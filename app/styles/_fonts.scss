@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700&subset=latin,latin-ext);
+
 @font-face {
   font-family: 'icomoon';
   src:url('#{$fonts-path}/icomoon.eot?-tou0sx');
@@ -7,4 +9,8 @@
   url('#{$fonts-path}/icomoon.svg?-tou0sx#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
 }

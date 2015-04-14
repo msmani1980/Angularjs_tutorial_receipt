@@ -1,11 +1,13 @@
 <div class="menu-container col-md-6" ng-repeat="item in dashboardMenu">
-    <h3>{{item.title}}</h3>
+    <div class="add-shadow">
+        <h3>{{item.title}}</h3>
 
-    <div class="menu-items-container col-xs-6" ng-repeat="menu in item.menuItems">
-        <a class="" ng-href="#/{{menu.route}}">
-            <i class="menu-icon {{menu.icon}}"></i>
+        <div class="menu-items-container col-xs-6" ng-repeat="menu in item.menuItems">
+            <a class="" ng-href="#/{{menu.route}}">
+                <i class="menu-icon {{menu.icon}}"></i>
 
-            <div class="menu-title">{{menu.name}}</div>
-        </a>
+                <div class="menu-title">{{menu.name}}</div>
+            </a>
+        </div>
     </div>
 </div>
