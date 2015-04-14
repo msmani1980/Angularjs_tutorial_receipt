@@ -14,8 +14,8 @@ angular.module('ts5App')
                 'title': 'Retail Item Management',
                 menuItems: [
                     {
-                        name: 'Manage menuItems',
-                        route: 'retail-menuItems',
+                        name: 'Manage Items',
+                        route: 'items',
                         icon: 'icon-manage-retail-item',
                         className: 'dashboard-managemenuItems'
                     },
