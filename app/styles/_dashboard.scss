@@ -1,12 +1,14 @@
 .menu-container {
+  margin-bottom: 5rem;
   &:nth-child(odd) {
     clear: left;
   }
   h3 {
+    margin: 0;
     background: #565D5E;
     color: #fff;
     height: 5.5rem;
-    padding-left: 0.5rem;
+    padding-left: 1.5rem;
     border-bottom: 0.3rem solid #7CC143;
     line-height: 5rem;
     font-weight: 200;
