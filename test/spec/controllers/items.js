@@ -16,7 +16,12 @@ describe('Controller: ItemsCtrl', function () {
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
+  it('should have $scope.items defined but object does not exist!', function () {
+    expect(scope.items).toBeDefined();
   });
+
+  it('expects $scope.items to have data in the array but it has nothing!', function () {
+    expect(scope.items.length).toBeGreaterThan(0);
+  });
+
 });
