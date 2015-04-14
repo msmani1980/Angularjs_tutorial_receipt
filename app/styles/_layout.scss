@@ -1,0 +1,18 @@
+.header {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  &::before {
+    box-shadow: 0 0 4px rgba(0, 0, 0, .14), 0 4px 8px rgba(0, 0, 0, .28);
+    content: "";
+    height: 56px;
+    left: -2%;
+    position: fixed;
+    width: 104%;
+    will-change: top, left;
+  }
+}
+
+.container {
+  padding-top: 9rem;
+}
