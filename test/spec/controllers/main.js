@@ -17,10 +17,14 @@ describe('Controller: MainCtrl', function () {
     }));
 
     it('should attach a list of dashboard items to the scope', function () {
-        expect(scope.dashboardItems.length).toBe(12);
+        expect(scope.dashboardMenu.length).toBe(12);
     });
 
-    it('should have title and items', function () {
-        expect(scope.dashboardItems[0].title).toBe('Retail Item Management')
+    it('should have a title property', function () {
+        expect(scope.dashboardMenu[0].title).toMatch(/retail item management/i);
+    });
+
+    it('should have a menuItems Array with 3 elements', function () {
+        expect(scope.dashboardMenu[0].menuItems.length).toBe(3);
     });
 });
