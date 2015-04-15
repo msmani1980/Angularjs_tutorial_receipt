@@ -25,9 +25,16 @@
         opacity: 0.5;
       }
     }
+    .breadcrumb {
+      padding: 0;
+      margin-bottom: 0;
+      background-color: inherit;
+      border-radius: 0;
+      color: inherit;
+    }
   }
 }
 
-.container {
+.main-container {
   padding-top: 9rem;
 }

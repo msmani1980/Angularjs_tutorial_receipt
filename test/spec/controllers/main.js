@@ -16,6 +16,10 @@ describe('Controller: MainCtrl', function () {
         });
     }));
 
+    it('should have a breadcrumb property', function () {
+        expect(scope.breadcrumb).toBeDefined();
+    });
+
     it('should attach a list of dashboard items to the scope', function () {
         expect(scope.dashboardMenu.length).toBe(12);
     });

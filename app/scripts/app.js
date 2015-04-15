@@ -29,6 +29,10 @@ angular
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
+      .when('/exchange-rates', {
+        templateUrl: 'views/exchange-rates.html',
+        controller: 'ExchangeRatesCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

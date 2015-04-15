@@ -26,7 +26,7 @@
     <div class="navbar" role="navigation">
         <div class="container-fluid">
             <a class="navbar-brand" ng-href="#/"><i class="fa fa-th"></i></a>
-            <a class="navbar-brand" ng-href="#/">TS5 Dashboard</a>
+            <span class="navbar-brand breadcrumb" ng-view="" ng-bind="breadcrumb">TS5 Dashboard</span>
 
             <ul class="nav navbar-nav navbar-right">
                 <li><a ng-href="#/"><i class="fa fa-cog"></i></a></li>
@@ -38,7 +38,7 @@
 </div>
 
 <div class="container">
-    <div ng-view=""></div>
+    <div class="main-container" ng-view=""></div>
 </div>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -74,6 +74,7 @@
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/main.js"></script>
 <script src="scripts/controllers/about.js"></script>
+<script src="scripts/controllers/exchange-rates.js"></script>
 <!-- endbuild -->
 </body>
 </html>
