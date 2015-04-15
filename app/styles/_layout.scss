@@ -37,3 +37,21 @@
 .main-container {
   padding-top: 9rem;
 }
+
+.panel-blue {
+  background-color: #BCE4F0;
+  border-color: #29A1DB;
+  .panel-heading {
+    background-color: inherit;
+    border-bottom: 1px solid #29A1DB;
+  }
+}
+
+.panel {
+  .company-name {
+    font-size: 150%;
+  }
+  .pull-right {
+    line-height: 3rem;
+  }
+}

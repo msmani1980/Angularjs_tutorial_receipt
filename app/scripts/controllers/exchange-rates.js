@@ -9,5 +9,5 @@
  */
 angular.module('ts5App')
     .controller('ExchangeRatesCtrl', function ($scope) {
-        $scope.breadcrumb = 'Daily Exchange Rates';
+        $scope.breadcrumb = 'Cash Management / Daily Exchange Rates';
     });

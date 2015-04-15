@@ -9,31 +9,32 @@
  * Main module of the application.
  */
 angular
-  .module('ts5App', [
-    'ngAnimate',
-    'ngAria',
-    'ngCookies',
-    'ngMessages',
-    'ngResource',
-    'ngRoute',
-    'ngSanitize',
-    'ngTouch'
-  ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
-      })
-      .when('/exchange-rates', {
-        templateUrl: 'views/exchange-rates.html',
-        controller: 'ExchangeRatesCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
-  });
+    .module('ts5App', [
+        'ngAnimate',
+        'ngAria',
+        'ngCookies',
+        'ngMessages',
+        'ngResource',
+        'ngRoute',
+        'ngSanitize',
+        'ngTouch'
+    ])
+    .config(function ($routeProvider) {
+        $.fn.datepicker.defaults.orientation = 'top auto';
+        $routeProvider
+            .when('/', {
+                templateUrl: 'views/main.html',
+                controller: 'MainCtrl'
+            })
+            .when('/about', {
+                templateUrl: 'views/about.html',
+                controller: 'AboutCtrl'
+            })
+            .when('/exchange-rates', {
+                templateUrl: 'views/exchange-rates.html',
+                controller: 'ExchangeRatesCtrl'
+            })
+            .otherwise({
+                redirectTo: '/'
+            });
+    });
