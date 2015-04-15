@@ -11,7 +11,7 @@ angular.module('ts5App')
   .controller('MainCtrl', function ($scope, $localStorage) {
 
     $scope.$storage = $localStorage.$default({
-      userId: 42
+      userId: 326
     });
 
     $scope.dashboardMenu = [
