@@ -14,14 +14,17 @@
   .navbar {
     background-color: $header-bg-color;
     border-radius: 0;
-    .navbar-right {
-      i {
-        font-size: 140%;
+    a {
+      font-size: 140%;
+      color: #fff;
+      &:hover, &:focus {
+        background-color: inherit;
+      }
+      &:hover {
+        color: #7CC143;
+        opacity: 0.5;
       }
     }
-  }
-  a {
-    color: #fff;
   }
 }
 
