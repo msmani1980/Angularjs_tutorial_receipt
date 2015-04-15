@@ -25,7 +25,12 @@
 }
 
 .list-footer nav {
-  display:inline-block; 
+	display:inline-block; 
+}
+
+.list-footer select {
+	display:inline-block;
+	width:auto; 
 }
 
 .list-footer .displaying {

@@ -1,6 +1,5 @@
 <h1>Items</h1>
 
-<!-- ListControls -->
 <div class="list-controls">
 
 	<div class="row">
@@ -35,9 +34,7 @@
 		</div>
 
 	</div>
-	<!-- /row -->
 
-	<!-- SearchCollapse -->
 	<div class="collapse" id="search-collapse">
 		
 		<form class="form">
@@ -121,22 +118,16 @@
 			
 				</div>
 
-
-
 			</div>
-			<!-- /row -->
-
+		
 			<button type="submit" class="btn btn">Search</button>
 
 		</form>
 
 	</div>
-	<!-- /SearchCollapse -->
 
 </div>
-<!-- /ListControls -->
 
-<!-- ListTable -->
 <div class="table-responsive table-hover list-form">
 
 	<table class="table table-bordered">
@@ -164,7 +155,7 @@
 
 		<tbody>
 
-			<tr ng-repeat="item in items | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName, startDate: search.effectiveStartDate, endDate:search.effectiveEndDate }"> 
+			<tr ng-repeat="item in items | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName, startDate: search.effectiveStartDate, endDate:search.effectiveEndDate }" ng-show="$index<listSize"> 
 
 				<th scope="row">
 					<span class="label label-primary">
@@ -187,58 +178,34 @@
 
 			</tr>
 
-
 		</tbody>
 
 	</table>
 
 </div>
-<!-- ListTable -->
 
-<!-- ListFooter -->
 <div class="list-footer">
 
 	<div class="row">
 
-		<!-- ListCount -->
-		<div class="col-xs-12 col-sm-6">
-			
-			Show 
+		<div class="col-xs-12 col-sm-6"> 
 
-			<div class="dropup">
+			Show
 
-			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="true">
-			    10
-			    <span class="caret"></span>
-			  </button>
-
-			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
-
-			  	<li role="presentation">
-			  		<a role="menuitem" tabindex="-1" href="#">100</a>
-			  	</li>
-
-			  	<li role="presentation">
-			  		<a role="menuitem" tabindex="-1" href="#">50</a>
-			  	</li>
-
-			    <li role="presentation">
-			    	<a role="menuitem" tabindex="-1" href="#">25</a>
-			    </li>
-			    
-			  </ul>
-
-			</div>
+			<select class="form-control" ng-model="listSize">
+				<option>10</option>
+				<option>25</option>
+				<option>50</option>
+				<option>100</option>
+			</select>
 
 			Items per Page
 
 		</div>
-		<!-- /ListCount -->
-
-		<!-- Pagination -->
+	
 		<div class="col-xs-12 col-sm-6 text-right">
 
-			<p class="hidden displaying">Showing 1 - 10 of 69</p>
+			<!--<p class="hidden displaying">Showing {{ pagination.rangeStart }}} - {{ pagination.rangeEnd }}} of {{ pagination.pageCount }}</p> -->
 			
 			<nav>
 				<ul class="pagination">
@@ -249,9 +216,9 @@
 						</a>
 					</li>
 
-					<li class="active"><a href="#">1</a></li>
-					<li><a href="#">2</a></li>
-					<li><a href="#">3</a></li>
+					<li ng-repeat="page in pagination.pages">
+						<a href="#">{{ page }}</a>
+					</li>
 					
 					<li>
 						<a href="#" aria-label="Next">
@@ -263,10 +230,8 @@
 			</nav>
 
 		</div>
-		<!-- /Pagination -->
+	
 
 	</div>
-	<!-- /row -->
 
 </div>
-<!-- /ListFooter -->
