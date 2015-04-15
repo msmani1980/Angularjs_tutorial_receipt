@@ -3,7 +3,7 @@
   &:nth-child(odd) {
     clear: left;
   }
-  .add-shadow {
+  &::before {
     display: table;
     width: 100%;
     -webkit-box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.35);
@@ -12,7 +12,7 @@
   }
   h3 {
     margin: 0;
-    background: #565D5E;
+    background: $header-bg-color;
     color: #fff;
     height: 5.5rem;
     padding-left: 1.5rem;
