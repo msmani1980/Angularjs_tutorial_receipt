@@ -34,8 +34,8 @@
           </select>
         Items per Page
       </div>
-      <div class="">
-        <pagination total-items="totalItems" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+      <div class="col-xs-12 col-sm-9 text-right">
+        <pagination total-items="totalItems" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
       </div>
     </div>
   </div>

@@ -20,6 +20,7 @@ angular
     'ngTouch',
     'ngStorage',
     'ui.bootstrap',
+    'angular.filter',
   ])
   .config(function ($routeProvider) {
 
@@ -31,6 +32,10 @@ angular
       .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
+      })
+	  .when('/items', {
+        templateUrl: 'views/items.html',
+        controller: 'ItemsCtrl'
       })
       .when('/companies', {
         templateUrl: 'views/companies.html',

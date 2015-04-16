@@ -12,9 +12,11 @@ angular.module('ts5App')
 
     $scope.$storage = $localStorage;
 
+    var url = 'https://ec2-52-6-49-188.compute-1.amazonaws.com';
+
     var req = {
         method: 'GET',
-        url: 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/companies',
+        url: url + '/api/companies',
         headers: {
             'Content-Type': 'application/json',
             'userId': 1
@@ -43,6 +45,7 @@ angular.module('ts5App')
 
         $scope.itemsPerPage = 10;
         $scope.currentPage = 1;
+        $scope.maxSize = 8;
 
         $scope.pageCount = function () {
           return Math.ceil($scope.companies.length / $scope.itemsPerPage);
