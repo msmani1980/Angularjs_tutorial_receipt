@@ -22,6 +22,7 @@ angular
     'ui.bootstrap',
     'angular.filter',
   ])
+  .constant('baseUrl', 'https://ec2-52-6-49-188.compute-1.amazonaws.com')
   .config(function ($routeProvider) {
 
     $routeProvider
