@@ -45,6 +45,7 @@ angular
       .when('/create-item', {
         templateUrl: 'views/create-item.html',
         controller: 'CreateItemCtrl'
+      })
       .when('/company/:id', {
         templateUrl: 'views/company.html',
         controller: 'CompanyCtrl'
@@ -52,4 +53,7 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+
+    
+
   });
