@@ -19,63 +19,33 @@
   </div>
 
   <div class="panel-body">
+
     <div class="row">
       <div class="col-md-6 col-xs-6">Tail</div>
-      <div class="col-md-6 col-xs-6 text-right">Base Currency: <span>{{companyCurrency.currencyCode}}</span></div>
+      <div class="col-md-6 col-xs-6 text-right">Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></div>
     </div>
     <div class="row">
       <div class="col-md-3 col-xs-3">Currency Code</div>
       <div class="col-md-3 col-xs-3">Paper Bank Exchange Rate</div>
       <div class="col-md-3 col-xs-3">Coin Bank Exchange Rate</div>
     </div>
-    <div class="row">
-      <div class="col-md-3 col-xs-3">GBP</div>
+    <div class="row" ng-repeat="currency in companyCurrencies">
+      <div class="col-md-3 col-xs-3">{{currency.currencyCode}}</div>
 
       <div class="col-md-3 col-xs-3">
         <div class="input-group">
-          <span class="input-group-addon">$</span>
+          <span class="input-group-addon">{{currency.currencySymbol}}</span>
           <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
         </div>
       </div>
 
       <div class="col-md-3 col-xs-3">
         <div class="input-group">
-          <span class="input-group-addon">$</span>
+          <span class="input-group-addon">{{currency.currencySymbol}}</span>
           <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-3 col-xs-3">EUR</div>
 
-      <div class="col-md-3 col-xs-3">
-        <div class="input-group">
-          <span class="input-group-addon">$</span>
-          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-        </div>
-      </div>
-
-      <div class="col-md-3 col-xs-3">
-        <div class="input-group">
-          <span class="input-group-addon">$</span>
-          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-3 col-xs-3">NOK</div>
-      <div class="col-md-3 col-xs-3">
-        <div class="input-group">
-          <span class="input-group-addon">$</span>
-          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-        </div>
-      </div>
-      <div class="col-md-3 col-xs-3">
-        <div class="input-group">
-          <span class="input-group-addon">$</span>
-          <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-        </div>
-      </div>
-    </div>
   </div>
 </div>

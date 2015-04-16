@@ -25,7 +25,8 @@ angular.module('ts5App')
     };
 
     return {
-      getCompanyBaseCurrency: getCompanyBaseCurrency
+      getCompanyBaseCurrency: getCompanyBaseCurrency,
+      getCompanyCurrencies: currencies.getCompanyCurrencies
     };
 
   });

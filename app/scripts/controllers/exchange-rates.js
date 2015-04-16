@@ -23,7 +23,11 @@ angular.module('ts5App')
     $scope.currentCompany = getCompany(326);
 
     currencyFactory.getCompanyBaseCurrency().then(function (companyCurrency) {
-      $scope.companyCurrency = companyCurrency;
+      $scope.companyBaseCurrency = companyCurrency;
+    });
+
+    currencyFactory.getCompanyCurrencies().then(function (companyCurrency) {
+      $scope.companyCurrencies = companyCurrency;
     });
 
   });
