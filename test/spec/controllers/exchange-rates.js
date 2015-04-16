@@ -51,5 +51,4 @@ describe('Controller: ExchangeRatesCtrl', function () {
     expect(scope.currency).toBe(42);
     $httpBackend.flush();
   });
-})
-;
+});
