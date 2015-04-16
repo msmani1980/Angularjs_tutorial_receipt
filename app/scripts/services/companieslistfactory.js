@@ -14,15 +14,16 @@ angular.module('ts5App')
     var paramDefaults = {};
 
     var actions = {
-      query: {
+      getList: {
         method: 'GET',
         headers: {
           'userId': 1,
         },
       },
-      create: {
-        method: 'POST',
-      }
+      // Example:
+      // create: {
+      //   method: 'POST',
+      // }
     };
 
     return $resource(url, paramDefaults, actions);
