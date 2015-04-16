@@ -9,21 +9,23 @@
  */
 angular.module('ts5App')
   .service('currencies', function ($q, $resource) {
-    var url = 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies';
+    var globalCurrenciesURL = 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies';
+    var companyCurrenciesURL = 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/companies/:companyId/currencies';
     var paramDefaults = {};
     var actions = {
       getCurrencies: {
         method: 'GET',
         headers: {
           'userId': 1,
-          'companyId': 326
+          'companyId': 374
         }
       },
       create: {
         method: 'POST'
       }
     };
-    var currenciesResource = $resource(url, paramDefaults, actions);
+    var globalCurrenciesResource = $resource(globalCurrenciesURL, paramDefaults, actions);
+    var companyCurrenciesResource = $resource(companyCurrenciesURL, {companyId: 374}, actions);
 
     var getBaseCurrency = function (currenciesArray, baseCurrencyId) {
       return currenciesArray.filter(function (currencyItem) {
@@ -33,13 +35,22 @@ angular.module('ts5App')
 
     var getCompanyBaseCurrency = function (baseCurrencyId) {
       var baseCompanyDeferred = $q.defer();
-      currenciesResource.getCurrencies().$promise.then(function (data) {
+      globalCurrenciesResource.getCurrencies().$promise.then(function (data) {
         baseCompanyDeferred.resolve(getBaseCurrency(data.response, baseCurrencyId));
       });
       return baseCompanyDeferred.promise;
     };
 
+    var getCompanyCurrencies = function (baseCurrencyId) {
+      var baseCompanyDeferred = $q.defer();
+      companyCurrenciesResource.getCurrencies().$promise.then(function (data) {
+        baseCompanyDeferred.resolve(data.companyCurrencies);
+      });
+      return baseCompanyDeferred.promise;
+    };
+
     return {
-      getCompanyBaseCurrency: getCompanyBaseCurrency
+      getCompanyBaseCurrency: getCompanyBaseCurrency,
+      getCompanyCurrencies: getCompanyCurrencies
     };
   });
