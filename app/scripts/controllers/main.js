@@ -26,7 +26,7 @@ angular.module('ts5App')
           },
           {
             name: 'Create Item',
-            route: 'retail-menuItems.create',
+            route: 'create-item',
             icon: 'icon-create-retail-item',
             className: 'dashboard-createItem'
           },

@@ -21,5 +21,8 @@
     "angular-mocks": "^1.3.0"
   },
   "appPath": "app",
-  "moduleName": "ts5App"
+  "moduleName": "ts5App",
+  "resolutions": {
+    "angular": "^1.3.0"
+  }
 }

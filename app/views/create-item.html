@@ -1,0 +1,67 @@
+
+
+<edit-form-header-directive></edit-form-header-directive>
+
+<form class="form edit-form">
+
+	<button type="submit">Save</button>
+
+	<div class="row">
+
+		<div class="col-xs-12 col-sm-6">
+
+			<div class="form-group">
+				<label for="item-code">Item Code</label>
+				<input ng-min-length="1" ng-model="edit.itemCode" type="text" class="form-control" id="item-code" placeholder="Item012">
+			</div>
+
+			<div class="form-group">
+				<label for="item-name">Item Name</label>
+				<input ng-model="edit.itemName" type="text" class="form-control" id="item-name" placeholder="Turkey">
+			</div>
+
+			<div class="form-group">
+				<label for="item-type">Item Type</label>
+				<select ng-model="edit.itemType" class="form-control" id="item-type">
+					<option ng-repeat="item in items | unique: 'itemTypeId'">{{ item.itemTypeName }}</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="item-onboard-name">Onboard Name</label>
+				<input ng-model="edit.onBoardName" type="text" class="form-control" id="item-onboard-name" placeholder="Turkey Delight">
+			</div>
+
+			<div class="form-group">
+				<label for="item-sales-category">Sales Category</label>
+				<select ng-model="edit.categoryName" class="form-control" id="item-sales-category">
+					<option ng-repeat="item in items | unique: 'salesCategoryId'">{{ item.categoryName }}</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="item-effective-start">Effective From</label>
+				<div class="input-group">
+					<div class="input-group-addon">  
+						<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 
+					</div>
+					<input ng-model="edit.effectiveStartDate" type="date" class="form-control" id="item-effective-start">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="item-effective-end">Effective To</label>
+				<div class="input-group">
+					<div class="input-group-addon">  
+						<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 
+					</div>
+					<input ng-model="edit.effectiveEndDate" type="date" class="form-control" id="item-effective-end">
+				</div>
+			</div>
+
+		</div>
+
+
+	</div>
+
+</form>
