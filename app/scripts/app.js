@@ -22,6 +22,7 @@ angular
     'ui.bootstrap',
     'angular.filter',
   ])
+  .constant('baseUrl', 'https://ec2-52-6-49-188.compute-1.amazonaws.com')
   .config(function ($routeProvider) {
 
     $routeProvider
@@ -33,7 +34,7 @@ angular
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
-	  .when('/items', {
+      .when('/items', {
         templateUrl: 'views/items.html',
         controller: 'ItemsCtrl'
       })
@@ -44,6 +45,9 @@ angular
       .when('/create-item', {
         templateUrl: 'views/create-item.html',
         controller: 'CreateItemCtrl'
+      .when('/company/:id', {
+        templateUrl: 'views/company.html',
+        controller: 'CompanyCtrl'
       })
       .otherwise({
         redirectTo: '/'

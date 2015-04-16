@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="company in filteredCompanies">
+      <tr ng-repeat="company in filteredCompanies" ng-click="showCompany(company)">
         <td>{{ company.companyTypeName }}</td>
         <td>{{ company.companyName }}</td>
         <td>{{ company.legalName }}</td>
