@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http) {
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currency) {
     var getCompany = function (companyId) {
       return {
         'id': companyId,
@@ -45,6 +45,7 @@ angular.module('ts5App')
       });
     };
 
+    $scope.currency = currency.someMethod();
     getCurrencies();
     $scope.breadcrumb = 'Cash Management / Daily Exchange Rates';
     $scope.currentCompany = getCompany(326);

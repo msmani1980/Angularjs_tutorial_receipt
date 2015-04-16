@@ -48,6 +48,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
   it('should have a breadcrumb property', function () {
     ExchangeRatesCtrl = createController();
     expect(scope.breadcrumb).toBeDefined();
+    expect(scope.currency).toBe(42);
     $httpBackend.flush();
   });
 })
