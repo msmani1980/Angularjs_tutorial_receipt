@@ -12,7 +12,7 @@ describe('Service: currencies', function () {
 
   beforeEach(inject(function (_currencies_, $injector) {
     $httpBackend = $injector.get('$httpBackend');
-    currenciesRequestHandler = $httpBackend.when('GET', 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies')
+    currenciesRequestHandler = $httpBackend.whenGET('https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies')
       .respond({
         'response': [{
           createdOn: '2014-08-19',
