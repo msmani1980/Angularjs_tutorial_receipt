@@ -1,1 +1,43 @@
-<p>This is the companies view.</p>
+<h1>Companies</h1>
+
+<div>
+  <table class="table table-bordered table-responsive table-hover">
+    <thead>
+      <tr>
+        <th>Company Type</th>
+        <th>Company Name</th>
+        <th>Legal Name</th>
+        <th>Additional Languages</th>
+        <th>Base Currency</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="company in filteredCompanies">
+        <td>{{ company.companyTypeName }}</td>
+        <td>{{ company.companyName }}</td>
+        <td>{{ company.legalName }}</td>
+        <td>{{ company.companyLanguages }}</td>
+        <td>{{ company.baseCurrencyCode }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="list-footer">
+    <div class="row">
+      <div class="col-xs-12 col-sm-3">
+        Show
+          <select class="form-control" ng-model="itemsPerPage">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+          </select>
+        Items per Page
+      </div>
+      <div class="">
+        <pagination total-items="totalItems" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+      </div>
+    </div>
+  </div>
+
+</div>
