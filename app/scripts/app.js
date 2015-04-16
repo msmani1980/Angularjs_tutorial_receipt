@@ -42,6 +42,10 @@ angular
         templateUrl: 'views/companies.html',
         controller: 'CompaniesCtrl'
       })
+      .when('/company/:id', {
+        templateUrl: 'views/company.html',
+        controller: 'CompanyCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
