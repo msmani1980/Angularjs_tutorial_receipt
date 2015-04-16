@@ -8,10 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('currencyFactory', function ($q, $resource) {
-    var url = 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies';
-    var paramDefaults = {};
-
+  .factory('currencyFactory', function ($q, $resource, currencies) {
     var getCompany = function (companyId) {
       return {
         'id': companyId,
@@ -22,34 +19,9 @@ angular.module('ts5App')
       };
     };
 
-    var actions = {
-      getCurrencies: {
-        method: 'GET',
-        headers: {
-          'userId': 1,
-          'companyId': 326
-        }
-      },
-      create: {
-        method: 'POST'
-      }
-    };
-
-    var baseCurrencyId = getCompany(326).baseCurrencyId;
-
-    var currenciesResource = $resource(url, paramDefaults, actions);
-    var getBaseCurrency = function (currenciesArray) {
-      return currenciesArray.filter(function (currencyItem) {
-        return currencyItem.id === baseCurrencyId;
-      })[0];
-    };
-
-    var getCompanyBaseCurrency = function () {
-    var baseCompanyDeferred = $q.defer();
-      currenciesResource.getCurrencies().$promise.then(function (data) {
-        baseCompanyDeferred.resolve(getBaseCurrency(data.response));
-      });
-      return baseCompanyDeferred.promise;
+    var getCompanyBaseCurrency = function(){
+      var baseCurrencyId = getCompany(326).baseCurrencyId;
+      return currencies.getCompanyBaseCurrency(baseCurrencyId);
     };
 
     return {

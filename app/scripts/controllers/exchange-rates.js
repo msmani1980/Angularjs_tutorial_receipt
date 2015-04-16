@@ -19,7 +19,6 @@ angular.module('ts5App')
       };
     };
 
-
     $scope.breadcrumb = 'Cash Management / Daily Exchange Rates';
     $scope.currentCompany = getCompany(326);
 
