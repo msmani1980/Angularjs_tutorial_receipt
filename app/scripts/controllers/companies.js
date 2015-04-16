@@ -8,9 +8,14 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompaniesCtrl', function ($scope, companiesListFactory, $localStorage) {
+  .controller('CompaniesCtrl', function ($scope, companiesListFactory, $localStorage, $location) {
 
     $scope.$storage = $localStorage;
+
+    // Click Action
+    $scope.showCompany = function(company) {
+      $location.path('company/' + company.id);
+    };
 
     $scope.companies = companiesListFactory.query();
 
