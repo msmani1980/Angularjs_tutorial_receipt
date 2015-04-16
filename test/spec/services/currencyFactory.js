@@ -11,7 +11,7 @@ describe('Factory: currencyFactory', function () {
           return {
             then: function (callback) {
               return callback({
-                currencyCode: "fakeCurrencyCode"
+                currencyCode: 'fakeCurrencyCode'
               });
             }
           };
