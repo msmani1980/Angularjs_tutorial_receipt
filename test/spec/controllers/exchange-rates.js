@@ -13,7 +13,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector) {
       $httpBackend = $injector.get('$httpBackend');
-      currenciesRequestHandler = $httpBackend.when('GET', 'https://54.87.153.42/api/currencies')
+      currenciesRequestHandler = $httpBackend.when('GET', 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies')
         .respond({
           'response': [{
             createdOn: '2014-08-19',
@@ -40,7 +40,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
   });
 
   it('should fetch currencies list from services', function () {
-    $httpBackend.expectGET('https://54.87.153.42/api/currencies');
+    $httpBackend.expectGET('https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies');
     ExchangeRatesCtrl = createController();
     $httpBackend.flush();
   });
@@ -48,7 +48,6 @@ describe('Controller: ExchangeRatesCtrl', function () {
   it('should have a breadcrumb property', function () {
     ExchangeRatesCtrl = createController();
     expect(scope.breadcrumb).toBeDefined();
-    expect(scope.currency).toBe(42);
     $httpBackend.flush();
   });
 });
