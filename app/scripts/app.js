@@ -19,6 +19,7 @@ angular
     'ngSanitize',
     'ngTouch',
     'ngStorage',
+    'ui.bootstrap',
   ])
   .config(function ($routeProvider) {
 
