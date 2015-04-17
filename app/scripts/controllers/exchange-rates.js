@@ -30,4 +30,8 @@ angular.module('ts5App')
       $scope.companyCurrencies = companyCurrency;
     });
 
+    currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRates) {
+      $scope.dailyExchangeRates = dailyExchangeRates;
+    });
+
   });
