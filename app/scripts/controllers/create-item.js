@@ -18,14 +18,11 @@ angular.module('ts5App')
   	$scope.formData = {};  
 
   	// Form template to be generated
-    $scope.formTemplate = [
+    $scope.formLeft = [
         {
             'type': 'text',
             'label': 'Retail Item Code',
             'model': 'itemCode',
-            'attributes': {
-            	'class': 'form-control'
-            }
         },
         {
             'type': 'text',
@@ -72,7 +69,77 @@ angular.module('ts5App')
             'label': 'Effective End Date',
             'model': 'endDate',
             'val': '20150517'
+        }   
+    ];
+
+    // Form template to be generated
+    $scope.formRight = [
+        {
+            'type': 'select',
+            'label': 'Item Tags',
+            'model': 'itemTags',
+            'options': {
+                'allergen1': {
+                    'label': 'Tag 1'
+                }
+             }
         },
+        {
+            'type': 'select',
+            'label': 'Allergens',
+            'model': 'allergens',
+            'options': {
+                'allergen1': {
+                    'label': 'Allergen 1'
+                }
+             }
+        },
+        {
+            'type': 'text',
+            'label': 'Item Name',
+            'model': 'itemName'
+        },
+        {
+            'type': 'text',
+            'label': 'POS Display Name',
+            'model': 'onBoardName'
+        },
+        {
+            'type': 'number',
+            'label': 'Category ID',
+            'model': 'categoryId',
+            'val': 179
+        },
+        
+        {
+            'type': 'number',
+            'label': 'Item Type',
+            'model': 'itemTypeId',
+            'val': 1
+        },
+        
+        {
+            'type': 'text',
+            'label': 'Item Description',
+            'model': 'desc'
+        },
+        {
+            'type': 'checkbox',
+            'label': 'Print Receipt',
+            'model': 'isPrintReceipt'
+        },
+        {
+            'type': 'text',
+            'label': 'Effective Start Date',
+            'model': 'startDate',
+            'val': '20150417'
+        },
+        {
+            'type': 'text',
+            'label': 'Effective End Date',
+            'model': 'endDate',
+            'val': '20150517'
+        }   
     ];
 
     // Submits the form, registered in views/directions/edit-form-header.html
@@ -109,8 +176,5 @@ angular.module('ts5App')
         });
 
   	};
-    
-
-  	
-
+   
   });
