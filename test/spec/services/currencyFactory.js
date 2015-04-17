@@ -22,6 +22,7 @@ describe('Factory: currencyFactory', function () {
     spyOn(currencies, 'getCompanyBaseCurrency').and.returnValue(deferred.promise);
     spyOn(currencies, 'getCompanyCurrencies').and.returnValue(deferred.promise);
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates').and.returnValue(deferred.promise);
+    spyOn(dailyExchangeRatesService, 'getPreviousExchangeRates').and.returnValue(deferred.promise);
     currencyFactory = _currencyFactory_;
   }));
 
@@ -63,6 +64,19 @@ describe('Factory: currencyFactory', function () {
   it('should return the company daily exchange rate array from dailyExchangeRatesService', function () {
     currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
       expect(dailyExchangeRatesArray[0].currencyCode).toBe('fakeCurrencyCode');
+    });
+    deferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
+    scope.$digest();
+  });
+
+  it('should call getpreviousExchangeRates from dailyExchangeRatesService service', function () {
+    currencyFactory.getPreviousExchangeRates();
+    expect(dailyExchangeRatesService.getPreviousExchangeRates).toHaveBeenCalled();
+  });
+
+  it('should return the company daily exchange rate array from getpreviousExchangeRates', function () {
+    currencyFactory.getPreviousExchangeRates().then(function (previousExchangeRatesArray) {
+      expect(previousExchangeRatesArray[0].currencyCode).toBe('fakeCurrencyCode');
     });
     deferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
     scope.$digest();

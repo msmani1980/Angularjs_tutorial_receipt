@@ -19,6 +19,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
         spyOn(currencyFactory, 'getCompanyBaseCurrency').and.returnValue(deferred.promise);
         spyOn(currencyFactory, 'getCompanyCurrencies').and.returnValue(deferred.promise);
         spyOn(currencyFactory, 'getDailyExchangeRates').and.returnValue(deferred.promise);
+        spyOn(currencyFactory, 'getPreviousExchangeRates').and.returnValue(deferred.promise);
         ExchangeRatesCtrl = $controller('ExchangeRatesCtrl', {
           $scope: scope
         });
@@ -45,5 +46,10 @@ describe('Controller: ExchangeRatesCtrl', function () {
   it('should get the DailyExchangeRates from currencyFactory', function () {
     ExchangeRatesCtrl = createController();
     expect(currencyFactory.getDailyExchangeRates).toHaveBeenCalled();
+  });
+
+  it('should get the PreviousExchangeRates from currencyFactory', function () {
+    ExchangeRatesCtrl = createController();
+    expect(currencyFactory.getPreviousExchangeRates).toHaveBeenCalled();
   });
 });

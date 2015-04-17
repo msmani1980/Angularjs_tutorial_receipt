@@ -34,4 +34,8 @@ angular.module('ts5App')
       $scope.dailyExchangeRates = dailyExchangeRates;
     });
 
+    currencyFactory.getPreviousExchangeRates().then(function (previousExchangeRates) {
+      $scope.previousExchangeRates = previousExchangeRates;
+    });
+
   });
