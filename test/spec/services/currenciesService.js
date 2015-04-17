@@ -92,9 +92,9 @@ describe('Service: currencies', function () {
 
     });
 
-    it('should return USD as currencyCode', function () {
-      currencies.getCompanyBaseCurrency(1).then(function (companyCurrency) {
-        expect(companyCurrency.currencyCode).toBe('USD');
+    it('should return USD as the company base currencyCode', function () {
+      currencies.getCompanyBaseCurrency(1).then(function (companyBaseCurrency) {
+        expect(companyBaseCurrency.currencyCode).toBe('USD');
       });
     });
 

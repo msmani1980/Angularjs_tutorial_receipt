@@ -3,30 +3,20 @@
 describe('Factory: currencyFactory', function () {
 
   // load the service's module
-  beforeEach(function () {
-    module('ts5App');
-    module(function ($provide) {
-      $provide.value('currencies', {
-        getCompanyBaseCurrency: function () {
-          return {
-            then: function (callback) {
-              return callback({
-                currencyCode: 'fakeCurrencyCode'
-              });
-            }
-          };
-        }
-      });
-      return null;
-    });
-  });
+  beforeEach(module('ts5App'));
 
   // instantiate service
   var currencyFactory,
-    currencies;
-  beforeEach(inject(function (_currencyFactory_, _currencies_) {
+    currencies,
+    deferred,
+    rootScope,
+    scope;
+  beforeEach(inject(function ($rootScope, $q, _currencyFactory_, _currencies_) {
+    rootScope = $rootScope;
+    scope = $rootScope.$new();
+    deferred = $q.defer();
     currencies = _currencies_;
-    spyOn(currencies, 'getCompanyBaseCurrency').and.callThrough();
+    spyOn(currencies, 'getCompanyBaseCurrency').and.returnValue(deferred.promise);
     currencyFactory = _currencyFactory_;
   }));
 
@@ -39,11 +29,12 @@ describe('Factory: currencyFactory', function () {
     expect(currencies.getCompanyBaseCurrency).toHaveBeenCalled();
   });
 
-  it('should have some property', function () {
+  it('should return companyCurrency from currencyFactory', function () {
     currencyFactory.getCompanyBaseCurrency().then(function (companyCurrency) {
       expect(companyCurrency.currencyCode).toBe('fakeCurrencyCode');
     });
-
+    deferred.resolve({currencyCode: 'fakeCurrencyCode'});
+    scope.$digest();
   });
 
 });
