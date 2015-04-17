@@ -21,7 +21,6 @@ angular
         'ngTouch'
     ])
     .config(function ($routeProvider) {
-        $.fn.datepicker.defaults.orientation = 'top auto';
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',

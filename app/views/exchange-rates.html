@@ -9,8 +9,12 @@
         </div>
         <div class="col-md-6 col-xs-6">
           <div class="input-group">
-            <input placeholder="mm/dd/YYYY" data-provide="datepicker" class="form-control">
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            <input type="text" class="form-control" datepicker-popup="dd/mm/yyyy" ng-model="exchangeRateDate"
+                   ng-required="true" close-text="Close"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="fa fa-calendar"></i>
+                </button>
+              </span>
           </div>
         </div>
       </div>
