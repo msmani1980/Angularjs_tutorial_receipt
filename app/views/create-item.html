@@ -1,17 +1,3 @@
 <edit-form-header-directive></edit-form-header-directive>
 
-<div class="row">
-
-	<div class="col-xs-12 col-sm-6">
-
-		<dynamic-form template="formLeft" ng-model="formData"></dynamic-form>
-
-	</div>
-
-	<div class="col-xs-12 col-sm-6">
-
-		<dynamic-form template="formRight" ng-model="formData"></dynamic-form>
-
-	</div>
-
-</div>
+<edit-form fields="fields" ng-model="formData" ng-submit="submitForm()"></edit-form>
