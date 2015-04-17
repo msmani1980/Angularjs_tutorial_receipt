@@ -22,8 +22,8 @@ angular.module('ts5App')
     $scope.breadcrumb = 'Cash Management / Daily Exchange Rates';
     $scope.currentCompany = getCompany(326);
 
-    currencyFactory.getCompanyBaseCurrency().then(function (companyCurrency) {
-      $scope.companyBaseCurrency = companyCurrency;
+    currencyFactory.getCompanyBaseCurrency().then(function (companyBaseCurrency) {
+      $scope.companyBaseCurrency = companyBaseCurrency;
     });
 
     currencyFactory.getCompanyCurrencies().then(function (companyCurrency) {

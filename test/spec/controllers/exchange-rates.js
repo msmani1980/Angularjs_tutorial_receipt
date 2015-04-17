@@ -6,7 +6,6 @@ describe('Controller: ExchangeRatesCtrl', function () {
   var ExchangeRatesCtrl,
     scope,
     createController,
-    getCompanyBaseCurrency,
     currencyFactory;
 
   beforeEach(module('ts5App'));
