@@ -30,6 +30,7 @@ angular.module('ts5App')
     };
 
     var dailyExchangeRatesResource = $resource(dailyExchangeRatesURL, paramDefaults, actions);
+
     var getDailyExchangeRates = function () {
       var dailyExchangeRatesDeferred = $q.defer();
       dailyExchangeRatesResource.getDailyExchangeRates().$promise.then(function (data) {

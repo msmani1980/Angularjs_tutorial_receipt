@@ -8,17 +8,20 @@ describe('Factory: currencyFactory', function () {
   // instantiate service
   var currencyFactory,
     currencies,
+    dailyExchangeRatesService,
     deferred,
     rootScope,
     scope;
-  beforeEach(inject(function ($rootScope, $q, _currencyFactory_, _currencies_) {
+  beforeEach(inject(function ($rootScope, $q, _currencyFactory_, _currencies_, _dailyExchangeRatesService_) {
     rootScope = $rootScope;
     scope = $rootScope.$new();
     deferred = $q.defer();
     currencies = _currencies_;
+    dailyExchangeRatesService = _dailyExchangeRatesService_;
 
     spyOn(currencies, 'getCompanyBaseCurrency').and.returnValue(deferred.promise);
     spyOn(currencies, 'getCompanyCurrencies').and.returnValue(deferred.promise);
+    spyOn(dailyExchangeRatesService, 'getDailyExchangeRates').and.returnValue(deferred.promise);
     currencyFactory = _currencyFactory_;
   }));
 
@@ -41,12 +44,25 @@ describe('Factory: currencyFactory', function () {
 
   it('should call getCompanyCurrencies from currencies service', function () {
     currencyFactory.getCompanyCurrencies();
-    expect(currencies.getCompanyCurrencies).toHaveBeenCalledWith();
+    expect(currencies.getCompanyCurrencies).toHaveBeenCalled();
   });
 
   it('should return the company currencies array from currencies service', function () {
     currencyFactory.getCompanyCurrencies().then(function (companyCurrencyArray) {
       expect(companyCurrencyArray[0].currencyCode).toBe('fakeCurrencyCode');
+    });
+    deferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
+    scope.$digest();
+  });
+
+  it('should call getDailyExchangeRates from dailyExchangeRatesService service', function () {
+    currencyFactory.getDailyExchangeRates();
+    expect(dailyExchangeRatesService.getDailyExchangeRates).toHaveBeenCalled();
+  });
+
+  it('should return the company daily exchange rate array from dailyExchangeRatesService', function () {
+    currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
+      expect(dailyExchangeRatesArray[0].currencyCode).toBe('fakeCurrencyCode');
     });
     deferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
     scope.$digest();
