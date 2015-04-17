@@ -14,7 +14,7 @@ angular.module('ts5App')
       restrict: 'E',
       scope: {
       	fields:	'=',
-        ngModel: '=',
+        ngModel: '='
       },
 
       controller: function($scope,$http,baseUrl) {

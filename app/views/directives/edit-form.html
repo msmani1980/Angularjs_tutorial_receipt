@@ -1,10 +1,6 @@
 <ng-form name="{{ formName }}" class="form form-responsive">
 
-	<button class="btn btn-primary" ng-click="submitForm()"> 
-		<span class="glyphicon glyphicon-check" aria-hidden="true"></span> 
-		<span class="hidden-xs">Save</span> 
-	</button>
-
+	<edit-form-header-directive></edit-form-header-directive>
 
 	<div class="form-group" ng-repeat="(key,field) in fields">
 

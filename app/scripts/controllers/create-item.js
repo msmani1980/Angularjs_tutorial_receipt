@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CreateItemCtrl', function ($scope) {
+  .controller('CreateItemCtrl', function ($scope,itemsFactory) {
 
   	// View Name to be displayed at the top of the form
   	$scope.viewName = 'Create Items'; 
@@ -18,6 +18,15 @@ angular.module('ts5App')
 
   	// Data object we get form processing the form
   	$scope.formData = {};  
+
+     $scope.fields2 = [
+        {
+            'type': 'text',
+            'label': 'Retaiasdsdasd Code',
+            'model': 'itemCode',
+            'value': 'test'
+        },
+    ];
 
   	// Form template to be generated
     $scope.fields = [
