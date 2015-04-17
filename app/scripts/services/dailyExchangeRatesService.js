@@ -9,15 +9,22 @@
  */
 angular.module('ts5App')
   .service('dailyExchangeRatesService', function ($q, $resource) {
-    var dailyExchangeRatesURL = 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/daily-exchange-rates';
-    var paramDefaults = {
-      retailCompanyId:326,
-      startDate:20150413,
-      endDate:20150413
+    var hostURL = 'https://ec2-52-6-49-188.compute-1.amazonaws.com';
+    var dailyExchangeRatesURL = hostURL + '/api/daily-exchange-rates';
+    var previousExchangeRatesURL = hostURL + '/api/daily-exchange-rates/previous-exchange-rate';
+
+    var dailyExchangeRatesParameters = {
+      retailCompanyId: 326,
+      startDate: 20150413,
+      endDate: 20150413
+    };
+    var previousExchangeRatesParameters = {
+      retailCompanyId: 326,
+      exchangeRateDate: 20150413
     };
 
     var actions = {
-      getDailyExchangeRates: {
+      getExchangeRates: {
         method: 'GET',
         headers: {
           'userId': 1,
@@ -29,16 +36,27 @@ angular.module('ts5App')
       }
     };
 
-    var dailyExchangeRatesResource = $resource(dailyExchangeRatesURL, paramDefaults, actions);
+    var dailyExchangeRatesResource = $resource(dailyExchangeRatesURL, dailyExchangeRatesParameters, actions);
+    var previousExchangeRatesResource = $resource(previousExchangeRatesURL, previousExchangeRatesParameters, actions);
 
     var getDailyExchangeRates = function () {
-      var dailyExchangeRatesDeferred = $q.defer();
-      dailyExchangeRatesResource.getDailyExchangeRates().$promise.then(function (data) {
-        dailyExchangeRatesDeferred.resolve(data.dailyExchangeRates);
+      var deferred = $q.defer();
+      dailyExchangeRatesResource.getExchangeRates().$promise.then(function (data) {
+        deferred.resolve(data.dailyExchangeRates);
       });
-      return dailyExchangeRatesDeferred.promise;
+      return deferred.promise;
     };
+
+    var getPreviousExchangeRates = function () {
+      var deferred = $q.defer();
+      previousExchangeRatesResource.getExchangeRates().$promise.then(function (data) {
+        deferred.resolve(data);
+      });
+      return deferred.promise;
+    };
+
     return {
-      getDailyExchangeRates: getDailyExchangeRates
+      getDailyExchangeRates: getDailyExchangeRates,
+      getPreviousExchangeRates: getPreviousExchangeRates
     };
   });

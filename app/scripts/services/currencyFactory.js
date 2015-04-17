@@ -32,10 +32,15 @@ angular.module('ts5App')
       return dailyExchangeRatesService.getDailyExchangeRates();
     };
 
+    var getpreviousExchangeRates = function() {
+      return dailyExchangeRatesService.getpreviousExchangeRates();
+    };
+
     return {
       getCompanyBaseCurrency: getCompanyBaseCurrency,
       getCompanyCurrencies: getCompanyCurrencies,
-      getDailyExchangeRates: getDailyExchangeRates
+      getDailyExchangeRates: getDailyExchangeRates,
+      getpreviousExchangeRates: getpreviousExchangeRates
     };
 
   });
