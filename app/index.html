@@ -1,8 +1,8 @@
 <!doctype html>
-<html class="no-js">
-<head>
+<html ng-app="ts5App" class="no-js">
+<head lang="{{language.shortName}}">
     <meta charset="utf-8">
-    <title></title>
+    <title>TS5</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 </head>
-<body ng-app="ts5App">
+<body >
 <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
     your browser</a> to improve your experience.</p>
@@ -87,6 +87,7 @@
 <script src="scripts/controllers/items.js"></script>
 <script src="scripts/services/companieslistfactory.js"></script>
 <script src="scripts/controllers/company.js"></script>
+<script src="scripts/services/globalmenuservice.js"></script>
 <script src="scripts/directives/menudropdown.js"></script>
 <script src="scripts/controllers/headermenu.js"></script>
 <!-- endbuild -->

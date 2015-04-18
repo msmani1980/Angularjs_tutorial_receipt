@@ -8,12 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MainCtrl', function ($scope, $localStorage) {
-
-    $scope.$storage = $localStorage.$default({
-      userId: 326
-    });
-
+  .controller('MainCtrl', function ($scope) {
     $scope.dashboardMenu = [
       {
         'title': 'Retail Item Management',
