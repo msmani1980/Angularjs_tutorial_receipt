@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CreateItemCtrl', function ($scope,itemsFactory) {
+  .controller('CreateItemCtrl', function ($scope) {
 
   	// View Name to be displayed at the top of the form
   	$scope.viewName = 'Create Items'; 

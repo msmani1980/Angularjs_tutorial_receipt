@@ -34,7 +34,7 @@ angular.module('ts5App')
 
       itemListResource.getList().$promise.then(function (data) {
 
-        baseItemDeffered.resolve(data)
+        baseItemDeffered.resolve(data);
 
       });
 

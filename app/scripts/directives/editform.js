@@ -17,7 +17,7 @@ angular.module('ts5App')
         ngModel: '='
       },
 
-      controller: function($scope,$http,baseUrl) {
+      controller: function($scope) {
 
         // Submit form 
         $scope.submitForm = function() {
@@ -31,7 +31,7 @@ angular.module('ts5App')
            });
 
           // forcing price right now, FIX ME
-          $scope.ngModel.prices = [{startDate: '20150418', endDate: '20150518', typeId: '1', priceCurrencies: [], taxIs: 'Included',}];
+          $scope.ngModel.prices = [{startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',}];
 
           // Request Object
           var req = {
