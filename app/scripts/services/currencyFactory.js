@@ -19,21 +19,34 @@ angular.module('ts5App')
       };
     };
 
-    var getCompanyBaseCurrency = function(){
+    var getCompanyBaseCurrency = function () {
       var baseCurrencyId = getCompany(326).baseCurrencyId;
       return currencies.getCompanyBaseCurrency(baseCurrencyId);
     };
 
-    var getCompanyCurrencies = function() {
+    var getCompanyCurrencies = function () {
       return currencies.getCompanyCurrencies();
     };
 
-    var getDailyExchangeRates = function() {
+    var getDailyExchangeRatesFromAPI = function () {
       return dailyExchangeRatesService.getDailyExchangeRates();
     };
 
-    var getPreviousExchangeRates = function() {
+    var getPreviousExchangeRates = function () {
       return dailyExchangeRatesService.getPreviousExchangeRates();
+    };
+
+    var getDailyExchangeRates = function () {
+      var deferred = $q.defer();
+
+      getDailyExchangeRatesFromAPI().then(function (dailyExchangeRates) {
+        if (dailyExchangeRates.length && dailyExchangeRates.length > 0) {
+          deferred.resolve(dailyExchangeRates);
+        } else {
+          deferred.resolve(getPreviousExchangeRates())
+        }
+      });
+      return deferred.promise;
     };
 
     return {

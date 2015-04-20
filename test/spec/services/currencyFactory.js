@@ -10,19 +10,23 @@ describe('Factory: currencyFactory', function () {
     currencies,
     dailyExchangeRatesService,
     deferred,
+    previousExchangeDeferred,
+    dailyExchangeDeferred,
     rootScope,
     scope;
   beforeEach(inject(function ($rootScope, $q, _currencyFactory_, _currencies_, _dailyExchangeRatesService_) {
     rootScope = $rootScope;
     scope = $rootScope.$new();
     deferred = $q.defer();
+    previousExchangeDeferred = $q.defer();
+    dailyExchangeDeferred = $q.defer();
     currencies = _currencies_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
 
     spyOn(currencies, 'getCompanyBaseCurrency').and.returnValue(deferred.promise);
     spyOn(currencies, 'getCompanyCurrencies').and.returnValue(deferred.promise);
-    spyOn(dailyExchangeRatesService, 'getDailyExchangeRates').and.returnValue(deferred.promise);
-    spyOn(dailyExchangeRatesService, 'getPreviousExchangeRates').and.returnValue(deferred.promise);
+    spyOn(dailyExchangeRatesService, 'getDailyExchangeRates').and.returnValue(dailyExchangeDeferred.promise);
+    spyOn(dailyExchangeRatesService, 'getPreviousExchangeRates').and.returnValue(previousExchangeDeferred.promise);
     currencyFactory = _currencyFactory_;
   }));
 
@@ -65,7 +69,7 @@ describe('Factory: currencyFactory', function () {
     currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
       expect(dailyExchangeRatesArray[0].currencyCode).toBe('fakeCurrencyCode');
     });
-    deferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
+    dailyExchangeDeferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
     scope.$digest();
   });
 
@@ -78,19 +82,21 @@ describe('Factory: currencyFactory', function () {
     currencyFactory.getPreviousExchangeRates().then(function (previousExchangeRatesArray) {
       expect(previousExchangeRatesArray[0].currencyCode).toBe('fakeCurrencyCode');
     });
-    deferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
+    previousExchangeDeferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
     scope.$digest();
   });
 
-  describe('daily exchange rates for today', function(){
+  describe('daily exchange rates for today', function () {
 
     it('should return previous exchange rate if daily exchange rate is null or empty', function () {
-      currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
-        expect(dailyExchangeRatesArray.length).toBe(0);
-      });
-      deferred.resolve([]);
-    });
 
+      currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
+        expect(dailyExchangeRatesArray[0].currencyCode).toBe('fakeCurrencyCode');
+      });
+      dailyExchangeDeferred.resolve([]);
+      previousExchangeDeferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
+      scope.$digest();
+    });
   });
 
 });
