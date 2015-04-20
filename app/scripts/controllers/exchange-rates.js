@@ -21,13 +21,6 @@ angular.module('ts5App')
 
     $scope.breadcrumb = 'Cash Management / Daily Exchange Rates';
     $scope.currentCompany = getCompany(326);
-    $scope.exchangeRateDate = new Date();
-    $scope.open = function($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
-
-      $scope.opened = true;
-    };
 
     currencyFactory.getCompanyBaseCurrency().then(function (companyBaseCurrency) {
       $scope.companyBaseCurrency = companyBaseCurrency;
