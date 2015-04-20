@@ -9,7 +9,8 @@
         </div>
         <div class="col-md-6 col-xs-6">
           <div class="input-group">
-            <input ng-model="cashiersDateField" placeholder="mm/dd/YYYY" data-provide="datepicker" class="form-control">
+            <input ng-model="cashiersDateField" placeholder="mm/dd/YYYY" data-provide="datepicker"
+                   class="form-control">
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           </div>
         </div>
@@ -46,5 +47,13 @@
         </div>
       </div>
     </div>
+    {{dailyExchangeRates.isSubmitted}}
+    <div class="row" ng-if="!dailyExchangeRates.isSubmitted">
+      <div class="text-right col-md-12 col-xs-12">
+        <input class="btn btn-default" type="submit" id="saveDailyExchangeRate" value="Save"/>
+        <input class="btn btn-primary" type="button" id="submitDailyExchangeRate" value="Submit"/>
+      </div>
+    </div>
+
   </div>
 </div>

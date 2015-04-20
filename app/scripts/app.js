@@ -25,6 +25,12 @@ angular
   ])
   .constant('baseUrl', 'https://ec2-52-6-49-188.compute-1.amazonaws.com')
   .config(function ($routeProvider) {
+    var datePickerOptions = $.extend($.fn.datepicker.defaults, {
+      format: 'mm/dd/yyyy',
+      autoclose: true,
+      todayHighlight: true
+    });
+    $.fn.datepicker.defaults = datePickerOptions;
 
     $routeProvider
       .when('/', {

@@ -61,12 +61,12 @@ describe('Factory: currencyFactory', function () {
   });
 
   it('should call getDailyExchangeRates from dailyExchangeRatesService service', function () {
-    currencyFactory.getDailyExchangeRates();
+    currencyFactory.getDailyExchangeRates('04202015');
     expect(dailyExchangeRatesService.getDailyExchangeRates).toHaveBeenCalled();
   });
 
   it('should return the company daily exchange rate array from dailyExchangeRatesService', function () {
-    currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
+    currencyFactory.getDailyExchangeRates('04202015').then(function (dailyExchangeRatesArray) {
       expect(dailyExchangeRatesArray[0].currencyCode).toBe('fakeCurrencyCode');
     });
     dailyExchangeDeferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
@@ -90,7 +90,7 @@ describe('Factory: currencyFactory', function () {
 
     it('should return previous exchange rate if daily exchange rate is null or empty', function () {
 
-      currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
+      currencyFactory.getDailyExchangeRates('04202015').then(function (dailyExchangeRatesArray) {
         expect(dailyExchangeRatesArray[0].previousCurrencyCode).toBe('fakeCurrencyCode');
       });
       dailyExchangeDeferred.resolve(null);

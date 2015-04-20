@@ -14,12 +14,12 @@ angular.module('ts5App')
     var previousExchangeRatesURL = hostURL + '/api/daily-exchange-rates/previous-exchange-rate';
 
     var dailyExchangeRatesParameters = {
-      retailCompanyId: 326,
+      retailCompanyId: 374,
       startDate: 20150413,
       endDate: 20150413
     };
     var previousExchangeRatesParameters = {
-      retailCompanyId: 326,
+      retailCompanyId: 374,
       exchangeRateDate: 20150413
     };
 
@@ -39,8 +39,10 @@ angular.module('ts5App')
     var dailyExchangeRatesResource = $resource(dailyExchangeRatesURL, dailyExchangeRatesParameters, actions);
     var previousExchangeRatesResource = $resource(previousExchangeRatesURL, previousExchangeRatesParameters, actions);
 
-    var getDailyExchangeRates = function () {
+    var getDailyExchangeRates = function (cashierDate) {
       var deferred = $q.defer();
+      dailyExchangeRatesParameters.startDate = cashierDate;
+      dailyExchangeRatesParameters.endDate = cashierDate;
       dailyExchangeRatesResource.getExchangeRates().$promise.then(function (data) {
         deferred.resolve(data.dailyExchangeRates);
       });

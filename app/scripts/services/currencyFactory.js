@@ -28,18 +28,18 @@ angular.module('ts5App')
       return currencies.getCompanyCurrencies();
     };
 
-    var getDailyExchangeRatesFromAPI = function () {
-      return dailyExchangeRatesService.getDailyExchangeRates();
+    var getDailyExchangeRatesFromAPI = function (cashierDate) {
+      return dailyExchangeRatesService.getDailyExchangeRates(cashierDate);
     };
 
     var getPreviousExchangeRates = function () {
       return dailyExchangeRatesService.getPreviousExchangeRates();
     };
 
-    var getDailyExchangeRates = function () {
+    var getDailyExchangeRates = function (cashierDate) {
       var deferred = $q.defer();
 
-      getDailyExchangeRatesFromAPI().then(function (dailyExchangeRates) {
+      getDailyExchangeRatesFromAPI(cashierDate).then(function (dailyExchangeRates) {
         if (dailyExchangeRates && dailyExchangeRates.length > 0) {
           deferred.resolve(dailyExchangeRates);
         } else {

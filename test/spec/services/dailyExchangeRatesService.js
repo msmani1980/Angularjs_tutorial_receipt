@@ -114,7 +114,7 @@ describe('Service: dailyExchangeRatesService', function () {
     it('should fetch the daily exchange rates array', function () {
       responseHandler.respond(dailyExchangeJSON);
       $httpBackend.expectGET(/api\/daily-exchange-rates/);
-      dailyExchangeRatesService.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
+      dailyExchangeRatesService.getDailyExchangeRates('04132015').then(function (dailyExchangeRatesArray) {
         expect(dailyExchangeRatesArray[0].exchangeRateDate).toBe('2015-04-13');
       });
     });
