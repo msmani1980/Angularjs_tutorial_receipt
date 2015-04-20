@@ -40,7 +40,7 @@ angular.module('ts5App')
       var deferred = $q.defer();
 
       getDailyExchangeRatesFromAPI().then(function (dailyExchangeRates) {
-        if (dailyExchangeRates.length && dailyExchangeRates.length > 0) {
+        if (dailyExchangeRates && dailyExchangeRates.length > 0) {
           deferred.resolve(dailyExchangeRates);
         } else {
           deferred.resolve(getPreviousExchangeRates())

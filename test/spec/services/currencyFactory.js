@@ -91,10 +91,10 @@ describe('Factory: currencyFactory', function () {
     it('should return previous exchange rate if daily exchange rate is null or empty', function () {
 
       currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
-        expect(dailyExchangeRatesArray[0].currencyCode).toBe('fakeCurrencyCode');
+        expect(dailyExchangeRatesArray[0].previousCurrencyCode).toBe('fakeCurrencyCode');
       });
-      dailyExchangeDeferred.resolve([]);
-      previousExchangeDeferred.resolve([{currencyCode: 'fakeCurrencyCode'}]);
+      dailyExchangeDeferred.resolve(null);
+      previousExchangeDeferred.resolve([{previousCurrencyCode: 'fakeCurrencyCode'}]);
       scope.$digest();
     });
   });
