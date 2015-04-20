@@ -82,4 +82,15 @@ describe('Factory: currencyFactory', function () {
     scope.$digest();
   });
 
+  describe('daily exchange rates for today', function(){
+
+    it('should return previous exchange rate if daily exchange rate is null or empty', function () {
+      currencyFactory.getDailyExchangeRates().then(function (dailyExchangeRatesArray) {
+        expect(dailyExchangeRatesArray.length).toBe(0);
+      });
+      deferred.resolve([]);
+    });
+
+  });
+
 });
