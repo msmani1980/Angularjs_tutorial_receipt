@@ -22,6 +22,8 @@ angular.module('ts5App')
     $scope.breadcrumb = 'Cash Management / Daily Exchange Rates';
     $scope.currentCompany = getCompany(326);
     $scope.cashiersDateField = new moment().format('L');
+    $scope.fields = {};
+
     $scope.$watch('cashiersDateField', function (cashiersDate) {
       var searchDate = moment(cashiersDate, 'L').format('YYYYMMDD').toString();
       currencyFactory.getDailyExchangeRates(searchDate).then(function (dailyExchangeRates) {
@@ -36,5 +38,9 @@ angular.module('ts5App')
     currencyFactory.getCompanyCurrencies().then(function (companyCurrency) {
       $scope.companyCurrencies = companyCurrency;
     });
+
+    $scope.saveDailyExchangeRates = function(){
+      console.log($scope.fields);
+    }
 
   });
