@@ -41,6 +41,11 @@ angular.module('ts5App')
 
     $scope.saveDailyExchangeRates = function(){
       console.log($scope.fields);
-    }
+    };
+
+    $scope.saveAndSubmitDailyExchangeRates = function() {
+      $scope.fields.isSubmitted = true;
+      $scope.saveDailyExchangeRates();
+    };
 
   });

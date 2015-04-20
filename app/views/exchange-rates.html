@@ -38,7 +38,7 @@
           <div class="input-group">
             <span class="input-group-addon">{{currency.currencySymbol}}</span>
             <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
-                   ng-model="fields.paperExchangeRate[currency.currencyCode]" currencyId="currency"
+                   ng-model="fields[currency.currencyCode].paperExchangeRate" currencyId="currency"
                    currencyType="paperExchangeRate" placeholder="0.0000" type="text"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
             <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
@@ -50,7 +50,7 @@
           <div class="input-group">
             <span class="input-group-addon">{{currency.currencySymbol}}</span>
             <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
-                   ng-model="fields.coinExchangeRate[currency.currencyCode]" currencyId="currency"
+                   ng-model="fields[currency.currencyCode].coinExchangeRate" currencyId="currency"
                    currencyType="coinExchangeRate" placeholder="0.0000" type="text"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
             <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
@@ -60,8 +60,8 @@
       </div>
       <div class="row" ng-if="!dailyExchangeRates.isSubmitted">
         <div class="text-right col-md-12 col-xs-12">
-          <input class="btn btn-default" type="submit" id="saveDailyExchangeRate" value="Save"/>
-          <input class="btn btn-primary" type="button" id="submitDailyExchangeRate" value="Submit"/>
+          <input class="btn btn-default" type="submit" value="Save"/>
+          <input class="btn btn-primary" type="button" value="Submit" ng-click="saveAndSubmitDailyExchangeRates()"/>
         </div>
       </div>
     </form>
