@@ -1,0 +1,38 @@
+// Since chrome has focus on everything,
+// we need to remove it for some elements
+menu-dropdown:focus {
+  outline: none
+}
+
+.menu-dropdown {
+  padding: 10px 15px;
+  line-height: 20px;
+  color: #FFF;
+  display: inline-block;
+
+  &.open > a,
+  &.open > a:hover,
+  &.open > a:focus {
+    background-color: transparent;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  a {
+    color: #FFF;
+    text-decoration: none;
+  }
+
+  .menu-dropdown-icon {
+    font-size: 23px;
+    padding-top: 3px;
+  }
+}
+
+@media (min-width: 768px) {
+  .menu-dropdown-title {
+    display: none;
+  }
+}

@@ -10,32 +10,48 @@
  * Main module of the application.
  */
 angular
-    .module('ts5App', [
-        'ngAnimate',
-        'ngAria',
-        'ngCookies',
-        'ngMessages',
-        'ngResource',
-        'ngRoute',
-        'ngSanitize',
-        'ngTouch'
-    ])
-    .config(function ($routeProvider) {
-        $.fn.datepicker.defaults.orientation = 'top auto';
-        $routeProvider
-            .when('/', {
-                templateUrl: 'views/main.html',
-                controller: 'MainCtrl'
-            })
-            .when('/about', {
-                templateUrl: 'views/about.html',
-                controller: 'AboutCtrl'
-            })
-            .when('/exchange-rates', {
-                templateUrl: 'views/exchange-rates.html',
-                controller: 'ExchangeRatesCtrl'
-            })
-            .otherwise({
-                redirectTo: '/'
-            });
-    });
+  .module('ts5App', [
+    'ngAnimate',
+    'ngAria',
+    'ngCookies',
+    'ngMessages',
+    'ngResource',
+    'ngRoute',
+    'ngSanitize',
+    'ngTouch',
+    'ngStorage',
+    'ui.bootstrap',
+    'angular.filter',
+  ])
+  .constant('baseUrl', 'https://ec2-52-6-49-188.compute-1.amazonaws.com')
+  .config(function ($routeProvider) {
+
+    $routeProvider
+      .when('/', {
+        templateUrl: 'views/main.html',
+        controller: 'MainCtrl'
+      })
+      .when('/about', {
+        templateUrl: 'views/about.html',
+        controller: 'AboutCtrl'
+      })
+      .when('/items', {
+        templateUrl: 'views/items.html',
+        controller: 'ItemsCtrl'
+      })
+      .when('/companies', {
+        templateUrl: 'views/companies.html',
+        controller: 'CompaniesCtrl'
+      })
+      .when('/company/:id', {
+        templateUrl: 'views/company.html',
+        controller: 'CompanyCtrl'
+      })
+      .when('/exchange-rates', {
+        templateUrl: 'views/exchange-rates.html',
+        controller: 'ExchangeRatesCtrl'
+      })
+      .otherwise({
+        redirectTo: '/'
+      });
+  });

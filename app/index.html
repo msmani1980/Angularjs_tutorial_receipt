@@ -1,8 +1,8 @@
 <!doctype html>
-<html class="no-js">
-<head>
+<html ng-app="ts5App" class="no-js">
+<head lang="{{language.shortName}}">
     <meta charset="utf-8">
-    <title></title>
+    <title>TS5</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -18,27 +18,33 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 </head>
-<body ng-app="ts5App">
+<body >
 <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
     your browser</a> to improve your experience.</p>
 <![endif]-->
 
-<!-- Add your site or application content here -->
-<div class="header">
-    <div class="navbar" role="navigation">
-        <div class="container-fluid">
-            <a class="navbar-brand" ng-href="#/"><i class="fa fa-th"></i></a>
-            <span class="navbar-brand breadcrumb" ng-bind="breadcrumb">TS5 Dashboard</span>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li><a ng-href="#/"><i class="fa fa-cog"></i></a></li>
-                <li><a ng-href="#/"><i class="fa fa-user"></i></a></li>
-                <li><a ng-href="#/"><i class="fa fa-plane"></i></a></li>
-            </ul>
-        </div>
+<nav class="navbar navbar-default navbar-fixed-top" ng-controller="HeaderMenuCtrl">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="fa fa-bars"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+        <span class="fa fa-th"></span>
+        TS5 Dashboard
+      </a>
     </div>
-</div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><menu-dropdown title="Language Picker" ng-model="languageModel" icon="fa fa-cog"></menu-dropdown></li>
+        <li><menu-dropdown title="User Picker" ng-model="userModel" icon="fa fa-user"></menu-dropdown></li>
+        <li><menu-dropdown title="Company Picker" ng-model="companyModel" icon="fa fa-plane"></menu-dropdown></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
 <div class="container-fluid">
     <div class="main-container" ng-view=""></div>
@@ -70,6 +76,9 @@
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 <script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/ngstorage/ngStorage.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/angular-filter/dist/angular-filter.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <!-- endbower -->
@@ -79,6 +88,13 @@
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/main.js"></script>
 <script src="scripts/controllers/about.js"></script>
+<script src="scripts/controllers/companies.js"></script>
+<script src="scripts/controllers/items.js"></script>
+<script src="scripts/services/companieslistfactory.js"></script>
+<script src="scripts/controllers/company.js"></script>
+<script src="scripts/services/globalmenuservice.js"></script>
+<script src="scripts/directives/menudropdown.js"></script>
+<script src="scripts/controllers/headermenu.js"></script>
 <script src="scripts/controllers/exchange-rates.js"></script>
 <script src="scripts/services/currencyFactory.js"></script>
 <script src="scripts/services/currenciesService.js"></script>
