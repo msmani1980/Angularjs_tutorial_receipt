@@ -20,7 +20,7 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Items',
-            route: 'items',
+            route: 'item-list',
             icon: 'icon-manage-retail-item',
             className: 'dashboard-managemenuItems'
           },
