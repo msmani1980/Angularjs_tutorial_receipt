@@ -43,7 +43,7 @@ angular.module('ts5App')
         if (dailyExchangeRates && dailyExchangeRates.length > 0) {
           deferred.resolve(dailyExchangeRates);
         } else {
-          deferred.resolve(getPreviousExchangeRates())
+          deferred.resolve(getPreviousExchangeRates());
         }
       });
       return deferred.promise;

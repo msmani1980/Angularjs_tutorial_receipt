@@ -38,11 +38,11 @@
           <div class="input-group">
             <span class="input-group-addon">{{currency.currencySymbol}}</span>
             <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
-                   ng-model="fields[currency.currencyCode].paperExchangeRate" currencyId="currency"
+                   ng-model="dailyExchangeRateCurrencies[currency.currencyCode].paperExchangeRate" currencyId="currency"
                    currencyType="paperExchangeRate" placeholder="0.0000" type="text"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
             <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
-                   value="1.0000" disabled="disabled">
+                   value="1.0000" readonly="true">
           </div>
         </div>
 
@@ -50,11 +50,11 @@
           <div class="input-group">
             <span class="input-group-addon">{{currency.currencySymbol}}</span>
             <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
-                   ng-model="fields[currency.currencyCode].coinExchangeRate" currencyId="currency"
+                   ng-model="dailyExchangeRateCurrencies[currency.currencyCode].coinExchangeRate" currencyId="currency"
                    currencyType="coinExchangeRate" placeholder="0.0000" type="text"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
             <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
-                   value="1.0000" disabled="disabled">
+                   value="1.0000" readonly="true">
           </div>
         </div>
       </div>
