@@ -1,11 +1,33 @@
 /* Items */
 
+.edit-form .alert {
+ 
+}
+
+.edit-form .ng-invalid {
+  color:#F00;
+}
+
+.edit-form label span {
+  color:#39C;
+}
+
 /* Edit Controls */
 .edit-controls .btn-group {
   margin:2rem 0;
 }
 .edit-controls .btn-group .btn {
   width:33%;
+}
+
+.btn-group {
+  width:100%;
+  margin-bottom: 2rem;
+}
+
+.edit-form h3 {
+  padding:1rem;
+  background:#EEE;
 }
 
 .view-name {

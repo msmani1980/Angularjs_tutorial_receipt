@@ -1,29 +1,52 @@
-<ng-form ng-controller="ItemCreateCtrl" class="form edit-form">
+<ng-form name="form" ng-controller="ItemCreateCtrl" class="form edit-form">
 
 	<edit-form-header-directive></edit-form-header-directive>
+
+	<div class="btn-group" role="group" aria-label="...">
+
+	 	<a ng-click="scrollTo('item-information')" type="button" class="btn btn-default">
+	  	Item Information
+	  	</a>
+
+	  	<a ng-click="scrollTo('measurements')" type="button" class="btn btn-default">
+	  	Measurements
+	  	</a>
+
+	 	<a ng-click="scrollTo('price-and-tax')"  type="button" class="btn btn-default">
+	  	Price & Tax
+	  	</a>
+
+	</div>
+
+	<h3 id="item-information">Item Information</h3>
 
 	<div class="row">
 
 		<div class="col-xs-12 col-sm-6">
 
 			<div class="form-group">
-				<label for="item-code">Retail Item Code</label>
-				<input ng-min-length="1" ng-model="formData.itemCode" type="text" class="form-control" placeholder="Item012">
+				<label for="item-code">
+					Retail Item Code <span>*</span> 
+					<span ng-show="form.$submitted && !form.itemCode.$valid">Please check this field</span>
+				</label>
+				<input name="itemCode" ng-model="formData.itemCode" required  ng-pattern="regex.alpha" type="text" class="form-control" placeholder="Item012"  />
+
+				
 			</div>
 
 			<div class="form-group">
-				<label for="item-name">Retail Item Name</label>
-				<input ng-model="formData.itemName" type="text" class="form-control" placeholder="Turkey">
+				<label for="item-name">Retail Item Name <span>*</span> </label>
+				<input name="itemName" ng-model="formData.itemName" required  ng-pattern="regex.alpha" type="text" class="form-control" placeholder="My Item" />
 			</div>
 
 			<div class="form-group">
-				<label for="item-onboard-name">POS Display Name</label>
-				<input ng-model="formData.onBoardName" type="text" class="form-control" placeholder="Turkey Delight">
+				<label for="item-onboard-name">POS Display Name <span>*</span> </label>
+				<input name="onBoardName" ng-model="formData.onBoardName" required  ng-pattern="regex.alpha" type="text" class="form-control" placeholder="Awesome New Thing" />
 			</div>
 
 			<div class="form-group">
-				<label for="item-description">Item Description</label>
-				<input ng-model="formData.desc" type="text" class="form-control" placeholder="Turkey">
+				<label for="item-description">Item Description <span>*</span> </label>
+				<input name="desc" ng-model="formData.desc" required ng-pattern="regex.alpha" type="text" class="form-control" placeholder="A simple description..." />
 			</div>
 
 			<div class="form-group">
@@ -40,6 +63,7 @@
 				
 				<input ng-model="formData.isPrintReceipt" type="checkbox" />
 				<label for="item-description">Print Receipt</label>
+
 			</div>
 
 			<div class="row">
@@ -166,7 +190,7 @@
 
 	</div>
 
-	<h3>Measurements</h3>
+	<h3 id="measurements">Measurements</h3>
 
 	<div class="row">
 
@@ -221,11 +245,11 @@
 
 	</div>
 
+	<h3 id="price-and-tax">Price & Tax</h3>
+
 	<div class="row">
 
 		<div class="col-xs-12 col-sm-6">
-
-			<h3>Price & Tax</h3>
 
 			<div class="form-inline">
 

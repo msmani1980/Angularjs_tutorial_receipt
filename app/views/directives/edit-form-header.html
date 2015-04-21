@@ -4,13 +4,13 @@
 
 		<div class="col-xs-6">
 			
-			<h2 class="view-name"> {{ viewName }}</h2>
+			<h2 class="view-name"> {{ viewName }} </h2>
 
 		</div>
 
 		<div class="col-xs-6 text-right">
 
-			<button class="btn"> Cancle </button>
+			<button class="btn"> Cancel </button>
 			
 			<button class="btn btn-success" ng-click="submitForm(formData)"> 
 				<span class="glyphicon glyphicon-check" aria-hidden="true"></span> 
@@ -20,22 +20,6 @@
 		</div>
 
 	</div>
-
-	<!--<div class="btn-group" role="group" aria-label="...">
-
-	  <button type="button" class="btn btn-default">
-	  	Section 1
-	  </button>
-
-	  <button type="button" class="btn btn-default">
-	  	Section 2
-	  </button>
-
-	  <button type="button" class="btn btn-default">
-	  	Section 3
-	  </button>
-
-	</div> -->
 
 	<p> All required fields are marked with a *</p>
 
@@ -55,8 +39,8 @@
 			</div>
 
 			<div class="modal-footer">
-				<a href="#/items" type="button" class="btn btn-default" data-dismiss="modal">Return to List</a>
-				<button type="button" class="btn btn-primary">Add Another</button>
+				<a href="#/item-list" type="button" class="btn btn-default" data-dismiss="modal">Return to List</a>
+				<a href="#/item-create" class="btn btn-primary">Add Another</a>
 			</div>
 
 		</div>
@@ -67,17 +51,29 @@
 
 	<div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
 
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+		<!--<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> -->
 		
 		<h4 id="oh-snap!-you-got-an-error!">
 			We weren't able to create your item!
 			<a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
 		</h4>
 
-		<p>Below are the fields that need to be fixed:</p>
-
 		<ul>
-			<li ng-repeat="error in formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> - 
+
+			<li ng-repeat="error in form.$error.required"> 
+
+				<strong>{{ error.$name }}</strong> is required
+
+			</li>
+			<li ng-repeat="error in form.$error.pattern"> 
+
+				<strong>{{ error.$name }}</strong> is invalid
+				
+			</li>
+
+		</ul>
+
+			<li ng-show="formErrors" ng-repeat="error in formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> - 
 
 				<span ng-switch-when="004">An item already exists with this {{ error.field }}</span>
 
@@ -85,6 +81,7 @@
 
 				<span ng-switch-default> {{ error.value }} </span>	
 			</li>
+
 		</ul>
 
 	</div>
