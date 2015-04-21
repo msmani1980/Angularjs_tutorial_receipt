@@ -40,6 +40,7 @@ angular.module('ts5App')
     });
 
     $scope.saveDailyExchangeRates = function () {
+
       var dummyPayload = {
         'dailyExchangeRate': {
           'exchangeRateDate': '20150420',

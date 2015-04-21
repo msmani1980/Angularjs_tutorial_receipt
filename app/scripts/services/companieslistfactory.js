@@ -18,13 +18,9 @@ angular.module('ts5App')
       getList: {
         method: 'GET',
         headers: {
-          'userId': user.id,
-        },
-      },
-      // Example:
-      // create: {
-      //   method: 'POST',
-      // }
+          'userId': user.id
+        }
+      }
     };
 
     return $resource(url, paramDefaults, actions);
