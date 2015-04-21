@@ -9,30 +9,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-    .controller('ItemsCtrl', function ($scope,$http) {
-
-        // QA (for all dem yummy items)
-        var url = 'https://ec2-52-6-49-188.compute-1.amazonaws.com';
-
-        // Dev environment
-        // var url = 'https://54.87.153.42';
-
-        // Request Object
-        var req = {
-            method: 'GET',
-            url: url + '/api/retail-items1',
-            headers: {
-                'Content-Type': 'application/json',
-                'userId': 1,
-                'companyId': 326
-            }
-        };
+    .controller('ItemsCtrl', function ($scope,$http,itemsFactory) {
 
         // set the list size
         $scope.listSize = 10;
 
-        // Request Items from API
-        $http(req).success(function(data) {
+        itemsFactory.getList().then(function (data) {
 
             $scope.items = data.retailItems;
 
@@ -42,10 +24,6 @@ angular.module('ts5App')
 
             $scope.pagination = pagination;
 
-
-        }).error(function() {
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
         });
 
         // Watch the listSize model change (items per page dropdown for pagination)

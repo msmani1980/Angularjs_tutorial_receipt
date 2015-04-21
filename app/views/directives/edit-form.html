@@ -1,0 +1,23 @@
+<ng-form name="{{ formName }}" class="form form-responsive">
+
+	<edit-form-header-directive></edit-form-header-directive>
+
+	<div class="form-group" ng-repeat="(key,field) in fields">
+
+		<div ng-switch on="field.type">
+
+			<label>{{ field.label }}</label>
+
+			<select ng-switch-when="select" data-ng-model="field.value">
+				<option ng-repeat="(value,label) in field.options" value="{{ value }}">{{ label }}</option>
+			</select>
+
+			<button ng-switch-when="button" class="btn btn-prmary" type="{{ field.type }}">{{ field.value }}</button>
+
+			<input ng-switch-default data-ng-model="field.value" class="form-control" type="{{ field.type }}" value="{{ field.value }}" />
+
+		</div>
+
+	</div>
+
+</ng-form>

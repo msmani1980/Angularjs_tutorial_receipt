@@ -1,0 +1,125 @@
+{
+   "retailItem":{
+      "startDate":"20150515",
+      "endDate":"20150715",
+      "createdBy":1,
+      "createdOn":"2015-04-20 15:18:06.579407",
+      "updatedBy":null,
+      "updatedOn":null,
+      "itemName":"TURKery1",
+      "itemCode":"turkey1",
+      "stockOwnerCode":null,
+      "onBoardName":"Turkey One",
+      "sellingPoint":"yer a turkey",
+      "categoryId":179,
+      "desc":"gobble",
+      "itemTypeId":1,
+      "groupId":null,
+      "length":"10.00",
+      "height":"10.00",
+      "width":"10.00",
+      "weight":"10.00",
+      "volume":"10.00",
+      "dimensionType":"13",
+      "volumeType":"8",
+      "weightType":"6",
+      "companyId":326,
+      "isPrintReceipt":true,
+      "keywords":"best turkey ever",
+      "mfgPartNumber":"xxxx142115",
+      "skuNumber":"sku12455",
+      "qrCodeImgUrl":"https://s3.amazonaws.com/ts5-cat-images/qrcode-6d250caa-46f4-4ca3-8b80-213b81d6c389.jpeg",
+      "qrCodeValue":"this is a qr",
+      "images":[
+
+      ],
+      "taxes":[
+         {
+            "id":85,
+            "companyTaxId":16,
+            "itemId":345,
+            "itemTaxType":"Gross"
+         }
+      ],
+      "tags":[
+         {
+            "id":59,
+            "tagId":13,
+            "itemId":345
+         },
+         {
+            "id":60,
+            "tagId":15,
+            "itemId":345
+         }
+      ],
+      "allergens":[
+         {
+            "id":84,
+            "allergenId":1,
+            "itemId":345
+         },
+         {
+            "id":85,
+            "allergenId":3,
+            "itemId":345
+         },
+         {
+            "id":86,
+            "allergenId":4,
+            "itemId":345
+         }
+      ],
+      "characteristics":[
+         {
+            "id":352,
+            "characteristicId":1,
+            "itemId":345
+         },
+         {
+            "id":351,
+            "characteristicId":2,
+            "itemId":345
+         },
+         {
+            "id":353,
+            "characteristicId":5,
+            "itemId":345
+         }
+      ],
+      "prices":[
+         {
+            "endDate":"2015-07-15 00:00:00.0",
+            "startDate":"2015-05-15 00:00:00.0",
+            "taxIs":"Included",
+            "typeId":1,
+            "id":427,
+            "itemId":345,
+            "priceCurrencies":[
+
+            ],
+            "stationExceptions":[
+
+            ]
+         }
+      ],
+      "substitutions":[
+         "339",
+         "338"
+      ],
+      "recommendations":[
+         "334",
+         "338"
+      ],
+      "globalTradeNumbers":[
+         {
+            "id":145,
+            "itemId":345,
+            "type":"UPC",
+            "value":"11111111"
+         }
+      ],
+      "id":345,
+      "linkUrl":null
+   }
+}

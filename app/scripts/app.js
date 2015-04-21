@@ -21,7 +21,8 @@ angular
     'ngTouch',
     'ngStorage',
     'ui.bootstrap',
-    'angular.filter'
+    'angular.filter',
+    'dynform'
   ])
   .constant('baseUrl', 'https://ec2-52-6-49-188.compute-1.amazonaws.com')
   .config(function ($routeProvider) {
@@ -49,6 +50,10 @@ angular
         templateUrl: 'views/companies.html',
         controller: 'CompaniesCtrl'
       })
+      .when('/create-item', {
+        templateUrl: 'views/create-item.html',
+        controller: 'CreateItemCtrl'
+      })
       .when('/company/:id', {
         templateUrl: 'views/company.html',
         controller: 'CompanyCtrl'
@@ -57,7 +62,14 @@ angular
         templateUrl: 'views/exchange-rates.html',
         controller: 'ExchangeRatesCtrl'
       })
+      .when('/item-create', {
+        templateUrl: 'views/item-create.html',
+        controller: 'ItemCreateCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
+
+
+
   });
