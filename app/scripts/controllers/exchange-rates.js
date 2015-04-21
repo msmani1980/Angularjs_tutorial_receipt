@@ -41,49 +41,49 @@ angular.module('ts5App')
 
     $scope.saveDailyExchangeRates = function () {
       var dummyPayload = {
-        "dailyExchangeRate": {
-          "exchangeRateDate": "20150420",
-          "isSubmitted": false,
-          "chCompanyId": "362",
-          "retailCompanyId": "326",
-          "chBaseCurrencyId": "8",
-          "retailBaseCurrencyId": "1",
-          "dailyExchangeRateCurrencies": [{
-            "id": "206",
-            "bankExchangeRate": null,
-            "coinExchangeRate": "1.0000",
-            "paperExchangeRate": "1.0000",
-            "retailCompanyCurrencyId": "168"
+        'dailyExchangeRate': {
+          'exchangeRateDate': '20150420',
+          'isSubmitted': false,
+          'chCompanyId': '362',
+          'retailCompanyId': '326',
+          'chBaseCurrencyId': '8',
+          'retailBaseCurrencyId': '1',
+          'dailyExchangeRateCurrencies': [{
+            'id': '206',
+            'bankExchangeRate': null,
+            'coinExchangeRate': '1.0000',
+            'paperExchangeRate': '1.0000',
+            'retailCompanyCurrencyId': '168'
           }, {
-            "id": "207",
-            "bankExchangeRate": null,
-            "coinExchangeRate": "1.8285",
-            "paperExchangeRate": "1.6157",
-            "retailCompanyCurrencyId": "174"
+            'id': '207',
+            'bankExchangeRate': null,
+            'coinExchangeRate': '1.8285',
+            'paperExchangeRate': '1.6157',
+            'retailCompanyCurrencyId': '174'
           }, {
-            "id": "208",
-            "bankExchangeRate": null,
-            "coinExchangeRate": "1.6777",
-            "paperExchangeRate": "1.1136",
-            "retailCompanyCurrencyId": "175"
+            'id': '208',
+            'bankExchangeRate': null,
+            'coinExchangeRate': '1.6777',
+            'paperExchangeRate': '1.1136',
+            'retailCompanyCurrencyId': '175'
           }, {
-            "id": "209",
-            "bankExchangeRate": null,
-            "coinExchangeRate": "1.0062",
-            "paperExchangeRate": "1.7230",
-            "retailCompanyCurrencyId": "177"
+            'id': '209',
+            'bankExchangeRate': null,
+            'coinExchangeRate': '1.0062',
+            'paperExchangeRate': '1.7230',
+            'retailCompanyCurrencyId': '177'
           }, {
-            "id": "210",
-            "bankExchangeRate": null,
-            "coinExchangeRate": "1.0000",
-            "paperExchangeRate": "1.0000",
-            "retailCompanyCurrencyId": "179"
+            'id': '210',
+            'bankExchangeRate': null,
+            'coinExchangeRate': '1.0000',
+            'paperExchangeRate': '1.0000',
+            'retailCompanyCurrencyId': '179'
           }, {
-            "id": "211",
-            "bankExchangeRate": null,
-            "coinExchangeRate": "1.1193",
-            "paperExchangeRate": "1.1234",
-            "retailCompanyCurrencyId": "185"
+            'id': '211',
+            'bankExchangeRate': null,
+            'coinExchangeRate': '1.1193',
+            'paperExchangeRate': '1.1234',
+            'retailCompanyCurrencyId': '185'
           }]
         }
       };
