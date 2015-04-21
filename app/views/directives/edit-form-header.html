@@ -79,6 +79,8 @@
 		<ul>
 			<li ng-repeat="error in formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> - 
 
+				<span ng-switch-when="004">An item already exists with this {{ error.field }}</span>
+
 				<span ng-switch-when="000">Field can't be empty</span>
 
 				<span ng-switch-default> {{ error.value }} </span>	

@@ -25,9 +25,6 @@ angular.module('ts5App')
           	// forcing price right now, FIX ME
           	$scope.formData.prices = [{startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',}];
 
-
-          	console.log($scope.formData);
-
           	// Request Object
 			var req = {
 			  method: 'POST',
