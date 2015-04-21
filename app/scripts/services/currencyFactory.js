@@ -36,6 +36,10 @@ angular.module('ts5App')
       return dailyExchangeRatesService.getPreviousExchangeRates();
     };
 
+    var saveDailyExchangeRates = function (payload) {
+      return dailyExchangeRatesService.saveDailyExchangeRates(payload);
+    };
+
     var getDailyExchangeRates = function (cashierDate) {
       var deferred = $q.defer();
 
@@ -53,7 +57,8 @@ angular.module('ts5App')
       getCompanyBaseCurrency: getCompanyBaseCurrency,
       getCompanyCurrencies: getCompanyCurrencies,
       getDailyExchangeRates: getDailyExchangeRates,
-      getPreviousExchangeRates: getPreviousExchangeRates
+      getPreviousExchangeRates: getPreviousExchangeRates,
+      saveDailyExchangeRates: saveDailyExchangeRates
     };
 
   });

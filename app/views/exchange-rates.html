@@ -43,6 +43,7 @@
                    currencyType="paperExchangeRate" placeholder="0.0000" type="currency"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
             <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
+                   ng-model="currenciesFields[currency.currencyCode].paperExchangeRate"
                    value="1.0000" readonly="true">
           </div>
         </div>
@@ -55,6 +56,7 @@
                    currencyType="coinExchangeRate" placeholder="0.0000" type="currency"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
             <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
+                   ng-model="currenciesFields[currency.currencyCode].coinExchangeRate"
                    value="1.0000" readonly="true">
           </div>
         </div>

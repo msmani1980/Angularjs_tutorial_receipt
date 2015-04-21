@@ -27,6 +27,7 @@ describe('Factory: currencyFactory', function () {
     spyOn(currencies, 'getCompanyCurrencies').and.returnValue(deferred.promise);
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates').and.returnValue(dailyExchangeDeferred.promise);
     spyOn(dailyExchangeRatesService, 'getPreviousExchangeRates').and.returnValue(previousExchangeDeferred.promise);
+    spyOn(dailyExchangeRatesService, 'saveDailyExchangeRates').and.returnValue(deferred.promise);
     currencyFactory = _currencyFactory_;
   }));
 
@@ -96,6 +97,14 @@ describe('Factory: currencyFactory', function () {
       dailyExchangeDeferred.resolve(null);
       previousExchangeDeferred.resolve([{previousCurrencyCode: 'fakeCurrencyCode'}]);
       scope.$digest();
+    });
+  });
+
+  describe('Save daily Exchange Rates', function () {
+    it('should call saveDailyExchangeRates from dailyExchangeRatesService', function () {
+      var fakePayload = {};
+      currencyFactory.saveDailyExchangeRates(fakePayload);
+      expect(dailyExchangeRatesService.saveDailyExchangeRates).toHaveBeenCalledWith(fakePayload);
     });
   });
 

@@ -1,5 +1,5 @@
 'use strict';
-
+/*global moment:false */
 /**
  * @ngdoc function
  * @name ts5App.controller:ExchangeRatesCtrl
@@ -23,78 +23,82 @@ angular.module('ts5App')
     $scope.currentCompany = getCompany(374);
     $scope.cashiersDateField = new moment().format('L');
     $scope.currenciesFields = {};
-    $scope.payload = {
-      'dailyExchangeRate': {
-        isSubmitted: false,
-        'chCompanyId': '362',
-        'chBaseCurrencyId': '8',
-        'retailCompanyId': getCompany(374).id,
-        'retailBaseCurrencyId': getCompany(374).baseCurrencyId,
-        'currenciesFields': []
-      }
-    };
+
+    function formatDateForAPI(cashiersDate) {
+      return moment(cashiersDate, 'L').format('YYYYMMDD').toString();
+    }
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
-      var formattedDateForAPI = moment(cashiersDate, 'L').format('YYYYMMDD').toString();
-      $scope.payload.dailyExchangeRate.exchangeRateDate = formattedDateForAPI;
+      var formattedDateForAPI = formatDateForAPI(cashiersDate);
       currencyFactory.getDailyExchangeRates(formattedDateForAPI).then(function (dailyExchangeRates) {
         $scope.dailyExchangeRates = dailyExchangeRates;
       });
     });
 
+    function clearExchangeRateCurrencies() {
+      $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies = [];
+    }
+
+    function serializeExchangeRate(currency) {
+      var coinExchangeRate = '1.0000',
+        paperExchangeRate = '1.0000';
+
+      if ($scope.currenciesFields[currency.currencyCode]) {
+        coinExchangeRate = $scope.currenciesFields[currency.currencyCode].coinExchangeRate;
+        paperExchangeRate = $scope.currenciesFields[currency.currencyCode].paperExchangeRate;
+      }
+
+      return {
+        retailCompanyCurrencyId: currency.id,
+        coinExchangeRate: coinExchangeRate,
+        paperExchangeRate: paperExchangeRate
+      };
+    }
+
+    function resolvePayloadDependencies() {
+      clearExchangeRateCurrencies();
+      angular.forEach($scope.companyCurrencies, function (currency) {
+        if ($scope.currenciesFields[currency.currencyCode]) {
+          var companyCurrency = serializeExchangeRate(currency);
+          $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.push(companyCurrency);
+        }
+      });
+    }
+
+    function createPayload(shouldSubmit) {
+      $scope.payload = {
+        dailyExchangeRate: {
+          isSubmitted: shouldSubmit || false,
+          exchangeRateDate: formatDateForAPI($scope.cashiersDateField),
+          chCompanyId: '362',
+          chBaseCurrencyId: '8',
+          retailCompanyId: getCompany(374).id,
+          retailBaseCurrencyId: getCompany(374).baseCurrencyId,
+          dailyExchangeRateCurrencies: []
+        }
+      };
+      resolvePayloadDependencies();
+    }
+
+    $scope.saveDailyExchangeRates = function (shouldSubmit) {
+      createPayload(shouldSubmit);
+      currencyFactory.saveDailyExchangeRates($scope.payload);
+    };
+
+    $scope.saveAndSubmitDailyExchangeRates = function () {
+      $scope.saveDailyExchangeRates(true);
+    };
+
     currencyFactory.getCompanyBaseCurrency().then(function (companyBaseCurrency) {
       $scope.companyBaseCurrency = companyBaseCurrency;
+      $scope.currenciesFields[$scope.companyBaseCurrency.currencyCode] = {
+        coinExchangeRate: '1.0000',
+        paperExchangeRate: '1.0000'
+      };
     });
 
     currencyFactory.getCompanyCurrencies().then(function (companyCurrency) {
       $scope.companyCurrencies = companyCurrency;
     });
 
-    $scope.saveDailyExchangeRates = function () {
-
-      var dummyPayload = {
-        'dailyExchangeRate': {
-          'dailyExchangeRateCurrencies': [{
-            'id': '206',
-            'bankExchangeRate': null,
-            'coinExchangeRate': '1.0000',
-            'paperExchangeRate': '1.0000',
-            'retailCompanyCurrencyId': '168'
-          }, {
-            'id': '207',
-            'bankExchangeRate': null,
-            'coinExchangeRate': '1.8285',
-            'paperExchangeRate': '1.6157',
-            'retailCompanyCurrencyId': '174'
-          }]
-        }
-      };
-
-      angular.forEach($scope.companyCurrencies, function (currency) {
-
-        companyId: 374
-        countries: Array[1]
-        currencyCode: "GBP"
-        currencyId: 8
-        currencyName: "British Pound"
-        currencySymbol: "£"
-        denominations: Array[0]
-        endDate: "2050-12-31"
-        eposDisplayOrder: 1
-        id: 203
-        isOperatedCurrency: true
-        startDate: "2015-04-14"
-        console.log('currency', currency);
-        //$scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies;
-      });
-      console.log('currenciesFields', $scope.currenciesFields);
-      console.log('payload', $scope.payload);
-    };
-
-    $scope.saveAndSubmitDailyExchangeRates = function () {
-      $scope.payload.dailyExchangeRate.isSubmitted = true;
-      $scope.saveDailyExchangeRates();
-    };
-
-  })
-;
+  });

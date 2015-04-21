@@ -48,4 +48,33 @@ describe('Controller: ExchangeRatesCtrl', function () {
     scope.$apply();
     expect(currencyFactory.getDailyExchangeRates).toHaveBeenCalled();
   });
+
+
+  describe('Save daily exchange rates', function () {
+    it('should generate the payload with is submitted false', function () {
+      ExchangeRatesCtrl = createController();
+      scope.$apply();
+      scope.saveDailyExchangeRates();
+      expect(scope.payload.dailyExchangeRate.isSubmitted).toBe(false);
+    });
+
+    it('should create the payload with the expected currencies', function () {
+      ExchangeRatesCtrl = createController();
+      scope.$apply();
+
+      scope.companyCurrencies = [{
+        currencyCode: 'GBP',
+        currencyId: 8,
+        id: 203
+      }];
+      scope.currenciesFields = {
+        GBP: {
+          coinExchangeRate: 'asdf',
+          paperExchangeRate: 'asdf'
+        }
+      };
+      scope.saveDailyExchangeRates();
+      expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.length).toBe(1);
+    });
+  });
 });
