@@ -19,14 +19,25 @@ angular.module('ts5App')
       };
     };
 
-    $scope.breadcrumb = 'Cash Management / Daily Exchange Rates';
-    $scope.currentCompany = getCompany(326);
+    $scope.breadcrumb = 'Daily Exchange Rates';
+    $scope.currentCompany = getCompany(374);
     $scope.cashiersDateField = new moment().format('L');
-    $scope.dailyExchangeRateCurrencies = {};
+    $scope.currenciesFields = {};
+    $scope.payload = {
+      'dailyExchangeRate': {
+        isSubmitted: false,
+        'chCompanyId': '362',
+        'chBaseCurrencyId': '8',
+        'retailCompanyId': getCompany(374).id,
+        'retailBaseCurrencyId': getCompany(374).baseCurrencyId,
+        'currenciesFields': []
+      }
+    };
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
-      var searchDate = moment(cashiersDate, 'L').format('YYYYMMDD').toString();
-      currencyFactory.getDailyExchangeRates(searchDate).then(function (dailyExchangeRates) {
+      var formattedDateForAPI = moment(cashiersDate, 'L').format('YYYYMMDD').toString();
+      $scope.payload.dailyExchangeRate.exchangeRateDate = formattedDateForAPI;
+      currencyFactory.getDailyExchangeRates(formattedDateForAPI).then(function (dailyExchangeRates) {
         $scope.dailyExchangeRates = dailyExchangeRates;
       });
     });
@@ -43,12 +54,6 @@ angular.module('ts5App')
 
       var dummyPayload = {
         'dailyExchangeRate': {
-          'exchangeRateDate': '20150420',
-          'isSubmitted': false,
-          'chCompanyId': '362',
-          'retailCompanyId': '326',
-          'chBaseCurrencyId': '8',
-          'retailBaseCurrencyId': '1',
           'dailyExchangeRateCurrencies': [{
             'id': '206',
             'bankExchangeRate': null,
@@ -61,39 +66,35 @@ angular.module('ts5App')
             'coinExchangeRate': '1.8285',
             'paperExchangeRate': '1.6157',
             'retailCompanyCurrencyId': '174'
-          }, {
-            'id': '208',
-            'bankExchangeRate': null,
-            'coinExchangeRate': '1.6777',
-            'paperExchangeRate': '1.1136',
-            'retailCompanyCurrencyId': '175'
-          }, {
-            'id': '209',
-            'bankExchangeRate': null,
-            'coinExchangeRate': '1.0062',
-            'paperExchangeRate': '1.7230',
-            'retailCompanyCurrencyId': '177'
-          }, {
-            'id': '210',
-            'bankExchangeRate': null,
-            'coinExchangeRate': '1.0000',
-            'paperExchangeRate': '1.0000',
-            'retailCompanyCurrencyId': '179'
-          }, {
-            'id': '211',
-            'bankExchangeRate': null,
-            'coinExchangeRate': '1.1193',
-            'paperExchangeRate': '1.1234',
-            'retailCompanyCurrencyId': '185'
           }]
         }
       };
-      console.log($scope.dailyExchangeRateCurrencies);
+
+      angular.forEach($scope.companyCurrencies, function (currency) {
+
+        companyId: 374
+        countries: Array[1]
+        currencyCode: "GBP"
+        currencyId: 8
+        currencyName: "British Pound"
+        currencySymbol: "£"
+        denominations: Array[0]
+        endDate: "2050-12-31"
+        eposDisplayOrder: 1
+        id: 203
+        isOperatedCurrency: true
+        startDate: "2015-04-14"
+        console.log('currency', currency);
+        //$scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies;
+      });
+      console.log('currenciesFields', $scope.currenciesFields);
+      console.log('payload', $scope.payload);
     };
 
     $scope.saveAndSubmitDailyExchangeRates = function () {
-      $scope.fields.isSubmitted = true;
+      $scope.payload.dailyExchangeRate.isSubmitted = true;
       $scope.saveDailyExchangeRates();
     };
 
-  });
+  })
+;

@@ -45,11 +45,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
 
   it('should get the DailyExchangeRates from currencyFactory', function () {
     ExchangeRatesCtrl = createController();
+    scope.$apply();
     expect(currencyFactory.getDailyExchangeRates).toHaveBeenCalled();
-  });
-
-  it('should get the PreviousExchangeRates from currencyFactory', function () {
-    ExchangeRatesCtrl = createController();
-    expect(currencyFactory.getPreviousExchangeRates).toHaveBeenCalled();
   });
 });
