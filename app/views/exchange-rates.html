@@ -42,7 +42,7 @@
                    required ng-pattern="regexp.decimal"
                    ng-model="currenciesFields[currency.currencyCode].paperExchangeRate"
                    name="{{currency.currencyCode}}paperExchangeRate"
-                   currencyType="paperExchangeRate" placeholder="0.0000" type="currency"
+                   currencyType="paperExchangeRate" placeholder="0.0000"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
             <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
                    ng-model="currenciesFields[currency.currencyCode].paperExchangeRate"
@@ -58,7 +58,8 @@
             <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
                    required ng-pattern="regexp.decimal"
                    ng-model="currenciesFields[currency.currencyCode].coinExchangeRate"
-                   currencyType="coinExchangeRate" placeholder="0.0000" type="currency"
+                   name="{{currency.currencyCode}}coinExchangeRate"
+                   currencyType="coinExchangeRate" placeholder="0.0000"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
             <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
                    ng-model="currenciesFields[currency.currencyCode].coinExchangeRate"
