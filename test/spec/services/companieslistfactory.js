@@ -11,8 +11,4 @@ describe('Service: companiesListFactory', function () {
     companiesListFactory = _companiesListFactory_;
   }));
 
-  it('should do something', function () {
-    expect(!!companiesListFactory).toBe(true);
-  });
-
 });
