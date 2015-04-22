@@ -1,18 +1,12 @@
 /* Items */
 
-.edit-form .alert {
- 
-}
-
-.edit-form .ng-invalid {
-  color:#F00;
-}
-
-.edit-form label span {
-  color:#39C;
-}
 
 /* Edit Controls */
+
+.view-name {
+  margin:0;  
+}
+
 .edit-controls .btn-group {
   margin:2rem 0;
 }
@@ -20,7 +14,7 @@
   width:33%;
 }
 
-.btn-group {
+.form-nav.btn-group {
   width:100%;
   margin-bottom: 2rem;
 }
@@ -28,10 +22,6 @@
 .edit-form h3 {
   padding:1rem;
   background:#EEE;
-}
-
-.view-name {
-  margin:0;  
 }
 
 .form-inline label {

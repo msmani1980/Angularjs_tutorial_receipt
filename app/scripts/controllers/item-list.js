@@ -3,13 +3,13 @@
 /**
  * @author Max Felker <max@bigroomstudios.com>
  * @ngdoc function
- * @name ts5App.controller:ItemsCtrl
+ * @name ts5App.controller:ItemListCtrl
  * @description
  * # ItemsCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-    .controller('ItemsCtrl', function ($scope,$http,itemsFactory) {
+    .controller('ItemListCtrl', function ($scope,$http,itemsFactory) {
 
         // set the list size
         $scope.listSize = 10;
