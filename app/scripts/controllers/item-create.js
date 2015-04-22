@@ -8,15 +8,15 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,$http,baseUrl,$location,$anchorScroll,regexp) {
-    
+  .controller('ItemCreateCtrl', function ($scope,$http,baseUrl,$location,$anchorScroll) {
+
     	// View Name
   		$scope.viewName = 'Create Item';
 
   		// Form Data to be passed to API
   		$scope.formData = {};
 
-        // Submit form 
+        // Submit form
 
         $scope.submitForm = function(formData) {
 
@@ -57,7 +57,7 @@ angular.module('ts5App')
 			}).error(function(data) {
 
 				$scope.displayError = true;
-			  
+
 			  	$scope.formErrors = data;
 
 			});
