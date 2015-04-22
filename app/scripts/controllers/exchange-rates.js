@@ -57,7 +57,6 @@ angular.module('ts5App')
     }
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
-      $scope.currenciesFields = {};
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       currencyFactory.getDailyExchangeRates(formattedDateForAPI).then(function (dailyExchangeRates) {
         $scope.dailyExchangeRates = dailyExchangeRates[0] || {};
@@ -65,6 +64,7 @@ angular.module('ts5App')
     });
 
     $scope.$watchGroup(['companyBaseCurrency', 'dailyExchangeRates'], function () {
+      $scope.currenciesFields = {};
       setBaseExchangeRateModel();
       setExchangeRatesModel();
     });
