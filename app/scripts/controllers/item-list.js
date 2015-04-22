@@ -11,14 +11,18 @@
 angular.module('ts5App')
     .controller('ItemListCtrl', function ($scope,$http,itemsFactory) {
 
+        $http.defaults.headers.common['userId'] = 1;
+        $http.defaults.headers.common['companyId'] = 326;
+
         // set the list size
         $scope.listSize = 10;
 
-        itemsFactory.getList().then(function (data) {
+        // Get a list from the API
+        var itemList = itemsFactory.query(function () {
 
-            $scope.items = data.retailItems;
+            $scope.items = itemList.retailItems;
 
-            $scope.itemsCount = data.meta.count;
+            $scope.itemsCount = itemList.meta.count;
 
             var pagination =  generatePagniation($scope.itemsCount,$scope.listSize);
 
@@ -40,13 +44,11 @@ angular.module('ts5App')
 
             var pageCount = Math.ceil( itemCount / itemsPerPage );
 
-            var pages = [];
+            var pages = [0];
 
             for(var i = 1; i < pageCount; i++) {
                 pages.push(i);
             }
-
-            console.log(pages);
 
             return {
                 pages: pages,

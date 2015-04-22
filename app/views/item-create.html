@@ -53,7 +53,7 @@
 							<div class="input-group-addon">  
 								<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 
 							</div> 
-							<input ng-model="formData.startDate" type="text" class="form-control" value="20150515" />
+							<input name="startDate" required ng-model="formData.startDate" type="text" class="form-control" value="20150515" />
 						</div>
 					</div>
 
@@ -67,7 +67,7 @@
 							<div class="input-group-addon">  
 								<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 
 							</div> 
-							<input ng-model="formData.endDate" type="text" class="form-control" value="20150715" />
+							<input name="endDate "required ng-model="formData.endDate" type="text" class="form-control" value="20150715" />
 						</div>
 					</div>
 
@@ -77,14 +77,16 @@
 
 			<div class="form-group">
 				<label for="item-sales-category">Sales Category</label>
-				<select ng-model="formData.categoryId" class="form-control">
+				<select name="categoryId" required ng-model="formData.categoryId" class="form-control">
 					<option value="179">Drinks</option>
 				</select>
 			</div>
 
+			<input-select label="Item Type" name="itemTypeId" required="true" options="[1:'Item Type 1',2: 'Item Type 2']"></input-select>
+
 			<div class="form-group">
 				<label for="item-type">Item Type</label>
-				<select ng-model="formData.itemTypeId" class="form-control">
+				<select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control">
 					<option value="1">Item Type 1</option>
 					<option value="2">Item Type 2</option>
 				</select>

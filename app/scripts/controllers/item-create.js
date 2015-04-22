@@ -8,8 +8,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,$http,baseUrl,$location,$anchorScroll,regexp) {
+  .controller('ItemCreateCtrl', function ($scope,$http,baseUrl,$location,$anchorScroll,itemsFactory) {
     
+  		$http.defaults.headers.common['userId'] = 1;
+    	$http.defaults.headers.common['companyId'] = 326;
+
     	// View Name
   		$scope.viewName = 'Create Item';
 
@@ -35,34 +38,25 @@ angular.module('ts5App')
           	// forcing price right now, FIX ME
           	$scope.formData.prices = [{startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',}];
 
-          	// Request Objec, FIX ME
-			var req = {
-			  method: 'POST',
-			  url: baseUrl + '/api/retail-items1',
-			  headers: {
-			      'Content-Type': 'application/json',
-			      'userId': 1,
-			      'companyId': 326
-			  },
-			  data: {
-			    retailItem: $scope.formData
-			  }
-			};
+          	var newItem = {
+          		retailItem: formData
+          	};
 
-			// Post Data to server
-			$http(req).success(function() {
+          	// Create newItem in API
+	      	itemsFactory.save(newItem,function () {
 
-				angular.element('#create-success').modal('show');
+	            angular.element('#create-success').modal('show');
 
-			}).error(function(data) {
+	        // API error
+	        }, function(error){
 
-				$scope.displayError = true;
+	        	$scope.displayError = true;
 			  
-			  	$scope.formErrors = data;
+			  	$scope.formErrors = error.data;
 
-			});
+	        });
 
-          };
+        };
 
         // TODO MOVE ME GLOBAL
   		$scope.scrollTo = function(id) {
