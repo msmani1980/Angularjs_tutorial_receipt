@@ -1,6 +1,6 @@
 <h1 class="ng-scope">{{breadcrumb}}</h1>
 <div class="panel panel-default">
-  <form ng-submit="saveDailyExchangeRates()">
+  <ng-form name="dailyExchangeRatesForm" ng-submit="saveDailyExchangeRates()">
 
     <div class="panel-heading">
       <div class="form-horizontal">
@@ -39,19 +39,24 @@
           <div class="input-group">
             <span class="input-group-addon">{{currency.currencySymbol}}</span>
             <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
+                   required ng-pattern="regexp.decimal"
                    ng-model="currenciesFields[currency.currencyCode].paperExchangeRate"
+                   name="{{currency.currencyCode}}paperExchangeRate"
                    currencyType="paperExchangeRate" placeholder="0.0000" type="currency"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
             <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
                    ng-model="currenciesFields[currency.currencyCode].paperExchangeRate"
                    value="1.0000" readonly="true">
           </div>
+          <span
+            ng-show="dailyExchangeRatesForm.{{currency.currencyCode}}paperExchangeRate.$dirty && dailyExchangeRatesForm.{{currency.currencyCode}}paperExchangeRate.$invalid">!</span>
         </div>
 
         <div class="col-sm-5 col-xs-5">
           <div class="input-group">
             <span class="input-group-addon">{{currency.currencySymbol}}</span>
             <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
+                   required ng-pattern="regexp.decimal"
                    ng-model="currenciesFields[currency.currencyCode].coinExchangeRate"
                    currencyType="coinExchangeRate" placeholder="0.0000" type="currency"
                    class="form-control" aria-label="Amount (to the nearest dollar)">
@@ -67,6 +72,6 @@
       <input class="btn btn-default" type="submit" value="Save"/>
       <input class="btn btn-primary" type="button" value="Submit" ng-click="saveDailyExchangeRates(true)"/>
     </div>
-  </form>
+  </ng-form>
 
 </div>
