@@ -28,10 +28,42 @@ angular.module('ts5App')
       return moment(cashiersDate, 'L').format('YYYYMMDD').toString();
     }
 
+    function getExchangeRateFromCompanyCurrencies(currenciesArray, currencyId) {
+      return currenciesArray.filter(function (currencyItem) {
+        return currencyItem.retailCompanyCurrencyId === currencyId;
+      })[0];
+    }
+
+    function serializeCoinAndPaperExchangeRate(currencyCode, coinExchangeRate, paperExchangeRate) {
+      $scope.currenciesFields[currencyCode] = {
+        coinExchangeRate: coinExchangeRate,
+        paperExchangeRate: paperExchangeRate
+      };
+    }
+
+    function setExchangeRatesModel(dailyExchangeRates) {
+      angular.forEach($scope.companyCurrencies, function (companyCurrency) {
+        if (dailyExchangeRates && angular.isArray(dailyExchangeRates.dailyExchangeRateCurrencies)) {
+          var exchangeRate = getExchangeRateFromCompanyCurrencies(dailyExchangeRates.dailyExchangeRateCurrencies, companyCurrency.id)
+
+          serializeCoinAndPaperExchangeRate(companyCurrency.currencyCode, exchangeRate.coinExchangeRate, exchangeRate.paperExchangeRate);
+        }
+      });
+    }
+
+    function cleanAndSetBaseRateModel() {
+      $scope.currenciesFields = {};
+      if ($scope.companyBaseCurrency) {
+        serializeCoinAndPaperExchangeRate($scope.companyBaseCurrency.currencyCode, '1.0000', '1.0000');
+      }
+    }
+
     $scope.$watch('cashiersDateField', function (cashiersDate) {
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
+      cleanAndSetBaseRateModel();
       currencyFactory.getDailyExchangeRates(formattedDateForAPI).then(function (dailyExchangeRates) {
-        $scope.dailyExchangeRates = dailyExchangeRates;
+        $scope.dailyExchangeRates = dailyExchangeRates[0] || {};
+        setExchangeRatesModel($scope.dailyExchangeRates);
       });
     });
 
@@ -68,6 +100,7 @@ angular.module('ts5App')
     function createPayload(shouldSubmit) {
       $scope.payload = {
         dailyExchangeRate: {
+          id: $scope.dailyExchangeRates.id || null,
           isSubmitted: shouldSubmit || false,
           exchangeRateDate: formatDateForAPI($scope.cashiersDateField),
           chCompanyId: '362',
@@ -91,10 +124,7 @@ angular.module('ts5App')
 
     currencyFactory.getCompanyBaseCurrency().then(function (companyBaseCurrency) {
       $scope.companyBaseCurrency = companyBaseCurrency;
-      $scope.currenciesFields[$scope.companyBaseCurrency.currencyCode] = {
-        coinExchangeRate: '1.0000',
-        paperExchangeRate: '1.0000'
-      };
+      cleanAndSetBaseRateModel();
     });
 
     currencyFactory.getCompanyCurrencies().then(function (companyCurrency) {

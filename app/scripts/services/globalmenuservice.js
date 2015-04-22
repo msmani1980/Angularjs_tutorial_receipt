@@ -14,16 +14,16 @@ angular.module('ts5App')
     var userModel = {
       '1': {
         id: 1,
-        name: 'Ali Karbassi',
+        name: 'Ali Karbassi'
       },
       '2': {
         id: 2,
-        name: 'Rodrigo Curiel',
+        name: 'Rodrigo Curiel'
       },
       '3': {
         id: 3,
-        name: 'Max Felker',
-      },
+        name: 'Max Felker'
+      }
     };
 
     // TODO: Add more if need be.
@@ -43,23 +43,23 @@ angular.module('ts5App')
         id: 3,
         name: 'German',
         shortName: 'de'
-      },
+      }
     };
 
     // TODO: Should pull from a factory at some point.
     var companyModel = {
       '1': {
         id: 1,
-        name: 'EasyJet',
+        name: 'EasyJet'
       },
       '2': {
         id: 2,
-        name: 'Frontier',
+        name: 'Frontier'
       },
       '3': {
         id: 3,
-        name: 'JetBlue',
-      },
+        name: 'JetBlue'
+      }
     };
 
     var defaults = {};
@@ -120,17 +120,17 @@ angular.module('ts5App')
       'user': {
         'get': getUser,
         'set': setUser,
-        'getModel': userModel,
+        'getModel': userModel
       },
       'language': {
         'get': getLanguage,
         'set': setLanguage,
-        'getModel': languageModel,
+        'getModel': languageModel
       },
       'company': {
         'get': getCompany,
         'set': setCompany,
-        'getModel': companyModel,
-      },
+        'getModel': companyModel
+      }
     };
   });
