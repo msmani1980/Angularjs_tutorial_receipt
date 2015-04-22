@@ -84,7 +84,6 @@ angular.module('ts5App')
       $localStorage.user = userObj;
       $rootScope.user = $localStorage.user;
 
-      console.log('Changing User to "' + userObj.name + '"');
     }
 
     // Language
@@ -98,7 +97,6 @@ angular.module('ts5App')
       $localStorage.language = languageObj;
       $rootScope.language = $localStorage.language;
 
-      console.log('Changing Language to "' + languageObj.name + '"');
     }
 
     // Company
@@ -112,7 +110,6 @@ angular.module('ts5App')
       $localStorage.company = companyObj;
       $rootScope.company = $localStorage.company;
 
-      console.log('Changing Company to "' + companyObj.name + '"');
     }
 
     // Public API here

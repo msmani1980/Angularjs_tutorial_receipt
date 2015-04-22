@@ -100,9 +100,13 @@ angular.module('ts5App')
     }
 
     function createPayload(shouldSubmit) {
+      var dailyExchangeRateId;
+      if ($scope.dailyExchangeRates && $scope.dailyExchangeRates.id) {
+        dailyExchangeRateId = $scope.dailyExchangeRates.id;
+      }
       $scope.payload = {
         dailyExchangeRate: {
-          id: $scope.dailyExchangeRates.id || null,
+          id: dailyExchangeRateId,
           isSubmitted: shouldSubmit || false,
           exchangeRateDate: formatDateForAPI($scope.cashiersDateField),
           chCompanyId: '362',

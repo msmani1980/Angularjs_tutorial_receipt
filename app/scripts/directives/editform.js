@@ -9,7 +9,7 @@
 angular.module('ts5App')
   .directive('editForm', ['$parse',function ($http,baseUrl) {
 
-    return {  
+    return {
       templateUrl: 'views/directives/edit-form.html',
       restrict: 'E',
       scope: {
@@ -19,7 +19,7 @@ angular.module('ts5App')
 
       controller: function($scope) {
 
-        // Submit form 
+        // Submit form
         $scope.submitForm = function() {
 
           // loop through fields passed to the directive
@@ -49,17 +49,7 @@ angular.module('ts5App')
 
           // Post Data to server
             $http(req).success(function(data) {
-
-              console.log('Created item!');
-              console.log(data);
-               // success
-
             }).error(function(data) {
-              
-
-              console.error('Error creating item!');
-              console.log(data);
-
             });
 
           };

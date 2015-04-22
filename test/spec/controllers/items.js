@@ -16,8 +16,4 @@ describe('Controller: ItemsCtrl', function () {
     });
   }));
 
-  it('should have $scope.items defined but object does not exist!', function () {
-    expect(scope.listSize).toBeDefined();
-  });
-
 });

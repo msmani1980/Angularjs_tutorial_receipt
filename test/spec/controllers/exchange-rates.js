@@ -83,7 +83,6 @@ describe('Controller: ExchangeRatesCtrl', function () {
       }]
     });
     scope.$digest();
-    console.log(scope.currenciesFields);
     expect(currencyFactory.getDailyExchangeRates).toHaveBeenCalled();
   });
 

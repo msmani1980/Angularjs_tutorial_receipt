@@ -46,8 +46,6 @@ angular.module('ts5App')
                 pages.push(i);
             }
 
-            console.log(pages);
-
             return {
                 pages: pages,
                 pageCount: pageCount
