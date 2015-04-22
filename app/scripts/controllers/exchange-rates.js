@@ -48,7 +48,7 @@ angular.module('ts5App')
     }
 
     function setExchangeRatesModel() {
-      if ($scope.dailyExchangeRates && angular.isArray($scope.dailyExchangeRates.dailyExchangeRateCurrencies)) {
+      if ($scope.companyCurrencies && $scope.dailyExchangeRates && angular.isArray($scope.dailyExchangeRates.dailyExchangeRateCurrencies)) {
         angular.forEach($scope.companyCurrencies, function (companyCurrency) {
           var exchangeRate = getExchangeRateFromCompanyCurrencies($scope.dailyExchangeRates.dailyExchangeRateCurrencies, companyCurrency.id);
           serializeCoinAndPaperExchangeRate(companyCurrency.currencyCode, exchangeRate.coinExchangeRate, exchangeRate.paperExchangeRate);
@@ -63,7 +63,7 @@ angular.module('ts5App')
       });
     });
 
-    $scope.$watchGroup(['companyBaseCurrency', 'dailyExchangeRates'], function () {
+    $scope.$watchGroup(['companyBaseCurrency', 'dailyExchangeRates', 'companyCurrencies'], function () {
       $scope.currenciesFields = {};
       setBaseExchangeRateModel();
       setExchangeRatesModel();
