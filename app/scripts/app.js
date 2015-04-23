@@ -1,4 +1,5 @@
 'use strict';
+/*global $*/
 
 /**
  * @ngdoc overview
@@ -39,6 +40,12 @@ angular
       url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
   })
   .config(function ($routeProvider) {
+    var datePickerOptions = $.extend($.fn.datepicker.defaults, {
+      format: 'mm/dd/yyyy',
+      autoclose: true,
+      todayHighlight: true
+    });
+    $.fn.datepicker.defaults = datePickerOptions;
 
     $routeProvider
       .when('/', {
@@ -64,6 +71,10 @@ angular
       .when('/company/:id', {
         templateUrl: 'views/company.html',
         controller: 'CompanyCtrl'
+      })
+      .when('/exchange-rates', {
+        templateUrl: 'views/exchange-rates.html',
+        controller: 'ExchangeRatesCtrl'
       })
       .when('/item-create', {
         templateUrl: 'views/item-create.html',

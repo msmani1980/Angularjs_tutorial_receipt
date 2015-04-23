@@ -52,7 +52,7 @@ angular.module('ts5App')
 
             return {
                 pages: pages,
-                pageCount: pageCount,
+                pageCount: pageCount
             };
 
         }

@@ -1,0 +1,78 @@
+<h1 class="ng-scope">{{breadcrumb}}</h1>
+<div class="panel panel-default">
+  <form name="dailyExchangeRatesForm" ng-submit="saveDailyExchangeRates()">
+
+    <div class="panel-heading">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <h3 class="col-sm-4">{{currentCompany.companyName}}</h3>
+          <label for="cashiersDateField" class="col-sm-4 control-label">Date of cashier's entry date</label>
+
+          <div class="col-sm-4 text-right">
+            <div class="input-group">
+              <input ng-model="cashiersDateField" id="cashiersDateField" placeholder="mm/dd/YYYY"
+                     data-provide="datepicker"
+                     class="form-control">
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel-body">
+
+      <div class="row">
+        <div class="col-sm-2">Tail</div>
+        <div class="col-sm-10 text-right">Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></div>
+      </div>
+      <div class="row">
+        <label class="col-sm-2 col-xs-2 control-label">Currency Code</label>
+        <label class="col-sm-5 col-xs-5 control-label">Paper Bank Exchange Rate</label>
+        <label class="col-sm-5 col-xs-5 control-label">Coin Bank Exchange Rate</label>
+      </div>
+      <div class="row" ng-repeat="currency in companyCurrencies">
+        <div class="col-sm-2 col-xs-2">{{currency.currencyCode}}</div>
+
+        <div class="col-sm-5 col-xs-5">
+          <div class="input-group">
+            <span class="input-group-addon">{{currency.currencySymbol}}</span>
+            <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
+                   required ng-pattern="regexp.decimal"
+                   ng-model="currenciesFields[currency.currencyCode].paperExchangeRate"
+                   name="{{currency.currencyCode}}paperExchangeRate"
+                   currencyType="paperExchangeRate" placeholder="0.0000"
+                   class="form-control" aria-label="Amount (to the nearest dollar)">
+            <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
+                   ng-model="currenciesFields[currency.currencyCode].paperExchangeRate"
+                   value="1.0000" readonly="true">
+          </div>
+          <span
+            ng-show="dailyExchangeRatesForm.{{currency.currencyCode}}paperExchangeRate.$dirty && dailyExchangeRatesForm.{{currency.currencyCode}}paperExchangeRate.$invalid">!</span>
+        </div>
+
+        <div class="col-sm-5 col-xs-5">
+          <div class="input-group">
+            <span class="input-group-addon">{{currency.currencySymbol}}</span>
+            <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
+                   required ng-pattern="regexp.decimal"
+                   ng-model="currenciesFields[currency.currencyCode].coinExchangeRate"
+                   name="{{currency.currencyCode}}coinExchangeRate"
+                   currencyType="coinExchangeRate" placeholder="0.0000"
+                   class="form-control" aria-label="Amount (to the nearest dollar)">
+            <input ng-if="companyBaseCurrency.currencyCode == currency.currencyCode" class="form-control text-right"
+                   ng-model="currenciesFields[currency.currencyCode].coinExchangeRate"
+                   value="1.0000" readonly="true">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-footer text-right" ng-if="showActionButtons && dailyExchangeRates.isSubmitted == false">
+      <input class="btn btn-default" type="submit" value="Save"/>
+      <input class="btn btn-primary" type="button" value="Submit" ng-click="saveDailyExchangeRates(true)"/>
+    </div>
+  </form>
+
+</div>

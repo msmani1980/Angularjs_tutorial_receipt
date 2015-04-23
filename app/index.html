@@ -9,6 +9,9 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -28,7 +31,7 @@
         <span class="sr-only">Toggle navigation</span>
         <span class="fa fa-bars"></span>
       </button>
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" ng-href="#/">
         <span class="fa fa-th"></span>
         TS5 Dashboard
       </a>
@@ -43,8 +46,8 @@
   </div>
 </nav>
 
-<div class="container">
-    <div ng-view=""></div>
+<div class="container-fluid">
+    <div class="main-container" ng-view=""></div>
 </div>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -56,7 +59,7 @@
                 r = n.getElementsByTagName(g)[0], a.src = u, r.parentNode.insertBefore(a, r)
     }(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-    ga('create', 'UA-XXXXX-X');
+    ga('create', 'UA-30136587-1');
     ga('send', 'pageview');
 </script>
 
@@ -76,6 +79,10 @@
 <script src="bower_components/ngstorage/ngStorage.js"></script>
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="bower_components/angular-filter/dist/angular-filter.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
 <script src="bower_components/angular-dynforms/dynamic-forms.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
@@ -95,6 +102,11 @@
 <script src="scripts/services/globalmenuservice.js"></script>
 <script src="scripts/directives/menudropdown.js"></script>
 <script src="scripts/controllers/headermenu.js"></script>
+<script src="scripts/controllers/exchange-rates.js"></script>
+<script src="scripts/services/currencyFactory.js"></script>
+<script src="scripts/services/currenciesService.js"></script>
+<script src="scripts/services/companyPreferences.js"></script>
+<script src="scripts/services/dailyExchangeRatesService.js"></script>
 <script src="scripts/services/itemsservice.js"></script>
 <script src="scripts/directives/input-select.js"></script>
 <!-- endbuild -->

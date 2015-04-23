@@ -9,6 +9,8 @@
  */
 angular.module('ts5App')
   .controller('MainCtrl', function ($scope) {
+    $scope.breadcrumb = 'TS5 Dashboard';
+
     $scope.dashboardMenu = [
       {
         'title': 'Retail Item Management',
@@ -21,7 +23,7 @@ angular.module('ts5App')
           },
           {
             name: 'Create Item',
-            route: 'item-create',
+            route: 'retail-menuItems.create',
             icon: 'icon-create-retail-item',
             className: 'dashboard-createItem'
           },
@@ -112,28 +114,24 @@ angular.module('ts5App')
         title: 'Promotion Management',
         menuItems: [
           {
-            id: 12,
             name: 'Manage Promotions',
             route: 'promotions',
             icon: 'icon-manage-promotion',
             className: 'dashboard-managePromotions'
           },
           {
-            id: 13,
             name: 'Create Promotion',
             route: 'promotions.create',
             icon: 'icon-create-promotion',
             className: 'dashboard-createPromotion'
           },
           {
-            id: 14,
             name: 'Manage Promotion Category',
             route: 'promotion-category',
             icon: 'icon-manage-promotion-category',
             className: 'dashboard-managePromotionCategory'
           },
           {
-            id: 15,
             name: 'Manage Promotion Catalog',
             route: 'promotion-catalogs',
             icon: 'icon-create-catalog',
@@ -144,14 +142,12 @@ angular.module('ts5App')
         title: 'Discount Management',
         menuItems: [
           {
-            id: 16,
             name: 'Manage Discounts',
             route: 'discounts',
             icon: 'icon-manage-discount',
             className: 'dashboard-manageDiscount'
           },
           {
-            id: 17,
             name: 'Create Discount',
             route: 'discounts.create',
             icon: 'icon-create-discount',
@@ -188,7 +184,6 @@ angular.module('ts5App')
         title: 'Transaction Retrieval',
         menuItems: [
           {
-            id: 23,
             name: 'Manage Transactions',
             route: 'transactions',
             icon: 'icon-manage-transactions',
@@ -199,21 +194,18 @@ angular.module('ts5App')
         title: 'Cash Management',
         menuItems: [
           {
-            id: 24,
             name: 'Daily Exchange Rate',
             route: 'exchange-rates',
             icon: 'icon-manage-transactions',
             className: 'dashboard-manageDailyExchangeRates'
           },
           {
-            id: 25,
             name: 'Manage Cash Bag',
             route: 'cash-bag',
             icon: 'icon-create-receipt-rules',
             className: 'dashboard-manageCashBag'
           },
           {
-            id: 26,
             name: 'Cash Bag Submission',
             route: 'cash-bag-submit',
             icon: 'icon-manage-retail-category',
@@ -221,4 +213,5 @@ angular.module('ts5App')
           }]
       }
     ];
+
   });
