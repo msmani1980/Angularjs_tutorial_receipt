@@ -1,3 +1,9 @@
+*:focus,
+*:hover,
+*:active {
+  outline: none;
+  background-color: transparent;
+}
 .navbar-default {
   background-color: $header-bg-color;
   color: #FFF;
@@ -17,7 +23,9 @@
 
     &:hover {
       color: #7CC143;
-      opacity: 0.5;
+    }
+    &:focus {
+      color: inherit;
     }
     .breadcrumb {
       @extend .navbar-brand;

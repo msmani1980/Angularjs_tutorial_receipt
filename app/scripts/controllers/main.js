@@ -77,13 +77,13 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Menus',
-            route: 'menus',
+            route: 'menu-list',
             icon: 'icon-manage-menu',
             className: 'dashboard-manageMenus'
           },
           {
             name: 'Create Menu',
-            route: 'menus.create',
+            route: 'menu-create',
             icon: 'icon-create-menu',
             className: 'dashboard-createMenu'
           }]
