@@ -80,6 +80,18 @@ angular
         templateUrl: 'views/item-create.html',
         controller: 'ItemCreateCtrl'
       })
+      .when('/menu-list', {
+        templateUrl: 'views/menu-list.html',
+        controller: 'MenuListCtrl'
+      })
+      .when('/menu-create', {
+        templateUrl: 'views/menu-create.html',
+        controller: 'MenuCreateCtrl'
+      })
+      .when('/menu-edit', {
+        templateUrl: 'views/menu-edit.html',
+        controller: 'MenuEditCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
