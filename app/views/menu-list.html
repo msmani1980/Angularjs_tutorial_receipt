@@ -1,2 +1,82 @@
 <h1 class="ng-scope">{{viewName}}</h1>
 
+<div class="list-controls">
+
+  <div class="row">
+    <div class="col-xs-6">
+      <a ng-href="#/menu-create" class="btn btn-primary"> + </a>
+    </div>
+
+    <div class="col-xs-6 text-right">
+      <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+              aria-controls="search-collapse">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        <span class="hidden-xs">Search</span>
+      </button>
+
+    </div>
+  </div>
+
+
+  <div class="panel panel-default collapse" id="search-collapse">
+    <form class="form">
+      <div class="panel-body">
+        <div class="row">
+
+          <div class="col-md-3 col-sm-6">
+
+            <div class="form-group">
+              <label for="item-code">Menu Code</label>
+              <input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="MENU012">
+            </div>
+
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+
+            <div class="form-group">
+              <label for="item-name">Menu Name</label>
+              <input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="iPad Mini">
+            </div>
+
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+
+            <div class="form-group">
+              <label for="menuStartDate">Effective From</label>
+
+              <div class="input-group">
+                <input ng-model="search.menuStartDate" id="menuStartDate" placeholder="mm/dd/YYYY"
+                       data-provide="datepicker"
+                       class="form-control">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+
+            <div class="form-group">
+              <label for="menuEndDate">Effective To</label>
+
+              <div class="input-group">
+                <input ng-model="search.menuEndDate" id="menuEndDate" placeholder="mm/dd/YYYY"
+                       data-provide="datepicker"
+                       class="form-control">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="panel-footer text-right">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </form>
+  </div>
+</div>
