@@ -19,7 +19,7 @@ angular.module('ts5App')
       };
     };
 
-    $scope.breadcrumb = 'Daily Exchange Rates';
+    $scope.viewName = 'Daily Exchange Rates';
     $scope.currentCompany = getCompany(374);
     $scope.cashiersDateField = new moment().format('L');
     $scope.currenciesFields = {};

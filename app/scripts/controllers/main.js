@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('MainCtrl', function ($scope) {
-    $scope.breadcrumb = 'TS5 Dashboard';
+    $scope.viewName = 'TS5 Dashboard';
 
     $scope.dashboardMenu = [
       {

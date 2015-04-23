@@ -35,9 +35,9 @@ describe('Controller: ExchangeRatesCtrl', function () {
     })
   );
 
-  it('should have a breadcrumb property', function () {
+  it('should have a viewName property', function () {
     ExchangeRatesCtrl = createController();
-    expect(scope.breadcrumb).toBeDefined();
+    expect(scope.viewName).toBeDefined();
   });
 
   it('should get the companyBaseCurrency from currencyFactory', function () {
