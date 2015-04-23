@@ -28,14 +28,14 @@
         <div class="col-sm-10 text-right">Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></div>
       </div>
       <div class="row">
-        <label class="col-sm-2 col-xs-2 control-label">Currency Code</label>
-        <label class="col-sm-5 col-xs-5 control-label">Paper Bank Exchange Rate</label>
-        <label class="col-sm-5 col-xs-5 control-label">Coin Bank Exchange Rate</label>
+        <label class="col-sm-2 control-label">Currency Code</label>
+        <label class="col-sm-5 control-label">Paper Bank Exchange Rate</label>
+        <label class="col-sm-5 control-label">Coin Bank Exchange Rate</label>
       </div>
       <div class="row" ng-repeat="currency in companyCurrencies">
-        <div class="col-sm-2 col-xs-2">{{currency.currencyCode}}</div>
+        <div class="col-sm-2">{{currency.currencyCode}}</div>
 
-        <div class="col-sm-5 col-xs-5">
+        <div class="col-sm-5">
           <div class="input-group">
             <span class="input-group-addon">{{currency.currencySymbol}}</span>
             <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
@@ -52,7 +52,7 @@
             ng-show="dailyExchangeRatesForm.{{currency.currencyCode}}paperExchangeRate.$dirty && dailyExchangeRatesForm.{{currency.currencyCode}}paperExchangeRate.$invalid">!</span>
         </div>
 
-        <div class="col-sm-5 col-xs-5">
+        <div class="col-sm-5">
           <div class="input-group">
             <span class="input-group-addon">{{currency.currencySymbol}}</span>
             <input ng-if="companyBaseCurrency.currencyCode != currency.currencyCode"
