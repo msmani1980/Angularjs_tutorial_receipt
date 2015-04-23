@@ -19,9 +19,11 @@ angular.module('ts5App')
   		// Form Data to be passed to API
   		$scope.formData = {};
 
+      $scope.itemTypeList = [{"id":1,"name":"Regular"},{"id":2,"name":"Virtual"}];
+
         // Submit form 
 
-        $scope.submitForm = function(formData) {
+      $scope.submitForm = function(formData) {
 
         	// If the local form is not valid
         	if(!$scope.form.$valid) {

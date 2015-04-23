@@ -1,14 +1,13 @@
 
 <div class="form-group" ng-class="{ 'has-error' : form[field.name].$dirty && !form[field.name].$valid || displayError && !form[field.name].$valid , 'has-success' : form[field.name].$dirty && form[field.name].$valid }">
 
+
 	<label class="control-label">
 		{{ field.label }} <span ng-show="field.required">*</span> 
 	</label>
 
 	<select name="{{field.name}}" ng-model="formData[field.name]" ng-required="{{ field.required }}" class="form-control" > 
-
-		<option ng-repeat="(key,option) in field.options" value="{{ key }}"> {{ option }}</option>
-
+		<option ng-repeat="option in itemTypeList track by $index" value="{{ option.id }}"> {{ option.name }}</p>
 	</select>
 	
 	<i class="control-label" ng-show="form[field.name].$dirty && !form[field.name].$valid">Please check this field</i>
