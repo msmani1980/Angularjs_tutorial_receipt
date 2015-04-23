@@ -23,6 +23,7 @@ angular.module('ts5App')
     $scope.currentCompany = getCompany(374);
     $scope.cashiersDateField = new moment().format('L');
     $scope.currenciesFields = {};
+    $scope.showActionButtons = false;
 
     function formatDateForAPI(cashiersDate) {
       return moment(cashiersDate, 'L').format('YYYYMMDD').toString();
@@ -56,6 +57,10 @@ angular.module('ts5App')
       }
     }
 
+    function hideShowActionButtons() {
+      $scope.showActionButtons = moment($scope.cashiersDateField, 'L').format('L') === moment().format('L');
+    }
+
     $scope.$watch('cashiersDateField', function (cashiersDate) {
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       currencyFactory.getDailyExchangeRates(formattedDateForAPI).then(function (dailyExchangeRates) {
@@ -67,6 +72,7 @@ angular.module('ts5App')
       $scope.currenciesFields = {};
       setBaseExchangeRateModel();
       setExchangeRatesModel();
+      hideShowActionButtons();
     });
 
     function clearExchangeRateCurrencies() {
