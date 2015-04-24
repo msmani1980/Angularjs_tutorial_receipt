@@ -11,7 +11,7 @@ describe('Service: companyPreferences', function () {
     preferencesRequestHandler;
   beforeEach(inject(function (_companyPreferences_, $injector) {
     $httpBackend = $injector.get('$httpBackend');
-    preferencesRequestHandler = $httpBackend.whenGET('https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies')
+    preferencesRequestHandler = $httpBackend.whenGET(/currencies/)
       .respond({
         'response': [{
           createdOn: '2014-08-19',
