@@ -88,7 +88,7 @@ angular
         templateUrl: 'views/menu-create.html',
         controller: 'MenuCreateCtrl'
       })
-      .when('/menu-edit', {
+      .when('/menu-edit/:id', {
         templateUrl: 'views/menu-edit.html',
         controller: 'MenuEditCtrl'
       })

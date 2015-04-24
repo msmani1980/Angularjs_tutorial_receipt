@@ -61,7 +61,7 @@ describe('Controller: MenuListCtrl', function () {
     expect(menuService.getMenuList).toHaveBeenCalled();
   });
 
-  describe("menuList in scope", function () {
+  describe('menuList in scope', function () {
     it('should attach a menuList after a API call to getMenuList', function () {
       expect(!!scope.menuList).toBe(true);
     });
@@ -74,5 +74,4 @@ describe('Controller: MenuListCtrl', function () {
       expect(scope.menuList.menus[0].menuItems.length).toBeGreaterThan(0);
     });
   });
-
 });
