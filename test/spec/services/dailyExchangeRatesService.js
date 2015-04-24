@@ -99,7 +99,7 @@ describe('Service: dailyExchangeRatesService', function () {
 
   }));
 
-  it('should do something', function () {
+  it('should exist', function () {
     expect(!!dailyExchangeRatesService).toBe(true);
   });
 

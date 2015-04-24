@@ -73,5 +73,9 @@ describe('Service: menuService', function () {
       expect(menuData.menus[0].menuCode).toBe('fakeMenuCode');
     });
 
+    it('should have an array of items', function () {
+      expect(menuData.menus[0].menuItems.length).toBeGreaterThan(0);
+    });
+
   });
 });

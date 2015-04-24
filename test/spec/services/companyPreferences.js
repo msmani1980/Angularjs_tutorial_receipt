@@ -26,7 +26,7 @@ describe('Service: companyPreferences', function () {
     companyPreferences = _companyPreferences_;
   }));
 
-  it('should do something', function () {
+  it('should exist', function () {
     expect(!!companyPreferences).toBe(true);
   });
 
