@@ -52,7 +52,6 @@ describe('Service: menuService', function () {
 
   describe('API calls', function () {
     var menuData;
-    var requestDeferred;
 
     beforeEach(function () {
       spyOn(menuService, 'getMenuList').and.callFake(function () {
