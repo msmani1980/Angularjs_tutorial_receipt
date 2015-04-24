@@ -10,8 +10,9 @@
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function ($scope,$http,baseUrl,$location,$anchorScroll,itemsFactory) {
     
-  		$http.defaults.headers.common['userId'] = 1;
-    	$http.defaults.headers.common['companyId'] = 326;
+      // TODO: make global and ingest actuall user / company ids
+  		$http.defaults.headers.common.userId = 1;
+    	$http.defaults.headers.companyId = 326;
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -19,7 +20,7 @@ angular.module('ts5App')
   		// Form Data to be passed to API
   		$scope.formData = {};
 
-      $scope.itemTypeList = [{"id":1,"name":"Regular"},{"id":2,"name":"Virtual"}];
+      $scope.itemTypeList = [{'id':1,'name':'Regular'},{'id':2,'name':'Virtual'}];
 
         // Submit form 
 
@@ -31,8 +32,9 @@ angular.module('ts5App')
         		// set display error flag to true (used in template)
   				$scope.displayError = true;
 
-  				return false;
-  			}
+    				return false;
+
+    			}
 
         	// set the formData models in the view to the scope.formData object
         	$scope.formData = angular.copy(formData);

@@ -11,11 +11,12 @@
 angular.module('ts5App')
     .controller('ItemListCtrl', function ($scope,$http,itemsFactory) {
 
-        $http.defaults.headers.common['userId'] = 1;
-        $http.defaults.headers.common['companyId'] = 326;
+        // TODO: make global and ingest actuall user / company ids
+        $http.defaults.headers.common.userId = 1;
+        $http.defaults.headers.common.companyId = 326;
 
         // set the list size
-        $scope.listSize = 10;
+        $scope.listSize = 10; 
 
         // Get a list from the API
         var itemList = itemsFactory.query(function () {
