@@ -1,4 +1,4 @@
-<h1 class="ng-scope">{{viewName}}</h1>
+<h1>{{viewName}}</h1>
 
 <div class="list-controls">
 
@@ -8,7 +8,7 @@
     </div>
 
     <div class="col-xs-6 text-right">
-      <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+      <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
               aria-controls="search-collapse">
         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
         <span class="hidden-xs">Search</span>
@@ -19,68 +19,78 @@
 
 
   <div class="panel panel-default collapse no-transition" id="search-collapse">
-    <form class="form">
-      <div class="panel-body">
-        <div class="row">
-
-          <div class="col-md-3 col-sm-6">
-
-            <div class="form-group">
-              <label for="item-code">Menu Code</label>
-              <input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="MENU012">
-            </div>
-
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="item-code">Menu Code</label>
+            <input ng-model="search.menuCode" type="text" class="form-control" id="item-code" placeholder="MENU012">
           </div>
 
-          <div class="col-md-3 col-sm-6">
+        </div>
 
-            <div class="form-group">
-              <label for="item-name">Menu Name</label>
-              <input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="iPad Mini">
-            </div>
-
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="item-name">Menu Name</label>
+            <input ng-model="search.menuName" type="text" class="form-control" id="item-name" placeholder="iPad Mini">
           </div>
 
-          <div class="col-md-3 col-sm-6">
+        </div>
 
-            <div class="form-group">
-              <label for="menuStartDate">Effective From</label>
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="menuStartDate">Effective From</label>
 
-              <div class="input-group">
-                <input ng-model="search.menuStartDate" id="menuStartDate" placeholder="mm/dd/YYYY"
-                       data-provide="datepicker"
-                       class="form-control">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-              </div>
-
+            <div class="input-group">
+              <input ng-model="search.startDate" id="menuStartDate" placeholder="mm/dd/YYYY"
+                     data-provide="datepicker"
+                     class="form-control">
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
-
-          </div>
-
-          <div class="col-md-3 col-sm-6">
-
-            <div class="form-group">
-              <label for="menuEndDate">Effective To</label>
-
-              <div class="input-group">
-                <input ng-model="search.menuEndDate" id="menuEndDate" placeholder="mm/dd/YYYY"
-                       data-provide="datepicker"
-                       class="form-control">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-              </div>
-            </div>
-
           </div>
         </div>
 
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="menuEndDate">Effective To</label>
+
+            <div class="input-group">
+              <input ng-model="search.endDate" id="menuEndDate" placeholder="mm/dd/YYYY"
+                     data-provide="datepicker"
+                     class="form-control">
+              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="panel-footer text-right">
-        <button type="submit" class="btn btn-primary">Search</button>
-      </div>
-    </form>
+
+    </div>
+    <div class="panel-footer text-right">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
   </div>
 </div>
 
-asd
-asd
-asd
+
+<table class="table table-bordered table-hover">
+  <thead>
+  <tr>
+    <th>Menu Code</th>
+    <th>Menu Name</th>
+    <th>Description</th>
+    <th>Effective From</th>
+    <th>Effective To</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr
+    ng-repeat="menu in menuList.menus | filter: { menuCode: search.menuCode, menuName: search.menuName, description: search.description, startDate: search.startDate, endDate: search.endDate}"
+    ng-click="showMenu(menu)">
+    <td>{{ menu.menuCode }}</td>
+    <td>{{ menu.menuName }}</td>
+    <td>{{ menu.description }}</td>
+    <td>{{ menu.startDate }}</td>
+    <td>{{ menu.endDate }}</td>
+  </tr>
+  </tbody>
+</table>
