@@ -15,13 +15,18 @@ angular.module('ts5App')
         $http.defaults.headers.common.userId = 1;
         $http.defaults.headers.common.companyId = 326;
 
+        // get item types
+        itemsFactory.itemTypes.query(function(itemTypes) {
+            $scope.itemTypes = itemTypes;
+        });
+
         // set the list size
         $scope.listSize = 10; 
 
         // Get a list from the API
-        var itemList = itemsFactory.query(function () {
+        itemsFactory.items.query(function (itemList) {
 
-            $scope.items = itemList.retailItems;
+            $scope.items = itemList.retailItems;  
 
             $scope.itemsCount = itemList.meta.count;
 

@@ -12,7 +12,7 @@ angular.module('ts5App')
     
       // TODO: make global and ingest actuall user / company ids
   		$http.defaults.headers.common.userId = 1;
-    	$http.defaults.headers.companyId = 326;
+    	$http.defaults.headers.common.companyId = 326;
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -20,7 +20,20 @@ angular.module('ts5App')
   		// Form Data to be passed to API
   		$scope.formData = {};
 
-      $scope.itemTypeList = [{'id':1,'name':'Regular'},{'id':2,'name':'Virtual'}];
+      // get items types
+      itemsFactory.itemTypes.query(function(itemTypes) {
+        $scope.itemTypes = itemTypes;
+      });
+
+      // get allergens
+      itemsFactory.allergens.query(function(allergens) {
+        $scope.allergens = allergens;
+      });
+
+      // get characteristics
+      itemsFactory.characteristics.query(function(characteristics) {
+        $scope.characteristics = characteristics;
+      });
 
         // Submit form 
 
@@ -47,20 +60,20 @@ angular.module('ts5App')
           	};
 
           	// Create newItem in API
-	      	itemsFactory.save(newItem,function () {
+  	      	itemsFactory.items.save(newItem,function () {
 
-	            angular.element('#create-success').modal('show');
+  	            angular.element('#create-success').modal('show');
 
-	        // API error
-	        }, function(error){
+  	        // API error
+  	        }, function(error){
 
-	        	$scope.displayError = true;
-			  
-			  	$scope.formErrors = error.data;
+  	        	$scope.displayError = true;
+  			  
+  			  	  $scope.formErrors = error.data;
 
-	        });
+  	        });
 
-        };
+          };
 
         // TODO MOVE ME GLOBAL
   		$scope.scrollTo = function(id) {

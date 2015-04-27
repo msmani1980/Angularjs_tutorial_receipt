@@ -64,7 +64,7 @@
 					<div class="form-group">
 						<label for="item-type">Item Type</label>
 						<select ng-model="search.itemType" class="form-control" id="item-type">
-							<option ng-repeat="item in items | unique: 'itemTypeId'">{{ item.itemTypeName }}</option>
+							<option ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>
 						</select>
 					</div>
 

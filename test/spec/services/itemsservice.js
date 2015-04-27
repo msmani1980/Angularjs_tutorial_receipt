@@ -114,16 +114,16 @@ describe('Items Service', function (baseUrl) {
 
       $httpBackend.expectGET(/retail-items1/);
 
-      spyOn(itemsService, 'query').and.callFake(function() {
+      spyOn(itemsService.items, 'query').and.callFake(function() {
         return itemListJSON;
       });
 
-      retailItemsList = itemsService.query();
+      retailItemsList = itemsService.items.query(); 
 
     });
 
     it('should be able call the query method', function() {
-      expect(itemsService.query).toHaveBeenCalled();
+      expect(itemsService.items.query).toHaveBeenCalled();
     });
 
     it('should fetch a list of items', function () {
