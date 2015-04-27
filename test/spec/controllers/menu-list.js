@@ -67,11 +67,15 @@ describe('Controller: MenuListCtrl', function () {
     });
 
     it('should have a menu name property', function () {
-      expect(scope.menuList.menus[0].menuCode).toBe('fakeMenuCode');
+      expect(scope.menuList[0].menuCode).toBe('fakeMenuCode');
     });
 
     it('should have an array of items', function () {
-      expect(scope.menuList.menus[0].menuItems.length).toBeGreaterThan(0);
+      expect(scope.menuList[0].menuItems.length).toBeGreaterThan(0);
+    });
+
+    it('should have a formatted start and date', function () {
+      expect(scope.menuList[0].startDate).toBe('9/30/2014');
     });
   });
 });

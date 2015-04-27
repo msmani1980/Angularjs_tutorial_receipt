@@ -84,7 +84,7 @@
   </thead>
   <tbody>
   <tr
-    ng-repeat="menu in menuList.menus | filter: { menuCode: search.menuCode, menuName: search.menuName, description: search.description, startDate: search.startDate, endDate: search.endDate}"
+    ng-repeat="menu in menuList | filter: { menuCode: search.menuCode, menuName: search.menuName, description: search.description, startDate: search.startDate, endDate: search.endDate}"
     ng-click="showMenu(menu)">
     <td>{{ menu.menuCode }}</td>
     <td>{{ menu.menuName }}</td>
