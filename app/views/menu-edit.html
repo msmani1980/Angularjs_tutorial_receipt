@@ -1,4 +1,4 @@
-<ng-form name="form" class="form edit-form">
+<ng-form name="menuEditForm" class="form edit-form">
 
   <div class="edit-controls">
     <div class="row">
@@ -23,12 +23,14 @@
 
   <div class="form-group col-sm-3">
     <label for="menuCode">Menu Code</label>
-    <input type="text" class="form-control" id="menuCode" ng-model="menu.menuCode" placeholder="ITM001">
+    <input type="text" name="menuCode" class="form-control" id="menuCode" ng-model="menu.menuCode"
+           placeholder="ITM001">
   </div>
 
   <div class="form-group col-sm-3">
     <label for="menuCode">Menu Name</label>
-    <input type="text" class="form-control" id="menuName" ng-model="menu.menuCode" placeholder="ITM001">
+    <input type="text" name="menuName" class="form-control" id="menuName" ng-model="menu.menuName"
+           placeholder="ITM001">
   </div>
 
   <div class="form-group col-xs-6 col-sm-3">
@@ -36,7 +38,7 @@
 
     <div class="input-group">
       <input ng-model="menu.startDate" id="menuStartDate" placeholder="mm/dd/YYYY"
-             data-provide="datepicker"
+             name="startDate" data-provide="datepicker"
              class="form-control">
       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
     </div>
@@ -47,7 +49,7 @@
 
     <div class="input-group">
       <input ng-model="menu.endDate" id="menuEndDate" placeholder="mm/dd/YYYY"
-             data-provide="datepicker"
+             name="endDate" data-provide="datepicker"
              class="form-control">
       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
     </div>
@@ -55,7 +57,8 @@
 
   <div class="form-group col-sm-12">
     <label for="menuCode">Description</label>
-    <input type="text" class="form-control" id="menuDescription" ng-model="menu.description" placeholder="ITM001">
+    <input type="text" name="description" class="form-control" id="menuDescription" ng-model="menu.description"
+           placeholder="ITM001">
   </div>
 
 </ng-form>

@@ -14,4 +14,9 @@ angular.module('ts5App')
     menuService.getMenu($routeParams.id).then(function (menuFromAPI) {
       $scope.menu = menuFromAPI;
     });
+
+    $scope.submitForm = function() {
+      console.log($scope.menuEditForm.$pristine);
+    };
+
   });
