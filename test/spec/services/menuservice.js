@@ -43,7 +43,6 @@ describe('Service: menuService', function () {
 
     $httpBackend = $injector.get('$httpBackend');
     menuService = _menuService_;
-    menusRequestHandler = $httpBackend.whenGET(/menus/);
   }));
 
   it('should exist', function () {
@@ -55,10 +54,11 @@ describe('Service: menuService', function () {
 
     describe('getMenuList', function () {
       beforeEach(function () {
-        spyOn(menuService, 'getMenuList').and.callFake(function () {
-          return menuResponseJSON;
+        $httpBackend.whenGET(/menus/).respond(menuResponseJSON);
+        menuService.getMenuList().then(function(menuListFromAPI){
+          menuData = menuListFromAPI;
         });
-        menuData = menuService.getMenuList();
+        $httpBackend.flush();
       });
 
       it('should fetch and return menuList', function () {
@@ -88,6 +88,17 @@ describe('Service: menuService', function () {
 
       it('should fetch and return menuList', function () {
         $httpBackend.expectGET(/menus/);
+      });
+    });
+
+    describe('updateMenu', function () {
+      beforeEach(function () {
+        $httpBackend.whenPUT(/menus/).respond({done:true});
+      });
+      it('it should POST data to menus API', function () {
+        menuService.updateMenu({menuData: 'fakeMenuPayload'});
+        $httpBackend.flush();
+        $httpBackend.expectPUT(/menus/);
       });
     });
 

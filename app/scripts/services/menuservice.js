@@ -51,8 +51,17 @@ angular.module('ts5App')
       return deferred.promise;
     };
 
+    var updateMenu = function (payload) {
+      var deferred = $q.defer();
+      requestResource.updateMenu(payload).$promise.then(function (data) {
+        deferred.resolve(data);
+      });
+      return deferred.promise;
+    };
+
     return {
       getMenuList: getMenuList,
-      getMenu: getMenu
+      getMenu: getMenu,
+      updateMenu: updateMenu
     };
   });
