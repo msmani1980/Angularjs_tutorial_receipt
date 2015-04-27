@@ -45,7 +45,7 @@ angular.module('ts5App')
 
             var pageCount = Math.ceil( itemCount / itemsPerPage );
 
-            var pages = [0];
+            var pages = [];
 
             for(var i = 1; i < pageCount; i++) {
                 pages.push(i);
