@@ -126,13 +126,13 @@ angular.module('ts5App')
             className: 'dashboard-createPromotion'
           },
           {
-            name: 'Manage Promotion Category',
+            name: 'Promotion Category',
             route: 'promotion-category',
             icon: 'icon-manage-promotion-category',
             className: 'dashboard-managePromotionCategory'
           },
           {
-            name: 'Manage Promotion Catalog',
+            name: 'Promotion Catalog',
             route: 'promotion-catalogs',
             icon: 'icon-create-catalog',
             className: 'dashboard-createCatalog'

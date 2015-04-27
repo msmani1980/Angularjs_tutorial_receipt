@@ -1,8 +1,29 @@
-.menu-container {
-  margin-bottom: 5rem;
-  &:nth-child(odd) {
+/* Small devices (tablets, 768px and up) */
+@media (min-width: $screen-sm-min) {
+  .menu-container:nth-child(odd) {
     clear: left;
   }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: $screen-md-min) {
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: $screen-lg-min) {
+  .menu-container {
+    &:nth-child(odd) {
+      clear: initial;
+    }
+    &:nth-child(3n+4) {
+      clear: left;
+    }
+  }
+}
+
+.menu-container {
+  margin-bottom: 5rem;
+
   .add-shadow {
     display: table;
     width: 100%;

@@ -8,10 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('MenuEditCtrl', function ($scope, $routeParams, menuService) {
+    $scope.viewName = 'Menu';
+
+    menuService.getMenu($routeParams.id).then(function (menuFromAPI) {
+      $scope.menu = menuFromAPI;
+    });
   });

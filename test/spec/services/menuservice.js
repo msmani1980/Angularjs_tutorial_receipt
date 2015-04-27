@@ -53,27 +53,42 @@ describe('Service: menuService', function () {
   describe('API calls', function () {
     var menuData;
 
-    beforeEach(function () {
-      spyOn(menuService, 'getMenuList').and.callFake(function () {
-        return menuResponseJSON;
+    describe('getMenuList', function () {
+      beforeEach(function () {
+        spyOn(menuService, 'getMenuList').and.callFake(function () {
+          return menuResponseJSON;
+        });
+        menuData = menuService.getMenuList();
       });
-      menuData = menuService.getMenuList();
+
+      it('should fetch and return menuList', function () {
+        $httpBackend.expectGET(/menus/);
+      });
+
+      it('should be an array', function () {
+        expect(menuData.menus.length).toBeGreaterThan(0);
+      });
+
+      it('should have a menu name property', function () {
+        expect(menuData.menus[0].menuCode).toBe('fakeMenuCode');
+      });
+
+      it('should have an array of items', function () {
+        expect(menuData.menus[0].menuItems.length).toBeGreaterThan(0);
+      });
     });
 
-    it('should fetch and return menuList', function () {
-      $httpBackend.expectGET(/menus/);
-    });
+    describe('getMenu', function () {
+      beforeEach(function () {
+        spyOn(menuService, 'getMenu').and.callFake(function () {
+          return menuResponseJSON;
+        });
+        menuData = menuService.getMenu(1);
+      });
 
-    it('should be an array', function () {
-      expect(menuData.menus.length).toBeGreaterThan(0);
-    });
-
-    it('should have a menu name property', function () {
-      expect(menuData.menus[0].menuCode).toBe('fakeMenuCode');
-    });
-
-    it('should have an array of items', function () {
-      expect(menuData.menus[0].menuItems.length).toBeGreaterThan(0);
+      it('should fetch and return menuList', function () {
+        $httpBackend.expectGET(/menus/);
+      });
     });
 
   });

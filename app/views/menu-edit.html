@@ -1,1 +1,61 @@
-<p>This is the menu-edit view.</p>
+<ng-form name="form" class="form edit-form">
+
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/menu-list" class="btn">Cancel</a>
+        <button class="btn btn-success" ng-click="submitForm()">
+          <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
+
+      </div>
+    </div>
+    <p>All required fields are marked with a *</p>
+
+  </div>
+
+  <h3 id="item-information">Menu Information</h3>
+
+  <div class="form-group col-sm-3">
+    <label for="menuCode">Menu Code</label>
+    <input type="text" class="form-control" id="menuCode" ng-model="menu.menuCode" placeholder="ITM001">
+  </div>
+
+  <div class="form-group col-sm-3">
+    <label for="menuCode">Menu Name</label>
+    <input type="text" class="form-control" id="menuName" ng-model="menu.menuCode" placeholder="ITM001">
+  </div>
+
+  <div class="form-group col-xs-6 col-sm-3">
+    <label for="menuCode">Effective From</label>
+
+    <div class="input-group">
+      <input ng-model="menu.startDate" id="menuStartDate" placeholder="mm/dd/YYYY"
+             data-provide="datepicker"
+             class="form-control">
+      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+    </div>
+  </div>
+
+  <div class="form-group col-xs-6 col-sm-3">
+    <label for="menuCode">Effective To</label>
+
+    <div class="input-group">
+      <input ng-model="menu.endDate" id="menuEndDate" placeholder="mm/dd/YYYY"
+             data-provide="datepicker"
+             class="form-control">
+      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+    </div>
+  </div>
+
+  <div class="form-group col-sm-12">
+    <label for="menuCode">Description</label>
+    <input type="text" class="form-control" id="menuDescription" ng-model="menu.description" placeholder="ITM001">
+  </div>
+
+</ng-form>

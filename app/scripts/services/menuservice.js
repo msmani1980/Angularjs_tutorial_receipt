@@ -22,6 +22,9 @@ angular.module('ts5App')
       getMenuList: {
         method: 'GET'
       },
+      getMenu: {
+        method: 'GET'
+      },
       createMenu: {
         method: 'POST'
       },
@@ -40,7 +43,16 @@ angular.module('ts5App')
       return deferred.promise;
     };
 
+    var getMenu = function (menuId) {
+      var deferred = $q.defer();
+      requestResource.getMenu({menuId: menuId}).$promise.then(function (data) {
+        deferred.resolve(data);
+      });
+      return deferred.promise;
+    };
+
     return {
-      getMenuList: getMenuList
+      getMenuList: getMenuList,
+      getMenu: getMenu
     };
   });
