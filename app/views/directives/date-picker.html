@@ -1,0 +1,32 @@
+<div class="input-daterange">
+<div class="row">
+  <div class="{{elementClass}}">
+    <label>{{labelFrom}}</label>
+
+    <div class="input-group col-xs-12">
+      <input type="text"
+             ng-model="startDateModel"
+             id="startDate"
+             placeholder="mm/dd/YYYY"
+             name="startDate"
+             ng-disabled="shouldDisableStartDate"
+             class="form-control">
+      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+    </div>
+  </div>
+  <div class="{{elementClass}}">
+    <label>{{labelTo}}</label>
+
+    <div class="input-group col-xs-12">
+      <input type="text"
+             ng-model="endDateModel"
+             id="endDate"
+             placeholder="mm/dd/YYYY"
+             name="endDate"
+             ng-disabled="shouldDisableEndDate"
+             class="form-control">
+      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+    </div>
+  </div>
+</div>
+</div>

@@ -33,27 +33,15 @@
            placeholder="ITM001">
   </div>
 
-  <div class="form-group col-xs-6 col-sm-3">
-    <label for="menuCode">Effective From</label>
-
-    <div class="input-group">
-      <input ng-model="menu.startDate" id="menuStartDate" placeholder="mm/dd/YYYY"
-             name="startDate" data-provide="datepicker"
-             class="form-control">
-      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-    </div>
-  </div>
-
-  <div class="form-group col-xs-6 col-sm-3">
-    <label for="menuCode">Effective To</label>
-
-    <div class="input-group">
-      <input ng-model="menu.endDate" id="menuEndDate" placeholder="mm/dd/YYYY"
-             name="endDate" data-provide="datepicker"
-             class="form-control">
-      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-    </div>
-  </div>
+  <date-picker
+    class="col-sm-6 col-xs-12"
+    element-class="col-xs-6 col-sm-6"
+    start-date-model="menu.startDate"
+    end-date-model="menu.endDate"
+    disable-previous-date="true"
+    label-from="Effective From"
+    label-to="Effective To">
+  </date-picker>
 
   <div class="form-group col-sm-12">
     <label for="menuCode">Description</label>
