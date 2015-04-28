@@ -11,10 +11,6 @@
 angular.module('ts5App')
     .controller('ItemListCtrl', function ($scope,$http,itemsFactory) {
 
-        // TODO: make global and ingest actuall user / company ids
-        $http.defaults.headers.common.userId = 1;
-        $http.defaults.headers.common.companyId = 326;
-
         // get item types
         itemsFactory.itemTypes.query(function(itemTypes) {
             $scope.itemTypes = itemTypes;

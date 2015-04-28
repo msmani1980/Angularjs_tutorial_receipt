@@ -15,7 +15,7 @@ describe('Items Service', function (baseUrl) {
   // load the service's module
   beforeEach(module('ts5App'));
 
-  beforeEach(inject(function (_itemsService_, $injector) {
+  beforeEach(inject(function (_itemsService_, $injector) { 
 
     itemListJSON = {
      'retailItems':[

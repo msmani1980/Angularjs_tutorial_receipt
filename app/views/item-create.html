@@ -1,4 +1,4 @@
-<ng-form name="form" ng-controller="ItemCreateCtrl" class="form edit-form">
+<ng-form name="form" class="form edit-form">
 
 	<edit-form-header-directive></edit-form-header-directive>
 
@@ -78,7 +78,7 @@
 			<div class="form-group" ng-class="{ 'has-error' : form[categoryId].$dirty && !form[categoryId].$valid || displayError && !form[categoryId].$valid , 'has-success' : form[categoryId].$dirty && form[categoryId].$valid }" >
 				<label for="item-sales-category">Sales Category</label>
 				<select name="categoryId" required ng-model="formData.categoryId" class="form-control">
-					<option value="179">Drinks</option>
+						<option ng-repeat="category in salesCategories" value="{{ category.id }}">{{ category.name }}</option>
 				</select>
 			</div>
 
@@ -101,16 +101,14 @@
 			<div class="form-group">
 				<label for="item-type">Item Substitutions</label>
 				<select multiple ng-model="formData.substitutions" class="form-control">
-					<option value="1">Substitution 1</option>
-					<option value="2">Substitution 2</option>
+					<option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
 				</select>
 			</div>
 
 			<div class="form-group">
 				<label for="item-type">Item Recommendations</label>
 				<select multiple ng-model="formData.recommendations" class="form-control">
-					<option value="1">Recommendation 1</option>
-					<option value="2">Recommendation 2</option>
+					<option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
 				</select>
 			</div>
 
@@ -121,8 +119,7 @@
 			<div class="form-group">
 				<label for="item-type">Item Tags</label>
 				<select multiple ng-model="formData.tags" class="form-control">
-					<option value="1">Tag 1</option>
-					<option value="2">Tag 2</option>
+					<option ng-repeat="tag in tags" value="{{ tag.id }}">{{ tag.name }}</option>
 				</select>
 			</div>
 
@@ -163,9 +160,7 @@
 				<input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
 
 				<select ng-model="formData.weightType" class="form-control">
-					<option value="6">g</option>
-					<option value="7">kg</option>
-					<option value="9">lb</option>
+					<option ng-repeat="weight in weightUnits" value="{{ weight.id }}">{{ weight.unitCode }}</option>
 				</select>
 
 			</div>
@@ -176,9 +171,7 @@
 				<input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
 
 				<select ng-model="formData.volumeType" class="form-control">
-					<option value="8">oz</option>
-					<option value="10">ml</option>
-					<option value="11">l</option>
+					<option ng-repeat="volume in volumeUnits" value="{{ volume.id }}">{{ volume.unitCode }}</option>
 				</select>
 				
 			</div>
@@ -195,9 +188,7 @@
 				<input ng-model="formData.height" type="text" class="form-control" placeholder="Height"> 
 
 				<select ng-model="formData.dimensionType" class="form-control">
-					<option value="13">mm</option>
-					<option value="14">cm</option>
-					<option value="15">in</option>
+					<option ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }}</option>
 				</select>
 
 			</div>
@@ -217,9 +208,7 @@
 				<label>Price Type</label>
 
 				<select ng-model="formData.prices.typeId" class="form-control">
-					<option value="1">Retail</option>
-					<option value="2">Frequent Flyer Status</option>
-					<option value="3">Fare Class</option>
+					<option ng-repeat="type in priceTypes" value="{{ type.id }}">{{ type.name }}</option>
 				</select>
 
 			</div>
@@ -229,9 +218,9 @@
 				<label>Tax Is</label>
 
 				<select ng-model="formData.prices.taxIs" class="form-control">
-					<option value="1">Retail</option>
-					<option value="2">Frequent Flyer Status</option>
-					<option value="3">Fare Class</option>
+					<option value="Included">Included</option>
+					<option value="Excluded">Excluded</option>
+					<option value="Exempt">Exempt</option>
 				</select>
 
 			</div>
@@ -277,9 +266,7 @@
 				<label>Applied Tax Type</label>
 
 				<select ng-model="formData.taxes.companyTaxId" class="form-control">
-					<option value="1">GST</option>
-					<option value="2">Local</option>
-					<option value="3">VAT</option>
+					<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }} - {{ type.description}} </option>
 				</select>
 
 				<select ng-model="formData.taxes.itemTaxType" class="form-control">

@@ -48,8 +48,8 @@ angular.module('ts5App')
 
     // TODO: Should pull from a factory at some point.
     var companyModel = {
-      '1': {
-        id: 1,
+      '326': {
+        id: 326,
         name: 'EasyJet'
       },
       '2': {
@@ -65,7 +65,7 @@ angular.module('ts5App')
     var defaults = {};
     defaults.user = userModel['1'];
     defaults.language = languageModel['1'];
-    defaults.company = companyModel['1'];
+    defaults.company = companyModel['326'];
 
     $localStorage.$default(defaults);
 
