@@ -8,7 +8,6 @@ describe('Service: menuService', function () {
   // instantiate service
   var menuService,
     $httpBackend,
-    menusRequestHandler,
     menuResponseJSON;
   beforeEach(inject(function (_menuService_, $injector) {
     menuResponseJSON = {

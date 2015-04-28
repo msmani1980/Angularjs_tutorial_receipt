@@ -11,15 +11,25 @@ angular.module('ts5App')
   .controller('MenuEditCtrl', function ($scope, $routeParams, menuService) {
     $scope.viewName = 'Menu';
 
+    function formatStartAndEndDates(formatFrom, formatTo) {
+      $scope.menu.startDate = moment($scope.menu.startDate, formatFrom).format(formatTo).toString();
+      $scope.menu.endDate = moment($scope.menu.endDate, formatFrom).format(formatTo).toString();
+    }
+
+    function attachModelToScope(menuFromAPI) {
+      var formatDateFrom = 'YYYY-MM-DD';
+      var formatDateTo = 'l';
+      $scope.menu = menuFromAPI;
+      formatStartAndEndDates(formatDateFrom, formatDateTo);
+    }
+
     $scope.submitForm = function () {
-      console.log($scope.menuEditForm.$pristine);
+      var formatDateFrom = 'l';
+      var formatDateTo = 'YYYYMMDD';
+      formatStartAndEndDates(formatDateFrom, formatDateTo);
+      menuService.updateMenu($scope.menu.toJSON()).then(attachModelToScope);
     };
 
-    menuService.getMenu($routeParams.id).then(function (menuFromAPI) {
-      var formatFromAPI = 'YYYY-MM-DD';
-      $scope.menu = menuFromAPI;
-      $scope.menu.startDate = moment($scope.menu.startDate, formatFromAPI).format('l').toString();
-      $scope.menu.endDate = moment($scope.menu.endDate, formatFromAPI).format('l').toString();
-    });
+    menuService.getMenu($routeParams.id).then(attachModelToScope);
 
   });

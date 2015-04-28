@@ -42,13 +42,21 @@ describe('Controller: MenuEditCtrl', function () {
     expect(!!scope.viewName).toBe(true);
   });
 
-  describe('menuList in scope', function () {
+  describe('menu object in scope', function () {
     it('should get the menu list from API', function () {
       expect(menuService.getMenu).toHaveBeenCalled();
     });
 
     it('should attach a menu object after a API call to getMenu', function () {
       expect(!!scope.menu).toBe(true);
+    });
+
+    it('should have an array of items', function () {
+      expect(scope.menu.menuItems.length).toBeGreaterThan(0);
+    });
+
+    it('should have date formatted to local', function () {
+      expect(scope.menu.endDate).toBe('4/15/2015');
     });
 
   });

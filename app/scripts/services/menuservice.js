@@ -12,9 +12,9 @@ angular.module('ts5App')
     $http.defaults.headers.common.userId = 1;
     $http.defaults.headers.common.companyId = 374;
 
-    var requestURL = baseUrl + '/api/menus/:menuId';
+    var requestURL = baseUrl + '/api/menus/:id';
     var requestParameters = {
-      menuId: '@id',
+      id: '@id',
       limit: 50
     };
 
@@ -45,7 +45,7 @@ angular.module('ts5App')
 
     var getMenu = function (menuId) {
       var deferred = $q.defer();
-      requestResource.getMenu({menuId: menuId}).$promise.then(function (data) {
+      requestResource.getMenu({id: menuId}).$promise.then(function (data) {
         deferred.resolve(data);
       });
       return deferred.promise;
