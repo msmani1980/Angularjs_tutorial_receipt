@@ -22,7 +22,8 @@ angular
     'ngStorage',
     'ui.bootstrap',
     'angular.filter',
-    'dynform'
+    'dynform',
+    'ngFileUpload'
   ])
   .constant('baseUrl', 'https://ec2-52-6-49-188.compute-1.amazonaws.com')
   .constant('regexp', {

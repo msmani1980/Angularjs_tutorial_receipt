@@ -135,8 +135,25 @@
 					<option value="2">Allergen 2</option>
 				</select>
 			</div>
-
-			<p class="alert alert-warning">Need to add image upload</p>
+<div ng-controller="UploadCtrl">
+    <input type="checkbox" ng-model="multiple">upload multiple file</br></br>
+    watching model:
+    <div class="button" ngf-select ng-model="files" ngf-multiple="multiple">Select File</div>
+    on file change:
+    <div class="button" ngf-select ngf-change="upload($files)" ngf-multiple="multiple">Select File</div>
+    Drop File:
+    <div ngf-drop ngf-select ng-model="files" class="drop-box" 
+        ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
+        accept="image/*,application/pdf">Drop pdfs or images here or click to upload</div>
+    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+    Files:
+    <ul>
+        <li ng-repeat="f in files" style="font:smaller">{{f.name}}</li>
+    </ul>
+    Upload Log:
+    <pre>{{log}}</pre>
+</div>
+</div>
 
 			<input-text label="Global Trade Item Number (GTIN)" name="GTIN" pattern="regexp.word" placeholder="1234"></input-text>
 
