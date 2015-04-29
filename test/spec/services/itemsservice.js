@@ -1,125 +1,65 @@
 'use strict';
 
-describe('Items Service', function (baseUrl) {
+describe('Items Service', function () {
 
   // instantiate service
   var itemsService,
     $httpBackend,
-    responseHandler,
-    url,
-    itemListJSON,
-    retailItemsList;
+    item,
+    items,
+    itemType,
+    itemTypes;
 
-  url = baseUrl + '/api/retail-items1';
+  // set base path for jasmine
+  jasmine.getJSONFixtures().fixturesPath = 'base/test/mock'; 
+
+  // load JSON fixtures
+  var json = jasmine.getJSONFixtures().load(
+    'items.json',
+    'itemTypes.json'
+  ); 
+
+  // grab item list json
+  var itemsJSON = json['items.json'];
+
+  var itemTypesJSON = json['itemTypes.json'];
+ 
+  //var itemCreateJSON = json['item-create.json']; 
 
   // load the service's module
   beforeEach(module('ts5App'));
 
-  beforeEach(inject(function (_itemsService_, $injector) { 
-
-    itemListJSON = {
-     'retailItems':[
-        {
-           'companyId':326,
-           'itemCode':'98765',
-           'itemName':'CokeDietSilver',
-           'itemTypeName':'Regular',
-           'itemTypeId':1,
-           'categoryName':'Drinks',
-           'salesCategoryId':179,
-           'sellingPoint':null,
-           'stockOwnerCode':null,
-           'onBoardName':'Diet Coke',
-           'currentPrice':null,
-           'description':'Silve can',
-           'imageUrl':null,
-           'startDate':'2015-04-15',
-           'endDate':'2015-05-09',
-           'keywords':null,
-           'isPrintReceipt':'false',
-           'id':'332',
-           'subViewItems':[
-              {
-                 'characteristicId':null,
-                 'allergenId':null,
-                 'substitutionId':null,
-                 'recommendedId':null,
-                 'gtnType':null,
-                 'gtnValue':null,
-                 'mfgPartNumber':null,
-                 'skuNumber':null,
-                 'price':null,
-                 'priceStartDate':'2015-04-16 00:00:00.0',
-                 'priceEndDate':'2015-05-09 00:00:00.0',
-                 'tagId':null,
-                 'companyCurrencyId':null
-              }
-           ]
-        },
-        {
-           'companyId':326,
-           'itemCode':'max123',
-           'itemName':'MaxItem',
-           'itemTypeName':'Regular',
-           'itemTypeId':1,
-           'categoryName':'Drinks',
-           'salesCategoryId':179,
-           'sellingPoint':'',
-           'stockOwnerCode':null,
-           'onBoardName':'Max\'s Item',
-           'currentPrice':null,
-           'description':'coolest',
-           'imageUrl':null,
-           'startDate':'2015-04-17',
-           'endDate':'2015-05-17',
-           'keywords':'',
-           'isPrintReceipt':'false',
-           'id':'333',
-           'subViewItems':[
-              {
-                 'characteristicId':null,
-                 'allergenId':null,
-                 'substitutionId':null,
-                 'recommendedId':null,
-                 'gtnType':null,
-                 'gtnValue':null,
-                 'mfgPartNumber':null,
-                 'skuNumber':null,
-                 'price':null,
-                 'priceStartDate':'2015-04-17 00:00:00.0',
-                 'priceEndDate':'2015-05-17 00:00:00.0',
-                 'tagId':null,
-                 'companyCurrencyId':null
-              }
-           ]
-        }
-      ]
-    };
-
+  // Inject the service and responshandler
+  beforeEach( inject(function (_itemsService_, $injector) { 
 
     itemsService = _itemsService_;
 
     $httpBackend = $injector.get('$httpBackend');
-    responseHandler = $httpBackend.whenGET(/retail-items1/);
   
-  })); // before inject
+  }));
 
   it('should exist', function () {
-    expect(!!itemsService).toBe(true);
+    expect(itemsService).toBeDefined();
   });
 
-  describe('Items List API', function () {
+  // Item API
+  describe('Items API', function () {
 
+    // inject the http request mock to the API
     beforeEach(function() {
 
-      $httpBackend.expectGET(/retail-items1/);
-
+      // spy on the query of the items service
       spyOn(itemsService.items, 'query').and.callFake(function() {
-        return itemListJSON;
+        return itemsJSON;
       });
 
-      retailItemsList = itemsService.items.query();  
+      // make the mock query call
+      items = itemsService.items.query();  
 
+    });
+
+    it('should have an item resource', function() {
+      expect(itemsService.items).toBeDefined();
     });
 
     it('should be able call the query method', function() {
@@ -127,14 +67,89 @@ describe('Items Service', function (baseUrl) {
     });
 
     it('should fetch a list of items', function () {
-      expect(retailItemsList.retailItems).toBeDefined();
+      expect(items.retailItems).toBeDefined();
     });
      
-    it('should have return atleast one item inside of retailItems', function () {
-      expect(retailItemsList.retailItems.length).toBeGreaterThan(0);
-    }); 
+    it('should have return at least one item inside of retailItems', function () {
 
+        expect(items.retailItems.length).toBeGreaterThan(0);
 
-  }); // describe api calls
+        describe('and a Retail Item', function() {
+
+          // grab first item in list
+          item =  items.retailItems[0]; 
+
+          it('should exist', function () {
+              expect(item).toBeDefined().and.not.beNull();
+          });
+
+          it('should have an id', function () {
+            expect(item.id).toBeDefined().and.not.beNull();
+          });
+
+          it('should have an companyId', function () {
+            expect(item.companyId).toBeDefined().and.not.beNull();
+          });
+
+          it('should have an itemName', function () {
+            expect(item.itemName).toBeDefined().and.not.beNull();
+          });
+
+        });
+
+    });
+
+  }); // describe item api
+
+  // Item Types API
+  describe('Item Type API', function () {
+
+    // inject the http request mock to the API 
+    beforeEach(function() {
+
+      // spy on the query of the item types service
+      spyOn(itemsService.itemTypes, 'query').and.callFake(function() {
+        return itemTypesJSON;
+      });
+
+      // make the mock query call
+      itemTypes = itemsService.itemTypes.query();  
+
+    });
+
+    it('should have an itemTypes resource', function() {
+      expect(itemsService.itemTypes).toBeDefined();
+    });
+
+    it('should be able call the query method', function() {
+      expect(itemsService.itemTypes.query).toHaveBeenCalled();
+    });
+     
+    it('should have return at least one item itemType', function () {
+
+        expect(itemTypes.length).toBeGreaterThan(0);
+
+        describe('and a Item Type', function() {
+
+          // grab first item in list
+          itemType =  itemTypes[0]; 
+
+          it('should exist', function () {
+              expect(itemType).toBeDefined().and.not.beNull();
+          });
+
+          it('should have an id', function () {
+            expect(itemType.id).toBeDefined().and.not.beNull();
+          });
+
+          it('should have an name', function () {
+            expect(item.name).toBeDefined().and.not.beNull();
+          });
+
+        });
+
+    });
+
+  }); // describe item api
 
 }); // describe item service
