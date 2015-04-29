@@ -30,7 +30,8 @@ angular.module('ts5App')
       tags: returnResource('/api/companies/'+company.id+'/tags'),
       salesCategories: returnResource('/api/companies/'+company.id+'/sales-categories'),
       currencies: returnResource('/api/companies/'+company.id+'/currencies'),
-      taxTypes: returnResource('/api/companies/'+company.id+'/tax-types')
+      taxTypes: returnResource('/api/companies/'+company.id+'/tax-types'),
+      stations: returnResource('/api/companies/'+company.id+'/stations'),
     };
 
   });

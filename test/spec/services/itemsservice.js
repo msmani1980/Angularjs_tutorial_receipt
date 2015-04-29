@@ -118,7 +118,7 @@ describe('Items Service', function (baseUrl) {
         return itemListJSON;
       });
 
-      retailItemsList = itemsService.items.query(); 
+      retailItemsList = itemsService.items.query();  
 
     });
 

@@ -100,9 +100,9 @@ angular.module('ts5App')
         });
 
         // get volume units
-      itemsFactory.units.volume.query(function(data) {
-        $scope.volumeUnits = data.units;
-      });
+        itemsFactory.units.volume.query(function(data) {
+          $scope.volumeUnits = data.units;
+        });
 
       }
 
@@ -124,9 +124,14 @@ angular.module('ts5App')
           $scope.salesCategories = data.salesCategories;
         });
 
-        // get sales categories
+        // get tax types
         companiesService.taxTypes.query(function(data) {
           $scope.taxTypes = data.response;
+        });
+
+        // get stations
+        companiesService.stations.query(function(data) {
+          $scope.stations = data.response;
         });
 
       }
