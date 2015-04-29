@@ -11,8 +11,8 @@
 angular.module('ts5App')
     .controller('ItemListCtrl', function ($scope,$http,itemsFactory) {
 
-        $http.defaults.headers.common['userId'] = 1;
-        $http.defaults.headers.common['companyId'] = 326;
+        $http.defaults.headers.common.userId = 1;
+        $http.defaults.headers.common.companyId = 326;
 
         // set the list size
         $scope.listSize = 10;

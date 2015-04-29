@@ -1,0 +1,33 @@
+/* Uploader Styles */
+
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    min-width: 200px;
+    min-height: 100px;
+    height: auto;
+    text-align: center;
+    padding-top: 25px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+.dragover {
+    border: 5px dashed blue;
+    background: #97A1C8;
+}
+.thumbnails{
+    display:block;
+    background: #F8F8F8;
+    width:100%;
+    margin-bottom:10px;
+    padding:1em;
+    border-radius:5px;
+}
+.img-thumbnail{
+    max-width:128px;
+}
+.img-thumbnail p{
+    text-align:center;
+    margin-bottom:0;
+}

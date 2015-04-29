@@ -12,7 +12,8 @@ angular.module('ts5App')
     
       // TODO: make global and ingest actuall user / company ids
   		$http.defaults.headers.common.userId = 1;
-    	$http.defaults.headers.companyId = 326;
+    	$http.defaults.headers.common.companyId = 326;
+      $http.defaults.headers.common.type = 'item';
 
     	// View Name
   		$scope.viewName = 'Create Item';

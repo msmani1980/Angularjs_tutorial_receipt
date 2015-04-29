@@ -135,25 +135,43 @@
 					<option value="2">Allergen 2</option>
 				</select>
 			</div>
-<div ng-controller="UploadCtrl">
-    <input type="checkbox" ng-model="multiple">upload multiple file</br></br>
-    watching model:
-    <div class="button" ngf-select ng-model="files" ngf-multiple="multiple">Select File</div>
-    on file change:
-    <div class="button" ngf-select ngf-change="upload($files)" ngf-multiple="multiple">Select File</div>
-    Drop File:
-    <div ngf-drop ngf-select ng-model="files" class="drop-box" 
-        ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
-        accept="image/*,application/pdf">Drop pdfs or images here or click to upload</div>
-    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
-    Files:
-    <ul>
-        <li ng-repeat="f in files" style="font:smaller">{{f.name}}</li>
-    </ul>
-    Upload Log:
-    <pre>{{log}}</pre>
-</div>
-</div>
+
+			<div class="form-group" ng-controller="UploadCtrl">
+		
+			    <label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
+
+			    <div ngf-select="" ngf-drop="" class="drop-box" 
+			    	ng-model="files" 
+			       	ngf-drag-over-class="dragover"  
+			        ngf-multiple="true" 
+			        ngf-allow-dir="true"
+			        ngf-accept="'.jpg,.png'"
+			        ngf-min-size='10' 
+    				ngf-max-size='10000' 
+			    >
+
+			        Drop Images, or Click.
+
+			    </div>
+
+			    <div class="thumbnails" ng-show="files != null">
+
+			    	<div class="img-thumbnail" ng-repeat="file in files">
+
+					    <!--TODO - Stop file thumbnails from overwriting eachother -->
+					    <img ngf-thumbnail="file" class="thumbs" />
+
+				    	<p>{{file.name}}</p>
+
+				    </div>
+
+			    </div>
+
+			    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+			    <div class="button btn btn-primary" ng-click="upload()">Upload</div>
+			  
+			</div>
 
 			<input-text label="Global Trade Item Number (GTIN)" name="GTIN" pattern="regexp.word" placeholder="1234"></input-text>
 
