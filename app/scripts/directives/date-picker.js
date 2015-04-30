@@ -36,7 +36,7 @@ angular.module('ts5App')
         console.log('startDate', startDateEvent.date);
       });
       $element.on('changeDate', '.endDate', function (endDateEvent) {
-        console.log('startDate', endDateEvent.date);
+        console.log('endDate', endDateEvent.date);
       });
     };
 
