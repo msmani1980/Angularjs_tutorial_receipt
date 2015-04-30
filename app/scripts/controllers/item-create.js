@@ -19,7 +19,9 @@ angular.module('ts5App')
   		$scope.viewName = 'Create Item';
 
   		// Form Data to be passed to API
-  		$scope.formData = {};
+  		$scope.formData = {
+        qrCodeValue: 'qrCode'
+      };
 
       $scope.itemTypeList = [{'id':1,'name':'Regular'},{'id':2,'name':'Virtual'}];
 

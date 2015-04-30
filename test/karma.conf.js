@@ -39,6 +39,8 @@ module.exports = function(config) {
       'bower_components/angular-moment/angular-moment.js',
       'bower_components/angular-dynforms/dynamic-forms.js',
       'bower_components/ng-file-upload/ng-file-upload.js',
+      'bower_components/qrcode/lib/qrcode.js',
+      'bower_components/angular-qr/src/angular-qr.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
