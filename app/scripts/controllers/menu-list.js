@@ -16,11 +16,11 @@ angular.module('ts5App')
     };
 
     function formatDates(menuArray) {
-      var formattedMenuArray = angular.extend({}, menuArray);
+      var formattedMenuArray = angular.copy(menuArray);
       angular.forEach(formattedMenuArray, function (menu) {
         var formatFromAPI = 'YYYY-MM-DD';
-        menu.startDate = moment(menu.startDate, formatFromAPI).format('l').toString();
-        menu.endDate = moment(menu.endDate, formatFromAPI).format('l').toString();
+        menu.startDate = moment(menu.startDate, formatFromAPI).format('L').toString();
+        menu.endDate = moment(menu.endDate, formatFromAPI).format('L').toString();
       });
       return formattedMenuArray;
     }

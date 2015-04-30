@@ -49,7 +49,7 @@
   <div class="panel-footer text-right">
     <button type="submit" class="btn btn-primary">Search</button>
   </div>
-</div>
+</div>{{search}}
 <table class="table table-bordered table-hover">
   <thead>
   <tr>
@@ -62,7 +62,7 @@
   </thead>
   <tbody>
   <tr
-    ng-repeat="menu in menuList | filter:search.menuCode, menuName: search.menuName, startDate: search.startDate, endDate: search.endDate}"
+    ng-repeat="menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName, startDate: search.startDate, endDate: search.endDate}"
     ng-click="showMenu(menu)">
     <td>{{ menu.menuCode }}</td>
     <td>{{ menu.menuName }}</td>

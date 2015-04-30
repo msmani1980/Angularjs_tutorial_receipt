@@ -75,7 +75,7 @@ describe('Controller: MenuListCtrl', function () {
     });
 
     it('should have a formatted start and date', function () {
-      expect(scope.menuList[0].startDate).toBe('9/30/2014');
+      expect(scope.menuList[0].startDate).toBe('09/30/2014');
     });
   });
 });
