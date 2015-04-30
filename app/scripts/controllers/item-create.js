@@ -32,7 +32,7 @@ angular.module('ts5App')
         	// set the formData models in the view to the scope.formData object
         	$scope.formData = angular.copy(formData);
 
-          	// forcing price right now, FIX ME
+          	// FIXME forcing price right now
           	$scope.formData.prices = [{startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',}];
 
           	var newItem = {
@@ -55,13 +55,14 @@ angular.module('ts5App')
 
           };
 
-        // TODO MOVE ME GLOBAL
+      // TODO MOVE ME GLOBAL
   		$scope.scrollTo = function(id) {
 	      $location.hash(id);
 	      $anchorScroll();
 	    };
 
       // Makes API requests  for item record dependencies likes itemTypes or allergens
+      // TODO: Move this to the factory?
       function getItemDependencies() {
 
         // Get a list from the API
@@ -107,6 +108,7 @@ angular.module('ts5App')
       }
 
       // Makes API requests  for companyu record dependencies likes tags or sales-categories
+      // TODO: Move this to the factory?
       function getCompanyDependencies() {
 
         // get tags

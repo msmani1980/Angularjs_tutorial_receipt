@@ -10,6 +10,7 @@
 angular.module('ts5App')
   .factory('itemsFactory', function ($resource, baseUrl, itemsService) {
 
+  	// just returns the service for now, we don't have anything to extend yet.
     return itemsService;
 
   });
