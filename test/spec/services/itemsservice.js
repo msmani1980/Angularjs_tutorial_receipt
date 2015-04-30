@@ -116,7 +116,7 @@ describe('Items Service |', function () {
   }); // describe item api
 
   // Item Types API
-  describe('Item Type API', function () {
+  describe('The Items Type API', function () {
 
     // inject the http request mock to the API 
     beforeEach(function() {
@@ -455,7 +455,7 @@ describe('Items Service |', function () {
 
     });
 
-    it('should have an Unit/Weight resource', function() {
+    it('should have an Unit/Volume resource', function() {
       expect(itemsService.units.volume).toBeDefined();
     });
 
@@ -491,8 +491,6 @@ describe('Items Service |', function () {
       expect(testObject.unitName).toBeDefined();
     });
   
-  }); // describe Units/Weight api
-
-
+  }); // describe Units/Volume api
 
 }); // describe item service
