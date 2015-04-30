@@ -136,7 +136,7 @@
 				</select>
 			</div>
 
-			<div class="form-group" ng-controller="UploadCtrl">
+			<div class="form-group upload-container" ng-controller="UploadCtrl">
 		
 			    <label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
 
@@ -145,16 +145,16 @@
 			       	ngf-drag-over-class="dragover"  
 			        ngf-multiple="true" 
 			        ngf-allow-dir="true"
-			        ngf-accept="'.jpg,.png'"
+			        ngf-accept="'.png,.jpg'"
 			        ngf-min-size='10' 
     				ngf-max-size='10000' 
 			    >
 
 			        Drop Images, or Click.
-
+            
 			    </div>
-
-			    <div class="thumbnails" ng-show="files != null">
+ 
+			    <div class="thumbnails" ng-show="files != null" ng-model="files">
 
 			    	<div class="img-thumbnail" ng-repeat="file in files">
 
@@ -169,7 +169,11 @@
 
 			    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
 
-			    <div class="button btn btn-primary" ng-click="upload()">Upload</div>
+			    <button class="button" ng-model="files" ng-disabled="!files" ng-click="upload()">Upload</button>
+
+        		<p class="alert alert-success" ng-show="file.result">{{file.result}} Upload Successful</p>
+
+        		<p class="alert alert-warning" ng-show="file.result">{{file.result}} Upload Failed</p>
 			  
 			</div>
 

@@ -9,7 +9,6 @@
     text-align: center;
     padding-top: 25px;
     margin-top: 10px;
-    margin-bottom: 20px;
     font-size: 2em;
 }
 .dragover {
@@ -20,9 +19,9 @@
     display:block;
     background: #F8F8F8;
     width:100%;
-    margin-bottom:10px;
     padding:1em;
     border-radius:5px;
+    margin-top:1em;
 }
 .img-thumbnail{
     max-width:128px;
@@ -30,4 +29,9 @@
 .img-thumbnail p{
     text-align:center;
     margin-bottom:0;
+}
+
+.upload-container button{
+    margin-bottom:1em;
+    margin-top:1em;
 }

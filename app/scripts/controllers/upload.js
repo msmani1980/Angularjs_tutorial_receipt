@@ -21,24 +21,6 @@ angular.module('ts5App')
 
     	var files = $scope.files;
 
-        /*if (files && files.length) {
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                Upload.upload({
-                    url: 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/images',
-                    fileFormDataName: 'image',
-                    file: file
-                }).progress(function (evt) {
-                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                    $scope.progress = progressPercentage;
-                }).success(function () {
-                    console.log( data + 'success');
-                }).error(function () {
-                	console.log( data + 'error');
-                });
-            }
-        }*/
-
         if (files && files.length) {
             
             Upload.upload({
@@ -48,10 +30,12 @@ angular.module('ts5App')
             }).progress(function (evt) {
                 var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                 $scope.progress = progressPercentage;
+                $scope.log = 'progress: ' + progressPercentage + '% ' +
+                evt.config.file.name + '\n' + $scope.log;
             }).success(function () {
-                //console.log( data + 'success');
+                console.log('success');
             }).error(function () {
-            	//console.log( data + 'error');
+            	console.log('error');
             });
 
         } else {
