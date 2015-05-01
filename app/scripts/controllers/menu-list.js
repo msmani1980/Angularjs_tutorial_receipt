@@ -15,8 +15,12 @@ angular.module('ts5App')
       $location.path('menu-edit/' + menu.id);
     };
 
+    var attachMenuListToScope = function (menuListFromAPI) {
+      $scope.menuList = formatDates(menuListFromAPI.menus);
+    };
+
     $scope.searchMenus = function () {
-      console.log($scope.search);
+      menuService.getMenuList($scope.search).then(attachMenuListToScope);
     };
 
     $scope.clearForm = function () {
@@ -33,7 +37,5 @@ angular.module('ts5App')
       return formattedMenuArray;
     }
 
-    menuService.getMenuList().then(function (menuListFromAPI) {
-      $scope.menuList = formatDates(menuListFromAPI.menus);
-    });
+    menuService.getMenuList().then(attachMenuListToScope);
   });

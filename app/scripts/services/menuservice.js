@@ -35,9 +35,9 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getMenuList = function () {
+    var getMenuList = function (payload) {
       var deferred = $q.defer();
-      requestResource.getMenuList().$promise.then(function (data) {
+      requestResource.getMenuList(payload).$promise.then(function (data) {
         deferred.resolve(data);
       });
       return deferred.promise;
