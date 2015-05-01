@@ -25,6 +25,7 @@ angular.module('ts5App')
 
     $scope.clearForm = function () {
       $scope.search = {};
+      $scope.searchMenus();
     };
 
     function formatDates(menuArray) {
