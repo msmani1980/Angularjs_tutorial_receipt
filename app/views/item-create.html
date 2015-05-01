@@ -136,10 +136,12 @@
 
 			    <div ngf-select="" ngf-drop="" class="drop-box" 
 			    	ng-model="files" 
+			    	ng-model-rejected="rejFiles"
+			    	ngf-change="generateThumb(file, files)"
 			       	ngf-drag-over-class="dragover"  
 			        ngf-multiple="true" 
 			        ngf-allow-dir="true"
-			        ngf-accept="'.png,.jpg'"
+			        ngf-accept="'.jpg,.png'"
 			        ngf-min-size='10' 
     				ngf-max-size='10000' 
 			    >
@@ -147,8 +149,10 @@
 			        Drop Images, or Click.
             
 			    </div>
+
+			    <p class="alert alert-danger" ng-model="files" ng-show="rejFiles.length">File doesn't meet requirements.</p>
  
-			    <div class="thumbnails" ng-show="files != null" ng-model="files">
+			    <div class="thumbnails" ng-show="files.length" ng-model="files">
 
 			    	<div class="img-thumbnail" ng-repeat="file in files">
 
@@ -157,17 +161,25 @@
 
 				    	<p>{{file.name}}</p>
 
+	    				<progressbar class="progress-striped" ng-model="files" ng-show="!fail && !success" ng-show="files.length" animate="true" value="progress"><b>{{progress}}%</b>
+	    				</progressbar>
+
+	    				<progressbar class="progress-striped" ng-model="files" ng-show="success" animate="true" value="100" type="success"><b>Success!</b>
+	    				</progressbar>
+
+	        			<progressbar class="progress-striped" ng-model="files" ng-show="fail" animate="true" value="100" type="danger"><b>Fail</b>
+	    				</progressbar>
+        			
 				    </div>
 
 			    </div>
 
 			    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
 
-			    <button class="button" ng-model="files" ng-disabled="!files" ng-click="upload()">Upload</button>
+			    <button class="btn button btn-success" ng-model="files" ng-hide="success" ng-disabled="!files.length" ng-click="upload()">Upload</button>
+			    <button class="btn button btn-default" ng-model="files" ng-show="files.length" ng-click="clearFiles()">Clear</button>
 
-        		<p class="alert alert-success" ng-show="file.result">{{file.result}} Upload Successful</p>
 
-        		<p class="alert alert-warning" ng-show="file.result">{{file.result}} Upload Failed</p>
 			  
 			</div>
 
@@ -201,7 +213,8 @@
 				<div class="form-group qr-upload-container" ng-controller="QruploadCtrl">
 
 				    <div ngf-select="" ngf-drop="" class="drop-box" 
-				    	ng-model="qrcodes" 
+				    	ng-model="qrcodes"
+				    	ng-model-rejected="rejFiles"
 				       	ngf-drag-over-class="dragover"  
 				        ngf-multiple="false" 
 				        ngf-allow-dir="true"

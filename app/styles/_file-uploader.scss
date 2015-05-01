@@ -15,6 +15,9 @@
     border: 5px dashed blue;
     background: #97A1C8;
 }
+.dragover-err {
+    border:5px dashed orange;
+}
 .thumbnails{
     display:block;
     background: #F8F8F8;
@@ -23,7 +26,7 @@
     border-radius:5px;
     margin-top:1em;
 }
-.img-thumbnail{
+img.thumbs{
     max-width:128px;
 }
 .img-thumbnail p{
@@ -34,16 +37,15 @@
     margin-bottom:1em;
     margin-top:1em;
 }
+
 .qr-upload-container button{
     margin-bottom:1em;
     margin-top:1em;
 }
-
 .qr-code{
     border-radius:5px;
     padding:1em;
 }
-
 .qr-code .btn{
     width:128px;
     margin-top:10px;

@@ -18,7 +18,8 @@ angular.module('ts5App')
 
   		// Form Data to be passed to API
   		$scope.formData = {
-        qrCodeValue: 'qrCode'
+        qrCodeValue: 'qrCode',
+        images: []
       };
 
       // Submit function to proces form and hit the api 
