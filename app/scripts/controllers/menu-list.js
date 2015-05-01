@@ -15,6 +15,10 @@ angular.module('ts5App')
       $location.path('menu-edit/' + menu.id);
     };
 
+    $scope.clearForm = function() {
+      $scope.search = {};
+    };
+
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
       angular.forEach(formattedMenuArray, function (menu) {

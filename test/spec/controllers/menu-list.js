@@ -57,6 +57,12 @@ describe('Controller: MenuListCtrl', function () {
     expect(scope.viewName).toBe('Menu Management');
   });
 
+  it('should clear search model', function () {
+    scope.search = {startDate: 'fakeDate'};
+    scope.clearForm();
+    expect(scope.search.startDate).toBe(undefined);
+  });
+
   it('should get the menu list from API', function () {
     expect(menuService.getMenuList).toHaveBeenCalled();
   });
