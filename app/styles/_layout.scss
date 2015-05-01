@@ -65,3 +65,10 @@
     line-height: 3rem;
   }
 }
+/* navbar */
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  // temporary fix until datepicker  is modified to go above
+  // z-index 1029
+  z-index: 9;
+}
