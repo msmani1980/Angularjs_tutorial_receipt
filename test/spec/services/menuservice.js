@@ -54,7 +54,7 @@ describe('Service: menuService', function () {
     describe('getMenuList', function () {
       beforeEach(function () {
         $httpBackend.whenGET(/menus/).respond(menuResponseJSON);
-        menuService.getMenuList().then(function(menuListFromAPI){
+        menuService.getMenuList().then(function (menuListFromAPI) {
           menuData = menuListFromAPI;
         });
         $httpBackend.flush();
@@ -77,6 +77,15 @@ describe('Service: menuService', function () {
       });
     });
 
+    describe('search Menu', function () {
+      it('should fetch and return menuList', function () {
+        spyOn(menuService, 'getMenuList').and.callThrough();
+        var payload = {someKey: 'someValue'};
+        menuService.getMenuList(payload);
+        expect(menuService.getMenuList).toHaveBeenCalledWith(payload);
+      });
+    });
+
     describe('getMenu', function () {
       beforeEach(function () {
         spyOn(menuService, 'getMenu').and.callFake(function () {
@@ -92,7 +101,7 @@ describe('Service: menuService', function () {
 
     describe('updateMenu', function () {
       beforeEach(function () {
-        $httpBackend.whenPUT(/menus/).respond({done:true});
+        $httpBackend.whenPUT(/menus/).respond({done: true});
       });
       it('it should POST data to menus API', function () {
         menuService.updateMenu({menuData: 'fakeMenuPayload'});

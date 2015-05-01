@@ -5,6 +5,8 @@ describe('Directive: datePicker', function () {
   // load the directive's module
   beforeEach(module('ts5App'));
 
+  beforeEach(module('template-module'));
+
   var element,
     scope;
 
@@ -12,9 +14,23 @@ describe('Directive: datePicker', function () {
     scope = $rootScope.$new();
   }));
 
-  //it('should make hidden element visible', inject(function ($compile) {
-  //  element = angular.element('<date-picker></date-picker>');
-  //  element = $compile(element)(scope);
-  //  expect(element.text()).toBe('this is the datePicker directive');
-  //}));
+  describe('date picker template', function () {
+    beforeEach(inject(function ($compile) {
+      element = angular.element('<date-picker label-from="labelFrom" label-to="labelTo"></date-picker>');
+      element = $compile(element)(scope);
+      scope.$digest();
+    }));
+
+    it('should have 2 input fields', function () {
+      expect(element.find('input').length).toBe(2);
+    });
+
+    it('should have label-from', function () {
+      expect(element.find('.startDateContainer label').text()).toBe('labelFrom');
+    });
+
+    it('should have label-from', function () {
+      expect(element.find('.endDateContainer label').text()).toBe('labelTo');
+    });
+  });
 });

@@ -15,7 +15,11 @@ angular.module('ts5App')
       $location.path('menu-edit/' + menu.id);
     };
 
-    $scope.clearForm = function() {
+    $scope.searchMenus = function () {
+      console.log($scope.search);
+    };
+
+    $scope.clearForm = function () {
       $scope.search = {};
     };
 

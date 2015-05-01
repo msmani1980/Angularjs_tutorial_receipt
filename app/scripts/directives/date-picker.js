@@ -53,7 +53,7 @@ angular.module('ts5App')
     }
 
     return {
-      templateUrl: 'views/directives/date-picker.html',
+      templateUrl: '/views/directives/date-picker.html',
       restrict: 'E',
       replace: true,
       scope: {
