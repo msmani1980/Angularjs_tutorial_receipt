@@ -11,23 +11,6 @@ angular.module('ts5App')
   .controller('MenuListCtrl', function ($scope, $location, menuService) {
     $scope.viewName = 'Menu Management';
 
-    $scope.showMenu = function (menu) {
-      $location.path('menu-edit/' + menu.id);
-    };
-
-    var attachMenuListToScope = function (menuListFromAPI) {
-      $scope.menuList = formatDates(menuListFromAPI.menus);
-    };
-
-    $scope.searchMenus = function () {
-      menuService.getMenuList($scope.search).then(attachMenuListToScope);
-    };
-
-    $scope.clearForm = function () {
-      $scope.search = {};
-      $scope.searchMenus();
-    };
-
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
       angular.forEach(formattedMenuArray, function (menu) {
@@ -37,6 +20,36 @@ angular.module('ts5App')
       });
       return formattedMenuArray;
     }
+
+    function serializeDates(payload) {
+      var formattedPayload = angular.copy(payload),
+        datePickerFormat = 'MM/DD/YYYY',
+        serializedFormat = 'YYYYMMDD';
+      if (formattedPayload.startDate) {
+        formattedPayload.startDate = moment(formattedPayload.startDate, datePickerFormat).format(serializedFormat).toString();
+      }
+      if (formattedPayload.endDate) {
+        formattedPayload.endDate = moment(formattedPayload.endDate, datePickerFormat).format(serializedFormat).toString();
+      }
+      return formattedPayload;
+    }
+
+    $scope.showMenu = function (menu) {
+      $location.path('menu-edit/' + menu.id);
+    };
+
+    var attachMenuListToScope = function (menuListFromAPI) {
+      $scope.menuList = formatDates(menuListFromAPI.menus);
+    };
+
+    $scope.searchMenus = function () {
+      menuService.getMenuList(serializeDates($scope.search)).then(attachMenuListToScope);
+    };
+
+    $scope.clearForm = function () {
+      $scope.search = {};
+      $scope.searchMenus();
+    };
 
     menuService.getMenuList().then(attachMenuListToScope);
   });

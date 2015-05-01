@@ -57,10 +57,17 @@ describe('Controller: MenuListCtrl', function () {
     expect(scope.viewName).toBe('Menu Management');
   });
 
-  it('should clear search model', function () {
+  it('should clear search model and make a API call', function () {
     scope.search = {startDate: 'fakeDate'};
     scope.clearForm();
     expect(scope.search.startDate).toBe(undefined);
+    expect(menuService.getMenuList).toHaveBeenCalledWith({});
+  });
+
+  it('should clear search model and make a API call', function () {
+    scope.search = {startDate: '10/05/1979'};
+    scope.searchMenus();
+    expect(menuService.getMenuList).toHaveBeenCalledWith({startDate: '19791005'});
   });
 
   it('should get the menu list from API', function () {
