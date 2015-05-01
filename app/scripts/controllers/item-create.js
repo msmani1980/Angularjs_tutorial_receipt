@@ -9,12 +9,17 @@
  */
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function ($scope,$http,baseUrl,$location,$anchorScroll,itemsFactory,companiesService) {
+    
+      // TODO: make global and ingest actuall user / company ids
+      $http.defaults.headers.common.type = 'item';
 
     	// View Name
   		$scope.viewName = 'Create Item';
 
   		// Form Data to be passed to API
-  		$scope.formData = {};
+  		$scope.formData = {
+        qrCodeValue: 'qrCode'
+      };
 
       // Submit function to proces form and hit the api 
       $scope.submitForm = function(formData) {

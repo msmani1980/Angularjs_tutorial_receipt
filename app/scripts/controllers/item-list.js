@@ -17,7 +17,7 @@ angular.module('ts5App')
         });
 
         // set the list size
-        $scope.listSize = 10; 
+        $scope.listSize = 10;
 
         // Get a list from the API
         itemsFactory.items.query(function (itemList) {
@@ -26,7 +26,7 @@ angular.module('ts5App')
 
             $scope.itemsCount = itemList.meta.count;
 
-            var pagination =  generatePagniation($scope.itemsCount,$scope.listSize);
+            var pagination =  generatePagination($scope.itemsCount,$scope.listSize);
 
             $scope.pagination = pagination;
 
@@ -35,18 +35,18 @@ angular.module('ts5App')
         // Watch the listSize model change (items per page dropdown for pagination)
         $scope.$watch('listSize', function() {
 
-            var pagination =  generatePagniation($scope.itemsCount, parseInt(this.last));
+            var pagination =  generatePagination($scope.itemsCount, parseInt(this.last));
 
             $scope.pagination = pagination;
 
         });
 
         //Generates pagination information
-        function generatePagniation(itemCount,itemsPerPage) {
+        function generatePagination(itemCount,itemsPerPage) {
 
             var pageCount = Math.ceil( itemCount / itemsPerPage );
 
-            var pages = [];
+            var pages = [0];
 
             for(var i = 1; i < pageCount; i++) {
                 pages.push(i);

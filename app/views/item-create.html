@@ -130,7 +130,46 @@
 				</select>
 			</div>
 
-			<p class="alert alert-warning">Need to add image upload</p>
+			<div class="form-group upload-container" ng-controller="UploadCtrl">
+		
+			    <label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
+
+			    <div ngf-select="" ngf-drop="" class="drop-box" 
+			    	ng-model="files" 
+			       	ngf-drag-over-class="dragover"  
+			        ngf-multiple="true" 
+			        ngf-allow-dir="true"
+			        ngf-accept="'.png,.jpg'"
+			        ngf-min-size='10' 
+    				ngf-max-size='10000' 
+			    >
+
+			        Drop Images, or Click.
+            
+			    </div>
+ 
+			    <div class="thumbnails" ng-show="files != null" ng-model="files">
+
+			    	<div class="img-thumbnail" ng-repeat="file in files">
+
+					    <!--TODO - Stop file thumbnails from overwriting eachother -->
+					    <img ngf-thumbnail="file" class="thumbs" />
+
+				    	<p>{{file.name}}</p>
+
+				    </div>
+
+			    </div>
+
+			    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+			    <button class="button" ng-model="files" ng-disabled="!files" ng-click="upload()">Upload</button>
+
+        		<p class="alert alert-success" ng-show="file.result">{{file.result}} Upload Successful</p>
+
+        		<p class="alert alert-warning" ng-show="file.result">{{file.result}} Upload Failed</p>
+			  
+			</div>
 
 			<input-text label="Global Trade Item Number (GTIN)" name="GTIN" pattern="regexp.word" placeholder="1234"></input-text>
 
@@ -138,12 +177,72 @@
 
 			<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="1234"></input-text>
 
-			<p class="alert alert-warning">Need to add QR creation and upload</p>
+			<tabset justified="true">
 
-			<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code"></input-text>
+				<tab heading="QR Create">
+
+					<div class="tab-pane">
+
+						<div class="qr-code">
+							<div class="thumb">
+								<qr text="formData.qrCodeValue" image="true" size="128"></qr>
+							</div>
+							<a class="btn btn-success">Save</a>
+						</div>
+
+						<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code"></input-text>
+
+					</div>
+
+				</tab>
+
+				<tab heading="QR Upload">
+				
+				<div class="form-group qr-upload-container" ng-controller="QruploadCtrl">
+
+				    <div ngf-select="" ngf-drop="" class="drop-box" 
+				    	ng-model="qrcodes" 
+				       	ngf-drag-over-class="dragover"  
+				        ngf-multiple="false" 
+				        ngf-allow-dir="true"
+				        ngf-accept="'.png,.jpg'"
+				        ngf-min-size='10' 
+	    				ngf-max-size='10000' 
+				    >
+
+				        Drop QR Code, or Click.
+	            
+				    </div>
+	 
+				    <div class="thumbnails" ng-show="qrcodes != null" ng-model="qrcodes">
+
+				    	<div class="img-thumbnail" ng-repeat="qrcode in qrcodes">
+
+						    <!--TODO - Stop file thumbnails from overwriting eachother -->
+						    <img ngf-thumbnail="qrcode" class="thumbs" />
+
+					    	<p>{{qrcode.name}}</p>
+
+					    </div>
+
+				    </div>
+
+				    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+				    <button class="button" ng-model="qrcodes" ng-disabled="!qrcodes" ng-click="upload()">Upload</button>
+
+	        		<p class="alert alert-success" ng-show="file.result">{{file.result}} Upload Successful</p>
+
+	        		<p class="alert alert-warning" ng-show="file.result">{{file.result}} Upload Failed</p>
+				  
+					</div>
+
+				</tab>
+
+			</tabset>
 
 			<input-text label="QR Image URL" name="qrCodeImgUrl" pattern="regexp.url" placeholder="1234"></input-text>
-
+			
 		</div>
 
 	</div>
