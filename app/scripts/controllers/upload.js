@@ -9,11 +9,10 @@
  */
 
 angular.module('ts5App')
-  .controller('UploadCtrl', ['$scope', 'Upload', function ($scope, Upload) {
+  .controller('UploadCtrl', ['$scope', 'Upload', function ($scope, Upload, baseUrl) {
 
-    // Log and Progress
-    $scope.log = '';
-    $scope.progress = [ ];
+    // Progress
+    $scope.uploadProgress = [];
 
     //Watch for files
    	$scope.$watch('files', function (files) {
@@ -23,58 +22,59 @@ angular.module('ts5App')
     //Clear current images/files
     $scope.clearFiles = function() {
         $scope.files = [];
-        $scope.progress = '0';
-        $scope.success = '';
-        $scope.fail = '';
+        $scope.uploadProgress = 0;
+        $scope.uploadSuccess = false;
+        $scope.uploadFail = false;
         $scope.formData.images = [];
     };
 
     //Upload Image function
     $scope.upload = function () {
 
-        //Set variable files for good practice
+        // grab files from scope
     	var files = $scope.files;
 
         //if a file exists and it's length is greater than 0
         if (files && files.length) {
             
+            // Upload iamge
             Upload.upload({     
-                url: 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/images',
+                url: baseUrl + '/api/images',
                 fileFormDataName: 'image',
                 file: files
             }).progress(function (evt) {
 
-                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-
                 //Upload Progress
-                $scope.progress = progressPercentage;
+                $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
 
+            // on a successful upload
             }).success(function (data) {
 
-                //Upload Success
-                $scope.success = 'Success'; 
+                // set the UI flag
+                $scope.uploadSuccess = true; 
 
-                //on success, create image array
+                // new image object
                 var newImage = {
                     endDate: '20150515',
                     imageURL: data.url,
                     startDate: '20150715'
                 };
 
-                //pass created image into images array
+                // pass new image object into formData.images array
                 $scope.formData.images.push(newImage);
 
+            // on a failed upload
             }).error(function (data) {
 
-                //Upload Fail
-                $scope.fail = 'Fail';
+                //set the UI flag 
+                $scope.uploadFail = true;
 
                 console.log(data);
 
             });
 
+        // no files found, exit function
         } else {
-
         	return false;
         }
 

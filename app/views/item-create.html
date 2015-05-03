@@ -130,6 +130,7 @@
 				</select>
 			</div>
 
+			<!-- TODO: Move to directive include -->
 			<div class="form-group upload-container" ng-controller="UploadCtrl">
 		
 			    <label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
@@ -161,13 +162,13 @@
 
 				    	<p>{{file.name}}</p>
 
-	    				<progressbar class="progress-striped" ng-model="files" ng-show="!fail && !success" ng-show="files.length" animate="true" value="progress"><b>{{progress}}%</b>
+	    				<progressbar class="progress-striped" ng-model="files" ng-show="!uploadFail && !uploadSuccess" ng-show="files.length" animate="true" value="progress"><b>{{uploadProgress}}%</b>
 	    				</progressbar>
 
-	    				<progressbar class="progress-striped" ng-model="files" ng-show="success" animate="true" value="100" type="success"><b>Success!</b>
+	    				<progressbar class="progress-striped" ng-model="files" ng-show="uploadSuccess" animate="true" value="100" type="success"><b>Success!</b>
 	    				</progressbar>
 
-	        			<progressbar class="progress-striped" ng-model="files" ng-show="fail" animate="true" value="100" type="danger"><b>Fail</b>
+	        			<progressbar class="progress-striped" ng-model="files" ng-show="uploadFail" animate="true" value="100" type="danger"><b>Fail</b>
 	    				</progressbar>
         			
 				    </div>
@@ -176,7 +177,9 @@
 
 			    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
 
-			    <button class="btn button btn-success" ng-model="files" ng-hide="success" ng-disabled="!files.length" ng-click="upload()">Upload</button>
+			    <button class="btn button btn-success" ng-model="files" ng-hide="success" ng-disabled="!files.length" ng-click="upload()">	Upload
+			    </button>
+			    
 			    <button class="btn button btn-default" ng-model="files" ng-show="files.length" ng-click="clearFiles()">Clear</button>
 
 			</div>
