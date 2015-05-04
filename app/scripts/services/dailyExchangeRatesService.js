@@ -15,15 +15,10 @@ angular.module('ts5App')
     var previousExchangeRatesURL = baseUrl + '/api/daily-exchange-rates/previous-exchange-rate';
 
     var dailyExchangeRatesParameters = {
-      exchangeRateId: '@dailyExchangeRate.id',
-      retailCompanyId: 374,
-      startDate: 20150413,
-      endDate: 20150413
+      exchangeRateId: '@dailyExchangeRate.id'
     };
 
     var previousExchangeRatesParameters = {
-      retailCompanyId: 374,
-      exchangeRateDate: 20150413
     };
 
     var actions = {

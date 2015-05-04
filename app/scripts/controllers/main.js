@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('MainCtrl', function ($scope) {
-    $scope.breadcrumb = 'TS5 Dashboard';
+    $scope.viewName = 'TS5 Dashboard';
 
     $scope.dashboardMenu = [
       {
@@ -77,13 +77,13 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Menus',
-            route: 'menus',
+            route: 'menu-list',
             icon: 'icon-manage-menu',
             className: 'dashboard-manageMenus'
           },
           {
             name: 'Create Menu',
-            route: 'menus.create',
+            route: 'menu-create',
             icon: 'icon-create-menu',
             className: 'dashboard-createMenu'
           }]
@@ -126,13 +126,13 @@ angular.module('ts5App')
             className: 'dashboard-createPromotion'
           },
           {
-            name: 'Manage Promotion Category',
+            name: 'Promotion Category',
             route: 'promotion-category',
             icon: 'icon-manage-promotion-category',
             className: 'dashboard-managePromotionCategory'
           },
           {
-            name: 'Manage Promotion Catalog',
+            name: 'Promotion Catalog',
             route: 'promotion-catalogs',
             icon: 'icon-create-catalog',
             className: 'dashboard-createCatalog'

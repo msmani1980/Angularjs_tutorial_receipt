@@ -1,3 +1,17 @@
+*:focus,
+*:hover,
+*:active {
+  outline: none;
+}
+
+.no-transition {
+  -webkit-transition: height 0.001s;
+  -moz-transition: height 0.001s;
+  -ms-transition: height 0.001s;
+  -o-transition: height 0.001s;
+  transition: height 0.001s;
+}
+
 .navbar-default {
   background-color: $header-bg-color;
   color: #FFF;
@@ -17,7 +31,9 @@
 
     &:hover {
       color: #7CC143;
-      opacity: 0.5;
+    }
+    &:focus {
+      color: inherit;
     }
     .breadcrumb {
       @extend .navbar-brand;
@@ -48,4 +64,11 @@
   .pull-right {
     line-height: 3rem;
   }
+}
+/* navbar */
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  // temporary fix until datepicker  is modified to go above
+  // z-index 1029
+  z-index: 9;
 }

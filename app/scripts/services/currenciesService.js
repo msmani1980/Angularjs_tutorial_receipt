@@ -8,9 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('currencies', function ($q, $resource) {
-    var globalCurrenciesURL = 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies';
-    var companyCurrenciesURL = 'https://ec2-52-6-49-188.compute-1.amazonaws.com/api/companies/:companyId/currencies';
+  .service('currencies', function ($q, $resource, baseUrl) {
+    var globalCurrenciesURL = baseUrl + '/api/currencies';
+    var companyCurrenciesURL = baseUrl + '/api/companies/:companyId/currencies';
     var paramDefaults = {};
     var actions = {
       getCurrencies: {

@@ -16,6 +16,17 @@ module.exports = function(config) {
     // testing framework to use (jasmine/mocha/qunit/...)
     frameworks: ['jasmine'],
 
+    //
+
+    preprocessors: {
+      'app/views/**/*.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: "app",
+      moduleName: "template-module"
+    },
+
     // list of files / patterns to load in the browser
     files: [
       // bower:js
@@ -53,7 +64,9 @@ module.exports = function(config) {
         watched: true,
         included: false,
         served: true
-      }
+      },
+      //location of templates
+      'app/views/**/*.html'
     ],
 
     // list of files / patterns to exclude
@@ -78,7 +91,8 @@ module.exports = function(config) {
     // Which plugins to enable
     plugins: [
       'karma-phantomjs-launcher',
-      'karma-jasmine'
+      'karma-jasmine',
+      'karma-ng-html2js-preprocessor'
     ],
 
     // Continuous Integration mode

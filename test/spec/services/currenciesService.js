@@ -85,7 +85,7 @@ describe('Service: currencies', function () {
     });
 
     it('should fetch currencies list from services', function () {
-      $httpBackend.expectGET('https://ec2-52-6-49-188.compute-1.amazonaws.com/api/currencies');
+      $httpBackend.expectGET(/currencies/);
       currencies.getCompanyBaseCurrency(1).then(function (companyCurrency) {
         expect(companyCurrency.currencyCode).toBe('USD');
       });

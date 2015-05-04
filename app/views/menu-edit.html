@@ -1,0 +1,68 @@
+<ng-form name="menuEditForm" class="form edit-form">
+
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/menu-list" class="btn">Cancel</a>
+        <button class="btn btn-success" ng-click="submitForm()">
+          <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
+
+      </div>
+    </div>
+    <p>All required fields are marked with a *</p>
+
+  </div>
+
+  <h3 id="item-information">Menu Information</h3>
+
+  <div class="form-group col-sm-3">
+    <label for="menuCode">Menu Code</label>
+    <input type="text" name="menuCode" class="form-control" id="menuCode" ng-model="menu.menuCode"
+           placeholder="ITM001">
+  </div>
+
+  <div class="form-group col-sm-3">
+    <label for="menuCode">Menu Name</label>
+    <input type="text" name="menuName" class="form-control" id="menuName" ng-model="menu.menuName"
+           placeholder="ITM001">
+  </div>
+
+  <date-picker
+    class="col-sm-6 col-xs-12"
+    element-class="col-xs-6 col-sm-6"
+    start-date-model="menu.startDate"
+    end-date-model="menu.endDate"
+    disable-past="true"
+    label-from="Effective From"
+    label-to="Effective To">
+  </date-picker>
+
+  <div class="form-group col-sm-12">
+    <label for="menuCode">Description</label>
+    <input type="text" name="description" class="form-control" id="menuDescription" ng-model="menu.description"
+           placeholder="ITM001">
+  </div>
+
+  <table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Item Id</th>
+      <th>Quantity</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in menu.menuItems">
+      <td>{{ item.itemId }}</td>
+      <td>{{ item.itemQty }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+
+</ng-form>

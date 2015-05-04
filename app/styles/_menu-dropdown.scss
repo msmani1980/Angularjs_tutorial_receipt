@@ -1,6 +1,4 @@
-// Since chrome has focus on everything,
-// we need to remove it for some elements
-menu-dropdown:focus {
+.menu-dropdown:focus {
   outline: none
 }
 
@@ -16,13 +14,12 @@ menu-dropdown:focus {
     background-color: transparent;
   }
 
-  &:focus {
-    outline: none;
-  }
-
   a {
     color: #FFF;
     text-decoration: none;
+    &:hover {
+      color: #7CC143;
+    }
   }
 
   .menu-dropdown-icon {
