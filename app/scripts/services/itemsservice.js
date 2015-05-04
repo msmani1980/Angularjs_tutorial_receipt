@@ -8,21 +8,25 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('itemsService', function ($resource,baseUrl) {
+  .service('itemsService', function ($resource, baseUrl) {
 
-    // Returns the $resource with a specific URL 
+    // Returns the $resource with a specific URL
     function returnResource(url, isArray) {
 
       var resourceURL = baseUrl + url;
 
       return $resource(resourceURL, {}, {
-          query: { 
-            method:'GET', 
-            isArray:isArray
-          }
-        });
+        query: {
+          method: 'GET',
+          isArray: isArray
+        }
+      });
+    }
 
-    } 
+    function getItem(itemId) {
+      var itemResource = $resource(baseUrl + '/api/retail-items1/:itemId', {itemId: '@itemId'});
+      return itemResource.get({itemId: itemId});
+    }
 
     // Public API
 
@@ -31,6 +35,7 @@ angular.module('ts5App')
 
     return {
       items: returnResource('/api/retail-items1'),
+      getItem: getItem,
       itemTypes: returnResource('/api/records/item-types', true),
       characteristics: returnResource('/api/records/characteristics', true),
       allergens: returnResource('/api/records/allergens', true),
@@ -43,4 +48,4 @@ angular.module('ts5App')
     };
 
   });
-    
+

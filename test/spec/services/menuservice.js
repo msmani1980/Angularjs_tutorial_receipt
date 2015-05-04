@@ -87,5 +87,4 @@ describe('Service: menuService', function () {
     });
 
   });
-})
-;
+});

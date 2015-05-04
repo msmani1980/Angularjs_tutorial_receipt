@@ -4,41 +4,35 @@ describe('Controller: MenuEditCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
+  beforeEach(module('served/menu.json'));
 
   var MenuEditCtrl,
     scope,
+    $httpBackend,
     menuResponseJSON,
-    getMenuDeferred,
     menuService;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _menuService_) {
+  beforeEach(inject(function ($controller, $rootScope, $injector, _menuService_) {
     scope = $rootScope.$new();
-    menuResponseJSON = {
-      'id': 121,
-      'companyId': 374,
-      'menuCode': 'Test01',
-      'menuName': 'Test Menu',
-      'description': 'Test Menu',
-      'startDate': '2015-04-15',
-      'endDate': '2015-04-15',
-      'createdBy': 1,
-      'createdOn': '2015-04-14 02:49:35.715873',
-      'updatedBy': null,
-      'updatedOn': null,
-      'menuItems': [{'id': 248, 'itemId': 331, 'itemQty': 1, 'menuId': 121, 'sortOrder': 1}]
-    };
-    getMenuDeferred = $q.defer();
-    getMenuDeferred.resolve(menuResponseJSON);
+    inject(function (_servedMenu_) {
+      menuResponseJSON = _servedMenu_;
+    });
+
+    $httpBackend = $injector.get('$httpBackend');
+
+    $httpBackend.whenGET(/menus/).respond(menuResponseJSON);
     menuService = _menuService_;
-    spyOn(menuService, 'getMenu').and.returnValue(getMenuDeferred.promise);
+
+    spyOn(menuService, 'getMenu').and.callThrough();
     MenuEditCtrl = $controller('MenuEditCtrl', {
       $scope: scope
     });
-    scope.$digest();
+    $httpBackend.flush();
+
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
+  it('should attach the view name', function () {
     expect(!!scope.viewName).toBe(true);
   });
 
@@ -56,7 +50,7 @@ describe('Controller: MenuEditCtrl', function () {
     });
 
     it('should have date formatted to local', function () {
-      expect(scope.menu.endDate).toBe('4/15/2015');
+      expect(scope.menu.endDate).toBe('04/15/2015');
     });
 
   });
