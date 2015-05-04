@@ -1,0 +1,66 @@
+<!-- PriceTypeDirective -->
+<div class="row">
+
+	<div class="col-xs-12 col-sm-8">
+
+		<label>Price Type</label>
+
+		<select ng-model="formData.prices[0].typeId" class="form-control">
+			<option ng-repeat="type in priceTypes" value="{{ type.id }}">{{ type.name }}</option>
+		</select>
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-6">
+
+				<div class="form-group">
+					<label for="item-effective-start">Effective From</label>
+					<div class="input-group">
+						<div class="input-group-addon">  
+							<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 
+						</div> 
+						<input ng-model="formData.prices[0].startDate" type="text" class="form-control" value="20150515" />
+					</div>
+				</div>
+
+			</div>
+
+			<div class="col-xs-12 col-sm-6">
+
+				<div class="form-group">
+
+					<label for="item-effective-start">Effective To</label>
+
+					<div class="input-group">
+
+						<div class="input-group-addon">  
+							<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 
+						</div> 
+
+						<input ng-model="formData.prices[0].endDate" type="text" class="form-control" value="20150515" />
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="col-xs-12 col-sm-4">
+
+		<label>Tax Is</label>
+
+		<select ng-model="formData.prices[0].taxIs" class="form-control">
+			<option value="Included">Included</option>
+			<option value="Excluded">Excluded</option>
+			<option value="Exempt">Exempt</option>
+		</select>
+
+	</div>
+
+
+</div>
+<!-- /PriceTypeDirective -->

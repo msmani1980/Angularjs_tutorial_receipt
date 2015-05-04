@@ -17,9 +17,9 @@ angular.module('ts5App')
 
     var initializeDatePicker = function ($scope, $element) {
       var options = angular.extend({}, datePickerOptions);
-      var listeners = {
+      /*var listeners = {
         'changeDate': 'onChangeDate'
-      };
+      };*/
 
       if ($scope.disablePast) {
         options.startDate = '+1d';

@@ -15,48 +15,75 @@ angular.module('ts5App')
 
   		// Form Data to be passed to API
   		$scope.formData = {
+        startDate: '20150515',
+        endDate: '20150715',
         qrCodeValue: 'qrCode',
-        images: []
+        images: [],
+        prices: [],
+        taxes:[],
+        tags: [],
+        allergens:[],
+        characteristics:[],
+        substitutions:[],
+        recommendations: [],
+        globalTradeNumbers: []
+      };
+
+      // Not complete
+      $scope.addPrice = function() {
+
+          // TODO: Currently adding 2 types at first, need to dynamically push items into this array
+
+          $scope.formData.prices.push({
+            startDate: $scope.formData.prices[0].startDate, 
+            endDate:  $scope.formData.prices[0].endDate, 
+            typeId: $scope.formData.prices[0].typeId, 
+            priceCurrencies: [], 
+            taxIs: $scope.formData.prices[0].taxIs
+          });
+
+          console.log($scope.formData);
+
       };
 
       // Submit function to proces form and hit the api 
       $scope.submitForm = function(formData) {
 
-        	// If the local form is not valid
-        	if(!$scope.form.$valid) {
+      	// If the local form is not valid
+      	if(!$scope.form.$valid) {
 
-        		// set display error flag to true (used in template)
-  				$scope.displayError = true;
+      		// set display error flag to true (used in template)
+				$scope.displayError = true;
 
-    				return false;
+  				return false;
 
-    			}
+  			}
 
-        	// set the formData models in the view to the scope.formData object
-        	$scope.formData = angular.copy(formData);
+      	// set the formData models in the view to the scope.formData object
+      	$scope.formData = angular.copy(formData);
 
-          	// FIXME forcing price right now
-          	$scope.formData.prices = [{startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',}];
+      	// FIXME forcing price right now
+      	//$scope.formData.prices = [{startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',}];
 
-          	var newItem = {
-          		retailItem: formData
-          	};
+      	var newItem = {
+      		retailItem: formData
+      	};
 
-          	// Create newItem in API
-  	      	itemsFactory.items.save(newItem,function () {
+      	// Create newItem in API
+      	itemsFactory.items.save(newItem,function () {
 
-  	            angular.element('#create-success').modal('show');
+           angular.element('#create-success').modal('show');
 
-  	        // API error
-  	        }, function(error){
+        // API error
+        }, function(error){
 
-  	        	$scope.displayError = true;
-  			  
-  			  	  $scope.formErrors = error.data;
+        	$scope.displayError = true;
+		  
+		  	  $scope.formErrors = error.data;
 
-  	        });
+        });
 
-          };
+      };
 
       // TODO MOVE ME GLOBAL
   		$scope.scrollTo = function(id) {

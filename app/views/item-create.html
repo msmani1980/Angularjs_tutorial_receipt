@@ -312,81 +312,42 @@
 
 	<h3 id="price-and-tax">Price & Tax</h3>
 
-	<div class="row">
+	<button type="button" class="btn btn-primary" ng-click="add()">
+       <i class"fa fa-plus"></i> Add Additional Price Type
+    </button>
+
+    <button type="button" class="btn btn-primary" ng-click="addPrice()">
+       <i class"fa fa-plus"></i> Add Price
+    </button>
+
+	<div id="price-type-container">
+		<input-price-type></input-price-type>
+	</div>
+
+	<!-- Tax Type -->
+	<div class"row">
 
 		<div class="col-xs-12 col-sm-6">
 
-			<div class="form-inline">
+			<div class="form-group">
+			<label>Tax Type</label>
 
-				<label>Price Type</label>
-
-				<select ng-model="formData.prices.typeId" class="form-control">
-					<option ng-repeat="type in priceTypes" value="{{ type.id }}">{{ type.name }}</option>
-				</select>
-
-			</div>
-
-			<div class="form-inline">
-
-				<label>Tax Is</label>
-
-				<select ng-model="formData.prices.taxIs" class="form-control">
-					<option value="Included">Included</option>
-					<option value="Excluded">Excluded</option>
-					<option value="Exempt">Exempt</option>
-				</select>
-
-			</div>
-
-			<div class="row">
-
-				<div class="col-xs-12 col-sm-6">
-
-					<div class="form-group">
-						<label for="item-effective-start">Effective From</label>
-						<div class="input-group">
-							<div class="input-group-addon">  
-								<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 
-							</div> 
-							<input ng-model="formData.prices.startDate" type="text" class="form-control" value="20150515" />
-						</div>
-					</div>
-
-				</div>
-
-				<div class="col-xs-12 col-sm-6">
-
-					<div class="form-group">
-						<label for="item-effective-start">Effective From</label>
-						<div class="input-group">
-							<div class="input-group-addon">  
-								<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 
-							</div> 
-							<input ng-model="formData.prices.startDate" type="text" class="form-control" value="20150515" />
-						</div>
-					</div>
-
-				</div>
-
+			<select ng-model="formData.taxes.companyTaxId" class="form-control">
+				<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }} - {{ type.description}} </option>
+			</select>
 			</div>
 
 		</div>
 
 		<div class="col-xs-12 col-sm-6">
 
-			<div class="form-inline">
+			<div class="form-group">
+			<label>Applied Tax Type</label>
 
-				<label>Applied Tax Type</label>
-
-				<select ng-model="formData.taxes.companyTaxId" class="form-control">
-					<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }} - {{ type.description}} </option>
-				</select>
-
-				<select ng-model="formData.taxes.itemTaxType" class="form-control">
-					<option value="1">Gross</option>
-					<option value="2">Net</option>
-				</select>
-
+			<select ng-model="formData.taxes.itemTaxType" class="form-control">
+				<option value="1">Gross</option>
+				<option value="2">Net</option>
+			</select>
 			</div>
 
 		</div>
