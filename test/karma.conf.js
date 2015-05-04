@@ -19,12 +19,18 @@ module.exports = function(config) {
     //
 
     preprocessors: {
-      'app/views/**/*.html': ['ng-html2js']
+      'app/views/**/*.html': ['ng-html2js'],
+      'test/mock/**/*.json': ['ng-json2js']
     },
 
     ngHtml2JsPreprocessor: {
       stripPrefix: "app",
       moduleName: "template-module"
+    },
+
+    ngJson2JsPreprocessor: {
+      stripPrefix: 'test/mock/',
+      prependPrefix: 'served/'
     },
 
     // list of files / patterns to load in the browser
@@ -55,7 +61,7 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
-      'test/mock/**/*.js',
+      'test/mock/**/*.json',
       'test/spec/**/*.js',
       {
         pattern: 'test/mock/*.json',
@@ -90,7 +96,8 @@ module.exports = function(config) {
     plugins: [
       'karma-phantomjs-launcher',
       'karma-jasmine',
-      'karma-ng-html2js-preprocessor'
+      'karma-ng-html2js-preprocessor',
+      'karma-ng-json2js-preprocessor'
     ],
 
     // Continuous Integration mode
