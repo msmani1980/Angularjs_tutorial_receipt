@@ -10,7 +10,6 @@ describe('Controller: MenuEditCtrl', function () {
     scope,
     $httpBackend,
     menuResponseJSON,
-    getMenuDeferred,
     menuService;
 
   // Initialize the controller and a mock scope
