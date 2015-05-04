@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('itemsService', function ($q, $resource, baseUrl) {
+  .service('itemsService', function ($resource, baseUrl) {
 
     // Returns the $resource with a specific URL
     function returnResource(url, isArray) {
@@ -24,13 +24,8 @@ angular.module('ts5App')
     }
 
     function getItem(itemId) {
-      //var deferred = $q.defer();
       var itemResource = $resource(baseUrl + '/api/retail-items1/:itemId', {itemId: '@itemId'});
       return itemResource.get({itemId: itemId});
-      //.$promise.then(function (data) {
-      //  deferred.resolve(data);
-      //});
-      //return deferred.promise;
     }
 
     // Public API
