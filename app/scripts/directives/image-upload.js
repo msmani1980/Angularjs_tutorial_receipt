@@ -38,7 +38,7 @@ angular.module('ts5App')
 	        // grab files from scope
 	    	var files = $scope.files;
 
-	        //if a file exists and it's length is greater than 0
+	        //if a file exists and it is not null
 	        if (files && files.length) {
 	            
 	            // Upload image
@@ -59,9 +59,9 @@ angular.module('ts5App')
 
 	                // new image object
 	                var newImage = {
-	                    endDate: '20150515',
 	                    imageURL: data.url,
-	                    startDate: '20150715'
+	                    startDate: '20150715',
+	                    endDate: '20150515'
 	                };
 
 	                // pass new image object into formData.images array
@@ -90,7 +90,7 @@ angular.module('ts5App')
 
       	templateUrl: 'views/directives/image-upload.html',
       	restrict: 'E',
-      	scope: false, // isolate scope to directive only
+      	scope: false, // isolate scope to parent 
       	controller: imageUploadController
     };
     
