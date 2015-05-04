@@ -8,10 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,$http,baseUrl,$location,$anchorScroll,itemsFactory,companiesService) {
-    
-      // TODO: make global and ingest actuall user / company ids
-      $http.defaults.headers.common.type = 'item';
+  .controller('ItemCreateCtrl', function ($scope,baseUrl,$location,$anchorScroll,itemsFactory,companiesService) {
 
     	// View Name
   		$scope.viewName = 'Create Item';

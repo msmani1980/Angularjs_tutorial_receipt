@@ -9,7 +9,10 @@
  */
 
 angular.module('ts5App')
-  .controller('UploadCtrl', ['$scope', 'Upload', function ($scope, Upload, baseUrl) {
+  .controller('UploadCtrl', function ($scope,Upload,baseUrl,$http) {
+
+    // set header param 'type' = item
+    $http.defaults.headers.common.type = 'item';
 
     // Progress
     $scope.uploadProgress = [];
@@ -80,4 +83,4 @@ angular.module('ts5App')
 
     };
 
-}]);
+});
