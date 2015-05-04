@@ -31,6 +31,7 @@ describe('Service: menuService', function () {
       beforeEach(function () {
         $httpBackend.whenGET(/menus/).respond(menuResponseJSON);
         menuService.getMenuList().then(function (menuListFromAPI) {
+          console.log(menuListFromAPI);
           menuData = menuListFromAPI;
         });
         $httpBackend.flush();
@@ -87,5 +88,4 @@ describe('Service: menuService', function () {
     });
 
   });
-})
-;
+});
