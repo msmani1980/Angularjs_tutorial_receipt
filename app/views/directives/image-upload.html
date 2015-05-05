@@ -2,7 +2,7 @@
 
     <label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
 
-    <div ngf-select="" ngf-drop="" class="drop-box" 
+    <div ngf-select="" ngf-drop="" class="dropbox" 
     	ng-model="files" 
     	ng-model-rejected="rejFiles"
     	ngf-change="generateThumb(file, files)"
@@ -30,7 +30,7 @@
 	    </i>
 
 	     <i ng-show="rejFiles[0].size < 10001">
-	    	'{{rejFiles[0].name}}' is invalid, '{{rejFiles[0].type}}' is not an accepted file type.
+	    	'{{rejFiles[0].name}}' is invalid, OR '{{rejFiles[0].type}}' is not an accepted file type.
 	    </i>
 
     </p>
