@@ -26,12 +26,27 @@ Running `grunt test` will run the unit tests with karma.
 
  - branch from master to feature/name or bug/name
 
- Committing:
+### Commiting
 
  - commit message template "{TicketNumber} {Username} - {Description}"
  - example "TSVPORTAL-713 maxfelker - Updated readme"
 
- ### Testing Against the API
- When testing against the API, there are issues with CORS and SSL. Close chrome and use the command below in you CLI:
+### Testing SSL and CORS 
+When testing your local build against the API, there are issues with SSL due to a self signed certificate on the API's server. Browse to the 
+development environment URL and accept the browser's SSL warning. This will resolve the SSL warning notice
+
+When testing your local build against the API, there are issues with CORS. Close chrome and use the command below in you CLI:
 
      open -a Google\ Chrome --args --enable-extensions --disable-web-security --allow-file-access-from-files --ignore-certificate-errors
+
+## Yeoman Recipes
+Below are a few helpful things when using yeoman to generate Angular code
+
+### Creating a Service
+Create a service named {serviceName}Service 
+
+    yo angular:service {serviceName}Service
+
+    yo angular:service itemsService
+
+Yeoman generates the service files and the file names are in lowercase. ** Please rename them to use camelCase and update app/index.html**  

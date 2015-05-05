@@ -100,6 +100,11 @@ angular.module('ts5App')
         $scope.itemTypes = data;
       });
 
+      // Get a list of item Types
+      itemsFactory.getPriceTypesList().then(function (data) {
+        $scope.priceTypes = data;
+      });
+
 
       // TODO MOVE ME GLOBAL
   		$scope.scrollTo = function(id) {
@@ -112,11 +117,6 @@ angular.module('ts5App')
       // TODO: Move this to the factory?
       function getItemDependencies() {
 
-
-        // get price types
-        itemsFactory.priceTypes.query(function(priceTypes) {
-          $scope.priceTypes = priceTypes;
-        });
 
         // get characteristics
         itemsFactory.characteristics.query(function(characteristics) {

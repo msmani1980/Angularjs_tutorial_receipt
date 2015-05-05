@@ -67,7 +67,7 @@ describe('ItemTypes Service |', function () {
       expect(testObject).toBeDefined();
     });
 
-    it('should expect the ItemType object to have an itemTypeId', function () {
+    it('should expect the ItemType object to have an id', function () {
       expect(testObject.id).toBeDefined();
     });
 
