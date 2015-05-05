@@ -7,7 +7,8 @@ describe('Items Service |', function () {
     $httpBackend,
     testObject,
     response,
-    itemsJSON,
+    itemJSON,
+    itemsListJSON,
     itemTypesJSON,
     characteristicsJSON,
     allergensJSON,
@@ -20,7 +21,8 @@ describe('Items Service |', function () {
   beforeEach(module('ts5App'));
 
   beforeEach(module(
-    'served/items.json',
+    'served/item.json',
+    'served/items-list.json',
     'served/itemTypes.json',
     'served/characteristics.json',
     'served/allergens.json',
@@ -35,9 +37,10 @@ describe('Items Service |', function () {
   beforeEach(inject(function (_itemsService_, $injector) {
 
     // Inject the JSON fixtures
-    inject(function (_servedItems_, _servedItemTypes_, _servedCharacteristics_, _servedAllergens_, _servedPriceTypes_,
+    inject(function (_servedItem_, _servedItemsList_, _servedItemTypes_, _servedCharacteristics_, _servedAllergens_, _servedPriceTypes_,
                      _servedUnitsDimension_, _servedUnitsWeight_, _servedUnitsVolume_) {
-      itemsJSON = _servedItems_;
+      itemJSON = _servedItem_;
+      itemsListJSON = _servedItemsList_;
       itemTypesJSON = _servedItemTypes_;
       characteristicsJSON = _servedCharacteristics_;
       allergensJSON = _servedAllergens_;
@@ -55,6 +58,26 @@ describe('Items Service |', function () {
     expect(itemsService).toBeDefined();
   });
 
+  describe('getItem API', function () {
+    beforeEach(function () {
+      $httpBackend.whenGET(/retail-items1\/332/).respond(itemJSON);
+    });
+
+    it('should return a single item with id 332', function () {
+      itemsService.getItem(332).then(function (itemFromAPI) {
+        expect(itemFromAPI.retailItem.id).toBe(332);
+      });
+      $httpBackend.flush();
+    });
+
+    it('should return a single item with itemName', function () {
+      itemsService.getItem(332).then(function (itemFromAPI) {
+        expect(itemFromAPI.retailItem.itemName).toBe('CokeDietSilver');
+      });
+      $httpBackend.flush();
+    });
+  });
+
   // Item API
   describe('The Items API', function () {
 
@@ -63,7 +86,7 @@ describe('Items Service |', function () {
 
       // spy on the query of the items service
       spyOn(itemsService.items, 'query').and.callFake(function () {
-        return itemsJSON;
+        return itemsListJSON;
       });
 
       // make the mock query call

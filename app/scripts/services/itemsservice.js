@@ -25,7 +25,7 @@ angular.module('ts5App')
 
     function getItem(itemId) {
       var itemResource = $resource(baseUrl + '/api/retail-items1/:itemId', {itemId: '@itemId'});
-      return itemResource.get({itemId: itemId});
+      return itemResource.get({itemId: itemId}).$promise;
     }
 
     // Public API
