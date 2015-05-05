@@ -89,9 +89,9 @@ angular.module('ts5App')
         $scope.items = data.retailItems;
       });
 
-      /*itemsFactory.getItemTypesList().then(function (itemTypes) {
-        $scope.itemTypes = itemTypes;
-      });*/
+      itemsFactory.getAllergensList().then(function (allergens) {
+        $scope.allergens = allergens;
+      });
 
       // TODO MOVE ME GLOBAL
   		$scope.scrollTo = function(id) {

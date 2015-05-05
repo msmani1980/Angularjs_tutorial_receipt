@@ -37,8 +37,8 @@ angular.module('ts5App')
       return requestResource.getItemsList(payload).$promise;
     };
 
-    var getItem = function (menuId) {
-      return requestResource.getItem({id: menuId}).$promise;
+    var getItem = function (id) {
+      return requestResource.getItem({id: id}).$promise;
     };
 
     var createItem = function (payload) {

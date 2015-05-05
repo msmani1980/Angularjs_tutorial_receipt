@@ -7,14 +7,14 @@ describe('Items Service |', function () {
     $httpBackend,
     testObject,
     response,
-    itemsJSON,
-    itemTypesJSON,
+    itemsJSON;
+ /*   itemTypesJSON,
     characteristicsJSON,
     allergensJSON,
     priceTypesJSON,
     unitsDimensionJSON,
     unitsWeightJSON,
-    unitsVolumeJSON;
+    unitsVolumeJSON;*/
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -35,16 +35,15 @@ describe('Items Service |', function () {
   beforeEach(inject(function (_itemsService_, $injector) {
 
     // Inject the JSON fixtures
-    inject(function (_servedItems_, _servedItemTypes_, _servedCharacteristics_, _servedAllergens_, _servedPriceTypes_,
-                     _servedUnitsDimension_, _servedUnitsWeight_, _servedUnitsVolume_) {
+    inject(function (_servedItems_) {
       itemsJSON = _servedItems_;
-      itemTypesJSON = _servedItemTypes_;
+      /*itemTypesJSON = _servedItemTypes_;
       characteristicsJSON = _servedCharacteristics_;
       allergensJSON = _servedAllergens_;
       priceTypesJSON = _servedPriceTypes_;
       unitsDimensionJSON = _servedUnitsDimension_;
       unitsWeightJSON = _servedUnitsWeight_;
-      unitsVolumeJSON = _servedUnitsVolume_;
+      unitsVolumeJSON = _servedUnitsVolume_;*/
     });
     itemsService = _itemsService_;
     $httpBackend = $injector.get('$httpBackend');
@@ -62,24 +61,24 @@ describe('Items Service |', function () {
     beforeEach(function () {
 
       // spy on the query of the items service
-      spyOn(itemsService.items, 'query').and.callFake(function () {
+      spyOn(itemsService, 'getItemsList').and.callFake(function () {
         return itemsJSON;
       });
 
       // make the mock query call
-      response = itemsService.items.query();
+      response = itemsService.getItemsList();
 
       // grab first item in list
       testObject = response.retailItems[0];
 
     });
 
-    it('should have an item resource', function () {
-      expect(itemsService.items).toBeDefined();
+    it('should be defined', function () {
+      expect(itemsService).toBeDefined();
     });
 
-    it('should be able call the query method', function () {
-      expect(itemsService.items.query).toHaveBeenCalled();
+    it('should be able call the getItemsList method', function () {
+      expect(itemsService.getItemsList).toHaveBeenCalled();
     });
 
     it('should get a response', function () {
@@ -109,9 +108,9 @@ describe('Items Service |', function () {
     it('Retail Item should have an itemName', function () {
       expect(testObject.itemName).toBeDefined();
     });
-
+ 
   }); // describe item api
-
+/*
   // Item Types API
   describe('The Items Type API', function () {
 
@@ -319,16 +318,6 @@ describe('Items Service |', function () {
         return unitsDimensionJSON;
       });
 
-      /* // spy on the query of the items service
-       spyOn(itemsService.units.weight, 'query').and.callFake(function() {
-       return unitsWeightJSON;
-       });
-
-       // spy on the query of the items service
-       spyOn(itemsService.units.volume, 'query').and.callFake(function() {
-       return unitsVolumeJSON;
-       });*/
-
       // make the mock query calls to the units
       response = itemsService.units.dimension.query();
 
@@ -489,5 +478,7 @@ describe('Items Service |', function () {
     });
 
   }); // describe Units/Volume api
+
+*/
 
 }); // describe item service
