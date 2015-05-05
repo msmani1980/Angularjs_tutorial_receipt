@@ -209,55 +209,6 @@ describe('Items Service |', function () {
 
   }); // describe characteristics api
 
-  // Allergens API
-  describe('The Allergens API', function () {
-
-    // inject the http request mock to the API
-    beforeEach(function () {
-
-      // spy on the query of the items service
-      spyOn(itemsService.allergens, 'query').and.callFake(function () {
-        return allergensJSON;
-      });
-
-      // make the mock query call
-      response = itemsService.allergens.query();
-
-      // grab first item in list
-      testObject = response[0];
-
-    });
-
-    it('should have an allergens resource', function () {
-      expect(itemsService.allergens).toBeDefined();
-    });
-
-    it('should be able call the query method', function () {
-      expect(itemsService.allergens.query).toHaveBeenCalled();
-    });
-
-    it('should get a response', function () {
-      expect(response).toBeDefined();
-    });
-
-    it('should have return at least one oject inside the response', function () {
-      expect(response.length).toBeGreaterThan(0);
-    });
-
-    it('Allergen should exist', function () {
-      expect(testObject).toBeDefined();
-    });
-
-    it('Allergen should have an allergenId', function () {
-      expect(testObject.allergenId).toBeDefined();
-    });
-
-    it('Allergen should have an name', function () {
-      expect(testObject.name).toBeDefined();
-    });
-
-  }); // describe allergens api
-
   // Price Types API
   describe('The Price Types API', function () {
 
