@@ -21,15 +21,6 @@ angular.module('ts5App')
       getAllergensList: {
         method: 'GET',
         isArray: true
-      },
-      getAllergen: {
-        method: 'GET'
-      },
-      createAllergen: {
-        method: 'POST'
-      },
-      updateAllergen: {
-        method: 'PUT'
       }
     };
 
@@ -39,23 +30,8 @@ angular.module('ts5App')
       return requestResource.getAllergensList(payload).$promise;
     };
 
-    var getAllergen = function (id) {
-      return requestResource.getAllergen({id: id}).$promise;
-    };
-
-    var createAllergen = function (payload) {
-      return requestResource.createAllergen(payload).$promise;
-    };
-
-    var updateAllergen = function (payload) {
-      return requestResource.updateAllergen(payload).$promise;
-    };
-
     return {
-      getAllergensList: getAllergensList,
-      getAllergen: getAllergen,
-      createAllergen:createAllergen,
-      updateAllergen: updateAllergen
+      getAllergensList: getAllergensList
     };
 
   });

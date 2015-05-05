@@ -8,8 +8,9 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('itemsFactory', function ($resource, baseUrl, itemsService, allergensService) {
+  .factory('itemsFactory', function ($resource, baseUrl, itemsService, allergensService,itemTypesService) {
 
+  	// Items
   	var getItem = function (id) {
 		return itemsService.getItem(id);
 	};
@@ -18,14 +19,28 @@ angular.module('ts5App')
 		return itemsService.getItemsList(payload);
 	};
 
+	// Allergens 
 	var getAllergensList = function (payload) {
 		return allergensService.getAllergensList(payload);
 	};
 
+	// Item Types
+	var getItemTypesList = function (payload) {
+		return itemTypesService.getItemTypesList(payload);
+	};
+
 	return {
+
+		// Items
 		getItem: getItem,
 		getItemsList: getItemsList,
-		getAllergensList: getAllergensList
+
+		// Allergens
+		getAllergensList: getAllergensList,
+
+		// Item Types
+		getItemTypesList: getItemTypesList
+
 	};
 
 });

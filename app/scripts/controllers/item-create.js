@@ -85,38 +85,33 @@ angular.module('ts5App')
 
       };
 
+      // Get a list of items
       itemsFactory.getItemsList().then(function (data) {
         $scope.items = data.retailItems;
       });
 
-      itemsFactory.getAllergensList().then(function (allergens) {
-        $scope.allergens = allergens;
+      // Get a list of allergens
+      itemsFactory.getAllergensList().then(function (data) {
+        $scope.allergens = data;
       });
+
+      // Get a list of item Types
+      itemsFactory.getItemTypesList().then(function (data) {
+        $scope.itemTypes = data;
+      });
+
 
       // TODO MOVE ME GLOBAL
   		$scope.scrollTo = function(id) {
 	      $location.hash(id);
 	      $anchorScroll();
 	    };
+      
 /*
       // Makes API requests  for item record dependencies likes itemTypes or allergens
       // TODO: Move this to the factory?
       function getItemDependencies() {
 
-        // Get a list from the API
-        itemsFactory.items.query(function (data) {
-          $scope.items = data.retailItems;
-        });
-
-        // get items types
-        itemsFactory.itemTypes.query(function(itemTypes) {
-          $scope.itemTypes = itemTypes;
-        });
-
-        // get allergens
-        itemsFactory.allergens.query(function(allergens) {
-          $scope.allergens = allergens;
-        });
 
         // get price types
         itemsFactory.priceTypes.query(function(priceTypes) {
