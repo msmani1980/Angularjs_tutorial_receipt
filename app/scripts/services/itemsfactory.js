@@ -10,7 +10,27 @@
 angular.module('ts5App')
   .factory('itemsFactory', function ($resource, baseUrl, itemsService) {
 
-  	// just returns the service for now, we don't have anything to extend yet.
-    return itemsService;
+  	var getItem = function (id) {
+		return itemsService.getItem(id);
+	};
 
-  });
+	var getItemsList = function (payload) {
+		return itemsService.getItemsList(payload);
+	};
+
+	/*var getItemType = function (id) {
+		return itemsTypesService.getItemType(id);
+	};
+
+	var getItemTypesList = function (payload) {
+		return itemsTypesService.getItemTypesList(payload);
+	};*/
+
+	return {
+		getItem: getItem,
+		getItemsList: getItemsList,
+	//	getItemType: getItemType,
+	//	getItemTypesList: getItemTypesList
+	};
+
+});

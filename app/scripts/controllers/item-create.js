@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,baseUrl,$location,$anchorScroll,itemsFactory,companiesService) {
+  .controller('ItemCreateCtrl', function ($scope,baseUrl,$location,$anchorScroll,itemsFactory) {
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -85,12 +85,20 @@ angular.module('ts5App')
 
       };
 
+      itemsFactory.getItemsList().then(function (data) {
+        $scope.items = data.retailItems;
+      });
+
+      /*itemsFactory.getItemTypesList().then(function (itemTypes) {
+        $scope.itemTypes = itemTypes;
+      });*/
+
       // TODO MOVE ME GLOBAL
   		$scope.scrollTo = function(id) {
 	      $location.hash(id);
 	      $anchorScroll();
 	    };
-
+/*
       // Makes API requests  for item record dependencies likes itemTypes or allergens
       // TODO: Move this to the factory?
       function getItemDependencies() {
@@ -172,6 +180,6 @@ angular.module('ts5App')
       getItemDependencies();
 
       // get company dependencies
-      getCompanyDependencies();
+      getCompanyDependencies();*/
 
   });

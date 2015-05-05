@@ -10,42 +10,50 @@
 angular.module('ts5App')
   .service('itemsService', function ($resource, baseUrl) {
 
-    // Returns the $resource with a specific URL
-    function returnResource(url, isArray) {
+    var requestURL = baseUrl + '/api/retail-items1/:id';
+    var requestParameters = {
+      id: '@id',
+      limit: 50
+    };
 
-      var resourceURL = baseUrl + url;
-
-      return $resource(resourceURL, {}, {
-        query: {
-          method: 'GET',
-          isArray: isArray
-        }
-      });
-    }
-
-    function getItem(itemId) {
-      var itemResource = $resource(baseUrl + '/api/retail-items1/:itemId', {itemId: '@itemId'});
-      return itemResource.get({itemId: itemId});
-    }
-
-    // Public API
-
-    // example: itemService.items.query(function(){ .. })
-    // example: itemService.units.weight.query(function(){ .. })
-
-    return {
-      items: returnResource('/api/retail-items1'),
-      getItem: getItem,
-      itemTypes: returnResource('/api/records/item-types', true),
-      characteristics: returnResource('/api/records/characteristics', true),
-      allergens: returnResource('/api/records/allergens', true),
-      priceTypes: returnResource('/api/records/price-types', true),
-      units: {
-        dimension: returnResource('/api/units?unitType=dimension'),
-        weight: returnResource('/api/units?unitType=weight'),
-        volume: returnResource('/api/units?unitType=volume')
+    var actions = {
+      getItemsList: {
+        method: 'GET'
+      },
+      getItem: {
+        method: 'GET'
+      },
+      createItem: {
+        method: 'POST'
+      },
+      updateItem: {
+        method: 'PUT'
       }
     };
 
-  });
+    var requestResource = $resource(requestURL, requestParameters, actions);
 
+    var getItemsList = function (payload) {
+      return requestResource.getItemsList(payload).$promise;
+    };
+
+    var getItem = function (menuId) {
+      return requestResource.getItem({id: menuId}).$promise;
+    };
+
+    var createItem = function (payload) {
+      return requestResource.createItem(payload).$promise;
+    };
+
+    var updateItem = function (payload) {
+      return requestResource.updateItem(payload).$promise;
+    };
+
+    return {
+      getItemsList: getItemsList,
+      getItem: getItem,
+      createItem:createItem,
+      updateItem: updateItem
+    };
+
+});

@@ -10,25 +10,34 @@
 angular.module('ts5App')
   .service('itemTypesService', function ($resource,baseUrl) {
 
-  var resourceURL = baseUrl + '/api/records/item-types';
+    var requestURL = baseUrl + '/api/records/item-types/:id';
+    var requestParameters = {
+      id: '@id',
+      limit: 50
+    };
 
-  var endpoint = $resource(resourceURL, {}, {
-      query: { 
-        method:'GET', 
-        isArray:true
-      } 
-  });
+    var actions = {
+      getItemTypesList: {
+        method: 'GET'
+      },
+      getItemType: {
+        method: 'GET'
+      }
+    };
 
-  // Get a list of item types
-  var getItemTypes = function(successCallBack,failureCallBack) {
-  	console.log(successCallBack);
- 	return endpoint.query(successCallBack,failureCallBack);
+    var requestResource = $resource(requestURL, requestParameters, actions);
 
-  };
+    var getItemTypesList = function (payload) {
+      return requestResource.getItemTypesList(payload).$promise;
+    };
 
-  // Public API
-  return {
-  	getItemTypes: getItemTypes,
-  };
+    var getItemType = function (menuId) {
+      return requestResource.getItemType({id: menuId}).$promise;
+    };
+
+    return {
+      getItemTypesList: getItemTypesList,
+      getItemType: getItemType
+    };
 
 });
