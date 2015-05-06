@@ -29,6 +29,31 @@ angular.module('ts5App')
         globalTradeNumbers: []
       };
 
+      // Get a list of items
+      itemsFactory.getItemsList().then(function (data) {
+        $scope.items = data.retailItems;
+      });
+
+      // Get a list of allergens
+      itemsFactory.getAllergensList().then(function (data) {
+        $scope.allergens = data;
+      });
+
+      // Get a list of item Types
+      itemsFactory.getItemTypesList().then(function (data) {
+        $scope.itemTypes = data;
+      });
+
+      // Get a list of Price Types
+      itemsFactory.getPriceTypesList().then(function (data) {
+        $scope.priceTypes = data;
+      });
+
+      // Get a list of Price Types
+      itemsFactory.getCharacteristicsList().then(function (data) {
+        $scope.characteristics = data;
+      });
+
       // Not complete
       $scope.addPrice = function() {
 
@@ -85,27 +110,6 @@ angular.module('ts5App')
 
       };
 
-      // Get a list of items
-      itemsFactory.getItemsList().then(function (data) {
-        $scope.items = data.retailItems;
-      });
-
-      // Get a list of allergens
-      itemsFactory.getAllergensList().then(function (data) {
-        $scope.allergens = data;
-      });
-
-      // Get a list of item Types
-      itemsFactory.getItemTypesList().then(function (data) {
-        $scope.itemTypes = data;
-      });
-
-      // Get a list of item Types
-      itemsFactory.getPriceTypesList().then(function (data) {
-        $scope.priceTypes = data;
-      });
-
-
       // TODO MOVE ME GLOBAL
   		$scope.scrollTo = function(id) {
 	      $location.hash(id);
@@ -116,12 +120,6 @@ angular.module('ts5App')
       // Makes API requests  for item record dependencies likes itemTypes or allergens
       // TODO: Move this to the factory?
       function getItemDependencies() {
-
-
-        // get characteristics
-        itemsFactory.characteristics.query(function(characteristics) {
-          $scope.characteristics = characteristics;
-        });
 
         // get dimension units
         itemsFactory.units.dimension.query(function(data) {
