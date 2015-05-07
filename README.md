@@ -55,8 +55,15 @@ Create a Route named {directive-name}
 
     yo angular:directive image-upload
 
+### Creating a Factory 
+Create a factory named {factory-name}-factory , appending the keyword -factory to the end
+
+    yo angular:factory {factory-name}-factory
+
+    yo angular:factory items-factory
+
 ### Creating a Service 
-Create a service named {service-name}-service
+Create a service named {service-name}-service , appending the keyword -service to the end
 
     yo angular:service {service-name}-service
 

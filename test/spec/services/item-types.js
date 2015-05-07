@@ -13,7 +13,7 @@ describe('ItemTypes Service |', function () {
   beforeEach(module('ts5App'));
 
   // Load json
-  beforeEach(module('served/itemTypes.json'));
+  beforeEach(module('served/item-types.json'));
 
   // Inject the service and responshandler
   beforeEach(inject(function (_itemTypesService_, $injector) {

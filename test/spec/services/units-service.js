@@ -15,9 +15,9 @@ describe('Units Service |', function () {
   beforeEach(module('ts5App'));
 
   beforeEach(module(
-    'served/unitsDimension.json',
-    'served/unitsWeight.json',
-    'served/unitsVolume.json'
+    'served/units-dimension.json',
+    'served/units-weight.json',
+    'served/units-volume.json'
   ));
 
 

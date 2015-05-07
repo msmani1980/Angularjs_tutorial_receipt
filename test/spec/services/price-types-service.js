@@ -13,7 +13,7 @@ describe('Price Types Service |', function () {
   beforeEach(module('ts5App'));
 
   // Load json
-  beforeEach(module('served/priceTypes.json'));
+  beforeEach(module('served/price-types.json'));
 
   // Inject the service and responshandler
   beforeEach(inject(function (_priceTypesService_, $injector) {
