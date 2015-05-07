@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('itemsService', function ($resource, baseUrl) {
 
-    var requestURL = baseUrl + '/api/retail-items1/:id';
+    var requestURL = baseUrl + '/api/retail-items/:id';
     var requestParameters = {
       id: '@id',
       limit: 50

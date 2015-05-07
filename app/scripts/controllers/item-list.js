@@ -12,7 +12,7 @@ angular.module('ts5App')
     .controller('ItemListCtrl', function ($scope,$http,itemsFactory) {
 
         // get item types
-        itemsFactory.itemTypes.query(function(itemTypes) {
+        itemsFactory.getItemTypesList(function(itemTypes) {
             $scope.itemTypes = itemTypes;
         });
 
@@ -20,7 +20,7 @@ angular.module('ts5App')
         $scope.listSize = 10;
 
         // Get a list from the API
-        itemsFactory.items.query(function (itemList) {
+        itemsFactory.getItemsList(function (itemList) {
 
             $scope.items = itemList.retailItems;  
 
