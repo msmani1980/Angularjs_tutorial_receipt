@@ -12,15 +12,15 @@ describe('Items Service |', function () {
   // load the service's module
   beforeEach(module('ts5App'));
 
-  beforeEach(module('served/items.json'));
+  beforeEach(module('served/items-list.json'));
 
 
   // Inject the service and responshandler
   beforeEach(inject(function (_itemsService_, $injector) {
 
     // Inject the JSON fixtures
-    inject(function (_servedItems_) {
-      itemsJSON = _servedItems_;
+    inject(function (_servedItemsList_) {
+      itemsJSON = _servedItemsList_;
     });
 
     itemsService = _itemsService_;
