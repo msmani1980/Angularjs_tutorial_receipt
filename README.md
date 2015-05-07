@@ -28,8 +28,8 @@ Running `grunt test` will run the unit tests with karma.
 
 ### Commiting
 
- - commit message template "{TicketNumber} {Username} - {Description}"
- - example "TSVPORTAL-713 maxfelker - Updated readme"
+ - commit message template "{TicketNumber} {Username} | {Description}"
+ - example "TSVPORTAL-713 maxfelker | Updated readme"
 
 ### Testing SSL and CORS 
 When testing your local build against the API, there are issues with SSL due to a self signed certificate on the API's server. Browse to the development environment URL and accept the browser's SSL warning. This will resolve the SSL warning notice
@@ -68,7 +68,6 @@ Create a service named {service-name}-service , appending the keyword -service t
     yo angular:service {service-name}-service
 
     yo angular:service price-types-service
-
 
 ## API
 The Angular app hits an API. This accepts and returns JSON.
