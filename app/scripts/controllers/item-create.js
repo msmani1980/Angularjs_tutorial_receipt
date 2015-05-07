@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,baseUrl,$location,$anchorScroll,itemsFactory) {
+  .controller('ItemCreateCtrl', function ($scope,baseUrl,$location,$anchorScroll,itemsFactory,companiesFactory) {
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -67,6 +67,11 @@ angular.module('ts5App')
       // get volume units
       itemsFactory.getWeightList(function(data) {
         $scope.volumeUnits = data.units; 
+      });
+
+      // get tags
+      companiesFactory.getTagsList(function(data) {
+        $scope.tags = data.response;
       });
 
       // Not complete
