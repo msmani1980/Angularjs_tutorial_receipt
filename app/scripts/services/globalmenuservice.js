@@ -65,7 +65,7 @@ angular.module('ts5App')
     var defaults = {};
     defaults.user = userModel['1'];
     defaults.language = languageModel['1'];
-    defaults.company = companyModel['326'];
+    defaults.company = companyModel['2'];
 
     $localStorage.$default(defaults);
 
