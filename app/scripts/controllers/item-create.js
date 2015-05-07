@@ -30,28 +30,43 @@ angular.module('ts5App')
       };
 
       // Get a list of items
-      itemsFactory.getItemsList().then(function (data) {
+      itemsFactory.getItemsList(function (data) {
         $scope.items = data.retailItems;
       });
 
       // Get a list of allergens
-      itemsFactory.getAllergensList().then(function (data) {
+      itemsFactory.getAllergensList(function (data) {
         $scope.allergens = data;
       });
 
       // Get a list of item Types
-      itemsFactory.getItemTypesList().then(function (data) {
+      itemsFactory.getItemTypesList(function (data) {
         $scope.itemTypes = data;
       });
 
       // Get a list of Price Types
-      itemsFactory.getPriceTypesList().then(function (data) {
+      itemsFactory.getPriceTypesList(function (data) {
         $scope.priceTypes = data;
       });
 
       // Get a list of Price Types
-      itemsFactory.getCharacteristicsList().then(function (data) {
+      itemsFactory.getCharacteristicsList(function (data) {
         $scope.characteristics = data;
+      });
+
+      // get dimension units
+      itemsFactory.getDimensionList(function(data) {
+        $scope.dimensionUnits = data.units;
+      });
+
+      // get weight units
+      itemsFactory.getVolumeList(function(data) {
+        $scope.weightUnits = data.units;
+      });
+
+      // get volume units
+      itemsFactory.getWeightList(function(data) {
+        $scope.volumeUnits = data.units; 
       });
 
       // Not complete
@@ -117,27 +132,7 @@ angular.module('ts5App')
 	    };
       
 /*
-      // Makes API requests  for item record dependencies likes itemTypes or allergens
-      // TODO: Move this to the factory?
-      function getItemDependencies() {
-
-        // get dimension units
-        itemsFactory.units.dimension.query(function(data) {
-          $scope.dimensionUnits = data.units;
-        });
-
-        // get weight units
-        itemsFactory.units.weight.query(function(data) {
-          $scope.weightUnits = data.units;
-        });
-
-        // get volume units
-        itemsFactory.units.volume.query(function(data) {
-          $scope.volumeUnits = data.units;
-        });
-
-      }
-
+    
       // Makes API requests  for companyu record dependencies likes tags or sales-categories
       // TODO: Move this to the factory?
       function getCompanyDependencies() {
@@ -168,9 +163,6 @@ angular.module('ts5App')
         });
 
       }
-
-       // get item dependencies 
-      getItemDependencies();
 
       // get company dependencies
       getCompanyDependencies();*/

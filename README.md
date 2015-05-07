@@ -32,8 +32,7 @@ Running `grunt test` will run the unit tests with karma.
  - example "TSVPORTAL-713 maxfelker - Updated readme"
 
 ### Testing SSL and CORS 
-When testing your local build against the API, there are issues with SSL due to a self signed certificate on the API's server. Browse to the 
-development environment URL and accept the browser's SSL warning. This will resolve the SSL warning notice
+When testing your local build against the API, there are issues with SSL due to a self signed certificate on the API's server. Browse to the development environment URL and accept the browser's SSL warning. This will resolve the SSL warning notice
 
 When testing your local build against the API, there are issues with CORS. Close chrome and use the command below in you CLI:
 
@@ -42,11 +41,31 @@ When testing your local build against the API, there are issues with CORS. Close
 ## Yeoman Recipes
 Below are a few helpful things when using yeoman to generate Angular code
 
-### Creating a Service
-Create a service named {serviceName}Service 
+### Creating a Route 
+Create a Route named {feature}-{action}
 
-    yo angular:service {serviceName}Service
+    yo angular:route {feature}-{action}
 
-    yo angular:service itemsService
+    yo angular:route item-create
 
-Yeoman generates the service files and the file names are in lowercase. ** Please rename them to use camelCase and update app/index.html**  
+### Creating a Directive 
+Create a Route named {directive-name}
+
+    yo angular:directive {directive-name}
+
+    yo angular:directive image-upload
+
+### Creating a Service 
+Create a service named {service-name}-service
+
+    yo angular:service {service-name}-service
+
+    yo angular:service price-types-service
+
+
+## API
+The Angular app hits an API. This accepts and returns JSON.
+
+DEV API URL:
+
+    https://ec2-52-6-49-188.compute-1.amazonaws.com/api/

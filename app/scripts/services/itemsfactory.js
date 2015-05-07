@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('itemsFactory', function ($resource, baseUrl, itemsService, allergensService,itemTypesService,priceTypesService,characteristicsService) {
+  .factory('itemsFactory', function ($resource, baseUrl, itemsService, allergensService,itemTypesService,priceTypesService,characteristicsService,unitsService) {
 
   	// Items
   	var getItem = function (id) {
@@ -39,6 +39,18 @@ angular.module('ts5App')
 		return characteristicsService.getCharacteristicsList(payload);
 	};
 
+	// Units
+	var getDimensionList = function (payload) {
+		return unitsService.getDimensionList(payload);
+	};
+	var getVolumeList = function (payload) {
+		return unitsService.getVolumeList(payload);
+	};
+
+	var getWeightList = function (payload) {
+		return unitsService.getWeightList(payload);
+	};
+
 	return {
 
 		// Items
@@ -56,6 +68,12 @@ angular.module('ts5App')
 
 		// Characteristics
 		getCharacteristicsList: getCharacteristicsList,
+
+		// Units
+		getDimensionList: getDimensionList,
+		getVolumeList:getVolumeList,
+		getWeightList:getWeightList
+
 
 	};
 
