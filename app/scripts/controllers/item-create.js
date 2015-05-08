@@ -18,6 +18,7 @@ angular.module('ts5App')
         startDate: '20150515',
         endDate: '20150715',
         qrCodeValue: 'qrCode',
+        qrCodeImgUrl: null,
         images: [],
         prices: [],
         taxes:[],
