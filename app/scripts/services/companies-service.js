@@ -1,3 +1,4 @@
+// TODO: Add delete method
 'use strict';
 
 /**
@@ -8,31 +9,52 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companiesService', function ($resource,baseUrl,GlobalMenuService) {
+  .service('companiesService', function ($resource, baseUrl) {
 
-  	var company = GlobalMenuService.company.get();
-
-    // Returns the $resource with a specific URL 
-    function returnResource(url, isArray) {
-
-      var resourceURL = baseUrl + url;
-
-      return $resource(resourceURL, {}, {
-          query: { 
-            method:'GET', 
-            isArray:isArray
-          }
-        });
-
-    } 
-
-    return {
-     // tags: returnResource('/api/companies/'+company.id+'/tags'),
-      //salesCategories: returnResource('/api/companies/'+company.id+'/sales-categories'),
-      currencies: returnResource('/api/companies/'+company.id+'/currencies'),
-      taxTypes: returnResource('/api/companies/'+company.id+'/tax-types'),
-      stations: returnResource('/api/companies/'+company.id+'/stations'),
+    var requestURL = baseUrl + '/api/companies/:id';
+    var requestParameters = {
+      id: '@id',
+      limit: 50
     };
 
-  });
-    
+    var actions = {
+      getCompaniesList: {
+        method: 'GET'
+      },
+      getCompany: {
+        method: 'GET'
+      },
+      createCompany: {
+        method: 'POST'
+      },
+      updateCompany: {
+        method: 'PUT'
+      }
+    };
+
+    var requestResource = $resource(requestURL, requestParameters, actions);
+
+    var getCompaniesList = function (payload) {
+      return requestResource.getCompaniesList(payload).$promise;
+    };
+
+    var getCompany = function (id) {
+      return requestResource.getCompany({id: id}).$promise;
+    };
+
+    var createCompany = function (payload) {
+      return requestResource.createCompany(payload).$promise;
+    };
+
+    var updateCompany = function (payload) {
+      return requestResource.updateCompany(payload).$promise;
+    };
+
+    return {
+      getCompaniesList: getCompaniesList,
+      getCompany: getCompany,
+      createCompany:createCompany,
+      updateCompany: updateCompany
+    };
+
+});

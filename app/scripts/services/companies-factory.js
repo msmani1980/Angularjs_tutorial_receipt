@@ -1,4 +1,6 @@
-// TODO: Write tests for this factory
+// TODO:
+// Add CRUD methods for companies
+// Write tests for this factory
 
 'use strict';
 
@@ -10,7 +12,16 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('companiesFactory', function (tagsService, salesCategoriesService,taxTypesService,stationsService) {
+  .factory('companiesFactory', function (companiesService,tagsService, salesCategoriesService,taxTypesService,stationsService) {
+
+  // Companies
+  var getCompany = function (id) {
+    return companiesService.getCompany(id);
+  };
+
+  var getCompaniesList = function (payload) {
+    return companiesService.getCompaniesList(payload);
+  };
 
   // Tags
   var getTagsList = function (payload) {
@@ -45,6 +56,10 @@ angular.module('ts5App')
   };
 
   return {
+
+    // Companies
+    getCompany: getCompany,
+    getCompaniesList: getCompaniesList,
 
     // Tags
     getTagsList: getTagsList,

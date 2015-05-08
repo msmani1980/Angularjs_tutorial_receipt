@@ -1,3 +1,6 @@
+// TODO: 
+// Add CRUD Test cases
+
 'use strict';
 
 describe('Items Service |', function () {

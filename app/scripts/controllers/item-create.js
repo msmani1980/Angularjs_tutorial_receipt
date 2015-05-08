@@ -1,3 +1,6 @@
+// TODO:
+// Write tests for this controller
+
 'use strict';
 
 /**
@@ -9,6 +12,10 @@
  */
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function ($scope,baseUrl,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
+
+      companiesFactory.getCompaniesList(function(data) {
+        console.log(data);
+      });
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -120,7 +127,7 @@ angular.module('ts5App')
       	if(!$scope.form.$valid) {
 
       		// set display error flag to true (used in template)
-				$scope.displayError = true;
+				  $scope.displayError = true;
 
   				return false;
 
@@ -157,6 +164,5 @@ angular.module('ts5App')
 	      $location.hash(id);
 	      $anchorScroll();
 	    };
-      
-
+    
   });

@@ -1,3 +1,7 @@
+// TODO:
+// Add CRUD methods for items
+// Write tests for this factory
+
 'use strict';
 
 /**
