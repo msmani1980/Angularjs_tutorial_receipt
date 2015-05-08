@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,baseUrl,$location,$anchorScroll,itemsFactory,companiesFactory) {
+  .controller('ItemCreateCtrl', function ($scope,baseUrl,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -79,6 +79,12 @@ angular.module('ts5App')
         $scope.salesCategories = data.salesCategories;
       });
 
+      // get curriences 
+      // TODO: Refactor this factory to use new standards and then update this call to be more like above
+      currencyFactory.getCompanyBaseCurrency().then(function (data) {
+        $scope.currencies = data;
+      });
+
       // Not complete
       $scope.addPrice = function() {
 
@@ -147,10 +153,6 @@ angular.module('ts5App')
       // TODO: Move this to the factory?
       function getCompanyDependencies() {
 
-        // get currencies
-        companiesService.currencies.query(function(currencies) {
-          $scope.currencies = currencies;
-        });
 
         // get tax types
         companiesService.taxTypes.query(function(data) {
@@ -164,7 +166,6 @@ angular.module('ts5App')
 
       }
 
-      // get company dependencies
-      getCompanyDependencies();*/
+*/
 
   });

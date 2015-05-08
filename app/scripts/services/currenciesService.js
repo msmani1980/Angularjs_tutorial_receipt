@@ -8,7 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('currencies', function ($q, $resource, baseUrl) {
+  .service('currencies', function ($q, $resource, baseUrl,GlobalMenuService) {
+
+    var company = GlobalMenuService.company.get();
     var globalCurrenciesURL = baseUrl + '/api/currencies';
     var companyCurrenciesURL = baseUrl + '/api/companies/:companyId/currencies';
     var paramDefaults = {};
@@ -25,7 +27,7 @@ angular.module('ts5App')
       }
     };
     var globalCurrenciesResource = $resource(globalCurrenciesURL, paramDefaults, actions);
-    var companyCurrenciesResource = $resource(companyCurrenciesURL, {companyId: 374}, actions);
+    var companyCurrenciesResource = $resource(companyCurrenciesURL, {companyId: company.id}, actions);
 
     var getBaseCurrency = function (currenciesArray, baseCurrencyId) {
       return currenciesArray.filter(function (currencyItem) {
