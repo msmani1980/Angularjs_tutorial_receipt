@@ -9,9 +9,6 @@
  */
 angular.module('ts5App')
   .service('menuService', function ($http, $q, $resource, baseUrl) {
-    $http.defaults.headers.common.userId = 1;
-    $http.defaults.headers.common.companyId = 374;
-
     var requestURL = baseUrl + '/api/menus/:id';
     var requestParameters = {
       id: '@id',
