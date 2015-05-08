@@ -74,6 +74,11 @@ angular.module('ts5App')
         $scope.tags = data.response;
       });
 
+      // get sales categories
+      companiesFactory.getSalesCategoriesList(function(data) {
+        $scope.salesCategories = data.salesCategories;
+      });
+
       // Not complete
       $scope.addPrice = function() {
 
@@ -142,19 +147,9 @@ angular.module('ts5App')
       // TODO: Move this to the factory?
       function getCompanyDependencies() {
 
-        // get tags
-        companiesService.tags.query(function(data) {
-          $scope.tags = data.response;
-        });
-
         // get currencies
         companiesService.currencies.query(function(currencies) {
           $scope.currencies = currencies;
-        });
-
-        // get sales categories
-        companiesService.salesCategories.query(function(data) {
-          $scope.salesCategories = data.salesCategories;
         });
 
         // get tax types
