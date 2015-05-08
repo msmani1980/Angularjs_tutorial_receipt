@@ -90,6 +90,12 @@ angular.module('ts5App')
         $scope.taxTypes = data.response;
       });
 
+
+      // get stations
+      companiesFactory.getStationsList(function(data) {
+        $scope.stations = data.response;
+      });
+
       // Not complete
       $scope.addPrice = function() {
 
@@ -152,13 +158,5 @@ angular.module('ts5App')
 	      $anchorScroll();
 	    };
       
-/*
-
-        // get stations
-        companiesService.stations.query(function(data) {
-          $scope.stations = data.response;
-        });
-
-*/
 
   });
