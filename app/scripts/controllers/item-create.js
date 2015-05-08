@@ -85,6 +85,11 @@ angular.module('ts5App')
         $scope.currencies = data;
       });
 
+       // get tax types
+      companiesFactory.getTaxTypesList(function(data) {
+        $scope.taxTypes = data.response;
+      });
+
       // Not complete
       $scope.addPrice = function() {
 
@@ -148,23 +153,11 @@ angular.module('ts5App')
 	    };
       
 /*
-    
-      // Makes API requests  for companyu record dependencies likes tags or sales-categories
-      // TODO: Move this to the factory?
-      function getCompanyDependencies() {
-
-
-        // get tax types
-        companiesService.taxTypes.query(function(data) {
-          $scope.taxTypes = data.response;
-        });
 
         // get stations
         companiesService.stations.query(function(data) {
           $scope.stations = data.response;
         });
-
-      }
 
 */
 

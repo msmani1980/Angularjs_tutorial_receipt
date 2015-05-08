@@ -1,0 +1,1 @@
+{"meta":{"count":3,"limit":3,"start":0},"response":[{"id":16,"companyId":326,"taxTypeCode":"GST","countTaxRate":"0","description":"Goods and Service Tax"},{"id":17,"companyId":326,"taxTypeCode":"Local","countTaxRate":"0","description":"Local City Taxes"},{"id":15,"companyId":326,"taxTypeCode":"VAT","countTaxRate":"0","description":"Value Added Tax"}]}

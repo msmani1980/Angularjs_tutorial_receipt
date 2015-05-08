@@ -1,3 +1,5 @@
+// TODO: Write tests for this factory
+
 'use strict';
 
 /**
@@ -8,13 +10,14 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('companiesFactory', function (tagsService, salesCategoriesService) {
+  .factory('companiesFactory', function (tagsService, salesCategoriesService,taxTypesService) {
 
   // Tags
   var getTagsList = function (payload) {
     return tagsService.getTagsList(payload);
   };
 
+  // Sales Categories
   var getSalesCategoriesList = function (payload) {
     return salesCategoriesService.getSalesCategoriesList(payload);
   };
@@ -31,6 +34,11 @@ angular.module('ts5App')
     return salesCategoriesService.updateSalesCategory(payload);
   };
 
+  // Tax Types
+  var getTaxTypesList = function (payload) {
+    return taxTypesService.getTaxTypesList(payload);
+  };
+
   return {
 
     // Tags
@@ -40,7 +48,10 @@ angular.module('ts5App')
     getSalesCategoriesList: getSalesCategoriesList,
     getSalesCategory: getSalesCategory,
     createSalesCategory:createSalesCategory,
-    updateSalesCategory: updateSalesCategory
+    updateSalesCategory: updateSalesCategory,
+
+    // Tax Types
+    getTaxTypesList: getTaxTypesList,
 
   };
 
