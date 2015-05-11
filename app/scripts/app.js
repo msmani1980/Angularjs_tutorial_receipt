@@ -106,7 +106,7 @@ angular
     var company = GlobalMenuService.company.get();
 
     // sets default headers
-    // TODO: Set up watch so when user and compnay id change, these are updated
+    // TODO: Set up watch so when user and company id change, these are updated
     $http.defaults.headers.common.userId = user.id;
     $http.defaults.headers.common.companyId = company.id;
 

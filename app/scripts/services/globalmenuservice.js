@@ -50,22 +50,26 @@ angular.module('ts5App')
     var companyModel = {
       '326': {
         id: 326,
-        name: 'EasyJet'
+        name: 'TS5 QA'
       },
       '2': {
         id: 2,
-        name: 'Frontier'
-      },
-      '3': {
-        id: 3,
         name: 'JetBlue'
+      },
+      '403': {
+        id: 403,
+        name: 'British Airways'
+      },
+      '213': {
+        id: 213,
+        name: 'Acme'
       }
     };
 
     var defaults = {};
     defaults.user = userModel['1'];
     defaults.language = languageModel['1'];
-    defaults.company = companyModel['326'];
+    defaults.company = companyModel['2'];
 
     $localStorage.$default(defaults);
 
