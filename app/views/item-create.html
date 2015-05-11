@@ -2,17 +2,17 @@
 
 	<edit-form-header-directive></edit-form-header-directive>
 
-	<div class="form-nav btn-group" role="group" aria-label="...">
+	<div class="form-nav btn-group-justified" role="group" aria-label="..." ng-init="activeBtn = 'item-information'">
 
-	 	<a ng-click="scrollTo('item-information')" type="button" class="btn btn-default">
+	 	<a ng-click="activeBtn = 'item-information'" ng-class="{'active':activeBtn === 'item-information'}" type="button" class="btn btn-default">
 	  	Item Information
 	  	</a>
 
-	  	<a ng-click="scrollTo('measurements')" type="button" class="btn btn-default">
+	  	<a ng-click="activeBtn = 'measurements'" ng-class="{'active':activeBtn === 'measurements'}" type="button" class="btn btn-default">
 	  	Measurements
 	  	</a>
 
-	 	<a ng-click="scrollTo('price-and-tax')"  type="button" class="btn btn-default">
+	 	<a ng-click="activeBtn = 'price-and-tax'" ng-class="{'active':activeBtn === 'price-and-tax'}" type="button" class="btn btn-default">
 	  	Price & Tax
 	  	</a>
 
