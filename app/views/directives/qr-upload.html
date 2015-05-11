@@ -1,0 +1,68 @@
+<div class="form-group qr-upload-container">
+
+	<div ngf-select="" ngf-drop="" class="drop-box" 
+		ng-model="files"
+		ng-model-rejected="rejFiles"
+		ngf-change="generateThumb(file, files)"
+	   	ngf-drag-over-class="dragover"  
+	    ngf-multiple="false" 
+	    ngf-allow-dir="true"
+	    ngf-accept="'.jpg,.png,.gif'"
+	    ngf-min-size='10'  
+		ngf-max-size='10000' 
+	>
+	    
+	<b>Drop QR Codes, or Click.</b>
+
+	<p>Accepted file formats: jpg, png, gif.</p> 
+
+	</div>
+
+	<p class="alert alert-danger" ng-show="rejFiles.length"> 
+
+	    <b>Your file doesn't meet the requirements:</b>
+	    <br>
+
+	    <i ng-show="rejFiles[0].size > 10000">
+	    	{{rejFiles[0].size / 1000}}kb, is a bit too large. 10kb is the max qr upload size.
+	    </i>
+
+	     <i ng-show="rejFiles[0].size < 10001">
+	    	'{{rejFiles[0].name}}' is invalid, OR '{{rejFiles[0].type}}' is not an accepted file type.
+	    </i>
+
+	</p>
+
+	<div class="thumbnails" ng-show="files.length">
+
+		<div class="img-thumbnail" ng-repeat="file in files">
+
+		    <img ngf-thumbnail="file" class="thumbs" />
+
+	    	<p>{{file.name}}</p>
+
+	    	<progressbar class="progress-striped" ng-model="files" ng-show="!qrUploadFail && !qrUploadSuccess" ng-show="files.length" animate="true" value="progress">
+				<b>{{qrUploadProgress}}%</b>
+			</progressbar>
+
+			<progressbar class="progress-striped" ng-model="files" ng-show="qrUploadSuccess" animate="true" value="100" type="success">
+				<b>Success!</b>
+			</progressbar>
+
+			<progressbar class="progress-striped" ng-model="files" ng-show="qrUploadFail" animate="true" value="100" type="danger">
+				<b>Fail</b>
+			</progressbar>
+
+	    </div>
+
+	</div>
+
+	<div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+	<button class="btn button btn-success" ng-model="files" ng-disabled="!files.length" ng-click="qrUploader()">	Upload
+	</button>
+
+	<button class="btn button btn-default" ng-model="files" ng-show="files.length" ng-click="clearQrCodes()">	Clear
+	</button> 
+
+</div>

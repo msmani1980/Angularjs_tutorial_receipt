@@ -142,68 +142,19 @@
 
 				<tab heading="QR Create">
 
-					<div class="tab-pane">
-
-						<div class="qr-code">
-							<div class="thumb">
-								<qr text="formData.qrCodeValue" image="true" size="128"></qr>
-							</div>
-							<a class="btn btn-success">Save</a>
-						</div>
-
-						<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code"></input-text>
-
-					</div>
+					<qr-create></qr-create>
 
 				</tab>
 
 				<tab heading="QR Upload">
 
-				<div class="form-group qr-upload-container" ng-controller="QruploadCtrl">
-
-				    <div ngf-select="" ngf-drop="" class="drop-box"
-				    	ng-model="qrcodes"
-				    	ng-model-rejected="rejFiles"
-				       	ngf-drag-over-class="dragover"
-				        ngf-multiple="false"
-				        ngf-allow-dir="true"
-				        ngf-accept="'.png,.jpg'"
-				        ngf-min-size='10'
-	    				ngf-max-size='10000'
-				    >
-
-				        Drop QR Code, or Click.
-
-				    </div>
-
-				    <div class="thumbnails" ng-show="qrcodes != null" ng-model="qrcodes">
-
-				    	<div class="img-thumbnail" ng-repeat="qrcode in qrcodes">
-
-						    <!--TODO - Stop file thumbnails from overwriting eachother -->
-						    <img ngf-thumbnail="qrcode" class="thumbs" />
-
-					    	<p>{{qrcode.name}}</p>
-
-					    </div>
-
-				    </div>
-
-				    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
-
-				    <button class="button" ng-model="qrcodes" ng-disabled="!qrcodes" ng-click="upload()">Upload</button>
-
-	        		<p class="alert alert-success" ng-show="file.result">{{file.result}} Upload Successful</p>
-
-	        		<p class="alert alert-warning" ng-show="file.result">{{file.result}} Upload Failed</p>
-
-					</div>
+					<qr-upload></qr-upload>
 
 				</tab>
 
 			</tabset>
 
-			<input-text label="QR Image URL" name="qrCodeImgUrl" pattern="regexp.url" placeholder="1234"></input-text>
+			<input-text label="QR Image URL" name="qrCodeImgUrl" pattern="regexp.url" placeholder="1234" ng-model="files"></input-text>
 
 		</div>
 

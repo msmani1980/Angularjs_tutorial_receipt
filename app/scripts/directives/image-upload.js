@@ -15,15 +15,15 @@ angular.module('ts5App')
 	    // set header param 'type' = item
 	    $http.defaults.headers.common.type = 'item';
 
-	    // Progress
+	    // progress
 	    $scope.uploadProgress = [];
 
-	    //Watch for files
+	    // watch for files
 	   	$scope.$watch('files', function (files) {
 	       $scope.files = files;
 	    });
 
-	    //Clear current images/files
+	    // clear current qr files
 	    $scope.clearFiles = function() {
 	        $scope.files = [];
 	        $scope.uploadProgress = 0;
@@ -32,7 +32,7 @@ angular.module('ts5App')
 	        $scope.formData.images = [];
 	    };
 
-	    //Upload Image function
+	    // upload image function
 	    $scope.upload = function () {
 
 	        // grab files from scope
@@ -48,7 +48,7 @@ angular.module('ts5App')
 	                file: files
 	            }).progress(function (evt) {
 
-	                //Upload Progress
+	                // Upload Progress
 	                $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
 
 	            // on a successful upload

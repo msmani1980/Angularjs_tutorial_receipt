@@ -1,0 +1,17 @@
+<div class="tab-pane">
+
+	<div class="qr-code">
+
+		<div class="thumb">
+
+			<qr text="formData.qrCodeValue" image="true" size="128"></qr>
+
+		</div>
+
+		<button class="btn button btn-success" ng-disabled="!formData.qrCodeValue.length" ng-click="qrCreate()">Save</a>
+
+	</div>
+
+	<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code"></input-text>
+
+</div>
