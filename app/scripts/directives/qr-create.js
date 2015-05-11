@@ -31,12 +31,46 @@ angular.module('ts5App')
             $scope.formData.qrCodeImgUrl = '';
         };
 
+        // Function to convert dataURI into a Blob
+        // After we pull the qrcode png out of the canvas, we need to pass it as a file/blob into the uploader.
+        // based off of http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
+        function dataURItoBlob(dataURI) {
+
+            var byteString, 
+                mimestring ;
+
+            if(dataURI.split(',')[0].indexOf('base64') !== -1 ) {
+                byteString = atob(dataURI.split(',')[1]);
+            } else {
+                byteString = decodeURI(dataURI.split(',')[1]);
+            }
+
+            mimestring = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+            var content = [];
+            for (var i = 0; i < byteString.length; i++) {
+                content[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([new Uint8Array(content)], {type: mimestring});
+        }
+
         // upload qr image function
         $scope.qrCreate = function () {
 
-           var files = files;
+           var canvas = angular.element('.qr-code canvas')[0];
 
-            console.log(files);
+           var imageData = canvas.toDataURL('image/png');
+
+           var imageBlob = dataURItoBlob(imageData);
+
+           imageBlob.name = $scope.formData.qrCodeValue + '.png';
+
+           var files = [imageBlob];
+
+            //return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+
+            console.log(imageBlob.name);
             //if a file exists and it is not null
             if (files && files.length) {
                 
