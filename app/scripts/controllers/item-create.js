@@ -11,11 +11,20 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,baseUrl,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
+  .controller('ItemCreateCtrl', function ($scope,$compile,baseUrl,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
 
-      companiesFactory.getCompaniesList(function(data) {
-        console.log(data);
-      });
+
+      $scope.addPriceTypeBlock = function() {
+
+        $scope.formData.prices.push(priceData);
+
+        var el = $compile( '<input-price-type priceTypeModel="formData.prices['+$scope.formData.prices.length+']"></input-price-type>' )( $scope );
+
+        angular.element('#price-type-container').append( el );
+
+      };
+      
+      var priceData = { startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',};
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -36,6 +45,17 @@ angular.module('ts5App')
         recommendations: [],
         globalTradeNumbers: []
       };
+
+
+      $scope.$watchCollection('formData.prices', function(newPrices, oldNames) {
+
+        console.log($scope.formData.prices);  console.log(newPrices);
+        //$scope.formData.prices = newPrices;
+
+      });
+
+
+      //$scope.prices = {};
 
       // Get a list of items
       itemsFactory.getItemsList(function (data) {
@@ -74,7 +94,7 @@ angular.module('ts5App')
 
       // get volume units
       itemsFactory.getWeightList(function(data) {
-        $scope.volumeUnits = data.units; 
+        $scope.volumeUnits = data.units;
       });
 
       // get tags
@@ -87,7 +107,7 @@ angular.module('ts5App')
         $scope.salesCategories = data.salesCategories;
       });
 
-      // get curriences 
+      // get curriences
       // TODO: Refactor this factory to use new standards and then update this call to be more like above
       currencyFactory.getCompanyBaseCurrency().then(function (data) {
         $scope.currencies = data;
@@ -107,21 +127,15 @@ angular.module('ts5App')
       // Not complete
       $scope.addPrice = function() {
 
-          // TODO: Currently adding 2 types at first, need to dynamically push items into this array
+          //$scope.formData.prices.push($scope.prices);
 
-          $scope.formData.prices.push({
-            startDate: $scope.formData.prices[0].startDate, 
-            endDate:  $scope.formData.prices[0].endDate, 
-            typeId: $scope.formData.prices[0].typeId, 
-            priceCurrencies: [], 
-            taxIs: $scope.formData.prices[0].taxIs
-          });
+          //$scope.prices = {};
 
           console.log($scope.formData);
 
       };
 
-      // Submit function to proces form and hit the api 
+      // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
       	// If the local form is not valid
@@ -153,7 +167,7 @@ angular.module('ts5App')
         }, function(error){
 
         	$scope.displayError = true;
-		  
+
 		  	  $scope.formErrors = error.data;
 
         });
@@ -165,5 +179,5 @@ angular.module('ts5App')
 	      $location.hash(id);
 	      $anchorScroll();
 	    };
-    
+
   });

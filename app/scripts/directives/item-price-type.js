@@ -11,19 +11,17 @@ angular.module('ts5App')
 
     return {
 
-      	templateUrl: 'views/directives/input-price-type.html',
-      	restrict: 'E',
-      	scope: false, // isolate scope to directive only
+    	templateUrl: 'views/directives/input-price-type.html',
+    	restrict: 'E',
+    	scope: true,
 
-	  	controller: function ( $scope, $element,$compile ) {
+	  	controller: function ( $scope, $element,$compile, $attrs) {
 
-	      $scope.add = function () {
-	        var el = $compile( '<input-price-type></input-price-type>' )( $scope );
-	        angular.element('#price-type-container').append( el );
-	      };
+        this.priceTypeModel = $attrs.pricetypemodel;
 
+        console.log('setting the price type model from directive ' + this.priceTypeModel);
 	    }
 
     };
-    
+
   });
