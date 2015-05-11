@@ -17,7 +17,7 @@ angular.module('ts5App')
   		$scope.formData = {
         startDate: '20150515',
         endDate: '20150715',
-        qrCodeValue: 'qrCode',
+        qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
         prices: [],

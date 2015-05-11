@@ -37,7 +37,7 @@ angular.module('ts5App')
         function dataURItoBlob(dataURI) {
 
             var byteString, 
-                mimestring ;
+                mimestring;
 
             if(dataURI.split(',')[0].indexOf('base64') !== -1 ) {
                 byteString = atob(dataURI.split(',')[1]);
@@ -58,19 +58,21 @@ angular.module('ts5App')
         // upload qr image function
         $scope.qrCreate = function () {
 
-           var canvas = angular.element('.qr-code canvas')[0];
+            // selector for qr-code canvas
+            var canvas = angular.element('.qr-code canvas')[0];
 
-           var imageData = canvas.toDataURL('image/png');
+            // convert canvas into img/png
+            var imageData = canvas.toDataURL('image/png');
 
-           var imageBlob = dataURItoBlob(imageData);
+            // Use function dataURItoBlob, pass imageData
+            var imageBlob = dataURItoBlob(imageData);
 
-           imageBlob.name = $scope.formData.qrCodeValue + '.png';
+            // Set blob name, esentially the file name
+            imageBlob.name = $scope.formData.qrCodeValue + '.png';
 
-           var files = [imageBlob];
+            // pass the image blob object into files
+            var files = [imageBlob];
 
-            //return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-
-            console.log(imageBlob.name);
             //if a file exists and it is not null
             if (files && files.length) {
                 

@@ -36,9 +36,7 @@ angular.module('ts5App')
 
             // grab files from scope
             var files = $scope.files;
-
-            console.log(files);
-
+            
             //if a file exists and it is not null
             if (files && files.length) {
                 
