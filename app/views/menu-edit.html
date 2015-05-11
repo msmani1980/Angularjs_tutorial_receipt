@@ -52,14 +52,15 @@
   <table class="table table-bordered table-hover">
     <thead>
     <tr>
-      <th>Item Id</th>
+      <th>Item Name</th>
       <th>Quantity</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="item in menu.menuItems">
-      <td>{{ item.itemId }}</td>
-      <td>{{ item.itemQty }}</td>
+    {{masterItemsList[0]}}
+    <tr ng-repeat="menuItem in menu.menuItems" ng-init="item = getItemUsingId(menuItem.itemId)">
+      <td>{{item.itemName}}</td>
+      <td>{{menuItem.itemQty}}</td>
     </tr>
     </tbody>
   </table>

@@ -33,8 +33,10 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getItemsList = function (payload, fetchFromMaster) {
-      payload.fetchFromMaster = fetchFromMaster ? 'master' : null;
+    var getItemsList = function (searchParameters, fetchFromMaster) {
+      searchParameters.fetchFromMaster = fetchFromMaster ? 'master' : null;
+      var payload = {};
+      angular.extend(payload, searchParameters);
       return requestResource.getItemsList(payload).$promise;
     };
 
