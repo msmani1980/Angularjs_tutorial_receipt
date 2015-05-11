@@ -2,7 +2,6 @@
 
 describe('Controller: MenuEditCtrl', function () {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/menu.json'));
 
@@ -12,7 +11,6 @@ describe('Controller: MenuEditCtrl', function () {
     menuResponseJSON,
     menuService;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, _menuService_) {
     scope = $rootScope.$new();
     inject(function (_servedMenu_) {

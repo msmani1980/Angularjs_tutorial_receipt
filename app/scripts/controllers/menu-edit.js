@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, menuService) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, menuService, itemsService) {
     $scope.viewName = 'Menu';
 
     function formatStartAndEndDates(formatFrom, formatTo) {
@@ -31,6 +31,6 @@ angular.module('ts5App')
     };
 
     menuService.getMenu($routeParams.id).then(attachModelToScope);
-    //itemsService.getItem(332)
+    itemsService.getItem(359)
 
   });
