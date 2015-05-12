@@ -34,6 +34,12 @@ describe('Controller: MenuEditCtrl', function () {
     MenuEditCtrl = $controller('MenuEditCtrl', {
       $scope: scope
     });
+
+    scope.menuEditForm = {
+      $valid: true,
+      $setPristine: function() {}
+    };
+
     scope.$digest();
     $httpBackend.flush();
   }));
