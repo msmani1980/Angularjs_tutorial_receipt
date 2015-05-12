@@ -15,7 +15,7 @@ angular.module('ts5App')
   .factory('itemsFactory', function ($resource, baseUrl, itemsService, allergensService,itemTypesService,priceTypesService,characteristicsService,unitsService) {
 
   	// Items
-  	var getItem = function (id) {
+  var getItem = function (id) {
 		return itemsService.getItem(id);
 	};
 
@@ -23,7 +23,15 @@ angular.module('ts5App')
 		return itemsService.getItemsList(payload);
 	};
 
-	// Allergens 
+  var createItem = function (payload) {
+		return itemsService.createItem(payload);
+	};
+
+  var updateItem = function (payload) {
+		return itemsService.updateItem(payload);
+	};
+
+	// Allergens
 	var getAllergensList = function (payload) {
 		return allergensService.getAllergensList(payload);
 	};
@@ -60,6 +68,8 @@ angular.module('ts5App')
 		// Items
 		getItem: getItem,
 		getItemsList: getItemsList,
+    createItem:createItem,
+    updateItem: updateItem,
 
 		// Allergens
 		getAllergensList: getAllergensList,

@@ -15,12 +15,19 @@ angular.module('ts5App')
 
       // Adds a new priceType object to the formData
       $scope.addPriceTypeBlock = function() {
-
-        $scope.formData.prices.push({});
-
+        $scope.formData.prices.push({priceCurrencies:priceCurrencies});
       };
 
-      var priceData = { startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',};
+      // mock price currency data
+      var priceCurrencies = [
+        {price: '1.00', companyCurrencyId: '1'},
+        {price: '1.00', companyCurrencyId: '57'},
+        {price: '1.00', companyCurrencyId: '58'},
+        {price: '1.00', companyCurrencyId: '63'}
+      ];
+
+      // first price type data object
+      var priceData = { startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: priceCurrencies, taxIs: 'Included',};
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -132,7 +139,7 @@ angular.module('ts5App')
       	};
 
       	// Create newItem in API
-      	itemsFactory.items.save(newItem,function () {
+      	itemsFactory.createItem(newItem,function () {
 
            angular.element('#create-success').modal('show');
 

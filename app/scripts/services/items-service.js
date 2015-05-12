@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('itemsService', function ($resource, baseUrl) {
+  .service('itemsService', function ($resource, baseUrl,$http) {
 
     var requestURL = baseUrl + '/api/retail-items/:id';
     var requestParameters = {
@@ -31,9 +31,13 @@ angular.module('ts5App')
       }
     };
 
+
+
+
     var requestResource = $resource(requestURL, requestParameters, actions);
 
     var getItemsList = function (payload) {
+      console.log($http.defaults.headers.common.companyId);
       return requestResource.getItemsList(payload).$promise;
     };
 
