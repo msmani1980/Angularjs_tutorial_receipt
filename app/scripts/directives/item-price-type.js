@@ -13,14 +13,7 @@ angular.module('ts5App')
 
     	templateUrl: 'views/directives/input-price-type.html',
     	restrict: 'E',
-    	scope: true,
-
-	  	controller: function ( $scope, $element,$compile, $attrs) {
-
-        this.priceTypeModel = $attrs.pricetypemodel;
-
-        console.log('setting the price type model from directive ' + this.priceTypeModel);
-	    }
+    	scope: true
 
     };
 

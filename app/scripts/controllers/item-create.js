@@ -13,17 +13,13 @@
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function ($scope,$compile,baseUrl,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
 
-
+      // Adds a new priceType object to the formData
       $scope.addPriceTypeBlock = function() {
 
-        $scope.formData.prices.push(priceData);
-
-        var el = $compile( '<input-price-type priceTypeModel="formData.prices['+$scope.formData.prices.length+']"></input-price-type>' )( $scope );
-
-        angular.element('#price-type-container').append( el );
+        $scope.formData.prices.push({});
 
       };
-      
+
       var priceData = { startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',};
 
     	// View Name
@@ -36,7 +32,7 @@ angular.module('ts5App')
         qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
-        prices: [],
+        prices: [priceData],
         taxes:[],
         tags: [],
         allergens:[],
@@ -45,17 +41,6 @@ angular.module('ts5App')
         recommendations: [],
         globalTradeNumbers: []
       };
-
-
-      $scope.$watchCollection('formData.prices', function(newPrices, oldNames) {
-
-        console.log($scope.formData.prices);  console.log(newPrices);
-        //$scope.formData.prices = newPrices;
-
-      });
-
-
-      //$scope.prices = {};
 
       // Get a list of items
       itemsFactory.getItemsList(function (data) {
@@ -124,17 +109,6 @@ angular.module('ts5App')
         $scope.stations = data.response;
       });
 
-      // Not complete
-      $scope.addPrice = function() {
-
-          //$scope.formData.prices.push($scope.prices);
-
-          //$scope.prices = {};
-
-          console.log($scope.formData);
-
-      };
-
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
@@ -151,8 +125,7 @@ angular.module('ts5App')
       	// set the formData models in the view to the scope.formData object
       	$scope.formData = angular.copy(formData);
 
-      	// FIXME forcing price right now
-      	//$scope.formData.prices = [{startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',}];
+        console.log($scope.formData);
 
       	var newItem = {
       		retailItem: formData

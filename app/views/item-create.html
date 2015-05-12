@@ -215,11 +215,12 @@
      <i class="fa fa-plus"></i> Add Additional Price Type
   </button>
 
-  <button type="button" class="btn btn-primary" ng-click="addPrice()">
-     <i class="fa fa-plus"></i> Add Price
-  </button>
-
 	<div id="price-type-container">
+
+		<div ng-repeat="(key,itemPrice) in formData.prices track by $index">
+			<input-price-type> </input-price-type>
+		</div>
+
 	</div>
 
 	<!-- Tax Type -->
