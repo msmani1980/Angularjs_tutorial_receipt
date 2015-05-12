@@ -7,8 +7,8 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a class="btn btn-default" ng-href="#/menu-list" class="btn">Cancel</a>
-        <button class="btn btn-success" ng-click="submitForm()">
+        <a class="btn btn-default" ng-href="#/menu-list" class="btn">Back</a>
+        <button ng-show="menuEditForm.$dirty" class="btn btn-success" ng-click="submitForm()">
           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
@@ -48,7 +48,6 @@
     <input type="text" name="description" class="form-control" id="menuDescription" ng-model="menu.description"
            placeholder="ITM001">
   </div>
-
   <table class="table table-bordered">
     <thead>
     <tr>
