@@ -16,14 +16,22 @@ angular.module('ts5App')
       return moment(dateString, formatFrom).format(formatTo).toString();
     }
 
-    $scope.getItemUsingId = function (masterItemId) {
-      return {
-        itemName: 'Sprite'
-      };
-    };
+    function getMasterItemUsingId(masterItemId) {
+      return $scope.masterItemsList.filter(function (masterItem) {
+        return masterItem.id === masterItemId;
+      })[0];
+    }
 
     function attachItemsModelToScope(masterItemsFromAPI) {
       $scope.masterItemsList = masterItemsFromAPI.masterItems;
+      $scope.menuItemsList = [];
+      angular.forEach($scope.menu.menuItems, function (menuItem) {
+        var masterItem = {
+          itemQty: menuItem.itemQty
+        };
+        angular.extend(masterItem, getMasterItemUsingId(menuItem.itemId));
+        $scope.menuItemsList.push(masterItem);
+      });
     }
 
     function fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, dateForAPIFormat) {

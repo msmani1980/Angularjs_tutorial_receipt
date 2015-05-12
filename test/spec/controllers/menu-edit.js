@@ -75,9 +75,18 @@ describe('Controller: MenuEditCtrl', function () {
         expect(!!scope.masterItemsList).toBe(true);
       });
 
-      it('should return the master item using ID from menu/itemsList', function(){
-        var selectedItem = scope.getItemUsingId(scope.menu.menuItems[0].itemId);
-        expect(selectedItem.itemName).toBe('Sprite')
+      describe('menuItemList in scope', function () {
+        it('should attach it to scope', function(){
+          expect(!!scope.menuItemsList).toBe(true);
+        });
+
+        it('should have itemQty', function(){
+          expect(!!scope.menuItemsList[0].itemQty).toBe(true);
+        });
+
+        it('should have a itemName', function(){
+          expect(!!scope.menuItemsList[0].itemName).toBe(true);
+        });
       });
     });
 
