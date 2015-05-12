@@ -1,0 +1,12 @@
+body{
+	background: $bg-color;
+}
+
+@media(min-width:$screen-sm-min){
+
+	.main-container{
+		width:90%;
+		margin:0 auto;
+	}
+
+}
