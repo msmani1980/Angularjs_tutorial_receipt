@@ -18,6 +18,7 @@ angular.module('ts5App')
         $scope.formData.prices.push({priceCurrencies:priceCurrencies});
       };
 
+      // TODO: Get from companies currenices from factory
       // mock price currency data
       var priceCurrencies = [
         {price: '1.00', companyCurrencyId: '1'},

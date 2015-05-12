@@ -4,11 +4,39 @@
 
 	<div class="col-xs-12 col-sm-8">
 
-		<label>Price Type</label>
+		<div class="row">
 
-		<select ng-model="formData.prices[$parent.key].typeId" class="form-control">
-			<option ng-repeat="type in $parent.priceTypes" value="{{ type.id }}">{{ type.name }}</option>
-		</select>
+			<div class="col-xs-12 col-sm-6">
+
+				<div class="form-group">
+
+					<label>Price Type</label>
+
+					<select ng-model="formData.prices[$parent.key].typeId" class="form-control">
+						<option ng-repeat="type in $parent.priceTypes" value="{{ type.id }}">{{ type.name }}</option>
+					</select>
+
+				</div>
+
+			</div>
+
+			<div class="col-xs-12 col-sm-6">
+
+				<div class="form-group">
+
+					<label>Tax Is</label>
+
+					<select ng-model="formData.prices[$parent.key].taxIs" class="form-control">
+						<option value="Included">Included</option>
+						<option value="Excluded">Excluded</option>
+						<option value="Exempt">Exempt</option>
+					</select>
+
+				</div>
+
+			</div>
+
+		</div>
 
 		<div class="row">
 
@@ -52,16 +80,9 @@
 
 	<div class="col-xs-12 col-sm-4">
 
-		<label>Tax Is</label>
-
-		<select ng-model="formData.prices[$parent.key].taxIs" class="form-control">
-			<option value="Included">Included</option>
-			<option value="Excluded">Excluded</option>
-			<option value="Exempt">Exempt</option>
-		</select>
+		<input ng-repeat="(currencyKey,currency) in formData.prices[$parent.key].priceCurrencies" ng-model="formData.prices[$parent.key].priceCurrencies[currencyKey].price" type="text" class="form-control" value="" />
 
 	</div>
-
 
 </div>
 <!-- /PriceTypeDirective -->
