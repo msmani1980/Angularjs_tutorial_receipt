@@ -8,29 +8,62 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, menuService) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, menuService, itemsService) {
     $scope.viewName = 'Menu';
 
-    function formatStartAndEndDates(formatFrom, formatTo) {
-      $scope.menu.startDate = moment($scope.menu.startDate, formatFrom).format(formatTo).toString();
-      $scope.menu.endDate = moment($scope.menu.endDate, formatFrom).format(formatTo).toString();
+
+    function formatDate(dateString, formatFrom, formatTo) {
+      return moment(dateString, formatFrom).format(formatTo).toString();
     }
 
-    function attachModelToScope(menuFromAPI) {
-      var formatDateFrom = 'YYYY-MM-DD';
+    function getMasterItemUsingId(masterItemId) {
+      return $scope.masterItemsList.filter(function (masterItem) {
+        return masterItem.id === masterItemId;
+      })[0];
+    }
+
+    function attachItemsModelToScope(masterItemsFromAPI) {
+      $scope.masterItemsList = masterItemsFromAPI.masterItems;
+      $scope.menuItemsList = [];
+      angular.forEach($scope.menu.menuItems, function (menuItem) {
+        var masterItem = {
+          itemQty: menuItem.itemQty
+        };
+        angular.extend(masterItem, getMasterItemUsingId(menuItem.itemId));
+        $scope.menuItemsList.push(masterItem);
+      });
+    }
+
+    function fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, dateForAPIFormat) {
+      var startDate = formatDate(menuFromAPI.startDate, dateFromAPIFormat, dateForAPIFormat);
+      var endDate = formatDate(menuFromAPI.endDate, dateFromAPIFormat, dateForAPIFormat);
+
+      itemsService.getItemsList({
+        startDate: startDate,
+        endDate: endDate
+      }, true).then(attachItemsModelToScope);
+    }
+
+    function localizeDates(dateFromAPIFormat, formatDateTo) {
+      $scope.menu.startDate = formatDate($scope.menu.startDate, dateFromAPIFormat, formatDateTo);
+      $scope.menu.endDate = formatDate($scope.menu.endDate, dateFromAPIFormat, formatDateTo);
+    }
+
+    function attachMenuListModelToScope(menuFromAPI) {
+      var dateFromAPIFormat = 'YYYY-MM-DD';
       var formatDateTo = 'L';
       $scope.menu = menuFromAPI;
-      formatStartAndEndDates(formatDateFrom, formatDateTo);
+      fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, 'YYYYMMDD');
+      localizeDates(dateFromAPIFormat, formatDateTo);
     }
 
     $scope.submitForm = function () {
       var formatDateFrom = 'l';
       var formatDateTo = 'YYYYMMDD';
-      formatStartAndEndDates(formatDateFrom, formatDateTo);
-      menuService.updateMenu($scope.menu.toJSON()).then(attachModelToScope);
+      localizeDates(formatDateFrom, formatDateTo);
+      menuService.updateMenu($scope.menu.toJSON()).then(attachMenuListModelToScope);
     };
 
-    menuService.getMenu($routeParams.id).then(attachModelToScope);
-    //itemsService.getItem(332)
+    menuService.getMenu($routeParams.id).then(attachMenuListModelToScope);
 
   });

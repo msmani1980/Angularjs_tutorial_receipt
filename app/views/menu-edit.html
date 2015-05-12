@@ -49,17 +49,17 @@
            placeholder="ITM001">
   </div>
 
-  <table class="table table-bordered table-hover">
+  <table class="table table-bordered">
     <thead>
     <tr>
-      <th>Item Id</th>
+      <th>Item Name</th>
       <th>Quantity</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="item in menu.menuItems">
-      <td>{{ item.itemId }}</td>
-      <td>{{ item.itemQty }}</td>
+    <tr ng-repeat="menuItem in menuItemsList">
+      <td>{{menuItem.itemName}}</td>
+      <td>{{menuItem.itemQty}}</td>
     </tr>
     </tbody>
   </table>
