@@ -28,23 +28,34 @@ angular.module('ts5App')
         $element.find('.endDate').remove();
       }
 
+      if ($scope.shouldDisableStartDate) {
+        $element.find('.endDate').datepicker(options);
+        return false;
+      }
+
+      if ($scope.shouldDisableEndDate) {
+        $element.find('.startDate').datepicker(options);
+        return false;
+      }
+
       $element.datepicker(options);
-      $element.on('changeDate', '.startDate', function (startDateEvent) {
-        console.log('startDate', startDateEvent.date);
-      });
-      $element.on('changeDate', '.endDate', function (endDateEvent) {
-        console.log('endDate', endDateEvent.date);
-      });
+
+      //$element.on('changeDate', '.startDate', function (startDateEvent) {
+      //  console.log('startDate', startDateEvent.date);
+      //});
+      //$element.on('changeDate', '.endDate', function (endDateEvent) {
+      //  console.log('endDate', endDateEvent.date);
+      //});
     };
 
     function link($scope, $element) {
-      initializeDatePicker($scope, $element);
 
       var watchListener = $scope.$watchGroup(['startDateModel', 'endDateModel'], function () {
         if ($scope.disablePast && !angular.isUndefined($scope.startDateModel)) {
           $scope.shouldDisableStartDate = moment($scope.startDateModel, 'L').format('L') < moment().format('L');
           $scope.shouldDisableEndDate = moment($scope.endDateModel, 'L').format('L') < moment().format('L');
           watchListener();
+          initializeDatePicker($scope, $element);
         }
       });
     }
