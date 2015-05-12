@@ -49,21 +49,41 @@ angular.module('ts5App')
       $scope.menu.endDate = formatDate($scope.menu.endDate, dateFromAPIFormat, formatDateTo);
     }
 
-    function attachMenuListModelToScope(menuFromAPI) {
+    function attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat) {
+      $scope.menu = angular.copy(menuFromAPI);
+      localizeDates(dateFromAPIFormat, 'L');
+      $scope.menuEditForm.$setPristine();
+    }
+
+    function setupMenuModelAndFetchItems(menuFromAPI) {
       var dateFromAPIFormat = 'YYYY-MM-DD';
-      var formatDateTo = 'L';
-      $scope.menu = menuFromAPI;
+      $scope.menuFromAPI = angular.copy(menuFromAPI);
+
       fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, 'YYYYMMDD');
-      localizeDates(dateFromAPIFormat, formatDateTo);
+      attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat);
+    }
+
+
+    function showModalAndResetModel(dataFromAPI) {
+      setupMenuModelAndFetchItems(dataFromAPI);
+      angular.element('#menu-edit-modal').modal('show');
+    }
+
+    function showErrors(dataFromAPI) {
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+      setupMenuModelAndFetchItems($scope.menuFromAPI);
     }
 
     $scope.submitForm = function () {
       var formatDateFrom = 'l';
       var formatDateTo = 'YYYYMMDD';
       localizeDates(formatDateFrom, formatDateTo);
-      menuService.updateMenu($scope.menu.toJSON()).then(attachMenuListModelToScope);
+      menuService.updateMenu($scope.menu.toJSON()).then(showModalAndResetModel, showErrors);
     };
 
-    menuService.getMenu($routeParams.id).then(attachMenuListModelToScope);
+    menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);
 
   });

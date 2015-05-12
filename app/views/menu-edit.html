@@ -1,5 +1,48 @@
 <ng-form name="menuEditForm" class="form edit-form">
 
+  <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+    </button>
+    <h4>
+      We weren't able to edit your menu!
+    </h4>
+
+    <ul>
+      <li ng-repeat="error in form.$error.required">
+        <strong>{{ error.$name }}</strong> is required
+      </li>
+      <li ng-repeat="error in form.$error.pattern">
+        <strong>{{ error.$name }}</strong> is invalid
+      </li>
+      <li ng-show="formErrors" ng-repeat="error in formErrors">
+        <strong>{{error.field}}</strong>
+        <span> {{ error.value }}</span>
+        <span> {{ error.code }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="modal fade" id="menu-edit-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Menu Saved!</h4>
+        </div>
+
+        <div class="modal-body">
+          <p>Your Menu was succesfuly saved!</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <div class="edit-controls">
     <div class="row">
       <div class="col-xs-6">
