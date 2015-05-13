@@ -18,13 +18,13 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Items',
-            route: '/#/item-list',
+            route: emberURL + 'retail-items',
             icon: 'icon-manage-retail-item',
             className: 'dashboard-managemenuItems'
           },
           {
             name: 'Create Item',
-            route: '/#/item-create',
+            route: emberURL + 'retail-items/create',
             icon: 'icon-create-retail-item',
             className: 'dashboard-createItem'
           },
