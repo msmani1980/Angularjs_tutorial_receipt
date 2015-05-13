@@ -84,7 +84,7 @@ angular.module('ts5App')
           },
           {
             name: 'Create Menu',
-            route: emberURL + 'menu-create',
+            route: emberURL + 'menus/create',
             icon: 'icon-create-menu',
             className: 'dashboard-createMenu'
           }]
