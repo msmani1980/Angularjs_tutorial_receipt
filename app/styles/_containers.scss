@@ -2,11 +2,15 @@ body{
 	background: $bg-color;
 }
 
+.wrapper{
+	width:90%;
+	margin:0 auto;
+}
+
 @media(min-width:$screen-sm-min){
 
-	.main-container{
-		width:90%;
-		margin:0 auto;
+	.wrapper{
+		width:95%;
 	}
 
 }

@@ -29,6 +29,7 @@ angular.module('ts5App')
             $scope.qrUploadSuccess = false; 
             $scope.qrUploadFail = false;
             $scope.formData.qrCodeImgUrl = '';
+            $scope.formData.qrCodeValue = '';
         };
 
         // Function to convert dataURI into a Blob

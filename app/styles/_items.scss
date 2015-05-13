@@ -27,7 +27,6 @@
   background:$form-header-bg-color;
   font-size:16px;
   border-radius:2px;
-  left: 15px;
 }
 
 .form-inline label {
@@ -78,10 +77,14 @@
 }
 
 .top-header{
-  width:90%;
+  width:100%;
   position: fixed;
+  left:0px;
+  right:0px;
   top: 50px;
   padding-bottom: 2em;
+  padding-left: 1em;
+  padding-right: 1em;
   z-index: 10;
   background:$bg-color;
   border-bottom:1px solid lightgray;
