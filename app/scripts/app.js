@@ -25,7 +25,7 @@ angular
     'ngFileUpload',
     'ja.qr'
   ])
-  .constant('baseUrl', 'https://ec2-52-6-49-188.compute-1.amazonaws.com')
+  .constant('baseUrl', 'https://54.83.17.106')
   .constant('regexp', {
       word: /^[\w\s]+$/,
       bit: /^(0|1)$/,
