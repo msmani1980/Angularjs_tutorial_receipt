@@ -128,7 +128,7 @@ angular.module('ts5App')
           },
           {
             name: 'Promotion Category',
-            route: emberURL + 'promotion-category',
+            route: emberURL + 'category',
             icon: 'icon-manage-promotion-category',
             className: 'dashboard-managePromotionCategory'
           },
