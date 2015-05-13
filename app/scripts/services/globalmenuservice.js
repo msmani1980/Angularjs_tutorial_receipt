@@ -69,7 +69,7 @@ angular.module('ts5App')
     var defaults = {};
     defaults.user = userModel['1'];
     defaults.language = languageModel['1'];
-    defaults.company = companyModel['2'];
+    defaults.company = 2;
 
     $localStorage.$default(defaults);
 
@@ -111,7 +111,7 @@ angular.module('ts5App')
     function setCompany(_company_) {
       var companyObj = companyModel[_company_];
 
-      $localStorage.company = companyObj;
+      $localStorage.company = _company_;
       $rootScope.company = $localStorage.company;
 
     }
