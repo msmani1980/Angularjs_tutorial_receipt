@@ -8,9 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('itemsService', function ($resource, baseUrl) {
+  .service('itemsService', function ($resource, ENV) {
 
-    var requestURL = baseUrl + '/api/retail-items/:fetchFromMaster/:id';
+    var requestURL = ENV.apiUrl + '/api/retail-items/:fetchFromMaster/:id';
     var requestParameters = {
       id: '@id',
       limit: 50

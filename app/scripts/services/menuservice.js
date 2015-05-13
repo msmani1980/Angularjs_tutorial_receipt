@@ -8,8 +8,8 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('menuService', function ($http, $q, $resource, baseUrl) {
-    var requestURL = baseUrl + '/api/menus/:id';
+  .service('menuService', function ($http, $q, $resource, ENV) {
+    var requestURL = ENV.apiUrl + '/api/menus/:id';
     var requestParameters = {
       id: '@id',
       limit: 50

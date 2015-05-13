@@ -8,9 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('characteristicsService', function ($resource, baseUrl) {
+  .service('characteristicsService', function ($resource, ENV) {
 
-    var requestURL = baseUrl + '/api/records/characteristics/:id';
+    var requestURL = ENV.apiUrl + '/api/records/characteristics/:id';
     var requestParameters = {
       id: '@id'
     };

@@ -8,9 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('currencies', function ($q, $resource, baseUrl) {
-    var globalCurrenciesURL = baseUrl + '/api/currencies';
-    var companyCurrenciesURL = baseUrl + '/api/companies/:companyId/currencies';
+  .service('currencies', function ($q, $resource, ENV) {
+    var globalCurrenciesURL = ENV.apiUrl + '/api/currencies';
+    var companyCurrenciesURL = ENV.apiUrl + '/api/companies/:companyId/currencies';
     var paramDefaults = {};
     var actions = {
       getCurrencies: {

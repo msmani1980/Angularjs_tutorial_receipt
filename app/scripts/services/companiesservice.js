@@ -8,23 +8,23 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companiesService', function ($resource,baseUrl,GlobalMenuService) {
+  .service('companiesService', function ($resource, ENV,GlobalMenuService) {
 
   	var company = GlobalMenuService.company.get();
 
-    // Returns the $resource with a specific URL 
+    // Returns the $resource with a specific URL
     function returnResource(url, isArray) {
 
-      var resourceURL = baseUrl + url;
+      var resourceURL = ENV.apiUrl + url;
 
       return $resource(resourceURL, {}, {
-          query: { 
-            method:'GET', 
+          query: {
+            method:'GET',
             isArray:isArray
           }
         });
 
-    } 
+    }
 
     return {
       tags: returnResource('/api/companies/'+company.id+'/tags'),
@@ -35,4 +35,4 @@ angular.module('ts5App')
     };
 
   });
-    
+

@@ -8,9 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('priceTypesService', function ($resource, baseUrl) {
+  .service('priceTypesService', function ($resource, ENV) {
 
-    var requestURL = baseUrl + '/api/records/price-types/:id';
+    var requestURL = ENV.apiUrl + '/api/records/price-types/:id';
     var requestParameters = {
       id: '@id'
     };

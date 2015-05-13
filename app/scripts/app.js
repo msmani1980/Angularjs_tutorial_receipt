@@ -10,6 +10,7 @@
  */
 angular
   .module('ts5App', [
+    'config',
     'ngAnimate',
     'ngAria',
     'ngCookies',
@@ -25,7 +26,6 @@ angular
     'ngFileUpload',
     'ja.qr'
   ])
-  .constant('baseUrl', '')
   .constant('regexp', {
       word: /^[\w\s]+$/,
       bit: /^(0|1)$/,
