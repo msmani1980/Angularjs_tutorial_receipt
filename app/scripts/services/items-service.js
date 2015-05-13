@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('itemsService', function ($resource, baseUrl) {
 
-    var requestURL = baseUrl + '/api/retail-items/:id';
+    var requestURL = baseUrl + '/api/retail-items/:fetchFromMaster/:id';
     var requestParameters = {
       id: '@id',
       limit: 50
@@ -33,7 +33,10 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getItemsList = function (payload) {
+    var getItemsList = function (searchParameters, fetchFromMaster) {
+      searchParameters.fetchFromMaster = fetchFromMaster ? 'master' : null;
+      var payload = {};
+      angular.extend(payload, searchParameters);
       return requestResource.getItemsList(payload).$promise;
     };
 
@@ -52,8 +55,8 @@ angular.module('ts5App')
     return {
       getItemsList: getItemsList,
       getItem: getItem,
-      createItem:createItem,
+      createItem: createItem,
       updateItem: updateItem
     };
 
-});
+  });

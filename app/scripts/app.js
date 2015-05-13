@@ -1,5 +1,4 @@
 'use strict';
-/*global $*/
 
 /**
  * @ngdoc overview
@@ -42,13 +41,6 @@ angular
       url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
   })
   .config(function ($routeProvider) {
-    var datePickerOptions = $.extend($.fn.datepicker.defaults, {
-      format: 'mm/dd/yyyy',
-      autoclose: true,
-      todayHighlight: true
-    });
-    $.fn.datepicker.defaults = datePickerOptions;
-
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',

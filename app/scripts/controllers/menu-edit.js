@@ -8,29 +8,82 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, menuService) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, menuService, itemsService) {
     $scope.viewName = 'Menu';
 
-    function formatStartAndEndDates(formatFrom, formatTo) {
-      $scope.menu.startDate = moment($scope.menu.startDate, formatFrom).format(formatTo).toString();
-      $scope.menu.endDate = moment($scope.menu.endDate, formatFrom).format(formatTo).toString();
+
+    function formatDate(dateString, formatFrom, formatTo) {
+      return moment(dateString, formatFrom).format(formatTo).toString();
     }
 
-    function attachModelToScope(menuFromAPI) {
-      var formatDateFrom = 'YYYY-MM-DD';
-      var formatDateTo = 'L';
-      $scope.menu = menuFromAPI;
-      formatStartAndEndDates(formatDateFrom, formatDateTo);
+    function getMasterItemUsingId(masterItemId) {
+      return $scope.masterItemsList.filter(function (masterItem) {
+        return masterItem.id === masterItemId;
+      })[0];
+    }
+
+    function attachItemsModelToScope(masterItemsFromAPI) {
+      $scope.masterItemsList = masterItemsFromAPI.masterItems;
+      $scope.menuItemsList = [];
+      angular.forEach($scope.menu.menuItems, function (menuItem) {
+        var masterItem = {
+          itemQty: menuItem.itemQty
+        };
+        angular.extend(masterItem, getMasterItemUsingId(menuItem.itemId));
+        $scope.menuItemsList.push(masterItem);
+      });
+    }
+
+    function fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, dateForAPIFormat) {
+      var startDate = formatDate(menuFromAPI.startDate, dateFromAPIFormat, dateForAPIFormat);
+      var endDate = formatDate(menuFromAPI.endDate, dateFromAPIFormat, dateForAPIFormat);
+
+      itemsService.getItemsList({
+        startDate: startDate,
+        endDate: endDate
+      }, true).then(attachItemsModelToScope);
+    }
+
+    function localizeDates(dateFromAPIFormat, formatDateTo) {
+      $scope.menu.startDate = formatDate($scope.menu.startDate, dateFromAPIFormat, formatDateTo);
+      $scope.menu.endDate = formatDate($scope.menu.endDate, dateFromAPIFormat, formatDateTo);
+    }
+
+    function attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat) {
+      $scope.menu = angular.copy(menuFromAPI);
+      localizeDates(dateFromAPIFormat, 'L');
+      $scope.menuEditForm.$setPristine();
+    }
+
+    function setupMenuModelAndFetchItems(menuFromAPI) {
+      var dateFromAPIFormat = 'YYYY-MM-DD';
+      $scope.menuFromAPI = angular.copy(menuFromAPI);
+
+      fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, 'YYYYMMDD');
+      attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat);
+    }
+
+
+    function showModalAndResetModel(dataFromAPI) {
+      setupMenuModelAndFetchItems(dataFromAPI);
+      angular.element('#menu-edit-modal').modal('show');
+    }
+
+    function showErrors(dataFromAPI) {
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+      setupMenuModelAndFetchItems($scope.menuFromAPI);
     }
 
     $scope.submitForm = function () {
       var formatDateFrom = 'l';
       var formatDateTo = 'YYYYMMDD';
-      formatStartAndEndDates(formatDateFrom, formatDateTo);
-      menuService.updateMenu($scope.menu.toJSON()).then(attachModelToScope);
+      localizeDates(formatDateFrom, formatDateTo);
+      menuService.updateMenu($scope.menu.toJSON()).then(showModalAndResetModel, showErrors);
     };
 
-    menuService.getMenu($routeParams.id).then(attachModelToScope);
-    //itemsService.getItem(332)
+    menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);
 
   });
