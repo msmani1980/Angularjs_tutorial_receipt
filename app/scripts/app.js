@@ -25,7 +25,7 @@ angular
     'ngFileUpload',
     'ja.qr'
   ])
-  .constant('baseUrl', 'https://54.83.17.106')
+  .constant('baseUrl', '')
   .constant('regexp', {
       word: /^[\w\s]+$/,
       bit: /^(0|1)$/,

@@ -108,10 +108,9 @@ angular.module('ts5App')
       return $localStorage.company;
     }
 
-    function setCompany(_company_) {
-      var companyObj = companyModel[_company_];
+    function setCompany(companyId) {
 
-      $localStorage.company = _company_;
+      $localStorage.company = companyId;
       $rootScope.company = $localStorage.company;
 
     }
