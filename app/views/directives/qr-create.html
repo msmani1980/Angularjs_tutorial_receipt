@@ -1,21 +1,35 @@
 <div class="tab-pane">
 
-	<div class="qr-code">
+	<div class="row">
 
-		<alert ng-show="formData.qrCodeImgUrl.length" type="success">QR Creation successful!</alert>
+		<div class="col-xs-12 col-sm-4">
 
-		<div class="thumb">
+			<div class="qr-code">
 
-			<qr text="formData.qrCodeValue" image="true" size="128"></qr>
+				<div class="thumb">
 
+					<qr text="formData.qrCodeValue" image="true" size="128"></qr>
+
+				</div> 
+
+				<button class="btn button btn-success" ng-show="!formData.qrCodeImgUrl.length" ng-disabled="!formData.qrCodeValue.length" ng-click="qrCreate()">Save QR</button>
+
+				<button class="btn button btn-default" ng-show="formData.qrCodeImgUrl.length" ng-click="clearQrCodes()">Clear QR</button>
+
+			</div>
+		
 		</div>
 
-		<button class="btn button btn-success" ng-show="!formData.qrCodeImgUrl.length" ng-disabled="!formData.qrCodeValue.length" ng-click="qrCreate()">Save QR</button>
+		<div class="col-xs-12 col-sm-8">
 
-		<button class="btn button btn-default" ng-show="formData.qrCodeImgUrl.length" ng-click="clearQrCodes()">Clear QR</button>
+			<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code"></input-text>
+
+			<alert ng-show="formData.qrCodeImgUrl.length" type="success">QR code saved!</alert>
+
+			<alert ng-show="qrCreateUploadFail" type="danger">Could not save QR code.</alert>
+
+		</div> 
 
 	</div>
-
-	<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code"></input-text>
 
 </div>

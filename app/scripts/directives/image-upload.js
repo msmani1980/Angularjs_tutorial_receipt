@@ -60,8 +60,8 @@ angular.module('ts5App')
 	                // new image object
 	                var newImage = {
 	                    imageURL: data.url,
-	                    startDate: '20150715',
-	                    endDate: '20150515'
+	                    startDate: '20150515',
+	                    endDate: '20150715'
 	                };
 
 	                // pass new image object into formData.images array

@@ -1,0 +1,9 @@
+.navbar{
+	box-shadow: -10px -10px 10px 10px #767676;
+	z-index: 11;
+	border:0px;
+}
+
+.nav-tabs a:focus, .nav-tabs a.focus, .nav-tabs a:active:focus, .nav-tabs a:active.focus, .nav-tabs.active a:focus, .nav-tabs a.active.focus{
+	outline:none;
+}

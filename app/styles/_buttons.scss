@@ -4,6 +4,10 @@
 	border-radius:2px;
 }
 
+.btn:focus, .btn.focus, .btn:active:focus, .btn:active.focus, .btn.active:focus, .btn.active.focus{
+	outline:none;
+}
+
 .btn-default {
 	background: $btn-bg-color;
 }
@@ -45,8 +49,13 @@
 		border: 1px solid $btn-border-color;
 	}
 
-	.btn:focus, .btn.focus, .btn:active:focus, .btn:active.focus, .btn.active:focus, .btn.active.focus{
-		outline:none;
+	@media(max-width:$screen-sm-min){
+
+		.btn {
+			font-size:13px;
+
+		}
+
 	}
 
 	.btn:nth-child(2) {
@@ -71,4 +80,12 @@
 		color:white;
 	}
 
+}
+
+.top-header {
+
+	.btn{
+		margin-left:5px;
+	}
+	
 }
