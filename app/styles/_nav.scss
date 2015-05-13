@@ -7,3 +7,17 @@
 .nav-tabs a:focus, .nav-tabs a.focus, .nav-tabs a:active:focus, .nav-tabs a:active.focus, .nav-tabs.active a:focus, .nav-tabs a.active.focus{
 	outline:none;
 }
+
+.nav-left{
+
+	padding-top:8px;
+
+		span{
+			font-size:30px;
+		}
+
+		li{
+			margin-right:2em;
+			font-size:24px;
+		}
+}

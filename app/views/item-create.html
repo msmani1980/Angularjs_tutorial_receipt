@@ -69,12 +69,13 @@
 
 				<li ng-repeat="error in form.$error.required"> 
 
-					<strong>{{ error.$name }}</strong> is required
+					<strong>{{ error.$name }}</strong> is a required field.
 
 				</li>
+
 				<li ng-repeat="error in form.$error.pattern"> 
 
-					<strong>{{ error.$name }}</strong> is invalid
+					<strong>{{ error.$name }}</strong> is invalid, recheck your input.
 					
 				</li>
 
@@ -82,7 +83,7 @@
 
 				<li ng-show="formErrors" ng-repeat="error in formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> - 
 
-					<span ng-switch-when="004">An item already exists with this {{ error.field }}</span>
+					<span ng-switch-when="004">An item already exists with this field: {{ error.field }}</span>
 
 					<span ng-switch-when="000">Field can't be empty</span>
 
@@ -343,11 +344,11 @@
 
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Success!</h4>
+				<h4 class="modal-title">Item Created</h4>
 			</div>
 
 			<div class="modal-body">
-				<p>Success!</p>
+				<h2> <span class='glyphicon glyphicon-check green'></span> Your item was created successfully! </h2>
 			</div>
 
 			<div class="modal-footer">
