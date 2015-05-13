@@ -11,41 +11,27 @@
 angular.module('ts5App')
     .controller('ItemListCtrl', function ($scope,$http,itemsFactory) {
 
-        // get item types
-        itemsFactory.getItemTypesList(function(itemTypes) {
+        itemsFactory.getItemTypesList().then(function(itemTypes) {
             $scope.itemTypes = itemTypes;
         });
 
-        // set the list size
         $scope.listSize = 10;
 
-        // Get a list from the API
-        itemsFactory.getItemsList(function (itemList) {
-
-            $scope.items = itemList.retailItems;  
-
+        itemsFactory.getItemsList({}).then(function (itemList) {
+            $scope.items = itemList.retailItems;
             $scope.itemsCount = itemList.meta.count;
-
             var pagination =  generatePagination($scope.itemsCount,$scope.listSize);
-
             $scope.pagination = pagination;
 
         });
 
-        // Watch the listSize model change (items per page dropdown for pagination)
         $scope.$watch('listSize', function() {
-
             var pagination =  generatePagination($scope.itemsCount, parseInt(this.last));
-
             $scope.pagination = pagination;
-
         });
 
-        //Generates pagination information
         function generatePagination(itemCount,itemsPerPage) {
-
             var pageCount = Math.ceil( itemCount / itemsPerPage );
-
             var pages = [0];
 
             for(var i = 1; i < pageCount; i++) {
@@ -56,7 +42,5 @@ angular.module('ts5App')
                 pages: pages,
                 pageCount: pageCount
             };
-
         }
-
     });
