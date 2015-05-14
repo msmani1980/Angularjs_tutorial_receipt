@@ -21,8 +21,8 @@ describe('Factory: currencyFactory', function () {
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
 
-    spyOn(currencies, 'getCompanyBaseCurrency').and.returnValue(deferred.promise);
-    spyOn(currencies, 'getCompanyCurrencies').and.callThrough();
+    spyOn(currenciesService, 'getCompanyBaseCurrency').and.returnValue(deferred.promise);
+    spyOn(currenciesService, 'getCompanyCurrencies').and.callThrough();
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates').and.returnValue(dailyExchangeDeferred.promise);
     spyOn(dailyExchangeRatesService, 'getPreviousExchangeRates').and.returnValue(previousExchangeDeferred.promise);
     spyOn(dailyExchangeRatesService, 'saveDailyExchangeRates').and.returnValue(deferred.promise);
