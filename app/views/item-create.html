@@ -17,12 +17,12 @@
 					<div class="col-xs-6 text-right">
 
 						<a href="#/item-list" class="btn btn-default">
-							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 
+							<span class="fa fa-remove" aria-hidden="true"></span> 
 							<span class="hidden-xs">Cancel</span> 
 						</a>
 						
 						<button class="btn btn-blue" ng-click="submitForm(formData)"> 
-							<span class="glyphicon glyphicon-check" aria-hidden="true"></span> 
+							<span class="fa fa-check-square-o" aria-hidden="true"></span> 
 							<span class="hidden-xs">Create</span> 
 						</button>
 
@@ -56,44 +56,7 @@
 
 	<ng-form name="form" class="form edit-form create-item-form">
 
-		<div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
-
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-			
-			<h4 id="oh-snap!-you-got-an-error!">
-				We weren't able to create your item!
-				<a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
-			</h4>
-
-			<ul>
-
-				<li ng-repeat="error in form.$error.required"> 
-
-					<strong>{{ error.$name }}</strong> is a required field.
-
-				</li>
-
-				<li ng-repeat="error in form.$error.pattern"> 
-
-					<strong>{{ error.$name }}</strong> is invalid, recheck your input.
-					
-				</li>
-
-			</ul>
-
-				<li ng-show="formErrors" ng-repeat="error in formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> - 
-
-					<span ng-switch-when="004">An item already exists with this field: {{ error.field }}</span>
-
-					<span ng-switch-when="000">Field can't be empty</span>
-
-					<span ng-switch-default> {{ error.value }} </span>	
-					
-				</li>
-
-			</ul>
-
-		</div>
+		<form-error-dialog></form-error-dialog>
 
 		<h3 id="item-information">Item Information</h3>
 
@@ -128,7 +91,7 @@
 							<label>Effective From</label>
 							<div class="input-group">
 								<div class="input-group-addon">
-									<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+									<span class="fa fa-calendar" aria-hidden="true"></span>
 								</div>
 								<input name="startDate" required ng-model="formData.startDate" type="text" class="form-control" value="20150515" />
 							</div>
@@ -142,7 +105,7 @@
 							<label>Effective To</label>
 							<div class="input-group">
 								<div class="input-group-addon">
-									<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+									<span class="fa fa-calendar" aria-hidden="true"></span>
 								</div>
 								<input name="endDate "required ng-model="formData.endDate" type="text" class="form-control" value="20150715" />
 							</div>
@@ -273,9 +236,9 @@
 
 					<label>Measurements</label>
 					<input ng-model="formData.length" type="text" class="form-control small" placeholder="Length"> 
-					<span class="glyphicon glyphicon-remove"></span>
+					<span class="fa fa-remove"></span>
 					<input ng-model="formData.width" type="text" class="form-control small" placeholder="Width"> 
-					<span class="glyphicon glyphicon-remove"></span>
+					<span class="fa fa-remove"></span>
 					<input ng-model="formData.height" type="text" class="form-control small" placeholder="Height">
 
 					<select ng-model="formData.dimensionType" class="form-control">
@@ -336,28 +299,4 @@
 
 </div>
 
-<div class="modal fade" id="create-success">
-
-	<div class="modal-dialog">
-
-		<div class="modal-content">
-
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Item Created</h4>
-			</div>
-
-			<div class="modal-body">
-				<h2> <span class='glyphicon glyphicon-check green'></span> Your item was created successfully! </h2>
-			</div>
-
-			<div class="modal-footer">
-				<a href="#/item-list" type="button" class="btn btn-default" data-dismiss="modal">Return to List</a>
-				<a href="#/item-create" class="btn btn-primary">Add Another</a>
-			</div>
-
-		</div>
-
-	</div>
-
-</div>
+<form-success-modal></form-success-modal>
