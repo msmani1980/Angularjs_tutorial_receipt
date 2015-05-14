@@ -1,94 +1,110 @@
 <!-- PriceTypeDirective -->
-<div class="row">
 
+<div class="panel panel-default">
 
-	<div class="col-xs-12 col-sm-8">
+  <div class="panel-heading">
+    <p class="panel-title">
+			<i class="fa fa-tags"></i> Price Group {{ $parent.key+1 }}
+		</p>
+  </div>
 
-		<div class="row">
-
-			<div class="col-xs-12 col-sm-6">
-
-				<div class="form-group">
-
-					<label>Price Type</label>
-
-					<select ng-model="formData.prices[$parent.key].typeId" class="form-control">
-						<option ng-repeat="type in $parent.priceTypes" value="{{ type.id }}">{{ type.name }}</option>
-					</select>
-
-				</div>
-
-			</div>
-
-			<div class="col-xs-12 col-sm-6">
-
-				<div class="form-group">
-
-					<label>Tax Is</label>
-
-					<select ng-model="formData.prices[$parent.key].taxIs" class="form-control">
-						<option value="Included">Included</option>
-						<option value="Excluded">Excluded</option>
-						<option value="Exempt">Exempt</option>
-					</select>
-
-				</div>
-
-			</div>
-
-		</div>
+  <div class="panel-body">
 
 		<div class="row">
 
-			<div class="col-xs-12 col-sm-6">
+			<div class="col-xs-12 col-sm-8">
 
-				<div class="form-group">
-					<label for="item-effective-start">Effective From</label>
-					<div class="input-group">
-						<div class="input-group-addon">
-							<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+				<div class="row">
+
+					<div class="col-xs-12 col-sm-6">
+
+						<div class="form-group">
+							<label for="item-effective-start">Effective From</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+								</div>
+								<input ng-model="itemPrice.startDate" type="text" class="form-control" value="20150515" />
+							</div>
 						</div>
-						<input ng-model="formData.prices[$parent.key].startDate" type="text" class="form-control" value="20150515" />
+
 					</div>
-				</div>
 
-			</div>
+					<div class="col-xs-12 col-sm-6">
 
-			<div class="col-xs-12 col-sm-6">
+						<div class="form-group">
 
-				<div class="form-group">
+							<label for="item-effective-start">Effective To</label>
 
-					<label for="item-effective-start">Effective To</label>
+							<div class="input-group">
 
-					<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+								</div>
 
-						<div class="input-group-addon">
-							<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+								<input ng-model="itemPrice.endDate" type="text" class="form-control" value="20150515" />
+
+							</div>
+
 						</div>
-
-						<input ng-model="formData.prices[$parent.key].endDate" type="text" class="form-control" value="20150515" />
 
 					</div>
 
 				</div>
 
-			</div>
+				<div class="row">
 
-		</div>
+					<div class="col-xs-12 col-sm-6">
 
-	</div>
+						<div class="form-group">
 
-	<div class="col-xs-12 col-sm-4">
+							<label>Price Type</label>
 
-		<div class="form-group" ng-repeat="(currencyKey,currency) in formData.prices[$parent.key].priceCurrencies track by $index">
+							<select ng-disabled="!(!!itemPrice.startDate) || !(!!itemPrice.endDate)" ng-model="itemPrice.typeId" class="form-control">
+								<option ng-repeat="type in $parent.priceTypes" value="{{ type.id }}">{{ type.name }}</option>
+							</select>
 
-			<div class="input-group">
+						</div>
 
-				<div class="input-group-addon">
-					{{currency.companyCurrencyId}}
+					</div>
+
+					<div class="col-xs-12 col-sm-6">
+
+						<div class="form-group">
+
+							<label>Tax Is</label>
+
+							<select ng-disabled="!(!!itemPrice.startDate) || !(!!itemPrice.endDate)" ng-model="itemPrice.taxIs" class="form-control">
+								<option value="Included">Included</option>
+								<option value="Excluded">Excluded</option>
+								<option value="Exempt">Exempt</option>
+							</select>
+
+						</div>
+
+					</div>
+
 				</div>
 
-				<input ng-model="currency.price" type="text" class="form-control"/>
+			</div>
+
+			<div class="col-xs-12 col-sm-4">
+
+				<p>Currencies List</p>
+
+				<div class="form-group" ng-repeat="(currencyKey,currency) in itemPrice.priceCurrencies track by $index">
+
+					<div class="input-group">
+
+						<div class="input-group-addon">
+							{{currency.companyCurrencyId}}
+						</div>
+
+						<input ng-disabled="!(!!itemPrice.startDate) || !(!!itemPrice.endDate)" ng-model="currency.price" type="text" class="form-control"/>
+
+					</div>
+
+				</div>
 
 			</div>
 

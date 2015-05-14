@@ -104,8 +104,8 @@ angular.module('ts5App')
         $scope.stations = data.response;
       });
 
-      // Adds a new priceType object to the formData
-      $scope.addPriceTypeBlock = function() {
+      // Adds a new Price Group object to the formData
+      $scope.addPriceGroup = function() {
 
         companyCurrenciesResource.query(function(data){
 
@@ -116,14 +116,14 @@ angular.module('ts5App')
             var currency = data.companyCurrencies[key];
 
             // TODO: Figure out why price currencies are coming out as a dupes from API
-            if(key>3) {
-              return false;
-            }
+            if(key<4) {
 
-            priceCurrencies.push({
-              price: '1.00',
-              companyCurrencyId: currency.currencyId
-            });
+              priceCurrencies.push({
+                price: '1.00',
+                companyCurrencyId: currency.currencyId
+              });
+
+            }
 
           }
 
@@ -170,6 +170,8 @@ angular.module('ts5App')
 
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
+
+        console.log(formData);
 
       	// If the local form is not valid
       	if(!$scope.form.$valid) {
