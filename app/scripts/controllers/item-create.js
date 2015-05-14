@@ -171,6 +171,44 @@ angular.module('ts5App')
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
+        // TODO: move these loops to functions
+
+        // loop through tags in form data
+        for(var tagKey in formData.tags) {
+
+          var tagId = formData.tags[tagKey];
+
+          // set tag as object and set tagId property
+          formData.tags[tagKey] = {
+            tagId: tagId
+          };
+
+        }
+
+        // loop through allergens in form data
+        for(var allergenKey in formData.allergens) {
+
+          var allergenId = formData.allergens[allergenKey];
+
+          // set tag as object and set allergenId property
+          formData.allergens[allergenKey] = {
+            allergenId: allergenId
+          };
+
+        }
+
+        // loop through characteristics in form data
+        for(var characteristicKey in formData.characteristics) {
+
+          var characteristicId = formData.characteristics[characteristicKey];
+
+          // set tag as object and set characteristicId property
+          formData.characteristics[characteristicKey] = {
+            characteristicId: characteristicId
+          };
+
+        }
+
         console.log(formData);
 
       	// If the local form is not valid
@@ -184,7 +222,7 @@ angular.module('ts5App')
   			}
 
       	// set the formData models in the view to the scope.formData object
-      	$scope.formData = angular.copy(formData);
+      	//$scope.formData = angular.copy(formData);
 
         console.log($scope.formData);
 
