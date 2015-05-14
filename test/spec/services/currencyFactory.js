@@ -7,18 +7,18 @@ describe('Factory: currencyFactory', function () {
 
   // instantiate service
   var currencyFactory,
-    currencies,
+    currenciesService,
     dailyExchangeRatesService,
     deferred,
     previousExchangeDeferred,
     dailyExchangeDeferred,
     rootScope,
     scope;
-  beforeEach(inject(function ($rootScope, $q, _currencyFactory_, _currencies_, _dailyExchangeRatesService_) {
+  beforeEach(inject(function ($rootScope, $q, _currencyFactory_, _currenciesService_, _dailyExchangeRatesService_) {
     deferred = $q.defer();
     previousExchangeDeferred = $q.defer();
     dailyExchangeDeferred = $q.defer();
-    currencies = _currencies_;
+    currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
 
     spyOn(currencies, 'getCompanyBaseCurrency').and.returnValue(deferred.promise);
@@ -38,7 +38,7 @@ describe('Factory: currencyFactory', function () {
 
   it('should call getCompanyBaseCurrency from currencies service', function () {
     currencyFactory.getCompanyBaseCurrency();
-    expect(currencies.getCompanyBaseCurrency).toHaveBeenCalled();
+    expect(currenciesService.getCompanyBaseCurrency).toHaveBeenCalled();
   });
 
   it('should return companyCurrency object', function () {
@@ -51,7 +51,7 @@ describe('Factory: currencyFactory', function () {
 
   it('should call getCompanyCurrencies from currencies service', function () {
     currencyFactory.getCompanyCurrencies({test:'payload'});
-    expect(currencies.getCompanyCurrencies).toHaveBeenCalled();
+    expect(currenciesService.getCompanyCurrencies).toHaveBeenCalled();
   });
 
   it('should return the company currencies array from currencies service', function () {

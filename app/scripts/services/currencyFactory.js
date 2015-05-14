@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('currencyFactory', function ($q, $resource, currencies, dailyExchangeRatesService) {
+  .factory('currencyFactory', function ($q, $resource, currenciesService, dailyExchangeRatesService) {
     var getCompany = function (companyId) {
       return {
         'id': companyId,
@@ -21,7 +21,7 @@ angular.module('ts5App')
 
     var getCompanyBaseCurrency = function () {
       var baseCurrencyId = getCompany(326).baseCurrencyId;
-      return currencies.getCompanyBaseCurrency(baseCurrencyId);
+      return currenciesService.getCompanyBaseCurrency(baseCurrencyId);
     };
 
     var getDailyExchangeRatesFromAPI = function (cashierDate) {
@@ -47,7 +47,7 @@ angular.module('ts5App')
 
     return {
       getCompanyBaseCurrency: getCompanyBaseCurrency,
-      getCompanyCurrencies: currencies.getCompanyCurrencies,
+      getCompanyCurrencies: currenciesService.getCompanyCurrencies,
       getDailyExchangeRates: getDailyExchangeRates,
       getPreviousExchangeRates: getPreviousExchangeRates,
       saveDailyExchangeRates: dailyExchangeRatesService.saveDailyExchangeRates
