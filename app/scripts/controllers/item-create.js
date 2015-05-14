@@ -1,5 +1,5 @@
-// TODO:
-// Write tests for this controller
+// TODO: Write tests for this controller
+// TODO: Make all dates relate to each other
 
 'use strict';
 
@@ -11,24 +11,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,$compile,baseUrl,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
-
-      // Adds a new priceType object to the formData
-      $scope.addPriceTypeBlock = function() {
-        $scope.formData.prices.push({priceCurrencies:priceCurrencies});
-      };
-
-      // TODO: Get from companies currenices from factory
-      // mock price currency data
-      var priceCurrencies = [
-        {price: '1.00', companyCurrencyId: '1'},
-        {price: '1.00', companyCurrencyId: '57'},
-        {price: '1.00', companyCurrencyId: '58'},
-        {price: '1.00', companyCurrencyId: '63'}
-      ];
+  .controller('ItemCreateCtrl', function ($scope,$compile,baseUrl,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
 
       // first price type data object
-      var priceData = { startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: priceCurrencies, taxIs: 'Included',};
+      var priceData = { startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',};
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -100,9 +86,10 @@ angular.module('ts5App')
         $scope.salesCategories = data.salesCategories;
       });
 
+
       // get curriences
       // TODO: Refactor this factory to use new standards and then update this call to be more like above
-      currencyFactory.getCompanyBaseCurrency().then(function (data) {
+      currencyFactory.getCompanyCurrencies().then(function (data) {
         $scope.currencies = data;
       });
 
@@ -115,6 +102,70 @@ angular.module('ts5App')
       // get stations
       companiesFactory.getStationsList(function(data) {
         $scope.stations = data.response;
+      });
+
+      // Adds a new priceType object to the formData
+      $scope.addPriceTypeBlock = function() {
+
+        companyCurrenciesResource.query(function(data){
+
+          var priceCurrencies = [];
+
+          for(var key in data.companyCurrencies) {
+
+            var currency = data.companyCurrencies[key];
+
+            // TODO: Figure out why price currencies are coming out as a dupes from API
+            if(key>3) {
+              return false;
+            }
+
+            priceCurrencies.push({
+              price: '1.00',
+              companyCurrencyId: currency.currencyId
+            });
+
+          }
+
+          $scope.formData.prices.push({
+            priceCurrencies:priceCurrencies
+          });
+
+        });
+
+      };
+
+      // TODO: Move currencies logic to service
+      var actions = {
+        query: {
+          method: 'GET',
+          isArray: false,
+        }
+      };
+
+      var companyCurrenciesURL = baseUrl + '/api/companies/:companyId/currencies';
+      var companyCurrenciesResource = $resource(companyCurrenciesURL, {companyId: 2, startDate: '20150515', endDate: '20150715', },actions);
+
+      companyCurrenciesResource.query(function(data){
+
+        $scope.currencies = data.companyCurrencies;
+
+        for(var key in data.companyCurrencies) {
+
+          var currency = data.companyCurrencies[key];
+
+          // TODO: Figure out why price currencies are coming out as a dupes from API
+          if(key>3) {
+            return false;
+          }
+
+          $scope.formData.prices[0].priceCurrencies.push({
+            price: '1.00',
+            companyCurrencyId: currency.currencyId
+          });
+
+        }
+
       });
 
       // Submit function to proces form and hit the api
@@ -140,9 +191,11 @@ angular.module('ts5App')
       	};
 
       	// Create newItem in API
-      	itemsFactory.createItem(newItem,function () {
+      	itemsFactory.createItem(newItem,function(response) {
 
-           angular.element('#create-success').modal('show');
+          console.log(response);
+
+          angular.element('#create-success').modal('show');
 
         // API error
         }, function(error){

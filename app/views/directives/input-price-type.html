@@ -80,7 +80,19 @@
 
 	<div class="col-xs-12 col-sm-4">
 
-		<input ng-repeat="(currencyKey,currency) in formData.prices[$parent.key].priceCurrencies" ng-model="formData.prices[$parent.key].priceCurrencies[currencyKey].price" type="text" class="form-control" value="" />
+		<div class="form-group" ng-repeat="(currencyKey,currency) in formData.prices[$parent.key].priceCurrencies track by $index">
+
+			<div class="input-group">
+
+				<div class="input-group-addon">
+					{{currency.companyCurrencyId}}
+				</div>
+
+				<input ng-model="currency.price" type="text" class="form-control"/>
+
+			</div>
+
+		</div>
 
 	</div>
 
