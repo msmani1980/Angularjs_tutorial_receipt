@@ -8,12 +8,12 @@ describe('Service: currenciesService', function () {
 
 
   // instantiate service
-  var currencies,
+  var currenciesService,
     $httpBackend,
     globalCurrenciesRequestHandler,
     companyCurrenciesRequestHandler;
 
-  beforeEach(inject(function (_currencies_, $injector) {
+  beforeEach(inject(function (_currenciesService_, $injector) {
     $httpBackend = $injector.get('$httpBackend');
     globalCurrenciesRequestHandler = $httpBackend.whenGET(/api\/currencies/)
       .respond({
@@ -70,12 +70,12 @@ describe('Service: currenciesService', function () {
           }, {'id': 58, 'companyCurrencyId': 168, 'currencyDenominationId': 11, 'isEasyPay': null}]
         }], 'meta': {'count': 6, 'limit': 6, 'start': 0}
       });
-    currencies = _currencies_;
+    currenciesService = _currenciesService_;
   }));
 
 
   it('should exist', function () {
-    expect(!!currencies).toBe(true);
+    expect(!!currenciesService).toBe(true);
   });
 
   describe('API calls', function () {
@@ -88,20 +88,20 @@ describe('Service: currenciesService', function () {
 
     it('should fetch currencies list from services', function () {
       $httpBackend.expectGET(/currencies/);
-      currencies.getCompanyBaseCurrency(1).then(function (companyCurrency) {
+      currenciesService.getCompanyBaseCurrency(1).then(function (companyCurrency) {
         expect(companyCurrency.currencyCode).toBe('USD');
       });
 
     });
 
     it('should return USD as the company base currencyCode', function () {
-      currencies.getCompanyBaseCurrency(1).then(function (companyBaseCurrency) {
+      currenciesService.getCompanyBaseCurrency(1).then(function (companyBaseCurrency) {
         expect(companyBaseCurrency.currencyCode).toBe('USD');
       });
     });
 
     it('should return USD as currencyCode', function () {
-      currencies.getCompanyCurrencies().then(function (currenciesArray) {
+      currenciesService.getCompanyCurrencies().then(function (currenciesArray) {
         expect(currenciesArray.companyCurrencies[0].currencyCode).toBe('GBP');
       });
     });
