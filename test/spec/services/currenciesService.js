@@ -4,6 +4,8 @@ describe('Service: currencies', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
+  beforeEach(module('served/menus.json'));
+
 
   // instantiate service
   var currencies,
@@ -100,7 +102,7 @@ describe('Service: currencies', function () {
 
     it('should return USD as currencyCode', function () {
       currencies.getCompanyCurrencies().then(function (currenciesArray) {
-        expect(currenciesArray[0].currencyCode).toBe('GBP');
+        expect(currenciesArray.companyCurrencies[0].currencyCode).toBe('GBP');
       });
     });
 

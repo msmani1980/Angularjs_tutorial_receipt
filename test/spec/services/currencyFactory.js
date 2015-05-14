@@ -15,8 +15,6 @@ describe('Factory: currencyFactory', function () {
     rootScope,
     scope;
   beforeEach(inject(function ($rootScope, $q, _currencyFactory_, _currencies_, _dailyExchangeRatesService_) {
-    rootScope = $rootScope;
-    scope = $rootScope.$new();
     deferred = $q.defer();
     previousExchangeDeferred = $q.defer();
     dailyExchangeDeferred = $q.defer();
@@ -24,10 +22,13 @@ describe('Factory: currencyFactory', function () {
     dailyExchangeRatesService = _dailyExchangeRatesService_;
 
     spyOn(currencies, 'getCompanyBaseCurrency').and.returnValue(deferred.promise);
-    spyOn(currencies, 'getCompanyCurrencies').and.returnValue(deferred.promise);
+    spyOn(currencies, 'getCompanyCurrencies').and.callThrough();
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates').and.returnValue(dailyExchangeDeferred.promise);
     spyOn(dailyExchangeRatesService, 'getPreviousExchangeRates').and.returnValue(previousExchangeDeferred.promise);
     spyOn(dailyExchangeRatesService, 'saveDailyExchangeRates').and.returnValue(deferred.promise);
+
+    rootScope = $rootScope;
+    scope = $rootScope.$new();
     currencyFactory = _currencyFactory_;
   }));
 
@@ -49,7 +50,7 @@ describe('Factory: currencyFactory', function () {
   });
 
   it('should call getCompanyCurrencies from currencies service', function () {
-    currencyFactory.getCompanyCurrencies();
+    currencyFactory.getCompanyCurrencies({test:'payload'});
     expect(currencies.getCompanyCurrencies).toHaveBeenCalled();
   });
 

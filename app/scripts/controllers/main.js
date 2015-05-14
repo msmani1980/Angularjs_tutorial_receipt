@@ -196,7 +196,7 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Daily Exchange Rate',
-            route: emberURL + 'exchange-rates',
+            route: '/#/exchange-rates',
             icon: 'icon-manage-transactions',
             className: 'dashboard-manageDailyExchangeRates'
           },

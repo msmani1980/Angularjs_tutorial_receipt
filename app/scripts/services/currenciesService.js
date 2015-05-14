@@ -41,12 +41,9 @@ angular.module('ts5App')
       return baseCompanyDeferred.promise;
     };
 
-    var getCompanyCurrencies = function () {
-      var baseCompanyDeferred = $q.defer();
-      companyCurrenciesResource.getCurrencies().$promise.then(function (data) {
-        baseCompanyDeferred.resolve(data.companyCurrencies);
-      });
-      return baseCompanyDeferred.promise;
+    var getCompanyCurrencies = function (payload) {
+      console.log('getCompanyCurrencies', payload);
+      return companyCurrenciesResource.getCurrencies(payload).$promise
     };
 
     return {

@@ -24,20 +24,12 @@ angular.module('ts5App')
       return currencies.getCompanyBaseCurrency(baseCurrencyId);
     };
 
-    var getCompanyCurrencies = function () {
-      return currencies.getCompanyCurrencies();
-    };
-
     var getDailyExchangeRatesFromAPI = function (cashierDate) {
       return dailyExchangeRatesService.getDailyExchangeRates(cashierDate);
     };
 
     var getPreviousExchangeRates = function () {
       return dailyExchangeRatesService.getPreviousExchangeRates();
-    };
-
-    var saveDailyExchangeRates = function (payload) {
-      return dailyExchangeRatesService.saveDailyExchangeRates(payload);
     };
 
     var getDailyExchangeRates = function (cashierDate) {
@@ -55,10 +47,10 @@ angular.module('ts5App')
 
     return {
       getCompanyBaseCurrency: getCompanyBaseCurrency,
-      getCompanyCurrencies: getCompanyCurrencies,
+      getCompanyCurrencies: currencies.getCompanyCurrencies,
       getDailyExchangeRates: getDailyExchangeRates,
       getPreviousExchangeRates: getPreviousExchangeRates,
-      saveDailyExchangeRates: saveDailyExchangeRates
+      saveDailyExchangeRates: dailyExchangeRatesService.saveDailyExchangeRates
     };
 
   });
