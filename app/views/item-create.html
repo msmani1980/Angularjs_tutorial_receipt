@@ -1,220 +1,265 @@
-<ng-form name="form" class="form edit-form">
+<div class="wrapper">
 
-	<edit-form-header-directive></edit-form-header-directive>
+	<div class="top-header">
 
-	<div class="form-nav btn-group" role="group" aria-label="...">
+		<div class="wrapper">
 
-	 	<a ng-click="scrollTo('item-information')" type="button" class="btn btn-default">
-	  	Item Information
-	  	</a>
+			<div class="edit-controls">
 
-	  	<a ng-click="scrollTo('measurements')" type="button" class="btn btn-default">
-	  	Measurements
-	  	</a>
+				<div class="row">
 
-	 	<a ng-click="scrollTo('price-and-tax')"  type="button" class="btn btn-default">
-	  	Price & Tax
-	  	</a>
+					<div class="col-xs-6">
 
-	</div>
+						<h2 class="view-name"> {{ viewName }} </h2>
 
-	<h3 id="item-information">Item Information</h3>
-
-	<div class="row">
-
-		<div class="col-xs-12 col-sm-6">
-
-			<input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.word" placeholder="Item123"></input-text>
-
-			<input-text label="Retail Item Name" name="itemName" required="true"  pattern="regexp.word" placeholder="My Item"></input-text>
-
-			<input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word" placeholder="My Awesome Item"></input-text>
-
-			<input-text label="Item Description" name="desc" required="true" pattern="regexp.word" placeholder="A simple description..."></input-text>
-
-			<input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="awesome cool new"></input-text>
-
-			<input-text label="Unique Selling Point" name="sellingPoint" pattern="regexp.word" placeholder="Something cool!"></input-text>
-
-			<div class="form-group">
-
-				<input ng-model="formData.isPrintReceipt" type="checkbox" />
-				<label>Print Receipt</label>
-
-			</div>
-
-			<div class="row" >
-
-				<div class="col-xs-12 col-sm-6">
-
-					<div class="form-group" ng-class="{ 'has-error' : form[startDate].$dirty && !form[startDate].$valid || displayError && !form[startDate].$valid , 'has-success' : form[startDate].$dirty && form[startDate].$valid }">
-						<label>Effective From</label>
-						<div class="input-group">
-							<div class="input-group-addon">
-								<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-							</div>
-							<input name="startDate" required ng-model="formData.startDate" type="text" class="form-control" value="20150515" />
-						</div>
 					</div>
 
-				</div>
+					<div class="col-xs-6 text-right">
 
-				<div class="col-xs-12 col-sm-6">
+						<a href="#/item-list" class="btn btn-default">
+							<span class="fa fa-remove" aria-hidden="true"></span>
+							<span class="hidden-xs">Cancel</span>
+						</a>
 
-					<div class="form-group"  ng-class="{ 'has-error' : form[endDate].$dirty && !form[endDate].$valid || displayError && !form[endDate].$valid , 'has-success' : form[endDate].$dirty && form[endDate].$valid }">
-						<label>Effective To</label>
-						<div class="input-group">
-							<div class="input-group-addon">
-								<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-							</div>
-							<input name="endDate "required ng-model="formData.endDate" type="text" class="form-control" value="20150715" />
-						</div>
+						<button class="btn btn-blue" ng-click="submitForm(formData)">
+							<span class="fa fa-check-square-o" aria-hidden="true"></span>
+							<span class="hidden-xs">Create</span>
+						</button>
+
 					</div>
 
 				</div>
 
 			</div>
 
-			<div class="form-group" ng-class="{ 'has-error' : form[categoryId].$dirty && !form[categoryId].$valid || displayError && !form[categoryId].$valid , 'has-success' : form[categoryId].$dirty && form[categoryId].$valid }" >
-				<label>Sales Category</label>
-				<select name="categoryId" required ng-model="formData.categoryId" class="form-control">
-						<option ng-repeat="category in salesCategories" value="{{ category.id }}">{{ category.name }}</option>
-				</select>
+			<div class="form-nav btn-group-justified item-top" role="group" aria-label="..." ng-init="activeBtn = 'item-information'">
+
+			 	<a ng-click="activeBtn = 'item-information'" ng-class="{'active':activeBtn === 'item-information'}" type="button" class="btn btn-default">
+			  	Item Information
+			  	</a>
+
+			  	<a ng-click="activeBtn = 'measurements'" ng-class="{'active':activeBtn === 'measurements'}" type="button" class="btn btn-default">
+			  	Measurements
+			  	</a>
+
+			 	<a ng-click="activeBtn = 'price-and-tax'" ng-class="{'active':activeBtn === 'price-and-tax'}" type="button" class="btn btn-default">
+			  	Price & Tax
+			  	</a>
+
 			</div>
 
-			<!--<input-select label="Item Type" name="itemTypeId" required="true" options="{{ itemTypeList }}"></input-select>-->
+			<p>All required fields are marked with a *.</p>
 
-			<div class="form-group" ng-class="{ 'has-error' : form[itemTypeId].$dirty && !form[itemTypeId].$valid || displayError && !form[itemTypeId].$valid , 'has-success' : form[itemTypeId].$dirty && form[itemTypeId].$valid }">
-				<label>Item Type</label>
-				<select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control">
-					<option ng-repeat="type in itemTypes" value="{{ type.id }}">{{ type.name }}</option>
-				</select>
+		</div>
+
+	</div> <!--/TopHeader -->
+
+	<ng-form name="form" class="form edit-form create-item-form">
+
+		<form-error-dialog></form-error-dialog>
+
+		<h3 id="item-information">Item Information</h3>
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-6">
+
+				<input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.word" placeholder="Item123"></input-text>
+
+				<input-text label="Retail Item Name" name="itemName" required="true"  pattern="regexp.word" placeholder="My Item"></input-text>
+
+				<input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word" placeholder="My Awesome Item"></input-text>
+
+				<input-text label="Item Description" name="desc" required="true" pattern="regexp.word" placeholder="A simple description..."></input-text>
+
+				<input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="awesome cool new"></input-text>
+
+				<input-text label="Unique Selling Point" name="sellingPoint" pattern="regexp.word" placeholder="Something cool!"></input-text>
+
+				<div class="form-group">
+
+					<input ng-model="formData.isPrintReceipt" type="checkbox" />
+					<label>Print Receipt</label>
+
+				</div>
+
+				<div class="row" >
+
+					<div class="col-xs-12 col-sm-6">
+
+						<div class="form-group" ng-class="{ 'has-error' : form[startDate].$dirty && !form[startDate].$valid || displayError && !form[startDate].$valid , 'has-success' : form[startDate].$dirty && form[startDate].$valid }">
+							<label>Effective From</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="fa fa-calendar" aria-hidden="true"></span>
+								</div>
+								<input name="startDate" required ng-model="formData.startDate" type="text" class="form-control" value="20150515" />
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6">
+
+						<div class="form-group"  ng-class="{ 'has-error' : form[endDate].$dirty && !form[endDate].$valid || displayError && !form[endDate].$valid , 'has-success' : form[endDate].$dirty && form[endDate].$valid }">
+							<label>Effective To</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="fa fa-calendar" aria-hidden="true"></span>
+								</div>
+								<input name="endDate "required ng-model="formData.endDate" type="text" class="form-control" value="20150715" />
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="form-group" ng-class="{ 'has-error' : form[categoryId].$dirty && !form[categoryId].$valid || displayError && !form[categoryId].$valid , 'has-success' : form[categoryId].$dirty && form[categoryId].$valid }" >
+					<label>Sales Category</label>
+					<select name="categoryId" required ng-model="formData.categoryId" class="form-control">
+							<option ng-repeat="category in salesCategories" value="{{ category.id }}">{{ category.name }}</option>
+					</select>
+				</div>
+
+				<!--<input-select label="Item Type" name="itemTypeId" required="true" options="{{ itemTypeList }}"></input-select>-->
+
+				<div class="form-group" ng-class="{ 'has-error' : form[itemTypeId].$dirty && !form[itemTypeId].$valid || displayError && !form[itemTypeId].$valid , 'has-success' : form[itemTypeId].$dirty && form[itemTypeId].$valid }">
+					<label>Item Type</label>
+					<select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control">
+						<option ng-repeat="type in itemTypes" value="{{ type.id }}">{{ type.name }}</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Item Characteristics</label>
+					<select multiple ng-model="formData.characteristics" class="form-control">
+						<option ng-repeat="character in characteristics" value="{{ character.id }}">{{ character.name }}</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Item Substitutions</label>
+					<select multiple ng-model="formData.substitutions" class="form-control">
+						<option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Item Recommendations</label>
+					<select multiple ng-model="formData.recommendations" class="form-control">
+						<option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
+					</select>
+				</div>
+
 			</div>
 
-			<div class="form-group">
-				<label>Item Characteristics</label>
-				<select multiple ng-model="formData.characteristics" class="form-control">
-					<option ng-repeat="character in characteristics" value="{{ character.id }}">{{ character.name }}</option>
-				</select>
-			</div>
+			<div class="col-xs-12 col-sm-6">
 
-			<div class="form-group">
-				<label>Item Substitutions</label>
-				<select multiple ng-model="formData.substitutions" class="form-control">
-					<option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
-				</select>
-			</div>
+				<div class="form-group">
+					<label>Item Tags</label>
+					<select multiple ng-model="formData.tags" class="form-control">
+						<option ng-repeat="tag in tags" value="{{ tag.id }}">{{ tag.name }}</option>
+					</select>
+				</div>
 
-			<div class="form-group">
-				<label>Item Recommendations</label>
-				<select multiple ng-model="formData.recommendations" class="form-control">
-					<option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
-				</select>
+				<div class="form-group">
+					<label>Allergen</label>
+					<select multiple ng-model="formData.allergens" class="form-control">
+						<option ng-repeat="allergen in allergens" value="{{ allergen.allergenId }}">{{ allergen.name }}</option>
+					</select>
+				</div>
+
+				<image-upload></image-upload>
+
+				<input-text label="Global Trade Item Number (GTIN)" name="GTIN" pattern="regexp.word" placeholder="1234"></input-text>
+
+				<input-text label="Mfg. Part Number" name="mfgPartNumber" pattern="regexp.word" placeholder="1234"></input-text>
+
+				<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="1234"></input-text>
+
+				<tabset justified="true">
+
+					<tab heading="QR Create">
+
+						<qr-create></qr-create>
+
+					</tab>
+
+					<tab heading="QR Upload">
+
+						<qr-upload></qr-upload>
+
+					</tab>
+
+				</tabset>
+
+				<input-text label="QR Image URL" name="qrCodeImgUrl" placeholder="1234" ng-model="files"></input-text>
+
 			</div>
 
 		</div>
 
-		<div class="col-xs-12 col-sm-6">
+		<h3 id="measurements">Measurements</h3>
 
-			<div class="form-group">
-				<label>Item Tags</label>
-				<select multiple ng-model="formData.tags" class="form-control">
-					<option ng-repeat="tag in tags" value="{{ tag.id }}">{{ tag.name }}</option>
-				</select>
-			</div>
+		<div class="row">
 
-			<div class="form-group">
-				<label>Allergen</label>
-				<select multiple ng-model="formData.allergens" class="form-control">
-					<option ng-repeat="allergen in allergens" value="{{ allergen.allergenId }}">{{ allergen.name }}</option>
-				</select>
-			</div>
+			<div class="col-xs-12 col-sm-6">
 
-			<image-upload></image-upload>
+				<div class="form-inline">
 
-			<input-text label="Global Trade Item Number (GTIN)" name="GTIN" pattern="regexp.word" placeholder="1234"></input-text>
+					<label>Item Weight</label>
+					<input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
 
-			<input-text label="Mfg. Part Number" name="mfgPartNumber" pattern="regexp.word" placeholder="1234"></input-text>
+					<select ng-model="formData.weightType" class="form-control">
+						<option ng-repeat="weight in weightUnits" value="{{ weight.id }}">{{ weight.unitCode }}</option>
+					</select>
 
-			<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="1234"></input-text>
+				</div>
 
-			<tabset justified="true">
+				<div class="form-inline">
 
-				<tab heading="QR Create">
+					<label>Item Volume</label>
+					<input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
 
-					<qr-create></qr-create>
+					<select ng-model="formData.volumeType" class="form-control">
+						<option ng-repeat="volume in volumeUnits" value="{{ volume.id }}">{{ volume.unitCode }}</option>
+					</select>
 
-				</tab>
-
-				<tab heading="QR Upload">
-
-					<qr-upload></qr-upload>
-
-				</tab>
-
-			</tabset>
-
-			<input-text label="QR Image URL" name="qrCodeImgUrl" placeholder="1234" ng-model="files"></input-text>
-
-		</div>
-
-	</div>
-
-	<h3 id="measurements">Measurements</h3>
-
-	<div class="row">
-
-		<div class="col-xs-12 col-sm-6">
-
-			<div class="form-inline">
-
-				<label>Item Weight</label>
-				<input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
-
-				<select ng-model="formData.weightType" class="form-control">
-					<option ng-repeat="weight in weightUnits" value="{{ weight.id }}">{{ weight.unitCode }}</option>
-				</select>
+				</div>
 
 			</div>
 
-			<div class="form-inline">
+			<div class="col-xs-12 col-sm-6">
 
-				<label>Item Volume</label>
-				<input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
+				<div class="form-inline">
 
-				<select ng-model="formData.volumeType" class="form-control">
-					<option ng-repeat="volume in volumeUnits" value="{{ volume.id }}">{{ volume.unitCode }}</option>
-				</select>
+					<label>Measurements</label>
+					<input ng-model="formData.length" type="text" class="form-control small" placeholder="Length">
+					<span class="fa fa-remove"></span>
+					<input ng-model="formData.width" type="text" class="form-control small" placeholder="Width">
+					<span class="fa fa-remove"></span>
+					<input ng-model="formData.height" type="text" class="form-control small" placeholder="Height">
+
+					<select ng-model="formData.dimensionType" class="form-control">
+						<option ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }}</option>
+					</select>
+
+				</div>
 
 			</div>
 
 		</div>
 
-		<div class="col-xs-12 col-sm-6">
 
-			<div class="form-inline">
 
-				<label>Measurements</label>
-				<input ng-model="formData.length" type="text" class="form-control" placeholder="Length"> x
-				<input ng-model="formData.width" type="text" class="form-control" placeholder="Width"> x
-				<input ng-model="formData.height" type="text" class="form-control" placeholder="Height">
-
-				<select ng-model="formData.dimensionType" class="form-control">
-					<option ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }}</option>
-				</select>
-
-			</div>
-
-		</div>
-
-	</div>
 	<h3 id="price-and-tax">Price & Tax</h3>
 
 	<p>
-	<button type="button" class="btn btn-primary" ng-click="addPriceGroup()">
-     <i class="fa fa-plus"></i> Add Price Group
-  </button>
-</p>
+		<button type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+	     <i class="fa fa-plus"></i> Add Price Group
+	  </button>
+	</p>
 
 	<div id="price-type-container">
 
@@ -224,34 +269,42 @@
 
 	</div>
 
-	<!-- Tax Type -->
+		<!-- Tax Type -->
 	<div class="row">
 
-		<div class="col-xs-12 col-sm-6">
+			<div class="col-xs-12 col-sm-6">
 
-			<div class="form-group">
-			<label>Tax Type</label>
+				<div class="form-group">
 
-			<select ng-model="formData.taxes.companyTaxId" class="form-control">
-				<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }} - {{ type.description}} </option>
-			</select>
+					<label>Tax Type</label>
+
+					<select ng-model="formData.taxes.companyTaxId" class="form-control">
+						<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }} - {{ type.description}} </option>
+					</select>
+
+				</div>
+
+			</div>
+
+			<div class="col-xs-12 col-sm-6">
+
+				<div class="form-group">
+
+					<label>Applied Tax Type</label>
+
+					<select ng-model="formData.taxes.itemTaxType" class="form-control">
+						<option value="1">Gross</option>
+						<option value="2">Net</option>
+					</select>
+
+				</div>
+
 			</div>
 
 		</div>
 
-		<div class="col-xs-12 col-sm-6">
+	</ng-form>
 
-			<div class="form-group">
-			<label>Applied Tax Type</label>
+</div>
 
-			<select ng-model="formData.taxes.itemTaxType" class="form-control">
-				<option value="1">Gross</option>
-				<option value="2">Net</option>
-			</select>
-			</div>
-
-		</div>
-
-	</div>
-
-</ng-form>
+<form-success-modal></form-success-modal>

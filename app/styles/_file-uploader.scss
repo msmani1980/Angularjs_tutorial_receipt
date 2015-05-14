@@ -1,11 +1,7 @@
 /* Uploader Styles */
 
-$upload-bkg: #F8F8F8;
-$upload-drag: #97A1C8;
-
 .drop-box {
-
-    background: $upload-bkg;
+    background: $upload-bg-color;
     border: 5px dashed #DDD;
     min-width: 200px;
     min-height: 100px;
@@ -13,7 +9,6 @@ $upload-drag: #97A1C8;
     text-align: center;
     padding-top: 25px;
     padding-bottom:25px;
-    margin-top: 10px;
     font-size: 2em;
 
     p {
@@ -25,7 +20,7 @@ $upload-drag: #97A1C8;
 
 .dragover {
     border: 5px dashed blue;
-    background: $upload-drag;
+    background: $upload-drag-color;
 }
 
 .dragover-err {
@@ -34,7 +29,7 @@ $upload-drag: #97A1C8;
 
 .thumbnails {
     display:block;
-    background: $upload-bkg;
+    background: $upload-bg-color;
     width:100%;
     padding:1em;
     border-radius:5px;
@@ -62,10 +57,41 @@ img.thumbs{
 
 .qr-code{
     border-radius:5px;
-    padding:1em;
+    padding: 1em;
+
+    .btn{
+        width:128px;
+        margin-top:10px;
+    }
+
 }
 
-.qr-code .btn{
-    width:128px;
+.tab-content{
+  background: white;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-top: 0;
+  border-radius: 2px;
+  margin-bottom: 1em;
+}
+
+qr-create .tab-content{
+    padding-right:2em;
+}
+
+qr-create .form-group{
+
     margin-top:10px;
+
+}
+
+qr-upload{
+
+    .btn{
+        margin-bottom:0px;
+    }
+
+    .form-group{
+        margin-bottom:0px;
+    }
 }

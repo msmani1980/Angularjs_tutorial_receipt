@@ -34,10 +34,14 @@
         <span class="fa fa-bars"></span>
       <a class="navbar-brand" ng-href="#/">
         <span class="fa fa-th"></span>
-        TS5 Dashboard
+       TS5 Dashboard
       </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
+    <ul class="nav navbar-nav navbar-left nav-left">
+      <li><span class='fa fa-th'></span></li>
+      <li></li>
+    </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
           <menu-dropdown title="Language Picker" ng-model="languageModel" icon="fa fa-cog"></menu-dropdown>
@@ -103,7 +107,6 @@
 <script src="scripts/controllers/about.js"></script>
 <script src="scripts/controllers/companies.js"></script>
 <script src="scripts/controllers/item-list.js"></script>
-<script src="scripts/directives/editformheaderdirective.js"></script>
 <script src="scripts/services/companieslistfactory.js"></script>
 <script src="scripts/controllers/company.js"></script>
 <script src="scripts/services/items-factory.js"></script>
@@ -139,6 +142,8 @@
 <script src="scripts/services/stations-service.js"></script>
 <script src="scripts/directives/qr-upload.js"></script>
 <script src="scripts/directives/qr-create.js"></script>
+<script src="scripts/directives/form-error-dialog.js"></script>
+<script src="scripts/directives/form-success-modal.js"></script>
 <!-- endbuild -->
 </body>
 </html>

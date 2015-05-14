@@ -25,10 +25,11 @@ angular.module('ts5App')
         // clear current qr codes
         $scope.clearQrCodes = function() {
             $scope.files = [];
-            $scope.qrUploadProgress = 0; 
-            $scope.qrUploadSuccess = false; 
-            $scope.qrUploadFail = false;
+            $scope.qrCreateUploadProgress = 0; 
+            $scope.qrCreateUploadSuccess = false; 
+            $scope.qrCreateUploadFail = false;
             $scope.formData.qrCodeImgUrl = '';
+            $scope.formData.qrCodeValue = '';
         };
 
         // Function to convert dataURI into a Blob
@@ -84,13 +85,13 @@ angular.module('ts5App')
                 }).progress(function (evt) {
 
                     // Upload Progress
-                    $scope.qrUploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+                    $scope.qrCreateUploadProgress = parseInt(100.0 * evt.loaded / evt.total);
 
                 // on a successful upload
                 }).success(function (data) {
 
                     // set the UI flag
-                    $scope.qrUploadSuccess = true; 
+                    $scope.qrCreateUploadSuccess = true; 
 
                     // pass new image object into formData.qrCodeValue array
                     $scope.formData.qrCodeImgUrl = data.url;
@@ -99,7 +100,7 @@ angular.module('ts5App')
                 }).error(function (data) {
 
                     //set the UI flag 
-                    $scope.qrUploadFail = true;
+                    $scope.qrCreateUploadFail = true;
 
                     console.log(data);
 
@@ -118,7 +119,7 @@ angular.module('ts5App')
 
       templateUrl: 'views/directives/qr-create.html',
       restrict: 'E',
-      scope: false,
+      scope: true,
       controller: qrCreateController
 
     };

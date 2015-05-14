@@ -1,0 +1,13 @@
+.form-group{
+
+	input, select{
+		border-radius:2px;
+		border: 1px solid $input-border-color;
+		vertical-align: text-top;
+	}
+
+} 
+
+.form-control.small{
+	max-width:100px;
+}
