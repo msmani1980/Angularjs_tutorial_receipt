@@ -16,7 +16,7 @@ angular.module('ts5App')
 	    $http.defaults.headers.common.type = 'item';
 
 	    // progress
-	    $scope.uploadProgress = [];
+	    $scope.uploadProgress = '0';
 
 	    // watch for files
 	   	$scope.$watch('files', function (files) {

@@ -34,15 +34,15 @@
 
 			<div class="form-nav btn-group-justified item-top" role="group" aria-label="..." ng-init="activeBtn = 'item-information'">
 
-			 	<a ng-click="activeBtn = 'item-information'" ng-class="{'active':activeBtn === 'item-information'}" type="button" class="btn btn-default">
+			 	<a ng-click="formScroll('item-information')" ng-class="{'active':activeBtn === 'item-information'}" type="button" class="btn btn-default">
 			  	Item Information
 			  	</a>
 
-			  	<a ng-click="activeBtn = 'measurements'" ng-class="{'active':activeBtn === 'measurements'}" type="button" class="btn btn-default">
+			  	<a ng-click="formScroll('measurements')" ng-class="{'active':activeBtn === 'measurements'}" type="button" class="btn btn-default">
 			  	Measurements
 			  	</a>
 
-			 	<a ng-click="activeBtn = 'price-and-tax'" ng-class="{'active':activeBtn === 'price-and-tax'}" type="button" class="btn btn-default">
+			 	<a ng-click="formScroll('price-and-tax')" ng-class="{'active':activeBtn === 'price-and-tax'}" type="button" class="btn btn-default">
 			  	Price & Tax
 			  	</a>
 
@@ -236,9 +236,9 @@
 
 					<label>Measurements</label>
 					<input ng-model="formData.length" type="text" class="form-control small" placeholder="Length">
-					<span class="fa fa-remove"></span>
+					<span class="fa fa-times"></span>
 					<input ng-model="formData.width" type="text" class="form-control small" placeholder="Width">
-					<span class="fa fa-remove"></span>
+					<span class="fa fa-times"></span>
 					<input ng-model="formData.height" type="text" class="form-control small" placeholder="Height">
 
 					<select ng-model="formData.dimensionType" class="form-control">

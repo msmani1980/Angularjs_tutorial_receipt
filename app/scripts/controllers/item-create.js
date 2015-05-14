@@ -249,9 +249,17 @@ angular.module('ts5App')
       };
 
       // TODO MOVE ME GLOBAL
-  		$scope.scrollTo = function(id) {
-	      $location.hash(id);
-	      $anchorScroll();
+  		$scope.formScroll = function(id, activeBtn) {
+
+        $scope.activeBtn = id;
+
+        var elm = angular.element('#'+id);
+        var body = angular.element('body');
+        
+        body.animate({scrollTop: elm.offset().top - 400}, 'slow');
+
+        return activeBtn;
+
 	    };
 
   });
