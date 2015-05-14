@@ -9,9 +9,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companiesService', function ($resource, baseUrl) {
+  .service('companiesService', function ($resource, ENV) {
 
-    var requestURL = baseUrl + '/api/companies/:id';
+    var requestURL = ENV.apiUrl + '/api/companies/:id';
     var requestParameters = {
       id: '@id',
       limit: 50

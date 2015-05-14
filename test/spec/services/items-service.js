@@ -10,20 +10,22 @@ describe('Items Service |', function () {
     $httpBackend,
     testObject,
     response,
-    itemsJSON;
+    itemsJSON,
+    masterItemListJSON;
 
   // load the service's module
   beforeEach(module('ts5App'));
 
-  beforeEach(module('served/items-list.json'));
+  beforeEach(module('served/items-list.json', 'served/master-item-list.json'));
 
 
   // Inject the service and responshandler
   beforeEach(inject(function (_itemsService_, $injector) {
 
     // Inject the JSON fixtures
-    inject(function (_servedItemsList_) {
+    inject(function (_servedItemsList_, _servedMasterItemList_) {
       itemsJSON = _servedItemsList_;
+      masterItemListJSON = _servedMasterItemList_;
     });
 
     itemsService = _itemsService_;
@@ -89,7 +91,19 @@ describe('Items Service |', function () {
     it('Retail Item should have an itemName', function () {
       expect(testObject.itemName).toBeDefined();
     });
- 
+
   }); // describe item api
+
+  describe('Master retail items API', function () {
+    beforeEach(function(){
+      $httpBackend.whenGET(/retail-items\/master/).respond(masterItemListJSON);
+    });
+
+    it('should get the master retail item list from API', function () {
+      itemsService.getItemsList({}, true);
+      $httpBackend.expectGET(/retail-items\/master/);
+      $httpBackend.flush();
+    });
+  });
 
 }); // describe item service

@@ -11,7 +11,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,$compile,baseUrl,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
+  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory) {
 
       // first price type data object
       var priceData = { startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',};
@@ -37,7 +37,7 @@ angular.module('ts5App')
       };
 
       // Get a list of items
-      itemsFactory.getItemsList(function (data) {
+      itemsFactory.getItemsList({}).then(function (data) {
         $scope.items = data.retailItems;
       });
 
@@ -86,18 +86,10 @@ angular.module('ts5App')
         $scope.salesCategories = data.salesCategories;
       });
 
-
-      // get curriences
-      // TODO: Refactor this factory to use new standards and then update this call to be more like above
-      currencyFactory.getCompanyCurrencies().then(function (data) {
-        $scope.currencies = data;
-      });
-
        // get tax types
       companiesFactory.getTaxTypesList(function(data) {
         $scope.taxTypes = data.response;
       });
-
 
       // get stations
       companiesFactory.getStationsList(function(data) {
@@ -107,23 +99,19 @@ angular.module('ts5App')
       // Adds a new Price Group object to the formData
       $scope.addPriceGroup = function() {
 
+        // TODO: Move this to the currency Service
         companyCurrenciesResource.query(function(data){
 
           var priceCurrencies = [];
 
-          for(var key in data.companyCurrencies) {
+          for(var key in data.response) {
 
-            var currency = data.companyCurrencies[key];
+            var currency = data.response[key];
 
-            // TODO: Figure out why price currencies are coming out as a dupes from API
-            if(key<4) {
-
-              priceCurrencies.push({
-                price: '1.00',
-                companyCurrencyId: currency.currencyId
-              });
-
-            }
+            priceCurrencies.push({
+              price: '1.00',
+              companyCurrencyId: currency.id
+            });
 
           }
 
@@ -143,25 +131,19 @@ angular.module('ts5App')
         }
       };
 
-      var companyCurrenciesURL = baseUrl + '/api/companies/:companyId/currencies';
-      var companyCurrenciesResource = $resource(companyCurrenciesURL, {companyId: 2, startDate: '20150515', endDate: '20150715', },actions);
+      var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
+      var companyCurrenciesResource = $resource(companyCurrenciesURL, {userId:1,companyId: 2, startDate: '20150515', endDate: '20150715', },actions);
 
+      // TODO: Move this to the currency Service
       companyCurrenciesResource.query(function(data){
 
-        $scope.currencies = data.companyCurrencies;
+        for(var key in data.response) {
 
-        for(var key in data.companyCurrencies) {
-
-          var currency = data.companyCurrencies[key];
-
-          // TODO: Figure out why price currencies are coming out as a dupes from API
-          if(key>3) {
-            return false;
-          }
+          var currency = data.response[key];
 
           $scope.formData.prices[0].priceCurrencies.push({
             price: '1.00',
-            companyCurrencyId: currency.currencyId
+            companyCurrencyId: currency.id
           });
 
         }
@@ -209,8 +191,6 @@ angular.module('ts5App')
 
         }
 
-        console.log(formData);
-
       	// If the local form is not valid
       	if(!$scope.form.$valid) {
 
@@ -221,17 +201,13 @@ angular.module('ts5App')
 
   			}
 
-      	// set the formData models in the view to the scope.formData object
-      	//$scope.formData = angular.copy(formData);
-
-        console.log($scope.formData);
-
+        // create a new item
       	var newItem = {
       		retailItem: formData
       	};
 
       	// Create newItem in API
-      	itemsFactory.createItem(newItem,function(response) {
+      	itemsFactory.createItem(newItem).then(function(response) {
 
           console.log(response);
 

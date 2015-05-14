@@ -10,6 +10,7 @@
 angular.module('ts5App')
   .controller('MainCtrl', function ($scope) {
     $scope.viewName = 'TS5 Dashboard';
+    var emberURL = '/ember/#/';
 
     $scope.dashboardMenu = [
       {
@@ -17,19 +18,19 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Items',
-            route: 'item-list',
+            route: '/#/item-list',
             icon: 'icon-manage-retail-item',
             className: 'dashboard-managemenuItems'
           },
           {
             name: 'Create Item',
-            route: 'item-create',
+            route: '/#/item-create',
             icon: 'icon-create-retail-item',
             className: 'dashboard-createItem'
           },
           {
             name: 'Manage Categories',
-            route: 'sales-categories',
+            route: emberURL + 'retail-items/categories',
             icon: 'icon-manage-retail-category',
             className: 'dashboard-manageItemCategories'
           }
@@ -40,13 +41,13 @@ angular.module('ts5App')
         'menuItems': [
           {
             name: 'Manage Companies',
-            route: 'companies',
+            route: emberURL + 'companies',
             icon: 'icon-manage-company',
             className: 'dashboard-manageCompanies'
           },
           {
             name: 'Create Company',
-            route: 'companies.create',
+            route: emberURL + 'companies/create',
             icon: 'icon-create-company',
             className: 'dashboard-createCompany'
           }
@@ -57,7 +58,7 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Schedules',
-            route: 'schedules',
+            route: emberURL + 'schedules',
             icon: 'icon-manage-schedule',
             className: 'dashboard-manageSchedules'
           }]
@@ -67,7 +68,7 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Taxes',
-            route: 'tax-rates',
+            route: emberURL + 'tax-rates',
             icon: 'icon-manage-taxes',
             className: 'dashboard-manageTaxes'
           }]
@@ -77,13 +78,13 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Menus',
-            route: 'menu-list',
+            route: '/#/menu-list',
             icon: 'icon-manage-menu',
             className: 'dashboard-manageMenus'
           },
           {
             name: 'Create Menu',
-            route: 'menu-create',
+            route: emberURL + 'menus/create',
             icon: 'icon-create-menu',
             className: 'dashboard-createMenu'
           }]
@@ -93,19 +94,19 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Menu Assignments',
-            route: 'menu-assignments',
+            route: emberURL + 'menu-assignments',
             icon: 'icon-menu-assignment',
             className: 'dashboard-menuAssignments'
           },
           {
             name: 'Manage Rules',
-            route: 'menu-rules',
+            route: emberURL + 'menu-rules',
             icon: 'icon-manage-rules',
             className: 'dashboard-manageRules'
           },
           {
             name: 'Create Rule',
-            route: 'menu-rules.create',
+            route: emberURL + 'menu-rules/create',
             icon: 'icon-create-rules',
             className: 'dashboard-createRules'
           }]
@@ -115,25 +116,25 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Promotions',
-            route: 'promotions',
+            route: emberURL + 'promotions',
             icon: 'icon-manage-promotion',
             className: 'dashboard-managePromotions'
           },
           {
             name: 'Create Promotion',
-            route: 'promotions.create',
+            route: emberURL + 'promotions/create',
             icon: 'icon-create-promotion',
             className: 'dashboard-createPromotion'
           },
           {
             name: 'Promotion Category',
-            route: 'promotion-category',
+            route: emberURL + 'category',
             icon: 'icon-manage-promotion-category',
             className: 'dashboard-managePromotionCategory'
           },
           {
             name: 'Promotion Catalog',
-            route: 'promotion-catalogs',
+            route: emberURL + 'promotion-catalogs',
             icon: 'icon-create-catalog',
             className: 'dashboard-createCatalog'
           }]
@@ -143,13 +144,13 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Discounts',
-            route: 'discounts',
+            route: emberURL + 'discounts',
             icon: 'icon-manage-discount',
             className: 'dashboard-manageDiscount'
           },
           {
             name: 'Create Discount',
-            route: 'discounts.create',
+            route: emberURL + 'discounts/create',
             icon: 'icon-create-discount',
             className: 'dashboard-createDiscount'
           }]
@@ -159,7 +160,7 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Messages',
-            route: 'employee-messages',
+            route: emberURL + 'employee-messages',
             icon: 'icon-employee-messages',
             className: 'dashboard-manageEmployeeMessages'
           }]
@@ -169,13 +170,13 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Rules',
-            route: 'receipt-rules',
+            route: emberURL + 'receipt-rules',
             icon: 'icon-manage-receipt-rules',
             className: 'dashboard-manageReceiptRules'
           },
           {
             name: 'Create Rules',
-            route: 'receipt-rules.create',
+            route: emberURL + 'receipt-rules/create',
             icon: 'icon-create-receipt-rules',
             className: 'dashboard-createReceiptRule'
           }]
@@ -185,7 +186,7 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Transactions',
-            route: 'transactions',
+            route: emberURL + 'transactions',
             icon: 'icon-manage-transactions',
             className: 'dashboard-manageTransactions'
           }]
@@ -195,19 +196,19 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Daily Exchange Rate',
-            route: 'exchange-rates',
+            route: emberURL + 'exchange-rates',
             icon: 'icon-manage-transactions',
             className: 'dashboard-manageDailyExchangeRates'
           },
           {
             name: 'Manage Cash Bag',
-            route: 'cash-bag',
+            route: emberURL + 'cash-bag',
             icon: 'icon-create-receipt-rules',
             className: 'dashboard-manageCashBag'
           },
           {
             name: 'Cash Bag Submission',
-            route: 'cash-bag-submit',
+            route: emberURL + 'cash-bag-submit',
             icon: 'icon-manage-retail-category',
             className: 'dashboard-cashBagSubmission'
           }]

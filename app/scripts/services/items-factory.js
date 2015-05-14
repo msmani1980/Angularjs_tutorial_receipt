@@ -12,7 +12,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('itemsFactory', function ($resource, baseUrl, itemsService, allergensService,itemTypesService,priceTypesService,characteristicsService,unitsService) {
+  .factory('itemsFactory', function ($resource, ENV, itemsService, allergensService,itemTypesService,priceTypesService,characteristicsService,unitsService) {
 
   	// Items
   var getItem = function (id) {

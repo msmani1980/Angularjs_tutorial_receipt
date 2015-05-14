@@ -7,7 +7,7 @@
  * # editForm
  */
 angular.module('ts5App')
-  .directive('editForm', ['$parse', function ($http, baseUrl) {
+  .directive('editForm', ['$parse', function ($http, ENV) {
 
     return {
       templateUrl: 'views/directives/edit-form.html',
@@ -42,7 +42,7 @@ angular.module('ts5App')
           // Request Object
           var req = {
             method: 'POST',
-            url: baseUrl + '/api/retail-items1',
+            url: ENV.apiUrl + '/api/retail-items1',
             headers: {
               'Content-Type': 'application/json',
               'userId': 1,

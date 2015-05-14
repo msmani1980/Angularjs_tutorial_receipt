@@ -9,7 +9,7 @@
 angular.module('ts5App')
   .directive('qrCreate', function () {
 
-  	var qrCreateController = function ($scope, Upload, baseUrl, $http) {
+  	var qrCreateController = function ($scope, Upload, ENV, $http) {
 
   		// set header param 'type' = item
         $http.defaults.headers.common.type = 'item';
@@ -25,8 +25,8 @@ angular.module('ts5App')
         // clear current qr codes
         $scope.clearQrCodes = function() {
             $scope.files = [];
-            $scope.qrCreateUploadProgress = 0; 
-            $scope.qrCreateUploadSuccess = false; 
+            $scope.qrCreateUploadProgress = 0;
+            $scope.qrCreateUploadSuccess = false;
             $scope.qrCreateUploadFail = false;
             $scope.formData.qrCodeImgUrl = '';
             $scope.formData.qrCodeValue = '';
@@ -37,7 +37,7 @@ angular.module('ts5App')
         // based off of http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
         function dataURItoBlob(dataURI) {
 
-            var byteString, 
+            var byteString,
                 mimestring;
 
             if(dataURI.split(',')[0].indexOf('base64') !== -1 ) {
@@ -76,12 +76,12 @@ angular.module('ts5App')
 
             //if a file exists and it is not null
             if (files && files.length) {
-                
+
                 // Upload image
-                Upload.upload({     
-                    url: baseUrl + '/api/images',
+                Upload.upload({
+                    url: ENV.apiUrl + '/api/images',
                     fileFormDataName: 'image',
-                    file: files[0] 
+                    file: files[0]
                 }).progress(function (evt) {
 
                     // Upload Progress
@@ -91,7 +91,7 @@ angular.module('ts5App')
                 }).success(function (data) {
 
                     // set the UI flag
-                    $scope.qrCreateUploadSuccess = true; 
+                    $scope.qrCreateUploadSuccess = true;
 
                     // pass new image object into formData.qrCodeValue array
                     $scope.formData.qrCodeImgUrl = data.url;
@@ -99,7 +99,7 @@ angular.module('ts5App')
                 // on a failed upload
                 }).error(function (data) {
 
-                    //set the UI flag 
+                    //set the UI flag
                     $scope.qrCreateUploadFail = true;
 
                     console.log(data);

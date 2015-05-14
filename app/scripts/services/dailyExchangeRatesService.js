@@ -8,14 +8,11 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('dailyExchangeRatesService', function ($q, $http, $resource, baseUrl) {
-
-    // Commented these out as there were overridding defaults for other services
-    // $http.defaults.headers.common.userId = 1;
+  .service('dailyExchangeRatesService', function ($q, $http, $resource, ENV) {
+    //$http.defaults.headers.common.userId = 1;
     //$http.defaults.headers.common.companyId = 362;
-
-    var dailyExchangeRatesURL = baseUrl + '/api/daily-exchange-rates/:exchangeRateId';
-    var previousExchangeRatesURL = baseUrl + '/api/daily-exchange-rates/previous-exchange-rate';
+    var dailyExchangeRatesURL = ENV.apiUrl + '/api/daily-exchange-rates/:exchangeRateId';
+    var previousExchangeRatesURL = ENV.apiUrl + '/api/daily-exchange-rates/previous-exchange-rate';
 
     var dailyExchangeRatesParameters = {
       exchangeRateId: '@dailyExchangeRate.id'

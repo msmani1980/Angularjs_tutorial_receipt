@@ -8,9 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('unitsService', function ($resource, baseUrl) {
+  .service('unitsService', function ($resource, ENV) {
 
-    var requestURL = baseUrl + '/api/units';
+    var requestURL = ENV.apiUrl + '/api/units';
 
     var dimensionParameters = {
       unitType:'dimension'

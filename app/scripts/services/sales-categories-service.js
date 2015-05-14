@@ -8,11 +8,12 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('salesCategoriesService', function ($resource, baseUrl,GlobalMenuService) {
+  .service('salesCategoriesService', function ($resource, ENV,GlobalMenuService) {
 
-  	var company = GlobalMenuService.company.get();
+    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+  	var companyId = GlobalMenuService.company.get();
 
-    var requestURL = baseUrl + '/api/companies/'+company.id+'/sales-categories/:id';
+    var requestURL = ENV.apiUrl + '/api/companies/'+companyId+'/sales-categories/:id';
     var requestParameters = {
       id: '@id',
       limit: 50

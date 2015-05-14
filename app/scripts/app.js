@@ -1,5 +1,4 @@
 'use strict';
-/*global $*/
 
 /**
  * @ngdoc overview
@@ -11,6 +10,7 @@
  */
 angular
   .module('ts5App', [
+    'config',
     'ngAnimate',
     'ngAria',
     'ngCookies',
@@ -26,7 +26,6 @@ angular
     'ngFileUpload',
     'ja.qr'
   ])
-  .constant('baseUrl', 'https://ec2-52-6-49-188.compute-1.amazonaws.com')
   .constant('regexp', {
       word: /^[\w\s]+$/,
       bit: /^(0|1)$/,
@@ -42,13 +41,6 @@ angular
       url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
   })
   .config(function ($routeProvider) {
-    var datePickerOptions = $.extend($.fn.datepicker.defaults, {
-      format: 'mm/dd/yyyy',
-      autoclose: true,
-      todayHighlight: true
-    });
-    $.fn.datepicker.defaults = datePickerOptions;
-
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -103,14 +95,14 @@ angular
 
     // get the user and company
     var user = GlobalMenuService.user.get();
-    var company = GlobalMenuService.company.get();
 
-    console.log(company.id);
+    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+    var companyId = GlobalMenuService.company.get();
 
     // sets default headers
     // TODO: Set up watch so when user and company id change, these are updated
     $http.defaults.headers.common.userId = user.id;
-    $http.defaults.headers.common.companyId = company.id;
+    $http.defaults.headers.common.companyId = companyId;
 
     // set regexp object into root scope for use in any template
     $rootScope.regexp = regexp;

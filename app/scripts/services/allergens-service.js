@@ -8,10 +8,10 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('allergensService', function ($resource,baseUrl) {
+  .service('allergensService', function ($resource, ENV) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
-    var requestURL = baseUrl + '/api/records/allergens/:id';
+    var requestURL = ENV.apiUrl + '/api/records/allergens/:id';
     var requestParameters = {
       id: '@id',
       limit: 50

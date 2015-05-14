@@ -2,34 +2,46 @@
 
 describe('Controller: MenuEditCtrl', function () {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/menu.json'));
+  beforeEach(module('served/menu.json', 'served/master-item-list.json'));
 
   var MenuEditCtrl,
     scope,
     $httpBackend,
     menuResponseJSON,
+    masterItemsResponseJSON,
+    itemsService,
     menuService;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, _menuService_) {
+  beforeEach(inject(function ($controller, $rootScope, $injector, _menuService_, _itemsService_) {
     scope = $rootScope.$new();
-    inject(function (_servedMenu_) {
+    inject(function (_servedMenu_, _servedMasterItemList_) {
       menuResponseJSON = _servedMenu_;
+      masterItemsResponseJSON = _servedMasterItemList_;
     });
 
     $httpBackend = $injector.get('$httpBackend');
 
     $httpBackend.whenGET(/menus/).respond(menuResponseJSON);
+    $httpBackend.whenGET(/retail-items\/master/).respond(masterItemsResponseJSON);
+
     menuService = _menuService_;
+    itemsService = _itemsService_;
 
     spyOn(menuService, 'getMenu').and.callThrough();
+    spyOn(itemsService, 'getItemsList').and.callThrough();//returnValue(masterItemsResponseJSON);
+
     MenuEditCtrl = $controller('MenuEditCtrl', {
       $scope: scope
     });
-    $httpBackend.flush();
 
+    scope.menuEditForm = {
+      $valid: true,
+      $setPristine: function() {}
+    };
+
+    scope.$digest();
+    $httpBackend.flush();
   }));
 
   it('should attach the view name', function () {
@@ -50,7 +62,38 @@ describe('Controller: MenuEditCtrl', function () {
     });
 
     it('should have date formatted to local', function () {
-      expect(scope.menu.endDate).toBe('04/15/2015');
+      expect(scope.menu.endDate).toBe('05/31/2015');
+    });
+
+    describe('getItemsList API', function () {
+
+      it('should get the items list from service', function () {
+        expect(itemsService.getItemsList).toHaveBeenCalled();
+      });
+
+      it('should restrict to start and end dates only', function () {
+        expect(itemsService.getItemsList).toHaveBeenCalledWith({ startDate: '20150501', endDate: '20150531', fetchFromMaster: 'master'}, true);
+      });
+    });
+
+    describe('item list on scope', function() {
+      it('should attach a list of items to scope', function () {
+        expect(!!scope.masterItemsList).toBe(true);
+      });
+
+      describe('menuItemList in scope', function () {
+        it('should attach it to scope', function(){
+          expect(!!scope.menuItemsList).toBe(true);
+        });
+
+        it('should have itemQty', function(){
+          expect(!!scope.menuItemsList[0].itemQty).toBe(true);
+        });
+
+        it('should have a itemName', function(){
+          expect(!!scope.menuItemsList[0].itemName).toBe(true);
+        });
+      });
     });
 
   });

@@ -3,14 +3,14 @@
 /**
  * @ngdoc directive
  * @name ts5App.directive:imageUpload
- * @description Image upload directive for TS5 retail items 
- * # imageUpload 
+ * @description Image upload directive for TS5 retail items
+ * # imageUpload
  */
 
 angular.module('ts5App')
   .directive('imageUpload', function () {
 
-	var imageUploadController = function ($scope, Upload, baseUrl, $http) {
+	var imageUploadController = function ($scope, Upload, ENV, $http) {
 
 	    // set header param 'type' = item
 	    $http.defaults.headers.common.type = 'item';
@@ -40,10 +40,10 @@ angular.module('ts5App')
 
 	        //if a file exists and it is not null
 	        if (files && files.length) {
-	            
+
 	            // Upload image
-	            Upload.upload({     
-	                url: baseUrl + '/api/images',
+	            Upload.upload({
+	                url: ENV.apiUrl + '/api/images',
 	                fileFormDataName: 'image',
 	                file: files
 	            }).progress(function (evt) {
@@ -55,7 +55,7 @@ angular.module('ts5App')
 	            }).success(function (data) {
 
 	                // set the UI flag
-	                $scope.uploadSuccess = true; 
+	                $scope.uploadSuccess = true;
 
 	                // new image object
 	                var newImage = {
@@ -70,7 +70,7 @@ angular.module('ts5App')
 	            // on a failed upload
 	            }).error(function (data) {
 
-	                //set the UI flag 
+	                //set the UI flag
 	                $scope.uploadFail = true;
 
 	                console.log(data);
@@ -90,8 +90,8 @@ angular.module('ts5App')
 
       	templateUrl: 'views/directives/image-upload.html',
       	restrict: 'E',
-      	scope: false, // isolate scope to parent 
+      	scope: false, // isolate scope to parent
       	controller: imageUploadController
     };
-    
+
   });

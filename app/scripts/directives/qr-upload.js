@@ -9,8 +9,8 @@
 angular.module('ts5App')
   .directive('qrUpload', function () {
 
-	var qrUploadController = function ($scope, Upload, baseUrl, $http) {
- 	
+	var qrUploadController = function ($scope, Upload, ENV, $http) {
+
         // set header param 'type' = item
         $http.defaults.headers.common.type = 'item';
 
@@ -25,8 +25,8 @@ angular.module('ts5App')
         // clear current qr codes
         $scope.clearQrCodes = function() {
             $scope.files = [];
-            $scope.qrUploadProgress = 0; 
-            $scope.qrUploadSuccess = false; 
+            $scope.qrUploadProgress = 0;
+            $scope.qrUploadSuccess = false;
             $scope.qrUploadFail = false;
             $scope.formData.qrCodeImgUrl = '';
         };
@@ -36,13 +36,13 @@ angular.module('ts5App')
 
             // grab files from scope
             var files = $scope.files;
-            
+
             //if a file exists and it is not null
             if (files && files.length) {
-                
+
                 // Upload image
-                Upload.upload({     
-                    url: baseUrl + '/api/images',
+                Upload.upload({
+                    url: ENV.apiUrl + '/api/images',
                     fileFormDataName: 'image',
                     file: files
                 }).progress(function (evt) {
@@ -54,7 +54,7 @@ angular.module('ts5App')
                 }).success(function (data) {
 
                     // set the UI flag
-                    $scope.qrUploadSuccess = true; 
+                    $scope.qrUploadSuccess = true;
 
                     // pass new image object into formData.qrCodeValue array
                     $scope.formData.qrCodeImgUrl = data.url;
@@ -62,7 +62,7 @@ angular.module('ts5App')
                 // on a failed upload
                 }).error(function (data) {
 
-                    //set the UI flag 
+                    //set the UI flag
                     $scope.qrUploadFail = true;
 
                     console.log(data);
