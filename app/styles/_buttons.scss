@@ -1,15 +1,5 @@
-.btn{
-	font-size:16px;
-	padding: 6px 12px;
-	border-radius:2px;
-}
-
 .btn:focus, .btn.focus, .btn:active:focus, .btn:active.focus, .btn.active:focus, .btn.active.focus{
 	outline:none;
-}
-
-.btn-default {
-	background: $btn-bg-color;
 }
 
 .btn-blue {
@@ -87,5 +77,5 @@
 	.btn{
 		margin-left:5px;
 	}
-	
+
 }
