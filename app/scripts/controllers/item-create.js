@@ -13,8 +13,6 @@
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory) {
 
-
-
     	// View Name
   		$scope.viewName = 'Create Item';
 
@@ -123,6 +121,16 @@ angular.module('ts5App')
         $scope.stations = data.response;
       });
 
+      // Adds a new GTIN object
+      $scope.addGTIN = function() {
+        $scope.formData.globalTradeNumbers.push({});
+      };
+
+      // Remove a GTIN object
+      $scope.removeGTIN = function(key) {
+        $scope.formData.globalTradeNumbers.splice(key,1);
+      };
+
       // Adds a new Price Group object to the formData
       $scope.addPriceGroup = function() {
 
@@ -163,7 +171,7 @@ angular.module('ts5App')
       var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
 
       // TODO: set isOperatedCurrency bool to company's prefernce
-      var companyCurrenciesResource = $resource(companyCurrenciesURL, {userId:1,companyId: 2,isOperatedCurrency: true, startDate: $scope.formData.startDate, endDate:  $scope.formData.endDate, },actions);
+      var companyCurrenciesResource = $resource(companyCurrenciesURL, {companyId: 2,isOperatedCurrency: true, startDate: $scope.formData.startDate, endDate:  $scope.formData.endDate, },actions);
 
       // TODO: Move this to the currency Service
       companyCurrenciesResource.query(function(data){
@@ -184,7 +192,10 @@ angular.module('ts5App')
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
+        console.log(formData);
+
         // TODO: move these loops to functions
+        // TODO: Need to uppdate these to use Select2 Directive
 
         // loop through tags in form data
         for(var tagKey in formData.tags) {
@@ -262,7 +273,7 @@ angular.module('ts5App')
 
         var elm = angular.element('#'+id);
         var body = angular.element('body');
-        
+
         body.animate({scrollTop: elm.offset().top - 400}, 'slow');
 
         return activeBtn;

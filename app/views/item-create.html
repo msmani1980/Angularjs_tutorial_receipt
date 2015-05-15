@@ -122,8 +122,6 @@
 					</select>
 				</div>
 
-				<!--<input-select label="Item Type" name="itemTypeId" required="true" options="{{ itemTypeList }}"></input-select>-->
-
 				<div class="form-group" ng-class="{ 'has-error' : form[itemTypeId].$dirty && !form[itemTypeId].$valid || displayError && !form[itemTypeId].$valid , 'has-success' : form[itemTypeId].$dirty && form[itemTypeId].$valid }">
 					<label>Item Type</label>
 					<select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control">
@@ -172,7 +170,20 @@
 
 				<image-upload></image-upload>
 
-				<input-text label="Global Trade Item Number (GTIN)" name="GTIN" pattern="regexp.word" placeholder="1234"></input-text>
+				<h3>Global Trade In Numbers (GTIN)</h3>
+				<p>
+					<button type="button" class="btn btn-primary" ng-click="addGTIN()">
+				     <i class="fa fa-plus"></i> Add GTIN
+				  </button>
+				</p>
+
+				<div id="gtin-container">
+
+					<div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index">
+						<input-gtin> </input-gtin>
+					</div>
+
+				</div>
 
 				<input-text label="Mfg. Part Number" name="mfgPartNumber" pattern="regexp.word" placeholder="1234"></input-text>
 
