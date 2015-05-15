@@ -12,7 +12,7 @@
 	background: -ms-linear-gradient(top,#52b3e2 0,#2aa1db 100%);
 	background: linear-gradient(to bottom,#52b3e2 0,#2aa1db 100%);
 	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#52b3e2', endColorstr='#2aa1db');
-	border: 1px solid $btn-blue-border-color;
+	border-color: $btn-blue-border-color;
 }
 
 .btn-blue:hover, .btn-blue.active, .btn-blue:active, .btn-blue:focus{
