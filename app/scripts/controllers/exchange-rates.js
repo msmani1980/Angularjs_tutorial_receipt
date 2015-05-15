@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory) {
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService) {
     var getCompany = function (companyId) {
       return {
         'id': companyId,
@@ -19,8 +19,10 @@ angular.module('ts5App')
       };
     };
 
+    var companyId = GlobalMenuService.company.get();
+
     $scope.viewName = 'Daily Exchange Rates';
-    $scope.currentCompany = getCompany(374);
+    $scope.currentCompany = getCompany(companyId);
     $scope.cashiersDateField = new moment().format('L');
     $scope.currenciesFields = {};
     $scope.showActionButtons = false;
@@ -52,7 +54,9 @@ angular.module('ts5App')
       if ($scope.companyCurrencies && $scope.dailyExchangeRates && angular.isArray($scope.dailyExchangeRates.dailyExchangeRateCurrencies)) {
         angular.forEach($scope.companyCurrencies, function (companyCurrency) {
           var exchangeRate = getExchangeRateFromCompanyCurrencies($scope.dailyExchangeRates.dailyExchangeRateCurrencies, companyCurrency.id);
-          serializeCoinAndPaperExchangeRate(companyCurrency.currencyCode, exchangeRate.coinExchangeRate, exchangeRate.paperExchangeRate);
+          if (exchangeRate) {
+            serializeCoinAndPaperExchangeRate(companyCurrency.code, exchangeRate.coinExchangeRate, exchangeRate.paperExchangeRate);
+          }
         });
       }
     }
@@ -63,8 +67,16 @@ angular.module('ts5App')
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
+      var companyCurrenciesPayload = {
+        startDate: formattedDateForAPI,
+        endDate: formattedDateForAPI,
+        isOperatedCurrency: true
+      };
+      currencyFactory.getCompanyCurrencies(companyCurrenciesPayload).then(function (companyCurrency) {
+        $scope.companyCurrencies = companyCurrency.response;
+      });
       currencyFactory.getDailyExchangeRates(formattedDateForAPI).then(function (dailyExchangeRates) {
-        $scope.dailyExchangeRates = dailyExchangeRates[0] || {};
+        $scope.dailyExchangeRates = dailyExchangeRates || {};
       });
     });
 
@@ -96,9 +108,10 @@ angular.module('ts5App')
     }
 
     function resolvePayloadDependencies() {
+      debugger;
       clearExchangeRateCurrencies();
       angular.forEach($scope.companyCurrencies, function (currency) {
-        if ($scope.currenciesFields[currency.currencyCode]) {
+        if ($scope.currenciesFields[currency.code]) {
           var companyCurrency = serializeExchangeRate(currency);
           $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.push(companyCurrency);
         }
@@ -117,8 +130,8 @@ angular.module('ts5App')
           exchangeRateDate: formatDateForAPI($scope.cashiersDateField),
           chCompanyId: '362',
           chBaseCurrencyId: '8',
-          retailCompanyId: getCompany(374).id,
-          retailBaseCurrencyId: getCompany(374).baseCurrencyId,
+          retailCompanyId: companyId,
+          retailBaseCurrencyId: getCompany(companyId).baseCurrencyId,
           dailyExchangeRateCurrencies: []
         }
       };
@@ -132,10 +145,6 @@ angular.module('ts5App')
 
     currencyFactory.getCompanyBaseCurrency().then(function (companyBaseCurrency) {
       $scope.companyBaseCurrency = companyBaseCurrency;
-    });
-
-    currencyFactory.getCompanyCurrencies().then(function (companyCurrency) {
-      $scope.companyCurrencies = companyCurrency.response;
     });
 
   });
