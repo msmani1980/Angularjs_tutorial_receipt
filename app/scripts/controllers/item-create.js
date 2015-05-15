@@ -20,8 +20,8 @@ angular.module('ts5App')
 
   		// Form Data to be passed to API
   		$scope.formData = {
-        startDate: '20150815',
-        endDate: '20151015',
+        startDate: '20150615',
+        endDate: '20150715',
         qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
@@ -52,7 +52,7 @@ angular.module('ts5App')
       $scope.$watch('formData', function(newData, oldVal){
 
         // if the start date has changed
-        if(newData.startDate != oldVal.startDate) {
+        if(newData.startDate !== oldVal.startDate) {
 
           // loop through all the price groups and set the startDate
           for(var key in $scope.formData.prices) {
@@ -143,6 +143,8 @@ angular.module('ts5App')
           }
 
           $scope.formData.prices.push({
+            startDate: $scope.formData.startDate,
+            endDate: $scope.formData.endDate,
             priceCurrencies:priceCurrencies
           });
 
@@ -159,7 +161,9 @@ angular.module('ts5App')
       };
 
       var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
-      var companyCurrenciesResource = $resource(companyCurrenciesURL, {userId:1,companyId: 2, startDate: $scope.formData.startDate, endDate:  $scope.formData.endDate, },actions);
+
+      // TODO: set isOperatedCurrency bool to company's prefernce
+      var companyCurrenciesResource = $resource(companyCurrenciesURL, {userId:1,companyId: 2,isOperatedCurrency: true, startDate: $scope.formData.startDate, endDate:  $scope.formData.endDate, },actions);
 
       // TODO: Move this to the currency Service
       companyCurrenciesResource.query(function(data){

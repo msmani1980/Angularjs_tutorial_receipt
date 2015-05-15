@@ -60,7 +60,7 @@ angular.module('ts5App')
 	                // new image object
 	                var newImage = {
 	                    imageURL: data.url,
-	                    startDate: '20150515',
+	                    startDate: '20150615',
 	                    endDate: '20150715'
 	                };
 
