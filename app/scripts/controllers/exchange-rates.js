@@ -135,7 +135,7 @@ angular.module('ts5App')
     });
 
     currencyFactory.getCompanyCurrencies().then(function (companyCurrency) {
-      $scope.companyCurrencies = companyCurrency;
+      $scope.companyCurrencies = companyCurrency.response;
     });
 
   });

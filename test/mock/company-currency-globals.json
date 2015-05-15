@@ -1,0 +1,33 @@
+{
+  "response": [
+    {
+      "id": 1,
+      "companyId": 2,
+      "code": "USD",
+      "name": "dollar"
+    },
+    {
+      "id": 57,
+      "companyId": 2,
+      "code": "GBP",
+      "name": "GreatBritishPound"
+    },
+    {
+      "id": 58,
+      "companyId": 2,
+      "code": "EUR",
+      "name": "EURO"
+    },
+    {
+      "id": 63,
+      "companyId": 2,
+      "code": "NOK",
+      "name": "NOK"
+    }
+  ],
+  "meta": {
+    "count": 4,
+    "limit": 4,
+    "start": 0
+  }
+}

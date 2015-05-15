@@ -8,46 +8,35 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('currenciesService', function ($q, $resource, ENV) {
-    var globalCurrenciesURL = ENV.apiUrl + '/api/currencies';
-    var companyCurrenciesURL = ENV.apiUrl + '/api/companies/:companyId/currencies';
-    var paramDefaults = {};
+  .service('currenciesService', function ($q, $resource, GlobalMenuService, ENV) {
+    var masterCurrenciesURL = ENV.apiUrl + '/api/currencies';
+    var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
+
+    var requestParameters = {
+      id: '@id'
+    };
+
     var actions = {
       getCurrencies: {
-        method: 'GET',
-        headers: {
-          'userId': 1,
-          'companyId': 374
-        }
+        method: 'GET'
       },
       create: {
         method: 'POST'
       }
     };
-    var globalCurrenciesResource = $resource(globalCurrenciesURL, paramDefaults, actions);
-    var companyCurrenciesResource = $resource(companyCurrenciesURL, {companyId: 374}, actions);
+    var masterCurrenciesResource = $resource(masterCurrenciesURL, requestParameters, actions);
+    var companyCurrenciesResource = $resource(companyCurrenciesURL, requestParameters, actions);
 
-    var getBaseCurrency = function (currenciesArray, baseCurrencyId) {
-      return currenciesArray.filter(function (currencyItem) {
-        return currencyItem.id === baseCurrencyId;
-      })[0];
-    };
-
-    var getCompanyBaseCurrency = function (baseCurrencyId) {
-      var baseCompanyDeferred = $q.defer();
-      globalCurrenciesResource.getCurrencies().$promise.then(function (data) {
-        baseCompanyDeferred.resolve(getBaseCurrency(data.response, baseCurrencyId));
-      });
-      return baseCompanyDeferred.promise;
+    var getCompanyGlobalCurrencies = function (payload) {
+      return masterCurrenciesResource.getCurrencies(payload).$promise;
     };
 
     var getCompanyCurrencies = function (payload) {
-      console.log('getCompanyCurrencies', payload);
-      return companyCurrenciesResource.getCurrencies(payload).$promise
+      return companyCurrenciesResource.getCurrencies(payload).$promise;
     };
 
     return {
-      getCompanyBaseCurrency: getCompanyBaseCurrency,
+      getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
       getCompanyCurrencies: getCompanyCurrencies
     };
   });

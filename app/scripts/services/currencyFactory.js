@@ -19,9 +19,19 @@ angular.module('ts5App')
       };
     };
 
+    var getCurrencyFromArrayUsingId = function (currenciesArray, baseCurrencyId) {
+      return currenciesArray.filter(function (currencyItem) {
+        return currencyItem.id === baseCurrencyId;
+      })[0];
+    };
+
     var getCompanyBaseCurrency = function () {
+      var deferred = $q.defer();
       var baseCurrencyId = getCompany(326).baseCurrencyId;
-      return currenciesService.getCompanyBaseCurrency(baseCurrencyId);
+      currenciesService.getCompanyGlobalCurrencies().then(function (data) {
+        deferred.resolve(getCurrencyFromArrayUsingId(data.response, baseCurrencyId));
+      });
+      return deferred.promise;
     };
 
     var getDailyExchangeRatesFromAPI = function (cashierDate) {

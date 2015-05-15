@@ -9,8 +9,6 @@
  */
 angular.module('ts5App')
   .service('dailyExchangeRatesService', function ($q, $http, $resource, ENV) {
-    $http.defaults.headers.common.userId = 1;
-    $http.defaults.headers.common.companyId = 362;
     var dailyExchangeRatesURL = ENV.apiUrl + '/api/daily-exchange-rates/:exchangeRateId';
     var previousExchangeRatesURL = ENV.apiUrl + '/api/daily-exchange-rates/previous-exchange-rate';
 
@@ -49,21 +47,13 @@ angular.module('ts5App')
     };
 
     var getDailyExchangeRates = function (cashierDate) {
-      var deferred = $q.defer();
       dailyExchangeRatesParameters.startDate = cashierDate;
       dailyExchangeRatesParameters.endDate = cashierDate;
-      dailyExchangeRatesResource.getExchangeRates().$promise.then(function (data) {
-        deferred.resolve(data.dailyExchangeRates);
-      });
-      return deferred.promise;
+      return dailyExchangeRatesResource.getExchangeRates().$promise;
     };
 
     var getPreviousExchangeRates = function () {
-      var deferred = $q.defer();
-      previousExchangeRatesResource.getExchangeRates().$promise.then(function (data) {
-        deferred.resolve(data);
-      });
-      return deferred.promise;
+      return previousExchangeRatesResource.getExchangeRates().$promise;
     };
 
     return {
