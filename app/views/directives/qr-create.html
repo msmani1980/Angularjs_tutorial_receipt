@@ -24,7 +24,7 @@
 
 			<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code"></input-text>
 
-			<alert ng-show="formData.qrCodeImgUrl.length" type="success">QR code saved!</alert>
+			<alert ng-show="formData.qrCodeImgUrl.length && formData.qrCodeValue.length" type="success">QR code saved!</alert>
 
 			<alert ng-show="qrCreateUploadFail" type="danger">Could not save QR code.</alert>
 

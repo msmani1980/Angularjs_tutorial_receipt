@@ -10,6 +10,7 @@
     padding-top: 25px;
     padding-bottom:25px;
     font-size: 2em;
+    margin-bottom:10px;
 
     p {
         font-size:16px;
@@ -31,13 +32,32 @@
     display:block;
     background: $upload-bg-color;
     width:100%;
-    padding:1em;
+    padding:15px;
     border-radius:5px;
     margin-top:1em;
+
+        p{
+            width:115px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .progress{
+
+            margin-bottom:0px;
+
+                b{
+                    text-shadow:0px 0px 3px black;
+                    padding-left:5px;
+                }
+        }
 }
+
 
 img.thumbs{
     max-width:128px;
+    padding:1em;
 }
 
 .img-thumbnail p{
@@ -45,17 +65,14 @@ img.thumbs{
     margin-bottom:0;
 }
 
-.upload-container button{
-    margin-bottom:1em;
-    margin-top:1em;
-}
-
-.qr-upload-container button{
-    margin-bottom:1em;
-    margin-top:1em;
+.upload-container{
+    .thumbnails{
+        margin-bottom:1em;
+    }
 }
 
 .qr-code{
+
     border-radius:5px;
     padding: 1em;
 
@@ -94,4 +111,9 @@ qr-upload{
     .form-group{
         margin-bottom:0px;
     }
+
+    .thumbnails{
+        margin-bottom:1em;
+    }
+
 }

@@ -2,7 +2,7 @@
 
 	<div ngf-select="" ngf-drop="" class="drop-box" 
 		ng-model="files"
-		ng-model-rejected="rejFiles"
+		ng-model-rejected="rejQr"
 		ngf-change="generateThumb(file, files)"
 	   	ngf-drag-over-class="dragover"  
 	    ngf-multiple="false" 
@@ -18,16 +18,16 @@
 
 	</div>
 
-	<p class="alert alert-danger" ng-show="rejFiles.length"> 
+	<p class="alert alert-danger" ng-show="rejQr.length"> 
 
 	    <b>Your file doesn't meet the requirements:</b>
 	    <br>
 
-	    <i ng-show="rejFiles[0].size > 10000">
+	    <i ng-show="rejQr[0].size > 10000">
 	    	{{rejFiles[0].size / 1000}}kb, is a bit too large. 10kb is the max qr upload size.
 	    </i>
 
-	     <i ng-show="rejFiles[0].size < 10001">
+	     <i ng-show="rejQr[0].size < 10001">
 	    	'{{rejFiles[0].name}}' is invalid, OR '{{rejFiles[0].type}}' is not an accepted file type.
 	    </i>
 
