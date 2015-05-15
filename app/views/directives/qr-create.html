@@ -1,0 +1,35 @@
+<div class="tab-pane">
+
+	<div class="row">
+
+		<div class="col-xs-12 col-sm-4">
+
+			<div class="qr-code">
+
+				<div class="thumb">
+
+					<qr text="formData.qrCodeValue" image="true" size="128"></qr>
+
+				</div> 
+
+				<button class="btn button btn-success" ng-show="!formData.qrCodeImgUrl.length" ng-disabled="!formData.qrCodeValue.length" ng-click="qrCreate()">Save QR</button>
+
+				<button class="btn button btn-default" ng-show="formData.qrCodeImgUrl.length" ng-click="clearQrCodes()">Clear QR</button>
+
+			</div>
+		
+		</div>
+
+		<div class="col-xs-12 col-sm-8">
+
+			<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code"></input-text>
+
+			<alert ng-show="formData.qrCodeImgUrl.length" type="success">QR code saved!</alert>
+
+			<alert ng-show="qrCreateUploadFail" type="danger">Could not save QR code.</alert>
+
+		</div> 
+
+	</div>
+
+</div>

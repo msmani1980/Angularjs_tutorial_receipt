@@ -69,6 +69,8 @@ angular.module('ts5App')
     var defaults = {};
     defaults.user = userModel['1'];
     defaults.language = languageModel['1'];
+
+    // TODO: Set company object instead of just number, need to refactor so ember will be happy
     defaults.company = 2;
 
     $localStorage.$default(defaults);

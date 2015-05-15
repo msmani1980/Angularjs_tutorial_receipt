@@ -1,0 +1,20 @@
+body{
+	background: $bg-color;
+}
+
+.main-container{
+	margin-top:8rem;
+}
+
+.wrapper{
+	width:90%;
+	margin:0 auto;
+}
+
+@media(max-width:$screen-sm-min){
+
+	.wrapper{
+		width:95%;
+	}
+
+}

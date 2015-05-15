@@ -4,7 +4,9 @@
 /* Edit Controls */
 
 .view-name {
-  margin:0;  
+  margin:0;
+  color:$blue-color;
+  font-size:2em;
 }
 
 .edit-controls .btn-group {
@@ -20,8 +22,11 @@
 }
 
 .edit-form h3 {
+  position:relative;
   padding:1rem;
-  background:#EEE;
+  background:$form-header-bg-color;
+  font-size:16px;
+  border-radius:2px;
 }
 
 .form-inline label {
@@ -69,4 +74,52 @@
 
 .list-footer .pagination {
   margin:0;
+}
+
+.top-header{
+  width:100%;
+  position: fixed;
+  left:0px;
+  right:0px;
+  top: 50px;
+  padding-bottom: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+  z-index: 10;
+  background:$bg-color;
+  border-bottom:1px solid lightgray;
+
+    p{
+      font-size:13px;
+      margin-top:15px;
+      color:gray;
+      font-weight:100;
+    }
+}
+
+.create-item-form label{
+  font-weight:100;
+  font-size:16px;
+  }
+
+.create-item-form{
+  z-index:1;
+  position:relative;
+  top:18rem;
+}
+
+@media(max-width:$screen-sm-min){
+  .top-header{
+    top:86px;
+    padding-bottom:0;
+    padding-left:0;
+    padding-right:0;
+  }
+
+  .create-item-form{
+    z-index:1;
+    position:relative;
+    top:20rem;
+  }
+
 }

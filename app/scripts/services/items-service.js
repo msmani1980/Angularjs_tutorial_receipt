@@ -59,4 +59,4 @@ angular.module('ts5App')
       updateItem: updateItem
     };
 
-  });
+});

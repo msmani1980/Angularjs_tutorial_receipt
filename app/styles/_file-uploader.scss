@@ -1,38 +1,50 @@
 /* Uploader Styles */
 
 .drop-box {
-    background: #F8F8F8;
+    background: $upload-bg-color;
     border: 5px dashed #DDD;
     min-width: 200px;
     min-height: 100px;
     height: auto;
     text-align: center;
     padding-top: 25px;
-    margin-top: 10px;
+    padding-bottom:25px;
     font-size: 2em;
+
+    p {
+        font-size:16px;
+        font-style:italic;
+    }
+
 }
+
 .dragover {
     border: 5px dashed blue;
-    background: #97A1C8;
+    background: $upload-drag-color;
 }
+
 .dragover-err {
     border:5px dashed orange;
 }
-.thumbnails{
+
+.thumbnails {
     display:block;
-    background: #F8F8F8;
+    background: $upload-bg-color;
     width:100%;
     padding:1em;
     border-radius:5px;
     margin-top:1em;
 }
+
 img.thumbs{
     max-width:128px;
 }
+
 .img-thumbnail p{
     text-align:center;
     margin-bottom:0;
 }
+
 .upload-container button{
     margin-bottom:1em;
     margin-top:1em;
@@ -42,11 +54,44 @@ img.thumbs{
     margin-bottom:1em;
     margin-top:1em;
 }
+
 .qr-code{
     border-radius:5px;
-    padding:1em;
+    padding: 1em;
+
+    .btn{
+        width:128px;
+        margin-top:10px;
+    }
+
 }
-.qr-code .btn{
-    width:128px;
+
+.tab-content{
+  background: white;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-top: 0;
+  border-radius: 2px;
+  margin-bottom: 1em;
+}
+
+qr-create .tab-content{
+    padding-right:2em;
+}
+
+qr-create .form-group{
+
     margin-top:10px;
+
+}
+
+qr-upload{
+
+    .btn{
+        margin-bottom:0px;
+    }
+
+    .form-group{
+        margin-bottom:0px;
+    }
 }

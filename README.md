@@ -3,6 +3,14 @@
 This project is generated with [yo angular generator](https://github.com/yeoman/generator-angular)
 version 0.11.1.
 
+## Development environment
+Below is the IP for the development environment and API
+
+    https://54.83.17.106/
+
+    // API
+    https://54.83.17.106/api/
+
 ## Build & development
 
 Run `grunt` for building and `grunt serve` for preview.
@@ -15,7 +23,7 @@ Running `grunt test` will run the unit tests with karma.
 
 - Commit early and often
 - 2 space indent
-- All code must have tests 
+- All code must have tests
 
 ### Naming conventions:
 
@@ -31,7 +39,7 @@ Running `grunt test` will run the unit tests with karma.
  - commit message template "{TicketNumber} {Username} | {Description}"
  - example "TSVPORTAL-713 maxfelker | Updated readme"
 
-### Testing SSL and CORS 
+### Testing SSL and CORS
 When testing your local build against the API, there are issues with SSL due to a self signed certificate on the API's server. Browse to the development environment URL and accept the browser's SSL warning. This will resolve the SSL warning notice
 
 When testing your local build against the API, there are issues with CORS. Close chrome and use the command below in you CLI:
@@ -41,37 +49,30 @@ When testing your local build against the API, there are issues with CORS. Close
 ## Yeoman Recipes
 Below are a few helpful things when using yeoman to generate Angular code
 
-### Creating a Route 
+### Creating a Route
 Create a Route named {feature}-{action}
 
     yo angular:route {feature}-{action}
 
     yo angular:route item-create
 
-### Creating a Directive 
+### Creating a Directive
 Create a Route named {directive-name}
 
     yo angular:directive {directive-name}
 
     yo angular:directive image-upload
 
-### Creating a Factory 
+### Creating a Factory
 Create a factory named {factory-name}-factory , appending the keyword -factory to the end
 
     yo angular:factory {factory-name}-factory
 
     yo angular:factory items-factory
 
-### Creating a Service 
+### Creating a Service
 Create a service named {service-name}-service , appending the keyword -service to the end
 
     yo angular:service {service-name}-service
 
     yo angular:service price-types-service
-
-## API
-The Angular app hits an API. This accepts and returns JSON.
-
-DEV API URL:
-
-    https://ec2-52-6-49-188.compute-1.amazonaws.com/api/

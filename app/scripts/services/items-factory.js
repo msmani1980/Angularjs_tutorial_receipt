@@ -1,3 +1,7 @@
+// TODO:
+// Add CRUD methods for items
+// Write tests for this factory
+
 'use strict';
 
 /**
@@ -11,12 +15,20 @@ angular.module('ts5App')
   .factory('itemsFactory', function ($resource, ENV, itemsService, allergensService,itemTypesService,priceTypesService,characteristicsService,unitsService) {
 
   	// Items
-  	var getItem = function (id) {
+  var getItem = function (id) {
 		return itemsService.getItem(id);
 	};
 
 	var getItemsList = function (payload) {
 		return itemsService.getItemsList(payload);
+	};
+
+  var createItem = function (payload) {
+		return itemsService.createItem(payload);
+	};
+
+  var updateItem = function (payload) {
+		return itemsService.updateItem(payload);
 	};
 
 	// Allergens
@@ -56,6 +68,8 @@ angular.module('ts5App')
 		// Items
 		getItem: getItem,
 		getItemsList: getItemsList,
+    createItem:createItem,
+    updateItem: updateItem,
 
 		// Allergens
 		getAllergensList: getAllergensList,

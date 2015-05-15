@@ -95,6 +95,8 @@ angular
 
     // get the user and company
     var user = GlobalMenuService.user.get();
+
+    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
     var companyId = GlobalMenuService.company.get();
 
     // sets default headers

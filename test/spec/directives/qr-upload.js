@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: editFormHeaderDirective', function () {
+describe('Directive: qrUpload', function () {
 
   // load the directive's module
   beforeEach(module('ts5App'));
@@ -10,4 +10,5 @@ describe('Directive: editFormHeaderDirective', function () {
   beforeEach(inject(function ($rootScope) {
     scope = $rootScope.$new();
   }));
+
 });
