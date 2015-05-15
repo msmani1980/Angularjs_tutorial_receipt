@@ -13,20 +13,18 @@
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory) {
 
-      // first price type data object
-      var priceData = { startDate: '20150515', endDate: '20150715', typeId: '1', priceCurrencies: [], taxIs: 'Included',};
+
 
     	// View Name
   		$scope.viewName = 'Create Item';
 
   		// Form Data to be passed to API
   		$scope.formData = {
-        startDate: '20150515',
-        endDate: '20150715',
+        startDate: '20150815',
+        endDate: '20151015',
         qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
-        prices: [priceData],
         taxes:[],
         tags: [],
         allergens:[],
@@ -35,6 +33,35 @@ angular.module('ts5App')
         recommendations: [],
         globalTradeNumbers: []
       };
+
+      // Setup the first price group
+      var priceData = {
+        startDate: $scope.formData.startDate,
+        endDate: $scope.formData.endDate,
+        typeId: '1',
+        priceCurrencies: [],
+        taxIs: 'Included'
+      };
+
+      // Add the price group data to the prices collection in the scope
+      $scope.formData.prices = [
+        priceData
+      ];
+
+      // when the form data changes
+      $scope.$watch('formData', function(newData, oldVal){
+
+        // if the start date has changed
+        if(newData.startDate != oldVal.startDate) {
+
+          // loop through all the price groups and set the startDate
+          for(var key in $scope.formData.prices) {
+            $scope.formData.prices[key].startDate = newData.startDate;
+          }
+
+        }
+
+      }, true);
 
       // Get a list of items
       itemsFactory.getItemsList({}).then(function (data) {
@@ -132,7 +159,7 @@ angular.module('ts5App')
       };
 
       var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
-      var companyCurrenciesResource = $resource(companyCurrenciesURL, {userId:1,companyId: 2, startDate: '20150515', endDate: '20150715', },actions);
+      var companyCurrenciesResource = $resource(companyCurrenciesURL, {userId:1,companyId: 2, startDate: $scope.formData.startDate, endDate:  $scope.formData.endDate, },actions);
 
       // TODO: Move this to the currency Service
       companyCurrenciesResource.query(function(data){
