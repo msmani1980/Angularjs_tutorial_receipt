@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: inputGtin', function () {
+describe('Directive: inputTaxType', function () {
 
   // load the directive's module
   beforeEach(module('ts5App'));
@@ -10,5 +10,6 @@ describe('Directive: inputGtin', function () {
   beforeEach(inject(function ($rootScope) {
     scope = $rootScope.$new();
   }));
+
 
 });

@@ -1,0 +1,52 @@
+<!-- TaxTypeDirective -->
+
+<div class="panel panel-default">
+
+  <div class="panel-heading">
+    <p class="panel-title">
+			<i class="fa fa-tags"></i> Tax Group {{ $parent.key+1 }}
+      <span class="pull-right btn btn-danger btn-xs" ng-click="removeTaxType($parent.key)">
+        <i class="fa fa-close"></i>
+      </span>
+		</p>
+  </div>
+
+  <div class="panel-body">
+
+    <div class="row">
+
+  			<div class="col-xs-12 col-sm-6">
+
+  				<div class="form-group">
+
+  					<label>Tax Type</label>
+
+  					<select ng-model="itemTax.companyTaxId" class="form-control">
+  						<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }} - {{ type.description}} </option>
+  					</select>
+
+  				</div>
+
+  			</div>
+
+  			<div class="col-xs-12 col-sm-6">
+
+  				<div class="form-group">
+
+  					<label>Applied Tax Type</label>
+
+  					<select ng-model="itemTax.itemTaxType" class="form-control">
+  						<option value="1">Gross</option>
+  						<option value="2">Net</option>
+  					</select>
+
+  				</div>
+
+  			</div>
+
+  	</div>
+
+	</div>
+
+</div>
+<!-- /TaxTypeDirective -->

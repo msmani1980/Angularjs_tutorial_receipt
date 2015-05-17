@@ -280,39 +280,21 @@
 
 	</div>
 
-		<!-- Tax Type -->
-	<div class="row">
+	<p>
+		<button type="button" class="btn btn-primary" ng-click="addTaxType()">
+	     <i class="fa fa-plus"></i> Add Tax Type
+	  </button>
+	</p>
 
-			<div class="col-xs-12 col-sm-6">
+	<div id="tax-type-container">
 
-				<div class="form-group">
-
-					<label>Tax Type</label>
-
-					<select ng-model="formData.taxes.companyTaxId" class="form-control">
-						<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }} - {{ type.description}} </option>
-					</select>
-
-				</div>
-
-			</div>
-
-			<div class="col-xs-12 col-sm-6">
-
-				<div class="form-group">
-
-					<label>Applied Tax Type</label>
-
-					<select ng-model="formData.taxes.itemTaxType" class="form-control">
-						<option value="1">Gross</option>
-						<option value="2">Net</option>
-					</select>
-
-				</div>
-
-			</div>
-
+		<div ng-repeat="(key,itemTax) in formData.taxes track by $index">
+			<input-tax-type> </input-tax-type>
 		</div>
+
+	</div>
+
+		<!-- Tax Type -->
 
 	</ng-form>
 

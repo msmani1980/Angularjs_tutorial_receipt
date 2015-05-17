@@ -121,6 +121,16 @@ angular.module('ts5App')
         $scope.stations = data.response;
       });
 
+      // Adds a new Tax Type object
+      $scope.addTaxType = function() {
+        $scope.formData.taxes.push({});
+      };
+
+      // Remove a Tax Type object
+      $scope.removeTaxType = function(key) {
+        $scope.formData.taxes.splice(key,1);
+      };
+
       // Adds a new GTIN object
       $scope.addGTIN = function() {
         $scope.formData.globalTradeNumbers.push({});
@@ -135,14 +145,19 @@ angular.module('ts5App')
       $scope.addPriceGroup = function() {
 
         // TODO: Move this to the currency Service
+
+        // request a list of currencies
         companyCurrenciesResource.query(function(data){
 
+          // create a currencies collection
           var priceCurrencies = [];
 
+          // loop through the response
           for(var key in data.response) {
 
             var currency = data.response[key];
 
+            // push a new currency object into the currencies collection
             priceCurrencies.push({
               price: '1.00',
               companyCurrencyId: currency.id
@@ -150,6 +165,7 @@ angular.module('ts5App')
 
           }
 
+          // push a new object into the prices collection
           $scope.formData.prices.push({
             startDate: $scope.formData.startDate,
             endDate: $scope.formData.endDate,
@@ -158,6 +174,11 @@ angular.module('ts5App')
 
         });
 
+      };
+
+      // Remove a Price Group object
+      $scope.removePriceGroup = function(key) {
+        $scope.formData.prices.splice(key,1);
       };
 
       // TODO: Move currencies logic to service

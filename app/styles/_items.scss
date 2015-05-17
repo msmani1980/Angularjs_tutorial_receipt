@@ -1,5 +1,12 @@
 /* Items */
 
+.panel .pull-right.btn {
+line-height: inherit;
+height: auto;
+font-size: 10px;
+padding: 5px 10px;
+}
+
 
 /* Edit Controls */
 
@@ -60,12 +67,12 @@
 }
 
 .list-footer nav {
-	display:inline-block; 
+	display:inline-block;
 }
 
 .list-footer select {
 	display:inline-block;
-	width:auto; 
+	width:auto;
 }
 
 .list-footer .displaying {
