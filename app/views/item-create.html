@@ -52,7 +52,8 @@
 
 		</div>
 
-	</div> <!--/TopHeader -->
+	</div>
+	<!--/TopHeader -->
 
 	<ng-form name="form" class="form edit-form create-item-form">
 
@@ -83,37 +84,15 @@
 
 				</div>
 
-				<div class="row" >
-
-					<div class="col-xs-12 col-sm-6">
-
-						<div class="form-group" ng-class="{ 'has-error' : form[startDate].$dirty && !form[startDate].$valid || displayError && !form[startDate].$valid , 'has-success' : form[startDate].$dirty && form[startDate].$valid }">
-							<label>Effective From</label>
-							<div class="input-group">
-								<div class="input-group-addon">
-									<span class="fa fa-calendar" aria-hidden="true"></span>
-								</div>
-								<input name="startDate" required ng-model="formData.startDate" type="text" class="form-control" value="20150515" />
-							</div>
-						</div>
-
-					</div>
-
-					<div class="col-xs-12 col-sm-6">
-
-						<div class="form-group"  ng-class="{ 'has-error' : form[endDate].$dirty && !form[endDate].$valid || displayError && !form[endDate].$valid , 'has-success' : form[endDate].$dirty && form[endDate].$valid }">
-							<label>Effective To</label>
-							<div class="input-group">
-								<div class="input-group-addon">
-									<span class="fa fa-calendar" aria-hidden="true"></span>
-								</div>
-								<input name="endDate "required ng-model="formData.endDate" type="text" class="form-control" value="20150715" />
-							</div>
-						</div>
-
-					</div>
-
-				</div>
+				<date-picker class="form-group"
+					ng-class="{ 'has-error' : form[startDate].$dirty && !form[startDate].$valid || displayError && !form[startDate].$valid , 'has-success' : form[startDate].$dirty && form[startDate].$valid }"
+					element-class="col-xs-6 col-sm-6"
+					start-date-model="formData.startDate"
+					end-date-model="formData.endDate"
+					disable-past="true"
+					label-from="Effective From"
+					label-to="Effective To">
+				</date-picker>
 
 				<div class="form-group" ng-class="{ 'has-error' : form[categoryId].$dirty && !form[categoryId].$valid || displayError && !form[categoryId].$valid , 'has-success' : form[categoryId].$dirty && form[categoryId].$valid }" >
 					<label>Sales Category</label>
@@ -263,41 +242,39 @@
 		</div>
 
 
+		<h3 id="price-and-tax">Price & Tax</h3>
 
-	<h3 id="price-and-tax">Price & Tax</h3>
+		<p>
+			<button type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+		     <i class="fa fa-plus"></i> Add Price Group
+		  </button>
+		</p>
 
-	<p>
-		<button type="button" class="btn btn-primary" ng-click="addPriceGroup()">
-	     <i class="fa fa-plus"></i> Add Price Group
-	  </button>
-	</p>
+		<div id="price-type-container">
 
-	<div id="price-type-container">
+			<div ng-repeat="(key,itemPrice) in formData.prices track by $index">
+				<input-price-type> </input-price-type>
+			</div>
 
-		<div ng-repeat="(key,itemPrice) in formData.prices track by $index">
-			<input-price-type> </input-price-type>
 		</div>
 
-	</div>
+		<p>
+			<button type="button" class="btn btn-primary" ng-click="addTaxType()">
+		     <i class="fa fa-plus"></i> Add Tax Type
+		  </button>
+		</p>
 
-	<p>
-		<button type="button" class="btn btn-primary" ng-click="addTaxType()">
-	     <i class="fa fa-plus"></i> Add Tax Type
-	  </button>
-	</p>
+		<div id="tax-type-container">
 
-	<div id="tax-type-container">
+			<div ng-repeat="(key,itemTax) in formData.taxes track by $index">
+				<input-tax-type> </input-tax-type>
+			</div>
 
-		<div ng-repeat="(key,itemTax) in formData.taxes track by $index">
-			<input-tax-type> </input-tax-type>
 		</div>
-
-	</div>
-
-		<!-- Tax Type -->
 
 	</ng-form>
 
 </div>
+<!-- /Container -->
 
 <form-success-modal></form-success-modal>

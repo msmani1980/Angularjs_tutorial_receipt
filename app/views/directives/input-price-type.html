@@ -19,43 +19,14 @@
 
 			<div class="col-xs-12 col-sm-8">
 
-				<div class="row">
-
-					<div class="col-xs-12 col-sm-6">
-
-						<div class="form-group">
-							<label for="item-effective-start">Effective From</label>
-							<div class="input-group">
-								<div class="input-group-addon">
-									<span class="fa fa-calendar" aria-hidden="true"></span>
-								</div>
-								<input ng-model="itemPrice.startDate" type="text" class="form-control" value="20150515" />
-							</div>
-						</div>
-
-					</div>
-
-					<div class="col-xs-12 col-sm-6">
-
-						<div class="form-group">
-
-							<label for="item-effective-start">Effective To</label>
-
-							<div class="input-group">
-
-								<div class="input-group-addon">
-									<span class="fa fa-calendar" aria-hidden="true"></span>
-								</div>
-
-								<input ng-model="itemPrice.endDate" type="text" class="form-control" value="20150515" />
-
-							</div>
-
-						</div>
-
-					</div>
-
-				</div>
+        <date-picker class="form-group"
+          element-class="col-xs-6 col-sm-6"
+					start-date-model="itemPrice.startDate"
+					end-date-model="itemPrice.endDate"
+					disable-past="true"
+					label-from="Effective From"
+					label-to="Effective To">
+				</date-picker>
 
 				<div class="row">
 
@@ -65,7 +36,7 @@
 
 							<label>Price Type</label>
 
-							<select ng-disabled="!(!!itemPrice.startDate) || !(!!itemPrice.endDate)" ng-model="itemPrice.typeId" class="form-control">
+							<select required ng-disabled="!(!!itemPrice.startDate) || !(!!itemPrice.endDate)" ng-model="itemPrice.typeId" class="form-control">
 								<option ng-repeat="type in $parent.priceTypes" value="{{ type.id }}">{{ type.name }}</option>
 							</select>
 
@@ -79,7 +50,7 @@
 
 							<label>Tax Is</label>
 
-							<select ng-disabled="!(!!itemPrice.startDate) || !(!!itemPrice.endDate)" ng-model="itemPrice.taxIs" class="form-control">
+							<select required ng-disabled="!(!!itemPrice.startDate) || !(!!itemPrice.endDate)" ng-model="itemPrice.taxIs" class="form-control">
 								<option value="Included">Included</option>
 								<option value="Excluded">Excluded</option>
 								<option value="Exempt">Exempt</option>

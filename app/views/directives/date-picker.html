@@ -1,31 +1,45 @@
 <div class="datepicker-container input-daterange">
-<div class="row">
-  <div class="startDateContainer {{elementClass}}">
-    <label>{{labelFrom}}</label>
 
-    <div class="input-group col-xs-12">
-      <input type="text"
-             ng-model="startDateModel"
-             placeholder="mm/dd/YYYY"
-             name="startDate"
-             ng-disabled="shouldDisableStartDate || disabled"
-             class="startDate form-control">
-      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+  <div class="row">
+
+    <div class="startDateContainer {{elementClass}}">
+
+      <label>{{labelFrom}}</label>
+
+      <div class="input-group col-xs-12">
+
+        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+
+        <input type="text"
+               ng-model="startDateModel"
+               placeholder="mm/dd/YYYY"
+               name="startDate"
+               ng-disabled="shouldDisableStartDate || disabled"
+               class="startDate form-control"/>
+
+      </div>
+
     </div>
+
+    <div class="endDateContainer {{elementClass}}">
+
+      <label>{{labelTo}}</label>
+
+      <div class="input-group col-xs-12">
+
+        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+
+        <input type="text"
+               ng-model="endDateModel"
+               placeholder="mm/dd/YYYY"
+               name="endDate"
+               ng-disabled="shouldDisableEndDate || disabled"
+               class="endDate form-control" />
+
+      </div>
+
+    </div>
+
   </div>
 
-  <div class="endDateContainer {{elementClass}}">
-    <label>{{labelTo}}</label>
-
-    <div class="input-group col-xs-12">
-      <input type="text"
-             ng-model="endDateModel"
-             placeholder="mm/dd/YYYY"
-             name="endDate"
-             ng-disabled="shouldDisableEndDate || disabled"
-             class="endDate form-control">
-      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-    </div>
-  </div>
-</div>
 </div>
