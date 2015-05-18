@@ -9,20 +9,10 @@
  */
 angular.module('ts5App')
   .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService) {
-    var getCompany = function (companyId) {
-      return {
-        'id': companyId,
-        'companyName': 'Virgin Australia',
-        'legalName': 'Virgin Australia',
-        'baseCurrencyId': 1,
-        'exchangeRateVariance': '10.0000'
-      };
-    };
-
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Daily Exchange Rates';
-    $scope.currentCompany = getCompany(companyId);
+    $scope.currentCompany = 'Delta';
     $scope.cashiersDateField = new moment().format('L');
     $scope.currenciesFields = {};
     $scope.showActionButtons = false;

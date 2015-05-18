@@ -18,7 +18,7 @@ angular.module('ts5App')
 
     var getCompanyBaseCurrency = function (companyId) {
       var deferred = $q.defer();
-      var baseCurrencyId = companiesService.getCompany(companyId).then(function(companyDataFromAPI){
+      companiesService.getCompany(companyId).then(function(companyDataFromAPI){
         currenciesService.getCompanyGlobalCurrencies().then(function (data) {
           deferred.resolve(getCurrencyFromArrayUsingId(data.response, companyDataFromAPI.baseCurrencyId));
         });
