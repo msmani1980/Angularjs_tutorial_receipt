@@ -17,8 +17,8 @@ angular.module('ts5App')
 
   		// Form Data to be passed to API
   		$scope.formData = {
-        startDate: moment().add('days',1).format('L'), // set to tomorrow, for your health!
-        endDate: moment().add('days',1).format('L'),
+        startDate: moment().add(1,'days').format('L'), // set to tomorrow, for your health!
+        endDate: moment().add(1,'days').format('L'),
         qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
