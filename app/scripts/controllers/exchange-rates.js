@@ -95,9 +95,9 @@ angular.module('ts5App')
       var coinExchangeRate = '1.0000',
         paperExchangeRate = '1.0000';
 
-      if ($scope.currenciesFields[currency.currencyCode]) {
-        coinExchangeRate = $scope.currenciesFields[currency.currencyCode].coinExchangeRate;
-        paperExchangeRate = $scope.currenciesFields[currency.currencyCode].paperExchangeRate;
+      if ($scope.currenciesFields[currency.code]) {
+        coinExchangeRate = $scope.currenciesFields[currency.code].coinExchangeRate;
+        paperExchangeRate = $scope.currenciesFields[currency.code].paperExchangeRate;
       }
 
       return {
@@ -108,7 +108,6 @@ angular.module('ts5App')
     }
 
     function resolvePayloadDependencies() {
-      debugger;
       clearExchangeRateCurrencies();
       angular.forEach($scope.companyCurrencies, function (currency) {
         if ($scope.currenciesFields[currency.code]) {
@@ -119,21 +118,12 @@ angular.module('ts5App')
     }
 
     function createPayload(shouldSubmit) {
-      var dailyExchangeRateId;
-      if ($scope.dailyExchangeRates && $scope.dailyExchangeRates.id) {
-        dailyExchangeRateId = $scope.dailyExchangeRates.id;
-      }
       $scope.payload = {
-        dailyExchangeRate: {
-          id: dailyExchangeRateId,
-          isSubmitted: shouldSubmit || false,
-          exchangeRateDate: formatDateForAPI($scope.cashiersDateField),
-          chCompanyId: '362',
-          chBaseCurrencyId: '8',
-          retailCompanyId: companyId,
-          retailBaseCurrencyId: getCompany(companyId).baseCurrencyId,
-          dailyExchangeRateCurrencies: []
-        }
+        dailyExchangeRate: angular.extend($scope.dailyExchangeRates.toJSON(),
+          {
+            isSubmitted: shouldSubmit || false,
+            exchangeRateDate: formatDateForAPI($scope.cashiersDateField)
+          })
       };
       resolvePayloadDependencies();
     }
@@ -143,7 +133,7 @@ angular.module('ts5App')
       currencyFactory.saveDailyExchangeRates($scope.payload);
     };
 
-    currencyFactory.getCompanyBaseCurrency().then(function (companyBaseCurrency) {
+    currencyFactory.getCompanyBaseCurrency(companyId).then(function (companyBaseCurrency) {
       $scope.companyBaseCurrency = companyBaseCurrency;
     });
 

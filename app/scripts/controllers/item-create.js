@@ -239,18 +239,12 @@ angular.module('ts5App')
 
       	// Create newItem in API
       	itemsFactory.createItem(newItem).then(function(response) {
-
-          console.log(response);
-
           angular.element('#create-success').modal('show');
 
         // API error
         }, function(error){
-
         	$scope.displayError = true;
-
 		  	  $scope.formErrors = error.data;
-
         });
 
       };

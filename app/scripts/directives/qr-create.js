@@ -98,12 +98,8 @@ angular.module('ts5App')
 
                 // on a failed upload
                 }).error(function (data) {
-
                     //set the UI flag
                     $scope.qrCreateUploadFail = true;
-
-                    console.log(data);
-
                 });
 
             // no files found, exit function

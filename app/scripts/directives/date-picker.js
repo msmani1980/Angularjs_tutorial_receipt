@@ -39,13 +39,6 @@ angular.module('ts5App')
       }
 
       $element.datepicker(options);
-
-      //$element.on('changeDate', '.startDate', function (startDateEvent) {
-      //  console.log('startDate', startDateEvent.date);
-      //});
-      //$element.on('changeDate', '.endDate', function (endDateEvent) {
-      //  console.log('endDate', endDateEvent.date);
-      //});
     };
 
     function link($scope, $element) {
