@@ -39,19 +39,15 @@ angular.module('ts5App')
       }
 
       $element.datepicker(options);
-
-      //$element.on('changeDate', '.startDate', function (startDateEvent) {
-      //  console.log('startDate', startDateEvent.date);
-      //});
-      //$element.on('changeDate', '.endDate', function (endDateEvent) {
-      //  console.log('endDate', endDateEvent.date);
-      //});
     };
 
     function link($scope, $element) {
-
+      if ($scope.isSearchField) {
+        initializeDatePicker($scope, $element);
+        return false;
+      }
       var watchListener = $scope.$watchGroup(['startDateModel', 'endDateModel'], function () {
-        if ($scope.disablePast && !angular.isUndefined($scope.startDateModel)) {
+        if (!$scope.isSearchField && $scope.disablePast && !angular.isUndefined($scope.startDateModel)) {
           $scope.shouldDisableStartDate = moment($scope.startDateModel, 'L').format('L') < moment().format('L');
           $scope.shouldDisableEndDate = moment($scope.endDateModel, 'L').format('L') < moment().format('L');
           watchListener();
@@ -71,6 +67,7 @@ angular.module('ts5App')
         disablePast: '@',
         disabled: '@',
         disableDateRange: '@',
+        isSearchField: '@',
         minDate: '@',
         maxDate: '@',
         startDateModel: '=',

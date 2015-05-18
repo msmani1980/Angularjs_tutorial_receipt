@@ -1,321 +1,351 @@
 {
   "response": [
     {
-      "id": 24,
-      "currencyCode": "EGP",
-      "currencyName": "Egyption Pound",
-      "currencySymbol": "£",
-      "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2015-04-14",
+      "id": 67,
+      "currencyCode": "IN",
+      "currencyName": "IN",
+      "currencySymbol": "?",
+      "decimalPrecision": 1,
+      "createdBy": 1,
+      "createdOn": "2014-12-19",
       "updatedBy": null,
       "updatedOn": null,
       "currencyCountryViews": [
         {
-          "countryCurrencyId": 23,
-          "countryCode": "EG",
-          "countryName": "Egypt",
-          "countryId": 72,
-          "currencyId": 24,
-          "currencyCode": "EGP"
+          "countryCurrencyId": 16,
+          "countryCode": "AU",
+          "countryName": "Australia",
+          "countryId": 20,
+          "currencyId": 67,
+          "currencyCode": "IN"
         }
       ]
     },
     {
-      "id": 23,
-      "currencyCode": "CHF",
-      "currencyName": "Swiss Franc",
-      "currencySymbol": "CHF",
+      "id": 66,
+      "currencyCode": "INR",
+      "currencyName": "INR",
+      "currencySymbol": "?",
       "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2015-01-27",
-      "updatedBy": null,
-      "updatedOn": null,
-      "currencyCountryViews": [
-        {
-          "countryCurrencyId": 22,
-          "countryCode": "CH",
-          "countryName": "Switzerland",
-          "countryId": 50,
-          "currencyId": 23,
-          "currencyCode": "CHF"
-        }
-      ]
-    },
-    {
-      "id": 22,
-      "currencyCode": "DET",
-      "currencyName": "dollars33",
-      "currencySymbol": "$",
-      "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2015-01-05",
+      "createdBy": 1,
+      "createdOn": "2014-12-09",
       "updatedBy": null,
       "updatedOn": null,
       "currencyCountryViews": [
         {
           "countryCurrencyId": 15,
-          "countryCode": "AL",
-          "countryName": "Albania",
-          "countryId": 13,
-          "currencyId": 22,
-          "currencyCode": "DET"
+          "countryCode": "IN",
+          "countryName": "India",
+          "countryId": 112,
+          "currencyId": 66,
+          "currencyCode": "INR"
         }
       ]
     },
     {
-      "id": 21,
-      "currencyCode": "DEZ",
-      "currencyName": "dollars1",
-      "currencySymbol": "$",
+      "id": 65,
+      "currencyCode": "NOS",
+      "currencyName": "NOS",
+      "currencySymbol": "₩",
       "decimalPrecision": 2,
       "createdBy": null,
-      "createdOn": "2015-01-05",
+      "createdOn": "2014-11-17",
       "updatedBy": null,
       "updatedOn": null,
       "currencyCountryViews": [
         {
           "countryCurrencyId": 14,
-          "countryCode": "AL",
-          "countryName": "Albania",
-          "countryId": 13,
-          "currencyId": 21,
-          "currencyCode": "DEZ"
+          "countryCode": "DZ",
+          "countryName": "Algeria",
+          "countryId": 69,
+          "currencyId": 65,
+          "currencyCode": "NOS"
         }
       ]
     },
     {
-      "id": 18,
-      "currencyCode": "DEE",
-      "currencyName": "dollars",
+      "id": 63,
+      "currencyCode": "NOK",
+      "currencyName": "NOK",
       "currencySymbol": "$",
       "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2015-01-02",
+      "createdBy": 1,
+      "createdOn": "2014-11-15",
       "updatedBy": null,
-      "updatedOn": null,
+      "updatedOn": "2014-11-15",
       "currencyCountryViews": [
         {
-          "countryCurrencyId": 13,
-          "countryCode": "AL",
-          "countryName": "Albania",
-          "countryId": 13,
-          "currencyId": 18,
-          "currencyCode": "DEE"
+          "countryCurrencyId": 12,
+          "countryCode": "GB",
+          "countryName": "United Kingdom",
+          "countryId": 84,
+          "currencyId": 63,
+          "currencyCode": "NOK"
         }
       ]
     },
     {
-      "id": 17,
-      "currencyCode": "TEI",
-      "currencyName": "dollars",
-      "currencySymbol": "$",
+      "id": 58,
+      "currencyCode": "EUR",
+      "currencyName": "EURO",
+      "currencySymbol": "€",
       "decimalPrecision": 2,
       "createdBy": null,
-      "createdOn": "2015-01-02",
+      "createdOn": "2014-10-14",
       "updatedBy": null,
-      "updatedOn": null,
-      "currencyCountryViews": []
+      "updatedOn": "2014-10-17",
+      "currencyCountryViews": [
+        {
+          "countryCurrencyId": 11,
+          "countryCode": "GB",
+          "countryName": "United Kingdom",
+          "countryId": 84,
+          "currencyId": 58,
+          "currencyCode": "EUR"
+        }
+      ]
     },
     {
-      "id": 15,
-      "currencyCode": "TEO",
-      "currencyName": "dollars",
-      "currencySymbol": "$",
+      "id": 57,
+      "currencyCode": "GBP",
+      "currencyName": "GreatBritishPound",
+      "currencySymbol": "£",
       "decimalPrecision": 2,
       "createdBy": null,
-      "createdOn": "2015-01-02",
+      "createdOn": "2014-10-14",
       "updatedBy": null,
-      "updatedOn": null,
-      "currencyCountryViews": []
-    },
-    {
-      "id": 13,
-      "currencyCode": "TTS",
-      "currencyName": "Test Currency",
-      "currencySymbol": "&",
-      "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2014-12-30",
-      "updatedBy": null,
-      "updatedOn": null,
+      "updatedOn": "2014-10-17",
       "currencyCountryViews": [
         {
           "countryCurrencyId": 10,
           "countryCode": "GB",
           "countryName": "United Kingdom",
           "countryId": 84,
-          "currencyId": 13,
-          "currencyCode": "TTS"
-        }
-      ]
-    },
-    {
-      "id": 12,
-      "currencyCode": "TST",
-      "currencyName": "TestCurrency",
-      "currencySymbol": "$",
-      "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2014-12-23",
-      "updatedBy": null,
-      "updatedOn": null,
-      "currencyCountryViews": [
-        {
-          "countryCurrencyId": 9,
-          "countryCode": "GB",
-          "countryName": "United Kingdom",
-          "countryId": 84,
-          "currencyId": 12,
-          "currencyCode": "TST"
-        }
-      ]
-    },
-    {
-      "id": 11,
-      "currencyCode": "DKK",
-      "currencyName": "Danish Krone",
-      "currencySymbol": "ø",
-      "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2014-12-12",
-      "updatedBy": null,
-      "updatedOn": "2015-01-09",
-      "currencyCountryViews": [
-        {
-          "countryCurrencyId": 8,
-          "countryCode": "DK",
-          "countryName": "Denmark",
-          "countryId": 66,
-          "currencyId": 11,
-          "currencyCode": "DKK"
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "currencyCode": "NOK",
-      "currencyName": "Norwegian Krone",
-      "currencySymbol": "€",
-      "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2014-11-12",
-      "updatedBy": null,
-      "updatedOn": "2015-01-09",
-      "currencyCountryViews": [
-        {
-          "countryCurrencyId": 16,
-          "countryCode": "NO",
-          "countryName": "Norway",
-          "countryId": 174,
-          "currencyId": 10,
-          "currencyCode": "NOK"
-        },
-        {
-          "countryCurrencyId": 7,
-          "countryCode": "GB",
-          "countryName": "United Kingdom",
-          "countryId": 84,
-          "currencyId": 10,
-          "currencyCode": "NOK"
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "currencyCode": "EUR",
-      "currencyName": "Euro",
-      "currencySymbol": "€",
-      "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2014-10-28",
-      "updatedBy": null,
-      "updatedOn": "2015-01-09",
-      "currencyCountryViews": [
-        {
-          "countryCurrencyId": 6,
-          "countryCode": "GB",
-          "countryName": "United Kingdom",
-          "countryId": 84,
-          "currencyId": 9,
-          "currencyCode": "EUR"
-        }
-      ]
-    },
-    {
-      "id": 8,
-      "currencyCode": "GBP",
-      "currencyName": "British Pound",
-      "currencySymbol": "£",
-      "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2014-10-28",
-      "updatedBy": null,
-      "updatedOn": "2015-01-09",
-      "currencyCountryViews": [
-        {
-          "countryCurrencyId": 4,
-          "countryCode": "GB",
-          "countryName": "United Kingdom",
-          "countryId": 84,
-          "currencyId": 8,
+          "currencyId": 57,
           "currencyCode": "GBP"
         }
       ]
     },
     {
-      "id": 6,
-      "currencyCode": "DOL",
-      "currencyName": "dollars",
+      "id": 56,
+      "currencyCode": "TEb",
+      "currencyName": "dollb",
       "currencySymbol": "$",
       "decimalPrecision": 2,
-      "createdBy": null,
-      "createdOn": "2014-09-17",
+      "createdBy": 2,
+      "createdOn": "2014-09-12",
       "updatedBy": null,
       "updatedOn": null,
       "currencyCountryViews": [
         {
-          "countryCurrencyId": 2,
-          "countryCode": "ZA",
-          "countryName": "South Africa",
-          "countryId": 254,
-          "currencyId": 6,
-          "currencyCode": "DOL"
+          "countryCurrencyId": 9,
+          "countryCode": "UZ",
+          "countryName": "Uzbekistan",
+          "countryId": 242,
+          "currencyId": 56,
+          "currencyCode": "TEb"
         }
       ]
     },
     {
-      "id": 4,
+      "id": 55,
+      "currencyCode": "TEj",
+      "currencyName": "dollj",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-09-12",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": []
+    },
+    {
+      "id": 54,
+      "currencyCode": "TEn",
+      "currencyName": "dolln",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-09-12",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": [
+        {
+          "countryCurrencyId": 7,
+          "countryCode": "UM",
+          "countryName": "United States Minor Outlying Islands",
+          "countryId": 239,
+          "currencyId": 54,
+          "currencyCode": "TEn"
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "currencyCode": "TEl",
+      "currencyName": "dolll",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-09-12",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": [
+        {
+          "countryCurrencyId": 5,
+          "countryCode": "UG",
+          "countryName": "Uganda",
+          "countryId": 238,
+          "currencyId": 53,
+          "currencyCode": "TEl"
+        },
+        {
+          "countryCurrencyId": 6,
+          "countryCode": "UM",
+          "countryName": "United States Minor Outlying Islands",
+          "countryId": 239,
+          "currencyId": 53,
+          "currencyCode": "TEl"
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "currencyCode": "TEq",
+      "currencyName": "dollq",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-09-12",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": []
+    },
+    {
+      "id": 51,
+      "currencyCode": "TEw",
+      "currencyName": "dollw",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-09-12",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": []
+    },
+    {
+      "id": 49,
+      "currencyCode": "TEz",
+      "currencyName": "dollz",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-09-12",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": []
+    },
+    {
+      "id": 46,
+      "currencyCode": "TEy",
+      "currencyName": "dolla",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-09-12",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": []
+    },
+    {
+      "id": 43,
+      "currencyCode": "TEG",
+      "currencyName": "dollars",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-09-11",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": [
+        {
+          "countryCurrencyId": 3,
+          "countryCode": "WS",
+          "countryName": "Samoa",
+          "countryId": 251,
+          "currencyId": 43,
+          "currencyCode": "TEG"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "currencyCode": "TEF",
+      "currencyName": "dollars",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-09-11",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": []
+    },
+    {
+      "id": 37,
       "currencyCode": "TEE",
       "currencyName": "dollars",
       "currencySymbol": "$",
       "decimalPrecision": 2,
       "createdBy": null,
-      "createdOn": "2014-09-17",
+      "createdOn": "2014-09-11",
       "updatedBy": null,
       "updatedOn": null,
       "currencyCountryViews": []
     },
     {
-      "id": 3,
-      "currencyCode": "NEW",
-      "currencyName": "TAX",
+      "id": 35,
+      "currencyCode": "TET",
+      "currencyName": "dollars",
       "currencySymbol": "$",
-      "decimalPrecision": 3,
+      "decimalPrecision": 2,
       "createdBy": null,
-      "createdOn": "2014-09-02",
+      "createdOn": "2014-09-11",
       "updatedBy": null,
       "updatedOn": null,
       "currencyCountryViews": []
     },
     {
-      "id": 2,
-      "currencyCode": "IRS",
-      "currencyName": "TAX",
-      "currencySymbol": "﷼",
-      "decimalPrecision": 3,
+      "id": 34,
+      "currencyCode": "TES",
+      "currencyName": "dollars",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
       "createdBy": null,
-      "createdOn": "2014-08-29",
+      "createdOn": "2014-09-11",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": []
+    },
+    {
+      "id": 18,
+      "currencyCode": "IRM",
+      "currencyName": "Rial",
+      "currencySymbol": "﷼",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-08-20",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": []
+    },
+    {
+      "id": 17,
+      "currencyCode": "AUD",
+      "currencyName": "dollar",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-08-20",
       "updatedBy": null,
       "updatedOn": null,
       "currencyCountryViews": []
@@ -323,24 +353,16 @@
     {
       "id": 1,
       "currencyCode": "USD",
-      "currencyName": "U.S. Dollar",
+      "currencyName": "dollar",
       "currencySymbol": "$",
       "decimalPrecision": 2,
       "createdBy": null,
       "createdOn": "2014-08-19",
       "updatedBy": null,
-      "updatedOn": "2015-01-09",
+      "updatedOn": "2014-10-17",
       "currencyCountryViews": [
         {
-          "countryCurrencyId": 3,
-          "countryCode": "IR",
-          "countryName": "Iran",
-          "countryId": 115,
-          "currencyId": 1,
-          "currencyCode": "USD"
-        },
-        {
-          "countryCurrencyId": 5,
+          "countryCurrencyId": 8,
           "countryCode": "US",
           "countryName": "United States",
           "countryId": 240,
@@ -348,11 +370,23 @@
           "currencyCode": "USD"
         }
       ]
+    },
+    {
+      "id": 0,
+      "currencyCode": "CAD",
+      "currencyName": "dollar",
+      "currencySymbol": "$",
+      "decimalPrecision": 2,
+      "createdBy": null,
+      "createdOn": "2014-08-20",
+      "updatedBy": null,
+      "updatedOn": null,
+      "currencyCountryViews": []
     }
   ],
   "meta": {
-    "count": 18,
-    "limit": 18,
+    "count": 23,
+    "limit": 23,
     "start": 0
   }
 }
