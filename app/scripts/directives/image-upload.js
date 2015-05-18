@@ -72,6 +72,11 @@ angular.module('ts5App')
 
 	                //set the UI flag
 	                $scope.uploadFail = true;
+
+
+                  // TODO: Interpret this failure and tell the user
+                  console.log(data);
+
 	            });
 
 	        // no files found, exit function

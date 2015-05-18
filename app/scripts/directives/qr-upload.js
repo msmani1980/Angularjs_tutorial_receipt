@@ -64,6 +64,9 @@ angular.module('ts5App')
 
                     //set the UI flag
                     $scope.qrUploadFail = true;
+
+                    console.log(data);
+
                 });
 
             // no files found, exit function

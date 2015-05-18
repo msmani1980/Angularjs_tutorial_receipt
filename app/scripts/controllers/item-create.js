@@ -10,7 +10,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory) {
+  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
 
     	// View Name
   		$scope.viewName = 'Create Item';
@@ -18,7 +18,7 @@ angular.module('ts5App')
   		// Form Data to be passed to API
   		$scope.formData = {
         startDate: moment().add(1,'days').format('L'), // set to tomorrow, for your health!
-        endDate: moment().add(1,'days').format('L'),
+        endDate: moment().add(90,'days').format('L'), // 90 days into the future
         qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
@@ -28,10 +28,13 @@ angular.module('ts5App')
         characteristics:[],
         substitutions:[],
         recommendations: [],
-        globalTradeNumbers: []
+        globalTradeNumbers: [],
+        prices: []
       };
 
-      // Setup the first price group
+
+
+    /*  // Setup the first price group
       var priceData = {
         startDate: $scope.formData.startDate,
         endDate: $scope.formData.endDate,
@@ -44,13 +47,36 @@ angular.module('ts5App')
       // Add the price group data to the prices collection in the scope
       $scope.formData.prices = [
         priceData
-      ];
+      ]; */
+
+      function formatDate(dateString, formatFrom, formatTo) {
+        return moment(dateString, formatFrom).format(formatTo).toString();
+      }
 
       // when the form data changes
       $scope.$watch('formData', function(newData, oldData){
 
         // check item dates and make sure all dates fall within the acceptable dates
         checkItemDates(newData,oldData);
+
+      /*  if(newData.startDate !== oldData.startDate) {
+
+          var startDate = formatDate(newData.startDate, 'L',  'YYYYMMDD');
+          var endDate = formatDate(newData.endDate, 'L',  'YYYYMMDD');
+
+          // currency filter
+          var currencyFilters = {
+            startDate: $scope.formData.startDate,
+            endDate: $scope.formData.endDate,
+            isOperatedCurrency: true
+          };
+
+          currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
+            console.log('currencies');
+            console.log(data.response);
+          });
+
+        }*/
 
       }, true);
 
@@ -106,12 +132,13 @@ angular.module('ts5App')
 
           } // end price for loop
 
+
+
         } // end if newData.startDate is different
 
       } // end checkItemDates
 
-
-      // Get a list of items
+      // Get a list of items for substitutions and recommendations
       itemsFactory.getItemsList({}).then(function (data) {
         $scope.items = data.retailItems;
       });
@@ -191,10 +218,17 @@ angular.module('ts5App')
       // Adds a new StationException object
       $scope.addStationException = function(priceIndex) {
 
-        // TODO: Move this to the currency Service
+        var startDate = formatDate($scope.formData.prices[priceIndex].startDate, 'L',  'YYYYMMDD');
+        var endDate = formatDate($scope.formData.prices[priceIndex].endDate, 'L',  'YYYYMMDD');
 
-        // request a list of currencies
-        companyCurrenciesResource.query(function(data){
+        // currency filter
+        var currencyFilters = {
+          startDate: startDate,
+          endDate: endDate,
+          isOperatedCurrency: true
+        };
+
+        currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
 
           // create a currencies collection
           var stationExceptionCurrencies = [];
@@ -238,10 +272,17 @@ angular.module('ts5App')
       // Adds a new Price Group object to the formData
       $scope.addPriceGroup = function() {
 
-        // TODO: Move this to the currency Service
+        var startDate = formatDate($scope.formData.startDate, 'L',  'YYYYMMDD');
+        var endDate = formatDate($scope.formData.endDate, 'L',  'YYYYMMDD');
 
-        // request a list of currencies
-        companyCurrenciesResource.query(function(data){
+        // currency filter
+        var currencyFilters = {
+          startDate: startDate,
+          endDate: endDate,
+          isOperatedCurrency: true
+        };
+
+        currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
 
           // create a currencies collection
           var priceCurrencies = [];
@@ -269,87 +310,20 @@ angular.module('ts5App')
 
         });
 
+
       };
+
+      $scope.addPriceGroup();
 
       // Remove a Price Group object
       $scope.removePriceGroup = function(key) {
         $scope.formData.prices.splice(key,1);
       };
 
-      // TODO: Move currencies logic to service
-      var actions = {
-        query: {
-          method: 'GET',
-          isArray: false,
-        }
-      };
-
-      var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
-
-      // TODO: set isOperatedCurrency bool to company's prefernce
-      var companyCurrenciesResource = $resource(companyCurrenciesURL, {companyId: 2,isOperatedCurrency: true, startDate: $scope.formData.startDate, endDate:  $scope.formData.endDate, },actions);
-
-      // TODO: Move this to the currency Service
-      companyCurrenciesResource.query(function(data){
-
-        for(var key in data.response) {
-
-          var currency = data.response[key];
-
-          $scope.formData.prices[0].priceCurrencies.push({
-            price: '1.00',
-            companyCurrencyId: currency.id,
-          });
-
-        }
-
-      });
-
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
-        console.log(formData);
-
-        // TODO: move these loops to functions
-        // TODO: Need to uppdate these to use Select2 Directive
-
-        // loop through tags in form data
-        for(var tagKey in formData.tags) {
-
-          var tagId = formData.tags[tagKey];
-
-          // set tag as object and set tagId property
-          formData.tags[tagKey] = {
-            tagId: tagId
-          };
-
-        }
-
-        // loop through allergens in form data
-        for(var allergenKey in formData.allergens) {
-
-          var allergenId = formData.allergens[allergenKey];
-
-          // set tag as object and set allergenId property
-          formData.allergens[allergenKey] = {
-            allergenId: allergenId
-          };
-
-        }
-
-        // loop through characteristics in form data
-        for(var characteristicKey in formData.characteristics) {
-
-          var characteristicId = formData.characteristics[characteristicKey];
-
-          // set tag as object and set characteristicId property
-          formData.characteristics[characteristicKey] = {
-            characteristicId: characteristicId
-          };
-
-        }
-
-      	// If the local form is not valid
+        // If the local form is not valid
       	if(!$scope.form.$valid) {
 
       		// set display error flag to true (used in template)
@@ -359,19 +333,96 @@ angular.module('ts5App')
 
   			}
 
+        // TODO: Add waiting modal
+
+        // copy the form data to the newItem
+        var newItem = angular.copy(formData);
+
+        // TODO: move these loops to functions
+        // TODO: Need to uppdate these to use Select2 Directive
+
+        // loop through tags in form data
+        for(var tagKey in newItem.tags) {
+
+          var tagId = newItem.tags[tagKey];
+
+          // set tag as object and set tagId property
+          newItem.tags[tagKey] = {
+            tagId: tagId
+          };
+
+        }
+
+        // loop through allergens in form data
+        for(var allergenKey in newItem.allergens) {
+
+          var allergenId = newItem.allergens[allergenKey];
+
+          // set tag as object and set allergenId property
+          newItem.allergens[allergenKey] = {
+            allergenId: allergenId
+          };
+
+        }
+
+        // loop through characteristics in form data
+        for(var characteristicKey in newItem.characteristics) {
+
+          var characteristicId = newItem.characteristics[characteristicKey];
+
+          // set tag as object and set characteristicId property
+          newItem.characteristics[characteristicKey] = {
+            characteristicId: characteristicId
+          };
+
+        }
+
+        // format stary and end date
+        newItem.startDate = formatDate(newItem.startDate, 'L',  'YYYYMMDD');
+        newItem.endDate = formatDate(newItem.endDate, 'L',  'YYYYMMDD');
+
+        // Loop through prices
+        for(var priceIndex in newItem.prices) {
+
+          var price = newItem.prices[priceIndex];
+
+          // format start and end dates
+          newItem.prices[priceIndex].startDate = formatDate(price.startDate, 'L',  'YYYYMMDD');
+          newItem.prices[priceIndex].endDate = formatDate(price.endDate, 'L',  'YYYYMMDD');
+
+          // loop through station exceptions
+          for(var stationIndex in newItem.prices[priceIndex].stationExceptions) {
+
+            var station = newItem.prices[stationIndex];
+
+            // format start and end dates
+            newItem.prices[stationIndex].startDate = formatDate(station.startDate, 'L',  'YYYYMMDD');
+            newItem.prices[stationIndex].endDate = formatDate(station.endDate, 'L',  'YYYYMMDD');
+
+          }
+
+        }
+
         // create a new item
-      	var newItem = {
-      		retailItem: formData
+      	var newItemPayload = {
+      		retailItem: newItem
       	};
 
       	// Create newItem in API
-      	itemsFactory.createItem(newItem).then(function(response) {
+      	itemsFactory.createItem(newItemPayload).then(function(response) {
+
+          console.log(response);
+
+          // show the success
           angular.element('#create-success').modal('show');
 
         // API error
         }, function(error){
+
+          // set flags for error UI to display
         	$scope.displayError = true;
 		  	  $scope.formErrors = error.data;
+
         });
 
       };
