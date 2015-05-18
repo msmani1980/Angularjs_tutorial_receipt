@@ -1,5 +1,4 @@
-<!-- PriceTypeDirective -->
-
+<!-- StationExceptionDirective -->
 <div class="panel panel-default">
 
   <div class="panel-heading">
@@ -37,7 +36,7 @@
 							<label>Station</label>
 
 							<select required ng-disabled="!(!!stationException.startDate) || !(!!stationException.endDate)" ng-model="stationException.stationId" class="form-control">
-								<option ng-repeat="station in stations" value="{{ station.id }}">{{ station.name }}</option>
+								<option ng-repeat="station in stations" value="{{ station.stationId }}">{{ station.stationCode }}</option>
 							</select>
 
 						</div>
@@ -68,7 +67,7 @@
 
 				<p>Currencies List</p>
 
-				<div class="form-group" ng-repeat="(currencyKey,currency) in stationException.priceCurrencies track by $index">
+				<div class="form-group" ng-repeat="(currencyKey,currency) in stationException.stationExceptionCurrencies track by $index">
 
 					<div class="input-group">
 
@@ -89,4 +88,4 @@
 	</div>
 
 </div>
-<!-- /PriceTypeDirective -->
+<!-- /StationExceptionDirective -->

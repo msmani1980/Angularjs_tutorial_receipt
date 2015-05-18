@@ -117,10 +117,6 @@ angular.module('ts5App')
         $scope.taxTypes = data.response;
       });
 
-      // get stations
-      companiesFactory.getStationsList(function(data) {
-        $scope.stations = data.response;
-      });
 
       // Adds a new Tax Type object
       $scope.addTaxType = function() {
@@ -142,9 +138,47 @@ angular.module('ts5App')
         $scope.formData.globalTradeNumbers.splice(key,1);
       };
 
+      // TODO: Make AJAX calls on start date and end date change
       // Adds a new StationException object
       $scope.addStationException = function(priceIndex) {
-        $scope.formData.prices[priceIndex].stationExceptions.push({});
+
+        // TODO: Move this to the currency Service
+
+        // request a list of currencies
+        companyCurrenciesResource.query(function(data){
+
+          // create a currencies collection
+          var stationExceptionCurrencies = [];
+
+          // loop through the response
+          for(var key in data.response) {
+
+            var currency = data.response[key];
+
+            // push a new currency object into the currencies collection
+            stationExceptionCurrencies.push({
+              price: '1.00',
+              companyCurrencyId: currency.id
+            });
+
+          }
+
+          // create a new station exception object and add to scope
+          $scope.formData.prices[priceIndex].stationExceptions.push({
+            startDate: $scope.formData.startDate,
+            endDate: $scope.formData.endDate,
+            stationExceptionCurrencies: stationExceptionCurrencies
+          });
+
+        });
+
+
+        // TODO: Add date filter to get Stations list
+        // get stations
+        companiesFactory.getStationsList(function(data) {
+          $scope.stations = data.response;
+        });
+
       };
 
       // Remove a GTStationExceptionIN object
