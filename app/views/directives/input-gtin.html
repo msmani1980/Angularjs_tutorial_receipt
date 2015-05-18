@@ -7,14 +7,14 @@
     <div class="col-xs-6 col-sm-6">
 
       <label>Value</label>
-      <input ng-model="GTIN.value" type="text" class="form-control" />
+      <input required pattern="regexp.number" ng-model="GTIN.value" type="text" class="form-control" />
 
     </div>
 
     <div class="col-xs-4 col-sm-5">
 
       <label>Type</label>
-      <select ng-model="GTIN.type" class="form-control">
+      <select required ng-model="GTIN.type" class="form-control">
         <option value="UPC">UPC</option>
         <option value="Barcode">Barcode</option>
         <option value="EAN">EAN</option>
