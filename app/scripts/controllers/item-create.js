@@ -294,8 +294,10 @@ angular.module('ts5App')
 
         var elm = angular.element('#'+id);
         var body = angular.element('body');
+        var navBar = angular.element('.navbar-header').height();
+        var topBar = angular.element('.top-header').height();
 
-        body.animate({scrollTop: elm.offset().top - 400}, 'slow');
+        body.animate({scrollTop: elm.offset().top - (navBar + topBar + 100)}, 'slow');
 
         return activeBtn;
 

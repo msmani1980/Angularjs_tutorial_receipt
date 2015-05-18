@@ -40,7 +40,7 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav navbar-left nav-left">
-      <li><span class='fa fa-th'></span></li>
+      <li ><span ng-click="leaveView()" class='fa fa-th'></span></li>
       <li></li>
     </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -61,6 +61,8 @@
 <div class="container-fluid">
   <div class="main-container" ng-view=""></div>
 </div>
+
+<leave-view-modal></leave-view-modal>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 <script>
@@ -150,6 +152,7 @@
 <script src="scripts/directives/form-success-modal.js"></script>
 <script src="scripts/directives/input-gtin.js"></script>
 <script src="scripts/directives/input-tax-type.js"></script>
+<script src="scripts/directives/leave-view-modal.js"></script>
 <!-- endbuild -->
 </body>
 </html>

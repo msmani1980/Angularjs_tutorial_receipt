@@ -1,6 +1,10 @@
-.navbar{
+
+.navbar-fixed-top{
 	box-shadow: -10px -10px 10px 10px #767676;
-	z-index: 11;
+}
+
+.navbar{
+	z-index: 1001;
 	border:0px;
 }
 
@@ -9,11 +13,12 @@
 }
 
 .nav-left{
-
+	
 	padding-top:8px;
 
 		span{
 			font-size:30px;
+			margin-top: 3px;
 		}
 
 		li{
@@ -21,3 +26,37 @@
 			font-size:24px;
 		}
 }
+/*
+#left-navigation{
+
+	.navbar{
+		position:fixed;
+		left:0px;
+		top:50px;
+		bottom:0px;
+		width:56px;
+		height:100%;
+		z-index:1000;
+		border-top: 3px solid #28A4DD;  
+		border-radius: 0px;
+		box-shadow:none;
+
+		ul{
+			width:56px;
+
+		}
+
+		li{
+			width:56px;
+			height:56px;
+			list-style:none;
+		}
+
+		i{
+
+		}
+
+	}
+}
+
+*/
