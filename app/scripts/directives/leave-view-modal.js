@@ -12,12 +12,16 @@ angular.module('ts5App')
     var leaveViewController= function ($scope, $location) {
 
       // Show leave view modal
-      $scope.leaveView = function() {
+      $scope.leaveView = function(str) {
 
         var e = angular.element('#leave-view-modal');
 
+        var leavePath = str;
+
+        $scope.leavePath = leavePath;
+
         //if the modal is hidden, and the location is not dashboard
-        if (e.modal('hide') && $location.path() === '/item-create'){
+        if (e.modal('hide') && $location.path() === '/item-create' && $location.path() !== '/'+leavePath){
 
           e.modal('show');
 
@@ -27,16 +31,20 @@ angular.module('ts5App')
     
         }
 
+        return leavePath;
+
       };
 
       $scope.leaveViewClose = function() {
 
         var e = angular.element('#leave-view-modal');
 
+        var leavePath = $scope.leavePath;
+
         e.modal('hide');
 
         e.on('hidden.bs.modal', function () {
-          $location.path('/');
+          $location.path('/' + leavePath);
           $scope.$apply();
         });
 

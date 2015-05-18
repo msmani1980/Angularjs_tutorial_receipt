@@ -26,7 +26,7 @@
 			font-size:24px;
 		}
 }
-/*
+
 #left-navigation{
 
 	.navbar{
@@ -37,9 +37,15 @@
 		width:56px;
 		height:100%;
 		z-index:1000;
+		padding:0px;
 		border-top: 3px solid #28A4DD;  
 		border-radius: 0px;
 		box-shadow:none;
+		background:#555B5C;
+		
+		@media(max-width:$screen-sm-min){
+			top:86px;
+		}
 
 		ul{
 			width:56px;
@@ -50,13 +56,78 @@
 			width:56px;
 			height:56px;
 			list-style:none;
+			left:0px;
+			margin-top: 10px;
+			margin-bottom: 20px;
+			text-align: center;
+		}
+
+		
+		li:hover > .left-nav-option{
+			opacity:1;
+		
+		}
+
+		.left-nav-option{
+			width:100%;
+			min-width:175px;
+			max-width:225px;
+			height:50px;
+			background:#444;
+			border:1px solid #bce4f0;
+			opacity:0;
+			position: relative;
+  			top: -50px;	
+  			border-radius:5px;
+  			left:0px;
+  			text-align:left;
+  			overflow:hidden;
+  			-webkit-transition: all .2s ease-in-out;
+			-moz-transition: all .2s ease-in-out;
+			-ms-transition: all .2s ease-in-out;
+			-o-transition: all .2s ease-in-out;
+			transition: all .2s ease-in-out;
+
+				i{
+					color: #bce4f0;
+					vertical-align: middle;
+					display:inline-block;
+  					height: 50px;
+				}
+
+				p{
+					color: #bce4f0;
+					font-weight:100;
+					font-size:16px;
+					display:inline-block;
+					vertical-align:middle;
+				}
+
+		}
+
+		.left-nav-option.lg{
+
+			width:225px;
+			
+		}
+
+		.active{
+
+			i{
+				color:#2aa1db;
+			}
+
 		}
 
 		i{
-
+		  font-size: 42px;
+		  color: #BBB;
+		  margin: 3px 6px;
+		  padding:0px;
+		  opacity:1;
 		}
 
 	}
-}
 
-*/
+
+}

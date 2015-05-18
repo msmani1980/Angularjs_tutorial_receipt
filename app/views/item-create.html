@@ -17,7 +17,7 @@
 					<div class="col-xs-6 text-right">
 
 						<button class="btn btn-default" ng-click="leaveView()">
-							<span class="fa fa-remove" aria-hidden="true"></span>
+							<span classz="fa fa-remove" aria-hidden="true"></span>
 							<span class="hidden-xs">Cancel</span>
 						</button>
 
@@ -327,3 +327,35 @@
 <form-success-modal></form-success-modal>
 
 <leave-view-modal></leave-view-modal>
+
+<div id="left-navigation">
+	<div class="container">
+		<ul class="navbar">
+
+			<li ng-click="leaveView('item-list')" ng-class="{'active':locationPath == '/item-list}">
+				<i class="icon-manage-retail-item"></i>
+				<div class="left-nav-option">
+					<i class="icon-manage-retail-item"></i>
+					<p>Manage Items</p>
+				</div>
+			</li>	
+
+			<li ng-click="leaveView('item-create')" ng-class="{'active':locationPath == '/item-create'}">
+				<i class="icon-create-retail-item"></i>
+				<div class="left-nav-option">
+					<i class="icon-create-retail-item"></i>
+					<p>Create Item</p>
+				</div>
+			</li>
+
+			<li ng-click="leaveView('retail-items/categories')" ng-class="{'active':locationPath == '/retail-items/categories}">
+				<i class="icon-manage-retail-category"></i>
+				<div class="left-nav-option lg">
+					<i class="icon-manage-retail-category"></i>
+					<p>Manage Categories</p>
+				</div>
+			</li>
+
+		</ul>
+	</div>
+</div>

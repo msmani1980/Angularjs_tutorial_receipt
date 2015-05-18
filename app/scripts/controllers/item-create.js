@@ -16,6 +16,8 @@ angular.module('ts5App')
     	// View Name
   		$scope.viewName = 'Create Item';
 
+      $scope.locationPath = $location.path();
+
   		// Form Data to be passed to API
   		$scope.formData = {
         startDate: '20150615',
