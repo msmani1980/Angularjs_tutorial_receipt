@@ -32,23 +32,6 @@ angular.module('ts5App')
         prices: []
       };
 
-
-
-    /*  // Setup the first price group
-      var priceData = {
-        startDate: $scope.formData.startDate,
-        endDate: $scope.formData.endDate,
-        typeId: '1',
-        priceCurrencies: [],
-        taxIs: 'Included',
-        stationExceptions:[]
-      };
-
-      // Add the price group data to the prices collection in the scope
-      $scope.formData.prices = [
-        priceData
-      ]; */
-
       function formatDate(dateString, formatFrom, formatTo) {
         return moment(dateString, formatFrom).format(formatTo).toString();
       }
@@ -58,25 +41,6 @@ angular.module('ts5App')
 
         // check item dates and make sure all dates fall within the acceptable dates
         checkItemDates(newData,oldData);
-
-      /*  if(newData.startDate !== oldData.startDate) {
-
-          var startDate = formatDate(newData.startDate, 'L',  'YYYYMMDD');
-          var endDate = formatDate(newData.endDate, 'L',  'YYYYMMDD');
-
-          // currency filter
-          var currencyFilters = {
-            startDate: $scope.formData.startDate,
-            endDate: $scope.formData.endDate,
-            isOperatedCurrency: true
-          };
-
-          currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
-            console.log('currencies');
-            console.log(data.response);
-          });
-
-        }*/
 
       }, true);
 
@@ -131,8 +95,6 @@ angular.module('ts5App')
             }
 
           } // end price for loop
-
-
 
         } // end if newData.startDate is different
 
@@ -218,8 +180,33 @@ angular.module('ts5App')
       // Adds a new StationException object
       $scope.addStationException = function(priceIndex) {
 
-        var startDate = formatDate($scope.formData.prices[priceIndex].startDate, 'L',  'YYYYMMDD');
-        var endDate = formatDate($scope.formData.prices[priceIndex].endDate, 'L',  'YYYYMMDD');
+        // create a new station exception object and add to scope
+        $scope.formData.prices[priceIndex].stationExceptions.push({
+          startDate: $scope.formData.startDate,
+          endDate: $scope.formData.endDate,
+          stationExceptionCurrencies: []
+        });
+
+        // set to up
+        updateStationException(priceIndex,0);
+
+      };
+
+      function updateStationException(priceIndex,stationExceptionIndex) {
+
+        var startDate = formatDate($scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex].startDate, 'L',  'YYYYMMDD');
+        var endDate = formatDate($scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex].endDate, 'L',  'YYYYMMDD');
+
+        // stations filter
+        var stationsFilter = {
+          startDate: startDate,
+          endDate: endDate
+        };
+
+        // get stations
+        companiesFactory.getStationsList(stationsFilter).then(function(data) {
+          $scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex].stations = data.response;
+        });
 
         // currency filter
         var currencyFilters = {
@@ -247,22 +234,11 @@ angular.module('ts5App')
           }
 
           // create a new station exception object and add to scope
-          $scope.formData.prices[priceIndex].stationExceptions.push({
-            startDate: $scope.formData.startDate,
-            endDate: $scope.formData.endDate,
-            stationExceptionCurrencies: stationExceptionCurrencies
-          });
+          $scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex].stationExceptionCurrencies = stationExceptionCurrencies;
 
         });
 
-
-        // TODO: Add date filter to get Stations list
-        // get stations
-        companiesFactory.getStationsList(function(data) {
-          $scope.stations = data.response;
-        });
-
-      };
+      }
 
       // Remove a GTStationExceptionIN object
       $scope.removeStationException = function(priceIndex,key) {
