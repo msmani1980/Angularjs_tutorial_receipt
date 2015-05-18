@@ -1,8 +1,7 @@
 // TODO: Write tests for this controller
-// TODO: Make all dates relate to each other
 
 'use strict';
-
+/*global moment*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -18,8 +17,8 @@ angular.module('ts5App')
 
   		// Form Data to be passed to API
   		$scope.formData = {
-        startDate: '20150615',
-        endDate: '20150715',
+        startDate: moment().add('days',1).format('L'), // set to tomorrow, for your health!
+        endDate: moment().add('days',1).format('L'),
         qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
@@ -48,19 +47,69 @@ angular.module('ts5App')
       ];
 
       // when the form data changes
-      $scope.$watch('formData', function(newData, oldVal){
+      $scope.$watch('formData', function(newData, oldData){
 
-        // if the start date has changed
-        if(newData.startDate !== oldVal.startDate) {
-
-          // loop through all the price groups and set the startDate
-          for(var key in $scope.formData.prices) {
-            $scope.formData.prices[key].startDate = newData.startDate;
-          }
-
-        }
+        // check item dates and make sure all dates fall within the acceptable dates
+        checkItemDates(newData,oldData);
 
       }, true);
+
+      // check date ranges on items, price groups and station exceptions
+      function checkItemDates(newData,oldData) {
+
+        // if the start date has changed
+        if(newData.startDate !== oldData.startDate || newData.endDate !== oldData.endDate) {
+
+          // loop through all the price groups
+          for(var priceIndex in $scope.formData.prices) {
+
+            var price = $scope.formData.prices[priceIndex];
+
+            // if new item end date is before price start date
+            if( moment(newData.endDate).isBefore(price.startDate) ) {
+
+              // set price start date as new item end date
+              $scope.formData.prices[priceIndex].startDate = newData.endDate;
+
+            }
+
+            // if new item start date is after price start date
+            if( moment(newData.startDate).isAfter(price.startDate) ) {
+
+              // set price start date as new item start date
+              $scope.formData.prices[priceIndex].startDate = newData.startDate;
+
+            }
+
+            // loop through all the station exceptions
+            for(var stationIndex in $scope.formData.prices[priceIndex].stationExceptions) {
+
+              var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationIndex];
+
+              // if new item end date is before station exception start date
+              if( moment(newData.endDate).isBefore(stationException.startDate) ) {
+
+                // set station exception start date as new item end date
+                $scope.formData.prices[priceIndex].stationExceptions[stationIndex].startDate = newData.endDate;
+
+              }
+
+              // if new item start date is after station exception start date
+              if( moment(newData.startDate).isAfter(stationException.startDate) ) {
+
+                // set station exception start date as new item start date
+                $scope.formData.prices[priceIndex].stationExceptions[stationIndex].startDate = newData.startDate;
+
+              }
+
+            }
+
+          } // end price for loop
+
+        } // end if newData.startDate is different
+
+      } // end checkItemDates
+
 
       // Get a list of items
       itemsFactory.getItemsList({}).then(function (data) {
