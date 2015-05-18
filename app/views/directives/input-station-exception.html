@@ -1,0 +1,92 @@
+<!-- PriceTypeDirective -->
+
+<div class="panel panel-default">
+
+  <div class="panel-heading">
+    <p class="panel-title">
+			<i class="fa fa-tags"></i> Station Exception {{ $parent.key+1 }}
+
+      <span class="pull-right btn btn-danger btn-xs" ng-click="removeStationException($parent.$parent.key,$parent.key)">
+        <i class="fa fa-close"></i>
+      </span>
+
+		</p>
+  </div>
+
+  <div class="panel-body">
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-8">
+
+        <date-picker class="form-group"
+          element-class="col-xs-6 col-sm-6"
+					start-date-model="stationException.startDate"
+					end-date-model="stationException.endDate"
+					disable-past="true"
+					label-from="Effective From"
+					label-to="Effective To">
+				</date-picker>
+
+				<div class="row">
+
+					<div class="col-xs-12 col-sm-6">
+
+						<div class="form-group">
+
+							<label>Station</label>
+
+							<select required ng-disabled="!(!!stationException.startDate) || !(!!stationException.endDate)" ng-model="stationException.stationId" class="form-control">
+								<option ng-repeat="station in stations" value="{{ station.id }}">{{ station.name }}</option>
+							</select>
+
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6">
+
+						<div class="form-group">
+
+							<label>Tax Is</label>
+
+							<select required ng-disabled="!(!!stationException.startDate) || !(!!stationException.endDate)" ng-model="stationException.taxIs" class="form-control">
+								<option value="Included">Included</option>
+								<option value="Excluded">Excluded</option>
+								<option value="Exempt">Exempt</option>
+							</select>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="col-xs-12 col-sm-4">
+
+				<p>Currencies List</p>
+
+				<div class="form-group" ng-repeat="(currencyKey,currency) in stationException.priceCurrencies track by $index">
+
+					<div class="input-group">
+
+						<div class="input-group-addon">
+							{{currency.code}}
+						</div>
+
+						<input ng-disabled="!(!!stationException.startDate) || !(!!stationException.endDate)" ng-model="currency.price" type="text" class="form-control"/>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+<!-- /PriceTypeDirective -->

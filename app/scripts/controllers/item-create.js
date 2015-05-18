@@ -38,7 +38,8 @@ angular.module('ts5App')
         endDate: $scope.formData.endDate,
         typeId: '1',
         priceCurrencies: [],
-        taxIs: 'Included'
+        taxIs: 'Included',
+        stationExceptions:[]
       };
 
       // Add the price group data to the prices collection in the scope
@@ -141,6 +142,16 @@ angular.module('ts5App')
         $scope.formData.globalTradeNumbers.splice(key,1);
       };
 
+      // Adds a new StationException object
+      $scope.addStationException = function(priceIndex) {
+        $scope.formData.prices[priceIndex].stationExceptions.push({});
+      };
+
+      // Remove a GTStationExceptionIN object
+      $scope.removeStationException = function(priceIndex,key) {
+        $scope.formData.prices[priceIndex].stationExceptions.splice(key,1);
+      };
+
       // Adds a new Price Group object to the formData
       $scope.addPriceGroup = function() {
 
@@ -169,7 +180,8 @@ angular.module('ts5App')
           $scope.formData.prices.push({
             startDate: $scope.formData.startDate,
             endDate: $scope.formData.endDate,
-            priceCurrencies:priceCurrencies
+            priceCurrencies:priceCurrencies,
+            stationExceptions:[]
           });
 
         });
@@ -203,7 +215,7 @@ angular.module('ts5App')
 
           $scope.formData.prices[0].priceCurrencies.push({
             price: '1.00',
-            companyCurrencyId: currency.id
+            companyCurrencyId: currency.id,
           });
 
         }

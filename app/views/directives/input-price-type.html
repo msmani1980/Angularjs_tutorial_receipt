@@ -86,6 +86,20 @@
 
 		</div>
 
+    <p>
+      <button type="button" class="btn btn-primary" ng-click="addStationException($parent.key)">
+         <i class="fa fa-plus"></i> Add Station Exception
+      </button>
+    </p>
+
+    <div id="station-exception-container">
+
+      <div ng-repeat="(key,stationException) in itemPrice.stationExceptions track by $index">
+        <input-station-exception> </input-station-exception>
+      </div>
+
+    </div>
+
 	</div>
 
 </div>
