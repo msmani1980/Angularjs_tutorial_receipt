@@ -1,198 +1,203 @@
-<div class="container-fluid">
+<div class="container module-container">
 
-<div class="list-controls">
+	<div class="list-controls">
 
-	<div class="row">
+		<div class="row">
 
-		<div class="col-xs-6">
 
-			<h2 class="view-name">Retail Items</h2>
+			<div class="col-xs-6">
 
-		</div>
-
-		<div class="col-xs-6 text-right">
-
-			<a href="#/item-create" class="btn btn-primary"> + Create Retail Item</a>
-
-			<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
-				<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-				<span class="hidden-xs">Search</span>
-			</button>
-
-			<!--
-			<div class="btn-group" role="group" aria-label="...">
-
-			  <button type="button" class="btn btn-default">
-			  	<span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
-			  </button>
-
-			  <button type="button" class="btn btn-default">
-			  	<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-			  </button>
-
-			</div>
-			-->
-
-		</div>
-
-	</div>
-
-	<div class="collapse" id="search-collapse">
-
-		<form class="form">
-
-			<div class="row">
-
-				<div class="col-xs-12 col-sm-6 col-md-4">
-
-					<div class="form-group">
-						<label for="item-code">Item Code</label>
-						<input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="Item012">
-					</div>
-
-				</div>
-
-				<div class="col-xs-12 col-sm-6 col-md-4">
-
-					<div class="form-group">
-						<label for="item-name">Item Name</label>
-						<input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="Turkey">
-					</div>
-
-				</div>
-
-				<div class="col-xs-12 col-sm-6 col-md-4">
-
-					<div class="form-group">
-						<label for="item-type">Item Type</label>
-						<select ng-model="search.itemType" class="form-control" id="item-type">
-							<option ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>
-						</select>
-					</div>
-
-				</div>
-
-				<div class="col-xs-12 col-sm-6 col-md-4">
-
-					<div class="form-group">
-						<label for="item-onboard-name">Onboard Name</label>
-						<input ng-model="search.onBoardName" type="text" class="form-control" id="item-onboard-name" placeholder="Turkey Delight">
-					</div>
-
-				</div>
-
-				<div class="col-xs-12 col-sm-6 col-md-4">
-
-					<div class="form-group">
-						<label for="item-sales-category">Sales Category</label>
-						<select ng-model="search.categoryName" class="form-control" id="item-sales-category">
-							<option ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name }}</option>
-						</select>
-					</div>
-
-				</div>
-
-				<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
-					start-date-model="search.startDate"
-					end-date-model="search.endDate"
-					disable-past="true"
-					label-from="Effective From"
-					label-to="Effective To">
-				</date-picker>
+				<h2 class="view-name">Retail Items</h2>
 
 			</div>
 
-			<button type="submit" class="btn btn">Search</button>
+			<div class="col-xs-6 text-right">
 
-		</form>
+				<a href="#/item-create" class="btn btn-primary"> + Create Retail Item</a>
 
-	</div>
+				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					<span class="hidden-xs">Search</span>
+				</button>
 
-</div>
+				<!--
+				<div class="btn-group" role="group" aria-label="...">
 
-<div class="table table-bordered table-responsive table-hover">
+				  <button type="button" class="btn btn-default">
+				  	<span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+				  </button>
 
-	<table class="table table-bordered">
+				  <button type="button" class="btn btn-default">
+				  	<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+				  </button>
 
-		<thead>
-
-			<tr>
-				<!--<th>
-					<abbr title="Stock Owner">S.O.</abbr>
-				</th>
-				<th>
-					<abbr title="Stock Owner Reference Number">Ref. #</abbr>
-				</th>-->
-				<th>Code</th>
-				<th>Name</th>
-				<th>Type</th>
-				<th>Onboard Name</th>
-				<th>Sales Category</th>
-				<th>Effective From</th>
-				<th>Effective To</th>
-				<th></th>
-			</tr>
-
-		</thead>
-
-		<tbody>
-
-			<tr ng-repeat="item in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName, startDate: search.startDate, endDate:search.endDate }">
-
-				<!--<th scope="row">
-					TODO: What goes here?
-				</th>
-				<td>{{ item.stockOwnerCode }}</td>
+				</div>
 				-->
-				<td>{{ item.itemCode }}</td>
-				<td>{{ item.itemName }}</td>
-				<td>{{ item.itemTypeName }}</td>
-				<td>{{ item.onBoardName }}</td>
-				<td>{{ item.categoryName }}</td>
-				<td>{{ item.startDate | date: 'MM/dd/yyyy' }}</td>
-				<td>{{ item.endDate | date: 'MM/dd/yyyy' }}</td>
-				<td>
-					<button class="btn btn-sm">
-						<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-					</button>
-				</td>
 
-			</tr>
-
-		</tbody>
-
-	</table>
-
-</div>
-
-<div class="list-footer">
-
-	<div class="row">
-
-		<div class="col-xs-12 col-sm-6">
-
-			Show
-
-			<select class="form-control" ng-model="itemsPerPage">
-				<option>10</option>
-				<option>25</option>
-				<option>50</option>
-				<option>100</option>
-			</select>
-
-			Items per Page
+			</div>
 
 		</div>
 
-		<div class="col-xs-12 col-sm-6 text-right">
+		<div class="collapse" id="search-collapse">
 
-			<pagination total-items="totalItems" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+			<form class="form">
+
+				<div class="row">
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="item-code">Item Code</label>
+							<input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="Item012">
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="item-name">Item Name</label>
+							<input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="Turkey">
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="item-type">Item Type</label>
+							<select ng-model="search.itemType" class="form-control" id="item-type">
+								<option ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>
+							</select>
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="item-onboard-name">Onboard Name</label>
+							<input ng-model="search.onBoardName" type="text" class="form-control" id="item-onboard-name" placeholder="Turkey Delight">
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="item-sales-category">Sales Category</label>
+							<select ng-model="search.categoryName" class="form-control" id="item-sales-category">
+								<option ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name }}</option>
+							</select>
+						</div>
+
+					</div>
+
+					<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
+						start-date-model="search.startDate"
+						end-date-model="search.endDate"
+						disable-past="true"
+						label-from="Effective From"
+						label-to="Effective To">
+					</date-picker>
+
+				</div>
+
+				<button type="submit" class="btn btn">Search</button>
+
+			</form>
 
 		</div>
 
+	</div>
+
+	<div class="table table-bordered table-responsive table-hover">
+
+		<table class="table table-bordered">
+
+			<thead>
+
+				<tr>
+					<th>
+						<abbr title="Stock Owner">S.O.</abbr>
+					</th>
+					<th>
+						<abbr title="Stock Owner Reference Number">Ref. #</abbr>
+					</th>
+					<th>Code</th>
+					<th>Name</th>
+					<th>Type</th>
+					<th>Onboard Name</th>
+					<th>Sales Category</th>
+					<th>Effective From</th>
+					<th>Effective To</th>
+					<th></th>
+				</tr>
+
+			</thead>
+
+			<tbody>
+
+				<tr ng-repeat="item in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName, startDate: search.startDate, endDate:search.endDate }">
+
+					<td>Stock Owner</td>
+					<td>{{ item.stockOwnerCode }}</td>
+					<td>{{ item.itemCode }}</td>
+					<td>{{ item.itemName }}</td>
+					<td>{{ item.itemTypeName }}</td>
+					<td>{{ item.onBoardName }}</td>
+					<td>{{ item.categoryName }}</td>
+					<td>{{ item.startDate | date: 'MM/dd/yyyy' }}</td>
+					<td>{{ item.endDate | date: 'MM/dd/yyyy' }}</td>
+					<td>
+						<button disabled class="btn btn-xs">
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+						</button>
+
+						<button disabled class="btn btn-xs">
+							<i class="fa fa-trash" aria-hidden="true"></i>
+						</button>
+					</td>
+
+				</tr>
+
+			</tbody>
+
+		</table>
+
+	</div>
+
+
+	<div class="list-footer">
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-6">
+
+				Show
+
+				<select class="form-control" ng-model="itemsPerPage">
+					<option>10</option>
+					<option>25</option>
+					<option>50</option>
+					<option>100</option>
+				</select>
+
+				Items per Page
+
+			</div>
+
+			<div class="col-xs-12 col-sm-6 text-right">
+
+				<pagination total-items="totalItems" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+
+			</div>
+
+
+		</div>
 
 	</div>
 
 </div>
 
-</div>
+<left-navigation></left-navigation>
