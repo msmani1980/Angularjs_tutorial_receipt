@@ -1,5 +1,5 @@
 'use strict';
-
+/* global moment */
 /**
  * @ngdoc directive
  * @name ts5App.directive:imageUpload
@@ -9,6 +9,11 @@
 
 angular.module('ts5App')
   .directive('imageUpload', function () {
+
+    // TODO: Move to global function
+  function formatDate(dateString, formatFrom, formatTo) {
+    return moment(dateString, formatFrom).format(formatTo).toString();
+  }
 
 	var imageUploadController = function ($scope, Upload, ENV, $http) {
 
@@ -60,8 +65,8 @@ angular.module('ts5App')
 	                // new image object
 	                var newImage = {
 	                    imageURL: data.url,
-	                    startDate: $scope.formData.startDate,
-	                    endDate: $scope.formData.endDate 
+	                    startDate:  formatDate($scope.formData.startDate, 'L',  'YYYYMMDD'),
+	                    endDate: formatDate($scope.formData.endDate, 'L',  'YYYYMMDD')
 	                };
 
 	                // pass new image object into formData.images array
