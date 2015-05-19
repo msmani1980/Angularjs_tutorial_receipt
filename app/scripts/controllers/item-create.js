@@ -15,8 +15,6 @@ angular.module('ts5App')
     	// View Name
   		$scope.viewName = 'Create Item';
 
-      $scope.locationPath = $location.path();
-
   		// Form Data to be passed to API
   		$scope.formData = {
         startDate: moment().add(1,'days').format('L'), // set to tomorrow, for your health!
