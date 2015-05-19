@@ -18,7 +18,7 @@ angular.module('ts5App')
         menuItems: [
           {
             name: 'Manage Items',
-            route: emberURL + 'retail-items',
+            route: '/#/item-list',
             icon: 'icon-manage-retail-item',
             className: 'dashboard-managemenuItems'
           },

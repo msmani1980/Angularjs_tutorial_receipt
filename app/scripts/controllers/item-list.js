@@ -39,7 +39,7 @@ angular.module('ts5App')
       };
 
       // display loading modal
-      angular.element('#loading').modal('show').find('p').text('Getting a list of items for you');
+      //angular.element('#loading').modal('show').find('p').text('Getting a list of items for you');
 
       $scope.currentPage = 1;
       $scope.itemsPerPage = 10;
