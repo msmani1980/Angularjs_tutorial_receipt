@@ -1,27 +1,56 @@
 <h1 class="ng-scope">{{viewName}}</h1>
 <form name="dailyExchangeRatesForm" ng-submit="saveDailyExchangeRates()">
+  <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+    </button>
+    <h4>
+      We weren't able to edit your menu!
+    </h4>
+
+    <ul>
+      <li ng-repeat="error in form.$error.required">
+        <strong>{{ error.$name }}</strong> is required
+      </li>
+      <li ng-repeat="error in form.$error.pattern">
+        <strong>{{ error.$name }}</strong> is invalid
+      </li>
+      <li ng-show="formErrors" ng-repeat="error in formErrors">
+        <strong>{{error.field}}</strong>
+        <span> {{ error.value }}</span>
+        <span> {{ error.code }}</span>
+      </li>
+    </ul>
+  </div>
   <div class="panel panel-default">
 
     <div class="panel-heading">
-      <div class="form-horizontal">
-        <div class="form-group">
-          <h3 class="col-sm-4">{{currentCompany.companyName}}</h3>
-          <label for="cashiersDateField" class="col-sm-4 control-label">Date of cashier's entry date</label>
+      <div class="row">
+        <h3 class="col-xs-6">{{currentCompany.companyName}}Delta Airlines</h3>
 
-          <div class="col-sm-4 text-right">
-            <div class="input-group">
-              <input ng-model="cashiersDateField"
-                     id="cashiersDateField"
-                     placeholder="mm/dd/YYYY"
-                     data-provide="datepicker"
-                     data-date-autoclose="true"
-                     data-date-endDate="+1"
-                     data-date-orientation="top auto"
-                     class="form-control">
-              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-            </div>
-          </div>
-        </div>
+        <date-picker
+          class="col-xs-6 text-right"
+          disable-date-range="true"
+          element-class="col-xs-10 pull-right"
+          start-date-model="cashiersDateField"
+          is-search-field="true"
+          label-from="Date of cashier's entry date">
+        </date-picker>
+
+        <!--<label for="cashiersDateField" class="col-sm-4 control-label">Date of cashier's entry date</label>-->
+
+        <!--<div class="col-sm-4 text-right">-->
+        <!--<div class="input-group">-->
+        <!--<input ng-model="cashiersDateField"-->
+        <!--id="cashiersDateField"-->
+        <!--placeholder="mm/dd/YYYY"-->
+        <!--data-provide="datepicker"-->
+        <!--data-date-autoclose="true"-->
+        <!--data-date-endDate="+1"-->
+        <!--data-date-orientation="top auto"-->
+        <!--class="form-control">-->
+        <!--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>-->
+        <!--</div>-->
+        <!--</div>-->
 
       </div>
     </div>
