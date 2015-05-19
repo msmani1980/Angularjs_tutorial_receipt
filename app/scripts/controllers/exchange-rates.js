@@ -40,7 +40,15 @@ angular.module('ts5App')
       }
     }
 
-    function setExchangeRatesModel() {
+    function setPreviousExchangeRatesModel() {
+      if ($scope.dailyExchangeRates && $scope.previousExchangeRates) {
+        if(!$scope.dailyExchangeRates.dailyExchangeRateCurrencies && $scope.previousExchangeRates.dailyExchangeRateCurrencies){
+          $scope.dailyExchangeRates.dailyExchangeRateCurrencies = $scope.previousExchangeRates.dailyExchangeRateCurrencies;
+        }
+      }
+    }
+
+    function setCurrentExchangeRatesModel() {
       if ($scope.companyCurrencies && $scope.dailyExchangeRates && angular.isArray($scope.dailyExchangeRates.dailyExchangeRateCurrencies)) {
         angular.forEach($scope.companyCurrencies, function (companyCurrency) {
           var exchangeRate = getExchangeRateFromCompanyCurrencies($scope.dailyExchangeRates.dailyExchangeRateCurrencies, companyCurrency.id);
@@ -65,15 +73,21 @@ angular.module('ts5App')
       currencyFactory.getCompanyCurrencies(companyCurrenciesPayload).then(function (companyCurrency) {
         $scope.companyCurrencies = companyCurrency.response;
       });
+
+      currencyFactory.getPreviousExchangeRates(formattedDateForAPI).then(function (previousExchangeRates) {
+        $scope.previousExchangeRates = previousExchangeRates || {};
+      });
+
       currencyFactory.getDailyExchangeRates(formattedDateForAPI).then(function (dailyExchangeRates) {
-        $scope.dailyExchangeRates = dailyExchangeRates || {};
+        $scope.dailyExchangeRates = dailyExchangeRates.dailyExchangeRates[0] || {};
       });
     });
 
     $scope.$watchGroup(['companyBaseCurrency', 'dailyExchangeRates', 'companyCurrencies'], function () {
       $scope.currenciesFields = {};
       setBaseExchangeRateModel();
-      setExchangeRatesModel();
+      setCurrentExchangeRatesModel();
+      setPreviousExchangeRatesModel();
       hideShowActionButtons();
     });
 
@@ -109,7 +123,7 @@ angular.module('ts5App')
 
     function createPayload(shouldSubmit) {
       $scope.payload = {
-        dailyExchangeRate: angular.extend($scope.dailyExchangeRates.toJSON(),
+        dailyExchangeRate: angular.extend($scope.dailyExchangeRates,
           {
             isSubmitted: shouldSubmit || false,
             exchangeRateDate: formatDateForAPI($scope.cashiersDateField)

@@ -26,25 +26,12 @@ angular.module('ts5App')
       return deferred.promise;
     };
 
-    var getDailyExchangeRatesFromAPI = function (cashierDate) {
-      return dailyExchangeRatesService.getDailyExchangeRates(cashierDate);
-    };
-
-    var getPreviousExchangeRates = function () {
-      return dailyExchangeRatesService.getPreviousExchangeRates();
+    var getPreviousExchangeRates = function (cashierDate) {
+      return dailyExchangeRatesService.getPreviousExchangeRates(cashierDate);
     };
 
     var getDailyExchangeRates = function (cashierDate) {
-      var deferred = $q.defer();
-
-      getDailyExchangeRatesFromAPI(cashierDate).then(function (dailyExchangeRates) {
-        if (dailyExchangeRates && dailyExchangeRates.length > 0) {
-          deferred.resolve(dailyExchangeRates);
-        } else {
-          deferred.resolve(getPreviousExchangeRates());
-        }
-      });
-      return deferred.promise;
+      return dailyExchangeRatesService.getDailyExchangeRates(cashierDate);
     };
 
     return {
