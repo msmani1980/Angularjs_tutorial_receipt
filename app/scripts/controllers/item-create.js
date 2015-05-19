@@ -89,6 +89,7 @@ angular.module('ts5App')
         $scope.taxTypes = data.response;
       });
 
+      // TODO: Move to global function
       function formatDate(dateString, formatFrom, formatTo) {
         return moment(dateString, formatFrom).format(formatTo).toString();
       }
