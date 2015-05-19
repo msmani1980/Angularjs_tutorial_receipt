@@ -33,9 +33,9 @@ describe('Controller: ExchangeRatesCtrl', function () {
 
       $httpBackend.expectGET(/companies/).respond(companyJSON);
       $httpBackend.expectGET(/company-currency-globals/).respond(companyCurrencyGlobalsJSON);
+      $httpBackend.expectGET(/previous-exchange-rate/).respond(dailyExchangeRatesJSON);
       $httpBackend.expectGET(/daily-exchange-rates/).respond(dailyExchangeRatesJSON);
       $httpBackend.expectGET(/currencies/).respond(currenciesJSON);
-      $httpBackend.expectGET(/previous-exchange-rate/).respond(dailyExchangeRatesJSON);
 
       scope = $rootScope.$new();
       ExchangeRatesCtrl = $controller('ExchangeRatesCtrl', {
@@ -58,7 +58,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
   });
 
   it('should fetch the daily exchange rate array from API', function () {
-    expect(scope.dailyExchangeRates.dailyExchangeRates.length).toBeGreaterThan(0);
+    expect(scope.dailyExchangeRates.dailyExchangeRateCurrencies.length).toBeGreaterThan(0);
   });
 
 

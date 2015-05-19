@@ -238,7 +238,7 @@ angular.module('ts5App')
       	};
 
       	// Create newItem in API
-      	itemsFactory.createItem(newItem).then(function(response) {
+      	itemsFactory.createItem(newItem).then(function() {
           angular.element('#create-success').modal('show');
 
         // API error
