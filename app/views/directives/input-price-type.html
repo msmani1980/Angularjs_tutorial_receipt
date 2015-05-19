@@ -86,21 +86,25 @@
 
 		</div>
 
-    <h3>Station Exceptions</h3>
+    <div ng-show="itemPrice.startDate && itemPrice.endDate" class="station-exceptions">
 
-    <p>
-      <button type="button" class="btn btn-primary" ng-click="addStationException($parent.key)">
-         <i class="fa fa-plus"></i> Add Station Exception
-      </button>
-    </p>
+      <h3>Station Exceptions</h3>
 
-    <div id="station-exception-container">
+      <p>
+        <button type="button" class="btn btn-primary" ng-click="addStationException($parent.key)">
+           <i class="fa fa-plus"></i> Add Station Exception
+        </button>
+      </p>
 
-      <div ng-repeat="(key,stationException) in itemPrice.stationExceptions track by $index">
-        <input-station-exception> </input-station-exception>
+      <div id="station-exception-container">
+
+        <div ng-repeat="(key,stationException) in itemPrice.stationExceptions track by $index">
+          <input-station-exception> </input-station-exception>
+        </div>
+
       </div>
 
-    </div>
+  </div>
 
 	</div>
 
