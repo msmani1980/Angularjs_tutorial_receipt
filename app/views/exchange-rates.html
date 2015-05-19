@@ -65,8 +65,7 @@
         </div>
       </div>
     </div>
-    <!-- ng-if="showActionButtons && !dailyExchangeRates.isSubmitted" -->
-    <div class="panel-footer text-right" ng-if="showActionButtons">
+    <div class="panel-footer text-right" ng-show="showActionButtons">
       <input class="btn btn-default" type="submit" value="Save"/>
       <input class="btn btn-primary" type="button" value="Submit" ng-click="saveDailyExchangeRates(true)"/>
     </div>

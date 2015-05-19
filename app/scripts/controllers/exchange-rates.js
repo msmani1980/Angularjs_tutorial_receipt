@@ -41,14 +41,12 @@ angular.module('ts5App')
     }
 
     function setPreviousExchangeRatesModel() {
-      if ($scope.dailyExchangeRates && $scope.previousExchangeRates) {
-        if (!$scope.dailyExchangeRates.dailyExchangeRateCurrencies && $scope.previousExchangeRates.dailyExchangeRateCurrencies) {
-          $scope.dailyExchangeRates = angular.extend($scope.previousExchangeRates,
-           {
-           isSubmitted: false,
-           exchangeRateDate: formatDateForAPI($scope.cashiersDateField)
-           });
-        }
+      if (!$scope.dailyExchangeRates.dailyExchangeRateCurrencies) {
+        $scope.dailyExchangeRates = angular.extend($scope.previousExchangeRates,
+          {
+            isSubmitted: false,
+            exchangeRateDate: formatDateForAPI($scope.cashiersDateField)
+          });
       }
     }
 
@@ -63,8 +61,17 @@ angular.module('ts5App')
       }
     }
 
-    function hideShowActionButtons() {
-      $scope.showActionButtons = moment($scope.cashiersDateField, 'L').format('L') === moment().format('L') && $scope.dailyExchangeRates.isSubmitted;
+    function shouldShowActionButtons() {
+      var isToday = moment($scope.cashiersDateField, 'L').format('L') === moment().format('L');
+      if (!isToday) {
+        return false;
+      }
+
+      if (isToday && $scope.dailyExchangeRates.isSubmitted) {
+        return false;
+      }
+
+      return true;
     }
 
     function setupModels() {
@@ -72,7 +79,7 @@ angular.module('ts5App')
       setBaseExchangeRateModel();
       setPreviousExchangeRatesModel();
       setCurrentExchangeRatesModel();
-      hideShowActionButtons();
+      $scope.showActionButtons = shouldShowActionButtons();
     }
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
@@ -137,7 +144,7 @@ angular.module('ts5App')
 
     $scope.saveDailyExchangeRates = function (shouldSubmit) {
       createPayload(shouldSubmit);
-      currencyFactory.saveDailyExchangeRates($scope.payload).then(function(dailyExchangeRatesData){
+      currencyFactory.saveDailyExchangeRates($scope.payload).then(function (dailyExchangeRatesData) {
         $scope.dailyExchangeRates = dailyExchangeRatesData || {};
         setupModels();
       });
