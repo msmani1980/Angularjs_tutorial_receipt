@@ -27,7 +27,7 @@ angular.module('ts5App')
 
       // TODO: Finish this watch
       $scope.$watch('search', function() {
-        console.log('search changed');
+      //  console.log('search changed');
       });
 
       // TODO: Set a watch on this
@@ -35,8 +35,6 @@ angular.module('ts5App')
 
         $scope.startDateFilter = formatDate($scope.search.startDate,'L', 'YYYYMMDD');
         $scope.endDateFilter = formatDate($scope.search.endDate,'L', 'YYYYMMDD');
-
-        console.log($scope);
 
       };
 

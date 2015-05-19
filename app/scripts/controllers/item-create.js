@@ -497,8 +497,6 @@ angular.module('ts5App')
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
-        console.log($scope.form);
-
         // If the local form is not valid
       	if(!$scope.form.$valid) {
 
@@ -531,12 +529,10 @@ angular.module('ts5App')
       	};
 
       	// Create newItem in API
-      	itemsFactory.createItem(newItemPayload).then(function(response) {
+      	itemsFactory.createItem(newItemPayload).then(function() {
 
           // hide loading modal
           angular.element('#loading').modal('hide');
-
-          console.log(response);
 
           // show the success
           angular.element('#create-success').modal('show');

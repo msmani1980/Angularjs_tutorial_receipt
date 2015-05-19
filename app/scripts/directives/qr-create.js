@@ -97,12 +97,12 @@ angular.module('ts5App')
                     $scope.formData.qrCodeImgUrl = data.url;
 
                 // on a failed upload
-                }).error(function (data) {
+                }).error(function () {
                     //set the UI flag
                     $scope.qrCreateUploadFail = true;
 
                     // TODO: Interpret this failure and tell the user
-                    console.log(data);
+                    //console.log(data);
 
                 });
 
