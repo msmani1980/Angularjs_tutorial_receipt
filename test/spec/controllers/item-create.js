@@ -15,4 +15,5 @@ describe('Controller: ItemCreateCtrl', function () {
       $scope: scope
     });
   }));
+  
 });

@@ -19,8 +19,8 @@ angular.module('ts5App')
 
   		// Form Data to be passed to API
   		$scope.formData = {
-        startDate: moment().add(1,'days').format('L'), // set to tomorrow, for your health!
-        endDate: moment().add(90,'days').format('L'), // 90 days into the future
+        startDate: '', //moment().add(1,'days').format('L'), // set to tomorrow, for your health!
+        endDate: '',// moment().add(90,'days').format('L'), // 90 days into the future
         qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
@@ -105,6 +105,17 @@ angular.module('ts5App')
 
 
       }, true);
+
+      // when the form to become valide
+      $scope.$watch('form.$valid', function(validity) {
+
+        // when it does hide the displayError ui component
+        if(validity) {
+          $scope.displayError = false;
+        }
+
+      });
+
 
       // when a price date is change for a price groupd or station, need to update currencies
       function refreshPriceGroups(newData,oldData) {
@@ -487,6 +498,8 @@ angular.module('ts5App')
 
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
+
+        console.log($scope.form);
 
         // If the local form is not valid
       	if(!$scope.form.$valid) {

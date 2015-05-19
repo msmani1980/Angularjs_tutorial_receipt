@@ -85,7 +85,6 @@
 				</div>
 
 				<date-picker class="form-group"
-					ng-class="{ 'has-error' : form[startDate].$dirty && !form[startDate].$valid || displayError && !form[startDate].$valid , 'has-success' : form[startDate].$dirty && form[startDate].$valid }"
 					element-class="col-xs-6 col-sm-6"
 					start-date-model="formData.startDate"
 					end-date-model="formData.endDate"
@@ -94,15 +93,15 @@
 					label-to="Effective To">
 				</date-picker>
 
-				<div class="form-group" ng-class="{ 'has-error' : form[categoryId].$dirty && !form[categoryId].$valid || displayError && !form[categoryId].$valid , 'has-success' : form[categoryId].$dirty && form[categoryId].$valid }" >
-					<label>Sales Category</label>
+				<div class="form-group">
+					<label>Sales Category *</label>
 					<select name="categoryId" required ng-model="formData.categoryId" class="form-control">
 							<option ng-repeat="category in salesCategories" value="{{ category.id }}">{{ category.name }}</option>
 					</select>
 				</div>
 
-				<div class="form-group" ng-class="{ 'has-error' : form[itemTypeId].$dirty && !form[itemTypeId].$valid || displayError && !form[itemTypeId].$valid , 'has-success' : form[itemTypeId].$dirty && form[itemTypeId].$valid }">
-					<label>Item Type</label>
+				<div class="form-group">
+					<label>Item Type *</label>
 					<select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control">
 						<option ng-repeat="type in itemTypes" value="{{ type.id }}">{{ type.name }}</option>
 					</select>
