@@ -182,16 +182,20 @@ angular.module('ts5App')
 
         // create a new station exception object and add to scope
         $scope.formData.prices[priceIndex].stationExceptions.push({
-          startDate: $scope.formData.startDate,
-          endDate: $scope.formData.endDate,
+          startDate: $scope.formData.prices[priceIndex].startDate,
+          endDate: $scope.formData.prices[priceIndex].endDate,
           stationExceptionCurrencies: []
         });
 
+        // get stationExceptionIndex
+        var stationExceptionIndex = $scope.formData.prices[priceIndex].stationExceptions.length - 1;
+
         // set to up
-        updateStationException(priceIndex,0);
+        updateStationException(priceIndex,stationExceptionIndex);
 
       };
 
+      // Updates the station exception with stations list and currencies list
       function updateStationException(priceIndex,stationExceptionIndex) {
 
         var startDate = formatDate($scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex].startDate, 'L',  'YYYYMMDD');
@@ -248,8 +252,27 @@ angular.module('ts5App')
       // Adds a new Price Group object to the formData
       $scope.addPriceGroup = function() {
 
-        var startDate = formatDate($scope.formData.startDate, 'L',  'YYYYMMDD');
-        var endDate = formatDate($scope.formData.endDate, 'L',  'YYYYMMDD');
+        // push a new object into the prices collection
+        $scope.formData.prices.push({
+          startDate: $scope.formData.startDate,
+          endDate: $scope.formData.endDate,
+          priceCurrencies:[],
+          stationExceptions:[]
+        });
+
+        // get stationExceptionIndex
+        var priceIndex = $scope.formData.prices.length - 1;
+
+        // set to up
+        updatePriceGroup(priceIndex);
+
+      };
+
+      // pulls a list of currencies from the API and updates the price group
+      function updatePriceGroup(priceIndex) {
+
+        var startDate = formatDate($scope.formData.prices[priceIndex].startDate, 'L',  'YYYYMMDD');
+        var endDate = formatDate($scope.formData.prices[priceIndex].endDate, 'L',  'YYYYMMDD');
 
         // currency filter
         var currencyFilters = {
@@ -276,18 +299,12 @@ angular.module('ts5App')
 
           }
 
-          // push a new object into the prices collection
-          $scope.formData.prices.push({
-            startDate: $scope.formData.startDate,
-            endDate: $scope.formData.endDate,
-            priceCurrencies:priceCurrencies,
-            stationExceptions:[]
-          });
+          // create a new station exception object and add to scope
+          $scope.formData.prices[priceIndex].priceCurrencies = priceCurrencies;
 
         });
 
-
-      };
+      }
 
       $scope.addPriceGroup();
 
