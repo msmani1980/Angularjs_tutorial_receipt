@@ -1,6 +1,6 @@
-
 .navbar-fixed-top{
 	box-shadow: -10px -10px 10px 10px #767676;
+	min-height:56px;
 }
 
 .navbar{
@@ -10,6 +10,18 @@
 
 .nav-tabs a:focus, .nav-tabs a.focus, .nav-tabs a:active:focus, .nav-tabs a:active.focus, .nav-tabs.active a:focus, .nav-tabs a.active.focus{
 	outline:none;
+}
+
+a.navbar-brand{
+
+	font-size:20px;
+	outline:none;
+
+		span{
+			font-size:30px;
+			vertical-align: middle;
+			margin-right:10px;
+		}
 }
 
 .nav-left{
@@ -32,7 +44,7 @@
 	.navbar{
 		position:fixed;
 		left:0px;
-		top:50px;
+		top:56px;
 		bottom:0px;
 		width:56px;
 		height:100%;
@@ -42,10 +54,6 @@
 		border-radius: 0px;
 		box-shadow:none;
 		background:#555B5C;
-
-		@media(max-width:$screen-sm-min){
-			top:86px;
-		}
 
 		ul{
 			width:56px;
@@ -129,6 +137,5 @@
 		}
 
 	}
-
 
 }
