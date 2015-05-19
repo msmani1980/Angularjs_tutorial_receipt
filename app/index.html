@@ -32,16 +32,13 @@
               aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
         <span class="fa fa-bars"></span>
+      </button>
       <a class="navbar-brand" ng-href="#/">
         <span class="fa fa-th"></span>
        TS5 Dashboard
       </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
-    <ul class="nav navbar-nav navbar-left nav-left">
-      <li><span class='fa fa-th'></span></li>
-      <li></li>
-    </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
           <menu-dropdown title="Language Picker" ng-model="languageModel" icon="fa fa-cog"></menu-dropdown>
@@ -103,7 +100,7 @@
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/app.js"></script>
-<script src="scripts/config.js" ></script>
+<script src="scripts/config.js"></script>
 <script src="scripts/controllers/main.js"></script>
 <script src="scripts/controllers/about.js"></script>
 <script src="scripts/controllers/companies.js"></script>
