@@ -8,21 +8,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService) {
-    var getCompany = function (companyId) {
-      return {
-        'id': companyId,
-        'companyName': 'Virgin Australia',
-        'legalName': 'Virgin Australia',
-        'baseCurrencyId': 1,
-        'exchangeRateVariance': '10.0000'
-      };
-    };
-
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q) {
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Daily Exchange Rates';
-    $scope.currentCompany = getCompany(companyId);
+    $scope.currentCompany = 'Delta';
     $scope.cashiersDateField = new moment().format('L');
     $scope.currenciesFields = {};
     $scope.showActionButtons = false;
@@ -50,7 +40,15 @@ angular.module('ts5App')
       }
     }
 
-    function setExchangeRatesModel() {
+    function setPreviousExchangeRatesModel() {
+      if ($scope.dailyExchangeRates && $scope.previousExchangeRates) {
+        if (!$scope.dailyExchangeRates.dailyExchangeRateCurrencies && $scope.previousExchangeRates.dailyExchangeRateCurrencies) {
+          $scope.dailyExchangeRates.dailyExchangeRateCurrencies = $scope.previousExchangeRates.dailyExchangeRateCurrencies;
+        }
+      }
+    }
+
+    function setCurrentExchangeRatesModel() {
       if ($scope.companyCurrencies && $scope.dailyExchangeRates && angular.isArray($scope.dailyExchangeRates.dailyExchangeRateCurrencies)) {
         angular.forEach($scope.companyCurrencies, function (companyCurrency) {
           var exchangeRate = getExchangeRateFromCompanyCurrencies($scope.dailyExchangeRates.dailyExchangeRateCurrencies, companyCurrency.id);
@@ -65,6 +63,14 @@ angular.module('ts5App')
       $scope.showActionButtons = moment($scope.cashiersDateField, 'L').format('L') === moment().format('L');
     }
 
+    function setupModels() {
+      $scope.currenciesFields = {};
+      setBaseExchangeRateModel();
+      setPreviousExchangeRatesModel();
+      setCurrentExchangeRatesModel();
+      hideShowActionButtons();
+    }
+
     $scope.$watch('cashiersDateField', function (cashiersDate) {
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       var companyCurrenciesPayload = {
@@ -72,19 +78,16 @@ angular.module('ts5App')
         endDate: formattedDateForAPI,
         isOperatedCurrency: true
       };
-      currencyFactory.getCompanyCurrencies(companyCurrenciesPayload).then(function (companyCurrency) {
-        $scope.companyCurrencies = companyCurrency.response;
-      });
-      currencyFactory.getDailyExchangeRates(formattedDateForAPI).then(function (dailyExchangeRates) {
-        $scope.dailyExchangeRates = dailyExchangeRates || {};
-      });
-    });
+      var companyCurrencyPromise = currencyFactory.getCompanyCurrencies(companyCurrenciesPayload);
+      var previousRatePromise = currencyFactory.getPreviousExchangeRates(formattedDateForAPI);
+      var currentRatePromise = currencyFactory.getDailyExchangeRates(formattedDateForAPI);
 
-    $scope.$watchGroup(['companyBaseCurrency', 'dailyExchangeRates', 'companyCurrencies'], function () {
-      $scope.currenciesFields = {};
-      setBaseExchangeRateModel();
-      setExchangeRatesModel();
-      hideShowActionButtons();
+      $q.all([companyCurrencyPromise, previousRatePromise, currentRatePromise]).then(function (apiData) {
+        $scope.companyCurrencies = apiData[0].response;
+        $scope.previousExchangeRates = apiData[1] || {};
+        $scope.dailyExchangeRates = apiData[2].dailyExchangeRates[0] || {};
+        setupModels();
+      });
     });
 
     function clearExchangeRateCurrencies() {
@@ -119,7 +122,7 @@ angular.module('ts5App')
 
     function createPayload(shouldSubmit) {
       $scope.payload = {
-        dailyExchangeRate: angular.extend($scope.dailyExchangeRates.toJSON(),
+        dailyExchangeRate: angular.extend($scope.dailyExchangeRates,
           {
             isSubmitted: shouldSubmit || false,
             exchangeRateDate: formatDateForAPI($scope.cashiersDateField)

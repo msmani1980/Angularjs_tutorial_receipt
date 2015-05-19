@@ -68,7 +68,7 @@ angular.module('ts5App')
 	                $scope.formData.images.push(newImage);
 
 	            // on a failed upload
-	            }).error(function (data) {
+	            }).error(function () {
 
 	                //set the UI flag
 	                $scope.uploadFail = true;

@@ -5,113 +5,61 @@ describe('Controller: ExchangeRatesCtrl', function () {
 
   var ExchangeRatesCtrl,
     scope,
-    createController,
-    currencyFactory,
-    getCompanyBaseCurrencyDeferred,
-    getCompanyCurrenciesDeferred,
-    getDailyExchangeRatesDeferred,
-    getPreviousExchangeRatesDeferred;
+    $httpBackend,
+    companyJSON,
+    currenciesJSON,
+    companyCurrencyGlobalsJSON,
+    dailyExchangeRatesJSON;
 
   beforeEach(module('ts5App'));
+  beforeEach(module(
+    'served/company.json',
+    'served/currencies.json',
+    'served/company-currency-globals.json',
+    'served/daily-exchange-rates.json'
+  ));
+
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _currencyFactory_) {
-      getCompanyBaseCurrencyDeferred = $q.defer();
-      getCompanyCurrenciesDeferred = $q.defer();
-      getDailyExchangeRatesDeferred = $q.defer();
-      getPreviousExchangeRatesDeferred = $q.defer();
-      currencyFactory = _currencyFactory_;
-      scope = $rootScope.$new();
+  beforeEach(inject(function ($controller, $rootScope, $injector) {
+      inject(function (_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_) {
+        companyJSON = _servedCompany_;
+        currenciesJSON = _servedCurrencies_;
+        companyCurrencyGlobalsJSON = _servedCompanyCurrencyGlobals_;
+        dailyExchangeRatesJSON = _servedDailyExchangeRates_;
+      });
 
-      createController = function () {
-        spyOn(currencyFactory, 'getCompanyBaseCurrency').and.returnValue(getCompanyBaseCurrencyDeferred.promise);
-        spyOn(currencyFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeferred.promise);
-        spyOn(currencyFactory, 'getDailyExchangeRates').and.returnValue(getDailyExchangeRatesDeferred.promise);
-        spyOn(currencyFactory, 'getPreviousExchangeRates').and.returnValue(getPreviousExchangeRatesDeferred.promise);
-        ExchangeRatesCtrl = $controller('ExchangeRatesCtrl', {
-          $scope: scope
-        });
-      };
+      $httpBackend = $injector.get('$httpBackend');
+
+      $httpBackend.expectGET(/companies/).respond(companyJSON);
+      $httpBackend.expectGET(/company-currency-globals/).respond(companyCurrencyGlobalsJSON);
+      $httpBackend.expectGET(/previous-exchange-rate/).respond(dailyExchangeRatesJSON);
+      $httpBackend.expectGET(/daily-exchange-rates/).respond(dailyExchangeRatesJSON);
+      $httpBackend.expectGET(/currencies/).respond(currenciesJSON);
+
+      scope = $rootScope.$new();
+      ExchangeRatesCtrl = $controller('ExchangeRatesCtrl', {
+        $scope: scope
+      });
+      $httpBackend.flush();
     })
   );
-
   it('should have a viewName property', function () {
-    ExchangeRatesCtrl = createController();
     expect(scope.viewName).toBeDefined();
   });
 
   it('should get the companyBaseCurrency from currencyFactory', function () {
-    ExchangeRatesCtrl = createController();
-    expect(currencyFactory.getCompanyBaseCurrency).toHaveBeenCalled();
-    getCompanyBaseCurrencyDeferred.resolve({currencyCode: 'USD'});
-    currencyFactory.getCompanyBaseCurrency().then(function (baseCurrency) {
-      expect(baseCurrency.currencyCode).toBe('USD');
-    });
-    scope.$digest();
+
+    expect(scope.companyBaseCurrency.currencyCode).toBe('EUR');
   });
 
-  it('should get the companyBaseCurrency from currencyFactory', function () {
-    ExchangeRatesCtrl = createController();
-    expect(currencyFactory.getCompanyCurrencies).toHaveBeenCalled();
+  it('should fetch the companyCurrencies array from API', function () {
+    expect(scope.companyCurrencies.length).toBeGreaterThan(0);
   });
 
-  it('should get the DailyExchangeRates from currencyFactory', function () {
-    ExchangeRatesCtrl = createController();
-    getCompanyCurrenciesDeferred.resolve({
-      companyCurrencies: [{
-        id: 208,
-        currencyId: 1,
-        companyId: 374,
-        currencyCode: 'USD'
-      }]
-    });
-    getCompanyCurrenciesDeferred.resolve({
-      dailyExchangeRates: [{
-        chBaseCurrencyId: 8,
-        chCompanyId: 374,
-        dailyExchangeRateCurrencies: [{
-          id: 127,
-          dailyExchangeRateId: 51,
-          retailCompanyCurrencyId: 208,
-          bankExchangeRate: null
-        }],
-        exchangeRateDate: '2015-04-21',
-        id: 51,
-        isSubmitted: false,
-        retailBaseCurrencyId: 1,
-        retailCompanyId: 374
-      }]
-    });
-    scope.$digest();
-    expect(currencyFactory.getDailyExchangeRates).toHaveBeenCalled();
+  it('should fetch the daily exchange rate array from API', function () {
+    expect(scope.dailyExchangeRates.dailyExchangeRateCurrencies.length).toBeGreaterThan(0);
   });
 
 
-  describe('Save daily exchange rates', function () {
-    it('should generate the payload with is submitted false', function () {
-      ExchangeRatesCtrl = createController();
-      scope.$apply();
-      scope.saveDailyExchangeRates();
-      expect(scope.payload.dailyExchangeRate.isSubmitted).toBe(false);
-    });
-
-    it('should create the payload with the expected currencies', function () {
-      ExchangeRatesCtrl = createController();
-      scope.$apply();
-
-      scope.companyCurrencies = [{
-        currencyCode: 'GBP',
-        currencyId: 8,
-        id: 203
-      }];
-      scope.currenciesFields = {
-        GBP: {
-          coinExchangeRate: '1.0000',
-          paperExchangeRate: '1.0000'
-        }
-      };
-      scope.saveDailyExchangeRates();
-      expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.length).toBe(1);
-    });
-  });
 });

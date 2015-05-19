@@ -1,0 +1,46 @@
+{
+  "id": 2,
+  "companyName": "Delta",
+  "companyCode": "DEL",
+  "companyTypeId": 1,
+  "parentCompanyId": null,
+  "isActive": true,
+  "legalName": "Delta",
+  "ediName": "Delta",
+  "dbaName": "Delta",
+  "roundingOptionId": 1,
+  "createdBy": null,
+  "createdOn": "2014-06-25 20:36:33.697621",
+  "updatedBy": 1,
+  "updatedOn": "2015-03-11 11:40:10.480242",
+  "baseCurrencyId": 58,
+  "exchangeRateVariance": "2.0000",
+  "taxes": [],
+  "languages": [],
+  "eposLanguages": [],
+  "companyCabinClasses": [
+    {
+      "id": 19,
+      "companyId": 2,
+      "cabinClass": "BuissinessClass",
+      "code": "c19",
+      "cabinClassDescription": "some new Discription",
+      "createdBy": 1,
+      "createdOn": "2014-09-01 04:59:11.017457",
+      "updatedBy": null,
+      "updatedOn": "2015-04-07 13:43:14.28253"
+    },
+    {
+      "id": 25,
+      "companyId": 2,
+      "cabinClass": "First BuissinessClass",
+      "code": "c25",
+      "cabinClassDescription": "some new Discription",
+      "createdBy": 1,
+      "createdOn": "2014-09-03 17:02:17.778253",
+      "updatedBy": null,
+      "updatedOn": "2015-04-07 13:43:14.28253"
+    }
+  ],
+  "countryVats": []
+}
