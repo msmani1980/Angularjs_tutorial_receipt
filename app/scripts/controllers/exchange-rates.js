@@ -43,7 +43,11 @@ angular.module('ts5App')
     function setPreviousExchangeRatesModel() {
       if ($scope.dailyExchangeRates && $scope.previousExchangeRates) {
         if (!$scope.dailyExchangeRates.dailyExchangeRateCurrencies && $scope.previousExchangeRates.dailyExchangeRateCurrencies) {
-          $scope.dailyExchangeRates.dailyExchangeRateCurrencies = $scope.previousExchangeRates.dailyExchangeRateCurrencies;
+          $scope.dailyExchangeRates = angular.extend($scope.previousExchangeRates,
+           {
+           isSubmitted: false,
+           exchangeRateDate: formatDateForAPI($scope.cashiersDateField)
+           });
         }
       }
     }
@@ -60,7 +64,7 @@ angular.module('ts5App')
     }
 
     function hideShowActionButtons() {
-      $scope.showActionButtons = moment($scope.cashiersDateField, 'L').format('L') === moment().format('L');
+      $scope.showActionButtons = moment($scope.cashiersDateField, 'L').format('L') === moment().format('L') && $scope.dailyExchangeRates.isSubmitted;
     }
 
     function setupModels() {
@@ -79,8 +83,8 @@ angular.module('ts5App')
         isOperatedCurrency: true
       };
       var companyCurrencyPromise = currencyFactory.getCompanyCurrencies(companyCurrenciesPayload);
-      var previousRatePromise = currencyFactory.getPreviousExchangeRates(formattedDateForAPI);
-      var currentRatePromise = currencyFactory.getDailyExchangeRates(formattedDateForAPI);
+      var previousRatePromise = currencyFactory.getPreviousExchangeRates(companyId, formattedDateForAPI);
+      var currentRatePromise = currencyFactory.getDailyExchangeRates(companyId, formattedDateForAPI);
 
       $q.all([companyCurrencyPromise, previousRatePromise, currentRatePromise]).then(function (apiData) {
         $scope.companyCurrencies = apiData[0].response;
@@ -133,7 +137,10 @@ angular.module('ts5App')
 
     $scope.saveDailyExchangeRates = function (shouldSubmit) {
       createPayload(shouldSubmit);
-      currencyFactory.saveDailyExchangeRates($scope.payload);
+      currencyFactory.saveDailyExchangeRates($scope.payload).then(function(dailyExchangeRatesData){
+        $scope.dailyExchangeRates = dailyExchangeRatesData || {};
+        setupModels();
+      });
     };
 
     currencyFactory.getCompanyBaseCurrency(companyId).then(function (companyBaseCurrency) {

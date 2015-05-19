@@ -16,18 +16,26 @@ angular.module('ts5App')
       exchangeRateId: '@dailyExchangeRate.id'
     };
 
-    var previousExchangeRatesParameters = {
-    };
+    var previousExchangeRatesParameters = {};
 
     var actions = {
       getExchangeRates: {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+          companyId: 362
+        }
       },
       createExchangeRate: {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          companyId: 362
+        }
       },
       updateExchangeRate: {
-        method: 'PUT'
+        method: 'PUT',
+        headers: {
+          companyId: 362
+        }
       }
     };
 
@@ -35,25 +43,28 @@ angular.module('ts5App')
     var dailyExchangeRatesResource = $resource(dailyExchangeRatesURL, dailyExchangeRatesParameters, actions);
 
     var saveDailyExchangeRates = function (payload) {
-      var deferred = $q.defer();
       var method = 'create';
       if (payload.dailyExchangeRate.id) {
         method = 'update';
       }
-      dailyExchangeRatesResource[method + 'ExchangeRate'](payload).$promise.then(function (data) {
-        deferred.resolve(data);
-      });
-      return deferred.promise;
+      return dailyExchangeRatesResource[method + 'ExchangeRate'](payload).$promise;
     };
 
-    var getDailyExchangeRates = function (cashierDate) {
-      dailyExchangeRatesParameters.startDate = cashierDate;
-      dailyExchangeRatesParameters.endDate = cashierDate;
-      return dailyExchangeRatesResource.getExchangeRates().$promise;
+    var getDailyExchangeRates = function (companyId, cashierDate) {
+      var payload = {
+        retailCompanyId: companyId,
+        startDate: cashierDate,
+        endDate: cashierDate
+      };
+      return dailyExchangeRatesResource.getExchangeRates(payload).$promise;
     };
 
-    var getPreviousExchangeRates = function () {
-      return previousExchangeRatesResource.getExchangeRates().$promise;
+    var getPreviousExchangeRates = function (companyId, cashierDate) {
+      var payload = {
+        retailCompanyId: companyId,
+        exchangeRateDate: cashierDate
+      };
+      return previousExchangeRatesResource.getExchangeRates(payload).$promise;
     };
 
     return {

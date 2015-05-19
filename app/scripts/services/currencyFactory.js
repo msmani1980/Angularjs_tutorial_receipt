@@ -26,12 +26,12 @@ angular.module('ts5App')
       return deferred.promise;
     };
 
-    var getPreviousExchangeRates = function (cashierDate) {
-      return dailyExchangeRatesService.getPreviousExchangeRates(cashierDate);
+    var getPreviousExchangeRates = function (companyId, cashierDate) {
+      return dailyExchangeRatesService.getPreviousExchangeRates(companyId, cashierDate);
     };
 
-    var getDailyExchangeRates = function (cashierDate) {
-      return dailyExchangeRatesService.getDailyExchangeRates(cashierDate);
+    var getDailyExchangeRates = function (companyId, cashierDate) {
+      return dailyExchangeRatesService.getDailyExchangeRates(companyId, cashierDate);
     };
 
     return {
