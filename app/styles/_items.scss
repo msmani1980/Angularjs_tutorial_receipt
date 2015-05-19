@@ -1,18 +1,17 @@
 /* Items */
 
 .panel .pull-right.btn {
-line-height: inherit;
-height: auto;
-font-size: 10px;
-padding: 5px 10px;
+  line-height: inherit;
+  height: auto;
+  font-size: 10px;
+  padding: 5px 10px;
 }
-
 
 /* Edit Controls */
 
 .view-name {
   margin:0;
-  font-size:2em;
+  font-size:26px;
 }
 
 .edit-controls .btn-group {
@@ -88,8 +87,10 @@ padding: 5px 10px;
   position: fixed;
   left:30px;
   right:0px;
-  top: 50px;
+  top: 56px;
   padding-bottom: 1em;
+  padding-right:1em;
+  padding-left:1em;
   z-index: 10;
   background:$form-header-bg-color;
   border-bottom:1px solid lightgray;
@@ -106,7 +107,7 @@ padding: 5px 10px;
 .create-item-form label{
   font-weight:100;
   font-size:16px;
-  }
+}
 
 .create-item-form{
   z-index:1;
@@ -114,18 +115,24 @@ padding: 5px 10px;
   top:18rem;
 }
 
+@media(max-width:$screen-lg-min){
+
+  .top-header{
+
+    .container{
+      max-width:90%;
+    }
+
+  }
+
+}
+
 @media(max-width:$screen-sm-min){
 
   .top-header{
-    top:86px;
     padding-bottom:0;
     padding-left:0;
     padding-right:0;
-
-      .container{
-        width:90%;
-      }
-
   }
 
   .create-item-form{
