@@ -4,15 +4,12 @@
 
 		<div class="modal-content">
 
-			<div class="modal-header">
-				<h4 class="modal-title">Item Created</h4>
-			</div>
-
 			<div class="modal-body">
 				<h2> <span class='fa fa-check-circle-o'></span> Your item was created successfully! </h2>
 			</div>
 
 			<div class="modal-footer">
+				<!-- TODO: Update button routes to be set by attributes pass via the directive -->
 				<button class="btn btn-default" ng-click="createSuccess('/item-list')">Return to List</a>
 				<button class="btn btn-primary" ng-click="createSuccess('/item-create')">Add Another</a>
 			</div>

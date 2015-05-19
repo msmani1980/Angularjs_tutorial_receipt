@@ -5,21 +5,20 @@
 		<div class="modal-content">
 
 			<div class="modal-header">
-				<h4 class="modal-title">You're about to leave this view!</h4>
+				<h3 class="modal-title"><span class='fa fa-warning'></span> You have unsaved changes</h3>
 			</div>
 
 			<div class="modal-body">
-				<h2><span class='fa fa-warning'></span>  Are you sure you want to cancel?</h2>
-				<p>All of the data you have entered, will not be saved.</p>
+				<p>Are you sure you want to leave? If you leave, none of your recent changes will be saved.</p>
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" ng-click="leaveViewClose()">Yes, Cancel.</button>
-				<a type="button" class="btn btn-primary" data-dismiss="modal">No, continue editing.</a>
+				<button type="button" class="btn btn-default" ng-click="leaveViewClose()">Discard Changes</button>
+				<a type="button" class="btn btn-primary" data-dismiss="modal">Continue Editing</a>
 			</div>
 
 		</div>
 
 	</div>
 
-</div> 
+</div>

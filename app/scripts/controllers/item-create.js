@@ -34,6 +34,61 @@ angular.module('ts5App')
         prices: []
       };
 
+      // Get a list of items for substitutions and recommendations
+      itemsFactory.getItemsList({}).then(function (data) {
+        $scope.items = data.retailItems;
+      });
+
+      // Get a list of allergens
+      itemsFactory.getAllergensList(function (data) {
+        $scope.allergens = data;
+      });
+
+      // Get a list of item Types
+      itemsFactory.getItemTypesList(function (data) {
+        $scope.itemTypes = data;
+      });
+
+      // Get a list of Price Types
+      itemsFactory.getPriceTypesList(function (data) {
+        $scope.priceTypes = data;
+      });
+
+      // Get a list of Price Types
+      itemsFactory.getCharacteristicsList(function (data) {
+        $scope.characteristics = data;
+      });
+
+      // get dimension units
+      itemsFactory.getDimensionList(function(data) {
+        $scope.dimensionUnits = data.units;
+      });
+
+      // get weight units
+      itemsFactory.getVolumeList(function(data) {
+        $scope.weightUnits = data.units;
+      });
+
+      // get volume units
+      itemsFactory.getWeightList(function(data) {
+        $scope.volumeUnits = data.units;
+      });
+
+      // get tags
+      companiesFactory.getTagsList(function(data) {
+        $scope.tags = data.response;
+      });
+
+      // get sales categories
+      companiesFactory.getSalesCategoriesList(function(data) {
+        $scope.salesCategories = data.salesCategories;
+      });
+
+       // get tax types
+      companiesFactory.getTaxTypesList(function(data) {
+        $scope.taxTypes = data.response;
+      });
+
       function formatDate(dateString, formatFrom, formatTo) {
         return moment(dateString, formatFrom).format(formatTo).toString();
       }
@@ -158,61 +213,6 @@ angular.module('ts5App')
         } // end if newData.startDate is different
 
       } // end checkItemDates
-
-      // Get a list of items for substitutions and recommendations
-      itemsFactory.getItemsList({}).then(function (data) {
-        $scope.items = data.retailItems;
-      });
-
-      // Get a list of allergens
-      itemsFactory.getAllergensList(function (data) {
-        $scope.allergens = data;
-      });
-
-      // Get a list of item Types
-      itemsFactory.getItemTypesList(function (data) {
-        $scope.itemTypes = data;
-      });
-
-      // Get a list of Price Types
-      itemsFactory.getPriceTypesList(function (data) {
-        $scope.priceTypes = data;
-      });
-
-      // Get a list of Price Types
-      itemsFactory.getCharacteristicsList(function (data) {
-        $scope.characteristics = data;
-      });
-
-      // get dimension units
-      itemsFactory.getDimensionList(function(data) {
-        $scope.dimensionUnits = data.units;
-      });
-
-      // get weight units
-      itemsFactory.getVolumeList(function(data) {
-        $scope.weightUnits = data.units;
-      });
-
-      // get volume units
-      itemsFactory.getWeightList(function(data) {
-        $scope.volumeUnits = data.units;
-      });
-
-      // get tags
-      companiesFactory.getTagsList(function(data) {
-        $scope.tags = data.response;
-      });
-
-      // get sales categories
-      companiesFactory.getSalesCategoriesList(function(data) {
-        $scope.salesCategories = data.salesCategories;
-      });
-
-       // get tax types
-      companiesFactory.getTaxTypesList(function(data) {
-        $scope.taxTypes = data.response;
-      });
 
       // Adds a new Tax Type object
       $scope.addTaxType = function() {
@@ -483,6 +483,7 @@ angular.module('ts5App')
 
       }
 
+
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
@@ -496,7 +497,8 @@ angular.module('ts5App')
 
   			}
 
-        // TODO: Add waiting modal
+        // display loading modal
+        angular.element('#loading').modal('show').find('p').text( 'We are creating your item');
 
         // copy the form data to the newItem
         var newItem = angular.copy(formData);
@@ -519,6 +521,9 @@ angular.module('ts5App')
       	// Create newItem in API
       	itemsFactory.createItem(newItemPayload).then(function(response) {
 
+          // hide loading modal
+          angular.element('#loading').modal('hide');
+
           console.log(response);
 
           // show the success
@@ -526,6 +531,9 @@ angular.module('ts5App')
 
         // API error
         }, function(error){
+
+          // hide loading modal
+          angular.element('#loading').modal('hide');
 
           // set flags for error UI to display
         	$scope.displayError = true;
@@ -535,7 +543,7 @@ angular.module('ts5App')
 
       };
 
-      // TODO MOVE ME GLOBAL
+      // TODO: MOVE ME GLOBAL
   		$scope.formScroll = function(id, activeBtn) {
 
         $scope.activeBtn = id;
