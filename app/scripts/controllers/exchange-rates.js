@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService) {
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q) {
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Daily Exchange Rates';
@@ -42,7 +42,7 @@ angular.module('ts5App')
 
     function setPreviousExchangeRatesModel() {
       if ($scope.dailyExchangeRates && $scope.previousExchangeRates) {
-        if(!$scope.dailyExchangeRates.dailyExchangeRateCurrencies && $scope.previousExchangeRates.dailyExchangeRateCurrencies){
+        if (!$scope.dailyExchangeRates.dailyExchangeRateCurrencies && $scope.previousExchangeRates.dailyExchangeRateCurrencies) {
           $scope.dailyExchangeRates.dailyExchangeRateCurrencies = $scope.previousExchangeRates.dailyExchangeRateCurrencies;
         }
       }
@@ -63,6 +63,14 @@ angular.module('ts5App')
       $scope.showActionButtons = moment($scope.cashiersDateField, 'L').format('L') === moment().format('L');
     }
 
+    function setupModels() {
+      $scope.currenciesFields = {};
+      setBaseExchangeRateModel();
+      setPreviousExchangeRatesModel();
+      setCurrentExchangeRatesModel();
+      hideShowActionButtons();
+    }
+
     $scope.$watch('cashiersDateField', function (cashiersDate) {
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       var companyCurrenciesPayload = {
@@ -70,25 +78,16 @@ angular.module('ts5App')
         endDate: formattedDateForAPI,
         isOperatedCurrency: true
       };
-      currencyFactory.getCompanyCurrencies(companyCurrenciesPayload).then(function (companyCurrency) {
-        $scope.companyCurrencies = companyCurrency.response;
-      });
+      var companyCurrencyPromise = currencyFactory.getCompanyCurrencies(companyCurrenciesPayload);
+      var previousRatePromise = currencyFactory.getPreviousExchangeRates(formattedDateForAPI);
+      var currentRatePromise = currencyFactory.getDailyExchangeRates(formattedDateForAPI);
 
-      currencyFactory.getPreviousExchangeRates(formattedDateForAPI).then(function (previousExchangeRates) {
-        $scope.previousExchangeRates = previousExchangeRates || {};
+      $q.all([companyCurrencyPromise, previousRatePromise, currentRatePromise]).then(function (apiData) {
+        $scope.companyCurrencies = apiData[0].response;
+        $scope.previousExchangeRates = apiData[1] || {};
+        $scope.dailyExchangeRates = apiData[2].dailyExchangeRates[0] || {};
+        setupModels();
       });
-
-      currencyFactory.getDailyExchangeRates(formattedDateForAPI).then(function (dailyExchangeRates) {
-        $scope.dailyExchangeRates = dailyExchangeRates.dailyExchangeRates[0] || {};
-      });
-    });
-
-    $scope.$watchGroup(['companyBaseCurrency', 'dailyExchangeRates', 'companyCurrencies'], function () {
-      $scope.currenciesFields = {};
-      setBaseExchangeRateModel();
-      setCurrentExchangeRatesModel();
-      setPreviousExchangeRatesModel();
-      hideShowActionButtons();
     });
 
     function clearExchangeRateCurrencies() {
