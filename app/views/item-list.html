@@ -1,6 +1,4 @@
-<div class="container">
-
-
+<div class="container-fluid">
 
 <div class="list-controls">
 
@@ -119,12 +117,12 @@
 		<thead>
 
 			<tr>
-				<th>
+				<!--<th>
 					<abbr title="Stock Owner">S.O.</abbr>
 				</th>
 				<th>
 					<abbr title="Stock Owner Reference Number">Ref. #</abbr>
-				</th>
+				</th>-->
 				<th>Code</th>
 				<th>Name</th>
 				<th>Type</th>
@@ -141,10 +139,11 @@
 
 			<tr ng-repeat="item in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName, startDate: search.startDate, endDate:search.endDate }">
 
-				<th scope="row">
-					<!-- TODO: What goes here? -->
+				<!--<th scope="row">
+					TODO: What goes here?
 				</th>
 				<td>{{ item.stockOwnerCode }}</td>
+				-->
 				<td>{{ item.itemCode }}</td>
 				<td>{{ item.itemName }}</td>
 				<td>{{ item.itemTypeName }}</td>
