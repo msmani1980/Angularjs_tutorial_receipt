@@ -15,7 +15,7 @@ angular.module('ts5App')
         $http.defaults.headers.common.type = 'item';
 
         // progress
-        $scope.qrUploadProgress = [];
+        $scope.qrUploadProgress = '0';
 
         // watch for files
         $scope.$watch('files', function (files) {
@@ -60,10 +60,14 @@ angular.module('ts5App')
                     $scope.formData.qrCodeImgUrl = data.url;
 
                 // on a failed upload
-                }).error(function () {
+                }).error(function (data) {
 
                     //set the UI flag
                     $scope.qrUploadFail = true;
+
+                    // TODO: Interpret this failure and tell the user
+                    console.log(data);
+
                 });
 
             // no files found, exit function

@@ -46,21 +46,17 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
-      })
       .when('/item-list', {
         templateUrl: 'views/item-list.html',
         controller: 'ItemListCtrl'
       })
+      .when('/item-create', {
+        templateUrl: 'views/item-create.html',
+        controller: 'ItemCreateCtrl'
+      })
       .when('/companies', {
         templateUrl: 'views/companies.html',
         controller: 'CompaniesCtrl'
-      })
-      .when('/create-item', {
-        templateUrl: 'views/create-item.html',
-        controller: 'CreateItemCtrl'
       })
       .when('/company/:id', {
         templateUrl: 'views/company.html',
@@ -69,10 +65,6 @@ angular
       .when('/exchange-rates', {
         templateUrl: 'views/exchange-rates.html',
         controller: 'ExchangeRatesCtrl'
-      })
-      .when('/item-create', {
-        templateUrl: 'views/item-create.html',
-        controller: 'ItemCreateCtrl'
       })
       .when('/menu-list', {
         templateUrl: 'views/menu-list.html',

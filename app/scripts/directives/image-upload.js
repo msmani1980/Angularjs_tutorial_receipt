@@ -16,7 +16,7 @@ angular.module('ts5App')
 	    $http.defaults.headers.common.type = 'item';
 
 	    // progress
-	    $scope.uploadProgress = [];
+	    $scope.uploadProgress = '0';
 
 	    // watch for files
 	   	$scope.$watch('files', function (files) {
@@ -68,10 +68,15 @@ angular.module('ts5App')
 	                $scope.formData.images.push(newImage);
 
 	            // on a failed upload
-	            }).error(function () {
+            }).error(function (data) {
 
 	                //set the UI flag
 	                $scope.uploadFail = true;
+
+
+                  // TODO: Interpret this failure and tell the user
+                  console.log(data);
+
 	            });
 
 	        // no files found, exit function

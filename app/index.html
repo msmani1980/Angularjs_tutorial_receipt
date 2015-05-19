@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
   <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+  <link rel="stylesheet" href="bower_components/select2/select2.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
@@ -33,7 +34,7 @@
         <span class="sr-only">Toggle navigation</span>
         <span class="fa fa-bars"></span>
       </button>
-      <a class="navbar-brand" ng-href="#/">
+      <a class="navbar-brand" ng-click="leaveView()">
         <span class="fa fa-th"></span>
         TS5 Dashboard
       </a>
@@ -57,6 +58,9 @@
 <div class="container-fluid">
   <div class="main-container" ng-view=""></div>
 </div>
+
+<loading-modal></loading-modal>
+<leave-view-modal></leave-view-modal>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 <script>
@@ -95,6 +99,8 @@
 <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
 <script src="bower_components/qrcode/lib/qrcode.js"></script>
 <script src="bower_components/angular-qr/src/angular-qr.js"></script>
+<script src="bower_components/select2/select2.js"></script>
+<script src="bower_components/ui-select/src/select3.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -140,8 +146,14 @@
 <script src="scripts/directives/qr-create.js"></script>
 <script src="scripts/directives/form-error-dialog.js"></script>
 <script src="scripts/directives/form-success-modal.js"></script>
+<script src="scripts/directives/input-gtin.js"></script>
+<script src="scripts/directives/input-tax-type.js"></script>
+<script src="scripts/directives/leave-view-modal.js"></script>
+<script src="scripts/directives/input-station-exception.js"></script>
 <script src="scripts/services/menu-service.js"></script>
 <script src="scripts/services/currencies-service.js"></script>
+<script src="scripts/directives/loading-modal.js"></script>
+<script src="scripts/directives/left-navigation.js"></script>
 <!-- endbuild -->
 </body>
 </html>

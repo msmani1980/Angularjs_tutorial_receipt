@@ -16,6 +16,7 @@ angular.module('ts5App')
     };
 
     var initializeDatePicker = function ($scope, $element) {
+
       var options = angular.extend({}, datePickerOptions);
 
       if ($scope.disablePast) {
@@ -39,21 +40,32 @@ angular.module('ts5App')
       }
 
       $element.datepicker(options);
+
     };
 
     function link($scope, $element) {
+
       if ($scope.isSearchField) {
         initializeDatePicker($scope, $element);
         return false;
       }
+
       var watchListener = $scope.$watchGroup(['startDateModel', 'endDateModel'], function () {
+
         if (!$scope.isSearchField && $scope.disablePast && !angular.isUndefined($scope.startDateModel)) {
+
           $scope.shouldDisableStartDate = moment($scope.startDateModel, 'L').format('L') < moment().format('L');
+
           $scope.shouldDisableEndDate = moment($scope.endDateModel, 'L').format('L') < moment().format('L');
+
           watchListener();
+
           initializeDatePicker($scope, $element);
+
         }
+
       });
+
     }
 
     return {

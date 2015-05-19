@@ -1,20 +1,26 @@
 /* Items */
 
+.panel .pull-right.btn {
+  line-height: inherit;
+  height: auto;
+  font-size: 10px;
+  padding: 5px 10px;
+}
 
 /* Edit Controls */
 
 .view-name {
   margin:0;
-  color:$blue-color;
-  font-size:2em;
+  font-size:26px;
 }
 
 .edit-controls .btn-group {
   margin:2rem 0;
 }
+
 .edit-controls .btn-group .btn {
   width:33%;
-}
+} 
 
 .form-nav.btn-group {
   width:100%;
@@ -60,12 +66,12 @@
 }
 
 .list-footer nav {
-	display:inline-block; 
+	display:inline-block;
 }
 
 .list-footer select {
 	display:inline-block;
-	width:auto; 
+	width:auto;
 }
 
 .list-footer .displaying {
@@ -79,14 +85,14 @@
 .top-header{
   width:100%;
   position: fixed;
-  left:0px;
+  left:30px;
   right:0px;
-  top: 50px;
+  top: 56px;
   padding-bottom: 1em;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-right:1em;
+  padding-left:1em;
   z-index: 10;
-  background:$bg-color;
+  background:$form-header-bg-color;
   border-bottom:1px solid lightgray;
 
     p{
@@ -95,12 +101,13 @@
       color:gray;
       font-weight:100;
     }
+
 }
 
 .create-item-form label{
   font-weight:100;
   font-size:16px;
-  }
+}
 
 .create-item-form{
   z-index:1;
@@ -108,9 +115,21 @@
   top:18rem;
 }
 
-@media(max-width:$screen-sm-min){
+@media(max-width:$screen-lg-min){
+
   .top-header{
-    top:86px;
+
+    .container{
+      max-width:90%;
+    }
+
+  }
+
+}
+
+@media(max-width:$screen-sm-min){
+
+  .top-header{
     padding-bottom:0;
     padding-left:0;
     padding-right:0;
