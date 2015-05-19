@@ -142,12 +142,21 @@ angular.module('ts5App')
       resolvePayloadDependencies();
     }
 
+    function showErrors(dataFromAPI) {
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+      setupModels();
+    }
+
     $scope.saveDailyExchangeRates = function (shouldSubmit) {
       createPayload(shouldSubmit);
       currencyFactory.saveDailyExchangeRates($scope.payload).then(function (dailyExchangeRatesData) {
         $scope.dailyExchangeRates = dailyExchangeRatesData || {};
+        angular.element('#success-modal').modal('show');
         setupModels();
-      });
+      }, showErrors);
     };
 
     currencyFactory.getCompanyBaseCurrency(companyId).then(function (companyBaseCurrency) {
