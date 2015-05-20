@@ -56,7 +56,8 @@
 
 
 img.thumbs{
-    padding:1em;
+    max-width:150px;
+    padding:1rem;
 }
 
 .img-thumbnail p{
@@ -66,14 +67,14 @@ img.thumbs{
 
 .upload-container{
     .thumbnails{
-        margin-bottom:1em;
+        margin-bottom:1rem;
     }
 }
 
 .qr-code{
 
     border-radius:5px;
-    padding: 1em;
+    padding: 1rem;
 
     .btn{
         width:128px;
@@ -91,14 +92,14 @@ img.thumbs{
 
 .tab-content{
     background: white;
-    padding: 1em;
+    padding: 1rem;
     border-top: 0;
     border-radius: 2px;
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
 }
 
 qr-create .tab-content{
-    padding-right:2em;
+    padding-right:2rem;
 }
 
 qr-create .form-group{
@@ -118,7 +119,7 @@ qr-upload{
     }
 
     .thumbnails{
-        margin-bottom:1em;
+        margin-bottom:1rem;
     }
 
 }
