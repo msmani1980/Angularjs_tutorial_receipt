@@ -115,6 +115,7 @@
 			<thead>
 
 				<tr>
+					<th></th>
 					<th>
 						<abbr title="Stock Owner">S.O.</abbr>
 					</th>
@@ -128,14 +129,26 @@
 					<th>Sales Category</th>
 					<th>Effective From</th>
 					<th>Effective To</th>
-					<th></th>
+
 				</tr>
 
 			</thead>
 
 			<tbody>
 
-				<tr ng-repeat="item in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName, startDate: search.startDate, endDate:search.endDate }">
+				<tr id="item-{{item.id}}" ng-repeat="(key,item) in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName, startDate: search.startDate, endDate:search.endDate }">
+
+					<td>
+
+						<a class="btn btn-primary btn-xs" href="#/item-edit/{{item.id}}">
+							<i class="fa fa-pencil"></i>
+						</a>
+
+						<button class="btn btn-danger btn-xs" ng-click="removeItem(item.id,key)">
+							<i class="fa fa-trash"></i>
+						</button>
+
+					</td>
 
 					<th scope="row">
 						<!-- TODO: What goes here? -->
@@ -148,17 +161,7 @@
 					<td>{{ item.categoryName }}</td>
 					<td>{{ item.startDate | date: 'MM/dd/yyyy' }}</td>
 					<td>{{ item.endDate | date: 'MM/dd/yyyy' }}</td>
-					<td>
 
-						<a class="btn btn-primary btn-xs" href="#/item-edit/{{item.id}}">
-							<i class="fa fa-pencil"></i>
-						</a>
-
-						<button class="btn btn-danger btn-xs" ng-click="deleteItem(item.id)">
-							<i class="fa fa-trash"></i>
-						</button>
-
-					</td>
 
 				</tr>
 

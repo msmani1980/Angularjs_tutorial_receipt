@@ -31,6 +31,10 @@ angular.module('ts5App')
 		return itemsService.updateItem(id,payload);
 	};
 
+  var removeItem = function (id) {
+		return itemsService.removeItem(id);
+	};
+
 	// Allergens
 	var getAllergensList = function (payload) {
 		return allergensService.getAllergensList(payload);
@@ -70,6 +74,7 @@ angular.module('ts5App')
 		getItemsList: getItemsList,
     createItem:createItem,
     updateItem: updateItem,
+    removeItem: removeItem,
 
 		// Allergens
 		getAllergensList: getAllergensList,

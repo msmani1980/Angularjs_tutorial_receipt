@@ -27,6 +27,9 @@ angular.module('ts5App')
       },
       updateItem: {
         method: 'PUT'
+      },
+      removeItem: {
+        method: 'DELETE'
       }
     };
 
@@ -51,11 +54,16 @@ angular.module('ts5App')
       return requestResource.updateItem({id:id},payload).$promise;
     };
 
+    var removeItem = function (id) {
+      return requestResource.removeItem({id:id}).$promise;
+    };
+
     return {
       getItemsList: getItemsList,
       getItem: getItem,
       createItem: createItem,
-      updateItem: updateItem
+      updateItem: updateItem,
+      removeItem: removeItem
     };
 
 });
