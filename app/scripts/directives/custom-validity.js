@@ -31,7 +31,6 @@ angular.module('ts5App')
 
         var validate = function () {
           var errorArray = Object.keys(ngModel.$error);
-          console.log(errorArray);
           var errorMessage = '';
           if (errorArray.length > 0) {
             errorMessage = customValidityMessage[errorArray[0]];

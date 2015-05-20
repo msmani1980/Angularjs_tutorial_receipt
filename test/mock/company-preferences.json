@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "count": 1,
+    "limit": 1,
+    "start": 0
+  },
+  "preferences": [
+    {
+      "id": 15,
+      "companyId": 2,
+      "featureId": 1,
+      "featureCode": "EXR",
+      "featureName": "Exchange Rate",
+      "optionId": 1,
+      "optionCode": "ERT",
+      "optionName": "Exchange Rate Type",
+      "choiceId": 2,
+      "choiceCode": "BNK",
+      "choiceName": "Bank"
+    }
+  ]
+}

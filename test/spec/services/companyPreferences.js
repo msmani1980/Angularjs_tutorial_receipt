@@ -4,25 +4,20 @@ describe('Service: companyPreferences', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
+  beforeEach(module('served/company-preferences.json'));
+
 
   // instantiate service
   var companyPreferences,
     $httpBackend,
-    preferencesRequestHandler;
+    preferencesJSON;
   beforeEach(inject(function (_companyPreferences_, $injector) {
+    inject(function (_servedCompanyPreferences_) {
+      preferencesJSON = _servedCompanyPreferences_;
+    });
     $httpBackend = $injector.get('$httpBackend');
-    preferencesRequestHandler = $httpBackend.whenGET(/currencies/)
-      .respond({
-        'response': [{
-          createdOn: '2014-08-19',
-          currencyCode: 'USD',
-          currencyId: 1,
-          currencyName: 'U.S. Dollar',
-          currencySymbol: '$',
-          decimalPrecision: 2,
-          id: 1
-        }]
-      });
+
+    $httpBackend.whenGET(/company-preferences/).respond(preferencesJSON);
     companyPreferences = _companyPreferences_;
   }));
 
