@@ -367,6 +367,13 @@ angular.module('ts5App')
 
       } // end checkItemDates
 
+      $scope.removeQRCode = function() {
+
+        $scope.formData.qrCodeImgUrl = '';
+        $scope.formData.qrCodeValue = '';
+
+      };
+
       $scope.removeImage = function(key) {
         $scope.formData.images.splice(key,1);
       };

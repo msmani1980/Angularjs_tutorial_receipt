@@ -188,7 +188,29 @@
 
 						<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="1234"></input-text>
 
-						<tabset justified="true">
+						<div class="panel panel-default" ng-show="formData.qrCodeImgUrl">
+
+						  <div class="panel-heading">
+
+						    <p class="panel-title">
+
+									<i class="fa fa-image"></i> QR Code
+
+						      <span class="pull-right btn btn-danger btn-xs" ng-click="removeQRCode()">
+						        <i class="fa fa-close"></i>
+						      </span>
+
+								</p>
+
+						  </div>
+
+						  <div class="panel-body">
+								<img src="{{ formData.qrCodeImgUrl }}" />
+							</div>
+
+						</div>
+
+						<tabset justified="true" ng-show="!formData.qrCodeImgUrl">
 
 							<tab heading="QR Create">
 
