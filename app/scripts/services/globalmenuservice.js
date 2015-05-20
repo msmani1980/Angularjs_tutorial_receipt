@@ -111,10 +111,8 @@ angular.module('ts5App')
     }
 
     function setCompany(companyId) {
-
       $localStorage.company = companyId;
       $rootScope.company = $localStorage.company;
-
     }
 
     // Public API here
