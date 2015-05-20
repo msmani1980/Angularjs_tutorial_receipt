@@ -651,6 +651,9 @@ angular.module('ts5App')
 
       function updateItem(itemData) {
 
+        // display loading modal
+        angular.element('#loading').modal('show').find('p').text( 'We are updating your item');
+
         var updateItemPayload = {
           retailItem: itemData
         };
@@ -662,8 +665,7 @@ angular.module('ts5App')
 
           angular.element('#loading').modal('hide');
 
-          // TODO: show alert instead of success
-          window.alert('Item updated!');
+          angular.element('#update-success').modal('show');
 
         // error handler
         }, function(response){
@@ -680,6 +682,9 @@ angular.module('ts5App')
       }
 
       function createItem(itemData) {
+
+        // display loading modal
+        angular.element('#loading').modal('show').find('p').text( 'We are creating your item');
 
         var newItemPayload = {
           retailItem: itemData
@@ -716,8 +721,7 @@ angular.module('ts5App')
 
   			}
 
-        // display loading modal
-        angular.element('#loading').modal('show').find('p').text( 'We are creating your item');
+
 
         // copy the form data to the itemData
         var itemData = angular.copy(formData);
