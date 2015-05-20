@@ -19,8 +19,7 @@ angular.module('ts5App')
         var regexObj = scope.$eval(attrs.customPattern);
 
         ngModel.$validators.pattern = function (value) {
-          var isValid = typeof value === 'string'
-            && regexObj[0].test(value);
+          var isValid = typeof value === 'string' && regexObj[0].test(value);
           return isValid;
         };
 
