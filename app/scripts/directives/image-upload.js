@@ -34,7 +34,7 @@ angular.module('ts5App')
 	        $scope.uploadProgress = 0;
 	        $scope.uploadSuccess = false;
 	        $scope.uploadFail = false;
-	        $scope.formData.images = [];
+	        $scope.imageTooLarge = false;
 	    };
 
 	    // upload image function
@@ -43,8 +43,23 @@ angular.module('ts5App')
 	        // grab files from scope
 	    	var files = $scope.files;
 
+			var imgElement = angular.element('.thumbs');
+			var imgHeight = imgElement.height();
+			var imgWidth = imgElement.width();
+
+			if (imgHeight > 128 && imgWidth > 128){
+
+				$scope.clearFiles();
+				$scope.imageTooLarge = true;
+				$scope.imageDimensions = imgHeight + 'px' + ' x ' + imgWidth + 'px';
+
+				return false;
+			}
+
 	        //if a file exists and it is not null
-	        if (files && files.length) {
+	       	if (files && files.length) {
+
+	       		$scope.imageTooLarge = false;
 
 	            // Upload image
 	            Upload.upload({
@@ -72,17 +87,19 @@ angular.module('ts5App')
 	                // pass new image object into formData.images array
 	                $scope.formData.images.push(newImage);
 
+	                $scope.clearFiles();
+
 	            // on a failed upload
-            }).error(function () {
+	            }).error(function () {
 
-	                //set the UI flag
-	                $scope.uploadFail = true;
+		                //set the UI flag
+		                $scope.uploadFail = true;
 
 
-                  // TODO: Interpret this failure and tell the user
-                //  console.log(data);
+	                  // TODO: Interpret this failure and tell the user
+	                //  console.log(data);
 
-	            });
+		            });
 
 	        // no files found, exit function
 	        } else {
