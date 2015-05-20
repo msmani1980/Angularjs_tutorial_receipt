@@ -12,13 +12,16 @@
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams) {
 
-    	// View Name
   		$scope.viewName = 'Create Item';
 
-      // Button Text
   		$scope.buttonText = 'Create';
 
-  		// Form Data to be passed to API
+      var editingItem = false;
+
+      if($routeParams.id) {
+        editingItem = true;
+      }
+
   		$scope.formData = {
         startDate: '',
         endDate: '',
@@ -35,21 +38,18 @@ angular.module('ts5App')
         prices: []
       };
 
-      var editForm = false;
-
-      if($routeParams.id) {
+      // gets an item to editingItem
+      function getItem(id) {
 
         // display loading modal
-        angular.element('#loading').modal('show').find('p').text( 'We are getting Item ' + $routeParams.id);
+        angular.element('#loading').modal('show').find('p').text( 'We are getting Item ' + id);
 
-        editForm = true;
-
-    		$scope.viewName = 'Edit Item ' + $routeParams.id;
+    		$scope.viewName = 'Edit Item ' + id;
 
     		$scope.buttonText = 'Save';
 
         // TODO: format dates when setting values
-        itemsFactory.getItem($routeParams.id).then(function (data) {
+        itemsFactory.getItem(id).then(function (data) {
 
           upateFormData(data.retailItem);
 
@@ -60,20 +60,59 @@ angular.module('ts5App')
 
       }
 
+      if(editingItem) {
+
+        getItem($routeParams.id);
+
+      }
+
+      // deserialize tag object from api
+      function deserializeTags(itemData) {
+
+        for(var tagKey in itemData.tags) {
+
+          var tag = itemData.tags[tagKey];
+
+          itemData.tags[tagKey] = tag.tagId.toString();
+
+        }
+
+      }
+
+      // deserialize characteristics object from api
+      function deserializeCharacteristics(itemData) {
+
+        for(var characteristicKey in itemData.characteristics) {
+
+          var characteristic = itemData.characteristics[characteristicKey];
+
+          itemData.characteristics[characteristicKey] = characteristic.characteristicId.toString();
+
+        }
+
+      }
+
+      // deserialize allergens object from api
+      function deserializeAllergens(itemData) {
+
+        for(var allergenkey in itemData.allergens) {
+
+          var allergen = itemData.allergens[allergenkey];
+
+          itemData.allergens[allergenkey] = allergen.allergenId.toString();
+
+        }
+
+      }
+
       // updates the $scope.formData
       function upateFormData(itemData) {
 
-        for(var tagKey in itemData.tags) {
-          itemData.tags[tagKey] = itemData.tags[tagKey].tagId.toString();
-        }
+        deserializeTags(itemData);
 
-        for(var characteristicKey in itemData.characteristics) {
-          itemData.characteristics[characteristicKey] = itemData.characteristics[characteristicKey].characteristicId.toString();
-        }
+        deserializeCharacteristics(itemData);
 
-        for(var allergenkey in itemData.allergens) {
-          itemData.allergens[allergenkey] = itemData.allergens[allergenkey].allergenId.toString();
-        }
+        deserializeAllergens(itemData);
 
         itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
         itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
@@ -647,7 +686,7 @@ angular.module('ts5App')
 
         cleanUpPayload(itemData);
 
-        if(editForm) {
+        if(editingItem) {
 
           updateItem(itemData);
 
