@@ -12,8 +12,6 @@
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams) {
 
-      var editForm = false;
-
     	// View Name
   		$scope.viewName = 'Create Item';
 
@@ -22,8 +20,8 @@ angular.module('ts5App')
 
   		// Form Data to be passed to API
   		$scope.formData = {
-        startDate: '', //moment().add(1,'days').format('L'), // set to tomorrow, for your health!
-        endDate: '',// moment().add(90,'days').format('L'), // 90 days into the future
+        startDate: '',
+        endDate: '',
         qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
@@ -37,22 +35,47 @@ angular.module('ts5App')
         prices: []
       };
 
+      var editForm = false;
+
       if($routeParams.id) {
+
+        // display loading modal
+        angular.element('#loading').modal('show').find('p').text( 'We are getting Item ' + $routeParams.id);
 
         editForm = true;
 
-        // View Name
     		$scope.viewName = 'Edit Item ' + $routeParams.id;
 
-        // Button Text
     		$scope.buttonText = 'Save';
 
-        // TODO: Update this to a function we can call over and over ;)
         // TODO: format dates when setting values
-        // Get a list of items for substitutions and recommendations
         itemsFactory.getItem($routeParams.id).then(function (data) {
-          $scope.formData = data.retailItem;
+
+          upateFormData(data.retailItem);
+
+          // hide loading modal
+          angular.element('#loading').modal('hide');
+
         });
+
+      }
+
+      // updates the $scope.formData
+      function upateFormData(itemData) {
+
+        for(var tagKey in itemData.tags) {
+          itemData.tags[tagKey] = itemData.tags[tagKey].tagId.toString();
+        }
+
+        for(var characteristicKey in itemData.characteristics) {
+          itemData.characteristics[characteristicKey] = itemData.characteristics[characteristicKey].characteristicId.toString();
+        }
+
+        for(var allergenkey in itemData.allergens) {
+          itemData.allergens[allergenkey] = itemData.allergens[allergenkey].allergenId.toString();
+        }
+
+        $scope.formData = itemData;
 
       }
 
@@ -522,6 +545,8 @@ angular.module('ts5App')
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
+        console.log(formData);
+
         // If the local form is not valid
       	if(!$scope.form.$valid) {
 
@@ -550,10 +575,14 @@ angular.module('ts5App')
 
         if(editForm) {
 
-        	// update itemData in API
-        	itemsFactory.updateItem( $routeParams.id, itemData).then(function(response) {
+          var updateItemPayload = {
+            retailItem: itemData
+          };
 
-            $scope.formData = response.retailItem;
+        	// update itemData in API
+        	itemsFactory.updateItem( $routeParams.id, updateItemPayload).then(function(response) {
+
+            upateFormData(response.retailItem);
 
             // hide loading modal
             angular.element('#loading').modal('hide');

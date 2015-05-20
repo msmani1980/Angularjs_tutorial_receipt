@@ -12,8 +12,7 @@ angular.module('ts5App')
 
     var requestURL = ENV.apiUrl + '/api/retail-items/:fetchFromMaster/:id';
     var requestParameters = {
-      id: '@id',
-      limit: 50
+      id: '@id'
     };
 
     var actions = {
@@ -49,7 +48,7 @@ angular.module('ts5App')
     };
 
     var updateItem = function (id,payload) {
-      return requestResource.updateItem({id:id},{retailItem:payload}).$promise;
+      return requestResource.updateItem({id:id},payload).$promise;
     };
 
     return {
