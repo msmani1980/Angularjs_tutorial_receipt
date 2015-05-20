@@ -148,6 +148,14 @@
 
 				<image-upload></image-upload>
 
+				<div id="images-container">
+
+					<div ng-repeat="(key,image) in formData.images track by $index">
+						<input-item-image> </input-item-image>
+					</div>
+
+				</div>
+
 				<h3>Global Trade In Numbers (GTIN)</h3>
 				<p>
 					<button type="button" class="btn btn-primary" ng-click="addGTIN()">

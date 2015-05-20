@@ -75,62 +75,82 @@ angular.module('ts5App')
           itemData.allergens[allergenkey] = itemData.allergens[allergenkey].allergenId.toString();
         }
 
+        itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
+        itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
+
+        // Loop through images
+        for(var imageIndex in itemData.images) {
+
+          var image = itemData.images[imageIndex];
+
+          // format start and end dates
+          image.startDate = formatDate(image.startDate, false,  'L');
+          image.endDate = formatDate(image.endDate, false,  'L');
+
+        }
+
+        for(var priceIndex in itemData.prices) {
+
+          var price = itemData.prices[priceIndex];
+
+          price.startDate = formatDate(price.startDate,false,'L') ;
+          price.endDate = formatDate(price.endDate,false,'L') ;
+
+          for(var stationExceptionIndex in price.stationExceptions) {
+
+            var stationException = price.stationExceptions[stationExceptionIndex];
+
+            stationException.startDate = formatDate(stationException.startDate,false,'L') ;
+            stationException.endDate = formatDate(stationException.endDate,false,'L') ;
+
+          }
+
+        }
+
         $scope.formData = itemData;
 
       }
 
-
-      // Get a list of items for substitutions and recommendations
       itemsFactory.getItemsList({}).then(function (data) {
         $scope.items = data.retailItems;
       });
 
-      // Get a list of allergens
       itemsFactory.getAllergensList(function (data) {
         $scope.allergens = data;
       });
 
-      // Get a list of item Types
       itemsFactory.getItemTypesList(function (data) {
         $scope.itemTypes = data;
       });
 
-      // Get a list of Price Types
       itemsFactory.getPriceTypesList(function (data) {
         $scope.priceTypes = data;
       });
 
-      // Get a list of Price Types
       itemsFactory.getCharacteristicsList(function (data) {
         $scope.characteristics = data;
       });
 
-      // get dimension units
       itemsFactory.getDimensionList(function(data) {
         $scope.dimensionUnits = data.units;
       });
 
-      // get weight units
       itemsFactory.getVolumeList(function(data) {
         $scope.weightUnits = data.units;
       });
 
-      // get volume units
       itemsFactory.getWeightList(function(data) {
         $scope.volumeUnits = data.units;
       });
 
-      // get tags
       companiesFactory.getTagsList(function(data) {
         $scope.tags = data.response;
       });
 
-      // get sales categories
       companiesFactory.getSalesCategoriesList(function(data) {
         $scope.salesCategories = data.salesCategories;
       });
 
-       // get tax types
       companiesFactory.getTaxTypesList(function(data) {
         $scope.taxTypes = data.response;
       });
@@ -140,7 +160,6 @@ angular.module('ts5App')
         return moment(dateString, formatFrom).format(formatTo).toString();
       }
 
-      // when the form data changes
       $scope.$watch('formData', function(newData, oldData){
 
         // check item dates and make sure all dates fall within the acceptable dates
@@ -152,10 +171,8 @@ angular.module('ts5App')
 
       }, true);
 
-      // when the form to become valide
       $scope.$watch('form.$valid', function(validity) {
 
-        // when it does hide the displayError ui component
         if(validity) {
           $scope.displayError = false;
         }
@@ -272,27 +289,26 @@ angular.module('ts5App')
 
       } // end checkItemDates
 
-      // Adds a new Tax Type object
+      $scope.removeImage = function(key) {
+        $scope.formData.images.splice(key,1);
+      };
+
       $scope.addTaxType = function() {
         $scope.formData.taxes.push({});
       };
 
-      // Remove a Tax Type object
       $scope.removeTaxType = function(key) {
         $scope.formData.taxes.splice(key,1);
       };
 
-      // Adds a new GTIN object
       $scope.addGTIN = function() {
         $scope.formData.globalTradeNumbers.push({});
       };
 
-      // Remove a GTIN object
       $scope.removeGTIN = function(key) {
         $scope.formData.globalTradeNumbers.splice(key,1);
       };
 
-      // Adds a new StationException object
       $scope.addStationException = function(priceIndex) {
 
         // create a new station exception object and add to scope
@@ -302,6 +318,10 @@ angular.module('ts5App')
           stationExceptionCurrencies: []
         });
 
+      };
+
+      $scope.removeStationException = function(priceIndex,key) {
+        $scope.formData.prices[priceIndex].stationExceptions.splice(key,1);
       };
 
       // Updates the station exception with stations list and currencies list
@@ -356,15 +376,8 @@ angular.module('ts5App')
 
       }
 
-      // Remove a GTStationExceptionIN object
-      $scope.removeStationException = function(priceIndex,key) {
-        $scope.formData.prices[priceIndex].stationExceptions.splice(key,1);
-      };
-
-      // Adds a new Price Group object to the formData
       $scope.addPriceGroup = function() {
 
-        // push a new object into the prices collection
         $scope.formData.prices.push({
           startDate: '',
           endDate: '',
@@ -372,6 +385,13 @@ angular.module('ts5App')
           stationExceptions:[]
         });
 
+      };
+
+      // Add the first price group
+      $scope.addPriceGroup();
+
+      $scope.removePriceGroup = function(key) {
+        $scope.formData.prices.splice(key,1);
       };
 
       // pulls a list of currencies from the API and updates the price group
@@ -413,20 +433,23 @@ angular.module('ts5App')
 
       }
 
-      // Add the first price group
-      $scope.addPriceGroup();
-
-      // Remove a Price Group object
-      $scope.removePriceGroup = function(key) {
-        $scope.formData.prices.splice(key,1);
-      };
-
       // Formats the dates when sending the payload to the API
       function formatPayloadDates(itemData){
 
         // format stary and end date
         itemData.startDate = formatDate(itemData.startDate, 'L',  'YYYYMMDD');
         itemData.endDate = formatDate(itemData.endDate, 'L',  'YYYYMMDD');
+
+        // Loop through images
+        for(var imageIndex in itemData.images) {
+
+          var image = itemData.images[imageIndex];
+
+          // format start and end dates
+          image.startDate = formatDate(image.startDate, 'L',  'YYYYMMDD');
+          image.endDate = formatDate(image.endDate, 'L',  'YYYYMMDD');
+
+        }
 
         // Loop through prices
         for(var priceIndex in itemData.prices) {
@@ -541,16 +564,67 @@ angular.module('ts5App')
 
       }
 
+      function updateItem(itemData) {
+
+        var updateItemPayload = {
+          retailItem: itemData
+        };
+
+        // update itemData in API
+        itemsFactory.updateItem( $routeParams.id, updateItemPayload).then(function(response) {
+
+          upateFormData(response.retailItem);
+
+          angular.element('#loading').modal('hide');
+
+          // TODO: show alert instead of success
+          window.alert('Item updated!');
+
+        // error handler
+        }, function(response){
+
+          console.log(status);
+
+          angular.element('#loading').modal('hide');
+
+          $scope.displayError = true;
+          $scope.formErrors = response.data;
+
+        });
+
+      }
+
+      function createItem(itemData) {
+
+        var newItemPayload = {
+          retailItem: itemData
+        };
+
+        itemsFactory.createItem(newItemPayload).then(function() {
+
+          angular.element('#loading').modal('hide');
+
+          angular.element('#create-success').modal('show');
+
+        // error response
+        }, function(error){
+
+          angular.element('#loading').modal('hide');
+
+          $scope.displayError = true;
+          $scope.formErrors = error.data;
+
+        });
+
+      }
 
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
         console.log(formData);
 
-        // If the local form is not valid
-      	if(!$scope.form.$valid) {
+      	if( !$scope.form.$valid ) {
 
-      		// set display error flag to true (used in template)
 				  $scope.displayError = true;
 
   				return false;
@@ -575,61 +649,11 @@ angular.module('ts5App')
 
         if(editForm) {
 
-          var updateItemPayload = {
-            retailItem: itemData
-          };
-
-        	// update itemData in API
-        	itemsFactory.updateItem( $routeParams.id, updateItemPayload).then(function(response) {
-
-            upateFormData(response.retailItem);
-
-            // hide loading modal
-            angular.element('#loading').modal('hide');
-
-            // TODO: show alert instead of success
-            // show the success
-            window.alert('Item updated!');
-
-          // API error
-          }, function(error){
-
-            // hide loading modal
-            angular.element('#loading').modal('hide');
-
-            // set flags for error UI to display
-          	$scope.displayError = true;
-  		  	  $scope.formErrors = error.data;
-
-          });
+          updateItem(itemData);
 
         } else {
 
-          // create a new item
-        	var newItemPayload = {
-        		retailItem: itemData
-        	};
-
-        	// Create itemData in API
-        	itemsFactory.createItem(newItemPayload).then(function() {
-
-            // hide loading modal
-            angular.element('#loading').modal('hide');
-
-            // show the success
-            angular.element('#create-success').modal('show');
-
-          // API error
-          }, function(error){
-
-            // hide loading modal
-            angular.element('#loading').modal('hide');
-
-            // set flags for error UI to display
-          	$scope.displayError = true;
-  		  	  $scope.formErrors = error.data;
-
-          });
+          createItem(itemData);
 
         }
 
