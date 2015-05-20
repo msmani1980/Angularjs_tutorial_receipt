@@ -35,6 +35,14 @@
 
     </p>
 
+	<p class="alert alert-danger" ng-model="files" ng-show="imageTooLarge"> 
+
+	    <i>
+			Your images dimensions '{{imageDimensions}}', are too large! .
+		</i>
+
+	</p>
+
     <div class="thumbnails" ng-show="files.length">
 
     	<!--TODO - Add support for multiple image uploads -->
@@ -45,7 +53,7 @@
 
 	    	<p>{{file.name}}</p>
 
-			<progressbar class="progress-striped" ng-model="files"  ng-show="!uploadFail && !uploadSuccess" ng-show="files.length" animate="true" value="progress">
+			<progressbar class="progress-striped" ng-model="files" ng-show="!uploadFail && !uploadSuccess" ng-show="files.length" animate="true" value="progress">
 				<b>{{uploadProgress}}%</b>
 			</progressbar>
 
