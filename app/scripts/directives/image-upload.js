@@ -29,7 +29,6 @@ angular.module('ts5App')
 	        $scope.uploadProgress = 0;
 	        $scope.uploadSuccess = false;
 	        $scope.uploadFail = false;
-	        $scope.imageTooLarge = false;
 	    };
 
 	    // upload image function
@@ -46,13 +45,11 @@ angular.module('ts5App')
 
 				$scope.clearFiles();
 				$scope.imageTooLarge = true;
-				$scope.imageDimensions = imgHeight + 'px' + ' x ' + imgWidth + 'px';
-
-				return false;
+				$scope.imageDimensions = imgWidth + 'px' + ' x ' + imgHeight + 'px';
 			}
 
 	        //if a file exists and it is not null
-	       	if (files && files.length) {
+	       	else if (files && files.length) {
 
 	       		$scope.imageTooLarge = false;
 
@@ -60,7 +57,7 @@ angular.module('ts5App')
 	            Upload.upload({
 	                url: ENV.apiUrl + '/api/images',
 	                fileFormDataName: 'image',
-	                file: files
+	                file: files 
 	            }).progress(function (evt) {
 
 	                // Upload Progress
