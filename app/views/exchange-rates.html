@@ -78,7 +78,8 @@
         <div class="col-xs-5">
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
-            <input ng-pattern="regexp.currencyWithFourDecimalPlace"
+            <input custom-validity
+                   custom-pattern="regexp.currencyWithFourDecimalPlace"
                    ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
                    ng-model="currenciesFields[currency.code].paperExchangeRate"
                    required="true"
@@ -92,7 +93,8 @@
         <div class="col-xs-5">
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
-            <input ng-pattern="regexp.currencyWithFourDecimalPlace"
+            <input custom-validity
+                   custom-pattern="regexp.currencyWithFourDecimalPlace"
                    ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
                    ng-model="currenciesFields[currency.code].coinExchangeRate"
                    required="true"
