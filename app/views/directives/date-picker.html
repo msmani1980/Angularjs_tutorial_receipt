@@ -16,7 +16,7 @@
                ng-model="startDateModel"
                placeholder="mm/dd/YYYY"
                name="{{labelFrom}}"
-               ng-disabled="shouldDisableStartDate || disabled"
+               ng-disabled="shouldDisableStartDate || disableStartDate"
                class="startDate form-control"
                />
 
@@ -37,7 +37,7 @@
                placeholder="mm/dd/YYYY"
                required="true"
                name="{{labelTo}}"
-               ng-disabled="shouldDisableEndDate || disabled"
+               ng-disabled="shouldDisableEndDate || disableEndDate"
                class="endDate form-control" />
 
       </div>

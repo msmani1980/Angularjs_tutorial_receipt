@@ -16,6 +16,10 @@ angular.module('ts5App')
 
   		$scope.buttonText = 'Create';
 
+      $scope.itemIsActive = false;
+
+      $scope.itemIsInactive = false;
+
       var editingItem = false;
 
       if($routeParams.id) {
@@ -105,17 +109,43 @@ angular.module('ts5App')
 
       }
 
+      // checks to see if the item is active
+      function checkIfItemIsActive(itemData) {
+
+        var today = moment().format();
+
+        $scope.itemIsActive = moment( itemData.startDate ).isBefore( today );
+
+      }
+
+      // checks to see if the item is inactive
+      function checkIfItemIsInactive(itemData) {
+
+        var today = moment().format();
+
+        $scope.itemIsInactive = moment( itemData.endDate ).isBefore( today );
+
+      }
+
       // updates the $scope.formData
       function upateFormData(itemData) {
+
+        itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
+        itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
+
+        checkIfItemIsInactive(itemData);
+
+        if(!$scope.itemIsInactive) {
+
+          checkIfItemIsActive(itemData);
+
+        }
 
         deserializeTags(itemData);
 
         deserializeCharacteristics(itemData);
 
         deserializeAllergens(itemData);
-
-        itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
-        itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
 
         // Loop through images
         for(var imageIndex in itemData.images) {
@@ -275,54 +305,63 @@ angular.module('ts5App')
       // check date ranges on items, price groups and station exceptions
       function checkItemDates(newData,oldData) {
 
-        // if the start date has changed
         if(newData.startDate !== oldData.startDate || newData.endDate !== oldData.endDate) {
 
-          // loop through all the price groups
-          for(var priceIndex in $scope.formData.prices) {
+          // TODO: Move this to it's own function
+          if(newData.prices.length > 0) {
 
-            var price = $scope.formData.prices[priceIndex];
+            // loop through all the price groups
+            for(var priceIndex in $scope.formData.prices) {
 
-            // if new item end date is before price start date
-            if( moment(newData.endDate).isBefore(price.startDate) ) {
+              var price = $scope.formData.prices[priceIndex];
 
-              // set price start date as new item end date
-              price.startDate = newData.endDate;
+              // if new item end date is before price start date
+              if( moment(newData.endDate).isBefore(price.startDate) ) {
 
-            }
-
-            // if new item start date is after price start date
-            if( moment(newData.startDate).isAfter(price.startDate) ) {
-
-              // set price start date as new item start date
-              price.startDate = newData.startDate;
-
-            }
-
-            // loop through all the station exceptions
-            for(var stationIndex in $scope.formData.prices[priceIndex].stationExceptions) {
-
-              var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationIndex];
-
-              // if new item end date is before station exception start date
-              if( moment(newData.endDate).isBefore(stationException.startDate) ) {
-
-                // set station exception start date as new item end date
-                stationException.startDate = newData.endDate;
+                // set price start date as new item end date
+                price.startDate = newData.endDate;
 
               }
 
-              // if new item start date is after station exception start date
-              if( moment(newData.startDate).isAfter(stationException.startDate) ) {
+              // if new item start date is after price start date
+              if( moment(newData.startDate).isAfter(price.startDate) ) {
 
-                // set station exception start date as new item start date
-                stationException.startDate = newData.startDate;
+                // set price start date as new item start date
+                price.startDate = newData.startDate;
 
               }
 
-            }
+              // TODO: Move this to it's own function
+              if(price.stationExceptions.length > 0) {
 
-          } // end price for loop
+                // loop through all the station exceptions
+                for(var stationIndex in price.stationExceptions) {
+
+                  var stationException = price.stationExceptions[stationIndex];
+
+                  // if new item end date is before station exception start date
+                  if( moment(newData.endDate).isBefore(stationException.startDate) ) {
+
+                    // set station exception start date as new item end date
+                    stationException.startDate = newData.endDate;
+
+                  }
+
+                  // if new item start date is after station exception start date
+                  if( moment(newData.startDate).isAfter(stationException.startDate) ) {
+
+                    // set station exception start date as new item start date
+                    stationException.startDate = newData.startDate;
+
+                  }
+
+                } // end station exception loop
+
+              } // end if exceptions list is greater than 0
+
+            } // end price for loop
+
+          } // if price length is greater than 0
 
         } // end if newData.startDate is different
 
