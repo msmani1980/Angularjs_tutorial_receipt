@@ -14,13 +14,12 @@ angular.module('ts5App')
       scope: {
         title: '@',
         ngModel: '=',
-        icon: '@',
+        icon: '@'
       },
-      controller: function($scope) {
-        this.setChoice = function(_choice_) {
-          $scope.ngModel.set(_choice_);
+      link: function($scope) {
+        $scope.setChoice = function(choiceId) {
+          $scope.ngModel.set(choiceId);
         };
-      },
-      controllerAs: 'item',
+      }
     };
   });
