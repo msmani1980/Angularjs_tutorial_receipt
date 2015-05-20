@@ -40,51 +40,17 @@ describe('Service: companyPreferencesService', function () {
         $httpBackend.expectGET(/menus/);
       });
 
-      //  it('should be an array', function () {
-      //    expect(apiData.menus.length).toBeGreaterThan(0);
-      //  });
-      //
-      //  it('should have a menu name property', function () {
-      //    expect(apiData.menus[0].menuCode).toBe('Test01');
-      //  });
-      //
-      //  it('should have an array of items', function () {
-      //    expect(apiData.menus[0].menuItems.length).toBeGreaterThan(0);
-      //  });
-      //});
-      //
-      //describe('search Menu', function () {
-      //  it('should fetch and return menuList', function () {
-      //    spyOn(companyPreferencesService, 'getMenuList').and.callThrough();
-      //    var payload = {someKey: 'someValue'};
-      //    companyPreferencesService.getMenuList(payload);
-      //    expect(companyPreferencesService.getMenuList).toHaveBeenCalledWith(payload);
-      //  });
-      //});
-      //
-      //describe('getMenu', function () {
-      //  beforeEach(function () {
-      //    spyOn(companyPreferencesService, 'getMenu').and.callFake(function () {
-      //      return menuResponseJSON;
-      //    });
-      //    apiData = companyPreferencesService.getMenu(1);
-      //  });
-      //
-      //  it('should fetch and return menuList', function () {
-      //    $httpBackend.expectGET(/menus/);
-      //  });
-      //});
-      //
-      //describe('updateMenu', function () {
-      //  beforeEach(function () {
-      //    $httpBackend.whenPUT(/menus/).respond({done: true});
-      //  });
-      //  it('it should POST data to menus API', function () {
-      //    companyPreferencesService.updateMenu({menuData: 'fakeMenuPayload'});
-      //    $httpBackend.flush();
-      //    $httpBackend.expectPUT(/menus/);
-      //  });
-      //});
+      it('should be an array', function () {
+        expect(apiData.preferences.length).toBeGreaterThan(0);
+      });
+
+      it('should have a featureCode name property', function () {
+        expect(apiData.preferences[0].featureCode).toBe('EXR');
+      });
+
+      it('should have a choiceCode name property', function () {
+        expect(apiData.preferences[0].choiceCode).toBe('BNK');
+      });
 
     });
   });
