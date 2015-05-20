@@ -670,8 +670,6 @@ angular.module('ts5App')
         // error handler
         }, function(response){
 
-          console.log(status);
-
           angular.element('#loading').modal('hide');
 
           $scope.displayError = true;
@@ -710,8 +708,6 @@ angular.module('ts5App')
 
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
-
-        console.log(formData);
 
       	if( !$scope.form.$valid ) {
 
