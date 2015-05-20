@@ -27,8 +27,8 @@ angular.module('ts5App')
 		return itemsService.createItem(payload);
 	};
 
-  var updateItem = function (payload) {
-		return itemsService.updateItem(payload);
+  var updateItem = function (id,payload) {
+		return itemsService.updateItem(id,payload);
 	};
 
 	// Allergens

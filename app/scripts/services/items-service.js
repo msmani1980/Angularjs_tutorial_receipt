@@ -48,8 +48,8 @@ angular.module('ts5App')
       return requestResource.createItem(payload).$promise;
     };
 
-    var updateItem = function (payload) {
-      return requestResource.updateItem(payload).$promise;
+    var updateItem = function (id,payload) {
+      return requestResource.updateItem({id:id},{retailItem:payload}).$promise;
     };
 
     return {

@@ -10,10 +10,15 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory) {
+  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams) {
+
+      var editForm = false;
 
     	// View Name
   		$scope.viewName = 'Create Item';
+
+      // Button Text
+  		$scope.buttonText = 'Create';
 
   		// Form Data to be passed to API
   		$scope.formData = {
@@ -31,6 +36,26 @@ angular.module('ts5App')
         globalTradeNumbers: [],
         prices: []
       };
+
+      if($routeParams.id) {
+
+        editForm = true;
+
+        // View Name
+    		$scope.viewName = 'Edit Item ' + $routeParams.id;
+
+        // Button Text
+    		$scope.buttonText = 'Save';
+
+        // TODO: Update this to a function we can call over and over ;)
+        // TODO: format dates when setting values
+        // Get a list of items for substitutions and recommendations
+        itemsFactory.getItem($routeParams.id).then(function (data) {
+          $scope.formData = data.retailItem;
+        });
+
+      }
+
 
       // Get a list of items for substitutions and recommendations
       itemsFactory.getItemsList({}).then(function (data) {
@@ -374,25 +399,25 @@ angular.module('ts5App')
       };
 
       // Formats the dates when sending the payload to the API
-      function formatPayloadDates(newItem){
+      function formatPayloadDates(itemData){
 
         // format stary and end date
-        newItem.startDate = formatDate(newItem.startDate, 'L',  'YYYYMMDD');
-        newItem.endDate = formatDate(newItem.endDate, 'L',  'YYYYMMDD');
+        itemData.startDate = formatDate(itemData.startDate, 'L',  'YYYYMMDD');
+        itemData.endDate = formatDate(itemData.endDate, 'L',  'YYYYMMDD');
 
         // Loop through prices
-        for(var priceIndex in newItem.prices) {
+        for(var priceIndex in itemData.prices) {
 
-          var price = newItem.prices[priceIndex];
+          var price = itemData.prices[priceIndex];
 
           // format start and end dates
           price.startDate = formatDate(price.startDate, 'L',  'YYYYMMDD');
           price.endDate = formatDate(price.endDate, 'L',  'YYYYMMDD');
 
           // loop through station exceptions
-          for(var stationExceptionIndex in newItem.prices[priceIndex].stationExceptions) {
+          for(var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
 
-            var station = newItem.prices[priceIndex].stationExceptions[stationExceptionIndex];
+            var station = itemData.prices[priceIndex].stationExceptions[stationExceptionIndex];
 
             // format start and end dates
             station.startDate = formatDate(station.startDate, 'L',  'YYYYMMDD');
@@ -405,15 +430,15 @@ angular.module('ts5App')
       }
 
       // cleans up invalid properties of payload before submitting
-      function cleanUpPayload(newItem) {
+      function cleanUpPayload(itemData) {
 
         // Loop through prices
-        for(var priceIndex in newItem.prices) {
+        for(var priceIndex in itemData.prices) {
 
           // loop through each price currency collection
-          for(var currencyIndex in newItem.prices[priceIndex].priceCurrencies) {
+          for(var currencyIndex in itemData.prices[priceIndex].priceCurrencies) {
 
-            var currency = newItem.prices[priceIndex].priceCurrencies[currencyIndex];
+            var currency = itemData.prices[priceIndex].priceCurrencies[currencyIndex];
 
             // remove code from currency collection before adding to payload
             delete currency.code;
@@ -421,9 +446,9 @@ angular.module('ts5App')
           }
 
           // loop through station exceptions
-          for(var stationExceptionIndex in newItem.prices[priceIndex].stationExceptions) {
+          for(var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
 
-            var stationException = newItem.prices[priceIndex].stationExceptions[stationExceptionIndex];
+            var stationException = itemData.prices[priceIndex].stationExceptions[stationExceptionIndex];
 
             // remove stations collection for stations exception before  adding to payload
             delete stationException.stations;
@@ -443,15 +468,15 @@ angular.module('ts5App')
       }
 
       // formats the tags for payload
-      function formatTags(newItem) {
+      function formatTags(itemData) {
 
         // loop through tags in form data
-        for(var tagKey in newItem.tags) {
+        for(var tagKey in itemData.tags) {
 
-          var tagId = newItem.tags[tagKey];
+          var tagId = itemData.tags[tagKey];
 
           // set tag as object and set tagId property
-          newItem.tags[tagKey] = {
+          itemData.tags[tagKey] = {
             tagId: tagId
           };
 
@@ -460,15 +485,15 @@ angular.module('ts5App')
       }
 
       // formats the allergens for payload
-      function formatAllergens(newItem) {
+      function formatAllergens(itemData) {
 
         // loop through allergens in form data
-        for(var allergenKey in newItem.allergens) {
+        for(var allergenKey in itemData.allergens) {
 
-          var allergenId = newItem.allergens[allergenKey];
+          var allergenId = itemData.allergens[allergenKey];
 
           // set tag as object and set allergenId property
-          newItem.allergens[allergenKey] = {
+          itemData.allergens[allergenKey] = {
             allergenId: allergenId
           };
 
@@ -477,15 +502,15 @@ angular.module('ts5App')
       }
 
       // formats the characteristics for payload
-      function formatCharacteristics(newItem) {
+      function formatCharacteristics(itemData) {
 
         // loop through characteristics in form data
-        for(var characteristicKey in newItem.characteristics) {
+        for(var characteristicKey in itemData.characteristics) {
 
-          var characteristicId = newItem.characteristics[characteristicKey];
+          var characteristicId = itemData.characteristics[characteristicKey];
 
           // set tag as object and set characteristicId property
-          newItem.characteristics[characteristicKey] = {
+          itemData.characteristics[characteristicKey] = {
             characteristicId: characteristicId
           };
 
@@ -510,44 +535,74 @@ angular.module('ts5App')
         // display loading modal
         angular.element('#loading').modal('show').find('p').text( 'We are creating your item');
 
-        // copy the form data to the newItem
-        var newItem = angular.copy(formData);
+        // copy the form data to the itemData
+        var itemData = angular.copy(formData);
 
-        formatTags(newItem);
+        formatTags(itemData);
 
-        formatCharacteristics(newItem);
+        formatCharacteristics(itemData);
 
-        formatAllergens(newItem);
+        formatAllergens(itemData);
 
-        formatPayloadDates(newItem);
+        formatPayloadDates(itemData);
 
-        cleanUpPayload(newItem);
+        cleanUpPayload(itemData);
 
-        // create a new item
-      	var newItemPayload = {
-      		retailItem: newItem
-      	};
+        if(editForm) {
 
-      	// Create newItem in API
-      	itemsFactory.createItem(newItemPayload).then(function() {
+        	// update itemData in API
+        	itemsFactory.updateItem( $routeParams.id, itemData).then(function(response) {
 
-          // hide loading modal
-          angular.element('#loading').modal('hide');
+            $scope.formData = response.retailItem;
 
-          // show the success
-          angular.element('#create-success').modal('show');
+            // hide loading modal
+            angular.element('#loading').modal('hide');
 
-        // API error
-        }, function(error){
+            // TODO: show alert instead of success
+            // show the success
+            window.alert('Item updated!');
 
-          // hide loading modal
-          angular.element('#loading').modal('hide');
+          // API error
+          }, function(error){
 
-          // set flags for error UI to display
-        	$scope.displayError = true;
-		  	  $scope.formErrors = error.data;
+            // hide loading modal
+            angular.element('#loading').modal('hide');
 
-        });
+            // set flags for error UI to display
+          	$scope.displayError = true;
+  		  	  $scope.formErrors = error.data;
+
+          });
+
+        } else {
+
+          // create a new item
+        	var newItemPayload = {
+        		retailItem: itemData
+        	};
+
+        	// Create itemData in API
+        	itemsFactory.createItem(newItemPayload).then(function() {
+
+            // hide loading modal
+            angular.element('#loading').modal('hide');
+
+            // show the success
+            angular.element('#create-success').modal('show');
+
+          // API error
+          }, function(error){
+
+            // hide loading modal
+            angular.element('#loading').modal('hide');
+
+            // set flags for error UI to display
+          	$scope.displayError = true;
+  		  	  $scope.formErrors = error.data;
+
+          });
+
+        }
 
       };
 
