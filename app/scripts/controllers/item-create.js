@@ -10,7 +10,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams) {
+  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams,GlobalMenuService) {
+
+      // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+      var companyId = GlobalMenuService.company.get();
 
       $scope.formData = {
         startDate: '',
@@ -56,6 +59,10 @@ angular.module('ts5App')
 
       }
 
+      function validateItemCompany(data) {
+       return data.retailItem.companyId === companyId;
+     }
+
       // gets an item to editingItem
       function getItem(id) {
 
@@ -64,7 +71,16 @@ angular.module('ts5App')
 
         itemsFactory.getItem(id).then(function (data) {
 
-          upateFormData(data.retailItem);
+          if( validateItemCompany(data) ) {
+
+            upateFormData(data.retailItem);
+
+          } else {
+
+            $location.path('/');
+            return false;
+
+          }
 
           // hide loading modal
           angular.element('#loading').modal('hide');
@@ -192,7 +208,11 @@ angular.module('ts5App')
             stationException.startDate = formatDate(stationException.startDate,false,'L') ;
             stationException.endDate = formatDate(stationException.endDate,false,'L') ;
 
+        //    updateStationException(priceIndex,stationExceptionIndex);
+
           }
+
+        //  updatePriceGroup(priceIndex);
 
         }
 
@@ -272,6 +292,10 @@ angular.module('ts5App')
       // when a price date is change for a price groupd or station, need to update currencies
       function refreshPriceGroups(newData,oldData) {
 
+        if(!oldData) {
+          return false;
+        }
+
         // if the prices data has changed
         if(newData.prices !== oldData.prices) {
 
@@ -283,7 +307,7 @@ angular.module('ts5App')
             var oldPriceGroup = oldData.prices[priceIndex];
 
             // if threre isn't old data yet, exit out of loop
-            if(oldPriceGroup.startDate === '' || oldPriceGroup.endDate === '') {
+            if(!oldPriceGroup || oldPriceGroup.startDate === '' || oldPriceGroup.endDate === '') {
               return false;
             }
 
@@ -429,6 +453,27 @@ angular.module('ts5App')
         $scope.formData.prices[priceIndex].stationExceptions.splice(key,1);
       };
 
+      // generate a list of station exception currencies
+      function generateStationExceptionCurrenciesList(currenciesList){
+
+        var priceCurrencies = [];
+
+        for(var key in currenciesList) {
+
+          var currency = currenciesList[key];
+
+          priceCurrencies.push({
+            price: '1.00',
+            companyCurrencyId: currency.id,
+            code: currency.code
+          });
+
+        }
+
+        return priceCurrencies;
+
+      }
+
       // Updates the station exception with stations list and currencies list
       function updateStationException(priceIndex,stationExceptionIndex) {
 
@@ -458,21 +503,7 @@ angular.module('ts5App')
         currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
 
           // create a currencies collection
-          var stationExceptionCurrencies = [];
-
-          // loop through the response
-          for(var key in data.response) {
-
-            var currency = data.response[key];
-
-            // push a new currency object into the currencies collection
-            stationExceptionCurrencies.push({
-              price: '1.00',
-              companyCurrencyId: currency.id,
-              code: currency.code
-            });
-
-          }
+          var stationExceptionCurrencies = generateStationExceptionCurrenciesList(data.response);
 
           // create a new station exception object and add to scope
           stationException.stationExceptionCurrencies = stationExceptionCurrencies;
@@ -499,11 +530,39 @@ angular.module('ts5App')
         $scope.formData.prices.splice(key,1);
       };
 
+
+      // generate a list of price currencies
+      function generatePriceCurrenciesList(currenciesList){
+
+        console.log(currenciesList);
+
+        var priceCurrencies = [];
+
+        for(var key in currenciesList) {
+
+          var currency = currenciesList[key];
+
+          priceCurrencies.push({
+            price: '1.00',
+            companyCurrencyId: currency.id,
+            code: currency.code
+          });
+
+        }
+
+        return priceCurrencies;
+
+      }
+
       // pulls a list of currencies from the API and updates the price group
       function updatePriceGroup(priceIndex) {
 
         var startDate = formatDate($scope.formData.prices[priceIndex].startDate, 'L',  'YYYYMMDD');
         var endDate = formatDate($scope.formData.prices[priceIndex].endDate, 'L',  'YYYYMMDD');
+
+        if(startDate === 'Invalid date' || endDate === 'Invalid date') {
+          return false;
+        }
 
         // currency filter
         var currencyFilters = {
@@ -515,21 +574,7 @@ angular.module('ts5App')
         currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
 
           // create a currencies collection
-          var priceCurrencies = [];
-
-          // loop through the response
-          for(var key in data.response) {
-
-            var currency = data.response[key];
-
-            // push a new currency object into the currencies collection
-            priceCurrencies.push({
-              price: '1.00',
-              companyCurrencyId: currency.id,
-              code: currency.code
-            });
-
-          }
+          var priceCurrencies = generatePriceCurrenciesList(data.response);
 
           // create a new station exception object and add to scope
           $scope.formData.prices[priceIndex].priceCurrencies = priceCurrencies;
