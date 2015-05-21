@@ -4,4 +4,5 @@ dist
 .idea
 .sass-cache
 bower_components
+coverage
 app/scripts/config.js

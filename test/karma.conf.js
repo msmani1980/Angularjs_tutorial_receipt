@@ -3,7 +3,7 @@
 // Generated on 2015-04-14 using
 // generator-karma 0.9.0
 
-module.exports = function(config) {
+module.exports = function (config) {
   'use strict';
 
   config.set({
@@ -17,10 +17,15 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
 
     //
-
+    reporters: ['progress', 'coverage'],
     preprocessors: {
+      'app/scripts/**/*.js': ['coverage'],
       'app/views/**/*.html': ['ng-html2js'],
       'test/mock/**/*.json': ['ng-json2js']
+    },
+    coverageReporter: {
+      type: 'cobertura',
+      dir: 'coverage'
     },
 
     ngHtml2JsPreprocessor: {
@@ -76,8 +81,7 @@ module.exports = function(config) {
     ],
 
     // list of files / patterns to exclude
-    exclude: [
-    ],
+    exclude: [],
 
     // web server port
     port: 8080,
@@ -99,7 +103,8 @@ module.exports = function(config) {
       'karma-phantomjs-launcher',
       'karma-jasmine',
       'karma-ng-html2js-preprocessor',
-      'karma-ng-json2js-preprocessor'
+      'karma-ng-json2js-preprocessor',
+      'karma-coverage'
     ],
 
     // Continuous Integration mode
