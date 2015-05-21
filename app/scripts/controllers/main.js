@@ -13,7 +13,7 @@ angular.module('ts5App')
     var emberURL = '/ember/#/';
 
     $scope.dashboardMenu = [
-      {
+  /*    {
         'title': 'Stock Owner Item Management',
         menuItems: [
           {
@@ -35,7 +35,7 @@ angular.module('ts5App')
             className: 'dashboard-manageItemCategories'
           }
         ]
-      },
+      },*/
       {
         'title': 'Retail Item Management',
         menuItems: [

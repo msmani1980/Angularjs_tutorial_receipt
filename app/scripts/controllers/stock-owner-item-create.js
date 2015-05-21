@@ -12,6 +12,9 @@
 angular.module('ts5App')
   .controller('StockOwnerItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams,GlobalMenuService) {
 
+      // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+      var companyId = GlobalMenuService.company.get();
+
       $scope.formData = {
         startDate: '',
         endDate: '',
@@ -24,7 +27,7 @@ angular.module('ts5App')
         substitutions:[],
         recommendations: [],
         globalTradeNumbers: [],
-        prices: []
+        costPrices: []
       };
 
       $scope.viewName = 'Create Item';
@@ -55,6 +58,11 @@ angular.module('ts5App')
 
       }
 
+      // TODO: Port me to items
+      function validateItemCompany(data) {
+        return data.retailItem.companyId === companyId;
+      }
+
       // gets an item to editingItem
       function getItem(id) {
 
@@ -63,10 +71,18 @@ angular.module('ts5App')
 
         itemsFactory.getItem(id).then(function (data) {
 
-          upateFormData(data.retailItem);
-
           // hide loading modal
           angular.element('#loading').modal('hide');
+
+          if( validateItemCompany(data) ) {
+
+            upateFormData(data.retailItem);
+
+          } else {
+            $location.path('/');
+            return false;
+          }
+
 
         });
 
@@ -176,9 +192,9 @@ angular.module('ts5App')
         }
 
         // TODO: turn this into a function
-        for(var priceIndex in itemData.prices) {
+        for(var priceIndex in itemData.costPrices) {
 
-          var price = itemData.prices[priceIndex];
+          var price = itemData.costPrices[priceIndex];
 
           price.startDate = formatDate(price.startDate,false,'L') ;
           price.endDate = formatDate(price.endDate,false,'L') ;
@@ -186,6 +202,9 @@ angular.module('ts5App')
         }
 
         $scope.formData = itemData;
+
+        // TODO: Port to items (fixes bug!)
+        updatePriceGroup(priceIndex);
 
       }
 
@@ -261,18 +280,24 @@ angular.module('ts5App')
       // when a price date is change for a price groupd or station, need to update currencies
       function refreshPriceGroups(newData,oldData) {
 
-        // if the prices data has changed
-        if(newData.prices !== oldData.prices) {
+        // TODO: Port to items
+        if(!oldData) {
+          return false;
+        }
+
+        // if the costPrices data has changed
+        if(newData.costPrices !== oldData.costPrices) {
 
           // loop through all the price groups
-          for(var priceIndex in $scope.formData.prices) {
+          for(var priceIndex in $scope.formData.costPrices) {
 
             // the new and old price groups
-            var newPriceGroup = newData.prices[priceIndex];
-            var oldPriceGroup = oldData.prices[priceIndex];
+            var newPriceGroup = newData.costPrices[priceIndex];
+            var oldPriceGroup = oldData.costPrices[priceIndex];
 
+            // TODO: Port to items
             // if threre isn't old data yet, exit out of loop
-            if(oldPriceGroup.startDate === '' || oldPriceGroup.endDate === '') {
+            if(!oldPriceGroup || oldPriceGroup.startDate === '' || oldPriceGroup.endDate === '') {
               return false;
             }
 
@@ -296,12 +321,12 @@ angular.module('ts5App')
         if(newData.startDate !== oldData.startDate || newData.endDate !== oldData.endDate) {
 
           // TODO: Move this to it's own function
-          if(newData.prices.length > 0) {
+          if(newData.costPrices.length > 0) {
 
             // loop through all the price groups
-            for(var priceIndex in $scope.formData.prices) {
+            for(var priceIndex in $scope.formData.costPrices) {
 
-              var price = $scope.formData.prices[priceIndex];
+              var price = $scope.formData.costPrices[priceIndex];
 
               // if new item end date is before price start date
               if( moment(newData.endDate).isBefore(price.startDate) ) {
@@ -356,10 +381,10 @@ angular.module('ts5App')
 
       $scope.addPriceGroup = function() {
 
-        $scope.formData.prices.push({
+        $scope.formData.costPrices.push({
           startDate: '',
           endDate: '',
-          priceCurrencies:[]
+          amount: '1.00'
         });
 
       };
@@ -368,37 +393,51 @@ angular.module('ts5App')
       $scope.addPriceGroup();
 
       $scope.removePriceGroup = function(key) {
-        $scope.formData.prices.splice(key,1);
+        $scope.formData.costPrices.splice(key,1);
       };
+
+      var getCurrencyFromArrayUsingId = function (currenciesArray, baseCurrencyId) {
+        return currenciesArray.filter(function (currencyItem) {
+          return currencyItem.id === baseCurrencyId;
+        })[0];
+      };
+
+      // TODO: Port this to items
+      /*
+      function generatePriceCurrenciesList(currenciesList){
+
+        var priceCurrencies = [];
+
+        for(var key in currenciesList) {
+
+          var currency = currenciesList[key];
+
+          priceCurrencies.push({
+            price: '1.00',
+            companyCurrencyId: currency.id,
+            code: currency.currencyCode
+          });
+
+        }
+
+        return priceCurrencies;
+
+      }*/
 
       // pulls a list of currencies from the API and updates the price group
       function updatePriceGroup(priceIndex) {
 
+        currencyFactory.getCompany(companyId).then(function (response) {
 
-        // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
-        var companyId = GlobalMenuService.company.get();
+          var baseCurrencyId = response.baseCurrencyId;
 
-        currencyFactory.getCompanyBaseCurrency(companyId).then(function (data) {
+          currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
 
-          // create a currencies collection
-          var priceCurrencies = [];
+            var baseCurrency = getCurrencyFromArrayUsingId(companyBaseCurrencyData.response, baseCurrencyId);
 
-          // loop through the response
-          for(var key in data.response) {
+            $scope.formData.costPrices[priceIndex].code = baseCurrency.currencyCode;
 
-            var currency = data.response[key];
-
-            // push a new currency object into the currencies collection
-            priceCurrencies.push({
-              price: '1.00',
-              companyCurrencyId: currency.id,
-              code: currency.code
-            });
-
-          }
-
-          // add price currencies into the scope
-          $scope.formData.prices[priceIndex].priceCurrencies = priceCurrencies;
+          });
 
         });
 
@@ -422,10 +461,10 @@ angular.module('ts5App')
 
         }
 
-        // Loop through prices
-        for(var priceIndex in itemData.prices) {
+        // Loop through costPrices
+        for(var priceIndex in itemData.costPrices) {
 
-          var price = itemData.prices[priceIndex];
+          var price = itemData.costPrices[priceIndex];
 
           // format start and end dates
           price.startDate = formatDate(price.startDate, 'L',  'YYYYMMDD');
@@ -438,18 +477,12 @@ angular.module('ts5App')
       // cleans up invalid properties of payload before submitting
       function cleanUpPayload(itemData) {
 
-        // Loop through prices
-        for(var priceIndex in itemData.prices) {
+        // Loop through costPrices
+        for(var priceIndex in itemData.costPrices) {
 
-          // loop through each price currency collection
-          for(var currencyIndex in itemData.prices[priceIndex].priceCurrencies) {
+          var price = itemData.costPrices[priceIndex];
 
-            var currency = itemData.prices[priceIndex].priceCurrencies[currencyIndex];
-
-            // remove code from currency collection before adding to payload
-            delete currency.code;
-
-          }
+          delete price.code;
 
         }
 
