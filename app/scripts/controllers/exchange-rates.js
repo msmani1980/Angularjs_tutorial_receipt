@@ -27,6 +27,12 @@ angular.module('ts5App')
       })[0];
     }
 
+    var getCurrencyFromArrayUsingId = function (currenciesArray, baseCurrencyId) {
+      return currenciesArray.filter(function (currencyItem) {
+        return currencyItem.id === baseCurrencyId;
+      })[0];
+    };
+
     function serializeCoinAndPaperExchangeRate(currencyCode, coinExchangeRate, paperExchangeRate) {
       $scope.currenciesFields[currencyCode] = {
         coinExchangeRate: coinExchangeRate,
@@ -159,8 +165,16 @@ angular.module('ts5App')
       }, showErrors);
     };
 
-    currencyFactory.getCompanyBaseCurrency(companyId).then(function (companyBaseCurrency) {
-      $scope.companyBaseCurrency = companyBaseCurrency;
+
+    function getCompanyBaseCurrency(baseCurrencyId) {
+      currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
+        $scope.companyBaseCurrency = getCurrencyFromArrayUsingId(companyBaseCurrencyData.response, baseCurrencyId);
+      });
+    }
+
+    currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
+      getCompanyBaseCurrency(companyDataFromAPI.baseCurrencyId);
+      $scope.company = companyDataFromAPI;
     });
 
   });

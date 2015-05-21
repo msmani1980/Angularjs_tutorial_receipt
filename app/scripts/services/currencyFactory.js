@@ -8,25 +8,14 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('currencyFactory', function ($q, $resource, currenciesService, dailyExchangeRatesService, companiesService) {
+  .factory('currencyFactory', function ($resource, currenciesService, dailyExchangeRatesService, companiesService) {
 
-    var getCurrencyFromArrayUsingId = function (currenciesArray, baseCurrencyId) {
-      return currenciesArray.filter(function (currencyItem) {
-        return currencyItem.id === baseCurrencyId;
-      })[0];
+    var getCompany = function (companyId) {
+      return companiesService.getCompany(companyId);
     };
 
-    var getCompanyBaseCurrency = function (companyId) {
-
-      var deferred = $q.defer();
-
-      companiesService.getCompany(companyId).then(function(companyDataFromAPI){
-        currenciesService.getCompanyGlobalCurrencies().then(function (data) {
-          deferred.resolve(getCurrencyFromArrayUsingId(data.response, companyDataFromAPI.baseCurrencyId));
-        });
-      });
-
-      return deferred.promise;
+    var getCompanyGlobalCurrencies = function (payload) {
+      return currenciesService.getCompanyGlobalCurrencies(payload);
     };
 
     var getPreviousExchangeRates = function (companyId, cashierDate) {
@@ -37,12 +26,21 @@ angular.module('ts5App')
       return dailyExchangeRatesService.getDailyExchangeRates(companyId, cashierDate);
     };
 
+    var getCompanyCurrencies = function (payload) {
+      return currenciesService.getCompanyCurrencies(payload);
+    };
+
+    var saveDailyExchangeRates = function (payload) {
+      return dailyExchangeRatesService.saveDailyExchangeRates(payload);
+    };
+
     return {
-      getCompanyBaseCurrency: getCompanyBaseCurrency,
-      getCompanyCurrencies: currenciesService.getCompanyCurrencies,
+      getCompany: getCompany,
+      getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
+      getCompanyCurrencies: getCompanyCurrencies,
       getDailyExchangeRates: getDailyExchangeRates,
       getPreviousExchangeRates: getPreviousExchangeRates,
-      saveDailyExchangeRates: dailyExchangeRatesService.saveDailyExchangeRates
+      saveDailyExchangeRates: saveDailyExchangeRates
     };
 
   });

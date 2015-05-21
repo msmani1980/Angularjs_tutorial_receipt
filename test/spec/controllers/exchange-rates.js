@@ -48,8 +48,11 @@ describe('Controller: ExchangeRatesCtrl', function () {
     expect(scope.viewName).toBeDefined();
   });
 
-  it('should get the companyBaseCurrency from currencyFactory', function () {
+  it('should get the company data from currencyFactory', function () {
+    expect(!!scope.company).toBe(true);
+  });
 
+  it('should get the companyBaseCurrency from currencyFactory', function () {
     expect(scope.companyBaseCurrency.currencyCode).toBe('EUR');
   });
 
@@ -61,5 +64,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
     expect(scope.dailyExchangeRates.dailyExchangeRateCurrencies.length).toBeGreaterThan(0);
   });
 
-
 });
+
+
+// TODO: complete tests
