@@ -71,11 +71,9 @@
 
 					<fieldset ng-disabled="viewOnly || itemIsActive">
 
-						<input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.word" placeholder="Item123"></input-text>
+						<input-text label="Stock Owner Item Code" name="itemCode" required="true" pattern="regexp.word" placeholder="Item123"></input-text>
 
-						<input-text label="Retail Item Name" name="itemName" required="true"  pattern="regexp.word" placeholder="My Item"></input-text>
-
-						<input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word" placeholder="My Awesome Item"></input-text>
+						<input-text label="Stock Owner Item Name" name="itemName" required="true"  pattern="regexp.word" placeholder="My Item"></input-text>
 
 						<input-text label="Item Description" name="desc" required="true" pattern="regexp.word" placeholder="A simple description..."></input-text>
 
@@ -349,20 +347,6 @@
 
 					<div ng-repeat="(key,itemPrice) in formData.prices track by $index">
 						<input-price-type> </input-price-type>
-					</div>
-
-				</div>
-
-				<p>
-					<button type="button" class="btn btn-primary" ng-click="addTaxType()">
-				     <i class="fa fa-plus"></i> Add Tax Type
-				  </button>
-				</p>
-
-				<div id="tax-type-container">
-
-					<div ng-repeat="(key,itemTax) in formData.taxes track by $index">
-						<input-tax-type> </input-tax-type>
 					</div>
 
 				</div>

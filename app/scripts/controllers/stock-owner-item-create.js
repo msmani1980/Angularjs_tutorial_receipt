@@ -10,7 +10,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockOwnerItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams) {
+  .controller('StockOwnerItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams,GlobalMenuService) {
 
       $scope.formData = {
         startDate: '',
@@ -18,7 +18,6 @@ angular.module('ts5App')
         qrCodeValue: '',
         qrCodeImgUrl: null,
         images: [],
-        taxes:[],
         tags: [],
         allergens:[],
         characteristics:[],
@@ -184,16 +183,6 @@ angular.module('ts5App')
           price.startDate = formatDate(price.startDate,false,'L') ;
           price.endDate = formatDate(price.endDate,false,'L') ;
 
-          // TODO: turn this into a function
-          for(var stationExceptionIndex in price.stationExceptions) {
-
-            var stationException = price.stationExceptions[stationExceptionIndex];
-
-            stationException.startDate = formatDate(stationException.startDate,false,'L') ;
-            stationException.endDate = formatDate(stationException.endDate,false,'L') ;
-
-          }
-
         }
 
         $scope.formData = itemData;
@@ -254,7 +243,7 @@ angular.module('ts5App')
         // check item dates and make sure all dates fall within the acceptable dates
         checkItemDates(newData,oldData);
 
-        // if a price group date or station exception changes, update currencies list
+        // if a price group date changes, update currencies list
         refreshPriceGroups(newData,oldData);
 
 
@@ -295,34 +284,13 @@ angular.module('ts5App')
 
             }
 
-            // loop through all the stations exceptions
-            for(var stationExceptionIndex in $scope.formData.prices[priceIndex].stationExceptions) {
-
-              var newStationException = newData.prices[priceIndex].stationExceptions[stationExceptionIndex];
-              var oldStationException = oldData.prices[priceIndex].stationExceptions[stationExceptionIndex];
-
-              // if threre isn't old data yet, exit out of loop
-              if(!oldStationException || oldStationException.endDate === '') {
-                return false;
-              }
-
-              // if the startDate or endDate is different
-              if(newStationException.startDate !== oldStationException.startDate || newStationException.endDate !== oldStationException.endDate) {
-
-                // update the price group
-                updateStationException(priceIndex,stationExceptionIndex);
-
-              }
-
-            } // end loop on stationExceptions
-
           } // end loop on price groups
 
         }
 
       }
 
-      // check date ranges on items, price groups and station exceptions
+      // check date ranges on items, price groups
       function checkItemDates(newData,oldData) {
 
         if(newData.startDate !== oldData.startDate || newData.endDate !== oldData.endDate) {
@@ -350,34 +318,6 @@ angular.module('ts5App')
                 price.startDate = newData.startDate;
 
               }
-
-              // TODO: Move this to it's own function
-              if(price.stationExceptions.length > 0) {
-
-                // loop through all the station exceptions
-                for(var stationIndex in price.stationExceptions) {
-
-                  var stationException = price.stationExceptions[stationIndex];
-
-                  // if new item end date is before station exception start date
-                  if( moment(newData.endDate).isBefore(stationException.startDate) ) {
-
-                    // set station exception start date as new item end date
-                    stationException.startDate = newData.endDate;
-
-                  }
-
-                  // if new item start date is after station exception start date
-                  if( moment(newData.startDate).isAfter(stationException.startDate) ) {
-
-                    // set station exception start date as new item start date
-                    stationException.startDate = newData.startDate;
-
-                  }
-
-                } // end station exception loop
-
-              } // end if exceptions list is greater than 0
 
             } // end price for loop
 
@@ -414,80 +354,12 @@ angular.module('ts5App')
         $scope.formData.globalTradeNumbers.splice(key,1);
       };
 
-      $scope.addStationException = function(priceIndex) {
-
-        // create a new station exception object and add to scope
-        $scope.formData.prices[priceIndex].stationExceptions.push({
-          startDate:'',
-          endDate:'',
-          stationExceptionCurrencies: []
-        });
-
-      };
-
-      $scope.removeStationException = function(priceIndex,key) {
-        $scope.formData.prices[priceIndex].stationExceptions.splice(key,1);
-      };
-
-      // Updates the station exception with stations list and currencies list
-      function updateStationException(priceIndex,stationExceptionIndex) {
-
-        var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex];
-
-        var startDate = formatDate(stationException.startDate, 'L',  'YYYYMMDD');
-        var endDate = formatDate(stationException.endDate, 'L',  'YYYYMMDD');
-
-        // stations filter
-        var stationsFilter = {
-          startDate: startDate,
-          endDate: endDate
-        };
-
-        // get stations
-        companiesFactory.getStationsList(stationsFilter).then(function(data) {
-          stationException.stations = data.response;
-        });
-
-        // currency filter
-        var currencyFilters = {
-          startDate: startDate,
-          endDate: endDate,
-          isOperatedCurrency: true
-        };
-
-        currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
-
-          // create a currencies collection
-          var stationExceptionCurrencies = [];
-
-          // loop through the response
-          for(var key in data.response) {
-
-            var currency = data.response[key];
-
-            // push a new currency object into the currencies collection
-            stationExceptionCurrencies.push({
-              price: '1.00',
-              companyCurrencyId: currency.id,
-              code: currency.code
-            });
-
-          }
-
-          // create a new station exception object and add to scope
-          stationException.stationExceptionCurrencies = stationExceptionCurrencies;
-
-        });
-
-      }
-
       $scope.addPriceGroup = function() {
 
         $scope.formData.prices.push({
           startDate: '',
           endDate: '',
-          priceCurrencies:[],
-          stationExceptions:[]
+          priceCurrencies:[]
         });
 
       };
@@ -502,17 +374,11 @@ angular.module('ts5App')
       // pulls a list of currencies from the API and updates the price group
       function updatePriceGroup(priceIndex) {
 
-        var startDate = formatDate($scope.formData.prices[priceIndex].startDate, 'L',  'YYYYMMDD');
-        var endDate = formatDate($scope.formData.prices[priceIndex].endDate, 'L',  'YYYYMMDD');
 
-        // currency filter
-        var currencyFilters = {
-          startDate: startDate,
-          endDate: endDate,
-          isOperatedCurrency: true
-        };
+        // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+        var companyId = GlobalMenuService.company.get();
 
-        currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
+        currencyFactory.getCompanyBaseCurrency(companyId).then(function (data) {
 
           // create a currencies collection
           var priceCurrencies = [];
@@ -531,7 +397,7 @@ angular.module('ts5App')
 
           }
 
-          // create a new station exception object and add to scope
+          // add price currencies into the scope
           $scope.formData.prices[priceIndex].priceCurrencies = priceCurrencies;
 
         });
@@ -565,17 +431,6 @@ angular.module('ts5App')
           price.startDate = formatDate(price.startDate, 'L',  'YYYYMMDD');
           price.endDate = formatDate(price.endDate, 'L',  'YYYYMMDD');
 
-          // loop through station exceptions
-          for(var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
-
-            var station = itemData.prices[priceIndex].stationExceptions[stationExceptionIndex];
-
-            // format start and end dates
-            station.startDate = formatDate(station.startDate, 'L',  'YYYYMMDD');
-            station.endDate = formatDate(station.endDate, 'L',  'YYYYMMDD');
-
-          }
-
         }
 
       }
@@ -593,24 +448,6 @@ angular.module('ts5App')
 
             // remove code from currency collection before adding to payload
             delete currency.code;
-
-          }
-
-          // loop through station exceptions
-          for(var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
-
-            var stationException = itemData.prices[priceIndex].stationExceptions[stationExceptionIndex];
-
-            // remove stations collection for stations exception before  adding to payload
-            delete stationException.stations;
-
-            // loop through each station exception  currency collection
-            for(var stationCurrencyIndex in stationException.stationExceptionCurrencies) {
-
-              // remove code from stations exceptions currencies item  adding to payload
-              delete stationException.stationExceptionCurrencies[stationCurrencyIndex].code;
-
-            }
 
           }
 
