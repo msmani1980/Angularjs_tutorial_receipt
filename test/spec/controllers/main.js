@@ -16,19 +16,34 @@ describe('Controller: MainCtrl', function () {
         });
     }));
 
+    // TODO: Need to add in company AJAX call before any of these Test. Left out companies factory test is incomplete
+
     it('should have a viewName property', function () {
         expect(scope.viewName).toBeDefined();
     });
 
-    it('should attach a list of dashboard items to the scope', function () {
-        expect(scope.dashboardMenu.length).toBe(12);
+    it('should have a retail menu collection', function () {
+        expect(MainCtrl.retailMenu.length).toBe(12);
     });
 
     it('should have a title property', function () {
-        expect(scope.dashboardMenu[0].title).toMatch(/retail item management/i);
+        expect(MainCtrl.retailMenu[0].title).toMatch(/retail item management/i);
     });
 
     it('should have a menuItems Array with 3 elements', function () {
-        expect(scope.dashboardMenu[0].menuItems.length).toBe(3);
+        expect(MainCtrl.retailMenu[0].menuItems.length).toBe(3);
     });
+
+    it('should have a stock owner menu collection', function () {
+        expect(MainCtrl.stockOwnerMenu.length).toBe(1);
+    });
+
+    it('should have a title property', function () {
+        expect(MainCtrl.stockOwnerMenu[0].title).toMatch(/stock owner item management/i);
+    });
+
+    it('should have a menuItems Array with 3 elements', function () {
+        expect(MainCtrl.stockOwnerMenu[0].menuItems.length).toBe(3);
+    });
+
 });

@@ -427,7 +427,8 @@ angular.module('ts5App')
       // pulls a list of currencies from the API and updates the price group
       function updatePriceGroup(priceIndex) {
 
-        currencyFactory.getCompany(companyId).then(function (response) {
+        // TODO: Make this call only once and then access locally
+        companiesFactory.getCompany(companyId).then(function (response) {
 
           var baseCurrencyId = response.baseCurrencyId;
 
