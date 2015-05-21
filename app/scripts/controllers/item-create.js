@@ -12,21 +12,7 @@
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams) {
 
-  		$scope.viewName = 'Create Item';
-
-  		$scope.buttonText = 'Create';
-
-      $scope.itemIsActive = false;
-
-      $scope.itemIsInactive = false;
-
-      var editingItem = false;
-
-      if($routeParams.id) {
-        editingItem = true;
-      }
-
-  		$scope.formData = {
+      $scope.formData = {
         startDate: '',
         endDate: '',
         qrCodeValue: '',
@@ -42,17 +28,40 @@ angular.module('ts5App')
         prices: []
       };
 
+      $scope.viewName = 'Create Item';
+
+  		$scope.buttonText = 'Create';
+
+      $scope.itemIsActive = false;
+
+      $scope.itemIsInactive = false;
+
+      $scope.viewOnly = $location.path().includes('item-view');
+
+      var editingItem = false;
+
+      function setFormAsViewOnly() {
+
+        $scope.viewName = 'Viewing Item ' + $routeParams.id;
+
+      }
+
+      function setFormAsEdit() {
+
+        editingItem = true;
+
+        $scope.viewName = 'Edit Item ' + $routeParams.id;
+
+        $scope.buttonText = 'Save';
+
+      }
+
       // gets an item to editingItem
       function getItem(id) {
 
         // display loading modal
         angular.element('#loading').modal('show').find('p').text( 'We are getting Item ' + id);
 
-    		$scope.viewName = 'Edit Item ' + id;
-
-    		$scope.buttonText = 'Save';
-
-        // TODO: format dates when setting values
         itemsFactory.getItem(id).then(function (data) {
 
           upateFormData(data.retailItem);
@@ -64,7 +73,15 @@ angular.module('ts5App')
 
       }
 
-      if(editingItem) {
+      if($scope.viewOnly) {
+        setFormAsViewOnly();
+      }
+
+      if( $routeParams.id && !$scope.viewOnly ) {
+        setFormAsEdit();
+      }
+
+      if(editingItem || $scope.viewOnly) {
 
         getItem($routeParams.id);
 
@@ -147,6 +164,7 @@ angular.module('ts5App')
 
         deserializeAllergens(itemData);
 
+        // TODO: turn this into a function
         // Loop through images
         for(var imageIndex in itemData.images) {
 
@@ -158,6 +176,7 @@ angular.module('ts5App')
 
         }
 
+        // TODO: turn this into a function
         for(var priceIndex in itemData.prices) {
 
           var price = itemData.prices[priceIndex];
@@ -165,6 +184,7 @@ angular.module('ts5App')
           price.startDate = formatDate(price.startDate,false,'L') ;
           price.endDate = formatDate(price.endDate,false,'L') ;
 
+          // TODO: turn this into a function
           for(var stationExceptionIndex in price.stationExceptions) {
 
             var stationException = price.stationExceptions[stationExceptionIndex];
@@ -670,8 +690,6 @@ angular.module('ts5App')
         // error handler
         }, function(response){
 
-          console.log(status);
-
           angular.element('#loading').modal('hide');
 
           $scope.displayError = true;
@@ -711,8 +729,6 @@ angular.module('ts5App')
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
-        console.log(formData);
-
       	if( !$scope.form.$valid ) {
 
 				  $scope.displayError = true;
@@ -720,8 +736,6 @@ angular.module('ts5App')
   				return false;
 
   			}
-
-
 
         // copy the form data to the itemData
         var itemData = angular.copy(formData);
