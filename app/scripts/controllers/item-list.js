@@ -123,4 +123,15 @@ angular.module('ts5App')
 
       };
 
+      $scope.clearSearchFilters = function() {
+
+        var filters = $scope.search;
+
+        for(var filterKey in filters) {
+          $scope.search[filterKey] = '';
+        }
+
+      };
+
+
     });
