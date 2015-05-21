@@ -165,12 +165,15 @@ angular.module('ts5App')
       }, showErrors);
     };
 
-
     function getCompanyBaseCurrency(baseCurrencyId) {
       currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
         $scope.companyBaseCurrency = getCurrencyFromArrayUsingId(companyBaseCurrencyData.response, baseCurrencyId);
       });
     }
+
+    currencyFactory.getCompanyPreferences().then(function (companyPreferencesData) {
+      $scope.companyPreferences = companyPreferencesData.preferences;
+    });
 
     currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
       getCompanyBaseCurrency(companyDataFromAPI.baseCurrencyId);
