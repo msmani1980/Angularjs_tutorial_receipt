@@ -198,11 +198,11 @@ angular.module('ts5App')
           price.startDate = formatDate(price.startDate,false,'L') ;
           price.endDate = formatDate(price.endDate,false,'L') ;
 
+          updatePriceGroup(priceIndex);
+
         }
 
         $scope.formData = itemData;
-
-        updatePriceGroup(priceIndex);
 
       }
 
