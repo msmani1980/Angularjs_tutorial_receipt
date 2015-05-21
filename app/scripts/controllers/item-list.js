@@ -111,7 +111,7 @@ angular.module('ts5App')
 
         startDate = formatDate(startDate, 'YYYYMMDD', 'L');
 
-        return moment( startDate ).isBefore( todaysDate );
+        return moment( startDate ).isBefore( todaysDate ) ;
 
       };
 
