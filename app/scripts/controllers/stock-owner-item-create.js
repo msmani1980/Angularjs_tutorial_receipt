@@ -58,7 +58,6 @@ angular.module('ts5App')
 
       }
 
-      // TODO: Port me to items
       function validateItemCompany(data) {
         return data.retailItem.companyId === companyId;
       }
@@ -203,7 +202,6 @@ angular.module('ts5App')
 
         $scope.formData = itemData;
 
-        // TODO: Port to items (fixes bug!)
         updatePriceGroup(priceIndex);
 
       }
@@ -280,7 +278,6 @@ angular.module('ts5App')
       // when a price date is change for a price groupd or station, need to update currencies
       function refreshPriceGroups(newData,oldData) {
 
-        // TODO: Port to items
         if(!oldData) {
           return false;
         }
@@ -295,7 +292,6 @@ angular.module('ts5App')
             var newPriceGroup = newData.costPrices[priceIndex];
             var oldPriceGroup = oldData.costPrices[priceIndex];
 
-            // TODO: Port to items
             // if threre isn't old data yet, exit out of loop
             if(!oldPriceGroup || oldPriceGroup.startDate === '' || oldPriceGroup.endDate === '') {
               return false;
@@ -401,28 +397,6 @@ angular.module('ts5App')
           return currencyItem.id === baseCurrencyId;
         })[0];
       };
-
-      // TODO: Port this to items
-      /*
-      function generatePriceCurrenciesList(currenciesList){
-
-        var priceCurrencies = [];
-
-        for(var key in currenciesList) {
-
-          var currency = currenciesList[key];
-
-          priceCurrencies.push({
-            price: '1.00',
-            companyCurrencyId: currency.id,
-            code: currency.currencyCode
-          });
-
-        }
-
-        return priceCurrencies;
-
-      }*/
 
       // pulls a list of currencies from the API and updates the price group
       function updatePriceGroup(priceIndex) {
