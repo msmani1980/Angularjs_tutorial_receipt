@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('currencyFactory', function ($resource, currenciesService, dailyExchangeRatesService, companiesService) {
+  .factory('currencyFactory', function ($resource, currenciesService, dailyExchangeRatesService, companiesService, companyPreferencesService) {
 
     var getCompany = function (companyId) {
       return companiesService.getCompany(companyId);
@@ -34,13 +34,18 @@ angular.module('ts5App')
       return dailyExchangeRatesService.saveDailyExchangeRates(payload);
     };
 
+    var getCompanyPreferences = function (payload) {
+      return companyPreferencesService.getCompanyPreferences(payload);
+    };
+
     return {
       getCompany: getCompany,
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
       getCompanyCurrencies: getCompanyCurrencies,
       getDailyExchangeRates: getDailyExchangeRates,
       getPreviousExchangeRates: getPreviousExchangeRates,
-      saveDailyExchangeRates: saveDailyExchangeRates
+      saveDailyExchangeRates: saveDailyExchangeRates,
+      getCompanyPreferences:getCompanyPreferences
     };
 
   });
