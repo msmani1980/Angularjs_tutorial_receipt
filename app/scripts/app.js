@@ -63,6 +63,22 @@ angular
         templateUrl: 'views/item-create.html',
         controller: 'ItemCreateCtrl'
       })
+      .when('/stock-owner-item-list', {
+        templateUrl: 'views/stock-owner-item-list.html',
+        controller: 'StockOwnerItemListCtrl'
+      })
+      .when('/stock-owner-item-create', {
+        templateUrl: 'views/stock-owner-item-create.html',
+        controller: 'StockOwnerItemCreateCtrl'
+      })
+      .when('/stock-owner-item-edit/:id', {
+        templateUrl: 'views/stock-owner-item-create.html',
+        controller: 'StockOwnerItemCreateCtrl'
+      })
+      .when('/stock-owner-item-view/:id', {
+        templateUrl: 'views/stock-owner-item-create.html',
+        controller: 'StockOwnerItemCreateCtrl'
+      })
       .when('/companies', {
         templateUrl: 'views/companies.html',
         controller: 'CompaniesCtrl'

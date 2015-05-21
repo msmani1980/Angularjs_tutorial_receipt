@@ -1,0 +1,383 @@
+<div class="container module-container">
+
+	<div class="top-header">
+
+		<div class="container">
+
+			<div class="edit-controls">
+
+				<div class="row">
+
+					<div class="col-xs-6">
+
+						<h2 class="view-name"> {{ viewName }} </h2>
+
+					</div>
+
+					<div class="col-xs-6 text-right">
+
+						<fieldset ng-hide="viewOnly">
+
+							<button class="btn btn-default" ng-click="leaveView()">
+								<span class="fa fa-remove" aria-hidden="true"></span>
+								<span class="hidden-xs">Cancel</span>
+							</button>
+
+							<button class="btn btn-primary" ng-click="submitForm(formData)">
+								<span class="fa fa-check-square-o" aria-hidden="true"></span>
+								<span class="hidden-xs">{{ buttonText }}</span>
+							</button>
+
+						</fieldset>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="form-nav btn-group-justified item-top" role="group" aria-label="..." ng-init="activeBtn = 'item-information'">
+
+			 	<a ng-click="formScroll('item-information')" ng-class="{'active':activeBtn === 'item-information'}" type="button" class="btn btn-default">
+			  	Item Information
+			  	</a>
+
+			  	<a ng-click="formScroll('measurements')" ng-class="{'active':activeBtn === 'measurements'}" type="button" class="btn btn-default">
+			  	Measurements
+			  	</a>
+
+			 	<a ng-click="formScroll('price-and-tax')" ng-class="{'active':activeBtn === 'price-and-tax'}" type="button" class="btn btn-default">
+			  	Price & Tax
+			  	</a>
+
+			</div>
+
+			<p>All required fields are marked with a *.</p>
+
+		</div>
+
+	</div>
+	<!--/TopHeader -->
+
+	<ng-form name="form" class="form edit-form create-item-form">
+
+			<form-error-dialog></form-error-dialog>
+
+			<h3 id="item-information">Item Information</h3>
+
+			<div class="row">
+
+				<div class="col-xs-12 col-sm-6">
+
+					<fieldset ng-disabled="viewOnly || itemIsActive">
+
+						<input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.word" placeholder="Item123"></input-text>
+
+						<input-text label="Retail Item Name" name="itemName" required="true"  pattern="regexp.word" placeholder="My Item"></input-text>
+
+						<input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word" placeholder="My Awesome Item"></input-text>
+
+						<input-text label="Item Description" name="desc" required="true" pattern="regexp.word" placeholder="A simple description..."></input-text>
+
+						<input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="awesome cool new"></input-text>
+
+						<input-text label="Unique Selling Point" name="sellingPoint" pattern="regexp.word" placeholder="Something cool!"></input-text>
+
+						<div class="form-group">
+
+							<input ng-model="formData.isPrintReceipt" type="checkbox" />
+							<label>Print Receipt</label>
+
+						</div>
+
+					</fieldset>
+
+					<date-picker class="form-group"
+						element-class="col-xs-6 col-sm-6"
+						start-date-model="formData.startDate"
+						end-date-model="formData.endDate"
+						disable-past="true"
+						label-from="Effective From"
+						label-to="Effective To"
+						disable-start-date="viewOnly || itemIsActive"
+						disable-end-date="viewOnly || itemIsInactive"
+						>
+					</date-picker>
+
+					<fieldset ng-disabled="viewOnly || itemIsActive">
+
+						<div class="form-group">
+							<label>Sales Category *</label>
+							<select name="categoryId" required ng-model="formData.categoryId" class="form-control">
+									<option ng-repeat="category in salesCategories" value="{{ category.id }}">{{ category.name }}</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Item Type *</label>
+							<select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control">
+								<option ng-repeat="type in itemTypes" value="{{ type.id }}">{{ type.name }}</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Item Characteristics</label>
+							<select multiple ng-model="formData.characteristics" class="form-control">
+								<option ng-repeat="character in characteristics" value="{{ character.id }}">{{ character.name }}</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Item Substitutions</label>
+							<select multiple ng-model="formData.substitutions" class="form-control">
+								<option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Item Recommendations</label>
+							<select multiple ng-model="formData.recommendations" class="form-control">
+								<option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
+							</select>
+						</div>
+
+					</fieldset>
+
+				</div>
+
+				<div class="col-xs-12 col-sm-6">
+
+					<fieldset ng-disabled="viewOnly || itemIsActive">
+
+						<div class="form-group">
+							<label>Item Tags</label>
+							<select multiple ng-model="formData.tags" class="form-control">
+								<option ng-repeat="tag in tags" value="{{ tag.id }}">{{ tag.name }}</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Allergen</label>
+							<select multiple ng-model="formData.allergens" class="form-control">
+								<option ng-repeat="allergen in allergens" value="{{ allergen.allergenId }}">{{ allergen.name }}</option>
+							</select>
+						</div>
+
+						<image-upload></image-upload>
+
+						<div id="images-container">
+
+							<div ng-repeat="(key,image) in formData.images track by $index">
+								<input-item-image> </input-item-image>
+							</div>
+
+						</div>
+
+						<h3>Global Trade In Numbers (GTIN)</h3>
+						<p>
+							<button type="button" class="btn btn-primary" ng-click="addGTIN()">
+						     <i class="fa fa-plus"></i> Add GTIN
+						  </button>
+						</p>
+
+						<div id="gtin-container">
+
+							<div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index">
+								<input-gtin> </input-gtin>
+							</div>
+
+						</div>
+
+						<input-text label="Mfg. Part Number" name="mfgPartNumber" pattern="regexp.word" placeholder="1234"></input-text>
+
+						<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="1234"></input-text>
+
+						<div class="panel panel-default" ng-show="formData.qrCodeImgUrl">
+
+						  <div class="panel-heading">
+
+						    <p class="panel-title">
+
+									<i class="fa fa-image"></i> QR Code
+
+						      <span class="pull-right btn btn-danger btn-xs" ng-click="removeQRCode()">
+						        <i class="fa fa-close"></i>
+						      </span>
+
+								</p>
+
+						  </div>
+
+						  <div class="panel-body">
+								<img src="{{ formData.qrCodeImgUrl }}" />
+							</div>
+
+						</div>
+
+						<tabset justified="true" ng-show="!formData.qrCodeImgUrl">
+
+							<tab heading="QR Create">
+
+								<qr-create></qr-create>
+
+							</tab>
+
+							<tab heading="QR Upload">
+
+								<qr-upload></qr-upload>
+
+							</tab>
+
+						</tabset>
+
+					</fieldset>
+
+				</div>
+
+			</div>
+
+			<fieldset ng-disabled="itemIsActive">
+
+				<h3 id="measurements">Measurements</h3>
+
+				<div class="row">
+
+					<div class="col-xs-12 col-sm-6">
+
+						<label>Item Weight</label>
+
+						<div class="row">
+
+							<div class="form-group">
+
+								<div class="col-xs-9">
+
+									<input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
+
+								</div>
+
+								<div class="col-xs-3">
+
+									<select ng-model="formData.weightType" class="form-control col-xs-2">
+
+										<option ng-repeat="weight in weightUnits" value="{{ weight.id }}">{{ weight.unitCode }}</option>
+
+									</select>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6">
+
+						<label>Item Volume</label>
+
+						<div class="row">
+
+							<div class="form-group">
+
+								<div class="col-xs-9">
+
+									<input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
+
+								</div>
+
+								<div class="col-xs-3">
+
+									<select ng-model="formData.volumeType" class="form-control">
+										<option ng-repeat="volume in volumeUnits" value="{{ volume.id }}">{{ volume.unitCode }}</option>
+									</select>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<label>Measurements</label>
+
+				<div class="row">
+
+					<div class="form-group">
+
+						<div class="col-md-3 col-xs-3">
+
+							<input ng-model="formData.length" type="text" class="form-control" placeholder="Length">
+
+						</div>
+
+						<div class="col-md-3 col-xs-3">
+
+							<input ng-model="formData.width" type="text" class="form-control" placeholder="Width">
+
+
+						</div>
+
+						<div class="col-md-3 col-xs-3">
+
+							<input ng-model="formData.height" type="text" class="form-control" placeholder="Height">
+
+						</div>
+
+						<div class="col-md-3 col-xs-3">
+							<select ng-model="formData.dimensionType" class="form-control">
+								<option ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }}</option>
+							</select>
+						</div>
+
+					</div>
+
+				</div>
+
+				<h3 id="price-and-tax">Price & Tax</h3>
+
+				<p>
+					<button type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+				     <i class="fa fa-plus"></i> Add Price Group
+				  </button>
+				</p>
+
+				<div id="price-type-container">
+
+					<div ng-repeat="(key,itemPrice) in formData.prices track by $index">
+						<input-price-type> </input-price-type>
+					</div>
+
+				</div>
+
+				<p>
+					<button type="button" class="btn btn-primary" ng-click="addTaxType()">
+				     <i class="fa fa-plus"></i> Add Tax Type
+				  </button>
+				</p>
+
+				<div id="tax-type-container">
+
+					<div ng-repeat="(key,itemTax) in formData.taxes track by $index">
+						<input-tax-type> </input-tax-type>
+					</div>
+
+				</div>
+
+		</fieldset>
+
+	</ng-form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<left-navigation></left-navigation>
