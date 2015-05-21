@@ -28,8 +28,6 @@ angular.module('ts5App')
             $scope.qrCreateUploadProgress = 0;
             $scope.qrCreateUploadSuccess = false;
             $scope.qrCreateUploadFail = false;
-            $scope.formData.qrCodeImgUrl = '';
-            $scope.formData.qrCodeValue = '';
         };
 
         // Function to convert dataURI into a Blob
@@ -95,6 +93,8 @@ angular.module('ts5App')
 
                     // pass new image object into formData.qrCodeValue array
                     $scope.formData.qrCodeImgUrl = data.url;
+
+                    $scope.clearQrCodes();
 
                 // on a failed upload
                 }).error(function () {

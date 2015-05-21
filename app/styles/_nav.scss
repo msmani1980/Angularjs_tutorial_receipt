@@ -74,13 +74,15 @@ a.navbar-brand{
 
 		li:hover > .left-nav-option{
 			opacity:1;
+			min-width:175px;
+			max-width:225px;
 
 		}
 
 		.left-nav-option{
 			width:100%;
-			min-width:175px;
-			max-width:225px;
+			min-width:0;
+			max-width:0;
 			height:50px;
 			background:#444;
 			border:1px solid #bce4f0;
