@@ -48,7 +48,7 @@
 
     <div class="panel-heading">
       <div class="row">
-        <h3 class="col-xs-6">{{currentCompany.companyName}}Delta Airlines</h3>
+        <h3 class="col-xs-6">{{company.companyName}}</h3>
 
         <date-picker
           class="col-xs-6 text-right"
@@ -64,7 +64,7 @@
     <div class="panel-body">
 
       <div class="row">
-        <div class="col-xs-2">Tail</div>
+        <div class="col-xs-2">{{cashHandlerCompany.companyName}}</div>
         <div class="col-xs-10 text-right">Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></div>
       </div>
       <div class="row">
@@ -112,4 +112,5 @@
     </div>
 
   </div>
+  {{random}}
 </form>

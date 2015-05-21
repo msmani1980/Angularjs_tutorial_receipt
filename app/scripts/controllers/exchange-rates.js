@@ -177,4 +177,8 @@ angular.module('ts5App')
       $scope.company = companyDataFromAPI;
     });
 
+    currencyFactory.getCompany(362).then(function (companyDataFromAPI) {
+      $scope.cashHandlerCompany = companyDataFromAPI;
+    });
+
   });
