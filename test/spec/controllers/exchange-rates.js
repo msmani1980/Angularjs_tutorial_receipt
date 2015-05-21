@@ -32,6 +32,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
       $httpBackend = $injector.get('$httpBackend');
 
       $httpBackend.expectGET(/companies/).respond(companyJSON);
+      $httpBackend.expectGET(/companies/).respond(companyJSON);
       $httpBackend.expectGET(/company-currency-globals/).respond(companyCurrencyGlobalsJSON);
       $httpBackend.expectGET(/previous-exchange-rate/).respond(dailyExchangeRatesJSON);
       $httpBackend.expectGET(/daily-exchange-rates/).respond(dailyExchangeRatesJSON);
