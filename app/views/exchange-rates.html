@@ -69,14 +69,14 @@
       </div>
       <div class="row">
         <label class="col-xs-2 control-label">Currency</label>
-        <label class="col-xs-3 control-label">Bank Exchange Rate</label>
-        <label class="col-xs-5 control-label">Paper Exchange Rate</label>
-        <label class="col-xs-5 control-label">Coin Exchange Rate</label>
+        <label class="col-xs-3 control-label" ng-if="isBankExchangePreferred">Bank Exchange Rate</label>
+        <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred">Paper Exchange Rate</label>
+        <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred">Coin Exchange Rate</label>
       </div>
       <div class="row" ng-repeat="currency in companyCurrencies">
         <div class="col-xs-2">{{currency.code}}</div>
 
-        <div class="col-xs-3">
+        <div class="col-xs-3" ng-if="isBankExchangePreferred">
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
@@ -91,7 +91,7 @@
           </div>
         </div>
 
-        <div class="col-xs-5">
+        <div class="col-xs-5" ng-if="!isBankExchangePreferred">
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
@@ -106,7 +106,7 @@
           </div>
         </div>
 
-        <div class="col-xs-5">
+        <div class="col-xs-5" ng-if="!isBankExchangePreferred">
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
