@@ -165,6 +165,16 @@ angular.module('ts5App')
       }, showErrors);
     };
 
+    $scope.isBankExchangePreferred = function() {
+      if (!$scope.companyPreferences) {
+        return false;
+      }
+
+      return $scope.companyPreferences.filter(function (feature) {
+        return (feature.featureCode === 'EXR' && feature.choiceCode === 'BNK');
+      }).length > 0;
+    };
+
     function getCompanyBaseCurrency(baseCurrencyId) {
       currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
         $scope.companyBaseCurrency = getCurrencyFromArrayUsingId(companyBaseCurrencyData.response, baseCurrencyId);

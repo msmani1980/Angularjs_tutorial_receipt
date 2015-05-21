@@ -69,6 +69,43 @@ describe('Controller: ExchangeRatesCtrl', function () {
     expect(scope.dailyExchangeRates.dailyExchangeRateCurrencies.length).toBeGreaterThan(0);
   });
 
+  describe('company Preferences', function () {
+
+    var preferencesJSON = [{
+      'featureCode': 'EXR',
+      'featureName': 'Exchange Rate',
+      'optionCode': 'ERT',
+      'optionName': 'Exchange Rate Type',
+      'choiceCode': 'BNK',
+      'choiceName': 'Bank'
+    }];
+
+    it('should attach the company preferences to scope', function () {
+      expect(!!scope.companyPreferences).toBe(true);
+    });
+
+    it('should return true if BNK is found in Exchange Rate feature', function () {
+      scope.companyPreferences = angular.extend(preferencesJSON);
+      expect(scope.isBankExchangePreferred()).toBe(true);
+    });
+
+    it('should return false if BNK is NOT found in Exchange Rate feature', function () {
+      scope.companyPreferences = angular.extend(preferencesJSON);
+      scope.companyPreferences[0].choiceCode = 'Not BNK';
+      expect(scope.isBankExchangePreferred()).toBe(false);
+    });
+
+    it('should return false if no preferences are defined', function () {
+      scope.companyPreferences = [];
+      expect(scope.isBankExchangePreferred()).toBe(false);
+    });
+
+    it('should return false if preferences is undefined or null', function () {
+      scope.companyPreferences = null;
+      expect(scope.isBankExchangePreferred()).toBe(false);
+    });
+  });
+
 });
 
 // TODO: complete tests

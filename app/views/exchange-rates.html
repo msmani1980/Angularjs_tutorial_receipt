@@ -69,11 +69,27 @@
       </div>
       <div class="row">
         <label class="col-xs-2 control-label">Currency</label>
-        <label class="col-xs-5 control-label">Paper Bank Exchange Rate</label>
-        <label class="col-xs-5 control-label">Coin Bank Exchange Rate</label>
+        <label class="col-xs-3 control-label">Bank Exchange Rate</label>
+        <label class="col-xs-5 control-label">Paper Exchange Rate</label>
+        <label class="col-xs-5 control-label">Coin Exchange Rate</label>
       </div>
       <div class="row" ng-repeat="currency in companyCurrencies">
         <div class="col-xs-2">{{currency.code}}</div>
+
+        <div class="col-xs-3">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-money"></i></span>
+            <input custom-validity
+                   custom-pattern="regexp.currencyWithFourDecimalPlace"
+                   ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
+                   ng-model="currenciesFields[currency.code].bankExchangeRate"
+                   required="true"
+                   name="{{currency.code}}bankExchangeRate"
+                   currencyType="bankExchangeRate" placeholder="0.0000"
+                   class="form-control"
+                   aria-label="Amount (to the nearest dollar)"/>
+          </div>
+        </div>
 
         <div class="col-xs-5">
           <div class="input-group">
