@@ -729,8 +729,6 @@ angular.module('ts5App')
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
-        console.log(formData);
-
       	if( !$scope.form.$valid ) {
 
 				  $scope.displayError = true;
