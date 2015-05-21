@@ -48,7 +48,7 @@
 
     <div class="panel-heading">
       <div class="row">
-        <h3 class="col-xs-6">{{currentCompany.companyName}}Delta Airlines</h3>
+        <h3 class="col-xs-6">{{company.companyName}}</h3>
 
         <date-picker
           class="col-xs-6 text-right"
@@ -64,18 +64,34 @@
     <div class="panel-body">
 
       <div class="row">
-        <div class="col-xs-2">Tail</div>
+        <div class="col-xs-2">{{cashHandlerCompany.companyName}}</div>
         <div class="col-xs-10 text-right">Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></div>
       </div>
       <div class="row">
         <label class="col-xs-2 control-label">Currency</label>
-        <label class="col-xs-5 control-label">Paper Bank Exchange Rate</label>
-        <label class="col-xs-5 control-label">Coin Bank Exchange Rate</label>
+        <label class="col-xs-3 control-label" ng-if="isBankExchangePreferred">Bank Exchange Rate</label>
+        <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred">Paper Exchange Rate</label>
+        <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred">Coin Exchange Rate</label>
       </div>
       <div class="row" ng-repeat="currency in companyCurrencies">
         <div class="col-xs-2">{{currency.code}}</div>
 
-        <div class="col-xs-5">
+        <div class="col-xs-3" ng-if="isBankExchangePreferred">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-money"></i></span>
+            <input custom-validity
+                   custom-pattern="regexp.currencyWithFourDecimalPlace"
+                   ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
+                   ng-model="currenciesFields[currency.code].bankExchangeRate"
+                   required="true"
+                   name="{{currency.code}}bankExchangeRate"
+                   currencyType="bankExchangeRate" placeholder="0.0000"
+                   class="form-control"
+                   aria-label="Amount (to the nearest dollar)"/>
+          </div>
+        </div>
+
+        <div class="col-xs-5" ng-if="!isBankExchangePreferred">
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
@@ -90,7 +106,7 @@
           </div>
         </div>
 
-        <div class="col-xs-5">
+        <div class="col-xs-5" ng-if="!isBankExchangePreferred">
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
@@ -112,4 +128,5 @@
     </div>
 
   </div>
+  {{random}}
 </form>

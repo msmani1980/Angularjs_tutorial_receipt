@@ -27,16 +27,23 @@ angular.module('ts5App')
       })[0];
     }
 
-    function serializeCoinAndPaperExchangeRate(currencyCode, coinExchangeRate, paperExchangeRate) {
+    var getCurrencyFromArrayUsingId = function (currenciesArray, baseCurrencyId) {
+      return currenciesArray.filter(function (currencyItem) {
+        return currencyItem.id === baseCurrencyId;
+      })[0];
+    };
+
+    function serializeExchangeRates(currencyCode, baseExchangeRate) {
       $scope.currenciesFields[currencyCode] = {
-        coinExchangeRate: coinExchangeRate,
-        paperExchangeRate: paperExchangeRate
+        coinExchangeRate: baseExchangeRate,
+        paperExchangeRate: baseExchangeRate,
+        bankExchangeRate: baseExchangeRate
       };
     }
 
     function setBaseExchangeRateModel() {
       if ($scope.companyBaseCurrency && $scope.dailyExchangeRates) {
-        serializeCoinAndPaperExchangeRate($scope.companyBaseCurrency.currencyCode, '1.0000', '1.0000');
+        serializeExchangeRates($scope.companyBaseCurrency.currencyCode, '1.0000');
       }
     }
 
@@ -55,7 +62,7 @@ angular.module('ts5App')
         angular.forEach($scope.companyCurrencies, function (companyCurrency) {
           var exchangeRate = getExchangeRateFromCompanyCurrencies($scope.dailyExchangeRates.dailyExchangeRateCurrencies, companyCurrency.id);
           if (exchangeRate) {
-            serializeCoinAndPaperExchangeRate(companyCurrency.code, exchangeRate.coinExchangeRate, exchangeRate.paperExchangeRate);
+            serializeExchangeRates(companyCurrency.code, exchangeRate.coinExchangeRate, exchangeRate.paperExchangeRate, exchangeRate.bankExchangeRate);
           }
         });
       }
@@ -105,19 +112,22 @@ angular.module('ts5App')
       $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies = [];
     }
 
-    function serializeExchangeRate(currency) {
+    function serializeExchangeRateForAPI(currency) {
       var coinExchangeRate = '1.0000',
-        paperExchangeRate = '1.0000';
+        paperExchangeRate = '1.0000',
+        bankExchangeRate = '1.0000';
 
       if ($scope.currenciesFields[currency.code]) {
         coinExchangeRate = $scope.currenciesFields[currency.code].coinExchangeRate;
         paperExchangeRate = $scope.currenciesFields[currency.code].paperExchangeRate;
+        bankExchangeRate = $scope.currenciesFields[currency.code].bankExchangeRate;
       }
 
       return {
         retailCompanyCurrencyId: currency.id,
         coinExchangeRate: coinExchangeRate,
-        paperExchangeRate: paperExchangeRate
+        paperExchangeRate: paperExchangeRate,
+        bankExchangeRate: bankExchangeRate
       };
     }
 
@@ -125,7 +135,7 @@ angular.module('ts5App')
       clearExchangeRateCurrencies();
       angular.forEach($scope.companyCurrencies, function (currency) {
         if ($scope.currenciesFields[currency.code]) {
-          var companyCurrency = serializeExchangeRate(currency);
+          var companyCurrency = serializeExchangeRateForAPI(currency);
           $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.push(companyCurrency);
         }
       });
@@ -159,8 +169,33 @@ angular.module('ts5App')
       }, showErrors);
     };
 
-    currencyFactory.getCompanyBaseCurrency(companyId).then(function (companyBaseCurrency) {
-      $scope.companyBaseCurrency = companyBaseCurrency;
+    $scope.isBankExchangePreferred = function() {
+      if (!$scope.companyPreferences) {
+        return false;
+      }
+
+      return $scope.companyPreferences.filter(function (feature) {
+        return (feature.featureCode === 'EXR' && feature.choiceCode === 'BNK');
+      }).length > 0;
+    };
+
+    function getCompanyBaseCurrency(baseCurrencyId) {
+      currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
+        $scope.companyBaseCurrency = getCurrencyFromArrayUsingId(companyBaseCurrencyData.response, baseCurrencyId);
+      });
+    }
+
+    currencyFactory.getCompanyPreferences().then(function (companyPreferencesData) {
+      $scope.companyPreferences = companyPreferencesData.preferences;
+    });
+
+    currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
+      getCompanyBaseCurrency(companyDataFromAPI.baseCurrencyId);
+      $scope.company = companyDataFromAPI;
+    });
+
+    currencyFactory.getCompany(362).then(function (companyDataFromAPI) {
+      $scope.cashHandlerCompany = companyDataFromAPI;
     });
 
   });

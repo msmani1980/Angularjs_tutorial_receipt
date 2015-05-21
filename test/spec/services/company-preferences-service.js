@@ -30,7 +30,7 @@ describe('Service: companyPreferencesService', function () {
     describe('getMenuList', function () {
       beforeEach(function () {
         $httpBackend.whenGET(/company-preferences/).respond(preferencesJSON);
-        companyPreferencesService.getList().then(function (menuListFromAPI) {
+        companyPreferencesService.getCompanyPreferences().then(function (menuListFromAPI) {
           apiData = menuListFromAPI;
         });
         $httpBackend.flush();

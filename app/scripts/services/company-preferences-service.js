@@ -15,18 +15,18 @@ angular.module('ts5App')
     };
 
     var actions = {
-      getList: {
+      getCompanyPreferences: {
         method: 'GET'
       }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getList = function (payload) {
-      return requestResource.getList(payload).$promise;
+    var getCompanyPreferences = function (payload) {
+      return requestResource.getCompanyPreferences(payload).$promise;
     };
 
     return {
-      getList: getList
+      getCompanyPreferences: getCompanyPreferences
     };
   });
