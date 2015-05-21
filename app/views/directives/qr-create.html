@@ -10,25 +10,25 @@
 
 					<qr text="formData.qrCodeValue" image="true" size="128"></qr>
 
-				</div> 
+				</div>
 
 				<button class="btn button btn-success" ng-show="!formData.qrCodeImgUrl.length" ng-disabled="!formData.qrCodeValue.length" ng-click="qrCreate()">Save QR</button>
 
 				<button class="btn button btn-default" ng-show="formData.qrCodeImgUrl.length" ng-click="clearQrCodes()">Clear QR</button>
 
 			</div>
-		
+
 		</div>
 
 		<div class="col-xs-12 col-sm-6">
 
-			<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code"></input-text>
+			<input-text label="QR Code" name="qrCodeValue" pattern="regexp.word" placeholder="my qr code" max-width="25"></input-text>
 
 			<alert ng-show="formData.qrCodeImgUrl.length && formData.qrCodeValue.length" type="success">QR code saved!</alert>
 
 			<alert ng-show="qrCreateUploadFail" type="danger">Could not save QR code.</alert>
 
-		</div> 
+		</div>
 
 	</div>
 
