@@ -59,7 +59,7 @@
 
 	<div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
 
-	<button class="btn button btn-success" ng-model="files" ng-disabled="!files.length" ng-click="qrUploader()">	Upload
+	<button class="btn button btn-success" ng-model="files" ng-hide="qrUploadSuccess" ng-disabled="!files.length" ng-click="qrUploader()">	Upload
 	</button>
 
 	<button class="btn button btn-default" ng-model="files" ng-show="files.length" ng-click="clearQrCodes()">	Clear

@@ -12,8 +12,7 @@ angular.module('ts5App')
 
     var requestURL = ENV.apiUrl + '/api/retail-items/:fetchFromMaster/:id';
     var requestParameters = {
-      id: '@id',
-      limit: 50
+      id: '@id'
     };
 
     var actions = {
@@ -28,6 +27,9 @@ angular.module('ts5App')
       },
       updateItem: {
         method: 'PUT'
+      },
+      removeItem: {
+        method: 'DELETE'
       }
     };
 
@@ -48,15 +50,20 @@ angular.module('ts5App')
       return requestResource.createItem(payload).$promise;
     };
 
-    var updateItem = function (payload) {
-      return requestResource.updateItem(payload).$promise;
+    var updateItem = function (id,payload) {
+      return requestResource.updateItem({id:id},payload).$promise;
+    };
+
+    var removeItem = function (id) {
+      return requestResource.removeItem({id:id}).$promise;
     };
 
     return {
       getItemsList: getItemsList,
       getItem: getItem,
       createItem: createItem,
-      updateItem: updateItem
+      updateItem: updateItem,
+      removeItem: removeItem
     };
 
 });

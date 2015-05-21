@@ -1,0 +1,55 @@
+<!-- GTINDirective -->
+
+<div class="panel panel-default">
+
+  <div class="panel-heading">
+
+    <p class="panel-title">
+
+			<i class="fa fa-image"></i> Image {{ $parent.key+1 }}
+
+      <span class="pull-right btn btn-danger btn-xs" ng-click="removeImage($parent.key)">
+        <i class="fa fa-close"></i>
+      </span>
+
+		</p>
+
+  </div>
+
+  <div class="panel-body">
+
+    <div class="form-group">
+
+      <div class="row">
+
+        <div class="col-xs-4 col-sm-4 col-md-2">
+
+          <label>Preview</label>
+
+          <img class="item-image-thumbnail" src="{{ image.imageURL }}" />
+
+        </div>
+
+        <div class="col-xs-8 col-sm-8 col-md-10">
+
+          <date-picker class="form-group"
+            element-class="col-xs-12 col-sm-12 col-md-6"
+            start-date-model="image.startDate"
+            end-date-model="image.endDate"
+            disable-past="true"
+            label-from="Effective From"
+            label-to="Effective To">
+          </date-picker>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- /GTINDirective -->

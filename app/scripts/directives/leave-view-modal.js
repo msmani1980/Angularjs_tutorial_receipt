@@ -21,14 +21,17 @@ angular.module('ts5App')
         $scope.leavePath = leavePath;
 
         //if the modal is hidden, and the location is not dashboard
-        if (e.modal('hide') && $location.path() !== '/' && $location.path !== '/#' && $location.path() !== '/'+leavePath){
+        if (e.modal('hide') && $location.path() === '/item-create' && $location.path() !== '/'+leavePath) {
 
           e.modal('show');
 
-        } else{
+        } else {
 
           e.modal('hide');
-    
+
+          $location.path('/' + leavePath);
+          $scope.$apply();
+
         }
 
         return leavePath;

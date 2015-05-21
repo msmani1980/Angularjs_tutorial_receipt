@@ -1,20 +1,20 @@
-  'use strict';
+'use strict';
 
-  /**
-   * @ngdoc directive
-   * @name ts5App.directive:inputGtin
-   * @description
-   * # inputGtin
-   */
-  angular.module('ts5App')
-    .directive('inputGtin', function () {
+/**
+ * @ngdoc directive
+ * @name ts5App.directive:inputGtin
+ * @description
+ * # inputGtin
+ */
+angular.module('ts5App')
+  .directive('inputGtin', function () {
 
-      return {
+    return {
 
-      	templateUrl: 'views/directives/input-gtin.html',
-      	restrict: 'E',
-      	scope: true
+    	templateUrl: 'views/directives/input-gtin.html',
+    	restrict: 'E',
+    	scope: true
 
-      };
+    };
 
-  });
+});

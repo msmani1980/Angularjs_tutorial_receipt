@@ -28,7 +28,6 @@ angular.module('ts5App')
             $scope.qrUploadProgress = 0;
             $scope.qrUploadSuccess = false;
             $scope.qrUploadFail = false;
-            $scope.formData.qrCodeImgUrl = '';
         };
 
         // upload qr image function
@@ -58,6 +57,8 @@ angular.module('ts5App')
 
                     // pass new image object into formData.qrCodeValue array
                     $scope.formData.qrCodeImgUrl = data.url;
+
+                    $scope.clearQrCodes();
 
                 // on a failed upload
                 }).error(function () {

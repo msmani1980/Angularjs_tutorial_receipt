@@ -10,428 +10,569 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, currencyFactory) {
+  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams) {
 
-    // View Name
-    $scope.viewName = 'Create Item';
-
-    // Form Data to be passed to API
-    $scope.formData = {
-      startDate: '', //moment().add(1,'days').format('L'), // set to tomorrow, for your health!
-      endDate: '',// moment().add(90,'days').format('L'), // 90 days into the future
-      qrCodeValue: '',
-      qrCodeImgUrl: null,
-      images: [],
-      taxes: [],
-      tags: [],
-      allergens: [],
-      characteristics: [],
-      substitutions: [],
-      recommendations: [],
-      globalTradeNumbers: [],
-      prices: []
-    };
-
-    // Get a list of items for substitutions and recommendations
-    itemsFactory.getItemsList({}).then(function (data) {
-      $scope.items = data.retailItems;
-    });
-
-    // Get a list of allergens
-    itemsFactory.getAllergensList(function (data) {
-      $scope.allergens = data;
-    });
-
-    // Get a list of item Types
-    itemsFactory.getItemTypesList(function (data) {
-      $scope.itemTypes = data;
-    });
-
-    // Get a list of Price Types
-    itemsFactory.getPriceTypesList(function (data) {
-      $scope.priceTypes = data;
-    });
-
-    // Get a list of Price Types
-    itemsFactory.getCharacteristicsList(function (data) {
-      $scope.characteristics = data;
-    });
-
-    // get dimension units
-    itemsFactory.getDimensionList(function (data) {
-      $scope.dimensionUnits = data.units;
-    });
-
-    // get weight units
-    itemsFactory.getVolumeList(function (data) {
-      $scope.weightUnits = data.units;
-    });
-
-    // get volume units
-    itemsFactory.getWeightList(function (data) {
-      $scope.volumeUnits = data.units;
-    });
-
-    // get tags
-    companiesFactory.getTagsList(function (data) {
-      $scope.tags = data.response;
-    });
-
-    // get sales categories
-    companiesFactory.getSalesCategoriesList(function (data) {
-      $scope.salesCategories = data.salesCategories;
-    });
-
-    // get tax types
-    companiesFactory.getTaxTypesList(function (data) {
-      $scope.taxTypes = data.response;
-    });
-
-    // TODO: Move to global function
-    function formatDate(dateString, formatFrom, formatTo) {
-      return moment(dateString, formatFrom).format(formatTo).toString();
-    }
-
-    // when the form data changes
-    $scope.$watch('formData', function (newData, oldData) {
-
-      // check item dates and make sure all dates fall within the acceptable dates
-      checkItemDates(newData, oldData);
-
-      // if a price group date or station exception changes, update currencies list
-      refreshPriceGroups(newData, oldData);
-
-
-    }, true);
-
-    // when the form to become valide
-    $scope.$watch('form.$valid', function (validity) {
-
-      // when it does hide the displayError ui component
-      if (validity) {
-        $scope.displayError = false;
-      }
-
-    });
-
-    // when a price date is change for a price groupd or station, need to update currencies
-    function refreshPriceGroups(newData, oldData) {
-
-      // if the prices data has changed
-      if (newData.prices === oldData.prices) {
-        return false;
-      }
-      // loop through all the price groups
-      for (var priceIndex in $scope.formData.prices) {
-
-        // the new and old price groups
-        var newPriceGroup = newData.prices[priceIndex];
-        var oldPriceGroup = oldData.prices[priceIndex];
-
-        // if threre isn't old data yet, exit out of loop
-        if (oldPriceGroup.startDate === '' || oldPriceGroup.endDate === '') {
-          return false;
-        }
-
-        // if the startDate or endDate is different
-        if (newPriceGroup.startDate !== oldPriceGroup.startDate || newPriceGroup.endDate !== oldPriceGroup.endDate) {
-
-          // update the price group
-          updatePriceGroup(priceIndex);
-
-        }
-
-        // loop through all the stations exceptions
-        for (var stationExceptionIndex in $scope.formData.prices[priceIndex].stationExceptions) {
-
-          var newStationException = newData.prices[priceIndex].stationExceptions[stationExceptionIndex];
-          var oldStationException = oldData.prices[priceIndex].stationExceptions[stationExceptionIndex];
-
-          // if threre isn't old data yet, exit out of loop
-          if (!oldStationException || oldStationException.endDate === '') {
-            return false;
-          }
-
-          // if the startDate or endDate is different
-          if (newStationException.startDate !== oldStationException.startDate || newStationException.endDate !== oldStationException.endDate) {
-
-            // update the price group
-            updateStationException(priceIndex, stationExceptionIndex);
-
-          }
-
-        } // end loop on stationExceptions
-
-      } // end loop on price groups
-
-
-    }
-
-    // check date ranges on items, price groups and station exceptions
-    function checkItemDates(newData, oldData) {
-
-      // if the start date has changed
-      if (newData.startDate !== oldData.startDate || newData.endDate !== oldData.endDate) {
-
-        // loop through all the price groups
-        for (var priceIndex in $scope.formData.prices) {
-
-          var price = $scope.formData.prices[priceIndex];
-
-          // if new item end date is before price start date
-          if (moment(newData.endDate).isBefore(price.startDate)) {
-
-            // set price start date as new item end date
-            price.startDate = newData.endDate;
-
-          }
-
-          // if new item start date is after price start date
-          if (moment(newData.startDate).isAfter(price.startDate)) {
-
-            // set price start date as new item start date
-            price.startDate = newData.startDate;
-
-          }
-
-          // loop through all the station exceptions
-          for (var stationIndex in $scope.formData.prices[priceIndex].stationExceptions) {
-
-            var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationIndex];
-
-            // if new item end date is before station exception start date
-            if (moment(newData.endDate).isBefore(stationException.startDate)) {
-
-              // set station exception start date as new item end date
-              stationException.startDate = newData.endDate;
-
-            }
-
-            // if new item start date is after station exception start date
-            if (moment(newData.startDate).isAfter(stationException.startDate)) {
-
-              // set station exception start date as new item start date
-              stationException.startDate = newData.startDate;
-
-            }
-
-          }
-
-        } // end price for loop
-
-      } // end if newData.startDate is different
-
-    } // end checkItemDates
-
-    // Adds a new Tax Type object
-    $scope.addTaxType = function () {
-      $scope.formData.taxes.push({});
-    };
-
-    // Remove a Tax Type object
-    $scope.removeTaxType = function (key) {
-      $scope.formData.taxes.splice(key, 1);
-    };
-
-    // Adds a new GTIN object
-    $scope.addGTIN = function () {
-      $scope.formData.globalTradeNumbers.push({});
-    };
-
-    // Remove a GTIN object
-    $scope.removeGTIN = function (key) {
-      $scope.formData.globalTradeNumbers.splice(key, 1);
-    };
-
-    // Adds a new StationException object
-    $scope.addStationException = function (priceIndex) {
-
-      // create a new station exception object and add to scope
-      $scope.formData.prices[priceIndex].stationExceptions.push({
+      $scope.formData = {
         startDate: '',
         endDate: '',
-        stationExceptionCurrencies: []
-      });
-
-    };
-
-    // Updates the station exception with stations list and currencies list
-    function updateStationException(priceIndex, stationExceptionIndex) {
-
-      var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex];
-
-      var startDate = formatDate(stationException.startDate, 'L', 'YYYYMMDD');
-      var endDate = formatDate(stationException.endDate, 'L', 'YYYYMMDD');
-
-      // stations filter
-      var stationsFilter = {
-        startDate: startDate,
-        endDate: endDate
+        qrCodeValue: '',
+        qrCodeImgUrl: null,
+        images: [],
+        taxes:[],
+        tags: [],
+        allergens:[],
+        characteristics:[],
+        substitutions:[],
+        recommendations: [],
+        globalTradeNumbers: [],
+        prices: []
       };
 
-      // get stations
-      companiesFactory.getStationsList(stationsFilter).then(function (data) {
-        stationException.stations = data.response;
-      });
+      $scope.viewName = 'Create Item';
 
-      // currency filter
-      var currencyFilters = {
-        startDate: startDate,
-        endDate: endDate,
-        isOperatedCurrency: true
-      };
+  		$scope.buttonText = 'Create';
 
-      currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
+      $scope.itemIsActive = false;
 
-        // create a currencies collection
-        var stationExceptionCurrencies = [];
+      $scope.itemIsInactive = false;
 
-        // loop through the response
-        for (var key in data.response) {
+      $scope.viewOnly = $location.path().includes('item-view');
 
-          var currency = data.response[key];
+      var editingItem = false;
 
-          // push a new currency object into the currencies collection
-          stationExceptionCurrencies.push({
-            price: '1.00',
-            companyCurrencyId: currency.id,
-            code: currency.code
-          });
+      function setFormAsViewOnly() {
+
+        $scope.viewName = 'Viewing Item ' + $routeParams.id;
+
+      }
+
+      function setFormAsEdit() {
+
+        editingItem = true;
+
+        $scope.viewName = 'Edit Item ' + $routeParams.id;
+
+        $scope.buttonText = 'Save';
+
+      }
+
+      // gets an item to editingItem
+      function getItem(id) {
+
+        // display loading modal
+        angular.element('#loading').modal('show').find('p').text( 'We are getting Item ' + id);
+
+        itemsFactory.getItem(id).then(function (data) {
+
+          upateFormData(data.retailItem);
+
+          // hide loading modal
+          angular.element('#loading').modal('hide');
+
+        });
+
+      }
+
+      if($scope.viewOnly) {
+        setFormAsViewOnly();
+      }
+
+      if( $routeParams.id && !$scope.viewOnly ) {
+        setFormAsEdit();
+      }
+
+      if(editingItem || $scope.viewOnly) {
+
+        getItem($routeParams.id);
+
+      }
+
+      // deserialize tag object from api
+      function deserializeTags(itemData) {
+
+        for(var tagKey in itemData.tags) {
+
+          var tag = itemData.tags[tagKey];
+
+          itemData.tags[tagKey] = tag.tagId.toString();
 
         }
 
-        // create a new station exception object and add to scope
-        stationException.stationExceptionCurrencies = stationExceptionCurrencies;
+      }
 
-      });
+      // deserialize characteristics object from api
+      function deserializeCharacteristics(itemData) {
 
-    }
+        for(var characteristicKey in itemData.characteristics) {
 
-    // Remove a GTStationExceptionIN object
-    $scope.removeStationException = function (priceIndex, key) {
-      $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
-    };
+          var characteristic = itemData.characteristics[characteristicKey];
 
-    // Adds a new Price Group object to the formData
-    $scope.addPriceGroup = function () {
-
-      // push a new object into the prices collection
-      $scope.formData.prices.push({
-        startDate: '',
-        endDate: '',
-        priceCurrencies: [],
-        stationExceptions: []
-      });
-
-    };
-
-    // pulls a list of currencies from the API and updates the price group
-    function updatePriceGroup(priceIndex) {
-
-      var startDate = formatDate($scope.formData.prices[priceIndex].startDate, 'L', 'YYYYMMDD');
-      var endDate = formatDate($scope.formData.prices[priceIndex].endDate, 'L', 'YYYYMMDD');
-
-      // currency filter
-      var currencyFilters = {
-        startDate: startDate,
-        endDate: endDate,
-        isOperatedCurrency: true
-      };
-
-      currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
-
-        // create a currencies collection
-        var priceCurrencies = [];
-
-        // loop through the response
-        for (var key in data.response) {
-
-          var currency = data.response[key];
-
-          // push a new currency object into the currencies collection
-          priceCurrencies.push({
-            price: '1.00',
-            companyCurrencyId: currency.id,
-            code: currency.code
-          });
+          itemData.characteristics[characteristicKey] = characteristic.characteristicId.toString();
 
         }
 
-        // create a new station exception object and add to scope
-        $scope.formData.prices[priceIndex].priceCurrencies = priceCurrencies;
+      }
 
-      });
+      // deserialize allergens object from api
+      function deserializeAllergens(itemData) {
 
-    }
+        for(var allergenkey in itemData.allergens) {
 
-    // Add the first price group
-    $scope.addPriceGroup();
+          var allergen = itemData.allergens[allergenkey];
 
-    // Remove a Price Group object
-    $scope.removePriceGroup = function (key) {
-      $scope.formData.prices.splice(key, 1);
-    };
+          itemData.allergens[allergenkey] = allergen.allergenId.toString();
 
-    // Formats the dates when sending the payload to the API
-    function formatPayloadDates(newItem) {
+        }
 
-      // format stary and end date
-      newItem.startDate = formatDate(newItem.startDate, 'L', 'YYYYMMDD');
-      newItem.endDate = formatDate(newItem.endDate, 'L', 'YYYYMMDD');
+      }
 
-      // Loop through prices
-      for (var priceIndex in newItem.prices) {
+      // checks to see if the item is active
+      function checkIfItemIsActive(itemData) {
 
-        var price = newItem.prices[priceIndex];
+        var today = moment().format();
 
-        // format start and end dates
-        price.startDate = formatDate(price.startDate, 'L', 'YYYYMMDD');
-        price.endDate = formatDate(price.endDate, 'L', 'YYYYMMDD');
+        $scope.itemIsActive = moment( itemData.startDate ).isBefore( today );
 
-        // loop through station exceptions
-        for (var stationExceptionIndex in newItem.prices[priceIndex].stationExceptions) {
+      }
 
-          var station = newItem.prices[priceIndex].stationExceptions[stationExceptionIndex];
+      // checks to see if the item is inactive
+      function checkIfItemIsInactive(itemData) {
+
+        var today = moment().format();
+
+        $scope.itemIsInactive = moment( itemData.endDate ).isBefore( today );
+
+      }
+
+      // updates the $scope.formData
+      function upateFormData(itemData) {
+
+        itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
+        itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
+
+        checkIfItemIsInactive(itemData);
+
+        if(!$scope.itemIsInactive) {
+
+          checkIfItemIsActive(itemData);
+
+        }
+
+        deserializeTags(itemData);
+
+        deserializeCharacteristics(itemData);
+
+        deserializeAllergens(itemData);
+
+        // TODO: turn this into a function
+        // Loop through images
+        for(var imageIndex in itemData.images) {
+
+          var image = itemData.images[imageIndex];
 
           // format start and end dates
-          station.startDate = formatDate(station.startDate, 'L', 'YYYYMMDD');
-          station.endDate = formatDate(station.endDate, 'L', 'YYYYMMDD');
+          image.startDate = formatDate(image.startDate, false,  'L');
+          image.endDate = formatDate(image.endDate, false,  'L');
+
+        }
+
+        // TODO: turn this into a function
+        for(var priceIndex in itemData.prices) {
+
+          var price = itemData.prices[priceIndex];
+
+          price.startDate = formatDate(price.startDate,false,'L') ;
+          price.endDate = formatDate(price.endDate,false,'L') ;
+
+          // TODO: turn this into a function
+          for(var stationExceptionIndex in price.stationExceptions) {
+
+            var stationException = price.stationExceptions[stationExceptionIndex];
+
+            stationException.startDate = formatDate(stationException.startDate,false,'L') ;
+            stationException.endDate = formatDate(stationException.endDate,false,'L') ;
+
+          }
+
+        }
+
+        $scope.formData = itemData;
+
+      }
+
+      itemsFactory.getItemsList({}).then(function (data) {
+        $scope.items = data.retailItems;
+      });
+
+      itemsFactory.getAllergensList(function (data) {
+        $scope.allergens = data;
+      });
+
+      itemsFactory.getItemTypesList(function (data) {
+        $scope.itemTypes = data;
+      });
+
+      itemsFactory.getPriceTypesList(function (data) {
+        $scope.priceTypes = data;
+      });
+
+      itemsFactory.getCharacteristicsList(function (data) {
+        $scope.characteristics = data;
+      });
+
+      itemsFactory.getDimensionList(function(data) {
+        $scope.dimensionUnits = data.units;
+      });
+
+      itemsFactory.getVolumeList(function(data) {
+        $scope.weightUnits = data.units;
+      });
+
+      itemsFactory.getWeightList(function(data) {
+        $scope.volumeUnits = data.units;
+      });
+
+      companiesFactory.getTagsList(function(data) {
+        $scope.tags = data.response;
+      });
+
+      companiesFactory.getSalesCategoriesList(function(data) {
+        $scope.salesCategories = data.salesCategories;
+      });
+
+      companiesFactory.getTaxTypesList(function(data) {
+        $scope.taxTypes = data.response;
+      });
+
+      // TODO: Move to global function
+      function formatDate(dateString, formatFrom, formatTo) {
+        return moment(dateString, formatFrom).format(formatTo).toString();
+      }
+
+      $scope.$watch('formData', function(newData, oldData){
+
+        // check item dates and make sure all dates fall within the acceptable dates
+        checkItemDates(newData,oldData);
+
+        // if a price group date or station exception changes, update currencies list
+        refreshPriceGroups(newData,oldData);
+
+
+      }, true);
+
+      $scope.$watch('form.$valid', function(validity) {
+
+        if(validity) {
+          $scope.displayError = false;
+        }
+
+      });
+
+
+      // when a price date is change for a price groupd or station, need to update currencies
+      function refreshPriceGroups(newData,oldData) {
+
+        // if the prices data has changed
+        if(newData.prices !== oldData.prices) {
+
+          // loop through all the price groups
+          for(var priceIndex in $scope.formData.prices) {
+
+            // the new and old price groups
+            var newPriceGroup = newData.prices[priceIndex];
+            var oldPriceGroup = oldData.prices[priceIndex];
+
+            // if threre isn't old data yet, exit out of loop
+            if(oldPriceGroup.startDate === '' || oldPriceGroup.endDate === '') {
+              return false;
+            }
+
+            // if the startDate or endDate is different
+            if(newPriceGroup.startDate !== oldPriceGroup.startDate || newPriceGroup.endDate !== oldPriceGroup.endDate) {
+
+              // update the price group
+              updatePriceGroup(priceIndex);
+
+            }
+
+            // loop through all the stations exceptions
+            for(var stationExceptionIndex in $scope.formData.prices[priceIndex].stationExceptions) {
+
+              var newStationException = newData.prices[priceIndex].stationExceptions[stationExceptionIndex];
+              var oldStationException = oldData.prices[priceIndex].stationExceptions[stationExceptionIndex];
+
+              // if threre isn't old data yet, exit out of loop
+              if(!oldStationException || oldStationException.endDate === '') {
+                return false;
+              }
+
+              // if the startDate or endDate is different
+              if(newStationException.startDate !== oldStationException.startDate || newStationException.endDate !== oldStationException.endDate) {
+
+                // update the price group
+                updateStationException(priceIndex,stationExceptionIndex);
+
+              }
+
+            } // end loop on stationExceptions
+
+          } // end loop on price groups
 
         }
 
       }
 
-    }
+      // check date ranges on items, price groups and station exceptions
+      function checkItemDates(newData,oldData) {
 
-    // cleans up invalid properties of payload before submitting
-    function cleanUpPayload(newItem) {
+        if(newData.startDate !== oldData.startDate || newData.endDate !== oldData.endDate) {
 
-      // Loop through prices
-      for (var priceIndex in newItem.prices) {
+          // TODO: Move this to it's own function
+          if(newData.prices.length > 0) {
 
-        // loop through each price currency collection
-        for (var currencyIndex in newItem.prices[priceIndex].priceCurrencies) {
+            // loop through all the price groups
+            for(var priceIndex in $scope.formData.prices) {
 
-          var currency = newItem.prices[priceIndex].priceCurrencies[currencyIndex];
+              var price = $scope.formData.prices[priceIndex];
 
-          // remove code from currency collection before adding to payload
-          delete currency.code;
+              // if new item end date is before price start date
+              if( moment(newData.endDate).isBefore(price.startDate) ) {
+
+                // set price start date as new item end date
+                price.startDate = newData.endDate;
+
+              }
+
+              // if new item start date is after price start date
+              if( moment(newData.startDate).isAfter(price.startDate) ) {
+
+                // set price start date as new item start date
+                price.startDate = newData.startDate;
+
+              }
+
+              // TODO: Move this to it's own function
+              if(price.stationExceptions.length > 0) {
+
+                // loop through all the station exceptions
+                for(var stationIndex in price.stationExceptions) {
+
+                  var stationException = price.stationExceptions[stationIndex];
+
+                  // if new item end date is before station exception start date
+                  if( moment(newData.endDate).isBefore(stationException.startDate) ) {
+
+                    // set station exception start date as new item end date
+                    stationException.startDate = newData.endDate;
+
+                  }
+
+                  // if new item start date is after station exception start date
+                  if( moment(newData.startDate).isAfter(stationException.startDate) ) {
+
+                    // set station exception start date as new item start date
+                    stationException.startDate = newData.startDate;
+
+                  }
+
+                } // end station exception loop
+
+              } // end if exceptions list is greater than 0
+
+            } // end price for loop
+
+          } // if price length is greater than 0
+
+        } // end if newData.startDate is different
+
+      } // end checkItemDates
+
+      $scope.removeQRCode = function() {
+
+        $scope.formData.qrCodeImgUrl = '';
+        $scope.formData.qrCodeValue = '';
+
+      };
+
+      $scope.removeImage = function(key) {
+        $scope.formData.images.splice(key,1);
+      };
+
+      $scope.addTaxType = function() {
+        $scope.formData.taxes.push({});
+      };
+
+      $scope.removeTaxType = function(key) {
+        $scope.formData.taxes.splice(key,1);
+      };
+
+      $scope.addGTIN = function() {
+        $scope.formData.globalTradeNumbers.push({});
+      };
+
+      $scope.removeGTIN = function(key) {
+        $scope.formData.globalTradeNumbers.splice(key,1);
+      };
+
+      $scope.addStationException = function(priceIndex) {
+
+        // create a new station exception object and add to scope
+        $scope.formData.prices[priceIndex].stationExceptions.push({
+          startDate:'',
+          endDate:'',
+          stationExceptionCurrencies: []
+        });
+
+      };
+
+      $scope.removeStationException = function(priceIndex,key) {
+        $scope.formData.prices[priceIndex].stationExceptions.splice(key,1);
+      };
+
+      // Updates the station exception with stations list and currencies list
+      function updateStationException(priceIndex,stationExceptionIndex) {
+
+        var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex];
+
+        var startDate = formatDate(stationException.startDate, 'L',  'YYYYMMDD');
+        var endDate = formatDate(stationException.endDate, 'L',  'YYYYMMDD');
+
+        // stations filter
+        var stationsFilter = {
+          startDate: startDate,
+          endDate: endDate
+        };
+
+        // get stations
+        companiesFactory.getStationsList(stationsFilter).then(function(data) {
+          stationException.stations = data.response;
+        });
+
+        // currency filter
+        var currencyFilters = {
+          startDate: startDate,
+          endDate: endDate,
+          isOperatedCurrency: true
+        };
+
+        currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
+
+          // create a currencies collection
+          var stationExceptionCurrencies = [];
+
+          // loop through the response
+          for(var key in data.response) {
+
+            var currency = data.response[key];
+
+            // push a new currency object into the currencies collection
+            stationExceptionCurrencies.push({
+              price: '1.00',
+              companyCurrencyId: currency.id,
+              code: currency.code
+            });
+
+          }
+
+          // create a new station exception object and add to scope
+          stationException.stationExceptionCurrencies = stationExceptionCurrencies;
+
+        });
+
+      }
+
+      $scope.addPriceGroup = function() {
+
+        $scope.formData.prices.push({
+          startDate: '',
+          endDate: '',
+          priceCurrencies:[],
+          stationExceptions:[]
+        });
+
+      };
+
+      // Add the first price group
+      $scope.addPriceGroup();
+
+      $scope.removePriceGroup = function(key) {
+        $scope.formData.prices.splice(key,1);
+      };
+
+      // pulls a list of currencies from the API and updates the price group
+      function updatePriceGroup(priceIndex) {
+
+        var startDate = formatDate($scope.formData.prices[priceIndex].startDate, 'L',  'YYYYMMDD');
+        var endDate = formatDate($scope.formData.prices[priceIndex].endDate, 'L',  'YYYYMMDD');
+
+        // currency filter
+        var currencyFilters = {
+          startDate: startDate,
+          endDate: endDate,
+          isOperatedCurrency: true
+        };
+
+        currencyFactory.getCompanyCurrencies(currencyFilters).then(function (data) {
+
+          // create a currencies collection
+          var priceCurrencies = [];
+
+          // loop through the response
+          for(var key in data.response) {
+
+            var currency = data.response[key];
+
+            // push a new currency object into the currencies collection
+            priceCurrencies.push({
+              price: '1.00',
+              companyCurrencyId: currency.id,
+              code: currency.code
+            });
+
+          }
+
+          // create a new station exception object and add to scope
+          $scope.formData.prices[priceIndex].priceCurrencies = priceCurrencies;
+
+        });
+
+      }
+
+      // Formats the dates when sending the payload to the API
+      function formatPayloadDates(itemData){
+
+        // format stary and end date
+        itemData.startDate = formatDate(itemData.startDate, 'L',  'YYYYMMDD');
+        itemData.endDate = formatDate(itemData.endDate, 'L',  'YYYYMMDD');
+
+        // Loop through images
+        for(var imageIndex in itemData.images) {
+
+          var image = itemData.images[imageIndex];
+
+          // format start and end dates
+          image.startDate = formatDate(image.startDate, 'L',  'YYYYMMDD');
+          image.endDate = formatDate(image.endDate, 'L',  'YYYYMMDD');
 
         }
 
-        // loop through station exceptions
-        for (var stationExceptionIndex in newItem.prices[priceIndex].stationExceptions) {
+        // Loop through prices
+        for(var priceIndex in itemData.prices) {
 
-          var stationException = newItem.prices[priceIndex].stationExceptions[stationExceptionIndex];
+          var price = itemData.prices[priceIndex];
 
-          // remove stations collection for stations exception before  adding to payload
-          delete stationException.stations;
+          // format start and end dates
+          price.startDate = formatDate(price.startDate, 'L',  'YYYYMMDD');
+          price.endDate = formatDate(price.endDate, 'L',  'YYYYMMDD');
 
-          // loop through each station exception  currency collection
-          for (var stationCurrencyIndex in stationException.stationExceptionCurrencies) {
+          // loop through station exceptions
+          for(var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
 
-            // remove code from stations exceptions currencies item  adding to payload
-            delete stationException.stationExceptionCurrencies[stationCurrencyIndex].code;
+            var station = itemData.prices[priceIndex].stationExceptions[stationExceptionIndex];
+
+            // format start and end dates
+            station.startDate = formatDate(station.startDate, 'L',  'YYYYMMDD');
+            station.endDate = formatDate(station.endDate, 'L',  'YYYYMMDD');
 
           }
 
@@ -439,131 +580,202 @@ angular.module('ts5App')
 
       }
 
-    }
+      // cleans up invalid properties of payload before submitting
+      function cleanUpPayload(itemData) {
 
-    // formats the tags for payload
-    function formatTags(newItem) {
+        // Loop through prices
+        for(var priceIndex in itemData.prices) {
 
-      // loop through tags in form data
-      for (var tagKey in newItem.tags) {
+          // loop through each price currency collection
+          for(var currencyIndex in itemData.prices[priceIndex].priceCurrencies) {
 
-        var tagId = newItem.tags[tagKey];
+            var currency = itemData.prices[priceIndex].priceCurrencies[currencyIndex];
 
-        // set tag as object and set tagId property
-        newItem.tags[tagKey] = {
-          tagId: tagId
+            // remove code from currency collection before adding to payload
+            delete currency.code;
+
+          }
+
+          // loop through station exceptions
+          for(var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
+
+            var stationException = itemData.prices[priceIndex].stationExceptions[stationExceptionIndex];
+
+            // remove stations collection for stations exception before  adding to payload
+            delete stationException.stations;
+
+            // loop through each station exception  currency collection
+            for(var stationCurrencyIndex in stationException.stationExceptionCurrencies) {
+
+              // remove code from stations exceptions currencies item  adding to payload
+              delete stationException.stationExceptionCurrencies[stationCurrencyIndex].code;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      // formats the tags for payload
+      function formatTags(itemData) {
+
+        // loop through tags in form data
+        for(var tagKey in itemData.tags) {
+
+          var tagId = itemData.tags[tagKey];
+
+          // set tag as object and set tagId property
+          itemData.tags[tagKey] = {
+            tagId: tagId
+          };
+
+        }
+
+      }
+
+      // formats the allergens for payload
+      function formatAllergens(itemData) {
+
+        // loop through allergens in form data
+        for(var allergenKey in itemData.allergens) {
+
+          var allergenId = itemData.allergens[allergenKey];
+
+          // set tag as object and set allergenId property
+          itemData.allergens[allergenKey] = {
+            allergenId: allergenId
+          };
+
+        }
+
+      }
+
+      // formats the characteristics for payload
+      function formatCharacteristics(itemData) {
+
+        // loop through characteristics in form data
+        for(var characteristicKey in itemData.characteristics) {
+
+          var characteristicId = itemData.characteristics[characteristicKey];
+
+          // set tag as object and set characteristicId property
+          itemData.characteristics[characteristicKey] = {
+            characteristicId: characteristicId
+          };
+
+        }
+
+      }
+
+      function updateItem(itemData) {
+
+        // display loading modal
+        angular.element('#loading').modal('show').find('p').text( 'We are updating your item');
+
+        var updateItemPayload = {
+          retailItem: itemData
         };
 
+        // update itemData in API
+        itemsFactory.updateItem( $routeParams.id, updateItemPayload).then(function(response) {
+
+          upateFormData(response.retailItem);
+
+          angular.element('#loading').modal('hide');
+
+          angular.element('#update-success').modal('show');
+
+        // error handler
+        }, function(response){
+
+          angular.element('#loading').modal('hide');
+
+          $scope.displayError = true;
+          $scope.formErrors = response.data;
+
+        });
+
       }
 
-    }
+      function createItem(itemData) {
 
-    // formats the allergens for payload
-    function formatAllergens(newItem) {
+        // display loading modal
+        angular.element('#loading').modal('show').find('p').text( 'We are creating your item');
 
-      // loop through allergens in form data
-      for (var allergenKey in newItem.allergens) {
-
-        var allergenId = newItem.allergens[allergenKey];
-
-        // set tag as object and set allergenId property
-        newItem.allergens[allergenKey] = {
-          allergenId: allergenId
+        var newItemPayload = {
+          retailItem: itemData
         };
 
-      }
+        itemsFactory.createItem(newItemPayload).then(function() {
 
-    }
+          angular.element('#loading').modal('hide');
 
-    // formats the characteristics for payload
-    function formatCharacteristics(newItem) {
+          angular.element('#create-success').modal('show');
 
-      // loop through characteristics in form data
-      for (var characteristicKey in newItem.characteristics) {
+        // error response
+        }, function(error){
 
-        var characteristicId = newItem.characteristics[characteristicKey];
+          angular.element('#loading').modal('hide');
 
-        // set tag as object and set characteristicId property
-        newItem.characteristics[characteristicKey] = {
-          characteristicId: characteristicId
-        };
+          $scope.displayError = true;
+          $scope.formErrors = error.data;
 
-      }
-
-    }
-
-
-    // Submit function to proces form and hit the api
-    $scope.submitForm = function (formData) {
-
-      // If the local form is not valid
-      if (!$scope.form.$valid) {
-
-        // set display error flag to true (used in template)
-        $scope.displayError = true;
-
-        return false;
+        });
 
       }
 
-      // display loading modal
-      angular.element('#loading').modal('show').find('p').text('We are creating your item');
+      // Submit function to proces form and hit the api
+      $scope.submitForm = function(formData) {
 
-      // copy the form data to the newItem
-      var newItem = angular.copy(formData);
+      	if( !$scope.form.$valid ) {
 
-      formatTags(newItem);
+				  $scope.displayError = true;
 
-      formatCharacteristics(newItem);
+  				return false;
 
-      formatAllergens(newItem);
+  			}
 
-      formatPayloadDates(newItem);
+        // copy the form data to the itemData
+        var itemData = angular.copy(formData);
 
-      cleanUpPayload(newItem);
+        formatTags(itemData);
 
-      // create a new item
-      var newItemPayload = {
-        retailItem: newItem
+        formatCharacteristics(itemData);
+
+        formatAllergens(itemData);
+
+        formatPayloadDates(itemData);
+
+        cleanUpPayload(itemData);
+
+        if(editingItem) {
+
+          updateItem(itemData);
+
+        } else {
+
+          createItem(itemData);
+
+        }
+
       };
 
-      // Create newItem in API
-      itemsFactory.createItem(newItemPayload).then(function () {
+      // TODO: MOVE ME GLOBAL
+  		$scope.formScroll = function(id, activeBtn) {
 
-        // hide loading modal
-        angular.element('#loading').modal('hide');
+        $scope.activeBtn = id;
 
-        // show the success
-        angular.element('#create-success').modal('show');
+        var elm = angular.element('#'+id);
+        var body = angular.element('body');
+        var navBar = angular.element('.navbar-header').height();
+        var topBar = angular.element('.top-header').height();
 
-        // API error
-      }, function (error) {
+        body.animate({scrollTop: elm.offset().top - (navBar + topBar + 100)}, 'slow');
 
-        // hide loading modal
-        angular.element('#loading').modal('hide');
+        return activeBtn;
 
-        // set flags for error UI to display
-        $scope.displayError = true;
-        $scope.formErrors = error.data;
-
-      });
-
-    };
-
-    // TODO: MOVE ME GLOBAL
-    $scope.formScroll = function (id, activeBtn) {
-
-      $scope.activeBtn = id;
-
-      var elm = angular.element('#' + id);
-      var body = angular.element('body');
-      var navBar = angular.element('.navbar-header').height();
-      var topBar = angular.element('.top-header').height();
-
-      body.animate({scrollTop: elm.offset().top - (navBar + topBar + 100)}, 'slow');
-
-      return activeBtn;
-
-    };
+	    };
 
   });

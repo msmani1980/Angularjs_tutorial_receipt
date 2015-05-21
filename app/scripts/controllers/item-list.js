@@ -87,4 +87,22 @@ angular.module('ts5App')
 
       });
 
+      $scope.removeItem = function(id,itemKey) {
+
+        if( window.confirm('Are you sure you would like to remove this item?') ) {
+
+          angular.element('#loading').modal('show').find('p').text('Removing your item');
+
+          itemsFactory.removeItem(id).then(function () {
+
+            angular.element('#loading').modal('hide');
+
+            $scope.paginatedItems.splice(itemKey,1);
+
+          });
+
+        }
+
+      };
+
     });

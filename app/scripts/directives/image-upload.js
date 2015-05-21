@@ -1,5 +1,5 @@
 'use strict';
-/* global moment */
+
 /**
  * @ngdoc directive
  * @name ts5App.directive:imageUpload
@@ -9,11 +9,6 @@
 
 angular.module('ts5App')
   .directive('imageUpload', function () {
-
-    // TODO: Move to global function
-  function formatDate(dateString, formatFrom, formatTo) {
-    return moment(dateString, formatFrom).format(formatTo).toString();
-  }
 
 	var imageUploadController = function ($scope, Upload, ENV, $http) {
 
@@ -34,7 +29,6 @@ angular.module('ts5App')
 	        $scope.uploadProgress = 0;
 	        $scope.uploadSuccess = false;
 	        $scope.uploadFail = false;
-	        $scope.formData.images = [];
 	    };
 
 	    // upload image function
@@ -43,14 +37,27 @@ angular.module('ts5App')
 	        // grab files from scope
 	    	var files = $scope.files;
 
+			var imgElement = angular.element('.thumbs');
+			var imgHeight = imgElement.height();
+			var imgWidth = imgElement.width();
+
+			if (imgHeight > 128 && imgWidth > 128){
+
+				$scope.clearFiles();
+				$scope.imageTooLarge = true;
+				$scope.imageDimensions = imgWidth + 'px' + ' x ' + imgHeight + 'px';
+			}
+
 	        //if a file exists and it is not null
-	        if (files && files.length) {
+	       	else if (files && files.length) {
+
+	       		$scope.imageTooLarge = false;
 
 	            // Upload image
 	            Upload.upload({
 	                url: ENV.apiUrl + '/api/images',
 	                fileFormDataName: 'image',
-	                file: files
+	                file: files 
 	            }).progress(function (evt) {
 
 	                // Upload Progress
@@ -65,24 +72,26 @@ angular.module('ts5App')
 	                // new image object
 	                var newImage = {
 	                    imageURL: data.url,
-	                    startDate:  formatDate($scope.formData.startDate, 'L',  'YYYYMMDD'),
-	                    endDate: formatDate($scope.formData.endDate, 'L',  'YYYYMMDD')
+	                    startDate:  $scope.formData.startDate,
+	                    endDate: $scope.formData.endDate
 	                };
 
 	                // pass new image object into formData.images array
 	                $scope.formData.images.push(newImage);
 
+	                $scope.clearFiles();
+
 	            // on a failed upload
-            }).error(function () {
+	            }).error(function () {
 
-	                //set the UI flag
-	                $scope.uploadFail = true;
+		                //set the UI flag
+		                $scope.uploadFail = true;
 
 
-                  // TODO: Interpret this failure and tell the user
-                //  console.log(data);
+	                  // TODO: Interpret this failure and tell the user
+	                //  console.log(data);
 
-	            });
+		            });
 
 	        // no files found, exit function
 	        } else {

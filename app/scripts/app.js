@@ -55,6 +55,14 @@ angular
         templateUrl: 'views/item-create.html',
         controller: 'ItemCreateCtrl'
       })
+      .when('/item-edit/:id', {
+        templateUrl: 'views/item-create.html',
+        controller: 'ItemCreateCtrl'
+      })
+      .when('/item-view/:id', {
+        templateUrl: 'views/item-create.html',
+        controller: 'ItemCreateCtrl'
+      })
       .when('/companies', {
         templateUrl: 'views/companies.html',
         controller: 'CompaniesCtrl'
