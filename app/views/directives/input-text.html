@@ -4,7 +4,7 @@
 		{{ field.label }} <span ng-show="field.required">*</span>
 	</label>
 
-	<input name="{{field.name}}" ng-model="formData[field.name]" ng-required="{{ field.required }}" ng-pattern="{{ field.pattern }}" type="text" class="form-control" placeholder="{{ field.placeholder }}"  ng-minlength="{{ field.minLength }}" ng-maxlength="{{ field.maxLength }}"/>
+	<input name="{{field.name}}" ng-model="formData[field.name]" ng-required="{{ field.required }}" ng-pattern="{{ field.pattern }}" type="text" class="form-control" placeholder="{{ field.placeholder }}"  ng-minlength="{{ field.minLength }}" ng-maxlength="{{ field.maxLength }}" maxlength="{{ parseInt(field.maxLength) + 1 }}" minlength="{{ field.minLength }}"/>
 
 	<i class="control-label" ng-show="form[field.name].$dirty && !form[field.name].$valid">Please check this field</i>
 

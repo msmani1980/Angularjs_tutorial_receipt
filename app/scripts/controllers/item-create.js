@@ -225,11 +225,11 @@ angular.module('ts5App')
       });
 
       itemsFactory.getVolumeList(function(data) {
-        $scope.weightUnits = data.units;
+        $scope.volumeUnits = data.units;
       });
 
       itemsFactory.getWeightList(function(data) {
-        $scope.volumeUnits = data.units;
+        $scope.weightUnits = data.units;
       });
 
       companiesFactory.getTagsList(function(data) {
@@ -729,6 +729,8 @@ angular.module('ts5App')
       // Submit function to proces form and hit the api
       $scope.submitForm = function(formData) {
 
+        console.log(formData);
+
       	if( !$scope.form.$valid ) {
 
 				  $scope.displayError = true;
@@ -749,6 +751,7 @@ angular.module('ts5App')
         formatPayloadDates(itemData);
 
         cleanUpPayload(itemData);
+
 
         if(editingItem) {
 
