@@ -1,35 +1,45 @@
 <div class="form-group qr-upload-container">
 
-	<div ngf-select="" ngf-drop="" class="drop-box" 
+	<label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
+
+	<div ngf-select="" ngf-drop="" class="drop-box"
 		ng-model="files"
 		ng-model-rejected="rejQr"
 		ngf-change="generateThumb(file, files)"
-	   	ngf-drag-over-class="dragover"  
-	    ngf-multiple="false" 
-	    ngf-allow-dir="true"
-	    ngf-accept="'.jpg,.png,.gif'"
-	    ngf-min-size='10'  
-		ngf-max-size='10000' 
+   	ngf-drag-over-class="dragover"
+    ngf-multiple="false"
+    ngf-allow-dir="true"
+    ngf-accept="'.jpg,.png,.gif'"
+    ngf-min-size='10'
+		ngf-max-size='10000'
 	>
-	    
+
 	<b>Drop QR Codes, or Click.</b>
 
-	<p>Accepted file formats: jpg, png, gif.</p> 
+	<p>Accepted file formats: jpg, png, gif.</p>
 
 	</div>
 
-	<p class="alert alert-danger" ng-show="rejQr.length"> 
+	<p class="alert alert-danger" ng-show="rejQr.length">
 
-	    <b>Your file doesn't meet the requirements:</b>
-	    <br>
+		<b>Your file doesn't meet the requirements:</b>
+		<br>
 
-	    <i ng-show="rejQr[0].size > 10000">
-	    	{{rejFiles[0].size / 1000}}kb, is a bit too large. 10kb is the max qr upload size.
-	    </i>
+		<i ng-show="rejQr[0].size > 10000">
+			max size: 10kb and 128 x 128 pixels.
+		</i>
 
-	     <i ng-show="rejQr[0].size < 10001">
-	    	'{{rejFiles[0].name}}' is invalid, OR '{{rejFiles[0].type}}' is not an accepted file type.
-	    </i>
+		<i ng-show="rejQr[0].size < 10001">
+			'{{rejQr[0].name}}' is invalid, OR '{{rejQr[0].type}}' is not an accepted file type.
+		</i>
+
+	</p>
+
+	<p class="alert alert-danger" ng-model="files" ng-show="qrTooLarge">
+
+	    <i>
+        Your file doesn't meet the requirements: max size: 10kb and 128 x 128 pixels.
+		</i>
 
 	</p>
 
@@ -63,6 +73,6 @@
 	</button>
 
 	<button class="btn button btn-default" ng-model="files" ng-show="files.length" ng-click="clearQrCodes()">	Clear
-	</button> 
+	</button>
 
 </div>

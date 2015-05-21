@@ -36,8 +36,21 @@ angular.module('ts5App')
             // grab files from scope
             var files = $scope.files;
 
+            var qrImgElement = angular.element('.thumbs');
+            var qrImgHeight = qrImgElement.height();
+            var qrImgWidth = qrImgElement.width();
+
+            if (qrImgHeight > 128 && qrImgWidth > 128){
+
+              $scope.clearQrCodes();
+              $scope.qrTooLarge = true;
+              $scope.imageDimensions = qrImgWidth + 'px' + ' x ' + qrImgHeight + 'px';
+            }
+
             //if a file exists and it is not null
-            if (files && files.length) {
+             else if (files && files.length) {
+
+               $scope.qrTooLarge = false;
 
                 // Upload image
                 Upload.upload({

@@ -15,8 +15,15 @@
 				<a href="#/item-create" class="btn btn-primary"> + Create Retail Item</a>
 
 				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
-					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					<span class="fa fa-search" aria-hidden="true"></span>
 					<span class="hidden-xs">Search</span>
+				</button>
+
+
+				<button class="btn btn-default"
+					ng-click="clearSearchFilters()"
+					ng-show="search.itemCode.length || search.itemName.length || search.itemType.length || search.onBoardName.length || search.categoryName.length || search.startDate.length || search.endDate.length">
+					<span>Clear</span>
 				</button>
 
 				<!--
@@ -144,11 +151,11 @@
 							<i class="fa fa-file"></i>
 						</a>
 
-						<a class="btn btn-primary btn-xs" href="#/item-edit/{{item.id}}">
+						<a class="btn btn-primary btn-xs" href="#/item-edit/{{item.id}}" ng-disabled="isItemActive(item.startDate)">
 							<i class="fa fa-pencil"></i>
 						</a>
 
-						<button class="btn btn-danger btn-xs" ng-click="removeItem(item.id,key)">
+						<button class="btn btn-danger btn-xs" ng-click="removeItem(item.id,key)" ng-disabled="isItemInactive(item.endDate)">
 							<i class="fa fa-trash"></i>
 						</button>
 

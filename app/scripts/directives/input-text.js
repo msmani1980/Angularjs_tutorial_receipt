@@ -20,6 +20,8 @@ angular.module('ts5App')
 	  		// set attributes of directive to the scope to use in template
 	      	$scope.field = $attrs;
 
+          $scope.parseInt = parseInt;
+
 	    }
 
     };
