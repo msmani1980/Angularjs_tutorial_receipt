@@ -144,11 +144,11 @@
 							<i class="fa fa-file"></i>
 						</a>
 
-						<a class="btn btn-primary btn-xs" href="#/item-edit/{{item.id}}">
+						<a class="btn btn-primary btn-xs" href="#/item-edit/{{item.id}}" ng-disabled="isItemActive(item.startDate)">
 							<i class="fa fa-pencil"></i>
 						</a>
 
-						<button class="btn btn-danger btn-xs" ng-click="removeItem(item.id,key)">
+						<button class="btn btn-danger btn-xs" ng-click="removeItem(item.id,key)" ng-disabled="isItemInactive(item.endDate)">
 							<i class="fa fa-trash"></i>
 						</button>
 
