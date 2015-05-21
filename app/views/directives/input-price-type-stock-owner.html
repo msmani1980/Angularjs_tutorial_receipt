@@ -1,0 +1,58 @@
+<!-- PriceTypeDirective -->
+
+<div class="panel panel-default">
+
+  <div class="panel-heading">
+    <p class="panel-title">
+			<i class="fa fa-tags"></i> Price Group {{ $parent.key+1 }}
+
+      <span class="pull-right btn btn-danger btn-xs" ng-click="removePriceGroup($parent.key)">
+        <i class="fa fa-close"></i>
+      </span>
+
+		</p>
+  </div>
+
+  <div class="panel-body">
+
+		<div class="row">
+
+      <div class="col-xs-12 col-sm-8">
+
+        <date-picker class="form-group"
+          element-class="col-xs-6 col-sm-6"
+					start-date-model="itemPrice.startDate"
+					end-date-model="itemPrice.endDate"
+					disable-past="true"
+					label-from="Effective From"
+					label-to="Effective To">
+				</date-picker>
+
+			</div>
+
+      <div class="col-xs-12 col-sm-4">
+
+				<label>Base Price</label>
+
+				<div class="form-group">
+
+					<div class="input-group">
+
+						<div class="input-group-addon">
+							{{itemPrice.code}}
+						</div>
+
+						<input ng-disabled="!itemPrice.code" ng-model="itemPrice.amount" type="text" class="form-control"/>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+<!-- /PriceTypeDirective -->

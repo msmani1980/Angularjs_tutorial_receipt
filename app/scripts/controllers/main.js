@@ -8,11 +8,75 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MainCtrl', function ($scope) {
+  .controller('MainCtrl', function ($scope,companiesFactory,GlobalMenuService) {
+
+    // scope management
+    var $this = this;
+
     $scope.viewName = 'TS5 Dashboard';
+
     var emberURL = '/ember/#/';
 
-    $scope.dashboardMenu = [
+    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+    var companyId = GlobalMenuService.company.get();
+
+    // changes the navigation depeneding on what company type you have
+    function updateNavigationPerCompanyType() {
+
+      companiesFactory.getCompany(companyId).then(function (response) {
+
+        var companyTypeId = response.companyTypeId;
+
+        switch(companyTypeId) {
+
+          case 2:
+
+            $scope.dashboardMenu = $this.stockOwnerMenu;
+
+          break;
+
+
+          default:
+
+            $scope.dashboardMenu = $this.retailMenu;
+
+          break;
+
+        }
+
+      });
+
+    }
+
+    updateNavigationPerCompanyType();
+
+    this.stockOwnerMenu = [
+     {
+        'title': 'Stock Owner Item Management',
+        menuItems: [
+          {
+            name: 'Manage SO Items',
+            route: '/#/stock-owner-item-list',
+            icon: 'icon-manage-retail-item',
+            className: 'dashboard-managemenuItems'
+          },
+          {
+            name: 'Create SO Item',
+            route: '/#/stock-owner-item-create',
+            icon: 'icon-create-retail-item',
+            className: 'dashboard-createItem'
+          },
+          {
+            name: 'Manage SO Categories',
+            route: emberURL + 'retail-items/categories',
+            icon: 'icon-manage-retail-category',
+            className: 'dashboard-manageItemCategories'
+          }
+        ]
+      }
+    ];
+
+    this.retailMenu = [
       {
         'title': 'Retail Item Management',
         menuItems: [
