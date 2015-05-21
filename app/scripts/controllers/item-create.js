@@ -208,11 +208,7 @@ angular.module('ts5App')
             stationException.startDate = formatDate(stationException.startDate,false,'L') ;
             stationException.endDate = formatDate(stationException.endDate,false,'L') ;
 
-        //    updateStationException(priceIndex,stationExceptionIndex);
-
           }
-
-        //  updatePriceGroup(priceIndex);
 
         }
 
