@@ -34,13 +34,12 @@ describe('Controller: ExchangeRatesCtrl', function () {
 
       $httpBackend = $injector.get('$httpBackend');
 
-      $httpBackend.expectGET(/company-preferences/).respond(companyPreferencesJSON);
-      $httpBackend.expectGET(/companies/).respond(companyJSON);
-      $httpBackend.expectGET(/companies/).respond(companyJSON);
-      $httpBackend.expectGET(/company-currency-globals/).respond(companyCurrencyGlobalsJSON);
-      $httpBackend.expectGET(/previous-exchange-rate/).respond(dailyExchangeRatesJSON);
-      $httpBackend.expectGET(/daily-exchange-rates/).respond(dailyExchangeRatesJSON);
-      $httpBackend.expectGET(/currencies/).respond(currenciesJSON);
+      $httpBackend.whenGET(/company-preferences/).respond(companyPreferencesJSON);
+      $httpBackend.whenGET(/companies/).respond(companyJSON);
+      $httpBackend.whenGET(/company-currency-globals/).respond(companyCurrencyGlobalsJSON);
+      $httpBackend.whenGET(/previous-exchange-rate/).respond(dailyExchangeRatesJSON);
+      $httpBackend.whenGET(/daily-exchange-rates/).respond(dailyExchangeRatesJSON);
+      $httpBackend.whenGET(/currencies/).respond(currenciesJSON);
 
       scope = $rootScope.$new();
       ExchangeRatesCtrl = $controller('ExchangeRatesCtrl', {

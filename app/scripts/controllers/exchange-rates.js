@@ -74,27 +74,26 @@ angular.module('ts5App')
         return false;
       }
 
-      if (isToday && $scope.dailyExchangeRates.isSubmitted) {
-        return false;
-      }
+      return !(isToday && $scope.dailyExchangeRates.isSubmitted);
 
-      return true;
     }
 
     function setupModels() {
       $scope.currenciesFields = {};
-      setBaseExchangeRateModel();
       setPreviousExchangeRatesModel();
       setCurrentExchangeRatesModel();
+      setBaseExchangeRateModel();
       $scope.showActionButtons = shouldShowActionButtons();
     }
 
     $scope.$watch('cashiersDateField', function (cashiersDate) {
+      if (!moment(cashiersDate, 'L', true).isValid()) {
+        return;
+      }
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       var companyCurrenciesPayload = {
         startDate: formattedDateForAPI,
-        endDate: formattedDateForAPI,
-        isOperatedCurrency: true
+        endDate: formattedDateForAPI
       };
       var companyCurrencyPromise = currencyFactory.getCompanyCurrencies(companyCurrenciesPayload);
       var previousRatePromise = currencyFactory.getPreviousExchangeRates(companyId, formattedDateForAPI);
@@ -153,10 +152,10 @@ angular.module('ts5App')
     }
 
     function showErrors(dataFromAPI) {
-      $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
       }
+      $scope.displayError = true;
       setupModels();
     }
 
@@ -164,24 +163,25 @@ angular.module('ts5App')
       createPayload(shouldSubmit);
       currencyFactory.saveDailyExchangeRates($scope.payload).then(function (dailyExchangeRatesData) {
         $scope.dailyExchangeRates = dailyExchangeRatesData || {};
-        angular.element('#success-modal').modal('show');
         setupModels();
+        angular.element('#success-modal').modal('show');
       }, showErrors);
     };
 
-    $scope.isBankExchangePreferred = function() {
+    $scope.isBankExchangePreferred = function () {
       if (!$scope.companyPreferences) {
         return false;
       }
 
       return $scope.companyPreferences.filter(function (feature) {
-        return (feature.featureCode === 'EXR' && feature.choiceCode === 'BNK');
-      }).length > 0;
+          return (feature.featureCode === 'EXR' && feature.choiceCode === 'BNK');
+        }).length > 0;
     };
 
     function getCompanyBaseCurrency(baseCurrencyId) {
       currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
         $scope.companyBaseCurrency = getCurrencyFromArrayUsingId(companyBaseCurrencyData.response, baseCurrencyId);
+        setupModels();
       });
     }
 
