@@ -26,20 +26,6 @@
 					<span>Clear</span>
 				</button>
 
-				<!--
-				<div class="btn-group" role="group" aria-label="...">
-
-				  <button type="button" class="btn btn-default">
-				  	<span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
-				  </button>
-
-				  <button type="button" class="btn btn-default">
-				  	<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-				  </button>
-
-				</div>
-				-->
-
 			</div>
 
 		</div>
@@ -73,7 +59,7 @@
 						<div class="form-group">
 							<label for="item-type">Item Type</label>
 							<select ng-model="search.itemType" class="form-control" id="item-type">
-								<option ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>
+								<option value="{{ type.name }}" ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>
 							</select>
 						</div>
 
@@ -93,7 +79,7 @@
 						<div class="form-group">
 							<label for="item-sales-category">Sales Category</label>
 							<select ng-model="search.categoryName" class="form-control" id="item-sales-category">
-								<option ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name }}</option>
+								<option value="{{ salesCategory.name }}" ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name }}</option>
 							</select>
 						</div>
 
@@ -186,10 +172,10 @@
 				Show
 
 				<select class="form-control" ng-model="itemsPerPage">
-					<option>10</option>
-					<option>25</option>
-					<option>50</option>
-					<option>100</option>
+					<option value="10">10</option>
+					<option value="25">25</option>
+					<option value="50">50</option>
+					<option value="100">100</option>
 				</select>
 
 				Items per Page
