@@ -64,8 +64,8 @@ angular.module('ts5App')
         id: 213,
         name: 'Acme'
       },
-      '621': {
-        id: 621,
+      '413': {
+        id: 413,
         name: 'Stock Owner Test'
       }
     };
