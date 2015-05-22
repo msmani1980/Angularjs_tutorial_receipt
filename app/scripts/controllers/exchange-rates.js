@@ -83,18 +83,18 @@ angular.module('ts5App')
 
     function setupModels() {
       $scope.currenciesFields = {};
-      setBaseExchangeRateModel();
       setPreviousExchangeRatesModel();
       setCurrentExchangeRatesModel();
+      setBaseExchangeRateModel();
       $scope.showActionButtons = shouldShowActionButtons();
     }
 
-    $scope.$watch('cashiersDateField', function (cashiersDate) {
+    $scope.$watchGroup(['cashiersDateField', 'companyBaseCurrency'], function (valuesArray) {
+      var cashiersDate = valuesArray[0];
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       var companyCurrenciesPayload = {
         startDate: formattedDateForAPI,
-        endDate: formattedDateForAPI,
-        isOperatedCurrency: true
+        endDate: formattedDateForAPI
       };
       var companyCurrencyPromise = currencyFactory.getCompanyCurrencies(companyCurrenciesPayload);
       var previousRatePromise = currencyFactory.getPreviousExchangeRates(companyId, formattedDateForAPI);
@@ -169,14 +169,14 @@ angular.module('ts5App')
       }, showErrors);
     };
 
-    $scope.isBankExchangePreferred = function() {
+    $scope.isBankExchangePreferred = function () {
       if (!$scope.companyPreferences) {
         return false;
       }
 
       return $scope.companyPreferences.filter(function (feature) {
-        return (feature.featureCode === 'EXR' && feature.choiceCode === 'BNK');
-      }).length > 0;
+          return (feature.featureCode === 'EXR' && feature.choiceCode === 'BNK');
+        }).length > 0;
     };
 
     function getCompanyBaseCurrency(baseCurrencyId) {
