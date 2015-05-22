@@ -71,15 +71,15 @@
 
 					<fieldset ng-disabled="viewOnly || itemIsActive">
 
-						<input-text label="Stock Owner Item Code" name="itemCode" required="true" pattern="regexp.word" placeholder="Item123"></input-text>
+						<input-text label="Stock Owner Item Code" name="itemCode" required="true" pattern="regexp.word" placeholder="Item123" min-length="1" max-length="10"></input-text>
 
-						<input-text label="Stock Owner Item Name" name="itemName" required="true"  pattern="regexp.word" placeholder="My Item"></input-text>
+						<input-text label="Stock Owner Item Name" name="itemName" required="true"  pattern="regexp.word" placeholder="Cool New Item" min-length="1" max-length="40"></input-text>
 
-						<input-text label="Item Description" name="desc" required="true" pattern="regexp.word" placeholder="A simple description..."></input-text>
+						<input-text label="Item Description" name="desc" required="true" pattern="regexp.word" placeholder="A simple description..." min-length="1" max-length="500" ></input-text>
 
-						<input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="awesome cool new"></input-text>
+						<input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="cool new item" max-length="500"></input-text>
 
-						<input-text label="Unique Selling Point" name="sellingPoint" pattern="regexp.word" placeholder="Something cool!"></input-text>
+						<input-text label="Unique Selling Point" name="sellingPoint" pattern="regexp.word" placeholder="This item is really cool" max-length="100"></input-text>
 
 						<div class="form-group">
 
@@ -181,14 +181,14 @@
 						<div id="gtin-container">
 
 							<div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index">
-								<input-gtin> </input-gtin>
+								<input-gtin max-length="13"> </input-gtin>
 							</div>
 
 						</div>
 
-						<input-text label="Mfg. Part Number" name="mfgPartNumber" pattern="regexp.word" placeholder="1234"></input-text>
+						<input-text label="Mfg. Part Number" name="mfgPartNumber" pattern="regexp.word" placeholder="1234567890" max-length="25"></input-text>
 
-						<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="1234"></input-text>
+						<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="0987654321" max-length="25"></input-text>
 
 						<div class="panel panel-default" ng-show="formData.qrCodeImgUrl">
 

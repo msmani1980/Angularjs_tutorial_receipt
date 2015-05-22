@@ -30,7 +30,7 @@ angular.module('ts5App')
         costPrices: []
       };
 
-      $scope.viewName = 'Create Item';
+      $scope.viewName = 'Create Stock Owner Item';
 
   		$scope.buttonText = 'Create';
 
@@ -44,7 +44,7 @@ angular.module('ts5App')
 
       function setFormAsViewOnly() {
 
-        $scope.viewName = 'Viewing Item ' + $routeParams.id;
+        $scope.viewName = 'Viewing Stock Owner Item ' + $routeParams.id;
 
       }
 
@@ -52,7 +52,7 @@ angular.module('ts5App')
 
         editingItem = true;
 
-        $scope.viewName = 'Edit Item ' + $routeParams.id;
+        $scope.viewName = 'Edit Stock Owner Item ' + $routeParams.id;
 
         $scope.buttonText = 'Save';
 
