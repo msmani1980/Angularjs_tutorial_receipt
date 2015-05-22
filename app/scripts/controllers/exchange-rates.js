@@ -74,11 +74,8 @@ angular.module('ts5App')
         return false;
       }
 
-      if (isToday && $scope.dailyExchangeRates.isSubmitted) {
-        return false;
-      }
+      return !(isToday && $scope.dailyExchangeRates.isSubmitted);
 
-      return true;
     }
 
     function setupModels() {
@@ -155,10 +152,10 @@ angular.module('ts5App')
     }
 
     function showErrors(dataFromAPI) {
-      $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
       }
+      $scope.displayError = true;
       setupModels();
     }
 
@@ -166,8 +163,8 @@ angular.module('ts5App')
       createPayload(shouldSubmit);
       currencyFactory.saveDailyExchangeRates($scope.payload).then(function (dailyExchangeRatesData) {
         $scope.dailyExchangeRates = dailyExchangeRatesData || {};
-        angular.element('#success-modal').modal('show');
         setupModels();
+        angular.element('#success-modal').modal('show');
       }, showErrors);
     };
 
