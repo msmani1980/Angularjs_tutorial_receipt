@@ -122,7 +122,7 @@
 			<thead>
 
 				<tr>
-					<th>Actions</th>
+
 					<th>
 						<abbr title="Stock Owner Reference Number">S.O. Ref. #</abbr>
 					</th>
@@ -133,6 +133,7 @@
 					<th>Sales Category</th>
 					<th>Effective From</th>
 					<th>Effective To</th>
+					<th>Actions</th>
 
 				</tr>
 
@@ -141,6 +142,15 @@
 			<tbody>
 
 				<tr id="item-{{item.id}}" ng-repeat="(key,item) in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName, startDate: search.startDate, endDate:search.endDate }">
+
+					<td>{{ item.stockOwnerCode }}</td>
+					<td>{{ item.itemCode }}</td>
+					<td>{{ item.itemName }}</td>
+					<td>{{ item.itemTypeName }}</td>
+					<td>{{ item.onBoardName }}</td>
+					<td>{{ item.categoryName }}</td>
+					<td>{{ item.startDate | date: 'MM/dd/yyyy' }}</td>
+					<td>{{ item.endDate | date: 'MM/dd/yyyy' }}</td>
 
 					<td>
 
@@ -157,15 +167,6 @@
 						</button>
 
 					</td>
-
-					<td>{{ item.stockOwnerCode }}</td>
-					<td>{{ item.itemCode }}</td>
-					<td>{{ item.itemName }}</td>
-					<td>{{ item.itemTypeName }}</td>
-					<td>{{ item.onBoardName }}</td>
-					<td>{{ item.categoryName }}</td>
-					<td>{{ item.startDate | date: 'MM/dd/yyyy' }}</td>
-					<td>{{ item.endDate | date: 'MM/dd/yyyy' }}</td>
 
 
 				</tr>
