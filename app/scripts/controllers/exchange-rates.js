@@ -89,8 +89,10 @@ angular.module('ts5App')
       $scope.showActionButtons = shouldShowActionButtons();
     }
 
-    $scope.$watchGroup(['cashiersDateField', 'companyBaseCurrency'], function (valuesArray) {
-      var cashiersDate = valuesArray[0];
+    $scope.$watch('cashiersDateField', function (cashiersDate) {
+      if (!moment(cashiersDate, 'L', true).isValid()) {
+        return;
+      }
       var formattedDateForAPI = formatDateForAPI(cashiersDate);
       var companyCurrenciesPayload = {
         startDate: formattedDateForAPI,
@@ -182,6 +184,7 @@ angular.module('ts5App')
     function getCompanyBaseCurrency(baseCurrencyId) {
       currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
         $scope.companyBaseCurrency = getCurrencyFromArrayUsingId(companyBaseCurrencyData.response, baseCurrencyId);
+        setupModels();
       });
     }
 
