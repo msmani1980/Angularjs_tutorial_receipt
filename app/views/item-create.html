@@ -163,7 +163,7 @@
 							</select>
 						</div>
 
-						<image-upload></image-upload>
+						<image-upload ng-hide="viewOnly"></image-upload>
 
 						<div id="images-container">
 
@@ -192,6 +192,22 @@
 
 						<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="0987654321" max-length="25"></input-text>
 
+						<tabset justified="true" ng-hide="viewOnly" ng-show="!formData.qrCodeImgUrl">
+
+							<tab heading="QR Create">
+
+								<qr-create></qr-create>
+
+							</tab>
+
+							<tab heading="QR Upload">
+
+								<qr-upload></qr-upload>
+
+							</tab>
+
+						</tabset>
+
 						<div class="panel panel-default" ng-show="formData.qrCodeImgUrl">
 
 						  <div class="panel-heading">
@@ -213,22 +229,6 @@
 							</div>
 
 						</div>
-
-						<tabset justified="true" ng-show="!formData.qrCodeImgUrl">
-
-							<tab heading="QR Create">
-
-								<qr-create></qr-create>
-
-							</tab>
-
-							<tab heading="QR Upload">
-
-								<qr-upload></qr-upload>
-
-							</tab>
-
-						</tabset>
 
 					</fieldset>
 
