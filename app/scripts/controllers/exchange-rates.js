@@ -33,17 +33,17 @@ angular.module('ts5App')
       })[0];
     };
 
-    function serializeExchangeRates(currencyCode, baseExchangeRate) {
+    function serializeExchangeRates(currencyCode, coinExchangeRate, paperExchangeRate, bankExchangeRate) {
       $scope.currenciesFields[currencyCode] = {
-        coinExchangeRate: baseExchangeRate,
-        paperExchangeRate: baseExchangeRate,
-        bankExchangeRate: baseExchangeRate
+        coinExchangeRate: coinExchangeRate,
+        paperExchangeRate: paperExchangeRate,
+        bankExchangeRate: bankExchangeRate
       };
     }
 
     function setBaseExchangeRateModel() {
       if ($scope.companyBaseCurrency && $scope.dailyExchangeRates) {
-        serializeExchangeRates($scope.companyBaseCurrency.currencyCode, '1.0000');
+        serializeExchangeRates($scope.companyBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000');
       }
     }
 
