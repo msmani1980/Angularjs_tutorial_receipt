@@ -37,7 +37,7 @@
 							<label>Price Type *</label>
 
 							<select name="Price Type" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate" ng-model="itemPrice.typeId" class="form-control">
-								<option ng-repeat="type in $parent.priceTypes" value="{{ type.id }}">{{ type.name }}</option>
+								<option ng-selected="type.id === itemPrice.typeId"  ng-repeat="type in $parent.priceTypes" value="{{ type.id }}">{{ type.name }}</option>
 							</select>
 
 						</div>

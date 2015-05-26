@@ -163,7 +163,7 @@
 							</select>
 						</div>
 
-						<image-upload ng-hide="viewOnly"></image-upload>
+						<image-upload ng-hide="viewOnly || itemIsActive"></image-upload>
 
 						<div id="images-container">
 
@@ -192,7 +192,7 @@
 
 						<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="0987654321" max-length="25"></input-text>
 
-						<tabset justified="true" ng-hide="viewOnly" ng-show="!formData.qrCodeImgUrl">
+						<tabset justified="true" ng-hide="viewOnly || itemIsActive" ng-show="!formData.qrCodeImgUrl">
 
 							<tab heading="QR Create">
 
