@@ -26,11 +26,11 @@ describe('Directive: datePicker', function () {
     });
 
     it('should have label-from', function () {
-      expect(element.find('.startDateContainer label').text()).toBe('labelFrom');
+      expect(element.find('.startDateContainer label').text()).toBe('labelFrom *');
     });
 
     it('should have label-from', function () {
-      expect(element.find('.endDateContainer label').text()).toBe('labelTo');
+      expect(element.find('.endDateContainer label').text()).toBe('labelTo *');
     });
   });
 });
