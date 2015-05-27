@@ -10,39 +10,82 @@
 angular.module('ts5App')
   .directive('imageUpload', function () {
 
-	var imageUploadController = function ($scope, Upload, ENV, $http) {
+  	var imageUploadController = function ($scope, Upload, ENV, $http) {
 
-	    // set header param 'type' = item
-	    $http.defaults.headers.common.type = 'item';
+      // set header param 'type' = item
+      $http.defaults.headers.common.type = 'item';
 
-	    // progress
-	    $scope.uploadProgress = '0';
+      $scope.uploadProgress = '0';
 
-	    // watch for files
-	   	$scope.$watch('files', function (files) {
-	       $scope.files = files;
-	    });
+     	$scope.$watch('files', function (files) {
+        $scope.files = files;
+      });
 
-	    // clear current qr files
-	    $scope.clearFiles = function() {
-	        $scope.files = [];
-	        $scope.uploadProgress = 0;
-	        $scope.uploadSuccess = false;
-	        $scope.uploadFail = false;
-	    };
+      // clear current files and progress
+      $scope.clearFiles = function() {
+        $scope.files = [];
+        $scope.uploadProgress = 0;
+        $scope.uploadSuccess = false;
+        $scope.uploadFail = false;
+      };
+
+      var multipleFiles =  function (i, files) {
+            
+        var file = files[i];
+
+        $scope.imageTooLarge = false;
+
+        // Upload image
+        Upload.upload({
+            url: ENV.apiUrl + '/api/images',
+            fileFormDataName: 'image',
+            file: file
+        }).progress(function (evt) {
+
+          // Upload Progress
+          $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+
+        // on a successful upload
+        }).success(function (data) {
+
+          // set the UI flag
+          $scope.uploadSuccess = true;
+
+          // new image object
+          var newImage = {
+              imageURL: data.url,
+              startDate:  $scope.formData.startDate,
+              endDate: $scope.formData.endDate
+          };
+
+          // pass new image object into formData.images array
+          $scope.formData.images.push(newImage);
+
+          $scope.clearFiles();
+
+        // on a failed upload
+        }).error(function () {
+
+          //set the UI flag
+          $scope.uploadFail = true;
+
+          // TODO: Interpret this failure and tell the user
+          //  console.log(data);
+
+        });
+
+      };
 
 	    // upload image function
 	    $scope.upload = function () {
 
-	        // grab files from scope
-	    	var files = $scope.files;
-
+        var files = $scope.files;
+            
   			var imgElement = angular.element('.thumbs');
   			var imgHeight = imgElement.height();
   			var imgWidth = imgElement.width();
 
   			if (imgHeight > 128 && imgWidth > 128){
-
   				$scope.clearFiles();
   				$scope.imageTooLarge = true;
   				$scope.imageDimensions = imgWidth + 'px' + ' x ' + imgHeight + 'px';
@@ -51,52 +94,21 @@ angular.module('ts5App')
         //if a file exists and it is not null
        	else if (files && files.length) {
 
-       		$scope.imageTooLarge = false;
+          //for multiple files, loop through
+          for (var i = 0; i < files.length; i++) {
 
-            // Upload image
-            Upload.upload({
-                url: ENV.apiUrl + '/api/images',
-                fileFormDataName: 'image',
-                file: files
-            }).progress(function (evt) {
+            multipleFiles(i, files);
 
-                // Upload Progress
-                $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+          }
 
-            // on a successful upload
-            }).success(function (data) {
+          $scope.clearFiles();
 
-                // set the UI flag
-                $scope.uploadSuccess = true;
+        // no files found, exit function
+        } else {
 
-                // new image object
-                var newImage = {
-                    imageURL: data.url,
-                    startDate:  $scope.formData.startDate,
-                    endDate: $scope.formData.endDate
-                };
+        	return false;
 
-                // pass new image object into formData.images array
-                $scope.formData.images.push(newImage);
-
-                $scope.clearFiles();
-
-            // on a failed upload
-            }).error(function () {
-
-	                //set the UI flag
-	                $scope.uploadFail = true;
-
-
-                  // TODO: Interpret this failure and tell the user
-                //  console.log(data);
-
-	            });
-
-	        // no files found, exit function
-	        } else {
-	        	return false;
-	        }
+        }
 
 	    };
 
