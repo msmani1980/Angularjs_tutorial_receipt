@@ -236,6 +236,24 @@ angular.module('ts5App')
 
       }
 
+      currencyFactory.getCompanyCurrencies(function(data) {
+
+        //$scope.currenciesList = data.response;
+
+        var masterCurrenciesList = [];
+
+        for(var key in data.response) {
+
+          var currency  = data.response[key];
+
+          masterCurrenciesList[currency.id] = currency.code
+
+        }
+
+        $scope.masterCurrenciesList = masterCurrenciesList;
+
+      });
+
       itemsFactory.getItemsList({}).then(function (data) {
         $scope.items = data.retailItems;
       });
@@ -504,6 +522,8 @@ angular.module('ts5App')
       // generate a list of station exception currencies
       function generateStationCurrenciesList(currenciesList){
 
+      //  console.log($scope.currenciesList);
+
         var listToReturn = [];
 
         for(var key in currenciesList) {
@@ -513,7 +533,7 @@ angular.module('ts5App')
           listToReturn.push({
             price: '1.00',
             companyCurrencyId: currency.id,
-            code: currency.code
+          //  code: currency.code
           });
 
         }
@@ -560,7 +580,7 @@ angular.module('ts5App')
 
         getStationsCurrenciesList(stationException).then(function (data) {
 
-          //setStationsCurrenciesList(stationException,data);
+          setStationsCurrenciesList(stationException,data);
 
         });
 
