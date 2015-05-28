@@ -21,6 +21,10 @@ angular.module('ts5App')
         $scope.files = files;
       });
 
+      $scope.filesChanged = function(){
+        //console.log('Files have been changed');
+      };
+
       // clear current files and progress
       $scope.clearFiles = function() {
         $scope.files = [];

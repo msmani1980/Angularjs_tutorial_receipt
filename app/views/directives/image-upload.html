@@ -5,7 +5,7 @@
     <div ngf-select="" ngf-drop="" class="drop-box"
     	ng-model="files"
     	ng-model-rejected="rejFiles"
-    	ngf-change="generateThumb(file, files)"
+    	ngf-change="filesChanged()"
        	ngf-drag-over-class="dragover"
         ngf-multiple="true"
         ngf-allow-dir="true"

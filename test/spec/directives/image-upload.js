@@ -4,7 +4,6 @@ describe('Image Upload Directive |', function () {
 
   // assign variables
   var element,
-      scope,
       imageJSON,
       Upload,
       response,
@@ -16,14 +15,17 @@ describe('Image Upload Directive |', function () {
   // load the expected json response and image
   beforeEach(module('served/image-upload.json'));
 
-  // set scope as $rootScope
-  beforeEach(inject(function ($rootScope) {
-    scope = $rootScope.$new();
-  }));
-
   // inject the service and responshandler
-  beforeEach(inject(function (_Upload_, $injector) {
+  beforeEach(inject(function (_$compile_, _$rootScope_, _Upload_, $injector) {
 
+     var $compile = _$compile_,
+     $scope = _$rootScope_;
+
+     //call image upload directive element
+    var tpl = '<image-upload></image-upload>';
+
+    element = $compile(tpl)($scope);
+  
     // inject the JSON fixtures
     inject(function (_servedImageUpload_) {
       imageJSON = _servedImageUpload_;    
@@ -36,42 +38,45 @@ describe('Image Upload Directive |', function () {
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET('views/directives/image-upload.html').respond(200, '');
 
+    //digest the scope
+    $scope.$digest();
+
+    var controller = element.controller;
+
+    return controller;
+
   }));
 
-  //Compile the directive inside it's own function
-  function compileDirective(tpl) {
-
-    //call image upload directive element
-    tpl = '<image-upload></image-upload>';
-
-    //inject the directive, compile
-    inject(function($compile){
-        var form = $compile(tpl)(scope);
-        element = form;
-    });
-
-    //digest the scope
-    scope.$digest();
- 
-  }
-
   //image upload directive
-  describe('image upload', function() {
-
-    //before each, call the compile function
-    beforeEach(function () {
-        compileDirective();
-    });
+  describe('When the directive is injected into a template, it', function() {
 
     //check if image upload directive is defined
     it('should initialize', function() {
-        expect(element[0]).toBeDefined();
+
+       inject(function () {
+        expect(element).toBeDefined();
+      });
+
+    });
+    
+  });
+
+  describe('When a user clicks on the image upload, it', function() {
+
+    //before each, call the compile function
+    beforeEach(inject(function () {
+        spyOn(element, 'click');
+    }));
+
+    //check if image upload directive is defined
+    it('should trigger a file upload dialog', function() {
+        expect(element.click).toBeDefined();
     });
     
   });
   
   //image upload logic 
-  describe('the image uploader', function() {
+  describe('When the upload function is called, it', function() {
 
     beforeEach(inject(function () {
        
@@ -85,19 +90,32 @@ describe('Image Upload Directive |', function () {
       
     }));
 
-    // check to see if Upload method is defined
     it('should be defined', function(){
       expect(Upload).toBeDefined();
     });
 
-    // check if call is successful
     it('should be able to call the upload function', function(){
       expect(Upload.upload).toHaveBeenCalled();
     });
 
-    // check for a response
     it('should get a response', function () {
       expect(response).toBeDefined();
+    });
+
+    it('should have an url defined in the response', function (){
+      expect(response.url).toBeDefined();
+    });
+
+    it('should return a url that is not null', function(){
+      expect(response.url.length).toBeGreaterThan(2);
+    });
+
+    it('should return a url that contains https://', function(){
+      expect(response.url).toContain('https://');
+    });
+
+    it('should return a url that contains s3', function(){
+      expect(response.url).toContain('s3');
     });
 
   });
