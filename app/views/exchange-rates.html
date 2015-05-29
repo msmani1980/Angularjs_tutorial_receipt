@@ -22,7 +22,7 @@
     </ul>
   </div>
 
-  <div class="modal fade" id="success-modal">
+  <div class="modal fade success-modal">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -123,8 +123,8 @@
       </div>
     </div>
     <div class="panel-footer text-right" ng-show="showActionButtons">
-      <input class="btn btn-default" type="submit" value="Save"/>
-      <input class="btn btn-primary" type="button" value="Submit" ng-click="saveDailyExchangeRates(true)"/>
+      <button class="btn btn-default save-btn" ng-click="saveDailyExchangeRates(false)">Save</button>
+      <button class="btn btn-primary submit-btn" value="Submit" ng-click="saveDailyExchangeRates(true)">Submit</button>
     </div>
 
   </div>
