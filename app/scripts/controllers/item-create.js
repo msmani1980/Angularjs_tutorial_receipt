@@ -532,8 +532,7 @@ angular.module('ts5App')
 
           listToReturn.push({
             price: '1.00',
-            companyCurrencyId: currency.id,
-          //  code: currency.code
+            companyCurrencyId: currency.id
           });
 
         }
@@ -619,7 +618,7 @@ angular.module('ts5App')
           var currency = currenciesList[key];
 
           priceCurrencies.push({
-          //  price: '1.00',
+            price: '1.00',
             companyCurrencyId: currency.id,
             code: currency.code
           });
@@ -724,14 +723,6 @@ angular.module('ts5App')
 
             // remove stations collection for stations exception before  adding to payload
             delete stationException.stations;
-
-            // loop through each station exception  currency collection
-            for(var stationCurrencyIndex in stationException.stationExceptionCurrencies) {
-
-              // remove code from stations exceptions currencies item  adding to payload
-              delete stationException.stationExceptionCurrencies[stationCurrencyIndex].code;
-
-            }
 
           }
 
