@@ -1,0 +1,65 @@
+.fuelux .wizard {
+  overflow: inherit;
+}
+
+.fuelux .wizard .steps {
+  margin-left: 0 !important;
+}
+
+.fuelux .wizard .actions {
+  position: relative;
+  background: none;
+  border-left: none;
+}
+
+.fuelux .wizard .datepicker-calendar-wrapper {
+  z-index: 9999;
+}
+
+.fuelux .wizard .well .table {
+  margin-bottom: 0;
+}
+
+.fuelux .wizard .well .table caption {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #3a87ad;
+}
+
+.fuelux .wizard .well h3 {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #3a87ad;
+  margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  .fuelux .wizard .steps li {
+    float: none;
+    padding-left: 20px;
+    border-bottom: 1px solid #d4d4d4;
+  }
+  .fuelux .wizard .steps li:first-child {
+    -webkit-border-bottom-left-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+    -moz-border-bottom-left-radius: 0;
+    -moz-border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .fuelux .wizard .steps li:last-child {
+    border-bottom: 0;
+  }
+  .fuelux .wizard .well {
+    padding: 8px;
+  }
+  .fuelux .wizard .well .table th {
+    word-break: break-all;
+  }
+  .fuelux .wizard .well .table td {
+    padding: 8px 4px;
+  }
+  .fuelux .wizard .well .table td input {
+    padding: 2px;
+  }
+}
