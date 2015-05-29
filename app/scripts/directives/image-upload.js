@@ -119,11 +119,10 @@ angular.module('ts5App')
     };
 
     return {
-
-      	templateUrl: 'views/directives/image-upload.html',
-      	restrict: 'E',
-      	scope: false, // isolate scope to parent
-      	controller: imageUploadController
+    	templateUrl: '/views/directives/image-upload.html',
+    	restrict: 'E',
+    	scope: false, // isolate scope to parent
+    	controller: imageUploadController
     };
 
   });
