@@ -161,10 +161,13 @@ angular.module('ts5App')
 
     $scope.saveDailyExchangeRates = function (shouldSubmit) {
       createPayload(shouldSubmit);
+      var buttonSelector = shouldSubmit ? '.submit-btn' : '.save-btn';
+      angular.element(buttonSelector).button('loading');
       currencyFactory.saveDailyExchangeRates($scope.payload).then(function (dailyExchangeRatesData) {
         $scope.dailyExchangeRates = dailyExchangeRatesData || {};
         setupModels();
-        angular.element('#success-modal').modal('show');
+        angular.element('.success-modal').modal('show');
+        angular.element(buttonSelector).button('reset');
       }, showErrors);
     };
 
