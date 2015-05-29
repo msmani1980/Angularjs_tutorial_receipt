@@ -10,7 +10,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams,GlobalMenuService) {
+  .controller('ItemCreateCtrl', function ($scope,$compile,ENV,$resource,$location,$anchorScroll,itemsFactory,companiesFactory,currencyFactory,$routeParams,GlobalMenuService,$q) {
 
       // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
       var companyId = GlobalMenuService.company.get();
@@ -214,45 +214,80 @@ angular.module('ts5App')
 
         $scope.formData = itemData;
 
-        // TODO: turn this into a function
+        updateStations();
+
+      }
+
+      // reaches out to the stations API per each station exception and update set stations list
+      function updateStations() {
+
+        var stationPromises = [];
+
         for(var priceIndex in $scope.formData.prices) {
 
           var price = $scope.formData.prices[priceIndex];
 
-          // TODO: turn this into a function
           for(var stationExceptionIndex in price.stationExceptions) {
 
             var stationException = price.stationExceptions[stationExceptionIndex];
 
-            getStationsList(stationException).then(function(data) {
-
-              setStationsList(stationException,data);
-
-            });
+            stationPromises.push( getStationsList(stationException) );
 
           }
+
+          // TODO: Move out of loop
+          $q.all(stationPromises).then(function(data){
+
+            console.log(data);
+
+            for(var key in data) {
+
+              var stationException = price.stationExceptions[key];
+
+              setStationsList(stationException,data[key]);
+
+            }
+
+          });
 
         }
 
       }
 
-      currencyFactory.getCompanyCurrencies(function(data) {
+    /*  function setAllStations(price,data) {
 
-        //$scope.currenciesList = data.response;
+        for(var key in data) {
 
-        var masterCurrenciesList = [];
+          var stationException = price.stationExceptions[key];
 
-        for(var key in data.response) {
-
-          var currency  = data.response[key];
-
-          masterCurrenciesList[currency.id] = currency.code
+          setStationsList(stationException,data[key]);
 
         }
 
-        $scope.masterCurrenciesList = masterCurrenciesList;
+      }*/
 
-      });
+      // gets a list of all currencies for the item
+      function getMasterCurrenciesList() {
+
+        currencyFactory.getCompanyCurrencies(function(data) {
+
+          var masterCurrenciesList = [];
+
+          for(var key in data.response) {
+
+            var currency  = data.response[key];
+
+            masterCurrenciesList[currency.id] = currency.code;
+
+          }
+
+          $scope.masterCurrenciesList = masterCurrenciesList;
+
+        });
+
+      }
+
+      getMasterCurrenciesList();
 
       itemsFactory.getItemsList({}).then(function (data) {
         $scope.items = data.retailItems;
@@ -582,8 +617,6 @@ angular.module('ts5App')
           setStationsCurrenciesList(stationException,data);
 
         });
-
-
 
       }
 
