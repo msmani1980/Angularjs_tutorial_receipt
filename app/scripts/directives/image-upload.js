@@ -10,68 +10,82 @@
 angular.module('ts5App')
   .directive('imageUpload', function () {
 
-  	var imageUploadController = function ($scope, Upload, ENV, $http) {
+  	var imageUploadController = function ($scope, Upload, ENV, $http,$q) {
 
       // set header param 'type' = item
       $http.defaults.headers.common.type = 'item';
 
-      $scope.uploadProgress = '0';
-
      	$scope.$watch('files', function (files) {
+
+        for(var fileKey in files) {
+
+          var file = files[fileKey];
+          file.uploadProgress = 0;
+
+        }
+
         $scope.files = files;
+
       });
 
-      $scope.filesChanged = function(){
-        //console.log('Files have been changed');
+
+      // clear current files and progress
+      $scope.clearAllFiles = function() {
+
+        for(var filesIndex in $scope.files) {
+
+          $scope.clearFile(filesIndex);
+
+        }
+
       };
 
       // clear current files and progress
-      $scope.clearFiles = function() {
-        $scope.files = [];
-        $scope.uploadProgress = 0;
-        $scope.uploadSuccess = false;
-        $scope.uploadFail = false;
+      $scope.clearFile = function(filesIndex) {
+
+        $scope.files.splice(filesIndex,1);
+
       };
 
-      var multipleFiles =  function (i, files) {
-            
-        var file = files[i];
+      $scope.addImage = function(fileIndex,data) {
 
-        $scope.imageTooLarge = false;
+        // new image object
+        var newImage = {
+            imageURL: data.url,
+            startDate:  $scope.formData.startDate,
+            endDate: $scope.formData.endDate
+        };
+
+        // pass new image object into formData.images array
+        $scope.formData.images.push(newImage);
+
+      };
+
+      $scope.uploadFile = function (fileIndex) {
+
+        var file = $scope.files[fileIndex];
 
         // Upload image
-        Upload.upload({
+        return Upload.upload({
             url: ENV.apiUrl + '/api/images',
             fileFormDataName: 'image',
             file: file
-        }).progress(function (evt) {
+        })
+        .progress(function (evt) {
 
           // Upload Progress
-          $scope.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
+          file.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
 
         // on a successful upload
         }).success(function (data) {
 
-          // set the UI flag
-          $scope.uploadSuccess = true;
-
-          // new image object
-          var newImage = {
-              imageURL: data.url,
-              startDate:  $scope.formData.startDate,
-              endDate: $scope.formData.endDate
-          };
-
-          // pass new image object into formData.images array
-          $scope.formData.images.push(newImage);
-
-          $scope.clearFiles();
+          $scope.addImage(fileIndex,data);
 
         // on a failed upload
         }).error(function () {
 
           //set the UI flag
-          $scope.uploadFail = true;
+          file.uploadFail = true;
 
           // TODO: Interpret this failure and tell the user
           //  console.log(data);
@@ -80,37 +94,69 @@ angular.module('ts5App')
 
       };
 
+      $scope.doesImageMeetSizeConstraint = function (filesIndex){
+
+        var file = $scope.files[filesIndex];
+
+        var imgElement = angular.element( angular.element('.fileTest')[filesIndex] );
+
+  			var imgHeight = imgElement.height();
+
+  			var imgWidth = imgElement.width();
+
+  			if (imgHeight > 128 || imgWidth > 128){
+
+  				file.imageTooLarge = true;
+
+  				file.imageDimensions = imgWidth + 'px' + ' x ' + imgHeight + 'px';
+
+  			} else {
+
+          return true;
+
+        }
+
+      };
+
 	    // upload image function
 	    $scope.upload = function () {
 
-        var files = $scope.files;
-            
-  			var imgElement = angular.element('.thumbs');
-  			var imgHeight = imgElement.height();
-  			var imgWidth = imgElement.width();
+        var fileUploadPromises = [];
 
-  			if (imgHeight > 128 && imgWidth > 128){
-  				$scope.clearFiles();
-  				$scope.imageTooLarge = true;
-  				$scope.imageDimensions = imgWidth + 'px' + ' x ' + imgHeight + 'px';
-  			}
+        $scope.filesToClear = [];
+
+        var files = $scope.files;
 
         //if a file exists and it is not null
-       	else if (files && files.length) {
+       	if (files && files.length) {
 
           //for multiple files, loop through
-          for (var i = 0; i < files.length; i++) {
+          for (var filesIndex in files) {
 
-            multipleFiles(i, files);
+             if( $scope.doesImageMeetSizeConstraint(filesIndex) ) {
 
+               fileUploadPromises.push( $scope.uploadFile(filesIndex) );
+
+             }
           }
 
-          $scope.clearFiles();
+          $q.all(fileUploadPromises).then(function(results) {
 
-        // no files found, exit function
-        } else {
+            var reversedResults = results.reverse();
 
-        	return false;
+            for(var key in reversedResults) {
+
+              var result = reversedResults[key];
+
+              if(result.status === 201) {
+
+                $scope.files.pop();
+
+              }
+
+            }
+
+          });
 
         }
 

@@ -10,10 +10,11 @@ describe('Image Upload Directive |', function () {
     Upload,
     response,
     $httpBackend;
- 
+
   // load the directive's module
   beforeEach(module('ts5App'));
 
+  // load directives/views in html
   beforeEach(module('template-module'));
 
   // load the expected json response and image
@@ -28,10 +29,10 @@ describe('Image Upload Directive |', function () {
 
     // inject the JSON fixtures
     inject(function (_servedImageUpload_) {
-      imageJSON = _servedImageUpload_;    
-    }); 
+      imageJSON = _servedImageUpload_;
+    });
 
-    //set upload 
+    //set upload
     Upload = _Upload_;
 
     // set httpbackend, add directive if not added
@@ -49,7 +50,6 @@ describe('Image Upload Directive |', function () {
       element = angular.element('<image-upload></image-upload>');
       element = $compile(element)(scope);
       scope.$digest();
-      controller = element.controller;
     }));
 
     it('should inject the directive', function () {
@@ -68,13 +68,13 @@ describe('Image Upload Directive |', function () {
       expect(element.find('.btn-default')).toBeDefined();
     });
 
-    it('should contain thumbnails', function() {
+    it('should contain thumbnails element', function() {
       expect(element.find('.thumbnails')).toBeDefined();
     });
 
     it('should contain a ng-model of files', function() {
       expect(element.find('.drop-box').attr('ng-model')).toContain('files');
-    }); 
+    });
 
   });
 
@@ -89,14 +89,18 @@ describe('Image Upload Directive |', function () {
     it('should trigger a file upload dialog', function() {
         expect(element.click).toBeDefined();
     });
-    
+
   });
-  
-  //image upload logic 
+
+  //image upload logic
   describe('When the upload function is called, it', function() {
 
-    beforeEach(inject(function () {
-       
+    beforeEach(inject(function ($compile) {
+      element = angular.element('<image-upload></image-upload>');
+      element = $compile(element)(scope);
+      scope.$digest();
+      controller = element.controller;
+
       // spy on the Upload.upload return expected JSON
       spyOn(Upload, 'upload').and.callFake(function() {
         return imageJSON;
@@ -104,7 +108,7 @@ describe('Image Upload Directive |', function () {
 
       // make the mock upload call
       response = Upload.upload();
-      
+
     }));
 
     it('should be defined', function(){
@@ -137,59 +141,152 @@ describe('Image Upload Directive |', function () {
 
   });
 
-  describe('When the controllers is accessed, it', function () {
+  describe('When the clearAllFiles function is called, it', function () {
 
     beforeEach(inject(function ($compile) {
       element = angular.element('<image-upload></image-upload>');
       element = $compile(element)(scope);
       scope.$digest();
-      controller = element.controller;
+      controller = element.controller('imageUpload');
 
       //set a file and upload responses for clearFiles()
-      scope.files = ['files'];
-      scope.uploadProgress = 100;
-      scope.uploadSuccess =  true;
-      scope.uploadFail = true;
+      scope.files = [
+        {
+          $$hashKey: 'object:277',
+          lastModified: 1430772953000,
+          lastModifiedDate:'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4636.png',
+          size: 7801,
+          type: 'image/png',
+          webkitRelativePath: '',
+          uploadProgress: 100,
+          uploadSuccess:true,
+          uploadFail: false
+        }
+      ];
+
 
     }));
 
-    it('should contain a files object', function() {  
-      expect(scope.files).toContain('files');
+    it('should contain an empty files object', function() {
+      expect(scope.files).toBeDefined();
+      expect(scope.files.length).toBe(1);
     });
 
-    it('should have an uploadProgress', function() {  
-      expect(scope.uploadProgress).toBe(100);
+    it('should have an uploadProgress varible', function() {
+      expect(scope.files[0].uploadProgress).toBeDefined();
     });
 
-    it('should have uploadSuccess', function() {  
-      expect(scope.uploadSuccess).toBeTruthy();
+    it('should have uploadSuccess', function() {
+      expect(scope.files[0].uploadSuccess).toBeTruthy();
     });
 
-    it('should have uploadFail', function() {  
-      expect(scope.uploadFail).toBeTruthy();
+    it('should have uploadFail', function() {
+      expect(scope.files[0].uploadFail).toBeFalsy();
     });
 
     it('should clear the files after clearFiles is called', function() {
-      scope.clearFiles();
+      scope.clearAllFiles();
       expect(scope.files.length).toBe(0);
     });
 
-    it('should clear uploadProgress after clearFiles is called', function() {
-      scope.clearFiles();
-      expect(scope.uploadProgress).toBe(0);
+  });
+
+
+  describe('When multiple files are uploaded, it', function(){
+
+    beforeEach(inject(function ($compile) {
+      element = angular.element('<image-upload></image-upload>');
+      element = $compile(element)(scope);
+      scope.$digest();
+      controller = element.controller('imageUpload');
+
+      spyOn(scope, 'upload').and.callFake(function() {
+        // set the UI flag
+        scope.uploadSuccess = true;
+
+        for (var i = 0; i < scope.files.length; i++) {
+
+          // new image object
+          var newImage = {
+              imageURL: imageJSON.url,
+              startDate:  scope.formData.startDate,
+              endDate: scope.formData.endDate
+          };
+
+          // pass new image object into formData.images array
+          scope.formData.images.push(newImage);
+
+        }
+
+      });
+      
+      scope.files = [
+        {
+          $$hashKey: 'object:277',
+          lastModified: 1430772953000,
+          lastModifiedDate:'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4636.png',
+          size: 7801,
+          type: 'image/png',
+          webkitRelativePath: ''
+        },
+        {
+          $$hashKey: 'object:278',
+          lastModified: 1430772953000,
+          lastModifiedDate: 'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4637.png',
+          size: 7802,
+          type: 'image/png',
+          webkitRelativePath: ''
+        }
+      ];
+
+      scope.formData = {
+        images: []
+      };
+
+      scope.upload();
+
+    }));
+
+    it('should be able to upload multiple images', function() {
+      expect(scope.formData.images.length).toBe(2);
     });
 
-    it('should clear uploadSuccess after clearFiles is called', function() {
-      scope.clearFiles();
-      expect(scope.uploadSuccess).toBeFalsy();
-    });
-
-    it('should clear uploadFail after clearFiles is called', function() {
-      scope.clearFiles();
-      expect(scope.uploadFail).toBeFalsy();
-    });
 
   });
+
+  /*
+  // spy on the Upload.upload return expected JSON
+  spyOn(Upload, 'upload').and.callFake(function() {
+    return false;
+  });
+
+  // make the mock upload call
+  response = Upload.upload();
+
+  it('should have imageTooLarge after upload is called', function() {
+      console.log(imgHeight);
+      expect(scope.imageTooLarge).toBeTruthy();
+    });
+
+    it('should have imgElement after upload is called', function() {
+      scope.imgElement = angular.element('.thumbs');
+      expect(scope.imgElement).toBeDefined();
+    });
+
+    it('should have imgHeight after upload is called', function() {
+      expect(scope.imgHeight).toBeDefined();
+    });
+
+    it('should have imgWidth after upload is called', function() {
+      expect(scope.imgWidth).toBeDefined();
+    });
+
+    it('should have uploadFail after upload is called', function() {
+      expect(scope.uploadFail).toBeTruthy();
+    }); */
 
 
 });
