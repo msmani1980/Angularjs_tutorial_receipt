@@ -39,9 +39,21 @@ angular.module('ts5App')
 
       $scope.itemIsInactive = false;
 
-      $scope.viewOnly = $location.path().includes('item-view');
+      $scope.viewOnly = false;
 
       var editingItem = false;
+
+      function checkIfViewOnly() {
+
+        var path = $location.path();
+
+        if( path.search('item-view') ) {
+
+          $scope.viewOnly = true;
+
+        }
+
+      }
 
       function setFormAsViewOnly() {
 
@@ -88,6 +100,8 @@ angular.module('ts5App')
         });
 
       }
+
+      checkIfViewOnly();
 
       if($scope.viewOnly) {
         setFormAsViewOnly();
@@ -214,7 +228,7 @@ angular.module('ts5App')
 
         $scope.formData = itemData;
 
-        updateStations();
+        updateStationsList();
 
       }
 
@@ -306,7 +320,7 @@ angular.module('ts5App')
       $scope.$watch('formData', function(newData, oldData){
 
         // check item dates and make sure all dates fall within the acceptable dates
-        checkItemDates(newData,oldData);
+        //checkItemDates(newData,oldData);
 
         // if a price group date or station exception changes, update currencies list
         refreshPriceGroups(newData,oldData);
@@ -380,11 +394,12 @@ angular.module('ts5App')
 
       }
 
+/*
       // check date ranges on items, price groups and station exceptions
       function checkItemDates(newData,oldData) {
 
         if(newData.startDate !== oldData.startDate || newData.endDate !== oldData.endDate) {
-          
+
           // TODO: Move this to it's own function
           if(newData.prices.length > 0) {
 
@@ -444,6 +459,8 @@ angular.module('ts5App')
         } // end if newData.startDate is different
 
       } // end checkItemDates
+
+      */
 
       $scope.removeQRCode = function() {
 
@@ -582,7 +599,7 @@ angular.module('ts5App')
       }
 
       // reaches out to the stations API per each station exception and update set stations list
-      function updateStations() {
+      function updateStationsList() {
 
         var stationPromises = [];
 
