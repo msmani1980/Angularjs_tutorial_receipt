@@ -218,41 +218,6 @@ angular.module('ts5App')
 
       }
 
-      // reaches out to the stations API per each station exception and update set stations list
-      function updateStations() {
-
-        var stationPromises = [];
-
-        for(var priceIndex in $scope.formData.prices) {
-
-          var price = $scope.formData.prices[priceIndex];
-
-          for(var stationExceptionIndex in price.stationExceptions) {
-
-            var stationException = price.stationExceptions[stationExceptionIndex];
-
-            stationPromises.push( getStationsList(stationException) );
-
-          }
-
-          // TODO: Move out of loop
-          $q.all(stationPromises).then(function(data){
-
-            console.log(data);
-
-            for(var key in data) {
-
-              var stationException = price.stationExceptions[key];
-
-              setStationsList(stationException,data[key]);
-
-            }
-
-          });
-
-        }
-
-      }
 
     /*  function setAllStations(price,data) {
 
@@ -341,7 +306,7 @@ angular.module('ts5App')
       $scope.$watch('formData', function(newData, oldData){
 
         // check item dates and make sure all dates fall within the acceptable dates
-        //checkItemDates(newData,oldData);
+        checkItemDates(newData,oldData);
 
         // if a price group date or station exception changes, update currencies list
         refreshPriceGroups(newData,oldData);
@@ -419,7 +384,7 @@ angular.module('ts5App')
       function checkItemDates(newData,oldData) {
 
         if(newData.startDate !== oldData.startDate || newData.endDate !== oldData.endDate) {
-
+          
           // TODO: Move this to it's own function
           if(newData.prices.length > 0) {
 
@@ -514,10 +479,9 @@ angular.module('ts5App')
       */
 
 
-      // Adds a station exception collection
+      // Adds a station exception collection in the form
       $scope.addStationException = function(priceIndex) {
 
-        // create a new station exception object and add to scope
         $scope.formData.prices[priceIndex].stationExceptions.push({
           startDate:'',
           endDate:'',
@@ -526,18 +490,17 @@ angular.module('ts5App')
 
       };
 
-      // Removes a station exception collection
+      // Removes a station exception collection from the form
       $scope.removeStationException = function(priceIndex,key) {
         $scope.formData.prices[priceIndex].stationExceptions.splice(key,1);
       };
 
-      // gets a list of stations based on station's start and end date
+      // gets a list of stations from the API filtered by station's start and end date
       function getStationsList(stationException) {
 
         var startDate = formatDate(stationException.startDate, 'L',  'YYYYMMDD');
         var endDate = formatDate(stationException.endDate, 'L',  'YYYYMMDD');
 
-        // stations filter
         var stationsFilter = {
           startDate: startDate,
           endDate: endDate
@@ -551,28 +514,6 @@ angular.module('ts5App')
       function setStationsList(stationException,data) {
 
         stationException.stations = data.response;
-
-      }
-
-      // generate a list of station exception currencies
-      function generateStationCurrenciesList(currenciesList){
-
-      //  console.log($scope.currenciesList);
-
-        var listToReturn = [];
-
-        for(var key in currenciesList) {
-
-          var currency = currenciesList[key];
-
-          listToReturn.push({
-            price: '1.00',
-            companyCurrencyId: currency.id
-          });
-
-        }
-
-        return listToReturn;
 
       }
 
@@ -601,6 +542,26 @@ angular.module('ts5App')
 
       }
 
+      // generate a list of station exception currencies
+      function generateStationCurrenciesList(currenciesList){
+
+        var listToReturn = [];
+
+        for(var key in currenciesList) {
+
+          var currency = currenciesList[key];
+
+          listToReturn.push({
+            price: '1.00',
+            companyCurrencyId: currency.id
+          });
+
+        }
+
+        return listToReturn;
+
+      }
+
       // Updates the station exception with stations list and currencies list
       function updateStationException(priceIndex,stationExceptionIndex) {
 
@@ -619,6 +580,52 @@ angular.module('ts5App')
         });
 
       }
+
+      // reaches out to the stations API per each station exception and update set stations list
+      function updateStations() {
+
+        var stationPromises = [];
+
+        for(var priceIndex in $scope.formData.prices) {
+
+          var price = $scope.formData.prices[priceIndex];
+
+          for(var stationExceptionIndex in price.stationExceptions) {
+
+            var stationException = price.stationExceptions[stationExceptionIndex];
+
+            stationPromises.push( getStationsList(stationException) );
+
+          }
+
+          handleStationPromises(stationPromises,price);
+
+        }
+
+      }
+
+      // Handles all of the station promises and sets the stations list per price group
+      function handleStationPromises(stationPromises,price) {
+
+        $q.all(stationPromises).then(function(data){
+
+          for(var key in data) {
+
+            var stationException = price.stationExceptions[key];
+
+            setStationsList(stationException,data[key]);
+
+          }
+
+        });
+
+      }
+
+      /*
+       * Price Groups
+       *
+      */
+
 
       $scope.addPriceGroup = function() {
 
