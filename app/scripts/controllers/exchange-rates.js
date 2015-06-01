@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q) {
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast) {
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Daily Exchange Rates';
@@ -159,16 +159,24 @@ angular.module('ts5App')
       setupModels();
     }
 
+    function showSuccessMessage(savedOrSubmitted) {
+      ngToast.create({
+        dismissOnTimeout: false,
+        dismissButton: true,
+        content: '<strong>Daily Exchange Rates</strong>: successfully ' + savedOrSubmitted + '!'
+      });
+    }
+
+    function successRequestHandler(dailyExchangeRatesData) {
+      $scope.dailyExchangeRates = dailyExchangeRatesData || {isSubmitted: false};
+      var savedOrSubmitted = $scope.dailyExchangeRates.isSubmitted ? 'submitted' : 'saved';
+      setupModels();
+      showSuccessMessage(savedOrSubmitted);
+    }
+
     $scope.saveDailyExchangeRates = function (shouldSubmit) {
       createPayload(shouldSubmit);
-      var buttonSelector = shouldSubmit ? '.submit-btn' : '.save-btn';
-      angular.element(buttonSelector).button('loading');
-      currencyFactory.saveDailyExchangeRates($scope.payload).then(function (dailyExchangeRatesData) {
-        $scope.dailyExchangeRates = dailyExchangeRatesData || {};
-        setupModels();
-        angular.element('.success-modal').modal('show');
-        angular.element(buttonSelector).button('reset');
-      }, showErrors);
+      currencyFactory.saveDailyExchangeRates($scope.payload).then(successRequestHandler, showErrors);
     };
 
     $scope.isBankExchangePreferred = function () {
