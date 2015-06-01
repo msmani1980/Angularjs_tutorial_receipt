@@ -276,7 +276,17 @@ angular.module('ts5App')
             icon: 'icon-manage-retail-category',
             className: 'dashboard-cashBagSubmission'
           }]
-      }
+      },
+      {
+          title: 'Post Trip Data',
+          menuItems: [
+            {
+              name: 'Post Trip Data',
+              route: '/#/post-trip-data',
+              icon: 'icon-manage-schedule',
+              className: 'dashboard-postTripData'
+            }]
+        }      
     ];
 
   });

@@ -1,0 +1,137 @@
+<div class="container">
+
+  <div class="top-header">
+    <div class="container">
+      <div class="edit-controls">
+        <div class="row">
+          <div class="col-xs-12">
+<!--             <h2 class="view-name">Post Trip Management</h2> -->
+            <h2 class="view-name"> {{ viewName }} </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/TopHeader -->
+
+  <ng-form name="form" class="form edit-form c post-trip-data-form">
+    <form-error-dialog></form-error-dialog>
+
+    <div class="form-group">
+      <div class="row">
+      
+        <div class="col-xs-12 col-sm-2">
+          <label for="scheduleNumber">Schedule Number</label>
+          <input type="text" class="form-control" id="scheduleNumber" placeholder="123456">
+        </div>
+        
+        <div class="col-xs-12 col-sm-2">
+          <label for="scheduleDate">Schedule Date</label>
+  				<date-picker class="form-group"
+  					element-class="col-xs-12 col-sm-2"
+  					start-date-model="formData.startDate"
+  					end-date-model="formData.endDate"
+  					disable-past="true"
+  					label-from="Effective From"
+  					label-to="Effective To"
+  					disable-start-date="viewOnly || itemIsActive"
+  					disable-end-date="viewOnly || itemIsInactive"
+  					>
+  				</date-picker>
+        </div>
+        
+        <div class="col-xs-12 col-sm-2">
+          <label for="departureStation">Departure Station</label>
+          <select class="form-control" id="selectTemplate">
+            <option>MDW</option>
+            <option>MIA</option>
+            <option>IAH</option>
+            <option>BOS</option>
+          </select>
+        </div>
+        
+        <div class="col-xs-12 col-sm-2">
+          <label for="departureTime">Departure Time</label>
+          <input type="text" class="form-control" id="departureTime" placeholder="12:34">
+        </div>
+  
+        <div class="col-xs-12 col-sm-2">
+          <label for="departureTimeZone">Departure Time Zone</label>
+          <input type="text" class="form-control" id="departureTimeZone" placeholder="123456">
+        </div>
+  
+        <div class="col-xs-12 col-sm-2">
+          <label for="arrivalStation">Arrival Station</label>
+          <select class="form-control" id="selectTemplate">
+            <option>MDW</option>
+            <option>MIA</option>
+            <option>IAH</option>
+            <option>BOS</option>
+          </select>
+        </div>
+      
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <div class="row">
+    
+            
+        <div class="col-xs-12 col-sm-2">
+          <label for="arrivalTime">Arrival Time</label>
+          <input type="text" class="form-control" id="arrivalTime" placeholder="123456">
+        </div>
+        
+        <div class="col-xs-12 col-sm-2">
+          <label for="arrivalTimeZone">Arrival Time Zone</label>
+          <input type="text" class="form-control" id="arrivalTimeZone" placeholder="123456">
+        </div>
+      
+      </div>
+    </div>
+
+      
+
+
+<!--     <table class="table"> -->
+<!--       <thead> -->
+<!--         <tr> -->
+<!--           <th>Schedule Number</th> -->
+<!--           <th>Schedule Date</th> -->
+<!--           <th></th> -->
+<!--           <th></th> -->
+<!--           <th>Departure Time Zone</th> -->
+<!--           <th>Arrival Station</th> -->
+<!--           <th>Arrival Time</th> -->
+<!--           <th>Arrival Time Zone</th> -->
+<!--           <th>Passenger Count</th> -->
+<!--           <th>Tail Number</th> -->
+<!--           <th>Employee ID</th> -->
+<!--         </tr> -->
+<!--       </thead> -->
+<!--       <tbody> -->
+<!--         <tr> -->
+<!--           <td><input type="text" class="form-control" id="flightNumber" placeholder="A320EU"></td> -->
+<!--           <td><input type="text" class="form-control" id="flightDate" placeholder="12/25/2105"></td> -->
+<!--           <td><input type="text" class="form-control" id="flightTemplate" placeholder="Breakfast"></td> -->
+<!--           <td><input type="text" class="form-control" id="inventoryReferenceNumber" placeholder="GJ1246"></td> -->
+<!--         </tr> -->
+<!--       </tbody> -->
+<!--     </table> -->
+    
+    
+    
+    
+
+  </ng-form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<left-navigation></left-navigation>

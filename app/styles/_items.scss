@@ -115,6 +115,12 @@
   top:18rem;
 }
 
+.post-trip-data-form {
+  z-index:1;
+  position:relative;
+  top:8rem;
+}
+
 @media(max-width:$screen-lg-min){
 
   .top-header{
@@ -139,6 +145,12 @@
     z-index:1;
     position:relative;
     top:20rem;
+  }
+  
+  .post-trip-data-form {
+  	z-index:1;
+  	position:relative;
+  	top:16rem;
   }
 
 }
