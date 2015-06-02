@@ -1,33 +1,49 @@
 {
   "dailyExchangeRates": [
     {
-      "id": 67,
-      "exchangeRateDate": "2015-05-18",
-      "chCompanyId": 2,
-      "retailCompanyId": 2,
-      "chBaseCurrencyId": 58,
-      "retailBaseCurrencyId": 58,
+      "id": 87,
+      "exchangeRateDate": "2015-06-01",
+      "chCompanyId": 362,
+      "retailCompanyId": 403,
+      "chBaseCurrencyId": 8,
+      "retailBaseCurrencyId": 8,
       "isSubmitted": false,
       "createdBy": 1,
-      "updatedBy": 1,
-      "createdOn": "2015-05-05 18:54:09.736503",
-      "updatedOn": "2015-05-18 16:55:34.606856",
+      "updatedBy": 2,
+      "createdOn": "2015-05-08 20:08:01.915854",
+      "updatedOn": "2015-06-01 16:49:11.155935",
       "dailyExchangeRateCurrencies": [
         {
-          "id": 142,
-          "dailyExchangeRateId": 67,
-          "retailCompanyCurrencyId": 57,
-          "bankExchangeRate": null,
-          "coinExchangeRate": "0.9870",
-          "paperExchangeRate": "0.9870"
+          "id": 295,
+          "dailyExchangeRateId": 87,
+          "retailCompanyCurrencyId": 1,
+          "bankExchangeRate": "0.1234",
+          "coinExchangeRate": null,
+          "paperExchangeRate": null
         },
         {
-          "id": 143,
-          "dailyExchangeRateId": 67,
-          "retailCompanyCurrencyId": 58,
-          "bankExchangeRate": null,
+          "id": 296,
+          "dailyExchangeRateId": 87,
+          "retailCompanyCurrencyId": 8,
+          "bankExchangeRate": "1.0000",
           "coinExchangeRate": "1.0000",
           "paperExchangeRate": "1.0000"
+        },
+        {
+          "id": 297,
+          "dailyExchangeRateId": 87,
+          "retailCompanyCurrencyId": 9,
+          "bankExchangeRate": "0.9876",
+          "coinExchangeRate": null,
+          "paperExchangeRate": null
+        },
+        {
+          "id": 298,
+          "dailyExchangeRateId": 87,
+          "retailCompanyCurrencyId": 11,
+          "bankExchangeRate": "0.5432",
+          "coinExchangeRate": null,
+          "paperExchangeRate": null
         }
       ]
     }

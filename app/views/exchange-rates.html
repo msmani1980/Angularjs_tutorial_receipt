@@ -22,22 +22,25 @@
     </ul>
   </div>
 
-  <div class="modal fade success-modal">
+  <div class="modal fade variance-warning-modal">
     <div class="modal-dialog">
       <div class="modal-content">
 
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Daily Exchange Rate Saved!</h4>
+          <h4 class="modal-title">Daily Exchange Rate Variance Warning!</h4>
         </div>
 
         <div class="modal-body">
-          <p>Your Daily Exchange Rate was successfully saved!</p>
+          <p>Are you sure you want to continue, there is more than 10% variance on the exchange rates</p>
         </div>
 
+        <ul ng-repeat="variance in varianceObject">
+          <li>{{variance.code}} - {{variance.percentage}} %</li>
+        </ul>
+
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+          <button type="button" class="btn btn-default" ng-click="saveDailyExchangeRates()">Continue</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
         </div>
 
       </div>
@@ -123,10 +126,9 @@
       </div>
     </div>
     <div class="panel-footer text-right" ng-show="showActionButtons">
-      <button class="btn btn-default save-btn" ng-click="saveDailyExchangeRates(false)">Save</button>
-      <button class="btn btn-primary submit-btn" ng-click="saveDailyExchangeRates(true)">Submit</button>
+      <button class="btn btn-default save-btn" ng-click="checkVarianceAndSave(false)">Save</button>
+      <button class="btn btn-primary submit-btn" ng-click="checkVarianceAndSave(true)">Submit</button>
     </div>
 
   </div>
-  {{random}}
 </form>
