@@ -15,6 +15,9 @@ angular.module('ts5App')
       // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
       var companyId = GlobalMenuService.company.get();
 
+      // object resolution in for sub scopes
+      var $this = this;
+
       $scope.formData = {
         startDate: '',
         endDate: '',
@@ -76,7 +79,9 @@ angular.module('ts5App')
      }
 
       // gets an item to editingItem
-      function getItem(id) {
+      this.getItem = function(id) {
+
+        var $this = this;
 
         // display loading modal
         angular.element('#loading').modal('show').find('p').text( 'We are getting Item ' + id);
@@ -85,7 +90,7 @@ angular.module('ts5App')
 
           if( validateItemCompany(data) ) {
 
-            upateFormData(data.retailItem);
+            $this.upateFormData(data.retailItem);
 
           } else {
 
@@ -99,7 +104,7 @@ angular.module('ts5App')
 
         });
 
-      }
+      };
 
       checkIfViewOnly();
 
@@ -113,7 +118,7 @@ angular.module('ts5App')
 
       if(editingItem || $scope.viewOnly) {
 
-        getItem($routeParams.id);
+        this.getItem($routeParams.id);
 
       }
 
@@ -175,7 +180,7 @@ angular.module('ts5App')
       }
 
       // updates the $scope.formData
-      function upateFormData(itemData) {
+      this.upateFormData = function(itemData) {
 
         itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
         itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
@@ -228,9 +233,9 @@ angular.module('ts5App')
 
         $scope.formData = itemData;
 
-        updateStationsList();
+        this.updateStationsList();
 
-      }
+      };
 
 
     /*  function setAllStations(price,data) {
@@ -323,7 +328,7 @@ angular.module('ts5App')
         //checkItemDates(newData,oldData);
 
         // if a price group date or station exception changes, update currencies list
-        refreshPriceGroups(newData,oldData);
+        $this.refreshPriceGroups(newData,oldData);
 
 
       }, true);
@@ -338,7 +343,7 @@ angular.module('ts5App')
 
 
       // when a price date is change for a price groupd or station, need to update currencies
-      function refreshPriceGroups(newData,oldData) {
+      this.refreshPriceGroups = function(newData,oldData) {
 
         if(!oldData) {
           return false;
@@ -382,7 +387,7 @@ angular.module('ts5App')
               if(newStationException.startDate !== oldStationException.startDate || newStationException.endDate !== oldStationException.endDate) {
 
                 // update the price group
-                updateStationException(priceIndex,stationExceptionIndex);
+                this.updateStationException(priceIndex,stationExceptionIndex);
 
               }
 
@@ -392,7 +397,7 @@ angular.module('ts5App')
 
         }
 
-      }
+      };
 
 /*
       // check date ranges on items, price groups and station exceptions
@@ -513,7 +518,7 @@ angular.module('ts5App')
       };
 
       // gets a list of stations from the API filtered by station's start and end date
-      function getStationsList(stationException) {
+      this.getStationsList = function(stationException) {
 
         var startDate = formatDate(stationException.startDate, 'L',  'YYYYMMDD');
         var endDate = formatDate(stationException.endDate, 'L',  'YYYYMMDD');
@@ -525,17 +530,17 @@ angular.module('ts5App')
 
         return companiesFactory.getStationsList(stationsFilter);
 
-      }
+      };
 
       // sets the stations list for the station exception
-      function setStationsList(stationException,data) {
+      this.setStationsList = function(stationException,data) {
 
         stationException.stations = data.response;
 
-      }
+      };
 
       // gets a list of a stations available currencies filtered on the start and end date
-      function getStationsCurrenciesList(stationException) {
+      this.getStationsCurrenciesList = function(stationException) {
 
         var startDate = formatDate(stationException.startDate, 'L',  'YYYYMMDD');
         var endDate = formatDate(stationException.endDate, 'L',  'YYYYMMDD');
@@ -548,19 +553,19 @@ angular.module('ts5App')
 
         return currencyFactory.getCompanyCurrencies(currencyFilters);
 
-      }
+      };
 
       // sets the stations currenies list
-      function setStationsCurrenciesList(stationException,data) {
+      this.setStationsCurrenciesList = function(stationException,data) {
 
-        var stationExceptionCurrencies = generateStationCurrenciesList(data.response);
+        var stationExceptionCurrencies = this.generateStationCurrenciesList(data.response);
 
         stationException.stationExceptionCurrencies = stationExceptionCurrencies;
 
-      }
+      };
 
       // generate a list of station exception currencies
-      function generateStationCurrenciesList(currenciesList){
+      this.generateStationCurrenciesList = function(currenciesList){
 
         var listToReturn = [];
 
@@ -577,29 +582,31 @@ angular.module('ts5App')
 
         return listToReturn;
 
-      }
+      };
 
       // Updates the station exception with stations list and currencies list
-      function updateStationException(priceIndex,stationExceptionIndex) {
+      this.updateStationException = function(priceIndex,stationExceptionIndex) {
+
+        var $this = this;
 
         var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex];
 
-        getStationsList(stationException).then(function(data) {
+        this.getStationsList(stationException).then(function(data) {
 
-          setStationsList(stationException,data);
-
-        });
-
-        getStationsCurrenciesList(stationException).then(function (data) {
-
-          setStationsCurrenciesList(stationException,data);
+          $this.setStationsList(stationException,data);
 
         });
 
-      }
+        this.getStationsCurrenciesList(stationException).then(function (data) {
+
+          $this.setStationsCurrenciesList(stationException,data);
+
+        });
+
+      };
 
       // reaches out to the stations API per each station exception and update set stations list
-      function updateStationsList() {
+      this.updateStationsList = function() {
 
         var stationPromises = [];
 
@@ -611,18 +618,20 @@ angular.module('ts5App')
 
             var stationException = price.stationExceptions[stationExceptionIndex];
 
-            stationPromises.push( getStationsList(stationException) );
+            stationPromises.push( this.getStationsList(stationException) );
 
           }
 
-          handleStationPromises(stationPromises,price);
+          this.handleStationPromises(stationPromises,price);
 
         }
 
-      }
+      };
 
       // Handles all of the station promises and sets the stations list per price group
-      function handleStationPromises(stationPromises,price) {
+      this.handleStationPromises = function(stationPromises,price) {
+
+        var $this = this;
 
         $q.all(stationPromises).then(function(data){
 
@@ -630,13 +639,13 @@ angular.module('ts5App')
 
             var stationException = price.stationExceptions[key];
 
-            setStationsList(stationException,data[key]);
+            $this.setStationsList(stationException,data[key]);
 
           }
 
         });
 
-      }
+      };
 
       /*
        * Price Groups
@@ -838,7 +847,9 @@ angular.module('ts5App')
 
       }
 
-      function updateItem(itemData) {
+      this.updateItem = function(itemData) {
+
+        var $this = this;
 
         // display loading modal
         angular.element('#loading').modal('show').find('p').text( 'We are updating your item');
@@ -850,7 +861,7 @@ angular.module('ts5App')
         // update itemData in API
         itemsFactory.updateItem( $routeParams.id, updateItemPayload).then(function(response) {
 
-          upateFormData(response.retailItem);
+          $this.upateFormData(response.retailItem);
 
           angular.element('#loading').modal('hide');
 
@@ -866,7 +877,7 @@ angular.module('ts5App')
 
         });
 
-      }
+      };
 
       function createItem(itemData) {
 
@@ -922,7 +933,7 @@ angular.module('ts5App')
 
         if(editingItem) {
 
-          updateItem(itemData);
+          this.updateItem(itemData);
 
         } else {
 
