@@ -14,9 +14,9 @@
 		ngf-max-size='10000'
     >
 
-	    <b>Drop Images, or Click.</b>
+  	  <b>Drop Images, or Click.</b>
 
-		<p>Accepted file formats: jpg, png, gif.</p>
+  		<p>Accepted file formats: jpg, png, gif.</p>
 
     </div>
 
@@ -43,8 +43,7 @@
 
     </p>
 
-
-    <div class="thumbnails" ng-show="files.length" ng-repeat="(fileKey,file) in files">
+    <div class="thumbnails" ng-show="files.length" ng-repeat="(fileKey, file) in files">
 
         <div class="panel panel-default">
 
@@ -88,8 +87,10 @@
 
               	</p>
 
-
-          			<progressbar class="progress-striped" ng-model="files" ng-show="!file.imageTooLarge && !file.uploadFail && !file.uploadSuccess" ng-show="files.length" animate="true" value="progress">
+          			<progressbar class="progress-striped" ng-model="files"
+                  ng-show="!file.imageTooLarge && !file.uploadFail && !file.uploadSuccess"
+                  ng-show="files.length" animate="true" value="file.uploadProgress"
+                >
           				<b>{{file.uploadProgress}}%</b>
           			</progressbar>
 

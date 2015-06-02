@@ -2,7 +2,6 @@
 
 describe('Image Upload Directive |', function () {
 
-  // assign variables
   var element,
     scope,
     controller,
@@ -11,36 +10,27 @@ describe('Image Upload Directive |', function () {
     response,
     $httpBackend;
 
-  // load the directive's module
   beforeEach(module('ts5App'));
 
-  // load directives/views in html
   beforeEach(module('template-module'));
 
-  // load the expected json response and image
   beforeEach(module('served/image-upload.json'));
 
-  //inject a new rootScope
   beforeEach(inject(function($rootScope) {
     scope = $rootScope.$new();
   }));
 
-  // inject dependancies for Upload
   beforeEach(inject(function (_Upload_, $injector) {
 
-    // inject the JSON fixtures
     inject(function (_servedImageUpload_) {
       imageJSON = _servedImageUpload_;
     });
 
-    //set upload
     Upload = _Upload_;
 
-    // set httpbackend, add directive if not added
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET('/views/directives/image-upload.html').respond(200, '');
 
-    //digest the scope
     scope.$digest();
 
   }));
@@ -81,7 +71,6 @@ describe('Image Upload Directive |', function () {
 
   describe('When a user clicks on the image upload, it', function() {
 
-    //before each, call the compile function
     beforeEach(inject(function ($compile) {
         element = angular.element('<image-upload></image-upload>');
         element = $compile(element)(scope);
@@ -91,7 +80,6 @@ describe('Image Upload Directive |', function () {
         spyOn(element, 'click');
     }));
 
-    //check if image upload directive is defined
     it('should have the click event defined', function() {
         angular.element(element[0]).trigger('click');
         expect(element.click).toBeDefined();
@@ -99,7 +87,6 @@ describe('Image Upload Directive |', function () {
 
   });
 
-  //image upload logic
   describe('When the upload function is called, it', function() {
 
     beforeEach(inject(function ($compile) {
@@ -108,12 +95,10 @@ describe('Image Upload Directive |', function () {
       scope.$digest();
       controller = element.controller('imageUpload');
 
-      // spy on the Upload.upload return expected JSON
       spyOn(Upload, 'upload').and.callFake(function() {
         return imageJSON;
       });
 
-      // make the mock upload call
       response = Upload.upload();
 
     }));
@@ -156,7 +141,6 @@ describe('Image Upload Directive |', function () {
       scope.$digest();
       controller = element.controller('imageUpload');
 
-      //set a file and upload responses for clearFiles()
       scope.files = [
 
         {
@@ -209,17 +193,15 @@ describe('Image Upload Directive |', function () {
       controller = element.controller('imageUpload');
 
       spyOn(scope, 'upload').and.callFake(function() {
-        // set the UI flag
+
         scope.uploadSuccess = true;
 
-          // new image object
           var newImage = {
               imageURL: imageJSON.url,
               startDate:  scope.formData.startDate,
               endDate: scope.formData.endDate
           };
 
-          // pass new image object into formData.images array
           scope.formData.images.push(newImage);
 
       });
@@ -246,7 +228,7 @@ describe('Image Upload Directive |', function () {
 
     }));
 
-    it('should be able to upload an imate ', function() {
+    it('should be able to upload an image', function() {
       expect(scope.formData.images.length).toBe(1);
     });
 
@@ -273,19 +255,17 @@ describe('Image Upload Directive |', function () {
       controller = element.controller('imageUpload');
 
       spyOn(scope, 'upload').and.callFake(function() {
-        // set the UI flag
+
         scope.uploadSuccess = true;
 
         for (var i = 0; i < scope.files.length; i++) {
 
-          // new image object
           var newImage = {
               imageURL: imageJSON.url,
               startDate:  scope.formData.startDate,
               endDate: scope.formData.endDate
           };
 
-          // pass new image object into formData.images array
           scope.formData.images.push(newImage);
 
         }

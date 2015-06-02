@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, menuService, itemsService) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuService, itemsService) {
     $scope.viewName = 'Menu';
 
 
@@ -63,10 +63,18 @@ angular.module('ts5App')
       attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat);
     }
 
+    function showSuccessMessage() {
+      ngToast.create({
+        dismissOnTimeout: false,
+        dismissButton: true,
+        content: '<strong>Menu</strong>: successfully updated!'
+      });
+    }
 
-    function showModalAndResetModel(dataFromAPI) {
+
+    function resetModelAndShowNotification(dataFromAPI) {
       setupMenuModelAndFetchItems(dataFromAPI);
-      angular.element('#menu-edit-modal').modal('show');
+      showSuccessMessage();
     }
 
     function showErrors(dataFromAPI) {
@@ -81,7 +89,7 @@ angular.module('ts5App')
       var formatDateFrom = 'l';
       var formatDateTo = 'YYYYMMDD';
       localizeDates(formatDateFrom, formatDateTo);
-      menuService.updateMenu($scope.menu.toJSON()).then(showModalAndResetModel, showErrors);
+      menuService.updateMenu($scope.menu.toJSON()).then(resetModelAndShowNotification, showErrors);
     };
 
     menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);

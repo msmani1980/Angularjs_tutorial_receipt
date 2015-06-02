@@ -65,6 +65,7 @@ module.exports = function (config) {
       'bower_components/angular-qr/src/angular-qr.js',
       'bower_components/select2/select2.js',
       'bower_components/ui-select/src/select3.js',
+      'bower_components/ngtoast/dist/ngToast.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
