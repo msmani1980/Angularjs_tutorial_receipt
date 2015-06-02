@@ -45,14 +45,30 @@
 
   <div class="form-group col-sm-3">
     <label for="menuCode">Menu Code</label>
-    <input type="text" name="menuCode" class="form-control" id="menuCode" ng-model="menu.menuCode"
-           placeholder="ITM001" readonly>
+    <input custom-pattern="regexp.alpha"
+           required
+           type="text"
+           name="menuCode"
+           maxlength="10"
+           class="form-control"
+           id="menuCode"
+           ng-model="menu.menuCode"
+           placeholder="ITM001"
+           readonly/>
   </div>
 
   <div class="form-group col-sm-3">
     <label for="menuCode">Menu Name</label>
-    <input type="text" name="menuName" class="form-control" id="menuName" ng-model="menu.menuName"
-           placeholder="ITM001" readonly>
+    <input custom-pattern="regexp.alpha"
+           required
+           type="text"
+           maxlength="25"
+           name="menuName"
+           class="form-control"
+           id="menuName"
+           ng-model="menu.menuName"
+           placeholder="ITM001"
+           readonly/>
   </div>
 
   <date-picker
@@ -67,10 +83,17 @@
 
   <div class="form-group col-sm-12">
     <label for="menuCode">Description</label>
-    <input type="text" name="description" class="form-control" id="menuDescription" ng-model="menu.description"
-           placeholder="ITM001" readonly>
+    <input custom-pattern="regexp.alpha"
+           type="text"
+           maxlength="50"
+           name="description"
+           class="form-control"
+           id="menuDescription"
+           ng-model="menu.description"
+           placeholder="ITM001"
+           readonly>
   </div>
-  <table class="table table-bordered table-hover">
+  <table class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
       <th>Item Name</th>
