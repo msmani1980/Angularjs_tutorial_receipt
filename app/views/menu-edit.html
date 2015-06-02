@@ -22,27 +22,6 @@
     </ul>
   </div>
 
-  <div class="modal fade" id="menu-edit-modal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Menu Saved!</h4>
-        </div>
-
-        <div class="modal-body">
-          <p>Your Menu was successfully saved!</p>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
   <div class="edit-controls">
     <div class="row">
       <div class="col-xs-6">
@@ -65,15 +44,31 @@
   <h3 id="item-information">Menu Information</h3>
 
   <div class="form-group col-sm-3">
-    <label for="menuCode">Menu Code</label>
-    <input type="text" name="menuCode" class="form-control" id="menuCode" ng-model="menu.menuCode"
-           placeholder="ITM001">
+    <label for="menuCode">Menu Code *</label>
+    <input custom-pattern="regexp.alpha"
+           required
+           type="text"
+           name="menuCode"
+           maxlength="10"
+           class="form-control"
+           id="menuCode"
+           ng-model="menu.menuCode"
+           placeholder="ITM001"
+           readonly/>
   </div>
 
   <div class="form-group col-sm-3">
-    <label for="menuCode">Menu Name</label>
-    <input type="text" name="menuName" class="form-control" id="menuName" ng-model="menu.menuName"
-           placeholder="ITM001">
+    <label for="menuCode">Menu Name *</label>
+    <input custom-pattern="regexp.alpha"
+           required
+           type="text"
+           maxlength="25"
+           name="menuName"
+           class="form-control"
+           id="menuName"
+           ng-model="menu.menuName"
+           placeholder="ITM001"
+           readonly/>
   </div>
 
   <date-picker
@@ -88,10 +83,17 @@
 
   <div class="form-group col-sm-12">
     <label for="menuCode">Description</label>
-    <input type="text" name="description" class="form-control" id="menuDescription" ng-model="menu.description"
-           placeholder="ITM001">
+    <input custom-pattern="regexp.alpha"
+           type="text"
+           maxlength="50"
+           name="description"
+           class="form-control"
+           id="menuDescription"
+           ng-model="menu.description"
+           placeholder="ITM001"
+           readonly>
   </div>
-  <table class="table table-bordered">
+  <table class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
       <th>Item Name</th>

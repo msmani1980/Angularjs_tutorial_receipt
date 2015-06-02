@@ -1,6 +1,12 @@
-#leave-view-model{
-	.modal-body{
-		padding:1em;
-	}
+#leave-view-model {
+  .modal-body {
+    padding: 1em;
+  }
+}
+
+.ng-toast {
+  strong {
+    color: #222;
+  }
 }
 
