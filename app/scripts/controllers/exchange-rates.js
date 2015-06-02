@@ -49,7 +49,7 @@ angular.module('ts5App')
     }
 
     function setPreviousExchangeRatesModel() {
-      if (!$scope.dailyExchangeRates.dailyExchangeRateCurrencies) {
+      if ($scope.dailyExchangeRates && !$scope.dailyExchangeRates.dailyExchangeRateCurrencies) {
         $scope.dailyExchangeRates = angular.extend($scope.previousExchangeRates,
           {
             isSubmitted: false,
