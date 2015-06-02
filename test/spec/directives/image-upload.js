@@ -20,6 +20,7 @@ describe('Image Upload Directive |', function () {
   // load the expected json response and image
   beforeEach(module('served/image-upload.json'));
 
+  //inject a new rootScope
   beforeEach(inject(function($rootScope) {
     scope = $rootScope.$new();
   }));
@@ -44,7 +45,7 @@ describe('Image Upload Directive |', function () {
 
   }));
 
-  describe('When directive is compiled, it', function () {
+  describe('When the image upload directive is compiled, it', function () {
 
     beforeEach(inject(function ($compile) {
       element = angular.element('<image-upload></image-upload>');
@@ -81,12 +82,18 @@ describe('Image Upload Directive |', function () {
   describe('When a user clicks on the image upload, it', function() {
 
     //before each, call the compile function
-    beforeEach(inject(function () {
+    beforeEach(inject(function ($compile) {
+        element = angular.element('<image-upload></image-upload>');
+        element = $compile(element)(scope);
+        scope.$digest();
+        controller = element.controller('imageUpload');
+        element = element.find('.drop-box');
         spyOn(element, 'click');
     }));
 
     //check if image upload directive is defined
-    it('should trigger a file upload dialog', function() {
+    it('should have the click event defined', function() {
+        angular.element(element[0]).trigger('click');
         expect(element.click).toBeDefined();
     });
 
@@ -99,7 +106,7 @@ describe('Image Upload Directive |', function () {
       element = angular.element('<image-upload></image-upload>');
       element = $compile(element)(scope);
       scope.$digest();
-      controller = element.controller;
+      controller = element.controller('imageUpload');
 
       // spy on the Upload.upload return expected JSON
       spyOn(Upload, 'upload').and.callFake(function() {
@@ -151,6 +158,7 @@ describe('Image Upload Directive |', function () {
 
       //set a file and upload responses for clearFiles()
       scope.files = [
+
         {
           $$hashKey: 'object:277',
           lastModified: 1430772953000,
@@ -163,8 +171,8 @@ describe('Image Upload Directive |', function () {
           uploadSuccess:true,
           uploadFail: false
         }
-      ];
 
+      ];
 
     }));
 
@@ -192,6 +200,69 @@ describe('Image Upload Directive |', function () {
 
   });
 
+  describe('When a file is uploaded, it', function(){
+
+    beforeEach(inject(function ($compile) {
+      element = angular.element('<image-upload></image-upload>');
+      element = $compile(element)(scope);
+      scope.$digest();
+      controller = element.controller('imageUpload');
+
+      spyOn(scope, 'upload').and.callFake(function() {
+        // set the UI flag
+        scope.uploadSuccess = true;
+
+          // new image object
+          var newImage = {
+              imageURL: imageJSON.url,
+              startDate:  scope.formData.startDate,
+              endDate: scope.formData.endDate
+          };
+
+          // pass new image object into formData.images array
+          scope.formData.images.push(newImage);
+
+      });
+
+      scope.files = [
+
+        {
+          $$hashKey: 'object:278',
+          lastModified: 1430772953000,
+          lastModifiedDate: 'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4637.png',
+          size: 7802,
+          type: 'image/png',
+          webkitRelativePath: ''
+        }
+
+      ];
+
+      scope.formData = {
+        images: []
+      };
+
+      scope.upload();
+
+    }));
+
+    it('should be able to upload an imate ', function() {
+      expect(scope.formData.images.length).toBe(1);
+    });
+
+    it('should have a file staged', function() {
+      expect(scope.files.length).toBe(1);
+    });
+
+    it('should have called the upload function', function() {
+      expect(scope.upload).toHaveBeenCalled();
+    });
+
+    it('should upload successfully', function() {
+      expect(scope.uploadSuccess).toBeTruthy();
+    });
+
+  });
 
   describe('When multiple files are uploaded, it', function(){
 
@@ -220,8 +291,9 @@ describe('Image Upload Directive |', function () {
         }
 
       });
-      
+
       scope.files = [
+
         {
           $$hashKey: 'object:277',
           lastModified: 1430772953000,
@@ -240,6 +312,7 @@ describe('Image Upload Directive |', function () {
           type: 'image/png',
           webkitRelativePath: ''
         }
+
       ];
 
       scope.formData = {
@@ -254,39 +327,91 @@ describe('Image Upload Directive |', function () {
       expect(scope.formData.images.length).toBe(2);
     });
 
-
-  });
-
-  /*
-  // spy on the Upload.upload return expected JSON
-  spyOn(Upload, 'upload').and.callFake(function() {
-    return false;
-  });
-
-  // make the mock upload call
-  response = Upload.upload();
-
-  it('should have imageTooLarge after upload is called', function() {
-      console.log(imgHeight);
-      expect(scope.imageTooLarge).toBeTruthy();
+    it('should have files staged', function() {
+      expect(scope.files.length).toBe(2);
     });
 
-    it('should have imgElement after upload is called', function() {
-      scope.imgElement = angular.element('.thumbs');
+    it('should have called the upload function', function() {
+      expect(scope.upload).toHaveBeenCalled();
+    });
+
+    it('should upload successfully', function() {
+      expect(scope.uploadSuccess).toBeTruthy();
+    });
+
+  });
+
+  describe('When files are uploaded, it', function(){
+
+    beforeEach(inject(function ($compile) {
+      element = angular.element('<image-upload></image-upload>');
+      element = $compile(element)(scope);
+      scope.$digest();
+      controller = element.controller('imageUpload');
+
+      spyOn(scope, 'doesImageMeetSizeConstraint').and.callThrough();
+
+      scope.files = [
+
+        {
+          $$hashKey: 'object:277',
+          lastModified: 1430772953000,
+          lastModifiedDate:'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4636.png',
+          size: 7801,
+          type: 'image/png',
+          webkitRelativePath: ''
+        },
+        {
+          $$hashKey: 'object:278',
+          lastModified: 1430772953000,
+          lastModifiedDate: 'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4637.png',
+          size: 7802,
+          type: 'image/png',
+          webkitRelativePath: ''
+        }
+
+      ];
+
+    }));
+
+    it('should be able to call size constraint test', function() {
+      scope.doesImageMeetSizeConstraint();
+      expect(scope.doesImageMeetSizeConstraint).toHaveBeenCalled();
+    });
+
+    it('should expect image 128x128 to return true', function() {
+      var imgElement = angular.element('<img class="fileTest" style="width:128px; height:128px;" ng-src="http://placehold.it/128x128"/>');
+      imgElement = angular.element(imgElement[0]);
+      expect(scope.doesImageMeetSizeConstraint(0, imgElement)).toBeTruthy();
+    });
+
+    it('should expect image 128x128 to return false', function() {
+      var imgElement = angular.element('<img class="fileTest" style="width:129px; height:129px;" ng-src="http://placehold.it/129x129"/>');
+      imgElement = angular.element(imgElement[0]);
+      expect(scope.doesImageMeetSizeConstraint(0, imgElement)).toBeFalsy();
+    });
+
+    it('should have imgElement defined', function() {
+      scope.imgElement = angular.element('.fileTest');
       expect(scope.imgElement).toBeDefined();
     });
 
-    it('should have imgHeight after upload is called', function() {
+    it('should have imgHeight defined', function() {
+      scope.doesImageMeetSizeConstraint();
       expect(scope.imgHeight).toBeDefined();
     });
 
-    it('should have imgWidth after upload is called', function() {
+    it('should have imgWidth defined', function() {
+      scope.doesImageMeetSizeConstraint();
       expect(scope.imgWidth).toBeDefined();
     });
 
-    it('should have uploadFail after upload is called', function() {
-      expect(scope.uploadFail).toBeTruthy();
-    }); */
+    it('should have uploadFail to be false', function() {
+      expect(scope.uploadFail).toBeFalsy();
+    });
 
+  });
 
 });

@@ -28,7 +28,6 @@ angular.module('ts5App')
 
       });
 
-
       // clear current files and progress
       $scope.clearAllFiles = function() {
 
@@ -94,21 +93,23 @@ angular.module('ts5App')
 
       };
 
-      $scope.doesImageMeetSizeConstraint = function (filesIndex){
+      $scope.doesImageMeetSizeConstraint = function (filesIndex, imgElement){
 
         var file = $scope.files[filesIndex];
 
-        var imgElement = angular.element( angular.element('.fileTest')[filesIndex] );
+        if(!imgElement){
+          imgElement = angular.element( angular.element('.fileTest')[filesIndex] );
+        }
 
-  			var imgHeight = imgElement.height();
+  			this.imgHeight = imgElement.height();
 
-  			var imgWidth = imgElement.width();
+  			this.imgWidth = imgElement.width();
 
-  			if (imgHeight > 128 || imgWidth > 128){
+  			if ($scope.imgHeight > 128 || $scope.imgWidth > 128){
 
   				file.imageTooLarge = true;
 
-  				file.imageDimensions = imgWidth + 'px' + ' x ' + imgHeight + 'px';
+  				file.imageDimensions = this.imgWidth + 'px' + ' x ' + this.imgHeight + 'px';
 
   			} else {
 
