@@ -113,7 +113,7 @@ angular.module('ts5App')
         endDate: formattedDateForAPI
       };
       var companyCurrencyPromise = currencyFactory.getCompanyCurrencies(companyCurrenciesPayload);
-      var previousRatePromise = currencyFactory.getPreviousExchangeRates(companyId, '20150531');
+      var previousRatePromise = currencyFactory.getPreviousExchangeRates(companyId, formattedDateForAPI);
       var currentRatePromise = currencyFactory.getDailyExchangeRates(companyId, formattedDateForAPI);
 
       $q.all([companyCurrencyPromise, previousRatePromise, currentRatePromise]).then(function (apiData) {
