@@ -13,10 +13,15 @@ angular.module('ts5App')
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Daily Exchange Rates';
-    $scope.currentCompany = 'Delta';
     $scope.cashiersDateField = new moment().format('L');
-    $scope.currenciesFields = {};
     $scope.showActionButtons = false;
+    $scope.companyCurrencies = [];
+    $scope.companyPreferences = [];
+    $scope.companyBaseCurrency = {};
+    $scope.currenciesFields = {};
+    $scope.dailyExchangeRates = {};
+    $scope.previousExchangeRates = {};
+    $scope.payload = {};
 
     function formatDateForAPI(cashiersDate) {
       return moment(cashiersDate, 'L').format('YYYYMMDD').toString();
@@ -43,7 +48,7 @@ angular.module('ts5App')
     }
 
     function setBaseExchangeRateModel() {
-      if ($scope.companyBaseCurrency && $scope.dailyExchangeRates) {
+      if ($scope.companyBaseCurrency.currencyCode && $scope.dailyExchangeRates) {
         serializeExchangeRates($scope.companyBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000');
       }
     }
