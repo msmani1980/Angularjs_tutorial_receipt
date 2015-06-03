@@ -5,7 +5,7 @@
     <div ngf-select="" ngf-drop="" class="drop-box"
     	ng-model="files"
     	ng-model-rejected="rejFiles"
-    	ngf-change="generateThumb(file, files)"
+    	ngf-change="filesChanged()"
        	ngf-drag-over-class="dragover"
         ngf-multiple="true"
         ngf-allow-dir="true"
@@ -14,11 +14,19 @@
 		ngf-max-size='10000'
     >
 
-	    <b>Drop Images, or Click.</b>
+  	  <b>Drop Images, or Click.</b>
 
-		<p>Accepted file formats: jpg, png, gif.</p>
+  		<p>Accepted file formats: jpg, png, gif.</p>
 
     </div>
+
+    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+    <button class="btn button btn-success" ng-model="files" ng-hide="file.uploadSuccess" ng-disabled="!files.length" ng-click="upload()">	Upload
+    </button>
+
+    <button class="btn button btn-default" ng-model="files" ng-show="files.length" ng-click="clearAllFiles()">	Clear All Files
+    </button>
 
     <p class="alert alert-danger" ng-show="rejFiles.length">
 
@@ -35,46 +43,73 @@
 
     </p>
 
-	<p class="alert alert-danger" ng-model="files" ng-show="imageTooLarge">
+    <div class="thumbnails" ng-show="files.length" ng-repeat="(fileKey, file) in files">
 
-	    <i>
-        Your file doesn't meet the requirements: max size: 10kb and 128 x 128 pixels.
-		</i>
+        <div class="panel panel-default">
 
-	</p>
+          <div class="panel-heading">
 
-    <div class="thumbnails" ng-show="files.length">
+            <p class="panel-title">
 
-    	<!--TODO - Add support for multiple image uploads -->
+        			<i class="fa fa-image"></i> New Image {{ fileKey+1 }}
 
-    	<div class="img-thumbnail" ng-repeat="file in files">
+              <span class="pull-right btn btn-danger btn-xs" ng-click="clearFile(fileKey)">
+                <i class="fa fa-close"></i>
+              </span>
 
-		    <img ngf-thumbnail="file" class="thumbs" />
+        		</p>
 
-	    	<p>{{file.name}}</p>
+          </div>
 
-			<progressbar class="progress-striped" ng-model="files" ng-show="!uploadFail && !uploadSuccess" ng-show="files.length" animate="true" value="progress">
-				<b>{{uploadProgress}}%</b>
-			</progressbar>
+          <div class="panel-body">
 
-			<progressbar class="progress-striped" ng-model="files" ng-show="uploadSuccess" animate="true" value="100" type="success">
-				<b>Success!</b>
-			</progressbar>
+            <div class="row">
 
-			<progressbar class="progress-striped" ng-model="files" ng-show="uploadFail" animate="true" value="100" type="danger">
-				<b>Fail</b>
-			</progressbar>
+              <div class="col-xs-4 col-sm-4 col-md-2">
 
-	    </div>
+                <label>Preview</label>
+
+                <img ngf-thumbnail="file" class="fileTest" />
+
+                <img class="item-image-thumbnail" ngf-thumbnail="file" />
+
+              </div>
+
+              <div class="col-xs-8 col-sm-8 col-md-10">
+
+                <label> {{ file.name }} </label>
+
+                <p class="alert alert-danger" ng-model="files" ng-show="file.imageTooLarge">
+
+              	    <i>
+                      Your file doesn't meet the requirements: max size: 10kb and 128 x 128 pixels.
+              		  </i>
+
+              	</p>
+
+          			<progressbar class="progress-striped" ng-model="files"
+                  ng-show="!file.imageTooLarge && !file.uploadFail && !file.uploadSuccess"
+                  ng-show="files.length" animate="true" value="file.uploadProgress"
+                >
+          				<b>{{file.uploadProgress}}%</b>
+          			</progressbar>
+
+          			<progressbar class="progress-striped" ng-model="files" ng-show="file.uploadSuccess" animate="true" value="100" type="success">
+          				<b>Success!</b>
+          			</progressbar>
+
+          			<progressbar class="progress-striped" ng-model="files" ng-show="file.uploadFail" animate="true" value="100" type="danger">
+          				<b>Fail</b>
+          			</progressbar>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
 
     </div>
-
-    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
-
-    <button class="btn button btn-success" ng-model="files" ng-hide="uploadSuccess" ng-disabled="!files.length" ng-click="upload()">	Upload
-    </button>
-
-    <button class="btn button btn-default" ng-model="files" ng-show="files.length" ng-click="clearFiles()">	Clear
-    </button>
 
 </div>

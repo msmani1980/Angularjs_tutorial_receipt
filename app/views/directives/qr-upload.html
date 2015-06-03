@@ -1,16 +1,16 @@
 <div class="form-group qr-upload-container">
 
-	<label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
+	<label for="item-type">Item QR Code (max size: 10kb and 128 x 128 pixels)</label>
 
 	<div ngf-select="" ngf-drop="" class="drop-box"
 		ng-model="files"
 		ng-model-rejected="rejQr"
 		ngf-change="generateThumb(file, files)"
-   	ngf-drag-over-class="dragover"
-    ngf-multiple="false"
-    ngf-allow-dir="true"
-    ngf-accept="'.jpg,.png,.gif'"
-    ngf-min-size='10'
+	   	ngf-drag-over-class="dragover"
+	    ngf-multiple="false"
+	    ngf-allow-dir="true"
+	    ngf-accept="'.jpg,.png,.gif'"
+	    ngf-min-size='10'
 		ngf-max-size='10000'
 	>
 
