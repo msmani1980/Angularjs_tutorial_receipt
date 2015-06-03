@@ -46,25 +46,25 @@ angular.module('ts5App')
 
       var editingItem = false;
 
-      function checkIfViewOnly() {
+      this.checkIfViewOnly = function() {
 
         var path = $location.path();
 
-        if( path.search('item-view') ) {
+        if( path.search('/item-view') !== -1 ) {
 
           $scope.viewOnly = true;
 
         }
 
-      }
+      };
 
-      function setFormAsViewOnly() {
+      this.setFormAsViewOnly = function() {
 
         $scope.viewName = 'Viewing Item ' + $routeParams.id;
 
-      }
+      };
 
-      function setFormAsEdit() {
+      this.setFormAsEdit = function() {
 
         editingItem = true;
 
@@ -72,11 +72,11 @@ angular.module('ts5App')
 
         $scope.buttonText = 'Save';
 
-      }
+      };
 
-      function validateItemCompany(data) {
+      this.validateItemCompany = function(data) {
        return data.retailItem.companyId === companyId;
-     }
+      };
 
       // gets an item to editingItem
       this.getItem = function(id) {
@@ -88,7 +88,7 @@ angular.module('ts5App')
 
         itemsFactory.getItem(id).then(function (data) {
 
-          if( validateItemCompany(data) ) {
+          if( $this.validateItemCompany(data) ) {
 
             $this.upateFormData(data.retailItem);
 
@@ -106,14 +106,14 @@ angular.module('ts5App')
 
       };
 
-      checkIfViewOnly();
+      this.checkIfViewOnly();
 
       if($scope.viewOnly) {
-        setFormAsViewOnly();
+        this.setFormAsViewOnly();
       }
 
       if( $routeParams.id && !$scope.viewOnly ) {
-        setFormAsEdit();
+        this.setFormAsEdit();
       }
 
       if(editingItem || $scope.viewOnly) {
@@ -181,6 +181,10 @@ angular.module('ts5App')
 
       // updates the $scope.formData
       this.upateFormData = function(itemData) {
+
+        if(!itemData) {
+          return false;
+        }
 
         itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
         itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
@@ -575,7 +579,7 @@ angular.module('ts5App')
 
           listToReturn.push({
             price: '1.00',
-            companyCurrencyId: currency.id
+            companyCurrencyId: parseInt(currency.id)
           });
 
         }
