@@ -38,8 +38,13 @@ angular.module('ts5App')
       $location.path('menu-edit/' + menu.id);
     };
 
-    $scope.deleteMenu = function (menu) {
+    $scope.deleteMenu = function () {
       return false;
+    };
+
+    $scope.showDeleteConfirmation = function (menuToDelete) {
+      $scope.menuToDelete = menuToDelete;
+      angular.element('.delete-warning-modal').modal('show');
     };
 
     $scope.isMenuReadOnly = function (menu) {
