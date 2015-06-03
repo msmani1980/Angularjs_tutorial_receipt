@@ -185,7 +185,7 @@ angular.module('ts5App')
     };
 
     // gets a list of all currencies for the item
-    function getMasterCurrenciesList() {
+    this.getMasterCurrenciesList = function () {
       currencyFactory.getCompanyCurrencies(function (data) {
         var masterCurrenciesList = [];
         for (var key in data.response) {
@@ -194,9 +194,19 @@ angular.module('ts5App')
         }
         $scope.masterCurrenciesList = masterCurrenciesList;
       });
-    }
+    };
 
-    getMasterCurrenciesList();
+    // gets a list of price types for price group
+    this.getPriceTypesList = function () {
+
+      itemsFactory.getPriceTypesList(function (data) {
+        $scope.priceTypes = data;
+      });
+
+    };
+
+    this.getMasterCurrenciesList();
+    this.getPriceTypesList();
 
     itemsFactory.getItemsList({}).then(function (data) {
       $scope.items = data.retailItems;
@@ -208,10 +218,6 @@ angular.module('ts5App')
 
     itemsFactory.getItemTypesList(function (data) {
       $scope.itemTypes = data;
-    });
-
-    itemsFactory.getPriceTypesList(function (data) {
-      $scope.priceTypes = data;
     });
 
     itemsFactory.getCharacteristicsList(function (data) {
