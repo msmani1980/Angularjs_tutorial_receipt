@@ -24,7 +24,8 @@ angular
     'angular.filter',
     'dynform',
     'ngFileUpload',
-    'ja.qr'
+    'ja.qr',
+    'ngToast'
   ])
   .constant('regexp', {
     word: /^[\w\s]+$/,
