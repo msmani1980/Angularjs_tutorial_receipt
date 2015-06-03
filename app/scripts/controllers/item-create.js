@@ -679,8 +679,6 @@ angular.module('ts5App')
       // generate a list of price currencies
       function generatePriceCurrenciesList(currenciesList){
 
-        console.log(currenciesList);
-
         var priceCurrencies = [];
 
         for(var key in currenciesList) {
