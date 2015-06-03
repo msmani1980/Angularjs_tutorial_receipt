@@ -9,10 +9,11 @@ describe('Controller: MenuListCtrl', function () {
     scope,
     getMenuListDeferred,
     menuService,
-    menuListJSON;
+    menuListJSON,
+    location;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope, _menuService_) {
+  beforeEach(inject(function ($q, $controller, $rootScope, _menuService_, $location) {
     menuListJSON = {
       'menus': [{
         'id': 1,
@@ -42,6 +43,7 @@ describe('Controller: MenuListCtrl', function () {
           }]
       }]
     };
+    location = $location;
     scope = $rootScope.$new();
     getMenuListDeferred = $q.defer();
     getMenuListDeferred.resolve(menuListJSON);
@@ -90,5 +92,17 @@ describe('Controller: MenuListCtrl', function () {
     it('should have a formatted start and date', function () {
       expect(scope.menuList[0].startDate).toBe('09/30/2014');
     });
+  });
+
+  describe('Action buttons', function () {
+    beforeEach(function () {
+    });
+
+    it('should change the url based on the menu object', function () {
+      scope.showMenu({id: 1});
+      scope.$digest();
+      expect(location.path()).toBe('/menu-edit/1');
+    });
+
   });
 });

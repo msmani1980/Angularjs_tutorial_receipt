@@ -62,17 +62,28 @@
     <th>Description</th>
     <th>Effective From</th>
     <th>Effective To</th>
+    <th>Actions</th>
   </tr>
   </thead>
   <tbody>
   <tr
-    ng-repeat="menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName}"
-    ng-click="showMenu(menu)">
+    ng-repeat="menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName}">
     <td>{{ menu.menuCode }}</td>
     <td>{{ menu.menuName }}</td>
     <td>{{ menu.description }}</td>
     <td>{{ menu.startDate }}</td>
     <td>{{ menu.endDate }}</td>
+    <td>
+      <button class="btn btn-info btn-xs" ng-click="showMenu(menu)">
+        <i class="fa fa-file"></i>
+      </button>
+      <button class="btn btn-primary btn-xs" ng-click="showMenu(menu)" ng-disabled="isMenuReadOnly(menu)">
+        <i class="fa fa-pencil"></i>
+      </button>
+      <button class="btn btn-danger btn-xs" ng-click="deleteMenu(menu)" ng-disabled="isMenuReadOnly(menu)">
+        <i class="fa fa-trash"></i>
+      </button>
+    </td>
   </tr>
   </tbody>
 </table>
