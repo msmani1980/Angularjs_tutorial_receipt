@@ -10,6 +10,7 @@
 angular.module('ts5App')
   .controller('MenuListCtrl', function ($scope, $location, menuService) {
     $scope.viewName = 'Menu Management';
+    $scope.search = {};
 
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
@@ -38,8 +39,16 @@ angular.module('ts5App')
       $location.path('menu-edit/' + menu.id);
     };
 
+    function showErrors(dataFromAPI) {
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+      $scope.displayError = true;
+    }
+
     $scope.deleteMenu = function () {
-      return false;
+      angular.element('.delete-warning-modal').modal('hide');
+      menuService.deleteMenu($scope.menuToDelete.id).then($scope.searchMenus, showErrors);
     };
 
     $scope.showDeleteConfirmation = function (menuToDelete) {

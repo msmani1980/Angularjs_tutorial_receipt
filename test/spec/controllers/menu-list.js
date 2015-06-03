@@ -25,7 +25,11 @@ describe('Controller: MenuListCtrl', function () {
     getMenuListDeferred.resolve(menuListJSON);
     menuService = _menuService_;
     spyOn(menuService, 'getMenuList').and.returnValue(getMenuListDeferred.promise);
-    spyOn(menuService, 'deleteMenu');
+    spyOn(menuService, 'deleteMenu').and.returnValue({
+      then: function () {
+        return;
+      }
+    });
     MenuListCtrl = $controller('MenuListCtrl', {
       $scope: scope
     });
@@ -101,16 +105,16 @@ describe('Controller: MenuListCtrl', function () {
     });
 
     it('should have a confirmDelete function', function () {
-      expect(!!scope.confirmDelete).toBe(true);
+      expect(!!scope.showDeleteConfirmation).toBe(true);
     });
 
     it('should attach menuToDelete to scope', function () {
-      scope.showDeleteConfirmation({name:'menuToDelete'});
+      scope.showDeleteConfirmation({name: 'menuToDelete'});
       expect(scope.menuToDelete.name).toBe('menuToDelete');
     });
 
     it('should do a DELETE requesto to menuService with menuToDelete', function () {
-      scope.showDeleteConfirmation({id:'1'});
+      scope.showDeleteConfirmation({id: '1'});
       scope.deleteMenu();
       expect(menuService.deleteMenu).toHaveBeenCalled();
     });
