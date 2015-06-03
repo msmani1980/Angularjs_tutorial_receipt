@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuListCtrl', function ($scope, $location, menuService) {
+  .controller('MenuListCtrl', function ($scope, $location, menuService, ngToast) {
     $scope.viewName = 'Menu Management';
     $scope.search = {};
 
@@ -39,16 +39,36 @@ angular.module('ts5App')
       $location.path('menu-edit/' + menu.id);
     };
 
+    $scope.searchMenus = function () {
+      menuService.getMenuList(serializeDates($scope.search)).then(attachMenuListToScope);
+    };
+
     function showErrors(dataFromAPI) {
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
       }
       $scope.displayError = true;
+      ngToast.create({
+        className: 'warning',
+        dismissOnTimeout: false,
+        dismissButton: true,
+        content: '<strong>Menu Management</strong>: error deleting menu!'
+      });
+    }
+
+    function successDeleteHandler() {
+      $scope.searchMenus();
+      ngToast.create({
+        className: 'success',
+        dismissOnTimeout: false,
+        dismissButton: true,
+        content: '<strong>Menu Management</strong>: successfully deleted menu!'
+      });
     }
 
     $scope.deleteMenu = function () {
       angular.element('.delete-warning-modal').modal('hide');
-      menuService.deleteMenu($scope.menuToDelete.id).then($scope.searchMenus, showErrors);
+      menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, showErrors);
     };
 
     $scope.showDeleteConfirmation = function (menuToDelete) {
@@ -63,10 +83,6 @@ angular.module('ts5App')
 
     var attachMenuListToScope = function (menuListFromAPI) {
       $scope.menuList = formatDates(menuListFromAPI.menus);
-    };
-
-    $scope.searchMenus = function () {
-      menuService.getMenuList(serializeDates($scope.search)).then(attachMenuListToScope);
     };
 
     $scope.clearForm = function () {
