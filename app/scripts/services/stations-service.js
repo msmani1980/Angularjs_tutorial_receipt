@@ -8,12 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('stationsService', function ($resource, ENV,GlobalMenuService) {
+  .service('stationsService', function ($resource, ENV) {
 
-    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
-  	var companyId = GlobalMenuService.company.get();
-
-    var requestURL = ENV.apiUrl + '/api/companies/'+companyId+'/stations/:id';
+    var requestURL = ENV.apiUrl + '/api/company-station-globals';
     var requestParameters = {
       id: '@id'
     };

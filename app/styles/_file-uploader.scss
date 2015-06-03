@@ -30,18 +30,18 @@
 
 .thumbnails {
     display:block;
-    background: $upload-bg-color;
+  //  background: $upload-bg-color;
     width:100%;
-    padding:15px;
-    border-radius:5px;
+  //  padding:15px;
+  //  border-radius:5px;
     margin-top:1em;
 
-        p{
+      /*  p{
             width:115px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
+        }*/
 
         .progress{
 
@@ -54,8 +54,13 @@
         }
 }
 
+img.fileTest {
+  position: absolute;
+  top:-1000px;
+  left:-1000px;
+}
 
-img.thumbs{
+/*img.thumbs{
     max-width:150px;
     padding:1rem;
 }
@@ -63,7 +68,7 @@ img.thumbs{
 .img-thumbnail p{
     text-align:center;
     margin-bottom:0;
-}
+}&*/
 
 .upload-container{
     .thumbnails{
