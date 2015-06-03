@@ -97,7 +97,6 @@ angular.module('ts5App')
       }
 
       return !(isToday && $scope.dailyExchangeRates.isSubmitted);
-
     }
 
     function setupModels() {
