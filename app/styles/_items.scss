@@ -119,6 +119,14 @@
   z-index:1;
   position:relative;
   top:8rem;
+  
+  .datepicker-container {
+  
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
 }
 
 @media(max-width:$screen-lg-min){
@@ -147,12 +155,6 @@
     top:20rem;
   }
   
-  .post-trip-data-form {
-  	z-index:1;
-  	position:relative;
-  	top:16rem;
-  }
-
 }
 
 .item-image-thumbnail {

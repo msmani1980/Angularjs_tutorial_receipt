@@ -53,7 +53,7 @@ angular
       })
       .when('/post-trip-data', {
         templateUrl: 'views/post-trip-data.html',
-        controller: 'PostTripDataCtrl'
+        controller: 'PostFlightDataCtrl'
       })      
       .when('/item-create', {
         templateUrl: 'views/item-create.html',
