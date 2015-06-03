@@ -8,8 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuListCtrl', function ($scope, $location, menuService) {
+  .controller('MenuListCtrl', function ($scope, $location, menuService, ngToast) {
     $scope.viewName = 'Menu Management';
+    $scope.search = {};
 
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
@@ -38,12 +39,50 @@ angular.module('ts5App')
       $location.path('menu-edit/' + menu.id);
     };
 
-    var attachMenuListToScope = function (menuListFromAPI) {
-      $scope.menuList = formatDates(menuListFromAPI.menus);
-    };
-
     $scope.searchMenus = function () {
       menuService.getMenuList(serializeDates($scope.search)).then(attachMenuListToScope);
+    };
+
+    function showErrors(dataFromAPI) {
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+      $scope.displayError = true;
+      ngToast.create({
+        className: 'warning',
+        dismissOnTimeout: false,
+        dismissButton: true,
+        content: '<strong>Menu Management</strong>: error deleting menu!'
+      });
+    }
+
+    function successDeleteHandler() {
+      $scope.searchMenus();
+      ngToast.create({
+        className: 'success',
+        dismissOnTimeout: false,
+        dismissButton: true,
+        content: '<strong>Menu Management</strong>: successfully deleted menu!'
+      });
+    }
+
+    $scope.deleteMenu = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+      menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, showErrors);
+    };
+
+    $scope.showDeleteConfirmation = function (menuToDelete) {
+      $scope.menuToDelete = menuToDelete;
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.isMenuReadOnly = function (menu) {
+      var isGreaterThanToday = moment(menu.endDate, 'L').format('L') <= moment().format('L');
+      return isGreaterThanToday;
+    };
+
+    var attachMenuListToScope = function (menuListFromAPI) {
+      $scope.menuList = formatDates(menuListFromAPI.menus);
     };
 
     $scope.clearForm = function () {
