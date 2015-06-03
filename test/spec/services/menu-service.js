@@ -86,5 +86,16 @@ describe('Service: menuService', function () {
       });
     });
 
+    describe('deleteMenu', function () {
+      beforeEach(function () {
+        $httpBackend.whenDELETE(/menus/).respond({done: true});
+      });
+      it('it should DELETE data to menus API', function () {
+        menuService.deleteMenu({menuData: 'fakeMenuPayload'});
+        $httpBackend.flush();
+        $httpBackend.expectDELETE(/menus/);
+      });
+    });
+
   });
 });

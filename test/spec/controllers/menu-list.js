@@ -99,5 +99,9 @@ describe('Controller: MenuListCtrl', function () {
       expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(true);
     });
 
+    it('should have a deleteMenu function', function () {
+      expect(!!scope.deleteMenu).toBe(true);
+    });
+
   });
 });

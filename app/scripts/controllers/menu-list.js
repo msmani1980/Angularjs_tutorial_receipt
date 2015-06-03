@@ -38,6 +38,10 @@ angular.module('ts5App')
       $location.path('menu-edit/' + menu.id);
     };
 
+    $scope.deleteMenu = function (menu) {
+      return false;
+    };
+
     $scope.isMenuReadOnly = function (menu) {
       var isGreaterThanToday = moment(menu.endDate, 'L').format('L') <= moment().format('L');
       return isGreaterThanToday;
