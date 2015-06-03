@@ -50,7 +50,6 @@ angular.module('ts5App')
       $scope.displayError = true;
       ngToast.create({
         className: 'warning',
-        dismissOnTimeout: false,
         dismissButton: true,
         content: '<strong>Menu Management</strong>: error deleting menu!'
       });
@@ -60,7 +59,6 @@ angular.module('ts5App')
       $scope.searchMenus();
       ngToast.create({
         className: 'success',
-        dismissOnTimeout: false,
         dismissButton: true,
         content: '<strong>Menu Management</strong>: successfully deleted menu!'
       });

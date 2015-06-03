@@ -66,7 +66,6 @@ angular.module('ts5App')
     function showSuccessMessage() {
       ngToast.create({
         className: 'success',
-        dismissOnTimeout: false,
         dismissButton: true,
         content: '<strong>Menu</strong>: successfully updated!'
       });
