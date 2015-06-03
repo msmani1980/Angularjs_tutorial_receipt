@@ -141,7 +141,7 @@ angular.module('ts5App')
         return false;
       }
       itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
-      inspectemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
+      itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
       checkIfItemIsInactive(itemData);
       if (!$scope.itemIsInactive) {
         checkIfItemIsActive(itemData);
@@ -672,7 +672,7 @@ angular.module('ts5App')
         function (response) {
           angular.element('#loading').modal('hide');
           $scope.displayError = true;
-          $scope.formErrors = response.data
+          $scope.formErrors = response.data;
         });
     };
 
