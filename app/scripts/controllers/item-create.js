@@ -693,6 +693,7 @@ angular.module('ts5App')
     }
 
     $scope.submitForm = function (formData) {
+
       if (!$scope.form.$valid) {
         $scope.displayError = true;
         return false;
@@ -704,7 +705,7 @@ angular.module('ts5App')
       formatPayloadDates(itemData);
       cleanUpPayload(itemData);
       if ($scope.editingItem) {
-        this.updateItem(itemData);
+        $this.updateItem(itemData);
       } else {
         createItem(itemData);
       }
