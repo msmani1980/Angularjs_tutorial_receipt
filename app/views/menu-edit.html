@@ -54,7 +54,7 @@
            id="menuCode"
            ng-model="menu.menuCode"
            placeholder="ITM001"
-           readonly/>
+           ng-readonly="isMenuReadOnly()"/>
   </div>
 
   <div class="form-group col-sm-3">
@@ -68,7 +68,7 @@
            id="menuName"
            ng-model="menu.menuName"
            placeholder="ITM001"
-           readonly/>
+           ng-readonly="isMenuReadOnly()"/>
   </div>
 
   <date-picker
@@ -91,7 +91,7 @@
            id="menuDescription"
            ng-model="menu.description"
            placeholder="ITM001"
-           readonly>
+           ng-readonly="isMenuReadOnly()">
   </div>
   <table class="table table-responsive table-bordered table-hover">
     <thead>
