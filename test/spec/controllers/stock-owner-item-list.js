@@ -12,47 +12,60 @@ describe('Controller: StockOwnerItemListCtrl', function () {
     getItemsListDeferred,
     itemsService,
     itemsListJSON,
-    itemTypesSON,
+    getItemTypesListDeferred,
+    itemTypesService,
+    itemTypesJSON,
+    getSalesCategoriesDeferred,
+    salesCategoriesService,
     salesCategoriesJSON,
     location,
     httpBackend;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope, _itemsService_,
+    _itemTypesService_, _salesCategoriesService_,
     $location, $httpBackend) {
+
     inject(function (_servedItemsList_, _servedItemTypes_,
       _servedSalesCategories_) {
       itemsListJSON = _servedItemsList_;
-      itemTypesSON = _servedItemTypes_;
+      itemTypesJSON = _servedItemTypes_;
       salesCategoriesJSON = _servedSalesCategories_;
     });
+
     httpBackend = $httpBackend;
     location = $location;
     scope = $rootScope.$new();
+
     getItemsListDeferred = $q.defer();
     getItemsListDeferred.resolve(itemsListJSON);
     itemsService = _itemsService_;
-
-    httpBackend.whenGET(/records\/item-types/).respond(itemTypesSON);
-    httpBackend.whenGET(
-      /companies\/\[object Object]\/sales-categories/).respond(
-      salesCategoriesJSON);
-
     spyOn(itemsService, 'getItemsList').and.returnValue(
       getItemsListDeferred.promise);
+
+    getItemTypesListDeferred = $q.defer();
+    getItemTypesListDeferred.resolve(itemTypesJSON);
+    itemTypesService = _itemTypesService_;
+    spyOn(itemTypesService, 'getItemTypesList').and.returnValue(
+      getItemTypesListDeferred.promise);
+
+    getSalesCategoriesDeferred = $q.defer();
+    getSalesCategoriesDeferred.resolve(salesCategoriesJSON);
+    salesCategoriesService = _salesCategoriesService_;
+    spyOn(salesCategoriesService, 'getSalesCategoriesList').and.returnValue(
+      getSalesCategoriesDeferred.promise);
+
     spyOn(itemsService, 'removeItem').and.returnValue({
       then: function () {
         return;
       }
-
-
     });
+
     StockOwnerItemListCtrl = $controller('StockOwnerItemListCtrl', {
       $scope: scope
     });
     scope.$digest();
   }));
-
 
   describe('The itemsList array', function () {
 
