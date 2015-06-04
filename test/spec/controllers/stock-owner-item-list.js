@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StockOwnerItemListCtrl', function () {
+describe('The StockOwnerItemListCtrl controller', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -65,7 +65,39 @@ describe('Controller: StockOwnerItemListCtrl', function () {
       $scope: scope
     });
     scope.$digest();
+
+    spyOn(StockOwnerItemListCtrl, 'getItemsList');
+    spyOn(StockOwnerItemListCtrl, 'getItemTypesList');
+    spyOn(StockOwnerItemListCtrl, 'getSalesCategoriesList');
+
+    StockOwnerItemListCtrl.getItemsList();
+    StockOwnerItemListCtrl.getItemTypesList();
+    StockOwnerItemListCtrl.getSalesCategoriesList();
   }));
+
+  it('should have a getItemsList method', function () {
+    expect(StockOwnerItemListCtrl.getItemsList).toBeDefined();
+  });
+
+  it('should call the getItemsList method', function () {
+    expect(StockOwnerItemListCtrl.getItemsList).toHaveBeenCalled();
+  });
+
+  it('should have a getItemTypesList method', function () {
+    expect(StockOwnerItemListCtrl.getItemTypesList).toBeDefined();
+  });
+
+  it('should call the getItemTypesList method', function () {
+    expect(StockOwnerItemListCtrl.getItemTypesList).toHaveBeenCalled();
+  });
+
+  it('should have a getItemsList method', function () {
+    expect(StockOwnerItemListCtrl.getItemsList).toBeDefined();
+  });
+
+  it('should call the getSalesCategoriesList method', function () {
+    expect(StockOwnerItemListCtrl.getSalesCategoriesList).toHaveBeenCalled();
+  });
 
   describe('The itemsList array', function () {
 
@@ -144,99 +176,5 @@ describe('Controller: StockOwnerItemListCtrl', function () {
     });
 
   });
-  /*it('should clear search model and make a API call', function () {
-    scope.search = {
-      startDate: 'fakeDate'
-    };
-    scope.clearForm();
-    expect(scope.search.startDate).toBe(undefined);
-    expect(itemsService.getItemsList).toHaveBeenCalledWith({});
-  });
 
-  it('should clear search model and make a API call', function () {
-    scope.search = {
-      startDate: '10/05/1979'
-    };
-    scope.searchMenus();
-    expect(itemsService.getItemsList).toHaveBeenCalledWith({
-      startDate: '19791005'
-    });
-  });
-
-  it('should get the menu list from API', function () {
-    expect(itemsService.getItemsList).toHaveBeenCalled();
-  });
-  */
-  /*describe('itemsList in scope', function () {
-    it('should attach a itemsList after a API call to getItemsList',
-      function () {
-        expect(!!scope.itemsList).toBe(true);
-      });
-
-    it('should have a menu name property', function () {
-      expect(scope.itemsList[0].menuCode).toBe('Test01');
-    });
-
-    it('should have an array of items', function () {
-      expect(scope.itemsList[0].menuItems.length).toBeGreaterThan(0);
-    });
-
-    it('should have a formatted start and date', function () {
-      expect(scope.itemsList[0].startDate).toBe('04/15/2015');
-    });
-  });
-  */
-  /*describe('Action buttons', function () {
-    var fakeMenuItem;
-
-    beforeEach(function () {
-      fakeMenuItem = {
-        endDate: moment().add(1, 'month').format('L').toString(),
-        startDate: moment().format('L').toString()
-      };
-    });
-
-    it('should change the url based on the menu object', function () {
-      scope.showMenu({
-        id: 1
-      });
-      scope.$digest();
-      expect(location.path()).toBe('/menu-edit/1');
-    });
-
-    it('should have a isMenuReadOnly function', function () {
-      expect(!!scope.isMenuReadOnly).toBe(true);
-    });
-
-    it('should return false if endDate > today', function () {
-      expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(false);
-    });
-
-    it('should return true if end date <= today', function () {
-      fakeMenuItem.endDate = moment().subtract(1, 'month').format(
-        'L').toString();
-      expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(true);
-    });
-
-    it('should have a confirmDelete function', function () {
-      expect(!!scope.showDeleteConfirmation).toBe(true);
-    });
-
-    it('should attach menuToDelete to scope', function () {
-      scope.showDeleteConfirmation({
-        name: 'menuToDelete'
-      });
-      expect(scope.menuToDelete.name).toBe('menuToDelete');
-    });
-
-    it('should do a DELETE requesto to itemsService with menuToDelete',
-      function () {
-        scope.showDeleteConfirmation({
-          id: '1'
-        });
-        scope.deleteMenu();
-        expect(itemsService.deleteMenu).toHaveBeenCalled();
-      });
-
-  });*/
 });
