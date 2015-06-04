@@ -90,18 +90,44 @@ describe('Controller: MenuListCtrl', function () {
       scope.$digest();
       expect(location.path()).toBe('/menu-edit/1');
     });
+    describe('can user edit / delete menu', function(){
+      it('should have a isMenuEditable function', function () {
+        expect(!!scope.isMenuEditable).toBe(true);
+      });
 
-    it('should have a isMenuReadOnly function', function () {
-      expect(!!scope.isMenuReadOnly).toBe(true);
-    });
+      it('should return false if endDate > today', function () {
+        expect(scope.isMenuEditable(fakeMenuItem)).toBe(false);
+      });
 
-    it('should return false if endDate > today', function () {
-      expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(false);
-    });
+      it('should return true if end date <= today', function () {
+        fakeMenuItem.endDate = moment().subtract(1, 'month').format('L').toString();
+        expect(scope.isMenuEditable(fakeMenuItem)).toBe(true);
+      });
 
-    it('should return true if end date <= today', function () {
-      fakeMenuItem.endDate = moment().subtract(1, 'month').format('L').toString();
-      expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(true);
+      it('should have a isMenuReadOnly function', function () {
+        expect(!!scope.isMenuReadOnly).toBe(true);
+      });
+
+      it('should return true if startDate < today > endDate', function () {
+        fakeMenuItem.startDate = moment().subtract(1, 'month').format('L').toString();
+        fakeMenuItem.endDate = moment().subtract(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(true);
+      });
+
+      it('should return true if startDate < today < endDate', function () {
+        fakeMenuItem.startDate = moment().subtract(1, 'month').format('L').toString();
+        fakeMenuItem.endDate = moment().add(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(true);
+      });
+
+      it('should return false if startDate > today > endDate', function () {
+        fakeMenuItem.startDate = moment().add(1, 'month').format('L').toString();
+        fakeMenuItem.endDate = moment().add(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(false);
+      });
+      it('should return false if menu === null or undefined', function () {
+        expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(false);
+      });
     });
 
     it('should have a confirmDelete function', function () {
