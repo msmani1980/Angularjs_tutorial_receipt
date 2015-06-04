@@ -16,8 +16,6 @@ describe('Service: transactionService', function () {
     });
 
     $httpBackend = $injector.get('$httpBackend');
-
-    $httpBackend.whenGET(/transactions/).respond(transactionsJSON);
     transactionService = _transactionService_;
   }));
 
@@ -29,6 +27,10 @@ describe('Service: transactionService', function () {
 
     describe('getTransactionList', function () {
       var dataToTestFromAPI;
+
+      beforeEach(function () {
+        $httpBackend.whenGET(/transactions/).respond(transactionsJSON);
+      });
 
       beforeEach(function () {
         $httpBackend.expectGET(/transactions/);
@@ -53,22 +55,21 @@ describe('Service: transactionService', function () {
     });
 
     describe('error handling for getTransactionList', function () {
-      var errorDataFromAPI,
-        successDataFromAPI;
+      var errorDataFromAPI;
+
       beforeEach(function () {
         $httpBackend.whenGET(/transactions/).respond(404, '');
-        transactionService.getTransactionList().then(
-          function (dataFromAPI) {
-            successDataFromAPI = dataFromAPI;
-          }, function (dataFromAPI) {
+      });
+
+      beforeEach(function () {
+        transactionService.getTransactionList().then(null, function (dataFromAPI) {
             errorDataFromAPI = dataFromAPI;
           });
         $httpBackend.flush();
       });
 
       it('should return 404', function () {
-        //console.log(successDataFromAPI, errorDataFromAPI);
-        //expect(errorDataFromAPI).toEqual([]);
+        expect(errorDataFromAPI.status).toEqual(404);
       });
 
     });
