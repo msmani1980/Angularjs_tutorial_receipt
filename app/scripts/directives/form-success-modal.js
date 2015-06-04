@@ -11,31 +11,19 @@ angular.module('ts5App')
 
     var formSuccessController = function ($scope, $location, $route) {
 
-      $scope.createSuccess = function (path) {
-
-        var e = angular.element('#create-success');
-
+      $scope.navigateTo = function (path) {
         var currentPath = $location.path();
-
-        e.modal('hide');
-
-        e.on('hidden.bs.modal', function () {
-
+        var modal = angular.element('#create-success');
+        modal.modal('hide');
+        modal.on('hidden.bs.modal', function () {
           if (currentPath === path) {
-
             $route.reload();
-
           } else {
-
             $location.path(path);
             $scope.$apply();
-
           }
-
         });
-
       };
-
     };
 
     return {

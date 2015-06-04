@@ -9,10 +9,8 @@
 			</div>
 
 			<div class="modal-footer">
-				{{ listPath }}
-				<!-- TODO: Update button routes to be set by attributes pass via the directive -->
-				<button class="btn btn-default" ng-click="createSuccess('/{{ listPath }}')">Return to List</a>
-				<button class="btn btn-primary" ng-click="createSuccess('/{{ createPath }}')">Add Another</a>
+				<button class="btn btn-default" ng-click="navigateTo('/{{ listPath }}')">Return to List</a>
+				<button class="btn btn-primary" ng-click="navigateTo('/{{ createPath }}')">Add Another</a>
 			</div>
 
 		</div>
