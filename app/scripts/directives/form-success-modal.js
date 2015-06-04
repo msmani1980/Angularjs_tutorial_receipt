@@ -9,9 +9,9 @@
 angular.module('ts5App')
   .directive('formSuccessModal', function () {
 
-    var formSuccessController= function ($scope, $location, $route) {
+    var formSuccessController = function ($scope, $location, $route) {
 
-      $scope.createSuccess = function(path) {
+      $scope.createSuccess = function (path) {
 
         var e = angular.element('#create-success');
 
@@ -21,16 +21,16 @@ angular.module('ts5App')
 
         e.on('hidden.bs.modal', function () {
 
-	        if(currentPath === path){
+          if (currentPath === path) {
 
-	        	$route.reload();
+            $route.reload();
 
-	        } else{
+          } else {
 
-	          $location.path(path);
-	          $scope.$apply();
+            $location.path(path);
+            $scope.$apply();
 
-	        }
+          }
 
         });
 
@@ -38,10 +38,13 @@ angular.module('ts5App')
 
     };
 
-     return {
+    return {
       templateUrl: 'views/directives/form-success-modal.html',
       restrict: 'E',
-      scope: true,
+      scope: {
+        listPath: '@',
+        createPath: '@'
+      },
       controller: formSuccessController
     };
 
