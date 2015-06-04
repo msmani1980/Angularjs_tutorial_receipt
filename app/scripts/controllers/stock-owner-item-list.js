@@ -26,18 +26,16 @@ angular.module('ts5App')
 
     // TODO: Move to global function
     function formatDate(dateString, formatFrom, formatTo) {
-      return moment(dateString, formatFrom).format(formatTo).toString();
+      var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
+      return new Date(dateToReturn);
     }
-
 
     // TODO: Set a watch on this
     $scope.formatDateFilter = function () {
-
       $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
         'YYYYMMDD');
       $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
         'YYYYMMDD');
-
     };
 
     this.setPaginatedList = function () {
