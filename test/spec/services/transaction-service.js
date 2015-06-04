@@ -30,10 +30,10 @@ describe('Service: transactionService', function () {
     describe('getTransactionList', function () {
       var dataToTestFromAPI;
 
-      beforeEach(function(){
+      beforeEach(function () {
         $httpBackend.expectGET(/transactions/);
         transactionService.getTransactionList().then(function (dataFromAPI) {
-          dataToTestFromAPI = dataFromAPI
+          dataToTestFromAPI = dataFromAPI;
         });
         $httpBackend.flush();
       });
@@ -43,11 +43,32 @@ describe('Service: transactionService', function () {
       });
 
       it('should return a transactions array', function () {
-          expect(dataToTestFromAPI.transactions).toEqual([]);
+        expect(dataToTestFromAPI.transactions).toEqual([]);
       });
 
       it('should return a meta object', function () {
-          expect(dataToTestFromAPI.meta).toEqual(transactionsJSON.meta);
+        expect(dataToTestFromAPI.meta).toEqual(transactionsJSON.meta);
+      });
+
+    });
+
+    describe('error handling for getTransactionList', function () {
+      var errorDataFromAPI,
+        successDataFromAPI;
+      beforeEach(function () {
+        $httpBackend.whenGET(/transactions/).respond(404, '');
+        transactionService.getTransactionList().then(
+          function (dataFromAPI) {
+            successDataFromAPI = dataFromAPI;
+          }, function (dataFromAPI) {
+            errorDataFromAPI = dataFromAPI;
+          });
+        $httpBackend.flush();
+      });
+
+      it('should return 404', function () {
+        //console.log(successDataFromAPI, errorDataFromAPI);
+        //expect(errorDataFromAPI).toEqual([]);
       });
 
     });
