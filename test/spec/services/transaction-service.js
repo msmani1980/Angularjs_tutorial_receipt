@@ -31,40 +31,26 @@ describe('Service: transactionService', function () {
   describe('API calls', function () {
 
     describe('getTransactionList', function () {
+      var dataToTestFromAPI;
+
+      beforeEach(function(){
+        $httpBackend.expectGET(/transactions/);
+        transactionService.getTransactionList().then(function (dataFromAPI) {
+          dataToTestFromAPI = dataFromAPI
+        });
+        $httpBackend.flush();
+      });
 
       it('should exist', function () {
         expect(!!transactionService.getTransactionList).toBe(true);
       });
 
-      it('should make a request to /api/transactions', function () {
-        $httpBackend.expectGET(/transactions/);
-        transactionService.getTransactionList();
-        $httpBackend.flush();
-      });
-
       it('should return a transactions array', function () {
-        $httpBackend.expectGET(/transactions/);
-        transactionService.getTransactionList().then(function (dataFromAPI) {
-          expect(dataFromAPI.transactions).toEqual([]);
-        });
-        $httpBackend.flush();
+          expect(dataToTestFromAPI.transactions).toEqual([]);
       });
 
       it('should return a meta object', function () {
-        $httpBackend.expectGET(/transactions/);
-        transactionService.getTransactionList().then(function (dataFromAPI) {
-          expect(dataFromAPI.meta).toEqual(transactionsJSON.meta);
-        });
-        $httpBackend.flush();
-      });
-
-      it('should return a the count of transactions in the meta object', function () {
-        transactionsJSON.meta.count = 10;
-        $httpBackend.expectGET(/transactions/);
-        transactionService.getTransactionList().then(function (dataFromAPI) {
-          expect(dataFromAPI.meta.count).toEqual(10);
-        });
-        $httpBackend.flush();
+          expect(dataToTestFromAPI.meta).toEqual(transactionsJSON.meta);
       });
 
     });
