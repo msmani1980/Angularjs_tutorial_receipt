@@ -120,6 +120,11 @@ describe('Controller: MenuEditCtrl', function () {
         scope.menu.endDate = moment().add(2, 'month').format('L').toString();
         expect(scope.isMenuReadOnly()).toBe(false);
       });
+
+      it('should return false if menu === null or undefined', function () {
+        delete scope.menu;
+        expect(scope.isMenuReadOnly()).toBe(false);
+      });
     });
 
   });

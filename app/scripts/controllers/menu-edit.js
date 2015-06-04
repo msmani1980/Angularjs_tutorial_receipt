@@ -78,6 +78,11 @@ angular.module('ts5App')
     }
 
     function showErrors(dataFromAPI) {
+      ngToast.create({
+        className: 'warning',
+        dismissButton: true,
+        content: '<strong>Menu</strong>: error updating menu!'
+      });
       $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
@@ -93,11 +98,12 @@ angular.module('ts5App')
     };
 
     $scope.isMenuReadOnly = function () {
+      if (angular.isUndefined($scope.menu)) {
+        return false;
+      }
       var todayDate = moment().format('L');
       var startDateBeforeToday = moment($scope.menu.startDate, 'L').format('L') < todayDate;
       var endDateBeforeToday = moment($scope.menu.endDate, 'L').format('L') < todayDate;
-      console.log(startDateBeforeToday);
-      console.log(endDateBeforeToday);
       return startDateBeforeToday || endDateBeforeToday;
     };
 
