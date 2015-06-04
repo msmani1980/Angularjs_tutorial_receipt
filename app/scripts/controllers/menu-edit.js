@@ -92,6 +92,15 @@ angular.module('ts5App')
       menuService.updateMenu($scope.menu.toJSON()).then(resetModelAndShowNotification, showErrors);
     };
 
+    $scope.isMenuReadOnly = function () {
+      var todayDate = moment().format('L');
+      var startDateBeforeToday = moment($scope.menu.startDate, 'L').format('L') < todayDate;
+      var endDateBeforeToday = moment($scope.menu.endDate, 'L').format('L') < todayDate;
+      console.log(startDateBeforeToday);
+      console.log(endDateBeforeToday);
+      return startDateBeforeToday || endDateBeforeToday;
+    };
+
     menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);
 
   });
