@@ -20,7 +20,7 @@ angular.module('ts5App')
     $scope.itemsPerPage = 10;
     $scope.startDateFilter = '';
     $scope.endDateFilter = '';
-    $scope.itemsList = null;
+    $scope.itemsList = [];
 
     var todaysDate = moment().format();
 
