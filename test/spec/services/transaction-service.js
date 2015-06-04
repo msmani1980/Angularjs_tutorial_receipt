@@ -3,21 +3,18 @@
 describe('Service: transactionService', function () {
 
   beforeEach(module('ts5App'));
+  beforeEach(module('served/transactions.json'));
+
 
   var transactionService,
     $httpBackend,
     transactionsJSON;
 
   beforeEach(inject(function (_transactionService_, $injector) {
-    //TODO: put proper JSON
-    transactionsJSON = {
-      'transactions': [],
-      'meta': {
-        'count': 0,
-        'limit': 0,
-        'start': 0
-      }
-    };
+    inject(function (_servedTransactions_) {
+      transactionsJSON = _servedTransactions_;
+    });
+
     $httpBackend = $injector.get('$httpBackend');
 
     $httpBackend.whenGET(/transactions/).respond(transactionsJSON);
