@@ -71,4 +71,54 @@ describe('The form success modal', function () {
 
   });
 
+  describe('when the list-path attribute is passed', function () {
+
+    var isolatedScope;
+
+    beforeEach(inject(function ($compile) {
+      element = angular.element(
+        '<form-success-modal list-path="item-list"></form-success-modal>'
+      );
+      element = $compile(element)(scope);
+      scope.$digest();
+      isolatedScope = element.isolateScope();
+    }));
+
+    it('should have have a list path attribute',
+      function () {
+        expect(element.attr('list-path')).toBeDefined();
+      });
+
+    it('should match the listPath variable passed to the directive',
+      function () {
+        expect(element.attr('list-path')).toEqual(isolatedScope.listPath);
+      });
+
+  });
+
+  describe('when the create-path attribute is passed', function () {
+
+    var isolatedScope;
+
+    beforeEach(inject(function ($compile) {
+      element = angular.element(
+        '<form-success-modal create-path="item-create"></form-success-modal>'
+      );
+      element = $compile(element)(scope);
+      scope.$digest();
+      isolatedScope = element.isolateScope();
+    }));
+
+    it('should have have a create path attribute',
+      function () {
+        expect(element.attr('create-path')).toBeDefined();
+      });
+
+    it('should match the createPath variable passed to the directive',
+      function () {
+        expect(element.attr('create-path')).toEqual(isolatedScope.createPath);
+      });
+
+  });
+
 });
