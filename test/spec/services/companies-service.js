@@ -1,4 +1,4 @@
-// TODO: 
+// TODO:
 // Add CRUD Test cases
 
 'use strict';
@@ -29,6 +29,11 @@ describe('Companies Service |', function () {
     $httpBackend = $injector.get('$httpBackend');
 
   }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should exist', function () {
     expect(companiesService).toBeDefined();
@@ -88,7 +93,7 @@ describe('Companies Service |', function () {
     it('Retail Item should have an companyName', function () {
       expect(testObject.companyName).toBeDefined();
     });
- 
+
   }); // describe item api
 
 }); // describe item service

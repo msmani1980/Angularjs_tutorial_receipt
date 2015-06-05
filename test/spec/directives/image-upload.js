@@ -7,8 +7,7 @@ describe('Image Upload Directive |', function () {
     controller,
     imageJSON,
     Upload,
-    response,
-    $httpBackend;
+    response;
 
   beforeEach(module('ts5App'));
 
@@ -20,17 +19,13 @@ describe('Image Upload Directive |', function () {
     scope = $rootScope.$new();
   }));
 
-  beforeEach(inject(function (_Upload_, $injector) {
+  beforeEach(inject(function (_Upload_) {
 
     inject(function (_servedImageUpload_) {
       imageJSON = _servedImageUpload_;
     });
 
     Upload = _Upload_;
-
-    $httpBackend = $injector.get('$httpBackend');
-    $httpBackend.whenGET('/views/directives/image-upload.html').respond(200, '');
-
     scope.$digest();
 
   }));

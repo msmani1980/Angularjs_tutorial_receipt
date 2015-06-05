@@ -23,11 +23,11 @@ describe('The StockOwnerItemListCtrl controller', function () {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope, _itemsService_,
-    _itemTypesService_, _salesCategoriesService_,
-    $location, $httpBackend) {
+                              _itemTypesService_, _salesCategoriesService_,
+                              $location, $httpBackend) {
 
     inject(function (_servedItemsList_, _servedItemTypes_,
-      _servedSalesCategories_) {
+                     _servedSalesCategories_) {
       itemsListJSON = _servedItemsList_;
       itemTypesJSON = _servedItemTypes_;
       salesCategoriesJSON = _servedSalesCategories_;
@@ -74,6 +74,11 @@ describe('The StockOwnerItemListCtrl controller', function () {
     StockOwnerItemListCtrl.getItemTypesList();
     StockOwnerItemListCtrl.getSalesCategoriesList();
   }));
+
+  afterEach(function() {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should have a getItemsList method', function () {
     expect(StockOwnerItemListCtrl.getItemsList).toBeDefined();
