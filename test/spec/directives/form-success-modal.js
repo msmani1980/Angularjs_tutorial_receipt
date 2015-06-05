@@ -15,9 +15,7 @@ describe('The Success Form Modal', function () {
 
   describe('form-success-modal element', function () {
     beforeEach(inject(function ($compile) {
-      element = angular.element(
-        '<form-success-modal list-path="item-list" create-path="item-create"></form-success-modal>'
-      );
+      element = angular.element('<form-success-modal></form-success-modal>');
       element = $compile(element)(scope);
       scope.$digest();
     }));

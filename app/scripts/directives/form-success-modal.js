@@ -27,7 +27,7 @@ angular.module('ts5App')
     };
 
     return {
-      templateUrl: 'views/directives/form-success-modal.html',
+      templateUrl: '/views/directives/form-success-modal.html',
       restrict: 'E',
       scope: {
         listPath: '@',
