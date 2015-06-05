@@ -23,7 +23,6 @@ describe('The form success modal', function () {
 
     it('should have a modal element', function () {
       expect(element).toBeDefined();
-      console.log(element);
     });
 
   });
