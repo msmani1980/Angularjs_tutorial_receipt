@@ -13,6 +13,7 @@ describe('The Success Form Modal', function () {
     httpBackend = $injector.get('$httpBackend');
     httpBackend.whenGET('views/directives/form-success-modal.html').respond(
       200, '');
+    scope.$digest();
   }));
 
   describe('form-success-modal element', function () {
