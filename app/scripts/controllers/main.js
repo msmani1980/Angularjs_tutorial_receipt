@@ -278,15 +278,25 @@ angular.module('ts5App')
           }]
       },
       {
-          title: 'Post Trip Data',
-          menuItems: [
-            {
-              name: 'Post Trip Data',
-              route: '/#/post-trip-data',
-              icon: 'icon-manage-schedule',
-              className: 'dashboard-postTripData'
-            }]
-        }      
+    	title: 'Post Trip Data',
+    	menuItems: [
+        {
+          name: 'Post Trip Data',
+          route: '/#/post-trip-data',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-postTripData'
+        }]
+      },
+      {
+        title: 'Crew Commission',
+        menuItems: [
+        {
+          name: 'Crew Commission',
+          route: '/#/crew-commission',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-crewCommission'
+        }]
+      }
     ];
 
   });

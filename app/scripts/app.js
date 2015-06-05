@@ -55,6 +55,10 @@ angular
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })      
+      .when('/crew-commission', {
+        templateUrl: 'views/crew-commission.html',
+        controller: 'CrewCommissionCtrl'
+      })  
       .when('/item-create', {
         templateUrl: 'views/item-create.html',
         controller: 'ItemCreateCtrl'
