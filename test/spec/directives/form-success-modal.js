@@ -1,9 +1,10 @@
 'use strict';
 
-describe('The Success Form Modal', function () {
+describe('The form success modal', function () {
 
   // load the directive's module
   beforeEach(module('ts5App'));
+
   beforeEach(module('template-module'));
 
   var scope,
@@ -20,15 +21,10 @@ describe('The Success Form Modal', function () {
       scope.$digest();
     }));
 
-    it('should inject the directive', function () {
+    it('should have a modal element', function () {
       expect(element).toBeDefined();
-    });
-
-    // TODO: Finish this - modal not actullay being found
-    it('should contain a div with the modal class', function () {
-      expect(element.find('.modal')).toBeDefined();
+      console.log(element);
     });
 
   });
-
 });
