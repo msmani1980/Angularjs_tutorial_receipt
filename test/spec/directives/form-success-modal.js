@@ -15,6 +15,7 @@ describe('The form success modal', function () {
   }));
 
   describe('element', function () {
+
     beforeEach(inject(function ($compile) {
       element = angular.element(
         '<form-success-modal></form-success-modal>');
@@ -54,4 +55,20 @@ describe('The form success modal', function () {
     });
 
   });
+
+  describe('directive isolated scope', function () {
+
+    var isolatedScope;
+
+    beforeEach(inject(function () {
+      isolatedScope = element.isolateScope();
+    }));
+
+    it('should have a navigateTo method attached to the scope',
+      function () {
+        expect(isolatedScope.navigateTo).toBeDefined();
+      });
+
+  });
+
 });
