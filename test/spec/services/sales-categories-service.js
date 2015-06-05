@@ -1,4 +1,4 @@
-// TODO: Add create, edit, delete tests 
+// TODO: Add create, edit, delete tests
 
 'use strict';
 
@@ -30,6 +30,11 @@ describe('Sales Categories Service |', function () {
     $httpBackend = $injector.get('$httpBackend');
 
   }));
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('The service should exist', function () {
     expect(salesCategoriesService).toBeDefined();

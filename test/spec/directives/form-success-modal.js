@@ -6,25 +6,20 @@ describe('The Success Form Modal', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
 
-  var scope, element, httpBackend;
+  var scope,
+    element;
 
-  beforeEach(inject(function ($rootScope, $injector) {
+  beforeEach(inject(function ($rootScope) {
     scope = $rootScope.$new();
-    httpBackend = $injector.get('$httpBackend');
-    httpBackend.whenGET('views/directives/form-success-modal.html').respond(
-      200, '');
-    scope.$digest();
   }));
 
   describe('form-success-modal element', function () {
-
     beforeEach(inject(function ($compile) {
       element = angular.element(
         '<form-success-modal list-path="item-list" create-path="item-create"></form-success-modal>'
       );
       element = $compile(element)(scope);
       scope.$digest();
-      console.log(element);
     }));
 
     it('should inject the directive', function () {

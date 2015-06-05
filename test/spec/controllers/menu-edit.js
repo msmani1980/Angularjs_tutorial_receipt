@@ -46,6 +46,11 @@ describe('Controller: MenuEditCtrl', function () {
     $httpBackend.flush();
   }));
 
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('should attach the view name', function () {
     expect(!!scope.viewName).toBe(true);
   });

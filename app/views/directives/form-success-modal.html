@@ -1,20 +1,17 @@
 <div class="modal fade" id="create-success" data-backdrop="static" data-keyboard="false">
 
-	<div class="modal-dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
 
-		<div class="modal-content">
+      <div class="modal-body">
+        <h2><span class='fa fa-check-circle-o'></span> Your item was created successfully! </h2>
+      </div>
 
-			<div class="modal-body">
-				<h2> <span class='fa fa-check-circle-o'></span> Your item was created successfully! </h2>
-			</div>
-
-			<div class="modal-footer">
-				<button class="btn btn-default" ng-click="navigateTo('/{{ listPath }}')">Return to List</a>
-				<button class="btn btn-primary" ng-click="navigateTo('/{{ createPath }}')">Add Another</a>
-			</div>
-
-		</div>
-
-	</div>
+      <div class="modal-footer">
+        <button class="btn btn-default" ng-click="navigateTo('/{{ listPath }}')">Return to List</button>
+        <button class="btn btn-primary" ng-click="navigateTo('/{{ createPath }}')">Add Another</button>
+      </div>
+    </div>
+  </div>
 
 </div>

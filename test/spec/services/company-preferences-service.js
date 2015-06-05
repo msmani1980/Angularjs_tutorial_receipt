@@ -11,14 +11,18 @@ describe('Service: companyPreferencesService', function () {
   var companyPreferencesService,
     $httpBackend,
     preferencesJSON;
-  beforeEach(inject(function (_companyPreferencesService_, $injector) {
+  beforeEach(inject(function (_companyPreferencesService_, _$httpBackend_) {
     inject(function (_servedCompanyPreferences_) {
       preferencesJSON = _servedCompanyPreferences_;
     });
-    $httpBackend = $injector.get('$httpBackend');
-
+    $httpBackend = _$httpBackend_;
     companyPreferencesService = _companyPreferencesService_;
   }));
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should exist', function () {
     expect(!!companyPreferencesService).toBe(true);
@@ -34,10 +38,6 @@ describe('Service: companyPreferencesService', function () {
           apiData = menuListFromAPI;
         });
         $httpBackend.flush();
-      });
-
-      it('should fetch and return menuList', function () {
-        $httpBackend.expectGET(/menus/);
       });
 
       it('should be an array', function () {

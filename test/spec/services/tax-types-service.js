@@ -29,6 +29,11 @@ describe('Tax Types Service |', function () {
 
   }));
 
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('The service should exist', function () {
     expect(taxTypesService).toBeDefined();
   });
@@ -86,7 +91,7 @@ describe('Tax Types Service |', function () {
     it('should expect the Tax Type object to have a taxTypeCode', function () {
       expect(testObject.taxTypeCode).toBeDefined();
     });
-    
+
 
   }); // describe Tax Types api
 
