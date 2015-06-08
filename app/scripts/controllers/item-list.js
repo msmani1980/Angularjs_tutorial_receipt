@@ -125,13 +125,18 @@ angular.module('ts5App')
 
       $scope.clearSearchFilters = function() {
 
-        var filters = $scope.search;
+       var filters = $scope.search;
 
-        for(var filterKey in filters) {
-          $scope.search[filterKey] = '';
-        }
+       $scope.startDate = '';
+       $scope.endDate = '';
 
-      };
+       $scope.startDateFilter = '';
+       $scope.endDateFilter = '';
 
+       for(var filterKey in filters) {
+         $scope.search[filterKey] = '';
+       }
+
+     };
 
     });
