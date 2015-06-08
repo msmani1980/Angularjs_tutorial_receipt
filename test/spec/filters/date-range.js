@@ -9,7 +9,6 @@ describe('Filter: dateRange |', function () {
   beforeEach(module('served/items-list.json'));
 
   beforeEach(inject(function($filter) {
-
     dateRange = $filter('daterange');
 
     dateRange.filterItems = function(items, startDateFilter, endDateFilter){
@@ -40,6 +39,11 @@ describe('Filter: dateRange |', function () {
   it('should return an array of filtered items', inject(function () {
     var items = dateRange(itemsJSON, '2015-05-15', '2015-07-15');
     expect(items.length).toBe(8);
+  }));
+
+  it('should return a an empty array, if dates criteria are not met', inject(function () {
+    var items = dateRange(itemsJSON, '2015-05-15', '2015-05-15');
+    expect(items.length).toBe(0);
   }));
 
 });
