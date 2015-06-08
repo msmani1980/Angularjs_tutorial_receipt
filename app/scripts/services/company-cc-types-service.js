@@ -9,5 +9,13 @@
  */
 angular.module('ts5App')
   .service('companyCcTypesService', function () {
+    function getCCtypes() {
+      return {
+        companyCCTypes: []
+      };
+    }
 
+    return {
+      getCCtypes: getCCtypes
+    }
   });

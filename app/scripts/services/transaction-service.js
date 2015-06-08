@@ -27,6 +27,7 @@ angular.module('ts5App')
       return requestResource.getTransactionList().$promise;
 
     }
+
     return {
       getTransactionList:getTransactionList
     }
