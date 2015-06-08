@@ -280,10 +280,16 @@ angular.module('ts5App')
       {
     	title: 'Post Trip Data',
     	menuItems: [
-        {
+	      {
+	        name: 'Manage Post Trip Data',
+	        route: '/#/post-trip-data-list',
+	        icon: 'icon-manage-menu',
+	        className: 'dashboard-postTripDataList'
+	      },
+	      {
           name: 'Post Trip Data',
           route: '/#/post-trip-data',
-          icon: 'icon-manage-schedule',
+          icon: 'icon-create-menu',
           className: 'dashboard-postTripData'
         }]
       },
@@ -296,6 +302,22 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-crewCommission'
         }]
+      },
+      {
+    	title: 'Refunds',
+		menuItems: [
+		{
+		  name: 'Global Reason',
+		  route: '/#/refund-global-reason-code',
+		  icon: 'icon-manage-schedule',
+		  className: 'dashboard-refundGlobalReasonCode'
+		},
+		{
+		  name: 'Company Reason',
+		  route: '/#/refund-company-reason-code',
+		  icon: 'icon-manage-schedule',
+		  className: 'dashboard-refundCompanyReasonCode'
+		}]
       }
     ];
 

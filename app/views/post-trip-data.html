@@ -1,6 +1,6 @@
 <div class="container module-container">
 
-  <div class="top-header">
+  <div class="top-header top-header-small">
     <div class="container">
       <div class="edit-controls">
         <div class="row">
@@ -19,22 +19,25 @@
 
     <div class="row">
 
-      <div class="col-xs-12 col-sm-2">
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="scheduleNumber">Schedule Number</label>
           <input type="text" class="form-control" id="scheduleNumber" placeholder="123456">
         </div>
       </div>
 
-      <date-picker
-        class="col-xs-12 col-sm-2"
+      <date-picker 
+        class="col-xs-12 col-sm-4"
         disable-date-range="true"
         start-date-model="scheduleNumber"
         is-search-field="true"
         label-from="Schedule Date">
       </date-picker>
 
-      <div class="col-xs-12 col-sm-2">
+    </div>
+    <div class="row">
+
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="departureStation">Departure Station</label>
           <select class="form-control" id="selectTemplate">
@@ -46,14 +49,14 @@
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-2">
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="departureTime">Departure Time</label>
           <input type="text" class="form-control" id="departureTime" placeholder="12:34">
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-2">
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="departureTimeZone">Departure Time Zone</label>
           <select class="form-control" id="departureTimeZone">
@@ -221,11 +224,11 @@
           </select>
         </div>
       </div>
-      
-    </div>  
+
+    </div>
     <div class="row">
 
-      <div class="col-xs-12 col-sm-2">
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="arrivalStation">Arrival Station</label>
           <select class="form-control" id="selectTemplate">
@@ -237,14 +240,14 @@
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-2">
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="arrivalTime">Arrival Time</label>
           <input type="text" class="form-control" id="arrivalTime" placeholder="12:34">
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-2">
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="arrivalTimeZone">Arrival Time Zone</label>
           <select class="form-control" id="arrivalTimeZone">
@@ -413,14 +416,17 @@
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-2">
+    </div>
+    <div class="row">
+
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="passengerCount">Passenger Count</label>
           <input type="text" class="form-control" id="passengerCount" placeholder="0123456789">
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-2">
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="tailNumber">Tail Number</label>
           <select class="form-control" id="tailNumber">
@@ -432,7 +438,7 @@
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-2">
+      <div class="col-xs-12 col-sm-4">
         <div class="form-group">
           <label for="employeeID">Employee ID</label>
           <select class="form-control" id="employeeID">

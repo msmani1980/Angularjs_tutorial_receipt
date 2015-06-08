@@ -1,0 +1,57 @@
+<div class="container module-container">
+
+  <div class="top-header top-header-small">
+    <div class="container">
+      <div class="edit-controls">
+        <div class="row">
+          <div class="col-xs-12">
+            <h2 class="view-name">{{ viewName }}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/TopHeader -->
+
+  <form name="form" class="form edit-form refund-global-reason-code-form">
+
+    <form-error-dialog></form-error-dialog>
+
+    <div class="row">
+
+      <div class="col-xs-12 col-sm-6">
+        <div class="form-group form-inline">
+          <label for="refundCodeType">Code Type</label>
+          <input type="text" class="form-control" id="refundCodeType" placeholder="123456">
+          <button type="submit" class="btn btn-default">
+            <span>Add</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="col-xs-12 col-sm-6">
+        <div class="form-group">
+          <label for="refundReason">Reason</label>
+          <select class="form-control" id="refundReason">
+            <option>Open Inventory</option>
+            <option>Refund</option>
+            <option>Complimentary</option>
+            <option>Closing Inventory</option>
+          </select>
+        </div>
+      </div>
+      
+    </div>
+
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<left-navigation></left-navigation>
