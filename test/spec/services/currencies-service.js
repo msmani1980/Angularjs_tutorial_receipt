@@ -28,6 +28,10 @@ describe('Service: currenciesService', function () {
     currenciesService = _currenciesService_;
   }));
 
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should exist', function () {
     expect(!!currenciesService).toBe(true);

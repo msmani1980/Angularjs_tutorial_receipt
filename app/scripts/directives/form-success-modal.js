@@ -9,39 +9,30 @@
 angular.module('ts5App')
   .directive('formSuccessModal', function () {
 
-    var formSuccessController= function ($scope, $location, $route) {
+    var formSuccessController = function ($scope, $location, $route) {
 
-      $scope.createSuccess = function(path) {
-
-        var e = angular.element('#create-success');
-
+      $scope.navigateTo = function (path) {
         var currentPath = $location.path();
-
-        e.modal('hide');
-
-        e.on('hidden.bs.modal', function () {
-
-	        if(currentPath === path){
-
-	        	$route.reload();
-
-	        } else{
-
-	          $location.path(path);
-	          $scope.$apply();
-
-	        }
-
+        var modal = angular.element('#create-success');
+        modal.modal('hide');
+        modal.on('hidden.bs.modal', function () {
+          if (currentPath === path) {
+            $route.reload();
+          } else {
+            $location.path(path);
+            $scope.$apply();
+          }
         });
-
       };
-
     };
 
-     return {
-      templateUrl: 'views/directives/form-success-modal.html',
+    return {
+      templateUrl: '/views/directives/form-success-modal.html',
       restrict: 'E',
-      scope: true,
+      scope: {
+        listPath: '@',
+        createPath: '@'
+      },
       controller: formSuccessController
     };
 

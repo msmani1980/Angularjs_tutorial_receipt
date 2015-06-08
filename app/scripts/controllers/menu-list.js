@@ -74,9 +74,19 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $scope.isMenuReadOnly = function (menu) {
+    $scope.isMenuEditable = function (menu) {
       var isGreaterThanToday = moment(menu.endDate, 'L').format('L') <= moment().format('L');
       return isGreaterThanToday;
+    };
+
+    $scope.isMenuReadOnly = function (menu) {
+      if (angular.isUndefined(menu)) {
+        return false;
+      }
+      var todayDate = moment().format('L');
+      var startDateBeforeToday = moment(menu.startDate, 'L').format('L') < todayDate;
+      var endDateBeforeToday = moment(menu.endDate, 'L').format('L') < todayDate;
+      return startDateBeforeToday || endDateBeforeToday;
     };
 
     var attachMenuListToScope = function (menuListFromAPI) {

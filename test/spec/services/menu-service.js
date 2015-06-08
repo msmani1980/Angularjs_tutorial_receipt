@@ -10,15 +10,21 @@ describe('Service: menuService', function () {
   var menuService,
     $httpBackend,
     menuResponseJSON;
-  beforeEach(inject(function (_menuService_, $injector) {
+  beforeEach(inject(function (_menuService_, _$httpBackend_) {
       inject(function (_servedMenus_) {
         menuResponseJSON = _servedMenus_;
       });
 
-      $httpBackend = $injector.get('$httpBackend');
+      $httpBackend = _$httpBackend_;
+      $httpBackend.whenGET(/menus/).respond(menuResponseJSON);
       menuService = _menuService_;
     })
   );
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should exist', function () {
     expect(!!menuService).toBe(true);
@@ -29,15 +35,10 @@ describe('Service: menuService', function () {
 
     describe('getMenuList', function () {
       beforeEach(function () {
-        $httpBackend.whenGET(/menus/).respond(menuResponseJSON);
         menuService.getMenuList().then(function (menuListFromAPI) {
           menuData = menuListFromAPI;
         });
         $httpBackend.flush();
-      });
-
-      it('should fetch and return menuList', function () {
-        $httpBackend.expectGET(/menus/);
       });
 
       it('should be an array', function () {
@@ -58,20 +59,8 @@ describe('Service: menuService', function () {
         spyOn(menuService, 'getMenuList').and.callThrough();
         var payload = {someKey: 'someValue'};
         menuService.getMenuList(payload);
+        $httpBackend.flush();
         expect(menuService.getMenuList).toHaveBeenCalledWith(payload);
-      });
-    });
-
-    describe('getMenu', function () {
-      beforeEach(function () {
-        spyOn(menuService, 'getMenu').and.callFake(function () {
-          return menuResponseJSON;
-        });
-        menuData = menuService.getMenu(1);
-      });
-
-      it('should fetch and return menuList', function () {
-        $httpBackend.expectGET(/menus/);
       });
     });
 
@@ -81,8 +70,8 @@ describe('Service: menuService', function () {
       });
       it('it should POST data to menus API', function () {
         menuService.updateMenu({menuData: 'fakeMenuPayload'});
-        $httpBackend.flush();
         $httpBackend.expectPUT(/menus/);
+        $httpBackend.flush();
       });
     });
 
@@ -92,8 +81,8 @@ describe('Service: menuService', function () {
       });
       it('it should DELETE data to menus API', function () {
         menuService.deleteMenu({menuData: 'fakeMenuPayload'});
-        $httpBackend.flush();
         $httpBackend.expectDELETE(/menus/);
+        $httpBackend.flush();
       });
     });
 

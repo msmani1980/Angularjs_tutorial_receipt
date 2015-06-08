@@ -99,6 +99,11 @@ describe('Service: dailyExchangeRatesService', function () {
 
   }));
 
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('should exist', function () {
     expect(!!dailyExchangeRatesService).toBe(true);
   });

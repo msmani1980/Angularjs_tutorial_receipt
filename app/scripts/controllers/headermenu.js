@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('HeaderMenuCtrl', function ($scope, GlobalMenuService) {
 
-    $scope.languageModel = GlobalMenuService.language;
+    $scope.settingsModel = GlobalMenuService.settings;
     $scope.userModel = GlobalMenuService.user;
     $scope.companyModel = GlobalMenuService.company;
   });
