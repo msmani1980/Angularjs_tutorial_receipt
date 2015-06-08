@@ -1,10 +1,9 @@
 'use strict';
 
-describe('Item Create Controller |', function () {
+describe('The Item Create Controller', function () {
 
   // load the controller's module
-  beforeEach(module('ts5App'));
-
+  beforeEach(module('ts5App', 'template-module'));
   beforeEach(module(
     'served/stations-date-filtered.json',
     'served/station-exception-currencies.json',
@@ -15,9 +14,13 @@ describe('Item Create Controller |', function () {
     $scope,
     $controller,
     $location,
-    ItemCreateCtrl;
+    ItemCreateCtrl,
+    $httpBackend;
 
   beforeEach(inject(function (_$rootScope_, _$controller_, $injector) {
+    $httpBackend = $injector.get('$httpBackend');
+    //FIXME: Test these calls on the controller
+    $httpBackend.whenGET(/./).respond(200, '');
     $location = $injector.get('$location');
     $location.path('/item-create');
     $rootScope = _$rootScope_;
@@ -112,24 +115,63 @@ describe('Item Create Controller |', function () {
 
   });
 
-  describe('The view', function () {
+  describe('view', function () {
 
     var $templateCache,
       $compile,
       html,
       view;
 
-    beforeEach(inject(function ($rootScope, _$templateCache_,
-      _$compile_) {
+    beforeEach(inject(function (_$templateCache_, _$compile_) {
       $templateCache = _$templateCache_;
       $compile = _$compile_;
-      html = $templateCache.get('item-create.html');
-      view = $compile(angular.element(html))($scope);
+      html = $templateCache.get('/views/item-create.html');
+      var compiled = $compile(angular.element(html))($scope);
+      view = angular.element(compiled[0]);
+      $scope.$digest();
     }));
 
     it('should be defined', function () {
       expect(view).toBeDefined();
-      console.log(view);
+    });
+
+    it('should have an ng-form directive', function () {
+      expect(view.find('ng-form').length).toEqual(1);
+    });
+
+    describe('UI for price and tax', function () {
+
+      it('should have a header', function () {
+        expect(view.find('#price-and-tax').length).toEqual(1);
+      });
+
+      it('should have a header with the correct label', function () {
+        expect(view.find('#price-and-tax').text()).toEqual(
+          'Price & Tax');
+      });
+
+      it('should have an Add Price Group button', function () {
+        expect(view.find('#add-price-group').length).toEqual(1);
+      });
+
+      it(
+        'should have an Add Price Group button with the correct label',
+        function () {
+          expect(view.find('#add-price-group').text().trim()).toEqual(
+            'Add Price Type');
+        });
+
+      it('should have an Add Tax Type button', function () {
+        expect(view.find('#add-tax-type').length).toEqual(1);
+      });
+
+      it(
+        'should have an Add Tax Type button with the correct label',
+        function () {
+          expect(view.find('#add-tax-type').text().trim()).toEqual(
+            'Add Tax Type');
+        });
+
     });
 
   });
