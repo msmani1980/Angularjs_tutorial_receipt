@@ -43,6 +43,7 @@ angular.module('ts5App')
 				return filteredDate;
 			}
 
+
 		};
 
 	});
