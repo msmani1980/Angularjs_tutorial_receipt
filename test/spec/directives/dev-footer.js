@@ -11,11 +11,16 @@ describe('Directive: devFooter', function () {
     versionService;
 
   beforeEach(inject(function ($rootScope, _versionService_) {
+    var fakeProjectInfo = {
+      'PROJECT_VERSION': 'fakeProjectVersion',
+      'BUILD_NUMBER': '06'
+    };
     versionService = _versionService_;
     scope = $rootScope.$new();
     spyOn(versionService, 'getProjectInfo').and.returnValue({
-      'PROJECT_VERSION': 'fakeProjectVersion',
-      'BUILD_NUMBER': '06'
+      then: function(){
+        return fakeProjectInfo;
+      }
     });
   }));
 
@@ -37,6 +42,5 @@ describe('Directive: devFooter', function () {
       scope.getProjectInfo();
       expect(versionService.getProjectInfo).toHaveBeenCalled();
     }));
-
 
 });

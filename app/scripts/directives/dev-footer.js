@@ -8,12 +8,13 @@
  */
 angular.module('ts5App')
   .directive('devFooter', ['versionService', function (versionService) {
-    function getProjectInfo() {
-      versionService.getProjectInfo();
-    }
 
-    function link(scope, element) {
-      scope.getProjectInfo = getProjectInfo;
+    function link(scope) {
+      scope.getProjectInfo = function () {
+        versionService.getProjectInfo().then(function(dataFromAPI){
+          scope.appInformation = dataFromAPI;
+        });
+      }
     }
 
     return {
