@@ -10,18 +10,20 @@
  */
 angular.module('ts5App')
 	.filter('daterange', function () {
-		return function(items, startDateFilter, endDateFilter) {
+		return function (items, startDateFilter, endDateFilter) {
 
-			if (!startDateFilter || !endDateFilter){
+			if (!startDateFilter || !endDateFilter) {
 				return items;
 			}
 
-		 	var isStartDateAfterOrEqual = function(item, startDateFilter){
-				return moment( item.startDate ).isAfter( startDateFilter ) || moment( item.startDate ).isSame( startDateFilter);
+			var isStartDateAfterOrEqual = function (item, startDateFilter) {
+				return moment(item.startDate).isAfter(startDateFilter) || moment(item.startDate)
+					.isSame(startDateFilter);
 			};
 
-			var isEndDateBeforeOrEqual  = function(item, endDateFilter){
-				return moment( item.endDate ).isBefore( endDateFilter ) || moment( item.endDate ).isSame( endDateFilter);
+			var isEndDateBeforeOrEqual = function (item, endDateFilter) {
+				return moment(item.endDate).isBefore(endDateFilter) || moment(item.endDate)
+					.isSame(endDateFilter);
 			};
 
 			var filteredDate = [];
@@ -43,4 +45,4 @@ angular.module('ts5App')
 
 		};
 
-  });
+	});
