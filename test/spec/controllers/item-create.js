@@ -11,30 +11,32 @@ describe('Item Create Controller |', function () {
     'served/price-types.json'
   ));
 
-  var $rootScope, $scope, $controller, $location, ItemCreateCtrl;
+  var $rootScope,
+    $scope,
+    $controller,
+    $location,
+    ItemCreateCtrl;
 
   beforeEach(inject(function (_$rootScope_, _$controller_, $injector) {
-
     $location = $injector.get('$location');
-
-    spyOn($location, 'path').and.returnValue('/item-create');
-
+    $location.path('/item-create');
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
-
     $controller = _$controller_;
-
     ItemCreateCtrl = $controller('ItemCreateCtrl', {
       '$rootScope': $rootScope,
       '$scope': $scope
     });
-
   }));
 
   describe('The ItemCreateCtrl', function () {
 
     it('should be defined', function () {
       expect(ItemCreateCtrl).toBeDefined();
+    });
+
+    it('should have a the route /item-create', function () {
+      expect($location.path()).toBe('/item-create');
     });
 
   });
@@ -107,6 +109,28 @@ describe('Item Create Controller |', function () {
         expect($scope.formData.prices).toBeDefined();
         expect($scope.formData.prices.length).toBe(1);
       });
+
+  });
+
+  describe('The view', function () {
+
+    var $templateCache,
+      $compile,
+      html,
+      view;
+
+    beforeEach(inject(function ($rootScope, _$templateCache_,
+      _$compile_) {
+      $templateCache = _$templateCache_;
+      $compile = _$compile_;
+      html = $templateCache.get('item-create.html');
+      view = $compile(angular.element(html))($scope);
+    }));
+
+    it('should be defined', function () {
+      expect(view).toBeDefined();
+      console.log(view);
+    });
 
   });
 
