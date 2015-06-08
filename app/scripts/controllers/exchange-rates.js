@@ -97,7 +97,6 @@ angular.module('ts5App')
       }
 
       return !(isToday && $scope.dailyExchangeRates.isSubmitted);
-
     }
 
     function setupModels() {
@@ -183,7 +182,7 @@ angular.module('ts5App')
 
     function showSuccessMessage(savedOrSubmitted) {
       ngToast.create({
-        dismissOnTimeout: false,
+        className: 'success',
         dismissButton: true,
         content: '<strong>Daily Exchange Rates</strong>: successfully ' + savedOrSubmitted + '!'
       });

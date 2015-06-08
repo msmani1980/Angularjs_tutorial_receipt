@@ -38,7 +38,7 @@ angular.module('ts5App')
             var byteString,
                 mimestring;
 
-            if(dataURI.split(',')[0].indexOf('base64') !== -1 ) {
+            if(dataURI.split(',')[0].indexOf('base64') !== -1) {
                 byteString = atob(dataURI.split(',')[1]);
             } else {
                 byteString = decodeURI(dataURI.split(',')[1]);

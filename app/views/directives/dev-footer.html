@@ -1,0 +1,8 @@
+<footer class="footer">
+  <div class="container">
+    <p class="text-muted text-center">
+      <i ng-if="!appInformation" class="fa fa-cogs" ng-click="getProjectInfo()"></i>
+      <span ng-if="appInformation">TS5 v{{appInformation.PROJECT_VERSION}} - {{appInformation.BUILD_NUMBER}}</span>
+    </p>
+  </div>
+</footer>

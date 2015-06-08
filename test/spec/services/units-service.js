@@ -35,11 +35,16 @@ describe('Units Service |', function () {
 
   }));
 
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('The service should exist', function () {
     expect(unitsService).toBeDefined();
   });
 
- 
+
   // Units/Dimensions API
   describe('When calling the Dimensions API it', function () {
 

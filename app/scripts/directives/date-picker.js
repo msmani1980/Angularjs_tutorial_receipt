@@ -10,6 +10,7 @@ angular.module('ts5App')
   .directive('datePicker', function () {
 
     var datePickerOptions = {
+      orientation: 'auto top',
       format: 'mm/dd/yyyy',
       autoclose: true,
       todayHighlight: true

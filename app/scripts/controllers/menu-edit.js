@@ -44,14 +44,16 @@ angular.module('ts5App')
       }, true).then(attachItemsModelToScope);
     }
 
-    function localizeDates(dateFromAPIFormat, formatDateTo) {
-      $scope.menu.startDate = formatDate($scope.menu.startDate, dateFromAPIFormat, formatDateTo);
-      $scope.menu.endDate = formatDate($scope.menu.endDate, dateFromAPIFormat, formatDateTo);
+    function localizeDates(datesContainer, formatDateFrom, formatDateTo) {
+      return {
+        startDate: formatDate(datesContainer.startDate, formatDateFrom, formatDateTo),
+        endDate: formatDate(datesContainer.endDate, formatDateFrom, formatDateTo)
+      };
     }
 
     function attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat) {
       $scope.menu = angular.copy(menuFromAPI);
-      localizeDates(dateFromAPIFormat, 'L');
+      angular.extend($scope.menu, localizeDates($scope.menu, dateFromAPIFormat, 'L'));
       $scope.menuEditForm.$setPristine();
     }
 
@@ -65,7 +67,7 @@ angular.module('ts5App')
 
     function showSuccessMessage() {
       ngToast.create({
-        dismissOnTimeout: false,
+        className: 'success',
         dismissButton: true,
         content: '<strong>Menu</strong>: successfully updated!'
       });
@@ -78,6 +80,11 @@ angular.module('ts5App')
     }
 
     function showErrors(dataFromAPI) {
+      ngToast.create({
+        className: 'warning',
+        dismissButton: true,
+        content: '<strong>Menu</strong>: error updating menu!'
+      });
       $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
@@ -86,10 +93,22 @@ angular.module('ts5App')
     }
 
     $scope.submitForm = function () {
-      var formatDateFrom = 'l';
-      var formatDateTo = 'YYYYMMDD';
-      localizeDates(formatDateFrom, formatDateTo);
-      menuService.updateMenu($scope.menu.toJSON()).then(resetModelAndShowNotification, showErrors);
+      var formatFrom = 'l',
+        formatTo = 'YYYYMMDD',
+        payload = angular.copy($scope.menu.toJSON());
+
+      angular.extend(payload, localizeDates(payload, formatFrom, formatTo));
+      menuService.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
+    };
+
+    $scope.isMenuReadOnly = function () {
+      if (angular.isUndefined($scope.menu)) {
+        return false;
+      }
+      var todayDate = moment().format('L');
+      var startDateBeforeToday = moment($scope.menu.startDate, 'L').format('L') < todayDate;
+      var endDateBeforeToday = moment($scope.menu.endDate, 'L').format('L') < todayDate;
+      return startDateBeforeToday || endDateBeforeToday;
     };
 
     menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);

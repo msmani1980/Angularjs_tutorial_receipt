@@ -1,5 +1,7 @@
 'use strict';
 
+/*global moment*/
+
 describe('Controller: MenuEditCtrl', function () {
 
   beforeEach(module('ts5App'));
@@ -43,6 +45,11 @@ describe('Controller: MenuEditCtrl', function () {
     scope.$digest();
     $httpBackend.flush();
   }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should attach the view name', function () {
     expect(!!scope.viewName).toBe(true);
@@ -93,6 +100,35 @@ describe('Controller: MenuEditCtrl', function () {
         it('should have a itemName', function(){
           expect(!!scope.menuItemsList[0].itemName).toBe(true);
         });
+      });
+    });
+
+    describe('isMenuReadOnly', function(){
+      it('should have a isMenuReadOnly function', function () {
+        expect(!!scope.isMenuReadOnly).toBe(true);
+      });
+
+      it('should return true if startDate < today > endDate', function () {
+        scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
+        scope.menu.endDate = moment().subtract(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly()).toBe(true);
+      });
+
+      it('should return true if startDate < today < endDate', function () {
+        scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
+        scope.menu.endDate = moment().add(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly()).toBe(true);
+      });
+
+      it('should return false if startDate > today > endDate', function () {
+        scope.menu.startDate = moment().add(1, 'month').format('L').toString();
+        scope.menu.endDate = moment().add(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly()).toBe(false);
+      });
+
+      it('should return false if menu === null or undefined', function () {
+        delete scope.menu;
+        expect(scope.isMenuReadOnly()).toBe(false);
       });
     });
 

@@ -54,6 +54,12 @@ describe('Controller: ExchangeRatesCtrl', function () {
       $httpBackend.flush();
     })
   );
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('should have a viewName property', function () {
     expect(scope.viewName).toBeDefined();
   });
@@ -115,6 +121,7 @@ describe('Controller: ExchangeRatesCtrl', function () {
 
     it('should create payload with today date', function () {
       scope.checkVarianceAndSave(false);
+      $httpBackend.flush();
       expect(scope.payload.dailyExchangeRate.exchangeRateDate).toBe(moment().format('YYYYMMDD').toString());
     });
 
@@ -126,17 +133,22 @@ describe('Controller: ExchangeRatesCtrl', function () {
         bankExchangeRate: '0.1234'
       };
       scope.checkVarianceAndSave(false);
+      $httpBackend.flush();
+
       expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies[0]).toEqual(expectedCurrencyObject);
     });
 
     it('should not alert of variance', function () {
       scope.checkVarianceAndSave(false);
+      $httpBackend.flush();
+
       expect(scope.varianceObject).toEqual([]);
     });
 
     it('should alert of variance > 10%', function () {
       scope.previousExchangeRates.dailyExchangeRateCurrencies[0].bankExchangeRate = '0.14191';
       scope.checkVarianceAndSave(false);
+
       expect(scope.varianceObject[0]).toEqual({code: 'USD', percentage: 13});
     });
 

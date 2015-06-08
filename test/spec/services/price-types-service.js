@@ -29,6 +29,11 @@ describe('Price Types Service |', function () {
 
   }));
 
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('The service should exist', function () {
     expect(priceTypesService).toBeDefined();
   });
@@ -68,7 +73,7 @@ describe('Price Types Service |', function () {
     });
 
     it('should expect the PriceType object to have an id', function () {
-      expect(testObject.id).toBeDefined(); 
+      expect(testObject.id).toBeDefined();
     });
 
     it('should expect the PriceType object to have a name', function () {
