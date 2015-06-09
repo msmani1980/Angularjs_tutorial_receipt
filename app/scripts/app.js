@@ -108,6 +108,30 @@ angular
         templateUrl: 'views/cash-bag-create.html',
         controller: 'CashBagCreateCtrl'
       })
+      .when('/cash-bag-list', {
+        templateUrl: 'views/cash-bag-list.html',
+        controller: 'CashBagListCtrl'
+      })
+      .when('/post-trip-data-list', {
+        templateUrl: 'views/post-trip-data-list.html',
+        controller: 'PostFlightDataListCtrl'
+      })
+      .when('/post-trip-data', {
+        templateUrl: 'views/post-trip-data.html',
+        controller: 'PostFlightDataCtrl'
+      })
+      .when('/crew-commission', {
+        templateUrl: 'views/crew-commission.html',
+        controller: 'CrewCommissionCtrl'
+      })
+      .when('/refund-global-reason-code', {
+        templateUrl: 'views/refund-global-reason-code.html',
+        controller: 'RefundGlobalReasonCodeCtrl'
+      })
+      .when('/refund-company-reason-code', {
+        templateUrl: 'views/refund-company-reason-code.html',
+        controller: 'RefundCompanyReasonCodeCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

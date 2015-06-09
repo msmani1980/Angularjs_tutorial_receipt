@@ -1,0 +1,117 @@
+<div class="module-container">
+
+  <form name="form" class="form edit-form crew-commission-form">
+
+    <form-error-dialog></form-error-dialog>
+    
+    <div class="edit-controls">
+      <div class="row">
+      
+        <div class="col-xs-6 col-sm-8">
+          <h2 class="view-name">{{ viewName }}</h2>
+        </div>
+        
+        <div class="col-xs-6 col-sm-4">
+          <div class="header-buttons pull-right">
+<!--               <button type="button" class="btn button-additional" {{action "cancel"}}>{{t "menus.form.button.secondary.cancel"}}</button> -->
+            <button type="button" class="btn btn-default">Cancel</button>
+<!--               <button type="button" class="btn button-primary" {{action "save"}}>{{t "menus.form.button.primary.create"}}</button> -->
+            <button type="button" class="btn btn-primary">Create</button>
+            <button type="button" class="btn btn-default">
+                <i class="fa fa-question-circle"></i>
+            </button>
+          </div>          
+        </div>        
+        
+      </div>
+    </div>
+
+  <!--/TopHeader -->
+
+    <div class="row">
+
+      <div class="col-xs-12 col-sm-3">
+        <div class="form-group">
+          <label for="itemName">Item Name</label>
+          <select class="form-control" id="itemName">
+            <option>Coke</option>
+            <option>Pepsi</option>
+            <option>Sprite</option>
+            <option>Chicken Sandwich</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label for="rateType">Rate Type</label>
+          <select class="form-control" id="rateType">
+            <option>Percentage</option>
+            <option>Fixed Amount</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label for="rate">Rate</label>
+          <input type="text" class="form-control" id="rate" placeholder="$10">
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-3">
+        <div class="form-group">
+          <label for="saleType">Sale Type</label>
+          <select class="form-control" id="saleType">
+            <option>Regular Sale</option>
+            <option>Complimentary Sale</option>
+            <option>Employee Purchase</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label for="saleType">Currency</label>
+          <select class="form-control" id="saleType">
+            <option>USD</option>
+            <option>GBP</option>
+            <option>EUR</option>
+            <option>DKK</option>
+          </select>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div class="row">
+    
+      <div class="col-xs-12">
+        <date-picker class="form-group"
+          element-class="col-xs-12 col-sm-3"
+          start-date-model="formData.startDate"
+          end-date-model="formData.endDate"
+          disable-past="true"
+          label-from="Effective From"
+          label-to="Effective To"
+          disable-start-date="viewOnly || itemIsActive"
+          disable-end-date="viewOnly || itemIsInactive"
+          >
+        </date-picker>
+      </div>
+
+    </div>
+
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<left-navigation></left-navigation>

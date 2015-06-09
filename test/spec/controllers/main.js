@@ -23,7 +23,7 @@ describe('Controller: MainCtrl', function () {
     });
 
     it('should have a retail menu collection', function () {
-        expect(MainCtrl.retailMenu.length).toBe(12);
+        expect(MainCtrl.retailMenu.length).toBe(15);
     });
 
     it('should have a title property', function () {
