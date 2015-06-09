@@ -29,7 +29,7 @@ angular.module('ts5App')
 
           e.modal('hide');
 
-          $location.path(leavePath);
+          $location.path('/' + leavePath);
           $scope.$apply();
 
         }
@@ -47,7 +47,7 @@ angular.module('ts5App')
         e.modal('hide');
 
         e.on('hidden.bs.modal', function () {
-          $location.path(leavePath);
+          $location.path('/' + leavePath);
           $scope.$apply();
         });
 
