@@ -9,10 +9,8 @@
  */
 angular.module('ts5App')
   .service('companyCcTypesService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + 'api/companies/403/company-credit-card-types';
-    var requestParameters = {
-      limit: 50
-    };
+    var requestURL = ENV.apiUrl + '/api/companies/:companyId/company-credit-card-types';
+    var requestParameters = {};
 
     var actions = {
       getCCtypes: {
@@ -22,8 +20,8 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getCCtypes() {
-      return requestResource.getCCtypes().$promise;
+    function getCCtypes(companyId) {
+      return requestResource.getCCtypes({companyId:companyId}).$promise;
     }
 
     return {

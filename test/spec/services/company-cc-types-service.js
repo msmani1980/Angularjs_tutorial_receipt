@@ -46,4 +46,16 @@ describe('Service: companyCcTypesService', function () {
 
   });
 
+  describe('company specific API calls', function () {
+
+    it('should call the API with companyId used in parameter', function () {
+      var companyId = 413;
+      var regex = new RegExp(companyId + '/company-credit-card-types', 'g');
+      $httpBackend.expectGET(regex).respond(200, '');
+      companyCcTypesService.getCCtypes(companyId);
+      $httpBackend.flush();
+    });
+
+  });
+
 });
