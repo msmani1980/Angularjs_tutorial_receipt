@@ -2,15 +2,16 @@
 	<div class="container">
 		<ul class="navbar">
 
-			<li ng-click="leaveView('item-list')" ng-class="{'active':locationPath == '/item-list'}">
+			<li ng-click="leaveView('{{itemListPath}}')" ng-class="{'active':locationPath == itemListPath}">
 				<i class="icon-manage-retail-item"></i>
 				<div class="left-nav-option">
 					<i class="icon-manage-retail-item"></i>
 					<p>Manage Items</p>
+
 				</div>
 			</li>
 
-			<li ng-click="leaveView('item-create')" ng-class="{'active':locationPath == '/item-create'}">
+			<li ng-click="leaveView('{{itemCreatePath}}')" ng-class="{'active':locationPath == itemCreatePath}">
 				<i class="icon-create-retail-item"></i>
 				<div class="left-nav-option">
 					<i class="icon-create-retail-item"></i>
@@ -18,7 +19,7 @@
 				</div>
 			</li>
 
-			<li ng-click="leaveView('ember/#/retail-items/categories')" ng-class="{'active':locationPath == '/retail-items/categories'}">
+			<li ng-click="leaveView('/{{manageCategoriesPath}}')" ng-class="{'active':locationPath == manageCategoriesPath}">
 				<i class="icon-manage-retail-category"></i>
 				<div class="left-nav-option lg">
 					<i class="icon-manage-retail-category"></i>
@@ -29,3 +30,5 @@
 		</ul>
 	</div>
 </div>
+
+<leave-view-modal></leave-view-modal>

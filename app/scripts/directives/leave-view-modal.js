@@ -9,10 +9,10 @@
 angular.module('ts5App')
   .directive('leaveViewModal', function () {
 
-    var leaveViewController= function ($scope, $location) {
+    var leaveViewController = function ($scope, $location) {
 
       // Show leave view modal
-      $scope.leaveView = function(str) {
+      $scope.leaveView = function (str) {
 
         var e = angular.element('#leave-view-modal');
 
@@ -21,7 +21,7 @@ angular.module('ts5App')
         $scope.leavePath = leavePath;
 
         //if the modal is hidden, and the location is not dashboard
-        if (e.modal('hide') && $location.path() === '/item-create' && $location.path() !== '/'+leavePath) {
+        if (e.modal('hide') && $location.path() !== leavePath) {
 
           e.modal('show');
 
@@ -29,7 +29,7 @@ angular.module('ts5App')
 
           e.modal('hide');
 
-          $location.path('/' + leavePath);
+          $location.path(leavePath);
           $scope.$apply();
 
         }
@@ -38,7 +38,7 @@ angular.module('ts5App')
 
       };
 
-      $scope.leaveViewClose = function() {
+      $scope.leaveViewClose = function () {
 
         var e = angular.element('#leave-view-modal');
 
@@ -47,7 +47,7 @@ angular.module('ts5App')
         e.modal('hide');
 
         e.on('hidden.bs.modal', function () {
-          $location.path('/' + leavePath);
+          $location.path(leavePath);
           $scope.$apply();
         });
 
@@ -56,10 +56,10 @@ angular.module('ts5App')
     };
 
     return {
-    templateUrl: 'views/directives/leave-view-modal.html',
-    restrict: 'E',
-    scope: false,
-    controller: leaveViewController
+      templateUrl: '/views/directives/leave-view-modal.html',
+      restrict: 'E',
+      scope: false,
+      controller: leaveViewController
 
     };
 

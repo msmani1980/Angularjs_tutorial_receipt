@@ -7,19 +7,40 @@
  * # leftNavigation
  */
 angular.module('ts5App')
-  .directive('leftNavigation', function ( ) {
+  .directive('leftNavigation', function () {
 
     var leftNavigationController = function ($scope, $location) {
 
-  		$scope.locationPath = $location.path();
+      $scope.locationPath = $location.path();
+      switch ($scope.basePath) {
+      case 'retail-items':
 
-  	};
+        $scope.itemListPath = '/item-list';
+        $scope.itemCreatePath = '/item-create';
+        $scope.manageCategoriesPath = 'ember/#/retail-items/categories';
+
+        break;
+
+      case 'stock-owner-items':
+
+        $scope.itemListPath = '/stock-owner-item-list';
+        $scope.itemCreatePath = '/stock-owner-item-create';
+        $scope.manageCategoriesPath =
+          'ember/#/stock-owner-item/categories';
+
+        break;
+
+      }
+
+    };
 
     return {
-      templateUrl: 'views/directives/left-navigation.html',
+      templateUrl: '/views/directives/left-navigation.html',
       restrict: 'E',
-      controller: leftNavigationController,
-      scope: false
+      scope: {
+        basePath: '@'
+      },
+      controller: leftNavigationController
     };
 
   });
