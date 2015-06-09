@@ -1,21 +1,21 @@
 <div id="left-navigation">
 	<div class="container">
-		<ul class="navbar">
+		<ul class="navbar ng-cloak">
 
 			<li ng-click="leaveView('{{itemListPath}}')" ng-class="{'active':locationPath == itemListPath}">
 				<i class="icon-manage-retail-item"></i>
-				<div class="left-nav-option">
+				<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 					<i class="icon-manage-retail-item"></i>
-					<p>Manage Items</p>
+					<p>Manage {{itemPrefix}} Items</p>
 
 				</div>
 			</li>
 
 			<li ng-click="leaveView('{{itemCreatePath}}')" ng-class="{'active':locationPath == itemCreatePath}">
 				<i class="icon-create-retail-item"></i>
-				<div class="left-nav-option">
+				<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 					<i class="icon-create-retail-item"></i>
-					<p>Create Item</p>
+					<p>Create {{itemPrefix}} Items</p>
 				</div>
 			</li>
 

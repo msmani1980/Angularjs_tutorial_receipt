@@ -27,6 +27,7 @@ angular.module('ts5App')
         $scope.itemCreatePath = '/stock-owner-item-create';
         $scope.manageCategoriesPath =
           'ember/#/stock-owner-item/categories';
+        $scope.itemPrefix = 'Stock Owner';
 
         break;
 
