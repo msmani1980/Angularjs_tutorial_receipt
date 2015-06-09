@@ -12,11 +12,68 @@
     </div>
   </div>
   <!--/TopHeader -->
+  
+  <div class="post-trip-data-list">
+    <div class="row">
+    
+      <div class="col-xs-6">
+        <a ng-href="/#/post-trip-data" class="btn btn-primary"> + </a>
+      </div>
+    
+      <div class="col-xs-6 text-right">
+        <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+      </div>
+      
+    </div>
+   
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form name="menuSearchForm" ng-submit="searchMenus()">
+        <div class="panel-body">
+          <div class="row">
+          
+            <div class="col-md-3 col-sm-6">
+              <div class="form-group">
+                <label for="item-code">Schedule Number</label>
+                <input ng-model="search.scheduleNumber" type="text" class="form-control" id="item-code" placeholder="T1">
+              </div>
+            </div>
 
-  <form name="form" class="form edit-form post-trip-data-form">
-
-    <form-error-dialog></form-error-dialog>
-
+            <date-picker 
+              class="col-md-3 col-sm-6"
+              disable-date-range="true"
+              start-date-model="scheduleNumber"
+              is-search-field="true"
+              label-from="Schedule Date">
+            </date-picker>
+        
+            <div class="col-md-3 col-sm-6">
+              <div class="form-group">
+                <label for="item-name">Departure Station</label>
+                <input ng-model="search.departureStation" type="text" class="form-control" id="item-name" placeholder="Test">
+              </div>
+            </div>
+            
+            <div class="col-md-3 col-sm-6">
+              <div class="form-group">
+                <label for="item-name">Arrival Station</label>
+                <input ng-model="search.arrivalStation" type="text" class="form-control" id="item-name" placeholder="Test">
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+  
     <table class="table table-bordered table-hover ng-scope">
       <thead>
         <tr>
@@ -29,7 +86,6 @@
       </thead>
       <tbody>
         <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
-<!--         <tr ng-repeat="menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName}" class="ng-scope"> -->
         <tr class="ng-scope">
           <td class="ng-binding">T1</td>
           <td class="ng-binding">05/06/2015</td>
@@ -48,8 +104,8 @@
           </td>
         </tr>
         <tr class="ng-scope">
-          <td class="ng-binding">T1</td>
-          <td class="ng-binding">05/06/2015</td>
+          <td class="ng-binding">T2</td>
+          <td class="ng-binding">05/07/2015</td>
           <td class="ng-binding">Test</td>
           <td class="ng-binding">Test</td>
           <td>
@@ -67,8 +123,7 @@
         <!-- end ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
       </tbody>
     </table>
-
-  </form>
+  </div>
 
 </div>
 <!-- /Container -->

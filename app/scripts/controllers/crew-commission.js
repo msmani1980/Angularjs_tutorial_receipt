@@ -1,6 +1,6 @@
 // TODO: Write tests for this controller
 
-// COPIED FROM ITEM-CREATE.JS
+// COPIED FROM ITEM-CREATE.JS FOR .CONTROLLER & SCOPE.VIEWNAME ONLY
 
 'use strict';
 /*global moment*/

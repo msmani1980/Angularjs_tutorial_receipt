@@ -1,6 +1,6 @@
 // TODO: Write tests for this controller
 
-// COPIED FROM ITEM-CREATE.JS
+// COPIED FROM ITEM-CREATE.JS FOR .CONTROLLER & SCOPE.VIEWNAME ONLY
 
 'use strict';
 /*global moment*/
@@ -33,7 +33,7 @@ angular.module('ts5App')
         prices: []
       };
 
-      $scope.viewName = 'Manage Post Flight Data';
+      $scope.viewName = 'Post Flight Data Management';
 
   		$scope.buttonText = 'Create';
 
