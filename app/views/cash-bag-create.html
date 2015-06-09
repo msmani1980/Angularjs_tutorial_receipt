@@ -1,54 +1,37 @@
 <h1 class="ng-scope">Cash Bag Create</h1>
+<h2>{{ flight.airline }} <small>{{ flight.number }} <date>{{ flight.date | date:'yyyy-MM-dd' }}</date></small></h2>
 <ng-form name="cashBagCreateForm" class="form edit-form">
   
   <div class="panel panel-default">
 
     <div class="panel-heading">
       <div class="row">
-        <h3 class="col-xs-6">{{ cashBag.flight }}</h3>
-
-        <span class="col-xs-6 text-right">{{ cashBag.date1 }}</span>
+        <div class="col-sm-6">
+          <div>Base currency: {{ cashBag.baseCurrency }}</div>
+        </div>
+        <div class="col-sm-6 text-right">
+          <div>Cashier's entry date: <date>{{ cashBag.cashiersEntryDate | date:'yyyy-MM-dd' }}</date></div>
+        </div>
       </div>
     </div>
 
     <div class="panel-body">
-
-      <div class="row">
-			  <div class="form-group col-sm-4">
-			     <div class="form-group">
-			       <label for="flightSchedule">Flight Schedule</label>
-			       <select multiple ng-model="cashBag" class="form-control">
-			         <option ng-repeat="flightSchedule in cashBag.flightSchedules" value="{{ flightSchedule.id }}">{{ flightSchedule.name }}</option>
-			       </select>
-			     </div>
+      
+      <div class="row form-group">
+			  <div class="col-sm-4">
+          <input-text label="Cash Bag #" name="cashBag" required="true" pattern="regexp.number" min-length="1" max-length="10"></input-text>
 			  </div>
 			  
-			  <div class="form-group col-sm-8">
-			    <div class="form-group">
-			      
-			      <div class="row">
-              <div class="col-sm-6">
-                <input-text label="Cash Bag #" name="cashBag" required="true" pattern="regexp.number" min-length="1" max-length="10"></input-text>
-              </div>
-              <div class="col-sm-6 text-right">
-                <div><label>Base currency:</label> {{ cashBag.baseCurrency }}</div>
-                <div><label>Cashier's entry date:</label> {{ cashBag.date2 }}</div>
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="col-sm-6">
-                <input-text label="Total # of Bags" name="numberOfBags" pattern="regexp.number" min-length="1" max-length="10"></input-text>
-              </div>
-              <div class="col-sm-6">
-                <input-text label="Bank Reference" name="bankReference" pattern="regexp.alpha"></input-text>  
-              </div>
-            </div>
-            
-			    </div>
+			  <div class="col-sm-4">
+          <input-text label="Total # of Bags" name="numberOfBags" pattern="regexp.number" min-length="1" max-length="10"></input-text>
 			  </div>
+			  
+			  <div class="col-sm-4">
+          <input-text label="Bank Reference" name="bankReference" pattern="regexp.alpha"></input-text>
+        </div>
       </div>
-      <div class="row">
+      
+      <div class="row form-group">
 				<table class="table table-responsive table-bordered table-hover">
 			    <thead>
 			    <tr>
@@ -61,7 +44,7 @@
 			    </tr>
 			    </thead>
 			    <tbody>
-			    <tr ng-repeat="exchange in cashBag.exchanges">
+			    <tr ng-repeat="exchange in exchangeRates">
 			      <td>{{ exchange[0] }}</td>
 			      <td>{{ exchange[1] }}</td>
 			      <td><input type="text" class="form-control" value="{{ exchange[2] }}" name="exchangePaperAmount[{{$index}}]"></td>

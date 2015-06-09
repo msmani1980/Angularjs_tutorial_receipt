@@ -14,17 +14,22 @@ angular.module('ts5App')
       'AngularJS',
       'Karma'
     ];
-    var mochCashBag = {
-     flight: 'TODO: flight',
-    	date1: 'TODO: date1',
-    	baseCurrency: 'TODO: DATA',
-    	date2: 'TODO: date2',
-    	flightSchedules: [{id:1,name:'test'},{id:2,name:'test 2'}],
-    	exchanges: [
-    	  ['CHF',1400.75,10.00,13.75,0.1844,0.1844],
-    	  ['USD',6.66,6.00,0.66,0.1844,0.1844]
-    	]
+    var mockFlight = {
+      airline: 'FPO Delta',
+      number: 'E2Y56',
+      date: new Date()
     };
+    var mockCashBag = {
+    	cashiersEntryDate: new Date(),
+    	baseCurrency: 'TODO: DATA',
+    	flightSchedules: [{id:1,name:'test'},{id:2,name:'test 2'}]
+    };
+    var mockExchangeRates = [
+      ['CHF',1400.75,10.00,13.75,0.1844,0.1844],
+      ['USD',6.66,6.00,0.66,0.1844,0.1844]
+    ];
     
-    $scope.cashBag = mochCashBag;
+    $scope.cashBag = mockCashBag;
+    $scope.flight = mockFlight;
+    $scope.exchangeRates = mockExchangeRates;
   });
