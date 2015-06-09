@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TS5 Inventory</title>
+<!-- CSS -->
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="//www.fuelcdn.com/fuelux/3.6.3/css/fuelux.min.css" rel="stylesheet">
+<link rel="stylesheet" href="styles/static-pages.css">
+</head>
+
+<body class="fuelux">
+  <div class="wizard" data-initialize="wizard" id="myWizard">
+
+    <ul class="steps">
+      <li data-step="1" data-name="assignInventoryReferenceNumber" class="active"><span class="badge">1</span>Assign Inventory Reference Number<span class="chevron"></span></li>
+      <li data-step="2" data-name="inPacking"><span class="badge">2</span>In Packing<span class="chevron"></span></li>
+      <li data-step="3" data-name="assignSeals"><span class="badge">3</span>Assign Seals<span class="chevron"></span></li>
+      <li data-step="4" data-name="dispatch"><span class="badge">4</span>Review &amp; Dispatch<span class="chevron"></span></li>
+    </ul>
+
+    <div class="step-content">
+      <!-- PANE 1 - Assign Inventory Reference Number --------------------------------------------------------------------- -->
+      <div class="step-pane active sample-pane" data-step="1">
+        <form class="form-horizontal" action="">
+          <div class="well">
+
+            <div class="form-group">
+              <label for="selectFlight" class="col-sm-4 control-label">Select Flight Number</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="selectFlight" placeholder="A320EU">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="selectDate" class="col-sm-4 control-label">Select Date</label>
+              <div class="datepicker fuelux" id="myDatepicker">
+                <div class="col-sm-8">
+                  <div class="input-group">
+                    <input class="form-control" id="myDatepickerInput" type="text" />
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-calendar"></span> <span class="sr-only">Toggle Calendar</span>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right datepicker-calendar-wrapper" role="menu">
+                        <div class="datepicker-calendar">
+                          <div class="datepicker-calendar-header">
+                            <button type="button" class="prev">
+                              <span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous Month</span>
+                            </button>
+                            <button type="button" class="next">
+                              <span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next Month</span>
+                            </button>
+                            <button type="button" class="title" data-month="11" data-year="2014">
+                              <span class="month"> <span data-month="0">January</span> <span data-month="1">February</span> <span data-month="2">March</span> <span data-month="3">April</span> <span data-month="4">May</span> <span data-month="5">June</span> <span data-month="6">July</span> <span data-month="7">August</span> <span data-month="8">September</span> <span data-month="9">October</span> <span data-month="10">November</span> <span data-month="11" class="current">December</span>
+                              </span> <span class="year">2014</span>
+                            </button>
+                          </div>
+                          <table class="datepicker-calendar-days">
+                            <thead>
+                              <tr>
+                                <th>Su</th>
+                                <th>Mo</th>
+                                <th>Tu</th>
+                                <th>We</th>
+                                <th>Th</th>
+                                <th>Fr</th>
+                                <th>Sa</th>
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                          <div class="datepicker-calendar-footer">
+                            <button type="button" class="datepicker-today">Today</button>
+                          </div>
+                        </div>
+                        <div class="datepicker-wheels" aria-hidden="true">
+                          <div class="datepicker-wheels-month">
+                            <h2 class="header">Month</h2>
+                            <ul>
+                              <li data-month="0"><button type="button">Jan</button></li>
+                              <li data-month="1"><button type="button">Feb</button></li>
+                              <li data-month="2"><button type="button">Mar</button></li>
+                              <li data-month="3"><button type="button">Apr</button></li>
+                              <li data-month="4"><button type="button">May</button></li>
+                              <li data-month="5"><button type="button">Jun</button></li>
+                              <li data-month="6"><button type="button">Jul</button></li>
+                              <li data-month="7"><button type="button">Aug</button></li>
+                              <li data-month="8"><button type="button">Sep</button></li>
+                              <li data-month="9"><button type="button">Oct</button></li>
+                              <li data-month="10"><button type="button">Nov</button></li>
+                              <li data-month="11"><button type="button">Dec</button></li>
+                            </ul>
+                          </div>
+                          <div class="datepicker-wheels-year">
+                            <h2 class="header">Year</h2>
+                            <ul></ul>
+                          </div>
+                          <div class="datepicker-wheels-footer clearfix">
+                            <button type="button" class="btn datepicker-wheels-back">
+                              <span class="glyphicon glyphicon-arrow-left"></span><span class="sr-only">Return to Calendar</span>
+                            </button>
+                            <button type="button" class="btn datepicker-wheels-select">
+                              Select <span class="sr-only">Month and Year</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="selectTemplate" class="col-sm-4 control-label">Select Template</label>
+              <div class="col-sm-8">
+                <select class="form-control" id="selectTemplate">
+                  <option>Breakfast</option>
+                  <option>Lunch</option>
+                  <option>Dinner</option>
+                  <option>Snack</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="assignInventoryReferenceNumber" class="col-sm-4 control-label">Assign Inventory Reference Number</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="assignInventoryReferenceNumber" placeholder="GJ1246">
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- PANE 2 - In Packing --------------------------------------------------------------------- -->
+      <div class="step-pane sample-pane" data-step="2">
+        <form class="form-horizontal" action="">
+
+          <div class="well">
+            <table class="table">
+              <caption>Flight Information</caption>
+              <thead>
+                <tr>
+                  <th>Flight Number</th>
+                  <th>Flight Date</th>
+                  <th>Flight Template</th>
+                  <th>Inventory Reference Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" class="form-control" id="flightNumber" placeholder="A320EU" disabled></td>
+                  <td><input type="text" class="form-control" id="flightDate" placeholder="12/25/2105" disabled></td>
+                  <td><input type="text" class="form-control" id="flightTemplate" placeholder="Breakfast" disabled></td>
+                  <td><input type="text" class="form-control" id="inventoryReferenceNumber" placeholder="GJ1246" disabled></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="well">
+            <table class="table">
+              <caption>Inventory</caption>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Expected</th>
+                  <th>Actual</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="18"></td>
+                </tr>
+                <tr>
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="16"></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="10" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="9"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- PANE 3 - Assign Seals --------------------------------------------------------------------- -->
+      <div class="step-pane sample-pane" data-step="3">
+        <form class="form-horizontal" action="">
+
+          <div class="well">
+            <table class="table">
+              <caption>Flight Information</caption>
+              <thead>
+                <tr>
+                  <th>Flight Number</th>
+                  <th>Flight Date</th>
+                  <th>Flight Template</th>
+                  <th>Inventory Reference Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="A320EU" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="12/25/2105" disabled></td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="2001" disabled></td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="GJ1246" disabled></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="well">
+            <table class="table">
+              <caption>Seal Number Assignment</caption>
+              <thead>
+                <tr>
+                  <th>Seal</th>
+                  <th>Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Seal #1</td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12465"></td>
+                </tr>
+                <tr>
+                  <td>Seal #2</td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12923"></td>
+                </tr>
+                <tr>
+                  <td>Seal #3</td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="11984"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- PANE 4 - Dispatch --------------------------------------------------------------------- -->
+      <div class="step-pane sample-pane" data-step="4">
+        <form class="form-horizontal" action="">
+
+          <div class="well">
+            <table class="table">
+              <caption>Flight Information</caption>
+              <thead>
+                <tr>
+                  <th>Flight Number</th>
+                  <th>Flight Date</th>
+                  <th>Flight Template</th>
+                  <th>Inventory Reference Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="A320EU" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="12/25/2105" disabled></td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="2001" disabled></td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="GJ1246" disabled></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="well">
+            <table class="table">
+              <div class="row">
+                <div class="col-xs-10">
+                  <h3>Inventory</h3>
+                </div>
+                <div class="col-xs-2">
+                  <button type="button" class="btn btn-info pull-right">Edit</button>
+                </div>
+              </div>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Expected</th>
+                  <th>Actual</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="18" disabled></td>
+                </tr>
+                <tr>
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="16" disabled></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="10" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="9" disabled></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="well">
+            <table class="table">
+              <div class="row">
+                <div class="col-xs-10">
+                  <h3>Seal Number Assignment</h3>
+                </div>
+                <div class="col-xs-2">
+                  <button type="button" class="btn btn-info pull-right">Edit</button>
+                </div>
+              </div>
+              <thead>
+                <tr>
+                  <th>Seal</th>
+                  <th>Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Seal #1</td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12465" disabled></td>
+                </tr>
+                <tr>
+                  <td>Seal #2</td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12923" disabled></td>
+                </tr>
+                <tr>
+                  <td>Seal #3</td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="11984" disabled></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-default btn-prev">
+        <span class="glyphicon glyphicon-arrow-left"></span>Prev
+      </button>
+      <button type="button" class="btn btn-default btn-primary btn-next" data-last="Complete">
+        Next<span class="glyphicon glyphicon-arrow-right"></span>
+      </button>
+    </div>
+
+  </div>
+
+<!-- jQuery -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js" type="text/javascript"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="//www.fuelcdn.com/fuelux/3.6.3/js/fuelux.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#myDatepicker').datepicker();
+	});
+</script>
+
+</body>
+</html>
