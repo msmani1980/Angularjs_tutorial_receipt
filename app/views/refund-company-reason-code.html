@@ -1,35 +1,31 @@
-<div class="container module-container">
-
-  <div class="top-header top-header-small">
-    <div class="container">
-      <div class="edit-controls">
-        <div class="row">
-        
-          <div class="col-xs-6 col-sm-8">
-            <h2 class="view-name">{{ viewName }}</h2>
-          </div>
-          
-          <div class="col-xs-6 col-sm-4">
-            <div class="header-buttons pull-right">
-<!--               <button type="button" class="btn button-additional" {{action "cancel"}}>{{t "menus.form.button.secondary.cancel"}}</button> -->
-              <button type="button" class="btn btn-default">Cancel</button>
-<!--               <button type="button" class="btn button-primary" {{action "save"}}>{{t "menus.form.button.primary.create"}}</button> -->
-              <button type="button" class="btn btn-primary">Create</button>
-              <button type="button" class="btn btn-default">
-                  <i class="fa fa-question-circle"></i>
-              </button>
-            </div>          
-          </div>        
- 
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--/TopHeader -->
+<div class="module-container">
 
   <form name="form" class="form edit-form refund-company-reason-code-form">
 
     <form-error-dialog></form-error-dialog>
+
+    <div class="edit-controls">
+      <div class="row">
+      
+        <div class="col-xs-6 col-sm-8">
+          <h2 class="view-name">{{ viewName }}</h2>
+        </div>
+        
+        <div class="col-xs-6 col-sm-4">
+          <div class="header-buttons pull-right">
+<!--               <button type="button" class="btn button-additional" {{action "cancel"}}>{{t "menus.form.button.secondary.cancel"}}</button> -->
+            <button type="button" class="btn btn-default">Cancel</button>
+<!--               <button type="button" class="btn button-primary" {{action "save"}}>{{t "menus.form.button.primary.create"}}</button> -->
+            <button type="button" class="btn btn-primary">Create</button>
+            <button type="button" class="btn btn-default">
+                <i class="fa fa-question-circle"></i>
+            </button>
+          </div>          
+        </div>        
+
+      </div>
+    </div>
+    <!--/TopHeader -->
 
     <div class="row">
 

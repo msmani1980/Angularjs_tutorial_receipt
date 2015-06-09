@@ -120,9 +120,6 @@
 }
   
 .post-trip-data-form {
-  z-index:1;
-  position:relative;
-  top:8rem;
   
   label {
   	font-weight:100;
@@ -139,16 +136,7 @@
   }
 }
 
-.post-trip-data-list {
-  z-index:1;
-  position:relative;
-  top:8rem;
-}
-
 .crew-commission-form {
-  z-index:1;
-  position:relative;
-  top:8rem;
   
   label {
   	font-weight:100;
@@ -164,9 +152,6 @@
 }
 
 .refund-global-reason-code-form {
-  z-index:1;
-  position:relative;
-  top:8rem;
 
   label {
   	font-weight:100;
@@ -187,9 +172,6 @@
 }
 
 .refund-company-reason-code-form {
-  z-index:1;
-  position:relative;
-  top:8rem;
   
   label {
   	font-weight:100;
@@ -228,8 +210,8 @@
   	.form-inline {
   	
   		.form-control {
-  			width: 100%;
-  			margin-bottom: 5px;
+  			display: inline-block;
+  			vertical-align: middle;
   		}
  		}
  	}
