@@ -90,7 +90,7 @@
 				<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
 					start-date-model="search.startDate"
 					end-date-model="search.endDate"
-					disable-past="true"
+					is-search-field="true"
 					label-from="Effective From"
 					label-to="Effective To">
 				</date-picker>
@@ -126,7 +126,7 @@
 
 			<tbody>
 
-				<tr id="item-{{item.id}}" ng-repeat="(key,item) in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName, startDate: search.startDate, endDate:search.endDate }">
+				<tr id="item-{{item.id}}" ng-repeat="(key,item) in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName } | daterange:startDateFilter:endDateFilter ">
 
 					<td>{{ item.stockOwnerCode }}</td>
 					<td>{{ item.itemCode }}</td>
