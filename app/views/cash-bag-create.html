@@ -1,1 +1,77 @@
-<p>This is the cash-bag-create view.</p>
+<h1 class="ng-scope">Cash Bag Create</h1>
+<ng-form name="cashBagCreateForm" class="form edit-form">
+  
+  <div class="panel panel-default">
+
+    <div class="panel-heading">
+      <div class="row">
+        <h3 class="col-xs-6">{{ cashBag.flight }}</h3>
+
+        <span class="col-xs-6 text-right">{{ cashBag.date1 }}</span>
+      </div>
+    </div>
+
+    <div class="panel-body">
+
+      <div class="row">
+  
+			  <div class="form-group col-sm-4">
+			     <div class="form-group">
+			       <label for="flightSchedule">Flight Schedule</label>
+			       <select multiple ng-model="cashBag" class="form-control">
+			         <option ng-repeat="flightSchedule in cashBag.flightSchedules" value="{{ flightSchedule.id }}">{{ flightSchedule.name }}</option>
+			       </select>
+			     </div>
+			  </div>
+			  
+			  <div class="form-group col-sm-4">
+			    <div class="form-group">
+			      <input-text label="Cash Bag #" name="cashBag" required="true" pattern="regexp.number" min-length="1" max-length="10"></input-text>
+			      <input-text label="Total # of Bags" name="numberOfBags" pattern="regexp.number" min-length="1" max-length="10"></input-text>
+			    </div>
+			  </div>
+			  
+			  <div class="form-group col-sm-4">
+			    <div class="form-group">
+			      <div>Base currency: {{ cashBag.baseCurrency }}</div>
+			    
+			      <div>Cashier's entry date: {{ cashBag.date2 }}</div>
+		        
+			      <input-text label="Bank Reference" name="bankReference" pattern="regexp.alpha"></input-text>
+			    </div>
+			  </div>
+      </div>
+      <div class="row">
+				<table class="table table-responsive table-bordered table-hover">
+			    <thead>
+			    <tr>
+			      <th>Currency</th>
+			      <th>Flight Amount</th>
+			      <th>Paper Amount</th>
+			      <th>Coin Amount</th>
+			      <th>Paper Bank Exchange Rate</th>
+			      <th>Coin Bank Exchange Ratev</th>
+			    </tr>
+			    </thead>
+			    <tbody>
+			    <tr ng-repeat="exchange in cashBag.exchanges">
+			      <td>{{ exchange[0] }}</td>
+			      <td>{{ exchange[1] }}</td>
+			      <td><input type="text" class="form-control" value="{{ exchange[2] }}" name="exchangePaperAmount[{{$index}}]"></td>
+			      <td><input type="text" class="form-control" value="{{ exchange[3] }}" name="exchangeCoinAmount[{{$index}}]"></td>
+			      <td>{{ exchange[4] }}</td>
+			      <td>{{ exchange[5] }}</td>
+			    </tr>
+			    </tbody>
+			  </table>
+      </div>
+    </div>
+    
+    <div class="panel-footer text-center">
+      <button class="btn btn-default save-btn">Save</button>
+      <p>TODO: If save button is disabled, show reason here</p>
+    </div>
+    
+  </div>  
+  
+</ng-form>
