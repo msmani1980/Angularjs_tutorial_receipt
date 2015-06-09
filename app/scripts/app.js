@@ -104,6 +104,12 @@ angular
         templateUrl: 'views/menu-edit.html',
         controller: 'MenuEditCtrl'
       })
+<<<<<<< HEAD
+      .when('/cash-bag-list', {
+        templateUrl: 'views/cash-bag-list.html',
+        controller: 'CashBagListCtrl'
+      })
+=======
       .when('/post-trip-data-list', {
         templateUrl: 'views/post-trip-data-list.html',
         controller: 'PostFlightDataListCtrl'
@@ -124,6 +130,7 @@ angular
         templateUrl: 'views/refund-company-reason-code.html',
         controller: 'RefundCompanyReasonCodeCtrl'
       }) 
+>>>>>>> master
       .otherwise({
         redirectTo: '/'
       });
