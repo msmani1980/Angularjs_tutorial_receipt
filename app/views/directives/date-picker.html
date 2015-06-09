@@ -5,14 +5,13 @@
 
     <div class="startDateContainer {{elementClass}}">
 
-      <label>{{labelFrom}} *</label>
+      <label>{{labelFrom}}</label>
 
       <div class="input-group col-xs-12">
 
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 
         <input type="text"
-               required="true"
                ng-model="startDateModel"
                placeholder="mm/dd/YYYY"
                name="{{labelFrom}}"
@@ -26,7 +25,7 @@
 
     <div class="endDateContainer {{elementClass}}">
 
-      <label>{{labelTo}} *</label>
+      <label>{{labelTo}}</label>
 
       <div class="input-group col-xs-12">
 
@@ -35,7 +34,6 @@
         <input type="text"
                ng-model="endDateModel"
                placeholder="mm/dd/YYYY"
-               required="true"
                name="{{labelTo}}"
                ng-disabled="shouldDisableEndDate || disableEndDate"
                class="endDate form-control" />
