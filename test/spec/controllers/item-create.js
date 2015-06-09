@@ -150,27 +150,53 @@ describe('The Item Create Controller', function () {
           'Price & Tax');
       });
 
-      it('should have an Add Price Group button', function () {
-        expect(view.find('#add-price-group').length).toEqual(1);
-      });
+      describe('price group button', function () {
 
-      it(
-        'should have an Add Price Group button with the correct label',
-        function () {
-          expect(view.find('#add-price-group').text().trim()).toEqual(
+        var priceGroupBtn;
+
+        beforeEach(function () {
+          priceGroupBtn = view.find('#add-price-group');
+        });
+
+        it('should be present in the DOM', function () {
+          expect(priceGroupBtn.length).toEqual(1);
+        });
+
+        it('should have the correct label', function () {
+          expect(priceGroupBtn.text().trim()).toEqual(
             'Add Price Type');
         });
 
-      it('should have an Add Tax Type button', function () {
-        expect(view.find('#add-tax-type').length).toEqual(1);
+        it('should have an ng-click', function () {
+          expect(priceGroupBtn.attr('ng-click')).toEqual(
+            'addPriceGroup()');
+        });
+
       });
 
-      it(
-        'should have an Add Tax Type button with the correct label',
-        function () {
-          expect(view.find('#add-tax-type').text().trim()).toEqual(
+      describe('tax type button', function () {
+
+        var taxTypeBtn;
+
+        beforeEach(function () {
+          taxTypeBtn = view.find('#add-tax-type');
+        });
+
+        it('should be present in the DOM', function () {
+          expect(taxTypeBtn.length).toEqual(1);
+        });
+
+        it('should have the correct label', function () {
+          expect(taxTypeBtn.text().trim()).toEqual(
             'Add Tax Type');
         });
+
+        it('should have an ng-click', function () {
+          expect(taxTypeBtn.attr('ng-click')).toEqual(
+            'addTaxType()');
+        });
+
+      });
 
     });
 
