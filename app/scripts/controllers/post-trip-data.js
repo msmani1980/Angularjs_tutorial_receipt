@@ -33,7 +33,7 @@ angular.module('ts5App')
         prices: []
       };
 
-      $scope.viewName = 'Post Flight Data';
+      $scope.viewName = 'Post Trip Data';
 
   		$scope.buttonText = 'Create';
 
