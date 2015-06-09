@@ -1,11 +1,11 @@
-<span class="dropdown menu-dropdown" dropdown dropdown-toggle on-toggle="toggled(open)">
+<div class="dropdown menu-dropdown" dropdown dropdown-toggle on-toggle="toggled(open)">
   <a href class="dropdown-toggle">
     <i class="menu-dropdown-icon ng-class:icon"></i>
     <span class="menu-dropdown-title">{{title}}</span>
   </a>
   <ul class="dropdown-menu">
-    <li ng-repeat="choice in ngModel.getModel" ng-click="setChoice(choice.id)">
-      <a href><i ng-if="ngModel.get() === choice.id" class="fa fa-check"></i> {{choice.name}}</a>
+    <li ng-repeat="choice in ngModel.getModel">
+      <a href="#" ng-click="setChoice(choice.id)"><i ng-if="ngModel.get() === choice.id" class="fa fa-check"></i> {{choice.name}}</a>
     </li>
   </ul>
-</span>
+</div>

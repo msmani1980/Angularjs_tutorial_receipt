@@ -1,4 +1,4 @@
-// TODO: 
+// TODO:
 // Add CRUD Test cases
 
 'use strict';
@@ -32,6 +32,11 @@ describe('Items Service |', function () {
     $httpBackend = $injector.get('$httpBackend');
 
   }));
+
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 
   it('should exist', function () {
     expect(itemsService).toBeDefined();

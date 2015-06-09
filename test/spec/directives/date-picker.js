@@ -4,7 +4,6 @@ describe('Directive: datePicker', function () {
 
   // load the directive's module
   beforeEach(module('ts5App'));
-
   beforeEach(module('template-module'));
 
   var element,

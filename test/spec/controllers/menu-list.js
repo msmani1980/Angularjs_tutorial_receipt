@@ -1,52 +1,35 @@
 'use strict';
 
+/*global moment*/
 describe('Controller: MenuListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
+  beforeEach(module('served/menus.json'));
 
   var MenuListCtrl,
     scope,
     getMenuListDeferred,
     menuService,
-    menuListJSON;
+    menuListJSON,
+    location;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope, _menuService_) {
-    menuListJSON = {
-      'menus': [{
-        'id': 1,
-        'companyId': 2,
-        'menuCode': 'fakeMenuCode',
-        'menuName': 'fakeMenuName',
-        'description': 'Cell Phone Chargers',
-        'startDate': '2014-09-30',
-        'endDate': '2017-10-02',
-        'createdBy': null,
-        'createdOn': '2014-09-26 16:10:41.126376',
-        'updatedBy': 1,
-        'updatedOn': '2015-01-13 19:08:47.439519',
-        'menuItems': [
-          {
-            'id': 2,
-            'itemId': 66,
-            'itemName': 'iPhone Charger',
-            'menuId': 1,
-            'itemQty': 1000
-          }, {
-            'id': 1,
-            'itemId': 51,
-            'itemName': 'Android Charger',
-            'menuId': 1,
-            'itemQty': 100
-          }]
-      }]
-    };
+  beforeEach(inject(function ($q, $controller, $rootScope, _menuService_, $location) {
+    inject(function (_servedMenus_) {
+      menuListJSON = _servedMenus_;
+    });
+    location = $location;
     scope = $rootScope.$new();
     getMenuListDeferred = $q.defer();
     getMenuListDeferred.resolve(menuListJSON);
     menuService = _menuService_;
     spyOn(menuService, 'getMenuList').and.returnValue(getMenuListDeferred.promise);
+    spyOn(menuService, 'deleteMenu').and.returnValue({
+      then: function () {
+        return;
+      }
+    });
     MenuListCtrl = $controller('MenuListCtrl', {
       $scope: scope
     });
@@ -80,7 +63,7 @@ describe('Controller: MenuListCtrl', function () {
     });
 
     it('should have a menu name property', function () {
-      expect(scope.menuList[0].menuCode).toBe('fakeMenuCode');
+      expect(scope.menuList[0].menuCode).toBe('Test01');
     });
 
     it('should have an array of items', function () {
@@ -88,7 +71,79 @@ describe('Controller: MenuListCtrl', function () {
     });
 
     it('should have a formatted start and date', function () {
-      expect(scope.menuList[0].startDate).toBe('09/30/2014');
+      expect(scope.menuList[0].startDate).toBe('04/15/2015');
     });
+  });
+
+  describe('Action buttons', function () {
+    var fakeMenuItem;
+
+    beforeEach(function () {
+      fakeMenuItem = {
+        endDate: moment().add(1, 'month').format('L').toString(),
+        startDate: moment().format('L').toString()
+      };
+    });
+
+    it('should change the url based on the menu object', function () {
+      scope.showMenu({id: 1});
+      scope.$digest();
+      expect(location.path()).toBe('/menu-edit/1');
+    });
+    describe('can user edit / delete menu', function(){
+      it('should have a isMenuEditable function', function () {
+        expect(!!scope.isMenuEditable).toBe(true);
+      });
+
+      it('should return false if endDate > today', function () {
+        expect(scope.isMenuEditable(fakeMenuItem)).toBe(false);
+      });
+
+      it('should return true if end date <= today', function () {
+        fakeMenuItem.endDate = moment().subtract(1, 'month').format('L').toString();
+        expect(scope.isMenuEditable(fakeMenuItem)).toBe(true);
+      });
+
+      it('should have a isMenuReadOnly function', function () {
+        expect(!!scope.isMenuReadOnly).toBe(true);
+      });
+
+      it('should return true if startDate < today > endDate', function () {
+        fakeMenuItem.startDate = moment().subtract(1, 'month').format('L').toString();
+        fakeMenuItem.endDate = moment().subtract(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(true);
+      });
+
+      it('should return true if startDate < today < endDate', function () {
+        fakeMenuItem.startDate = moment().subtract(1, 'month').format('L').toString();
+        fakeMenuItem.endDate = moment().add(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(true);
+      });
+
+      it('should return false if startDate > today > endDate', function () {
+        fakeMenuItem.startDate = moment().add(1, 'month').format('L').toString();
+        fakeMenuItem.endDate = moment().add(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(false);
+      });
+      it('should return false if menu === null or undefined', function () {
+        expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(false);
+      });
+    });
+
+    it('should have a confirmDelete function', function () {
+      expect(!!scope.showDeleteConfirmation).toBe(true);
+    });
+
+    it('should attach menuToDelete to scope', function () {
+      scope.showDeleteConfirmation({name: 'menuToDelete'});
+      expect(scope.menuToDelete.name).toBe('menuToDelete');
+    });
+
+    it('should do a DELETE requesto to menuService with menuToDelete', function () {
+      scope.showDeleteConfirmation({id: '1'});
+      scope.deleteMenu();
+      expect(menuService.deleteMenu).toHaveBeenCalled();
+    });
+
   });
 });

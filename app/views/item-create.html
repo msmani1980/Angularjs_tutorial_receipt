@@ -340,9 +340,9 @@
 				<h3 id="price-and-tax">Price & Tax</h3>
 
 				<p>
-					<button type="button" class="btn btn-primary" ng-click="addPriceGroup()">
-				     <i class="fa fa-plus"></i> Add Price Group
-				  </button>
+					<button id="add-price-group" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+						<i class="fa fa-plus"></i> Add Price Type
+					</button>
 				</p>
 
 				<div id="price-type-container">
@@ -354,7 +354,7 @@
 				</div>
 
 				<p>
-					<button type="button" class="btn btn-primary" ng-click="addTaxType()">
+					<button id="add-tax-type" type="button" class="btn btn-primary" ng-click="addTaxType()">
 				     <i class="fa fa-plus"></i> Add Tax Type
 				  </button>
 				</p>
@@ -374,7 +374,7 @@
 </div>
 <!-- /Container -->
 
-<form-success-modal></form-success-modal>
+<form-success-modal list-path="item-list" create-path="item-create"></form-success-modal>
 
 <form-update-modal></form-update-modal>
 

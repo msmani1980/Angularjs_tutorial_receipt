@@ -1,5 +1,7 @@
 'use strict';
 
+/*global moment:false */
+
 describe('Controller: ExchangeRatesCtrl', function () {
   // load the controller's module
 
@@ -10,7 +12,8 @@ describe('Controller: ExchangeRatesCtrl', function () {
     currenciesJSON,
     companyCurrencyGlobalsJSON,
     companyPreferencesJSON,
-    dailyExchangeRatesJSON;
+    dailyExchangeRatesJSON,
+    previousExchangeRatesJSON;
 
   beforeEach(module('ts5App'));
   beforeEach(module(
@@ -18,17 +21,19 @@ describe('Controller: ExchangeRatesCtrl', function () {
     'served/currencies.json',
     'served/company-currency-globals.json',
     'served/daily-exchange-rates.json',
+    'served/previous-exchange-rate.json',
     'served/company-preferences.json'
   ));
 
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector) {
-      inject(function (_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedCompanyPreferences_) {
+      inject(function (_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedPreviousExchangeRate_, _servedCompanyPreferences_) {
         companyJSON = _servedCompany_;
         currenciesJSON = _servedCurrencies_;
         companyCurrencyGlobalsJSON = _servedCompanyCurrencyGlobals_;
         dailyExchangeRatesJSON = _servedDailyExchangeRates_;
+        previousExchangeRatesJSON = _servedPreviousExchangeRate_;
         companyPreferencesJSON = _servedCompanyPreferences_;
       });
 
@@ -37,8 +42,9 @@ describe('Controller: ExchangeRatesCtrl', function () {
       $httpBackend.whenGET(/company-preferences/).respond(companyPreferencesJSON);
       $httpBackend.whenGET(/companies/).respond(companyJSON);
       $httpBackend.whenGET(/company-currency-globals/).respond(companyCurrencyGlobalsJSON);
-      $httpBackend.whenGET(/previous-exchange-rate/).respond(dailyExchangeRatesJSON);
+      $httpBackend.whenGET(/previous-exchange-rate/).respond(previousExchangeRatesJSON);
       $httpBackend.whenGET(/daily-exchange-rates/).respond(dailyExchangeRatesJSON);
+      $httpBackend.whenPUT(/daily-exchange-rates/).respond(dailyExchangeRatesJSON);
       $httpBackend.whenGET(/currencies/).respond(currenciesJSON);
 
       scope = $rootScope.$new();
@@ -48,6 +54,12 @@ describe('Controller: ExchangeRatesCtrl', function () {
       $httpBackend.flush();
     })
   );
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('should have a viewName property', function () {
     expect(scope.viewName).toBeDefined();
   });
@@ -103,6 +115,43 @@ describe('Controller: ExchangeRatesCtrl', function () {
       scope.companyPreferences = null;
       expect(scope.isBankExchangePreferred()).toBe(false);
     });
+  });
+
+  describe('saving exchange rates', function () {
+
+    it('should create payload with today date', function () {
+      scope.checkVarianceAndSave(false);
+      $httpBackend.flush();
+      expect(scope.payload.dailyExchangeRate.exchangeRateDate).toBe(moment().format('YYYYMMDD').toString());
+    });
+
+    it('should add Exchange Rate Currencies', function () {
+      var expectedCurrencyObject = {
+        retailCompanyCurrencyId: 1,
+        coinExchangeRate: null,
+        paperExchangeRate: null,
+        bankExchangeRate: '0.1234'
+      };
+      scope.checkVarianceAndSave(false);
+      $httpBackend.flush();
+
+      expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies[0]).toEqual(expectedCurrencyObject);
+    });
+
+    it('should not alert of variance', function () {
+      scope.checkVarianceAndSave(false);
+      $httpBackend.flush();
+
+      expect(scope.varianceObject).toEqual([]);
+    });
+
+    it('should alert of variance > 10%', function () {
+      scope.previousExchangeRates.dailyExchangeRateCurrencies[0].bankExchangeRate = '0.14191';
+      scope.checkVarianceAndSave(false);
+
+      expect(scope.varianceObject[0]).toEqual({code: 'USD', percentage: 13});
+    });
+
   });
 
 });

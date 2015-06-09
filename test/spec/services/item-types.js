@@ -29,6 +29,11 @@ describe('ItemTypes Service |', function () {
 
   }));
 
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('The service should exist', function () {
     expect(itemTypesService).toBeDefined();
   });

@@ -1,4 +1,5 @@
 'use strict';
+
 /*global moment:false */
 /**
  * @ngdoc function
@@ -8,14 +9,19 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q) {
+  .controller('ExchangeRatesCtrl', function ($scope, $http, currencyFactory, GlobalMenuService, $q, ngToast) {
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Daily Exchange Rates';
-    $scope.currentCompany = 'Delta';
     $scope.cashiersDateField = new moment().format('L');
-    $scope.currenciesFields = {};
     $scope.showActionButtons = false;
+    $scope.companyCurrencies = [];
+    $scope.companyPreferences = [];
+    $scope.companyBaseCurrency = {};
+    $scope.currenciesFields = {};
+    $scope.dailyExchangeRates = {};
+    $scope.previousExchangeRates = {};
+    $scope.payload = {};
 
     function formatDateForAPI(cashiersDate) {
       return moment(cashiersDate, 'L').format('YYYYMMDD').toString();
@@ -42,13 +48,13 @@ angular.module('ts5App')
     }
 
     function setBaseExchangeRateModel() {
-      if ($scope.companyBaseCurrency && $scope.dailyExchangeRates) {
+      if ($scope.companyBaseCurrency.currencyCode && $scope.dailyExchangeRates) {
         serializeExchangeRates($scope.companyBaseCurrency.currencyCode, '1.0000', '1.0000', '1.0000');
       }
     }
 
     function setPreviousExchangeRatesModel() {
-      if (!$scope.dailyExchangeRates.dailyExchangeRateCurrencies) {
+      if ($scope.dailyExchangeRates && !$scope.dailyExchangeRates.dailyExchangeRateCurrencies) {
         $scope.dailyExchangeRates = angular.extend($scope.previousExchangeRates,
           {
             isSubmitted: false,
@@ -68,6 +74,22 @@ angular.module('ts5App')
       }
     }
 
+    function serializePreviousExchangeRates() {
+      $scope.previousCurrency = {};
+      if ($scope.previousExchangeRates && angular.isArray($scope.previousExchangeRates.dailyExchangeRateCurrencies)) {
+        angular.forEach($scope.companyCurrencies, function (companyCurrency) {
+          var exchangeRate = getExchangeRateFromCompanyCurrencies($scope.previousExchangeRates.dailyExchangeRateCurrencies, companyCurrency.id);
+          if (exchangeRate) {
+            $scope.previousCurrency[companyCurrency.code] = {
+              coinExchangeRate: exchangeRate.coinExchangeRate,
+              paperExchangeRate: exchangeRate.paperExchangeRate,
+              bankExchangeRate: exchangeRate.bankExchangeRate
+            };
+          }
+        });
+      }
+    }
+
     function shouldShowActionButtons() {
       var isToday = moment($scope.cashiersDateField, 'L').format('L') === moment().format('L');
       if (!isToday) {
@@ -75,7 +97,6 @@ angular.module('ts5App')
       }
 
       return !(isToday && $scope.dailyExchangeRates.isSubmitted);
-
     }
 
     function setupModels() {
@@ -159,16 +180,55 @@ angular.module('ts5App')
       setupModels();
     }
 
-    $scope.saveDailyExchangeRates = function (shouldSubmit) {
+    function showSuccessMessage(savedOrSubmitted) {
+      ngToast.create({
+        className: 'success',
+        dismissButton: true,
+        content: '<strong>Daily Exchange Rates</strong>: successfully ' + savedOrSubmitted + '!'
+      });
+    }
+
+    function successRequestHandler(dailyExchangeRatesData) {
+      $scope.dailyExchangeRates = dailyExchangeRatesData || {isSubmitted: false};
+      var savedOrSubmitted = $scope.dailyExchangeRates.isSubmitted ? 'submitted' : 'saved';
+      setupModels();
+      showSuccessMessage(savedOrSubmitted);
+    }
+
+    function calculateVariance() {
+      var rateVariance = [];
+      angular.forEach($scope.currenciesFields, function (currencyObject, currencyCode) {
+        if ($scope.previousCurrency[currencyCode]) {
+          angular.forEach(currencyObject, function (rate, rateType) {
+            var percentage = Math.floor((100 - (currencyObject[rateType] / $scope.previousCurrency[currencyCode][rateType]) * 100));
+            if (percentage > 10) {
+              rateVariance.push({
+                  code: currencyCode,
+                  percentage: percentage
+                }
+              );
+            }
+          });
+        }
+      });
+      return rateVariance;
+    }
+
+    $scope.checkVarianceAndSave = function(shouldSubmit) {
+      serializePreviousExchangeRates();
       createPayload(shouldSubmit);
-      var buttonSelector = shouldSubmit ? '.submit-btn' : '.save-btn';
-      angular.element(buttonSelector).button('loading');
-      currencyFactory.saveDailyExchangeRates($scope.payload).then(function (dailyExchangeRatesData) {
-        $scope.dailyExchangeRates = dailyExchangeRatesData || {};
-        setupModels();
-        angular.element('.success-modal').modal('show');
-        angular.element(buttonSelector).button('reset');
-      }, showErrors);
+
+      $scope.varianceObject = calculateVariance();
+      if (Object.keys($scope.varianceObject).length > 0) {
+        angular.element('.variance-warning-modal').modal('show');
+        return;
+      }
+      $scope.saveDailyExchangeRates();
+    };
+
+    $scope.saveDailyExchangeRates = function () {
+      angular.element('.variance-warning-modal').modal('hide');
+      currencyFactory.saveDailyExchangeRates($scope.payload).then(successRequestHandler, showErrors);
     };
 
     $scope.isBankExchangePreferred = function () {

@@ -27,6 +27,9 @@ angular.module('ts5App')
       },
       updateMenu: {
         method: 'PUT'
+      },
+      deleteMenu: {
+        method: 'DELETE'
       }
     };
 
@@ -40,12 +43,17 @@ angular.module('ts5App')
       return requestResource.getMenu({id: menuId}).$promise;
     };
 
+    var deleteMenu = function (menuId) {
+      return requestResource.deleteMenu({id: menuId}).$promise;
+    };
+
     var updateMenu = function (payload) {
       return requestResource.updateMenu(payload).$promise;
     };
 
     return {
       getMenuList: getMenuList,
+      deleteMenu: deleteMenu,
       getMenu: getMenu,
       updateMenu: updateMenu
     };

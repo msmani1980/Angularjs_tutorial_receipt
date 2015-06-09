@@ -29,6 +29,11 @@ describe('Tags Service |', function () {
 
   }));
 
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('The service should exist', function () {
     expect(tagsService).toBeDefined();
   });
