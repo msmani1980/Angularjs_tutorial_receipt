@@ -43,7 +43,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <li>
-          <menu-dropdown title="Language Picker" ng-model="languageModel" icon="fa fa-cog"></menu-dropdown>
+          <menu-dropdown title="Settings" ng-model="settingsModel" icon="fa fa-cog"></menu-dropdown>
         </li>
         <li>
           <menu-dropdown title="User Picker" ng-model="userModel" icon="fa fa-user"></menu-dropdown>
@@ -59,6 +59,7 @@
 <div class="container-fluid">
   <div class="main-container" ng-view=""></div>
 </div>
+<dev-footer></dev-footer>
 
 <loading-modal></loading-modal>
 <toast></toast>
@@ -163,6 +164,8 @@
 <script src="scripts/controllers/stock-owner-item-create.js"></script>
 <script src="scripts/directives/input-price-type-stock-owner.js"></script>
 <script src="scripts/directives/left-navigation-stock-owner.js"></script>
+<script src="scripts/services/version-service.js"></script>
+<script src="scripts/directives/dev-footer.js"></script>
 <!-- endbuild -->
 </body>
 </html>

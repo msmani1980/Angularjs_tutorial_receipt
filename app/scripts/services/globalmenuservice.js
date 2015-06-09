@@ -10,7 +10,6 @@
 angular.module('ts5App')
   .service('GlobalMenuService', function ($localStorage, $rootScope) {
 
-    // TODO: User switch or logout only?
     var userModel = {
       '1': {
         id: 1,
@@ -26,9 +25,7 @@ angular.module('ts5App')
       }
     };
 
-    // TODO: Add more if need be.
-    // TODO: Move out to json?
-    var languageModel = {
+    var settingsModel = {
       '1': {
         id: 1,
         name: 'English',
@@ -60,7 +57,7 @@ angular.module('ts5App')
 
     var defaults = {};
     defaults.user = userModel['1'];
-    defaults.language = languageModel['1'];
+    defaults.settings = settingsModel['1'];
 
     // TODO: Set company object instead of just number, need to refactor so ember will be happy
     defaults.company = 2;
@@ -68,7 +65,7 @@ angular.module('ts5App')
     $localStorage.$default(defaults);
 
     $rootScope.user = $localStorage.user;
-    $rootScope.language = $localStorage.language;
+    $rootScope.settings = $localStorage.settings;
     $rootScope.company = $localStorage.company;
 
     // User
@@ -84,16 +81,16 @@ angular.module('ts5App')
 
     }
 
-    // Language
-    function getLanguage() {
-      return $localStorage.language;
+    // settings
+    function getsettings() {
+      return $localStorage.settings;
     }
 
-    function setLanguage(_language_) {
-      var languageObj = languageModel[_language_];
+    function setsettings(_settings_) {
+      var settingsObj = settingsModel[_settings_];
 
-      $localStorage.language = languageObj;
-      $rootScope.language = $localStorage.language;
+      $localStorage.settings = settingsObj;
+      $rootScope.settings = $localStorage.settings;
 
     }
 
@@ -114,10 +111,10 @@ angular.module('ts5App')
         'set': setUser,
         'getModel': userModel
       },
-      'language': {
-        'get': getLanguage,
-        'set': setLanguage,
-        'getModel': languageModel
+      'settings': {
+        'get': getsettings,
+        'set': setsettings,
+        'getModel': settingsModel
       },
       'company': {
         'get': getCompany,
