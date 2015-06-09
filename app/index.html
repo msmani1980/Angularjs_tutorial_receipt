@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
   <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
   <link rel="stylesheet" href="bower_components/select2/select2.css" />
+  <link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
@@ -42,7 +43,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <li>
-          <menu-dropdown title="Language Picker" ng-model="languageModel" icon="fa fa-cog"></menu-dropdown>
+          <menu-dropdown title="Settings" ng-model="settingsModel" icon="fa fa-cog"></menu-dropdown>
         </li>
         <li>
           <menu-dropdown title="User Picker" ng-model="userModel" icon="fa fa-user"></menu-dropdown>
@@ -58,8 +59,10 @@
 <div class="container-fluid">
   <div class="main-container" ng-view=""></div>
 </div>
+<dev-footer></dev-footer>
 
 <loading-modal></loading-modal>
+<toast></toast>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 <script>
@@ -100,6 +103,7 @@
 <script src="bower_components/angular-qr/src/angular-qr.js"></script>
 <script src="bower_components/select2/select2.js"></script>
 <script src="bower_components/ui-select/src/select3.js"></script>
+<script src="bower_components/ngtoast/dist/ngToast.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -160,11 +164,16 @@
 <script src="scripts/controllers/stock-owner-item-create.js"></script>
 <script src="scripts/directives/input-price-type-stock-owner.js"></script>
 <script src="scripts/directives/left-navigation-stock-owner.js"></script>
+<<<<<<< HEAD
 <script src="scripts/controllers/post-trip-data-list.js"></script>
 <script src="scripts/controllers/post-trip-data.js"></script>
 <script src="scripts/controllers/crew-commission.js"></script>
 <script src="scripts/controllers/refund-global-reason-code.js"></script>
 <script src="scripts/controllers/refund-company-reason-code.js"></script>
+=======
+<script src="scripts/services/version-service.js"></script>
+<script src="scripts/directives/dev-footer.js"></script>
+>>>>>>> master
 <!-- endbuild -->
 </body>
 </html>
