@@ -19,7 +19,7 @@ angular.module('ts5App')
     var actions = {
       getCashBagList: {
         method: 'GET',
-        headers: {companyId:362}
+        headers: {companyId: 362}
       }
     };
 
@@ -33,6 +33,6 @@ angular.module('ts5App')
     }
 
     return {
-      getCashBagList:getCashBagList
-    }
+      getCashBagList: getCashBagList
+    };
   });
