@@ -3,17 +3,17 @@
 describe('Service: cashBagService', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag.json'));
+  beforeEach(module('served/cash-bag-list.json'));
 
 
   var cashBagService,
     $httpBackend,
-    responseJSON,
+    cashBagListResponseJSON,
     headers = {companyId:362,"Accept":"application/json, text/plain, */*","userId":1};
 
   beforeEach(inject(function (_cashBagService_, $injector) {
-    inject(function (_servedCashBag_) {
-      responseJSON = _servedCashBag_;
+    inject(function (_servedCashBagList_) {
+      cashBagListResponseJSON = _servedCashBagList_;
     });
 
     $httpBackend = $injector.get('$httpBackend');
@@ -40,7 +40,7 @@ describe('Service: cashBagService', function () {
     describe('getCashBagList', function () {
 
       beforeEach(function () {
-        $httpBackend.whenGET(/cash-bags/,headers).respond(responseJSON);
+        $httpBackend.whenGET(/cash-bags/,headers).respond(cashBagListResponseJSON);
 
         cashBagService.getCashBagList().then(function (dataFromAPI) {
           cashBagData = dataFromAPI;
@@ -74,6 +74,10 @@ describe('Service: cashBagService', function () {
         cashBagService.getCashBagList(companyId);
         $httpBackend.flush();
       });
+    });
+
+    describe('getCashBag', function(){
+      it('should ')
     });
 
   });

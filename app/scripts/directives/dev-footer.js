@@ -11,10 +11,10 @@ angular.module('ts5App')
 
     function link(scope) {
       scope.getProjectInfo = function () {
-        versionService.getProjectInfo().then(function(dataFromAPI){
+        versionService.getProjectInfo().then(function (dataFromAPI) {
           scope.appInformation = dataFromAPI;
         });
-      }
+      };
     }
 
     return {

@@ -1,24 +1,25 @@
 <div id="left-navigation">
 	<div class="container">
-		<ul class="navbar">
+		<ul class="navbar ng-cloak">
 
-			<li ng-click="leaveView('item-list')" ng-class="{'active':locationPath == '/item-list'}">
+			<li ng-click="leaveViewNav('{{itemListPath}}')" ng-class="{'active':locationPath == itemListPath}">
 				<i class="icon-manage-retail-item"></i>
-				<div class="left-nav-option">
+				<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 					<i class="icon-manage-retail-item"></i>
-					<p>Manage Items</p>
+					<p>Manage {{itemPrefix}} Items</p>
+
 				</div>
 			</li>
 
-			<li ng-click="leaveView('item-create')" ng-class="{'active':locationPath == '/item-create'}">
+			<li ng-click="leaveViewNav('{{itemCreatePath}}')" ng-class="{'active':locationPath == itemCreatePath}">
 				<i class="icon-create-retail-item"></i>
-				<div class="left-nav-option">
+				<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 					<i class="icon-create-retail-item"></i>
-					<p>Create Item</p>
+					<p>Create {{itemPrefix}} Items</p>
 				</div>
 			</li>
 
-			<li ng-click="leaveView('ember/#/retail-items/categories')" ng-class="{'active':locationPath == '/retail-items/categories'}">
+			<li ng-click="leaveViewNav('/{{manageCategoriesPath}}')" ng-class="{'active':locationPath == manageCategoriesPath}">
 				<i class="icon-manage-retail-category"></i>
 				<div class="left-nav-option lg">
 					<i class="icon-manage-retail-category"></i>
@@ -29,3 +30,5 @@
 		</ul>
 	</div>
 </div>
+
+<leave-view-modal-nav></leave-view-modal-nav>
