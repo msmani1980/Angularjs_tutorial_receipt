@@ -15,7 +15,9 @@ describe('Directive: datePicker', function () {
 
   describe('date picker template', function () {
     beforeEach(inject(function ($compile) {
-      element = angular.element('<date-picker label-from="labelFrom" label-to="labelTo"></date-picker>');
+      element = angular.element(
+        '<date-picker label-from="labelFrom" label-to="labelTo"></date-picker>'
+      );
       element = $compile(element)(scope);
       scope.$digest();
     }));
@@ -25,11 +27,13 @@ describe('Directive: datePicker', function () {
     });
 
     it('should have label-from', function () {
-      expect(element.find('.startDateContainer label').text()).toBe('labelFrom *');
+      expect(element.find('.startDateContainer label').text()).toBe(
+        'labelFrom');
     });
 
     it('should have label-from', function () {
-      expect(element.find('.endDateContainer label').text()).toBe('labelTo *');
+      expect(element.find('.endDateContainer label').text()).toBe(
+        'labelTo');
     });
   });
 });

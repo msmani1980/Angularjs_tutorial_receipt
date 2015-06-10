@@ -115,6 +115,70 @@
   top:18rem;
 }
 
+.top-header.top-header-small {
+	padding-bottom: 0;
+}
+  
+.post-trip-data-form {
+  
+  label {
+  	font-weight:100;
+  	font-size:16px
+  }
+  
+  .datepicker-container {
+    
+    .row {
+    	margin-bottom: 15px;
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+.crew-commission-form {
+  
+  label {
+  	font-weight:100;
+  	font-size:16px
+  }
+  
+  .datepicker-container {
+  	
+  	.startDateContainer {
+  		margin-bottom: 15px;
+  	}
+  }
+}
+
+.refund-global-reason-code-form {
+
+  label {
+  	font-weight:100;
+  	font-size:16px
+  }
+    
+  .form-inline {
+  
+  	label {
+  		margin-top: 0;
+  		margin-bottom: 5px;
+  	}
+  	
+  	.form-control {
+  		width: 80%;
+  	}
+ 	}
+}
+
+.refund-company-reason-code-form {
+  
+  label {
+  	font-weight:100;
+  	font-size:16px
+  }
+}
+
 @media(max-width:$screen-lg-min){
 
   .top-header{
@@ -140,7 +204,18 @@
     position:relative;
     top:20rem;
   }
-
+  
+  .refund-global-reason-code-form {
+  
+  	.form-inline {
+  	
+  		.form-control {
+  			display: inline-block;
+  			vertical-align: middle;
+  		}
+ 		}
+ 	}
+  
 }
 
 .item-image-thumbnail {
