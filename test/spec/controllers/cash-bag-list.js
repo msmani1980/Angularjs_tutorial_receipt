@@ -7,20 +7,24 @@ describe('Controller: CashBagListCtrl', function () {
   beforeEach(module('served/cash-bag.json'));
 
   var CashBagListCtrl,
-    scope, responseJSON, cashBagService, getCashBagListDeferred, GlobalMenuService, companyId;
+    scope, cashBagResponseJSON, cashBagService, getCashBagListDeferred, GlobalMenuService, companyId, stationsService, stationsListDeferred, stationsResponseJSON;
 
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     inject(function (_servedCashBag_) {
-      responseJSON = _servedCashBag_;
+      cashBagResponseJSON = _servedCashBag_;
     });
     cashBagService = $injector.get('cashBagService');
     GlobalMenuService = $injector.get('GlobalMenuService');
+    stationsService = $injector.get('stationsService');
     scope = $rootScope.$new();
     getCashBagListDeferred = $q.defer();
-    getCashBagListDeferred.resolve(responseJSON);
+    getCashBagListDeferred.resolve(cashBagResponseJSON);
+    stationsListDeferred = $q.defer();
+    stationsListDeferred.resolve(stationsResponseJSON);
     spyOn(cashBagService, 'getCashBagList').and.returnValue(getCashBagListDeferred.promise);
+    spyOn(stationsService, 'getStationsList').and.returnValue(stationsListDeferred.promise);
     CashBagListCtrl = $controller('CashBagListCtrl', {
       $scope: scope
     });
@@ -32,8 +36,12 @@ describe('Controller: CashBagListCtrl', function () {
     expect(cashBagService.getCashBagList).toHaveBeenCalledWith(companyId);
   });
 
-  it('should have cashBagList attached to scope', function (){
+  it('should have cashBagList attached to scope', function () {
     expect(scope.cashBagList).not.toBe(undefined);
+  });
+
+  it('should call stationsService with id', function () {
+    expect(stationsService.getStationsList).toHaveBeenCalled();
   });
 
 });

@@ -16,19 +16,19 @@ angular.module('ts5App')
     };
 
     var actions = {
-      getStationsList: {
+      getGlobalStationList: {
         method: 'GET'
       }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getStationsList = function (payload) {
-      return requestResource.getStationsList(payload).$promise;
+    var getGlobalStationList = function (payload) {
+      return requestResource.getGlobalStationList(payload).$promise;
     };
 
     return {
-      getStationsList: getStationsList
+      getGlobalStationList: getGlobalStationList
     };
 
 });
