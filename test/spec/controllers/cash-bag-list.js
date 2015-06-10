@@ -4,18 +4,28 @@ describe('Controller: CashBagListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag.json','served/stations.json'));
+  beforeEach(module('served/cash-bag.json', 'served/stations.json'));
 
   var CashBagListCtrl,
-    scope, cashBagResponseJSON, cashBagService, getCashBagListDeferred, GlobalMenuService, companyId, stationsService, stationsListDeferred, stationsResponseJSON;
+    scope,
+    cashBagResponseJSON,
+    cashBagService,
+    getCashBagListDeferred,
+    GlobalMenuService,
+    companyId,
+    stationsService,
+    stationsListDeferred,
+    stationsResponseJSON,
+    location;
 
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedCashBag_,_servedStations_) {
+  beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location) {
+    inject(function (_servedCashBag_, _servedStations_) {
       cashBagResponseJSON = _servedCashBag_;
       stationsResponseJSON = _servedStations_;
     });
+    location = $location;
     cashBagService = $injector.get('cashBagService');
     GlobalMenuService = $injector.get('GlobalMenuService');
     stationsService = $injector.get('stationsService');
@@ -41,13 +51,21 @@ describe('Controller: CashBagListCtrl', function () {
     expect(scope.cashBagList).not.toBe(undefined);
   });
 
-  describe('get station list', function(){
+  describe('get station list', function () {
     it('should call getStationList with companyId', function () {
       expect(stationsService.getStationList).toHaveBeenCalledWith(companyId);
     });
 
     it('should have stationList attached to scope', function () {
       expect(scope.stationList).not.toBe(undefined);
+    });
+  });
+
+  describe('Action buttons', function(){
+    it('should change the url based on the menu object', function () {
+      scope.showCashBag({id: 1});
+      scope.$digest();
+      expect(location.path()).toBe('/cash-bag-create/1');
     });
   });
 

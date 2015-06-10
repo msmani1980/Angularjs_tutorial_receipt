@@ -10,9 +10,10 @@
 angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/cash-bags';
+    var requestURL = ENV.apiUrl + '/api/cash-bags/:id';
 
     var requestParameters = {
+      id:'@id',
       limit: 50
     };
 

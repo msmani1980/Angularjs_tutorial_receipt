@@ -8,12 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCreateCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('CashBagCreateCtrl', function ($scope, cashBagService) {
+
+    $scope.viewName = "Cash Bag";
+
     var mockFlight = {
       airline: 'FPO Delta',
       number: 'E2Y56',
