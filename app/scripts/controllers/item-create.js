@@ -498,7 +498,7 @@ angular.module('ts5App')
       var $this = this;
       var stationException = $scope.formData.prices[priceIndex].stationExceptions[
         stationExceptionIndex];
-      this.getStationsList(stationException).then(function (data) {
+      this.getGlobalStationList(stationException).then(function (data) {
         $this.setStationsList(stationException, data);
       });
       this.getStationsCurrenciesList(stationException).then(function (data) {
@@ -514,7 +514,7 @@ angular.module('ts5App')
         for (var stationExceptionIndex in price.stationExceptions) {
           var stationException = price.stationExceptions[
             stationExceptionIndex];
-          stationPromises.push(this.getStationsList(stationException));
+          stationPromises.push(this.getGlobalStationList(stationException));
         }
         this.handleStationPromises(stationPromises, price);
       }
