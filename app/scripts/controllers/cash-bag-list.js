@@ -12,10 +12,20 @@ angular.module('ts5App')
   	var companyId = GlobalMenuService.company.get();
   	cashBagService.getCashBagList(companyId).then(function(response){
   		$scope.cashBagList = response.cashBags;
+      $scope.bankRefList = getBankRefList(response.cashBags);
   	});
 
     stationsService.getStationList(companyId).then(function(response){
       $scope.stationList = response.response;
     });
+
+    function getBankRefList(cashBagList) {
+      var bankRefList = [];
+      cashBagList.forEach(function(element, index, array){
+        if(element.bankReferenceNumber != null && bankRefList.indexOf(element.bankReferenceNumber) > -1 )
+          bankRefList.push(element.bankReferenceNumber);
+      });
+      return bankRefList;
+    }
 
   });

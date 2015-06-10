@@ -41,6 +41,15 @@ describe('Controller: CashBagListCtrl', function () {
     expect(scope.cashBagList).not.toBe(undefined);
   });
 
+  it('should have bankRefList attached to scope', function () {
+    expect(scope.bankRefList).not.toBe(undefined);
+  });
+
+  it('should have bankRefList with no null values', function() {
+    expect(scope.bankRefList).not.toContain(null);
+  });
+
+
   describe('get station list', function(){
     it('should call getStationList with companyId', function () {
       expect(stationsService.getStationList).toHaveBeenCalledWith(companyId);
