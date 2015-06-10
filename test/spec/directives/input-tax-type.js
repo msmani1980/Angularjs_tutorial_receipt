@@ -60,6 +60,66 @@ describe('The tax type input directive', function () {
           2);
       });
 
+      describe('tax type input', function () {
+
+        var column,
+          label;
+
+        beforeEach(function () {
+          column = angular.element(element.find(
+            '.row .col-xs-12')[0]);
+          label = angular.element(column.find(
+            '.form-group label')[0]);
+        });
+
+        it('should be present in the DOM', function () {
+          expect(column[0]).toBeDefined();
+        });
+
+        it('should have a form-group', function () {
+          expect(column.find('.form-group')[0]).toBeDefined();
+        });
+
+        it('should have label', function () {
+          expect(label[0]).toBeDefined();
+        });
+
+        it('should have label with the correct text', function () {
+          expect(label.text().trim()).toEqual('Tax Type *');
+        });
+
+        describe('taxt type select', function () {
+
+          var select;
+
+          beforeEach(function () {
+            select = angular.element(column.find(
+              'select')[0]);
+          });
+
+          it('should be present in the DOM', function () {
+            expect(select[0]).toBeDefined();
+            console.log(select);
+          });
+
+          it('should be required', function () {
+            expect(select.attr('required')).toBeTruthy();
+          });
+
+          it('should have the correct ng-model', function () {
+            expect(select.attr('ng-model')).toEqual(
+              'itemTax.companyTaxId');
+          });
+
+          it('should have a name', function () {
+            expect(select.attr('name')).toEqual(
+              'Tax Type');
+          });
+
+        });
+
+      });
+
     });
 
   });
