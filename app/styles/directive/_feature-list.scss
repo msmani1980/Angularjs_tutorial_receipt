@@ -1,0 +1,153 @@
+:focus {
+  outline: 0;
+  outline: none;
+}
+.list-head {
+  margin: 0;
+}
+.list-header {
+  @extend .text-left;
+  word-wrap: normal;
+  padding: 12px 15px;
+  line-height: 24px;
+  color: rgba(#999, 1.0);
+  font-weight: normal;
+
+//  @include text-shadow(rgba(#999, 0.15) 0px 1px 0)
+}
+.list-item {
+  padding: 12px 15px;
+  line-height: 24px;
+}
+list-object > div.row {
+  margin: 1px 0;
+  background-color: #efefef;
+  .list-header {
+    background-color: #ffffff;
+
+    &:hover {
+      background-color: #ffffff;
+      cursor: default;
+    }
+  }
+  &:hover {
+    background-color: #e6e6e6;
+    cursor: pointer;
+  }
+  .list-item:not(.visible-xs) {
+    border-right: 1px solid #ffffff;
+    &:last-child {
+      border: none;
+    }
+  }
+}
+
+// hackish, find a better solution --- makes the top panel section align with the row
+//.panel-body .panel-group .row {
+//  margin: -3px -19px 0 -19px;
+//}
+
+list-object {
+  .panel-list {
+    @extend .panel-default;
+    margin: 20px 0;
+    &:hover {
+      background-color: #e6e6e6;
+    }
+
+    .panel-heading {
+      line-height: 36px;
+      background-color: transparent;
+    }
+  }
+
+  &:first-of-type .panel-list {
+    margin: 0 0 20px 0;
+  }
+}
+
+/*  // panel-controls  */
+.panel-controls {
+  display: block;
+  position: relative;
+  .btn-edit {
+    top: -16px;
+    right: -16px;
+    border-top-right-radius: 0;
+    &:hover {
+      //    color: #fff;
+      //    background-color: #563d7c;
+      //    border-color: #563d7c;
+    }
+  }
+}
+.btn-edit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  //  color: #767676;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #e1e1e8;
+  border-radius: 0 4px 0 4px;
+}
+/*  //panel-controls  */
+
+.panel-list {
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 0px;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  .panel-heading {
+    padding: 12px 15px;
+    border: none;
+    margin: 1px 0 0 0;
+  }
+  .panel-body {
+    padding: 0 15px;
+
+    .list-group {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+/* //animate */
+
+//@-webkit-keyframes slidein {
+//  from {
+//    margin-top:100%;
+//    width:300%
+//  }
+//
+//  to {
+//    margin-top:0%;
+//    width:100%;
+//  }
+//}
+
+.panel-list {
+//  transition-property: margin;
+//  transition-duration: 0.5s;
+//  transition-delay: 0s;
+}
+
+/* //end animate */
+
+// google box shadow
+//box-shadow: 0 -1px 0 #e5e5e5,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+
+/* //empty-list */
+.feature-empty {
+  @extend .text-center;
+  margin-top: 3rem;
+  p {
+    margin-bottom: 3rem;
+  }
+}

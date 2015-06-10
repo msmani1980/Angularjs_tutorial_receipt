@@ -80,9 +80,9 @@ angular
         templateUrl: 'views/stock-owner-item-create.html',
         controller: 'StockOwnerItemCreateCtrl'
       })
-      .when('/companies', {
-        templateUrl: 'views/companies.html',
-        controller: 'CompaniesCtrl'
+      .when('/company-list', {
+        templateUrl: 'views/company-list.html',
+        controller: 'CompanyListCtrl'
       })
       .when('/company/:id', {
         templateUrl: 'views/company.html',
