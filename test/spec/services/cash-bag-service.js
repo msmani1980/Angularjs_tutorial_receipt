@@ -11,8 +11,9 @@ describe('Service: cashBagService', function () {
     cashBagService = _cashBagService_;
   }));
 
-  it('should do something', function () {
+  it('should exist', function () {
     expect(!!cashBagService).toBe(true);
   });
+  
 
 });
