@@ -24,8 +24,18 @@ module.exports = function (config) {
       'test/mock/**/*.json': ['ng-json2js']
     },
     coverageReporter: {
-      type: 'cobertura',
-      dir: 'coverage'
+      dir: 'coverage',
+      reporters: [
+        // reporters not supporting the `file` property
+        {
+          type: 'html',
+          subdir: 'report-html'
+        },
+        {
+          type: 'cobertura',
+          subdir: '.'
+        }
+      ]
     },
 
     ngHtml2JsPreprocessor: {
