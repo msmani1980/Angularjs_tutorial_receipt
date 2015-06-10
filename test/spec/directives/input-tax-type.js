@@ -154,6 +154,109 @@ describe('The tax type input directive', function () {
 
       });
 
+      describe('applied tax type', function () {
+
+        var column,
+          label;
+
+        beforeEach(function () {
+          column = angular.element(element.find(
+            '.row .col-xs-12')[1]);
+          label = angular.element(column.find(
+            '.form-group label')[0]);
+        });
+
+        it('should be present in the DOM', function () {
+          expect(column[0]).toBeDefined();
+        });
+
+        it('should have a form-group', function () {
+          expect(column.find('.form-group')[0]).toBeDefined();
+        });
+
+        it('should have label', function () {
+          expect(label[0]).toBeDefined();
+        });
+
+        it('should have label with the correct text', function () {
+          expect(label.text().trim()).toEqual(
+            'Applied Tax Type *');
+        });
+
+        describe('select', function () {
+
+          var select;
+
+          beforeEach(function () {
+            select = angular.element(column.find(
+              'select')[0]);
+          });
+
+          it('should be present in the DOM', function () {
+            expect(select[0]).toBeDefined();
+          });
+
+          it('should be required', function () {
+            expect(select.attr('required')).toBeTruthy();
+          });
+
+          it('should have the correct ng-model', function () {
+            expect(select.attr('ng-model')).toEqual(
+              'itemTax.itemTaxType');
+          });
+
+          it('should have a name', function () {
+            expect(select.attr('name')).toEqual(
+              'Applied Tax Type');
+          });
+
+          it('should contain a list of options', function () {
+            expect(select.find('option').length).toEqual(
+              3);
+          });
+
+          describe('options', function () {
+
+            var grossOption,
+              netOption;
+
+            beforeEach(function () {
+              grossOption = angular.element(select.find(
+                'option')[1]);
+              netOption = angular.element(select.find(
+                'option')[2]);
+            });
+
+            it('should be contain a gross option',
+              function () {
+                expect(grossOption[0]).toBeDefined();
+              });
+
+            it(
+              'should have a gross option with the correct label',
+              function () {
+                expect(grossOption.text().trim()).toEqual(
+                  'Gross');
+              });
+
+            it('should be contain a net option',
+              function () {
+                expect(netOption[0]).toBeDefined();
+              });
+
+            it(
+              'should have a net option with the correct label',
+              function () {
+                expect(netOption.text().trim()).toEqual(
+                  'Net');
+              });
+
+          });
+
+        });
+
+      });
+
     });
 
   });
