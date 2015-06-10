@@ -50,6 +50,18 @@ describe('Service: cashBagService', function () {
       it('should be an array', function () {
         expect(Object.prototype.toString.call(cashBagData.cashBags)).toBe('[object Array]');
       });
+
+      it('should have isSubmitted property', function(){
+        expect(cashBagData.cashBags[0].isSubmitted).not.toBe(null);
+      });
+
+      it('should have retailCompanyId property', function(){
+        expect(cashBagData.cashBags[0].retailCompanyId).not.toBe(null);
+      });
+
+      it('should have cashbagSubmittedBy property', function(){
+        expect(cashBagData.cashBags[0].cashbagSubmittedBy).not.toBe(undefined);
+      });
     });
 
     describe('api call parameters', function() {
