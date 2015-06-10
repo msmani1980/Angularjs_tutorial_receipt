@@ -28,7 +28,6 @@ describe('Directive: leftNavigation', function () {
 
       it('should inject the directive', function () {
         expect(element).toBeDefined();
-        console.log(element);
       });
 
       it('should contain an element with a navbar class', function () {
