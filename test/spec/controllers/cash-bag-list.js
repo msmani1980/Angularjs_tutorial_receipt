@@ -4,11 +4,11 @@ describe('Controller: CashBagListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag.json', 'served/stations.json'));
+  beforeEach(module('served/cash-bag-list.json', 'served/stations.json'));
 
   var CashBagListCtrl,
     scope,
-    cashBagResponseJSON,
+    cashBagListResponseJSON,
     cashBagService,
     getCashBagListDeferred,
     GlobalMenuService,
@@ -21,8 +21,8 @@ describe('Controller: CashBagListCtrl', function () {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location) {
-    inject(function (_servedCashBag_, _servedStations_) {
-      cashBagResponseJSON = _servedCashBag_;
+    inject(function (_servedCashBagList_, _servedStations_) {
+      cashBagListResponseJSON = _servedCashBagList_;
       stationsResponseJSON = _servedStations_;
     });
     location = $location;
@@ -31,7 +31,7 @@ describe('Controller: CashBagListCtrl', function () {
     stationsService = $injector.get('stationsService');
     scope = $rootScope.$new();
     getCashBagListDeferred = $q.defer();
-    getCashBagListDeferred.resolve(cashBagResponseJSON);
+    getCashBagListDeferred.resolve(cashBagListResponseJSON);
     stationsListDeferred = $q.defer();
     stationsListDeferred.resolve(stationsResponseJSON);
     spyOn(cashBagService, 'getCashBagList').and.returnValue(getCashBagListDeferred.promise);

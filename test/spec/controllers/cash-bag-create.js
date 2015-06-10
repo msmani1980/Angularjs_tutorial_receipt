@@ -4,23 +4,23 @@ describe('Controller: CashBagCreateCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag.json'));
+  beforeEach(module('served/cash-bag-list.json'));
 
   var CashBagCreateCtrl,
     scope,
-    cashBagResponseJSON,
+    cashBagListResponseJSON,
     cashBagService,
     getCashBagListDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedCashBag_) {
-      cashBagResponseJSON = _servedCashBag_;
+    inject(function (_servedCashBagList_) {
+      cashBagListResponseJSON = _servedCashBagList_;
     });
     cashBagService = $injector.get('cashBagService');
     scope = $rootScope.$new();
     getCashBagListDeferred = $q.defer();
-    getCashBagListDeferred.resolve(cashBagResponseJSON);
+    getCashBagListDeferred.resolve(cashBagListResponseJSON);
     CashBagCreateCtrl = $controller('CashBagCreateCtrl', {
       $scope: scope
     });
