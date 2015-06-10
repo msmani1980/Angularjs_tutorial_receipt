@@ -2,13 +2,12 @@
 
 describe('The tax type input directive', function () {
 
-  // load the directive's module
-  beforeEach(module('ts5App'));
-
-  beforeEach(module('template-module'));
-
   var scope,
     element;
+
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
+  beforeEach(module('served/tax-types.json'));
 
   beforeEach(inject(function ($rootScope) {
     scope = $rootScope.$new();
@@ -17,6 +16,9 @@ describe('The tax type input directive', function () {
   describe('element', function () {
 
     beforeEach(inject(function ($compile) {
+      inject(function (_servedTaxTypes_) {
+        scope.taxTypes = _servedTaxTypes_.response;
+      });
       element = angular.element(
         '<input-tax-type></input-tax-type>');
       element = $compile(element)(scope);
@@ -99,7 +101,6 @@ describe('The tax type input directive', function () {
 
           it('should be present in the DOM', function () {
             expect(select[0]).toBeDefined();
-            console.log(select);
           });
 
           it('should be required', function () {
@@ -114,6 +115,39 @@ describe('The tax type input directive', function () {
           it('should have a name', function () {
             expect(select.attr('name')).toEqual(
               'Tax Type');
+          });
+
+          it('should contain a list of options', function () {
+            expect(select.find('option').length).toBeGreaterThan(
+              0);
+          });
+
+          describe('option element', function () {
+
+            var optionElement,
+              optionJSON;
+
+            beforeEach(function () {
+              optionElement = angular.element(
+                select.find(
+                  'option')[1]);
+              optionJSON = scope.taxTypes[0];
+            });
+
+            it(
+              'should have a value set as the taxType.id',
+              function () {
+                expect(optionElement.attr('value')).toEqual(
+                  optionJSON.id.toString());
+              });
+
+            it(
+              'should have a display the taxTypeCode as the value',
+              function () {
+                expect(optionElement.text().trim()).toEqual(
+                  optionJSON.taxTypeCode);
+              });
+
           });
 
         });
