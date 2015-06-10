@@ -10,25 +10,38 @@
 angular.module('ts5App')
   .service('stationsService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/company-station-globals';
-    var requestParameters = {
+    var globalRequestURL = ENV.apiUrl + '/api/company-station-globals';
+    var stationRequestURL = ENV.apiUrl + '/api/companies/:id/stations';
+
+    var stationRequestParameters = {
       id: '@id'
     };
 
-    var actions = {
+    var globalActions = {
       getGlobalStationList: {
         method: 'GET'
       }
     };
-
-    var requestResource = $resource(requestURL, requestParameters, actions);
+    var stationActions = {
+      getStationList: {
+        method: 'GET'
+      }
+    };
+    var globalRequestResource = $resource(globalRequestURL, null, globalActions);
+    var stationRequestResource = $resource(stationRequestURL, stationRequestParameters, stationActions);
 
     var getGlobalStationList = function (payload) {
-      return requestResource.getGlobalStationList(payload).$promise;
+      return globalRequestResource.getGlobalStationList(payload).$promise;
+    };
+
+    var getStationList = function (companyId) {
+      var payload = {id:companyId};
+      return stationRequestResource.getStationList(payload).$promise;
     };
 
     return {
-      getGlobalStationList: getGlobalStationList
+      getGlobalStationList: getGlobalStationList,
+      getStationList: getStationList
     };
 
 });

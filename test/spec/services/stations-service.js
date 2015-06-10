@@ -6,21 +6,22 @@ describe('Stations Service |', function () {
   // instantiate service
   var stationsService,
     $httpBackend,
-    testObject,
-    response,
+    globalStationsJSON,
     stationsJSON;
 
   // load the service's module
   beforeEach(module('ts5App'));
 
   // Load json
+  beforeEach(module('served/global-stations.json'));
   beforeEach(module('served/stations.json'));
 
   // Inject the service and responshandler
   beforeEach(inject(function (_stationsService_, $injector) {
 
     // Inject the JSON fixtures
-    inject(function (_servedStations_) {
+    inject(function (_servedGlobalStations_, _servedStations_) {
+      globalStationsJSON = _servedGlobalStations_;
       stationsJSON = _servedStations_;
     });
 
@@ -39,65 +40,58 @@ describe('Stations Service |', function () {
     expect(stationsService).toBeDefined();
   });
 
-  // Stations API
-  describe('When calling the API it', function () {
+  it('should have a getGlobalStationList method accessible from controller', function () {
+    expect(!!stationsService.getGlobalStationList).toBe(true);
+  });
 
-    // inject the http request mock to the API
-    beforeEach(function () {
+  describe('global station API calls', function () {
+    var globalStationData;
 
-      spyOn(stationsService, 'getGlobalStationList').and.callFake(function () {
-        return stationsJSON;
+    describe('getGlobalStationList', function () {
+
+      beforeEach(function () {
+        $httpBackend.whenGET(/company-station-globals/).respond(globalStationsJSON);
+
+        stationsService.getGlobalStationList().then(function (dataFromAPI) {
+          globalStationData = dataFromAPI;
+        });
+        $httpBackend.flush();
       });
 
-      // make the mock query call
-      response = stationsService.getGlobalStationList();
+      it('should be an array', function () {
+        expect(Object.prototype.toString.call(globalStationData.response)).toBe('[object Array]');
+      });
 
-      // grab first item in list
-      testObject = response.response[0];
+      it('should have id property', function(){
+        expect(globalStationData.response[0].id).not.toBe(undefined);
+      });
 
     });
 
-    it('should be able call the getGlobalStationList method', function () {
-      expect(stationsService.getGlobalStationList).toHaveBeenCalled();
+  });
+
+  it('should have a getStationList method accessible from controller', function () {
+    expect(!!stationsService.getStationList).toBe(true);
+  });
+
+  describe('station API calls', function () {
+    var stationData;
+    describe('getStationList', function () {
+      beforeEach(function () {
+        var companyId = 403;
+        var regex = new RegExp(companyId + '/stations', 'g');
+        $httpBackend.expectGET(regex).respond(stationsJSON);
+
+        stationsService.getStationList(companyId).then(function (dataFromAPI) {
+          stationData = dataFromAPI;
+        });
+        $httpBackend.flush();
+      });
+
+      it('should be an array', function () {
+        expect(Object.prototype.toString.call(stationData.response)).toBe('[object Array]');
+      });
+
     });
-
-    it('should receive a response', function () {
-      expect(response).toBeDefined();
-    });
-
-    it('should receive a response with a response array', function () {
-      expect(response.response).toBeDefined();
-    });
-
-    it('should have at least one object inside the response array', function () {
-      expect(response.response.length).toBeGreaterThan(0);
-    });
-
-    it('should contain a Station object in the response', function () {
-      expect(testObject).toBeDefined();
-    });
-
-    it('should expect the Station object to have an id', function () {
-      expect(testObject.id).toBeDefined();
-    });
-
-    it('should expect the Station object to have an companyId', function () {
-      expect(testObject.companyId).toBeDefined();
-    });
-
-    it('should expect the Station object to have a stationName', function () {
-      expect(testObject.stationName).toBeDefined();
-    });
-
-    it('should expect the Station object to have a startDate', function () {
-      expect(testObject.startDate).toBeDefined();
-    });
-
-     it('should expect the Station object to have a endDate', function () {
-      expect(testObject.endDate).toBeDefined();
-    });
-
-
-  }); // describe Stations api
-
+  });
 });

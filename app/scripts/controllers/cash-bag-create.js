@@ -20,15 +20,15 @@ angular.module('ts5App')
       date: new Date()
     };
     var mockCashBag = {
-    	cashiersEntryDate: new Date(),
-    	baseCurrency: 'TODO: DATA',
-    	flightSchedules: [{id:1,name:'test'},{id:2,name:'test 2'}]
+      cashiersEntryDate: new Date(),
+      baseCurrency: 'TODO: DATA',
+      flightSchedules: [{id: 1, name: 'test'}, {id: 2, name: 'test 2'}]
     };
     var mockExchangeRates = [
-      ['CHF',1400.75,10.00,13.75,0.1844,0.1844],
-      ['USD',6.66,6.00,0.66,0.1844,0.1844]
+      ['CHF', 1400.75, 10.00, 13.75, 0.1844, 0.1844],
+      ['USD', 6.66, 6.00, 0.66, 0.1844, 0.1844]
     ];
-    
+
     $scope.cashBag = mockCashBag;
     $scope.flight = mockFlight;
     $scope.exchangeRates = mockExchangeRates;
