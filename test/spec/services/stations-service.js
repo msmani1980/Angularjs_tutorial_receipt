@@ -45,20 +45,20 @@ describe('Stations Service |', function () {
     // inject the http request mock to the API
     beforeEach(function () {
 
-      spyOn(stationsService, 'getStationsList').and.callFake(function () {
+      spyOn(stationsService, 'getGlobalStationList').and.callFake(function () {
         return stationsJSON;
       });
 
       // make the mock query call
-      response = stationsService.getStationsList();
+      response = stationsService.getGlobalStationList();
 
       // grab first item in list
       testObject = response.response[0];
 
     });
 
-    it('should be able call the getStationsList method', function () {
-      expect(stationsService.getStationsList).toHaveBeenCalled();
+    it('should be able call the getGlobalStationList method', function () {
+      expect(stationsService.getGlobalStationList).toHaveBeenCalled();
     });
 
     it('should receive a response', function () {

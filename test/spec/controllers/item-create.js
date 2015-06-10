@@ -325,11 +325,11 @@ describe('The Item Create Controller', function () {
 
       });
 
-    it('should be have a getStationsList method', function () {
-      expect(ItemCreateCtrl.getStationsList).toBeDefined();
+    it('should be have a getGlobalStationList method', function () {
+      expect(ItemCreateCtrl.getGlobalStationList).toBeDefined();
     });
 
-    describe('The ItemCreateCtrl.getStationsList method', function () {
+    describe('The ItemCreateCtrl.getGlobalStationList method', function () {
 
       var response,
         testObject;
@@ -341,13 +341,13 @@ describe('The Item Create Controller', function () {
         });
 
         // spy on the query of the items service
-        spyOn(ItemCreateCtrl, 'getStationsList').and.callFake(
+        spyOn(ItemCreateCtrl, 'getGlobalStationList').and.callFake(
           function () {
             return stationsJSON;
           });
 
         // make the mock query call
-        response = ItemCreateCtrl.getStationsList();
+        response = ItemCreateCtrl.getGlobalStationList();
 
         // grab first item in list
         testObject = response.response[0];
@@ -355,7 +355,7 @@ describe('The Item Create Controller', function () {
       }));
 
       it('should have been called', function () {
-        expect(ItemCreateCtrl.getStationsList).toHaveBeenCalled();
+        expect(ItemCreateCtrl.getGlobalStationList).toHaveBeenCalled();
       });
 
       it('should return a response from the API', function () {
@@ -654,7 +654,7 @@ describe('The Item Create Controller', function () {
 
           $scope.addStationException(0);
 
-          spyOn(ItemCreateCtrl, 'getStationsList').and.callThrough();
+          spyOn(ItemCreateCtrl, 'getGlobalStationList').and.callThrough();
 
           spyOn(ItemCreateCtrl, 'getStationsCurrenciesList').and
             .callThrough();
@@ -673,8 +673,8 @@ describe('The Item Create Controller', function () {
           expect(ItemCreateCtrl.updateStationException).toHaveBeenCalled();
         });
 
-        it('should have called getStationsList', function () {
-          expect(ItemCreateCtrl.getStationsList).toHaveBeenCalled();
+        it('should have called getGlobalStationList', function () {
+          expect(ItemCreateCtrl.getGlobalStationList).toHaveBeenCalled();
         });
 
         it('should have called getStationsCurrenciesList', function () {
@@ -709,11 +709,11 @@ describe('The Item Create Controller', function () {
 
         $q = $injector.get('$q');
 
-        var stationPromise1 = jasmine.createSpyObj('stationPromise1', ['getStationsList']);
-        var stationPromise2 = jasmine.createSpyObj('stationPromise2', ['getStationsList']);
+        var stationPromise1 = jasmine.createSpyObj('stationPromise1', ['getGlobalStationList']);
+        var stationPromise2 = jasmine.createSpyObj('stationPromise2', ['getGlobalStationList']);
 
-        stationPromise1.getStationsList.and.returnValue($q.when(stationsJSON));
-        stationPromise2.getStationsList.and.returnValue($q.when(stationsJSON));
+        stationPromise1.getGlobalStationList.and.returnValue($q.when(stationsJSON));
+        stationPromise2.getGlobalStationList.and.returnValue($q.when(stationsJSON));
 
         spyOn(ItemCreateCtrl, 'handleStationPromises').and.callThrough();
 
