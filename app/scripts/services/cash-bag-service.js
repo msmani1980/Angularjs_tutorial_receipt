@@ -8,6 +8,30 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('cashBagService', function () {
-    // AngularJS will instantiate a singleton by calling "new" on this function
+  .service('cashBagService', function ($resource, ENV) {
+
+    var requestURL = ENV.apiUrl + '/api/cash-bags';
+
+    var requestParameters = {
+      limit: 50
+    };
+
+    var actions = {
+      getCashBagList: {
+        method: 'GET'
+      }
+    };
+
+    var requestResource = $resource(requestURL, requestParameters, actions);
+
+    function getCashBagList(companyId) {
+      var payload = {
+        retailCompanyId: companyId
+      };
+      return requestResource.getCashBagList(payload).$promise;
+    }
+
+    return {
+      getCashBagList:getCashBagList
+    }
   });
