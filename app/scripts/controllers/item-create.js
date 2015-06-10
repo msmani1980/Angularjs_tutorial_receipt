@@ -443,7 +443,7 @@ angular.module('ts5App')
     };
 
     // gets a list of stations from the API filtered by station's start and end date
-    this.getStationsList = function (stationException) {
+    this.getGlobalStationList = function (stationException) {
       var startDate = formatDate(stationException.startDate, 'L',
         'YYYYMMDD');
       var endDate = formatDate(stationException.endDate, 'L', 'YYYYMMDD');
@@ -451,7 +451,7 @@ angular.module('ts5App')
         startDate: startDate,
         endDate: endDate
       };
-      return companiesFactory.getStationsList(stationsFilter);
+      return companiesFactory.getGlobalStationList(stationsFilter);
     };
 
     // sets the stations list for the station exception
@@ -498,7 +498,7 @@ angular.module('ts5App')
       var $this = this;
       var stationException = $scope.formData.prices[priceIndex].stationExceptions[
         stationExceptionIndex];
-      this.getStationsList(stationException).then(function (data) {
+      this.getGlobalStationList(stationException).then(function (data) {
         $this.setStationsList(stationException, data);
       });
       this.getStationsCurrenciesList(stationException).then(function (data) {
@@ -514,7 +514,7 @@ angular.module('ts5App')
         for (var stationExceptionIndex in price.stationExceptions) {
           var stationException = price.stationExceptions[
             stationExceptionIndex];
-          stationPromises.push(this.getStationsList(stationException));
+          stationPromises.push(this.getGlobalStationList(stationException));
         }
         this.handleStationPromises(stationPromises, price);
       }

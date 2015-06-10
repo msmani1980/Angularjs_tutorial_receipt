@@ -51,8 +51,8 @@ angular.module('ts5App')
   };
 
   // Tax Types
-  var getStationsList = function (payload) {
-    return stationsService.getStationsList(payload);
+  var getGlobalStationList = function (payload) {
+    return stationsService.getGlobalStationList(payload);
   };
 
   return {
@@ -74,7 +74,7 @@ angular.module('ts5App')
     getTaxTypesList: getTaxTypesList,
 
     // Stations
-    getStationsList: getStationsList
+    getGlobalStationList: getGlobalStationList
 
   };
 
