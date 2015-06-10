@@ -29,6 +29,10 @@ describe('The tax type input directive', function () {
       expect(element.find('.panel')[0]).toBeDefined();
     });
 
+    it('should have the panel-title class', function () {
+      expect(element.find('.panel').hasClass('panel-default')).toBeTruthy();
+    });
+
     describe('panel heading', function () {
 
       it('should have a panel-heading', function () {
@@ -43,6 +47,35 @@ describe('The tax type input directive', function () {
       it('should have the correct heading label', function () {
         expect(element.find('.panel-title').text().trim()).toEqual(
           'Tax Type 1');
+      });
+
+      describe('remove button', function () {
+
+        var removeBtn;
+
+        beforeEach(function () {
+          removeBtn = angular.element(element.find(
+            '.btn-remove-tax-type')[0]);
+        });
+
+        it('should be present in the DOM', function () {
+          expect(removeBtn[0]).toBeDefined();
+        });
+
+        it('should have a btn-danger class', function () {
+          expect(removeBtn.hasClass('btn-danger')).toBeTruthy();
+        });
+
+        it('should contain an close icon', function () {
+          expect(removeBtn.find('i.fa-close')[0]).toBeDefined();
+        });
+
+        it('should have an click event to remove tax types',
+          function () {
+            expect(removeBtn.attr('ng-click')).toEqual(
+              'removeTaxType($parent.key)');
+          });
+
       });
 
     });
