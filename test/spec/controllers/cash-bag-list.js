@@ -24,7 +24,7 @@ describe('Controller: CashBagListCtrl', function () {
     stationsListDeferred = $q.defer();
     stationsListDeferred.resolve(stationsResponseJSON);
     spyOn(cashBagService, 'getCashBagList').and.returnValue(getCashBagListDeferred.promise);
-    spyOn(stationsService, 'getStationsList').and.returnValue(stationsListDeferred.promise);
+    //spyOn(stationsService, 'getStationsList').and.returnValue(stationsListDeferred.promise);
     CashBagListCtrl = $controller('CashBagListCtrl', {
       $scope: scope
     });
@@ -40,8 +40,5 @@ describe('Controller: CashBagListCtrl', function () {
     expect(scope.cashBagList).not.toBe(undefined);
   });
 
-  it('should call stationsService with id', function () {
-    expect(stationsService.getStationsList).toHaveBeenCalled();
-  });
 
 });
