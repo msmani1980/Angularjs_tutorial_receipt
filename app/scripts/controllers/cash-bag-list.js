@@ -11,7 +11,7 @@ angular.module('ts5App')
   .controller('CashBagListCtrl', function ($scope, cashBagService, GlobalMenuService) {
   	var companyId = GlobalMenuService.company.get();
   	cashBagService.getCashBagList(companyId).then(function(response){
-  		$scope.cashBagList = response;
+  		$scope.cashBagList = response.cashBags;
   	});
 
   });
