@@ -99,12 +99,12 @@
     <td colspan="6" ng-click="" class="btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Cash Bag</td>
     </tr>
     <tr
-      ng-repeat="menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName}">
-      <td>{{ cashList.cashBag }}</td>
-      <td>{{ cashList.bankRef }}</td>
-      <td>{{ cashList.date }}</td>
-      <td>{{ cashList.origin }}</td>
-      <td>{{ cashList.destination }}</td>
+      ng-repeat="cashBag in cashBagList">
+      <td>{{ cashBag.cashBagNumber }}</td>
+      <td>{{ cashBag.bankReferenceNumber }}</td>
+      <td>{{ cashBag.scheduleDate }}</td>
+      <td>{{ cashBag.origin }}</td>
+      <td>{{ cashBag.destination }}</td>
       <td>
         <button class="btn btn-info btn-xs">
           <i class="fa fa-file"></i>

@@ -8,10 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('CashBagListCtrl', function ($scope, cashBagService, GlobalMenuService) {
+  	var companyId = GlobalMenuService.company.get();
+  	cashBagService.getCashBagList(companyId).then(function(response){
+  		$scope.cashBagList = response;
+  	});
+
   });

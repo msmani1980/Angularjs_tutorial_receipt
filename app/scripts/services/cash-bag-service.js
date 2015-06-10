@@ -18,7 +18,8 @@ angular.module('ts5App')
 
     var actions = {
       getCashBagList: {
-        method: 'GET'
+        method: 'GET',
+        headers: {companyId:362}
       }
     };
 

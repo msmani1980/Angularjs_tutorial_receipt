@@ -8,7 +8,8 @@ describe('Service: cashBagService', function () {
 
   var cashBagService,
     $httpBackend,
-    responseJSON;
+    responseJSON,
+    headers = {companyId:362,"Accept":"application/json, text/plain, */*","userId":1};
 
   beforeEach(inject(function (_cashBagService_, $injector) {
     inject(function (_servedCashBag_) {
@@ -39,7 +40,7 @@ describe('Service: cashBagService', function () {
     describe('getCashBagList', function () {
 
       beforeEach(function () {
-        $httpBackend.whenGET(/cash-bags/).respond(responseJSON);
+        $httpBackend.whenGET(/cash-bags/,headers).respond(responseJSON);
 
         cashBagService.getCashBagList().then(function (dataFromAPI) {
           cashBagData = dataFromAPI;
@@ -69,7 +70,7 @@ describe('Service: cashBagService', function () {
         var companyId = 413;
         // TODO: fix regex to not include limit=50
         var regex = new RegExp('cash-bags\\?limit=50&retailCompanyId=' + companyId, 'g');
-        $httpBackend.expectGET(regex).respond(200, '');
+        $httpBackend.expectGET(regex, headers).respond(200, '');
         cashBagService.getCashBagList(companyId);
         $httpBackend.flush();
       });
