@@ -13,7 +13,7 @@ angular.module('ts5App')
     var requestURL = ENV.apiUrl + '/api/cash-bags/:id';
 
     var requestParameters = {
-      id:'@id',
+      id: '@id',
       limit: 50
     };
 
@@ -28,18 +28,19 @@ angular.module('ts5App')
 
     function getCashBagList(companyId, optionalPayload) {
       var payload;
-      if(arguments.length == 2)
+      if (arguments.length === 2) {
         payload = optionalPayload;
-      else
+      } else {
         payload = {};
+      }
 
-      payload['retailCompanyId'] = companyId;
+      payload.retailCompanyId = companyId;
       return requestResource.getCashBag(payload).$promise;
     }
 
-    function getCashBag(cashBagId){
+    function getCashBag(cashBagId) {
       var payload = {
-        id:cashBagId
+        id: cashBagId
       };
       return requestResource.getCashBag(payload).$promise;
     }
@@ -48,4 +49,5 @@ angular.module('ts5App')
       getCashBagList: getCashBagList,
       getCashBag: getCashBag
     };
-  });
+  })
+;

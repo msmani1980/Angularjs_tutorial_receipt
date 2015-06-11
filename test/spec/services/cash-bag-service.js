@@ -92,7 +92,7 @@ describe('Service: cashBagService', function () {
       });
 
       it('should not need a payload parameter', function() {
-        var companyId = '413'
+        var companyId = '413';
         // TODO: fix regex to not include limit=50
         var regex = new RegExp('cash-bags\\?limit=50&retailCompanyId=' + companyId, 'g');
         $httpBackend.expectGET(regex, headers).respond(200, '');
