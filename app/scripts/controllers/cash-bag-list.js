@@ -26,7 +26,7 @@ angular.module('ts5App')
     };
 
     $scope.searchCashBag = function () {
-      cashBagService.getCashBagList($scope.search).then(function(response){
+      cashBagService.getCashBagList(companyId, $scope.search).then(function(response){
         $scope.cashBagList = response.cashBags;
       });
     };

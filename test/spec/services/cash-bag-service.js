@@ -77,9 +77,29 @@ describe('Service: cashBagService', function () {
         // TODO: fix regex to not include limit=50
         var regex = new RegExp('cash-bags\\?limit=50&retailCompanyId=' + companyId, 'g');
         $httpBackend.expectGET(regex, headers).respond(200, '');
+        cashBagService.getCashBagList(companyId, {});
+        $httpBackend.flush();
+      });
+
+      it('should take an additional payload parameter', function() {
+        var cashBagNumber = '123';
+        var payload = {cashBagNumber: cashBagNumber};
+        // TODO: fix regex to not include limit=50
+        var regex = new RegExp('cashBagNumber=' + cashBagNumber, 'g');
+        $httpBackend.expectGET(regex, headers).respond(200, '');
+        cashBagService.getCashBagList('413', payload);
+        $httpBackend.flush();
+      });
+
+      it('should not need a payload parameter', function() {
+        var companyId = '413'
+        // TODO: fix regex to not include limit=50
+        var regex = new RegExp('cash-bags\\?limit=50&retailCompanyId=' + companyId, 'g');
+        $httpBackend.expectGET(regex, headers).respond(200, '');
         cashBagService.getCashBagList(companyId);
         $httpBackend.flush();
       });
+
     });
 
     describe('getCashBag', function () {
