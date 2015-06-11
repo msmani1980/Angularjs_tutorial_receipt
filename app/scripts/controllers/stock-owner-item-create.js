@@ -118,14 +118,16 @@ angular.module('ts5App')
 
     // checks to see if the item is active
     function checkIfItemIsActive(itemData) {
-      var today = moment().format();
-      $scope.itemIsActive = moment(itemData.startDate).isBefore(today);
+      var today = new Date();
+      var itemStartDate = new Date(itemData.startDate);
+      $scope.itemIsActive = itemStartDate <= today;
     }
 
     // checks to see if the item is inactive
     function checkIfItemIsInactive(itemData) {
-      var today = moment().format();
-      $scope.itemIsInactive = moment(itemData.endDate).isBefore(today);
+      var today = new Date();
+      var itemEndDate = new Date(itemData.endDate);
+      $scope.itemIsInactive = itemEndDate <= today;
     }
 
     // updates the $scope.formData
