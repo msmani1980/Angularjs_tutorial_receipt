@@ -10,8 +10,7 @@ describe('Controller: CashBagCreateCtrl', function () {
     scope,
     $httpBackend,
     cashBagService,
-    cashBagResponseJSON,
-    cashBagId = 95;
+    cashBagResponseJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, _cashBagService_) {
