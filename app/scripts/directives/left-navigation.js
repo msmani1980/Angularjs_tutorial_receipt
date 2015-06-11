@@ -68,7 +68,6 @@ angular.module('ts5App')
 
       this.navigateTo = function (path) {
         $location.path(path);
-        console.log($location.path());
       };
 
       this.checkIfEditing = function () {

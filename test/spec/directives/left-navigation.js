@@ -17,10 +17,12 @@ describe('Directive: leftNavigation', function () {
 
   beforeEach(inject(function ($compile) {
     element = angular.element(
-      '<left-navigation></left-navigation>');
+      '<left-navigation base-path="retail-items"></left-navigation>'
+    );
     element = $compile(element)(scope);
     scope.$digest();
     controller = element.controller('leftNavigation');
+
   }));
 
   describe('When the leftNavigation directive is compiled, it',
@@ -79,11 +81,52 @@ describe('Directive: leftNavigation', function () {
           var navLi = angular.element(element.find(
             '.navbar li')[0]);
 
-          expect(navLi.attr('ng-click')).toEqual(
-            'leaveViewNav(\'\')');
+          expect(navLi.attr('ng-click')).toContain(
+            'leaveViewNav');
 
         });
 
     });
+
+
+  describe('directive isolated scope', function () {
+
+    var isolatedScope;
+
+    beforeEach(inject(function () {
+      isolatedScope = element.isolateScope();
+    }));
+
+    it('should have a navigateTo method attached to the scope',
+      function () {
+        expect(isolatedScope.leaveViewNav).toBeDefined();
+      });
+
+  });
+
+  describe('when the list-path attribute is passed', function () {
+
+    var isolatedScope;
+
+    beforeEach(inject(function ($compile) {
+      element = angular.element(
+        '<left-navigation base-path="retail-items"></left-navigation>'
+      );
+      element = $compile(element)(scope);
+      scope.$digest();
+      isolatedScope = element.isolateScope();
+    }));
+
+    it('should have have a base path attribute',
+      function () {
+        expect(element.attr('base-path')).toBeDefined();
+      });
+
+    it('should match the basePath variable passed to the directive',
+      function () {
+        expect(element.attr('base-path')).toEqual(isolatedScope.basePath);
+      });
+
+  });
 
 });
