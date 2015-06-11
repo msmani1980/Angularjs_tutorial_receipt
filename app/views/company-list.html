@@ -1,9 +1,9 @@
-<h1>Manage Companies</h1>
+<h2 class="view-name">{{viewName}}</h2>
 <div ng-if="companyList.length">
     <div class="list-controls">
         <div class="row">
             <div class="col-xs-6">
-                <button class="btn btn-primary" ui-sref="company.create"><span class="fa fa-plus"></span>
+                <button class="btn btn-primary" href="#/company-create"><span class="fa fa-plus"></span>
                 </button>
             </div>
             <div class="col-xs-6 text-right">
@@ -38,7 +38,7 @@
             <div class="hidden-xs col-sm-4 list-header border-right">Additional Languages</div>
             <div class="hidden-xs col-sm-2 list-header border-right">Base Currency</div>
         </div>
-        <list-object ng-repeat="company in filteredCompanies" vm="company" type="company" class="list-body"></list-object>
+        <list-object ng-repeat="company in filteredCompanies" vm="company" type="company" class="list-body" view="showCompany(company)" edit="editCompany(company)" func1="showCompanyRelationshipList(company)"></list-object>
         <div ng-if="companyList.length === 0" class="feature-empty">
             <p>No Employee Messages Found</p>
         </div>
@@ -65,5 +65,5 @@
 </div>
 <!-- //TODO: Add create link -->
 <div ng-if="companyList.length === 0" class="feature-empty">
-    <button class="btn btn-primary" ng-href="#/-create"><span class="fa fa-plus" aria-hidden="true"></span> Create Employee Message</button>
+    <button class="btn btn-primary" ng-href="#/-create"><span class="fa fa-plus" aria-hidden="true"></span> Create Compa</button>
 </div>

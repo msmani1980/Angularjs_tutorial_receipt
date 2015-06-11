@@ -8,7 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyListCtrl', function ($scope, companyFactory, $localStorage) {
+  .controller('CompanyListCtrl', function ($scope, companyFactory, $localStorage, $location) {
+    $scope.viewName = 'Manage Companies';
+
     $scope.$storage = $localStorage;
     $scope.currentPage = 1;
     $scope.itemsPerPage = 10;
@@ -28,6 +30,18 @@ angular.module('ts5App')
 
         $scope.filteredCompanies = $scope.companyList.slice(begin, end);
       });
+    };
+
+    $scope.showCompanyRelationshipList = function (company) {
+      $location.path('/company-relationship-edit/' + company.id);
+    };
+
+    $scope.showCompany = function (company) {
+      $location.path('/company-view/' + company.id);
+    };
+
+    $scope.editCompany = function (company) {
+      $location.path('/company-edit/' + company.id);
     };
 
     companyFactory.getCompanyList().then(attachCompanyListToScope);

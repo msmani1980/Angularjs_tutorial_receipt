@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CompanyRelationshipCtrl', function ($scope, $routeParams, companyRelationshipService) {
-
+    $scope.viewName = 'Company Relationships';
     $scope.companyRelationshipList = [];
 
     function setupCompanyRelationshipModel(companyRelationshipsFromAPI) {
