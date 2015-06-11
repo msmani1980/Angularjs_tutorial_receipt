@@ -57,7 +57,7 @@
           <div class="form-group">
             <label for="item-type">Origin
               <select multiple ng-model="search.itemType" class="form-control" id="search-origin">
-                <option ng-repeat="type in itemTypes" value="{{ origin.name }}">{{ origin.name }}</option>
+                <option ng-repeat="station in stationList" value="{{ station }}">{{ station.stationCode }} ({{ station.stationName}})</option>
               </select>
               <input type="checkbox"> Add All</label>
           </div>
@@ -67,7 +67,7 @@
           <div class="form-group">
             <label for="item-type">Destination
               <select multiple ng-model="search.itemType" class="form-control" id="search-origin">
-                <option ng-repeat="type in itemTypes" value="{{ origin.name }}">{{ origin.name }}</option>
+                <option ng-repeat="station in stationList" value="{{ station }}">{{ station.stationCode }} ({{ station.stationName}})</option>
               </select>
               <input type="checkbox"> Add All</label>
           </div>
