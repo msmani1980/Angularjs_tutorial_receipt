@@ -98,7 +98,6 @@ describe('Directive: leaveViewModalNav', function () {
 
 
         it('should contain the function leaveViewClose()', function () {
-          scope.leaveViewClose();
           expect(scope.leaveViewClose).toBeDefined();
         });
 

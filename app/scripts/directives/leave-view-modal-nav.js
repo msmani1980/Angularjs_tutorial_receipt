@@ -11,43 +11,58 @@ angular.module('ts5App')
 
     var leaveViewNavController = function ($scope, $location) {
 
+      var $this = this;
+
       // Show leave view modal
-      $scope.leaveViewNav = function (str) {
+      $scope.leaveViewNav = function (path) {
 
-        var e = angular.element('#leave-view-modal-nav');
+        $scope.leavePathNav = path;
+        var currentPath = $location.path();
+        var onEditView = $this.checkIfEditing();
 
-        var leavePathNav = str;
+        $this.setModalElement();
+        $this.hideModal();
 
-        $scope.leavePathNav = leavePathNav;
-
-        //if the modal is hidden, and the location is not dashboard
-        if (e.modal('hide') && $location.path() !== leavePathNav) {
-
-          e.modal('show');
-
+        if (onEditView && currentPath !== $scope.leavePathNav) {
+          $this.showModal();
         } else {
-
-          e.modal('hide');
-
-          $location.path(leavePathNav);
-          $scope.$apply();
-
+          $this.hideModal();
+          $this.navigateTo($scope.leavePathNav);
         }
 
-        return leavePathNav;
+      };
 
+      this.setModalElement = function () {
+        this.modalElement = angular.element('#leave-view-modal-nav');
+      };
+
+      this.showModal = function () {
+        this.modalElement.modal('show');
+      };
+
+      this.hideModal = function () {
+        this.modalElement.modal('hide');
+      };
+
+      this.navigateTo = function (path) {
+        $location.path(path);
+      };
+
+      this.checkIfEditing = function () {
+        var path = $location.path();
+        if (path.search('create') !== -1) {
+          return true;
+        } else {
+          return false;
+        }
       };
 
       $scope.leaveViewClose = function () {
 
-        var e = angular.element('#leave-view-modal-nav');
-
-        var leavePathNav = $scope.leavePathNav;
-
-        e.modal('hide');
-
-        e.on('hidden.bs.modal', function () {
-          $location.path(leavePathNav);
+        $this.setModalElement();
+        $this.hideModal();
+        $this.modalElement.on('hidden.bs.modal', function () {
+          $location.path($scope.leavePathNav);
           $scope.$apply();
         });
 
