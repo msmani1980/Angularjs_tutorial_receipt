@@ -23,7 +23,6 @@ angular.module('ts5App')
     // if we have a route id param, get that model from the api
     if($routeParams.id) {
       cashBagService.getCashBag($routeParams.id).then(function (response) {
-        console.log(response);
         $scope.cashBag = response;
       });
     }
