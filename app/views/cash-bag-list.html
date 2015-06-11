@@ -27,8 +27,8 @@
           <div class="col-xs-12 col-sm-6 col-md-3">
 						<div class="form-group">
 							<label for="item-type">Bank Ref #</label>
-							<select ng-model="search.itemType" class="form-control" id="item-type">
-								<option value="{{bankRef.name}}"  ng-repeat="type in itemTypes | unique: 'id'">{{ bankRef.name }}</option>
+							<select class="form-control" id="item-type">
+								<option value="{{ bankRef }}"  ng-repeat="bankRef in bankRefList">{{ bankRef }}</option>
 							</select>
 						</div>
 					</div>

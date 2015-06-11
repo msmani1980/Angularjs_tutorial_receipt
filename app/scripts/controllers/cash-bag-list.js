@@ -11,9 +11,9 @@ angular.module('ts5App')
   .controller('CashBagListCtrl', function ($scope, cashBagService, GlobalMenuService, stationsService, $location) {
   	var companyId = GlobalMenuService.company.get();
   	cashBagService.getCashBagList(companyId).then(function(response){
-  		$scope.cashBagList = response.cashBags;
+      $scope.cashBagList = response.cashBags;
       $scope.bankRefList = getBankRefList(response.cashBags);
-  	});
+    });
 
     stationsService.getStationList(companyId).then(function(response){
       $scope.stationList = response.response;
@@ -26,7 +26,7 @@ angular.module('ts5App')
     function getBankRefList(cashBagList) {
       var bankRefList = [];
       cashBagList.forEach(function(element, index, array){
-        if(element.bankReferenceNumber != null && bankRefList.indexOf(element.bankReferenceNumber) > -1 )
+        if(element.bankReferenceNumber != null && bankRefList.indexOf(element.bankReferenceNumber) < 0)
           bankRefList.push(element.bankReferenceNumber);
       });
       return bankRefList;

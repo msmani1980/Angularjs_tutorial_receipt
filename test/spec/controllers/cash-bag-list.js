@@ -51,13 +51,22 @@ describe('Controller: CashBagListCtrl', function () {
     expect(scope.cashBagList).not.toBe(undefined);
   });
 
-  it('should have bankRefList attached to scope', function () {
-    expect(scope.bankRefList).not.toBe(undefined);
+
+  describe('filter bank reference number list for search', function() {
+    it('should have bankRefList attached to scope', function () {
+      expect(scope.bankRefList).not.toBe(undefined);
+    });
+
+    it('should have no null values', function() {
+      expect(scope.bankRefList).not.toContain(null);
+    });
+
+    it('should have no duplicate values', function() {
+      for(var i=0; i<scope.bankRefList.length -1; i++)
+        expect(scope.bankRefList[i+1]).not.toBe(scope.bankRefList[i]);
+    });
   });
 
-  it('should have bankRefList with no null values', function() {
-    expect(scope.bankRefList).not.toContain(null);
-  });
 
 
   describe('get station list', function () {
