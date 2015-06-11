@@ -1,7 +1,8 @@
-<h1 class="ng-scope">Cash Bag Create</h1>
+<h1>{{ viewName }}</h1>
+
 <h2>{{ flight.airline }} <small>{{ flight.number }} <date>{{ flight.date | date:'yyyy-MM-dd' }}</date></small></h2>
 <ng-form name="cashBagCreateForm" class="form edit-form">
-  
+
   <div class="panel panel-default">
 
     <div class="panel-heading">
@@ -16,21 +17,21 @@
     </div>
 
     <div class="panel-body">
-      
+
       <div class="row form-group">
 			  <div class="col-sm-4">
           <input-text label="Cash Bag #" name="cashBag" required="true" pattern="regexp.number" min-length="1" max-length="10"></input-text>
 			  </div>
-			  
+
 			  <div class="col-sm-4">
           <input-text label="Total # of Bags" name="numberOfBags" pattern="regexp.number" min-length="1" max-length="10"></input-text>
 			  </div>
-			  
+
 			  <div class="col-sm-4">
           <input-text label="Bank Reference" name="bankReference" pattern="regexp.alpha"></input-text>
         </div>
       </div>
-      
+
       <div class="row form-group">
 				<table class="table table-responsive table-bordered table-hover">
 			    <thead>
@@ -56,12 +57,12 @@
 			  </table>
       </div>
     </div>
-    
+
     <div class="panel-footer text-center">
       <button class="btn btn-default save-btn">Save</button>
       <p>TODO: If save button is disabled, show reason here</p>
     </div>
-    
-  </div>  
-  
+
+  </div>
+
 </ng-form>
