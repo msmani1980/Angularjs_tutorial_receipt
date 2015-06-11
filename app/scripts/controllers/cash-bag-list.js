@@ -10,6 +10,8 @@
 angular.module('ts5App')
   .controller('CashBagListCtrl', function ($scope, cashBagService, GlobalMenuService, stationsService, $location) {
   	var companyId = GlobalMenuService.company.get();
+    $scope.search = {};
+
   	cashBagService.getCashBagList(companyId).then(function(response){
       $scope.cashBagList = response.cashBags;
       $scope.bankRefList = getBankRefList(response.cashBags);
@@ -21,6 +23,17 @@ angular.module('ts5App')
 
     $scope.showCashBag = function (cashBag) {
       $location.path('cash-bag-create/' + cashBag.id);
+    };
+
+    $scope.searchCashBag = function () {
+      cashBagService.getCashBagList($scope.search).then(function(response){
+        $scope.cashBagList = response.cashBags;
+      });
+    };
+
+    $scope.clearForm = function () {
+      $scope.search = {};
+      $scope.searchCashBag();
     };
 
     function getBankRefList(cashBagList) {

@@ -67,6 +67,27 @@ describe('Controller: CashBagListCtrl', function () {
     });
   });
 
+  describe('search cash bag', function() {
+    it('should have a search object attached to scope', function() {
+      expect(scope.search).not.toBe(undefined);
+    });
+
+    it('should clear search model and make a API call', function () {
+      scope.search = {cashBagNumber: 'fakeCashBagNumber'};
+      scope.clearForm();
+      expect(scope.search.cashBagNumber).toBe(undefined);
+      expect(cashBagService.getCashBagList).toHaveBeenCalledWith({});
+    });
+
+    it('should clear search model and make a API call', function () {
+      var testCashBagNumber = '123'
+      scope.search = {cashBagNumber: testCashBagNumber};
+      scope.searchCashBag();
+      expect(cashBagService.getCashBagList).toHaveBeenCalledWith({cashBagNumber: testCashBagNumber});
+    });
+
+  });
+
 
 
   describe('get station list', function () {
