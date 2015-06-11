@@ -12,8 +12,8 @@ describe('Service: cashBagService', function () {
     cashBagResponseJSON,
     headers = {
       companyId: 362,
-      "Accept": "application/json, text/plain, */*",
-      "userId": 1
+      'Accept': 'application/json, text/plain, */*',
+      'userId': 1
     };
 
   beforeEach(inject(function (_cashBagService_, $injector) {

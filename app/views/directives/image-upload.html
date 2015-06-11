@@ -89,16 +89,16 @@
 
           			<progressbar class="progress-striped" ng-model="files"
                   ng-show="!file.imageTooLarge && !file.uploadFail && !file.uploadSuccess"
-                  ng-show="files.length" animate="true" value="file.uploadProgress"
+                  ng-show="files.length" value="file.uploadProgress"
                 >
           				<b>{{file.uploadProgress}}%</b>
           			</progressbar>
 
-          			<progressbar class="progress-striped" ng-model="files" ng-show="file.uploadSuccess" animate="true" value="100" type="success">
+          			<progressbar class="progress-striped" ng-model="files" ng-show="file.uploadSuccess" value="100" type="success">
           				<b>Success!</b>
           			</progressbar>
 
-          			<progressbar class="progress-striped" ng-model="files" ng-show="file.uploadFail" animate="true" value="100" type="danger">
+          			<progressbar class="progress-striped" ng-model="files" ng-show="file.uploadFail" value="100" type="danger">
           				<b>Fail</b>
           			</progressbar>
 
