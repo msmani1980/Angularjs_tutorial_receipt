@@ -68,7 +68,7 @@ describe('Directive: leftNavigation', function () {
             1);
         });
 
-      it('should have the leave-view-modal-nav directive injected',
+      it('should have the leave-view-modal-nav element',
         function () {
           expect(element.find('#leave-view-modal-nav')).toBeDefined();
         });
