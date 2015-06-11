@@ -9,11 +9,9 @@
  */
 angular.module('ts5App')
   .controller('CashBagCreateCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+
+    $scope.viewName = 'Cash Bag';
+
     var mockFlight = {
       airline: 'FPO Delta',
       number: 'E2Y56',
@@ -22,7 +20,13 @@ angular.module('ts5App')
     var mockCashBag = {
       cashiersEntryDate: new Date(),
       baseCurrency: 'TODO: DATA',
-      flightSchedules: [{id: 1, name: 'test'}, {id: 2, name: 'test 2'}]
+      flightSchedules: [{
+        id: 1,
+        name: 'test'
+      }, {
+        id: 2,
+        name: 'test 2'
+      }]
     };
     var mockExchangeRates = [
       ['CHF', 1400.75, 10.00, 13.75, 0.1844, 0.1844],
