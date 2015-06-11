@@ -25,9 +25,10 @@ angular.module('ts5App')
 
     function getBankRefList(cashBagList) {
       var bankRefList = [];
-      cashBagList.forEach(function(element, index, array){
-        if(element.bankReferenceNumber != null && bankRefList.indexOf(element.bankReferenceNumber) < 0)
+      cashBagList.forEach(function(element){
+        if(element.bankReferenceNumber !== null && bankRefList.indexOf(element.bankReferenceNumber) < 0) {
           bankRefList.push(element.bankReferenceNumber);
+        }
       });
       return bankRefList;
     }
