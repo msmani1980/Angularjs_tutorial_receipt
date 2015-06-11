@@ -3,7 +3,18 @@
     <div class="hidden-xs col-sm-2 list-item">{{vm.companyName}}</div>
     <div class="hidden-xs col-sm-2 list-item">{{vm.legalName}}</div>
     <div class="hidden-xs col-sm-4 list-item">{{vm.companyLanguages}}</div>
-    <div class="hidden-xs col-sm-2 list-item">{{vm.baseCurrencyCode}}</div>
+    <div class="hidden-xs col-sm-1 list-item">{{vm.baseCurrencyCode}}</div>
+    <div class="hidden-xs col-sm-1 list-item text-right">
+        <a class="btn btn-primary btn-xs" aria-label="Manage Company Relationships" href="#/company-relationship-edit/{{vm.id}}">
+            <i class="fa fa-arrows-h" aria-hidden="true"></i>
+        </a>
+        <a class="btn btn-primary btn-xs" aria-label="View Company" href="#/company-view/{{vm.id}}" >
+            <i class="fa fa-file" aria-hidden="true"></i>
+        </a>
+        <a class="btn btn-primary btn-xs" aria-label="Edit Company" href="#/company-edit/{{vm.id}}">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+        </a>
+    </div>
     <div class="visible-xs col-xs-3 list-header text-right">Company Type</div>
     <div class="visible-xs col-xs-9 list-item">{{vm.companyTypeName}}</div>
     <div class="clearfix visible-xs-block"></div>
@@ -18,4 +29,11 @@
     <div class="clearfix visible-xs-block"></div>
     <div class="visible-xs col-xs-3 list-header text-right">Base Currency</div>
     <div class="visible-xs col-xs-9 list-item">{{vm.baseCurrencyCode}}</div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="visible-xs col-xs-3 list-header text-right">Actions</div>
+    <div class="visible-xs col-xs-9 list-item">
+        <a class="btn btn-primary btn-xs" href="#/company-relationship-edit/{{vm.id}}">
+            <i class="fa fa-arrows-h"></i>
+        </a>
+    </div>
 </div>
