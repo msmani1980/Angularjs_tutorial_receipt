@@ -18,7 +18,7 @@ angular.module('ts5App')
     };
 
     var actions = {
-      getCashBagList: {
+      getCashBag: {
         method: 'GET',
         headers: {companyId: 362}
       }
@@ -30,10 +30,18 @@ angular.module('ts5App')
       var payload = {
         retailCompanyId: companyId
       };
-      return requestResource.getCashBagList(payload).$promise;
+      return requestResource.getCashBag(payload).$promise;
+    }
+
+    function getCashBag(cashBagId){
+      var payload = {
+        id:cashBagId
+      };
+      return requestResource.getCashBag(payload).$promise;
     }
 
     return {
-      getCashBagList: getCashBagList
+      getCashBagList: getCashBagList,
+      getCashBag: getCashBag
     };
   });
