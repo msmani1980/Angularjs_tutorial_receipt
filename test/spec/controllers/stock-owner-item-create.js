@@ -122,7 +122,7 @@ describe('The Stock Owner Item Create Controller', function () {
         '/views/stock-owner-item-create.html');
       var compiled = $compile(angular.element(html))($scope);
       view = angular.element(compiled[0]);
-      $scope.$digest();
+      //$scope.$digest();
     }));
 
     it('should be defined', function () {

@@ -8,9 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCreateCtrl', function ($scope, cashBagService) {
+  .controller('CashBagCreateCtrl', function ($scope) {
 
-    $scope.viewName = "Cash Bag";
+    $scope.viewName = 'Cash Bag';
 
     var mockFlight = {
       airline: 'FPO Delta',
@@ -20,7 +20,13 @@ angular.module('ts5App')
     var mockCashBag = {
       cashiersEntryDate: new Date(),
       baseCurrency: 'TODO: DATA',
-      flightSchedules: [{id: 1, name: 'test'}, {id: 2, name: 'test 2'}]
+      flightSchedules: [{
+        id: 1,
+        name: 'test'
+      }, {
+        id: 2,
+        name: 'test 2'
+      }]
     };
     var mockExchangeRates = [
       ['CHF', 1400.75, 10.00, 13.75, 0.1844, 0.1844],
