@@ -25,5 +25,5 @@ angular.module('ts5App')
       }
     }
 
-    companyRelationshipService.getCompanyRelationshipList($routeParams.id).then(setupCompanyRelationshipModel);
+    companyRelationshipService.getCompanyRelationshipListByCompany($routeParams.id).then(setupCompanyRelationshipModel);
   });

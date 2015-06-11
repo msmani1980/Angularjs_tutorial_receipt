@@ -9,7 +9,7 @@
  * # companyRelationshipService
  * Service in the ts5App.
  */
-(function (ng) {angular.module('ts5App')
+angular.module('ts5App')
   .service('companyRelationshipService', function ($resource, $http, ENV) {
     var requestURL = ENV.apiUrl + '/api/companies/:id/relationships';
     var requestParameters = {
@@ -29,10 +29,12 @@
     }
 
     function transformRequest(data) {
-      data = angular.fromJson(data);
-      data.companyRelationships.forEach(function (companyRelationship) {
-        normalizeDateForAPI(companyRelationship);
-      });
+      if (data) {
+        data = angular.fromJson(data);
+        data.companyRelationships.forEach(function (companyRelationship) {
+          normalizeDateForAPI(companyRelationship);
+        });
+      }
       return data;
     }
 
@@ -43,6 +45,11 @@
     };
 
     var actions = {
+      getCompanyRelationshipListByCompany: {
+        method: 'GET',
+        transformResponse: appendTransform($http.defaults.transformResponse, transformResponse),
+        transformRequest: appendTransform($http.defaults.transformRequest, transformRequest)
+      },
       getCompanyRelationshipList: {
         method: 'GET',
         transformResponse: appendTransform($http.defaults.transformResponse, transformResponse),
@@ -106,11 +113,10 @@
     };
 
     return {
-      getCompanyRelationshipList: getCompanyRelationshipList,
       getCompanyRelationshipListByCompany: getCompanyRelationshipListByCompany,
+      getCompanyRelationshipList: getCompanyRelationshipList,
       getCompanyRelationship: getCompanyRelationship,
       createCompanyRelationship: createCompanyRelationship,
       updateCompanyRelationship: updateCompanyRelationship
     };
   });
-}(angular));
