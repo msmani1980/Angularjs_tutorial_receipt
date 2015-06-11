@@ -1,46 +1,46 @@
 <h1>Manage Cash Bag</h1>
 
-  <div class="row">
-    <div class="col-xs-6 text-right pull-right">
-      <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
-              aria-expanded="false"
-              aria-controls="search-collapse">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        <span class="hidden-xs">Search</span>
-      </button>
-    </div>
+<div class="row">
+  <div class="col-xs-6 text-right pull-right">
+    <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+            aria-expanded="false"
+            aria-controls="search-collapse">
+      <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      <span class="hidden-xs">Search</span>
+    </button>
   </div>
-  <br>
+</div>
+<br>
 
-  <div class="panel panel-default collapse no-transition" id="search-collapse">
-    <form name="cashBagSearchForm" ng-submit="searchCashBags()">
-      <div class="panel-body">
-        <div class="row">
+<div class="panel panel-default collapse no-transition" id="search-collapse">
+  <form name="cashBagSearchForm" ng-submit="searchCashBags()">
+    <div class="panel-body">
+      <div class="row">
 
-          <div class="col-md-3 col-sm-6">
-            <div class="form-group">
-              <label for="item-code">Cash Bag</label>
-              <input ng-model="search.menuCode" type="text" class="form-control" id="item-code">
-            </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="item-code">Cash Bag</label>
+            <input ng-model="search.menuCode" type="text" class="form-control" id="item-code">
           </div>
+        </div>
 
-          <div class="col-xs-12 col-sm-6 col-md-3">
-						<div class="form-group">
-							<label for="item-type">Bank Ref #</label>
-							<select class="form-control" id="item-type">
-								<option value="{{ bankRef }}"  ng-repeat="bankRef in bankRefList">{{ bankRef }}</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="col-md-3 col-sm-6">
-            <div class="form-group">
-              <label for="item-name">Schedule</label>
-              <input ng-model="search.menuName" type="text" class="form-control" id="item-name">
-            </div>
+        <div class="col-xs-12 col-sm-6 col-md-3">
+          <div class="form-group">
+            <label for="item-type">Bank Ref #</label>
+            <select class="form-control" id="item-type">
+              <option value="{{ bankRef }}" ng-repeat="bankRef in bankRefList">{{ bankRef }}</option>
+            </select>
           </div>
+        </div>
 
-         <div class="col-md-3 col-sm-6">
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="item-name">Schedule</label>
+            <input ng-model="search.menuName" type="text" class="form-control" id="item-name">
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
           <date-picker
             element-class="col-xs-6 col-sm-6"
             start-date-model="search.startDate"
@@ -49,73 +49,75 @@
             label-to="Effective To"
             is-search-field="true">
           </date-picker>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="item-type">Origin
+              <select multiple ng-model="search.itemType" class="form-control" id="search-origin">
+                <option ng-repeat="type in itemTypes" value="{{ origin.name }}">{{ origin.name }}</option>
+              </select>
+              <input type="checkbox"> Add All</label>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-3 col-sm-6">
-						<div class="form-group">
-							<label for="item-type">Origin</label>
-							<select ng-model="search.itemType" class="form-control" id="item-type">
-								<option value="{{orign.name}}"  ng-repeat="type in itemTypes | unique: 'id'">{{ orign.name }}</option>
-							</select>
-							<input type="checkbox"> Add All</label>
-						</div>
-					</div>
-
-          <div class="col-md-3 col-sm-6">
-						<div class="form-group">
-							<label for="item-type">Destination</label>
-							<select ng-model="search.itemType" class="form-control" id="item-type">
-								<option value="{{destinations.name}}"  ng-repeat="type in itemTypes | unique: 'id'">{{ destinations.name }}</option>
-							</select>
-							<input type="checkbox"> Add All</label>
-						</div>
-					</div>
-
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="item-type">Destination
+              <select multiple ng-model="search.itemType" class="form-control" id="search-origin">
+                <option ng-repeat="type in itemTypes" value="{{ origin.name }}">{{ origin.name }}</option>
+              </select>
+              <input type="checkbox"> Add All</label>
+          </div>
         </div>
-      </div>
 
-      <div class="panel-footer text-right">
-        <button type="button" class="btn btn-default">Clear</button>
-        <button type="submit" class="btn btn-primary">Search</button>
       </div>
-    </form>
-  </div>
+    </div>
 
-  <table class="table table-bordered table-hover">
-    <thead>
-    <tr>
-      <th>Cash Bag</th>
-      <th>Bank Ref #</th>
-      <th>Date</th>
-      <th>Origin</th>
-      <th>Destination</th>
-      <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td colspan="6" ng-click="" class="btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Cash Bag</td>
-    </tr>
-    <tr
-      ng-repeat="cashBag in cashBagList">
-      <td>{{ cashBag.cashBagNumber }}</td>
-      <td>{{ cashBag.bankReferenceNumber }}</td>
-      <td>{{ cashBag.scheduleDate }}</td>
-      <td>{{ cashBag.departureStationCode }}</td>
-      <td>{{ cashBag.arrivalStationCode }}</td>
-      <td>
-        <button class="btn btn-info btn-xs" ng-click="showCashBag(cashBag)">
-          <i class="fa fa-file"></i>
-        </button>
-        <button class="btn btn-primary btn-xs" ng-click="showCashBag(cashBag)">
-          <i class="fa fa-pencil"></i>
-        </button>
-        <button class="btn btn-danger btn-xs">
-          <i class="fa fa-trash"></i>
-        </button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+    <div class="panel-footer text-right">
+      <button type="button" class="btn btn-default">Clear</button>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+</div>
+
+<table class="table table-bordered table-hover">
+  <thead>
+  <tr>
+    <th>Cash Bag</th>
+    <th>Bank Ref #</th>
+    <th>Date</th>
+    <th>Origin</th>
+    <th>Destination</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td colspan="6" ng-click="" class="btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      Add Cash Bag
+    </td>
+  </tr>
+  <tr
+    ng-repeat="cashBag in cashBagList">
+    <td>{{ cashBag.cashBagNumber }}</td>
+    <td>{{ cashBag.bankReferenceNumber }}</td>
+    <td>{{ cashBag.scheduleDate }}</td>
+    <td>{{ cashBag.departureStationCode }}</td>
+    <td>{{ cashBag.arrivalStationCode }}</td>
+    <td>
+      <button class="btn btn-info btn-xs" ng-click="showCashBag(cashBag)">
+        <i class="fa fa-file"></i>
+      </button>
+      <button class="btn btn-primary btn-xs" ng-click="showCashBag(cashBag)">
+        <i class="fa fa-pencil"></i>
+      </button>
+      <button class="btn btn-danger btn-xs">
+        <i class="fa fa-trash"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>
