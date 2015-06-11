@@ -26,6 +26,7 @@ angular.module('ts5App')
     };
 
     $scope.searchCashBag = function () {
+      // TODO: serialize scheduleDate parameter
       cashBagService.getCashBagList(companyId, $scope.search).then(function(response){
         $scope.cashBagList = response.cashBags;
       });
