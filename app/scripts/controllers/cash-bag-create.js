@@ -4,30 +4,27 @@
  * @ngdoc function
  * @name ts5App.controller:CashBagCreateCtrl
  * @description
+ * @author kmeath
  * # CashBagCreateCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCreateCtrl', function ($scope, cashBagService) {
+  .controller('CashBagCreateCtrl', function ($scope, cashBagService, $routeParams, $location) {
 
-    $scope.viewName = "Cash Bag";
+    // make sure state is view, edit or create, otherwise redirect home
+    if(-1===['view','edit','create'].indexOf($routeParams.state)){
+      return $location.path('/');
+    }
 
-    var mockFlight = {
-      airline: 'FPO Delta',
-      number: 'E2Y56',
-      date: new Date()
-    };
-    var mockCashBag = {
-      cashiersEntryDate: new Date(),
-      baseCurrency: 'TODO: DATA',
-      flightSchedules: [{id: 1, name: 'test'}, {id: 2, name: 'test 2'}]
-    };
-    var mockExchangeRates = [
-      ['CHF', 1400.75, 10.00, 13.75, 0.1844, 0.1844],
-      ['USD', 6.66, 6.00, 0.66, 0.1844, 0.1844]
-    ];
+    $scope.viewName = 'Cash Bag';
+    $scope.readOnly = $routeParams.state === 'view';
+    $scope.state = $routeParams.state;
 
-    $scope.cashBag = mockCashBag;
-    $scope.flight = mockFlight;
-    $scope.exchangeRates = mockExchangeRates;
+    // if we have a route id param, get that model from the api
+    if($routeParams.id) {
+      cashBagService.getCashBag($routeParams.id).then(function (response) {
+        console.log(response);
+        $scope.cashBag = response;
+      });
+    }
   });
