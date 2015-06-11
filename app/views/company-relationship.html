@@ -1,1 +1,10 @@
 <h1>Manage Relationships</h1>
+<div class="container module-container">
+  <list-object ng-repeat="companyRelationship in companyRelationshipList" vm="companyRelationship"
+               type="company-relationship"></list-object>
+  <div class="row">
+    <div class="col-xs-12 text-right">
+      <a class="btn btn-primary"><span class="fa fa-plus" aria-hidden="true"></span> Add Company Relationship</a>
+    </div>
+  </div>
+</div>

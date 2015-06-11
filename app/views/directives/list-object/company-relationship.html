@@ -1,0 +1,27 @@
+<div class="panel panel-transparent">
+  <div class="panel-body">
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <label>Company Type *</label>
+        <select name="companyType" required ng-model="vm.companyType" class="form-control">
+          <option ng-repeat="companyType in companyTypes" value="{{ companyType.id }}">{{ companyType.name }}</option>
+        </select>
+      </div>
+      <div class="form-group col-sm-6">
+        <label>Company Type *</label>
+        <select name="companyName" required ng-model="vm.companyId" class="form-control">
+          <option ng-repeat="company in companyList" value="{{ company.id }}">{{ company.name }}</option>
+        </select>
+      </div>
+      <date-picker
+          class="col-sm-6 col-xs-12"
+          element-class="col-xs-6 col-sm-6"
+          start-date-model="vm.startDate"
+          end-date-model="vm.endDate"
+          disable-past="true"
+          label-from="Effective From"
+          label-to="Effective To">
+      </date-picker>
+    </div>
+  </div>
+</div>

@@ -23,8 +23,8 @@ angular.module('ts5App')
 
     return {
       scope: {
-        vm: '=',
-        stations: '='
+        vm: '='/*,
+        stations: '='*/
       },
       //  vm: '&listObject'
       //},
