@@ -11,7 +11,6 @@
 angular
   .module('ts5App', [
     'config',
-    'ngAnimate',
     'ngAria',
     'ngCookies',
     'ngMessages',

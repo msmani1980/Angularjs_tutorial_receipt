@@ -10,14 +10,15 @@
 angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/cash-bags';
+    var requestURL = ENV.apiUrl + '/api/cash-bags/:id';
 
     var requestParameters = {
+      id:'@id',
       limit: 50
     };
 
     var actions = {
-      getCashBagList: {
+      getCashBag: {
         method: 'GET',
         headers: {companyId: 362}
       }
@@ -29,10 +30,18 @@ angular.module('ts5App')
       var payload = {
         retailCompanyId: companyId
       };
-      return requestResource.getCashBagList(payload).$promise;
+      return requestResource.getCashBag(payload).$promise;
+    }
+
+    function getCashBag(cashBagId){
+      var payload = {
+        id:cashBagId
+      };
+      return requestResource.getCashBag(payload).$promise;
     }
 
     return {
-      getCashBagList: getCashBagList
+      getCashBagList: getCashBagList,
+      getCashBag: getCashBag
     };
   });
