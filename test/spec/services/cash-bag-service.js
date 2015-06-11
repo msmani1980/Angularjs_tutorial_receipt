@@ -10,7 +10,11 @@ describe('Service: cashBagService', function () {
     $httpBackend,
     cashBagListResponseJSON,
     cashBagResponseJSON,
-    headers = {companyId:362,"Accept":"application/json, text/plain, */*","userId":1};
+    headers = {
+      companyId: 362,
+      'Accept': 'application/json, text/plain, */*',
+      'userId': 1
+    };
 
   beforeEach(inject(function (_cashBagService_, $injector) {
     inject(function (_servedCashBagList_, _servedCashBag_) {
@@ -42,7 +46,7 @@ describe('Service: cashBagService', function () {
 
       var cashBagListData;
       beforeEach(function () {
-        $httpBackend.whenGET(/cash-bags/,headers).respond(cashBagListResponseJSON);
+        $httpBackend.whenGET(/cash-bags/, headers).respond(cashBagListResponseJSON);
 
         cashBagService.getCashBagList().then(function (dataFromAPI) {
           cashBagListData = dataFromAPI;
@@ -54,20 +58,20 @@ describe('Service: cashBagService', function () {
         expect(Object.prototype.toString.call(cashBagListData.cashBags)).toBe('[object Array]');
       });
 
-      it('should have isSubmitted property', function(){
+      it('should have isSubmitted property', function () {
         expect(cashBagListData.cashBags[0].isSubmitted).not.toBe(null);
       });
 
-      it('should have retailCompanyId property', function(){
+      it('should have retailCompanyId property', function () {
         expect(cashBagListData.cashBags[0].retailCompanyId).not.toBe(null);
       });
 
-      it('should have cashbagSubmittedBy property', function(){
+      it('should have cashbagSubmittedBy property', function () {
         expect(cashBagListData.cashBags[0].cashbagSubmittedBy).not.toBe(undefined);
       });
     });
 
-    describe('api call parameters', function() {
+    describe('api call parameters', function () {
       it('should have a company id as payload', function () {
         var companyId = 413;
         // TODO: fix regex to not include limit=50
@@ -78,7 +82,7 @@ describe('Service: cashBagService', function () {
       });
     });
 
-    describe('getCashBag', function(){
+    describe('getCashBag', function () {
 
       it('should be accessible in the controller', function () {
         expect(!!cashBagService.getCashBag).toBe(true);
@@ -88,7 +92,7 @@ describe('Service: cashBagService', function () {
 
       beforeEach(function () {
         var cashBagId = 95;
-        var regex = new RegExp('cash-bags/'+cashBagId, 'g');
+        var regex = new RegExp('cash-bags/' + cashBagId, 'g');
         $httpBackend.expectGET(regex).respond(cashBagResponseJSON);
 
         cashBagService.getCashBag(cashBagId).then(function (dataFromAPI) {
@@ -97,11 +101,11 @@ describe('Service: cashBagService', function () {
         $httpBackend.flush();
       });
 
-      it('should be an object', function(){
+      it('should be an object', function () {
         expect(Object.prototype.toString.call(cashBagData)).toBe('[object Object]');
       });
 
-      it('should have id property', function(){
+      it('should have id property', function () {
         expect(cashBagData.id).not.toBe(null);
       });
 
