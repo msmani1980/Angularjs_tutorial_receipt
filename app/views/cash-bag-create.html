@@ -1,6 +1,6 @@
-<h1>{{ viewName }}</h1>
+<h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
 
-<h2>{{ flight.airline }} <small>{{ flight.number }} <date>{{ flight.date | date:'yyyy-MM-dd' }}</date></small></h2>
+<h2>TODO: Airline <small>TODO: Flight <date>{{ cashBag.scheduleDate }}</date></small></h2>
 <ng-form name="cashBagCreateForm" class="form edit-form">
 
   <div class="panel panel-default">
@@ -8,10 +8,10 @@
     <div class="panel-heading">
       <div class="row">
         <div class="col-sm-6">
-          <div>Base currency: {{ cashBag.baseCurrency }}</div>
+          <div>Base currency: TODO: Base currency</div>
         </div>
         <div class="col-sm-6 text-right">
-          <div>Cashier's entry date: <date>{{ cashBag.cashiersEntryDate | date:'yyyy-MM-dd' }}</date></div>
+          <div>Cashier's entry date: <date>{{ cashBag.createdOn }}</date></div>
         </div>
       </div>
     </div>
@@ -20,15 +20,42 @@
 
       <div class="row form-group">
 			  <div class="col-sm-4">
-          <input-text label="Cash Bag #" name="cashBag" required="true" pattern="regexp.number" min-length="1" max-length="10"></input-text>
+          <label for="cashBagNumber">Cash Bag #</label>
+          <input custom-pattern="regexp.alpha"
+                 required
+                 type="text"
+                 maxlength="25"
+                 name="cashBagNumber"
+                 class="form-control"
+                 id="cashBagNumber"
+                 ng-model="cashBag.cashBagNumber"
+                 ng-readonly="readOnly"/>
 			  </div>
 
 			  <div class="col-sm-4">
-          <input-text label="Total # of Bags" name="numberOfBags" pattern="regexp.number" min-length="1" max-length="10"></input-text>
+          <label for="totalCashBags">Total # of Bags</label>
+          <input custom-pattern="regexp.alpha"
+                 required
+                 type="text"
+                 maxlength="25"
+                 name="totalCashBags"
+                 class="form-control"
+                 id="totalCashBags"
+                 ng-model="cashBag.totalCashBags",
+                 ng-readonly="readOnly"/>
 			  </div>
 
 			  <div class="col-sm-4">
-          <input-text label="Bank Reference" name="bankReference" pattern="regexp.alpha"></input-text>
+          <label for="totalCashBags">Bank Reference</label>
+          <input custom-pattern="regexp.alpha"
+                 required
+                 type="text"
+                 maxlength="25"
+                 name="bankReferenceNumber"
+                 class="form-control"
+                 id="bankReferenceNumber"
+                 ng-model="cashBag.bankReferenceNumber",
+                 ng-readonly="readOnly"/>
         </div>
       </div>
 
@@ -45,13 +72,21 @@
 			    </tr>
 			    </thead>
 			    <tbody>
-			    <tr ng-repeat="exchange in exchangeRates">
-			      <td>{{ exchange[0] }}</td>
-			      <td>{{ exchange[1] }}</td>
-			      <td><input type="text" class="form-control" value="{{ exchange[2] }}" name="exchangePaperAmount[{{$index}}]"></td>
-			      <td><input type="text" class="form-control" value="{{ exchange[3] }}" name="exchangeCoinAmount[{{$index}}]"></td>
-			      <td>{{ exchange[4] }}</td>
-			      <td>{{ exchange[5] }}</td>
+			    <tr ng-repeat="currency in cashBag.cashBagCurrencies">
+			      <td>{{ currency.currencyId }}</td>
+			      <td>{{ currency.bankAmount }}</td>
+			      <td><input type="text"
+                       class="form-control"
+                       ng-model="currency.coinAmountEpos"
+                       name="coinAmountManual[{{currency.currencyId}}]"
+                       ng-readonly="readOnly"></td>
+			      <td><input type="text"
+                       class="form-control"
+                       ng-model="currency.paperAmountEpos"
+                       name="paperAmountManual[{{currency.currencyId}}]"
+                       ng-readonly="readOnly"></td>
+			      <td>{{ currency.paperAmountEpos }}</td>
+			      <td>{{ currency.coinAmountEpos }}</td>
 			    </tr>
 			    </tbody>
 			  </table>
