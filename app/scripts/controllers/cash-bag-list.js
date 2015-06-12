@@ -38,6 +38,10 @@ angular.module('ts5App')
       $scope.searchCashBag();
     };
 
+    $scope.showCreatePopup = function () {
+      angular.element('#addCashBagModal').modal('show');
+    }
+
     function getBankRefList(cashBagList) {
       var bankRefList = [];
       cashBagList.forEach(function(element){
