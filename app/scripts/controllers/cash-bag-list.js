@@ -10,6 +10,7 @@
 angular.module('ts5App')
   .controller('CashBagListCtrl', function ($scope, cashBagService, GlobalMenuService, stationsService, $location) {
   	var companyId = GlobalMenuService.company.get();
+    $scope.viewName = 'Manage Cash Bag'
     $scope.search = {};
 
   	cashBagService.getCashBagList(companyId).then(function(response){
