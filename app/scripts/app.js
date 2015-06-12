@@ -107,7 +107,7 @@ angular
         templateUrl: 'views/menu-edit.html',
         controller: 'MenuEditCtrl'
       })
-      .when('/cash-bag-create', {
+      .when('/cash-bag/:state/:id?', {
         templateUrl: 'views/cash-bag-create.html',
         controller: 'CashBagCreateCtrl'
       })
