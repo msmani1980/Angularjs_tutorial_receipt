@@ -1,5 +1,5 @@
 'use strict';
-
+/*global moment*/
 /**
  * @ngdoc function
  * @name ts5App.controller:CashBagEditCtrl
@@ -15,9 +15,13 @@ angular.module('ts5App')
     $scope.readOnly = $routeParams.state !== 'edit';
     $scope.displayError = false;
 
-    $scope.update = function (cashBag) {
+    $scope.update = function (updatedCashBag) {
+      var saveCashBag = angular.copy(updatedCashBag);
+      // TODO see how Luis is doing this in company-relationship-service, tsv154 branch
+      saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
+      $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
       var payload = {
-        cashBag: angular.copy(cashBag)
+        cashBag: saveCashBag
       };
       cashBagService.updateCashBag($routeParams.id, payload).then(
         function () {
@@ -26,12 +30,14 @@ angular.module('ts5App')
             dismissButton: true,
             content: '<strong>Cash bag</strong>: successfully updated!'
           });
+          $scope.displayError = false;
+          $scope.formErrors = {};
         },
         function (error) {
           ngToast.create({
             className: 'warning',
             dismissButton: true,
-            content: '<strong>Cash bag</strong>: error updating menu!'
+            content: '<strong>Cash bag</strong>: error updating cash bag!'
           });
           $scope.displayError = true;
           $scope.formErrors = error.data;
