@@ -20,7 +20,11 @@ angular.module('ts5App')
     var actions = {
       getCashBag: {
         method: 'GET',
-        headers: {companyId: 362}
+        headers: {companyId: 362} // TODO should this always be here?
+      },
+      updateCashBag: {
+        method: 'PUT',
+        headers: {companyId: 362} // TODO should this always be here?
       }
     };
 
@@ -40,8 +44,13 @@ angular.module('ts5App')
       return requestResource.getCashBag(payload).$promise;
     }
 
+    function updateCashBag(payload){
+      return requestResource.updateCashBag(payload).$promise;
+    }
+
     return {
       getCashBagList: getCashBagList,
-      getCashBag: getCashBag
+      getCashBag: getCashBag,
+      updateCashBag: updateCashBag
     };
   });
