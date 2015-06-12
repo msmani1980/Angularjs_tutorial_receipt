@@ -15,7 +15,7 @@ angular.module('ts5App')
     $scope.readOnly = $routeParams.state !== 'edit';
 
     $scope.update = function (cashBag) {
-      var updatedCashBag = angular.copy(cashBag);
+      // var updatedCashBag = angular.copy(cashBag);
       // console.log(updatedCashBag);
       // call cashBagService.putCashBag
 
