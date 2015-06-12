@@ -10,7 +10,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
     menuAPIResponse;
 
   beforeEach(module('ts5App'));
-  beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('template-module'));
   beforeEach(module(
     'served/menus.json'
   ));
@@ -114,7 +114,105 @@ describe('Controller: MenuRelationshipListCtrl', function () {
       expect(view).toBeDefined();
     });
 
-    describe('table', function () {
+    describe('container', function () {
+
+      var container;
+
+      beforeEach(function () {
+        container = angular.element(view.find(
+          '.fluid-container')[0]);
+      });
+
+      it('should be defined', function () {
+        expect(container).toBeDefined();
+      });
+
+    });
+
+    describe('list controls', function () {
+
+      var controls;
+
+      beforeEach(function () {
+        controls = angular.element(view.find(
+          '.list-controls')[0]);
+      });
+
+      it('should be defined', function () {
+        expect(controls).toBeDefined();
+      });
+
+      it('should have a row', function () {
+        expect(controls.find('.row')[0]).toBeDefined();
+      });
+
+      it('should have (2) columns inside of the row', function () {
+        expect(controls.find('.row .col-xs-6').length).toEqual(
+          2);
+      });
+
+      it('should have a View Name', function () {
+        expect(controls.find('.view-name')[0]).toBeDefined();
+      });
+
+      it('should have a View Name that contains text', function () {
+        expect(controls.find('.view-name').text().trim()).toEqual(
+          'Menu Relationship List');
+      });
+
+      it('should have (2) buttons inside the control', function () {
+        expect(controls.find('button.btn').length).toEqual(
+          2);
+      });
+
+      describe('search button', function () {
+        var searchButton;
+        beforeEach(function () {
+          searchButton = angular.element(controls.find(
+            '.btn')[0]);
+        });
+
+        it('should be defined', function () {
+          expect(searchButton[0]).toBeDefined();
+        });
+
+        it('should contain a search icon', function () {
+          expect(searchButton.find('span.fa-search')).toBeDefined();
+        });
+
+        it('should contain text', function () {
+          expect(searchButton.find('.btn-label').text().trim())
+            .toEqual('Search');
+        });
+
+      });
+
+      describe('clear button', function () {
+        var clearButton;
+        beforeEach(function () {
+          clearButton = angular.element(controls.find(
+            '.btn')[1]);
+        });
+
+        it('should be defined', function () {
+          expect(clearButton[0]).toBeDefined();
+        });
+
+        it('should contain text', function () {
+          expect(clearButton.find('.btn-label').text().trim())
+            .toEqual('Clear');
+        });
+
+        it('should contain an ng-click', function () {
+          expect(clearButton.attr('ng-click')).toEqual(
+            'clearSearchFilters()');
+        });
+
+      });
+
+    });
+
+    describe('menu table', function () {
 
       var table;
 
@@ -136,7 +234,8 @@ describe('Controller: MenuRelationshipListCtrl', function () {
           testHeader;
 
         beforeEach(function () {
-          thead = angular.element(table.find('thead')[0]);
+          thead = angular.element(table.find('thead')[
+            0]);
         });
 
         it('should contain 6 columns', function () {
@@ -144,37 +243,44 @@ describe('Controller: MenuRelationshipListCtrl', function () {
         });
 
         it('should contain a Menu Code column', function () {
-          testHeader = angular.element(thead.find('th')[0]);
+          testHeader = angular.element(thead.find(
+            'th')[0]);
           expect(testHeader.text().trim()).toEqual(
             'Menu Code');
         });
 
         it('should contain a Menu Name column', function () {
-          testHeader = angular.element(thead.find('th')[1]);
+          testHeader = angular.element(thead.find(
+            'th')[1]);
           expect(testHeader.text().trim()).toEqual(
             'Menu Name');
         });
 
-        it('should contain a Caterer Station column', function () {
-          testHeader = angular.element(thead.find('th')[2]);
-          expect(testHeader.text().trim()).toEqual(
-            'Caterer Stations');
-        });
+        it('should contain a Caterer Station column',
+          function () {
+            testHeader = angular.element(thead.find(
+              'th')[2]);
+            expect(testHeader.text().trim()).toEqual(
+              'Caterer Stations');
+          });
 
         it('should contain a Start Date column', function () {
-          testHeader = angular.element(thead.find('th')[3]);
+          testHeader = angular.element(thead.find(
+            'th')[3]);
           expect(testHeader.text().trim()).toEqual(
             'Start Date');
         });
 
         it('should contain a End Date column', function () {
-          testHeader = angular.element(thead.find('th')[4]);
+          testHeader = angular.element(thead.find(
+            'th')[4]);
           expect(testHeader.text().trim()).toEqual(
             'End Date');
         });
 
         it('should contain an Actions column', function () {
-          testHeader = angular.element(thead.find('th')[5]);
+          testHeader = angular.element(thead.find(
+            'th')[5]);
           expect(testHeader.text().trim()).toEqual(
             'Actions');
         });
@@ -186,13 +292,15 @@ describe('Controller: MenuRelationshipListCtrl', function () {
         var tbody;
 
         beforeEach(function () {
-          tbody = angular.element(table.find('tbody')[0]);
+          tbody = angular.element(table.find('tbody')[
+            0]);
         });
 
         it(
           'should contain a list tr element which is the same length as the menu list ',
           function () {
-            expect(tbody.find('tr').length).toEqual($scope.menuList
+            expect(tbody.find('tr').length).toEqual(
+              $scope.menuList
               .length);
           });
 
@@ -203,16 +311,19 @@ describe('Controller: MenuRelationshipListCtrl', function () {
             testMenuData;
 
           beforeEach(function () {
-            testMenuData = menuAPIResponse.menus[0];
-            testRow = angular.element(tbody.find('tr')[
+            testMenuData = menuAPIResponse.menus[
+              0];
+            testRow = angular.element(tbody.find(
+              'tr')[
               0]);
           });
 
-          it('should contain a Menu Code cell', function () {
-            testCell = angular.element(testRow.find(
-              'td')[0]);
-            expect(testCell).toBeDefined();
-          });
+          it('should contain a Menu Code cell',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[0]);
+              expect(testCell).toBeDefined();
+            });
 
           it(
             'should have a Menu Code cell that matches the api data',
@@ -223,11 +334,12 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                 testMenuData.menuCode);
             });
 
-          it('should contain a Menu Name cell', function () {
-            testCell = angular.element(testRow.find(
-              'td')[1]);
-            expect(testCell).toBeDefined();
-          });
+          it('should contain a Menu Name cell',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[1]);
+              expect(testCell).toBeDefined();
+            });
 
           it(
             'should have a Menu Name cell that matches the api data',
@@ -239,18 +351,20 @@ describe('Controller: MenuRelationshipListCtrl', function () {
             });
 
 
-          it('should contain a Caterer Stations  cell',
+          it(
+            'should contain a Caterer Stations  cell',
             function () {
               testCell = angular.element(testRow.find(
                 'td')[2]);
               expect(testCell).toBeDefined();
             });
 
-          it('should contain a Start Date cell', function () {
-            testCell = angular.element(testRow.find(
-              'td')[3]);
-            expect(testCell).toBeDefined();
-          });
+          it('should contain a Start Date cell',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[3]);
+              expect(testCell).toBeDefined();
+            });
 
           it(
             'should have a Start Date cell that matches the api data',
@@ -258,25 +372,31 @@ describe('Controller: MenuRelationshipListCtrl', function () {
               testCell = angular.element(testRow.find(
                 'td')[3]);
 
-              var formattedDate = moment(testCell.text().trim(),
-                'MM/DD/YYYY').format('YYYY-MM-DD').toString();
+              var formattedDate = moment(testCell.text()
+                  .trim(),
+                  'MM/DD/YYYY').format('YYYY-MM-DD')
+                .toString();
               expect(
-                formattedDate).toEqual(testMenuData.startDate);
+                formattedDate).toEqual(
+                testMenuData.startDate);
             });
 
-          it('should contain a End Date cell', function () {
-            testCell = angular.element(testRow.find(
-              'td')[4]);
-            expect(testCell).toBeDefined();
-          });
+          it('should contain a End Date cell',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[4]);
+              expect(testCell).toBeDefined();
+            });
 
           it(
             'should have a End Date cell that matches the api data',
             function () {
               testCell = angular.element(testRow.find(
                 'td')[4]);
-              var formattedDate = moment(testCell.text().trim(),
-                'MM/DD/YYYY').format('YYYY-MM-DD').toString();
+              var formattedDate = moment(testCell.text()
+                  .trim(),
+                  'MM/DD/YYYY').format('YYYY-MM-DD')
+                .toString();
               expect(formattedDate).toEqual(
                 testMenuData.endDate);
             });

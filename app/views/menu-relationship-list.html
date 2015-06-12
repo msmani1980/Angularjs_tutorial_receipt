@@ -1,6 +1,85 @@
-<div class="table table-bordered table-responsive table-hover">
+<div class="fluid-container">
 
-  <table class="table table-bordered">
+	<div class="list-controls">
+
+		<div class="row">
+
+			<div class="col-xs-6">
+
+				<h2 class="view-name">Menu Relationship List</h2>
+
+			</div>
+
+      <div class="col-xs-6 text-right">
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="btn-label hidden-xs">Search</span>
+        </button>
+
+
+        <button class="btn btn-default"
+          ng-click="clearSearchFilters()"
+          ng-show="search.menuCode.length || search.menuName.length || search.menuStation.length || search.menuStation.length || search.startDate.length || search.endDate.length">
+          <span class="btn-label">Clear</span>
+        </button>
+
+      </div>
+
+		</div>
+
+		<div class="collapse" id="search-collapse">
+
+			<form class="form">
+
+				<div class="row">
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="menu-code">Menu Code</label>
+							<input ng-model="search.menuCode" type="text" class="form-control" id="menu-code" placeholder="MC001" />
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="menu-name">Menu Name</label>
+							<input ng-model="search.menuName" type="text" class="form-control" id="menu-name" placeholder="Menu Name" />
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="menu-station">Catering Station</label>
+							<select ng-model="search.menuStation" class="form-control" id="menu-station">
+								<!--<option value="{{type.name}}"  ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>-->
+							</select>
+						</div>
+
+					</div>
+
+				</div>
+
+				<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
+					start-date-model="search.startDate"
+					end-date-model="search.endDate"
+					is-search-field="true"
+					label-from="Effective From"
+					label-to="Effective To">
+				</date-picker>
+
+			</form>
+
+		</div>
+
+	</div>
+
+  <table class="table table-bordered table-responsive table-hover">
 
     <thead>
 
@@ -46,5 +125,6 @@
     </tbody>
 
   </table>
+
 
 </div>
