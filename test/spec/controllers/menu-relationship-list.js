@@ -1,5 +1,5 @@
 'use strict';
-
+/* global moment */
 describe('Controller: MenuRelationshipListCtrl', function () {
 
   var $rootScope,
@@ -181,18 +181,112 @@ describe('Controller: MenuRelationshipListCtrl', function () {
 
       });
 
-      it('should have a tbody element', function () {
-        expect(table.find('tbody')).toBeDefined();
+      describe('table body', function () {
+
+        var tbody;
+
+        beforeEach(function () {
+          tbody = angular.element(table.find('tbody')[0]);
+        });
+
+        it(
+          'should contain a list tr element which is the same length as the menu list ',
+          function () {
+            expect(tbody.find('tr').length).toEqual($scope.menuList
+              .length);
+          });
+
+        describe('first row', function () {
+
+          var testRow,
+            testCell,
+            testMenuData;
+
+          beforeEach(function () {
+            testMenuData = menuAPIResponse.menus[0];
+            testRow = angular.element(tbody.find('tr')[
+              0]);
+          });
+
+          it('should contain a Menu Code cell', function () {
+            testCell = angular.element(testRow.find(
+              'td')[0]);
+            expect(testCell).toBeDefined();
+          });
+
+          it(
+            'should have a Menu Code cell that matches the api data',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[0]);
+              expect(testCell.text().trim()).toEqual(
+                testMenuData.menuCode);
+            });
+
+          it('should contain a Menu Name cell', function () {
+            testCell = angular.element(testRow.find(
+              'td')[1]);
+            expect(testCell).toBeDefined();
+          });
+
+          it(
+            'should have a Menu Name cell that matches the api data',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[1]);
+              expect(testCell.text().trim()).toEqual(
+                testMenuData.menuName);
+            });
+
+
+          it('should contain a Caterer Stations  cell',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[2]);
+              expect(testCell).toBeDefined();
+            });
+
+          it('should contain a Start Date cell', function () {
+            testCell = angular.element(testRow.find(
+              'td')[3]);
+            expect(testCell).toBeDefined();
+          });
+
+          it(
+            'should have a Start Date cell that matches the api data',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[3]);
+
+              var formattedDate = moment(testCell.text().trim(),
+                'MM/DD/YYYY').format('YYYY-MM-DD').toString();
+              expect(
+                formattedDate).toEqual(testMenuData.startDate);
+            });
+
+          it('should contain a End Date cell', function () {
+            testCell = angular.element(testRow.find(
+              'td')[4]);
+            expect(testCell).toBeDefined();
+          });
+
+          it(
+            'should have a End Date cell that matches the api data',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[4]);
+              var formattedDate = moment(testCell.text().trim(),
+                'MM/DD/YYYY').format('YYYY-MM-DD').toString();
+              expect(formattedDate).toEqual(
+                testMenuData.endDate);
+            });
+
+
+        });
+
       });
 
     });
-
-    it(
-      'should contain a list tr element which is the same length as the menu list ',
-      function () {
-        expect(view.find('table tbody tr').length).toEqual($scope.menuList
-          .length);
-      });
 
   });
 

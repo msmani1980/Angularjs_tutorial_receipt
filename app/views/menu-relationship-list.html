@@ -17,25 +17,25 @@
 
     <tbody>
 
-      <tr id="item-{{item.id}}" ng-repeat="(key,item) in menuList">
+      <tr id="menu-{{menu.id}}" ng-repeat="(key,menu) in menuList">
 
-        <td>{{ item.stockOwnerCode }}</td>
-        <td>{{ item.itemCode }}</td>
-        <td>{{ item.itemName }}</td>
-        <td>{{ item.startDate | date: 'MM/dd/yyyy' }}</td>
-        <td>{{ item.endDate | date: 'MM/dd/yyyy' }}</td>
+        <td>{{ menu.menuCode }}</td>
+        <td>{{ menu.menuName }}</td>
+        <td>{{ menu.stations }}</td>
+        <td>{{ menu.startDate | date: 'MM/dd/yyyy' }}</td>
+        <td>{{ menu.endDate | date: 'MM/dd/yyyy' }}</td>
 
         <td>
 
-          <a class="btn btn-info btn-xs" href="#/item-view/{{item.id}}">
+          <a class="btn btn-info btn-xs" href="#/menu-view/{{menu.id}}">
             <i class="fa fa-file"></i>
           </a>
 
-          <a class="btn btn-primary btn-xs" href="#/item-edit/{{item.id}}" ng-disabled="isItemInactive(item.endDate)">
+          <a class="btn btn-primary btn-xs" href="#/menu-edit/{{menu.id}}" ng-disabled="isMenuInactive(menu.endDate)">
             <i class="fa fa-pencil"></i>
           </a>
 
-          <button class="btn btn-danger btn-xs" ng-click="removeItem(item.id,key)" ng-disabled="isItemActive(item.startDate) || isItemInactive(item.endDate)">
+          <button class="btn btn-danger btn-xs" ng-click="removeMenu(menu.id,key)" ng-disabled="isMenuActive(menu.startDate) || isMenuInactive(menu.endDate)">
             <i class="fa fa-trash"></i>
           </button>
 
