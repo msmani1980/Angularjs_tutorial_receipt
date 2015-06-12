@@ -1,19 +1,19 @@
 'use strict';
 
-describe('Controller: CashBagCreateCtrl', function () {
+describe('Controller: CashBagEditCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/cash-bag.json'));
 
-  var CashBagCreateCtrl,
+  var CashBagEditCtrl,
     scope,
     $httpBackend,
     cashBagService,
     cashBagResponseJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, _cashBagService_) {
+  beforeEach(inject(function ($controller, $rootScope, $injector) {
     scope = $rootScope.$new();
     inject(function (_servedCashBag_) {
       cashBagResponseJSON = _servedCashBag_;
@@ -23,12 +23,13 @@ describe('Controller: CashBagCreateCtrl', function () {
 
     $httpBackend.whenGET(/cash-bags/).respond(cashBagResponseJSON);
 
-    cashBagService = _cashBagService_;
+    cashBagService = $injector.get('cashBagService');
 
-    CashBagCreateCtrl = $controller('CashBagCreateCtrl', {
+    CashBagEditCtrl = $controller('CashBagEditCtrl', {
       $scope: scope,
-      $routeParams: {state: 'view', id: 95}
+      $routeParams: {state:'edit', id:95}
     });
+
     spyOn(cashBagService, 'getCashBag').and.callThrough();
 
     scope.$digest();
@@ -43,15 +44,16 @@ describe('Controller: CashBagCreateCtrl', function () {
   it('should attach a viewName to the scope', function () {
     expect(scope.viewName).toBe('Cash Bag');
   });
-/*
-  describe('cash bag object in scope', function () {
-    it('should get the cash bag from API', function () {
-      expect(cashBagService.getCashBag).toHaveBeenCalled();
-    });
 
-    it('should attach a cash bag object after a API call to getCashBag', function () {
-      expect(!!scope.cashBag).toBe(true);
-    });
+  /*
+  it('should call getCashBag from cashBagService', function () {
+    expect(cashBagService.getCashBag).toHaveBeenCalled();
   });
-*/
+  */
+
+  it('should have cashBag attached to scope after API call', function () {
+    // console.log(scope.cashBag);
+    expect(!!scope.cashBag).toBe(true);
+  });
+
 });

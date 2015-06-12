@@ -130,7 +130,20 @@ describe('Service: cashBagService', function () {
       });
 
     });
-
+    /*
+    describe('updateCashBag', function () {
+      beforeEach(function () {
+        var cashBagId = 95;
+        var regex = new RegExp('cash-bags/' + cashBagId, 'g');
+        $httpBackend.whenPUT(regex).respond({done: true});
+      });
+      it('it should POST data to cash bag API', function () {
+        cashBagService.updateCashBag({cashBagData: 'fakeCashBagPayload'});
+        $httpBackend.expectPUT(/cash-bags/);
+        $httpBackend.flush();
+      });
+    });
+    */
   });
 
 
