@@ -134,6 +134,15 @@
       margin-right: 0;
     }
   }
+  
+  .employeeID-multiple-select {
+    width: 100%;
+    
+    .select2-choices {
+        border-color: #ccc;
+        border-radius: 2px;
+    }
+  }
 }
 
 .crew-commission-form {
