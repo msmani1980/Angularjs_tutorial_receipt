@@ -5,18 +5,12 @@
     <thead>
 
       <tr>
-        <th>
-          <abbr title="Stock Owner Reference Number">S.O. Ref. #</abbr>
-        </th>
-        <th>Code</th>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Onboard Name</th>
-        <th>Sales Category</th>
-        <th>Effective From</th>
-        <th>Effective To</th>
+        <th>Menu Code</th>
+        <th>Menu Name</th>
+        <th>Caterer Stations</th>
+        <th>Start Date</th>
+        <th>End Date</th>
         <th>Actions</th>
-
       </tr>
 
     </thead>
@@ -28,9 +22,6 @@
         <td>{{ item.stockOwnerCode }}</td>
         <td>{{ item.itemCode }}</td>
         <td>{{ item.itemName }}</td>
-        <td>{{ item.itemTypeName }}</td>
-        <td>{{ item.onBoardName }}</td>
-        <td>{{ item.categoryName }}</td>
         <td>{{ item.startDate | date: 'MM/dd/yyyy' }}</td>
         <td>{{ item.endDate | date: 'MM/dd/yyyy' }}</td>
 

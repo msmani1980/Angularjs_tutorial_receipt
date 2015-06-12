@@ -114,8 +114,77 @@ describe('Controller: MenuRelationshipListCtrl', function () {
       expect(view).toBeDefined();
     });
 
-    it('should have an table', function () {
-      expect(view.find('table').length).toEqual(1);
+    describe('table', function () {
+
+      var table;
+
+      beforeEach(function () {
+        table = angular.element(view.find('table')[0]);
+      });
+
+      it('should be defined', function () {
+        expect(table).toBeDefined();
+      });
+
+      it('should have a thead element', function () {
+        expect(table.find('thead')).toBeDefined();
+      });
+
+      describe('table header', function () {
+
+        var thead,
+          testHeader;
+
+        beforeEach(function () {
+          thead = angular.element(table.find('thead')[0]);
+        });
+
+        it('should contain 6 columns', function () {
+          expect(thead.find('th').length).toEqual(6);
+        });
+
+        it('should contain a Menu Code column', function () {
+          testHeader = angular.element(thead.find('th')[0]);
+          expect(testHeader.text().trim()).toEqual(
+            'Menu Code');
+        });
+
+        it('should contain a Menu Name column', function () {
+          testHeader = angular.element(thead.find('th')[1]);
+          expect(testHeader.text().trim()).toEqual(
+            'Menu Name');
+        });
+
+        it('should contain a Caterer Station column', function () {
+          testHeader = angular.element(thead.find('th')[2]);
+          expect(testHeader.text().trim()).toEqual(
+            'Caterer Stations');
+        });
+
+        it('should contain a Start Date column', function () {
+          testHeader = angular.element(thead.find('th')[3]);
+          expect(testHeader.text().trim()).toEqual(
+            'Start Date');
+        });
+
+        it('should contain a End Date column', function () {
+          testHeader = angular.element(thead.find('th')[4]);
+          expect(testHeader.text().trim()).toEqual(
+            'End Date');
+        });
+
+        it('should contain an Actions column', function () {
+          testHeader = angular.element(thead.find('th')[5]);
+          expect(testHeader.text().trim()).toEqual(
+            'Actions');
+        });
+
+      });
+
+      it('should have a tbody element', function () {
+        expect(table.find('tbody')).toBeDefined();
+      });
+
     });
 
     it(
