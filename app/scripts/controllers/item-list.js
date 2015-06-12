@@ -27,19 +27,22 @@ angular.module('ts5App')
     $scope.startDateFilter = '';
     $scope.endDateFilter = '';
 
-    var todaysDate = moment(new Date()).format();
+    var todaysDate = moment().format();
 
-    // TODO: Finish this watch
-    $scope.$watch('search', function () {
+    $scope.$watch('search.startDate + search.endDate', function () {
+
+      $scope.formatDateFilter();
+
     });
 
-    // TODO: Set a watch on this
     $scope.formatDateFilter = function () {
 
-      $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
-        'YYYYMMDD');
-      $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
-        'YYYYMMDD');
+      if ($scope.search.startDate.length) {
+        $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
+          'YYYY-MM-DD');
+        $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
+          'YYYY-MM-DD');
+      }
 
     };
 
@@ -131,11 +134,16 @@ angular.module('ts5App')
 
       var filters = $scope.search;
 
+      $scope.startDate = '';
+      $scope.endDate = '';
+
+      $scope.startDateFilter = '';
+      $scope.endDateFilter = '';
+
       for (var filterKey in filters) {
         $scope.search[filterKey] = '';
       }
 
     };
-
 
   });
