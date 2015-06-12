@@ -12,7 +12,7 @@
 angular.module('ts5App')
   .service('companyRelationshipService', function ($resource, $http, ENV) {
     var requestURL = ENV.apiUrl + '/api/companies/:id/relationships';
-    var typeRequestURL = ENV.apiUrl + '/api/company-relation/:id';
+    var typeRequestURL = ENV.apiUrl + '/api/company-relation/:id/types';
     var requestParameters = {
       id: '@id'
     };

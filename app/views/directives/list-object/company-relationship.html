@@ -4,7 +4,9 @@
       <div class="form-group col-sm-6">
         <label>Company Type *</label>
         <select name="companyType" required ng-model="vm.companyType" class="form-control">
-          <option ng-repeat="companyType in companyTypes" value="{{ companyType.id }}">{{ companyType.name }}</option>
+          <option ng-repeat="companyType in $parent.companyRelationshipTypeList"
+              value="{{ companyType.companyTypeId }}">{{ companyType.companyTypeName }}
+          </option>
         </select>
       </div>
       <div class="form-group col-sm-6">

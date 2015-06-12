@@ -8,9 +8,14 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyRelationshipListCtrl', function ($scope, $routeParams, companyRelationshipService) {
+  .controller('CompanyRelationshipListCtrl', function ($scope, $routeParams, companyRelationshipFactory) {
     $scope.viewName = 'Company Relationships';
     $scope.companyRelationshipList = [];
+    $scope.companyRelationshipTypeList = [];
+
+    function setupCompanyRelationshipType(companyRelationshipTypeListFromAPI) {
+      $scope.companyRelationshipTypeList = companyRelationshipTypeListFromAPI.response;
+    }
 
     function setupCompanyRelationshipModel(companyRelationshipsFromAPI) {
       companyRelationshipsFromAPI = companyRelationshipsFromAPI.companyRelationships;
@@ -25,5 +30,14 @@ angular.module('ts5App')
       }
     }
 
-    companyRelationshipService.getCompanyRelationshipListByCompany($routeParams.id).then(setupCompanyRelationshipModel);
+    companyRelationshipFactory.getCompany($routeParams.id).then(function(company) {
+      return company;
+    }).then(function(company) {
+      $scope.company = company;
+      companyRelationshipFactory.getCompanyRelationshipTypeList(company.companyTypeId).then(setupCompanyRelationshipType);
+    });
+
+    companyRelationshipFactory.getCompanyRelationshipListByCompany($routeParams.id).then(setupCompanyRelationshipModel, null).then(function() {
+
+    });
   });
