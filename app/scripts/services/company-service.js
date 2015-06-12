@@ -12,8 +12,7 @@ angular.module('ts5App')
   .service('companyService', function ($resource, ENV) {
     var requestURL = ENV.apiUrl + '/api/companies/:id';
     var requestParameters = {
-      id: '@id',
-      limit: 50
+      id: '@id'
     };
 
     var actions = {

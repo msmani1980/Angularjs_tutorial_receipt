@@ -30,9 +30,9 @@ describe('Factory: companyRelationshipFactory', function () {
   });
 
   describe('companyService API', function () {
-    it('should call companyService on getCompany', function () {
-      companyRelationshipFactory.getCompany(2);
-      expect(companyService.getCompany).toHaveBeenCalled();
+    it('should call companyService on getCompanyList', function () {
+      companyRelationshipFactory.getCompanyList();
+      expect(companyService.getCompanyList).toHaveBeenCalled();
     });
   });
 

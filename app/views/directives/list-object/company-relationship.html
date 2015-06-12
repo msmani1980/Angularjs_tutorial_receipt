@@ -12,7 +12,7 @@
       <div class="form-group col-sm-6">
         <label>Company Name *</label>
         <select name="companyName" required ng-model="vm.companyId" class="form-control">
-          <option ng-repeat="company in companyList" value="{{ company.id }}">{{ company.name }}</option>
+          <option ng-repeat="company in $parent.companyList" value="{{ company.id }}">{{ company.companyName }}</option>
         </select>
       </div>
       <date-picker

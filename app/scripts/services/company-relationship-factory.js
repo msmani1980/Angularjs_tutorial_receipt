@@ -14,8 +14,8 @@
 angular.module('ts5App')
   .factory('companyRelationshipFactory', function ($resource, ENV, companyRelationshipService, companyService) {
 
-    var getCompany = function (id) {
-      return companyService.getCompany(id);
+    var getCompanyList = function (payload) {
+      return companyService.getCompanyList(payload);
     };
 
     var getCompanyRelationshipListByCompany = function (id) {
@@ -27,7 +27,7 @@ angular.module('ts5App')
     };
 
     return {
-      getCompany: getCompany,
+      getCompanyList: getCompanyList,
       getCompanyRelationshipListByCompany: getCompanyRelationshipListByCompany,
       getCompanyRelationshipTypeList: getCompanyRelationshipTypeList
     };
