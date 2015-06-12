@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:CompanyRelationshipCtrl
+ * @name ts5App.controller:CompanyRelationshipListCtrl
  * @description
- * # CompanyRelationshipCtrl
+ * # CompanyRelationshipListCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyRelationshipCtrl', function ($scope, $routeParams, companyRelationshipService) {
+  .controller('CompanyRelationshipListCtrl', function ($scope, $routeParams, companyRelationshipService) {
     $scope.viewName = 'Company Relationships';
     $scope.companyRelationshipList = [];
 

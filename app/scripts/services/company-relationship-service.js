@@ -12,6 +12,7 @@
 angular.module('ts5App')
   .service('companyRelationshipService', function ($resource, $http, ENV) {
     var requestURL = ENV.apiUrl + '/api/companies/:id/relationships';
+    var typeRequestURL = ENV.apiUrl + '/api/company-relation/:id';
     var requestParameters = {
       id: '@id'
     };
@@ -58,6 +59,9 @@ angular.module('ts5App')
       getCompanyRelationship: {
         method: 'GET'
       },
+      getCompanyRelationshipTypeList: {
+        method: 'GET'
+      },
       createCompanyRelationship: {
         method: 'POST'
       },
@@ -67,6 +71,7 @@ angular.module('ts5App')
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
+    var typeRequestResource = $resource(typeRequestURL, requestParameters, actions);
 
     var normalizeDateForApp = function (dataFromAPI, startDateKey, endDateKey) {
       var dateFromAPIFormat = 'YYYY-MM-DD';
@@ -104,6 +109,10 @@ angular.module('ts5App')
       return requestResource.getCompanyRelationship({id: id}).$promise;
     };
 
+    var getCompanyRelationshipTypeList = function (id) {
+      return typeRequestResource.getCompanyRelationshipTypeList({id: id}).$promise;
+    };
+
     var createCompanyRelationship = function (payload) {
       return requestResource.createCompanyRelationship(payload).$promise;
     };
@@ -116,6 +125,7 @@ angular.module('ts5App')
       getCompanyRelationshipListByCompany: getCompanyRelationshipListByCompany,
       getCompanyRelationshipList: getCompanyRelationshipList,
       getCompanyRelationship: getCompanyRelationship,
+      getCompanyRelationshipTypeList: getCompanyRelationshipTypeList,
       createCompanyRelationship: createCompanyRelationship,
       updateCompanyRelationship: updateCompanyRelationship
     };

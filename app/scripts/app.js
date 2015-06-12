@@ -85,7 +85,7 @@ angular
       })
       .when('/company-relationship-edit/:id', {
         templateUrl: 'views/company-relationship.html',
-        controller: 'CompanyRelationshipCtrl'
+        controller: 'CompanyRelationshipListCtrl'
       })
       .when('/company/:id', {
         templateUrl: 'views/company.html',
