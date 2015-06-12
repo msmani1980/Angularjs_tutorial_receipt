@@ -13,14 +13,17 @@ angular.module('ts5App')
     var requestURL = ENV.apiUrl + '/api/cash-bags/:id';
 
     var requestParameters = {
-      id: '@id',
-      limit: 50
+      id: '@id'
     };
 
     var actions = {
       getCashBag: {
         method: 'GET',
-        headers: {companyId: 362}
+        headers: {companyId: 362} // TODO should this always be here?
+      },
+      updateCashBag: {
+        method: 'PUT',
+        headers: {companyId: 362} // TODO should this always be here?
       }
     };
 
@@ -35,19 +38,22 @@ angular.module('ts5App')
       }
 
       payload.retailCompanyId = companyId;
+      payload.limit = 50;
       return requestResource.getCashBag(payload).$promise;
     }
 
     function getCashBag(cashBagId) {
-      var payload = {
-        id: cashBagId
-      };
-      return requestResource.getCashBag(payload).$promise;
+      return requestResource.getCashBag({id:cashBagId}).$promise;
+    }
+
+    function updateCashBag(cashBagId, payload){
+      return requestResource.updateCashBag({id:cashBagId}, payload).$promise;
     }
 
     return {
       getCashBagList: getCashBagList,
-      getCashBag: getCashBag
+      getCashBag: getCashBag,
+      updateCashBag: updateCashBag
     };
   })
 ;

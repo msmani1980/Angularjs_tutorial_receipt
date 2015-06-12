@@ -131,6 +131,17 @@ describe('Service: cashBagService', function () {
 
     });
 
+    describe('updateCashBag', function () {
+      beforeEach(function () {
+        $httpBackend.whenPUT(/cash-bags/).respond({done: true});
+      });
+      it('it should PUT data to cash bag API', function () {
+        cashBagService.updateCashBag(95, {cashBag: 'fakeCashBagPayload'});
+        $httpBackend.expectPUT(/cash-bags/);
+        $httpBackend.flush();
+      });
+    });
+
   });
 
 
