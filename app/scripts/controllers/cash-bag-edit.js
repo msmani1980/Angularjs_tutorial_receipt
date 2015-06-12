@@ -20,7 +20,7 @@ angular.module('ts5App')
         cashBag: angular.copy(cashBag)
       };
       cashBagService.updateCashBag($routeParams.id, payload).then(
-        function (response) {
+        function () {
           ngToast.create({
             className: 'success',
             dismissButton: true,
