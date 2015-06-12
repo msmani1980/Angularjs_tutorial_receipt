@@ -34,6 +34,39 @@
   margin-top: 0;
 }
 
+.fuelux .wizard .table-scrollable {
+  width: 100%;
+}
+
+.fuelux .wizard .table-scrollable thead, .fuelux .wizard .table-scrollable tbody, .fuelux .wizard .table-scrollable tr, .fuelux .wizard .table-scrollable td, .fuelux .wizard .table-scrollable th {
+  display: block;
+}
+
+.fuelux .wizard .table-scrollable tr:after {
+  content: ' ';
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+
+.fuelux .wizard .table-scrollable thead th {
+  height: 36px;
+}
+
+.fuelux .wizard .table-scrollable tbody {
+  height: 280px;
+  overflow-y: auto;
+}
+
+.fuelux .wizard .table-scrollable tbody td, .fuelux .wizard .table-scrollable thead th {
+  width: 33%;
+  float: left;
+}
+
+.fuelux .wizard input[type="text"].sequential-seals {
+  margin-top: 10px !important;
+}
+
 @media (max-width: 768px) {
   .fuelux .wizard .steps li {
     float: none;
