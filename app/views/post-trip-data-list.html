@@ -40,13 +40,28 @@
                 <input ng-model="search.scheduleNumber" type="text" class="form-control" id="item-code" placeholder="T1">
               </div>
             </div>
+            
+            <div class="col-md-3 col-sm-6">
+              <div class="form-group">
+                <label for="tailNumber">Tail Number</label>
+                <select class="form-control" id="tailNumber">
+                  <option>123456</option>
+                  <option>123456</option>
+                  <option>123456</option>
+                  <option>123456</option>
+                </select>
+              </div>
+            </div>
 
-            <date-picker 
-              class="col-md-3 col-sm-6"
-              disable-date-range="true"
-              start-date-model="scheduleNumber"
-              is-search-field="true"
-              label-from="Schedule Date">
+            <date-picker class="form-group"
+              element-class="col-md-3 col-sm-6"
+              start-date-model="formData.startDate"
+              end-date-model="formData.endDate"
+              disable-past="true"
+              label-from="Effective From"
+              label-to="Effective To"
+              disable-start-date="viewOnly || itemIsActive"
+              disable-end-date="viewOnly || itemIsInactive">
             </date-picker>
         
             <div class="col-md-3 col-sm-6">
@@ -55,14 +70,28 @@
                 <input ng-model="search.departureStation" type="text" class="form-control" id="item-name" placeholder="Test">
               </div>
             </div>
-            
+
+            <div class="col-md-3 col-sm-6">
+              <div class="form-group">
+                <label for="item-name">Departure Time</label>
+                <input ng-model="search.departureTime" type="text" class="form-control" id="item-name" placeholder="Test">
+              </div>
+            </div>
+                        
             <div class="col-md-3 col-sm-6">
               <div class="form-group">
                 <label for="item-name">Arrival Station</label>
                 <input ng-model="search.arrivalStation" type="text" class="form-control" id="item-name" placeholder="Test">
               </div>
             </div>
-            
+
+            <div class="col-md-3 col-sm-6">
+              <div class="form-group">
+                <label for="item-name">Arrival Time</label>
+                <input ng-model="search.arrivalTime" type="text" class="form-control" id="item-name" placeholder="Test">
+              </div>
+            </div>
+                        
           </div>
         </div>
         <div class="panel-footer text-right">
@@ -76,9 +105,10 @@
       <thead>
         <tr>
           <th>Schedule Number</th>
-          <th>Schedule Date</th>
           <th>Departure Station</th>
+          <th>Departure Time</th>
           <th>Arrival Station</th>
+          <th>Arrival Time</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -87,8 +117,9 @@
         <tr class="ng-scope">
           <td class="ng-binding">T1</td>
           <td class="ng-binding">05/06/2015</td>
+          <td class="ng-binding">12:34</td>
           <td class="ng-binding">Test</td>
-          <td class="ng-binding">Test</td>
+          <td class="ng-binding">12:34</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="showMenu(menu)" tabindex="0">
               <i class="fa fa-file"></i>
@@ -104,8 +135,9 @@
         <tr class="ng-scope">
           <td class="ng-binding">T2</td>
           <td class="ng-binding">05/07/2015</td>
+          <td class="ng-binding">12:34</td>
           <td class="ng-binding">Test</td>
-          <td class="ng-binding">Test</td>
+          <td class="ng-binding">12:34</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="showMenu(menu)" tabindex="0">
               <i class="fa fa-file"></i>
