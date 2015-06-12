@@ -47,7 +47,7 @@ describe('Controller: CashBagEditCtrl', function () {
 
   describe('cashBag object in scope', function () {
     /*
-     // TODO - get this test working
+     // TODO - get this test working?
      it('should call getCashBag from cashBagService', function () {
      expect(cashBagService.getCashBag).toHaveBeenCalled();
      });

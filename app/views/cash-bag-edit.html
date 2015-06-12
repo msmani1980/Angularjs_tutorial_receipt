@@ -1,6 +1,6 @@
 <h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
 
-<h2>TODO: Airline <small>TODO: Flight <date>{{ cashBag.scheduleDate }}</date></small></h2>
+<h2>TODO: Airline <small>Flight {{ cashBag.scheduleNumber }} <small><date class="text-right">{{ cashBag.scheduleDate }}</date></small></small></h2>
 <ng-form name="cashBagCreateForm" class="form edit-form">
 
   <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
@@ -30,7 +30,7 @@
     <div class="panel-heading">
       <div class="row">
         <div class="col-sm-6">
-          <div>Base currency: TODO: Base currency</div>
+          <div>Base currency: TODO: Company base currency</div>
         </div>
         <div class="col-sm-6 text-right">
           <div>Cashier's entry date: <date>{{ cashBag.createdOn }}</date></div>
