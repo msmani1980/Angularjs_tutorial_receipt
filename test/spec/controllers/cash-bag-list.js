@@ -51,6 +51,45 @@ describe('Controller: CashBagListCtrl', function () {
     expect(scope.cashBagList).not.toBe(undefined);
   });
 
+
+  describe('filter bank reference number list for search', function () {
+    it('should have bankRefList attached to scope', function () {
+      expect(scope.bankRefList).not.toBe(undefined);
+    });
+
+    it('should have no null values', function () {
+      expect(scope.bankRefList).not.toContain(null);
+    });
+
+    it('should have no duplicate values', function () {
+      for (var i = 0; i < scope.bankRefList.length - 1; i++) {
+        expect(scope.bankRefList[i + 1]).not.toBe(scope.bankRefList[i]);
+      }
+    });
+  });
+
+  describe('search cash bag', function () {
+    it('should have a search object attached to scope', function () {
+      expect(scope.search).not.toBe(undefined);
+    });
+
+    it('should clear search model and make a API call', function () {
+      scope.search = {cashBagNumber: 'fakeCashBagNumber'};
+      scope.clearForm();
+      expect(scope.search.cashBagNumber).toBe(undefined);
+      expect(cashBagService.getCashBagList).toHaveBeenCalledWith(companyId, {});
+    });
+
+    it('should have a search model and make a API call', function () {
+      var testCashBagNumber = '123';
+      scope.search = {cashBagNumber: testCashBagNumber};
+      scope.searchCashBag();
+      expect(cashBagService.getCashBagList).toHaveBeenCalledWith(companyId, {cashBagNumber: testCashBagNumber});
+    });
+
+  });
+
+
   describe('get station list', function () {
     it('should call getStationList with companyId', function () {
       expect(stationsService.getStationList).toHaveBeenCalledWith(companyId);
@@ -61,7 +100,7 @@ describe('Controller: CashBagListCtrl', function () {
     });
   });
 
-  describe('Action buttons', function(){
+  describe('Action buttons', function () {
     it('should change the url based on the menu object', function () {
       scope.showCashBag({id: 1});
       scope.$digest();

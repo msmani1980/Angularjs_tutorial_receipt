@@ -31,7 +31,6 @@ angular.module('ts5App')
 
     // TODO: Finish this watch
     $scope.$watch('search', function () {
-      //  console.log('search changed');
     });
 
     // TODO: Set a watch on this
