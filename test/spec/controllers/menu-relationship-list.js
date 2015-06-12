@@ -15,7 +15,6 @@ describe('Controller: MenuRelationshipListCtrl', function () {
     'served/menus.json'
   ));
 
-
   beforeEach(inject(function (_$rootScope_, _$controller_, $injector,
     _servedMenus_) {
     $location = $injector.get('$location');
@@ -42,19 +41,20 @@ describe('Controller: MenuRelationshipListCtrl', function () {
 
   });
 
-  describe('Menu API response', function () {
+  describe('menus list', function () {
 
     it('should be defined', function () {
-      expect(menuAPIResponse).toBeDefined();
-    });
-
-    it('should be contain a menus array', function () {
-      expect(menuAPIResponse.menus).toBeDefined();
+      expect($scope.menuList).toBeDefined();
     });
 
     it('should be contain at least one object in the menus array',
       function () {
-        expect(menuAPIResponse.menus.length).toBeGreaterThan(0);
+        expect($scope.menuList.length).toBeGreaterThan(0);
+      });
+
+    it('should be match the menus from the menu API Respone',
+      function () {
+        expect($scope.menuList).toEqual(menuAPIResponse.menus);
       });
 
     describe('menu object', function () {
@@ -62,7 +62,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
       var menuObject;
 
       beforeEach(function () {
-        menuObject = menuAPIResponse.menus[0];
+        menuObject = $scope.menuList[0];
       });
 
       it('should be defined', function () {

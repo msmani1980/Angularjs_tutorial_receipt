@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('MenuRelationshipListCtrl', function ($scope) {
 
-    /*var apiResponse;
+    var apiResponse;
 
     apiResponse = {
       'menus': [{
@@ -59,6 +59,6 @@ angular.module('ts5App')
       }
     };
 
-    $scope.menuList = apiResponse.menus;*/
+    $scope.menuList = apiResponse.menus;
 
   });
