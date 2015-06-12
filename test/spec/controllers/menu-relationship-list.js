@@ -10,7 +10,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
     menuAPIResponse;
 
   beforeEach(module('ts5App'));
-  //beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('ts5App', 'template-module'));
   beforeEach(module(
     'served/menus.json'
   ));
@@ -91,6 +91,39 @@ describe('Controller: MenuRelationshipListCtrl', function () {
 
     });
 
+  });
+
+  describe('view', function () {
+
+    var $templateCache,
+      $compile,
+      html,
+      view;
+
+    beforeEach(inject(function (_$templateCache_, _$compile_) {
+      $templateCache = _$templateCache_;
+      $compile = _$compile_;
+      html = $templateCache.get(
+        '/views/menu-relationship-list.html');
+      var compiled = $compile(angular.element(html))($scope);
+      view = angular.element(compiled[0]);
+      $scope.$digest();
+    }));
+
+    it('should be defined', function () {
+      expect(view).toBeDefined();
+    });
+
+    it('should have an table', function () {
+      expect(view.find('table').length).toEqual(1);
+    });
+
+    it(
+      'should contain a list tr element which is the same length as the menu list ',
+      function () {
+        expect(view.find('table tbody tr').length).toEqual($scope.menuList
+          .length);
+      });
 
   });
 
