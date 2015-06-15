@@ -21,6 +21,8 @@ angular.module('ts5App')
     $scope.startDateFilter = '';
     $scope.endDateFilter = '';
     $scope.itemsList = [];
+    $scope.startDateFilter = '';
+    $scope.endDateFilter = '';
 
     var todaysDate = moment().format();
 
@@ -30,12 +32,19 @@ angular.module('ts5App')
       return new Date(dateToReturn);
     }
 
-    // TODO: Set a watch on this
+    $scope.$watch('search.startDate + search.endDate', function () {
+      $scope.formatDateFilter();
+    });
+
     $scope.formatDateFilter = function () {
-      $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
-        'YYYYMMDD');
-      $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
-        'YYYYMMDD');
+
+      if ($scope.search.startDate.length) {
+        $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
+          'YYYY-MM-DD');
+        $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
+          'YYYY-MM-DD');
+      }
+
     };
 
     this.setPaginatedList = function () {
