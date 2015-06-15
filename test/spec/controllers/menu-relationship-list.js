@@ -189,7 +189,6 @@ describe('Controller: MenuRelationshipListCtrl', function () {
         beforeEach(function () {
           searchContainer = angular.element(controls.find(
             '#search-collapse')[0]);
-
         });
 
         it('should be defined', function () {
@@ -239,6 +238,11 @@ describe('Controller: MenuRelationshipListCtrl', function () {
             expect(formGroup.find('input')[0]).toBeDefined();
           });
 
+          it('should contain .form-control class', function () {
+            expect(formGroup.find('input').hasClass(
+              'form-control')).toBeTruthy();
+          });
+
           it(
             'should contain an input field with the correct ng-model',
             function () {
@@ -275,6 +279,11 @@ describe('Controller: MenuRelationshipListCtrl', function () {
             expect(formGroup.find('input')[0]).toBeDefined();
           });
 
+          it('should contain .form-control class', function () {
+            expect(formGroup.find('input').hasClass(
+              'form-control')).toBeTruthy();
+          });
+
           it(
             'should contain an input field with the correct ng-model',
             function () {
@@ -282,6 +291,62 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                   'ng-model'))
                 .toEqual('search.menuName');
             });
+
+        });
+
+        describe('catering station form group', function () {
+
+          var formGroup;
+          beforeEach(function () {
+            formGroup = angular.element(searchContainer
+              .find('.form-group')[2]);
+          });
+
+          it('should be defined', function () {
+            expect(formGroup[0]).toBeDefined();
+          });
+
+          it('should contain a label', function () {
+            expect(formGroup.find('label')[0]).toBeDefined();
+          });
+
+          it('should contain a label with the correct text',
+            function () {
+              expect(formGroup.find('label').text().trim())
+                .toEqual('Catering Station');
+            });
+
+          it('should contain an select element', function () {
+            expect(formGroup.find('select')[0]).toBeDefined();
+          });
+
+          it('should contain .form-control class', function () {
+            expect(formGroup.find('select').hasClass(
+              'form-control')).toBeTruthy();
+          });
+
+          it(
+            'should contain an input field with the correct ng-model',
+            function () {
+              expect(formGroup.find('select').attr(
+                  'ng-model'))
+                .toEqual('search.menuStation');
+            });
+
+        });
+
+        describe('date-picker directive', function () {
+          var datePicker;
+          beforeEach(function () {
+            datePicker = searchContainer.find(
+              '.datepicker-container');
+          });
+
+          it('should be defined', function () {
+            expect(datePicker[0]).toBeDefined();
+          });
+
+          // TODO: Test directive element injection, talk to Rodrigo about replace
 
         });
 
