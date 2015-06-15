@@ -10,9 +10,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
     menuAPIResponse;
 
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module(
-    'served/menus.json'
-  ));
+  beforeEach(module('served/menus.json'));
 
   beforeEach(inject(function (_$rootScope_, _$controller_, $injector,
     _servedMenus_) {
@@ -111,7 +109,6 @@ describe('Controller: MenuRelationshipListCtrl', function () {
 
     it('should be defined', function () {
       expect(view).toBeDefined();
-      console.log(view);
     });
 
     describe('container', function () {
@@ -458,6 +455,17 @@ describe('Controller: MenuRelationshipListCtrl', function () {
               var viewItemBtn = testCell.find(
                 '.btn-danger');
               expect(viewItemBtn.find('.fa-trash')).toBeDefined();
+            });
+
+          it(
+            'should have ng-click with removeMenu function',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[5]);
+              var viewItemBtn = testCell.find(
+                '.btn-danger');
+              expect(viewItemBtn.attr('ng-click')).toEqual(
+                'removeMenu(menu.id,key)');
             });
 
         });
