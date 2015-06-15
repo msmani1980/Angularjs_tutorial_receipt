@@ -184,6 +184,109 @@ describe('Controller: MenuRelationshipListCtrl', function () {
 
       });
 
+      describe('search container', function () {
+        var searchContainer;
+        beforeEach(function () {
+          searchContainer = angular.element(controls.find(
+            '#search-collapse')[0]);
+
+        });
+
+        it('should be defined', function () {
+          expect(searchContainer).toBeDefined();
+        });
+
+        it('should have the class .collapse', function () {
+          expect(searchContainer.hasClass('collapse')).toBeTruthy();
+        });
+
+        it('should contain a form', function () {
+          expect(searchContainer.find('form')[0]).toBeDefined();
+        });
+
+        it('should contain a form with a row', function () {
+          expect(searchContainer.find('form .row')[0]).toBeDefined();
+        });
+
+        it('should contain (5) columns', function () {
+          expect(searchContainer.find(
+            'form .row > .col-xs-12').length).toEqual(5);
+        });
+
+        describe('menu code form group', function () {
+
+          var formGroup;
+          beforeEach(function () {
+            formGroup = angular.element(searchContainer
+              .find('.form-group')[0]);
+          });
+
+          it('should be defined', function () {
+            expect(formGroup[0]).toBeDefined();
+          });
+
+          it('should contain a label', function () {
+            expect(formGroup.find('label')[0]).toBeDefined();
+          });
+
+          it('should contain a label with the correct text',
+            function () {
+              expect(formGroup.find('label').text().trim())
+                .toEqual('Menu Code');
+            });
+
+          it('should contain an input field', function () {
+            expect(formGroup.find('input')[0]).toBeDefined();
+          });
+
+          it(
+            'should contain an input field with the correct ng-model',
+            function () {
+              expect(formGroup.find('input').attr(
+                  'ng-model'))
+                .toEqual('search.menuCode');
+            });
+
+        });
+
+        describe('menu name form group', function () {
+
+          var formGroup;
+          beforeEach(function () {
+            formGroup = angular.element(searchContainer
+              .find('.form-group')[1]);
+          });
+
+          it('should be defined', function () {
+            expect(formGroup[0]).toBeDefined();
+          });
+
+          it('should contain a label', function () {
+            expect(formGroup.find('label')[0]).toBeDefined();
+          });
+
+          it('should contain a label with the correct text',
+            function () {
+              expect(formGroup.find('label').text().trim())
+                .toEqual('Menu Name');
+            });
+
+          it('should contain an input field', function () {
+            expect(formGroup.find('input')[0]).toBeDefined();
+          });
+
+          it(
+            'should contain an input field with the correct ng-model',
+            function () {
+              expect(formGroup.find('input').attr(
+                  'ng-model'))
+                .toEqual('search.menuName');
+            });
+
+        });
+
+      });
+
       describe('clear button', function () {
         var clearButton;
         beforeEach(function () {
