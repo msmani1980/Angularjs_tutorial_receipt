@@ -7,13 +7,14 @@ describe('Controller: MenuRelationshipListCtrl', function () {
     $controller,
     $location,
     MenuRelationshipListCtrl,
-    menuAPIResponse;
+    menuAPIResponse,
+    stationAPIResponse;
 
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/menus.json'));
+  beforeEach(module('served/menus.json', 'served/caterer-stations.json'));
 
   beforeEach(inject(function (_$rootScope_, _$controller_, $injector,
-    _servedMenus_) {
+    _servedMenus_, _servedCatererStations_) {
     $location = $injector.get('$location');
     $location.path('/menu-relationship-list');
     $rootScope = _$rootScope_;
@@ -24,6 +25,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
       '$scope': $scope
     });
     menuAPIResponse = _servedMenus_;
+    stationAPIResponse = _servedCatererStations_;
   }));
 
   describe('The MenuRelationshipListCtrl', function () {
@@ -84,6 +86,61 @@ describe('Controller: MenuRelationshipListCtrl', function () {
       it('should have a menuName and it is a string', function () {
         expect(menuObject.menuName).toBeDefined();
         expect(menuObject.menuName).toEqual(jasmine.any(String));
+      });
+
+    });
+
+  });
+
+  describe('station list', function () {
+
+    it('should be defined', function () {
+      expect($scope.stationList).toBeDefined();
+    });
+
+    it('should be contain at least one object in the menus array',
+      function () {
+        expect($scope.stationList.length).toBeGreaterThan(0);
+      });
+
+    it('should be match the stations from the station API Response',
+      function () {
+        expect($scope.stationList).toEqual(stationAPIResponse.response);
+      });
+
+    describe('station object', function () {
+
+      var stationObject;
+
+      beforeEach(function () {
+        stationObject = $scope.stationList[0];
+      });
+
+      it('should be defined', function () {
+        expect(stationObject).toBeDefined();
+      });
+
+      it('should have an id and it is a number', function () {
+        expect(stationObject.id).toBeDefined();
+        expect(stationObject.id).toEqual(jasmine.any(Number));
+      });
+
+      it('should have a companyId and it is a number', function () {
+        expect(stationObject.companyId).toBeDefined();
+        expect(stationObject.companyId).toEqual(jasmine.any(
+          Number));
+      });
+
+      it('should have a station Code and it is a number', function () {
+        expect(stationObject.code).toBeDefined();
+        expect(stationObject.code).toEqual(jasmine.any(
+          String));
+      });
+
+      it('should have a station Name and it is a string', function () {
+        expect(stationObject.name).toBeDefined();
+        expect(stationObject.name).toEqual(jasmine.any(
+          String));
       });
 
     });
