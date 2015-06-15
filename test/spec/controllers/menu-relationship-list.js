@@ -352,6 +352,26 @@ describe('Controller: MenuRelationshipListCtrl', function () {
 
       });
 
+      describe('search functionality', function () {
+
+        var table,
+          menuCodeInput;
+
+        beforeEach(function () {
+          table = angular.element(view.find('table')[0]);
+          menuCodeInput = angular.element(view.find(
+            'input[ng-model="search.menuCode"]')[0]);
+          menuCodeInput.val('M');
+          $scope.$digest();
+          menuCodeInput.triggerHandler('input');
+        });
+
+        it('should contain the updated model text', function () {
+          expect(table.find('tbody tr').length).toEqual(1);
+        });
+
+      });
+
       describe('clear button', function () {
         var clearButton;
         beforeEach(function () {
