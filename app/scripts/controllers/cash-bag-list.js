@@ -8,18 +8,23 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagService, GlobalMenuService, stationsService, $location) {
-  	var companyId = GlobalMenuService.company.get();
-    $scope.viewName = 'Manage Cash Bag'
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location) {
+  	var companyId = cashBagFactory.getCompanyId();
+    $scope.viewName = 'Manage Cash Bag';
     $scope.search = {};
+    $scope.schedulesList = {};
 
-  	cashBagService.getCashBagList(companyId).then(function(response){
+    cashBagFactory.getCashBagList(companyId).then(function(response){
       $scope.cashBagList = response.cashBags;
       $scope.bankRefList = getBankRefList(response.cashBags);
     });
 
-    stationsService.getStationList(companyId).then(function(response){
+    cashBagFactory.getStationList(companyId).then(function(response){
       $scope.stationList = response.response;
+    });
+
+    cashBagFactory.getSchedulesList(companyId).then(function(response){
+      $scope.schedulesList = response.distinctSchedules;
     });
 
     $scope.showCashBag = function (cashBag) {
@@ -28,7 +33,7 @@ angular.module('ts5App')
 
     $scope.searchCashBag = function () {
       // TODO: serialize scheduleDate parameter
-      cashBagService.getCashBagList(companyId, $scope.search).then(function(response){
+      cashBagFactory.getCashBagList(companyId, $scope.search).then(function(response){
         $scope.cashBagList = response.cashBags;
       });
     };
@@ -40,7 +45,7 @@ angular.module('ts5App')
 
     $scope.showCreatePopup = function () {
       angular.element('#addCashBagModal').modal('show');
-    }
+    };
 
     function getBankRefList(cashBagList) {
       var bankRefList = [];

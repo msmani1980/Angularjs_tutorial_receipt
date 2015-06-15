@@ -15,7 +15,7 @@
               <div class="form-group">
                 <label for="cashBag-origin">Schedule</label>
                   <select ng-model="search.arrivalStationCode" class="form-control col-md-12" id="cashBag-origin">
-                    <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{ station.stationName}})</option>
+                    <option ng-repeat="schedule in schedulesList" value="{{ schedule.scheduleNumber }}">{{ schedule.scheduleNumber }}</option>
                   </select>
               </div>
             </div>
