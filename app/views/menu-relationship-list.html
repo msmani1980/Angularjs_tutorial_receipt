@@ -56,8 +56,8 @@
 
 						<div class="form-group">
 							<label for="menu-station">Catering Station</label>
-							<select ng-model="search.menuStation" class="form-control" id="menu-station">
-								<!--<option value="{{type.name}}"  ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>-->
+							<select multiple="true" ng-model="search.menuStation" class="form-control" id="menu-station">
+								<option value="{{station.code}}" ng-repeat="station in stationList | unique: 'id'">{{ station.code }}</option>
 							</select>
 						</div>
 

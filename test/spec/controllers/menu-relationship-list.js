@@ -382,6 +382,11 @@ describe('Controller: MenuRelationshipListCtrl', function () {
               'form-control')).toBeTruthy();
           });
 
+          it('should be a multiple select input', function () {
+            expect(formGroup.find('select').attr(
+              'multiple')).toBeTruthy();
+          });
+
           it(
             'should contain an input field with the correct ng-model',
             function () {
@@ -389,6 +394,31 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                   'ng-model'))
                 .toEqual('search.menuStation');
             });
+
+          it(
+            'should contain all stations in apiResponse as options',
+            function () {
+              expect(formGroup.find('option').length).toEqual(
+                $scope.stationList.length);
+            });
+
+          describe('catering station option', function () {
+
+            var option;
+            beforeEach(function () {
+              option = angular.element(formGroup
+                .find('option')[0]);
+            });
+
+            it(
+              'should have a value set from the stationList',
+              function () {
+                expect(option.val()).toEqual($scope.stationList[
+                  0].code);
+              });
+
+          });
+
 
         });
 
