@@ -12,13 +12,16 @@
 
       <div class="col-xs-6 text-right">
 
-        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+				<a href="#/menu-relationship-create" class="btn btn-primary btn-create">
+					<span class="fa fa-plus" aria-hidden="true"></span> Create Menu Relationship
+				</a>
+
+        <button class="btn btn-default btn-search" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
           <span class="fa fa-search" aria-hidden="true"></span>
           <span class="btn-label hidden-xs">Search</span>
         </button>
 
-
-        <button class="btn btn-default"
+        <button class="btn btn-default btn-search-clear"
           ng-click="clearSearchFilters()"
           ng-show="search.menuCode.length || search.menuName.length || search.menuStation.length || search.menuStation.length || search.startDate.length || search.endDate.length">
           <span class="btn-label">Clear</span>

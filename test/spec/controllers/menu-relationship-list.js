@@ -214,16 +214,39 @@ describe('Controller: MenuRelationshipListCtrl', function () {
           'Menu Relationship List');
       });
 
-      it('should have (2) buttons inside the control', function () {
-        expect(controls.find('button.btn').length).toEqual(
-          2);
+      it('should have (3) buttons inside the controls', function () {
+        expect(controls.find('.btn').length).toEqual(3);
+      });
+
+      describe('create button', function () {
+
+        var createButton;
+        beforeEach(function () {
+          createButton = angular.element(controls.find(
+            '.btn-create')[0]);
+        });
+
+        it('should be defined', function () {
+          expect(createButton[0]).toBeDefined();
+        });
+
+        it('should contain a plus icon', function () {
+          expect(createButton.find('span.fa-plus')).toBeDefined();
+        });
+
+        it('should contain text', function () {
+          expect(createButton.text().trim()).toEqual(
+            'Create Menu Relationship');
+        });
+
       });
 
       describe('search button', function () {
+
         var searchButton;
         beforeEach(function () {
           searchButton = angular.element(controls.find(
-            '.btn')[0]);
+            '.btn-search')[0]);
         });
 
         it('should be defined', function () {
@@ -242,6 +265,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
       });
 
       describe('search container', function () {
+
         var searchContainer;
         beforeEach(function () {
           searchContainer = angular.element(controls.find(
@@ -517,7 +541,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
         var clearButton;
         beforeEach(function () {
           clearButton = angular.element(controls.find(
-            '.btn')[1]);
+            '.btn-search-clear')[0]);
         });
 
         it('should be defined', function () {
