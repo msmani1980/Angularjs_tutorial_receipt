@@ -9,8 +9,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
     MenuRelationshipListCtrl,
     menuAPIResponse;
 
-  beforeEach(module('ts5App'));
-  beforeEach(module('template-module'));
+  beforeEach(module('ts5App', 'template-module'));
   beforeEach(module(
     'served/menus.json'
   ));
@@ -112,6 +111,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
 
     it('should be defined', function () {
       expect(view).toBeDefined();
+      console.log(view);
     });
 
     describe('container', function () {
@@ -318,6 +318,11 @@ describe('Controller: MenuRelationshipListCtrl', function () {
               0]);
           });
 
+          it('should contain ng-repeat', function () {
+            expect(testRow.attr('ng-repeat')).toContain(
+              '(key,menu) in menuList');
+          });
+
           it('should contain a Menu Code cell',
             function () {
               testCell = angular.element(testRow.find(
@@ -350,9 +355,8 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                 testMenuData.menuName);
             });
 
-
           it(
-            'should contain a Caterer Stations  cell',
+            'should contain a Caterer Stations cell',
             function () {
               testCell = angular.element(testRow.find(
                 'td')[2]);
@@ -401,6 +405,60 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                 testMenuData.endDate);
             });
 
+          it('should have a view item button defined',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[4]);
+              var viewItemBtn = testCell.find('.btn-info');
+              expect(viewItemBtn).toBeDefined();
+            });
+
+          it(
+            'should have a icon inside the item edit button',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[4]);
+              var viewItemBtn = testCell.find('.btn-info');
+              expect(viewItemBtn.find('.fa-file')).toBeDefined();
+            });
+
+          it('should have a edit item button defined',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[4]);
+              var viewItemBtn = testCell.find(
+                '.btn-primary');
+              expect(viewItemBtn).toBeDefined();
+            });
+
+          it(
+            'should have a icon inside the item edit button',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[4]);
+              var viewItemBtn = testCell.find(
+                '.btn-primary');
+              expect(viewItemBtn.find('.fa-pencil')).toBeDefined();
+            });
+
+          it('should have a delete item button defined',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[4]);
+              var viewItemBtn = testCell.find(
+                '.btn-danger');
+              expect(viewItemBtn).toBeDefined();
+            });
+
+          it(
+            'should have a icon inside the item delete button',
+            function () {
+              testCell = angular.element(testRow.find(
+                'td')[4]);
+              var viewItemBtn = testCell.find(
+                '.btn-danger');
+              expect(viewItemBtn.find('.fa-trash')).toBeDefined();
+            });
 
         });
 

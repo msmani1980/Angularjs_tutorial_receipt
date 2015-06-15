@@ -96,7 +96,7 @@
 
     <tbody>
 
-      <tr id="menu-{{menu.id}}" ng-repeat="(key,menu) in menuList">
+      <tr id="menu-{{menu.id}}" ng-repeat="(key,menu) in menuList | filter: { menuCode: search.menuCode, menuName: search.menuName, stations: search.stations } | daterange:startDateFilter:endDateFilter ">
 
         <td>{{ menu.menuCode }}</td>
         <td>{{ menu.menuName }}</td>
