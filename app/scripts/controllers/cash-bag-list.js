@@ -21,8 +21,12 @@ angular.module('ts5App')
       $scope.stationList = response.response;
     });
 
-    $scope.showCashBag = function (cashBag) {
-      $location.path('cash-bag-create/' + cashBag.id);
+    $scope.viewCashBag = function (cashBag) {
+      $location.path('cash-bag/' + cashBag.id);
+    };
+
+    $scope.editCashBag = function (cashBag) {
+      $location.path('cash-bag/' + cashBag.id + '/edit');
     };
 
     $scope.searchCashBag = function () {

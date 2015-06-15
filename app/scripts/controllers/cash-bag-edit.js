@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagEditCtrl', function ($scope, cashBagService, $routeParams, ngToast) {
+  .controller('CashBagEditCtrl', function ($scope, $routeParams, ngToast, ENV, cashBagService, companiesService) {
 
     $scope.viewName = 'Cash Bag';
     $scope.readOnly = $routeParams.state !== 'edit';
@@ -33,21 +33,30 @@ angular.module('ts5App')
           $scope.displayError = false;
           $scope.formErrors = {};
         },
-        function (error) {
-          ngToast.create({
-            className: 'warning',
-            dismissButton: true,
-            content: '<strong>Cash bag</strong>: error updating cash bag!'
-          });
-          $scope.displayError = true;
-          $scope.formErrors = error.data;
-        }
+        showErrors
       );
 
     };
 
+    function showErrors(error) {
+      ngToast.create({
+        className: 'warning',
+        dismissButton: true,
+        content: '<strong>Cash bag</strong>: error!'
+      });
+      $scope.displayError = true;
+      $scope.formErrors = error.data;
+    }
+
     // if we have a route id param, get that model from the api
-    cashBagService.getCashBag($routeParams.id).then(function (response) {
-      $scope.cashBag = response;
-    });
+    cashBagService.getCashBag($routeParams.id).then(
+      function (response) {
+        $scope.cashBag = response;
+        $scope.displayError = false;
+        $scope.formErrors = {};
+      },
+      showErrors
+    );
+    // console.log(ENV);
+    // companiesService.getCompany()
   });
