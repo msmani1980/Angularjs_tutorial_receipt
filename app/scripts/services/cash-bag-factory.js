@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('cashBagFactory', function (cashBagService, GlobalMenuService, stationsService, schedulesService) {
+  .factory('cashBagFactory', function (cashBagService, GlobalMenuService, stationsService, schedulesService, companiesService, currenciesService) {
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
@@ -29,10 +29,41 @@ angular.module('ts5App')
       return schedulesService.getSchedules(id);
     };
 
+    // TODO - write test
+    var getCompany = function (id) {
+      return companiesService.getCompany(id);
+    };
+
+    // TODO - write test
+    var updateCashBag = function(id, payload) {
+      return cashBagService.updateCashBag(id, payload);
+    };
+
+    // TODO - write test
+    var getCashBag = function(id) {
+      return cashBagService.getCashBag(id);
+    };
+
+    // TODO - write test
+    var deleteCashBag = function(id) {
+      return cashBagService.deleteCashBag(id);
+    };
+
+    // TODO - write test
+    var getCompanyCurrencies = function() {
+      return currenciesService.getCompanyCurrencies();
+    }
+
     return {
       getCompanyId: getCompanyId,
       getCashBagList: getCashBagList,
       getStationList: getStationList,
-      getSchedulesList: getSchedulesList
+      getSchedulesList: getSchedulesList,
+      getCompany: getCompany,
+      getCashBag: getCashBag,
+      updateCashBag: updateCashBag,
+      deleteCashBag: deleteCashBag,
+      getCompanyCurrencies: getCompanyCurrencies
+
     };
   });

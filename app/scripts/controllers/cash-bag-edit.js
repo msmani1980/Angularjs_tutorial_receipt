@@ -9,7 +9,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagEditCtrl', function ($scope, $routeParams, ngToast, ENV, cashBagService, companiesService) {
+  .controller('CashBagEditCtrl', function ($scope, $routeParams, $q, ngToast, cashBagFactory) {
+
+    var companyId = cashBagFactory.getCompanyId();
 
     $scope.viewName = 'Cash Bag';
     $scope.readOnly = $routeParams.state !== 'edit';
@@ -23,7 +25,7 @@ angular.module('ts5App')
       var payload = {
         cashBag: saveCashBag
       };
-      cashBagService.updateCashBag($routeParams.id, payload).then(
+      cashBagFactory.updateCashBag($routeParams.id, payload).then(
         function () {
           ngToast.create({
             className: 'success',
@@ -49,14 +51,40 @@ angular.module('ts5App')
     }
 
     // if we have a route id param, get that model from the api
-    cashBagService.getCashBag($routeParams.id).then(
-      function (response) {
-        $scope.cashBag = response;
-        $scope.displayError = false;
-        $scope.formErrors = {};
-      },
-      showErrors
-    );
-    // console.log(ENV);
-    // companiesService.getCompany()
+    var getCashBag = cashBagFactory.getCashBag($routeParams.id).then(
+        function (response) {
+          $scope.cashBag = response;
+          $scope.displayError = false;
+          $scope.formErrors = {};
+        },
+        showErrors
+      );
+
+    var getCompany = cashBagFactory.getCompany(companyId).then(
+        function (response) {
+          $scope.company = response;
+          console.log($scope.company);
+        }
+      );
+
+    // requires $scope.company to be set first
+    var getCompanyCurrencies = cashBagFactory.getCompanyCurrencies().then(
+        function(response) {
+          $scope.companyCurrencies = response.response;
+        }
+      );
+
+    $q.all([getCashBag, getCompany, getCompanyCurrencies]).then(function(){
+      console.log("ALL PROMISES RESOLVED");
+      $scope.getCurrencyCode = function(currencyId){
+        $scope.companyCurrencies.forEach(function (currency) {
+            if (currencyId == currency.baseCurrencyId) {
+              console.log(currency.code);
+              return currency.code;
+            }
+          }
+        );
+      };
+    });
+
   });

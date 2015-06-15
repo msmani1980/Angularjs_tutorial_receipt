@@ -1,6 +1,6 @@
 <h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
 
-<h2>TODO: Airline <small>Flight {{ cashBag.scheduleNumber }} <small><date class="text-right">{{ cashBag.scheduleDate }}</date></small></small></h2>
+<h2>{{ company.companyName }} <small>Flight {{ cashBag.scheduleNumber }} <small><date class="text-right">{{ cashBag.scheduleDate }}</date></small></small></h2>
 <ng-form name="cashBagCreateForm" class="form edit-form">
 
   <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
@@ -30,7 +30,7 @@
     <div class="panel-heading">
       <div class="row">
         <div class="col-sm-6">
-          <div>Base currency: TODO: Company base currency</div>
+          <div>Base currency: <span data-currency-code="{{ company.baseCurrencyId }}">{{ company.baseCurrencyId }}</span></div>
         </div>
         <div class="col-sm-6 text-right">
           <div>Cashier's entry date: <date>{{ cashBag.createdOn }}</date></div>
@@ -95,7 +95,7 @@
 			    </thead>
 			    <tbody>
 			    <tr ng-repeat="currency in cashBag.cashBagCurrencies">
-			      <td>{{ currency.currencyId }}</td>
+			      <td data-currency-code="{{ currency.currencyId }}">{{ currency.currencyId }}</td>
 			      <td>{{ currency.bankAmount }}</td>
 			      <td><input type="text"
                        class="form-control"
@@ -120,7 +120,6 @@
         <span class="fa fa-check-square-o" aria-hidden="true"></span>
         <span class="hidden-xs">Save</span>
       </button>
-      <p>TODO: If save button is disabled, show reason here</p>
     </div>
 
   </div>
