@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="ts5App" class="no-js">
 
 <head>
 <meta charset="utf-8">
@@ -7,8 +7,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TS5 Inventory</title>
 <!-- CSS -->
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"> -->
 <link href="//www.fuelcdn.com/fuelux/3.6.3/css/fuelux.min.css" rel="stylesheet">
+
+<!-- build:css(.) styles/vendor.css -->
+<!-- bower:css -->
+<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
+<link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+<link rel="stylesheet" href="bower_components/select2/select2.css" />
+<link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast.css" />
+<!-- endbower -->
+<!-- endbuild -->
+<!-- build:css(.tmp) styles/main.css -->
+
 <link rel="stylesheet" href="styles/main.css">
 <link rel="stylesheet" href="styles/static-pages.css">
 </head>
@@ -26,7 +39,7 @@
     <div class="step-content">
       <!-- PANE 1 - Assign Inventory Reference Number --------------------------------------------------------------------- -->
       <div class="step-pane active sample-pane" data-step="1">
-        <form class="form-horizontal" id="form-in-wizard" action="">
+        <ng-form class="form-horizontal" id="form-in-wizard" action="">
           <div class="well">
 
             <div class="form-group">
@@ -143,12 +156,12 @@
             </div>
 
           </div>
-        </form>
+        </ng-form>
       </div>
 
       <!-- PANE 2 - In Packing --------------------------------------------------------------------- -->
       <div class="step-pane sample-pane" data-step="2">
-        <form class="form-horizontal" action="">
+        <ng-form class="form-horizontal" action="">
 
           <div class="well">
             <table class="table">
@@ -292,12 +305,12 @@
             </table>
           </div>
 
-        </form>
+        </ng-form>
       </div>
 
       <!-- PANE 3 - Assign Seals --------------------------------------------------------------------- -->
       <div class="step-pane sample-pane" data-step="3">
-        <form class="form-horizontal" action="">
+        <ng-form class="form-horizontal" action="">
 
           <div class="well">
             <table class="table">
@@ -350,28 +363,249 @@
                   </td>
                   <td>
                     <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12466">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12467">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12468">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12469">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12470">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12471">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12472">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12473">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12474">
-                    <input type="text" class="form-control sequential-seals" id="sealNumber" placeholder="12475">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12466">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12467">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12468">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12469">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12470">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12471">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12472">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12473">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12474">
+                    <input type="text" class="form-control sequential-seals sequential-seals-outbound" id="sealNumber" placeholder="12475">
                   </td>
                   <td><input type="text" class="form-control" id="sealNumber" placeholder="10"></td>
                   <td>
                     <label class="checkbox-custom checkbox-inline" id="myCheckbox9" data-initialize="checkbox">
-                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals" type="checkbox" value="option1">
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-outbound" type="checkbox" value="option1">
                       <span class="checkbox-label">Sequential</span>
                     </label>
                   </td>
                   <td>
-                    <button type="button" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" ng-click="addGTIN()">
                        <i class="fa fa-plus"></i>
                     </button>
+
+<!-- TODO: CONNECT WITH ANGULAR DATA TO ADD MORE SEALS -->
+<!--                     <div id="gtin-container"> -->
+        
+<!--                       <div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index"> -->
+<!--                         <input-gtin> </input-gtin> -->
+<!--                       </div> -->
+        
+<!--                     </div> -->
+                    
+                    
+                    <button type="button" class="btn btn-danger">
+                       <i class="fa fa-close"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="well">
+            <table class="table">
+              <div class="row">
+                <div class="col-xs-10">
+                  <h3>Transfer</h3>
+                </div>
+              </div>
+              <thead>
+                <tr>
+                  <th>Seal Color</th>
+                  <th>Seal Number</th>
+                  <th>Number of Seals</th>
+                  <th></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <select class="form-control" style="background-color: #33CC33" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
+                      <option style="background-color: #33CC33">Green</option>
+                      <option style="background-color: #66CCFF">Blue</option>
+                      <option style="background-color: #FFCC00">Yellow</option>
+                      <option>White</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12466">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12467">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12468">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12469">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12470">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12471">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12472">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12473">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12474">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12475">
+                  </td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="10"></td>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="myCheckbox9" data-initialize="checkbox">
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-transfer" type="checkbox" value="option1">
+                      <span class="checkbox-label">Sequential</span>
+                    </label>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-primary" ng-click="addGTIN()">
+                       <i class="fa fa-plus"></i>
+                    </button>
+
+<!-- TODO: CONNECT WITH ANGULAR DATA TO ADD MORE SEALS -->
+<!--                     <div id="gtin-container"> -->
+        
+<!--                       <div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index"> -->
+<!--                         <input-gtin> </input-gtin> -->
+<!--                       </div> -->
+        
+<!--                     </div> -->
+                    
+                    
+                    <button type="button" class="btn btn-danger">
+                       <i class="fa fa-close"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+                    
+          <div class="well">
+            <table class="table">
+              <div class="row">
+                <div class="col-xs-10">
+                  <h3>Inbound</h3>
+                </div>
+              </div>
+              <thead>
+                <tr>
+                  <th>Seal Color</th>
+                  <th>Seal Number</th>
+                  <th>Number of Seals</th>
+                  <th></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <select class="form-control" style="background-color: #FFCC00" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
+                      <option style="background-color: #FFCC00">Yellow</option>
+                      <option style="background-color: #66CCFF">Blue</option>
+                      <option style="background-color: #33CC33">Green</option>
+                      <option>White</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12466">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12467">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12468">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12469">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12470">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12471">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12472">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12473">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12474">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12475">
+                  </td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="10"></td>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="myCheckbox9" data-initialize="checkbox">
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-inbound" type="checkbox" value="option1">
+                      <span class="checkbox-label">Sequential</span>
+                    </label>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-primary" ng-click="addGTIN()">
+                       <i class="fa fa-plus"></i>
+                    </button>
+
+<!-- TODO: CONNECT WITH ANGULAR DATA TO ADD MORE SEALS -->
+<!--                     <div id="gtin-container"> -->
+        
+<!--                       <div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index"> -->
+<!--                         <input-gtin> </input-gtin> -->
+<!--                       </div> -->
+        
+<!--                     </div> -->
+                    
+                    
+                    <button type="button" class="btn btn-danger">
+                       <i class="fa fa-close"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="well">
+            <table class="table">
+              <div class="row">
+                <div class="col-xs-10">
+                  <h3>High Security</h3>
+                </div>
+              </div>
+              <thead>
+                <tr>
+                  <th>Seal Color</th>
+                  <th>Seal Number</th>
+                  <th>Number of Seals</th>
+                  <th></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <select class="form-control" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
+                      <option>White</option>
+                      <option style="background-color: #66CCFF">Blue</option>
+                      <option style="background-color: #FFCC00">Yellow</option>
+                      <option style="background-color: #33CC33">Green</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12466">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12467">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12468">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12469">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12470">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12471">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12472">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12473">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12474">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12475">
+                  </td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="10"></td>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="myCheckbox9" data-initialize="checkbox">
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-high-security" type="checkbox" value="option1">
+                      <span class="checkbox-label">Sequential</span>
+                    </label>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-primary" ng-click="addGTIN()">
+                       <i class="fa fa-plus"></i>
+                    </button>
+
+<!-- TODO: CONNECT WITH ANGULAR DATA TO ADD MORE SEALS -->
+<!--                     <div id="gtin-container"> -->
+        
+<!--                       <div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index"> -->
+<!--                         <input-gtin> </input-gtin> -->
+<!--                       </div> -->
+        
+<!--                     </div> -->
+                    
+                    
                     <button type="button" class="btn btn-danger">
                        <i class="fa fa-close"></i>
                     </button>
@@ -381,12 +615,12 @@
             </table>
           </div>
 
-        </form>
+        </ng-form>
       </div>
 
       <!-- PANE 4 - Dispatch --------------------------------------------------------------------- -->
       <div class="step-pane sample-pane" data-step="4">
-        <form class="form-horizontal" action="">
+        <ng-form class="form-horizontal" action="">
 
           <div class="well">
             <table class="table">
@@ -520,28 +754,36 @@
               </div>
               <thead>
                 <tr>
-                  <th>Seal</th>
-                  <th>Number</th>
+                  <th>Seal Type</th>
+                  <th>Seal Color</th>
+                  <th>Seal Number</th>
+                  <th>Number of Seals</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Seal #1</td>
+                  <td>Outbound</td>
+                  <td><input type="text" class="form-control" id="sealColor" placeholder="Blue" style="background-color: #66CCFF" disabled></td>
                   <td><input type="text" class="form-control" id="sealNumber" placeholder="12465" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="6" disabled></td>
                 </tr>
                 <tr>
-                  <td>Seal #2</td>
-                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12923" disabled></td>
+                <td>Transfer</td>
+                  <td><input type="text" class="form-control" id="sealColor" placeholder="Green" style="background-color: #33CC33" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12444" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="2" disabled></td>
                 </tr>
                 <tr>
-                  <td>Seal #3</td>
-                  <td><input type="text" class="form-control" id="sealNumber" placeholder="11984" disabled></td>
-                </tr>
+                <td>Inbound</td>
+                  <td><input type="text" class="form-control" id="sealColor" placeholder="Yellow" style="background-color: #FFCC00" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12399" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="10" disabled></td>
+                  <tr>
               </tbody>
             </table>
           </div>
 
-        </form>
+        </ng-form>
       </div>
 
     </div>
@@ -572,15 +814,130 @@
 <!--     </div> -->
 <!--   </div> -->
 
+<form-success-modal list-path="item-list" create-path="item-create"></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<!-- <left-navigation base-path="retail-items"></left-navigation> -->
+
+
+
 
 <!-- jQuery -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js" type="text/javascript"></script>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js" type="text/javascript"></script> -->
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+<!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script> -->
+
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-messages/angular-messages.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/ngstorage/ngStorage.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/angular-filter/dist/angular-filter.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
+<script src="bower_components/angular-dynforms/dynamic-forms.js"></script>
+<script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
+<script src="bower_components/qrcode/lib/qrcode.js"></script>
+<script src="bower_components/angular-qr/src/angular-qr.js"></script>
+<script src="bower_components/select2/select2.js"></script>
+<script src="bower_components/ui-select/src/select3.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/ngtoast/dist/ngToast.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/config.js"></script>
+<script src="scripts/controllers/main.js"></script>
+<script src="scripts/controllers/about.js"></script>
+<script src="scripts/controllers/companies.js"></script>
+<script src="scripts/controllers/item-list.js"></script>
+<script src="scripts/services/companieslistfactory.js"></script>
+<script src="scripts/controllers/company.js"></script>
+<script src="scripts/services/items-factory.js"></script>
+<script src="scripts/controllers/item-create.js"></script>
+<script src="scripts/directives/input-text.js"></script>
+<script src="scripts/services/globalmenuservice.js"></script>
+<script src="scripts/directives/menudropdown.js"></script>
+<script src="scripts/controllers/headermenu.js"></script>
+<script src="scripts/controllers/exchange-rates.js"></script>
+<script src="scripts/services/currency-factory.js"></script>
+<script src="scripts/services/company-preferences-service.js"></script>
+<script src="scripts/services/dailyExchangeRatesService.js"></script>
+<script src="scripts/services/items-service.js"></script>
+<script src="scripts/directives/input-select.js"></script>
+<script src="scripts/services/companies-service.js"></script>
+<script src="scripts/controllers/menu-list.js"></script>
+<script src="scripts/controllers/menu-create.js"></script>
+<script src="scripts/controllers/menu-edit.js"></script>
+<script src="scripts/directives/date-picker.js"></script>
+<script src="scripts/directives/item-price-type.js"></script>
+<script src="scripts/directives/image-upload.js"></script>
+<script src="scripts/services/allergens-service.js"></script>
+<script src="scripts/services/item-types.js"></script>
+<script src="scripts/services/price-types-service.js"></script>
+<script src="scripts/services/characteristics-service.js"></script>
+<script src="scripts/services/units-service.js"></script>
+<script src="scripts/services/tags-service.js"></script>
+<script src="scripts/services/companies-factory.js"></script>
+<script src="scripts/services/sales-categories-service.js"></script>
+<script src="scripts/services/tax-types-service.js"></script>
+<script src="scripts/services/stations-service.js"></script>
+<script src="scripts/directives/qr-upload.js"></script>
+<script src="scripts/directives/qr-create.js"></script>
+<script src="scripts/directives/form-error-dialog.js"></script>
+<script src="scripts/directives/form-success-modal.js"></script>
+<script src="scripts/directives/input-gtin.js"></script>
+<script src="scripts/directives/input-tax-type.js"></script>
+<script src="scripts/directives/leave-view-modal.js"></script>
+<script src="scripts/directives/input-station-exception.js"></script>
+<script src="scripts/services/menu-service.js"></script>
+<script src="scripts/services/currencies-service.js"></script>
+<script src="scripts/directives/loading-modal.js"></script>
+<script src="scripts/directives/left-navigation.js"></script>
+<script src="scripts/directives/input-item-image.js"></script>
+<script src="scripts/directives/form-update-modal.js"></script>
+<script src="scripts/directives/custom-validity.js"></script>
+<script src="scripts/controllers/stock-owner-item-list.js"></script>
+<script src="scripts/controllers/stock-owner-item-create.js"></script>
+<script src="scripts/directives/input-price-type-stock-owner.js"></script>
+<script src="scripts/services/version-service.js"></script>
+<script src="scripts/directives/dev-footer.js"></script>
+<script src="scripts/controllers/post-trip-data-list.js"></script>
+<script src="scripts/controllers/post-trip-data.js"></script>
+<script src="scripts/controllers/crew-commission.js"></script>
+<script src="scripts/controllers/refund-global-reason-code.js"></script>
+<script src="scripts/controllers/refund-company-reason-code.js"></script>
+<script src="scripts/filters/date-range.js"></script>
+<script src="scripts/services/version-service.js"></script>
+<script src="scripts/controllers/cash-bag-edit.js"></script>
+<script src="scripts/services/cash-bag-service.js"></script>
+<script src="scripts/controllers/cash-bag-list.js"></script>
+<!-- endbuild -->
+
 <script src="//www.fuelcdn.com/fuelux/3.6.3/js/fuelux.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		
+		$('#MyWizard').wizard('next');
+
 		$('#myDatepicker').datepicker();
 		
 		$('#myCheckbox').checkbox();

@@ -67,6 +67,24 @@
   margin-top: 10px !important;
 }
 
+
+.fuelux .wizard input[type="text"]::-webkit-input-placeholder {
+   color: #333;
+}
+
+.fuelux .wizard input[type="text"]:-moz-placeholder { /* Firefox 18- */
+   color: #333;  
+}
+
+.fuelux .wizard input[type="text"]::-moz-placeholder {  /* Firefox 19+ */
+   color: #333;  
+}
+
+.fuelux .wizard input[type="text"]:-ms-input-placeholder {  
+   color: #333;  
+}
+
+
 @media (max-width: 768px) {
   .fuelux .wizard .steps li {
     float: none;
