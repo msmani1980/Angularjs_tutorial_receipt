@@ -4,7 +4,7 @@ describe('Controller: CashBagEditCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag.json','served/company.json'));
+  beforeEach(module('served/cash-bag.json','served/company.json', 'served/company-currency-globals.json'));
 
   var CashBagEditCtrl,
     scope,
@@ -13,14 +13,17 @@ describe('Controller: CashBagEditCtrl', function () {
     getCashBagDeferred,
     companyId,
     companyResponseJSON,
-    getCompanyDeferred;
+    getCompanyDeferred,
+    companyCurrencyGlobalsResponseJSON,
+    getCompanyCurrenciesDeffered;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
-    inject(function (_servedCashBag_, _servedCompany_) {
+    inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_) {
       cashBagResponseJSON = _servedCashBag_;
       companyResponseJSON = _servedCompany_;
+      companyCurrencyGlobalsResponseJSON = _servedCompanyCurrencyGlobals_;
     });
 
     cashBagFactory = $injector.get('cashBagFactory');
@@ -32,6 +35,10 @@ describe('Controller: CashBagEditCtrl', function () {
     getCompanyDeferred = $q.defer();
     getCompanyDeferred.resolve(companyResponseJSON);
     spyOn(cashBagFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
+
+    getCompanyCurrenciesDeffered = $q.defer();
+    getCompanyCurrenciesDeffered.resolve(companyCurrencyGlobalsResponseJSON);
+    spyOn(cashBagFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeffered.promise);
 
     CashBagEditCtrl = $controller('CashBagEditCtrl', {
       $scope: scope,

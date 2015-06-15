@@ -30,7 +30,7 @@
     <div class="panel-heading">
       <div class="row">
         <div class="col-sm-6">
-          <div>Base currency: <span data-currency-code="{{ company.baseCurrencyId }}">{{ company.baseCurrencyId }}</span></div>
+          <div>Base currency: <span data-currency-code="{{ company.baseCurrencyId }}">{{ getCurrencyCode(company.baseCurrencyId) }}</span></div>
         </div>
         <div class="col-sm-6 text-right">
           <div>Cashier's entry date: <date>{{ cashBag.createdOn }}</date></div>
@@ -95,7 +95,7 @@
 			    </thead>
 			    <tbody>
 			    <tr ng-repeat="currency in cashBag.cashBagCurrencies">
-			      <td data-currency-code="{{ currency.currencyId }}">{{ currency.currencyId }}</td>
+			      <td data-currency-code="{{ currency.currencyId }}">{{ getCurrencyCode(currency.currencyId) }}</td>
 			      <td>{{ currency.bankAmount }}</td>
 			      <td><input type="text"
                        class="form-control"

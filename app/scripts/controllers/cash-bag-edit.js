@@ -50,41 +50,43 @@ angular.module('ts5App')
       $scope.formErrors = error.data;
     }
 
-    // if we have a route id param, get that model from the api
     var getCashBag = cashBagFactory.getCashBag($routeParams.id).then(
-        function (response) {
-          $scope.cashBag = response;
-          $scope.displayError = false;
-          $scope.formErrors = {};
-        },
-        showErrors
-      );
+      function (response) {
+        $scope.cashBag = response;
+        $scope.displayError = false;
+        $scope.formErrors = {};
+      },
+      showErrors
+    );
 
     var getCompany = cashBagFactory.getCompany(companyId).then(
-        function (response) {
-          $scope.company = response;
-          console.log($scope.company);
-        }
-      );
+      function (response) {
+        $scope.company = response;
+      }
+    );
 
-    // requires $scope.company to be set first
     var getCompanyCurrencies = cashBagFactory.getCompanyCurrencies().then(
-        function(response) {
-          $scope.companyCurrencies = response.response;
+      function(response) {
+        $scope.companyCurrencies = response.response;
+      }
+    );
+
+    function getCurrencyCode(currencies, currencyId){
+      angular.forEach(currencies, function (currency) {
+          if (currencyId == currency.id) {
+            return currency.code;
+          }
         }
       );
+    }
 
     $q.all([getCashBag, getCompany, getCompanyCurrencies]).then(function(){
-      console.log("ALL PROMISES RESOLVED");
-      $scope.getCurrencyCode = function(currencyId){
-        $scope.companyCurrencies.forEach(function (currency) {
-            if (currencyId == currency.baseCurrencyId) {
-              console.log(currency.code);
-              return currency.code;
-            }
-          }
-        );
-      };
+      $scope.getCurrencyCode = function(currencyId) {
+        var returnValue = getCurrencyCode($scope.companyCurrencies, currencyId);
+        // TODO, does not work
+        // console.log(returnValue);
+        return returnValue;
+      }
     });
 
   });
