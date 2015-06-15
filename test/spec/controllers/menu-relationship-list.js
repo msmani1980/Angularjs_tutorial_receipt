@@ -354,20 +354,74 @@ describe('Controller: MenuRelationshipListCtrl', function () {
 
       describe('search functionality', function () {
 
-        var table,
-          menuCodeInput;
+        var table;
 
         beforeEach(function () {
           table = angular.element(view.find('table')[0]);
-          menuCodeInput = angular.element(view.find(
-            'input[ng-model="search.menuCode"]')[0]);
-          menuCodeInput.val('M');
-          $scope.$digest();
-          menuCodeInput.triggerHandler('input');
         });
 
-        it('should contain the updated model text', function () {
-          expect(table.find('tbody tr').length).toEqual(1);
+        describe('menu code filter', function () {
+
+          var menuCodeInput;
+
+          beforeEach(function () {
+            menuCodeInput = angular.element(view.find(
+              'input[ng-model="search.menuCode"]')[
+              0]);
+          });
+
+          it(
+            'should return all items in the table when the menu code is not set ',
+            function () {
+              menuCodeInput.val('');
+              $scope.$digest();
+              menuCodeInput.triggerHandler('input');
+              expect(table.find('tbody tr').length).toEqual(
+                $scope.menuList.length);
+            });
+
+          it(
+            'should contain (1) item in the table when the menu code is filtered by "M" ',
+            function () {
+              menuCodeInput.val('M');
+              $scope.$digest();
+              menuCodeInput.triggerHandler('input');
+              expect(table.find('tbody tr').length).toEqual(
+                1);
+            });
+
+        });
+
+        describe('menu name filter', function () {
+
+          var menuNameInput;
+
+          beforeEach(function () {
+            menuNameInput = angular.element(view.find(
+              'input[ng-model="search.menuName"]')[
+              0]);
+          });
+
+          it(
+            'should return all items in the table when the menu name is not set ',
+            function () {
+              menuNameInput.val('');
+              $scope.$digest();
+              menuNameInput.triggerHandler('input');
+              expect(table.find('tbody tr').length).toEqual(
+                $scope.menuList.length);
+            });
+
+          it(
+            'should contain (1) item in the table when the menu name is filtered by "Name" ',
+            function () {
+              menuNameInput.val('Name');
+              $scope.$digest();
+              menuNameInput.triggerHandler('input');
+              expect(table.find('tbody tr').length).toEqual(
+                1);
+            });
+
         });
 
       });
