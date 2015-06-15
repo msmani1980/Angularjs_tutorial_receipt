@@ -113,10 +113,15 @@ describe('Controller: CashBagListCtrl', function () {
   });
 
   describe('Action buttons', function () {
-    it('should change the url based on the menu object', function () {
-      scope.showCashBag({id: 1});
+    it('should change the url based on the menu object to view a cash bag', function () {
+      scope.viewCashBag({id: 1});
       scope.$digest();
-      expect(location.path()).toBe('/cash-bag-create/1');
+      expect(location.path()).toBe('/cash-bag/1');
+    });
+    it('should change the url based on the menu object to edit a cash bag', function () {
+      scope.editCashBag({id: 1});
+      scope.$digest();
+      expect(location.path()).toBe('/cash-bag/1/edit');
     });
   });
 

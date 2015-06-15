@@ -40,7 +40,7 @@ describe('Service: cashBagService', function () {
 
     describe('getCashBagList', function () {
 
-      it('should be accessible in the controller', function () {
+      it('should be accessible in the service', function () {
         expect(!!cashBagService.getCashBagList).toBe(true);
       });
 
@@ -104,7 +104,7 @@ describe('Service: cashBagService', function () {
 
     describe('getCashBag', function () {
 
-      it('should be accessible in the controller', function () {
+      it('should be accessible in the service', function () {
         expect(!!cashBagService.getCashBag).toBe(true);
       });
 
@@ -132,15 +132,36 @@ describe('Service: cashBagService', function () {
     });
 
     describe('updateCashBag', function () {
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.updateCashBag).toBe(true);
+      });
+
       beforeEach(function () {
         $httpBackend.whenPUT(/cash-bags/).respond({done: true});
       });
-      it('it should PUT data to cash bag API', function () {
+      it('should PUT data to cash bag API', function () {
         cashBagService.updateCashBag(95, {cashBag: 'fakeCashBagPayload'});
         $httpBackend.expectPUT(/cash-bags/);
         $httpBackend.flush();
       });
     });
+
+    describe('deleteCashBag', function(){
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.deleteCashBag).toBe(true);
+      });
+
+      beforeEach(function () {
+        $httpBackend.whenDELETE(/cash-bags/).respond({done: true});
+      });
+
+      it('should DELETE a cash bag from API', function(){
+        cashBagService.deleteCashBag();
+        $httpBackend.expectDELETE(/cash-bags/);
+        $httpBackend.flush();
+      });
+    });
+
 
   });
 

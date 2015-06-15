@@ -24,6 +24,10 @@ angular.module('ts5App')
       updateCashBag: {
         method: 'PUT',
         headers: {companyId: 362} // TODO should this always be here?
+      },
+      deleteCashBag: {
+        method: 'DELETE',
+        headers: {companyId: 362} // TODO should this always be here?
       }
     };
 
@@ -48,10 +52,15 @@ angular.module('ts5App')
       return requestResource.updateCashBag({id:cashBagId}, payload).$promise;
     }
 
+    function deleteCashBag(cashBagId){
+      return requestResource.deleteCashBag({id:cashBagId}).$promise;
+    }
+
     return {
       getCashBagList: getCashBagList,
       getCashBag: getCashBag,
-      updateCashBag: updateCashBag
+      updateCashBag: updateCashBag,
+      deleteCashBag: deleteCashBag
     };
   })
 ;
