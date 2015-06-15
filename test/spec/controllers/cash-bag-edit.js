@@ -45,15 +45,17 @@ describe('Controller: CashBagEditCtrl', function () {
     expect(scope.viewName).toBe('Cash Bag');
   });
 
-  /*
-  it('should call getCashBag from cashBagService', function () {
-    expect(cashBagService.getCashBag).toHaveBeenCalled();
-  });
-  */
+  describe('cashBag object in scope', function () {
+    /*
+     // TODO - get this test working?
+     it('should call getCashBag from cashBagService', function () {
+     expect(cashBagService.getCashBag).toHaveBeenCalled();
+     });
+     */
 
-  it('should have cashBag attached to scope after API call', function () {
-    // console.log(scope.cashBag);
-    expect(!!scope.cashBag).toBe(true);
+    it('should have cashBag attached to scope after API call', function () {
+      expect(!!scope.cashBag).toBe(true);
+    });
   });
 
 });
