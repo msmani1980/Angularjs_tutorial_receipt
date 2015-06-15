@@ -8,30 +8,32 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagService, GlobalMenuService, stationsService, $location) {
-  	var companyId = GlobalMenuService.company.get();
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location) {
+  	var companyId = cashBagFactory.getCompanyId();
+    $scope.viewName = 'Manage Cash Bag';
     $scope.search = {};
+    $scope.schedulesList = {};
 
-  	cashBagService.getCashBagList(companyId).then(function(response){
+    cashBagFactory.getCashBagList(companyId).then(function(response){
       $scope.cashBagList = response.cashBags;
       $scope.bankRefList = getBankRefList(response.cashBags);
     });
 
-    stationsService.getStationList(companyId).then(function(response){
+    cashBagFactory.getStationList(companyId).then(function(response){
       $scope.stationList = response.response;
     });
 
-    $scope.viewCashBag = function (cashBag) {
-      $location.path('cash-bag/' + cashBag.id);
-    };
+    cashBagFactory.getSchedulesList(companyId).then(function(response){
+      $scope.schedulesList = response.distinctSchedules;
+    });
 
-    $scope.editCashBag = function (cashBag) {
-      $location.path('cash-bag/' + cashBag.id + '/edit');
+    $scope.showCashBag = function (cashBag) {
+      $location.path('cash-bag-create/' + cashBag.id);
     };
 
     $scope.searchCashBag = function () {
       // TODO: serialize scheduleDate parameter
-      cashBagService.getCashBagList(companyId, $scope.search).then(function(response){
+      cashBagFactory.getCashBagList(companyId, $scope.search).then(function(response){
         $scope.cashBagList = response.cashBags;
       });
     };
@@ -39,6 +41,10 @@ angular.module('ts5App')
     $scope.clearForm = function () {
       $scope.search = {};
       $scope.searchCashBag();
+    };
+
+    $scope.showCreatePopup = function () {
+      angular.element('#addCashBagModal').modal('show');
     };
 
     function getBankRefList(cashBagList) {

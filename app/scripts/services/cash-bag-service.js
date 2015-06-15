@@ -34,11 +34,9 @@ angular.module('ts5App')
     var requestResource = $resource(requestURL, requestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
-      var payload;
+      var payload = {};
       if (arguments.length === 2) {
         payload = optionalPayload;
-      } else {
-        payload = {};
       }
 
       payload.retailCompanyId = companyId;
