@@ -25,20 +25,19 @@ angular.module('ts5App')
       var payload = {
         cashBag: saveCashBag
       };
-      cashBagFactory.updateCashBag($routeParams.id, payload).then(
-        function () {
-          ngToast.create({
-            className: 'success',
-            dismissButton: true,
-            content: '<strong>Cash bag</strong>: successfully updated!'
-          });
-          $scope.displayError = false;
-          $scope.formErrors = {};
-        },
-        showErrors
-      );
+      cashBagFactory.updateCashBag($routeParams.id, payload).then(updateSuccess, showErrors);
 
     };
+
+    function updateSuccess(){
+      ngToast.create({
+        className: 'success',
+        dismissButton: true,
+        content: '<strong>Cash bag</strong>: successfully updated!'
+      });
+      $scope.displayError = false;
+      $scope.formErrors = {};
+    }
 
     function showErrors(error) {
       ngToast.create({

@@ -40,6 +40,8 @@ describe('Controller: CashBagEditCtrl', function () {
     getCompanyCurrenciesDeffered.resolve(companyCurrencyGlobalsResponseJSON);
     spyOn(cashBagFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeffered.promise);
 
+    spyOn(cashBagFactory, 'updateCashBag').and.callThrough();
+
     CashBagEditCtrl = $controller('CashBagEditCtrl', {
       $scope: scope,
       $routeParams: {state:'edit', id:95}
@@ -68,6 +70,28 @@ describe('Controller: CashBagEditCtrl', function () {
     });
     it('should have company attached to scope after API call', function(){
       expect(!!scope.company).toBe(true);
+    });
+  });
+
+  describe('companyCurrencies in scope', function(){
+    it('should call getCompanyCurrencies', function(){
+      expect(cashBagFactory.getCompanyCurrencies).toHaveBeenCalled();
+    });
+    it('should have companyCurrencies attached to scope after API call', function(){
+      expect(!!scope.companyCurrencies).toBe(true);
+    });
+    it('should have currencyCodes attached to scope after API call', function(){
+      expect(!!scope.currencyCodes).toBe(true);
+    });
+  });
+
+  describe('update cash bag', function () {
+    it('should have an update method attached to the scope', function(){
+      expect(!!scope.update).toBe(true);
+    });
+    it('should call updateCashBag', function(){
+      scope.update(cashBagResponseJSON);
+      expect(cashBagFactory.updateCashBag).toHaveBeenCalled();
     });
   });
 
