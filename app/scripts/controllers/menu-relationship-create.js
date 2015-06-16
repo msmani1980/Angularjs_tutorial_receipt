@@ -18,4 +18,7 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
+    $scope.viewOnly = false;
+    $scope.itemIsActive = false;
+    $scope.itemIsInactive = false;
   });

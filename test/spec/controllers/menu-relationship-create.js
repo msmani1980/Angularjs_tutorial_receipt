@@ -161,6 +161,59 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
 
     });
 
+    describe('form', function () {
+
+      var form;
+
+      beforeEach(function () {
+        form = angular.element(view.find('ng-form')[0]);
+      });
+
+      it('should be defined', function () {
+        expect(form[0]).toBeDefined();
+      });
+
+      it('should have a name attribute', function () {
+        expect(form.attr('name')).toEqual('form');
+      });
+
+      it('should have a .form class', function () {
+        expect(form.hasClass('form')).toBeTruthy();
+      });
+
+      it('should inject the form-error-dialog directive', function () {
+        expect(form.find('form-error-dialog')[0]).toBeDefined();
+      });
+
+      describe('fieldset', function () {
+        var fieldSet;
+
+        beforeEach(function () {
+          fieldSet = angular.element(form.find('fieldset')[
+            0]);
+        });
+
+        it('should be defined', function () {
+          expect(fieldSet[0]).toBeDefined();
+        });
+
+        it(
+          'should contain ng-disabled with specific expression',
+          function () {
+            expect(fieldSet.attr('ng-disabled')).toContain(
+              'viewOnly || itemIsActive');
+          });
+
+        it('should contain a row',
+          function () {
+            var fieldSetRow = fieldSet.find('.row')[0];
+            expect(fieldSetRow).toBeDefined();
+          });
+
+      });
+
+    });
+
   });
 
 });
