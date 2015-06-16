@@ -16,6 +16,7 @@
 <body class="fuelux">
   <div class="wizard" data-initialize="wizard" id="myWizard">
 
+<!-- TODO: RENAME SPANS AFTER COMPLETE CLASS ADDED: Inventory Reference Number Assigned, Packed, Seals Assigned, Dispatched -->
     <ul class="steps">
       <li data-step="1" data-name="assignInventoryReferenceNumber" class="active"><span class="badge">1</span>Assign Inventory Reference Number<span class="chevron"></span></li>
       <li data-step="2" data-name="inPacking"><span class="badge">2</span>In Packing<span class="chevron"></span></li>
@@ -467,8 +468,13 @@
           <div class="well">
             <table class="table">
               <div class="row">
-                <div class="col-xs-10">
+                <div class="col-xs-9">
                   <h3>Hand Over</h3>
+                </div>
+                <div class="col-xs-3">
+                  <button type="button" class="btn btn-info pull-right">
+                     <i class="fa fa-plus"></i> Add Hand Over
+                  </button>
                 </div>
               </div>
               <thead>

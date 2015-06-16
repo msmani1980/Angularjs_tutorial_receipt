@@ -123,13 +123,13 @@ angular
         templateUrl: 'views/employee-commission.html',
         controller: 'EmployeeCommissionCtrl'
       })
-      .when('/refund-global-reason-code', {
-        templateUrl: 'views/refund-global-reason-code.html',
-        controller: 'RefundGlobalReasonCodeCtrl'
+      .when('/global-reason-code', {
+        templateUrl: 'views/global-reason-code.html',
+        controller: 'GlobalReasonCodeCtrl'
       })
-      .when('/refund-company-reason-code', {
-        templateUrl: 'views/refund-company-reason-code.html',
-        controller: 'RefundCompanyReasonCodeCtrl'
+      .when('/company-reason-code', {
+        templateUrl: 'views/company-reason-code.html',
+        controller: 'CompanyReasonCodeCtrl'
       })
       .otherwise({
         redirectTo: '/'

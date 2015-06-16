@@ -308,15 +308,15 @@ angular.module('ts5App')
 		menuItems: [
 		{
 		  name: 'Global Reason',
-		  route: '/#/refund-global-reason-code',
+		  route: '/#/global-reason-code',
 		  icon: 'icon-manage-schedule',
-		  className: 'dashboard-refundGlobalReasonCode'
+		  className: 'dashboard-globalReasonCode'
 		},
 		{
 		  name: 'Company Reason',
-		  route: '/#/refund-company-reason-code',
+		  route: '/#/company-reason-code',
 		  icon: 'icon-manage-schedule',
-		  className: 'dashboard-refundCompanyReasonCode'
+		  className: 'dashboard-companyReasonCode'
 		}]
       }
     ];
