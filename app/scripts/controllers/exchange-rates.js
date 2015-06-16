@@ -215,6 +215,9 @@ angular.module('ts5App')
     }
 
     $scope.checkVarianceAndSave = function(shouldSubmit) {
+      if (!$scope.dailyExchangeRatesForm.$valid){
+        return false;
+      }
       serializePreviousExchangeRates();
       createPayload(shouldSubmit);
 
