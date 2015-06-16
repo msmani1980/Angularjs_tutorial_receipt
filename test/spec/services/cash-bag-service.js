@@ -74,8 +74,7 @@ describe('Service: cashBagService', function () {
     describe('api call parameters', function () {
       it('should have a company id as payload', function () {
         var companyId = 413;
-        // TODO: fix regex to not include limit=50
-        var regex = new RegExp('cash-bags\\?limit=50&retailCompanyId=' + companyId, 'g');
+        var regex = new RegExp('cash-bags\\?\.\*retailCompanyId=' + companyId, 'g');
         $httpBackend.expectGET(regex, headers).respond(200, '');
         cashBagService.getCashBagList(companyId, {});
         $httpBackend.flush();
@@ -84,8 +83,7 @@ describe('Service: cashBagService', function () {
       it('should take an additional payload parameter', function() {
         var cashBagNumber = '123';
         var payload = {cashBagNumber: cashBagNumber};
-        // TODO: fix regex to not include limit=50
-        var regex = new RegExp('cashBagNumber=' + cashBagNumber, 'g');
+        var regex = new RegExp('cash-bags\\?\.\*cashBagNumber=' + cashBagNumber, 'g');
         $httpBackend.expectGET(regex, headers).respond(200, '');
         cashBagService.getCashBagList('413', payload);
         $httpBackend.flush();
@@ -93,8 +91,7 @@ describe('Service: cashBagService', function () {
 
       it('should not need a payload parameter', function() {
         var companyId = '413';
-        // TODO: fix regex to not include limit=50
-        var regex = new RegExp('cash-bags\\?limit=50&retailCompanyId=' + companyId, 'g');
+        var regex = new RegExp('cash-bags\\?\.\*retailCompanyId=' + companyId, 'g');
         $httpBackend.expectGET(regex, headers).respond(200, '');
         cashBagService.getCashBagList(companyId);
         $httpBackend.flush();
