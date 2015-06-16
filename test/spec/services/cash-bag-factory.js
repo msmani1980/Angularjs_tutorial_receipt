@@ -81,7 +81,7 @@ describe('Factory: cashBagFactory', function () {
       expect(schedulesService.getSchedules).toHaveBeenCalledWith(companyId);
     });
     it('should call schedulesService on getDailySchedules', function () {
-      var dummyParams = '123'
+      var dummyParams = '123';
       cashBagFactory.getDailySchedulesList(companyId, dummyParams, dummyParams);
       expect(schedulesService.getDailySchedules).toHaveBeenCalledWith(companyId, dummyParams, dummyParams);
     });
