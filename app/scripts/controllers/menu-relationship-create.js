@@ -9,9 +9,13 @@
  */
 angular.module('ts5App')
   .controller('MenuRelationshipCreateCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    $scope.viewName = 'Create Menu Relationship';
+    $scope.buttonText = 'Save';
+    $scope.formData = {
+      menuCode: '',
+      menuName: '',
+      stations: [],
+      startDate: '',
+      endDate: ''
+    };
   });

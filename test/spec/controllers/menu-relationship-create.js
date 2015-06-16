@@ -59,7 +59,7 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
     }));
 
     it('should be defined', function () {
-      expect(view).toBeDefined();
+      expect(view[0]).toBeDefined();
     });
 
     describe('container', function () {
@@ -68,11 +68,95 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
 
       beforeEach(function () {
         container = angular.element(view.find(
-          '.fluid-container')[0]);
+          '.container')[0]);
       });
 
       it('should be defined', function () {
         expect(container).toBeDefined();
+      });
+
+    });
+
+    describe('edit controls', function () {
+
+      var controls;
+
+      beforeEach(function () {
+        controls = angular.element(view.find(
+          '.edit-controls')[0]);
+      });
+
+      it('should be defined', function () {
+        expect(controls).toBeDefined();
+      });
+
+      it('should have a row', function () {
+        expect(controls.find('.row')[0]).toBeDefined();
+      });
+
+      it('should have (2) columns inside of the row', function () {
+        expect(controls.find('.row .col-xs-6').length).toEqual(
+          2);
+      });
+
+      it('should have a View Name', function () {
+        expect(controls.find('.view-name')[0]).toBeDefined();
+      });
+
+      it('should have a View Name that contains text', function () {
+        expect(controls.find('.view-name').text().trim()).toEqual(
+          'Create Menu Relationship');
+      });
+
+      it('should have (2) buttons inside the controls', function () {
+        expect(controls.find('.btn').length).toEqual(2);
+      });
+
+      describe('save button', function () {
+
+        var saveButton;
+        beforeEach(function () {
+          saveButton = angular.element(controls.find(
+            '.btn-primary')[0]);
+        });
+
+        it('should be defined', function () {
+          expect(saveButton[0]).toBeDefined();
+        });
+
+        it('should contain a check square icon', function () {
+          expect(saveButton.find('span.fa-check-square-o')[
+            0]).toBeDefined();
+        });
+
+        it('should contain the correct text', function () {
+          expect(saveButton.find('.btn-label').text().trim())
+            .toEqual('Save');
+        });
+
+      });
+
+      describe('cancel button', function () {
+
+        var cancelButton;
+        beforeEach(function () {
+          cancelButton = angular.element(controls.find(
+            '.btn-default')[0]);
+        });
+
+        it('should be defined', function () {
+          expect(cancelButton[0]).toBeDefined();
+        });
+
+        it('should contain a close icon', function () {
+          expect(cancelButton.find('span.fa-close')).toBeDefined();
+        });
+
+        it('should contain the correct text', function () {
+          expect(cancelButton.find('.btn-label').text().trim())
+            .toEqual('Cancel');
+        });
+
       });
 
     });
