@@ -755,71 +755,125 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                 testMenuData.endDate);
             });
 
-          it('should have a view item button defined',
-            function () {
-              testCell = angular.element(testRow.find(
-                'td')[4]);
-              var viewItemBtn = testCell.find('.btn-info');
-              expect(viewItemBtn).toBeDefined();
-            });
+          describe('view button', function () {
 
-          it(
-            'should have a icon inside the item edit button',
-            function () {
-              testCell = angular.element(testRow.find(
-                'td')[4]);
-              var viewItemBtn = testCell.find('.btn-info');
-              expect(viewItemBtn.find('.fa-file')).toBeDefined();
-            });
+            var viewButton;
 
-          it('should have a edit item button defined',
-            function () {
-              testCell = angular.element(testRow.find(
-                'td')[4]);
-              var viewItemBtn = testCell.find(
-                '.btn-primary');
-              expect(viewItemBtn).toBeDefined();
-            });
-
-          it(
-            'should have a icon inside the item edit button',
-            function () {
-              testCell = angular.element(testRow.find(
-                'td')[4]);
-              var viewItemBtn = testCell.find(
-                '.btn-primary');
-              expect(viewItemBtn.find('.fa-pencil')).toBeDefined();
-            });
-
-          it('should have a delete item button defined',
-            function () {
-              testCell = angular.element(testRow.find(
-                'td')[4]);
-              var viewItemBtn = testCell.find(
-                '.btn-danger');
-              expect(viewItemBtn).toBeDefined();
-            });
-
-          it(
-            'should have a icon inside the item delete button',
-            function () {
-              testCell = angular.element(testRow.find(
-                'td')[4]);
-              var viewItemBtn = testCell.find(
-                '.btn-danger');
-              expect(viewItemBtn.find('.fa-trash')).toBeDefined();
-            });
-
-          it(
-            'should have ng-click with removeMenu function',
-            function () {
+            beforeEach(function () {
               testCell = angular.element(testRow.find(
                 'td')[5]);
-              var viewItemBtn = testCell.find(
-                '.btn-danger');
-              expect(viewItemBtn.attr('ng-click')).toEqual(
-                'removeMenu(menu.id,key)');
+              viewButton = angular.element(testCell
+                .find('.btn-view'));
             });
+
+            it('should be defined', function () {
+              expect(viewButton[0]).toBeDefined();
+            });
+
+            it('should have a file icon', function () {
+              expect(viewButton.find('.fa-file')[0])
+                .toBeDefined();
+            });
+
+            it('should have the btn-info class',
+              function () {
+                expect(viewButton.hasClass('btn-info'))
+                  .toBeTruthy();
+              });
+
+            it(
+              'should have an ng-href to view the menu',
+              function () {
+                var testObject = $scope.menuList[0];
+                var testUrl = '#/menu-view/' +
+                  testObject.id;
+                expect(viewButton.attr('ng-href')).toEqual(
+                  testUrl);
+              });
+
+
+
+          });
+
+          describe('edit button', function () {
+
+            var editButton;
+
+            beforeEach(function () {
+              testCell = angular.element(testRow.find(
+                'td')[5]);
+              editButton = angular.element(
+                testCell
+                .find('.btn-edit'));
+            });
+
+            it('should be defined', function () {
+              expect(editButton[0]).toBeDefined();
+            });
+
+            it('should have a pencil icon', function () {
+              expect(editButton.find('.fa-pencil')[
+                0]).toBeDefined();
+            });
+
+            it('should have the btn-primary class',
+              function () {
+                expect(editButton.hasClass(
+                  'btn-primary')).toBeTruthy();
+              });
+
+            it(
+              'should have an ng-href to edit the menu',
+              function () {
+                var testObject = $scope.menuList[
+                  0];
+                var testUrl = '#/menu-edit/' +
+                  testObject.id;
+                expect(editButton.attr('ng-href'))
+                  .toEqual(
+                    testUrl);
+              });
+
+          });
+
+          describe('delete button', function () {
+
+            var deleteButton;
+
+            beforeEach(function () {
+              testCell = angular.element(
+                testRow.find(
+                  'td')[5]);
+              deleteButton = angular.element(
+                testCell
+                .find('.btn-delete'));
+            });
+
+            it('should be defined', function () {
+              expect(deleteButton[0]).toBeDefined();
+            });
+
+            it('should have a trash icon', function () {
+              expect(deleteButton.find(
+                '.fa-trash')[0]).toBeDefined();
+            });
+
+            it('should have the btn-danger class',
+              function () {
+                expect(deleteButton.hasClass(
+                  'btn-danger')).toBeTruthy();
+              });
+
+            it(
+              'should have ng-click with removeMenu function',
+              function () {
+                expect(deleteButton.attr(
+                  'ng-click')).toEqual(
+                  'removeMenu(menu.id,key)');
+              });
+
+          });
+
 
         });
 
