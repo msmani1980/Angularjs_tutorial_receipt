@@ -115,16 +115,23 @@ angular.module('ts5App')
     }, {
       title: 'Menu Management',
       menuItems: [{
-        name: 'Manage Menus',
-        route: '/#/menu-list',
-        icon: 'icon-manage-menu',
-        className: 'dashboard-manageMenus'
-      }, {
-        name: 'Create Menu',
-        route: emberURL + 'menus/create',
-        icon: 'icon-create-menu',
-        className: 'dashboard-createMenu'
-      }]
+          name: 'Manage Menus',
+          route: '/#/menu-list',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageMenus'
+        }, {
+          name: 'Create Menu',
+          route: emberURL + 'menus/create',
+          icon: 'icon-create-menu',
+          className: 'dashboard-createMenu'
+        }, {
+          name: 'Menu Relationships',
+          route: '/#/menu-relationship-list',
+          icon: 'icon-menu-assignment',
+          className: 'dashboard-menuAssignments'
+        },
+
+      ]
     }, {
       title: 'Menu Assignment',
       menuItems: [{
