@@ -1,5 +1,5 @@
 'use strict';
-/*global moment*/
+/* global moment */
 /**
  * @author Max Felker <max@bigroomstudios.com>
  * @ngdoc function
@@ -24,12 +24,12 @@ angular.module('ts5App')
     $scope.startDateFilter = '';
     $scope.endDateFilter = '';
 
-    var todaysDate = moment().format();
+    var todaysDate = Date.parse(new Date());
 
     // TODO: Move to global function
     function formatDate(dateString, formatFrom, formatTo) {
       var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
-      return new Date(dateToReturn);
+      return dateToReturn;
     }
 
     $scope.$watch('search.startDate + search.endDate', function () {
@@ -38,7 +38,7 @@ angular.module('ts5App')
 
     $scope.formatDateFilter = function () {
 
-      if ($scope.search.startDate.length) {
+      if ($scope.search.startDate && $scope.search.endDate) {
         $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
           'YYYY-MM-DD');
         $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
@@ -98,17 +98,19 @@ angular.module('ts5App')
     };
 
     $scope.isItemActive = function (startDate) {
-      startDate = formatDate(startDate, 'YYYYMMDD', 'L');
-      return moment(startDate).isBefore(todaysDate);
+      return Date.parse(startDate) <= todaysDate;
     };
 
     $scope.isItemInactive = function (endDate) {
-      endDate = formatDate(endDate, 'YYYYMMDD', 'L');
-      return moment(endDate).isBefore(todaysDate);
+      return Date.parse(endDate) <= todaysDate;
     };
 
     $scope.clearSearchFilters = function () {
       var filters = $scope.search;
+      $scope.startDate = '';
+      $scope.endDate = '';
+      $scope.startDateFilter = '';
+      $scope.endDateFilter = '';
       for (var filterKey in filters) {
         $scope.search[filterKey] = '';
       }

@@ -27,7 +27,7 @@ angular.module('ts5App')
     $scope.startDateFilter = '';
     $scope.endDateFilter = '';
 
-    var todaysDate = new Date();
+    var todaysDate = Date.parse(new Date());
 
     $scope.$watch('search.startDate + search.endDate', function () {
 
@@ -37,11 +37,13 @@ angular.module('ts5App')
 
     $scope.formatDateFilter = function () {
 
-      if ($scope.search.startDate.length) {
+      if ($scope.search.startDate && $scope.search.endDate) {
+
         $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
           'YYYY-MM-DD');
         $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
           'YYYY-MM-DD');
+
       }
 
     };
@@ -115,35 +117,22 @@ angular.module('ts5App')
     };
 
     $scope.isItemActive = function (startDate) {
-
-      startDate = formatDate(startDate, 'YYYYMMDD', 'L');
-
-      return moment(startDate).isBefore(todaysDate);
-
+      return Date.parse(startDate) <= todaysDate;
     };
 
     $scope.isItemInactive = function (endDate) {
-
-      endDate = formatDate(endDate, 'YYYYMMDD', 'L');
-
-      return moment(endDate).isBefore(todaysDate);
-
+      return Date.parse(endDate) <= todaysDate;
     };
 
     $scope.clearSearchFilters = function () {
-
       var filters = $scope.search;
-
       $scope.startDate = '';
       $scope.endDate = '';
-
       $scope.startDateFilter = '';
       $scope.endDateFilter = '';
-
       for (var filterKey in filters) {
         $scope.search[filterKey] = '';
       }
-
     };
 
   });

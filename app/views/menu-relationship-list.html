@@ -113,11 +113,11 @@
             <i class="fa fa-file"></i>
           </a>
 
-          <a class="btn btn-primary btn-xs" ng-href="#/menu-edit/{{menu.id}}" ng-disabled="isMenuInactive(menu.endDate)">
+          <a class="btn btn-primary btn-xs" ng-href="#/menu-edit/{{menu.id}}" ng-disabled="isItemActive(menu.endDate)">
             <i class="fa fa-pencil"></i>
           </a>
 
-          <button class="btn btn-danger btn-xs" ng-click="removeMenu(menu.id,key)" ng-disabled="isMenuActive(menu.startDate) || isMenuInactive(menu.endDate)">
+          <button class="btn btn-danger btn-xs" ng-click="removeMenu(menu.id,key)" ng-disabled="isItemActive(menu.startDate) || isItemInactive(menu.endDate)">
             <i class="fa fa-trash"></i>
           </button>
 
