@@ -443,7 +443,6 @@ describe('Controller: MenuRelationshipListCtrl', function () {
 
           });
 
-
         });
 
         describe('date-picker directive', function () {
@@ -791,8 +790,6 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                   testUrl);
               });
 
-
-
           });
 
           describe('edit button', function () {
@@ -834,6 +831,17 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                     testUrl);
               });
 
+            it(
+              'should be disabled if the menu is inactive',
+              function () {
+                var testObject = $scope.menuList[0];
+                var itemIsInactive = $scope.isItemInactive(
+                  testObject.endDate);
+                expect(itemIsInactive).toBeTruthy();
+                expect(editButton.attr('disabled')).toEqual(
+                  'disabled');
+              });
+
           });
 
           describe('delete button', function () {
@@ -870,6 +878,30 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                 expect(deleteButton.attr(
                   'ng-click')).toEqual(
                   'removeMenu(menu.id,key)');
+              });
+
+            it(
+              'should be disabled if the menu is active',
+              function () {
+                var testObject = $scope.menuList[0];
+                var itemIsActive = $scope.isItemActive(
+                  testObject.endDate);
+                expect(itemIsActive).toBeTruthy();
+                expect(deleteButton.attr('disabled'))
+                  .toEqual(
+                    'disabled');
+              });
+
+            it(
+              'should be disabled if the menu is inactive',
+              function () {
+                var testObject = $scope.menuList[0];
+                var itemIsInactive = $scope.isItemInactive(
+                  testObject.endDate);
+                expect(itemIsInactive).toBeTruthy();
+                expect(deleteButton.attr('disabled'))
+                  .toEqual(
+                    'disabled');
               });
 
           });
