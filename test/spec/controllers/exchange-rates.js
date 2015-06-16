@@ -51,11 +51,14 @@ describe('Controller: ExchangeRatesCtrl', function () {
       ExchangeRatesCtrl = $controller('ExchangeRatesCtrl', {
         $scope: scope
       });
+      scope.dailyExchangeRatesForm = {
+        $valid: true
+      };
       $httpBackend.flush();
     })
   );
 
-  afterEach(function() {
+  afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
@@ -149,7 +152,10 @@ describe('Controller: ExchangeRatesCtrl', function () {
       scope.previousExchangeRates.dailyExchangeRateCurrencies[0].bankExchangeRate = '0.14191';
       scope.checkVarianceAndSave(false);
 
-      expect(scope.varianceObject[0]).toEqual({code: 'USD', percentage: 13});
+      expect(scope.varianceObject[0]).toEqual({
+        code: 'USD',
+        percentage: 13
+      });
     });
 
   });
