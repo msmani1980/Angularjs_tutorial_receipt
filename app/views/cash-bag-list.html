@@ -6,32 +6,38 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Add Cash Bag</h4>
+        <h4 class="modal-title">Search Schedules</h4>
       </div>
       <div class="modal-body">
+        <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4>Not a valid schedule</h4>
+        </div>
         <form name="cashBagSearchForm" ng-submit="searchCashBag()">
           <div class="row">
             <div class="col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="cashBag-origin">Schedule</label>
-                  <select ng-model="search.arrivalStationCode" class="form-control col-md-12" id="cashBag-origin">
+                  <select ng-model="newCashBag.scheduleNumber" class="form-control col-md-12" id="cashBag-origin">
                     <option ng-repeat="schedule in schedulesList" value="{{ schedule.scheduleNumber }}">{{ schedule.scheduleNumber }}</option>
                   </select>
               </div>
             </div>
             <div class="col-md-6 col-sm-12">
               <date-picker
+                id="createCashBagDatePicker"
                 class="col-sm-12"
                 disable-date-range="true"
-                start-date-model="search.scheduleDate"
+                start-date-model="newCashBag.scheduleDate"
                 is-search-field="true"
-                label-from="Schedule Date">
-              </date-picker>
+                label-from="Schedule Date"
+                startDate="'06/11/2015'">
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="submitCreate()">Submit</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
     </div>
@@ -58,7 +64,7 @@
         <div class="col-md-3 col-sm-6">
           <div class="form-group">
             <label for="cashBag-number">Cash Bag</label>
-            <input ng-model="search.cashBagNumber" type="text" class="form-control" id="cashBag-number">
+            <input ng-model="search.cashBagNumber" type="text" class="form-control" id="cashBag-number" >
           </div>
         </div>
 
