@@ -200,7 +200,7 @@ angular.module('ts5App')
       angular.forEach($scope.currenciesFields, function (currencyObject, currencyCode) {
         if ($scope.previousCurrency[currencyCode]) {
           angular.forEach(currencyObject, function (rate, rateType) {
-            var percentage = Math.floor((100 - (currencyObject[rateType] / $scope.previousCurrency[currencyCode][rateType]) * 100));
+            var percentage = Math.floor((100 - ($scope.currenciesFields[currencyCode][rateType] / $scope.previousCurrency[currencyCode][rateType]) * 100));
             if (percentage > 10) {
               rateVariance.push({
                   code: currencyCode,

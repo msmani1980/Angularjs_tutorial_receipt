@@ -9,7 +9,6 @@
 angular.module('ts5App')
   .directive('menuSlide', function () {
     function link(scope, element) {
-      console.log('menuSlide', scope, element);
     }
 
     return {
