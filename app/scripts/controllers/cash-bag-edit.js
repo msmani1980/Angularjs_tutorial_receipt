@@ -68,25 +68,16 @@ angular.module('ts5App')
     var getCompanyCurrencies = cashBagFactory.getCompanyCurrencies().then(
       function(response) {
         $scope.companyCurrencies = response.response;
+        $scope.currencyCodes = [];
+        angular.forEach(response.response, function (currency) {
+            $scope.currencyCodes[currency.id] = currency.code;
+          }
+        );
       }
     );
 
-    function getCurrencyCode(currencies, currencyId){
-      angular.forEach(currencies, function (currency) {
-          if (currencyId == currency.id) {
-            return currency.code;
-          }
-        }
-      );
-    }
-
-    $q.all([getCashBag, getCompany, getCompanyCurrencies]).then(function(){
-      $scope.getCurrencyCode = function(currencyId) {
-        var returnValue = getCurrencyCode($scope.companyCurrencies, currencyId);
-        // TODO, does not work
-        // console.log(returnValue);
-        return returnValue;
-      }
+    $q.all([getCompany, getCompanyCurrencies]).then(function(){
+      // console.log('all promises met');
     });
 
   });
