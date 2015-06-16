@@ -1,0 +1,44 @@
+{
+  "schedules": [
+    {
+      "id": 348,
+      "scheduleNumber": "105",
+      "preScheduleNumber": null,
+      "nextScheduleNumber": null,
+      "companyId": "403",
+      "startDate": "2015-05-05",
+      "endDate": "2018-12-31",
+      "days": "{1,2,3,4,5,6,7}",
+      "dayId": 2,
+      "scheduleDate": "2015-06-02",
+      "scheduleId": 348,
+      "scheduleDayId": 23840,
+      "companyCarrierTypeId": null,
+      "companyCarrierId": null,
+      "carrierNumber": null,
+      "seatConfigurationId": null,
+      "departureStationId": 1,
+      "departure": "ORD",
+      "departureTime": "10:00",
+      "arrivalStationId": 8,
+      "arrival": "LAX",
+      "arrivalTime": "15:00",
+      "groundTime": null,
+      "blockTime": null,
+      "tripDistance": null,
+      "tripDistanceUnit": null,
+      "tripDistanceUnitCode": null,
+      "firstTrip": "false",
+      "lastTrip": "false",
+      "createdBy": 1,
+      "createdOn": "2015-05-04 20:08:38.15888",
+      "updatedBy": null,
+      "updatedOn": null
+    }
+  ],
+  "meta": {
+    "count": 1,
+    "limit": 1,
+    "start": 0
+  }
+}
