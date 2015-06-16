@@ -10,22 +10,35 @@
 angular.module('ts5App')
   .service('schedulesService', function ($resource, ENV) {
 
-    var schedulesRequestURL = ENV.apiUrl + '/api/companies/:id/schedules/distinct';
+    var schedulesRequestURL = ENV.apiUrl + '/api/companies/:id/schedules';
 
     var schedulesActions = {
       getSchedules: {
         method: 'GET'
+      },
+      getDailySchedules: {
+        method: 'GET'
       }
     };
-    var schedulesRequestResource = $resource(schedulesRequestURL, null, schedulesActions);
+    var distinctSchedulesRequestResource = $resource(schedulesRequestURL + '/distinct', null, schedulesActions);
+    var dailySchedulesRequestResource = $resource(schedulesRequestURL + '/daily', null, schedulesActions);
 
     var getSchedules = function (companyId) {
       var payload = {id:companyId};
-      return schedulesRequestResource.getSchedules(payload).$promise;
+      return distinctSchedulesRequestResource.getSchedules(payload).$promise;
+    };
+
+    var getDailySchedules = function (companyId,scheduleNumber, scheduleDate) {
+      var payload = {id:companyId,
+        scheduleNumber:scheduleNumber,
+        scheduleDate:scheduleDate
+      };
+      return dailySchedulesRequestResource.getSchedules(payload).$promise;
     };
 
     return {
-      getSchedules: getSchedules
+      getSchedules: getSchedules,
+      getDailySchedules: getDailySchedules
     };
 
   });
