@@ -76,8 +76,8 @@ angular.module('ts5App')
       }
     );
 
-    $q.all([getCompany, getCompanyCurrencies]).then(function(){
-      // console.log('all promises met');
+    $q.all([getCashBag, getCompany, getCompanyCurrencies]).then(function(){
+      // All promises met
     });
 
   });

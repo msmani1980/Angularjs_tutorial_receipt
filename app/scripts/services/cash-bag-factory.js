@@ -52,7 +52,7 @@ angular.module('ts5App')
     // TODO - write test
     var getCompanyCurrencies = function() {
       return currenciesService.getCompanyCurrencies();
-    }
+    };
 
     return {
       getCompanyId: getCompanyId,
