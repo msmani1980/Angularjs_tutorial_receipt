@@ -1,5 +1,5 @@
 'use strict';
-/*global moment*/
+/* global moment */
 /**
  * @author Max Felker <max@bigroomstudios.com>
  * @ngdoc function
@@ -15,7 +15,7 @@ angular.module('ts5App')
     // TODO: Move to global function
     function formatDate(dateString, formatFrom, formatTo) {
       var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
-      return new Date(dateToReturn);
+      return dateToReturn;
     }
 
     // set search and start dates to nothing
@@ -27,7 +27,7 @@ angular.module('ts5App')
     $scope.startDateFilter = '';
     $scope.endDateFilter = '';
 
-    var todaysDate = moment().format();
+    var todaysDate = new Date();
 
     $scope.$watch('search.startDate + search.endDate', function () {
 
