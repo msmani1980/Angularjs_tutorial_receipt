@@ -79,7 +79,8 @@ angular.module('ts5App')
         minDate: '@',
         maxDate: '@',
         startDateModel: '=',
-        endDateModel: '='
+        endDateModel: '=',
+        required: '@'
       },
       link: link
     };
