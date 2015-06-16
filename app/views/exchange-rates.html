@@ -59,7 +59,8 @@
           element-class="col-xs-10 col-lg-6 pull-right"
           start-date-model="cashiersDateField"
           is-search-field="true"
-          label-from="Cashier's entry date">
+          label-from="Cashier's entry date"
+          required="true">
         </date-picker>
       </div>
     </div>
@@ -83,7 +84,7 @@
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
-                   custom-pattern="regexp.currencyWithFourDecimalPlace"
+                   custom-pattern="currencyWithFourDecimalPlace"
                    ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
                    ng-model="currenciesFields[currency.code].bankExchangeRate"
                    required="true"
@@ -98,7 +99,7 @@
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
-                   custom-pattern="regexp.currencyWithFourDecimalPlace"
+                   custom-pattern="currencyWithFourDecimalPlace"
                    ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
                    ng-model="currenciesFields[currency.code].paperExchangeRate"
                    required="true"
@@ -113,7 +114,7 @@
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
-                   custom-pattern="regexp.currencyWithFourDecimalPlace"
+                   custom-pattern="currencyWithFourDecimalPlace"
                    ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
                    ng-model="currenciesFields[currency.code].coinExchangeRate"
                    required="true"
