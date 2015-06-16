@@ -1,10 +1,21 @@
+<div class="col-xs-6 col-sm-8">
 <h2 class="view-name">{{viewName}}</h2>
+</div>
+<div class="col-xs-6 col-sm-4">
+  <div class="header-buttons pull-right">
+    <button type="button" class="btn btn-default">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="saveCompanyRelationshipList()">Create</button>
+    <button type="button" class="btn btn-default">
+      <i class="fa fa-question-circle"></i>
+    </button>
+  </div>
+</div>
 <div class="container module-container">
-  <list-object ng-repeat="companyRelationship in companyRelationshipList" vm="companyRelationship"
+  <list-object ng-repeat="companyRelationship in formData" vm="companyRelationship"
                type="company-relationship"></list-object>
   <div class="row">
     <div class="col-xs-12 text-right">
-      <a class="btn btn-primary"><span class="fa fa-plus" aria-hidden="true"></span> Add Company Relationship</a>
+      <button class="btn btn-primary" ng-click="addCompanyRelationship()"><span class="fa fa-plus" aria-hidden="true"></span> Add Company Relationship</button>
     </div>
   </div>
 </div>

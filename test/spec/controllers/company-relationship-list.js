@@ -48,22 +48,27 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
 
   describe('companyRelationshipList in scope', function () {
     it('should attach a companyRelationshipList after a API call to getCompanyRelationshipList', function () {
-      expect(!!scope.companyRelationshipList).toBe(true);
+      expect(!!scope.formData).toBe(true);
     });
 
     it('should have a menu name property', function () {
-      expect(scope.companyRelationshipList[0].companyName).toBe('British Airways');
+      expect(scope.formData[0].companyName).toBe('British Airways');
     });
   });
 
   describe('Action buttons', function () {
-    var fakeMenuItem;
+    var fakeCompanyRelationship;
 
     beforeEach(function () {
-      fakeMenuItem = {
-        endDate: moment().add(1, 'month').format('L').toString(),
-        startDate: moment().format('L').toString()
+      fakeCompanyRelationship = {
+        relativeCompanyId: 1,
+        startDate: '2015-01-01',
+        endDate: '2015-01-01'
       };
+    });
+
+    describe('addCompanyRelationship()', function() {
+
     });
   });
 });

@@ -11,7 +11,7 @@
  */
 angular.module('ts5App')
   .service('companyRelationshipService', function ($resource, $http, ENV) {
-    var requestURL = ENV.apiUrl + '/api/companies/:id/relationships';
+    var requestURL = ENV.apiUrl + '/api/companies/:id/relationships/:companyRelationshipId';
     var typeRequestURL = ENV.apiUrl + '/api/company-relation/:id/types';
     var requestParameters = {
       id: '@id'
@@ -29,14 +29,29 @@ angular.module('ts5App')
       return data;
     }
 
-    function transformRequest(data) {
-      if (data) {
-        data = angular.fromJson(data);
-        data.companyRelationships.forEach(function (companyRelationship) {
-          normalizeDateForAPI(companyRelationship);
-        });
-      }
+    function transformResponseCompanyRelationshipType(data) {
+      data = angular.fromJson(data);
+      data.companyRelationships.forEach(function (companyRelationship) {
+        normalizeDateForApp(companyRelationship);
+      });
       return data;
+    }
+
+    function transformRequest(data) {
+      data = angular.fromJson(data);
+      normalizeDateForAPI(data);
+
+      //Hack for BE
+      data.relativeCompanyId = parseInt(data.relativeCompanyId) || parseInt(data.companyId);
+      delete data.companyId;
+      delete data.companyType;
+      delete data.companyName;
+      delete data.companyTypeName;
+      delete data.id;
+      delete data.relativeCompany;
+      delete data.relativeCompanyType;
+
+      return angular.toJson(data);
     }
 
     // this function is from the docs: https://docs.angularjs.org/api/ng/service/$http#overriding-the-default-transformations-per-request
@@ -48,25 +63,26 @@ angular.module('ts5App')
     var actions = {
       getCompanyRelationshipListByCompany: {
         method: 'GET',
-        transformResponse: appendTransform($http.defaults.transformResponse, transformResponse),
-        transformRequest: appendTransform($http.defaults.transformRequest, transformRequest)
+        transformResponse: appendTransform($http.defaults.transformResponse, transformResponse)
       },
       getCompanyRelationshipList: {
         method: 'GET',
-        transformResponse: appendTransform($http.defaults.transformResponse, transformResponse),
-        transformRequest: appendTransform($http.defaults.transformRequest, transformRequest)
+        transformResponse: appendTransform($http.defaults.transformResponse, transformResponse)
       },
       getCompanyRelationship: {
         method: 'GET'
       },
       getCompanyRelationshipTypeList: {
+        //transformResponse: appendTransform($http.defaults.transformResponse, transformResponseCompanyRelationshipType),
         method: 'GET'
       },
       createCompanyRelationship: {
-        method: 'POST'
+        method: 'POST',
+        transformRequest: appendTransform($http.defaults.transformRequest, transformRequest)
       },
       updateCompanyRelationship: {
-        method: 'PUT'
+        method: 'PUT',
+        transformRequest: appendTransform($http.defaults.transformRequest, transformRequest)
       }
     };
 
@@ -114,11 +130,14 @@ angular.module('ts5App')
     };
 
     var createCompanyRelationship = function (payload) {
-      return requestResource.createCompanyRelationship(payload).$promise;
+      return requestResource.createCompanyRelationship({id: payload.companyId}, payload).$promise;
     };
 
     var updateCompanyRelationship = function (payload) {
-      return requestResource.updateCompanyRelationship(payload).$promise;
+      return requestResource.updateCompanyRelationship({
+        id: payload.companyId,
+        companyRelationshipId: payload.id
+      }, payload).$promise;
     };
 
     return {

@@ -10,10 +10,31 @@
 angular.module('ts5App')
   .controller('CompanyRelationshipListCtrl', function ($scope, $routeParams, companyRelationshipFactory) {
     $scope.viewName = 'Company Relationships';
+    $scope.formData = [];
     $scope.company = {};
     $scope.companyList = [];
-    $scope.companyRelationshipList = [];
     $scope.companyRelationshipTypeList = [];
+
+    $scope.saveCompanyRelationshipList = function () {
+      var payload = {};
+      payload.companyRelationships = angular.copy($scope.formData);
+
+      $scope.formData.forEach(function (companyRelationship) {
+        if (companyRelationship.id) {
+          companyRelationshipFactory.updateCompanyRelationship(companyRelationship);
+        } else {
+          companyRelationshipFactory.createCompanyRelationship(companyRelationship);
+        }
+      });
+    };
+
+    $scope.addCompanyRelationship = function () {
+      $scope.formData.push({
+        relativeCompanyId: null,
+        startDate: null,
+        endDate: null
+      });
+    };
 
     function setupCompanyRelationshipType(companyRelationshipTypeListFromAPI) {
       $scope.companyRelationshipTypeList = companyRelationshipTypeListFromAPI.response;
@@ -22,13 +43,9 @@ angular.module('ts5App')
     function setupCompanyRelationshipModel(companyRelationshipsFromAPI) {
       companyRelationshipsFromAPI = companyRelationshipsFromAPI.companyRelationships;
       if (!companyRelationshipsFromAPI.length) {
-        $scope.companyRelationshipList.push({
-          relativeCompanyId: null,
-          startDate: null,
-          endDate: null
-        });
+        $scope.addCompanyRelationship();
       } else {
-        $scope.companyRelationshipList = angular.copy(companyRelationshipsFromAPI);
+        $scope.formData = companyRelationshipsFromAPI;
       }
     }
 
@@ -46,7 +63,5 @@ angular.module('ts5App')
       companyRelationshipFactory.getCompanyRelationshipTypeList($scope.company.companyTypeId).then(setupCompanyRelationshipType);
     });
 
-    companyRelationshipFactory.getCompanyRelationshipListByCompany($routeParams.id).then(setupCompanyRelationshipModel, null).then(function() {
-
-    });
+    companyRelationshipFactory.getCompanyRelationshipListByCompany($routeParams.id).then(setupCompanyRelationshipModel);
   });
