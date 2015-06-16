@@ -25,6 +25,12 @@ angular.module('ts5App')
       } else if ($scope.minDate && !$scope.isSearchField) {
         options.startDate = moment($scope.minDate, 'L').format('L');
       }
+      if ($scope.minDate) {
+        options.startDate = $scope.minDate;
+      }
+      if ($scope.maxDate) {
+        options.endDate = $scope.maxDate;
+      }
 
       if ($scope.disableDateRange) {
         $element.find('.endDateContainer').remove();

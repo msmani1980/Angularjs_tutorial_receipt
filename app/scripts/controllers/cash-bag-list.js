@@ -16,6 +16,7 @@ angular.module('ts5App')
     $scope.schedulesList = {};
     $scope.newCashBag = {};
     $scope.displayError = false;
+    $scope.createCashBagError = 'Error!'
 
     cashBagFactory.getCashBagList(companyId).then(function(response){
       $scope.cashBagList = response.cashBags;
@@ -55,13 +56,15 @@ angular.module('ts5App')
     };
 
     $scope.submitCreate = function() {
-      // TODO: validate that scheduleNum and scheduleDate are populated. then validate that new schedule exists after API call
+      if ($scope.newCashBag.scheduleDate == undefined || $scope.newCashBag.scheduleNumber == undefined){
+        showError('Please select both a schedule number and a schedule date');
+        return;
+      }
       cashBagFactory.getDailySchedulesList(companyId, $scope.newCashBag.scheduleNumber, $scope.newCashBag.scheduleDate).then(function(response){
         if(response.schedules.length < 1) {
-          $scope.displayError = true;
+          showError('Not a valid schedule');
         } else {
-          $location.path('cash-bag/' + response.schedules[0].id + '/edit');
-          $('#addCashBagModal').modal('hide');
+          // TODO: show new form
         }
       });
     };
@@ -76,5 +79,11 @@ angular.module('ts5App')
       });
       return bankRefList;
     }
+
+    function showError(errorMsg) {
+      $scope.displayError = true;
+      $scope.createCashBagError = 'Please select both a schedule number and a schedule date';
+    }
+
 
   });
