@@ -8,7 +8,8 @@
  */
 angular.module('ts5App')
   .directive('menuSlide', function () {
-    function link(scope, element) {
+    function link() {
+
     }
 
     return {
