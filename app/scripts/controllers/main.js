@@ -294,17 +294,17 @@ angular.module('ts5App')
         }]
       },
       {
-        title: 'Crew Commission',
+        title: 'Employee Commission',
         menuItems: [
         {
-          name: 'Crew Commission',
-          route: '/#/crew-commission',
+          name: 'Employee Commission',
+          route: '/#/employee-commission',
           icon: 'icon-manage-schedule',
-          className: 'dashboard-crewCommission'
+          className: 'dashboard-employeeCommission'
         }]
       },
       {
-    	title: 'Refunds',
+    	title: 'Reason',
 		menuItems: [
 		{
 		  name: 'Global Reason',

@@ -119,9 +119,9 @@ angular
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })
-      .when('/crew-commission', {
-        templateUrl: 'views/crew-commission.html',
-        controller: 'CrewCommissionCtrl'
+      .when('/employee-commission', {
+        templateUrl: 'views/employee-commission.html',
+        controller: 'EmployeeCommissionCtrl'
       })
       .when('/refund-global-reason-code', {
         templateUrl: 'views/refund-global-reason-code.html',

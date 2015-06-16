@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CrewCommissionCtrl', function ($scope) {
+  .controller('EmployeeCommissionCtrl', function ($scope) {
 
-    $scope.viewName = 'Crew Commission';
+    $scope.viewName = 'Employee Commission';
 
   });
