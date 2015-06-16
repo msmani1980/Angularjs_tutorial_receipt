@@ -29,10 +29,15 @@ angular.module('ts5App')
       return schedulesService.getSchedules(id);
     };
 
+    var getDailySchedulesList = function (id, scheduleNumber, scheduleDate) {
+      return schedulesService.getDailySchedules(id, scheduleNumber, scheduleDate);
+    };
+
     return {
       getCompanyId: getCompanyId,
       getCashBagList: getCashBagList,
       getStationList: getStationList,
-      getSchedulesList: getSchedulesList
+      getSchedulesList: getSchedulesList,
+      getDailySchedulesList: getDailySchedulesList
     };
   });

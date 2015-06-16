@@ -24,6 +24,7 @@ describe('Factory: cashBagFactory', function () {
     spyOn(GlobalMenuService.company, 'get');
     spyOn(stationsService, 'getStationList');
     spyOn(schedulesService, 'getSchedules');
+    spyOn(schedulesService, 'getDailySchedules');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -53,6 +54,11 @@ describe('Factory: cashBagFactory', function () {
     it('should call schedulesService on getSchedules', function () {
       cashBagFactory.getSchedulesList(companyId);
       expect(schedulesService.getSchedules).toHaveBeenCalledWith(companyId);
+    });
+    it('should call schedulesService on getDailySchedules', function () {
+      var dummyParams = '123'
+      cashBagFactory.getDailySchedulesList(companyId, dummyParams, dummyParams);
+      expect(schedulesService.getDailySchedules).toHaveBeenCalledWith(companyId, dummyParams, dummyParams);
     });
   });
 
