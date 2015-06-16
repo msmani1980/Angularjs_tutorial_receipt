@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MainCtrl', function ($scope,companiesFactory,GlobalMenuService) {
+  .controller('MainCtrl', function ($scope, companiesFactory, GlobalMenuService) {
 
     // scope management
     var $this = this;
@@ -22,36 +22,22 @@ angular.module('ts5App')
 
     // changes the navigation depeneding on what company type you have
     function updateNavigationPerCompanyType() {
-
       companiesFactory.getCompany(companyId).then(function (response) {
-
         var companyTypeId = response.companyTypeId;
-
-        switch(companyTypeId) {
-
+        switch (companyTypeId) {
           case 2:
-
             $scope.dashboardMenu = $this.stockOwnerMenu;
-
-          break;
-
-
+            break;
           default:
-
             $scope.dashboardMenu = $this.retailMenu;
-
-          break;
-
+            break;
         }
-
       });
-
     }
-
     updateNavigationPerCompanyType();
 
     this.stockOwnerMenu = [
-     {
+      {
         'title': 'Stock Owner Item Management',
         menuItems: [
           {
@@ -278,46 +264,46 @@ angular.module('ts5App')
           }]
       },
       {
-    	title: 'Post Trip Data',
-    	menuItems: [
-	      {
-	        name: 'Manage Post Trip Data',
-	        route: '/#/post-trip-data-list',
-	        icon: 'icon-manage-menu',
-	        className: 'dashboard-postTripDataList'
-	      },
-	      {
-          name: 'Post Trip Data',
-          route: '/#/post-trip-data',
-          icon: 'icon-create-menu',
-          className: 'dashboard-postTripData'
-        }]
+        title: 'Post Trip Data',
+        menuItems: [
+          {
+            name: 'Manage Post Trip Data',
+            route: '/#/post-trip-data-list',
+            icon: 'icon-manage-menu',
+            className: 'dashboard-postTripDataList'
+          },
+          {
+            name: 'Post Trip Data',
+            route: '/#/post-trip-data',
+            icon: 'icon-create-menu',
+            className: 'dashboard-postTripData'
+          }]
       },
       {
         title: 'Crew Commission',
         menuItems: [
-        {
-          name: 'Crew Commission',
-          route: '/#/crew-commission',
-          icon: 'icon-manage-schedule',
-          className: 'dashboard-crewCommission'
-        }]
+          {
+            name: 'Crew Commission',
+            route: '/#/crew-commission',
+            icon: 'icon-manage-schedule',
+            className: 'dashboard-crewCommission'
+          }]
       },
       {
-    	title: 'Refunds',
-		menuItems: [
-		{
-		  name: 'Global Reason',
-		  route: '/#/refund-global-reason-code',
-		  icon: 'icon-manage-schedule',
-		  className: 'dashboard-refundGlobalReasonCode'
-		},
-		{
-		  name: 'Company Reason',
-		  route: '/#/refund-company-reason-code',
-		  icon: 'icon-manage-schedule',
-		  className: 'dashboard-refundCompanyReasonCode'
-		}]
+        title: 'Refunds',
+        menuItems: [
+          {
+            name: 'Global Reason',
+            route: '/#/refund-global-reason-code',
+            icon: 'icon-manage-schedule',
+            className: 'dashboard-refundGlobalReasonCode'
+          },
+          {
+            name: 'Company Reason',
+            route: '/#/refund-company-reason-code',
+            icon: 'icon-manage-schedule',
+            className: 'dashboard-refundCompanyReasonCode'
+          }]
       }
     ];
 
