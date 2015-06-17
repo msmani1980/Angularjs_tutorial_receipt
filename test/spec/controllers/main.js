@@ -23,7 +23,7 @@ describe('Controller: MainCtrl', function () {
   });
 
   it('should have a retail menu collection', function () {
-    expect(MainCtrl.retailMenu.length).toBe(15);
+    expect(MainCtrl.retailMenu.length).toBe(16);
   });
 
   it('should have a title property', function () {
@@ -60,8 +60,8 @@ describe('Controller: MainCtrl', function () {
       expect(menuNavigation.title.trim()).toEqual('Menu Management');
     });
 
-    it('should have (3) navigation items', function () {
-      expect(menuNavigation.menuItems.length).toEqual(3);
+    it('should have (2) navigation items', function () {
+      expect(menuNavigation.menuItems.length).toEqual(2);
     });
 
     describe('Manage Menu Link', function () {
@@ -104,17 +104,36 @@ describe('Controller: MainCtrl', function () {
 
     });
 
-    describe('Manage Relationships Link', function () {
+  });
+
+  describe('Menu Relationships', function () {
+
+    var menuRelationship;
+
+    beforeEach(function () {
+      menuRelationship = MainCtrl.retailMenu[6];
+    });
+
+    it('should have the correct title', function () {
+      expect(menuRelationship.title.trim()).toEqual(
+        'Menu Relationships');
+    });
+
+    it('should have (2) navigation items', function () {
+      expect(menuRelationship.menuItems.length).toEqual(2);
+    });
+
+    describe('Manage Relationship Link', function () {
 
       var navigationItem;
 
       beforeEach(function () {
-        navigationItem = menuNavigation.menuItems[2];
+        navigationItem = menuRelationship.menuItems[0];
       });
 
       it('should have the correct label', function () {
         expect(navigationItem.name.trim()).toEqual(
-          'Menu Relationships');
+          'Manage Relationships');
       });
 
       it('should have the correct route', function () {
@@ -124,6 +143,25 @@ describe('Controller: MainCtrl', function () {
 
     });
 
+    describe('Create Relationship Link', function () {
+
+      var navigationItem;
+
+      beforeEach(function () {
+        navigationItem = menuRelationship.menuItems[1];
+      });
+
+      it('should have the correct label', function () {
+        expect(navigationItem.name.trim()).toEqual(
+          'Create Relationships');
+      });
+
+      it('should have the correct route', function () {
+        expect(navigationItem.route).toEqual(
+          '/#/menu-relationship-create');
+      });
+
+    });
 
   });
 

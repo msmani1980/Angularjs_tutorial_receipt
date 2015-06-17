@@ -36,38 +36,38 @@ describe('Directive: leftNavigation', function () {
         expect(element.find('.navbar')).toBeDefined();
       });
 
-      it('should contain a ul navbar with (3) li elements', function () {
-        expect(element.find('.navbar li').length).toBe(3);
+      it('should contain a ul navbar with (5) li elements', function () {
+        expect(element.find('.navbar li').length).toBe(5);
       });
 
-      it('should contain a ul navbar with (3) left-nav-option elements',
+      it('should contain a ul navbar with (5) left-nav-option elements',
         function () {
           expect(element.find('.navbar .left-nav-option').length).toBe(
-            3);
+            5);
         });
 
-      it('should contain a ul navbar with (3) p elements',
+      it('should contain a ul navbar with (5) p elements',
         function () {
           expect(element.find('.left-nav-option p').length).toBe(
-            3);
+            5);
         });
 
-      it('should contain a left-nav-option with (3) icon elements',
+      it('should contain a left-nav-option with (5) icon elements',
         function () {
           expect(element.find('.left-nav-option i').length).toBe(
-            3);
+            5);
         });
 
-      it('should contain a ul navbar with (6) icon elements',
+      it('should contain a ul navbar with (10) icon elements',
         function () {
           expect(element.find('.navbar li i').length).toBe(
-            6);
+            10);
         });
 
-      it('should contain a left-nav-option with (1) lg class',
+      it('should contain a left-nav-option with (5) lg class',
         function () {
           expect(element.find('.left-nav-option.lg').length).toBe(
-            1);
+            5);
         });
 
       it('should have the leave-view-modal-nav element',
@@ -290,6 +290,38 @@ describe('Directive: leftNavigation', function () {
         });
 
     });
+
+  describe(
+    'when the base-path attribute is passed with menu-relationship, it',
+    function () {
+
+      var isolatedScope;
+
+      beforeEach(inject(function ($compile) {
+        element = angular.element(
+          '<left-navigation base-path="menu-relationship"></left-navigation>'
+        );
+        element = $compile(element)(scope);
+        scope.$digest();
+        isolatedScope = element.isolateScope();
+      }));
+
+      it(
+        'should have a menuRelationshipListPath variable that contains /menu-relationship-list',
+        function () {
+          expect(isolatedScope.menuRelationshipListPath).toContain(
+            '/menu-relationship-list');
+        });
+
+      it(
+        'should have a menuRelationshipCreatePath variable that contains /stock-owner-item-create',
+        function () {
+          expect(isolatedScope.menuRelationshipCreatePath).toContain(
+            '/menu-relationship-create');
+        });
+
+    });
+
 
   describe('when the controller is accessed, it',
     function () {

@@ -2,30 +2,65 @@
 	<div class="container">
 		<ul class="navbar ng-cloak">
 
-			<li ng-click="leaveViewNav('{{itemListPath}}')" ng-class="{'active':locationPath == itemListPath}">
+		<li ng-click="leaveViewNav('{{itemListPath}}')"
+			ng-class="{'active':locationPath == itemListPath}"
+			ng-show="itemListPath">
+
+			<i class="icon-manage-retail-item"></i>
+			<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 				<i class="icon-manage-retail-item"></i>
-				<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
-					<i class="icon-manage-retail-item"></i>
-					<p>Manage {{itemPrefix}} Items</p>
+				<p>Manage {{itemPrefix}}</p>
+			</div>
 
-				</div>
-			</li>
+		</li>
 
-			<li ng-click="leaveViewNav('{{itemCreatePath}}')" ng-class="{'active':locationPath == itemCreatePath}">
+		<li ng-click="leaveViewNav('{{itemCreatePath}}')"
+			ng-class="{'active':locationPath == itemCreatePath}"
+			ng-show="itemCreatePath">
+
+			<i class="icon-create-retail-item"></i>
+			<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 				<i class="icon-create-retail-item"></i>
-				<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
-					<i class="icon-create-retail-item"></i>
-					<p>Create {{itemPrefix}} Items</p>
-				</div>
-			</li>
-			<li ng-class="{'active':locationPath == manageCategoriesPath}">
+				<p>Create {{itemPrefix}}</p>
+			</div>
+
+		</li>
+
+		<li ng-class="{'active':locationPath == manageCategoriesPath}"
+			ng-show="manageCategoriesPath">
+
 			<a ng-href="{{manageCategoriesPath}}">
 				<i class="icon-manage-retail-category"></i>
 				<div class="left-nav-option lg">
 					<i class="icon-manage-retail-category"></i>
-					<p>Manage Categories</p>
+					<p>Manage Cat</p>
 				</div>
 			</a>
+
+		</li>
+
+		<li ng-click="leaveViewNav('{{menuRelationshipListPath}}')"
+			ng-class="{'active':locationPath == menuRelationshipListPath}"
+			ng-show="menuRelationshipListPath">
+
+			<i class="icon-menu-assignment"></i>
+			<div class="left-nav-option lg">
+				<i class="icon-menu-assignment"></i>
+				<p>Manage {{itemPrefix}}</p>
+			</div>
+
+		</li>
+
+		<li ng-click="leaveViewNav('{{menuRelationshipCreatePath}}')"
+			ng-class="{'active':locationPath == menuRelationshipCreatePath}"
+			ng-show="menuRelationshipCreatePath">
+
+			<i class="icon-create-menu"></i>
+			<div class="left-nav-option lg">
+				<i class="icon-create-menu"></i>
+				<p>Create {{itemPrefix}}</p>
+			</div>
+
 		</li>
 
 		</ul>
