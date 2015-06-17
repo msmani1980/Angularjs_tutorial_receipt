@@ -14,8 +14,10 @@ angular.module('ts5App')
     var companyId = cashBagFactory.getCompanyId();
 
     $scope.viewName = 'Cash Bag';
-    $scope.readOnly = $routeParams.state !== 'edit';
+    $scope.readOnly = $routeParams.state === 'view';
     $scope.displayError = false;
+    $scope.scheduleDate = $routeParams.scheduleDate;
+    $scope.scheduleNumber = $routeParams.scheduleNumber;
 
     $scope.update = function (updatedCashBag) {
       var saveCashBag = angular.copy(updatedCashBag);
@@ -57,6 +59,14 @@ angular.module('ts5App')
       },
       showErrors
     );
+
+
+    if ($routeParams.id == undefined) {
+      $scope.cashBag = {
+        scheduleDate: $routeParams.scheduleDate,
+        scheduleNumber: $routeParams.scheduleNumber
+      };
+    }
 
     var getCompany = cashBagFactory.getCompany(companyId).then(
       function (response) {
