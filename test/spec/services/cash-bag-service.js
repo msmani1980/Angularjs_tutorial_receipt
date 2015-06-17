@@ -159,6 +159,38 @@ describe('Service: cashBagService', function () {
       });
     });
 
+    describe('createCashBag', function () {
+
+      it('should be accessible in the service', function () {
+        expect(!!cashBagService.createCashBag).toBe(true);
+      });
+
+      var cashBagData;
+
+      beforeEach(function () {
+        var cashBag = {
+          scheduleDate: '20150611',
+          scheduleNumber: '105',
+          cashBagCurrencies: []
+        };
+        $httpBackend.expectPOST(/cash-bags/).respond(cashBagResponseJSON);
+
+        cashBagService.createCashBag(cashBag).then(function (dataFromAPI) {
+          cashBagData = dataFromAPI;
+        });
+        $httpBackend.flush();
+      });
+
+      it('should be an object', function () {
+        expect(Object.prototype.toString.call(cashBagData)).toBe('[object Object]');
+      });
+
+      it('should have id property', function () {
+        expect(cashBagData.id).not.toBe(null);
+      });
+
+    });
+
 
   });
 

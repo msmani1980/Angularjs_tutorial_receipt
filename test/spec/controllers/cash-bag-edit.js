@@ -4,7 +4,7 @@ describe('Controller: CashBagEditCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag.json','served/company.json', 'served/company-currency-globals.json'));
+  beforeEach(module('served/cash-bag.json', 'served/company.json', 'served/company-currency-globals.json'));
 
   var CashBagEditCtrl,
     scope,
@@ -31,6 +31,7 @@ describe('Controller: CashBagEditCtrl', function () {
 
     getCashBagDeferred = $q.defer();
     getCashBagDeferred.resolve(cashBagResponseJSON);
+    spyOn(cashBagFactory, 'createCashBag').and.returnValue(getCashBagDeferred.promise);
 
     getCompanyDeferred = $q.defer();
     getCompanyDeferred.resolve(companyResponseJSON);
@@ -45,13 +46,15 @@ describe('Controller: CashBagEditCtrl', function () {
     companyId = cashBagFactory.getCompanyId();
   }));
 
-  describe('edit controller action', function(){
+  // TODO: test getDailyExchangeRates & other global service calls
+
+  describe('edit controller action', function () {
 
     beforeEach(inject(function ($controller) {
       spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
       CashBagEditCtrl = $controller('CashBagEditCtrl', {
         $scope: scope,
-        $routeParams: {state:'edit', id:95}
+        $routeParams: {state: 'edit', id: 95}
       });
       scope.$digest();
     }));
@@ -69,68 +72,99 @@ describe('Controller: CashBagEditCtrl', function () {
       });
     });
 
-    describe('company object in scope', function(){
-      it('should call getCompany with companyId', function(){
+    describe('company object in scope', function () {
+      it('should call getCompany with companyId', function () {
         expect(cashBagFactory.getCompany).toHaveBeenCalledWith(companyId);
       });
-      it('should have company attached to scope after API call', function(){
+      it('should have company attached to scope after API call', function () {
         expect(!!scope.company).toBe(true);
       });
     });
 
-    describe('companyCurrencies in scope', function(){
-      it('should call getCompanyCurrencies', function(){
+    describe('companyCurrencies in scope', function () {
+      it('should call getCompanyCurrencies', function () {
         expect(cashBagFactory.getCompanyCurrencies).toHaveBeenCalled();
       });
-      it('should have companyCurrencies attached to scope after API call', function(){
+      it('should have companyCurrencies attached to scope after API call', function () {
         expect(!!scope.companyCurrencies).toBe(true);
       });
-      it('should have currencyCodes attached to scope after API call', function(){
+      it('should have currencyCodes attached to scope after API call', function () {
         expect(!!scope.currencyCodes).toBe(true);
       });
     });
 
     describe('update cash bag', function () {
-      it('should have an update method attached to the scope', function(){
-        expect(!!scope.update).toBe(true);
+      it('should have an update method attached to the scope', function () {
+        expect(!!scope.save).toBe(true);
       });
-      it('should call updateCashBag', function(){
-        scope.update(cashBagResponseJSON);
+      it('should call updateCashBag', function () {
+        scope.save(cashBagResponseJSON);
         expect(cashBagFactory.updateCashBag).toHaveBeenCalled();
-      });
-    });
-
-    describe('create cash bag', function(){
-      it('should not have an id set in routeParam', function(){
-
       });
     });
 
   });
 
-  describe('create controller action', function() {
+  describe('create controller action', function () {
 
+    var routeParams = {
+      state: 'create',
+      scheduleDate: '20151231',
+      scheduleNumber: '105'
+    };
     beforeEach(inject(function ($controller) {
       CashBagEditCtrl = $controller('CashBagEditCtrl', {
         $scope: scope,
-        $routeParams: {
-          state:'create',
-          scheduleDate:'20151231',
-          scheduleNumber: '105'
-        }
+        $routeParams: routeParams
       });
       scope.$digest();
     }));
 
-    it('should have cashBag defined in scope', function(){
+    it('should have cashBag defined in scope', function () {
       console.log(scope.cashBag);
       expect(!!scope.cashBag).toBe(true);
     });
-    it('should have scheduleDate defined in scope', function(){
-      expect(scope.scheduleDate).toBeDefined();
+
+    describe('cashBag definition', function () {
+      it('should have scheduleDate defined in cashBag', function () {
+        expect(scope.cashBag.scheduleDate).toBeDefined();
+        expect(scope.cashBag.scheduleDate).toEqual(routeParams.scheduleDate);
+      });
+
+      it('should have scheduleNumber defined in cashBag', function () {
+        expect(scope.cashBag.scheduleNumber).toBeDefined();
+        expect(scope.cashBag.scheduleNumber).toEqual(routeParams.scheduleNumber);
+      });
+
+      it('should have cashBagCurrencies in cashBag', function () {
+        expect(scope.cashBag.cashBagCurrencies).toBeDefined();
+      });
+
+      it('should have cashBagCurrencies that is an array', function () {
+        expect(Object.prototype.toString.call(scope.cashBag.cashBagCurrencies)).toBe('[object Array]');
+      });
+
+      it('should be formatted like companyCurrencies', function () {
+        console.log(scope.cashBag);
+        expect(scope.cashBag.cashBagCurrencies[0].currencyId).toEqual(companyCurrencyGlobalsResponseJSON.response[0].id);
+        expect(scope.cashBag.cashBagCurrencies.length).toEqual(companyCurrencyGlobalsResponseJSON.response.length);
+      });
     });
-    it('should have scheduleNumber defined in scope', function(){
-      expect(scope.scheduleNumber).toBeDefined();
+
+    describe('create cash bag save', function() {
+      it('should have an save method attached to the scope', function () {
+        expect(!!scope.save).toBe(true);
+      });
+
+      it('should be a function', function () {
+        expect(Object.prototype.toString.call(scope.save)).toBe('[object Function]');
+      });
+
+      it('should call createCashBag', function () {
+        scope.save(cashBagResponseJSON);
+        expect(cashBagFactory.createCashBag).toHaveBeenCalled();
+      });
+
     });
 
   });
