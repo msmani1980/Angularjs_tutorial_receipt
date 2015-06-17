@@ -18,8 +18,8 @@
             <div class="col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="cashBag-origin">Schedule</label>
-                  <select ng-model="newCashBag.scheduleNumber" class="form-control col-md-12" id="cashBag-origin">
-                    <option ng-repeat="schedule in schedulesList" value="{{ schedule.scheduleNumber }}">{{ schedule.scheduleNumber }}</option>
+                  <select ng-model="newCashBag.scheduleIndex" class="form-control col-md-12" id="cashBag-origin" ng-change="updateScheduleDate()" required="true">
+                    <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}</option>
                   </select>
               </div>
             </div>
@@ -31,8 +31,8 @@
                 start-date-model="newCashBag.scheduleDate"
                 is-search-field="true"
                 label-from="Schedule Date"
-                min-date="06/18/2015"
-                max-date="06/28/2015"
+                min-date="scheduleMinDate"
+                max-date="scheduleMaxDate"
                 required="true">
             </div>
           </div>

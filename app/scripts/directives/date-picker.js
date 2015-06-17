@@ -17,7 +17,6 @@ angular.module('ts5App')
     };
 
     var initializeDatePicker = function ($scope, $element) {
-
       var options = angular.extend({}, datePickerOptions);
 
       if ($scope.disablePast) {
@@ -51,6 +50,10 @@ angular.module('ts5App')
     };
 
     function link($scope, $element) {
+      $scope.$watchGroup(['minDate', 'maxDate'], function(){
+        $element.find('.startDate').datepicker('setStartDate', $scope.minDate);
+        $element.find('.startDate').datepicker('setEndDate', $scope.maxDate);
+      });
 
       if ($scope.isSearchField) {
         initializeDatePicker($scope, $element);
@@ -82,8 +85,8 @@ angular.module('ts5App')
         disableEndDate: '=',
         disableDateRange: '@',
         isSearchField: '@',
-        minDate: '@',
-        maxDate: '@',
+        minDate: '=',
+        maxDate: '=',
         startDateModel: '=',
         endDateModel: '=',
         required: '@'
