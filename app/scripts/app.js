@@ -152,4 +152,30 @@ angular
     // set regexp object into root scope for use in any template
     $rootScope.regexp = regexp;
 
+    $rootScope.sideMenu = [
+      {
+        'title': 'Stock Owner Item Management',
+        menuItems: [
+          {
+            name: 'Manage SO Items',
+            route: '/#/stock-owner-item-list',
+            icon: 'icon-manage-retail-item',
+            className: 'dashboard-managemenuItems'
+          },
+          {
+            name: 'Create SO Item',
+            route: '/#/stock-owner-item-create',
+            icon: 'icon-create-retail-item',
+            className: 'dashboard-createItem'
+          },
+          {
+            name: 'Manage SO Categories',
+            route: 'retail-items/categories',
+            icon: 'icon-manage-retail-category',
+            className: 'dashboard-manageItemCategories'
+          }
+        ]
+      }
+    ];
+
   }]);
