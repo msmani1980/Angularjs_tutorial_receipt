@@ -36,8 +36,7 @@
         <span class="fa fa-bars"></span>
       </button>
       <a class="navbar-brand" ng-href="/#/">
-        <span class="fa fa-th"></span>
-        TS5 Dashboard
+        ☰ TS5 Dashboard
       </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
@@ -56,11 +55,14 @@
   </div>
 </nav>
 
+<menu-slide>
+</menu-slide>
+
 <div class="container-fluid">
   <div class="main-container" ng-view=""></div>
 </div>
-<dev-footer></dev-footer>
 
+<dev-footer></dev-footer>
 <loading-modal></loading-modal>
 <toast></toast>
 
@@ -115,7 +117,6 @@
 <script src="scripts/controllers/companies.js"></script>
 <script src="scripts/controllers/item-list.js"></script>
 <script src="scripts/services/companieslistfactory.js"></script>
-<script src="scripts/services/companies-factory.js"></script>
 <script src="scripts/controllers/company.js"></script>
 <script src="scripts/services/items-factory.js"></script>
 <script src="scripts/controllers/item-create.js"></script>
@@ -175,10 +176,8 @@
 <script src="scripts/services/version-service.js"></script>
 <script src="scripts/controllers/cash-bag-edit.js"></script>
 <script src="scripts/services/cash-bag-service.js"></script>
-<script src="scripts/services/schedules-service.js"></script>
-<script src="scripts/services/stations-service.js"></script>
 <script src="scripts/controllers/cash-bag-list.js"></script>
-<script src="scripts/services/cash-bag-factory.js"></script>
+<script src="scripts/directives/menu-slide.js"></script>
 <!-- endbuild -->
 </body>
 </html>

@@ -17,7 +17,8 @@
                name="{{labelFrom}}"
                ng-disabled="shouldDisableStartDate || disableStartDate"
                class="startDate form-control"
-               />
+               ng-required="required"
+          />
 
       </div>
 
@@ -36,7 +37,8 @@
                placeholder="mm/dd/YYYY"
                name="{{labelTo}}"
                ng-disabled="shouldDisableEndDate || disableEndDate"
-               class="endDate form-control" />
+               ng-required="required && !isSearchField"
+               class="endDate form-control"/>
 
       </div>
 
