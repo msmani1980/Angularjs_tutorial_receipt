@@ -8,12 +8,17 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, ngToast) {
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location) {
   	var companyId = cashBagFactory.getCompanyId();
     $scope.viewName = 'Manage Cash Bag';
     $scope.search = {};
     $scope.schedulesList = {};
     $scope.displayError = false;
+    $scope.newCashBag = {};
+    $scope.scheduleMinDate = '01/01/2000';
+    $scope.scheduleMaxDate = '12/31/3000';
+    $scope.displayError = false;
+    $scope.createCashBagError = 'Error!';
 
     cashBagFactory.getCashBagList(companyId).then(function(response){
       $scope.cashBagList = response.cashBags;
@@ -72,6 +77,28 @@ angular.module('ts5App')
       angular.element('#addCashBagModal').modal('show');
     };
 
+    $scope.submitCreate = function() {
+      if(!$scope.createCashBagForm.$valid) {
+        showError('Please select both a schedule number and a schedule date');
+        return;
+      }
+      cashBagFactory.getDailySchedulesList(companyId, $scope.schedulesList[$scope.newCashBag.scheduleIndex].scheduleNumber, $scope.newCashBag.scheduleDate).then(function(response){
+        if(response.schedules.length < 1) {
+          showError('Not a valid schedule');
+        } else {
+          $scope.displayError = false;
+          // TODO: show new form
+        }
+      });
+    };
+
+    $scope.updateScheduleDate = function() {
+      var minDateComponents = $scope.schedulesList[$scope.newCashBag.scheduleIndex].minEffectiveStart.split("-");
+      var maxDateComponents = $scope.schedulesList[$scope.newCashBag.scheduleIndex].maxEffectiveEnd.split("-");
+      $scope.scheduleMinDate = minDateComponents[1] + '/' + minDateComponents[2] + '/' + minDateComponents[3];
+      $scope.scheduleMaxDate = maxDateComponents[1] + '/' + maxDateComponents[2] + '/' + maxDateComponents[3];
+    };
+
     function getBankRefList(cashBagList) {
       var bankRefList = [];
       cashBagList.forEach(function(element){
@@ -80,6 +107,11 @@ angular.module('ts5App')
         }
       });
       return bankRefList;
+    }
+
+    function showError(errorMsg) {
+      $scope.displayError = true;
+      $scope.createCashBagError = errorMsg;
     }
 
   });

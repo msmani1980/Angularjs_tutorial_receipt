@@ -56,13 +56,13 @@ describe('Controller: CashBagListCtrl', function () {
   });
 
   it('should have cashBagList attached to scope', function () {
-    expect(scope.cashBagList).not.toBe(undefined);
+    expect(scope.cashBagList).toBeDefined();
   });
 
 
   describe('filter bank reference number list for search', function () {
     it('should have bankRefList attached to scope', function () {
-      expect(scope.bankRefList).not.toBe(undefined);
+      expect(scope.bankRefList).toBeDefined();
     });
 
     it('should have no null values', function () {
@@ -78,7 +78,7 @@ describe('Controller: CashBagListCtrl', function () {
 
   describe('search cash bag', function () {
     it('should have a search object attached to scope', function () {
-      expect(scope.search).not.toBe(undefined);
+      expect(scope.search).toBeDefined();;
     });
 
     it('should clear search model and make a API call', function () {
@@ -104,7 +104,7 @@ describe('Controller: CashBagListCtrl', function () {
     });
 
     it('should have stationList attached to scope', function () {
-      expect(scope.stationList).not.toBe(undefined);
+      expect(scope.stationList).toBeDefined();
     });
   });
 
@@ -114,7 +114,7 @@ describe('Controller: CashBagListCtrl', function () {
     });
 
     it('should have schedulesList attached to scope', function () {
-      expect(scope.schedulesList).not.toBe(undefined);
+      expect(scope.schedulesList).toBeDefined();
     });
   });
 
