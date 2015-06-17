@@ -151,12 +151,12 @@ angular.module('ts5App')
           name: 'Manage Relationships',
           route: '/#/menu-relationship-list',
           icon: 'icon-menu-assignment',
-          className: 'dashboard-menuRelationshipList'
+          className: 'dashboard-menuAssignments'
         }, {
           name: 'Create Relationships',
           route: '/#/menu-relationship-create',
           icon: 'icon-create-menu',
-          className: 'dashboard-menuRelationshipCreate'
+          className: 'dashboard-menuAssignments'
         }, ]
       }, {
         title: 'Promotion Management',
