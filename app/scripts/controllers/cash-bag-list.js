@@ -93,8 +93,8 @@ angular.module('ts5App')
     };
 
     $scope.updateScheduleDate = function() {
-      var minDateComponents = $scope.schedulesList[$scope.newCashBag.scheduleIndex].minEffectiveStart.split("-");
-      var maxDateComponents = $scope.schedulesList[$scope.newCashBag.scheduleIndex].maxEffectiveEnd.split("-");
+      var minDateComponents = $scope.schedulesList[$scope.newCashBag.scheduleIndex].minEffectiveStart.split('-');
+      var maxDateComponents = $scope.schedulesList[$scope.newCashBag.scheduleIndex].maxEffectiveEnd.split('-');
       $scope.scheduleMinDate = minDateComponents[1] + '/' + minDateComponents[2] + '/' + minDateComponents[3];
       $scope.scheduleMaxDate = maxDateComponents[1] + '/' + maxDateComponents[2] + '/' + maxDateComponents[3];
     };

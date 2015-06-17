@@ -51,7 +51,7 @@ angular.module('ts5App')
 
     var createCashBag = function(payload) {
       return cashBagService.createCashBag(payload);
-    }
+    };
 
     var getCompanyCurrencies = function() {
       return currenciesService.getCompanyCurrencies();
@@ -59,7 +59,7 @@ angular.module('ts5App')
 
     var getDailyExchangeRates = function(id, cashierDate) {
       return dailyExchangeRatesService.getDailyExchangeRates(id, cashierDate);
-    }
+    };
 
     return {
       getCompanyId: getCompanyId,

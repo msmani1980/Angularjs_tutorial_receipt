@@ -24,7 +24,7 @@ angular.module('ts5App')
 
     };
 
-    $scope.save = function(formCashBag) {
+    $scope.save = function (formCashBag) {
       switch ($routeParams.state) {
         case 'edit':
           var saveCashBag = angular.copy(formCashBag);
@@ -37,8 +37,9 @@ angular.module('ts5App')
           cashBagFactory.updateCashBag($routeParams.id, payload).then(updateSuccess, showErrors);
           break;
         case 'create':
-          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function(){
-            alert('successs');
+          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function () {
+            //TODO: redirect
+            console.log('success');
           }, showErrors);
           break;
       }
@@ -109,6 +110,7 @@ angular.module('ts5App')
           scheduleNumber: $routeParams.scheduleNumber,
           cashBagCurrencies: []
         };
+
         $q.all([getDailyExchangeRates, getCompanyCurrencies]).then(function(){
           // TODO: throw error when dailyExchangeRates returns empty array
           console.log($scope.dailyExchangeRates);
@@ -121,7 +123,6 @@ angular.module('ts5App')
         });
         break;
     }
-
 
 
     //$q.all([getCashBag, getCompany, getCompanyCurrencies]).then(function(){
