@@ -13,18 +13,25 @@
   
   <div class="post-trip-data-list">
     <div class="row">
-    
-<!-- TODO: IMPORT FROM FILE [ EX: SCHEDULE MANAGEMENT SCREEN ] -->    
+
       <div class="col-xs-12">
-        <div class="btn-group">
-          <button type="button" class="btn btn-info">
+        <div class="btn-group import-from-file">
+          <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#importFromData">
             Import Post Trip From File <i class="fa fa-caret-right"></i>
           </button>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-info">
-            <i class="fa fa-download"></i> Download Template
-          </button>
+          
+          <div id="importFromData" class="collapse width">
+            <input type="file" style="margin:5px; display:block;">
+            
+            <button type="button" class="btn btn-info">
+              Upload
+            </button>
+            
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target=".download-template-modal" ng-click="downloadTemplate()">
+              <i class="fa fa-download"></i> Download Template
+            </button>
+          </div>
+ 
         </div>
       </div>
 
@@ -52,14 +59,14 @@
         <div class="panel-body">
           <div class="row">
           
-            <div class="col-md-3 col-sm-6">
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="item-code">Schedule Number</label>
                 <input ng-model="search.scheduleNumber" type="text" class="form-control" id="item-code" placeholder="T1">
               </div>
             </div>
             
-            <div class="col-md-3 col-sm-6">
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="tailNumber">Tail Number</label>
                 <select class="form-control" id="tailNumber">
@@ -72,7 +79,7 @@
             </div>
 
             <date-picker class="form-group"
-              element-class="col-md-3 col-sm-6"
+              element-class="col-xs-12 col-sm-3"
               start-date-model="formData.startDate"
               end-date-model="formData.endDate"
               disable-past="true"
@@ -82,31 +89,33 @@
               disable-end-date="viewOnly || itemIsInactive">
             </date-picker>
         
-            <div class="col-md-3 col-sm-6">
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="item-name">Departure Station</label>
                 <input ng-model="search.departureStation" type="text" class="form-control" id="item-name" placeholder="Test">
               </div>
             </div>
 
-            <div class="col-md-3 col-sm-6">
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="item-name">Departure Time</label>
-                <input ng-model="search.departureTime" type="text" class="form-control" id="item-name" placeholder="Test">
+                <input ng-model="search.departureTime" type="text" class="form-control departure-time-from" id="item-name" placeholder="From">
+                <input ng-model="search.departureTime" type="text" class="form-control departure-time-to" id="item-name" placeholder="To">
               </div>
             </div>
                         
-            <div class="col-md-3 col-sm-6">
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="item-name">Arrival Station</label>
                 <input ng-model="search.arrivalStation" type="text" class="form-control" id="item-name" placeholder="Test">
               </div>
             </div>
 
-            <div class="col-md-3 col-sm-6">
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="item-name">Arrival Time</label>
-                <input ng-model="search.arrivalTime" type="text" class="form-control" id="item-name" placeholder="Test">
+                <input ng-model="search.arrivalTime" type="text" class="form-control arrival-time-from" id="item-name" placeholder="From">
+                <input ng-model="search.arrivalTime" type="text" class="form-control arrival-time-to" id="item-name" placeholder="To">
               </div>
             </div>
                         
@@ -174,7 +183,29 @@
   </div>
 
 </div>
+
+<!-- Modal - Download Template -->
+<!-- <div class="modal fade" id="DownloadTemplateModal" tabindex="-1"  role="dialog" aria-labelledby="myModalLabel"> -->
+<!--   <div class="modal-dialog" role="document"> -->
+<!--     <div class="modal-content"> -->
+<!--       <div class="modal-header"> -->
+<!--         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+<!--         <h4 class="modal-title" id="myModalLabel">Download Template</h4> -->
+<!--       </div> -->
+<!--       <div class="modal-body"> -->
+<!--        <p>coming soon...</p> -->
+<!--       </div> -->
+<!--       <div class="modal-footer"> -->
+<!--         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+<!--         <button type="button" class="btn btn-primary">Save changes</button> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--   </div> -->
+<!-- </div> -->
+
 <!-- /Container -->
+
+<download-template-modal></download-template-modal>
 
 <form-success-modal></form-success-modal>
 
