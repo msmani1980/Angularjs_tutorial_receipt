@@ -22,27 +22,19 @@ angular.module('ts5App')
 
     // changes the navigation depeneding on what company type you have
     function updateNavigationPerCompanyType() {
-
       companiesFactory.getCompany(companyId).then(function (response) {
-
         var companyTypeId = response.companyTypeId;
 
         switch (companyTypeId) {
-
         case 2:
           $scope.dashboardMenu = $this.stockOwnerMenu;
           break;
-
         default:
           $scope.dashboardMenu = $this.retailMenu;
           break;
-
         }
-
       });
-
     }
-
     updateNavigationPerCompanyType();
 
     this.stockOwnerMenu = [{
@@ -240,6 +232,27 @@ angular.module('ts5App')
           route: emberURL + 'cash-bag-submission',
           icon: 'icon-manage-retail-category',
           className: 'dashboard-cashBagSubmission'
+        }]
+      }, {
+        title: 'Post Trip Data',
+        menuItems: [{
+          name: 'Manage Post Trip Data',
+          route: '/#/post-trip-data-list',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-postTripDataList'
+        }, {
+          name: 'Post Trip Data',
+          route: '/#/post-trip-data',
+          icon: 'icon-create-menu',
+          className: 'dashboard-postTripData'
+        }]
+      }, {
+        title: 'Crew Commission',
+        menuItems: [{
+          name: 'Crew Commission',
+          route: '/#/crew-commission',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-crewCommission'
         }]
       }, {
         title: 'Post Trip Data',
