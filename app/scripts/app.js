@@ -131,6 +131,10 @@ angular
         templateUrl: 'views/refund-company-reason-code.html',
         controller: 'RefundCompanyReasonCodeCtrl'
       })
+      .when('/item-import', {
+        templateUrl: 'views/item-import.html',
+        controller: 'ItemImportCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
