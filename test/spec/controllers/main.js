@@ -116,7 +116,7 @@ describe('Controller: MainCtrl', function () {
 
     it('should have the correct title', function () {
       expect(menuRelationship.title.trim()).toEqual(
-        'Menu Relationships');
+        'Menu-Catering Station Relationship');
     });
 
     it('should have (2) navigation items', function () {
@@ -153,7 +153,7 @@ describe('Controller: MainCtrl', function () {
 
       it('should have the correct label', function () {
         expect(navigationItem.name.trim()).toEqual(
-          'Create Relationships');
+          'Create Relationship');
       });
 
       it('should have the correct route', function () {

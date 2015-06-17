@@ -146,14 +146,14 @@ angular.module('ts5App')
       },
 
       {
-        title: 'Menu Relationships',
+        title: 'Menu-Catering Station Relationship',
         menuItems: [{
           name: 'Manage Relationships',
           route: '/#/menu-relationship-list',
           icon: 'icon-menu-assignment',
           className: 'dashboard-menuAssignments'
         }, {
-          name: 'Create Relationships',
+          name: 'Create Relationship',
           route: '/#/menu-relationship-create',
           icon: 'icon-create-menu',
           className: 'dashboard-menuAssignments'
