@@ -25,6 +25,7 @@ describe('Controller: CashBagListCtrl', function () {
       cashBagListResponseJSON = _servedCashBagList_;
       stationsResponseJSON = _servedStations_;
       schedulesResponseJSON = _servedSchedules_;
+
     });
     location = $location;
     cashBagFactory = $injector.get('cashBagFactory');
@@ -38,6 +39,11 @@ describe('Controller: CashBagListCtrl', function () {
     spyOn(cashBagFactory, 'getCashBagList').and.returnValue(getCashBagListDeferred.promise);
     spyOn(cashBagFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(cashBagFactory, 'getSchedulesList').and.returnValue(schedulesListDeferred.promise);
+    spyOn(cashBagFactory, 'deleteCashBag').and.returnValue({
+      then: function () {
+        return;
+      }
+    });
     CashBagListCtrl = $controller('CashBagListCtrl', {
       $scope: scope
     });
@@ -113,15 +119,37 @@ describe('Controller: CashBagListCtrl', function () {
   });
 
   describe('Action buttons', function () {
+    it('should have a viewCashBag function in scope', function(){
+      expect(scope.viewCashBag).toBeDefined();
+    });
     it('should change the url based on the menu object to view a cash bag', function () {
       scope.viewCashBag({id: 1});
       scope.$digest();
       expect(location.path()).toBe('/cash-bag/1');
     });
+    it('should have an editCashBag function in scope', function(){
+      expect(scope.editCashBag).toBeDefined();
+    });
+    it('should have a editCashBag callable function', function(){
+      expect(Object.prototype.toString.call(scope.editCashBag)).toBe('[object Function]');
+    });
     it('should change the url based on the menu object to edit a cash bag', function () {
       scope.editCashBag({id: 1});
       scope.$digest();
       expect(location.path()).toBe('/cash-bag/1/edit');
+    });
+    it('should have a deleteCashBag function in scope', function(){
+      expect(scope.deleteCashBag).toBeDefined();
+    });
+    it('should have a deleteCashBag callable function', function(){
+      expect(Object.prototype.toString.call(scope.deleteCashBag)).toBe('[object Function]');
+    });
+    it('should call cashBagFactory.cashBagDelete when delete is called', function(){
+      var id = 95;
+      var cashBag = {id:id};
+      scope.deleteCashBag(cashBag);
+      scope.$digest();
+      expect(cashBagFactory.deleteCashBag).toHaveBeenCalledWith(id);
     });
   });
 
