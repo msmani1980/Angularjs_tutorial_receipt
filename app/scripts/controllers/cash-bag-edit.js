@@ -11,10 +11,9 @@
 angular.module('ts5App')
   .controller('CashBagEditCtrl', function ($scope, $routeParams, $q, ngToast, cashBagFactory) {
 
-    // controller properties
-    var _this = this;
-    _this.companyId = undefined;
-    _this.services = undefined;
+    // controller global properties
+    var _companyId = undefined,
+      _services = undefined;
 
     // scope globals
     $scope.viewName = 'Cash Bag';
@@ -24,12 +23,12 @@ angular.module('ts5App')
     // Constructor
     (function CONSTRUCTOR(){
       // define global controller properties
-      _this.companyId = cashBagFactory.getCompanyId();
-      _this.services = {
+      _companyId = cashBagFactory.getCompanyId();
+      _services = {
         promises: [],
         call: function(servicesArray){
           angular.forEach(servicesArray, function(_service){
-            _this.services.promises.push(_this.services[_service]());
+            _services.promises.push(_services[_service]());
           });
         },
         getCashBag: function () {
@@ -43,7 +42,7 @@ angular.module('ts5App')
           );
         },
         getCompany: function(){
-          return cashBagFactory.getCompany(_this.companyId).then(
+          return cashBagFactory.getCompany(_companyId).then(
             function (response) {
               $scope.company = response;
             }
@@ -61,7 +60,7 @@ angular.module('ts5App')
           );
         },
         getDailyExchangeRates: function () {
-          return cashBagFactory.getDailyExchangeRates(_this.companyId, $routeParams.scheduleDate).then(
+          return cashBagFactory.getDailyExchangeRates(_companyId, $routeParams.scheduleDate).then(
             function (response) {
               $scope.dailyExchangeRates = response.dailyExchangeRates;
             }
@@ -140,18 +139,18 @@ angular.module('ts5App')
 
     // CRUD - Create
     function CREATE(){
-      _this.services.call(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
+      _services.call(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
 
       $scope.readOnly = false;
       $scope.cashBag = {
         isSubmitted: 'false',
-        retailCompanyId: _this.companyId,
+        retailCompanyId: _companyId,
         scheduleDate: $routeParams.scheduleDate,
         scheduleNumber: $routeParams.scheduleNumber,
         cashBagCurrencies: []
       };
 
-      $q.all(_this.services.promises).then(function(){
+      $q.all(_services.promises).then(function(){
         // TODO: throw error when dailyExchangeRates returns empty array
         $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
         angular.forEach($scope.companyCurrencies, function(currency){
@@ -167,13 +166,13 @@ angular.module('ts5App')
 
     // CRUD - Read
     function READ(){
-      _this.services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      _services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
     }
 
     // CRUD - Update
     function UPDATE(){
       $scope.readOnly = false;
-      _this.services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      _services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
     }
 
     // CRUD - Delete
