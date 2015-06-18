@@ -78,7 +78,7 @@ describe('Controller: CashBagListCtrl', function () {
 
   describe('search cash bag', function () {
     it('should have a search object attached to scope', function () {
-      expect(scope.search).toBeDefined();;
+      expect(scope.search).toBeDefined();
     });
 
     it('should clear search model and make a API call', function () {

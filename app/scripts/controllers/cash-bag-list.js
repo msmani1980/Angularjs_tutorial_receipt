@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location) {
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, ngToast) {
   	var companyId = cashBagFactory.getCompanyId();
     $scope.viewName = 'Manage Cash Bag';
     $scope.search = {};
