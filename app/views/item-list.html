@@ -147,7 +147,7 @@
 							<i class="fa fa-pencil"></i>
 						</a>
 
-						<button class="btn btn-danger btn-xs" ng-click="removeItem(item.id,key)" ng-disabled="isItemActive(item.startDate) || isItemInactive(item.endDate)">
+						<button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id,key)" ng-disabled="isItemActive(item.startDate) || isItemInactive(item.endDate)">
 							<i class="fa fa-trash"></i>
 						</button>
 
@@ -196,3 +196,4 @@
 <form-success-modal></form-success-modal>
 
 <left-navigation base-path="retail-items"></left-navigation>
+<delete-record-dialog></delete-record-dialog>
