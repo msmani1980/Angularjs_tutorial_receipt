@@ -12,8 +12,8 @@ angular.module('ts5App')
   .controller('CashBagEditCtrl', function ($scope, $routeParams, $q, ngToast, cashBagFactory) {
 
     // controller global properties
-    var _companyId = undefined,
-      _services = undefined;
+    var _companyId = null,
+      _services = null;
 
     // scope properties
     $scope.viewName = 'Cash Bag';
