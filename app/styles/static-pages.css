@@ -63,11 +63,6 @@
   float: left;
 }
 
-.fuelux .wizard input[type="text"].sequential-seals {
-  margin-top: 10px !important;
-}
-
-
 .fuelux .wizard input[type="text"]::-webkit-input-placeholder {
    color: #333;
 }
@@ -82,6 +77,14 @@
 
 .fuelux .wizard input[type="text"]:-ms-input-placeholder {  
    color: #333;  
+}
+
+.fuelux .wizard .has-discrepancy, .fuelux .wizard .has-discrepancy td {
+  background-color: #ffdada !important;
+}
+
+.fuelux .wizard .checkbox-inline {
+  margin-right: 10px;
 }
 
 
