@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, ngToast) {
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, ngToast) {
   	var companyId = cashBagFactory.getCompanyId();
     $scope.viewName = 'Manage Cash Bag';
     $scope.search = {};
@@ -22,6 +22,17 @@ angular.module('ts5App')
 
     cashBagFactory.getCashBagList(companyId).then(function(response){
       $scope.cashBagList = response.cashBags;
+      angular.forEach($scope.cashBagList, function(_cb){
+        if($scope.isNew(_cb.id)){
+          ngToast.create({
+            className: 'success',
+            dismissButton: true,
+            content: '<strong>Cash bag</strong>: successfully created!'
+          });
+          $scope.displayError = false;
+          $scope.formErrors = {};
+        }
+      });
       $scope.bankRefList = getBankRefList(response.cashBags);
     });
 
@@ -34,11 +45,11 @@ angular.module('ts5App')
     });
 
     $scope.viewCashBag = function (cashBag) {
-      $location.path('cash-bag/' + cashBag.id);
+      $location.path('cash-bag/view/' + cashBag.id);
     };
 
     $scope.editCashBag = function (cashBag) {
-      $location.path('cash-bag/' + cashBag.id + '/edit');
+      $location.path('cash-bag/edit/' + cashBag.id);
     };
 
     $scope.searchCashBag = function () {
@@ -53,14 +64,38 @@ angular.module('ts5App')
       $scope.searchCashBag();
     };
 
-    $scope.deleteCashBag = function(cashBag){
-      // if (window.confirm('Are you sure you would like to remove this item?')) {
-        // TODO validate that the cashBag is eligible for deletion.
-        cashBagFactory.deleteCashBag(cashBag.id).then(function() {
+    $scope.isNew = function(cashBagId){
+      return ($routeParams.newId == cashBagId);
+    };
 
-        },
-        showErrors);
-      // }
+    $scope.deleteCashBag = function(cashBag){
+        // TODO validate that the cashBag is eligible for deletion.
+        if($scope.canDelete(cashBag)) {
+          cashBagFactory.deleteCashBag(cashBag.id).then(function () {
+              alert('deleted');
+            },
+            showErrors);
+        }
+    };
+
+    $scope.canDelete = function(cashBag){
+      // TODO, BLOCKER, need access to the following values,
+      // TODO These not available in the cash bag listing json object
+      // cashBag.cashBagCurrencies[i].paperAmountManual
+      // cashBag.cashBagCurrencies[i].coinAmountManual
+      // cashBag.cashBagCurrencies[i].bankAmount
+      // if all are null then can delete
+      var canDelete = true;
+      angular.forEach(cashBag.cashBagCurrencies, function(currency){
+        if(canDelete){
+          if(currency.paperAmountManual != null
+            || currency.coinAmountManual != null
+            || currency.coinAmountManual != null){
+            canDelete = false;
+          }
+        }
+      });
+      return canDelete;
     };
 
     function showErrors(error){

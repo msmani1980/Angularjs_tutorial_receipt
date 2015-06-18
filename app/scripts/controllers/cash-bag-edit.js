@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagEditCtrl', function ($scope, $routeParams, $q, ngToast, cashBagFactory, factoryHelper) {
+  .controller('CashBagEditCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, factoryHelper) {
 
     // controller global properties
     var _companyId = null,
@@ -32,15 +32,17 @@ angular.module('ts5App')
             cashBag: saveCashBag
           };
           cashBagFactory.updateCashBag($routeParams.id, payload).then(
-            HELPERS.updateSuccess,
-            HELPERS.showErrors
+            HELPERS().updateSuccess,
+            HELPERS().showErrors
           );
           break;
         case 'create':
-          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function () {
-            //TODO: redirect
-            console.log('success');
-          }, HELPERS.showErrors);
+          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function(newCashBag) {
+            $location.search('newId', newCashBag.id)
+              .search('scheduleDate', null)
+              .search('scheduleNumber', null)
+              .path('cash-bag-list');
+          }, HELPERS().showErrors);
           break;
       }
     };
@@ -59,7 +61,7 @@ angular.module('ts5App')
               $scope.displayError = false;
               $scope.formErrors = {};
             },
-            HELPERS.showErrors
+            HELPERS().showErrors
           );
         },
         getCompany: function(){

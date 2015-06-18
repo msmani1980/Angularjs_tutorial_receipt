@@ -8,3 +8,20 @@ body{
 .module-container{
 	padding-left:71px;
 }
+
+@keyframes newfadeoutgreen
+{
+  0%   { background-color: rgba(223, 240, 216, 1) }
+  100% { background-color: rgba(223, 240, 216, 0) }
+}
+
+@-webkit-keyframes newfadeoutgreen
+{
+  0%   { background-color: rgba(223, 240, 216, 1) }
+  100% { background-color: rgba(223, 240, 216, 0) }
+}
+
+.new{
+  -webkit-animation: newfadeoutgreen 3s linear 2s;
+  animation: newfadeoutgreen 3s linear 2s;
+}
