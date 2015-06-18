@@ -7,7 +7,8 @@ describe('Directive: deleteRecordDialog', function () {
 
   var scope,
     element,
-    controller;
+    controller,
+    modalHTMLElement;
 
   beforeEach(inject(function ($rootScope) {
     scope = $rootScope.$new();
@@ -68,22 +69,62 @@ describe('Directive: deleteRecordDialog', function () {
       element = $compile(element)(scope);
       scope.$digest();
       controller = element.controller('deleteRecordDialog');
+
+      modalHTMLElement = element.find('#delete-record')[0];
+
+      scope.deleteRecordDialog(1, 21);
+
     }));
 
-    it('should have a deleteRecordDialog element defined',
-      function () {
-        expect(controller.modalElement).toBeDefined();
+    describe('modalElement', function () {
+
+      it('should be defined',
+        function () {
+          expect(controller.modalElement).toBeDefined();
+        });
+
+      it('should contain #delete-record', function () {
+        expect(controller.modalElement.selector).toContain(
+          '#delete-record');
       });
 
-    it('should have a deleteRecordDialog method attached to the scope',
-      function () {
-        expect(scope.deleteRecordDialog).toBeDefined();
+    });
+
+    describe('deleteRecordDialog', function () {
+
+      it('should be defined',
+        function () {
+          expect(scope.deleteRecordDialog).toBeDefined();
+        });
+
+      describe('itemToDelete', function () {
+
+        it('should contain an object',
+          function () {
+            expect(scope.itemToDelete).toBeDefined();
+          });
+
+        it('should contain an id',
+          function () {
+            expect(scope.itemToDelete.id).toEqual(1);
+          });
+
+        it('should contain an itemKey',
+          function () {
+            expect(scope.itemToDelete.itemKey).toEqual(21);
+          });
       });
 
-    it('should have a deleteRecord method attached to the scope',
-      function () {
-        expect(scope.deleteRecord).toBeDefined();
-      });
+    });
+
+    describe('deleteRecord', function () {
+
+      it('should be defined',
+        function () {
+          expect(scope.deleteRecord).toBeDefined();
+        });
+
+    });
 
   });
 
