@@ -65,14 +65,14 @@ angular.module('ts5App')
     };
 
     $scope.isNew = function(cashBagId){
-      return ($routeParams.newId == cashBagId);
+      return ($routeParams.newId === cashBagId);
     };
 
     $scope.deleteCashBag = function(cashBag){
         // TODO validate that the cashBag is eligible for deletion.
         if($scope.canDelete(cashBag)) {
           cashBagFactory.deleteCashBag(cashBag.id).then(function () {
-              alert('deleted');
+              window.alert('deleted');
             },
             showErrors);
         }
@@ -88,9 +88,7 @@ angular.module('ts5App')
       var canDelete = true;
       angular.forEach(cashBag.cashBagCurrencies, function(currency){
         if(canDelete){
-          if(currency.paperAmountManual != null
-            || currency.coinAmountManual != null
-            || currency.coinAmountManual != null){
+          if(currency.paperAmountManual !== null || currency.coinAmountManual !== null || currency.coinAmountManual !== null){
             canDelete = false;
           }
         }
