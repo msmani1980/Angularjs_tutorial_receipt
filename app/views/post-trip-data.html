@@ -1,6 +1,6 @@
 <div class="module-container">
 
-  <form name="form" class="form edit-form post-trip-data-form">
+  <ng-form name="form" class="form edit-form post-trip-data-form">
 
     <form-error-dialog></form-error-dialog>
     
@@ -13,9 +13,10 @@
         
         <div class="col-xs-6 col-sm-4">
           <div class="header-buttons pull-right">
-  <!--               <button type="button" class="btn button-additional" {{action "cancel"}}>{{t "menus.form.button.secondary.cancel"}}</button> -->
+<!-- TODO: BUTTONS FUNCTIONALITY -->
+<!--               <button type="button" class="btn button-additional" {{action "cancel"}}>{{t "menus.form.button.secondary.cancel"}}</button> -->
             <button type="button" class="btn btn-default">Cancel</button>
-  <!--               <button type="button" class="btn button-primary" {{action "save"}}>{{t "menus.form.button.primary.create"}}</button> -->
+<!--               <button type="button" class="btn button-primary" {{action "save"}}>{{t "menus.form.button.primary.create"}}</button> -->
             <button type="button" class="btn btn-primary">Create</button>
             <button type="button" class="btn btn-default">
                 <i class="fa fa-question-circle"></i>
@@ -31,10 +32,7 @@
     <div class="row">
 
       <div class="col-xs-12 col-sm-4">
-        <div class="form-group">
-          <label for="scheduleNumber">Schedule Number</label>
-          <input type="text" class="form-control" id="scheduleNumber" placeholder="123456">
-        </div>
+        <input-text label="Schedule Number" name="scheduleNumber" required="true" pattern="regexp.word" placeholder="123456" min-length="1" max-length="10"></input-text>
       </div>
 
       <date-picker 
@@ -42,7 +40,7 @@
         disable-date-range="true"
         start-date-model="scheduleNumber"
         is-search-field="true"
-        label-from="Schedule Date">
+        label-from="Schedule Date *">
       </date-picker>
 
     </div>
@@ -51,7 +49,7 @@
 
       <div class="col-xs-12 col-sm-4">
         <div class="form-group">
-          <label for="departureStation">Departure Station</label>
+          <label for="departureStation">Departure Station *</label>
           <select class="form-control" id="selectTemplate">
             <option>MDW</option>
             <option>MIA</option>
@@ -62,15 +60,13 @@
       </div>
 
       <div class="col-xs-12 col-sm-4">
-        <div class="form-group">
-          <label for="departureTime">Departure Time</label>
-          <input type="text" class="form-control" id="departureTime" placeholder="12:34">
-        </div>
+        <input-text label="Departure Time" name="departureTime" required="true" pattern="regexp.word" placeholder="12:34" min-length="1" max-length="10"></input-text>
       </div>
 
       <div class="col-xs-12 col-sm-4">
+<!-- TODO: TIME ZONE ADJUSTS AND MATCHES DEPARTURE STATION -->
         <div class="form-group">
-          <label for="departureTimeZone">Departure Time Zone</label>
+          <label for="departureTimeZone">Departure Time Zone *</label>
           <input type="text" class="form-control" id="arrivalTime" placeholder="Pacific [PDT -07:00]" disabled>
         </div>
       </div>
@@ -81,7 +77,7 @@
 
       <div class="col-xs-12 col-sm-4">
         <div class="form-group">
-          <label for="arrivalStation">Arrival Station</label>
+          <label for="arrivalStation">Arrival Station *</label>
           <select class="form-control" id="selectTemplate">
             <option>MDW</option>
             <option>MIA</option>
@@ -92,15 +88,13 @@
       </div>
 
       <div class="col-xs-12 col-sm-4">
-        <div class="form-group">
-          <label for="arrivalTime">Arrival Time</label>
-          <input type="text" class="form-control" id="arrivalTime" placeholder="12:34">
-        </div>
+        <input-text label="Arrival Time" name="arrivalTime" required="true" pattern="regexp.word" placeholder="12:34" min-length="1" max-length="10"></input-text>
       </div>
 
       <div class="col-xs-12 col-sm-4">
+<!-- TODO: TIME ZONE ADJUSTS AND MATCHES DEPARTURE STATION -->
         <div class="form-group">
-          <label for="arrivalTimeZone">Arrival Time Zone</label>
+          <label for="arrivalTimeZone">Arrival Time Zone *</label>
           <input type="text" class="form-control" id="arrivalTime" placeholder="Belize [CST -06:00]" disabled>
         </div>
       </div>
@@ -110,10 +104,11 @@
     <div class="row">
 
       <div class="col-xs-12 col-sm-4">
-        <div class="form-group">
-          <label for="passengerCount">Passenger Count</label>
-          <input type="text" class="form-control" id="passengerCount" placeholder="0123456789">
-        </div>
+        <input-text label="Passenger Count" name="passengerCount" required="true" pattern="regexp.word" placeholder="123" min-length="1" max-length="10"></input-text>
+<!--         <div class="form-group"> -->
+<!--           <label for="passengerCount">Passenger Count</label> -->
+<!--           <input type="text" class="form-control" id="passengerCount" placeholder="0123456789"> -->
+<!--         </div> -->
       </div>
 
       <div class="col-xs-12 col-sm-4">
@@ -134,7 +129,7 @@
     
       <div class="col-xs-12 employee-id">
         <div class="form-group">
-          <label for="employeeID">Employee ID</label>
+          <label for="employeeID">Employee ID *</label>
         
           <div class="row">
            
@@ -150,6 +145,7 @@
             </div>
             
             <div class="col-xs-12 col-sm-8">
+<!-- TODO: 'ADD EMPLOYEE' BUTTON FUNCTIONALITY -->
               <button type="button form-control" class="btn btn-primary">
                 <i class="fa fa-plus"></i> Add Employee
               </button>
@@ -157,6 +153,7 @@
             
           </div>
           
+<!-- TODO: 'ADD EMPLOYEE' ADDED ROW SHOWN HERE W/ 'REMOVE EMPLOYEE' BUTTON -->
           <div class="row">
            
             <div class="col-xs-12 col-sm-4">
@@ -204,14 +201,14 @@
             </div>
             
           </div>
-           
-        </div>                   
-        
+          
+        </div>
+                        
       </div>
       
     </div>
 
-  </form>
+  </ng-form>
 
 </div>
 <!-- /Container -->
