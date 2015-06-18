@@ -11,100 +11,19 @@
 angular.module('ts5App')
   .controller('CashBagEditCtrl', function ($scope, $routeParams, $q, ngToast, cashBagFactory) {
 
+    // controller properties
     var _this = this;
-    this.companyId = undefined;
-    this.services = undefined;
+    _this.companyId = undefined;
+    _this.services = undefined;
 
+    // scope globals
     $scope.viewName = 'Cash Bag';
     $scope.readOnly = true;
     $scope.displayError = false;
 
-    $scope.save = function (formCashBag) {
-      switch ($routeParams.state) {
-        case 'edit':
-          var saveCashBag = angular.copy(formCashBag);
-          // TODO see how Luis is doing this in company-relationship-service, tsv154 branch
-          saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
-          $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
-          var payload = {
-            cashBag: saveCashBag
-          };
-          cashBagFactory.updateCashBag($routeParams.id, payload).then(
-            _this.HELPERS.updateSuccess,
-            _this.HELPERS.showErrors
-          );
-          break;
-        case 'create':
-          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function () {
-            //TODO: redirect
-            console.log('success');
-          }, _this.HELPERS.showErrors);
-          break;
-      }
-    };
-
-
-    this.HELPERS = {
-      showErrors: function(error) {
-        ngToast.create({
-          className: 'warning',
-          dismissButton: true,
-          content: '<strong>Cash bag</strong>: error!'
-        });
-        $scope.displayError = true;
-        $scope.formErrors = error.data;
-      },
-      updateSuccess: function(){
-        ngToast.create({
-          className: 'success',
-          dismissButton: true,
-          content: '<strong>Cash bag</strong>: successfully updated!'
-        });
-        $scope.displayError = false;
-        $scope.formErrors = {};
-      }
-    };
-
-    this.CREATE = function(){
-      _this.services.call(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
-
-      $scope.readOnly = false;
-      $scope.cashBag = {
-        isSubmitted: 'false',
-        retailCompanyId: _this.companyId,
-        scheduleDate: $routeParams.scheduleDate,
-        scheduleNumber: $routeParams.scheduleNumber,
-        cashBagCurrencies: []
-      };
-
-      $q.all(_this.services.promises).then(function(){
-        // TODO: throw error when dailyExchangeRates returns empty array
-        $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
-        angular.forEach($scope.companyCurrencies, function(currency){
-          $scope.cashBag.cashBagCurrencies.push(
-            {
-              currencyId:currency.id,
-              bankAmount:'0.0000'
-            }
-          );
-        });
-      });
-    };
-
-    this.READ = function(){
-      _this.services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
-    };
-
-    this.UPDATE = function(){
-      $scope.readOnly = false;
-      _this.services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
-    };
-
-    this.DELETE = function(){
-      // TODO - this
-    };
-
-    this.CONSTRUCTOR = (function(){
+    // Constructor
+    (function CONSTRUCTOR(){
+      // define global controller properties
       _this.companyId = cashBagFactory.getCompanyId();
       _this.services = {
         promises: [],
@@ -120,7 +39,7 @@ angular.module('ts5App')
               $scope.displayError = false;
               $scope.formErrors = {};
             },
-            _this.HELPERS.showErrors
+            HELPERS.showErrors
           );
         },
         getCompany: function(){
@@ -152,21 +71,119 @@ angular.module('ts5App')
 
       switch ($routeParams.state) {
         case 'create':
-          _this.CREATE();
+          CREATE();
           break;
         case 'view':
-          _this.READ();
+          READ();
           break;
         case 'edit':
-          _this.UPDATE();
+          UPDATE();
           break;
         case 'delete':
-          _this.DELETE();
+          DELETE();
           break;
         default:
           // TODO - redirect home?
           break;
       }
+      DESTRUCTOR();
     })();
+
+    // form action
+    $scope.save = function (formCashBag) {
+      switch ($routeParams.state) {
+        case 'edit':
+          var saveCashBag = angular.copy(formCashBag);
+          // TODO see how Luis is doing this in company-relationship-service, tsv154 branch
+          saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
+          $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
+          var payload = {
+            cashBag: saveCashBag
+          };
+          cashBagFactory.updateCashBag($routeParams.id, payload).then(
+            HELPERS.updateSuccess,
+            HELPERS.showErrors
+          );
+          break;
+        case 'create':
+          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function () {
+            //TODO: redirect
+            console.log('success');
+          }, HELPERS.showErrors);
+          break;
+      }
+    };
+
+    // helpers
+    function HELPERS() {
+      return {
+        showErrors: function (error) {
+          ngToast.create({
+            className: 'warning',
+            dismissButton: true,
+            content: '<strong>Cash bag</strong>: error!'
+          });
+          $scope.displayError = true;
+          $scope.formErrors = error.data;
+        },
+        updateSuccess: function () {
+          ngToast.create({
+            className: 'success',
+            dismissButton: true,
+            content: '<strong>Cash bag</strong>: successfully updated!'
+          });
+          $scope.displayError = false;
+          $scope.formErrors = {};
+        }
+      };
+    }
+
+    // CRUD - Create
+    function CREATE(){
+      _this.services.call(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
+
+      $scope.readOnly = false;
+      $scope.cashBag = {
+        isSubmitted: 'false',
+        retailCompanyId: _this.companyId,
+        scheduleDate: $routeParams.scheduleDate,
+        scheduleNumber: $routeParams.scheduleNumber,
+        cashBagCurrencies: []
+      };
+
+      $q.all(_this.services.promises).then(function(){
+        // TODO: throw error when dailyExchangeRates returns empty array
+        $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
+        angular.forEach($scope.companyCurrencies, function(currency){
+          $scope.cashBag.cashBagCurrencies.push(
+            {
+              currencyId:currency.id,
+              bankAmount:'0.0000'
+            }
+          );
+        });
+      });
+    }
+
+    // CRUD - Read
+    function READ(){
+      _this.services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+    }
+
+    // CRUD - Update
+    function UPDATE(){
+      $scope.readOnly = false;
+      _this.services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+    }
+
+    // CRUD - Delete
+    function DELETE(){
+      // TODO - this
+    }
+
+    // Destructor
+    function DESTRUCTOR(){
+      // TODO - teardown
+    }
 
   });
