@@ -17,12 +17,10 @@ angular.module('ts5App')
 
       $scope.deleteRecordDialog = function (id, itemKey) {
         $this.modalElement.modal('show');
-
         $scope.itemToDelete = {
           id: id,
           itemKey: itemKey
         };
-
       };
 
       $scope.deleteRecord = function () {
