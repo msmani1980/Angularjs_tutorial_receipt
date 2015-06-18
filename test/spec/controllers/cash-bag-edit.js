@@ -34,6 +34,7 @@ describe('Controller: CashBagEditCtrl', function () {
 
     getCashBagDeferred = $q.defer();
     getCashBagDeferred.resolve(cashBagResponseJSON);
+    spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
     spyOn(cashBagFactory, 'createCashBag').and.returnValue(getCashBagDeferred.promise);
 
     getCompanyDeferred = $q.defer();
@@ -53,65 +54,8 @@ describe('Controller: CashBagEditCtrl', function () {
     companyId = cashBagFactory.getCompanyId();
   }));
 
-  describe('EDIT controller action', function () {
-
-    beforeEach(inject(function ($controller) {
-      spyOn(cashBagFactory, 'getCashBag').and.returnValue(getCashBagDeferred.promise);
-      CashBagEditCtrl = $controller('CashBagEditCtrl', {
-        $scope: scope,
-        $routeParams: {state: 'edit', id: 95}
-      });
-      scope.$digest();
-    }));
-
-    it('should attach a viewName to the scope', function () {
-      expect(scope.viewName).toBe('Cash Bag');
-    });
-
-    describe('cashBag object in scope', function () {
-      it('should call getCashBag', function () {
-        expect(cashBagFactory.getCashBag).toHaveBeenCalled();
-      });
-      it('should have cashBag attached to scope after API call', function () {
-        expect(!!scope.cashBag).toBe(true);
-      });
-    });
-
-    describe('company object in scope', function () {
-      it('should call getCompany with companyId', function () {
-        expect(cashBagFactory.getCompany).toHaveBeenCalledWith(companyId);
-      });
-      it('should have company attached to scope after API call', function () {
-        expect(!!scope.company).toBe(true);
-      });
-    });
-
-    describe('companyCurrencies in scope', function () {
-      it('should call getCompanyCurrencies', function () {
-        expect(cashBagFactory.getCompanyCurrencies).toHaveBeenCalled();
-      });
-      it('should have companyCurrencies attached to scope after API call', function () {
-        expect(!!scope.companyCurrencies).toBe(true);
-      });
-      it('should have currencyCodes attached to scope after API call', function () {
-        expect(!!scope.currencyCodes).toBe(true);
-      });
-    });
-
-    describe('update cash bag', function () {
-      it('should have an update method attached to the scope', function () {
-        expect(!!scope.save).toBe(true);
-      });
-      it('should call updateCashBag', function () {
-        scope.save(cashBagResponseJSON);
-        expect(cashBagFactory.updateCashBag).toHaveBeenCalled();
-      });
-    });
-
-  });
-
-  describe('create controller action', function () {
-
+  // CREATE
+  describe('CREATE controller action', function () {
     var routeParams = {
       state: 'create',
       scheduleDate: '20151231',
@@ -125,8 +69,41 @@ describe('Controller: CashBagEditCtrl', function () {
       scope.$digest();
     }));
 
-    it('should have cashBag defined in scope', function () {
-      expect(!!scope.cashBag).toBe(true);
+    describe('scope globals', function(){
+      it('should attach a viewName to the scope', function () {
+        expect(scope.viewName).toBe('Cash Bag');
+      });
+      it('should set the readOnly to false in scope', function () {
+        expect(scope.readOnly).toEqual(false);
+      });
+      it('should set the displayError boolean in scope', function () {
+        expect(scope.displayError).toEqual(false);
+      });
+      it('should have a formSave function attached to the scope', function () {
+        expect(scope.formSave).toBeDefined();
+        expect(Object.prototype.toString.call(scope.formSave)).toBe('[object Function]');
+      });
+    });
+
+    describe('cashBagFactory API calls', function(){
+      it('should call getCompany with companyId', function () {
+        expect(cashBagFactory.getCompany).toHaveBeenCalledWith(companyId);
+      });
+      it('should have company attached to scope after API call', function () {
+        expect(scope.company).toBeDefined();
+      });
+      it('should call getCompanyCurrencies', function () {
+        expect(cashBagFactory.getCompanyCurrencies).toHaveBeenCalled();
+      });
+      it('should have companyCurrencies attached to scope after API call', function () {
+        expect(scope.companyCurrencies).toBeDefined();
+      });
+      it('should call getDailyExchangeRates', function () {
+        expect(cashBagFactory.getDailyExchangeRates).toHaveBeenCalledWith(companyId, routeParams.scheduleDate);
+      });
+      it('should have dailyExchangeRates attached to scope after API call', function () {
+        expect(scope.dailyExchangeRates).toBeDefined();
+      });
     });
 
     describe('cashBag definition', function () {
@@ -134,43 +111,156 @@ describe('Controller: CashBagEditCtrl', function () {
         expect(scope.cashBag.scheduleDate).toBeDefined();
         expect(scope.cashBag.scheduleDate).toEqual(routeParams.scheduleDate);
       });
-
       it('should have scheduleNumber defined in cashBag', function () {
         expect(scope.cashBag.scheduleNumber).toBeDefined();
         expect(scope.cashBag.scheduleNumber).toEqual(routeParams.scheduleNumber);
       });
-
       it('should have cashBagCurrencies in cashBag', function () {
         expect(scope.cashBag.cashBagCurrencies).toBeDefined();
       });
-
       it('should have cashBagCurrencies that is an array', function () {
         expect(Object.prototype.toString.call(scope.cashBag.cashBagCurrencies)).toBe('[object Array]');
       });
-
+      // TODO handle empty company currency globals result
       it('should be formatted like companyCurrencies', function () {
         expect(scope.cashBag.cashBagCurrencies[0].currencyId).toEqual(companyCurrencyGlobalsResponseJSON.response[0].id);
         expect(scope.cashBag.cashBagCurrencies.length).toEqual(companyCurrencyGlobalsResponseJSON.response.length);
       });
     });
 
-    describe('create cash bag save', function() {
-      it('should have an save method attached to the scope', function () {
-        expect(!!scope.save).toBe(true);
+    describe('formSave', function() {
+      it('should call cashBagFactory createCashBag', function () {
+        scope.formSave(scope.cashBag);
+        expect(cashBagFactory.createCashBag).toHaveBeenCalledWith({cashBag: scope.cashBag});
       });
-
-      it('should be a function', function () {
-        expect(Object.prototype.toString.call(scope.save)).toBe('[object Function]');
-      });
-
-      it('should call createCashBag', function () {
-        scope.save(cashBagResponseJSON);
-        expect(cashBagFactory.createCashBag).toHaveBeenCalled();
-      });
-
+      // TODO - test for error?
     });
 
   });
 
+  // READ
+  describe('READ controller action', function(){
+    var routeParams = {
+      state: 'view',
+      id: 95
+    };
+    beforeEach(inject(function ($controller) {
+      CashBagEditCtrl = $controller('CashBagEditCtrl', {
+        $scope: scope,
+        $routeParams: routeParams
+      });
+      scope.$digest();
+    }));
+
+    describe('scope globals', function() {
+      it('should attach a viewName to the scope', function () {
+        expect(scope.viewName).toBe('Cash Bag');
+      });
+      it('should set the readOnly to true in scope', function () {
+        expect(scope.readOnly).toEqual(true);
+      });
+      it('should set the displayError boolean in scope', function () {
+        expect(scope.displayError).toEqual(false);
+      });
+      it('should have a formSave function attached to the scope', function () {
+        expect(scope.formSave).toBeDefined();
+        expect(Object.prototype.toString.call(scope.formSave)).toBe('[object Function]');
+      });
+    });
+
+    describe('cashBagFactory API calls', function(){
+      it('should call getCashBag', function () {
+        expect(cashBagFactory.getCashBag).toHaveBeenCalled();
+      });
+      it('should have cashBag attached to scope after API call', function () {
+        expect(scope.cashBag).toBeDefined();
+      });
+      it('should call getCompany with companyId', function () {
+        expect(cashBagFactory.getCompany).toHaveBeenCalledWith(companyId);
+      });
+      it('should have company attached to scope after API call', function () {
+        expect(scope.company).toBeDefined();
+      });
+      it('should call getCompanyCurrencies', function () {
+        expect(cashBagFactory.getCompanyCurrencies).toHaveBeenCalled();
+      });
+      it('should have companyCurrencies attached to scope after API call', function () {
+        expect(scope.companyCurrencies).toBeDefined();
+      });
+    });
+
+    describe('cashBag definition', function () {
+      it('should have id defined cashBag', function () {
+        expect(scope.cashBag.id).toBeDefined();
+      });
+    });
+  });
+
+  // UPDATE
+  describe('UPDATE controller action', function () {
+    var routeParams = {
+      state: 'edit',
+      id: 95
+    };
+    beforeEach(inject(function ($controller) {
+      CashBagEditCtrl = $controller('CashBagEditCtrl', {
+        $scope: scope,
+        $routeParams: routeParams
+      });
+      scope.$digest();
+    }));
+
+    describe('scope globals', function(){
+      it('should attach a viewName to the scope', function () {
+        expect(scope.viewName).toBe('Cash Bag');
+      });
+      it('should set the readOnly to false in scope', function () {
+        expect(scope.readOnly).toEqual(false);
+      });
+      it('should set the displayError boolean in scope', function () {
+        expect(scope.displayError).toEqual(false);
+      });
+      it('should have a formSave function attached to the scope', function () {
+        expect(scope.formSave).toBeDefined();
+        expect(Object.prototype.toString.call(scope.formSave)).toBe('[object Function]');
+      });
+    });
+
+    describe('cashBagFactory API calls', function(){
+      it('should call getCashBag', function () {
+        expect(cashBagFactory.getCashBag).toHaveBeenCalled();
+      });
+      it('should have cashBag attached to scope after API call', function () {
+        expect(scope.cashBag).toBeDefined();
+      });
+      it('should call getCompany with companyId', function () {
+        expect(cashBagFactory.getCompany).toHaveBeenCalledWith(companyId);
+      });
+      it('should have company attached to scope after API call', function () {
+        expect(scope.company).toBeDefined();
+      });
+      it('should call getCompanyCurrencies', function () {
+        expect(cashBagFactory.getCompanyCurrencies).toHaveBeenCalled();
+      });
+      it('should have companyCurrencies attached to scope after API call', function () {
+        expect(scope.companyCurrencies).toBeDefined();
+      });
+    });
+
+    describe('cashBag definition', function () {
+      it('should have id defined cashBag', function () {
+        expect(scope.cashBag.id).toBeDefined();
+      });
+    });
+
+    describe('formSave', function() {
+      it('should call cashBagFactory updateCashBag', function () {
+        scope.formSave(scope.cashBag);
+        expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(routeParams.id, {cashBag:scope.cashBag});
+      });
+      // TODO - test for error?
+    });
+
+  });
 
 });

@@ -15,14 +15,39 @@ angular.module('ts5App')
     var _companyId = undefined,
       _services = undefined;
 
-    // scope globals
+    // scope properties
     $scope.viewName = 'Cash Bag';
     $scope.readOnly = true;
     $scope.displayError = false;
 
+    // scope methods
+    $scope.formSave = function (formCashBag) {
+      switch ($routeParams.state) {
+        case 'edit':
+          var saveCashBag = angular.copy(formCashBag);
+          // TODO see how Luis is doing this in company-relationship-service, tsv154 branch
+          saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
+          $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
+          var payload = {
+            cashBag: saveCashBag
+          };
+          cashBagFactory.updateCashBag($routeParams.id, payload).then(
+            HELPERS.updateSuccess,
+            HELPERS.showErrors
+          );
+          break;
+        case 'create':
+          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function () {
+            //TODO: redirect
+            console.log('success');
+          }, HELPERS.showErrors);
+          break;
+      }
+    };
+
     // Constructor
     (function CONSTRUCTOR(){
-      // define global controller properties
+      // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
       _services = {
         promises: [],
@@ -87,31 +112,6 @@ angular.module('ts5App')
       }
       DESTRUCTOR();
     })();
-
-    // form action
-    $scope.save = function (formCashBag) {
-      switch ($routeParams.state) {
-        case 'edit':
-          var saveCashBag = angular.copy(formCashBag);
-          // TODO see how Luis is doing this in company-relationship-service, tsv154 branch
-          saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
-          $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
-          var payload = {
-            cashBag: saveCashBag
-          };
-          cashBagFactory.updateCashBag($routeParams.id, payload).then(
-            HELPERS.updateSuccess,
-            HELPERS.showErrors
-          );
-          break;
-        case 'create':
-          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function () {
-            //TODO: redirect
-            console.log('success');
-          }, HELPERS.showErrors);
-          break;
-      }
-    };
 
     // helpers
     function HELPERS() {
