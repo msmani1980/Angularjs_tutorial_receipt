@@ -157,6 +157,7 @@ angular.module('ts5App')
           $scope.cashBag.cashBagCurrencies.push(
             {
               currencyId:currency.id,
+              // TODO - what value should go here, can user's enter the "Flight amount" on the create page
               bankAmount:'0.0000'
             }
           );
