@@ -1,16 +1,15 @@
 'use strict';
-/*global moment*/
+
 /**
  * @author Max Felker <max@bigroomstudios.com>
  * @ngdoc function
  * @name ts5App.controller:StockOwnerItemListCtrl
  * @description
- * # ItemsCtrl
- * Controller of the ts5App
+ * Controller for the Stock Owner Items List view
  */
 angular.module('ts5App')
   .controller('StockOwnerItemListCtrl', function ($scope, $http, itemsFactory,
-    companiesFactory) {
+    companiesFactory, dateUtility) {
 
     $scope.search = {
       startDate: '',
@@ -24,27 +23,19 @@ angular.module('ts5App')
     $scope.startDateFilter = '';
     $scope.endDateFilter = '';
 
-    var todaysDate = moment().format();
-
-    // TODO: Move to global function
-    function formatDate(dateString, formatFrom, formatTo) {
-      var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
-      return new Date(dateToReturn);
-    }
-
     $scope.$watch('search.startDate + search.endDate', function () {
       $scope.formatDateFilter();
     });
 
     $scope.formatDateFilter = function () {
-
-      if ($scope.search.startDate.length) {
-        $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
+      if ($scope.search.startDate && $scope.search.endDate) {
+        $scope.startDateFilter = dateUtility.formatDate($scope.search.startDate,
+          'L',
           'YYYY-MM-DD');
-        $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
+        $scope.endDateFilter = dateUtility.formatDate($scope.search.endDate,
+          'L',
           'YYYY-MM-DD');
       }
-
     };
 
     this.setPaginatedList = function () {
@@ -98,13 +89,11 @@ angular.module('ts5App')
     };
 
     $scope.isItemActive = function (startDate) {
-      startDate = formatDate(startDate, 'YYYYMMDD', 'L');
-      return moment(startDate).isBefore(todaysDate);
+      return Date.parse(startDate) <= dateUtility.now();
     };
 
     $scope.isItemInactive = function (endDate) {
-      endDate = formatDate(endDate, 'YYYYMMDD', 'L');
-      return moment(endDate).isBefore(todaysDate);
+      return Date.parse(endDate) <= dateUtility.now();
     };
 
     $scope.clearSearchFilters = function () {

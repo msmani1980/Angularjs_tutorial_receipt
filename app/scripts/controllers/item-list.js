@@ -5,8 +5,7 @@
  * @ngdoc function
  * @name ts5App.controller:ItemListCtrl
  * @description
- * # ItemsCtrl
- * Controller of the ts5App
+ * Contoller for the Retail Items List View
  */
 angular.module('ts5App')
   .controller('ItemListCtrl', function ($scope, $http, itemsFactory,
@@ -26,7 +25,6 @@ angular.module('ts5App')
     });
 
     $scope.formatDateFilter = function () {
-
       if ($scope.search.startDate && $scope.search.endDate) {
         $scope.startDateFilter = dateUtility.formatDate($scope.search.startDate,
           'L',
@@ -35,11 +33,7 @@ angular.module('ts5App')
           'L',
           'YYYY-MM-DD');
       }
-
     };
-
-    // display loading modal
-    //angular.element('#loading').modal('show').find('p').text('Getting a list of items for you');
 
     $scope.currentPage = 1;
     $scope.itemsPerPage = 10;
@@ -51,7 +45,7 @@ angular.module('ts5App')
     // Get a list of items
     itemsFactory.getItemsList({}).then(function (response) {
 
-      var items = response.retailItems;
+      $scope.items = response.retailItems;
 
       $scope.totalItems = response.meta.count;
 
@@ -59,7 +53,7 @@ angular.module('ts5App')
       var end = begin + $scope.itemsPerPage;
 
       // update the paginated items to display
-      $scope.paginatedItems = items.slice(begin, end);
+      $scope.paginatedItems = $scope.items.slice(begin, end);
 
       itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
@@ -80,7 +74,7 @@ angular.module('ts5App')
         var end = begin + $scope.itemsPerPage;
 
         // update the paginated items to display
-        $scope.paginatedItems = items.slice(begin, end);
+        $scope.paginatedItems = $scope.items.slice(begin, end);
 
       });
 
