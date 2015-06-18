@@ -9,11 +9,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagEditCtrl', function ($scope, $routeParams, $q, ngToast, cashBagFactory) {
+  .controller('CashBagEditCtrl', function ($scope, $routeParams, $q, ngToast, cashBagFactory, factoryHelper) {
 
     // controller global properties
     var _companyId = null,
-      _services = null;
+      _factoryHelper = factoryHelper;
 
     // scope properties
     $scope.viewName = 'Cash Bag';
@@ -49,13 +49,9 @@ angular.module('ts5App')
     (function CONSTRUCTOR(){
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
-      _services = {
-        promises: [],
-        call: function(servicesArray){
-          angular.forEach(servicesArray, function(_service){
-            _services.promises.push(_services[_service]());
-          });
-        },
+
+      // in object of our services, to be called with the factory helper
+      var services = {
         getCashBag: function () {
           return cashBagFactory.getCashBag($routeParams.id).then(
             function (response) {
@@ -92,6 +88,8 @@ angular.module('ts5App')
           );
         }
       };
+
+      _factoryHelper.setServices(services);
 
       switch ($routeParams.state) {
         case 'create':
@@ -139,7 +137,7 @@ angular.module('ts5App')
 
     // CRUD - Create
     function CREATE(){
-      _services.call(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
+      var _promises = _factoryHelper.callServices(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
 
       $scope.readOnly = false;
       $scope.cashBag = {
@@ -150,7 +148,7 @@ angular.module('ts5App')
         cashBagCurrencies: []
       };
 
-      $q.all(_services.promises).then(function(){
+      $q.all(_promises).then(function(){
         // TODO: throw error when dailyExchangeRates returns empty array
         $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
         angular.forEach($scope.companyCurrencies, function(currency){
@@ -166,13 +164,13 @@ angular.module('ts5App')
 
     // CRUD - Read
     function READ(){
-      _services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
     }
 
     // CRUD - Update
     function UPDATE(){
       $scope.readOnly = false;
-      _services.call(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
     }
 
     // CRUD - Delete
