@@ -255,6 +255,15 @@
   		margin-bottom: 15px;
   	}
   }
+  .retail-name-multiple-select {
+    width: 100%;
+    margin-right: 10px;
+    
+    .select2-choices {
+      border-color: #ccc;
+      border-radius: 2px;
+    }
+  }
 }
 
 .global-reason-code-form {

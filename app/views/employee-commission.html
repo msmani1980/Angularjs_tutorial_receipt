@@ -29,20 +29,72 @@
   <!--/TopHeader -->
 
     <div class="row">
-
+      
       <div class="col-xs-12 col-sm-3">
         <div class="form-group">
-          <label for="itemName">Item Name</label>
-          <select class="form-control" id="itemName">
-            <option>Coke</option>
-            <option>Pepsi</option>
-            <option>Sprite</option>
-            <option>Chicken Sandwich</option>
+          <label for="saleType">Sale Type</label>
+          <select class="form-control" id="saleType">
+            <option>Regular Sale</option>
+            <option>Complimentary Sale</option>
+            <option>Employee Purchase</option>
+            <option>Other</option>
           </select>
         </div>
       </div>
+            <div class="col-xs-12 col-sm-4">
+      
+      <date-picker class="form-group"
+        element-class="col-xs-12 col-sm-6"
+        start-date-model="formData.startDate"
+        end-date-model="formData.endDate"
+        disable-past="true"
+        label-from="Effective From"
+        label-to="Effective To"
+        disable-start-date="viewOnly || itemIsActive"
+        disable-end-date="viewOnly || itemIsInactive"
+        >
+      </date-picker>
+      </div>
       
       <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label for="itemName">Item Category</label>
+          <select class="form-control" id="itemName">
+            <option>Soft drinks</option>
+            <option>Rentals</option>
+            <option>Snacks</option>
+            <option>Hot Drinks</option>
+            <option>Chocolates</option>
+            <option>Lunch</option>
+            <option>Parent Test</option>
+            <option>Fruits</option>
+            <option>Gadgets</option>
+            <option>Frarances</option>
+            <option>Virtual Items</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-3">
+        <div class="form-group">
+          <label for="retailName">Retail Name</label>
+          <select class="retail-name-multiple-select" multiple="multiple" id="retailName">
+            <option>Coke</option>
+            <option>Pepsi</option>
+            <option>Sprite</option>
+            <option>7-Up</option>
+            <option>Orange Crush</option>
+            <option>Ginger Ale</option>
+            <option>Root Beer</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+    
+    <div class="row">
+      
+      <div class="col-xs-12 col-sm-3">
         <div class="form-group">
           <label for="rateType">Rate Type</label>
           <select class="form-control" id="rateType">
@@ -59,19 +111,8 @@
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-3">
-        <div class="form-group">
-          <label for="saleType">Sale Type</label>
-          <select class="form-control" id="saleType">
-            <option>Regular Sale</option>
-            <option>Complimentary Sale</option>
-            <option>Employee Purchase</option>
-            <option>Other</option>
-          </select>
-        </div>
-      </div>
       
-      <div class="col-xs-12 col-sm-2">
+      <div class="col-xs-12 col-sm-3">
         <div class="form-group">
           <label for="saleType">Currency</label>
           <select class="form-control" id="saleType">
@@ -82,24 +123,8 @@
           </select>
         </div>
       </div>
-      
-    </div>
     
-    <div class="row">
-    
-      <div class="col-xs-12">
-        <date-picker class="form-group"
-          element-class="col-xs-12 col-sm-3"
-          start-date-model="formData.startDate"
-          end-date-model="formData.endDate"
-          disable-past="true"
-          label-from="Effective From"
-          label-to="Effective To"
-          disable-start-date="viewOnly || itemIsActive"
-          disable-end-date="viewOnly || itemIsInactive"
-          >
-        </date-picker>
-      </div>
+
 
     </div>
 

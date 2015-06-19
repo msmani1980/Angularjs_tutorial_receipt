@@ -4,12 +4,13 @@
  * @ngdoc function
  * @name ts5App.controller:PostFlightDataCtrl
  * @description
- * # PostFlightDataCtrl
+ * # EmployeeCommissionCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
   .controller('EmployeeCommissionCtrl', function ($scope) {
 
     $scope.viewName = 'Employee Commission';
+    $('.retail-name-multiple-select').select2();
 
   });
