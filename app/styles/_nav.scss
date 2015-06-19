@@ -78,6 +78,23 @@ a.navbar-brand{
 			max-width:325px;
 
 		}
+		li a{
+			width:56px;
+			height:56px;
+			list-style:none;
+			left:0px;
+			margin-top: 10px;
+			margin-bottom: 20px;
+			text-align: center;
+			text-decoration: none;
+		}
+
+
+		li a:hover > .left-nav-option{
+			opacity:1;
+			min-width:175px;
+			max-width:325px;
+		}
 
 		.left-nav-option{
 			width:100%;
