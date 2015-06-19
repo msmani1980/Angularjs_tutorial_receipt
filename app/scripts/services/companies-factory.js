@@ -12,70 +12,70 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('companiesFactory', function (companiesService,tagsService, salesCategoriesService,taxTypesService,stationsService) {
-
-  // Companies
-  var getCompany = function (id) {
-    return companiesService.getCompany(id);
-  };
-
-  var getCompaniesList = function (payload) {
-    return companiesService.getCompaniesList(payload);
-  };
-
-  // Tags
-  var getTagsList = function (payload) {
-    return tagsService.getTagsList(payload);
-  };
-
-  // Sales Categories
-  var getSalesCategoriesList = function (payload) {
-    return salesCategoriesService.getSalesCategoriesList(payload);
-  };
-
-  var getSalesCategory = function (id) {
-    return salesCategoriesService.getSalesCategory(id);
-  };
-
-  var createSalesCategory = function (payload) {
-    return salesCategoriesService.createSalesCategory(payload);
-  };
-
-  var updateSalesCategory = function (payload) {
-    return salesCategoriesService.updateSalesCategory(payload);
-  };
-
-  // Tax Types
-  var getTaxTypesList = function (payload) {
-    return taxTypesService.getTaxTypesList(payload);
-  };
-
-  // Tax Types
-  var getGlobalStationList = function (payload) {
-    return stationsService.getGlobalStationList(payload);
-  };
-
-  return {
+  .factory('companiesFactory', function (companiesService, tagsService, salesCategoriesService, taxTypesService, stationsService) {
 
     // Companies
-    getCompany: getCompany,
-    getCompaniesList: getCompaniesList,
+    var getCompany = function (id) {
+      return companiesService.getCompany(id);
+    };
+
+    var getCompaniesList = function (payload) {
+      return companiesService.getCompaniesList(payload);
+    };
 
     // Tags
-    getTagsList: getTagsList,
+    var getTagsList = function (payload) {
+      return tagsService.getTagsList(payload);
+    };
 
     // Sales Categories
-    getSalesCategoriesList: getSalesCategoriesList,
-    getSalesCategory: getSalesCategory,
-    createSalesCategory:createSalesCategory,
-    updateSalesCategory: updateSalesCategory,
+    var getSalesCategoriesList = function (payload) {
+      return salesCategoriesService.getSalesCategoriesList(payload);
+    };
+
+    var getSalesCategory = function (id) {
+      return salesCategoriesService.getSalesCategory(id);
+    };
+
+    var createSalesCategory = function (payload) {
+      return salesCategoriesService.createSalesCategory(payload);
+    };
+
+    var updateSalesCategory = function (payload) {
+      return salesCategoriesService.updateSalesCategory(payload);
+    };
 
     // Tax Types
-    getTaxTypesList: getTaxTypesList,
+    var getTaxTypesList = function (payload) {
+      return taxTypesService.getTaxTypesList(payload);
+    };
 
-    // Stations
-    getGlobalStationList: getGlobalStationList
+    // Tax Types
+    var getGlobalStationList = function (payload) {
+      return stationsService.getGlobalStationList(payload);
+    };
 
-  };
+    return {
 
-});
+      // Companies
+      getCompany: getCompany,
+      getCompaniesList: getCompaniesList,
+
+      // Tags
+      getTagsList: getTagsList,
+
+      // Sales Categories
+      getSalesCategoriesList: getSalesCategoriesList,
+      getSalesCategory: getSalesCategory,
+      createSalesCategory: createSalesCategory,
+      updateSalesCategory: updateSalesCategory,
+
+      // Tax Types
+      getTaxTypesList: getTaxTypesList,
+
+      // Stations
+      getGlobalStationList: getGlobalStationList
+
+    };
+
+  });

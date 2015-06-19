@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('cashBagService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/cash-bags/:id';
+    var requestURL = ENV.apiUrl + '/api/cash-bags';
 
     var requestParameters = {
       id: '@id'
@@ -24,17 +24,23 @@ angular.module('ts5App')
       updateCashBag: {
         method: 'PUT',
         headers: {companyId: 362} // TODO should this always be here?
+      },
+      deleteCashBag: {
+        method: 'DELETE',
+        headers: {companyId: 362} // TODO should this always be here?
+      },
+      createCashBag: {
+        method: 'POST',
+        headers: {companyId: 362} // TODO should this always be here?
       }
     };
 
-    var requestResource = $resource(requestURL, requestParameters, actions);
+    var requestResource = $resource(requestURL+'/:id', requestParameters, actions);
 
     function getCashBagList(companyId, optionalPayload) {
-      var payload;
+      var payload = {};
       if (arguments.length === 2) {
         payload = optionalPayload;
-      } else {
-        payload = {};
       }
 
       payload.retailCompanyId = companyId;
@@ -50,10 +56,19 @@ angular.module('ts5App')
       return requestResource.updateCashBag({id:cashBagId}, payload).$promise;
     }
 
+    function deleteCashBag(cashBagId){
+      return requestResource.deleteCashBag({id:cashBagId}).$promise;
+    }
+
+    function createCashBag(payload) {
+      return requestResource.createCashBag(payload).$promise;
+    }
+
     return {
       getCashBagList: getCashBagList,
       getCashBag: getCashBag,
-      updateCashBag: updateCashBag
+      updateCashBag: updateCashBag,
+      deleteCashBag: deleteCashBag,
+      createCashBag: createCashBag
     };
-  })
-;
+  });

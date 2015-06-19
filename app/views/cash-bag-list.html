@@ -1,4 +1,71 @@
-<h1>Manage Cash Bag</h1>
+<h1>{{ viewName }}</h1>
+
+<div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+  </button>
+  <ul>
+    <li ng-repeat="error in form.$error.required">
+      <strong>{{ error.$name }}</strong> is required
+    </li>
+    <li ng-repeat="error in form.$error.pattern">
+      <strong>{{ error.$name }}</strong> is invalid
+    </li>
+    <li ng-show="formErrors" ng-repeat="error in formErrors">
+      <strong>{{error.field}}</strong>
+      <span> {{ error.value }}</span>
+      <span> {{ error.code }}</span>
+    </li>
+  </ul>
+</div>
+
+<!-- Add cash bag modal-->
+<div class="modal fade" id="addCashBagModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Search Schedules</h4>
+      </div>
+      <div class="modal-body">
+        <div ng-show="displayModalError" class="alert alert-danger alert-dismissible fade in" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+          </button>
+          <h4>{{ createCashBagError }}</h4>
+        </div>
+        <form name="createCashBagForm">
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <label for="cashBag-origin">Schedule</label>
+                <select ng-model="scheduleIndex" class="form-control col-md-12" id="cashBag-origin"
+                        ng-change="updateScheduleDate()" required="true">
+                  <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <date-picker
+                id="createCashBagDatePicker"
+                class="col-sm-12"
+                disable-date-range="false"
+                start-date-model="scheduleDate"
+                is-search-field="true"
+                label-from="Schedule Date"
+                min-date="scheduleMinDate"
+                max-date="scheduleMaxDate"
+                required="true">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="submitCreate()">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="row">
   <div class="col-xs-6 text-right pull-right">
@@ -28,7 +95,7 @@
           <div class="form-group">
             <label for="cashBag-bankRef">Bank Ref #</label>
             <select class="form-control" ng-model="search.bankReferenceNumber" id="cashBag-bankRef">
-              <option value="""></option>
+              <option value=""></option>
               <option value="{{ bankRef }}" ng-repeat="bankRef in bankRefList">{{ bankRef }}</option>
             </select>
           </div>
@@ -55,21 +122,23 @@
       <div class="row">
         <div class="col-md-3 col-sm-6">
           <div class="form-group">
-            <label for="cashBag-origin">Origin
-              <select multiple ng-model="search.arrivalStationCode" class="form-control" id="cashBag-origin">
-                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{ station.stationName}})</option>
-              </select>
-              <input type="checkbox"> Add All</label>
+            <label for="cashBag-origin">Origin</label>
+            <select ng-model="search.arrivalStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-origin">
+              <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{
+                station.stationName}})
+              </option>
+            </select>
           </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
           <div class="form-group">
-            <label for="cashBag-destination">Destination
-              <select multiple ng-model="search.departureStationCode" class="form-control" id="cashBag-destination">
-                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{ station.stationName}})</option>
-              </select>
-              <input type="checkbox"> Add All</label>
+            <label for="cashBag-destination">Destination</label>
+            <select ng-model="search.departureStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-destination">
+              <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }}
+                ({{ station.stationName}})
+              </option>
+            </select>
           </div>
         </div>
 
@@ -96,26 +165,24 @@
   </thead>
   <tbody>
   <tr>
-    <td colspan="6" ng-click="" class="btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    <td colspan="6" ng-click="showCreatePopup()" class="btn-default"><span class="glyphicon glyphicon-plus"
+                                                                           aria-hidden="true"></span>
       Add Cash Bag
     </td>
   </tr>
   <tr
-    ng-repeat="cashBag in cashBagList">
+    ng-repeat="cashBag in cashBagList" ng-class="{'new':isNew(cashBag.id)}">
     <td>{{ cashBag.cashBagNumber }}</td>
     <td>{{ cashBag.bankReferenceNumber }}</td>
     <td>{{ cashBag.scheduleDate }}</td>
     <td>{{ cashBag.departureStationCode }}</td>
     <td>{{ cashBag.arrivalStationCode }}</td>
     <td>
-      <button class="btn btn-info btn-xs" ng-click="showCashBag(cashBag)">
+      <button class="btn btn-info btn-xs" ng-click="viewCashBag(cashBag)">
         <i class="fa fa-file"></i>
       </button>
-      <button class="btn btn-primary btn-xs" ng-click="showCashBag(cashBag)">
+      <button class="btn btn-primary btn-xs" ng-click="editCashBag(cashBag)">
         <i class="fa fa-pencil"></i>
-      </button>
-      <button class="btn btn-danger btn-xs">
-        <i class="fa fa-trash"></i>
       </button>
     </td>
   </tr>
