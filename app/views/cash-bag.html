@@ -1,6 +1,7 @@
 <h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
 
 <h2>{{ company.companyName }} <small>Flight {{ cashBag.scheduleNumber }} <small><date class="text-right">{{ cashBag.scheduleDate }}</date></small></small></h2>
+
 <ng-form name="cashBagCreateForm" class="form edit-form">
 
   <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
@@ -124,4 +125,11 @@
 
   </div>
 
+</ng-form>
+<ng-form name="cashBagDeleteForm" class="form edit-form" ng-show="canDelete(cashBag)">
+  <div class="panel-footer text-center">
+    <button class="btn btn-danger" ng-click="delete(cashBag)">
+      <span class="hidden-xs">Delete</span>
+    </button>
+  </div>
 </ng-form>

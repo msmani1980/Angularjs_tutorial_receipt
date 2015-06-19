@@ -46,6 +46,15 @@ angular.module('ts5App')
           break;
       }
     };
+    $scope.canDelete = function(cashBag){ return false; };
+    $scope.delete = function(cashBag){
+      if($scope.canDelete(cashBag)) {
+        cashBagFactory.deleteCashBag(cashBag.id).then(function () {
+            window.alert('deleted');
+          },
+          HELPERS().showErrors);
+      }
+    };
 
     // Constructor
     (function CONSTRUCTOR(){
@@ -103,9 +112,6 @@ angular.module('ts5App')
         case 'edit':
           UPDATE();
           break;
-        case 'delete':
-          DELETE();
-          break;
         default:
           // TODO - redirect home?
           break;
@@ -133,6 +139,17 @@ angular.module('ts5App')
           });
           $scope.displayError = false;
           $scope.formErrors = {};
+        },
+        canDelete: function(cashBag){
+          var canDelete = true;
+          angular.forEach(cashBag.cashBagCurrencies, function(currency){
+            if(canDelete){
+              if((currency.bankAmount !== '0.000' && currency.bankAmount !== null) || currency.coinAmountManual !== null || currency.coinAmountManual !== null){
+                canDelete = false;
+              }
+            }
+          });
+          return canDelete;
         }
       };
     }
@@ -167,18 +184,19 @@ angular.module('ts5App')
 
     // CRUD - Read
     function READ(){
-      _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      $q.all(_promises).then(function() {
+        $scope.canDelete = HELPERS().canDelete;
+      });
     }
 
     // CRUD - Update
     function UPDATE(){
       $scope.readOnly = false;
-      _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
-    }
-
-    // CRUD - Delete
-    function DELETE(){
-      // TODO - this
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      $q.all(_promises).then(function() {
+        $scope.canDelete = HELPERS().canDelete;
+      });
     }
 
     // Destructor

@@ -68,34 +68,6 @@ angular.module('ts5App')
       return ($routeParams.newId === cashBagId);
     };
 
-    $scope.deleteCashBag = function(cashBag){
-        // TODO validate that the cashBag is eligible for deletion.
-        if($scope.canDelete(cashBag)) {
-          cashBagFactory.deleteCashBag(cashBag.id).then(function () {
-              window.alert('deleted');
-            },
-            showErrors);
-        }
-    };
-
-    $scope.canDelete = function(cashBag){
-      // TODO, BLOCKER, need access to the following values,
-      // TODO These not available in the cash bag listing json object
-      // cashBag.cashBagCurrencies[i].paperAmountManual
-      // cashBag.cashBagCurrencies[i].coinAmountManual
-      // cashBag.cashBagCurrencies[i].bankAmount
-      // if all are null then can delete
-      var canDelete = true;
-      angular.forEach(cashBag.cashBagCurrencies, function(currency){
-        if(canDelete){
-          if(currency.paperAmountManual !== null || currency.coinAmountManual !== null || currency.coinAmountManual !== null){
-            canDelete = false;
-          }
-        }
-      });
-      return canDelete;
-    };
-
     function showErrors(error){
       ngToast.create({
         className: 'warning',
