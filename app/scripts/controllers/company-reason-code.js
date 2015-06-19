@@ -8,6 +8,6 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('RefundGlobalReasonCodeCtrl', function ($scope) {
-    $scope.viewName = 'Refund - Global Reason Code';
+  .controller('CompanyReasonCodeCtrl', function ($scope) {
+    $scope.viewName = 'Company Reason Code';
   });

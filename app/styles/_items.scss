@@ -134,9 +134,115 @@
       margin-right: 0;
     }
   }
+  
+  .employee-id {
+  
+  	.form-group {
+  	
+  		.row {
+  			margin-bottom: 10px;
+  		}
+  	}
+  
+  	.employeeID-multiple-select {
+    	width: 100%;
+    	margin-right: 10px;
+    	
+    	.select2-choices {
+        border-color: #ccc;
+        border-radius: 2px;
+    	}
+  	}
+  	.btn {
+  		vertical-align: bottom;
+  	}
+ 	}
 }
 
-.crew-commission-form {
+.post-trip-data-list {
+
+	label {
+		width: 100%
+	}
+  
+  .import-from-file {
+  	margin-bottom: 10px;
+    height: 36px;	
+  	
+  	input[type="file"] {
+  		padding: 6px;
+  		border: 1px solid #46b8da;
+  		float: left;
+  		margin: 0 !important;
+  	}
+  	
+  	#importFromData {
+    	display: inline-block;
+    	white-space: nowrap;
+		}
+		
+		.collapse {
+  		display: none;
+  		visibility: hidden;
+		}
+		
+		.collapse.in {
+ 			display: block;
+	 		visibility: visible;
+		}
+		
+		tr.collapse.in {
+  		display: table-row;
+		}
+		
+		tbody.collapse.in {
+  		display: table-row-group;
+		}
+		
+		.collapsing {
+  		position: relative;
+  		height: 0;
+  		overflow: hidden;
+  		-webkit-transition-property: height, visibility;
+  		transition-property: height, visibility;
+ 			-webkit-transition-duration: 0.35s;
+  		transition-duration: 0.35s;
+  		-webkit-transition-timing-function: ease;
+  		transition-timing-function: ease;
+		}
+		
+		.collapsing.width {
+  		-webkit-transition-property: width, visibility;
+  		transition-property: width, visibility;
+  		width: 0;
+  		height: auto;
+		}
+  }
+  .datepicker-container {
+  
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    
+    .startDateContainer {
+      margin-bottom: 15px;
+    }
+  }
+  
+  .departure-time-from, .arrival-time-from {
+  	float: left;
+  	width: 45%;
+  	margin-right: 8px;
+ 	}
+  
+  .departure-time-to, .arrival-time-to {
+  	float: left;
+  	width: 45%;
+ 	}  
+}
+
+.employee-commission-form {
   
   label {
   	font-weight:100;
@@ -151,7 +257,7 @@
   }
 }
 
-.refund-global-reason-code-form {
+.global-reason-code-form {
 
   label {
   	font-weight:100;
@@ -171,7 +277,7 @@
  	}
 }
 
-.refund-company-reason-code-form {
+.company-reason-code-form {
   
   label {
   	font-weight:100;
@@ -205,7 +311,7 @@
     top:20rem;
   }
   
-  .refund-global-reason-code-form {
+  .global-reason-code-form {
   
   	.form-inline {
   	
@@ -222,5 +328,4 @@
   display: block;
   margin:0 auto;
   max-width: 48px;
-
 }
