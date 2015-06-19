@@ -138,19 +138,6 @@ describe('Controller: CashBagListCtrl', function () {
       scope.$digest();
       expect(location.path()).toBe('/cash-bag/edit/1');
     });
-    it('should have a deleteCashBag function in scope', function(){
-      expect(scope.deleteCashBag).toBeDefined();
-    });
-    it('should have a deleteCashBag callable function', function(){
-      expect(Object.prototype.toString.call(scope.deleteCashBag)).toBe('[object Function]');
-    });
-    it('should call cashBagFactory.cashBagDelete when delete is called', function(){
-      var id = 95;
-      var cashBag = {id:id};
-      scope.deleteCashBag(cashBag);
-      scope.$digest();
-      expect(cashBagFactory.deleteCashBag).toHaveBeenCalledWith(id);
-    });
   });
 
 });
