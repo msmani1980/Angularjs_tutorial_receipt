@@ -200,7 +200,7 @@ describe('Controller: CashBagListCtrl', function () {
     it('should change the url based on the menu object to view a cash bag', function () {
       scope.viewCashBag({id: 1});
       scope.$digest();
-      expect(location.path()).toBe('/cash-bag/1');
+      expect(location.path()).toBe('/cash-bag/view/1');
     });
     it('should have an editCashBag function in scope', function () {
       expect(scope.editCashBag).toBeDefined();
@@ -211,7 +211,7 @@ describe('Controller: CashBagListCtrl', function () {
     it('should change the url based on the menu object to edit a cash bag', function () {
       scope.editCashBag({id: 1});
       scope.$digest();
-      expect(location.path()).toBe('/cash-bag/1/edit');
+      expect(location.path()).toBe('/cash-bag/edit/1');
     });
     it('should have a deleteCashBag function in scope', function () {
       expect(scope.deleteCashBag).toBeDefined();

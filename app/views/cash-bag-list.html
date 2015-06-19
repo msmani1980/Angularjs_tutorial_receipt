@@ -165,7 +165,7 @@
     </td>
   </tr>
   <tr
-    ng-repeat="cashBag in cashBagList">
+    ng-repeat="cashBag in cashBagList" ng-class="{'new':isNew(cashBag.id)}">
     <td>{{ cashBag.cashBagNumber }}</td>
     <td>{{ cashBag.bankReferenceNumber }}</td>
     <td>{{ cashBag.scheduleDate }}</td>
@@ -177,9 +177,6 @@
       </button>
       <button class="btn btn-primary btn-xs" ng-click="editCashBag(cashBag)">
         <i class="fa fa-pencil"></i>
-      </button>
-      <button class="btn btn-danger btn-xs" ng-click="deleteCashBag(cashBag)">
-        <i class="fa fa-trash"></i>
       </button>
     </td>
   </tr>

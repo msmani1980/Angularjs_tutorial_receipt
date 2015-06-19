@@ -8,12 +8,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $q, ngToast) {
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, ngToast) {
 
     var _companyId = null,
       _services = null;
 
-    $scope.viewName = 'Cash Bag';
+    $scope.viewName = 'Manage Cash Bag';
     $scope.displayModalError = false;
     $scope.displayError = false;
     $scope.createCashBagError = 'temp error message';
@@ -34,6 +34,17 @@ angular.module('ts5App')
           return cashBagFactory.getCashBagList(_companyId).then(
             function (response) {
               $scope.cashBagList = response.cashBags;
+              angular.forEach($scope.cashBagList, function(_cb){
+                if($scope.isNew(_cb.id)){
+                  ngToast.create({
+                    className: 'success',
+                    dismissButton: true,
+                    content: '<strong>Cash bag</strong>: successfully created!'
+                  });
+                  $scope.displayError = false;
+                  $scope.formErrors = {};
+                }
+              });
               $scope.bankRefList = getSortedBankRefList(response.cashBags);
             }
           );
@@ -84,11 +95,11 @@ angular.module('ts5App')
 
     // scope methods
     $scope.viewCashBag = function (cashBag) {
-      $location.path('cash-bag/' + cashBag.id);
+      $location.path('cash-bag/view/' + cashBag.id);
     };
 
     $scope.editCashBag = function (cashBag) {
-      $location.path('cash-bag/' + cashBag.id + '/edit');
+      $location.path('cash-bag/edit/' + cashBag.id);
     };
 
     $scope.searchCashBag = function () {
@@ -106,14 +117,8 @@ angular.module('ts5App')
       $scope.searchCashBag();
     };
 
-    $scope.deleteCashBag = function (cashBag) {
-      // if (window.confirm('Are you sure you would like to remove this item?')) {
-      // TODO validate that the cashBag is eligible for deletion.
-      cashBagFactory.deleteCashBag(cashBag.id).then(function () {
-
-        },
-        showErrors('cash bag could not be deleted'));
-      // }
+    $scope.isNew = function(cashBagId){
+      return ($routeParams.newId === cashBagId);
     };
 
     $scope.showCreatePopup = function () {
