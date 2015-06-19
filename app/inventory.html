@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="ts5App" class="no-js">
 
 <head>
 <meta charset="utf-8">
@@ -9,12 +9,14 @@
 <!-- CSS -->
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="//www.fuelcdn.com/fuelux/3.6.3/css/fuelux.min.css" rel="stylesheet">
+<link rel="stylesheet" href="styles/main.css">
 <link rel="stylesheet" href="styles/static-pages.css">
 </head>
 
 <body class="fuelux">
   <div class="wizard" data-initialize="wizard" id="myWizard">
 
+<!-- TODO: RENAME SPANS AFTER COMPLETE CLASS ADDED: Inventory Reference Number Assigned, Packed, Seals Assigned, Dispatched -->
     <ul class="steps">
       <li data-step="1" data-name="assignInventoryReferenceNumber" class="active"><span class="badge">1</span>Assign Inventory Reference Number<span class="chevron"></span></li>
       <li data-step="2" data-name="inPacking"><span class="badge">2</span>In Packing<span class="chevron"></span></li>
@@ -25,13 +27,20 @@
     <div class="step-content">
       <!-- PANE 1 - Assign Inventory Reference Number --------------------------------------------------------------------- -->
       <div class="step-pane active sample-pane" data-step="1">
-        <form class="form-horizontal" action="">
+        <ng-form class="form-horizontal" id="form-in-wizard" action="">
           <div class="well">
 
             <div class="form-group">
-              <label for="selectFlight" class="col-sm-4 control-label">Select Flight Number</label>
+              <label for="selectCateringStation" class="col-sm-4 control-label">Select Catering Station</label>
               <div class="col-sm-8">
-                <input type="text" class="form-control" id="selectFlight" placeholder="A320EU">
+                <input type="text" class="form-control" id="selectCateringStation" placeholder="LGW">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="selectSchedule" class="col-sm-4 control-label">Select Schedule Number</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="selectSchedule" placeholder="A320EU">
               </div>
             </div>
 
@@ -116,9 +125,9 @@
             </div>
 
             <div class="form-group">
-              <label for="selectTemplate" class="col-sm-4 control-label">Select Template</label>
+              <label for="selectMenu" class="col-sm-4 control-label">Select Menu</label>
               <div class="col-sm-8">
-                <select class="form-control" id="selectTemplate">
+                <select class="form-control" id="selectMenu">
                   <option>Breakfast</option>
                   <option>Lunch</option>
                   <option>Dinner</option>
@@ -135,38 +144,38 @@
             </div>
 
           </div>
-        </form>
+        </ng-form>
       </div>
 
       <!-- PANE 2 - In Packing --------------------------------------------------------------------- -->
       <div class="step-pane sample-pane" data-step="2">
-        <form class="form-horizontal" action="">
+        <ng-form class="form-horizontal" action="">
 
           <div class="well">
             <table class="table">
-              <caption>Flight Information</caption>
               <thead>
                 <tr>
-                  <th>Flight Number</th>
-                  <th>Flight Date</th>
-                  <th>Flight Template</th>
+                  <th>Catering Station</th>
+                  <th>Schedule Number</th>
+                  <th>Schedule Date</th>
+                  <th>Schedule Menu</th>
                   <th>Inventory Reference Number</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="text" class="form-control" id="flightNumber" placeholder="A320EU" disabled></td>
-                  <td><input type="text" class="form-control" id="flightDate" placeholder="12/25/2105" disabled></td>
-                  <td><input type="text" class="form-control" id="flightTemplate" placeholder="Breakfast" disabled></td>
+                  <td><input type="text" class="form-control" id="cateringStation" placeholder="LGW" disabled></td>
+                  <td><input type="text" class="form-control" id="scheduleNumber" placeholder="A320EU" disabled></td>
+                  <td><input type="text" class="form-control" id="scheduleDate" placeholder="12/25/2105" disabled></td>
+                  <td><input type="text" class="form-control" id="scheduleMenu" placeholder="Breakfast" disabled></td>
                   <td><input type="text" class="form-control" id="inventoryReferenceNumber" placeholder="GJ1246" disabled></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="well">
-            <table class="table">
-              <caption>Inventory</caption>
+          <div class="well" >
+            <table class="table table-striped table-scrollable">
               <thead>
                 <tr>
                   <th>Item</th>
@@ -178,97 +187,103 @@
                 <tr>
                   <td>Coke</td>
                   <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
-                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="18"></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
                 </tr>
-                <tr>
+                <tr class="has-discrepancy">
                   <td>Pepsi</td>
                   <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
-                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="16"></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16"></td>
                 </tr>
                 <tr>
                   <td>Chicken Sandwich</td>
-                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="10" disabled></td>
-                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="9"></td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16"></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16"></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16"></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16"></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20"></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-        </form>
+        </ng-form>
       </div>
 
       <!-- PANE 3 - Assign Seals --------------------------------------------------------------------- -->
       <div class="step-pane sample-pane" data-step="3">
-        <form class="form-horizontal" action="">
+        <ng-form class="form-horizontal" action="">
 
           <div class="well">
             <table class="table">
-              <caption>Flight Information</caption>
               <thead>
                 <tr>
-                  <th>Flight Number</th>
-                  <th>Flight Date</th>
-                  <th>Flight Template</th>
+                  <th>Catering Station</th>
+                  <th>Schedule Number</th>
+                  <th>Schedule Date</th>
+                  <th>Schedule Menu</th>
                   <th>Inventory Reference Number</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="A320EU" disabled></td>
-                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="12/25/2105" disabled></td>
-                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="2001" disabled></td>
-                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="GJ1246" disabled></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="well">
-            <table class="table">
-              <caption>Seal Number Assignment</caption>
-              <thead>
-                <tr>
-                  <th>Seal</th>
-                  <th>Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Seal #1</td>
-                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12465"></td>
-                </tr>
-                <tr>
-                  <td>Seal #2</td>
-                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12923"></td>
-                </tr>
-                <tr>
-                  <td>Seal #3</td>
-                  <td><input type="text" class="form-control" id="sealNumber" placeholder="11984"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-        </form>
-      </div>
-
-      <!-- PANE 4 - Dispatch --------------------------------------------------------------------- -->
-      <div class="step-pane sample-pane" data-step="4">
-        <form class="form-horizontal" action="">
-
-          <div class="well">
-            <table class="table">
-              <caption>Flight Information</caption>
-              <thead>
-                <tr>
-                  <th>Flight Number</th>
-                  <th>Flight Date</th>
-                  <th>Flight Template</th>
-                  <th>Inventory Reference Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
+                  <td><input type="text" class="form-control" id="cateringStation" placeholder="LGW" disabled></td>
                   <td><input type="text" class="form-control" id="expectedQuantity" placeholder="A320EU" disabled></td>
                   <td><input type="text" class="form-control" id="actualQuantity" placeholder="12/25/2105" disabled></td>
                   <td><input type="text" class="form-control" id="expectedQuantity" placeholder="2001" disabled></td>
@@ -281,11 +296,299 @@
           <div class="well">
             <table class="table">
               <div class="row">
+                <div class="col-xs-8 col-sm-10">
+                  <h3>Outbound</h3>
+                </div>
+                
+                <div class="col-xs-4 col-sm-2">
+                  <select class="form-control" style="background-color: #66CCFF" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
+                    <option style="background-color: #66CCFF">Blue</option>
+                    <option style="background-color: #FFCC00">Yellow</option>
+                    <option style="background-color: #33CC33">Green</option>
+                    <option>White</option>
+                  </select>
+                </div>                
+                    
+              </div>
+              <thead>
+                <tr>
+                  <th width="15%">Seal Number</th>
+                  <th width="15%">Number of Seals</th>
+                  <th width="15%">From</th>
+                  <th width="15%">To</th>
+                  <th width="40%">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control sequential-seals-outbound" id="sealNumber" placeholder="10">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control sequential-seals-outbound" id="sealNumber" placeholder="12465" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control sequential-seals-outbound" id="sealNumber" placeholder="12475" disabled>
+                  </td>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-outbound" type="checkbox" value="1">
+                      <span class="checkbox-label">Sequential</span>
+                    </label>
+                    <span id="assignSealsActionButtons">
+                      <button type="button" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Add Seal
+                      </button>
+                    </span>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12111">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="20">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="12111" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="12131" disabled>
+                  </td>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-outbound-01" type="checkbox" value="1">
+                      <span class="checkbox-label">Sequential</span>
+                    </label>
+                    <span id="assignSealsActionButtons">
+                      <button type="button" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Add Seal
+                      </button>
+                      <button type="button" class="btn btn-danger">
+                        <i class="fa fa-close"></i> Remove Seal
+                      </button>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="well">
+            <table class="table">
+              <div class="row">
+                <div class="col-xs-9">
+                  <h3>Hand Over</h3>
+                </div>
+                <div class="col-xs-3">
+                  <button type="button" class="btn btn-info pull-right">
+                     <i class="fa fa-plus"></i> Add Hand Over
+                  </button>
+                </div>
+              </div>
+              <thead>
+                <tr>
+                  <th>Seal Color</th>
+                  <th>Seal Number</th>
+                  <th>Number of Seals</th>
+                  <th></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td width="10%">
+                    <select class="form-control" style="background-color: #33CC33" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
+                      <option style="background-color: #33CC33">Green</option>
+                      <option style="background-color: #66CCFF">Blue</option>
+                      <option style="background-color: #FFCC00">Yellow</option>
+                      <option>White</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12466">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12467">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12468">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12469">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12470">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12471">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12472">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12473">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12474">
+                    <input type="text" class="form-control sequential-seals sequential-seals-transfer" id="sealNumber" placeholder="12475">
+                  </td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="10"></td>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="myCheckbox9" data-initialize="checkbox">
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-transfer" type="checkbox" value="option1">
+                      <span class="checkbox-label">Sequential</span>
+                    </label>
+                  </td>
+                  <td width="20%">
+                    <button type="button" class="btn btn-primary">
+                       <i class="fa fa-plus"></i> Add Seal
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+                    
+          <div class="well">
+            <table class="table">
+              <div class="row">
+                <div class="col-xs-10">
+                  <h3>Inbound</h3>
+                </div>
+              </div>
+              <thead>
+                <tr>
+                  <th>Seal Color</th>
+                  <th>Seal Number</th>
+                  <th>Number of Seals</th>
+                  <th></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td width="10%">
+                    <select class="form-control" style="background-color: #FFCC00" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
+                      <option style="background-color: #FFCC00">Yellow</option>
+                      <option style="background-color: #66CCFF">Blue</option>
+                      <option style="background-color: #33CC33">Green</option>
+                      <option>White</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12466">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12467">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12468">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12469">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12470">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12471">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12472">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12473">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12474">
+                    <input type="text" class="form-control sequential-seals sequential-seals-inbound" id="sealNumber" placeholder="12475">
+                  </td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="10"></td>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="myCheckbox9" data-initialize="checkbox">
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-inbound" type="checkbox" value="option1">
+                      <span class="checkbox-label">Sequential</span>
+                    </label>
+                  </td>
+                  <td width="20%">
+                    <button type="button" class="btn btn-primary">
+                       <i class="fa fa-plus"></i> Add Seal
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="well">
+            <table class="table">
+              <div class="row">
+                <div class="col-xs-10">
+                  <h3>High Security</h3>
+                </div>
+              </div>
+              <thead>
+                <tr>
+                  <th>Seal Color</th>
+                  <th>Seal Number</th>
+                  <th>Number of Seals</th>
+                  <th></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td width="10%">
+                    <select class="form-control" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
+                      <option>White</option>
+                      <option style="background-color: #66CCFF">Blue</option>
+                      <option style="background-color: #FFCC00">Yellow</option>
+                      <option style="background-color: #33CC33">Green</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12466">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12467">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12468">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12469">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12470">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12471">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12472">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12473">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12474">
+                    <input type="text" class="form-control sequential-seals sequential-seals-high-security" id="sealNumber" placeholder="12475">
+                  </td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="10"></td>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="myCheckbox9" data-initialize="checkbox">
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-high-security" type="checkbox" value="option1">
+                      <span class="checkbox-label">Sequential</span>
+                    </label>
+                  </td>
+                  <td width="20%">
+                    <button type="button" class="btn btn-primary">
+                       <i class="fa fa-plus"></i> Add Seal
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </ng-form>
+      </div>
+
+      <!-- PANE 4 - Dispatch --------------------------------------------------------------------- -->
+      <div class="step-pane sample-pane" data-step="4">
+        <ng-form class="form-horizontal" action="">
+
+          <div class="well">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Catering Station</th>
+                  <th>Schedule Number</th>
+                  <th>Schedule Date</th>
+                  <th>Schedule Menu</th>
+                  <th>Inventory Reference Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" class="form-control" id="cateringStation" placeholder="LGW" disabled></td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="A320EU" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="12/25/2105" disabled></td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="2001" disabled></td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="GJ1246" disabled></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="well">
+            <table class="table table-striped table-scrollable">
+              <div class="row">
                 <div class="col-xs-10">
                   <h3>Inventory</h3>
                 </div>
                 <div class="col-xs-2">
-                  <button type="button" class="btn btn-info pull-right">Edit</button>
+                  <button type="button" class="btn btn-info pull-right" id="goToInPacking">Edit</button>
                 </div>
               </div>
               <thead>
@@ -299,17 +602,77 @@
                 <tr>
                   <td>Coke</td>
                   <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
-                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="18" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
                 </tr>
-                <tr>
+                <tr class="has-discrepancy">
                   <td>Pepsi</td>
                   <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
-                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="16" disabled></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16" disabled></td>
                 </tr>
                 <tr>
                   <td>Chicken Sandwich</td>
-                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="10" disabled></td>
-                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="9" disabled></td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16" disabled></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16" disabled></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16" disabled></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control has-error" id="actualQuantity" placeholder="16" disabled></td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td><input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled></td>
+                  <td><input type="text" class="form-control" id="actualQuantity" placeholder="20" disabled></td>
                 </tr>
               </tbody>
             </table>
@@ -322,33 +685,41 @@
                   <h3>Seal Number Assignment</h3>
                 </div>
                 <div class="col-xs-2">
-                  <button type="button" class="btn btn-info pull-right">Edit</button>
+                  <button type="button" class="btn btn-info pull-right" id="goToAssignSeals">Edit</button>
                 </div>
               </div>
               <thead>
                 <tr>
-                  <th>Seal</th>
-                  <th>Number</th>
+                  <th>Seal Type</th>
+                  <th>Seal Color</th>
+                  <th>Seal Number</th>
+                  <th>Number of Seals</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Seal #1</td>
+                  <td>Outbound</td>
+                  <td><input type="text" class="form-control" id="sealColor" placeholder="Blue" style="background-color: #66CCFF" disabled></td>
                   <td><input type="text" class="form-control" id="sealNumber" placeholder="12465" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="6" disabled></td>
                 </tr>
                 <tr>
-                  <td>Seal #2</td>
-                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12923" disabled></td>
+                <td>Transfer</td>
+                  <td><input type="text" class="form-control" id="sealColor" placeholder="Green" style="background-color: #33CC33" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12444" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="2" disabled></td>
                 </tr>
                 <tr>
-                  <td>Seal #3</td>
-                  <td><input type="text" class="form-control" id="sealNumber" placeholder="11984" disabled></td>
-                </tr>
+                <td>Inbound</td>
+                  <td><input type="text" class="form-control" id="sealColor" placeholder="Yellow" style="background-color: #FFCC00" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="12399" disabled></td>
+                  <td><input type="text" class="form-control" id="sealNumber" placeholder="10" disabled></td>
+                  <tr>
               </tbody>
             </table>
           </div>
 
-        </form>
+        </ng-form>
       </div>
 
     </div>
@@ -368,12 +739,32 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js" type="text/javascript"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+<!-- endbuild -->
+
 <script src="//www.fuelcdn.com/fuelux/3.6.3/js/fuelux.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#myDatepicker').datepicker();
-	});
+		    
+    $('#goToInPacking').on('click', function(e, data) {
+  	  $('[data-step=2]').trigger("click");
+  	});
+    
+    $('#goToAssignSeals').on('click', function(e, data) {
+      $('[data-step=3]').trigger("click");
+    });
+	
+// TODO: HIDE ASSIGN SEALS ACTION BUTTONS WITH CHECKBOX
+//     $('#assignSealsSequentialCheckbox').on('checked.fu.checkbox', function (evt, item) {
+//         $("#assignSealsActionButtons").hide();
+//     });
+    
+//     $('#assignSealsSequentialCheckbox').on('unchecked.fu.checkbox', function (evt, item) {
+//         $("#assignSealsActionButtons").show();
+//     });
+    
+  });
 </script>
 
 </body>
