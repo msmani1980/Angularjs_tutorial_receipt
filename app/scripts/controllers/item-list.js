@@ -9,8 +9,9 @@
  */
 angular.module('ts5App')
   .controller('ItemListCtrl', function ($scope, $http, itemsFactory,
-    companiesFactory, dateUtility) {
+    companiesFactory, dateUtility, $filter) {
 
+    var $this = this;
     $scope.search = {
       startDate: '',
       endDate: ''
@@ -23,8 +24,20 @@ angular.module('ts5App')
     $scope.startDateFilter = '';
     $scope.endDateFilter = '';
 
+    this.filterItems = function () {
+      return $filter('filter')($scope.itemsList, $scope.search);
+    };
+
+    $scope.$watchCollection('search', function () {
+      $scope.paginatedItems = $this.filterItems();
+    });
+
     $scope.$watch('search.startDate + search.endDate', function () {
       $scope.formatDateFilter();
+    });
+
+    $scope.$watch('currentPage + itemsPerPage', function () {
+      $this.setPaginatedList();
     });
 
     $scope.formatDateFilter = function () {
@@ -39,9 +52,11 @@ angular.module('ts5App')
     };
 
     this.setPaginatedList = function () {
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+      /*var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
       var end = begin + $scope.itemsPerPage;
-      $scope.paginatedItems = $scope.itemsList.slice(begin, end);
+      $scope.paginatedItems = $scope.itemsList.slice(begin, end);*/
+      $scope.paginatedItems = this.filterItems();
+      console.log('setting paginatedItems', $scope.paginatedItems);
     };
 
     this.getItemsList = function () {
@@ -50,9 +65,6 @@ angular.module('ts5App')
         $scope.itemsList = response.retailItems;
         $scope.totalItems = response.meta.count;
         $this.setPaginatedList();
-        $scope.$watch('currentPage + itemsPerPage', function () {
-          $this.setPaginatedList();
-        });
       });
     };
 
