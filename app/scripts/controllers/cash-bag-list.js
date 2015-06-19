@@ -34,9 +34,9 @@ angular.module('ts5App')
           return cashBagFactory.getCashBagList(_companyId).then(
             function (response) {
               $scope.cashBagList = response.cashBags;
-              angular.forEach($scope.cashBagList, function(_cb){
-                showSuccessMessage('successfully created');
-              });
+              //angular.forEach($scope.cashBagList, function(_cb){
+              //  showSuccessMessage('successfully created');
+              //});
               $scope.bankRefList = getSortedBankRefList(response.cashBags);
             }
           );
@@ -45,6 +45,8 @@ angular.module('ts5App')
           return cashBagFactory.getStationList(_companyId).then(
             function (response) {
               $scope.stationList = response.response;
+              $('.stations-multi-select').select2({ width: '100%' });
+
             }
           );
         },
@@ -95,17 +97,19 @@ angular.module('ts5App')
     };
 
     $scope.searchCashBag = function () {
-      var searchPayload = $scope.search;
       if ($scope.search.scheduleDate) {
-        searchPayload.scheduleDate = moment($scope.search.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
+        $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
       }
-      cashBagFactory.getCashBagList(_companyId, searchPayload).then(function (response) {
+      cashBagFactory.getCashBagList(_companyId, $scope.search).then(function (response) {
         $scope.cashBagList = response.cashBags;
+        $scope.search.scheduleDate = '';
+
       });
     };
 
     $scope.clearForm = function () {
       $scope.search = {};
+      $('.stations-multi-select').select2('data', null);
       $scope.searchCashBag();
     };
 

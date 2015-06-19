@@ -28,7 +28,8 @@
       </div>
       <div class="modal-body">
         <div ng-show="displayModalError" class="alert alert-danger alert-dismissible fade in" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+          </button>
           <h4>{{ createCashBagError }}</h4>
         </div>
         <form name="createCashBagForm">
@@ -36,9 +37,11 @@
             <div class="col-md-6 col-sm-12">
               <div class="form-group">
                 <label for="cashBag-origin">Schedule</label>
-                  <select ng-model="scheduleIndex" class="form-control col-md-12" id="cashBag-origin" ng-change="updateScheduleDate()" required="true">
-                    <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}</option>
-                  </select>
+                <select ng-model="scheduleIndex" class="form-control col-md-12" id="cashBag-origin"
+                        ng-change="updateScheduleDate()" required="true">
+                  <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}
+                  </option>
+                </select>
               </div>
             </div>
             <div class="col-md-6 col-sm-12">
@@ -84,7 +87,7 @@
         <div class="col-md-3 col-sm-6">
           <div class="form-group">
             <label for="cashBag-number">Cash Bag</label>
-            <input ng-model="search.cashBagNumber" type="text" class="form-control" id="cashBag-number" >
+            <input ng-model="search.cashBagNumber" type="text" class="form-control" id="cashBag-number">
           </div>
         </div>
 
@@ -92,7 +95,8 @@
           <div class="form-group">
             <label for="cashBag-bankRef">Bank Ref #</label>
             <select class="form-control" ng-model="search.bankReferenceNumber" id="cashBag-bankRef">
-              <option value="""></option>
+              <option value=""
+              "></option>
               <option value="{{ bankRef }}" ng-repeat="bankRef in bankRefList">{{ bankRef }}</option>
             </select>
           </div>
@@ -119,21 +123,23 @@
       <div class="row">
         <div class="col-md-3 col-sm-6">
           <div class="form-group">
-            <label for="cashBag-origin">Origin
-              <select multiple ng-model="search.arrivalStationCode" class="form-control" id="cashBag-origin">
-                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{ station.stationName}})</option>
-              </select>
-              <input type="checkbox"> Add All</label>
+            <label for="cashBag-origin">Origin</label>
+            <select ng-model="search.arrivalStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-origin">
+              <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{
+                station.stationName}})
+              </option>
+            </select>
           </div>
         </div>
 
         <div class="col-md-3 col-sm-6">
           <div class="form-group">
-            <label for="cashBag-destination">Destination
-              <select multiple ng-model="search.departureStationCode" class="form-control" id="cashBag-destination">
-                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }} ({{ station.stationName}})</option>
-              </select>
-              <input type="checkbox"> Add All</label>
+            <label for="cashBag-destination">Destination</label>
+            <select ng-model="search.departureStationCode" class="stations-multi-select" multiple="multiple" id="cashBag-destination">
+              <option ng-repeat="station in stationList" value="{{ station.stationCode }}">{{ station.stationCode }}
+                ({{ station.stationName}})
+              </option>
+            </select>
           </div>
         </div>
 
@@ -160,7 +166,8 @@
   </thead>
   <tbody>
   <tr>
-    <td colspan="6" ng-click="showCreatePopup()" class="btn-default" ><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    <td colspan="6" ng-click="showCreatePopup()" class="btn-default"><span class="glyphicon glyphicon-plus"
+                                                                           aria-hidden="true"></span>
       Add Cash Bag
     </td>
   </tr>
