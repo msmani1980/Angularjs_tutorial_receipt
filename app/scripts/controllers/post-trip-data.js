@@ -10,5 +10,5 @@
 angular.module('ts5App')
   .controller('PostFlightDataCtrl', function ($scope) {
     $scope.viewName = 'Post Trip Data';
-    $(".employeeID-multiple-select").select2();
+    $('.employeeID-multiple-select').select2();
   });
