@@ -9,7 +9,7 @@
 angular.module('ts5App')
   .directive('formErrorDialog', function () {
     return {
-      templateUrl: 'views/directives/form-error-dialog.html',
+      templateUrl: '/views/directives/form-error-dialog.html',
       restrict: 'E',
       scope: false
     };

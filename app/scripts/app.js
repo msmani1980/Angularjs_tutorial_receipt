@@ -131,6 +131,14 @@ angular
         templateUrl: 'views/company-reason-code.html',
         controller: 'CompanyReasonCodeCtrl'
       })
+      .when('/menu-relationship-list', {
+        templateUrl: 'views/menu-relationship-list.html',
+        controller: 'MenuRelationshipListCtrl'
+      })
+      .when('/menu-relationship-create', {
+        templateUrl: 'views/menu-relationship-create.html',
+        controller: 'MenuRelationshipCreateCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
