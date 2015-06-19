@@ -250,6 +250,10 @@ angular.module('ts5App')
       $scope.taxTypes = data.response;
     });
 
+    $q.all([itemsFactory.getItemsList, itemsFactory.getAllergensList, itemsFactory.getTagsList, itemsFactory.getCharacteristicsList]).then(function(){
+      $('.multi-select').select2({width:'100%'});
+    });
+
     // TODO: Move to global function
     function formatDate(dateString, formatFrom, formatTo) {
       var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
