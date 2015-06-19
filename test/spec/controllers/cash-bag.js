@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CashBagEditCtrl', function () {
+describe('Controller: CashBagCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -62,7 +62,7 @@ describe('Controller: CashBagEditCtrl', function () {
       scheduleNumber: '105'
     };
     beforeEach(inject(function ($controller) {
-      CashBagEditCtrl = $controller('CashBagEditCtrl', {
+      CashBagEditCtrl = $controller('CashBagCtrl', {
         $scope: scope,
         $routeParams: routeParams
       });
@@ -145,7 +145,7 @@ describe('Controller: CashBagEditCtrl', function () {
       id: 95
     };
     beforeEach(inject(function ($controller) {
-      CashBagEditCtrl = $controller('CashBagEditCtrl', {
+      CashBagEditCtrl = $controller('CashBagCtrl', {
         $scope: scope,
         $routeParams: routeParams
       });
@@ -203,7 +203,7 @@ describe('Controller: CashBagEditCtrl', function () {
       id: 95
     };
     beforeEach(inject(function ($controller) {
-      CashBagEditCtrl = $controller('CashBagEditCtrl', {
+      CashBagEditCtrl = $controller('CashBagCtrl', {
         $scope: scope,
         $routeParams: routeParams
       });

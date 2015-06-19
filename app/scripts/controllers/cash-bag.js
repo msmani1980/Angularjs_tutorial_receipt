@@ -2,14 +2,14 @@
 /*global moment*/
 /**
  * @ngdoc function
- * @name ts5App.controller:CashBagEditCtrl
+ * @name ts5App.controller:CashBagCtrl
  * @description
  * @author kmeath
  * # CashBagCreateCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagEditCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, factoryHelper) {
+  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, factoryHelper) {
 
     // controller global properties
     var _companyId = null,
