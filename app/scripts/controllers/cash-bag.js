@@ -144,7 +144,13 @@ angular.module('ts5App')
           var canDelete = true;
           angular.forEach(cashBag.cashBagCurrencies, function(currency){
             if(canDelete){
-              if((currency.bankAmount !== '0.000' && currency.bankAmount !== null) || currency.coinAmountManual !== null || currency.coinAmountManual !== null){
+              if(currency.bankAmount !== '0.0000' && currency.bankAmount !== null){
+                canDelete = false;
+              }
+              if(currency.coinAmountManual !== null){
+                canDelete = false;
+              }
+              if(currency.coinAmountManual !== null){
                 canDelete = false;
               }
             }

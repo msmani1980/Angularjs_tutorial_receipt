@@ -121,15 +121,9 @@
         <span class="fa fa-check-square-o" aria-hidden="true"></span>
         <span class="hidden-xs">Save</span>
       </button>
+      <button class="btn btn-danger" ng-click="delete(cashBag)" ng-show="canDelete(cashBag)">Delete</button>
     </div>
 
   </div>
 
-</ng-form>
-<ng-form name="cashBagDeleteForm" class="form edit-form" ng-show="canDelete(cashBag)">
-  <div class="panel-footer text-center">
-    <button class="btn btn-danger" ng-click="delete(cashBag)">
-      <span class="hidden-xs">Delete</span>
-    </button>
-  </div>
 </ng-form>
