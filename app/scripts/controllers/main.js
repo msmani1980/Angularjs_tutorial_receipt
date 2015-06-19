@@ -239,25 +239,25 @@ angular.module('ts5App')
         className: 'dashboard-postTripData'
       }]
     }, {
-      title: 'Crew Commission',
+      title: 'Employee Commission',
       menuItems: [{
-        name: 'Crew Commission',
-        route: '/#/crew-commission',
+        name: 'Employee Commission',
+        route: '/#/employee-commission',
         icon: 'icon-manage-schedule',
-        className: 'dashboard-crewCommission'
+        className: 'dashboard-employeeCommission'
       }]
     }, {
-      title: 'Refunds',
+      title: 'Reason',
       menuItems: [{
         name: 'Global Reason',
-        route: '/#/refund-global-reason-code',
+        route: '/#/global-reason-code',
         icon: 'icon-manage-schedule',
-        className: 'dashboard-refundGlobalReasonCode'
+        className: 'dashboard-globalReasonCode'
       }, {
         name: 'Company Reason',
-        route: '/#/refund-company-reason-code',
+        route: '/#/company-reason-code',
         icon: 'icon-manage-schedule',
-        className: 'dashboard-refundCompanyReasonCode'
+        className: 'dashboard-companyReasonCode'
       }]
     }];
 

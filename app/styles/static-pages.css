@@ -34,6 +34,60 @@
   margin-top: 0;
 }
 
+.fuelux .wizard .table-scrollable {
+  width: 100%;
+}
+
+.fuelux .wizard .table-scrollable thead, .fuelux .wizard .table-scrollable tbody, .fuelux .wizard .table-scrollable tr, .fuelux .wizard .table-scrollable td, .fuelux .wizard .table-scrollable th {
+  display: block;
+}
+
+.fuelux .wizard .table-scrollable tr:after {
+  content: ' ';
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+
+.fuelux .wizard .table-scrollable thead th {
+  height: 36px;
+}
+
+.fuelux .wizard .table-scrollable tbody {
+  height: 380px;
+  overflow-y: auto;
+}
+
+.fuelux .wizard .table-scrollable tbody td, .fuelux .wizard .table-scrollable thead th {
+  width: 33%;
+  float: left;
+}
+
+.fuelux .wizard input[type="text"]::-webkit-input-placeholder {
+   color: #333;
+}
+
+.fuelux .wizard input[type="text"]:-moz-placeholder { /* Firefox 18- */
+   color: #333;  
+}
+
+.fuelux .wizard input[type="text"]::-moz-placeholder {  /* Firefox 19+ */
+   color: #333;  
+}
+
+.fuelux .wizard input[type="text"]:-ms-input-placeholder {  
+   color: #333;  
+}
+
+.fuelux .wizard .has-discrepancy, .fuelux .wizard .has-discrepancy td {
+  background-color: #ffdada !important;
+}
+
+.fuelux .wizard .checkbox-inline {
+  margin-right: 10px;
+}
+
+
 @media (max-width: 768px) {
   .fuelux .wizard .steps li {
     float: none;
