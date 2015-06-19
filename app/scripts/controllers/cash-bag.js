@@ -174,17 +174,21 @@ angular.module('ts5App')
       };
 
       $q.all(_promises).then(function(){
-        // TODO: throw error when dailyExchangeRates returns empty array
-        $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
-        angular.forEach($scope.companyCurrencies, function(currency){
-          $scope.cashBag.cashBagCurrencies.push(
-            {
-              currencyId:currency.id,
-              // TODO - what value should go here, can user's enter the "Flight amount" on the create page
-              bankAmount:'0.0000'
-            }
-          );
-        });
+        if(angular.isArray($scope.dailyExchangeRates)){
+          $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
+          angular.forEach($scope.companyCurrencies, function(currency){
+            $scope.cashBag.cashBagCurrencies.push(
+              {
+                currencyId:currency.id,
+                // TODO - what value should go here, can user's enter the "Flight amount" on the create page
+                bankAmount:'0.0000' // TODO should the user be allowed to set this value on create form?
+              }
+            );
+          });
+        }
+        else{
+          // TODO: throw error when dailyExchangeRates returns empty array
+        }
       });
     }
 
