@@ -9,7 +9,7 @@
 			<i class="icon-manage-retail-item"></i>
 			<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 				<i class="icon-manage-retail-item"></i>
-				<p>Manage {{itemPrefix}}</p>
+				<p>Manage {{itemPrefix}} Items</p>
 			</div>
 		</li>
 
@@ -20,7 +20,7 @@
 			<i class="icon-create-retail-item"></i>
 			<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 				<i class="icon-create-retail-item"></i>
-				<p>Create {{itemPrefix}}</p>
+				<p>Create {{itemPrefix}} Item</p>
 			</div>
 		</li>
 
@@ -30,7 +30,10 @@
 				<i class="icon-manage-retail-category"></i>
 				<div class="left-nav-option lg">
 					<i class="icon-manage-retail-category"></i>
-					<p>Manage Categories</p>
+					<p>Manage
+						<span ng-hide="itemPrefixSm">{{itemPrefix}}</span>
+						<span ng-show="itemPrefixSm">{{itemPrefixSm}}</span> Categories
+					</p>
 				</div>
 			</a>
 		</li>
@@ -42,7 +45,7 @@
 			<i class="icon-menu-assignment"></i>
 			<div class="left-nav-option lg">
 				<i class="icon-menu-assignment"></i>
-				<p>Manage {{itemPrefix}}</p>
+				<p>Manage {{itemPrefix}}s</p>
 			</div>
 		</li>
 
