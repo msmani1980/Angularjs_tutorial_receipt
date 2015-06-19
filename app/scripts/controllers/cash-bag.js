@@ -46,7 +46,7 @@ angular.module('ts5App')
           break;
       }
     };
-    $scope.canDelete = function(cashBag){ return false; };
+    $scope.canDelete = function(){ return false; };
     $scope.delete = function(cashBag){
       if($scope.canDelete(cashBag)) {
         cashBagFactory.deleteCashBag(cashBag.id).then(function () {
