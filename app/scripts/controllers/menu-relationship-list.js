@@ -9,9 +9,10 @@
  */
 angular.module('ts5App')
   .controller('MenuRelationshipListCtrl', function ($scope) {
-
     var menuAPIResponse,
       stationAPIResponse;
+
+    var todaysDate = Date.parse(new Date());
 
     // TODO: Move to global function
     function formatDate(dateString, formatFrom, formatTo) {
@@ -24,27 +25,20 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
-
     $scope.startDateFilter = '';
     $scope.endDateFilter = '';
 
-    var todaysDate = Date.parse(new Date());
-
     $scope.$watch('search.startDate + search.endDate', function () {
-
       $scope.formatDateFilter();
-
     });
 
     $scope.formatDateFilter = function () {
-
       if ($scope.search.startDate && $scope.search.endDate) {
         $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
           'YYYY-MM-DD');
         $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
           'YYYY-MM-DD');
       }
-
     };
 
     $scope.isItemActive = function (startDate) {

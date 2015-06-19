@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name ts5App.controller:MainCtrl
@@ -9,16 +8,11 @@
  */
 angular.module('ts5App')
   .controller('MainCtrl', function ($scope, companiesFactory, GlobalMenuService) {
-
-    // scope management
     var $this = this;
-
-    $scope.viewName = 'TS5 Dashboard';
-
     var emberURL = '/ember/#/';
-
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
     var companyId = GlobalMenuService.company.get();
+    $scope.viewName = 'TS5 Dashboard';
 
     // changes the navigation depeneding on what company type you have
     function updateNavigationPerCompanyType() {
@@ -35,6 +29,7 @@ angular.module('ts5App')
         }
       });
     }
+
     updateNavigationPerCompanyType();
 
     this.stockOwnerMenu = [{
@@ -56,7 +51,6 @@ angular.module('ts5App')
         className: 'dashboard-manageItemCategories'
       }]
     }];
-
     this.retailMenu = [{
       'title': 'Retail Item Management',
       menuItems: [{
