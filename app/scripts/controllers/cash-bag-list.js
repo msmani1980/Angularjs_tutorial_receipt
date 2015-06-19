@@ -35,15 +35,7 @@ angular.module('ts5App')
             function (response) {
               $scope.cashBagList = response.cashBags;
               angular.forEach($scope.cashBagList, function(_cb){
-                if($scope.isNew(_cb.id)){
-                  ngToast.create({
-                    className: 'success',
-                    dismissButton: true,
-                    content: '<strong>Cash bag</strong>: successfully created!'
-                  });
-                  $scope.displayError = false;
-                  $scope.formErrors = {};
-                }
+                showSuccessMessage('successfully created');
               });
               $scope.bankRefList = getSortedBankRefList(response.cashBags);
             }
@@ -68,14 +60,14 @@ angular.module('ts5App')
     })();
 
     // helpers
-    function showErrors(error) {
+    function showSuccessMessage(error) {
       ngToast.create({
-        className: 'warning',
+        className: 'success',
         dismissButton: true,
-        content: '<strong>Cash bag</strong>: error!'
+        content: '<strong>Cash bag</strong>:' + error
       });
       $scope.displayError = true;
-      $scope.formErrors = error.data;
+      $scope.formErrors = {};
     }
 
     function showModalErrors(errorMessage) {
