@@ -1,5 +1,6 @@
 'use strict';
 /*global moment*/
+/*global $*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl

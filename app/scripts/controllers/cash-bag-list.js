@@ -1,4 +1,7 @@
 'use strict';
+/*global moment*/
+/*global $*/
+
 
 /**
  * @ngdoc function
