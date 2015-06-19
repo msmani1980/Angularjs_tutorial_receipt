@@ -76,16 +76,14 @@ angular.module('ts5App')
       return Math.ceil($scope.items.length / $scope.itemsPerPage);
     };
 
-    $scope.removeItem = function (id, itemKey) {
-      if (window.confirm('Are you sure you would like to remove this item?')) {
-        angular.element('#loading').modal('show').find('p').text(
-          'Removing your item');
-        itemsFactory.removeItem(id).then(function () {
-          angular.element('#loading').modal('hide');
-          $scope.paginatedItems.splice(itemKey, 1);
-        });
+    $scope.removeItem = function (itemToDelete) {
+      angular.element('#loading').modal('show').find('p').text(
+        'Removing your item');
 
-      }
+      itemsFactory.removeItem(itemToDelete.id).then(function () {
+        angular.element('#loading').modal('hide');
+        $scope.paginatedItems.splice(itemToDelete.itemKey, 1);
+      });
     };
 
     $scope.isItemActive = function (startDate) {
