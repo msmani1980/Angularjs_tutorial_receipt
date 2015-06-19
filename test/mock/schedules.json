@@ -1,0 +1,39 @@
+{
+  "distinctSchedules": [
+    {
+      "companyId": 403,
+      "maxEffectiveEnd": "2015-05-21",
+      "minEffectiveStart": "2015-05-06",
+      "scheduleNumber": "106"
+    },
+    {
+      "companyId": 403,
+      "maxEffectiveEnd": "2018-12-31",
+      "minEffectiveStart": "2015-06-02",
+      "scheduleNumber": "111"
+    },
+    {
+      "companyId": 403,
+      "maxEffectiveEnd": "2019-03-28",
+      "minEffectiveStart": "2019-03-21",
+      "scheduleNumber": "108"
+    },
+    {
+      "companyId": 403,
+      "maxEffectiveEnd": "2018-12-31",
+      "minEffectiveStart": "2015-05-05",
+      "scheduleNumber": "105"
+    },
+    {
+      "companyId": 403,
+      "maxEffectiveEnd": "2050-01-01",
+      "minEffectiveStart": "2015-05-16",
+      "scheduleNumber": "107"
+    }
+  ],
+  "meta": {
+    "count": 5,
+    "limit": 5,
+    "start": 0
+  }
+}
