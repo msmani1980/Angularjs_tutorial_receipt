@@ -18,8 +18,7 @@ describe('Controller: CashBagListCtrl', function () {
     schedulesResponseJSON,
     schedulesDailyResponseJSON,
     cashBagFactory,
-    location,
-    companyId;
+    location;
 
 
   // Initialize the controller and a mock scope
