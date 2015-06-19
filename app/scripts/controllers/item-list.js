@@ -75,12 +75,26 @@ angular.module('ts5App')
       });
     };
 
-    $scope.removeItem = function (itemToDelete) {
+    this.findItemIndex = function (itemId) {
+      var itemIndex = 0;
+      for (var key in $scope.itemsList) {
+        var item = $scope.itemsList[key];
+        if (item.id === itemId) {
+          itemIndex = key;
+          break;
+        }
+      }
+      return itemIndex;
+    };
+
+    $scope.removeItem = function (itemId) {
+      var itemIndex = $this.findItemIndex(itemId);
       angular.element('#loading').modal('show').find('p').text(
         'Removing your item');
-      itemsFactory.removeItem(itemToDelete.id).then(function () {
+      itemsFactory.removeItem(itemId).then(function () {
         angular.element('#loading').modal('hide');
-        $scope.itemsList.splice(itemToDelete.itemKey, 1);
+        $scope.itemsList.splice(itemIndex, 1);
+        $this.updateItemList();
       });
     };
 

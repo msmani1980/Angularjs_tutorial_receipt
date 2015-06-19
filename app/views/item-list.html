@@ -147,7 +147,7 @@
 							<i class="fa fa-pencil"></i>
 						</a>
 
-						<button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id,key)" ng-disabled="isItemActive(item.startDate) || isItemInactive(item.endDate)">
+						<button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id)" ng-disabled="isItemActive(item.startDate) || isItemInactive(item.endDate)">
 							<i class="fa fa-trash"></i>
 						</button>
 
@@ -170,10 +170,7 @@
 				Show
 
 				<select class="form-control" ng-model="itemsPerPage">
-					<option selected="selected" value="10">10</option>
-					<option value="25">25</option>
-					<option value="50">50</option>
-					<option value="100">100</option>
+					<option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
 				</select>
 
 				Items per Page
