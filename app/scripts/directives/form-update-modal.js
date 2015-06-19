@@ -9,7 +9,7 @@
 angular.module('ts5App')
   .directive('formUpdateModal', function () {
     return {
-      templateUrl: 'views/directives/form-update-modal.html',
+      templateUrl: '/views/directives/form-update-modal.html',
       restrict: 'E',
       scope: false
     };
