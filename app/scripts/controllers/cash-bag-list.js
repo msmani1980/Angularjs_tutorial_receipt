@@ -38,7 +38,9 @@ angular.module('ts5App')
             function (response) {
               $scope.cashBagList = response.cashBags;
               angular.forEach($scope.cashBagList, function(_cb){
-                showSuccessMessage('successfully created');
+                if($scope.isNew(_cb.id)){
+                  showSuccessMessage('successfully created');
+                }
               });
               $scope.bankRefList = getSortedBankRefList(response.cashBags);
             }
