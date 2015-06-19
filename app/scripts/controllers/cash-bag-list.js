@@ -92,8 +92,11 @@ angular.module('ts5App')
     };
 
     $scope.searchCashBag = function () {
-      // TODO: serialize scheduleDate parameter
-      cashBagFactory.getCashBagList(companyId, $scope.search).then(function (response) {
+      var searchPayload = $scope.search;
+      if ($scope.search.scheduleDate) {
+        searchPayload.scheduleDate = moment($scope.search.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
+      }
+      cashBagFactory.getCashBagList(_companyId, searchPayload).then(function (response) {
         $scope.cashBagList = response.cashBags;
       });
     };
@@ -127,13 +130,13 @@ angular.module('ts5App')
         showModalErrors('Please select both a schedule number and a schedule date');
         return;
       }
-      cashBagFactory.getDailySchedulesList(companyId, $scope.schedulesList[$scope.scheduleIndex].scheduleNumber, $scope.scheduleDate).then(function (response) {
+      var formattedDate = moment($scope.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
+      cashBagFactory.getDailySchedulesList(_companyId, $scope.schedulesList[$scope.scheduleIndex].scheduleNumber, formattedDate).then(function (response) {
         if (response.schedules.length < 1) {
           showModalErrors('Not a valid schedule');
         } else {
           $scope.displayError = false;
           $('#addCashBagModal').removeClass('fade').modal('hide');
-          var formattedDate = moment($scope.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
           $location.path('cash-bag/create').search({
             scheduleNumber: $scope.schedulesList[$scope.scheduleIndex].scheduleNumber,
             scheduleDate: formattedDate
