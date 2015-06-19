@@ -1,0 +1,54 @@
+<div class="modal fade" id="download-template-modal">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <div class="row">
+
+          <div class="col-xs-6">
+            <h4 class="modal-title">Download Template</h4>
+          </div>
+
+          <div class="col-xs-6 text-right">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            
+<!-- TODO: 'DOWNLOAD TEMPLATE' BUTTON TO .XLS DOCUMENT -->
+            <a href="#" class="btn btn-info"> <i class="fa fa-download"></i> Download Template
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-body">
+        <p>
+          The file is an Excel (.xls, .xlsx) file and has only one sheet.<br> The first line should be the header with the column names.
+        </p>
+
+        <p>
+          <b>The column order and name should match the following:</b>
+        </p>
+
+        <ul>
+          <li><b>Schedule Number</b> – Required. This is the Flight Number of the Flight Schedule.</li>
+          <li><b>Schedule Effective Date</b> – Required. Effective Date of the Flight Schedule, Format = yyyymmdd</li>
+          <li><b>Departure Station</b> – Required. This is the 3-letter airport code.</li>
+          <li><b>Departure Time</b> – Required. This is the time of Flight Departure (HH:MM). Enter in 24 hour format. (Ex. 15:24 for 3:24PM or 10:15 for 10:15AM)</li>
+          <li><b>Arrival Station</b> – Required. This is the 3-letter airport code.</li>
+          <li><b>Arrival Time</b> – Required. This is the time of Flight Arrival (HH:MM). Enter in 24 hour format. (Ex. 15:24 for 3:24PM or 10:15 for 10:15AM)</li>
+          <li><b>Passenger Count</b> – Required. Numbers only.</li>
+          <li><b>Tail Number</b> – Required. Should match a Tail Number setup in the system.</li>
+          <li><b>Employee ID</b> – Required. Multiple employees can be comma separated. Should match IDs set up in the system.</li>
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

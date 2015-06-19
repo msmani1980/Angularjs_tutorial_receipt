@@ -119,17 +119,25 @@ angular
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })
-      .when('/crew-commission', {
-        templateUrl: 'views/crew-commission.html',
-        controller: 'CrewCommissionCtrl'
+      .when('/employee-commission', {
+        templateUrl: 'views/employee-commission.html',
+        controller: 'EmployeeCommissionCtrl'
       })
-      .when('/refund-global-reason-code', {
-        templateUrl: 'views/refund-global-reason-code.html',
-        controller: 'RefundGlobalReasonCodeCtrl'
+      .when('/global-reason-code', {
+        templateUrl: 'views/global-reason-code.html',
+        controller: 'GlobalReasonCodeCtrl'
       })
-      .when('/refund-company-reason-code', {
-        templateUrl: 'views/refund-company-reason-code.html',
-        controller: 'RefundCompanyReasonCodeCtrl'
+      .when('/company-reason-code', {
+        templateUrl: 'views/company-reason-code.html',
+        controller: 'CompanyReasonCodeCtrl'
+      })
+      .when('/menu-relationship-list', {
+        templateUrl: 'views/menu-relationship-list.html',
+        controller: 'MenuRelationshipListCtrl'
+      })
+      .when('/menu-relationship-create', {
+        templateUrl: 'views/menu-relationship-create.html',
+        controller: 'MenuRelationshipCreateCtrl'
       })
       .when('/item-import', {
         templateUrl: 'views/item-import.html',
