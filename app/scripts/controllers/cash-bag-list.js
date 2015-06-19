@@ -37,9 +37,9 @@ angular.module('ts5App')
           return cashBagFactory.getCashBagList(_companyId).then(
             function (response) {
               $scope.cashBagList = response.cashBags;
-              //angular.forEach($scope.cashBagList, function(_cb){
-              //  showSuccessMessage('successfully created');
-              //});
+              angular.forEach($scope.cashBagList, function(_cb){
+                showSuccessMessage('successfully created');
+              });
               $scope.bankRefList = getSortedBankRefList(response.cashBags);
             }
           );
