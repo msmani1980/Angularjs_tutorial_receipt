@@ -1,5 +1,6 @@
 'use strict';
 /*global moment*/
+/*global $*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -248,6 +249,10 @@ angular.module('ts5App')
 
     companiesFactory.getTaxTypesList(function (data) {
       $scope.taxTypes = data.response;
+    });
+
+    $q.all([itemsFactory.getItemsList, itemsFactory.getAllergensList, itemsFactory.getTagsList, itemsFactory.getCharacteristicsList]).then(function(){
+      $('.multi-select').select2({width:'100%'});
     });
 
     // TODO: Move to global function
