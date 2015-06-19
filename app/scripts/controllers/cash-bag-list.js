@@ -8,31 +8,81 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, ngToast) {
-  	var companyId = cashBagFactory.getCompanyId();
-    $scope.viewName = 'Manage Cash Bag';
+  .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $q, ngToast) {
+
+    var _companyId = null,
+      _services = null;
+
+    $scope.viewName = 'Cash Bag';
+    $scope.displayModalError = false;
+    $scope.displayError = false;
+    $scope.createCashBagError = 'temp error message';
     $scope.search = {};
-    $scope.schedulesList = {};
-    $scope.displayError = false;
-    $scope.newCashBag = {};
-    $scope.scheduleMinDate = '01/01/2000';
-    $scope.scheduleMaxDate = '12/31/3000';
-    $scope.displayError = false;
-    $scope.createCashBagError = 'Error!';
 
-    cashBagFactory.getCashBagList(companyId).then(function(response){
-      $scope.cashBagList = response.cashBags;
-      $scope.bankRefList = getBankRefList(response.cashBags);
-    });
+    // Constructor
+    (function CONSTRUCTOR() {
+      // set global controller properties
+      _companyId = cashBagFactory.getCompanyId();
+      _services = {
+        promises: [],
+        call: function (servicesArray) {
+          angular.forEach(servicesArray, function (_service) {
+            _services.promises.push(_services[_service]());
+          });
+        },
+        getCashBagList: function () {
+          return cashBagFactory.getCashBagList(_companyId).then(
+            function (response) {
+              $scope.cashBagList = response.cashBags;
+              $scope.bankRefList = getSortedBankRefList(response.cashBags);
+            }
+          );
+        },
+        getStationList: function () {
+          return cashBagFactory.getStationList(_companyId).then(
+            function (response) {
+              $scope.stationList = response.response;
+            }
+          );
+        },
+        getSchedulesList: function () {
+          return cashBagFactory.getSchedulesList(_companyId).then(
+            function (response) {
+              $scope.schedulesList = response.distinctSchedules;
+            }
+          );
+        }
+      };
+      _services.call(['getCashBagList', 'getStationList', 'getSchedulesList']);
+    })();
 
-    cashBagFactory.getStationList(companyId).then(function(response){
-      $scope.stationList = response.response;
-    });
+    // helpers
+    function showErrors(error) {
+      ngToast.create({
+        className: 'warning',
+        dismissButton: true,
+        content: '<strong>Cash bag</strong>: error!'
+      });
+      $scope.displayError = true;
+      $scope.formErrors = error.data;
+    }
 
-    cashBagFactory.getSchedulesList(companyId).then(function(response){
-      $scope.schedulesList = response.distinctSchedules;
-    });
+    function showModalErrors(errorMessage) {
+      $scope.displayModalError = true;
+      $scope.createCashBagError = errorMessage;
+    }
 
+    function getSortedBankRefList(cashBagList) {
+      var bankRefList = [];
+      cashBagList.forEach(function (element) {
+        if (element.bankReferenceNumber !== null && bankRefList.indexOf(element.bankReferenceNumber) < 0) {
+          bankRefList.push(element.bankReferenceNumber);
+        }
+      });
+      return bankRefList;
+    }
+
+    // scope methods
     $scope.viewCashBag = function (cashBag) {
       $location.path('cash-bag/' + cashBag.id);
     };
@@ -43,7 +93,7 @@ angular.module('ts5App')
 
     $scope.searchCashBag = function () {
       // TODO: serialize scheduleDate parameter
-      cashBagFactory.getCashBagList(companyId, $scope.search).then(function(response){
+      cashBagFactory.getCashBagList(companyId, $scope.search).then(function (response) {
         $scope.cashBagList = response.cashBags;
       });
     };
@@ -53,65 +103,43 @@ angular.module('ts5App')
       $scope.searchCashBag();
     };
 
-    $scope.deleteCashBag = function(cashBag){
+    $scope.deleteCashBag = function (cashBag) {
       // if (window.confirm('Are you sure you would like to remove this item?')) {
-        // TODO validate that the cashBag is eligible for deletion.
-        cashBagFactory.deleteCashBag(cashBag.id).then(function() {
+      // TODO validate that the cashBag is eligible for deletion.
+      cashBagFactory.deleteCashBag(cashBag.id).then(function () {
 
         },
-        showErrors);
+        showErrors('cash bag could not be deleted'));
       // }
     };
-
-    function showErrors(error){
-      ngToast.create({
-        className: 'warning',
-        dismissButton: true,
-        content: '<strong>Cash bag</strong>: error!'
-      });
-      $scope.displayError = true;
-      $scope.formErrors = error.data;
-    }
 
     $scope.showCreatePopup = function () {
       angular.element('#addCashBagModal').modal('show');
     };
 
-    $scope.submitCreate = function() {
-      if(!$scope.createCashBagForm.$valid) {
-        showError('Please select both a schedule number and a schedule date');
+    $scope.updateScheduleDate = function () {
+      $scope.scheduleMinDate = moment($scope.schedulesList[$scope.scheduleIndex].minEffectiveStart, 'YYYY-MM-DD').format('MM/DD/YYYY').toString();
+      $scope.scheduleMaxDate = moment($scope.schedulesList[$scope.scheduleIndex].maxEffectiveEnd, 'YYYY-MM-DD').format('MM/DD/YYYY').toString();
+    };
+
+    $scope.submitCreate = function () {
+      if (!$scope.createCashBagForm.$valid) {
+        showModalErrors('Please select both a schedule number and a schedule date');
         return;
       }
-      cashBagFactory.getDailySchedulesList(companyId, $scope.schedulesList[$scope.newCashBag.scheduleIndex].scheduleNumber, $scope.newCashBag.scheduleDate).then(function(response){
-        if(response.schedules.length < 1) {
-          showError('Not a valid schedule');
+      cashBagFactory.getDailySchedulesList(companyId, $scope.schedulesList[$scope.scheduleIndex].scheduleNumber, $scope.scheduleDate).then(function (response) {
+        if (response.schedules.length < 1) {
+          showModalErrors('Not a valid schedule');
         } else {
           $scope.displayError = false;
-          // TODO: show new form
+          $('#addCashBagModal').removeClass('fade').modal('hide');
+          var formattedDate = moment($scope.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
+          $location.path('cash-bag/create').search({
+            scheduleNumber: $scope.schedulesList[$scope.scheduleIndex].scheduleNumber,
+            scheduleDate: formattedDate
+          });
         }
       });
     };
-
-    $scope.updateScheduleDate = function() {
-      var minDateComponents = $scope.schedulesList[$scope.newCashBag.scheduleIndex].minEffectiveStart.split('-');
-      var maxDateComponents = $scope.schedulesList[$scope.newCashBag.scheduleIndex].maxEffectiveEnd.split('-');
-      $scope.scheduleMinDate = minDateComponents[1] + '/' + minDateComponents[2] + '/' + minDateComponents[3];
-      $scope.scheduleMaxDate = maxDateComponents[1] + '/' + maxDateComponents[2] + '/' + maxDateComponents[3];
-    };
-
-    function getBankRefList(cashBagList) {
-      var bankRefList = [];
-      cashBagList.forEach(function(element){
-        if(element.bankReferenceNumber !== null && bankRefList.indexOf(element.bankReferenceNumber) < 0) {
-          bankRefList.push(element.bankReferenceNumber);
-        }
-      });
-      return bankRefList;
-    }
-
-    function showError(errorMsg) {
-      $scope.displayError = true;
-      $scope.createCashBagError = errorMsg;
-    }
 
   });
