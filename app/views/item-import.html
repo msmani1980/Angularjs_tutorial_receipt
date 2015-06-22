@@ -129,7 +129,7 @@
           ui-draggable="true"
           drag="stockOwner"
           on-drop-success="dropSuccessHandler($event, $index, stockOwnerItemsList)"
-          ng-repeat="stockOwner in stockOwnerItemsList track by $index">
+          ng-repeat="stockOwner in stockOwnerItemsList | filter:searchStockOwnerItem track by $index">
           <td>{{ stockOwner.colorCode }}</td>
           <td>{{ stockOwner.companyName }}</td>
           <td>{{ stockOwner.reference }}</td>
@@ -155,7 +155,7 @@
           ui-draggable="true"
           drag="item"
           on-drop-success="dropSuccessHandler($event, $index, itemList)"
-          ng-repeat="item in itemList | filter:searchRetailItem">
+          ng-repeat="item in itemList | filter:searchRetailItem track by $index">
           <td>{{ item.colorCode }}</td>
           <td>{{ item.companyName }}</td>
           <td>{{ item.reference }}</td>
