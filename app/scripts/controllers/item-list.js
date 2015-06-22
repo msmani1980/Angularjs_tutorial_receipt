@@ -92,7 +92,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchFilters = function () {
-      $scope.dateRange.endDate = '';
+      $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       $scope.startDateFilter = '';
       $scope.endDateFilter = '';
