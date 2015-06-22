@@ -17,9 +17,20 @@
     <p>All required fields are marked with a *</p>
   </div>
 
+  <date-picker
+    class="col-xs-12 col-md-6 col-sm-6"
+    element-class="col-xs-6 col-sm-6"
+    start-date-model="startDate"
+    end-date-model="endDate"
+    label-from="Effective From"
+    label-to="Effective To"
+    required="true"
+    disable-past="true">
+  </date-picker>
+
   <div class="col-sm-3">
     <div class="form-group">
-      <label for="itemName">Item Name</label>
+      <label class="control-label" for="itemName">Item Name</label>
       <select class="form-control" id="itemName">
         <option>Coke</option>
         <option>Pepsi</option>
@@ -29,9 +40,9 @@
     </div>
   </div>
 
-  <div class="col-sm-2">
+  <div class="col-sm-3">
     <div class="form-group">
-      <label for="rateType">Rate Type</label>
+      <label class="control-label" for="rateType">Rate Type</label>
       <select class="form-control" id="rateType">
         <option>Percentage</option>
         <option>Fixed Amount</option>
@@ -39,16 +50,16 @@
     </div>
   </div>
 
-  <div class="col-sm-2">
+  <div class="col-sm-3">
     <div class="form-group">
-      <label for="rate">Rate</label>
+      <label class="control-label" for="rate">Rate</label>
       <input type="text" class="form-control" id="rate" placeholder="$10">
     </div>
   </div>
 
   <div class="col-sm-3">
     <div class="form-group">
-      <label for="saleType">Sale Type</label>
+      <label class="control-label" for="saleType">Sale Type</label>
       <select class="form-control" id="saleType">
         <option>Regular Sale</option>
         <option>Complimentary Sale</option>
@@ -58,9 +69,9 @@
     </div>
   </div>
 
-  <div class="col-sm-2">
+  <div class="col-sm-3">
     <div class="form-group">
-      <label for="currency">Currency</label>
+      <label class="control-label" for="currency">Currency</label>
       <select class="form-control" id="currency">
         <option>USD</option>
         <option>GBP</option>
@@ -68,19 +79,6 @@
         <option>DKK</option>
       </select>
     </div>
-  </div>
-
-  <div class="col-xs-12 row">
-    <date-picker
-      class="col-xs-12 col-md-6 col-sm-12"
-      element-class="col-xs-6 col-sm-6"
-      start-date-model="startDate"
-      end-date-model="endDate"
-      label-from="Effective From"
-      label-to="Effective To"
-      required="true"
-      disable-past="true">
-    </date-picker>
   </div>
 
 </form>
