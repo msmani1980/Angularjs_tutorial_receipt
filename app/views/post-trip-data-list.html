@@ -2,15 +2,15 @@
 
   <div class="edit-controls">
     <div class="row">
-    
+
       <div class="col-xs-12">
         <h2 class="view-name">{{ viewName }}</h2>
       </div>
-      
+
     </div>
   </div>
   <!--/TopHeader -->
-  
+
   <div class="post-trip-data-list">
     <div class="row">
 
@@ -19,31 +19,31 @@
           <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#importFromData">
             Import Post Trip From File <i class="fa fa-caret-right"></i>
           </button>
-          
+
           <div id="importFromData" class="collapse width">
             <input type="file" style="margin:5px; display:block;">
-            
+
 <!-- TODO: 'UPLOAD' BUTTON FUNCTIONALITY -->
             <button type="button" class="btn btn-info">
               Upload
             </button>
-            
+
             <button type="button" class="btn btn-info" data-toggle="modal" data-target=".download-template-modal" ng-click="downloadTemplate()">
               <i class="fa fa-download"></i> Download Template
             </button>
           </div>
- 
+
         </div>
       </div>
 
     </div>
-  
+
     <div class="row">
-    
+
       <div class="col-xs-6">
         <a ng-href="/#/post-trip-data" class="btn btn-primary"> + </a>
       </div>
-    
+
       <div class="col-xs-6 text-right">
         <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
@@ -52,22 +52,20 @@
           <span class="hidden-xs">Search</span>
         </button>
       </div>
-      
+
     </div>
-   
     <div class="panel panel-default collapse no-transition" id="search-collapse">
       <form name="menuSearchForm" ng-submit="searchMenus()">
         <div class="panel-body">
           <div class="row">
-          
-<!-- TODO: 'SEARCH' FUNCTIONALITY -->
+
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="item-code">Schedule Number</label>
                 <input ng-model="search.scheduleNumber" type="text" class="form-control" id="item-code" placeholder="T1">
               </div>
             </div>
-            
+
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="tailNumber">Tail Number</label>
@@ -90,7 +88,7 @@
               disable-start-date="viewOnly || itemIsActive"
               disable-end-date="viewOnly || itemIsInactive">
             </date-picker>
-        
+
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="item-name">Departure Station</label>
@@ -105,7 +103,7 @@
                 <input ng-model="search.departureTime" type="text" class="form-control departure-time-to" id="item-name" placeholder="To">
               </div>
             </div>
-                        
+
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="item-name">Arrival Station</label>
@@ -120,7 +118,7 @@
                 <input ng-model="search.arrivalTime" type="text" class="form-control arrival-time-to" id="item-name" placeholder="To">
               </div>
             </div>
-                        
+
           </div>
         </div>
         <div class="panel-footer text-right">
@@ -129,7 +127,7 @@
         </div>
       </form>
     </div>
-  
+
     <table class="table table-bordered table-hover ng-scope">
       <thead>
         <tr>
