@@ -114,7 +114,8 @@
 
   <div class="form-group">
     <div class="col-xs-6">
-      <table class="table table-bordered table-hover">
+      <table ui-on-Drop="onDrop($event, $data, stockOwnerItemsList)"
+             class="sortable table table-bordered table-hover">
         <thead>
         <tr>
           <th>&nbsp;</th>
@@ -125,7 +126,10 @@
         </thead>
         <tbody>
         <tr
-          ng-repeat="stockOwner in stockOwnerItemsList | filter:searchStockOwnerItem">
+          ui-draggable="true"
+          drag="stockOwner"
+          on-drop-success="dropSuccessHandler($event, $index, stockOwnerItemsList)"
+          ng-repeat="stockOwner in stockOwnerItemsList track by $index">
           <td>{{ stockOwner.colorCode }}</td>
           <td>{{ stockOwner.companyName }}</td>
           <td>{{ stockOwner.reference }}</td>
@@ -135,7 +139,8 @@
       </table>
     </div>
     <div class="col-xs-6">
-      <table class="table table-bordered table-hover">
+      <table ui-on-Drop="onDrop($event, $data, itemList)"
+             class="sortable table table-bordered table-hover">
         <thead>
         <tr>
           <th>&nbsp;</th>
@@ -147,6 +152,9 @@
         </thead>
         <tbody>
         <tr
+          ui-draggable="true"
+          drag="item"
+          on-drop-success="dropSuccessHandler($event, $index, itemList)"
           ng-repeat="item in itemList | filter:searchRetailItem">
           <td>{{ item.colorCode }}</td>
           <td>{{ item.companyName }}</td>
