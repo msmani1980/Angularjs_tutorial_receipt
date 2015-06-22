@@ -317,7 +317,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
           it('should contain a label with the correct text',
             function () {
               expect(formGroup.find('label').text().trim())
-                .toEqual('Catering Station');
+                .toEqual('Caterer Stations');
             });
           it('should contain an select element', function () {
             expect(formGroup.find('select')[0]).toBeDefined();
