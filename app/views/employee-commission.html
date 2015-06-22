@@ -53,7 +53,18 @@
   <div class="col-sm-3">
     <div class="form-group">
       <label class="control-label" for="rate">Rate</label>
-      <input type="text" class="form-control" id="rate" placeholder="$10">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-money"></i></span>
+        <input custom-validity
+               custom-pattern="currencyWithFourDecimalPlace"
+               ng-model="rate"
+               required="true"
+               id="rate"
+               name="rate"
+               placeholder="0.0000"
+               class="form-control"
+               aria-label="Amount (to the nearest dollar)"/>
+      </div>
     </div>
   </div>
 
