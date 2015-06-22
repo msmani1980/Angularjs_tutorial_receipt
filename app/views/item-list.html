@@ -101,7 +101,9 @@
 
 	</div>
 
-	<alert ng-show="!paginatedItems.length" class="info"><span class="fa fa-flag"></span> Your search returned no results.</alert>
+	<alert ng-show="!paginatedItems.length" type="info">
+		<span class="fa fa-flag"></span> Your search returned no results.
+	</alert>
 
 	<div class="table table-bordered table-responsive table-hover" ng-show="paginatedItems.length">
 
