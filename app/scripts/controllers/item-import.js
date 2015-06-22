@@ -21,6 +21,8 @@ angular.module('ts5App')
       array.push($data);
     };
 
+    // TODO: change BACK button to back/save when models change
+
     // TODO: pull data from API
     $scope.stockOwnerList = [
       {name: 'GRO'},
