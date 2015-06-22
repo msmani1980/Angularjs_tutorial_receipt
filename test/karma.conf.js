@@ -76,6 +76,7 @@ module.exports = function (config) {
       'bower_components/ui-select/src/select3.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/ngtoast/dist/ngToast.js',
+      'bower_components/angular-native-dragdrop/draganddrop.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
