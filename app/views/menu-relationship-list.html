@@ -23,7 +23,7 @@
 
         <button class="btn btn-default btn-search-clear"
           ng-click="clearSearchFilters()"
-          ng-show="search.menuCode.length || search.menuName.length || search.menuStation.length || search.menuStation.length || search.startDate.length || search.endDate.length">
+          ng-show="search.menuCode.length || search.menuName.length || search.menuStation.length || search.menuStation.length || dateRange.startDate.length || dateRange.endDate.length">
           <span class="btn-label">Clear</span>
         </button>
 
@@ -69,8 +69,8 @@
 				</div>
 
 				<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
-					start-date-model="search.startDate"
-					end-date-model="search.endDate"
+					start-date-model="dateRange.startDate"
+					end-date-model="dateRange.endDate"
 					is-search-field="true"
 					label-from="Effective From"
 					label-to="Effective To">
@@ -99,7 +99,7 @@
 
     <tbody>
 
-      <tr id="menu-{{menu.id}}" ng-repeat="(key,menu) in menuList | filter: { menuCode: search.menuCode, menuName: search.menuName, stations: search.stations } | daterange:startDateFilter:endDateFilter ">
+      <tr id="menu-{{menu.id}}" ng-repeat="(key,menu) in paginatedRecords">
 
         <td>{{ menu.menuCode }}</td>
         <td>{{ menu.menuName }}</td>
@@ -129,6 +129,35 @@
 
   </table>
 
+	<div class="list-footer">
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-6">
+
+				Show
+
+				<select class="form-control" ng-model="itemsPerPage">
+					<option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
+				</select>
+
+				Items per Page
+
+			</div>
+
+			<div class="col-xs-12 col-sm-6 text-right">
+
+				<pagination total-items="recordListCount" items-per-page="recordsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+
+			</div>
+
+
+		</div>
+
+	</div>
+
 </div>
 
 <left-navigation base-path="menu-relationship"></left-navigation>
+
+<delete-record-dialog></delete-record-dialog>
