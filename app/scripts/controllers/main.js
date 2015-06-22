@@ -216,7 +216,7 @@ angular.module('ts5App')
         className: 'dashboard-manageDailyExchangeRates'
       }, {
         name: 'Manage Cash Bag',
-        route: emberURL + 'cash-bag',
+        route: '/#/cash-bag-list',
         icon: 'icon-create-receipt-rules',
         className: 'dashboard-manageCashBag'
       }, {
