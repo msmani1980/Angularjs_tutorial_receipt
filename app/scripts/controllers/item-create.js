@@ -41,6 +41,8 @@ angular.module('ts5App')
     $scope.itemIsInactive = false;
     $scope.viewOnly = false;
     $scope.editingItem = false;
+    $scope.shouldDisplayURLField = false;
+
 
     this.checkIfViewOnly = function () {
       var path = $location.path();
@@ -448,6 +450,21 @@ angular.module('ts5App')
     // Removes a station exception collection from the form
     $scope.removeStationException = function (priceIndex, key) {
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
+    };
+
+    $scope.filterCharacteristics = function() {
+      if($scope.itemTypes[$scope.formData.itemTypeId-1].name === 'Virtual') {
+        $scope.filteredCharacteristics = [];
+        angular.forEach($scope.characteristics, function(value){
+          if(value.name === 'Downloadable' || value.name === 'Link') {
+            $scope.filteredCharacteristics.push(value);
+          }
+          $scope.shouldDisplayURLField = true;
+        });
+      } else {
+        $scope.filteredCharacteristics = $scope.characteristics;
+        $scope.shouldDisplayURLField = false;
+      }
     };
 
     // gets a list of stations from the API filtered by station's start and end date

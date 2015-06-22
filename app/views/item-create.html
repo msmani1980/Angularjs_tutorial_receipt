@@ -125,7 +125,7 @@
 
           <div class="form-group">
             <label>Item Type *</label>
-            <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control">
+            <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
               <option ng-repeat="type in itemTypes" value="{{ type.id }}">{{ type.name }}</option>
             </select>
           </div>
@@ -133,8 +133,12 @@
           <div class="form-group">
             <label>Item Characteristics</label>
             <select ng-model="formData.characteristics" class="multi-select" multiple="multiple">
-              <option ng-repeat="character in characteristics" value="{{ character.id }}">{{ character.name }}</option>
+              <option ng-repeat="character in filteredCharacteristics" value="{{ character.id }}">{{ character.name }}</option>
             </select>
+          </div>
+
+          <div class="form-group">
+          <input-text label="URL" name="sellingPoint" pattern="regexp.word" ng-show="shouldDisplayURLField"></input-text>
           </div>
 
           <div class="form-group">
