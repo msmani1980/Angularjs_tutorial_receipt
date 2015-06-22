@@ -17,6 +17,7 @@ describe('Factory: companyRelationshipFactory', function () {
     companyRelationshipService = _companyRelationshipService_;
 
     spyOn(companyService, 'getCompany');
+    spyOn(companyService, 'getCompanyList');
     spyOn(companyRelationshipService, 'getCompanyRelationshipListByCompany');
     spyOn(companyRelationshipService, 'getCompanyRelationshipTypeList');
 

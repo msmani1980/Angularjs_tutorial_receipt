@@ -11,8 +11,8 @@
  */
 angular.module('ts5App')
   .service('companyRelationshipService', function ($resource, $http, ENV) {
-    var requestURL = ENV.apiUrl + '/api/companies/:id/relationships/:companyRelationshipId';
-    var typeRequestURL = ENV.apiUrl + '/api/company-relation/:id/types';
+    var companyRelationshipRequestURL = ENV.apiUrl + '/api/companies/:id/relationships/:companyRelationshipId';
+    var companyTypeRequestURL = ENV.apiUrl + '/api/company-relation/:id/types';
     var requestParameters = {
       id: '@id'
     };
@@ -86,8 +86,8 @@ angular.module('ts5App')
       }
     };
 
-    var requestResource = $resource(requestURL, requestParameters, actions);
-    var typeRequestResource = $resource(typeRequestURL, requestParameters, actions);
+    var companyRelationshipRequestURL = $resource(companyRelationshipRequestURL, requestParameters, actions);
+    var typeRequestResource = $resource(companyTypeRequestURL, requestParameters, actions);
 
     var normalizeDateForApp = function (dataFromAPI, startDateKey, endDateKey) {
       var dateFromAPIFormat = 'YYYY-MM-DD';
@@ -114,15 +114,15 @@ angular.module('ts5App')
     };
 
     var getCompanyRelationshipList = function (payload) {
-      return requestResource.getCompanyRelationshipList(payload).$promise;
+      return companyRelationshipRequestURL.getCompanyRelationshipList(payload).$promise;
     };
 
     var getCompanyRelationshipListByCompany = function (id) {
-      return requestResource.getCompanyRelationshipListByCompany({id: id}).$promise;
+      return companyRelationshipRequestURL.getCompanyRelationshipListByCompany({id: id}).$promise;
     };
 
     var getCompanyRelationship = function (id) {
-      return requestResource.getCompanyRelationship({id: id}).$promise;
+      return companyRelationshipRequestURL.getCompanyRelationship({id: id}).$promise;
     };
 
     var getCompanyRelationshipTypeList = function (id) {
@@ -130,11 +130,11 @@ angular.module('ts5App')
     };
 
     var createCompanyRelationship = function (payload) {
-      return requestResource.createCompanyRelationship({id: payload.companyId}, payload).$promise;
+      return companyRelationshipRequestURL.createCompanyRelationship({id: payload.companyId}, payload).$promise;
     };
 
     var updateCompanyRelationship = function (payload) {
-      return requestResource.updateCompanyRelationship({
+      return companyRelationshipRequestURL.updateCompanyRelationship({
         id: payload.companyId,
         companyRelationshipId: payload.id
       }, payload).$promise;
