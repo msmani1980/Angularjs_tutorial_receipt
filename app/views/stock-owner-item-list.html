@@ -22,7 +22,7 @@
 
 				<button class="btn btn-default"
 					ng-click="clearSearchFilters()"
-					ng-show="search.itemCode.length || search.itemName.length || search.itemType.length || search.onBoardName.length || search.categoryName.length || search.startDate.length || search.endDate.length">
+					ng-show="search.itemCode.length || search.itemName.length || search.itemType.length || search.onBoardName.length || search.categoryName.length || search.dateRange.length || search.dateRange.length">
 					<span>Clear</span>
 				</button>
 
@@ -79,8 +79,8 @@
 				</div>
 
 				<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
-					start-date-model="search.startDate"
-					end-date-model="search.endDate"
+					start-date-model="dateRange.startDate"
+					end-date-model="dateRange.endDate"
 					is-search-field="true"
 					label-from="Effective From"
 					label-to="Effective To">
@@ -117,7 +117,7 @@
 
 			<tbody>
 
-				<tr id="item-{{item.id}}" ng-repeat="(key,item) in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, categoryName: search.categoryName } | daterange:startDateFilter:endDateFilter ">
+				<tr id="item-{{item.id}}" ng-repeat="(key,item) in paginatedItems">
 
 					<td>{{ item.stockOwnerCode }}</td>
 					<td>{{ item.itemCode }}</td>
@@ -161,10 +161,7 @@
 				Show
 
 				<select class="form-control" ng-model="itemsPerPage">
-					<option value="10">10</option>
-					<option value="25">25</option>
-					<option value="50">50</option>
-					<option value="100">100</option>
+					<option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
 				</select>
 
 				Items per Page

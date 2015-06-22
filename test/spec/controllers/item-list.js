@@ -1,93 +1,194 @@
 'use strict';
 
 // testing controller
-describe('itemListCtrl', function() {
-   var $httpBackend, $rootScope, createController, authRequestHandler;
+describe('itemListCtrl', function () {
 
-   // Set up the module
-   beforeEach(module('ts5App')); 
+  // load the controller's module
+  beforeEach(module('ts5App'));
+  beforeEach(module('served/items-list.json', 'served/item-types.json',
+    'served/sales-categories.json'));
 
-   beforeEach(inject(function($injector) {
-
-     // Set up the mock http service responses
-     $httpBackend = $injector.get('$httpBackend');
-
-     // backend definition common for all tests
-     authRequestHandler = $httpBackend.when('GET', '/auth.py')
-                            .respond({userId: 'userX'}, {'A-Token': 'xxx'});
-
-     // Get hold of a scope (i.e. the root scope)
-     $rootScope = $injector.get('$rootScope');
-
-     // The $controller service is used to create instances of controllers
-     var $controller = $injector.get('$controller');
-
-     createController = function() {
-       return $controller('itemListCtrl', {'$scope' : $rootScope });
-     };
-
-   }));
-
-   afterEach(function() {
-     $httpBackend.verifyNoOutstandingExpectation();
-     $httpBackend.verifyNoOutstandingRequest();
-   });
+  var ItemListCtrl,
+    scope,
+    getItemsListDeferred,
+    itemsService,
+    itemsListJSON,
+    getItemTypesListDeferred,
+    itemTypesService,
+    itemTypesJSON,
+    getSalesCategoriesDeferred,
+    salesCategoriesService,
+    salesCategoriesJSON,
+    location,
+    httpBackend,
+    authRequestHandler;
 
 
-   /*it('should fetch list', function() {
+  // Initialize the controller and a mock scope
+  beforeEach(inject(function ($q, $controller, $rootScope, _itemsService_,
+    _itemTypesService_, _salesCategoriesService_,
+    $location, $httpBackend) {
 
-     $httpBackend.expectGET('/item-list.json');
+    inject(function (_servedItemsList_, _servedItemTypes_,
+      _servedSalesCategories_) {
+      itemsListJSON = _servedItemsList_;
+      itemTypesJSON = _servedItemTypes_;
+      salesCategoriesJSON = _servedSalesCategories_;
+    });
 
-     var controller = createController();
+    // backend definition common for all tests
+    authRequestHandler = $httpBackend.when('GET', '/auth.py').respond({
+      userId: 'userX'
+    }, {
+      'A-Token': 'xxx'
+    });
 
-      expect(controller).notBe(null);
+    httpBackend = $httpBackend;
+    location = $location;
+    scope = $rootScope.$new();
 
-     $httpBackend.flush();
+    getItemsListDeferred = $q.defer();
+    getItemsListDeferred.resolve(itemsListJSON);
+    itemsService = _itemsService_;
+    spyOn(itemsService, 'getItemsList').and.returnValue(
+      getItemsListDeferred.promise);
 
-   });*/
+    getItemTypesListDeferred = $q.defer();
+    getItemTypesListDeferred.resolve(itemTypesJSON);
+    itemTypesService = _itemTypesService_;
+    spyOn(itemTypesService, 'getItemTypesList').and.returnValue(
+      getItemTypesListDeferred.promise);
 
+    getSalesCategoriesDeferred = $q.defer();
+    getSalesCategoriesDeferred.resolve(salesCategoriesJSON);
+    salesCategoriesService = _salesCategoriesService_;
+    spyOn(salesCategoriesService, 'getSalesCategoriesList').and.returnValue(
+      getSalesCategoriesDeferred.promise);
 
-   /*it('should fail authentication', function() {
+    spyOn(itemsService, 'removeItem').and.returnValue({
+      then: function () {
+        return;
+      }
+    });
 
-     // Notice how you can change the response even after it was set
-     authRequestHandler.respond(401, '');
+    ItemListCtrl = $controller('ItemListCtrl', {
+      $scope: scope
+    });
+    scope.$digest();
 
-     $httpBackend.expectGET('/auth.py');
-     var controller = createController();
-     $httpBackend.flush();
-     expect($rootScope.status).toBe('Failed...');
-   });
+    spyOn(ItemListCtrl, 'getItemsList');
+    spyOn(ItemListCtrl, 'getItemTypesList');
+    spyOn(ItemListCtrl, 'getSalesCategoriesList');
 
+    ItemListCtrl.getItemsList();
+    ItemListCtrl.getItemTypesList();
+    ItemListCtrl.getSalesCategoriesList();
+  }));
 
-   it('should send msg to server', function() {
-     var controller = createController();
-     $httpBackend.flush();
+  afterEach(function () {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });
 
-     // now you don’t care about the authentication, but
-     // the controller will still send the request and
-     // $httpBackend will respond without you having to
-     // specify the expectation and response for this request
+  it('should have a getItemsList method', function () {
+    expect(ItemListCtrl.getItemsList).toBeDefined();
+  });
 
-     $httpBackend.expectPOST('/add-msg.py', 'message content').respond(201, '');
-     $rootScope.saveMessage('message content');
-     expect($rootScope.status).toBe('Saving...');
-     $httpBackend.flush();
-     expect($rootScope.status).toBe('');
-   });
+  it('should call the getItemsList method', function () {
+    expect(ItemListCtrl.getItemsList).toHaveBeenCalled();
+  });
 
+  it('should have a getItemTypesList method', function () {
+    expect(ItemListCtrl.getItemTypesList).toBeDefined();
+  });
 
-   it('should send auth header', function() {
-     var controller = createController();
-     $httpBackend.flush();
+  it('should call the getItemTypesList method', function () {
+    expect(ItemListCtrl.getItemTypesList).toHaveBeenCalled();
+  });
 
-     $httpBackend.expectPOST('/add-msg.py', undefined, function(headers) {
-       // check if the header was send, if it wasn't the expectation won't
-       // match the request and the test will fail
-       return headers['Authorization'] == 'xxx';
-     }).respond(201, '');
+  it('should have a getItemsList method', function () {
+    expect(ItemListCtrl.getItemsList).toBeDefined();
+  });
 
-     $rootScope.saveMessage('whatever');
-     $httpBackend.flush();
-   }); */
+  it('should call the getSalesCategoriesList method', function () {
+    expect(ItemListCtrl.getSalesCategoriesList).toHaveBeenCalled();
+  });
 
+  describe('The itemsList array', function () {
+
+    it('should be attached to the scope', function () {
+      expect(scope.itemsList).toBeDefined();
+    });
+
+    it('should have more than 1 item in the itemsList', function () {
+      expect(scope.itemsList.length).toBeGreaterThan(1);
+    });
+
+    it('should match the response from the API', function () {
+      expect(scope.itemsList).toEqual(itemsListJSON.retailItems);
+    });
+
+    describe('contains an item object which', function () {
+
+      var item;
+      beforeEach(function () {
+        item = scope.itemsList[1];
+      });
+
+      it('should be defined', function () {
+        expect(item).toBeDefined();
+      });
+
+      it('should have an id property and is a string', function () {
+        expect(item.id).toBeDefined();
+        expect(item.id).toEqual(jasmine.any(String));
+      });
+
+      it('should have an itemCode property and is a string',
+        function () {
+          expect(item.itemCode).toBeDefined();
+          expect(item.itemCode).toEqual(jasmine.any(String));
+        });
+
+      it('should have an stockOwnerCode property and is a string',
+        function () {
+          expect(item.stockOwnerCode).toBeDefined();
+          expect(item.stockOwnerCode).toEqual(jasmine.any(String));
+        });
+
+      it('should have an itemName property and is a string',
+        function () {
+          expect(item.itemName).toBeDefined();
+          expect(item.itemName).toEqual(jasmine.any(String));
+        });
+
+      it('should have an itemTypeId property and is a number',
+        function () {
+          expect(item.itemTypeId).toBeDefined();
+          expect(item.itemTypeId).toEqual(jasmine.any(Number));
+        });
+
+      it('should have an categoryName property and is a string',
+        function () {
+          expect(item.categoryName).toBeDefined();
+          expect(item.categoryName).toEqual(jasmine.any(String));
+        });
+
+    });
+
+  });
+
+  describe('The Pagination', function () {
+
+    it('should attach currentPage to the scope', function () {
+      expect(scope.currentPage).toBeDefined();
+      expect(scope.currentPage).toEqual(1);
+    });
+
+    it('should attach itemsPerPage to the scope', function () {
+      expect(scope.itemsPerPage).toBeDefined();
+      expect(scope.itemsPerPage).toEqual(10);
+    });
+
+  });
 });

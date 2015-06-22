@@ -20,7 +20,7 @@
 
 				<button class="btn btn-default"
 					ng-click="clearSearchFilters()"
-					ng-show="search.itemCode.length || search.itemName.length || search.itemType.length || search.onBoardName.length || search.categoryName.length || search.startDate.length || search.endDate.length">
+					ng-show="search.itemCode.length || search.itemName.length || search.itemType.length || search.onBoardName.length || search.categoryName.length || dateRange.startDate.length || dateRange.endDate.length">
 					<span>Clear</span>
 				</button>
 
@@ -81,8 +81,8 @@
 				</div>
 
 				<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
-					start-date-model="search.startDate"
-					end-date-model="search.endDate"
+					start-date-model="dateRange.startDate"
+					end-date-model="dateRange.endDate"
 					is-search-field="true"
 					label-from="Effective From"
 					label-to="Effective To">
@@ -119,7 +119,7 @@
 
 			<tbody>
 
-				<tr id="item-{{item.id}}" ng-repeat="(key,item) in paginatedItems | filter: { itemCode: search.itemCode, itemName: search.itemName, itemTypeName: search.itemType, onBoardName: search.onBoardName, categoryName: search.categoryName } | daterange:startDateFilter:endDateFilter ">
+				<tr id="item-{{item.id}}" ng-repeat="(key,item) in paginatedItems">
 
 					<td>{{ item.stockOwnerCode }}</td>
 					<td>{{ item.itemCode }}</td>
@@ -140,7 +140,7 @@
 							<i class="fa fa-pencil"></i>
 						</a>
 
-						<button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id,key)" ng-disabled="isItemActive(item.startDate) || isItemInactive(item.endDate)">
+						<button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id)" ng-disabled="isItemActive(item.startDate) || isItemInactive(item.endDate)">
 							<i class="fa fa-trash"></i>
 						</button>
 
@@ -155,17 +155,16 @@
 			<div class="col-xs-12 col-sm-6">
 				Show
 				<select class="form-control" ng-model="itemsPerPage">
-					<option value="10">10</option>
-					<option value="25">25</option>
-					<option value="50">50</option>
-					<option value="100">100</option>
+					<option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
 				</select>
 				Items per Page
 
 			</div>
 
 			<div class="col-xs-12 col-sm-6 text-right">
-				<pagination total-items="totalItems" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+
+				<pagination total-items="itemsListCount" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+
 			</div>
 		</div>
 	</div>

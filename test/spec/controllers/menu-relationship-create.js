@@ -109,7 +109,7 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
         });
         it('should contain the correct text', function () {
           expect(saveButton.find('.btn-label').text().trim())
-            .toEqual('Save');
+            .toEqual('Create');
         });
       });
 

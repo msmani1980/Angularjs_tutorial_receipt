@@ -9,7 +9,7 @@
 angular.module('ts5App')
   .controller('MenuRelationshipCreateCtrl', function ($scope) {
     $scope.viewName = 'Create Menu Relationship';
-    $scope.buttonText = 'Save';
+    $scope.buttonText = 'Create';
     $scope.formData = {
       menuCode: '',
       menuName: '',
