@@ -94,7 +94,11 @@
 
 	</div>
 
-	<div class="table table-bordered table-responsive table-hover">
+	<alert ng-show="!paginatedItems.length" type="info">
+		<span class="fa fa-flag"></span> Your search returned no results.
+	</alert>
+
+	<div class="table table-bordered table-responsive table-hover" ng-show="paginatedItems.length">
 
 		<table class="table table-bordered">
 
