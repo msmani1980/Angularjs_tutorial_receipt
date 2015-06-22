@@ -19,19 +19,6 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
-    $scope.startDateFilter = '';
-    $scope.endDateFilter = '';
-
-    this.formatDateFilter = function () {
-      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
-        $scope.startDateFilter = dateUtility.formatDate($scope.dateRange.startDate,
-          'L',
-          'YYYY-MM-DD');
-        $scope.endDateFilter = dateUtility.formatDate($scope.dateRange.endDate,
-          'L',
-          'YYYY-MM-DD');
-      }
-    };
 
     this.updateItemList = function () {
       var filteredItems = $this.filterItems();
@@ -40,18 +27,16 @@ angular.module('ts5App')
     };
 
     this.filterItems = function () {
-      this.formatDateFilter();
-      var dateFiltered = $filter('daterange')($scope.itemsList, $scope.startDateFilter,
-        $scope.endDateFilter);
+      var dateFiltered = $filter('daterange')($scope.itemsList, $scope.dateRange
+        .startDate,
+        $scope.dateRange.endDate);
       return $filter('filter')(dateFiltered, $scope.search);
     };
 
     this.setPaginatedItems = function (filteredItems) {
-      if (filteredItems.length > 0) {
-        var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-        var end = begin + $scope.itemsPerPage;
-        $scope.paginatedItems = filteredItems.slice(begin, end);
-      }
+      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+      var end = begin + $scope.itemsPerPage;
+      $scope.paginatedItems = filteredItems.slice(begin, end);
     };
 
     this.getItemsList = function () {
@@ -107,7 +92,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchFilters = function () {
-      $scope.dateRange.endDate = '';
+      $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       $scope.startDateFilter = '';
       $scope.endDateFilter = '';
@@ -122,9 +107,9 @@ angular.module('ts5App')
       $this.updateItemList();
     }, true);
 
-    $scope.$watch('dateRange', function () {
+    $scope.$watch('dateRange.startDate + dateRange.endDate', function () {
       $this.updateItemList();
-    }, true);
+    });
 
     $scope.$watch('currentPage + itemsPerPage', function () {
       $this.updateItemList();

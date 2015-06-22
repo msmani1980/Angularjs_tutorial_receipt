@@ -22,7 +22,7 @@
 
 				<button class="btn btn-default"
 					ng-click="clearSearchFilters()"
-					ng-show="search.itemCode.length || search.itemName.length || search.itemType.length || search.onBoardName.length || search.categoryName.length || search.dateRange.length || search.dateRange.length">
+					ng-show="search.itemCode.length || search.itemName.length || search.itemType.length || search.onBoardName.length || search.categoryName.length || dateRange.startDate.length || dateRange.endDate.length">
 					<span>Clear</span>
 				</button>
 
@@ -92,7 +92,11 @@
 
 	</div>
 
-	<div class="table table-bordered table-responsive table-hover">
+	<alert ng-show="!paginatedItems.length" type="info">
+		<span class="fa fa-flag"></span> Your search returned no results.
+	</alert>
+
+	<div class="table table-bordered table-responsive table-hover" ng-show="paginatedItems.length">
 
 		<table class="table table-bordered">
 
