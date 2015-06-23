@@ -7,11 +7,16 @@ describe('Service: employeeCommissionFactory', function () {
 
   // instantiate service
   var employeeCommissionFactory,
-    itemsService;
+    itemsService,
+    priceTypesService;
 
-  beforeEach(inject(function (_employeeCommissionFactory_, _itemsService_) {
+  beforeEach(inject(function (_employeeCommissionFactory_, _itemsService_, _priceTypesService_) {
     itemsService = _itemsService_;
+    priceTypesService = _priceTypesService_;
+
     spyOn(itemsService, 'getItemsList');
+    spyOn(priceTypesService, 'getPriceTypesList');
+
     employeeCommissionFactory = _employeeCommissionFactory_;
   }));
 
@@ -19,11 +24,16 @@ describe('Service: employeeCommissionFactory', function () {
     expect(!!employeeCommissionFactory).toBe(true);
   });
 
-  describe('Items service API', function () {
+  describe('API Calls', function () {
 
-    it('should fetch from API', function () {
+    it('should fetch items from itemsService', function () {
       employeeCommissionFactory.getItemsList();
       expect(itemsService.getItemsList).toHaveBeenCalled();
+    });
+
+    it('should fetch price types from priceTypesService', function () {
+      employeeCommissionFactory.getPriceTypesList();
+      expect(priceTypesService.getPriceTypesList).toHaveBeenCalled();
     });
   });
 
