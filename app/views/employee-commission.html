@@ -32,7 +32,7 @@
     <div class="form-group">
       <label class="control-label" for="itemName">Item Name</label>
       <select class="form-control" id="itemName">
-        <option ng-repeat="item in itemsList | orderBy:'itemName'">{{item.itemName}}</option>
+        <option ng-repeat="item in itemsList | orderBy:'itemName'" value="{{item.masterId}}">{{item.itemName}}</option>
       </select>
     </div>
   </div>
@@ -41,10 +41,7 @@
     <div class="form-group">
       <label class="control-label" for="saleType">Sale Type</label>
       <select class="form-control" id="saleType">
-        <option>Regular Sale</option>
-        <option>Complimentary Sale</option>
-        <option>Employee Purchase</option>
-        <option>Other</option>
+        <option ng-repeat="priceType in priceTypesList | orderBy:'name'" value="{{priceType.id}}">{{priceType.name}}</option>
       </select>
     </div>
   </div>
