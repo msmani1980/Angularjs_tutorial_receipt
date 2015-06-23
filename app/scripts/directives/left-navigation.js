@@ -18,6 +18,7 @@ angular.module('ts5App')
         $scope.itemListPath = '/item-list';
         $scope.itemCreatePath = '/item-create';
         $scope.manageCategoriesPath = '/ember/#/retail-items/categories';
+        $scope.itemPrefix = 'Retail';
 
         break;
 
@@ -26,8 +27,17 @@ angular.module('ts5App')
         $scope.itemListPath = '/stock-owner-item-list';
         $scope.itemCreatePath = '/stock-owner-item-create';
         $scope.manageCategoriesPath =
-          '/ember/#/stock-owner-item/categories';
+          '/ember/#/retail-items/categories';
         $scope.itemPrefix = 'Stock Owner';
+        $scope.itemPrefixSm = 'SO';
+
+        break;
+
+      case 'menu-relationship':
+
+        $scope.menuRelationshipListPath = '/menu-relationship-list';
+        $scope.menuRelationshipCreatePath = '/menu-relationship-create';
+        $scope.itemPrefix = 'Menu Relationship';
 
         break;
 

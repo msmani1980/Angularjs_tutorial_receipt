@@ -21,12 +21,13 @@
 
 		</li>
 
-	</ul>
-
 		<li ng-show="formErrors" ng-repeat="error in formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> -
 
-
 			<span ng-switch-when="000">Field can't be empty</span>
+
+			<span ng-switch-when="001">Data format is invalid</span>
+
+			<span ng-switch-when="003">Allowable maximum length exceeded</span>
 
 			<span ng-switch-when="004">Duplicate values are not allowed</span>
 

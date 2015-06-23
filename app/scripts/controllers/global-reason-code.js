@@ -8,8 +8,6 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CrewCommissionCtrl', function ($scope) {
-
-    $scope.viewName = 'Crew Commission';
-
+  .controller('GlobalReasonCodeCtrl', function ($scope) {
+    $scope.viewName = 'Global Reason Code';
   });

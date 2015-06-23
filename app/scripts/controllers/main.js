@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc function
  * @name ts5App.controller:MainCtrl
@@ -8,29 +7,25 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MainCtrl', function ($scope, companyFactory, GlobalMenuService) {
-    // scope management
+  .controller('MainCtrl', function ($scope, companiesFactory, GlobalMenuService) {
     var $this = this;
     var emberURL = '/ember/#/';
-
-    $scope.viewName = 'TS5 Dashboard';
-
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
     var companyId = GlobalMenuService.company.get();
+    $scope.viewName = 'TS5 Dashboard';
 
     // changes the navigation depeneding on what company type you have
     function updateNavigationPerCompanyType() {
-      companyFactory.getCompany(companyId).then(function (response) {
+      companiesFactory.getCompany(companyId).then(function (response) {
         var companyTypeId = response.companyTypeId;
 
         switch (companyTypeId) {
-          case 2:
-            $scope.dashboardMenu = $this.stockOwnerMenu;
-            break;
-
-          default:
-            $scope.dashboardMenu = $this.retailMenu;
-            break;
+        case 2:
+          $scope.dashboardMenu = $this.stockOwnerMenu;
+          break;
+        default:
+          $scope.dashboardMenu = $this.retailMenu;
+          break;
         }
       });
     }
@@ -38,7 +33,7 @@ angular.module('ts5App')
     updateNavigationPerCompanyType();
 
     this.stockOwnerMenu = [{
-      title: 'Stock Owner Item Management',
+      'title': 'Stock Owner Item Management',
       menuItems: [{
         name: 'Manage SO Items',
         route: '/#/stock-owner-item-list',
@@ -56,9 +51,8 @@ angular.module('ts5App')
         className: 'dashboard-manageItemCategories'
       }]
     }];
-
     this.retailMenu = [{
-      title: 'Retail Item Management',
+      'title': 'Retail Item Management',
       menuItems: [{
         name: 'Manage Items',
         route: '/#/item-list',
@@ -76,15 +70,15 @@ angular.module('ts5App')
         className: 'dashboard-manageItemCategories'
       }]
     }, {
-      title: 'Company Management',
-      menuItems: [{
+      'title': 'Company Management',
+      'menuItems': [{
         name: 'Manage Companies',
-        route: '/#/company-list',
+        route: emberURL + 'companies',
         icon: 'icon-manage-company',
         className: 'dashboard-manageCompanies'
       }, {
         name: 'Create Company',
-        route: '/#/company-create',
+        route: emberURL + 'companies/create',
         icon: 'icon-create-company',
         className: 'dashboard-createCompany'
       }]
@@ -116,7 +110,7 @@ angular.module('ts5App')
         route: emberURL + 'menus/create',
         icon: 'icon-create-menu',
         className: 'dashboard-createMenu'
-      }]
+      }, ]
     }, {
       title: 'Menu Assignment',
       menuItems: [{
@@ -135,6 +129,19 @@ angular.module('ts5App')
         icon: 'icon-create-rules',
         className: 'dashboard-createRules'
       }]
+    }, {
+      title: 'Menu-Catering Station Relationship',
+      menuItems: [{
+        name: 'Manage Relationships',
+        route: '/#/menu-relationship-list',
+        icon: 'icon-menu-assignment',
+        className: 'dashboard-menuAssignments'
+      }, {
+        name: 'Create Relationship',
+        route: '/#/menu-relationship-create',
+        icon: 'icon-create-menu',
+        className: 'dashboard-menuAssignments'
+      }, ]
     }, {
       title: 'Promotion Management',
       menuItems: [{
@@ -209,7 +216,7 @@ angular.module('ts5App')
         className: 'dashboard-manageDailyExchangeRates'
       }, {
         name: 'Manage Cash Bag',
-        route: emberURL + 'cash-bag',
+        route: '/#/cash-bag-list',
         icon: 'icon-create-receipt-rules',
         className: 'dashboard-manageCashBag'
       }, {
@@ -217,40 +224,41 @@ angular.module('ts5App')
         route: emberURL + 'cash-bag-submission',
         icon: 'icon-manage-retail-category',
         className: 'dashboard-cashBagSubmission'
+      }]
+    }, {
+      title: 'Post Trip Data',
+      menuItems: [{
+        name: 'Manage Post Trip Data',
+        route: '/#/post-trip-data-list',
+        icon: 'icon-manage-menu',
+        className: 'dashboard-postTripDataList'
       }, {
-          title: 'Post Trip Data',
-          menuItems: [{
-              name: 'Manage Post Trip Data',
-              route: '/#/post-trip-data-list',
-              icon: 'icon-manage-menu',
-              className: 'dashboard-postTripDataList'
-            }, {
-              name: 'Post Trip Data',
-              route: '/#/post-trip-data',
-              icon: 'icon-create-menu',
-              className: 'dashboard-postTripData'
-            }]
-        }, {
-          title: 'Crew Commission',
-          menuItems: [{
-              name: 'Crew Commission',
-              route: '/#/crew-commission',
-              icon: 'icon-manage-schedule',
-              className: 'dashboard-crewCommission'
-            }]
-        }, {
-          title: 'Refunds',
-          menuItems: [{
-              name: 'Global Reason',
-              route: '/#/refund-global-reason-code',
-              icon: 'icon-manage-schedule',
-              className: 'dashboard-refundGlobalReasonCode'
-            }, {
-              name: 'Company Reason',
-              route: '/#/refund-company-reason-code',
-              icon: 'icon-manage-schedule',
-              className: 'dashboard-refundCompanyReasonCode'
-            }]
-        }]
+        name: 'Post Trip Data',
+        route: '/#/post-trip-data',
+        icon: 'icon-create-menu',
+        className: 'dashboard-postTripData'
+      }]
+    }, {
+      title: 'Employee Commission',
+      menuItems: [{
+        name: 'Employee Commission',
+        route: '/#/employee-commission',
+        icon: 'icon-manage-schedule',
+        className: 'dashboard-employeeCommission'
+      }]
+    }, {
+      title: 'Reason',
+      menuItems: [{
+        name: 'Global Reason',
+        route: '/#/global-reason-code',
+        icon: 'icon-manage-schedule',
+        className: 'dashboard-globalReasonCode'
+      }, {
+        name: 'Company Reason',
+        route: '/#/company-reason-code',
+        icon: 'icon-manage-schedule',
+        className: 'dashboard-companyReasonCode'
+      }]
     }];
+
   });

@@ -17,13 +17,18 @@ angular.module('ts5App')
     };
 
     var initializeDatePicker = function ($scope, $element) {
-
       var options = angular.extend({}, datePickerOptions);
 
       if ($scope.disablePast) {
         options.startDate = '+1d';
       } else if ($scope.minDate && !$scope.isSearchField) {
         options.startDate = moment($scope.minDate, 'L').format('L');
+      }
+      if ($scope.minDate) {
+        options.startDate = $scope.minDate;
+      }
+      if ($scope.maxDate) {
+        options.endDate = $scope.maxDate;
       }
 
       if ($scope.disableDateRange) {
@@ -45,6 +50,10 @@ angular.module('ts5App')
     };
 
     function link($scope, $element) {
+      $scope.$watchGroup(['minDate', 'maxDate'], function(){
+        $element.find('.startDate').datepicker('setStartDate', $scope.minDate);
+        $element.find('.startDate').datepicker('setEndDate', $scope.maxDate);
+      });
 
       if ($scope.isSearchField) {
         initializeDatePicker($scope, $element);
@@ -82,8 +91,8 @@ angular.module('ts5App')
         disableEndDate: '=',
         disableDateRange: '@',
         isSearchField: '@',
-        minDate: '@',
-        maxDate: '@',
+        minDate: '=',
+        maxDate: '=',
         startDateModel: '=',
         endDateModel: '='
       },

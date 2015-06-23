@@ -1,13 +1,12 @@
 <!-- GTINDirective -->
 
-<div class="form-group">
-
+<div class="form-group" ng-class="{ 'has-error' : form[GTIN].$dirty && !form[GTIN].$valid || displayError && !form[GTIN].$valid , 'has-success' : form[GTIN].$dirty && form[GTIN].$valid }">
   <div class="row">
 
     <div class="col-xs-6 col-sm-6">
 
       <label>Value *</label>
-      <input required name="GTIN" ng-model="GTIN.value" type="text" class="form-control" minlength="1" ng-min-length="1" ng-max-lengh="13" maxlength="13"/>
+      <input ng-required name="GTIN" ng-model="GTIN.value" type="text" class="form-control" ng-pattern="regexp.alphanumeric" minlength="1" maxlength="13" ng-min-length="1" ng-max-lengh="13" />
 
     </div>
 

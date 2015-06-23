@@ -24,7 +24,8 @@ angular
     'dynform',
     'ngFileUpload',
     'ja.qr',
-    'ngToast'
+    'ngToast',
+    'ang-drag-drop'
   ])
   .constant('regexp', {
     word: /^[\w\s]+$/,
@@ -79,13 +80,9 @@ angular
         templateUrl: 'views/stock-owner-item-create.html',
         controller: 'StockOwnerItemCreateCtrl'
       })
-      .when('/company-list', {
-        templateUrl: 'views/company-list.html',
-        controller: 'CompanyListCtrl'
-      })
-      .when('/company-relationship-edit/:id', {
-        templateUrl: 'views/company-relationship.html',
-        controller: 'CompanyRelationshipListCtrl'
+      .when('/companies', {
+        templateUrl: 'views/companies.html',
+        controller: 'CompaniesCtrl'
       })
       .when('/company/:id', {
         templateUrl: 'views/company.html',
@@ -108,8 +105,8 @@ angular
         controller: 'MenuEditCtrl'
       })
       .when('/cash-bag/:state/:id?', {
-        templateUrl: 'views/cash-bag-create.html',
-        controller: 'CashBagCreateCtrl'
+        templateUrl: 'views/cash-bag.html',
+        controller: 'CashBagCtrl'
       })
       .when('/cash-bag-list', {
         templateUrl: 'views/cash-bag-list.html',
@@ -123,17 +120,29 @@ angular
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })
-      .when('/crew-commission', {
-        templateUrl: 'views/crew-commission.html',
-        controller: 'CrewCommissionCtrl'
+      .when('/employee-commission', {
+        templateUrl: 'views/employee-commission.html',
+        controller: 'EmployeeCommissionCtrl'
       })
-      .when('/refund-global-reason-code', {
-        templateUrl: 'views/refund-global-reason-code.html',
-        controller: 'RefundGlobalReasonCodeCtrl'
+      .when('/global-reason-code', {
+        templateUrl: 'views/global-reason-code.html',
+        controller: 'GlobalReasonCodeCtrl'
       })
-      .when('/refund-company-reason-code', {
-        templateUrl: 'views/refund-company-reason-code.html',
-        controller: 'RefundCompanyReasonCodeCtrl'
+      .when('/company-reason-code', {
+        templateUrl: 'views/company-reason-code.html',
+        controller: 'CompanyReasonCodeCtrl'
+      })
+      .when('/menu-relationship-list', {
+        templateUrl: 'views/menu-relationship-list.html',
+        controller: 'MenuRelationshipListCtrl'
+      })
+      .when('/menu-relationship-create', {
+        templateUrl: 'views/menu-relationship-create.html',
+        controller: 'MenuRelationshipCreateCtrl'
+      })
+      .when('/item-import', {
+        templateUrl: 'views/item-import.html',
+        controller: 'ItemImportCtrl'
       })
       .otherwise({
         redirectTo: '/'
@@ -155,5 +164,31 @@ angular
 
     // set regexp object into root scope for use in any template
     $rootScope.regexp = regexp;
+
+    $rootScope.sideMenu = [
+      {
+        'title': 'Stock Owner Item Management',
+        menuItems: [
+          {
+            name: 'Manage SO Items',
+            route: '/#/stock-owner-item-list',
+            icon: 'icon-manage-retail-item',
+            className: 'dashboard-managemenuItems'
+          },
+          {
+            name: 'Create SO Item',
+            route: '/#/stock-owner-item-create',
+            icon: 'icon-create-retail-item',
+            className: 'dashboard-createItem'
+          },
+          {
+            name: 'Manage SO Categories',
+            route: 'retail-items/categories',
+            icon: 'icon-manage-retail-category',
+            className: 'dashboard-manageItemCategories'
+          }
+        ]
+      }
+    ];
 
   }]);

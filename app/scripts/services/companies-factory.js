@@ -1,4 +1,6 @@
-// TODO: Redirect any instances referring to this factory to companyFactory
+// TODO:
+// Add CRUD methods for companies
+// Write tests for this factory
 
 'use strict';
 
@@ -10,15 +12,15 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('companiesFactory', function (companyService, tagsService, salesCategoriesService, taxTypesService, stationsService) {
+  .factory('companiesFactory', function (companiesService, tagsService, salesCategoriesService, taxTypesService, stationsService) {
 
     // Companies
     var getCompany = function (id) {
-      return companyService.getCompany(id);
+      return companiesService.getCompany(id);
     };
 
     var getCompaniesList = function (payload) {
-      return companyService.getCompaniesList(payload);
+      return companiesService.getCompaniesList(payload);
     };
 
     // Tags
@@ -54,6 +56,7 @@ angular.module('ts5App')
     };
 
     return {
+
       // Companies
       getCompany: getCompany,
       getCompaniesList: getCompaniesList,
@@ -72,6 +75,7 @@ angular.module('ts5App')
 
       // Stations
       getGlobalStationList: getGlobalStationList
+
     };
 
   });

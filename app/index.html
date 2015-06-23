@@ -9,12 +9,12 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css(.) styles/vendor.css -->
   <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css"/>
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
-  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css"/>
-  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css"/>
-  <link rel="stylesheet" href="bower_components/select2/select2.css"/>
-  <link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast.css"/>
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+  <link rel="stylesheet" href="bower_components/select2/select2.css" />
+  <link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
@@ -36,8 +36,7 @@
         <span class="fa fa-bars"></span>
       </button>
       <a class="navbar-brand" ng-href="/#/">
-        <span class="fa fa-th"></span>
-        TS5 Dashboard
+        ☰ TS5 Dashboard
       </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
@@ -56,11 +55,13 @@
   </div>
 </nav>
 
+<menu-slide></menu-slide>
+
 <div class="container-fluid">
   <div class="main-container" ng-view=""></div>
 </div>
-<dev-footer></dev-footer>
 
+<dev-footer></dev-footer>
 <loading-modal></loading-modal>
 <toast></toast>
 
@@ -68,9 +69,9 @@
 <script>
   !function (A, n, g, u, l, a, r) {
     A.GoogleAnalyticsObject = l, A[l] = A[l] || function () {
-          (A[l].q = A[l].q || []).push(arguments)
-        }, A[l].l = +new Date, a = n.createElement(g),
-        r = n.getElementsByTagName(g)[0], a.src = u, r.parentNode.insertBefore(a, r)
+        (A[l].q = A[l].q || []).push(arguments)
+      }, A[l].l = +new Date, a = n.createElement(g),
+      r = n.getElementsByTagName(g)[0], a.src = u, r.parentNode.insertBefore(a, r)
   }(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
   ga('create', 'UA-30136587-1');
@@ -104,6 +105,7 @@
 <script src="bower_components/ui-select/src/select3.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/ngtoast/dist/ngToast.js"></script>
+<script src="bower_components/angular-native-dragdrop/draganddrop.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -112,10 +114,11 @@
 <script src="scripts/config.js"></script>
 <script src="scripts/controllers/main.js"></script>
 <script src="scripts/controllers/about.js"></script>
-<script src="scripts/controllers/company-list.js"></script>
+<script src="scripts/controllers/companies.js"></script>
 <script src="scripts/controllers/item-list.js"></script>
+<script src="scripts/services/companieslistfactory.js"></script>
+<script src="scripts/services/companies-factory.js"></script>
 <script src="scripts/controllers/company.js"></script>
-<script src="scripts/controllers/company-relationship-list.js"></script>
 <script src="scripts/services/items-factory.js"></script>
 <script src="scripts/controllers/item-create.js"></script>
 <script src="scripts/directives/input-text.js"></script>
@@ -128,7 +131,7 @@
 <script src="scripts/services/dailyExchangeRatesService.js"></script>
 <script src="scripts/services/items-service.js"></script>
 <script src="scripts/directives/input-select.js"></script>
-<script src="scripts/services/company-service.js"></script>
+<script src="scripts/services/companies-service.js"></script>
 <script src="scripts/controllers/menu-list.js"></script>
 <script src="scripts/controllers/menu-create.js"></script>
 <script src="scripts/controllers/menu-edit.js"></script>
@@ -142,12 +145,9 @@
 <script src="scripts/services/units-service.js"></script>
 <script src="scripts/services/tags-service.js"></script>
 <script src="scripts/services/companies-factory.js"></script>
-<script src="scripts/services/company-relationship-factory.js"></script>
-<script src="scripts/services/company-factory.js"></script>
 <script src="scripts/services/sales-categories-service.js"></script>
 <script src="scripts/services/tax-types-service.js"></script>
 <script src="scripts/services/stations-service.js"></script>
-<script src="scripts/services/company-relationship-service.js"></script>
 <script src="scripts/directives/qr-upload.js"></script>
 <script src="scripts/directives/qr-create.js"></script>
 <script src="scripts/directives/form-error-dialog.js"></script>
@@ -158,7 +158,6 @@
 <script src="scripts/directives/input-station-exception.js"></script>
 <script src="scripts/services/menu-service.js"></script>
 <script src="scripts/services/currencies-service.js"></script>
-<script src="scripts/directives/list-object.js"></script>
 <script src="scripts/directives/loading-modal.js"></script>
 <script src="scripts/directives/left-navigation.js"></script>
 <script src="scripts/directives/input-item-image.js"></script>
@@ -171,14 +170,25 @@
 <script src="scripts/directives/dev-footer.js"></script>
 <script src="scripts/controllers/post-trip-data-list.js"></script>
 <script src="scripts/controllers/post-trip-data.js"></script>
-<script src="scripts/controllers/crew-commission.js"></script>
-<script src="scripts/controllers/refund-global-reason-code.js"></script>
-<script src="scripts/controllers/refund-company-reason-code.js"></script>
+<script src="scripts/controllers/employee-commission.js"></script>
+<script src="scripts/controllers/global-reason-code.js"></script>
+<script src="scripts/controllers/company-reason-code.js"></script>
 <script src="scripts/filters/date-range.js"></script>
 <script src="scripts/services/version-service.js"></script>
-<script src="scripts/controllers/cash-bag-create.js"></script>
+<script src="scripts/controllers/cash-bag.js"></script>
 <script src="scripts/services/cash-bag-service.js"></script>
+<script src="scripts/services/schedules-service.js"></script>
+<script src="scripts/services/stations-service.js"></script>
 <script src="scripts/controllers/cash-bag-list.js"></script>
+<script src="scripts/services/cash-bag-factory.js"></script>
+<script src="scripts/directives/menu-slide.js"></script>
+<script src="scripts/services/factory-helper.js"></script>
+<script src="scripts/controllers/menu-relationship-list.js"></script>
+<script src="scripts/controllers/menu-relationship-create.js"></script>
+<script src="scripts/controllers/item-import.js"></script>
+<script src="scripts/directives/download-template-modal.js"></script>
+<script src="scripts/directives/delete-record-dialog.js"></script>
+<script src="scripts/services/date-utility.js"></script>
 <!-- endbuild -->
 </body>
 </html>
