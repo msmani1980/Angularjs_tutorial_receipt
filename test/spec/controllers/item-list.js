@@ -190,5 +190,15 @@ describe('itemListCtrl', function () {
       expect(scope.itemsPerPage).toEqual(10);
     });
 
+    it('should attach currentPageInt to the scope', function () {
+      expect(scope.currentPageInt).toBeDefined();
+      expect(scope.currentPageInt).toEqual(1);
+    });
+
+    it('should attach itemsPerPageInt to the scope', function () {
+      expect(scope.itemsPerPageInt).toBeDefined();
+      expect(scope.itemsPerPageInt).toEqual(10);
+    });
+
   });
 });

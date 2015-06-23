@@ -94,7 +94,7 @@
 
 	</div>
 
-	<alert ng-show="!paginatedItems.length" type="info">
+	<alert ng-hide="!item.length" ng-show="!paginatedItems.length" type="info">
 		<span class="fa fa-flag"></span> Your search returned no results.
 	</alert>
 
