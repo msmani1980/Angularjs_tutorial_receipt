@@ -14,4 +14,8 @@ describe('Controller: EmployeeCommissionCtrl', function () {
     });
   }));
 
+  describe('', function(){
+
+  });
+
 });

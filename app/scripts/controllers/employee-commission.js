@@ -5,7 +5,7 @@
  * @ngdoc function
  * @name ts5App.controller:EmployeeCommissionCtrl
  * @description
- * # PostFlightDataCtrl
+ * # EmployeeCommissionCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
