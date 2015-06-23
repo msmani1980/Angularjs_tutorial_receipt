@@ -13,8 +13,8 @@ angular.module('ts5App')
 
     var $this = this;
     $scope.currentPage = 1;
-    $scope.recordsPerPage = 10;
-    $scope.recordList = [];
+    $scope.menusPerPage = 10;
+    $scope.menuList = [];
     $scope.dateRange = {
       startDate: '',
       endDate: ''
@@ -22,34 +22,33 @@ angular.module('ts5App')
     var stationAPIResponse;
 
     $scope.$watch('dateRange.startDate + dateRange.endDate', function () {
-      $scope.updateRecordList();
+      $this.updateMenuList();
     });
 
-    this.updateRecordList = function () {
-      var filteredRecords = $this.filterItems();
-      $scope.recordListCount = filteredRecords.length;
-      $this.setPaginatedRecords(filteredRecords);
+    this.updateMenuList = function () {
+      var filteredMenus = $this.filterItems();
+      $scope.menuListCount = filteredMenus.length;
+      $this.setPaginatedMenus(filteredMenus);
     };
 
     this.filterItems = function () {
-      var dateFiltered = $filter('daterange')($scope.recordList, $scope.dateRange
+      var dateFiltered = $filter('daterange')($scope.menuList, $scope.dateRange
         .startDate,
         $scope.dateRange.endDate);
       return $filter('filter')(dateFiltered, $scope.search);
     };
 
-    this.setPaginatedRecords = function (filteredRecords) {
-      var begin = (($scope.currentPage - 1) * $scope.recordsPerPage);
-      var end = begin + $scope.recordsPerPage;
-      $scope.paginatedRecords = filteredRecords.slice(begin, end);
+    this.setPaginatedMenus = function (filteredMenus) {
+      var begin = (($scope.currentPage - 1) * $scope.menusPerPage);
+      var end = begin + $scope.menusPerPage;
+      $scope.paginatedMenus = filteredMenus.slice(begin, end);
     };
 
-    this.getRecordList = function () {
-      var $this = this;
+    this.getMenuList = function () {
       menuService.getMenuList().then(function (response) {
-        $scope.recordList = response.menus;
-        $scope.recordListCount = $scope.recordList.length;
-        $this.updateRecordList();
+        $scope.menuList = response.menus;
+        $scope.menuListCount = $scope.menuList.length;
+        $this.updateMenuList();
       });
     };
 
@@ -68,10 +67,10 @@ angular.module('ts5App')
       for (var filterKey in filters) {
         $scope.search[filterKey] = '';
       }
-      $scope.recordListCount = $scope.recordList.length;
+      $scope.menuListCount = $scope.menuList.length;
     };
 
-    this.getRecordList();
+    this.getMenuList();
 
     stationAPIResponse = {
 

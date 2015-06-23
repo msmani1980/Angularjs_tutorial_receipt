@@ -99,7 +99,7 @@
 
     <tbody>
 
-      <tr id="menu-{{menu.id}}" ng-repeat="(key,menu) in paginatedRecords">
+      <tr id="menu-{{menu.id}}" ng-repeat="(key,menu) in paginatedMenus">
 
         <td>{{ menu.menuCode }}</td>
         <td>{{ menu.menuName }}</td>
@@ -137,8 +137,8 @@
 
 				Show
 
-				<select class="form-control" ng-model="itemsPerPage">
-					<option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
+				<select class="form-control" ng-model="menusPerPage">
+					<option ng-selected="menusPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
 				</select>
 
 				Items per Page
@@ -147,7 +147,7 @@
 
 			<div class="col-xs-12 col-sm-6 text-right">
 
-				<pagination total-items="recordListCount" items-per-page="recordsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+				<pagination total-items="menuListCount" items-per-page="menusPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
 
 			</div>
 
@@ -160,4 +160,4 @@
 
 <left-navigation base-path="menu-relationship"></left-navigation>
 
-<delete-record-dialog></delete-record-dialog>
+<delete-menu-dialog></delete-menu-dialog>
