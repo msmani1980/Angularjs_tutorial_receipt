@@ -27,10 +27,7 @@ angular.module('ts5App')
     };
 
     this.filterItems = function () {
-      var dateFiltered = $filter('daterange')($scope.itemsList, $scope.dateRange
-        .startDate,
-        $scope.dateRange.endDate);
-      return $filter('filter')(dateFiltered, $scope.search);
+      return $filter('filter')($scope.itemsList, $scope.search);
     };
 
     this.parsePaginationToInt = function () {
@@ -45,9 +42,21 @@ angular.module('ts5App')
       $scope.paginatedItems = filteredItems.slice(begin, end);
     };
 
+    this.generateItemQuery = function () {
+      var query = {};
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
+          'L', 'YYYYMMDD');
+        query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
+          'L', 'YYYYMMDD');
+      }
+      return query;
+    };
+
     this.getItemsList = function () {
+      var query = this.generateItemQuery();
       var $this = this;
-      itemsFactory.getItemsList({}).then(function (response) {
+      itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
         $scope.itemsListCount = $scope.itemsList.length;
         $this.updateItemList();
@@ -113,8 +122,8 @@ angular.module('ts5App')
       $this.updateItemList();
     }, true);
 
-    $scope.$watch('dateRange.startDate + dateRange.endDate', function () {
-      $this.updateItemList();
+    $scope.$watchCollection('dateRange', function () {
+      $this.getItemsList();
     });
 
     $scope.$watch('currentPage + itemsPerPage', function () {
