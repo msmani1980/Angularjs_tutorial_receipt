@@ -33,9 +33,15 @@ angular.module('ts5App')
       return $filter('filter')(dateFiltered, $scope.search);
     };
 
+    this.parsePaginationToInt = function () {
+      $scope.currentPageInt = parseInt($scope.currentPage);
+      $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
+    };
+
     this.setPaginatedItems = function (filteredItems) {
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-      var end = begin + $scope.itemsPerPage;
+      this.parsePaginationToInt();
+      var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
+      var end = begin + $scope.itemsPerPageInt;
       $scope.paginatedItems = filteredItems.slice(begin, end);
     };
 
