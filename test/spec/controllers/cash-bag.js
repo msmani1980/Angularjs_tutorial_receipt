@@ -20,7 +20,7 @@ describe('Controller: CashBagCtrl', function () {
     dailyExchangeRatesResponseJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
+  beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_) {
     scope = $rootScope.$new();
 
     inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_) {
@@ -30,7 +30,7 @@ describe('Controller: CashBagCtrl', function () {
       dailyExchangeRatesResponseJSON = _servedDailyExchangeRates_;
     });
 
-    cashBagFactory = $injector.get('cashBagFactory');
+    cashBagFactory = _cashBagFactory_;
 
     getCashBagDeferred = $q.defer();
     getCashBagDeferred.resolve(cashBagResponseJSON);

@@ -11,11 +11,11 @@ describe('Factory: cashBagFactory', function () {
     GlobalMenuService,
     stationsService,
     schedulesService,
-    rootScope,
-    scope,
     companiesService,
     currenciesService,
-    dailyExchangeRatesService;
+    dailyExchangeRatesService,
+    rootScope,
+    scope;
 
   beforeEach(inject(function ($rootScope, _cashBagFactory_, _cashBagService_, _GlobalMenuService_, _stationsService_, _schedulesService_, _companiesService_, _currenciesService_, _dailyExchangeRatesService_) {
     cashBagService = _cashBagService_;

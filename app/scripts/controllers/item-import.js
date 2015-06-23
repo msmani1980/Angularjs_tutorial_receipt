@@ -8,8 +8,17 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemImportCtrl', function ($scope) {
+  .controller('ItemImportCtrl', function ($scope, $q, ItemImportFactory ) {
+
+    // controller global properties
+    var _companyId = null;
+
     $scope.viewName = 'Import Stock Owner Items';
+
+    // Constructor
+    (function CONSTRUCTOR(){
+
+    })();
 
     // TODO: documentation here:
     // http://angular-dragdrop.github.io/angular-dragdrop/
