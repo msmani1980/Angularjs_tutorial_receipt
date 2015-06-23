@@ -23,11 +23,11 @@ describe('The StockOwnerItemListCtrl controller', function () {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope, _itemsService_,
-                              _itemTypesService_, _salesCategoriesService_,
-                              $location, $httpBackend) {
+    _itemTypesService_, _salesCategoriesService_,
+    $location, $httpBackend) {
 
     inject(function (_servedItemsList_, _servedItemTypes_,
-                     _servedSalesCategories_) {
+      _servedSalesCategories_) {
       itemsListJSON = _servedItemsList_;
       itemTypesJSON = _servedItemTypes_;
       salesCategoriesJSON = _servedSalesCategories_;
@@ -75,7 +75,7 @@ describe('The StockOwnerItemListCtrl controller', function () {
     StockOwnerItemListCtrl.getSalesCategoriesList();
   }));
 
-  afterEach(function() {
+  afterEach(function () {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
   });
@@ -178,6 +178,16 @@ describe('The StockOwnerItemListCtrl controller', function () {
     it('should attach itemsPerPage to the scope', function () {
       expect(scope.itemsPerPage).toBeDefined();
       expect(scope.itemsPerPage).toEqual(10);
+    });
+
+    it('should attach currentPageInt to the scope', function () {
+      expect(scope.currentPageInt).toBeDefined();
+      expect(scope.currentPageInt).toEqual(1);
+    });
+
+    it('should attach itemsPerPageInt to the scope', function () {
+      expect(scope.itemsPerPageInt).toBeDefined();
+      expect(scope.itemsPerPageInt).toEqual(10);
     });
 
   });
