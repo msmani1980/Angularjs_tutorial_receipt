@@ -14,6 +14,7 @@ angular.module('ts5App')
     };
 
     var getPostTripDataList = function (id, optionalPayload) {
+      return {response:'mock'};
       //if(arguments.length > 1) {
       //  return cashBagService.getCashBagList(id, optionalPayload);
       //} else {
@@ -27,8 +28,8 @@ angular.module('ts5App')
 
 
     return {
-      getCompanyId: getCompanyId,
       getPostTripDataList: getPostTripDataList,
+      getCompanyId: getCompanyId,
       getStationList: getStationList
     };
   });

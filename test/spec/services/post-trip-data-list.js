@@ -4,12 +4,14 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  //beforeEach(module('served/post-trip-data-list.json'));
+  beforeEach(module('served/stations.json'));
 
   var PostTripDataListCtrl,
     scope,
     postTripDataResponseJSON,
     postTripDataDeferred,
+    stationsListResponseJSON,
+    stationsListDeferred,
     companyId,
     postTripFactory,
     location;
@@ -20,13 +22,20 @@ describe('Controller: PostFlightDataListCtrl', function () {
     //inject(function (_servedPostTripDataList_) {
     //  postTripDataResponseJSON = _servedPostTripDataList_;
     //});
+    inject(function (_servedStations_) {
+      stationsListResponseJSON = _servedStations_;
+    });
     location = $location;
-    //postTripFactory = $injector.get('postTripFactory');
+    postTripFactory = $injector.get('postTripFactory');
     scope = $rootScope.$new();
+
+    stationsListDeferred = $q.defer();
+    stationsListDeferred.resolve(stationsListResponseJSON);
     //postTripDataDeferred = $q.defer();
     //postTripDataDeferred.resolve(postTripDataResponseJSON);
 
     //spyOn(postTripFactory, 'getPostTripDataList').and.returnValue(postTripDataDeferred.promise);
+    spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     PostTripDataListCtrl = $controller('PostFlightDataListCtrl', {
       $scope: scope
     });
@@ -46,7 +55,10 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
   describe('post trip data constructor calls', function(){
     it('should call getPostTripDataList', function(){
-      expect(postTripFactory.getPostTripData).toHaveBeenCalled();
+      expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
+    });
+    it('shoudl call getCompanyId', function(){
+      expect(postTripFactory.getCompanyId).toHaveBeenCalled();
     });
   });
 
