@@ -9,11 +9,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionCtrl', function ($scope) {
+  .controller('EmployeeCommissionCtrl', function ($scope, employeeCommissionFactory) {
 
     $scope.viewName = 'Employee Commission';
-
     $scope.startDate = moment().add(1, 'days').format('L').toString();
-    //$scope.endDate = moment().format('L').toString();
 
+    employeeCommissionFactory.getItemsList({}).then(function(dataFromAPI) {
+      $scope.itemsList = dataFromAPI.retailItems;
+    });
   });

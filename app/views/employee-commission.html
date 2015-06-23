@@ -32,10 +32,7 @@
     <div class="form-group">
       <label class="control-label" for="itemName">Item Name</label>
       <select class="form-control" id="itemName">
-        <option>Coke</option>
-        <option>Pepsi</option>
-        <option>Sprite</option>
-        <option>Chicken Sandwich</option>
+        <option ng-repeat="item in itemsList | orderBy:'itemName'">{{item.itemName}}</option>
       </select>
     </div>
   </div>

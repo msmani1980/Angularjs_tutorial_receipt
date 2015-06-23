@@ -12,10 +12,14 @@ describe('Controller: EmployeeCommissionCtrl', function () {
     EmployeeCommissionCtrl = $controller('EmployeeCommissionCtrl', {
       $scope: scope
     });
+    scope.$digest();
   }));
 
-  describe('', function(){
+  describe('initialize', function(){
 
+    it('should have a list of items attached to scope', function(){
+      expect(scope.itemsList).toBeDefined();
+    });
   });
 
 });
