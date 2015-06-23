@@ -30,4 +30,8 @@ angular.module('ts5App')
       });
     });
 
+    employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
+      $scope.priceTypesList = dataFromAPI;
+    });
+
   });

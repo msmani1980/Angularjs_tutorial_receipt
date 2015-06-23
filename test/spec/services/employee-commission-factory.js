@@ -10,9 +10,9 @@ describe('Service: employeeCommissionFactory', function () {
     itemsService,
     priceTypesService;
 
-  beforeEach(inject(function (_employeeCommissionFactory_, _itemsService_, _priceTypesService_) {
-    itemsService = _itemsService_;
-    priceTypesService = _priceTypesService_;
+  beforeEach(inject(function (_employeeCommissionFactory_, $injector) {
+    itemsService = $injector.get('itemsService');
+    priceTypesService = $injector.get('priceTypesService');
 
     spyOn(itemsService, 'getItemsList');
     spyOn(priceTypesService, 'getPriceTypesList');
