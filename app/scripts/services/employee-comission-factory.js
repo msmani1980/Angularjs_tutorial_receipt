@@ -2,22 +2,19 @@
 
 /**
  * @ngdoc service
- * @name ts5App.employeeComissionFactory
+ * @name ts5App.employeeCommissionFactory
  * @description
- * # employeeComissionFactory
+ * # employeeCommissionFactory
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('employeeComissionFactory', function () {
-    // Service logic
-    // ...
+  .factory('employeeCommissionFactory', function (itemsService) {
 
-    var meaningOfLife = 42;
+    var getItemsList = function (payload) {
+      return itemsService.getItemsList(payload);
+    };
 
-    // Public API here
     return {
-      someMethod: function () {
-        return meaningOfLife;
-      }
+      getItemsList: getItemsList
     };
   });
