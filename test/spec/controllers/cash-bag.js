@@ -128,7 +128,7 @@ describe('Controller: CashBagCtrl', function () {
       });
     });
 
-    describe('formSave', function() {
+    describe('formSave form action', function() {
       it('should call cashBagFactory createCashBag', function () {
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.createCashBag).toHaveBeenCalledWith({cashBag: scope.cashBag});

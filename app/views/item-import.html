@@ -1,4 +1,4 @@
-<form name="itemImportSearchForm" class="form-horizontal edit-form">
+v<form name="itemImportSearchForm" class="form-horizontal edit-form">
 
   <div class="edit-controls">
     <div class="row">
@@ -37,12 +37,12 @@
                 name="stockOwnerId"
                 class="form-control"
                 id="stockOwnerId">
-          <option>Select Stock Owner</option>
-          <option ng-repeat="company in stockOwnerList">{{company.name}}</option>
+          <option value="">Select Stock Owner</option>
+          <option ng-repeat="company in stockOwnerList" ng-value="{{ company.id }}">{{company.companyName}}</option>
         </select>
       </div>
       <div class="col-xs-3">
-        <button class="btn btn-default">Import All</button>
+        <button class="btn btn-default" ng-click="importAll()">Import All</button>
       </div>
     </div>
     <div class="col-xs-6">
