@@ -10,10 +10,10 @@ describe('Controller: MenuRelationshipListCtrl', function () {
     stationAPIResponse;
 
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/menus.json', 'served/caterer-stations.json'));
+  beforeEach(module('served/menus.json', 'served/catering-stations.json'));
 
   beforeEach(inject(function (_$rootScope_, _$controller_, $injector,
-    _servedMenus_, _servedCatererStations_) {
+    _servedMenus_, _servedCateringStations_) {
     $location = $injector.get('$location');
     $location.path('/menu-relationship-list');
     $rootScope = _$rootScope_;
@@ -24,7 +24,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
       '$scope': $scope
     });
     menuAPIResponse = _servedMenus_;
-    stationAPIResponse = _servedCatererStations_;
+    stationAPIResponse = _servedCateringStations_;
   }));
 
   describe('The MenuRelationshipListCtrl', function () {
@@ -317,7 +317,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
           it('should contain a label with the correct text',
             function () {
               expect(formGroup.find('label').text().trim())
-                .toEqual('Caterer Stations');
+                .toEqual('Catering Stations');
             });
           it('should contain an select element', function () {
             expect(formGroup.find('select')[0]).toBeDefined();
@@ -487,12 +487,12 @@ describe('Controller: MenuRelationshipListCtrl', function () {
           expect(testHeader.text().trim()).toEqual(
             'Menu Name');
         });
-        it('should contain a Caterer Station column',
+        it('should contain a Catering Station column',
           function () {
             testHeader = angular.element(thead.find(
               'th')[2]);
             expect(testHeader.text().trim()).toEqual(
-              'Caterer Stations');
+              'Catering Stations');
           });
         it('should contain a Start Date column', function () {
           testHeader = angular.element(thead.find(
@@ -572,7 +572,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                 testMenuData.menuName);
             });
           it(
-            'should contain a Caterer Stations cell',
+            'should contain a Catering Stations cell',
             function () {
               testCell = angular.element(testRow.find(
                 'td')[2]);
