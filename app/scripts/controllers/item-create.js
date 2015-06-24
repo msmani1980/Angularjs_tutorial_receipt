@@ -51,13 +51,16 @@ angular.module('ts5App')
       }
     };
 
-    this.setFormAsViewOnly = function () {
-      $scope.viewName = 'Viewing Item ' + $routeParams.id;
+    this.setFormAsViewOnly = function (item) {
+      $scope.viewName = 'Viewing Item ' + item.itemName;
+    };
+
+    this.updateViewName = function (item) {
+      $scope.viewName = 'Editing ' + item.itemName;
     };
 
     this.setFormAsEdit = function () {
       $scope.editingItem = true;
-      $scope.viewName = 'Edit Item ' + $routeParams.id;
       $scope.buttonText = 'Save';
     };
 
@@ -76,7 +79,8 @@ angular.module('ts5App')
 
       itemsFactory.getItem(id).then(function (data) {
         if ($this.validateItemCompany(data)) {
-          $this.upateFormData(data.retailItem);
+          $this.updateFormData(data.retailItem);
+          $this.updateViewName(data.retailItem);
         } else {
           $location.path('/');
           return false;
@@ -141,7 +145,7 @@ angular.module('ts5App')
     }
 
     // updates the $scope.formData
-    this.upateFormData = function (itemData) {
+    this.updateFormData = function (itemData) {
       if (!itemData) {
         return false;
       }
@@ -253,8 +257,12 @@ angular.module('ts5App')
       $scope.taxTypes = data.response;
     });
 
-    $q.all([itemsFactory.getItemsList, itemsFactory.getAllergensList, itemsFactory.getTagsList, itemsFactory.getCharacteristicsList]).then(function(){
-      $('.multi-select').select2({width:'100%'});
+    $q.all([itemsFactory.getItemsList, itemsFactory.getAllergensList,
+      itemsFactory.getTagsList, itemsFactory.getCharacteristicsList
+    ]).then(function () {
+      $('.multi-select').select2({
+        width: '100%'
+      });
     });
 
     // TODO: Move to global function
@@ -452,11 +460,12 @@ angular.module('ts5App')
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
     };
 
-    $scope.filterCharacteristics = function() {
-      if($scope.itemTypes[$scope.formData.itemTypeId-1].name === 'Virtual') {
+    $scope.filterCharacteristics = function () {
+      if ($scope.itemTypes[$scope.formData.itemTypeId - 1].name ===
+        'Virtual') {
         $scope.filteredCharacteristics = [];
-        angular.forEach($scope.characteristics, function(value){
-          if(value.name === 'Downloadable' || value.name === 'Link') {
+        angular.forEach($scope.characteristics, function (value) {
+          if (value.name === 'Downloadable' || value.name === 'Link') {
             $scope.filteredCharacteristics.push(value);
           }
           $scope.shouldDisplayURLField = true;
@@ -696,7 +705,7 @@ angular.module('ts5App')
       };
       itemsFactory.updateItem($routeParams.id, updateItemPayload).then(
         function (response) {
-          $this.upateFormData(response.retailItem);
+          $this.updateFormData(response.retailItem);
           angular.element('#loading').modal('hide');
           angular.element('#update-success').modal('show');
         },
