@@ -20,6 +20,42 @@ angular.module('ts5App')
     $scope.readOnly = true;
     $scope.displayError = false;
 
+    var helpers = {
+      showMessage: function(error, isError, message) {
+        if(arguments.length < 2) {
+          isError = true;
+          message = 'error';
+        }
+        var className = isError ? 'warning' : 'success';
+        ngToast.create({
+          className: className,
+          dismissButton: true,
+          content: '<strong>Cash bag</strong>:' + message + '!'
+        });
+        $scope.displayError = true;
+        if(error !== null) {
+          $scope.formErrors = error.data;
+        }
+      },
+      canDelete: function (cashBag) {
+        var canDelete = true;
+        angular.forEach(cashBag.cashBagCurrencies, function (currency) {
+          if (canDelete) {
+            if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
+              canDelete = false;
+            }
+            if (currency.coinAmountManual !== null) {
+              canDelete = false;
+            }
+            if (currency.coinAmountManual !== null) {
+              canDelete = false;
+            }
+          }
+        });
+        return canDelete;
+      }
+    };
+
     // scope methods
     $scope.formSave = function (formCashBag) {
       switch ($routeParams.state) {
@@ -32,8 +68,8 @@ angular.module('ts5App')
             cashBag: saveCashBag
           };
           cashBagFactory.updateCashBag($routeParams.id, payload).then(
-            HELPERS().updateSuccess,
-            HELPERS().showErrors
+            helpers.showMessage(null, false, 'successfully updated'),
+            helpers.showMessage
           );
           break;
         case 'create':
@@ -42,7 +78,7 @@ angular.module('ts5App')
               .search('scheduleDate', null)
               .search('scheduleNumber', null)
               .path('cash-bag-list');
-          }, HELPERS().showErrors);
+          }, helpers.showMessage);
           break;
       }
     };
@@ -54,12 +90,12 @@ angular.module('ts5App')
         cashBagFactory.deleteCashBag(cashBag.id).then(function () {
             window.alert('deleted');
           },
-          HELPERS().showErrors);
+          helpers.showMessage);
       }
     };
 
     // Constructor
-    (function CONSTRUCTOR() {
+    (function constructor() {
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
 
@@ -72,7 +108,7 @@ angular.module('ts5App')
               $scope.displayError = false;
               $scope.formErrors = {};
             },
-            HELPERS().showErrors
+            helpers.showMessage
           );
         },
         getCompany: function () {
@@ -106,64 +142,24 @@ angular.module('ts5App')
 
       switch ($routeParams.state) {
         case 'create':
-          CREATE();
+          create();
           break;
         case 'view':
-          READ();
+          read();
           break;
         case 'edit':
-          UPDATE();
+          update();
           break;
         default:
           // TODO - redirect home?
           break;
       }
-      DESTRUCTOR();
     })();
 
-    // helpers
-    function HELPERS() {
-      return {
-        showErrors: function (error) {
-          ngToast.create({
-            className: 'warning',
-            dismissButton: true,
-            content: '<strong>Cash bag</strong>: error!'
-          });
-          $scope.displayError = true;
-          $scope.formErrors = error.data;
-        },
-        updateSuccess: function () {
-          ngToast.create({
-            className: 'success',
-            dismissButton: true,
-            content: '<strong>Cash bag</strong>: successfully updated!'
-          });
-          $scope.displayError = false;
-          $scope.formErrors = {};
-        },
-        canDelete: function (cashBag) {
-          var canDelete = true;
-          angular.forEach(cashBag.cashBagCurrencies, function (currency) {
-            if (canDelete) {
-              if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
-                canDelete = false;
-              }
-              if (currency.coinAmountManual !== null) {
-                canDelete = false;
-              }
-              if (currency.coinAmountManual !== null) {
-                canDelete = false;
-              }
-            }
-          });
-          return canDelete;
-        }
-      };
-    }
+
 
     // CRUD - Create
-    function CREATE() {
+    function create() {
       var _promises = _factoryHelper.callServices(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
 
       $scope.readOnly = false;
@@ -197,25 +193,20 @@ angular.module('ts5App')
     }
 
     // CRUD - Read
-    function READ() {
+    function read() {
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
       $q.all(_promises).then(function () {
-        $scope.canDelete = HELPERS().canDelete;
+        $scope.canDelete = helpers.canDelete;
       });
     }
 
     // CRUD - Update
-    function UPDATE() {
+    function update() {
       $scope.readOnly = false;
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
       $q.all(_promises).then(function () {
-        $scope.canDelete = HELPERS().canDelete;
+        $scope.canDelete = helpers.canDelete;
       });
-    }
-
-    // Destructor
-    function DESTRUCTOR() {
-      // TODO - teardown
     }
 
   });
