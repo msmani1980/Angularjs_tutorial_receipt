@@ -19,19 +19,6 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
-    $scope.startDateFilter = '';
-    $scope.endDateFilter = '';
-
-    this.formatDateFilter = function () {
-      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
-        $scope.startDateFilter = dateUtility.formatDate($scope.dateRange.startDate,
-          'L',
-          'YYYY-MM-DD');
-        $scope.endDateFilter = dateUtility.formatDate($scope.dateRange.endDate,
-          'L',
-          'YYYY-MM-DD');
-      }
-    };
 
     this.updateItemList = function () {
       var filteredItems = $this.filterItems();
@@ -40,23 +27,36 @@ angular.module('ts5App')
     };
 
     this.filterItems = function () {
-      this.formatDateFilter();
-      var dateFiltered = $filter('daterange')($scope.itemsList, $scope.startDateFilter,
-        $scope.endDateFilter);
-      return $filter('filter')(dateFiltered, $scope.search);
+      return $filter('filter')($scope.itemsList, $scope.search);
+    };
+
+    this.parsePaginationToInt = function () {
+      $scope.currentPageInt = parseInt($scope.currentPage);
+      $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
     };
 
     this.setPaginatedItems = function (filteredItems) {
-      if (filteredItems.length > 0) {
-        var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-        var end = begin + $scope.itemsPerPage;
-        $scope.paginatedItems = filteredItems.slice(begin, end);
+      this.parsePaginationToInt();
+      var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
+      var end = begin + $scope.itemsPerPageInt;
+      $scope.paginatedItems = filteredItems.slice(begin, end);
+    };
+
+    this.generateItemQuery = function () {
+      var query = {};
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
+          'L', 'YYYYMMDD');
+        query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
+          'L', 'YYYYMMDD');
       }
+      return query;
     };
 
     this.getItemsList = function () {
+      var query = this.generateItemQuery();
       var $this = this;
-      itemsFactory.getItemsList({}).then(function (response) {
+      itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
         $scope.itemsListCount = $scope.itemsList.length;
         $this.updateItemList();
@@ -107,7 +107,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchFilters = function () {
-      $scope.dateRange.endDate = '';
+      $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       $scope.startDateFilter = '';
       $scope.endDateFilter = '';
@@ -122,9 +122,9 @@ angular.module('ts5App')
       $this.updateItemList();
     }, true);
 
-    $scope.$watch('dateRange', function () {
-      $this.updateItemList();
-    }, true);
+    $scope.$watchCollection('dateRange', function () {
+      $this.getItemsList();
+    });
 
     $scope.$watch('currentPage + itemsPerPage', function () {
       $this.updateItemList();

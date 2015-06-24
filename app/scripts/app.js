@@ -24,7 +24,8 @@ angular
     'dynform',
     'ngFileUpload',
     'ja.qr',
-    'ngToast'
+    'ngToast',
+    'ang-drag-drop'
   ])
   .constant('regexp', {
     word: /^[\w\s]+$/,
@@ -138,6 +139,10 @@ angular
       .when('/menu-relationship-create', {
         templateUrl: 'views/menu-relationship-create.html',
         controller: 'MenuRelationshipCreateCtrl'
+      })
+      .when('/item-import', {
+        templateUrl: 'views/item-import.html',
+        controller: 'ItemImportCtrl'
       })
       .otherwise({
         redirectTo: '/'
