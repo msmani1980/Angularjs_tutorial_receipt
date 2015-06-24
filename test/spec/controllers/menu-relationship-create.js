@@ -163,7 +163,7 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
           'should contain ng-disabled with specific expression',
           function () {
             expect(fieldSet.attr('ng-disabled')).toContain(
-              'viewOnly || itemIsActive');
+              'viewOnly || menuIsActive');
           });
         it('should contain a row', function () {
           var fieldSetRow = fieldSet.find('.row')[0];
