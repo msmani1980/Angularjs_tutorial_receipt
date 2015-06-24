@@ -109,8 +109,6 @@ angular.module('ts5App')
     $scope.clearSearchFilters = function () {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
-      $scope.startDateFilter = '';
-      $scope.endDateFilter = '';
       var filters = $scope.search;
       for (var filterKey in filters) {
         $scope.search[filterKey] = '';
@@ -118,9 +116,9 @@ angular.module('ts5App')
       $scope.itemsListCount = $scope.itemsList.length;
     };
 
-    $scope.$watch('search', function () {
+    $scope.$watchCollection('search', function () {
       $this.updateItemList();
-    }, true);
+    });
 
     $scope.$watchCollection('dateRange', function () {
       $this.getItemsList();

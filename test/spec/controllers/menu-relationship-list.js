@@ -622,7 +622,7 @@ describe('Menu Relationship List Controller', function () {
           });
           it('should contain ng-repeat', function () {
             expect(testRow.attr('ng-repeat')).toContain(
-              '(key,menu) in menuList');
+              '(key,menu) in paginatedMenus');
           });
           it('should contain a Menu Code cell',
             function () {
@@ -732,13 +732,15 @@ describe('Menu Relationship List Controller', function () {
           });
 
           describe('edit button', function () {
-            var editButton;
+            var editButton,
+              testObject;
             beforeEach(function () {
               testCell = angular.element(testRow.find(
                 'td')[5]);
               editButton = angular.element(
                 testCell
-                .find('.btn-edit'));
+                .find('.btn-edit')[0]);
+              testObject = $scope.menuList[0];
             });
             it('should be defined', function () {
               expect(editButton[0]).toBeDefined();
@@ -755,23 +757,19 @@ describe('Menu Relationship List Controller', function () {
             it(
               'should have an ng-href to edit the menu',
               function () {
-                var testObject = $scope.menuList[
-                  0];
                 var testUrl = '#/menu-edit/' +
                   testObject.id;
                 expect(editButton.attr('ng-href'))
-                  .toEqual(
-                    testUrl);
+                  .toEqual(testUrl);
               });
             it(
               'should be disabled if the menu is inactive',
               function () {
-                var testObject = $scope.menuList[0];
-                var itemIsInactive = $scope.isItemInactive(
+                var menuIsInactive = $scope.isMenuInactive(
                   testObject.endDate);
-                expect(itemIsInactive).toBeTruthy();
-                expect(editButton.attr('disabled')).toEqual(
-                  'disabled');
+                expect(menuIsInactive).toBeTruthy();
+                expect(editButton.attr(
+                  'disabled')).toEqual('disabled');
               });
           });
 
@@ -808,9 +806,9 @@ describe('Menu Relationship List Controller', function () {
               'should be disabled if the menu is active',
               function () {
                 var testObject = $scope.menuList[0];
-                var itemIsActive = $scope.isItemActive(
+                var menuIsActive = $scope.isMenuActive(
                   testObject.endDate);
-                expect(itemIsActive).toBeTruthy();
+                expect(menuIsActive).toBeTruthy();
                 expect(deleteButton.attr('disabled'))
                   .toEqual(
                     'disabled');
@@ -819,9 +817,9 @@ describe('Menu Relationship List Controller', function () {
               'should be disabled if the menu is inactive',
               function () {
                 var testObject = $scope.menuList[0];
-                var itemIsInactive = $scope.isItemInactive(
+                var menuIsInactive = $scope.isMenuInactive(
                   testObject.endDate);
-                expect(itemIsInactive).toBeTruthy();
+                expect(menuIsInactive).toBeTruthy();
                 expect(deleteButton.attr('disabled'))
                   .toEqual(
                     'disabled');

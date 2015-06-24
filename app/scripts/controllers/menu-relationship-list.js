@@ -19,49 +19,84 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
-    var stationAPIResponse;
-
-    $scope.$watch('dateRange.startDate + dateRange.endDate', function () {
-      $this.updateMenuList();
-    });
 
     this.updateMenuList = function () {
-      var filteredMenus = $this.filterItems();
+      var filteredMenus = $this.filterMenus();
       $scope.menuListCount = filteredMenus.length;
       $this.setPaginatedMenus(filteredMenus);
     };
 
-    this.filterItems = function () {
-      var dateFiltered = $filter('daterange')($scope.menuList, $scope.dateRange
-        .startDate,
-        $scope.dateRange.endDate);
-      return $filter('filter')(dateFiltered, $scope.search);
+    this.filterMenus = function () {
+      return $filter('filter')($scope.menuList, $scope.search);
+    };
+
+    this.parsePaginationToInt = function () {
+      $scope.currentPageInt = parseInt($scope.currentPage);
+      $scope.menusPerPageInt = parseInt($scope.menusPerPage);
     };
 
     this.setPaginatedMenus = function (filteredMenus) {
-      var begin = (($scope.currentPage - 1) * $scope.menusPerPage);
-      var end = begin + $scope.menusPerPage;
+      this.parsePaginationToInt();
+      var begin = (($scope.currentPageInt - 1) * $scope.menusPerPageInt);
+      var end = begin + $scope.menusPerPageInt;
       $scope.paginatedMenus = filteredMenus.slice(begin, end);
     };
 
+    this.generateMenuQuery = function () {
+      var query = {};
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
+          'L', 'YYYYMMDD');
+        query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
+          'L', 'YYYYMMDD');
+      }
+      return query;
+    };
+
     this.getMenuList = function () {
-      menuService.getMenuList().then(function (response) {
+      var query = this.generateMenuQuery();
+      var $this = this;
+      menuService.getMenuList(query).then(function (response) {
         $scope.menuList = response.menus;
         $scope.menuListCount = $scope.menuList.length;
         $this.updateMenuList();
       });
     };
 
-    $scope.isItemActive = function (startDate) {
+
+    this.findMenuIndex = function (menuId) {
+      var menuIndex = 0;
+      for (var key in $scope.menuList) {
+        var menu = $scope.menuList[key];
+        if (menu.id === menuId) {
+          menuIndex = key;
+          break;
+        }
+      }
+      return menuIndex;
+    };
+
+    $scope.removeMenu = function (menuId) {
+      var menuIndex = $this.findMenuIndex(menuId);
+      angular.element('#loading').modal('show').find('p').text(
+        'Removing your menu');
+      menuService.removeMenu(menuId).then(function () {
+        angular.element('#loading').modal('hide');
+        $scope.menuList.splice(menuIndex, 1);
+        $this.updateMenuList();
+      });
+    };
+
+    $scope.isMenuActive = function (startDate) {
       return Date.parse(startDate) <= dateUtility.now();
     };
 
-    $scope.isItemInactive = function (endDate) {
+    $scope.isMenuInactive = function (endDate) {
       return Date.parse(endDate) <= dateUtility.now();
     };
 
     $scope.clearSearchFilters = function () {
-      $scope.dateRange.endDate = '';
+      $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
       for (var filterKey in filters) {
@@ -70,9 +105,21 @@ angular.module('ts5App')
       $scope.menuListCount = $scope.menuList.length;
     };
 
+    $scope.$watchCollection('search', function () {
+      $this.updateMenuList();
+    });
+
+    $scope.$watchCollection('dateRange', function () {
+      $this.getMenuList();
+    });
+
+    $scope.$watch('currentPage + menusPerPage', function () {
+      $this.updateMenuList();
+    });
+
     this.getMenuList();
 
-    stationAPIResponse = {
+    var stationAPIResponse = {
 
       'response': [{
         'id': 1,
