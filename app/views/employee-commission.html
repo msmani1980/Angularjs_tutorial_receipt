@@ -7,7 +7,7 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a class="btn btn-default" ng-href="#/menu-list" class="btn">Back</a>
+        <a class="btn btn-default" ng-href="#/" class="btn">Back</a>
         <button ng-show="employeeCommissionForm.$dirty" class="btn btn-success" ng-click="submitForm()">
           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
@@ -41,7 +41,8 @@
     <div class="form-group">
       <label class="control-label" for="saleType">Sale Type</label>
       <select class="form-control" id="saleType">
-        <option ng-repeat="priceType in priceTypesList | orderBy:'name'" value="{{priceType.id}}">{{priceType.name}}</option>
+        <option ng-repeat="priceType in priceTypesList | orderBy:'name'" value="{{priceType.id}}">{{priceType.name}}
+        </option>
       </select>
     </div>
   </div>
@@ -59,6 +60,7 @@
   <div class="col-sm-3">
     <div class="form-group">
       <label class="control-label" for="rate">Rate</label>
+
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-money"></i></span>
         <input custom-validity
