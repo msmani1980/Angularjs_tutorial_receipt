@@ -15,6 +15,7 @@ angular.module('ts5App')
 
     // scope properties
     $scope.viewName = 'Import Stock Owner Items';
+    $scope.selectedCompany = null;
 
     // scope methods
     $scope.importAll = function(value){
