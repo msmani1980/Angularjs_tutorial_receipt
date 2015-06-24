@@ -3,17 +3,17 @@
     <div class="row">
       <div class="form-group col-sm-6">
         <label>Company Type</label>
-
-        <select name="companyType" required ng-model="vm.companyType" class="form-control">
+        <select name="companyType" ng-model="search.companyTypeId" ng-init="search.companyTypeId" class="form-control">
           <option ng-repeat="companyType in $parent.companyRelationshipTypeList"
-              value="{{ companyType.companyTypeId }}">{{ companyType.companyTypeName }}
+                  value="{{ companyType.relativeCompanyTypeId }}">{{ companyType.relativeCompanyType }}
           </option>
         </select>
       </div>
       <div class="form-group col-sm-6">
-        <label>Company Name *</label>{{vm.companyId}}
-        <select ng-model="vm.companyId" class="form-control">
-          <option ng-selected="company.id === vm.companyId" ng-repeat="company in $parent.companyList" value="{{ company.id }}">{{ company.companyName }}</option>
+        <label>Company Name *</label>
+        <select name="companyName" ng-model="vm.relativeCompanyId" class="form-control" required>
+          <option value="">Please select...</option>
+          <option ng-selected="company.id === vm.relativeCompanyId" ng-repeat="company in $parent.companyList | filter:search" value="{{ company.id }}">{{ company.companyName }}</option>
         </select>
       </div>
       <date-picker
@@ -23,7 +23,8 @@
           end-date-model="vm.endDate"
           disable-past="true"
           label-from="Effective From"
-          label-to="Effective To">
+          label-to="Effective To"
+          required="true">
       </date-picker>
     </div>
   </div>

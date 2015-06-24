@@ -42,7 +42,7 @@ angular.module('ts5App')
       normalizeDateForAPI(data);
 
       //Hack for BE
-      data.relativeCompanyId = parseInt(data.relativeCompanyId) || parseInt(data.companyId);
+      //data.relativeCompanyId = parseInt(data.companyId) || parseInt(data.relativeCompanyId);
       delete data.companyId;
       delete data.companyType;
       delete data.companyName;
