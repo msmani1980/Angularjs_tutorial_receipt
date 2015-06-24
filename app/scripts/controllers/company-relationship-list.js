@@ -15,6 +15,19 @@ angular.module('ts5App')
     $scope.companyList = [];
     $scope.companyRelationshipTypeList = [];
 
+    $scope.submit = function(isValid, data) {
+      if(!isValid) return;
+
+      //submit the data to the server
+      data.forEach(function (companyRelationship) {
+        if (companyRelationship.id) {
+          companyRelationshipFactory.updateCompanyRelationship(companyRelationship);
+        } else {
+          companyRelationshipFactory.createCompanyRelationship(companyRelationship);
+        }
+      });
+    };
+
     $scope.saveCompanyRelationshipList = function () {
       var payload = {};
       payload.companyRelationships = angular.copy($scope.formData);

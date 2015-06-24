@@ -33,7 +33,7 @@ angular.module('ts5App')
     };
 
     $scope.showCompanyRelationshipList = function (company) {
-      $location.path('/company-relationship-edit/' + company.id);
+      $location.path('/company-relationship-list/' + company.id);
     };
 
     $scope.showCompany = function (company) {
