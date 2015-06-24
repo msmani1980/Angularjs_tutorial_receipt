@@ -17,6 +17,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Post Trip Data';
     $scope.readOnly = false;
+    $scope.postTrip = {};
 
     (function CONSTRUCTOR() {
       // set global controller properties
@@ -45,6 +46,26 @@ angular.module('ts5App')
       };
       _services.call(['getStationList', 'getCarrierTypes']);
     })();
+
+    $scope.updateCarrierNumbers = function() {
+      postTripFactory.getCarrierNumbers(_companyId, $scope.carrierTypeId).then(function(response){
+        $scope.carrierNumbers = response.response;
+      }, function(){
+        $scope.carrierNumbers = [];
+      });
+    };
+
+    $scope.updateArrivalInfo = function() {
+      var station = $scope.stationList[$scope.arrivalStationIndex];
+      $scope.postTrip.arrivalStation = station.stationName;
+      $scope.postTrip.arrivalTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
+    };
+
+    $scope.updateDepartureInfo = function() {
+      var station = $scope.stationList[$scope.departureStationIndex];
+      $scope.postTrip.departureStation = station.stationName;
+      $scope.postTrip.departureTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
+    };
     //
     //function CREATE(){
     //  // create

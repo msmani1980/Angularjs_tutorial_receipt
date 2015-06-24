@@ -68,32 +68,44 @@
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="tail-number">Tail Number</label>
-                <select class="form-control" id="tail-number" ng-model="search.tailNumber">
-                  <option>123456</option>
-                  <option>123456</option>
-                  <option>123456</option>
-                  <option>123456</option>
+                <label for="carrier-type">Carrier Types</label>
+                <select class="form-control" id="carrier-type" ng-model="search.carrierTypeId" ng-change="updateCarrierNumbers()">
+                  <option value=""></option>
+                  <option ng-repeat="carrier in carrierTypes" value="{{ carrier.id }}">
+                    {{ carrier.carrierType }}
+                  </option>
                 </select>
               </div>
             </div>
 
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="tail-number">Tail Number</label>
+                <select class="form-control" id="tail-number" ng-model="search.tailNumber">
+                  <option value=""></option>
+                  <option ng-repeat="number in carrierNumbers" value="{{ number.carrierNumber }}">
+                    {{ number.carrierNumber }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <date-picker class="form-group"
               element-class="col-xs-12 col-sm-3"
-              start-date-model="formData.startDate"
-              end-date-model="formData.endDate"
+              start-date-model="search.startDate"
+              end-date-model="search.endDate"
               disable-past="true"
               label-from="Effective From"
               label-to="Effective To"
-              disable-start-date="viewOnly || itemIsActive"
-              disable-end-date="viewOnly || itemIsInactive">
+              disable-start-date="viewOnly"
+              disable-end-date="viewOnly">
             </date-picker>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="departure-station">Departure Station</label>
-                <select class="form-control" id="departure-station" ng-model="search.departureStation">
-                  <option value=""></option>
+                <select class="stations-multi-select" id="departure-station" multiple="multiple" ng-model="search.departureStation">
                   <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
                     {{ station.stationCode }} ({{ station.stationName}})
                   </option>
@@ -103,17 +115,15 @@
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label>Departure Time</label>
-                <input ng-model="search.departureTimeHour" type="text" class="form-control departure-time-from" id="departure-hour" placeholder="hh">
-                <input ng-model="search.departureTimeMinute" type="text" class="form-control departure-time-to" id="departure-min" placeholder="mm">
+                <label for="departure-time">Departure Time</label>
+                <input ng-model="search.departureTime" type="text" class="form-control" id="departure-time" placeholder="15:43">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="arrival-station">Arrival Station</label>
-                <select class="form-control" id="arrival-station" ng-model="search.arrivalStation">
-                  <option value=""></option>
+                <select class="stations-multi-select" id="arrival-station" multiple="multiple" ng-model="search.arrivalStation">
                   <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
                     {{ station.stationCode }} ({{ station.stationName}})
                   </option>
@@ -124,8 +134,7 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Arrival Time</label>
-                <input ng-model="search.arrivalTimeHour" type="text" class="form-control arrival-time-from" id="arrival-hour" placeholder="hh">
-                <input ng-model="search.arrivalTimeMinute" type="text" class="form-control arrival-time-to" id="arrival-min" placeholder="mm">
+                <input ng-model="search.arrivalTime" type="text" class="form-control" id="arrival-time" placeholder="20:14">
               </div>
             </div>
 
@@ -137,7 +146,6 @@
         </div>
       </form>
     </div>
-
     <table class="table table-bordered table-hover ng-scope">
       <thead>
         <tr>
@@ -176,13 +184,13 @@
           <td class="ng-binding">Test</td>
           <td class="ng-binding">12:34</td>
           <td>
-            <button class="btn btn-info btn-xs" ng-click="showMenu(menu)" tabindex="0">
+            <button class="btn btn-info btn-xs" ng-click="viewPostTrip()" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="showMenu(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+            <button class="btn btn-primary btn-xs" ng-click="editPostTrip()" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
               <i class="fa fa-pencil"></i>
             </button>
-            <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip()" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
               <i class="fa fa-trash"></i>
             </button>
           </td>

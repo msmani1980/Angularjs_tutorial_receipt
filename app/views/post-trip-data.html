@@ -12,13 +12,9 @@
         <div class="row" ng-hide="readOnly">
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
-              <label for="schedule-number">Schedule Number *</label>
-              <select class="form-control" id="schedule-number" ng-model="postTrip.scheduleNumber">
-                <option>123</option>
-                <option>456</option>
-                <option>234</option>
-                <option>645</option>
-              </select>
+              <label>Scheduel Number *</label>
+              <input ng-model="postTrip.scheduleNumber" type="text" class="form-control schedule-number"
+                     placeholder="123" required="true" ng-readonly="readOnly">
             </div>
           </div>
           <div class="form-group">
@@ -49,8 +45,8 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="departureStation">Departure Station *</label>
-              <select class="form-control" id="departureStation" ng-model="postTrip.departureStation">
-                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
+              <select class="form-control" id="departureStation" ng-model="departureStationIndex" ng-change="updateDepartureInfo()">
+                <option ng-repeat="station in stationList" value="{{ $index }}">
                   {{ station.stationCode }} ({{ station.stationName}})
                 </option>
               </select>
@@ -64,11 +60,10 @@
           </div>
 
           <div class="col-xs-12 col-sm-4">
-            <!-- TODO: TIME ZONE ADJUSTS AND MATCHES DEPARTURE STATION -->
             <div class="form-group">
               <label for="departure-time-zone">Departure Time Zone *</label>
-              <input type="text" class="form-control" id="departure-time-zone" placeholder="Pacific [PDT -07:00]"
-                     ng-model="postTrip.departureTimeZone" disabled>
+              <input type="text" class="form-control" id="departure-time-zone" placeholder=""
+                     ng-model="postTrip.departureTimezone" disabled>
             </div>
           </div>
         </div>
@@ -77,8 +72,8 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="arrival-station">Arrival Station *</label>
-              <select class="form-control" id="arrival-station" ng-model="postTrip.arrivalStation">
-                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
+              <select class="form-control" id="arrival-station" ng-model="arrivalStationIndex" ng-change="updateArrivalInfo()">
+                <option ng-repeat="station in stationList" value="{{ $index }}">
                   {{ station.stationCode }} ({{ station.stationName}})
                 </option>
               </select>
@@ -94,11 +89,10 @@
           </div>
 
           <div class="col-xs-12 col-sm-4">
-            <!-- TODO: TIME ZONE ADJUSTS AND MATCHES DEPARTURE STATION -->
             <div class="form-group">
               <label>Arrival Time Zone *</label>
-              <input type="text" class="form-control" id="arrivalTime" placeholder="Belize [CST -06:00]"
-                    ng-model="postTrip.arrivalTimeZone" disabled>
+              <input type="text" class="form-control" id="arrivalTime" placeholder=""
+                    ng-model="postTrip.arrivalTimezone" disabled>
             </div>
           </div>
 
@@ -116,8 +110,8 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="carrier-type">Carrier Type</label>
-              <select class="form-control" id="carrier-type" ng-model="postTrip.carrierType" ng-change="updateCarrierNumber()">
-                <option ng-repeat="carrierType in carrierTypes" value="{{ carrierType.carrierTypeId }}">
+              <select class="form-control" id="carrier-type" ng-model="carrierTypeId" ng-change="updateCarrierNumbers()">
+                <option ng-repeat="carrierType in carrierTypes" value="{{ carrierType.id }}">
                   {{ carrierType.carrierType }}
                 </option>
               </select>
@@ -128,7 +122,9 @@
             <div class="form-group">
               <label for="tailNumber">Tail Number</label>
               <select class="form-control" id="tailNumber" ng-model="postTrip.tailNumber">
-                <option></option>
+                <option ng-repeat="number in carrierNumbers" value="{{ number.carrierNumber }}">
+                  {{ number.carrierNumber }}
+                </option>
               </select>
             </div>
           </div>

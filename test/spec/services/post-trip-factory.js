@@ -10,6 +10,7 @@ describe('Factory: cashBagFactory', function () {
     GlobalMenuService,
     stationsService,
     carrierService,
+    schedulesService,
     rootScope,
     scope;
 
