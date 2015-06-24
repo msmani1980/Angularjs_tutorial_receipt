@@ -253,8 +253,12 @@ angular.module('ts5App')
       $scope.taxTypes = data.response;
     });
 
-    $q.all([itemsFactory.getItemsList, itemsFactory.getAllergensList, itemsFactory.getTagsList, itemsFactory.getCharacteristicsList]).then(function(){
-      $('.multi-select').select2({width:'100%'});
+    $q.all([itemsFactory.getItemsList, itemsFactory.getAllergensList,
+      itemsFactory.getTagsList, itemsFactory.getCharacteristicsList
+    ]).then(function () {
+      $('.multi-select').select2({
+        width: '100%'
+      });
     });
 
     // TODO: Move to global function
@@ -452,11 +456,12 @@ angular.module('ts5App')
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
     };
 
-    $scope.filterCharacteristics = function() {
-      if($scope.itemTypes[$scope.formData.itemTypeId-1].name === 'Virtual') {
+    $scope.filterCharacteristics = function () {
+      if ($scope.itemTypes[$scope.formData.itemTypeId - 1].name ===
+        'Virtual') {
         $scope.filteredCharacteristics = [];
-        angular.forEach($scope.characteristics, function(value){
-          if(value.name === 'Downloadable' || value.name === 'Link') {
+        angular.forEach($scope.characteristics, function (value) {
+          if (value.name === 'Downloadable' || value.name === 'Link') {
             $scope.filteredCharacteristics.push(value);
           }
           $scope.shouldDisplayURLField = true;
@@ -616,6 +621,7 @@ angular.module('ts5App')
 
     }
 
+    // TODO: make this a controller function
     // Formats the dates when sending the payload to the API
     function formatPayloadDates(itemData) {
       itemData.startDate = formatDate(itemData.startDate, 'L', 'YYYYMMDD');
