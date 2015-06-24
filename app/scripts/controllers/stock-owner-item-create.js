@@ -42,13 +42,16 @@ angular.module('ts5App')
       }
     };
 
-    this.setFormAsViewOnly = function () {
-      $scope.viewName = 'Viewing Item ' + $routeParams.id;
+    this.setFormAsViewOnly = function (item) {
+      $scope.viewName = 'Viewing Item ' + item.itemName;
+    };
+
+    this.updateViewName = function (item) {
+      $scope.viewName = 'Editing ' + item.itemName;
     };
 
     this.setFormAsEdit = function () {
       $scope.editingItem = true;
-      $scope.viewName = 'Edit Item ' + $routeParams.id;
       $scope.buttonText = 'Save';
     };
 
@@ -66,7 +69,8 @@ angular.module('ts5App')
 
       itemsFactory.getItem(id).then(function (data) {
         if ($this.validateItemCompany(data)) {
-          $this.upateFormData(data.retailItem);
+          $this.updateFormData(data.retailItem);
+          $this.updateViewName(data.retailItem);
         } else {
           $location.path('/');
           return false;
@@ -131,7 +135,7 @@ angular.module('ts5App')
     }
 
     // updates the $scope.formData
-    this.upateFormData = function (itemData) {
+    this.updateFormData = function (itemData) {
       if (!itemData) {
         return false;
       }
@@ -464,7 +468,7 @@ angular.module('ts5App')
       };
       itemsFactory.updateItem($routeParams.id, updateItemPayload).then(
         function (response) {
-          $this.upateFormData(response.retailItem);
+          $this.updateFormData(response.retailItem);
           angular.element('#loading').modal('hide');
           angular.element('#update-success').modal('show');
         },

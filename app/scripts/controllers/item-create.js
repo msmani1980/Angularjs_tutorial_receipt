@@ -51,8 +51,8 @@ angular.module('ts5App')
       }
     };
 
-    this.setFormAsViewOnly = function () {
-      $scope.viewName = 'Viewing Item ' + $routeParams.id;
+    this.setFormAsViewOnly = function (item) {
+      $scope.viewName = 'Viewing Item ' + item.itemName;
     };
 
     this.updateViewName = function (item) {
