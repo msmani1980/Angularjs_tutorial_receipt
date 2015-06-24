@@ -1,9 +1,10 @@
 'use strict';
-
+/* global moment */
 describe('Menu Relationship List Controller', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/menus.json', 'served/caterer-stations.json'));
+  beforeEach(module('template-module'));
 
   var MenuRelationshipListCtrl,
     $scope,
@@ -196,7 +197,7 @@ describe('Menu Relationship List Controller', function () {
 
   });
 
-  /* E2E Tests
+  /* E2E Tests */
 
   describe('view', function () {
 
@@ -212,6 +213,7 @@ describe('Menu Relationship List Controller', function () {
         '/views/menu-relationship-list.html');
       var compiled = $compile(angular.element(html))($scope);
       view = angular.element(compiled[0]);
+      $scope.$digest();
     }));
 
     it('should be defined', function () {
@@ -498,7 +500,7 @@ describe('Menu Relationship List Controller', function () {
               $scope.$digest();
               menuNameInput.triggerHandler('input');
               expect(table.find('tbody tr').length).toEqual(
-                $scope.menuList.length);
+                $scope.paginatedMenus.length);
             });
           it(
             'should contain (1) item in the table when the menu name is filtered by "Name" ',
@@ -829,5 +831,5 @@ describe('Menu Relationship List Controller', function () {
       });
     });
   });
-  */
+
 });
