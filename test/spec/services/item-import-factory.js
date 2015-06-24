@@ -25,7 +25,6 @@ describe('Factor: ItemImportFactory', function () {
     scope = $rootScope.$new();
   }));
 
-  var companyId = '403';
   it('should be defined', function () {
     expect(!!ItemImportFactory).toBe(true);
   });
