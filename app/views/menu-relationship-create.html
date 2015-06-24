@@ -36,7 +36,7 @@
 
 			<form-error-dialog></form-error-dialog>
 
-      <fieldset ng-disabled="viewOnly || itemIsActive">
+      <fieldset ng-disabled="viewOnly || menuIsActive">
 
 			<div class="row">
 
@@ -53,8 +53,8 @@
   						disable-past="true"
   						label-from="Effective From"
   						label-to="Effective To"
-  						disable-start-date="viewOnly || itemIsActive"
-  						disable-end-date="viewOnly || itemIsInactive"
+  						disable-start-date="viewOnly || menuIsActive"
+  						disable-end-date="viewOnly || menuIsInactive"
   						>
   					</date-picker>
 

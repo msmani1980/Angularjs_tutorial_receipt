@@ -723,7 +723,8 @@ describe('Menu Relationship List Controller', function () {
               'should have an ng-href to view the menu',
               function () {
                 var testObject = $scope.menuList[0];
-                var testUrl = '#/menu-view/' +
+                var testUrl =
+                  '#/menu-relationship-view/' +
                   testObject.id;
                 expect(viewButton.attr('ng-href')).toEqual(
                   testUrl);
@@ -757,7 +758,8 @@ describe('Menu Relationship List Controller', function () {
             it(
               'should have an ng-href to edit the menu',
               function () {
-                var testUrl = '#/menu-edit/' +
+                var testUrl =
+                  '#/menu-relationship-edit/' +
                   testObject.id;
                 expect(editButton.attr('ng-href'))
                   .toEqual(testUrl);
