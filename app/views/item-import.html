@@ -1,4 +1,4 @@
-v<form name="itemImportSearchForm" class="form-horizontal edit-form">
+<form name="itemImportSearchForm" class="form-horizontal edit-form">
 
   <div class="edit-controls">
     <div class="row">
@@ -34,11 +34,14 @@ v<form name="itemImportSearchForm" class="form-horizontal edit-form">
       <div class="col-xs-9">
         <label class="sr-only" for="stockOwnerId">Stock Owner</label>
         <select required
-                name="stockOwnerId"
-                class="form-control"
-                id="stockOwnerId">
+            name="stockOwnerId"
+            class="form-control"
+            id="stockOwnerId"
+            ng-show="companiesLoaded"
+            ng-change="changeSelectedStockownerCompany(company.id)"
+            ng-model="selectedStockownerCompany"
+            ng-options="company as company.companyName for company in stockOwnerList">
           <option value="">Select Stock Owner</option>
-          <option ng-repeat="company in stockOwnerList" ng-value="{{ company.id }}">{{company.companyName}}</option>
         </select>
       </div>
       <div class="col-xs-3">
@@ -132,8 +135,8 @@ v<form name="itemImportSearchForm" class="form-horizontal edit-form">
           on-drop-success="dropSuccessHandler($event, $index, stockOwnerItemsList)"
           ng-repeat="stockOwner in stockOwnerItemsList | filter:searchStockOwnerItem track by $index">
           <td>{{ stockOwner.colorCode }}</td>
-          <td>{{ stockOwner.companyName }}</td>
-          <td>{{ stockOwner.reference }}</td>
+          <td>{{ selectedStockownerCompany.companyName }}</td>
+          <td>{{ stockOwner.itemCode }}</td>
           <td>{{ stockOwner.itemName }}</td>
         </tr>
         </tbody>
@@ -159,7 +162,7 @@ v<form name="itemImportSearchForm" class="form-horizontal edit-form">
           ng-repeat="item in itemList | filter:searchRetailItem track by $index">
           <td>{{ item.colorCode }}</td>
           <td>{{ item.companyName }}</td>
-          <td>{{ item.reference }}</td>
+          <td>{{ item.itemCode }}</td>
           <td>{{ item.itemName }}</td>
           <td><a href="#" ng-click="deleteItem(item)">X</a></td>
         </tr>
