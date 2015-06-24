@@ -37,7 +37,7 @@ angular.module('ts5App')
           );
           break;
         case 'create':
-          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function(newCashBag) {
+          cashBagFactory.createCashBag({cashBag: formCashBag}).then(function (newCashBag) {
             $location.search('newId', newCashBag.id)
               .search('scheduleDate', null)
               .search('scheduleNumber', null)
@@ -46,9 +46,11 @@ angular.module('ts5App')
           break;
       }
     };
-    $scope.canDelete = function(){ return false; };
-    $scope.delete = function(cashBag){
-      if($scope.canDelete(cashBag)) {
+    $scope.canDelete = function () {
+      return false;
+    };
+    $scope.delete = function (cashBag) {
+      if ($scope.canDelete(cashBag)) {
         cashBagFactory.deleteCashBag(cashBag.id).then(function () {
             window.alert('deleted');
           },
@@ -57,7 +59,7 @@ angular.module('ts5App')
     };
 
     // Constructor
-    (function CONSTRUCTOR(){
+    (function CONSTRUCTOR() {
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
 
@@ -73,14 +75,14 @@ angular.module('ts5App')
             HELPERS().showErrors
           );
         },
-        getCompany: function(){
+        getCompany: function () {
           return cashBagFactory.getCompany(_companyId).then(
             function (response) {
               $scope.company = response;
             }
           );
         },
-        getCompanyCurrencies: function(){
+        getCompanyCurrencies: function () {
           return cashBagFactory.getCompanyCurrencies().then(
             function (response) {
               $scope.companyCurrencies = response.response;
@@ -140,17 +142,17 @@ angular.module('ts5App')
           $scope.displayError = false;
           $scope.formErrors = {};
         },
-        canDelete: function(cashBag){
+        canDelete: function (cashBag) {
           var canDelete = true;
-          angular.forEach(cashBag.cashBagCurrencies, function(currency){
-            if(canDelete){
-              if(currency.bankAmount !== '0.0000' && currency.bankAmount !== null){
+          angular.forEach(cashBag.cashBagCurrencies, function (currency) {
+            if (canDelete) {
+              if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
                 canDelete = false;
               }
-              if(currency.coinAmountManual !== null){
+              if (currency.coinAmountManual !== null) {
                 canDelete = false;
               }
-              if(currency.coinAmountManual !== null){
+              if (currency.coinAmountManual !== null) {
                 canDelete = false;
               }
             }
@@ -161,7 +163,7 @@ angular.module('ts5App')
     }
 
     // CRUD - Create
-    function CREATE(){
+    function CREATE() {
       var _promises = _factoryHelper.callServices(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
 
       $scope.readOnly = false;
@@ -173,44 +175,46 @@ angular.module('ts5App')
         cashBagCurrencies: []
       };
 
-      $q.all(_promises).then(function(){
-        if(angular.isArray($scope.dailyExchangeRates)){
+      $q.all(_promises).then(function () {
+        if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
           $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
-          angular.forEach($scope.companyCurrencies, function(currency){
-            $scope.cashBag.cashBagCurrencies.push(
-              {
-                currencyId:currency.id,
-                // TODO - what value should go here, can user's enter the "Flight amount" on the create page
-                bankAmount:'0.0000' // TODO should the user be allowed to set this value on create form?
-              }
-            );
-          });
+        } else {
+          // TODO: throw error for empty dailyExchangeRate
         }
-        else{
-          // TODO: throw error when dailyExchangeRates returns empty array
-        }
+        angular.forEach($scope.companyCurrencies, function (currency) {
+          $scope.cashBag.cashBagCurrencies.push(
+            {
+              currencyId: currency.id,
+              // TODO - what value should go here, can user's enter the "Flight amount" on the create page
+              bankAmount: '0.0000', // TODO should the user be allowed to set this value on create form?
+              paperAmountManual: '0.0000',
+              coinAmountManual: '0.0000'
+            }
+          );
+        });
+
       });
     }
 
     // CRUD - Read
-    function READ(){
+    function READ() {
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
-      $q.all(_promises).then(function() {
+      $q.all(_promises).then(function () {
         $scope.canDelete = HELPERS().canDelete;
       });
     }
 
     // CRUD - Update
-    function UPDATE(){
+    function UPDATE() {
       $scope.readOnly = false;
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
-      $q.all(_promises).then(function() {
+      $q.all(_promises).then(function () {
         $scope.canDelete = HELPERS().canDelete;
       });
     }
 
     // Destructor
-    function DESTRUCTOR(){
+    function DESTRUCTOR() {
       // TODO - teardown
     }
 
