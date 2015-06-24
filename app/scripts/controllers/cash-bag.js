@@ -179,7 +179,7 @@ angular.module('ts5App')
         if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
           $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
         } else {
-          // TODO: throw error for empty dailyExchangeRate
+          // TODO: throw error: no daiy exchange rate created for this date - redirect to exchange rates page?
         }
         angular.forEach($scope.companyCurrencies, function (currency) {
           $scope.cashBag.cashBagCurrencies.push(
