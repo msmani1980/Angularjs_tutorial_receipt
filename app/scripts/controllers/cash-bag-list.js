@@ -23,7 +23,7 @@ angular.module('ts5App')
     $scope.search = {};
 
     // Constructor
-    (function CONSTRUCTOR() {
+    (function constructor() {
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
       _services = {
