@@ -2,17 +2,52 @@
 
 describe('Service: taxRateTypesService', function () {
 
-  // load the service's module
   beforeEach(module('ts5App'));
+  beforeEach(module('served/tax-rate-types.json'));
 
-  // instantiate service
-  var taxRateTypesService;
-  beforeEach(inject(function (_taxRateTypesService_) {
+
+  var taxRateTypesService,
+    $httpBackend,
+    taxRateTypesJSON;
+
+  beforeEach(inject(function (_taxRateTypesService_, $injector) {
+    inject(function (_servedTaxRateTypes_) {
+      taxRateTypesJSON = {
+        response: _servedTaxRateTypes_ // NOTE: had to add convert it to a JSON so that it plays nice with $httpBackend
+      };
+    });
+
+    $httpBackend = $injector.get('$httpBackend');
+    $httpBackend.whenGET(/tax-rate-types/).respond(taxRateTypesJSON);
     taxRateTypesService = _taxRateTypesService_;
   }));
 
-  it('should do something', function () {
+  afterEach(function () {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should exist', function () {
     expect(!!taxRateTypesService).toBe(true);
+  });
+
+  describe('getTaxRateTypes', function () {
+    var fakeReponseData;
+    beforeEach(function () {
+      taxRateTypesService.getTaxRateTypes().then(function (dataFromAPI) {
+        fakeReponseData = dataFromAPI;
+      });
+      $httpBackend.flush();
+    });
+
+    it('should be an array', function () {
+      expect(angular.isArray(fakeReponseData.response)).toBe(true);
+    });
+
+    it('should have a name property', function () {
+      expect(fakeReponseData.response[0].taxRateType).toBeDefined();
+    });
+
   });
 
 });
