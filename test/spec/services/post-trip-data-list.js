@@ -91,6 +91,16 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
   });
 
+  describe('updateCarrierNumber', function(){
+    it('should call getCarrierNumber', function(){
+      scope.updateCarrierNumbers();
+      expect(postTripFactory.getCarrierNumbers).toHaveBeenCalled();
+    });
+    it('should attach carrierNumbers to scope', function(){
+      scope.updateCarrierNumbers();
+      expect(scope.carrierNumbers).toBeDefined();
+    });
+  });
 
   describe('action buttons', function(){
     it('should allow view button to redirect to a new page', function(){

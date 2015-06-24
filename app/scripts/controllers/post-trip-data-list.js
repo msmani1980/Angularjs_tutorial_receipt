@@ -15,7 +15,6 @@ angular.module('ts5App')
     $scope.viewName = 'Post Trip Data Management';
     $scope.search = {};
 
-    // Constructor
     (function CONSTRUCTOR() {
       // set global controller properties
       _companyId = postTripFactory.getCompanyId();
@@ -50,7 +49,11 @@ angular.module('ts5App')
     $scope.clearSearchForm = function () {
       $scope.search = {};
       // TODO: call API with empty search object
-    }
+    };
+
+    $scope.updateCarrierNumbers = function() {
+
+    };
 
 
   });

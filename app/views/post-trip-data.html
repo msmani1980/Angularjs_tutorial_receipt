@@ -50,10 +50,9 @@
             <div class="form-group">
               <label for="departureStation">Departure Station *</label>
               <select class="form-control" id="departureStation" ng-model="postTrip.departureStation">
-                <option>MDW</option>
-                <option>MIA</option>
-                <option>IAH</option>
-                <option>BOS</option>
+                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
+                  {{ station.stationCode }} ({{ station.stationName}})
+                </option>
               </select>
             </div>
           </div>
@@ -79,10 +78,9 @@
             <div class="form-group">
               <label for="arrival-station">Arrival Station *</label>
               <select class="form-control" id="arrival-station" ng-model="postTrip.arrivalStation">
-                <option>MDW</option>
-                <option>MIA</option>
-                <option>IAH</option>
-                <option>BOS</option>
+                <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
+                  {{ station.stationCode }} ({{ station.stationName}})
+                </option>
               </select>
             </div>
           </div>
@@ -118,11 +116,10 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="carrier-type">Carrier Type</label>
-              <select class="form-control" id="carrier-type" ng-model="postTrip.carrierType">
-                <option>123456</option>
-                <option>123456</option>
-                <option>123456</option>
-                <option>123456</option>
+              <select class="form-control" id="carrier-type" ng-model="postTrip.carrierType" ng-change="updateCarrierNumber()">
+                <option ng-repeat="carrierType in carrierTypes" value="{{ carrierType.carrierTypeId }}">
+                  {{ carrierType.carrierType }}
+                </option>
               </select>
             </div>
           </div>
