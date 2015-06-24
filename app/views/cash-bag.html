@@ -98,15 +98,15 @@
 			    <tr ng-repeat="currency in cashBag.cashBagCurrencies">
 			      <td>{{ currencyCodes[currency.currencyId] }}</td>
 			      <td>{{ currency.bankAmount }}</td>
-			      <td><input type="text"
+            <td><input type="text"
                        class="form-control"
-                       ng-model="currency.coinAmountEpos"
-                       name="coinAmountManual[{{currency.currencyId}}]"
+                       ng-model="currency.paperAmountManual"
+                       name="paperAmountManual[{{currency.currencyId}}]"
                        ng-readonly="readOnly"></td>
 			      <td><input type="text"
                        class="form-control"
-                       ng-model="currency.paperAmountEpos"
-                       name="paperAmountManual[{{currency.currencyId}}]"
+                       ng-model="currency.coinAmountManual"
+                       name="coinAmountManual[{{currency.currencyId}}]"
                        ng-readonly="readOnly"></td>
 			      <td>{{ currency.paperAmountEpos }}</td>
 			      <td>{{ currency.coinAmountEpos }}</td>
