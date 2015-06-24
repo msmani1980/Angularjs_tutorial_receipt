@@ -8,14 +8,17 @@ describe('Service: employeeCommissionFactory', function () {
   // instantiate service
   var employeeCommissionFactory,
     itemsService,
-    priceTypesService;
+    priceTypesService,
+    taxRateTypesService;
 
   beforeEach(inject(function (_employeeCommissionFactory_, $injector) {
     itemsService = $injector.get('itemsService');
     priceTypesService = $injector.get('priceTypesService');
+    taxRateTypesService = $injector.get('taxRateTypesService');
 
     spyOn(itemsService, 'getItemsList');
     spyOn(priceTypesService, 'getPriceTypesList');
+    spyOn(taxRateTypesService, 'getTaxRateTypes');
 
     employeeCommissionFactory = _employeeCommissionFactory_;
   }));
@@ -34,6 +37,11 @@ describe('Service: employeeCommissionFactory', function () {
     it('should fetch price types from priceTypesService', function () {
       employeeCommissionFactory.getPriceTypesList();
       expect(priceTypesService.getPriceTypesList).toHaveBeenCalled();
+    });
+
+    it('should fetch price types from priceTypesService', function () {
+      employeeCommissionFactory.getTaxRateTypes();
+      expect(taxRateTypesService.getTaxRateTypes).toHaveBeenCalled();
     });
   });
 
