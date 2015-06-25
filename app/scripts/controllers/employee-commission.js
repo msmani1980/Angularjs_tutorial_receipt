@@ -28,6 +28,13 @@ angular.module('ts5App')
       employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
         $scope.itemsList = dataFromAPI.retailItems;
       });
+
+      var currencyFilters = angular.extend(payload, {
+        isOperatedCurrency: true
+      });
+      employeeCommissionFactory.getCompanyCurrencies(currencyFilters).then(function (dataFromAPI) {
+        $scope.companyCurrencies = dataFromAPI.response;
+      });
     });
 
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {

@@ -57,6 +57,10 @@ describe('Controller: EmployeeCommissionCtrl', function () {
     it('should have a list of price types attached to scope', function(){
       expect(scope.taxRateTypes).toBeDefined();
     });
+
+    it('should have a list of currencies attached to scope', function(){
+      expect(scope.companyCurrencies).toBeDefined();
+    });
   });
 
 });

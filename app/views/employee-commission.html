@@ -79,10 +79,7 @@
     <div class="form-group">
       <label class="control-label" for="currency">Currency</label>
       <select class="form-control" id="currency">
-        <option>USD</option>
-        <option>GBP</option>
-        <option>EUR</option>
-        <option>DKK</option>
+        <option ng-repeat="currency in companyCurrencies | orderBy:'code'" value="{{currency.id}}">{{currency.code}}
       </select>
     </div>
   </div>
