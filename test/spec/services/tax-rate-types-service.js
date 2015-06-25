@@ -46,7 +46,6 @@ describe('Service: taxRateTypesService', function () {
     });
 
     it('should have a name property', function () {
-      console.log(fakeReponseData[0]);
       expect(fakeReponseData[0].taxRateType).toBeDefined();
     });
 

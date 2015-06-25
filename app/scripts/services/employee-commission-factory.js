@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('employeeCommissionFactory', function (itemsService, priceTypesService, taxRateTypesService) {
+  .factory('employeeCommissionFactory', function (itemsService, priceTypesService, taxRateTypesService, currenciesService) {
 
     var getItemsList = function (payload) {
       return itemsService.getItemsList(payload);
@@ -22,9 +22,14 @@ angular.module('ts5App')
       return taxRateTypesService.getTaxRateTypes(payload);
     };
 
+    var getCompanyCurrencies = function (payload) {
+      return currenciesService.getCompanyCurrencies(payload);
+    };
+
     return {
       getItemsList: getItemsList,
       getPriceTypesList: getPriceTypesList,
-      getTaxRateTypes: getTaxRateTypes
+      getTaxRateTypes: getTaxRateTypes,
+      getCompanyCurrencies: getCompanyCurrencies
     };
   });
