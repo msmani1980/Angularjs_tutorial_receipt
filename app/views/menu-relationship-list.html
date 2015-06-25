@@ -41,7 +41,7 @@
 
 						<div class="form-group">
 							<label for="menu-code">Menu Code</label>
-							<input ng-model="search.menuCode" type="text" class="form-control" id="menu-code" placeholder="MC001" />
+							<input ng-model="search.menuCode" type="text" class="form-control" placeholder="MC001" />
 						</div>
 
 					</div>
@@ -50,7 +50,7 @@
 
 						<div class="form-group">
 							<label for="menu-name">Menu Name</label>
-							<input ng-model="search.menuName" type="text" class="form-control" id="menu-name" placeholder="Menu Name" />
+							<input ng-model="search.menuName" type="text" class="form-control" placeholder="Menu Name" />
 						</div>
 
 					</div>
@@ -59,11 +59,10 @@
 
 						<div class="form-group">
 							<label for="menu-station">Catering Stations</label>
-							<select multiple="true" ng-model="search.menuStation" class="form-control" id="menu-station">
+							<select multiple="multiple" ng-model="search.menuStation" class="multi-select">
 								<option value="{{station.code}}" ng-repeat="station in stationList | unique: 'id'">{{ station.code }}</option>
 							</select>
 						</div>
-
 					</div>
 
 				</div>
@@ -99,11 +98,11 @@
 
     <tbody>
 
-      <tr id="menu-{{menu.id}}" ng-repeat="(key,menu) in paginatedMenus">
+      <tr ng-repeat="(key,menu) in paginatedMenus">
 
         <td>{{ menu.menuCode }}</td>
         <td>{{ menu.menuName }}</td>
-        <td>{{ menu.stations }}</td>
+        <td> <span class="label label-info" ng-repeat="(stationKey,station) in menu.menuStations"> {{ station.code }} </span> </td>
         <td>{{ menu.startDate | date: 'MM/dd/yyyy' }}</td>
         <td>{{ menu.endDate | date: 'MM/dd/yyyy' }}</td>
 

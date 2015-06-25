@@ -26,7 +26,9 @@ angular.module('ts5App')
       $this.setPaginatedMenus(filteredMenus);
     };
 
+    // FIXME: Finish this
     this.filterMenus = function () {
+      console.log($scope.search);
       return $filter('filter')($scope.menuList, $scope.search);
     };
 
@@ -57,6 +59,11 @@ angular.module('ts5App')
       var query = this.generateMenuQuery();
       var $this = this;
       menuService.getMenuList(query).then(function (response) {
+        // FIXME: Get real response from the API
+        for (var key in response.menus) {
+          response.menus[key].menuStations = [stationAPIResponse.response[
+            key]];
+        }
         $scope.menuList = response.menus;
         $scope.menuListCount = $scope.menuList.length;
         $this.updateMenuList();
@@ -64,8 +71,9 @@ angular.module('ts5App')
     };
 
     this.getCatererStationList = function () {
-      catererStationService.getCatererStationList().then(function (response) {
-        $scope.stationList = response.response;
+      catererStationService.getCatererStationList().then(function () {
+        $scope.stationList = stationAPIResponse.response;
+        $this.initSelectUI();
       });
     };
 
@@ -79,6 +87,19 @@ angular.module('ts5App')
         }
       }
       return menuIndex;
+    };
+
+    this.initSelectUI = function () {
+      angular.element('.multi-select').select2({
+        width: '100%'
+      });
+    };
+
+    this.deserializeStationFilters = function () {
+      var filters = '';
+      for (var key in $scope.search.menuStation) {
+        filters.push($scope.search.menuStation[key]);
+      }
     };
 
     $scope.removeMenu = function (menuId) {
