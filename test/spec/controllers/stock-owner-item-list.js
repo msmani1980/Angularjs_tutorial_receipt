@@ -104,6 +104,22 @@ describe('The StockOwnerItemListCtrl controller', function () {
     expect(StockOwnerItemListCtrl.getSalesCategoriesList).toHaveBeenCalled();
   });
 
+  it('should have a parseStartDate method', function () {
+    expect(StockOwnerItemListCtrl.parseStartDate).toBeDefined();
+  });
+
+  it('should have a parseEndDate method', function () {
+    expect(StockOwnerItemListCtrl.parseEndDate).toBeDefined();
+  });
+
+  it('should have a filterItems method', function () {
+    expect(StockOwnerItemListCtrl.filterItems).toBeDefined();
+  });
+
+  it('should have a sortItems method', function () {
+    expect(StockOwnerItemListCtrl.sortItems).toBeDefined();
+  });
+
   describe('The itemsList array', function () {
 
     it('should be attached to the scope', function () {

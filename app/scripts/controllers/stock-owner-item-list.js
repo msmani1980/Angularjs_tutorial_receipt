@@ -105,26 +105,22 @@ angular.module('ts5App')
       });
     };
 
-    $scope.parseStartDate = function (startDate) {
-      $scope.startDateParsed = Date.parse(startDate);
-      startDate = $scope.startDateParsed;
-      return startDate;
+    this.parseStartDate = function (startDate) {
+      return Date.parse(startDate);
     };
 
-    $scope.parseEndDate = function (endDate) {
-      $scope.endDateParsed = Date.parse(endDate);
-      endDate = $scope.endDateParsed;
-      return endDate;
+    this.parseEndDate = function (endDate) {
+      return Date.parse(endDate);
     };
 
     $scope.isItemActive = function (startDate) {
-      $scope.parseStartDate();
-      return startDate <= dateUtility.now();
+      var parsedDate = $this.parseStartDate(startDate);
+      return parsedDate <= dateUtility.now();
     };
 
     $scope.isItemInactive = function (endDate) {
-      $scope.parseEndDate();
-      return endDate <= dateUtility.now();
+      var parsedDate = $this.parseEndDate(endDate);
+      return parsedDate <= dateUtility.now();
     };
 
     $scope.clearSearchFilters = function () {

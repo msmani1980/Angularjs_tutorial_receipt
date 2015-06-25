@@ -114,6 +114,22 @@ describe('itemListCtrl', function () {
     expect(ItemListCtrl.getSalesCategoriesList).toHaveBeenCalled();
   });
 
+  it('should have a parseStartDate method', function () {
+    expect(ItemListCtrl.parseStartDate).toBeDefined();
+  });
+
+  it('should have a parseEndDate method', function () {
+    expect(ItemListCtrl.parseEndDate).toBeDefined();
+  });
+
+  it('should have a filterItems method', function () {
+    expect(ItemListCtrl.filterItems).toBeDefined();
+  });
+
+  it('should have a sortItems method', function () {
+    expect(ItemListCtrl.sortItems).toBeDefined();
+  });
+
   describe('The itemsList array', function () {
 
     it('should be attached to the scope', function () {
