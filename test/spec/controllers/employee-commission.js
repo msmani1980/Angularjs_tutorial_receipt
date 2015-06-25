@@ -3,7 +3,7 @@
 describe('Controller: EmployeeCommissionCtrl', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json'));
+  beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/company-currency-globals.json'));
 
 
   var EmployeeCommissionCtrl,
@@ -11,16 +11,19 @@ describe('Controller: EmployeeCommissionCtrl', function () {
     getItemsListDeferred,
     getPriceTypesListDeferred,
     getTaxRateTypesDeferred,
+    getCompanyCurrenciesDeferred,
     itemsListJSON,
     priceTypeListJSON,
     taxRateTypesJSON,
+    companyCurrencyJSON,
     scope;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
-    inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_) {
+    inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedCompanyCurrencyGlobals_) {
       itemsListJSON = _servedItemsList_;
       priceTypeListJSON = _servedPriceTypes_;
       taxRateTypesJSON = _servedTaxRateTypes_;
+      companyCurrencyJSON = _servedCompanyCurrencyGlobals_;
     });
 
     getItemsListDeferred = $q.defer();
@@ -32,10 +35,14 @@ describe('Controller: EmployeeCommissionCtrl', function () {
     getTaxRateTypesDeferred = $q.defer();
     getTaxRateTypesDeferred.resolve(taxRateTypesJSON);
 
+    getCompanyCurrenciesDeferred = $q.defer();
+    getCompanyCurrenciesDeferred.resolve(companyCurrencyJSON);
+
     employeeCommissionFactory = $injector.get('employeeCommissionFactory');
     spyOn(employeeCommissionFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getPriceTypesList').and.returnValue(getPriceTypesListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getTaxRateTypes').and.returnValue(getTaxRateTypesDeferred.promise);
+    spyOn(employeeCommissionFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeferred.promise);
 
     scope = $rootScope.$new();
     EmployeeCommissionCtrl = $controller('EmployeeCommissionCtrl', {
