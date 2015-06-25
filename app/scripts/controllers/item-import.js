@@ -9,9 +9,5 @@
  */
 angular.module('ts5App')
   .controller('ItemImportCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    $scope.viewName = 'Import Stock Owner Items';
   });

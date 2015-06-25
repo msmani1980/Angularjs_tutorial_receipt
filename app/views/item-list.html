@@ -1,17 +1,11 @@
 <div class="fluid-container module-container">
-
 	<div class="list-controls">
-
 		<div class="row item-list-row">
-
 			<div class="col-xs-4">
-
 				<h2 class="view-name">Retail Items</h2>
-
 			</div>
 
 			<div class="col-xs-8 text-right">
-
         <a href="#/item-create" class="btn btn-primary">+ <span class="hidden-xs">Create Retail Item</span></a>
 
         <a href="#/item-import" class="btn btn-default">
@@ -35,22 +29,17 @@
 		</div>
 
 		<div class="collapse" id="search-collapse">
-
 			<form class="form">
-
 				<div class="row">
 
 					<div class="col-xs-12 col-sm-6 col-md-4">
-
 						<div class="form-group">
 							<label for="item-code">Item Code</label>
 							<input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="Item012">
 						</div>
-
 					</div>
 
 					<div class="col-xs-12 col-sm-6 col-md-4">
-
 						<div class="form-group">
 							<label for="item-name">Item Name</label>
 							<input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="Turkey">
@@ -160,46 +149,30 @@
 						</button>
 
 					</td>
-
 				</tr>
-
 			</tbody>
-
 		</table>
-
 	</div>
 
 	<div class="list-footer">
-
 		<div class="row">
-
 			<div class="col-xs-12 col-sm-6">
-
 				Show
-
 				<select class="form-control" ng-model="itemsPerPage">
 					<option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
 				</select>
-
 				Items per Page
 
 			</div>
 
 			<div class="col-xs-12 col-sm-6 text-right">
-
 				<pagination total-items="itemsListCount" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
-
 			</div>
-
-
 		</div>
-
 	</div>
-
 </div>
 
 <form-success-modal></form-success-modal>
-
 <left-navigation base-path="retail-items"></left-navigation>
 
 <delete-record-dialog></delete-record-dialog>
