@@ -4,21 +4,25 @@
 
 		<div class="row item-list-row">
 
-			<div class="col-xs-6">
+			<div class="col-xs-4">
 
 				<h2 class="view-name">Retail Items</h2>
 
 			</div>
 
-			<div class="col-xs-6 text-right">
+			<div class="col-xs-8 text-right">
 
-				<a href="#/item-create" class="btn btn-primary"> + Create Retail Item</a>
+        <a href="#/item-create" class="btn btn-primary">+ <span class="hidden-xs">Create Retail Item</span></a>
+
+        <a href="#/item-import" class="btn btn-default">
+          <span class="fa fa-copy" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Import Items From Stock Owner</span>
+        </a>
 
 				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
-					<span class="fa fa-search" aria-hidden="true"></span>
-					<span class="hidden-xs">Search</span>
+          <span class="fa fa-search" aria-hidden="true"></span>
+					<span class="hidden-sm hidden-xs">Search</span>
 				</button>
-
 
 				<button class="btn btn-default"
 					ng-click="clearSearchFilters()"

@@ -139,6 +139,10 @@ angular
         templateUrl: 'views/menu-relationship-create.html',
         controller: 'MenuRelationshipCreateCtrl'
       })
+      .when('/item-import', {
+        templateUrl: 'views/item-import.html',
+        controller: 'ItemImportCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
