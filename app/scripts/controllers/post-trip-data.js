@@ -14,12 +14,32 @@ angular.module('ts5App')
 
     var _companyId = '403',
       _services = null;
+    var $this = this;
 
     $scope.viewName = 'Post Trip Data';
     $scope.readOnly = false;
     $scope.postTrip = {};
 
-    (function constructor() {
+    this.initCreateView = function() {
+      $scope.readOnly = false;
+      $scope.viewName = 'Create Post Trip Data';
+
+      // TODO: create/back button
+    };
+
+    this.initReadView = function() {
+      $scope.readOnly = true;
+      $('.employeeID-multiple-select').prop('disabled', true);
+      // TODO: autopopulate fields
+    };
+
+    this.initUpdateView = function() {
+      $scope.readOnly = false;
+      // TODO: autopopulate fields
+      // TODO: save/back button
+    };
+
+    this.initController = function() {
       // set global controller properties
       _companyId = postTripFactory.getCompanyId();
       _services = {
@@ -48,19 +68,20 @@ angular.module('ts5App')
 
       switch ($routeParams.state) {
         case 'create':
-          create();
+          $this.initCreateView();
           break;
         case 'view':
-          read();
+          $this.initReadView();
           break;
         case 'edit':
-          update();
+          $this.initUpdateView();
           break;
         default:
+          $this.initReadView();
           break;
       }
 
-    })();
+    }();
 
     $scope.updateCarrierNumbers = function () {
       postTripFactory.getCarrierNumbers(_companyId, $scope.carrierTypeId).then(function (response) {
@@ -81,25 +102,6 @@ angular.module('ts5App')
       $scope.postTrip.departureStation = station.stationName;
       $scope.postTrip.departureTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
     };
-
-    function create() {
-      $scope.readOnly = false;
-      $scope.viewName = 'Create Post Trip Data';
-
-      // TODO: create/back button
-    }
-
-    function read() {
-      $scope.readOnly = true;
-      $('.employeeID-multiple-select').prop('disabled', true);
-      // TODO: autopopulate fields
-    }
-
-    function update() {
-      $scope.readOnly = false;
-      // TODO: autopopulate fields
-      // TODO: save/back button
-    }
 
 
   });
