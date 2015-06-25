@@ -43,6 +43,7 @@
             ng-options="company as company.companyName for company in stockOwnerList">
           <option value="">Select Stock Owner</option>
         </select>
+        <div ng-show="mockData1">TODO - the above select list is mock data until <a href="https://jira.egate-solutions.com/browse/TSVPORTAL-2038">TSVPORTAL-2038</a> is completed.</div>
       </div>
       <div class="col-xs-3">
         <button class="btn btn-default" ng-click="importAll()">Import All</button>
@@ -51,7 +52,7 @@
     <div class="col-xs-6">
 
       <div class="col-xs-12 text-right">
-        <button class="btn btn-default">Remove All</button>
+        <button class="btn btn-default" ng-click="removeAll()">Remove All</button>
       </div>
     </div>
 
@@ -118,11 +119,11 @@
 
   <div class="form-group">
     <div class="col-xs-6">
-      <table ui-on-Drop="onDrop($event, $data, stockOwnerItemsList)"
+      <table ui-on-Drop="onDrop($event, $data, stockownersRetailItemList)"
              class="sortable table table-bordered table-hover">
         <thead>
         <tr>
-          <th>&nbsp;</th>
+          <th ng-style="{'background-color':companyHexColor()}">&nbsp;</th>
           <th>S.O.</th>
           <th>S.O. Ref. #</th>
           <th>Name</th>
@@ -132,9 +133,9 @@
         <tr
           ui-draggable="true"
           drag="stockOwner"
-          on-drop-success="dropSuccessHandler($event, $index, stockOwnerItemsList)"
-          ng-repeat="stockOwner in stockOwnerItemsList | filter:searchStockOwnerItem track by $index">
-          <td ng-style="{'background-color':hexColor(stockOwner)}"></td>
+          on-drop-success="dropSuccessHandler($event, $index, stockownersRetailItemList)"
+          ng-repeat="stockOwner in stockownersRetailItemList | filter:searchStockOwnerItem track by $index">
+          <td ng-style="{'background-color':hexColor(stockOwner)}">&nbsp;</td>
           <td>{{ selectedStockownerCompany.companyName }}</td>
           <td>{{ stockOwner.itemCode }}</td>
           <td>{{ stockOwner.itemName }}</td>
@@ -143,11 +144,11 @@
       </table>
     </div>
     <div class="col-xs-6">
-      <table ui-on-Drop="onDrop($event, $data, itemList)"
+      <table ui-on-Drop="onDrop($event, $data, airlineRetailItemList)"
              class="sortable table table-bordered table-hover">
         <thead>
         <tr>
-          <th>&nbsp;</th>
+          <th ng-style="{'background-color':companyHexColor('current')}">&nbsp;</th>
           <th>S.O.</th>
           <th>S.O. Ref. #</th>
           <th>Name</th>
@@ -158,13 +159,13 @@
         <tr
           ui-draggable="true"
           drag="item"
-          on-drop-success="dropSuccessHandler($event, $index, itemList)"
-          ng-repeat="item in itemList | filter:searchRetailItem track by $index">
-          <td ng-style="{'background-color':hexColor(item, 1)}"></td>
+          on-drop-success="dropSuccessHandler($event, $index, airlineRetailItemList)"
+          ng-repeat="item in airlineRetailItemList | filter:searchRetailItem track by $index">
+          <td ng-style="{'background-color':hexColor(item)}">&nbsp;</td>
           <td>{{ item.companyName }}</td>
           <td>{{ item.itemCode }}</td>
           <td>{{ item.itemName }}</td>
-          <td><a href="#" ng-click="deleteItem(item)">X</a></td>
+          <td><a ng-click="removeRetailItem(item)">X</a></td>
         </tr>
         </tbody>
       </table>

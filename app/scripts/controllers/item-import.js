@@ -11,60 +11,108 @@ angular.module('ts5App')
   .controller('ItemImportCtrl', function ($scope, $q, ItemImportFactory ) {
 
     // controller global properties
-    var _companyId    = null;
+    var _companyId    = null,
+      _stockOwnerItemsFullList = [];
 
     // scope properties
     $scope.viewName = 'Import Stock Owner Items';
     $scope.selectedStockownerCompany = null;
     $scope.companiesLoaded = false;
-     var f = false;
-    $scope.hexColor = function(item, useCompanyId){
-      if(!f){
-        console.log(item);
-        f = true;
-      }
-      if(item.hasOwnProperty(item)){
-        return item.hexColor;
-      }
-      var companyId = _companyId;
-      if(undefined === useCompanyId){
-        companyId = $scope.selectedStockownerCompany.id;
-      }
-      item.hexColor = helpers.randomHexColor.get(companyId);
-      return item.hexColor;
-    };
 
+    // scope methods
+    $scope.companyHexColor = function(useCurrentCompanyId){
+      if(angular.isDefined(useCurrentCompanyId)){
+        return helpers.randomHexColor.get(_companyId);
+      }
+      if(!angular.isObject($scope.selectedStockownerCompany) || !angular.isDefined($scope.selectedStockownerCompany.id)){
+        return 'inherit';
+      }
+      return helpers.randomHexColor.get($scope.selectedStockownerCompany.id);
+    };
+    $scope.hexColor = function(retailItem){
+      if(angular.isDefined(retailItem.hexColor)){
+        return retailItem.hexColor;
+      }
+      retailItem.hexColor = helpers.randomHexColor.get(retailItem.companyId);
+      return retailItem.hexColor;
+    };
     $scope.changeSelectedStockownerCompany = function(){
-      $scope.stockOwnerItemsList = [];
-      if(undefined === $scope.selectedStockownerCompany){
+      $scope.stockownersRetailItemList = [];
+      if(!angular.isObject($scope.selectedStockownerCompany)){
+        return;
+      }
+      if(!angular.isDefined($scope.selectedStockownerCompany.id)){
         return;
       }
       ItemImportFactory.getItemsList({companyId:$scope.selectedStockownerCompany.id}).then(function(response){
-        console.log($scope.selectedStockownerCompany.id);
-        f= false;
-        angular.forEach(response.retailItems, function(retailItem){
-          if(!helpers.retailItemSkus.has(retailItem)) {
-            this.push(retailItem);
-          }
-        }, $scope.stockOwnerItemsList);
+        _stockOwnerItemsFullList = response.retailItems;
+        helpers.stockownersRetailItemList.set();
       });
     };
+    $scope.importAll = function(){
+      var retailItems = helpers.retailItemSkus.setMultiple($scope.stockownersRetailItemList);
+      $scope.airlineRetailItemList = $scope.airlineRetailItemList.concat(retailItems);
+      $scope.stockownersRetailItemList = [];
+    };
+    $scope.removeRetailItem = function(retailItem) {
+      var i = $scope.airlineRetailItemList.indexOf(retailItem);
+      $scope.airlineRetailItemList.splice(i, 1);
 
-    // scope methods
-    $scope.importAll = function(value){
-
+      if(!angular.isObject($scope.selectedStockownerCompany)){
+        return;
+      }
+      if(!angular.isDefined($scope.selectedStockownerCompany.id)){
+        return;
+      }
+      if($scope.selectedStockownerCompany.id != retailItem.companyId){
+        return;
+      }
+      if(-1 !== $scope.stockownersRetailItemList.indexOf(retailItem)){
+        return;
+      }
+      helpers.stockownersRetailItemList.set();
+    };
+    $scope.removeAll = function(){
+      helpers.retailItemSkus.existing = [];
+      $scope.airlineRetailItemList = [];
+      helpers.stockownersRetailItemList.set();
     };
 
     // helpers
     var helpers = {
+      stockownersRetailItemList: {
+        set: function(){
+          $scope.stockownersRetailItemList = [];
+          angular.forEach(_stockOwnerItemsFullList, function(retailItem){
+            if(!helpers.retailItemSkus.has(retailItem)) {
+              this.push(retailItem);
+            }
+          }, $scope.stockownersRetailItemList);
+        }
+      },
       retailItemSkus: {
         existing: [],
+        setMultiple: function(retailItems){
+          var _retailItems = [];
+          angular.forEach(retailItems, function(retailItem){
+            helpers.retailItemSkus.set(retailItem);
+            this.push(retailItem);
+          }, _retailItems);
+          return _retailItems;
+        },
         set: function (retailItem) {
-          this.existing.push(retailItem.itemCode);
+          if(!this.has(retailItem)) {
+            this.existing.push(retailItem.itemCode);
+          }
         },
         has: function (retailItem) {
-          return false;
           return -1 !== this.existing.indexOf(retailItem.itemCode);
+        },
+        remove: function(retailItem) {
+          if(!this.has(retailItem)) {
+            var i = this.existing.indexOf(retailItem.itemCode);
+            this.existing.splice(i, 1);
+          }
         }
       },
       randomHexColor: {
@@ -119,18 +167,16 @@ angular.module('ts5App')
         var companies = response.companies;
 
         // TODO - Can only mock until https://jira.egate-solutions.com/browse/TSVPORTAL-2038 is done
-        var mockResponse = {'companies':[{'id':413,'companyName':'Company 413','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'TEST_009','ediName':'TEST_009','dbaName':'TEST_009','countRelation':'1','baseCurrencyCode':'USD','companyCode':'TEST_009','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':413,'companyName':'GRO 555','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'Gro test Company ','ediName':'EDI ','dbaName':'Test Dba ','countRelation':'1','baseCurrencyCode':'USD','companyCode':'5555','isActive':'false','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':407,'companyName':'GRO 2','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'GRO 2','ediName':null,'dbaName':null,'countRelation':'0','baseCurrencyCode':'GBP','companyCode':'223423','isActive':'true','baseCurrencyId':8,'companyLanguages':'','exchangeRateVariance':null},{'id':404,'companyName':'StockOwner1','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'StockOwner1','ediName':null,'dbaName':null,'countRelation':'0','baseCurrencyCode':'USD','companyCode':'12345','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':396,'companyName':'stockCom12','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'stockCom12','ediName':'stockCom1','dbaName':'stockCom12','countRelation':'0','baseCurrencyCode':'USD','companyCode':'st21','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':392,'companyName':'stockCom','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'stockCom','ediName':'stockCom','dbaName':'stockCom','countRelation':'0','baseCurrencyCode':'USD','companyCode':'st2','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':378,'companyName':'Test Training ','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'Test Training ','ediName':null,'dbaName':'Test DBA','countRelation':'0','baseCurrencyCode':'USD','companyCode':'555','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':375,'companyName':'delarche test','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':369,'legalName':'dddd','ediName':null,'dbaName':null,'countRelation':'0','baseCurrencyCode':'TTS','companyCode':'dsf','isActive':'false','baseCurrencyId':13,'companyLanguages':'French (Standard)','exchangeRateVariance':null}],'meta':{'count':8,'limit':8,'start':0}};
+        var mockResponse = {'companies':[{'id':419,'companyName':'TEST_009','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'TEST_009','ediName':'TEST_009','dbaName':'TEST_009','countRelation':'1','baseCurrencyCode':'USD','companyCode':'TEST_009','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':413,'companyName':'GRO 555','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'Gro test Company ','ediName':'EDI ','dbaName':'Test Dba ','countRelation':'1','baseCurrencyCode':'USD','companyCode':'5555','isActive':'false','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':407,'companyName':'GRO 2','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'GRO 2','ediName':null,'dbaName':null,'countRelation':'0','baseCurrencyCode':'GBP','companyCode':'223423','isActive':'true','baseCurrencyId':8,'companyLanguages':'','exchangeRateVariance':null},{'id':404,'companyName':'StockOwner1','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'StockOwner1','ediName':null,'dbaName':null,'countRelation':'0','baseCurrencyCode':'USD','companyCode':'12345','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':396,'companyName':'stockCom12','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'stockCom12','ediName':'stockCom1','dbaName':'stockCom12','countRelation':'0','baseCurrencyCode':'USD','companyCode':'st21','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':392,'companyName':'stockCom','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'stockCom','ediName':'stockCom','dbaName':'stockCom','countRelation':'0','baseCurrencyCode':'USD','companyCode':'st2','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':378,'companyName':'Test Training ','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':null,'legalName':'Test Training ','ediName':null,'dbaName':'Test DBA','countRelation':'0','baseCurrencyCode':'USD','companyCode':'555','isActive':'true','baseCurrencyId':1,'companyLanguages':'','exchangeRateVariance':null},{'id':375,'companyName':'delarche test','companyTypeName':'Stockowner','companyTypeId':2,'parentCompanyId':369,'legalName':'dddd','ediName':null,'dbaName':null,'countRelation':'0','baseCurrencyCode':'TTS','companyCode':'dsf','isActive':'false','baseCurrencyId':13,'companyLanguages':'French (Standard)','exchangeRateVariance':null}],'meta':{'count':8,'limit':8,'start':0}};;
+
+        $scope.mockData1 = true;
 
         companies = mockResponse.companies;
         // companies.unshift({companyName:"Select Stock Owner",id:""});
         $scope.stockOwnerList = companies;
       }),
       ItemImportFactory.getItemsList({companyId:_companyId}).then(function(response){
-        $scope.itemList = [];
-        angular.forEach(response.retailItems, function(retailItem){
-          helpers.retailItemSkus.set(retailItem);
-          this.push(retailItem);
-        }, $scope.itemList)
+        $scope.airlineRetailItemList = helpers.retailItemSkus.setMultiple(response.retailItems);
       })];
       $q.all(promises).then(function(){
         $scope.companiesLoaded = true;

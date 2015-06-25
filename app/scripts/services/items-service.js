@@ -38,7 +38,7 @@ angular.module('ts5App')
 
     var getItemsList = function (searchParameters, fetchFromMaster) {
       var _requestResource = requestResource;
-      if(undefined !== searchParameters.companyId){
+      if(angular.isDefined(searchParameters.companyId)){
         actions.getItemsList.headers = {companyId:searchParameters.companyId};
         _requestResource = $resource(requestURL, requestParameters, actions);
       }
