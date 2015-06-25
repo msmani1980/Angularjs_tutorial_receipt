@@ -13,7 +13,7 @@ angular.module('ts5App')
       return GlobalMenuService.company.get();
     };
 
-    var getPostTripDataList = function (id, optionalPayload) {
+    var getPostTripDataList = function () {
       return {response:'mock'};
       //if(arguments.length > 1) {
       //  return cashBagService.getCashBagList(id, optionalPayload);

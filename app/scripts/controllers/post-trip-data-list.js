@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, $routeParams, $q) {
+  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location) {
     var _companyId = '403',
       _services = null;
 
@@ -29,19 +29,15 @@ angular.module('ts5App')
           return postTripFactory.getPostTripDataList(_companyId, {});
         },
         getStationList: function () {
-          return postTripFactory.getStationList(_companyId).then(
-            function (response) {
-              $scope.stationList = response.response;
-              $('.stations-multi-select').select2({width: '100%'});
-            }
-          );
+          return postTripFactory.getStationList(_companyId).then(function (response) {
+            $scope.stationList = response.response;
+            $('.stations-multi-select').select2({width: '100%'});
+          });
         },
-        getCarrierTypes: function() {
-          return postTripFactory.getCarrierTypes(_companyId).then(
-            function (response) {
-              $scope.carrierTypes = response.response;
-            }
-          )
+        getCarrierTypes: function () {
+          return postTripFactory.getCarrierTypes(_companyId).then(function (response) {
+            $scope.carrierTypes = response.response;
+          });
         }
       };
       _services.call(['getPostTripDataList', 'getStationList', 'getCarrierTypes']);
@@ -59,23 +55,23 @@ angular.module('ts5App')
       // TODO: call API with empty search object
     };
 
-    $scope.updateCarrierNumbers = function() {
-      postTripFactory.getCarrierNumbers(_companyId, $scope.search.carrierTypeId).then(function(response){
+    $scope.updateCarrierNumbers = function () {
+      postTripFactory.getCarrierNumbers(_companyId, $scope.search.carrierTypeId).then(function (response) {
         $scope.carrierNumbers = response.response;
-      }, function(){
+      }, function () {
         $scope.carrierNumbers = [];
       });
     };
 
-    $scope.viewPostTrip = function() {
+    $scope.viewPostTrip = function () {
       $location.path('post-trip-data/view/' + 1);
     };
 
-    $scope.editPostTrip = function() {
+    $scope.editPostTrip = function () {
       $location.path('post-trip-data/edit/' + 1);
     };
 
-    $scope.deletePostTrip = function() {
+    $scope.deletePostTrip = function () {
       // TODO: delete
     };
 

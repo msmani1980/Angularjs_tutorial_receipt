@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, $q) {
+  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams) {
     $('.employeeID-multiple-select').select2();
 
     var _companyId = '403',
@@ -36,7 +36,7 @@ angular.module('ts5App')
             }
           );
         },
-        getCarrierTypes: function() {
+        getCarrierTypes: function () {
           return postTripFactory.getCarrierTypes(_companyId).then(
             function (response) {
               $scope.carrierTypes = response.response;
@@ -62,44 +62,44 @@ angular.module('ts5App')
 
     })();
 
-    $scope.updateCarrierNumbers = function() {
-      postTripFactory.getCarrierNumbers(_companyId, $scope.carrierTypeId).then(function(response){
+    $scope.updateCarrierNumbers = function () {
+      postTripFactory.getCarrierNumbers(_companyId, $scope.carrierTypeId).then(function (response) {
         $scope.carrierNumbers = response.response;
-      }, function(){
+      }, function () {
         $scope.carrierNumbers = [];
       });
     };
 
-    $scope.updateArrivalInfo = function() {
+    $scope.updateArrivalInfo = function () {
       var station = $scope.stationList[$scope.arrivalStationIndex];
       $scope.postTrip.arrivalStation = station.stationName;
       $scope.postTrip.arrivalTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
     };
 
-    $scope.updateDepartureInfo = function() {
+    $scope.updateDepartureInfo = function () {
       var station = $scope.stationList[$scope.departureStationIndex];
       $scope.postTrip.departureStation = station.stationName;
       $scope.postTrip.departureTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
     };
-    
-    function create(){
+
+    function create() {
       $scope.readOnly = false;
+      $scope.viewName = 'Create Post Trip Data';
+
       // TODO: create/back button
     }
 
-    function read(){
+    function read() {
       $scope.readOnly = true;
-      $('.employeeID-multiple-select').prop("disabled", true);
+      $('.employeeID-multiple-select').prop('disabled', true);
       // TODO: autopopulate fields
     }
 
-    function update(){
+    function update() {
       $scope.readOnly = false;
       // TODO: autopopulate fields
       // TODO: save/back button
     }
-
-
 
 
   });
