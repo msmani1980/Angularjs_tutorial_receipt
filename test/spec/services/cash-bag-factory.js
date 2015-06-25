@@ -17,12 +17,12 @@ describe('Factory: cashBagFactory', function () {
     currenciesService,
     dailyExchangeRatesService;
 
-  beforeEach(inject(function ($rootScope, _cashBagFactory_, _cashBagService_, _GlobalMenuService_, _stationsService_, _schedulesService_, _companiesService_, _currenciesService_, _dailyExchangeRatesService_) {
+  beforeEach(inject(function ($rootScope, _cashBagFactory_, _cashBagService_, _GlobalMenuService_, _stationsService_, _schedulesService_, _companyService_, _currenciesService_, _dailyExchangeRatesService_) {
     cashBagService = _cashBagService_;
     GlobalMenuService = _GlobalMenuService_;
     stationsService = _stationsService_;
     schedulesService = _schedulesService_;
-    companiesService = _companiesService_;
+    companiesService = _companyService_;
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
 

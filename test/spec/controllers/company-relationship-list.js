@@ -2,36 +2,45 @@
 
 describe('Controller: CompanyRelationshipListCtrl', function () {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/company-relationships.json',
-    'served/company-relationship-types.json'
+  beforeEach(module('served/company-list.json',
+    'served/company-relationship-list.json',
+    'served/company-relationship-type-list.json'
   ));
 
   var CompanyRelationshipListCtrl,
     scope,
+    getCompanyListDeferred,
     getCompanyRelationshipListByCompanyDeferred,
     getCompanyRelationshipTypeListDeferred,
-    companyRelationshipService,
+    companyRelationshipFactory,
+    companyListJSON,
     companyRelationshipListByCompanyJSON,
     companyRelationshipTypeListJSON,
     location;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope, _companyRelationshipService_, $location) {
-    inject(function (_servedCompanyRelationships_, _servedCompanyRelationshipTypes_) {
-      companyRelationshipListByCompanyJSON = _servedCompanyRelationships_;
-      companyRelationshipTypeListJSON = _servedCompanyRelationshipTypes_;
+  beforeEach(inject(function ($q, $controller, $rootScope, _companyRelationshipFactory_, $location) {
+    inject(function (_servedCompanyList_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypeList_) {
+      companyListJSON = _servedCompanyList_;
+      companyRelationshipListByCompanyJSON = _servedCompanyRelationshipList_;
+      companyRelationshipTypeListJSON = _servedCompanyRelationshipTypeList_;
     });
+
     location = $location;
     scope = $rootScope.$new();
+
+    getCompanyListDeferred = $q.defer();
+    getCompanyListDeferred.resolve(companyListJSON);
     getCompanyRelationshipListByCompanyDeferred = $q.defer();
     getCompanyRelationshipListByCompanyDeferred.resolve(companyRelationshipListByCompanyJSON);
     getCompanyRelationshipTypeListDeferred = $q.defer();
     getCompanyRelationshipTypeListDeferred.resolve(companyRelationshipTypeListJSON);
-    companyRelationshipService = _companyRelationshipService_;
-    spyOn(companyRelationshipService, 'getCompanyRelationshipListByCompany').and.returnValue(getCompanyRelationshipListByCompanyDeferred.promise);
-    spyOn(companyRelationshipService, 'getCompanyRelationshipTypeList').and.returnValue(getCompanyRelationshipTypeListDeferred.promise);
+
+    companyRelationshipFactory = _companyRelationshipFactory_;
+
+    spyOn(companyRelationshipFactory, 'getCompanyList').and.returnValue(getCompanyListDeferred.promise);
+    spyOn(companyRelationshipFactory, 'getCompanyRelationshipListByCompany').and.returnValue(getCompanyRelationshipListByCompanyDeferred.promise);
+    spyOn(companyRelationshipFactory, 'getCompanyRelationshipTypeList').and.returnValue(getCompanyRelationshipTypeListDeferred.promise);
     CompanyRelationshipListCtrl = $controller('CompanyRelationshipListCtrl', {
       $scope: scope
     });
@@ -43,7 +52,7 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
   });
 
   it('should get the company relationship list from API', function () {
-    expect(companyRelationshipService.getCompanyRelationshipListByCompany).toHaveBeenCalled();
+    expect(companyRelationshipFactory.getCompanyRelationshipListByCompany).toHaveBeenCalled();
   });
 
   describe('companyRelationshipList in scope', function () {
@@ -56,19 +65,19 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     });
   });
 
-  describe('Action buttons', function () {
-    var fakeCompanyRelationship;
-
-    beforeEach(function () {
-      fakeCompanyRelationship = {
-        relativeCompanyId: 1,
-        startDate: '2015-01-01',
-        endDate: '2015-01-01'
-      };
-    });
-
-    describe('addCompanyRelationship()', function() {
-
-    });
-  });
+  //describe('Action buttons', function () {
+  //  var fakeCompanyRelationship;
+  //
+  //  beforeEach(function () {
+  //    fakeCompanyRelationship = {
+  //      relativeCompanyId: 1,
+  //      startDate: '2015-01-01',
+  //      endDate: '2015-01-01'
+  //    };
+  //  });
+  //
+  //  describe('addCompanyRelationship()', function() {
+  //
+  //  });
+  //});
 });

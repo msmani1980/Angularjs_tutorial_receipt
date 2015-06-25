@@ -98,4 +98,5 @@ plugin.
 *   [Configuration](https://www.npmjs.com/package/karma-ng-json2js-preprocessor#configuration)
 *   [How does it work?](https://www.npmjs.com/package/karma-ng-json2js-preprocessor#how-does-it-work)
 
-
+### Conventions
+It's an Angular convention to have a dollar sign ($) in the front of the names of things that are both injected ($scope, $timeout, $http) and built-in to Angular. If you see $scope being used in the link function of a directive, that is both wrong and confusing since parameters are passed to the link function of directives, not injected.

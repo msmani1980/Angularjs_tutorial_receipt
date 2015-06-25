@@ -64,7 +64,7 @@ describe('Controller: CompanyListCtrl', function () {
     it('manage company-relationship should change the URL based on the company object', function() {
       scope.showCompanyRelationshipList({id: 1});
       scope.$digest();
-      expect(location.path()).toBe('/company-relationship-edit/1');
+      expect(location.path()).toBe('/company-relationship-list/1');
     });
   });
 });

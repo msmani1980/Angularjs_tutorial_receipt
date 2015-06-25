@@ -6,25 +6,29 @@ describe('Service: companyRelationshipService', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/company-relationship.json', 'served/company-relationship-list.json', 'served/company-relationship-types.json'));
+  beforeEach(module('served/company-relationship.json', 'served/company-relationship-list.json', 'served/company-relationship-type-list.json'));
 
   var companyRelationshipService,
     $httpBackend,
     companyRelationshipResponseJSON,
     companyRelationshipListResponseJSON,
-    companyRelationshipTypesResponseJSON;
+    companyRelationshipTypesResponseJSON,
+    headers = {
+      companyId: 362,
+      'Accept': 'application/json, text/plain, */*',
+      'userId': 1
+    };
 
   beforeEach(inject(function (_companyRelationshipService_, $injector) {
-    inject(function (_servedCompanyRelationship_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypes_) {
+    inject(function (_servedCompanyRelationship_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypeList_) {
       companyRelationshipResponseJSON = _servedCompanyRelationship_;
       companyRelationshipListResponseJSON = _servedCompanyRelationshipList_;
-      companyRelationshipTypesResponseJSON = _servedCompanyRelationshipTypes_;
+      companyRelationshipTypesResponseJSON = _servedCompanyRelationshipTypeList_;
     });
 
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/companies/).respond(companyRelationshipListResponseJSON);
     $httpBackend.whenGET(/company-relation/).respond(companyRelationshipTypesResponseJSON);
-    $httpBackend.whenPOST(/relationships/).respond(companyRelationshipResponseJSON);
     companyRelationshipService = _companyRelationshipService_;
   }));
 
@@ -39,27 +43,28 @@ describe('Service: companyRelationshipService', function () {
   });
 
   describe('API calls', function () {
-    var companyRelationshipData;
+    var companyRelationshipListByCompanyData;
     var companyRelationshipTypeData;
+    var companyRelationshipData;
 
     describe('getCompanyRelationshipListByCompany', function () {
       beforeEach(function () {
         companyRelationshipService.getCompanyRelationshipListByCompany().then(function (companyRelationshipListFromAPI) {
-          companyRelationshipData = companyRelationshipListFromAPI;
+          companyRelationshipListByCompanyData = companyRelationshipListFromAPI;
         });
         $httpBackend.flush();
       });
 
       it('should be an array', function () {
-        expect(Object.prototype.toString.call(companyRelationshipData.companyRelationships)).toBe('[object Array]');
+        expect(angular.isArray(companyRelationshipListByCompanyData.companyRelationships)).toBe(true);
       });
 
       it('should have an array of company-relationship', function () {
-        expect(companyRelationshipData.companyRelationships.length).toBeGreaterThan(0);
+        expect(companyRelationshipListByCompanyData.companyRelationships.length).toBeGreaterThan(0);
       });
 
       it('should have a companyName property', function () {
-        expect(companyRelationshipData.companyRelationships[0].companyName).toBe('British Airways');
+        expect(companyRelationshipListByCompanyData.companyRelationships[0].companyName).toBe('British Airways');
       });
     });
 
@@ -86,6 +91,7 @@ describe('Service: companyRelationshipService', function () {
 
     describe('getCompanyRelationshipList', function () {
       beforeEach(function () {
+
         var relativeCompanyId = 413;
         var regex = new RegExp('/companies/' + relativeCompanyId + '/relationships', 'g');
         $httpBackend.whenGET(regex).respond({});
@@ -117,25 +123,31 @@ describe('Service: companyRelationshipService', function () {
     });
 
     describe('createCompanyRelationship', function () {
-      describe('createCompanyRelationship', function () {
-        beforeEach(function () {
-          var companyId = 413;
-          var regex = new RegExp('/companies/' + companyId + '/relationships', 'g');
-          $httpBackend.whenPOST(regex).respond(companyRelationshipData);
-        });
+      beforeEach(function () {
+        var companyId = 417;
+        var relativeCompanyId = 420;
+        var regex = new RegExp('/companies/' + companyId + '/relationships', 'g');
+        var data = {
+          "companyId": companyId,
+          "relativeCompanyId": relativeCompanyId,
+          "startDate": "2015-09-20",
+          "endDate": "2015-09-21"
+        };
 
-        it('should POST data to company-relationship API', function () {
-          companyRelationshipService.createCompanyRelationship({
-            companyId: 413
-          }, {relativeCompanyId: 2});
-          $httpBackend.expectPOST(/relationships/);
-          $httpBackend.flush();
+        $httpBackend.whenPOST(regex).respond({ "id": 77});
+
+        companyRelationshipService.createCompanyRelationship(data).then(function (response) {
+          companyRelationshipData = response;
         });
+        $httpBackend.flush();
+      });
+
+      it('should be accessible in the service', function () {
+        expect(!!companyRelationshipService.createCompanyRelationship).toBe(true);
       });
 
       it('should POST data to company-relationship API', function () {
-        console.log(companyRelationshipData);
-        expect(angular.isObject(companyRelationshipData)).toBe(true);
+        expect(angular.isNumber(companyRelationshipData.id)).toBe(true);
       });
 
       it('should return an id', function () {
