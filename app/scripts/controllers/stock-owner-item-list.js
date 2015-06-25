@@ -21,15 +21,19 @@ angular.module('ts5App')
     };
 
     this.updateItemList = function () {
-      var filteredItems = $this.filterItems();
+      var sortedItems = $this.sortItems();
+      var filteredItems = $this.filterItems(sortedItems);
       $scope.itemsListCount = filteredItems.length;
       $this.setPaginatedItems(filteredItems);
     };
 
-    this.filterItems = function () {
-      return $filter('filter')($scope.itemsList, $scope.search);
+    this.filterItems = function (sortedItems) {
+      return $filter('filter')(sortedItems, $scope.search);
     };
 
+    this.sortItems = function () {
+      return $filter('orderBy')($scope.itemsList, 'itemName');
+    };
     this.parsePaginationToInt = function () {
       $scope.currentPageInt = parseInt($scope.currentPage);
       $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
@@ -44,11 +48,14 @@ angular.module('ts5App')
 
     this.generateItemQuery = function () {
       var query = {};
+      var todaysDate = dateUtility.formatDate(dateUtility.now());
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
         query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
           'L', 'YYYYMMDD');
         query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
           'L', 'YYYYMMDD');
+      } else {
+        query.startDate = todaysDate;
       }
       return query;
     };
@@ -98,12 +105,26 @@ angular.module('ts5App')
       });
     };
 
+    $scope.parseStartDate = function (startDate) {
+      $scope.startDateParsed = Date.parse(startDate);
+      startDate = $scope.startDateParsed;
+      return startDate;
+    };
+
+    $scope.parseEndDate = function (endDate) {
+      $scope.endDateParsed = Date.parse(endDate);
+      endDate = $scope.endDateParsed;
+      return endDate;
+    };
+
     $scope.isItemActive = function (startDate) {
-      return Date.parse(startDate) <= dateUtility.now();
+      $scope.parseStartDate();
+      return startDate <= dateUtility.now();
     };
 
     $scope.isItemInactive = function (endDate) {
-      return Date.parse(endDate) <= dateUtility.now();
+      $scope.parseEndDate();
+      return endDate <= dateUtility.now();
     };
 
     $scope.clearSearchFilters = function () {

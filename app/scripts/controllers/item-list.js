@@ -67,7 +67,6 @@ angular.module('ts5App')
       itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
         $scope.itemsListCount = $scope.itemsList.length;
-        console.log($scope.itemsList.length);
         $this.updateItemList();
       });
     };
