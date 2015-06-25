@@ -63,6 +63,8 @@
   </div>
   <!--/TopHeader -->
 
+  <div class="create-form-container">
+
   <ng-form name="form" class="form edit-form create-item-form">
 
     <form-error-dialog></form-error-dialog>
@@ -357,37 +359,39 @@
 
       <h3 id="price-and-tax">Price & Tax</h3>
 
-      <p>
-        <button id="add-price-group" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
-          <i class="fa fa-plus"></i> Add Price Type
-        </button>
-      </p>
+        <p>
+          <button id="add-price-group" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+            <i class="fa fa-plus"></i> Add Price Type
+          </button>
+        </p>
 
-      <div id="price-type-container">
+        <div id="price-type-container">
 
-        <div ng-repeat="(key,itemPrice) in formData.prices track by $index">
-          <input-price-type></input-price-type>
+          <div ng-repeat="(key,itemPrice) in formData.prices track by $index">
+            <input-price-type></input-price-type>
+          </div>
+
         </div>
 
-      </div>
+        <p>
+          <button id="add-tax-type" type="button" class="btn btn-primary" ng-click="addTaxType()">
+            <i class="fa fa-plus"></i> Add Tax Type
+          </button>
+        </p>
 
-      <p>
-        <button id="add-tax-type" type="button" class="btn btn-primary" ng-click="addTaxType()">
-          <i class="fa fa-plus"></i> Add Tax Type
-        </button>
-      </p>
+        <div id="tax-type-container">
 
-      <div id="tax-type-container">
+          <div ng-repeat="(key,itemTax) in formData.taxes track by $index">
+            <input-tax-type></input-tax-type>
+          </div>
 
-        <div ng-repeat="(key,itemTax) in formData.taxes track by $index">
-          <input-tax-type></input-tax-type>
         </div>
-
-      </div>
 
     </fieldset>
 
   </ng-form>
+
+  </div>
 
 </div>
 <!-- /Container -->
