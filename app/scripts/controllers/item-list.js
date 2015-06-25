@@ -49,11 +49,14 @@ angular.module('ts5App')
 
     this.generateItemQuery = function () {
       var query = {};
+      var todaysDate = dateUtility.formatDate(dateUtility.now());
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
         query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
           'L', 'YYYYMMDD');
         query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
           'L', 'YYYYMMDD');
+      } else {
+        query.startDate = todaysDate;
       }
       return query;
     };
@@ -64,6 +67,7 @@ angular.module('ts5App')
       itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
         $scope.itemsListCount = $scope.itemsList.length;
+        console.log($scope.itemsList.length);
         $this.updateItemList();
       });
     };
@@ -123,12 +127,6 @@ angular.module('ts5App')
     $scope.isItemInactive = function (endDate) {
       $scope.parseEndDate();
       return endDate <= dateUtility.now();
-    };
-
-    $scope.isItemEnabled = function (startDate, endDate) {
-      $scope.parseStartDate();
-      $scope.parseEndDate();
-      return startDate >= dateUtility.now() || endDate >= dateUtility.now();
     };
 
     $scope.clearSearchFilters = function () {
