@@ -39,7 +39,7 @@ angular.module('ts5App')
       // TODO: save/back button
     };
 
-    this.initController = function() {
+    (function initController() {
       // set global controller properties
       _companyId = postTripFactory.getCompanyId();
       _services = {
@@ -81,7 +81,7 @@ angular.module('ts5App')
           break;
       }
 
-    }();
+    })();
 
     $scope.updateCarrierNumbers = function () {
       postTripFactory.getCarrierNumbers(_companyId, $scope.carrierTypeId).then(function (response) {
