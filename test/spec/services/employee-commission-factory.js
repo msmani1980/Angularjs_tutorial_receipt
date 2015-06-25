@@ -39,7 +39,7 @@ describe('Service: employeeCommissionFactory', function () {
       expect(priceTypesService.getPriceTypesList).toHaveBeenCalled();
     });
 
-    it('should fetch price types from priceTypesService', function () {
+    it('should fetch tax rate types from taxRateTypesService', function () {
       employeeCommissionFactory.getTaxRateTypes();
       expect(taxRateTypesService.getTaxRateTypes).toHaveBeenCalled();
     });

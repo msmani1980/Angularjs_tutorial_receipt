@@ -34,4 +34,8 @@ angular.module('ts5App')
       $scope.priceTypesList = dataFromAPI;
     });
 
+    employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {
+      $scope.taxRateTypes = dataFromAPI;
+    });
+
   });
