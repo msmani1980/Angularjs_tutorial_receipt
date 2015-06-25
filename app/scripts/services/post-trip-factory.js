@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('postTripFactory', function (GlobalMenuService, stationsService) {
+  .factory('postTripFactory', function (GlobalMenuService, stationsService, carrierService) {
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
@@ -26,10 +26,19 @@ angular.module('ts5App')
       return stationsService.getStationList(id);
     };
 
+    var getCarrierNumbers = function(id, carrierType) {
+      return carrierService.getCarrierNumbers(id, carrierType);
+    };
+
+    var getCarrierTypes = function(id){
+      return carrierService.getCarrierTypes(id);
+    };
 
     return {
       getPostTripDataList: getPostTripDataList,
       getCompanyId: getCompanyId,
-      getStationList: getStationList
+      getStationList: getStationList,
+      getCarrierNumbers:getCarrierNumbers,
+      getCarrierTypes:getCarrierTypes
     };
   });
