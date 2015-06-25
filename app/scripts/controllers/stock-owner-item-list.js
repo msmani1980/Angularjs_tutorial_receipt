@@ -122,8 +122,13 @@ angular.module('ts5App')
       $this.updateItemList();
     }, true);
 
+<<<<<<< HEAD
     $scope.$watchCollection('dateRange', function () {
       $this.getItemsList();
+=======
+    $scope.$watch('dateRange.startDate + dateRange.endDate', function () {
+      $this.updateItemList();
+>>>>>>> e19e52ace87c8924adde87159b481e0888e0516a
     });
 
     $scope.$watch('currentPage + itemsPerPage', function () {
