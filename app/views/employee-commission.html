@@ -50,9 +50,11 @@
   <div class="col-sm-3">
     <div class="form-group">
       <label class="control-label" for="rateType">Rate Type</label>
-      <select class="form-control" id="rateType">
-        <option ng-repeat="taxRate in taxRateTypes | orderBy:'taxRateType'" value="{{taxRate.id}}">{{taxRate.taxRateType}}
-      </select>
+      <select
+        class="form-control"
+        id="rateType"
+        ng-options="taxRate.taxRateType for taxRate in taxRateTypes | orderBy:'taxRateType' track by taxRate.id"
+        ng-model="selectedRateType"></select>
     </div>
   </div>
 
@@ -61,21 +63,24 @@
       <label class="control-label" for="rate">Rate</label>
 
       <div class="input-group">
-        <span class="input-group-addon"><i class="fa fa-money"></i></span>
+        <span class="input-group-addon">
+          <i class="fa"
+             ng-class="selectedRateType.id == 1 ? 'fa-money' : 'fa-pie-chart'"></i>
+        </span>
         <input custom-validity
-               custom-pattern="currencyWithFourDecimalPlace"
+               custom-pattern="currencyWithTwoDecimalPlace"
                ng-model="rate"
                required="true"
                id="rate"
                name="rate"
-               placeholder="0.0000"
+               placeholder="0.00"
                class="form-control"
                aria-label="Amount (to the nearest dollar)"/>
       </div>
     </div>
   </div>
 
-  <div class="col-sm-3">
+  <div class="col-sm-3" ng-show="selectedRateType.id == 1">
     <div class="form-group">
       <label class="control-label" for="currency">Currency</label>
       <select class="form-control" id="currency">
