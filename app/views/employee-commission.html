@@ -58,14 +58,13 @@
     </div>
   </div>
 
-  <div class="col-sm-3">
+  <div class="col-sm-3" ng-show="selectedRateType.id == 2">
     <div class="form-group">
       <label class="control-label" for="rate">Rate</label>
 
       <div class="input-group">
         <span class="input-group-addon">
-          <i class="fa"
-             ng-class="selectedRateType.id == 1 ? 'fa-money' : 'fa-pie-chart'"></i>
+          <i class="fa fa-pie-chart"></i>
         </span>
         <input custom-validity
                custom-pattern="currencyWithTwoDecimalPlace"
@@ -81,11 +80,23 @@
   </div>
 
   <div class="col-sm-3" ng-show="selectedRateType.id == 1">
-    <div class="form-group">
-      <label class="control-label" for="currency">Currency</label>
-      <select class="form-control" id="currency">
-        <option ng-repeat="currency in companyCurrencies | orderBy:'code'" value="{{currency.id}}">{{currency.code}}
-      </select>
+    <label class="control-label">Rate for Currency</label>
+
+    <div class="form-group" ng-repeat="currency in companyCurrencies">
+
+      <div class="input-group">
+        <span class="input-group-addon">
+                {{currency.code}}
+        </span>
+        <input custom-validity
+               custom-pattern="currencyWithTwoDecimalPlace"
+               ng-model="currenciesFields[currency.code]"
+               required="true"
+               name="rate{{currency.code}}"
+               placeholder="0.00"
+               class="form-control"
+               aria-label="Amount (to the nearest dollar)"/>
+      </div>
     </div>
   </div>
 
