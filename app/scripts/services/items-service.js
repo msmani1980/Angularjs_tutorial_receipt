@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('itemsService', function ($resource, ENV) {
+  .service('itemsService', function ($resource, ENV, $location) {
 
     var requestURL = ENV.apiUrl + '/api/retail-items/:fetchFromMaster/:id';
     var requestParameters = {
@@ -17,7 +17,8 @@ angular.module('ts5App')
 
     var actions = {
       getItemsList: {
-        method: 'GET'
+        method: 'GET',
+        headers: {}
       },
       getItem: {
         method: 'GET'
@@ -36,10 +37,15 @@ angular.module('ts5App')
     var requestResource = $resource(requestURL, requestParameters, actions);
 
     var getItemsList = function (searchParameters, fetchFromMaster) {
+      var _requestResource = requestResource;
+      if(undefined !== searchParameters.companyId){
+        actions.getItemsList.headers = {companyId:searchParameters.companyId};
+        _requestResource = $resource(requestURL, requestParameters, actions);
+      }
       searchParameters.fetchFromMaster = fetchFromMaster ? 'master' : null;
       var payload = {};
       angular.extend(payload, searchParameters);
-      return requestResource.getItemsList(payload).$promise;
+      return _requestResource.getItemsList(payload).$promise;
     };
 
     var getItem = function (id) {
