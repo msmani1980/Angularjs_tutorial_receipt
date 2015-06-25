@@ -3,7 +3,7 @@
 describe('Menu Relationship List Controller', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/menus.json', 'served/caterer-stations.json'));
+  beforeEach(module('served/menus.json', 'served/catering-stations.json'));
   beforeEach(module('template-module'));
 
   var MenuRelationshipListCtrl,
@@ -18,9 +18,9 @@ describe('Menu Relationship List Controller', function () {
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
     $location, $httpBackend) {
-    inject(function (_servedMenus_, _servedCatererStations_) {
+    inject(function (_servedMenus_, _servedCateringStations_) {
       menuListJSON = _servedMenus_;
-      stationListJSON = _servedCatererStations_;
+      stationListJSON = _servedCateringStations_;
     });
 
     // backend definition common for all tests
@@ -398,7 +398,7 @@ describe('Menu Relationship List Controller', function () {
           it('should contain a label with the correct text',
             function () {
               expect(formGroup.find('label').text().trim())
-                .toEqual('Caterer Stations');
+                .toEqual('Catering Stations');
             });
           it('should contain an select element', function () {
             expect(formGroup.find('select')[0]).toBeDefined();
@@ -568,12 +568,12 @@ describe('Menu Relationship List Controller', function () {
           expect(testHeader.text().trim()).toEqual(
             'Menu Name');
         });
-        it('should contain a Caterer Station column',
+        it('should contain a Catering Station column',
           function () {
             testHeader = angular.element(thead.find(
               'th')[2]);
             expect(testHeader.text().trim()).toEqual(
-              'Caterer Stations');
+              'Catering Stations');
           });
         it('should contain a Start Date column', function () {
           testHeader = angular.element(thead.find(
@@ -653,7 +653,7 @@ describe('Menu Relationship List Controller', function () {
                 testMenuData.menuName);
             });
           it(
-            'should contain a Caterer Stations cell',
+            'should contain a Catering Stations cell',
             function () {
               testCell = angular.element(testRow.find(
                 'td')[2]);
