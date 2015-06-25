@@ -78,41 +78,34 @@ describe('Controller: PostTripDataCtrl', function () {
       });
     });
     describe('update arrival/departure info', function () {
-      var stationList = [{
-        stationName: '',
-        timezone: 'US/Chicago',
-        utcOffset: '+2:00'
-      }];
+      beforeEach(function(){
+        scope.stationList =  [{
+          stationName: '',
+          timezone: 'US/Chicago',
+          utcOffset: '+2:00'
+        }];
+        scope.postTrip = {};
+        scope.arrivalStationIndex = 0;
+        scope.departureStationIndex = 0;
+      });
 
       it('should set new arrival station', function () {
         var testStationName = 'testStation';
-        scope.arrivalStationIndex = 0;
-        scope.postTrip = {};
-        scope.stationList = stationList;
         scope.stationList[0].stationName = testStationName;
         scope.updateArrivalInfo();
         expect(scope.postTrip.arrivalStation).toEqual(testStationName);
       });
       it('should set new departure station', function () {
         var testStationName = 'testStation2';
-        scope.departureStationIndex = 0;
-        scope.postTrip = {};
-        scope.stationList = stationList;
         scope.stationList[0].stationName = testStationName;
         scope.updateDepartureInfo();
         expect(scope.postTrip.departureStation).toEqual(testStationName);
       });
       it('should set new arrival timezone', function () {
-        scope.arrivalStationIndex = 0;
-        scope.postTrip = {};
-        scope.stationList = stationList;
         scope.updateArrivalInfo();
         expect(scope.postTrip.arrivalTimezone).toEqual('US/Chicago [UTC +2:00]');
       });
       it('should set new departure timezone', function () {
-        scope.departureStationIndex = 0;
-        scope.postTrip = {};
-        scope.stationList = stationList;
         scope.updateDepartureInfo();
         expect(scope.postTrip.departureTimezone).toEqual('US/Chicago [UTC +2:00]');
       });
