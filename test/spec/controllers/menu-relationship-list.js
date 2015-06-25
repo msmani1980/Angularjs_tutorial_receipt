@@ -12,12 +12,14 @@ describe('Menu Relationship List Controller', function () {
     menuService,
     menuListJSON,
     stationListJSON,
+    catererStationService,
+    getCatererStationListDeffered,
     location,
     httpBackend,
     authRequestHandler;
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
-    $location, $httpBackend) {
+    $location, $httpBackend, _catererStationService_) {
     inject(function (_servedMenus_, _servedCateringStations_) {
       menuListJSON = _servedMenus_;
       stationListJSON = _servedCateringStations_;
@@ -40,14 +42,20 @@ describe('Menu Relationship List Controller', function () {
     spyOn(menuService, 'getMenuList').and.returnValue(
       getMenuListDeffered.promise);
 
+    getCatererStationListDeffered = $q.defer();
+    getCatererStationListDeffered.resolve(stationListJSON);
+    catererStationService = _catererStationService_;
+    spyOn(catererStationService, 'getCatererStationList').and.returnValue(
+      getCatererStationListDeffered.promise);
+
     MenuRelationshipListCtrl = $controller('MenuRelationshipListCtrl', {
       $scope: $scope
     });
 
     spyOn(MenuRelationshipListCtrl, 'getMenuList');
-
+    spyOn(MenuRelationshipListCtrl, 'getCatererStationList');
     MenuRelationshipListCtrl.getMenuList();
-
+    MenuRelationshipListCtrl.getCatererStationList();
     $scope.$digest();
 
   }));

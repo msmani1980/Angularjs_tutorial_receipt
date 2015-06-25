@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('MenuRelationshipListCtrl', function ($scope, dateUtility,
-    $filter, menuService) {
+    $filter, menuService, catererStationService) {
 
     var $this = this;
     $scope.currentPage = 1;
@@ -63,6 +63,11 @@ angular.module('ts5App')
       });
     };
 
+    this.getCatererStationList = function () {
+      catererStationService.getCatererStationList().then(function (response) {
+        $scope.stationList = response.response;
+      });
+    };
 
     this.findMenuIndex = function (menuId) {
       var menuIndex = 0;
@@ -118,6 +123,7 @@ angular.module('ts5App')
     });
 
     this.getMenuList();
+    this.getCatererStationList();
 
     var stationAPIResponse = {
 
