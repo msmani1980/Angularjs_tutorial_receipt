@@ -12,9 +12,10 @@ describe('Service: taxRateTypesService', function () {
 
   beforeEach(inject(function (_taxRateTypesService_, $injector) {
     inject(function (_servedTaxRateTypes_) {
-      taxRateTypesJSON = {
-        response: _servedTaxRateTypes_ // NOTE: had to add convert it to a JSON so that it plays nice with $httpBackend
-      };
+      //taxRateTypesJSON = {
+      //  response: _servedTaxRateTypes_ // NOTE: had to add convert it to a JSON so that it plays nice with $httpBackend
+      //};
+      taxRateTypesJSON = _servedTaxRateTypes_;
     });
 
     $httpBackend = $injector.get('$httpBackend');
@@ -41,11 +42,12 @@ describe('Service: taxRateTypesService', function () {
     });
 
     it('should be an array', function () {
-      expect(angular.isArray(fakeReponseData.response)).toBe(true);
+      expect(angular.isArray(fakeReponseData)).toBe(true);
     });
 
     it('should have a name property', function () {
-      expect(fakeReponseData.response[0].taxRateType).toBeDefined();
+      console.log(fakeReponseData[0]);
+      expect(fakeReponseData[0].taxRateType).toBeDefined();
     });
 
   });

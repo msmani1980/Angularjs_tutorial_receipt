@@ -51,8 +51,7 @@
     <div class="form-group">
       <label class="control-label" for="rateType">Rate Type</label>
       <select class="form-control" id="rateType">
-        <option>Percentage</option>
-        <option>Fixed Amount</option>
+        <option ng-repeat="taxRate in taxRateTypes | orderBy:'taxRateType'" value="{{taxRate.id}}">{{taxRate.taxRateType}}
       </select>
     </div>
   </div>
