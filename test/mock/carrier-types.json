@@ -1,0 +1,37 @@
+{
+  "response": [
+    {
+      "id": 20,
+      "companyId": 403,
+      "carrierTypeId": 8,
+      "carrierType": "A-319",
+      "companyCarrierType": "A-319",
+      "description": "Airbus319",
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    {
+      "id": 19,
+      "companyId": 403,
+      "carrierTypeId": 7,
+      "carrierType": "A-320",
+      "companyCarrierType": "A-320",
+      "description": "Airbus320",
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null
+    }
+  ],
+  "meta": {
+    "count": 2,
+    "limit": 2,
+    "start": 0
+  }
+}
