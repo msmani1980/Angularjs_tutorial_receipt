@@ -123,7 +123,7 @@
              class="sortable table table-bordered table-hover">
         <thead>
         <tr>
-          <th ng-style="{'background-color':companyHexColor()}">&nbsp;</th>
+          <th ng-style="{'background-color':selectedStockownerCompany.hexColor}">&nbsp;</th>
           <th>S.O.</th>
           <th>S.O. Ref. #</th>
           <th>Name</th>
@@ -135,8 +135,8 @@
           drag="stockOwner"
           on-drop-success="dropSuccessHandler($event, $index, stockownersRetailItemList)"
           ng-repeat="stockOwner in stockownersRetailItemList | filter:searchStockOwnerItem track by $index">
-          <td ng-style="{'background-color':hexColor(stockOwner)}">&nbsp;</td>
-          <td>{{ selectedStockownerCompany.companyName }}</td>
+          <td ng-style="{'background-color':stockOwner.hexColor}">&nbsp;</td>
+          <td>{{ stockOwner.companyName }}</td>
           <td>{{ stockOwner.itemCode }}</td>
           <td>{{ stockOwner.itemName }}</td>
         </tr>
@@ -148,7 +148,7 @@
              class="sortable table table-bordered table-hover">
         <thead>
         <tr>
-          <th ng-style="{'background-color':companyHexColor('current')}">&nbsp;</th>
+          <th>&nbsp;</th>
           <th>S.O.</th>
           <th>S.O. Ref. #</th>
           <th>Name</th>
@@ -161,11 +161,11 @@
           drag="item"
           on-drop-success="dropSuccessHandler($event, $index, airlineRetailItemList)"
           ng-repeat="item in airlineRetailItemList | filter:searchRetailItem track by $index">
-          <td ng-style="{'background-color':hexColor(item)}">&nbsp;</td>
+          <td ng-style="{'background-color':item.hexColor}">&nbsp;</td>
           <td>{{ item.companyName }}</td>
           <td>{{ item.itemCode }}</td>
           <td>{{ item.itemName }}</td>
-          <td><a ng-click="removeRetailItem(item)">X</a></td>
+          <td><a ng-click="removeRetailItem(item)" ng-hide="cannotRemoveRetailItem(item)">X</a></td>
         </tr>
         </tbody>
       </table>
