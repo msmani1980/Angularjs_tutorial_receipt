@@ -22,7 +22,8 @@ angular.module('ts5App')
       currencyWithFourDecimalPlace: [/^\d+\.\d{4}$/, 'This field should use format 0.0000'],
       currencyWithTwoDecimalPlace: [/^\d+\.\d{2}$/, 'This field should use format 0.00'],
       price: [/^\$?\s?[0-9\,]+(\.\d{0,4})?$/, 'Error message for price'],
-      url: [/(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/, 'Error for URL']
+      url: [/(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/, 'Error for URL'],
+      time:[/[0-2][0-9]\:[0-5][0-9]/, 'This field should use 24 hour time format (hh:mm)']
     };
     return {
       restrict: 'A',
