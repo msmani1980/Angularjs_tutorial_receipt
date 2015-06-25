@@ -23,7 +23,6 @@
           <div id="importFromData" class="collapse width">
             <input type="file" style="margin:5px; display:block;">
 
-<!-- TODO: 'UPLOAD' BUTTON FUNCTIONALITY -->
             <button type="button" class="btn btn-info">
               Upload
             </button>
@@ -41,7 +40,7 @@
     <div class="row">
 
       <div class="col-xs-6">
-        <a ng-href="/#/post-trip-data" class="btn btn-primary"> + </a>
+        <a ng-href="/#/post-trip-data/create" class="btn btn-primary"> + </a>
       </div>
 
       <div class="col-xs-6 text-right">
@@ -161,18 +160,18 @@
         <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
         <tr class="ng-scope">
           <td class="ng-binding">T1</td>
-          <td class="ng-binding">05/06/2015</td>
-          <td class="ng-binding">12:34</td>
+          <td class="ng-binding">07/15/2015</td>
+          <td class="ng-binding">2:34</td>
           <td class="ng-binding">Test</td>
-          <td class="ng-binding">12:34</td>
+          <td class="ng-binding">5:34</td>
           <td>
-            <button class="btn btn-info btn-xs" ng-click="showMenu(menu)" tabindex="0">
+            <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="showMenu(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
               <i class="fa fa-pencil"></i>
             </button>
-            <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
               <i class="fa fa-trash"></i>
             </button>
           </td>
@@ -186,12 +185,6 @@
           <td>
             <button class="btn btn-info btn-xs" ng-click="viewPostTrip()" tabindex="0">
               <i class="fa fa-file"></i>
-            </button>
-            <button class="btn btn-primary btn-xs" ng-click="editPostTrip()" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
-              <i class="fa fa-pencil"></i>
-            </button>
-            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip()" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
-              <i class="fa fa-trash"></i>
             </button>
           </td>
         </tr>

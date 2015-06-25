@@ -116,7 +116,7 @@ angular
         templateUrl: 'views/post-trip-data-list.html',
         controller: 'PostFlightDataListCtrl'
       })
-      .when('/post-trip-data', {
+      .when('/post-trip-data/:state/:id?', {
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })

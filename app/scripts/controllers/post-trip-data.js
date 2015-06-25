@@ -19,7 +19,7 @@ angular.module('ts5App')
     $scope.readOnly = false;
     $scope.postTrip = {};
 
-    (function CONSTRUCTOR() {
+    (function constructor() {
       // set global controller properties
       _companyId = postTripFactory.getCompanyId();
       _services = {
@@ -45,6 +45,21 @@ angular.module('ts5App')
         }
       };
       _services.call(['getStationList', 'getCarrierTypes']);
+
+      switch ($routeParams.state) {
+        case 'create':
+          create();
+          break;
+        case 'view':
+          read();
+          break;
+        case 'edit':
+          update();
+          break;
+        default:
+          break;
+      }
+
     })();
 
     $scope.updateCarrierNumbers = function() {
@@ -66,26 +81,25 @@ angular.module('ts5App')
       $scope.postTrip.departureStation = station.stationName;
       $scope.postTrip.departureTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
     };
-    //
-    //function CREATE(){
-    //  // create
-    //  // create/back button
-    //}
-    //
-    //function READ(){
-    //  // view
-    //  // readOnly
-    //  // autopopulate fields
-    //}
-    //
-    //function UPDATE(){
-    //
-    //  // edit
-    //  // autopopulate fields
-    //  // save/back button
-    //}
-    //
-    //
+    
+    function create(){
+      $scope.readOnly = false;
+      // TODO: create/back button
+    }
+
+    function read(){
+      $scope.readOnly = true;
+      $('.employeeID-multiple-select').prop("disabled", true);
+      // TODO: autopopulate fields
+    }
+
+    function update(){
+      $scope.readOnly = false;
+      // TODO: autopopulate fields
+      // TODO: save/back button
+    }
+
+
 
 
   });
