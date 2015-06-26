@@ -46,6 +46,34 @@ describe('Controller: ItemImportCtrl', function () {
     it('should attach a viewName to the scope', function () {
       expect(scope.viewName).toBe('Import Stock Owner Items');
     });
+    it('should have a changeSelectedStockownerCompany function attached to the scope', function(){
+      expect(scope.changeSelectedStockownerCompany).toBeDefined();
+      expect(Object.prototype.toString.call(scope.changeSelectedStockownerCompany)).toBe('[object Function]');
+    });
+    it('should have a importAll function attached to the scope', function(){
+      expect(scope.importAll).toBeDefined();
+      expect(Object.prototype.toString.call(scope.importAll)).toBe('[object Function]');
+    });
+    it('should have a isAirlineItem function attached to the scope', function(){
+      expect(scope.isAirlineItem).toBeDefined();
+      expect(Object.prototype.toString.call(scope.isAirlineItem)).toBe('[object Function]');
+    });
+    it('should have a removeRetailItem function attached to the scope', function(){
+      expect(scope.removeRetailItem).toBeDefined();
+      expect(Object.prototype.toString.call(scope.removeRetailItem)).toBe('[object Function]');
+    });
+    it('should have a removeAll function attached to the scope', function(){
+      expect(scope.removeAll).toBeDefined();
+      expect(Object.prototype.toString.call(scope.removeAll)).toBe('[object Function]');
+    });
+    it('should have a dropSuccessHandler function attached to the scope', function(){
+      expect(scope.dropSuccessHandler).toBeDefined();
+      expect(Object.prototype.toString.call(scope.dropSuccessHandler)).toBe('[object Function]');
+    });
+    it('should have a onDrop function attached to the scope', function(){
+      expect(scope.onDrop).toBeDefined();
+      expect(Object.prototype.toString.call(scope.onDrop)).toBe('[object Function]');
+    });
   });
 
   describe('ItemImportFactory API calls', function () {
@@ -63,12 +91,13 @@ describe('Controller: ItemImportCtrl', function () {
     it('should call getItemsList', function () {
       expect(ItemImportFactory.getItemsList).toHaveBeenCalled();
     });
-    it('should have itemList attached to scope after API call', function () {
-      expect(scope.itemList).toBeDefined();
+    it('should have airlineRetailItemList attached to scope after API call', function () {
+      expect(scope.airlineRetailItemList).toBeDefined();
     });
   });
 
-
+  it('should remove')
+/*
   describe('importAll form action', function () {
 
     beforeEach(function(){
@@ -84,8 +113,7 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.stockOwnerItemsList).toBeDefined();
       expect(angular.isArray(scope.stockOwnerItemsList)).toBe(true);
     });
-    /**/
   });
-
+*/
 
 });

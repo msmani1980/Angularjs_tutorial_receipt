@@ -43,7 +43,6 @@
             ng-options="company as company.companyName for company in stockOwnerList">
           <option value="">Select Stock Owner</option>
         </select>
-        <div ng-show="mockData1">TODO - the above select list is mock data until <a href="https://jira.egate-solutions.com/browse/TSVPORTAL-2038">TSVPORTAL-2038</a> is completed.</div>
       </div>
       <div class="col-xs-3">
         <button class="btn btn-default" ng-click="importAll()">Import All</button>
@@ -165,7 +164,7 @@
           <td>{{ item.companyName }}</td>
           <td>{{ item.itemCode }}</td>
           <td>{{ item.itemName }}</td>
-          <td><a ng-click="removeRetailItem(item)" ng-hide="cannotRemoveRetailItem(item)">X</a></td>
+          <td><a ng-click="removeRetailItem(item)" ng-hide="isAirlineItem(item)">X</a></td>
         </tr>
         </tbody>
       </table>
