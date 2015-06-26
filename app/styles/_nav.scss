@@ -2,7 +2,9 @@
 	box-shadow: -10px -10px 10px 10px #767676;
 	min-height:56px;
 }
-
+html .navbar, .navbar-fixed-top{
+	z-index: 1001;
+}
 .navbar{
 	z-index: 1001;
 	border:0px;
