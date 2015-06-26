@@ -50,6 +50,7 @@ angular.module('ts5App')
         .text('We are getting Menu ' + id);
 
       menuService.getMenu(id).then(function (data) {
+
         $this.updateFormData(data);
         angular.element('#loading').modal('hide');
       });

@@ -98,25 +98,25 @@
 
     <tbody>
 
-      <tr ng-repeat="(key,menu) in paginatedMenus">
+      <tr ng-repeat="(key,relationship) in paginatedRelationships">
 
-        <td>{{ menu.menuCode }}</td>
-        <td>{{ menu.menuName }}</td>
-        <td> <span class="label label-info" ng-repeat="(stationKey,station) in menu.menuStations"> {{ station.code }} </span> </td>
-        <td>{{ menu.startDate | date: 'MM/dd/yyyy' }}</td>
-        <td>{{ menu.endDate | date: 'MM/dd/yyyy' }}</td>
+        <td>{{ relationship.menuCode }}</td>
+        <td>{{ relationship.menuName }}</td>
+        <td> <span class="label label-info" ng-repeat="(stationKey,stationId) in relationship.catererStationIds"> {{ stationId }} </span> </td>
+        <td>{{ relationship.startDate | date: 'MM/dd/yyyy' }}</td>
+        <td>{{ relationship.endDate | date: 'MM/dd/yyyy' }}</td>
 
         <td>
 
-          <a class="btn btn-info btn-xs btn-view" ng-href="#/menu-relationship-view/{{menu.id}}">
+          <a class="btn btn-info btn-xs btn-view" ng-href="#/menu-relationship-view/{{relationship.id}}">
             <i class="fa fa-file"></i>
           </a>
 
-          <a class="btn btn-primary btn-xs btn-edit" ng-href="#/menu-relationship-edit/{{menu.id}}" ng-disabled="isMenuActive(menu.endDate)">
+          <a class="btn btn-primary btn-xs btn-edit" ng-href="#/menu-relationship-edit/{{relationship.id}}" ng-disabled="isMenuActive(relationship.endDate)">
             <i class="fa fa-pencil"></i>
           </a>
 
-          <button class="btn btn-danger btn-xs btn-delete" ng-click="removeMenu(menu.id,key)" ng-disabled="isMenuActive(menu.startDate) || isMenuInactive(menu.endDate)">
+          <button class="btn btn-danger btn-xs btn-delete" ng-click="removeMenu(relationship.id,key)" ng-disabled="isMenuActive(relationship.startDate) || isMenuInactive(relationship.endDate)">
             <i class="fa fa-trash"></i>
           </button>
 
@@ -136,8 +136,8 @@
 
 				Show
 
-				<select class="form-control" ng-model="menusPerPage">
-					<option ng-selected="menusPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
+				<select class="form-control" ng-model="relationshipsPerPage">
+					<option ng-selected="relationshipsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
 				</select>
 
 				Items per Page
@@ -146,7 +146,7 @@
 
 			<div class="col-xs-12 col-sm-6 text-right">
 
-				<pagination total-items="menuListCount" items-per-page="menusPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+				<pagination total-items="relationshipListCount" items-per-page="relationshipsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
 
 			</div>
 
