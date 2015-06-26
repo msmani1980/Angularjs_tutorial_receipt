@@ -21,6 +21,7 @@ angular.module('ts5App')
     $scope.displayError = false;
     $scope.displayedScheduleDate = '';
     $scope.displayedCashierDate = '';
+    $scope.saveButtonName = '';
 
     var helpers = {
       showMessage: function(error, isError, message) {
@@ -174,6 +175,8 @@ angular.module('ts5App')
       };
       $scope.displayedScheduleDate = moment($routeParams.scheduleDate, 'YYYYMMDD').format('YYYY-MM-DD').toString();
       $scope.displayedCashierDate = moment().format('YYYY-MM-DD');
+      $scope.saveButtonName = 'Create';
+
       $q.all(_promises).then(function () {
         if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
           $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
@@ -213,6 +216,7 @@ angular.module('ts5App')
         $scope.canDelete = helpers.canDelete;
         $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
         $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
+        $scope.saveButtonName = 'Save';
       });
     }
 
