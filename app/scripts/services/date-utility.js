@@ -11,8 +11,11 @@ angular.module('ts5App')
   .service('dateUtility', function () {
 
     this.formatDate = function (dateString, formatFrom, formatTo) {
-      var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
-      return dateToReturn;
+      return moment(dateString, formatFrom).format(formatTo).toString();
+    };
+
+    this.formatDateForAPI = function (dateToFormat) {
+      return moment(dateToFormat, 'L').format('YYYYMMDD').toString();
     };
 
     this.now = function () {
