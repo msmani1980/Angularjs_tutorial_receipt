@@ -19,6 +19,7 @@ angular.module('ts5App')
     $scope.viewName = 'Cash Bag';
     $scope.readOnly = true;
     $scope.displayError = false;
+    $scope.displayedScheduleDate = '';
 
     var helpers = {
       showMessage: function(error, isError, message) {
@@ -170,6 +171,7 @@ angular.module('ts5App')
         scheduleNumber: $routeParams.scheduleNumber,
         cashBagCurrencies: []
       };
+      $scope.displayedScheduleDate = moment($routeParams.scheduleDate, 'YYYYMMDD').format('YYYY-MM-DD').toString();
 
       $q.all(_promises).then(function () {
         if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
@@ -197,6 +199,7 @@ angular.module('ts5App')
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
       $q.all(_promises).then(function () {
         $scope.canDelete = helpers.canDelete;
+        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
       });
     }
 
@@ -206,6 +209,7 @@ angular.module('ts5App')
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
       $q.all(_promises).then(function () {
         $scope.canDelete = helpers.canDelete;
+        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
       });
     }
 
