@@ -32,4 +32,4 @@ angular.module('ts5App')
       getPriceTypesList: getPriceTypesList
     };
 
-});
+  });

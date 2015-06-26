@@ -95,13 +95,6 @@ angular.module('ts5App')
       });
     };
 
-    this.deserializeStationFilters = function () {
-      var filters = '';
-      for (var key in $scope.search.menuStation) {
-        filters.push($scope.search.menuStation[key]);
-      }
-    };
-
     $scope.removeMenu = function (menuId) {
       var menuIndex = $this.findMenuIndex(menuId);
       angular.element('#loading').modal('show').find('p').text(
