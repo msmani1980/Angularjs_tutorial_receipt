@@ -7,7 +7,7 @@
  * # listObject
  */
 angular.module('ts5App')
-  .directive('listObject', function () {
+  .directive('featureListItem', function () {
     function controller($scope/*, element, attrs*/) {
       // set attributes of directive to the scope to use in template
       $scope.isExpanded = false;
@@ -18,12 +18,12 @@ angular.module('ts5App')
     }
 
     function templateUrl(element, attrs) {
-      return 'views/directives/list-object/' + attrs.type + '.html';
+      return 'views/directives/feature-list-item/' + attrs.type + '.html';
     }
 
     return {
       scope: {
-        vm: '=',
+        viewModel: '=',
         edit: '&',
         view: '&',
         func1: '&'

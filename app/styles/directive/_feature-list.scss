@@ -19,7 +19,7 @@
   padding: 12px 15px;
   line-height: 24px;
 }
-list-object > div.row {
+feature-list-item > div.row {
   margin: 1px 0;
   background-color: #efefef;
   .list-header {
@@ -118,32 +118,6 @@ list-object {
   }
 }
 
-/* //animate */
-
-//@-webkit-keyframes slidein {
-//  from {
-//    margin-top:100%;
-//    width:300%
-//  }
-//
-//  to {
-//    margin-top:0%;
-//    width:100%;
-//  }
-//}
-
-.panel-list {
-//  transition-property: margin;
-//  transition-duration: 0.5s;
-//  transition-delay: 0s;
-}
-
-/* //end animate */
-
-// google box shadow
-//box-shadow: 0 -1px 0 #e5e5e5,0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
-
-/* //empty-list */
 .feature-empty {
   @extend .text-center;
   margin-top: 3rem;

@@ -43,8 +43,8 @@
       </ul>
     </div>
     <div class="container module-container">
-      <list-object ng-repeat="companyRelationship in companyRelationshipListData" vm="companyRelationship"
-                   type="company-relationship"></list-object>
+      <feature-list-item ng-repeat="companyRelationship in companyRelationshipListData" view-model="companyRelationship"
+                   type="company-relationship"></feature-list-item>
       <div class="row">
         <div class="col-xs-12 text-right">
           <button class="btn btn-primary" ng-click="addCompanyRelationship(company.id)">

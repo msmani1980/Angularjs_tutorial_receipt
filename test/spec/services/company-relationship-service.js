@@ -77,7 +77,7 @@ describe('Service: companyRelationshipService', function () {
       });
 
       it('should be an array', function () {
-        expect(Object.prototype.toString.call(companyRelationshipTypeData.response)).toBe('[object Array]');
+        expect(angular.isArray(companyRelationshipTypeData.response)).toBe(true);
       });
 
       it('should have an array of available company-relationship-type by company-type', function () {

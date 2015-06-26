@@ -11,7 +11,7 @@
       </div>
       <div class="form-group col-sm-6">
         <label>Company Name *</label>
-        <select name="companyName" ng-model="vm.relativeCompanyId"
+        <select name="companyName" ng-model="viewModel.relativeCompanyId"
                 ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
                 class="form-control" required>
           <option selected disabled value="">Please select...</option>
@@ -20,8 +20,8 @@
       <date-picker
           class="col-sm-6 col-xs-12"
           element-class="col-xs-6 col-sm-6"
-          start-date-model="vm.startDate"
-          end-date-model="vm.endDate"
+          start-date-model="viewModel.startDate"
+          end-date-model="viewModel.endDate"
           disable-past="true"
           label-from="Effective From"
           label-to="Effective To"

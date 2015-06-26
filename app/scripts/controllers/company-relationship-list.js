@@ -25,19 +25,11 @@ angular.module('ts5App')
       });
     };
 
-    function updateCompanyRelationship() {
+    function saveCompanyRelationship(typeOfSave) {
       ngToast.create({
         className: 'success',
         dismissButton: true,
-        content: '<strong>Company Relationship</strong>: successfully updated!'
-      });
-    }
-
-    function createCompanyRelationship() {
-      ngToast.create({
-        className: 'success',
-        dismissButton: true,
-        content: '<strong>Company Relationship</strong>: successfully created!'
+        content: '<strong>Company Relationship</strong>: successfully ' + typeOfSave + '!'
       });
     }
 
@@ -55,14 +47,16 @@ angular.module('ts5App')
     }
 
     $scope.submit = function(isValid, data) {
-      if(!isValid) return;
+      if (!isValid) {
+        return;
+      }
 
       var promises = [];
       data.forEach(function (companyRelationship) {
         if (companyRelationship.id) {
-          promises.push(companyRelationshipFactory.updateCompanyRelationship(companyRelationship).then(updateCompanyRelationship));
+          promises.push(companyRelationshipFactory.updateCompanyRelationship(companyRelationship).then(saveCompanyRelationship('updated')));
         } else {
-          promises.push(companyRelationshipFactory.createCompanyRelationship(companyRelationship).then(createCompanyRelationship));
+          promises.push(companyRelationshipFactory.createCompanyRelationship(companyRelationship).then(saveCompanyRelationship('created')));
         }
       });
 
@@ -96,8 +90,9 @@ angular.module('ts5App')
         if (company.id === parseInt($routeParams.id)) {
           $scope.company = company;
           return undefined;
+        } else {
+          return company;
         }
-        return company;
       });
     }
 

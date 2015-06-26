@@ -49,9 +49,9 @@
       <div class="hidden-xs col-sm-4 list-header border-right">Additional Languages</div>
       <div class="hidden-xs col-sm-2 list-header border-right">Base Currency</div>
     </div>
-    <list-object ng-repeat="company in filteredCompanies" vm="company" type="company" class="list-body"
+    <feature-list-item ng-repeat="company in filteredCompanies" view-model="company" type="company" class="list-body"
                  view="showCompany(company)" edit="editCompany(company)"
-                 func1="showCompanyRelationshipList(company)"></list-object>
+                 func1="showCompanyRelationshipList(company)"></feature-list-object>
     <div ng-if="companyList.length === 0" class="feature-empty">
       <p>No Employee Messages Found</p>
     </div>
