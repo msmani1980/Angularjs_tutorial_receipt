@@ -102,7 +102,6 @@ angular.module('ts5App')
                     $scope.qrCreateUploadFail = true;
 
                     // TODO: Interpret this failure and tell the user
-                    //console.log(data);
 
                 });
 

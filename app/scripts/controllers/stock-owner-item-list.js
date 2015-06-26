@@ -1,58 +1,65 @@
 'use strict';
-/*global moment*/
+
 /**
  * @author Max Felker <max@bigroomstudios.com>
  * @ngdoc function
  * @name ts5App.controller:StockOwnerItemListCtrl
  * @description
- * # ItemsCtrl
- * Controller of the ts5App
+ * Controller for the Stock Owner Items List view
  */
 angular.module('ts5App')
   .controller('StockOwnerItemListCtrl', function ($scope, $http, itemsFactory,
-    companiesFactory) {
+    companiesFactory, dateUtility, $filter) {
 
-    $scope.search = {
+    var $this = this;
+    $scope.currentPage = 1;
+    $scope.itemsPerPage = 10;
+    $scope.itemsList = [];
+    $scope.dateRange = {
       startDate: '',
       endDate: ''
     };
-    $scope.currentPage = 1;
-    $scope.itemsPerPage = 10;
-    $scope.startDateFilter = '';
-    $scope.endDateFilter = '';
-    $scope.itemsList = [];
 
-    var todaysDate = moment().format();
-
-    // TODO: Move to global function
-    function formatDate(dateString, formatFrom, formatTo) {
-      var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
-      return new Date(dateToReturn);
-    }
-
-    // TODO: Set a watch on this
-    $scope.formatDateFilter = function () {
-      $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
-        'YYYYMMDD');
-      $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
-        'YYYYMMDD');
+    this.updateItemList = function () {
+      var filteredItems = $this.filterItems();
+      $scope.itemsListCount = filteredItems.length;
+      $this.setPaginatedItems(filteredItems);
     };
 
-    this.setPaginatedList = function () {
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-      var end = begin + $scope.itemsPerPage;
-      $scope.paginatedItems = $scope.itemsList.slice(begin, end);
+    this.filterItems = function () {
+      return $filter('filter')($scope.itemsList, $scope.search);
+    };
+
+    this.parsePaginationToInt = function () {
+      $scope.currentPageInt = parseInt($scope.currentPage);
+      $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
+    };
+
+    this.setPaginatedItems = function (filteredItems) {
+      this.parsePaginationToInt();
+      var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
+      var end = begin + $scope.itemsPerPageInt;
+      $scope.paginatedItems = filteredItems.slice(begin, end);
+    };
+
+    this.generateItemQuery = function () {
+      var query = {};
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
+          'L', 'YYYYMMDD');
+        query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
+          'L', 'YYYYMMDD');
+      }
+      return query;
     };
 
     this.getItemsList = function () {
+      var query = this.generateItemQuery();
       var $this = this;
-      itemsFactory.getItemsList({}).then(function (response) {
+      itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
-        $scope.totalItems = response.meta.count;
-        $this.setPaginatedList();
-        $scope.$watch('currentPage + itemsPerPage', function () {
-          $this.setPaginatedList();
-        });
+        $scope.itemsListCount = $scope.itemsList.length;
+        $this.updateItemList();
       });
     };
 
@@ -68,41 +75,63 @@ angular.module('ts5App')
       });
     };
 
-    this.getItemsList();
-    this.getItemTypesList();
-    this.getSalesCategoriesList();
-
-    $scope.pageCount = function () {
-      return Math.ceil($scope.items.length / $scope.itemsPerPage);
+    this.findItemIndex = function (itemId) {
+      var itemIndex = 0;
+      for (var key in $scope.itemsList) {
+        var item = $scope.itemsList[key];
+        if (item.id === itemId) {
+          itemIndex = key;
+          break;
+        }
+      }
+      return itemIndex;
     };
 
-    $scope.removeItem = function (id, itemKey) {
-      if (window.confirm('Are you sure you would like to remove this item?')) {
-        angular.element('#loading').modal('show').find('p').text(
-          'Removing your item');
-        itemsFactory.removeItem(id).then(function () {
-          angular.element('#loading').modal('hide');
-          $scope.paginatedItems.splice(itemKey, 1);
-        });
-
-      }
+    $scope.removeItem = function (itemId) {
+      var itemIndex = $this.findItemIndex(itemId);
+      angular.element('#loading').modal('show').find('p').text(
+        'Removing your item');
+      itemsFactory.removeItem(itemId).then(function () {
+        angular.element('#loading').modal('hide');
+        $scope.itemsList.splice(itemIndex, 1);
+        $this.updateItemList();
+      });
     };
 
     $scope.isItemActive = function (startDate) {
-      startDate = formatDate(startDate, 'YYYYMMDD', 'L');
-      return moment(startDate).isBefore(todaysDate);
+      return Date.parse(startDate) <= dateUtility.now();
     };
 
     $scope.isItemInactive = function (endDate) {
-      endDate = formatDate(endDate, 'YYYYMMDD', 'L');
-      return moment(endDate).isBefore(todaysDate);
+      return Date.parse(endDate) <= dateUtility.now();
     };
 
     $scope.clearSearchFilters = function () {
+      $scope.dateRange.startDate = '';
+      $scope.dateRange.endDate = '';
+      $scope.startDateFilter = '';
+      $scope.endDateFilter = '';
       var filters = $scope.search;
       for (var filterKey in filters) {
         $scope.search[filterKey] = '';
       }
+      $scope.itemsListCount = $scope.itemsList.length;
     };
+
+    $scope.$watch('search', function () {
+      $this.updateItemList();
+    }, true);
+
+    $scope.$watchCollection('dateRange', function () {
+      $this.getItemsList();
+    });
+
+    $scope.$watch('currentPage + itemsPerPage', function () {
+      $this.updateItemList();
+    });
+
+    this.getItemsList();
+    this.getItemTypesList();
+    this.getSalesCategoriesList();
 
   });

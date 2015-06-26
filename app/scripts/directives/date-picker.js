@@ -17,13 +17,18 @@ angular.module('ts5App')
     };
 
     var initializeDatePicker = function ($scope, $element) {
-
       var options = angular.extend({}, datePickerOptions);
 
       if ($scope.disablePast) {
         options.startDate = '+1d';
       } else if ($scope.minDate && !$scope.isSearchField) {
         options.startDate = moment($scope.minDate, 'L').format('L');
+      }
+      if ($scope.minDate) {
+        options.startDate = $scope.minDate;
+      }
+      if ($scope.maxDate) {
+        options.endDate = $scope.maxDate;
       }
 
       if ($scope.disableDateRange) {
@@ -41,10 +46,17 @@ angular.module('ts5App')
       }
 
       $element.datepicker(options);
-
     };
 
     function link($scope, $element) {
+      $scope.$watchGroup(['minDate', 'maxDate'], function () {
+        if (!angular.isUndefined($scope.minDate)) {
+          $element.find('.startDate').datepicker('setStartDate', $scope.minDate);
+        }
+        if (!angular.isUndefined($scope.maxDate)) {
+          $element.find('.startDate').datepicker('setEndDate', $scope.maxDate);
+        }
+      });
 
       if ($scope.isSearchField) {
         initializeDatePicker($scope, $element);
@@ -52,20 +64,13 @@ angular.module('ts5App')
       }
 
       var watchListener = $scope.$watchGroup(['startDateModel', 'endDateModel'], function () {
-
         if (!$scope.isSearchField && $scope.disablePast && !angular.isUndefined($scope.startDateModel)) {
-
-
           // TODO: update to use isBefore and isAfter methods
           $scope.shouldDisableStartDate = moment($scope.startDateModel, 'L').format('L') < moment().format('L');
-
           $scope.shouldDisableEndDate = moment($scope.endDateModel, 'L').format('L') < moment().format('L');
-
           watchListener();
-
           initializeDatePicker($scope, $element);
         }
-
       });
     }
 
@@ -82,10 +87,11 @@ angular.module('ts5App')
         disableEndDate: '=',
         disableDateRange: '@',
         isSearchField: '@',
-        minDate: '@',
-        maxDate: '@',
+        minDate: '=',
+        maxDate: '=',
         startDateModel: '=',
-        endDateModel: '='
+        endDateModel: '=',
+        required: '@'
       },
       link: link
     };

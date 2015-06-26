@@ -18,7 +18,7 @@
 
 						<fieldset ng-hide="viewOnly">
 
-							<button class="btn btn-default" ng-click="leaveView()">
+							<button class="btn btn-default" ng-click="leaveView('stock-owner-item-list')">
 								<span class="fa fa-remove" aria-hidden="true"></span>
 								<span class="hidden-xs">Cancel</span>
 							</button>
@@ -59,6 +59,8 @@
 	</div>
 	<!--/TopHeader -->
 
+	<div class="create-form-container">
+
 	<ng-form name="form" class="form edit-form create-item-form">
 
 			<form-error-dialog></form-error-dialog>
@@ -80,13 +82,6 @@
 						<input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="cool new item" max-length="500"></input-text>
 
 						<input-text label="Unique Selling Point" name="sellingPoint" pattern="regexp.word" placeholder="This item is really cool" max-length="100"></input-text>
-
-						<div class="form-group">
-
-							<input ng-model="formData.isPrintReceipt" type="checkbox" />
-							<label>Print Receipt</label>
-
-						</div>
 
 					</fieldset>
 
@@ -223,7 +218,7 @@
 						  </div>
 
 						  <div class="panel-body">
-								<img src="{{ formData.qrCodeImgUrl }}" />
+								<img ng-src="{{ formData.qrCodeImgUrl }}" />
 							</div>
 
 						</div>
@@ -336,8 +331,8 @@
 				<h3 id="price-and-tax">Price</h3>
 
 				<p>
-					<button type="button" class="btn btn-primary" ng-click="addPriceGroup()">
-				     <i class="fa fa-plus"></i> Add Price Group
+					<button id="add-price-group" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+				     <i class="fa fa-plus"></i> Add Price Type
 				  </button>
 				</p>
 
@@ -352,6 +347,8 @@
 		</fieldset>
 
 	</ng-form>
+	
+	</div>
 
 </div>
 <!-- /Container -->
@@ -362,4 +359,4 @@
 
 <leave-view-modal></leave-view-modal>
 
-<left-navigation-stock-owner></left-navigation-stock-owner>
+<left-navigation base-path="stock-owner-items"></left-navigation>

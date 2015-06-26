@@ -1,0 +1,285 @@
+{
+  "response": [
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 47,
+      "companyId": 403,
+      "carrierNumber": "G-EZAA",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 37,
+          "companyCarrierId": 47,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 48,
+      "companyId": 403,
+      "carrierNumber": "G-EZAB",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 38,
+          "companyCarrierId": 48,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 49,
+      "companyId": 403,
+      "carrierNumber": "G-EZAC",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 39,
+          "companyCarrierId": 49,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 50,
+      "companyId": 403,
+      "carrierNumber": "G-EZAD",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 40,
+          "companyCarrierId": 50,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 51,
+      "companyId": 403,
+      "carrierNumber": "G-EZAE",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 41,
+          "companyCarrierId": 51,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 52,
+      "companyId": 403,
+      "carrierNumber": "G-EZAF",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 42,
+          "companyCarrierId": 52,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 53,
+      "companyId": 403,
+      "carrierNumber": "G-EZAG",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 43,
+          "companyCarrierId": 53,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 54,
+      "companyId": 403,
+      "carrierNumber": "G-EZAH",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 44,
+          "companyCarrierId": 54,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 55,
+      "companyId": 403,
+      "carrierNumber": "G-EZAI",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 45,
+          "companyCarrierId": 55,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 56,
+      "companyId": 403,
+      "carrierNumber": "G-EZAJ",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 46,
+          "companyCarrierId": 56,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 57,
+      "companyId": 403,
+      "carrierNumber": "G-EZAK",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 47,
+          "companyCarrierId": 57,
+          "seatConfigId": 25
+        }
+      ]
+    },
+    {
+      "startDate": "2015-05-05",
+      "endDate": "2050-01-01",
+      "createdBy": null,
+      "createdOn": null,
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 58,
+      "companyId": 403,
+      "carrierNumber": "G-EZAL",
+      "shipNumber": null,
+      "companyCarrierTypeCode": "A-319",
+      "companyCarrierTypeId": 20,
+      "carrierTypeCode": "A-319",
+      "carrierTypeId": 8,
+      "seatConfigs": [
+        {
+          "id": 48,
+          "companyCarrierId": 58,
+          "seatConfigId": 25
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "count": 12,
+    "limit": 12,
+    "start": 0
+  }
+}

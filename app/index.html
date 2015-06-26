@@ -36,8 +36,7 @@
         <span class="fa fa-bars"></span>
       </button>
       <a class="navbar-brand" ng-href="/#/">
-        <span class="fa fa-th"></span>
-        TS5 Dashboard
+        ☰ TS5 Dashboard
       </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
@@ -56,11 +55,13 @@
   </div>
 </nav>
 
+<menu-slide></menu-slide>
+
 <div class="container-fluid">
   <div class="main-container" ng-view=""></div>
 </div>
-<dev-footer></dev-footer>
 
+<dev-footer></dev-footer>
 <loading-modal></loading-modal>
 <toast></toast>
 
@@ -82,7 +83,6 @@
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
-<script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/angular-aria/angular-aria.js"></script>
 <script src="bower_components/angular-cookies/angular-cookies.js"></script>
 <script src="bower_components/angular-messages/angular-messages.js"></script>
@@ -97,13 +97,14 @@
 <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script src="bower_components/moment/moment.js"></script>
 <script src="bower_components/angular-moment/angular-moment.js"></script>
-<script src="bower_components/angular-dynforms/dynamic-forms.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
 <script src="bower_components/qrcode/lib/qrcode.js"></script>
 <script src="bower_components/angular-qr/src/angular-qr.js"></script>
 <script src="bower_components/select2/select2.js"></script>
 <script src="bower_components/ui-select/src/select3.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/ngtoast/dist/ngToast.js"></script>
+<script src="bower_components/angular-native-dragdrop/draganddrop.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -115,6 +116,7 @@
 <script src="scripts/controllers/companies.js"></script>
 <script src="scripts/controllers/item-list.js"></script>
 <script src="scripts/services/companieslistfactory.js"></script>
+<script src="scripts/services/companies-factory.js"></script>
 <script src="scripts/controllers/company.js"></script>
 <script src="scripts/services/items-factory.js"></script>
 <script src="scripts/controllers/item-create.js"></script>
@@ -163,10 +165,34 @@
 <script src="scripts/controllers/stock-owner-item-list.js"></script>
 <script src="scripts/controllers/stock-owner-item-create.js"></script>
 <script src="scripts/directives/input-price-type-stock-owner.js"></script>
-<script src="scripts/directives/left-navigation-stock-owner.js"></script>
-<script src="scripts/services/transaction-service.js"></script>
 <script src="scripts/services/version-service.js"></script>
 <script src="scripts/directives/dev-footer.js"></script>
+<script src="scripts/controllers/post-trip-data-list.js"></script>
+<script src="scripts/controllers/post-trip-data.js"></script>
+<script src="scripts/controllers/employee-commission.js"></script>
+<script src="scripts/controllers/global-reason-code.js"></script>
+<script src="scripts/controllers/company-reason-code.js"></script>
+<script src="scripts/filters/date-range.js"></script>
+<script src="scripts/services/version-service.js"></script>
+<script src="scripts/controllers/cash-bag.js"></script>
+<script src="scripts/services/cash-bag-service.js"></script>
+<script src="scripts/services/schedules-service.js"></script>
+<script src="scripts/services/stations-service.js"></script>
+<script src="scripts/controllers/cash-bag-list.js"></script>
+<script src="scripts/services/cash-bag-factory.js"></script>
+<script src="scripts/directives/menu-slide.js"></script>
+<script src="scripts/services/factory-helper.js"></script>
+<script src="scripts/controllers/menu-relationship-list.js"></script>
+<script src="scripts/controllers/menu-relationship-create.js"></script>
+<script src="scripts/controllers/item-import.js"></script>
+<script src="scripts/directives/download-template-modal.js"></script>
+<script src="scripts/directives/delete-record-dialog.js"></script>
+<script src="scripts/services/date-utility.js"></script>
+<script src="scripts/services/employee-commission-factory.js"></script>
+<script src="scripts/services/tax-rate-types-service.js"></script>
+<script src="scripts/services/post-trip-factory.js"></script>
+<script src="scripts/services/carrier-service.js"></script>
+<script src="scripts/services/transaction-service.js"></script>
 <script src="scripts/services/company-cc-types-service.js"></script>
 <!-- endbuild -->
 </body>

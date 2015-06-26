@@ -46,7 +46,7 @@ module.exports = function (grunt) {
       },
       sass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-        tasks: ['sass:server', 'autoprefixer']
+        tasks: ['sass:server', 'postcss']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -181,21 +181,13 @@ module.exports = function (grunt) {
       server: '.tmp'
     },
 
-    // Add vendor prefixed styles
-    autoprefixer: {
+    postcss: {
       options: {
-        browsers: ['last 1 version']
-      },
-      server: {
-        options: {
-          map: true
-        },
-        files: [{
-          expand: true,
-          cwd: '.tmp/styles/',
-          src: '{,*/}*.css',
-          dest: '.tmp/styles/'
-        }]
+        map: true,
+        processors: [
+          require('autoprefixer-core')({browsers: 'last 1 version'}),
+          require('csswring')
+        ]
       },
       dist: {
         files: [{
@@ -471,7 +463,7 @@ module.exports = function (grunt) {
       'ngconstant:development',
       'wiredep',
       'concurrent:server',
-      'autoprefixer:server',
+      'postcss',
       'connect:livereload',
       'watch'
     ]);
@@ -487,7 +479,7 @@ module.exports = function (grunt) {
     'ngconstant:development',
     'wiredep',
     'concurrent:test',
-    'autoprefixer',
+    'postcss',
     'connect:test',
     'karma'
   ]);
@@ -498,7 +490,7 @@ module.exports = function (grunt) {
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
-    'autoprefixer',
+    'postcss',
     'concat',
     'ngAnnotate',
     'copy:dist',

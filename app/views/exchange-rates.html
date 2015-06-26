@@ -59,7 +59,8 @@
           element-class="col-xs-10 col-lg-6 pull-right"
           start-date-model="cashiersDateField"
           is-search-field="true"
-          label-from="Cashier's entry date">
+          label-from="Cashier's entry date"
+          required="true">
         </date-picker>
       </div>
     </div>
@@ -83,10 +84,10 @@
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
-                   custom-pattern="regexp.currencyWithFourDecimalPlace"
+                   custom-pattern="currencyWithFourDecimalPlace"
                    ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
                    ng-model="currenciesFields[currency.code].bankExchangeRate"
-                   required="true"
+                   ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
                    name="{{currency.code}}bankExchangeRate"
                    currencyType="bankExchangeRate" placeholder="0.0000"
                    class="form-control"
@@ -98,10 +99,10 @@
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
-                   custom-pattern="regexp.currencyWithFourDecimalPlace"
+                   custom-pattern="currencyWithFourDecimalPlace"
                    ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
                    ng-model="currenciesFields[currency.code].paperExchangeRate"
-                   required="true"
+                   ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
                    name="{{currency.code}}paperExchangeRate"
                    currencyType="paperExchangeRate" placeholder="0.0000"
                    class="form-control"
@@ -113,10 +114,10 @@
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-money"></i></span>
             <input custom-validity
-                   custom-pattern="regexp.currencyWithFourDecimalPlace"
+                   custom-pattern="currencyWithFourDecimalPlace"
                    ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
                    ng-model="currenciesFields[currency.code].coinExchangeRate"
-                   required="true"
+                   ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
                    name="{{currency.code}}coinExchangeRate"
                    currencyType="coinExchangeRate" placeholder="0.0000"
                    class="form-control"

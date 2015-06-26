@@ -1,0 +1,134 @@
+<div class="fluid-container module-container">
+
+	<div class="list-controls">
+
+		<div class="row item-list-row">
+
+			<div class="col-xs-6">
+
+				<h2 class="view-name">Menu Relationship List</h2>
+
+			</div>
+
+      <div class="col-xs-6 text-right">
+
+				<a href="#/menu-relationship-create" class="btn btn-primary btn-create">
+					<span class="fa fa-plus" aria-hidden="true"></span> <span class="btn-label hidden-xs">Create Menu Relationship</span>
+				</a>
+
+        <button class="btn btn-default btn-search" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="btn-label hidden-xs">Search</span>
+        </button>
+
+        <button class="btn btn-default btn-search-clear"
+          ng-click="clearSearchFilters()"
+          ng-show="search.menuCode.length || search.menuName.length || search.menuStation.length || search.menuStation.length || search.startDate.length || search.endDate.length">
+          <span class="btn-label">Clear</span>
+        </button>
+
+      </div>
+
+		</div>
+
+		<div class="collapse" id="search-collapse">
+
+			<form class="form">
+
+				<div class="row">
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="menu-code">Menu Code</label>
+							<input ng-model="search.menuCode" type="text" class="form-control" id="menu-code" placeholder="MC001" />
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="menu-name">Menu Name</label>
+							<input ng-model="search.menuName" type="text" class="form-control" id="menu-name" placeholder="Menu Name" />
+						</div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6 col-md-4">
+
+						<div class="form-group">
+							<label for="menu-station">Catering Stations</label>
+							<select multiple="true" ng-model="search.menuStation" class="form-control" id="menu-station">
+								<option value="{{station.code}}" ng-repeat="station in stationList | unique: 'id'">{{ station.code }}</option>
+							</select>
+						</div>
+
+					</div>
+
+				</div>
+
+				<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
+					start-date-model="search.startDate"
+					end-date-model="search.endDate"
+					is-search-field="true"
+					label-from="Effective From"
+					label-to="Effective To">
+				</date-picker>
+
+			</form>
+
+		</div>
+
+	</div>
+
+  <table class="table table-bordered table-responsive table-hover">
+
+    <thead>
+
+      <tr>
+        <th>Menu Code</th>
+        <th>Menu Name</th>
+        <th>Catering Stations</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Actions</th>
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr id="menu-{{menu.id}}" ng-repeat="(key,menu) in menuList | filter: { menuCode: search.menuCode, menuName: search.menuName, stations: search.stations } | daterange:startDateFilter:endDateFilter ">
+
+        <td>{{ menu.menuCode }}</td>
+        <td>{{ menu.menuName }}</td>
+        <td>{{ menu.stations }}</td>
+        <td>{{ menu.startDate | date: 'MM/dd/yyyy' }}</td>
+        <td>{{ menu.endDate | date: 'MM/dd/yyyy' }}</td>
+
+        <td>
+
+          <a class="btn btn-info btn-xs btn-view" ng-href="#/menu-view/{{menu.id}}">
+            <i class="fa fa-file"></i>
+          </a>
+
+          <a class="btn btn-primary btn-xs btn-edit" ng-href="#/menu-edit/{{menu.id}}" ng-disabled="isItemActive(menu.endDate)">
+            <i class="fa fa-pencil"></i>
+          </a>
+
+          <button class="btn btn-danger btn-xs btn-delete" ng-click="removeMenu(menu.id,key)" ng-disabled="isItemActive(menu.startDate) || isItemInactive(menu.endDate)">
+            <i class="fa fa-trash"></i>
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+
+<left-navigation base-path="menu-relationship"></left-navigation>

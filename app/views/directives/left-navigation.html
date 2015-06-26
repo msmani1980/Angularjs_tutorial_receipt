@@ -1,31 +1,90 @@
 <div id="left-navigation">
 	<div class="container">
-		<ul class="navbar">
+		<ul class="navbar ng-cloak">
 
-			<li ng-click="leaveView('item-list')" ng-class="{'active':locationPath == '/item-list'}">
+		<li ng-click="leaveViewNav('{{itemListPath}}')"
+			ng-class="{'active':locationPath == itemListPath}"
+			ng-show="itemListPath">
+
+			<i class="icon-manage-retail-item"></i>
+			<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 				<i class="icon-manage-retail-item"></i>
-				<div class="left-nav-option">
-					<i class="icon-manage-retail-item"></i>
-					<p>Manage Items</p>
-				</div>
-			</li>
+				<p>Manage {{itemPrefix}} Items</p>
+			</div>
+		</li>
 
-			<li ng-click="leaveView('item-create')" ng-class="{'active':locationPath == '/item-create'}">
+		<li ng-click="leaveViewNav('{{itemCreatePath}}')"
+			ng-class="{'active':locationPath == itemCreatePath}"
+			ng-show="itemCreatePath">
+
+			<i class="icon-create-retail-item"></i>
+			<div class="left-nav-option" ng-class="{'lg':itemPrefix}">
 				<i class="icon-create-retail-item"></i>
-				<div class="left-nav-option">
-					<i class="icon-create-retail-item"></i>
-					<p>Create Item</p>
-				</div>
-			</li>
+				<p>Create {{itemPrefix}} Item</p>
+			</div>
+		</li>
 
-			<li ng-click="leaveView('ember/#/retail-items/categories')" ng-class="{'active':locationPath == '/retail-items/categories'}">
+		<li ng-class="{'active':locationPath == manageCategoriesPath}"
+			ng-show="manageCategoriesPath">
+			<a ng-href="{{manageCategoriesPath}}">
 				<i class="icon-manage-retail-category"></i>
 				<div class="left-nav-option lg">
 					<i class="icon-manage-retail-category"></i>
-					<p>Manage Categories</p>
+					<p>Manage
+						<span ng-hide="itemPrefixSm">{{itemPrefix}}</span>
+						<span ng-show="itemPrefixSm">{{itemPrefixSm}}</span> Categories
+					</p>
 				</div>
-			</li>
+			</a>
+		</li>
+
+		<li ng-click="leaveViewNav('{{menuRelationshipListPath}}')"
+			ng-class="{'active':locationPath == menuRelationshipListPath}"
+			ng-show="menuRelationshipListPath">
+
+			<i class="icon-menu-assignment"></i>
+			<div class="left-nav-option lg">
+				<i class="icon-menu-assignment"></i>
+				<p>Manage {{itemPrefix}}s</p>
+			</div>
+		</li>
+
+		<li ng-click="leaveViewNav('{{menuRelationshipCreatePath}}')"
+			ng-class="{'active':locationPath == menuRelationshipCreatePath}"
+			ng-show="menuRelationshipCreatePath">
+
+			<i class="icon-create-menu"></i>
+			<div class="left-nav-option lg">
+				<i class="icon-create-menu"></i>
+				<p>Create {{itemPrefix}}</p>
+			</div>
+		</li>
 
 		</ul>
 	</div>
+</div>
+
+<div class="modal fade" id="leave-view-modal-nav">
+
+	<div class="modal-dialog">
+
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h3 class="modal-title"><span class="fa fa-warning"></span> You have unsaved changes</h3>
+			</div>
+
+			<div class="modal-body">
+				<p>Are you sure you want to leave? If you leave, none of your recent changes will be saved.</p>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" ng-click="leaveViewClose()">Discard Changes</button>
+				<a type="button" class="btn btn-primary" data-dismiss="modal">Continue Editing</a>
+			</div>
+
+		</div>
+
+	</div>
+
 </div>

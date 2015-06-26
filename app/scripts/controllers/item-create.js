@@ -1,5 +1,6 @@
 'use strict';
 /*global moment*/
+/*global $*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -40,6 +41,8 @@ angular.module('ts5App')
     $scope.itemIsInactive = false;
     $scope.viewOnly = false;
     $scope.editingItem = false;
+    $scope.shouldDisplayURLField = false;
+
 
     this.checkIfViewOnly = function () {
       var path = $location.path();
@@ -48,13 +51,16 @@ angular.module('ts5App')
       }
     };
 
-    this.setFormAsViewOnly = function () {
-      $scope.viewName = 'Viewing Item ' + $routeParams.id;
+    this.setFormAsViewOnly = function (item) {
+      $scope.viewName = 'Viewing Item ' + item.itemName;
+    };
+
+    this.updateViewName = function (item) {
+      $scope.viewName = 'Editing ' + item.itemName;
     };
 
     this.setFormAsEdit = function () {
       $scope.editingItem = true;
-      $scope.viewName = 'Edit Item ' + $routeParams.id;
       $scope.buttonText = 'Save';
     };
 
@@ -73,7 +79,8 @@ angular.module('ts5App')
 
       itemsFactory.getItem(id).then(function (data) {
         if ($this.validateItemCompany(data)) {
-          $this.upateFormData(data.retailItem);
+          $this.updateFormData(data.retailItem);
+          $this.updateViewName(data.retailItem);
         } else {
           $location.path('/');
           return false;
@@ -125,18 +132,20 @@ angular.module('ts5App')
 
     // checks to see if the item is active
     function checkIfItemIsActive(itemData) {
-      var today = moment().format();
-      $scope.itemIsActive = moment(itemData.startDate).isBefore(today);
+      var today = new Date();
+      var itemStartDate = new Date(itemData.startDate);
+      $scope.itemIsActive = itemStartDate <= today;
     }
 
     // checks to see if the item is inactive
     function checkIfItemIsInactive(itemData) {
-      var today = moment().format();
-      $scope.itemIsInactive = moment(itemData.endDate).isBefore(today);
+      var today = new Date();
+      var itemEndDate = new Date(itemData.endDate);
+      $scope.itemIsInactive = itemEndDate <= today;
     }
 
     // updates the $scope.formData
-    this.upateFormData = function (itemData) {
+    this.updateFormData = function (itemData) {
       if (!itemData) {
         return false;
       }
@@ -248,9 +257,18 @@ angular.module('ts5App')
       $scope.taxTypes = data.response;
     });
 
+    $q.all([itemsFactory.getItemsList, itemsFactory.getAllergensList,
+      itemsFactory.getTagsList, itemsFactory.getCharacteristicsList
+    ]).then(function () {
+      $('.multi-select').select2({
+        width: '100%'
+      });
+    });
+
     // TODO: Move to global function
     function formatDate(dateString, formatFrom, formatTo) {
-      return moment(dateString, formatFrom).format(formatTo).toString();
+      var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
+      return dateToReturn;
     }
 
     $scope.$watch('formData', function (newData, oldData) {
@@ -442,8 +460,24 @@ angular.module('ts5App')
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
     };
 
+    $scope.filterCharacteristics = function () {
+      if ($scope.itemTypes[$scope.formData.itemTypeId - 1].name ===
+        'Virtual') {
+        $scope.filteredCharacteristics = [];
+        angular.forEach($scope.characteristics, function (value) {
+          if (value.name === 'Downloadable' || value.name === 'Link') {
+            $scope.filteredCharacteristics.push(value);
+          }
+          $scope.shouldDisplayURLField = true;
+        });
+      } else {
+        $scope.filteredCharacteristics = $scope.characteristics;
+        $scope.shouldDisplayURLField = false;
+      }
+    };
+
     // gets a list of stations from the API filtered by station's start and end date
-    this.getStationsList = function (stationException) {
+    this.getGlobalStationList = function (stationException) {
       var startDate = formatDate(stationException.startDate, 'L',
         'YYYYMMDD');
       var endDate = formatDate(stationException.endDate, 'L', 'YYYYMMDD');
@@ -451,7 +485,7 @@ angular.module('ts5App')
         startDate: startDate,
         endDate: endDate
       };
-      return companiesFactory.getStationsList(stationsFilter);
+      return companiesFactory.getGlobalStationList(stationsFilter);
     };
 
     // sets the stations list for the station exception
@@ -498,7 +532,7 @@ angular.module('ts5App')
       var $this = this;
       var stationException = $scope.formData.prices[priceIndex].stationExceptions[
         stationExceptionIndex];
-      this.getStationsList(stationException).then(function (data) {
+      this.getGlobalStationList(stationException).then(function (data) {
         $this.setStationsList(stationException, data);
       });
       this.getStationsCurrenciesList(stationException).then(function (data) {
@@ -514,7 +548,7 @@ angular.module('ts5App')
         for (var stationExceptionIndex in price.stationExceptions) {
           var stationException = price.stationExceptions[
             stationExceptionIndex];
-          stationPromises.push(this.getStationsList(stationException));
+          stationPromises.push(this.getGlobalStationList(stationException));
         }
         this.handleStationPromises(stationPromises, price);
       }
@@ -671,7 +705,7 @@ angular.module('ts5App')
       };
       itemsFactory.updateItem($routeParams.id, updateItemPayload).then(
         function (response) {
-          $this.upateFormData(response.retailItem);
+          $this.updateFormData(response.retailItem);
           angular.element('#loading').modal('hide');
           angular.element('#update-success').modal('show');
         },

@@ -1,0 +1,7 @@
+<div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+  <h3>Menu</h3>
+  <div class="spmenu-container" ng-repeat="item in sideMenu">
+  <h4 class="text-center">{{item.title}}</h4>
+  <a ng-repeat="menu in item.menuItems" href="{{menu.route}}">{{menu.name}}</a>
+  </div>
+</div>

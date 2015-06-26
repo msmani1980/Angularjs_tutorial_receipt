@@ -1,0 +1,61 @@
+{
+  "id": 95,
+  "bankReferenceNumber": "123654",
+  "cashBagNumber": "123",
+  "originationSource": 2,
+  "chCompanyId": 362,
+  "dailyExchangeRateId": 83,
+  "eposCashBagsId": null,
+  "isSubmitted": "false",
+  "retailCompanyId": 403,
+  "scheduleDate": "2015-05-29",
+  "scheduleNumber": "105",
+  "totalCashBags": 1,
+  "createdBy": 1,
+  "createdOn": "2015-05-29 16:35:15.958865",
+  "updatedBy": null,
+  "updatedOn": null,
+  "cashbagSubmittedBy": null,
+  "cashBagCurrencies": [
+    {
+      "id": 477,
+      "bankAmount": "1.0000",
+      "coinAmountEpos": null,
+      "coinAmountManual": null,
+      "companyCashBagId": 95,
+      "paperAmountEpos": null,
+      "paperAmountManual": null,
+      "currencyId": 1
+    },
+    {
+      "id": 478,
+      "bankAmount": "1.0000",
+      "coinAmountEpos": null,
+      "coinAmountManual": null,
+      "companyCashBagId": 95,
+      "paperAmountEpos": null,
+      "paperAmountManual": null,
+      "currencyId": 8
+    },
+    {
+      "id": 479,
+      "bankAmount": "1.0000",
+      "coinAmountEpos": null,
+      "coinAmountManual": null,
+      "companyCashBagId": 95,
+      "paperAmountEpos": null,
+      "paperAmountManual": null,
+      "currencyId": 9
+    },
+    {
+      "id": 480,
+      "bankAmount": "1.0000",
+      "coinAmountEpos": null,
+      "coinAmountManual": null,
+      "companyCashBagId": 95,
+      "paperAmountEpos": null,
+      "paperAmountManual": null,
+      "currencyId": 11
+    }
+  ]
+}

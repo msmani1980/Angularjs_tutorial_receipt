@@ -1,40 +1,45 @@
 'use strict';
 
-describe('Item Create Controller |', function () {
+describe('The Item Create Controller', function () {
 
   // load the controller's module
-  beforeEach(module('ts5App'));
-
+  beforeEach(module('ts5App', 'template-module'));
   beforeEach(module(
     'served/stations-date-filtered.json',
     'served/station-exception-currencies.json',
     'served/price-types.json'
   ));
 
-  var $rootScope, $scope, $controller, $location, ItemCreateCtrl;
+  var $rootScope,
+    $scope,
+    $controller,
+    $location,
+    ItemCreateCtrl,
+    $httpBackend;
 
   beforeEach(inject(function (_$rootScope_, _$controller_, $injector) {
-
+    $httpBackend = $injector.get('$httpBackend');
+    //FIXME: Test these calls on the controller
+    $httpBackend.whenGET(/./).respond(200, '');
     $location = $injector.get('$location');
-
-    spyOn($location, 'path').and.returnValue('/item-create');
-
+    $location.path('/item-create');
     $rootScope = _$rootScope_;
     $scope = $rootScope.$new();
-
     $controller = _$controller_;
-
     ItemCreateCtrl = $controller('ItemCreateCtrl', {
       '$rootScope': $rootScope,
       '$scope': $scope
     });
-
   }));
 
   describe('The ItemCreateCtrl', function () {
 
     it('should be defined', function () {
       expect(ItemCreateCtrl).toBeDefined();
+    });
+
+    it('should have a the route /item-create', function () {
+      expect($location.path()).toBe('/item-create');
     });
 
   });
@@ -107,6 +112,93 @@ describe('Item Create Controller |', function () {
         expect($scope.formData.prices).toBeDefined();
         expect($scope.formData.prices.length).toBe(1);
       });
+
+  });
+
+  describe('view', function () {
+
+    var $templateCache,
+      $compile,
+      html,
+      view;
+
+    beforeEach(inject(function (_$templateCache_, _$compile_) {
+      $templateCache = _$templateCache_;
+      $compile = _$compile_;
+      html = $templateCache.get('/views/item-create.html');
+      var compiled = $compile(angular.element(html))($scope);
+      view = angular.element(compiled[0]);
+      $scope.$digest();
+    }));
+
+    it('should be defined', function () {
+      expect(view).toBeDefined();
+    });
+
+    it('should have an ng-form directive', function () {
+      expect(view.find('ng-form').length).toEqual(1);
+    });
+
+    describe('UI for price and tax', function () {
+
+      it('should have a header', function () {
+        expect(view.find('#price-and-tax').length).toEqual(1);
+      });
+
+      it('should have a header with the correct label', function () {
+        expect(view.find('#price-and-tax').text()).toEqual(
+          'Price & Tax');
+      });
+
+      describe('price group button', function () {
+
+        var priceGroupBtn;
+
+        beforeEach(function () {
+          priceGroupBtn = view.find('#add-price-group');
+        });
+
+        it('should be present in the DOM', function () {
+          expect(priceGroupBtn.length).toEqual(1);
+        });
+
+        it('should have the correct label', function () {
+          expect(priceGroupBtn.text().trim()).toEqual(
+            'Add Price Type');
+        });
+
+        it('should have an ng-click', function () {
+          expect(priceGroupBtn.attr('ng-click')).toEqual(
+            'addPriceGroup()');
+        });
+
+      });
+
+      describe('tax type button', function () {
+
+        var taxTypeBtn;
+
+        beforeEach(function () {
+          taxTypeBtn = view.find('#add-tax-type');
+        });
+
+        it('should be present in the DOM', function () {
+          expect(taxTypeBtn.length).toEqual(1);
+        });
+
+        it('should have the correct label', function () {
+          expect(taxTypeBtn.text().trim()).toEqual(
+            'Add Tax Type');
+        });
+
+        it('should have an ng-click', function () {
+          expect(taxTypeBtn.attr('ng-click')).toEqual(
+            'addTaxType()');
+        });
+
+      });
+
+    });
 
   });
 
@@ -233,11 +325,11 @@ describe('Item Create Controller |', function () {
 
       });
 
-    it('should be have a getStationsList method', function () {
-      expect(ItemCreateCtrl.getStationsList).toBeDefined();
+    it('should be have a getGlobalStationList method', function () {
+      expect(ItemCreateCtrl.getGlobalStationList).toBeDefined();
     });
 
-    describe('The ItemCreateCtrl.getStationsList method', function () {
+    describe('The ItemCreateCtrl.getGlobalStationList method', function () {
 
       var response,
         testObject;
@@ -249,13 +341,13 @@ describe('Item Create Controller |', function () {
         });
 
         // spy on the query of the items service
-        spyOn(ItemCreateCtrl, 'getStationsList').and.callFake(
+        spyOn(ItemCreateCtrl, 'getGlobalStationList').and.callFake(
           function () {
             return stationsJSON;
           });
 
         // make the mock query call
-        response = ItemCreateCtrl.getStationsList();
+        response = ItemCreateCtrl.getGlobalStationList();
 
         // grab first item in list
         testObject = response.response[0];
@@ -263,7 +355,7 @@ describe('Item Create Controller |', function () {
       }));
 
       it('should have been called', function () {
-        expect(ItemCreateCtrl.getStationsList).toHaveBeenCalled();
+        expect(ItemCreateCtrl.getGlobalStationList).toHaveBeenCalled();
       });
 
       it('should return a response from the API', function () {
@@ -562,7 +654,7 @@ describe('Item Create Controller |', function () {
 
           $scope.addStationException(0);
 
-          spyOn(ItemCreateCtrl, 'getStationsList').and.callThrough();
+          spyOn(ItemCreateCtrl, 'getGlobalStationList').and.callThrough();
 
           spyOn(ItemCreateCtrl, 'getStationsCurrenciesList').and
             .callThrough();
@@ -581,8 +673,8 @@ describe('Item Create Controller |', function () {
           expect(ItemCreateCtrl.updateStationException).toHaveBeenCalled();
         });
 
-        it('should have called getStationsList', function () {
-          expect(ItemCreateCtrl.getStationsList).toHaveBeenCalled();
+        it('should have called getGlobalStationList', function () {
+          expect(ItemCreateCtrl.getGlobalStationList).toHaveBeenCalled();
         });
 
         it('should have called getStationsCurrenciesList', function () {
@@ -617,11 +709,11 @@ describe('Item Create Controller |', function () {
 
         $q = $injector.get('$q');
 
-        var stationPromise1 = jasmine.createSpyObj('stationPromise1', ['getStationsList']);
-        var stationPromise2 = jasmine.createSpyObj('stationPromise2', ['getStationsList']);
+        var stationPromise1 = jasmine.createSpyObj('stationPromise1', ['getGlobalStationList']);
+        var stationPromise2 = jasmine.createSpyObj('stationPromise2', ['getGlobalStationList']);
 
-        stationPromise1.getStationsList.and.returnValue($q.when(stationsJSON));
-        stationPromise2.getStationsList.and.returnValue($q.when(stationsJSON));
+        stationPromise1.getGlobalStationList.and.returnValue($q.when(stationsJSON));
+        stationPromise2.getGlobalStationList.and.returnValue($q.when(stationsJSON));
 
         spyOn(ItemCreateCtrl, 'handleStationPromises').and.callThrough();
 

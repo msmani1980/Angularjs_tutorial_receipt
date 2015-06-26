@@ -24,8 +24,18 @@ module.exports = function (config) {
       'test/mock/**/*.json': ['ng-json2js']
     },
     coverageReporter: {
-      type: 'cobertura',
-      dir: 'coverage'
+      dir: 'coverage',
+      reporters: [
+        // reporters not supporting the `file` property
+        {
+          type: 'html',
+          subdir: 'report-html'
+        },
+        {
+          type: 'cobertura',
+          subdir: '.'
+        }
+      ]
     },
 
     ngHtml2JsPreprocessor: {
@@ -44,7 +54,6 @@ module.exports = function (config) {
       'bower_components/jquery/dist/jquery.js',
       'bower_components/angular/angular.js',
       'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js',
-      'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-aria/angular-aria.js',
       'bower_components/angular-cookies/angular-cookies.js',
       'bower_components/angular-messages/angular-messages.js',
@@ -59,13 +68,14 @@ module.exports = function (config) {
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'bower_components/moment/moment.js',
       'bower_components/angular-moment/angular-moment.js',
-      'bower_components/angular-dynforms/dynamic-forms.js',
       'bower_components/ng-file-upload/ng-file-upload.js',
       'bower_components/qrcode/lib/qrcode.js',
       'bower_components/angular-qr/src/angular-qr.js',
       'bower_components/select2/select2.js',
       'bower_components/ui-select/src/select3.js',
+      'bower_components/angular-animate/angular-animate.js',
       'bower_components/ngtoast/dist/ngToast.js',
+      'bower_components/angular-native-dragdrop/draganddrop.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

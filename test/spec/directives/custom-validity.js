@@ -11,11 +11,10 @@ describe('Directive: customValidity', function () {
   beforeEach(inject(function ($rootScope) {
     scope = $rootScope.$new();
     scope.fakeModel = 'some values';
-    scope.fakePattern = [/^-?([0-9]*)$/, 'some text'];
   }));
 
   it('should not change the element', inject(function ($compile) {
-    element = angular.element('<input custom-pattern="fakePattern" custom-validity ng-model="fakeModel"/>');
+    element = angular.element('<input custom-pattern="price" custom-validity ng-model="fakeModel"/>');
     element = $compile(element)(scope);
     expect(element.attr('custom-validity')).toBe('');
   }));

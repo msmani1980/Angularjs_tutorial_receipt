@@ -1,0 +1,129 @@
+<h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
+
+<h2>{{ company.companyName }} <small>Flight {{ cashBag.scheduleNumber }} <small><date class="text-right">{{ cashBag.scheduleDate }}</date></small></small></h2>
+
+<ng-form name="cashBagCreateForm" class="form edit-form">
+
+  <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+    </button>
+    <h4>
+      We weren't able to edit your cash bag!
+    </h4>
+
+    <ul>
+      <li ng-repeat="error in form.$error.required">
+        <strong>{{ error.$name }}</strong> is required
+      </li>
+      <li ng-repeat="error in form.$error.pattern">
+        <strong>{{ error.$name }}</strong> is invalid
+      </li>
+      <li ng-show="formErrors" ng-repeat="error in formErrors">
+        <strong>{{error.field}}</strong>
+        <span> {{ error.value }}</span>
+        <span> {{ error.code }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="panel panel-default">
+
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-sm-6">
+          <div>Base currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
+        </div>
+        <div class="col-sm-6 text-right">
+          <div>Cashier's entry date: <date>{{ cashBag.createdOn }}</date></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body">
+
+      <div class="row form-group">
+			  <div class="col-sm-4">
+          <label for="cashBagNumber">Cash Bag #</label>
+          <input custom-pattern="regexp.alpha"
+                 required
+                 type="text"
+                 maxlength="25"
+                 name="cashBagNumber"
+                 class="form-control"
+                 id="cashBagNumber"
+                 ng-model="cashBag.cashBagNumber"
+                 ng-readonly="readOnly"/>
+			  </div>
+
+			  <div class="col-sm-4">
+          <label for="totalCashBags">Total # of Bags</label>
+          <input custom-pattern="regexp.alpha"
+                 required
+                 type="text"
+                 maxlength="25"
+                 name="totalCashBags"
+                 class="form-control"
+                 id="totalCashBags"
+                 ng-model="cashBag.totalCashBags",
+                 ng-readonly="readOnly"/>
+			  </div>
+
+			  <div class="col-sm-4">
+          <label for="totalCashBags">Bank Reference</label>
+          <input custom-pattern="regexp.alpha"
+                 required
+                 type="text"
+                 maxlength="25"
+                 name="bankReferenceNumber"
+                 class="form-control"
+                 id="bankReferenceNumber"
+                 ng-model="cashBag.bankReferenceNumber",
+                 ng-readonly="readOnly"/>
+        </div>
+      </div>
+
+      <div class="row form-group">
+				<table class="table table-responsive table-bordered table-hover">
+			    <thead>
+			    <tr>
+			      <th>Currency</th>
+			      <th>Flight Amount</th>
+			      <th>Paper Amount</th>
+			      <th>Coin Amount</th>
+			      <th>Paper Bank Exchange Rate</th>
+			      <th>Coin Bank Exchange Ratev</th>
+			    </tr>
+			    </thead>
+			    <tbody>
+			    <tr ng-repeat="currency in cashBag.cashBagCurrencies">
+			      <td>{{ currencyCodes[currency.currencyId] }}</td>
+			      <td>{{ currency.bankAmount }}</td>
+            <td><input type="text"
+                       class="form-control"
+                       ng-model="currency.paperAmountManual"
+                       name="paperAmountManual[{{currency.currencyId}}]"
+                       ng-readonly="readOnly"></td>
+			      <td><input type="text"
+                       class="form-control"
+                       ng-model="currency.coinAmountManual"
+                       name="coinAmountManual[{{currency.currencyId}}]"
+                       ng-readonly="readOnly"></td>
+			      <td>{{ currency.paperAmountEpos }}</td>
+			      <td>{{ currency.coinAmountEpos }}</td>
+			    </tr>
+			    </tbody>
+			  </table>
+      </div>
+    </div>
+
+    <div class="panel-footer text-center">
+      <button class="btn btn-primary" ng-click="formSave(cashBag)" ng-hide="readOnly">
+        <span class="fa fa-check-square-o" aria-hidden="true"></span>
+        <span class="hidden-xs">Save</span>
+      </button>
+      <button class="btn btn-danger" ng-click="delete(cashBag)" ng-show="canDelete(cashBag)">Delete</button>
+    </div>
+
+  </div>
+
+</ng-form>

@@ -1,17 +1,16 @@
 <!-- TaxTypeDirective -->
-
 <div class="panel panel-default">
 
   <div class="panel-heading">
     <p class="panel-title">
-			<i class="fa fa-tags"></i> Tax Group {{ $parent.key+1 }}
-      <span class="pull-right btn btn-danger btn-xs" ng-click="removeTaxType($parent.key)">
+			<i class="fa fa-tags"></i> Tax Type {{ $parent.key+1 }}
+      <span class="btn-remove-tax-type pull-right btn btn-danger btn-xs" ng-click="removeTaxType($parent.key)">
         <i class="fa fa-close"></i>
       </span>
 		</p>
   </div>
 
-  <div class="panel-body">
+  <div class="panel-body container-fluid">
 
     <div class="row">
 
@@ -22,7 +21,7 @@
   					<label>Tax Type *</label>
 
   					<select required name="Tax Type" ng-model="itemTax.companyTaxId" class="form-control">
-  						<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }} - {{ type.description}} </option>
+  						<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }}</option>
   					</select>
 
   				</div>
