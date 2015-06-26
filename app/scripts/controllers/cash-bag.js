@@ -20,6 +20,7 @@ angular.module('ts5App')
     $scope.readOnly = true;
     $scope.displayError = false;
     $scope.displayedScheduleDate = '';
+    $scope.displayedCashierDate = '';
 
     var helpers = {
       showMessage: function(error, isError, message) {
@@ -172,7 +173,7 @@ angular.module('ts5App')
         cashBagCurrencies: []
       };
       $scope.displayedScheduleDate = moment($routeParams.scheduleDate, 'YYYYMMDD').format('YYYY-MM-DD').toString();
-
+      $scope.displayedCashierDate = moment().format('YYYY-MM-DD');
       $q.all(_promises).then(function () {
         if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
           $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
@@ -199,6 +200,7 @@ angular.module('ts5App')
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
+        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
         $scope.canDelete = false;
       });
     }
@@ -210,6 +212,7 @@ angular.module('ts5App')
       $q.all(_promises).then(function () {
         $scope.canDelete = helpers.canDelete;
         $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
+        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
       });
     }
 
