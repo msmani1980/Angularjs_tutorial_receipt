@@ -196,7 +196,7 @@ angular.module('ts5App')
     function read() {
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
       $q.all(_promises).then(function () {
-        $scope.canDelete = helpers.canDelete;
+        $scope.canDelete = false;
       });
     }
 
