@@ -46,13 +46,16 @@ angular.module('ts5App')
       }
 
       $element.datepicker(options);
-
     };
 
     function link($scope, $element) {
-      $scope.$watchGroup(['minDate', 'maxDate'], function(){
-        $element.find('.startDate').datepicker('setStartDate', $scope.minDate);
-        $element.find('.startDate').datepicker('setEndDate', $scope.maxDate);
+      $scope.$watchGroup(['minDate', 'maxDate'], function () {
+        if (!angular.isUndefined($scope.minDate)) {
+          $element.find('.startDate').datepicker('setStartDate', $scope.minDate);
+        }
+        if (!angular.isUndefined($scope.maxDate)) {
+          $element.find('.startDate').datepicker('setEndDate', $scope.maxDate);
+        }
       });
 
       if ($scope.isSearchField) {
@@ -68,7 +71,6 @@ angular.module('ts5App')
           watchListener();
           initializeDatePicker($scope, $element);
         }
-
       });
     }
 

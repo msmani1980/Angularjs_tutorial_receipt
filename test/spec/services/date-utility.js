@@ -31,13 +31,25 @@ describe('Date Utility service', function () {
       expect(dateUtility.formatDate).toBeDefined();
     });
 
-    it('should format a date string from one format to another',
-      function () {
-        var expectedDateString = '20150619';
-        var formattedString = dateUtility.formatDate('06/19/2015',
-          'L', 'YYYYMMDD');
-        expect(formattedString).toEqual(expectedDateString);
-      });
+    it('should format a date string from one format to another', function () {
+      var expectedDateString = '20150619';
+      var formattedString = dateUtility.formatDate('06/19/2015', 'L', 'YYYYMMDD');
+      expect(formattedString).toEqual(expectedDateString);
+    });
+
+  });
+
+  describe('formatDateForAPI method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.formatDateForAPI).toBeDefined();
+    });
+
+    it('should format a date string from one format to another', function () {
+      var expectedDateString = '20150619';
+      var formattedString = dateUtility.formatDateForAPI('06/19/2015');
+      expect(formattedString).toEqual(expectedDateString);
+    });
 
   });
 

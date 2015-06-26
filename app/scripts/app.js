@@ -21,7 +21,6 @@ angular
     'ngStorage',
     'ui.bootstrap',
     'angular.filter',
-    'dynform',
     'ngFileUpload',
     'ja.qr',
     'ngToast',
