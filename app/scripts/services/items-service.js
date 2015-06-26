@@ -56,12 +56,12 @@ angular.module('ts5App')
       return requestResource.createItem(payload).$promise;
     };
 
-    var updateItem = function (id,payload) {
-      return requestResource.updateItem({id:id},payload).$promise;
+    var updateItem = function (id, payload) {
+      return requestResource.updateItem({id: id}, payload).$promise;
     };
 
     var removeItem = function (id) {
-      return requestResource.removeItem({id:id}).$promise;
+      return requestResource.removeItem({id: id}).$promise;
     };
 
     return {
@@ -72,4 +72,4 @@ angular.module('ts5App')
       removeItem: removeItem
     };
 
-});
+  });
