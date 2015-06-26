@@ -20,6 +20,20 @@ angular.module('ts5App')
       endDate: ''
     };
 
+    this.init = function () {
+      $scope.$watchCollection('search', function () {
+        $this.updateMenuList();
+      });
+      $scope.$watchCollection('dateRange', function () {
+        $this.getMenuList();
+      });
+      $scope.$watch('currentPage + menusPerPage', function () {
+        $this.updateMenuList();
+      });
+      this.getMenuList();
+      this.getCatererStationList();
+    };
+
     this.updateMenuList = function () {
       var filteredMenus = $this.filterMenus();
       $scope.menuListCount = filteredMenus.length;
@@ -120,141 +134,6 @@ angular.module('ts5App')
       $scope.menuListCount = $scope.menuList.length;
     };
 
-    $scope.$watchCollection('search', function () {
-      $this.updateMenuList();
-    });
-
-    $scope.$watchCollection('dateRange', function () {
-      $this.getMenuList();
-    });
-
-    $scope.$watch('currentPage + menusPerPage', function () {
-      $this.updateMenuList();
-    });
-
-    this.getMenuList();
-    this.getCatererStationList();
-
-    var stationAPIResponse = {
-
-      'response': [{
-        'id': 1,
-        'companyId': 326,
-        'code': 'ORD',
-        'name': 'Chicago O-hare'
-      }, {
-        'id': 2,
-        'companyId': 326,
-        'code': 'MDW',
-        'name': 'Chicago Midway'
-      }, {
-        'id': 8,
-        'companyId': 326,
-        'code': 'LAX',
-        'name': 'Los Angeles'
-      }, {
-        'id': 9,
-        'companyId': 326,
-        'code': 'MIA',
-        'name': 'Miami'
-      }, {
-        'id': 10,
-        'companyId': 326,
-        'code': 'IAH',
-        'name': 'Houston'
-      }, {
-        'id': 19,
-        'companyId': 326,
-        'code': 'ALC',
-        'name': 'Alicante'
-      }, {
-        'id': 20,
-        'companyId': 326,
-        'code': 'BCN',
-        'name': 'Barcelona'
-      }, {
-        'id': 21,
-        'companyId': 326,
-        'code': 'AGP',
-        'name': 'Malaga'
-      }, {
-        'id': 22,
-        'companyId': 326,
-        'code': 'VLC',
-        'name': 'Valencia'
-      }, {
-        'id': 23,
-        'companyId': 326,
-        'code': 'CPH',
-        'name': 'Copenhagen'
-      }, {
-        'id': 24,
-        'companyId': 326,
-        'code': 'SKS',
-        'name': 'Vojens'
-      }, {
-        'id': 25,
-        'companyId': 326,
-        'code': 'EKHG',
-        'name': 'Herning'
-      }, {
-        'id': 26,
-        'companyId': 326,
-        'code': 'BSL',
-        'name': 'Basel'
-      }, {
-        'id': 27,
-        'companyId': 326,
-        'code': 'GVA',
-        'name': 'Geneva'
-      }, {
-        'id': 28,
-        'companyId': 326,
-        'code': 'ZRH',
-        'name': 'Zurich'
-      }, {
-        'id': 29,
-        'companyId': 326,
-        'code': 'BRN',
-        'name': 'Bern'
-      }, {
-        'id': 30,
-        'companyId': 326,
-        'code': 'ZHI',
-        'name': 'Grenchen'
-      }, {
-        'id': 39,
-        'companyId': 326,
-        'code': 'LON',
-        'name': 'Heathrow Intl'
-      }, {
-        'id': 41,
-        'companyId': 326,
-        'code': 'LGW',
-        'name': 'Gatwick '
-      }, {
-        'id': 43,
-        'companyId': 326,
-        'code': 'LPL',
-        'name': 'Liverpool '
-      }, {
-        'id': 44,
-        'companyId': 326,
-        'code': 'LTN',
-        'name': 'Luton '
-      }, {
-        'id': 45,
-        'companyId': 326,
-        'code': 'MAD',
-        'name': 'Madrid '
-      }],
-      'meta': {
-        'count': 22,
-        'limit': 22,
-        'start': 0
-      }
-    };
-
-    $scope.stationList = stationAPIResponse.response;
+    this.init();
 
   });
