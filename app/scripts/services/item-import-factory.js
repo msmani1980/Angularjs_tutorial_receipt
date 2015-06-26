@@ -18,9 +18,13 @@ angular.module('ts5App')
     var getItemsList = function(searchParameters, fetchFromMaster){
       return itemsService.getItemsList(searchParameters, fetchFromMaster);
     };
+    var createItem = function(payload){
+      return itemsService.createItem(payload);
+    };
     return {
       getCompanyId: getCompanyId,
       getCompaniesList: getCompaniesList,
-      getItemsList: getItemsList
+      getItemsList: getItemsList,
+      createItem: createItem
     };
   });

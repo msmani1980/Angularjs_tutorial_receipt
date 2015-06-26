@@ -20,6 +20,7 @@ describe('Factor: ItemImportFactory', function () {
     spyOn(GlobalMenuService.company, 'get');
     spyOn(companiesService, 'getCompaniesList');
     spyOn(itemsService, 'getItemsList');
+    spyOn(itemsService, 'createItem');
 
     ItemImportFactory = _ItemImportFactory_;
     scope = $rootScope.$new();
@@ -49,6 +50,11 @@ describe('Factor: ItemImportFactory', function () {
       var params = {companyId:413};
       ItemImportFactory.getItemsList(params);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(params, undefined);
+    });
+    it('should call createItem', function(){
+      var payload = {retailItem:{}};
+      ItemImportFactory.createItem(payload);
+      expect(itemsService.createItem).toHaveBeenCalledWith(payload);
     });
   });
 });

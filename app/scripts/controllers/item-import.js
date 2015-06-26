@@ -59,6 +59,19 @@ angular.module('ts5App')
       setStockownersRetailItemList();
     };
 
+    $scope.submitForm = function(){
+      var importedRetailItems = [];
+      angular.forEach($scope.airlineRetailItemList, function (retailItem) {
+        if (!$scope.isAirlineItem(retailItem)) {
+          retailItem.stockOwnerCode = retailItem.itemCode;
+          importedRetailItems.push(retailItem);
+        }
+      });
+      ItemImportFactory.createItem().then(function(){
+        console.log('success');
+      });
+    };
+
     // private controller functions
     function setStockownersRetailItemList() {
       $scope.stockownersRetailItemList = [];
