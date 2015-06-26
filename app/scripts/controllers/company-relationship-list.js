@@ -10,13 +10,14 @@
 angular.module('ts5App')
   .controller('CompanyRelationshipListCtrl', function ($q, $scope, $location, $routeParams, ngToast, companyRelationshipFactory) {
     $scope.viewName = 'Company Relationships';
-    $scope.formData = [];
+    $scope.isLoading = true;
+    $scope.companyRelationshipListData = [];
     $scope.company = {};
     $scope.companyList = [];
     $scope.companyRelationshipTypeList = [];
 
     $scope.addCompanyRelationship = function (id) {
-      $scope.formData.push({
+      $scope.companyRelationshipListData.push({
         companyId: id,
         relativeCompanyId: null,
         startDate: null,
@@ -84,7 +85,9 @@ angular.module('ts5App')
       if (!companyRelationshipsFromAPI.length) {
         $scope.addCompanyRelationship($routeParams.id);
       } else {
-        $scope.formData = companyRelationshipsFromAPI;
+        $scope.companyRelationshipListData = companyRelationshipsFromAPI.filter(function (companyRelationship) {
+          return (companyRelationship.companyId === $scope.company.id) ? companyRelationship : undefined;
+        });
       }
     }
 
@@ -110,16 +113,25 @@ angular.module('ts5App')
       });
     }
 
-    var getCompanyRelationshipListByCompanyPromise = companyRelationshipFactory.getCompanyRelationshipListByCompany($routeParams.id);
-    var getCompanyListPromise = companyRelationshipFactory.getCompanyList();
+    var getCompanyRelationshipListByCompanyPromise = function (companyId) {
+      return companyRelationshipFactory.getCompanyRelationshipListByCompany(companyId);
+    };
+    var getCompanyListPromise = function () {
+      return companyRelationshipFactory.getCompanyList();
+    };
+    var getCompanyRelationshipTypeListPromise = function (companyTypeId) {
+      return companyRelationshipFactory.getCompanyRelationshipTypeList(companyTypeId);
+    };
 
-    $q.all([getCompanyRelationshipListByCompanyPromise, getCompanyListPromise]).then(function (response) {
+    getCompanyListPromise().then(function (response) {
+      setupCompanyScope(response);
+
+      return $q.all([getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise($scope.company.companyTypeId)]);
+    }).then(function (response) {
       setupCompanyRelationshipScope(response[0]);
-      setupCompanyScope(response[1]);
-
-      return companyRelationshipFactory.getCompanyRelationshipTypeList($scope.company.companyTypeId);
-    }).then(function (types) {
-      setupCompanyRelationshipTypeScope(types);
-      filterCompanyListByTypesScope(types);
+      setupCompanyRelationshipTypeScope(response[1]);
+      filterCompanyListByTypesScope(response[1]);
+    }).then(function () {
+      $scope.isLoading = false;
     })
   });
