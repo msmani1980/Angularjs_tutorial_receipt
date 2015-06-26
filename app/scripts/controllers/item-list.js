@@ -103,21 +103,17 @@ angular.module('ts5App')
       });
     };
 
-    this.parseStartDate = function (startDate) {
-      return Date.parse(startDate);
-    };
-
-    this.parseEndDate = function (endDate) {
-      return Date.parse(endDate);
+    this.parseDate = function (date) {
+      return Date.parse(date);
     };
 
     $scope.isItemActive = function (startDate) {
-      var parsedDate = $this.parseStartDate(startDate);
+      var parsedDate = $this.parseDate(startDate);
       return parsedDate <= dateUtility.now();
     };
 
     $scope.isItemInactive = function (endDate) {
-      var parsedDate = $this.parseEndDate(endDate);
+      var parsedDate = $this.parseDate(endDate);
       return parsedDate <= dateUtility.now();
     };
 

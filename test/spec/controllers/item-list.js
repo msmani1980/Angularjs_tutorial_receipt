@@ -114,12 +114,8 @@ describe('itemListCtrl', function () {
     expect(ItemListCtrl.getSalesCategoriesList).toHaveBeenCalled();
   });
 
-  it('should have a parseStartDate method', function () {
-    expect(ItemListCtrl.parseStartDate).toBeDefined();
-  });
-
-  it('should have a parseEndDate method', function () {
-    expect(ItemListCtrl.parseEndDate).toBeDefined();
+  it('should have a parseDate method', function () {
+    expect(ItemListCtrl.parseDate).toBeDefined();
   });
 
   it('should have a filterItems method', function () {
@@ -145,7 +141,6 @@ describe('itemListCtrl', function () {
     });
 
     describe('contains an item object which', function () {
-
       var item;
       beforeEach(function () {
         item = scope.itemsList[1];
