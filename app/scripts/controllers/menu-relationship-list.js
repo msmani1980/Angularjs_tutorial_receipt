@@ -59,11 +59,6 @@ angular.module('ts5App')
       var query = this.generateMenuQuery();
       var $this = this;
       menuService.getMenuList(query).then(function (response) {
-        // FIXME: Get real response from the API
-        for (var key in response.menus) {
-          response.menus[key].menuStations = [stationAPIResponse.response[
-            key]];
-        }
         $scope.menuList = response.menus;
         $scope.menuListCount = $scope.menuList.length;
         $this.updateMenuList();
@@ -71,8 +66,9 @@ angular.module('ts5App')
     };
 
     this.getCatererStationList = function () {
-      catererStationService.getCatererStationList().then(function () {
-        $scope.stationList = stationAPIResponse.response;
+      catererStationService.getCatererStationList().then(function (
+        apiResponse) {
+        $scope.stationList = apiResponse.response;
         $this.initSelectUI();
       });
     };
