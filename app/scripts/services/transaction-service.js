@@ -30,5 +30,5 @@ angular.module('ts5App')
 
     return {
       getTransactionList:getTransactionList
-    }
+    };
   });

@@ -26,5 +26,5 @@ angular.module('ts5App')
 
     return {
       getCCtypes: getCCtypes
-    }
+    };
   });
