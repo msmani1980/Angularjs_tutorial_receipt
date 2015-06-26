@@ -116,8 +116,8 @@ describe('The StockOwnerItemListCtrl controller', function () {
     expect(StockOwnerItemListCtrl.filterItems).toBeDefined();
   });
 
-  it('should have a sortItems method', function () {
-    expect(StockOwnerItemListCtrl.sortItems).toBeDefined();
+  it('should have a generateItemQuery method', function () {
+    expect(StockOwnerItemListCtrl.generateItemQuery).toBeDefined();
   });
 
   describe('The itemsList array', function () {

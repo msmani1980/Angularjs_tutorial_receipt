@@ -126,8 +126,8 @@ describe('itemListCtrl', function () {
     expect(ItemListCtrl.filterItems).toBeDefined();
   });
 
-  it('should have a sortItems method', function () {
-    expect(ItemListCtrl.sortItems).toBeDefined();
+  it('should have a generateItemQuery method', function () {
+    expect(ItemListCtrl.generateItemQuery).toBeDefined();
   });
 
   describe('The itemsList array', function () {

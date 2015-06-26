@@ -21,19 +21,15 @@ angular.module('ts5App')
     };
 
     this.updateItemList = function () {
-      var sortedItems = $this.sortItems();
-      var filteredItems = $this.filterItems(sortedItems);
+      var filteredItems = $this.filterItems();
       $scope.itemsListCount = filteredItems.length;
       $this.setPaginatedItems(filteredItems);
     };
 
-    this.filterItems = function (sortedItems) {
-      return $filter('filter')(sortedItems, $scope.search);
+    this.filterItems = function () {
+      return $filter('filter')($scope.itemsList, $scope.search);
     };
 
-    this.sortItems = function () {
-      return $filter('orderBy')($scope.itemsList, 'itemName');
-    };
     this.parsePaginationToInt = function () {
       $scope.currentPageInt = parseInt($scope.currentPage);
       $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
@@ -47,15 +43,17 @@ angular.module('ts5App')
     };
 
     this.generateItemQuery = function () {
-      var query = {};
       var todaysDate = dateUtility.formatDate(dateUtility.now());
+      var query = {
+        startDate: todaysDate,
+        sortBy: 'ASC',
+        sortOn: 'itemName'
+      };
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
         query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
           'L', 'YYYYMMDD');
         query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
           'L', 'YYYYMMDD');
-      } else {
-        query.startDate = todaysDate;
       }
       return query;
     };
