@@ -66,6 +66,10 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.removeAll).toBeDefined();
       expect(Object.prototype.toString.call(scope.removeAll)).toBe('[object Function]');
     });
+    it('should have a submitForm function attached to the scope', function(){
+      expect(scope.submitForm).toBeDefined();
+      expect(Object.prototype.toString.call(scope.submitForm)).toBe('[object Function]');
+    });
     it('should have a dropSuccessHandler function attached to the scope', function(){
       expect(scope.dropSuccessHandler).toBeDefined();
       expect(Object.prototype.toString.call(scope.dropSuccessHandler)).toBe('[object Function]');
@@ -77,7 +81,6 @@ describe('Controller: ItemImportCtrl', function () {
   });
 
   describe('ItemImportFactory API calls', function () {
-
     it('should call getCompaniesList', function () {
       expect(ItemImportFactory.getCompaniesList).toHaveBeenCalledWith({
         companyTypeId: 2,
@@ -96,23 +99,24 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-/*
-  describe('importAll form action', function () {
-
+  describe('changeSelectedStockownerCompany scope function', function(){
+    var companyId = 407;
     beforeEach(function(){
-      scope.importAll(362);
+      scope.selectedStockownerCompany = {id:companyId};
+      scope.changeSelectedStockownerCompany();
       scope.$digest();
     });
-
-    it('should call getItemsList from factory with a companyId', function () {
-      expect(ItemImportFactory.getItemsList).toHaveBeenCalledWith({companyId: 362});
+    it('should not return false', function(){
+      expect(scope.changeSelectedStockownerCompany()).not.toBe(false);
+    });
+    it('should call getItemsList', function () {
+      expect(ItemImportFactory.getItemsList).toHaveBeenCalledWith({companyId:companyId});
+    });
+    it('should set stockownersRetailItemList as an array in scope', function(){
+      expect(scope.stockownersRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.stockownersRetailItemList)).toBe('[object Array]');
     });
 
-    it('should have stockOwnerItemsList attached to scope after API call', function () {
-      expect(scope.stockOwnerItemsList).toBeDefined();
-      expect(angular.isArray(scope.stockOwnerItemsList)).toBe(true);
-    });
   });
-*/
 
 });

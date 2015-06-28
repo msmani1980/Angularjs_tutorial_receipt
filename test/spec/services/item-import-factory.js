@@ -10,17 +10,20 @@ describe('Factor: ItemImportFactory', function () {
     GlobalMenuService,
     companiesService,
     itemsService,
+    itemImportService,
     scope;
 
-  beforeEach(inject(function ($rootScope, _ItemImportFactory_, _GlobalMenuService_, _companiesService_, _itemsService_) {
+  beforeEach(inject(function ($rootScope, _ItemImportFactory_, _GlobalMenuService_, _companiesService_, _itemsService_, _itemImportService_) {
     GlobalMenuService = _GlobalMenuService_;
     companiesService = _companiesService_;
     itemsService = _itemsService_;
+    itemImportService = _itemImportService_;
 
     spyOn(GlobalMenuService.company, 'get');
     spyOn(companiesService, 'getCompaniesList');
     spyOn(itemsService, 'getItemsList');
     spyOn(itemsService, 'createItem');
+    spyOn(itemImportService, 'importItems');
 
     ItemImportFactory = _ItemImportFactory_;
     scope = $rootScope.$new();
@@ -57,4 +60,13 @@ describe('Factor: ItemImportFactory', function () {
       expect(itemsService.createItem).toHaveBeenCalledWith(payload);
     });
   });
+
+  describe('itemImportService API', function() {
+    it('should call importItems', function() {
+      var payload = [2,3,4];
+      ItemImportFactory.importItems(payload);
+      expect(itemImportService.importItems).toHaveBeenCalledWith(payload);
+    });
+  });
+
 });
