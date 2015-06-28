@@ -42,7 +42,7 @@ describe('Service: companyService', function () {
     });
 
     it('should be an array', function () {
-      expect(Object.prototype.toString.call(companyData.companies) === '[object Array]');
+      expect(angular.isArray(companyData.companies)).toBe(true);
     });
 
     it('should have a companyName property', function () {

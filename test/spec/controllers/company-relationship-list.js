@@ -59,10 +59,5 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     it('should attach a companyRelationshipList after a API call to getCompanyRelationshipList', function () {
       expect(!!scope.companyRelationshipListData).toBe(true);
     });
-
-    //it('should have an array of company relationships with the first item\'s having a company name property"', function () {
-    //  console.log(scope.companyRelationshipListData);
-    //  expect(scope.companyRelationshipListData[0].companyName).toBe('British Airways');
-    //});
   });
 });

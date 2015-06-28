@@ -10,21 +10,18 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companyRelationshipService', function ($resource, $http, ENV) {
+  .service('companyRelationshipService', function ($resource, $http, ENV, dateUtility) {
     var companyRelationshipRequestURL = ENV.apiUrl + '/api/companies/:id/relationships/:companyRelationshipId';
     var companyTypeRequestURL = ENV.apiUrl + '/api/company-relation/:id/types';
     var requestParameters = {
       id: '@id'
     };
 
-    function formatDate(dateString, formatFrom, formatTo) {
-      return moment(dateString, formatFrom).format(formatTo).toString();
-    }
-
     function transformResponse(data) {
       data = angular.fromJson(data);
       data.companyRelationships.forEach(function (companyRelationship) {
-        normalizeDateForApp(companyRelationship);
+        companyRelationship.startDate = dateUtility.formatDateForApp(companyRelationship.startDate, 'YYYY-MM-DD');
+        companyRelationship.endDate = dateUtility.formatDateForApp(companyRelationship.endDate, 'YYYY-MM-DD');
       });
       return data;
     }
@@ -32,14 +29,17 @@ angular.module('ts5App')
     function transformResponseCompanyRelationshipType(data) {
       data = angular.fromJson(data);
       data.companyRelationships.forEach(function (companyRelationship) {
-        normalizeDateForApp(companyRelationship);
+        companyRelationship.startDate = dateUtility.formatDateForApp(companyRelationship.startDate, 'YYYY-MM-DD');
+        companyRelationship.endDate = dateUtility.formatDateForApp(companyRelationship.endDate, 'YYYY-MM-DD');
       });
       return data;
     }
 
     function transformRequest(data) {
       data = angular.fromJson(data);
-      normalizeDateForAPI(data);
+
+      data.startDate = dateUtility.formatDateForAPI(data.startDate);
+      data.endDate = dateUtility.formatDateForAPI(data.endDate);
 
       //Hack for BE
       //data.relativeCompanyId = parseInt(data.companyId) || parseInt(data.relativeCompanyId);
