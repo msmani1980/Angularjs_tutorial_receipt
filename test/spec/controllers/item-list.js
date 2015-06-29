@@ -114,6 +114,18 @@ describe('itemListCtrl', function () {
     expect(ItemListCtrl.getSalesCategoriesList).toHaveBeenCalled();
   });
 
+  it('should have a parseDate method', function () {
+    expect(ItemListCtrl.parseDate).toBeDefined();
+  });
+
+  it('should have a filterItems method', function () {
+    expect(ItemListCtrl.filterItems).toBeDefined();
+  });
+
+  it('should have a generateItemQuery method', function () {
+    expect(ItemListCtrl.generateItemQuery).toBeDefined();
+  });
+
   describe('The itemsList array', function () {
 
     it('should be attached to the scope', function () {
@@ -129,7 +141,6 @@ describe('itemListCtrl', function () {
     });
 
     describe('contains an item object which', function () {
-
       var item;
       beforeEach(function () {
         item = scope.itemsList[1];
