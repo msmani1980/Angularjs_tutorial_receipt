@@ -179,14 +179,14 @@
         <tbody>
         <tr
           ui-draggable="true"
-          drag="iiRetailItem"
+          drag="retailItem"
           on-drop-success="dropSuccessHandler($event, $index, companyRetailItemList)"
-          ng-repeat="iiRetailItem in companyRetailItemList | filter:searchRetailItem track by $index">
-          <td ng-style="{'background-color':iiRetailItem.hexColor}">&nbsp;</td>
-          <td>{{ iiRetailItem.companyName }}</td>
-          <td>{{ iiRetailItem.itemCode }}</td>
-          <td>{{ iiRetailItem.itemName }}</td>
-          <td><a ng-click="removeRetailItem(iiRetailItem)" ng-hide="isCompanyItem(iiRetailItem)">X</a></td>
+          ng-repeat="retailItem in companyRetailItemList | filter:searchRetailItem track by $index">
+          <td ng-style="{'background-color':retailItem.hexColor}">&nbsp;</td>
+          <td>{{ retailItem.companyName }}</td>
+          <td>{{ retailItem.itemCode }}</td>
+          <td>{{ retailItem.itemName }}</td>
+          <td><a ng-click="removeRetailItem(retailItem)" ng-hide="isCompanyItem(retailItem)">X</a></td>
         </tr>
         </tbody>
       </table>
