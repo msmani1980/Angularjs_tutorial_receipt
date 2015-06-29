@@ -39,15 +39,12 @@ angular.module('ts5App')
     $scope.importAll = function () {
       angular.forEach($scope.stockownersRetailItemList, function(retailItem){
         if(!canBeAddedToAirlineRetailList(retailItem)){
-          return false;
+          return;
         }
         if (-1 !== $scope.airlineRetailItemList.indexOf(retailItem)){
-          return false;
+          return;
         }
-        _airlineRetailItemCodes.push(retailItem.itemCode);
-        _airlineRetailItemNames.push(retailItem.itemName);
-        _airlineRetailItemOnboardNames.push(retailItem.onBoardName);
-        $scope.airlineRetailItemList.push(retailItem);
+        addRetailItemToAirlineRetailItems(retailItem);
       });
       $scope.stockownersRetailItemList = [];
     };
@@ -77,10 +74,7 @@ angular.module('ts5App')
       _airlineRetailItemOnboardNames = [];
       angular.forEach(tempList, function(retailItem){
         if($scope.isAirlineItem(retailItem)){
-          _airlineRetailItemCodes.push(retailItem.itemCode);
-          _airlineRetailItemNames.push(retailItem.itemName);
-          _airlineRetailItemOnboardNames.push(retailItem.onBoardName);
-          $scope.airlineRetailItemList.push(retailItem);
+          addRetailItemToAirlineRetailItems(retailItem);
         }
         else if(retailItem.companyId === $scope.selectedStockownerCompany.id){
           $scope.stockownersRetailItemList.push(retailItem);
@@ -130,6 +124,21 @@ angular.module('ts5App')
         return false;
       }
       return true;
+    }
+
+    function addRetailItemToAirlineRetailItems(retailItem){
+      if(retailItem.hasOwnProperty('itemCode') && -1 === _airlineRetailItemCodes.indexOf(retailItem.itemCode)) {
+        _airlineRetailItemCodes.push(retailItem.itemCode);
+      }
+      if(retailItem.hasOwnProperty('itemName') && -1 === _airlineRetailItemNames.indexOf(retailItem.itemName)) {
+        _airlineRetailItemNames.push(retailItem.itemName);
+      }
+      if(retailItem.hasOwnProperty('onBoardName') && -1 === _airlineRetailItemOnboardNames.indexOf(retailItem.onBoardName)) {
+        _airlineRetailItemOnboardNames.push(retailItem.onBoardName);
+      }
+      if(-1 === $scope.airlineRetailItemList.indexOf(retailItem)) {
+        $scope.airlineRetailItemList.push(retailItem);
+      }
     }
 
     // private controller classes
@@ -201,11 +210,8 @@ angular.module('ts5App')
           company.hexColor = randomHexColorClass.get(company.id);
         });
         angular.forEach($scope.airlineRetailItemList, function (retailItem) {
-          _airlineRetailItemCodes.push(retailItem.itemCode);
-          _airlineRetailItemNames.push(retailItem.itemName);
-          _airlineRetailItemOnboardNames.push(retailItem.onBoardName);
-          $scope.airlineRetailItemList.push(retailItem);
           retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
+          addRetailItemToAirlineRetailItems(retailItem);
         });
         $scope.companiesLoaded = true;
       });
