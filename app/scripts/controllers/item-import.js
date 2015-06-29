@@ -179,6 +179,9 @@ angular.module('ts5App')
       }
     };
 
+    // controller properties
+    this.constructorPromises = [];
+
     // Controller constructor
     this.constructor = function(){
       _companyId = ItemImportFactory.getCompanyId();
@@ -188,20 +191,21 @@ angular.module('ts5App')
       $scope.stockOwnerList = [];
       $scope.companyRetailItemList = [];
       $scope.companiesLoaded = false;
-
-      var getCompaniesPromise = ItemImportFactory.getCompaniesList({companyTypeId: 2, limit: null}).then(function (response) {
+      this.constructorPromises = [
+        ItemImportFactory.getCompaniesList({companyTypeId: 2, limit: null}).then(function (response) {
         // TODO - This api request queries the full list of companies until https://jira.egate-solutions.com/browse/TSVPORTAL-2038">TSVPORTAL-2038 is completed.
           angular.forEach(response.companies, function(company){
             if(2 === company.companyTypeId){
               this.push(company);
             }
           }, $scope.stockOwnerList);
-        });
-      var getItemsListPromise = ItemImportFactory.getItemsList({companyId: _companyId}).then(function (response) {
+        }),
+        ItemImportFactory.getItemsList({companyId: _companyId}).then(function (response) {
           $scope.companyRetailItemList = response.retailItems;
-        });
+        })
+      ];
       // assign random color to all companies and items
-      $q.all([getCompaniesPromise, getItemsListPromise]).then(function () {
+      $q.all(this.constructorPromises).then(function () {
         angular.forEach($scope.stockOwnerList, function (company) {
           company.hexColor = randomHexColorClass.get(company.id);
         });
@@ -214,7 +218,7 @@ angular.module('ts5App')
     }
     this.constructor();
 
-    // controller event handlers
+    // scope event handlers
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
     $scope.dropSuccessHandler = function ($event, index, array) {
       array.splice(index, 1);
