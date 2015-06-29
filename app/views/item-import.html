@@ -65,6 +65,7 @@
             ng-options="company as company.companyName for company in importCompanyList">
           <option selected default value="">Select Stock Owner</option>
         </select>
+        <p ng-hide="companiesLoaded"><em>One moment while we load the list of available companies...</em></p>
       </div>
       <div class="col-xs-3">
         <button class="btn btn-default" ng-click="importAll()">Import All</button>
@@ -190,6 +191,7 @@
         </tr>
         </tbody>
       </table>
+      <p ng-hide="retailItemsLoaded"><em>Loading retail items...</em></p>
     </div>
   </div>
 

@@ -214,6 +214,7 @@ angular.module('ts5App')
           addRetailItemToCompanyRetailItems(retailItem);
         });
         $scope.companiesLoaded = true;
+        $scope.retailItemsLoaded = true;
       });
     };
     this.constructor();
