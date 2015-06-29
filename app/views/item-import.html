@@ -63,7 +63,7 @@
             ng-change="changeSelectedStockownerCompany(company.id)"
             ng-model="selectedStockownerCompany"
             ng-options="company as company.companyName for company in stockOwnerList">
-          <option value="">Select Stock Owner</option>
+          <option selected default value="">Select Stock Owner</option>
         </select>
       </div>
       <div class="col-xs-3">
