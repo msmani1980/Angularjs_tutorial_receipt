@@ -131,6 +131,14 @@ angular.module('ts5App')
             }
           );
         },
+        getCashHandlerCompany: function () {
+          // TODO: get correct cash handler company
+          return cashBagFactory.getCompany(362).then(
+            function (response) {
+              $scope.cashHandlerCompany = response;
+            }
+          );
+        },
         getCompanyCurrencies: function () {
           return cashBagFactory.getCompanyCurrencies().then(
             function (response) {
@@ -178,7 +186,7 @@ angular.module('ts5App')
 
     // CRUD - Create
     function create() {
-      var _promises = _factoryHelper.callServices(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
+      var _promises = _factoryHelper.callServices(['getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
 
       $scope.readOnly = false;
       $scope.cashBag = {
@@ -216,7 +224,7 @@ angular.module('ts5App')
 
     // CRUD - Read
     function read() {
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
         $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
@@ -226,7 +234,7 @@ angular.module('ts5App')
     // CRUD - Update
     function update() {
       $scope.readOnly = false;
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
         $scope.canDelete = helpers.canDelete;
         $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;

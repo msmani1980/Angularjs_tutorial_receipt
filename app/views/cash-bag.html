@@ -31,7 +31,8 @@
     <div class="panel-heading">
       <div class="row">
         <div class="col-sm-6">
-          <div>Cash Handler Base Currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
+          <div>Cash Handler Base Currency: {{ currencyCodes[cashHandlerCompany.baseCurrencyId] }}</div>
+          <div>Airline Base Currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
         </div>
         <div class="col-sm-6 text-right">
           <div>Cashier's entry date: <date>{{ displayedCashierDate }}</date></div>
