@@ -100,9 +100,9 @@
 
       <tr ng-repeat="(key,relationship) in paginatedRelationships">
 
-        <td>{{ relationship.menuCode }}</td>
-        <td>{{ relationship.menuName }}</td>
-        <td> <span class="label label-info" ng-repeat="(stationKey,stationId) in relationship.catererStationIds"> {{ stationId }} </span> </td>
+        <td>{{ relationship.menu.menuCode }}</td>
+        <td>{{ relationship.menu.menuName }}</td>
+        <td> <span class="label label-info" ng-repeat="(stationKey,station) in relationship.stations track by station.id"> {{ station.code }} </span> </td>
         <td>{{ relationship.startDate | date: 'MM/dd/yyyy' }}</td>
         <td>{{ relationship.endDate | date: 'MM/dd/yyyy' }}</td>
 

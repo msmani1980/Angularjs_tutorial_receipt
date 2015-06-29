@@ -15,26 +15,50 @@ angular.module('ts5App')
     $scope.currentPage = 1;
     $scope.relationshipsPerPage = 10;
     $scope.relationshipList = [];
-    $scope.dateRange = {
-      startDate: '',
-      endDate: ''
-    };
 
     this.init = function () {
       $scope.$watchCollection('search', function () {
         $this.updateRelationshipList();
       });
       $scope.$watchCollection('dateRange', function () {
-        $this.getRelationshipList();
+        $this.getMenuList();
       });
       $scope.$watch('currentPage + relationshipsPerPage', function () {
         $this.updateRelationshipList();
       });
-      this.getRelationshipList();
+      this.getMenuList();
       this.getCatererStationList();
     };
 
+    this.associateMenuData = function () {
+      for (var key in $scope.relationshipList) {
+        var relationship = $scope.relationshipList[key];
+        var menuIndex = this.findMenuIndex(relationship.menuId);
+        if (menuIndex !== null) {
+          console.log(menuIndex, 'menu!');
+          $scope.relationshipList[key].menu = $scope.menuList[menuIndex];
+        }
+      }
+    };
+
+    this.associateStationData = function () {
+      for (var key in $scope.relationshipList) {
+        var relationship = $scope.relationshipList[key];
+        relationship.stations = [];
+        for (var stationKey in relationship.catererStationIds) {
+          var stationId = relationship.catererStationIds[stationKey];
+          var stationIndex = this.findStationIndex(stationId);
+          if (stationIndex !== null) {
+            $scope.relationshipList[key].stations[stationKey] = $scope.stationList[
+              stationIndex];
+          }
+        }
+      }
+    };
+
     this.updateRelationshipList = function () {
+      this.associateMenuData();
+      this.associateStationData();
       var filteredRelationships = $this.filterRelationships();
       $scope.relationshipListCount = filteredRelationships.length;
       $this.setPaginatedRelationships(filteredRelationships);
@@ -55,7 +79,8 @@ angular.module('ts5App')
 
     this.generateRelationshipQuery = function () {
       var query = {};
-      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+      if ($scope.dateRange && $scope.dateRange.startDate && $scope.dateRange
+        .endDate) {
         query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
           'L', 'YYYYMMDD');
         query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
@@ -66,10 +91,8 @@ angular.module('ts5App')
 
     this.getRelationshipList = function () {
       var query = this.generateRelationshipQuery();
-      var $this = this;
       menuCatererStationsService.getRelationshipList(query).then(function (
         response) {
-        console.log(response);
         $scope.relationshipList = response.companyMenuCatererStations;
         $scope.relationshipListCount = $scope.relationshipList.length;
         $this.updateRelationshipList();
@@ -84,16 +107,48 @@ angular.module('ts5App')
       });
     };
 
+    this.getMenuList = function () {
+      var query = this.generateRelationshipQuery();
+      menuService.getMenuList(query).then(function (apiResponse) {
+        $scope.menuList = apiResponse.menus;
+        $this.getRelationshipList();
+      });
+    };
+
     this.findRelationshipIndex = function (relationshipId) {
-      var relationshipIndex = 0;
+      var relationshipIndex = null;
       for (var key in $scope.relationshipList) {
         var relationship = $scope.relationshipList[key];
-        if (relationship.id === relationshipId) {
+        if (parseInt(relationship.id) === parseInt(relationshipId)) {
           relationshipIndex = key;
           break;
         }
       }
       return relationshipIndex;
+    };
+
+    this.findMenuIndex = function (menuId) {
+      var menuIndex = null;
+      for (var key in $scope.menuList) {
+        var menu = $scope.menuList[key];
+        if (parseInt(menu.id) === parseInt(menuId)) {
+          menuIndex = key;
+          break;
+        }
+      }
+      return menuIndex;
+    };
+
+    this.findStationIndex = function (stationId) {
+      var stationIndex = null;
+      for (var key in $scope.stationList) {
+        var station = $scope.stationList[key];
+        if (parseInt(station.id) === parseInt(stationId)) {
+          stationIndex = key;
+          break;
+        }
+      }
+      return stationIndex;
     };
 
     this.initSelectUI = function () {

@@ -3,7 +3,8 @@
 describe('Menu Relationship List Controller', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/menus.json', 'served/catering-stations.json'));
+  beforeEach(module('served/menus.json', 'served/catering-stations.json',
+    'served/menu-catering-stations.json'));
   beforeEach(module('template-module'));
 
   var MenuRelationshipListCtrl,
@@ -14,15 +15,21 @@ describe('Menu Relationship List Controller', function () {
     stationListJSON,
     catererStationService,
     getCatererStationListDeffered,
+    getRelationshipListDeffered,
+    menuCatererStationListJSON,
+    menuCatererStationsService,
     location,
     httpBackend,
     authRequestHandler;
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
-    $location, $httpBackend, _catererStationService_) {
-    inject(function (_servedMenus_, _servedCateringStations_) {
+    $location, $httpBackend, _catererStationService_,
+    _menuCatererStationsService_) {
+    inject(function (_servedMenus_, _servedCateringStations_,
+      _servedMenuCateringStations_) {
       menuListJSON = _servedMenus_;
       stationListJSON = _servedCateringStations_;
+      menuCatererStationListJSON = _servedMenuCateringStations_;
     });
 
     // backend definition common for all tests
@@ -48,14 +55,21 @@ describe('Menu Relationship List Controller', function () {
     spyOn(catererStationService, 'getCatererStationList').and.returnValue(
       getCatererStationListDeffered.promise);
 
+    getRelationshipListDeffered = $q.defer();
+    getRelationshipListDeffered.resolve(menuCatererStationListJSON);
+    menuCatererStationsService = _menuCatererStationsService_;
+    spyOn(menuCatererStationsService, 'getRelationshipList').and.returnValue(
+      getRelationshipListDeffered.promise);
+
     MenuRelationshipListCtrl = $controller('MenuRelationshipListCtrl', {
       $scope: $scope
     });
 
+    spyOn(MenuRelationshipListCtrl, 'init');
     spyOn(MenuRelationshipListCtrl, 'getMenuList');
     spyOn(MenuRelationshipListCtrl, 'getCatererStationList');
-    MenuRelationshipListCtrl.getMenuList();
-    MenuRelationshipListCtrl.getCatererStationList();
+    spyOn(MenuRelationshipListCtrl, 'getRelationshipList');
+
     $scope.$digest();
 
   }));
@@ -198,9 +212,9 @@ describe('Menu Relationship List Controller', function () {
       expect($scope.currentPage).toEqual(1);
     });
 
-    it('should attach itemsPerPage to the scope', function () {
-      expect($scope.menusPerPage).toBeDefined();
-      expect($scope.menusPerPage).toEqual(10);
+    it('should attach relationshipsPerPage to the scope', function () {
+      expect($scope.relationshipsPerPage).toBeDefined();
+      expect($scope.relationshipsPerPage).toEqual(10);
     });
 
   });
@@ -411,9 +425,9 @@ describe('Menu Relationship List Controller', function () {
           it('should contain an select element', function () {
             expect(formGroup.find('select')[0]).toBeDefined();
           });
-          it('should contain .form-control class', function () {
+          it('should contain .multi-select class', function () {
             expect(formGroup.find('select').hasClass(
-              'form-control')).toBeTruthy();
+              'multi-select')).toBeTruthy();
           });
           it('should be a multiple select input', function () {
             expect(formGroup.find('select').attr(
@@ -424,7 +438,7 @@ describe('Menu Relationship List Controller', function () {
             function () {
               expect(formGroup.find('select').attr(
                   'ng-model'))
-                .toEqual('search.menuStation');
+                .toEqual('search.menuStations');
             });
           it(
             'should contain all stations in apiResponse as options',
@@ -481,13 +495,15 @@ describe('Menu Relationship List Controller', function () {
               $scope.$digest();
               menuCodeInput.triggerHandler('input');
               expect(table.find('tbody tr').length).toEqual(
-                $scope.menuList.length);
+                $scope.relationshipList.length);
             });
           it(
-            'should contain (1) item in the table when the menu code is filtered by "M" ',
+            'should contain (1) item in the table when the menu code is filtered by "T" ',
             function () {
-              menuCodeInput.val('M');
+              console.log($scope.paginatedRelationships);
+              menuCodeInput.val('T');
               $scope.$digest();
+              console.log($scope.paginatedRelationships);
               menuCodeInput.triggerHandler('input');
               expect(table.find('tbody tr').length).toEqual(
                 1);
@@ -508,7 +524,7 @@ describe('Menu Relationship List Controller', function () {
               $scope.$digest();
               menuNameInput.triggerHandler('input');
               expect(table.find('tbody tr').length).toEqual(
-                $scope.paginatedMenus.length);
+                $scope.paginatedRelationships.length);
             });
           it(
             'should contain (1) item in the table when the menu name is filtered by "Name" ',
@@ -610,22 +626,21 @@ describe('Menu Relationship List Controller', function () {
             0]);
         });
         it(
-          'should contain a list tr element which is the same length as the menu list ',
+          'should contain a list tr element which is the same length as the relationship list ',
           function () {
             expect(tbody.find('tr').length).toEqual(
-              $scope.menuList
-              .length);
+              $scope.relationshipList.length);
           });
 
         describe('first row', function () {
           var testRow,
             testCell,
-            testMenuData;
+            testRelationshipData;
           beforeEach(function () {
-            testMenuData = menuListJSON.menus[
-              0];
-            testRow = angular.element(tbody.find(
-              'tr')[
+            testRelationshipData =
+              menuCatererStationListJSON.menus[
+                0];
+            testRow = angular.element(tbody.find('tr')[
               0]);
           });
           it('should contain ng-repeat', function () {
@@ -644,7 +659,7 @@ describe('Menu Relationship List Controller', function () {
               testCell = angular.element(testRow.find(
                 'td')[0]);
               expect(testCell.text().trim()).toEqual(
-                testMenuData.menuCode);
+                testRelationshipData.menuCode);
             });
           it('should contain a Menu Name cell',
             function () {
@@ -658,7 +673,7 @@ describe('Menu Relationship List Controller', function () {
               testCell = angular.element(testRow.find(
                 'td')[1]);
               expect(testCell.text().trim()).toEqual(
-                testMenuData.menuName);
+                testRelationshipData.menuName);
             });
           it(
             'should contain a Catering Stations cell',
@@ -685,7 +700,7 @@ describe('Menu Relationship List Controller', function () {
                 .toString();
               expect(
                 formattedDate).toEqual(
-                testMenuData.startDate);
+                testRelationshipData.startDate);
             });
           it('should contain a End Date cell',
             function () {
@@ -703,7 +718,7 @@ describe('Menu Relationship List Controller', function () {
                   'MM/DD/YYYY').format('YYYY-MM-DD')
                 .toString();
               expect(formattedDate).toEqual(
-                testMenuData.endDate);
+                testRelationshipData.endDate);
             });
 
           describe('view button', function () {
