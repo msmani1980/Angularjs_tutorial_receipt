@@ -75,32 +75,32 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     beforeEach(function () {
       companyRelationshipList = [
         {
-          "id": 26,
-          "companyId": 413,
-          "companyName": "GRO 555",
-          "companyTypeName": "Stockowner",
-          "relativeCompanyId": 396,
-          "relativeCompany": "stockCom12",
-          "relativeCompanyType": "Stockowner",
-          "startDate": "06/30/2015",
-          "endDate": "07/08/2015"
+          'id': 26,
+          'companyId': 413,
+          'companyName': 'GRO 555',
+          'companyTypeName': 'Stockowner',
+          'relativeCompanyId': 396,
+          'relativeCompany': 'stockCom12',
+          'relativeCompanyType': 'Stockowner',
+          'startDate': '06/30/2015',
+          'endDate': '07/08/2015'
         },
         {
-          "id": 44,
-          "companyId": 413,
-          "companyName": "GRO 555",
-          "companyTypeName": "Stockowner",
-          "relativeCompanyId": 404,
-          "relativeCompany": "StockOwner1",
-          "relativeCompanyType": "Stockowner",
-          "startDate": "06/24/2015",
-          "endDate": "07/22/2015"
+          'id': 44,
+          'companyId': 413,
+          'companyName': 'GRO 555',
+          'companyTypeName': 'Stockowner',
+          'relativeCompanyId': 404,
+          'relativeCompany': 'StockOwner1',
+          'relativeCompanyType': 'Stockowner',
+          'startDate': '06/24/2015',
+          'endDate': '07/22/2015'
         },
         {
-          "companyId": 413,
-          "relativeCompanyId": 407,
-          "startDate": "07/07/2015",
-          "endDate": "07/08/2015"
+          'companyId': 413,
+          'relativeCompanyId': 407,
+          'startDate': '07/07/2015',
+          'endDate': '07/08/2015'
         }
       ];
       scope.$digest();
