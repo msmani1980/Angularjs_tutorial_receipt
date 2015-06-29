@@ -14,6 +14,7 @@ describe('Controller: ItemImportCtrl', function () {
     companyId,
     retailItemsResponseJSON,
     getItemsListDeferred,
+    importItemsDeferred,
     currentCompanyId = 4;
 
   // Initialize the controller and a mock scope
@@ -35,7 +36,9 @@ describe('Controller: ItemImportCtrl', function () {
     getItemsListDeferred.resolve(retailItemsResponseJSON);
     spyOn(ItemImportFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
 
-    spyOn(ItemImportFactory, 'importItems').and.callThrough();
+    importItemsDeferred = $q.defer();
+    importItemsDeferred.resolve({'ImportItems':{'importItems':[1,2,3]}});
+    spyOn(ItemImportFactory, 'importItems').and.returnValue(importItemsDeferred.promise);
 
     spyOn(ItemImportFactory, 'getCompanyId').and.returnValue(currentCompanyId);
     companyId = ItemImportFactory.getCompanyId();

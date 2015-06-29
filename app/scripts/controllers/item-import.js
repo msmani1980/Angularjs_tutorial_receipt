@@ -215,7 +215,7 @@ angular.module('ts5App')
         });
         $scope.companiesLoaded = true;
       });
-    }
+    };
     this.constructor();
 
     // scope event handlers
