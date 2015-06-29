@@ -18,12 +18,12 @@ describe('Factory: cashBagFactory', function () {
     dailyExchangeRatesService,
     companyPreferencesService;
 
-  beforeEach(inject(function ($rootScope, _cashBagFactory_, _cashBagService_, _GlobalMenuService_, _stationsService_, _schedulesService_, _companiesService_, _currenciesService_, _dailyExchangeRatesService_, _companyPreferencesService_) {
+  beforeEach(inject(function ($rootScope, _cashBagFactory_, _cashBagService_, _GlobalMenuService_, _stationsService_, _schedulesService_, _companyService_, _currenciesService_, _dailyExchangeRatesService_, _companyPreferencesService_) {
     cashBagService = _cashBagService_;
     GlobalMenuService = _GlobalMenuService_;
     stationsService = _stationsService_;
     schedulesService = _schedulesService_;
-    companiesService = _companiesService_;
+    companiesService = _companyService_;
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
     companyPreferencesService = _companyPreferencesService_;
@@ -41,7 +41,6 @@ describe('Factory: cashBagFactory', function () {
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates');
     spyOn(companyPreferencesService, 'getCompanyPreferences');
-
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -134,6 +133,7 @@ describe('Factory: cashBagFactory', function () {
       expect(dailyExchangeRatesService.getDailyExchangeRates).toHaveBeenCalledWith(companyId, cashierDate);
     });
   });
+  
   describe('company preferences API', function() {
     it('should call getCompanyPreferences', function(){
       cashBagFactory.getCompanyPreferences();

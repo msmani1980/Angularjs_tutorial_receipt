@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('cashBagFactory', function (cashBagService, GlobalMenuService, stationsService, schedulesService, companiesService, currenciesService, dailyExchangeRatesService, companyPreferencesService) {
+  .factory('cashBagFactory', function (cashBagService, GlobalMenuService, stationsService, schedulesService, companyService, currenciesService, dailyExchangeRatesService) {
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
@@ -34,7 +34,7 @@ angular.module('ts5App')
     };
 
     var getCompany = function (id) {
-      return companiesService.getCompany(id);
+      return companyService.getCompany(id);
     };
 
     var updateCashBag = function(id, payload) {
