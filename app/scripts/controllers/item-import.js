@@ -12,9 +12,9 @@ angular.module('ts5App')
 
     // private controller vars
     var _companyId = null,
-      _airlineRetailItemCodes = [],
-      _airlineRetailItemNames = [],
-      _airlineRetailItemOnboardNames = [];
+      _companyRetailItemCodes = [],
+      _companyRetailItemNames = [],
+      _companyRetailItemOnboardNames = [];
 
     // scope properties
     $scope.viewName = 'Import Stock Owner Items';
@@ -27,7 +27,7 @@ angular.module('ts5App')
       ItemImportFactory.getItemsList({companyId: $scope.selectedStockownerCompany.id}).then(function (response) {
         $scope.stockownersRetailItemList = [];
         angular.forEach(response.retailItems, function (retailItem) {
-          if (canBeAddedToAirlineRetailList(retailItem)) {
+          if (canBeAddedToCompanyRetailList(retailItem)) {
             retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
             retailItem.companyName = $scope.selectedStockownerCompany.companyName;
             this.push(retailItem);
@@ -38,43 +38,43 @@ angular.module('ts5App')
 
     $scope.importAll = function () {
       angular.forEach($scope.stockownersRetailItemList, function(retailItem){
-        if(!canBeAddedToAirlineRetailList(retailItem)){
+        if(!canBeAddedToCompanyRetailList(retailItem)){
           return;
         }
-        if (-1 !== $scope.airlineRetailItemList.indexOf(retailItem)){
+        if (-1 !== $scope.companyRetailItemList.indexOf(retailItem)){
           return;
         }
-        addRetailItemToAirlineRetailItems(retailItem);
+        addRetailItemToCompanyRetailItems(retailItem);
       });
       $scope.stockownersRetailItemList = [];
     };
 
-    $scope.isAirlineItem = function (retailItem) {
+    $scope.isCompanyItem = function (retailItem) {
       return retailItem.companyId === _companyId;
     };
 
     $scope.removeRetailItem = function (retailItem) {
-      if($scope.isAirlineItem(retailItem)){
+      if($scope.isCompanyItem(retailItem)){
         return false;
       }
-      _airlineRetailItemCodes.splice(_airlineRetailItemCodes.indexOf(retailItem.itemCode), 1);
-      _airlineRetailItemNames.splice(_airlineRetailItemNames.indexOf(retailItem.itemName), 1);
-      _airlineRetailItemOnboardNames.splice(_airlineRetailItemOnboardNames.indexOf(retailItem.onBoardName), 1);
-      $scope.airlineRetailItemList.splice($scope.airlineRetailItemList.indexOf(retailItem), 1);
+      _companyRetailItemCodes.splice(_companyRetailItemCodes.indexOf(retailItem.itemCode), 1);
+      _companyRetailItemNames.splice(_companyRetailItemNames.indexOf(retailItem.itemName), 1);
+      _companyRetailItemOnboardNames.splice(_companyRetailItemOnboardNames.indexOf(retailItem.onBoardName), 1);
+      $scope.companyRetailItemList.splice($scope.companyRetailItemList.indexOf(retailItem), 1);
       if($scope.selectedStockownerCompany.id === retailItem.companyId) {
         $scope.stockownersRetailItemList.push(retailItem);
       }
     };
 
     $scope.removeAll = function () {
-      var tempList = angular.copy($scope.airlineRetailItemList);
-      $scope.airlineRetailItemList = [];
-      _airlineRetailItemCodes = [];
-      _airlineRetailItemNames = [];
-      _airlineRetailItemOnboardNames = [];
+      var tempList = angular.copy($scope.companyRetailItemList);
+      $scope.companyRetailItemList = [];
+      _companyRetailItemCodes = [];
+      _companyRetailItemNames = [];
+      _companyRetailItemOnboardNames = [];
       angular.forEach(tempList, function(retailItem){
-        if($scope.isAirlineItem(retailItem)){
-          addRetailItemToAirlineRetailItems(retailItem);
+        if($scope.isCompanyItem(retailItem)){
+          addRetailItemToCompanyRetailItems(retailItem);
         }
         else if(retailItem.companyId === $scope.selectedStockownerCompany.id){
           $scope.stockownersRetailItemList.push(retailItem);
@@ -85,8 +85,8 @@ angular.module('ts5App')
 
     $scope.submitForm = function(){
       var importedRetailItemIds = [];
-      angular.forEach($scope.airlineRetailItemList, function (retailItem) {
-        if (!$scope.isAirlineItem(retailItem)) {
+      angular.forEach($scope.companyRetailItemList, function (retailItem) {
+        if (!$scope.isCompanyItem(retailItem)) {
           retailItem.stockOwnerCode = retailItem.itemCode;
           importedRetailItemIds.push(parseInt(retailItem.itemMasterId));
         }
@@ -95,7 +95,7 @@ angular.module('ts5App')
       ItemImportFactory.importItems(payload).then(function(){
         $scope.displayError = false;
         showMessage('successful!', 'success');
-        constructor();
+        this.constructor();
       }, function(response) {
         showMessage('failed!', 'warning');
         $scope.displayError = true;
@@ -105,31 +105,31 @@ angular.module('ts5App')
       });
     };
 
-    function canBeAddedToAirlineRetailList(retailItem){
-      if (-1 !== _airlineRetailItemCodes.indexOf(retailItem.itemCode)){
+    function canBeAddedToCompanyRetailList(retailItem){
+      if (-1 !== _companyRetailItemCodes.indexOf(retailItem.itemCode)){
         return false;
       }
-      if (-1 !== _airlineRetailItemNames.indexOf(retailItem.itemName)){
+      if (-1 !== _companyRetailItemNames.indexOf(retailItem.itemName)){
         return false;
       }
-      if (-1 !== _airlineRetailItemOnboardNames.indexOf(retailItem.onBoardName)){
+      if (-1 !== _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName)){
         return false;
       }
       return true;
     }
 
-    function addRetailItemToAirlineRetailItems(retailItem){
-      if(retailItem.hasOwnProperty('itemCode') && -1 === _airlineRetailItemCodes.indexOf(retailItem.itemCode)) {
-        _airlineRetailItemCodes.push(retailItem.itemCode);
+    function addRetailItemToCompanyRetailItems(retailItem){
+      if(retailItem.hasOwnProperty('itemCode') && -1 === _companyRetailItemCodes.indexOf(retailItem.itemCode)) {
+        _companyRetailItemCodes.push(retailItem.itemCode);
       }
-      if(retailItem.hasOwnProperty('itemName') && -1 === _airlineRetailItemNames.indexOf(retailItem.itemName)) {
-        _airlineRetailItemNames.push(retailItem.itemName);
+      if(retailItem.hasOwnProperty('itemName') && -1 === _companyRetailItemNames.indexOf(retailItem.itemName)) {
+        _companyRetailItemNames.push(retailItem.itemName);
       }
-      if(retailItem.hasOwnProperty('onBoardName') && -1 === _airlineRetailItemOnboardNames.indexOf(retailItem.onBoardName)) {
-        _airlineRetailItemOnboardNames.push(retailItem.onBoardName);
+      if(retailItem.hasOwnProperty('onBoardName') && -1 === _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName)) {
+        _companyRetailItemOnboardNames.push(retailItem.onBoardName);
       }
-      if(-1 === $scope.airlineRetailItemList.indexOf(retailItem)) {
-        $scope.airlineRetailItemList.push(retailItem);
+      if(-1 === $scope.companyRetailItemList.indexOf(retailItem)) {
+        $scope.companyRetailItemList.push(retailItem);
       }
     }
 
@@ -182,11 +182,11 @@ angular.module('ts5App')
     // Controller constructor
     this.constructor = function(){
       _companyId = ItemImportFactory.getCompanyId();
-      _airlineRetailItemCodes = [];
-      _airlineRetailItemNames = [];
-      _airlineRetailItemOnboardNames = [];
+      _companyRetailItemCodes = [];
+      _companyRetailItemNames = [];
+      _companyRetailItemOnboardNames = [];
       $scope.stockOwnerList = [];
-      $scope.airlineRetailItemList = [];
+      $scope.companyRetailItemList = [];
       $scope.companiesLoaded = false;
 
       var getCompaniesPromise = ItemImportFactory.getCompaniesList({companyTypeId: 2, limit: null}).then(function (response) {
@@ -198,21 +198,21 @@ angular.module('ts5App')
           }, $scope.stockOwnerList);
         });
       var getItemsListPromise = ItemImportFactory.getItemsList({companyId: _companyId}).then(function (response) {
-          $scope.airlineRetailItemList = response.retailItems;
+          $scope.companyRetailItemList = response.retailItems;
         });
       // assign random color to all companies and items
       $q.all([getCompaniesPromise, getItemsListPromise]).then(function () {
         angular.forEach($scope.stockOwnerList, function (company) {
           company.hexColor = randomHexColorClass.get(company.id);
         });
-        angular.forEach($scope.airlineRetailItemList, function (retailItem) {
+        angular.forEach($scope.companyRetailItemList, function (retailItem) {
           retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
-          addRetailItemToAirlineRetailItems(retailItem);
+          addRetailItemToCompanyRetailItems(retailItem);
         });
         $scope.companiesLoaded = true;
       });
     }
-    constructor();
+    this.constructor();
 
     // controller event handlers
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/

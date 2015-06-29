@@ -165,7 +165,7 @@
       </table>
     </div>
     <div class="col-xs-6">
-      <table ui-on-Drop="onDrop($event, $data, airlineRetailItemList)"
+      <table ui-on-Drop="onDrop($event, $data, companyRetailItemList)"
              class="sortable table table-bordered table-hover">
         <thead>
         <tr>
@@ -180,13 +180,13 @@
         <tr
           ui-draggable="true"
           drag="iiRetailItem"
-          on-drop-success="dropSuccessHandler($event, $index, airlineRetailItemList)"
-          ng-repeat="iiRetailItem in airlineRetailItemList | filter:searchRetailItem track by $index">
+          on-drop-success="dropSuccessHandler($event, $index, companyRetailItemList)"
+          ng-repeat="iiRetailItem in companyRetailItemList | filter:searchRetailItem track by $index">
           <td ng-style="{'background-color':iiRetailItem.hexColor}">&nbsp;</td>
           <td>{{ iiRetailItem.companyName }}</td>
           <td>{{ iiRetailItem.itemCode }}</td>
           <td>{{ iiRetailItem.itemName }}</td>
-          <td><a ng-click="removeRetailItem(iiRetailItem)" ng-hide="isAirlineItem(iiRetailItem)">X</a></td>
+          <td><a ng-click="removeRetailItem(iiRetailItem)" ng-hide="isCompanyItem(iiRetailItem)">X</a></td>
         </tr>
         </tbody>
       </table>

@@ -58,9 +58,9 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.importAll).toBeDefined();
       expect(Object.prototype.toString.call(scope.importAll)).toBe('[object Function]');
     });
-    it('should have a isAirlineItem function attached to the scope', function(){
-      expect(scope.isAirlineItem).toBeDefined();
-      expect(Object.prototype.toString.call(scope.isAirlineItem)).toBe('[object Function]');
+    it('should have a isCompanyItem function attached to the scope', function(){
+      expect(scope.isCompanyItem).toBeDefined();
+      expect(Object.prototype.toString.call(scope.isCompanyItem)).toBe('[object Function]');
     });
     it('should have a removeRetailItem function attached to the scope', function(){
       expect(scope.removeRetailItem).toBeDefined();
@@ -98,8 +98,8 @@ describe('Controller: ItemImportCtrl', function () {
     it('should call getItemsList', function () {
       expect(ItemImportFactory.getItemsList).toHaveBeenCalled();
     });
-    it('should have airlineRetailItemList attached to scope after API call', function () {
-      expect(scope.airlineRetailItemList).toBeDefined();
+    it('should have companyRetailItemList attached to scope after API call', function () {
+      expect(scope.companyRetailItemList).toBeDefined();
     });
   });
 
@@ -131,7 +131,7 @@ describe('Controller: ItemImportCtrl', function () {
     var companyId = 407;
     beforeEach(function(){
       scope.selectedStockownerCompany = {id:companyId};
-      scope.airlineRetailItemList = [
+      scope.companyRetailItemList = [
         {companyId:currentCompanyId,itemCode:'123re',itemName:'123re',onBoardName:'123re'},
         {companyId:432,itemCode:'456re',itemName:'456re',onBoardName:'456re'}];
       scope.stockownersRetailItemList = [
@@ -144,9 +144,9 @@ describe('Controller: ItemImportCtrl', function () {
     it('should not return false', function(){
       expect(scope.importAll()).not.toBe(false);
     });
-    it('should set airlineRetailItemList as an array in scope', function(){
-      expect(scope.airlineRetailItemList).toBeDefined();
-      expect(Object.prototype.toString.call(scope.airlineRetailItemList)).toBe('[object Array]');
+    it('should set companyRetailItemList as an array in scope', function(){
+      expect(scope.companyRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.companyRetailItemList)).toBe('[object Array]');
     });
     it('should set stockownersRetailItemList as an empty array in scope', function(){
       expect(scope.stockownersRetailItemList).toBeDefined();
@@ -155,12 +155,12 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  describe('isAirlineItem scope function', function(){
+  describe('isCompanyItem scope function', function(){
     it('should return false when invalid companyId is passed', function(){
-      expect(scope.isAirlineItem({companyId:2})).toBe(false);
+      expect(scope.isCompanyItem({companyId:2})).toBe(false);
     });
     it('should return true when same companyId is passed', function(){
-      expect(scope.isAirlineItem({companyId:currentCompanyId})).toBe(true);
+      expect(scope.isCompanyItem({companyId:currentCompanyId})).toBe(true);
     });
   });
 
@@ -168,7 +168,7 @@ describe('Controller: ItemImportCtrl', function () {
     var retailItem1 = {companyId:currentCompanyId,itemCode:'123',itemName:'123',onBoardName:'123'};
     var retailItem2 = {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456'};
     beforeEach(function(){
-      scope.airlineRetailItemList = [retailItem2];
+      scope.companyRetailItemList = [retailItem2];
       scope.stockownersRetailItemList = [];
       scope.selectedStockownerCompany = {id:432};
       scope.$digest();
@@ -182,15 +182,15 @@ describe('Controller: ItemImportCtrl', function () {
       scope.removeRetailItem(retailItem2);
       expect(scope.stockownersRetailItemList.length).toEqual(1);
     });
-    it('should expect airlineRetailItemList array length to be 0', function() {
+    it('should expect companyRetailItemList array length to be 0', function() {
       scope.removeRetailItem(retailItem2);
-      expect(scope.airlineRetailItemList.length).toEqual(0);
+      expect(scope.companyRetailItemList.length).toEqual(0);
     });
   });
 
   describe('removeAll scope function', function(){
     beforeEach(function(){
-      scope.airlineRetailItemList = [
+      scope.companyRetailItemList = [
         {companyId:432,id:1,itemCode:'123',itemName:'123',onBoardName:'123'},
         {companyId:432,id:2,itemCode:'1234',itemName:'1234',onBoardName:'1234'},
         {companyId:currentCompanyId,id:3,itemCode:'12345',itemName:'12345',onBoardName:'12345'},
@@ -200,8 +200,8 @@ describe('Controller: ItemImportCtrl', function () {
       scope.$digest();
       scope.removeAll();
     });
-    it('should reset airlineRetailItemList to a single array item', function(){
-      expect(scope.airlineRetailItemList.length).toEqual(1);
+    it('should reset companyRetailItemList to a single array item', function(){
+      expect(scope.companyRetailItemList.length).toEqual(1);
     });
     it('should reset stockownersRetailItemList to a single array item', function(){
       expect(scope.stockownersRetailItemList.length).toEqual(2);
@@ -212,7 +212,7 @@ describe('Controller: ItemImportCtrl', function () {
     var payload;
     beforeEach(function(){
       var items = [{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:'1234'}];
-      scope.airlineRetailItemList = items;
+      scope.companyRetailItemList = items;
       payload = {ImportItems:{importItems: [1234]}};
       scope.$digest();
       scope.submitForm();
