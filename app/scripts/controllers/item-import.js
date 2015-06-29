@@ -94,18 +94,10 @@ angular.module('ts5App')
       var payload = {ImportItems:{importItems: importedRetailItemIds}};
       ItemImportFactory.importItems(payload).then(function(){
         $scope.displayError = false;
-        ngToast.create({
-          className: 'success',
-          dismissButton: true,
-          content: '<strong>Item import</strong>: successful!'
-        });
+        showMessage('successful!', 'success');
         constructor();
       }, function(response) {
-        ngToast.create({
-          className: 'warning',
-          dismissButton: true,
-          content: '<strong>Item import</strong>: failed!'
-        });
+        showMessage('failed!', 'warning');
         $scope.displayError = true;
         if ('data' in response) {
           $scope.formErrors = response.data;
@@ -139,6 +131,10 @@ angular.module('ts5App')
       if(-1 === $scope.airlineRetailItemList.indexOf(retailItem)) {
         $scope.airlineRetailItemList.push(retailItem);
       }
+    }
+
+    function showMessage(message, messageType) {
+      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Item import</strong>: ' + message });
     }
 
     // private controller classes
@@ -184,7 +180,7 @@ angular.module('ts5App')
     };
 
     // Controller constructor
-    function constructor() {
+    this.constructor = function(){
       _companyId = ItemImportFactory.getCompanyId();
       _airlineRetailItemCodes = [];
       _airlineRetailItemNames = [];
