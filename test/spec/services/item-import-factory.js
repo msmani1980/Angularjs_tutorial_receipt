@@ -1,62 +1,62 @@
 'use strict';
 
-describe('Factor: ItemImportFactory', function () {
+describe('Factor: itemImportFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
 
   // instantiate service
-  var ItemImportFactory,
+  var itemImportFactory,
     GlobalMenuService,
-    companiesService,
+    companyService,
     itemsService,
     itemImportService,
     scope;
 
-  beforeEach(inject(function ($rootScope, _ItemImportFactory_, _GlobalMenuService_, _companiesService_, _itemsService_, _itemImportService_) {
+  beforeEach(inject(function ($rootScope, _itemImportFactory_, _GlobalMenuService_, _companyService_, _itemsService_, _itemImportService_) {
     GlobalMenuService = _GlobalMenuService_;
-    companiesService = _companiesService_;
+    companyService = _companyService_;
     itemsService = _itemsService_;
     itemImportService = _itemImportService_;
 
     spyOn(GlobalMenuService.company, 'get');
-    spyOn(companiesService, 'getCompaniesList');
+    spyOn(companyService, 'getCompanyList');
     spyOn(itemsService, 'getItemsList');
     spyOn(itemsService, 'createItem');
     spyOn(itemImportService, 'importItems');
 
-    ItemImportFactory = _ItemImportFactory_;
+    itemImportFactory = _itemImportFactory_;
     scope = $rootScope.$new();
   }));
 
   it('should be defined', function () {
-    expect(!!ItemImportFactory).toBe(true);
+    expect(!!itemImportFactory).toBe(true);
   });
 
   describe('GlobalMenuService API', function () {
     it('should call globalMenuService on company.get', function () {
-      ItemImportFactory.getCompanyId();
+      itemImportFactory.getCompanyId();
       expect(GlobalMenuService.company.get).toHaveBeenCalled();
     });
   });
 
-  describe('companiesService API', function() {
-    it('should call getCompaniesList', function() {
+  describe('companyService API', function() {
+    it('should call getCompanyList', function() {
       var payload = {companyTypeId:413};
-      ItemImportFactory.getCompaniesList(payload);
-      expect(companiesService.getCompaniesList).toHaveBeenCalledWith(payload);
+      itemImportFactory.getCompanyList(payload);
+      expect(companyService.getCompanyList).toHaveBeenCalledWith(payload);
     });
   });
 
   describe('itemsService API', function(){
     it('should call getItemsList', function(){
       var params = {companyId:413};
-      ItemImportFactory.getItemsList(params);
+      itemImportFactory.getItemsList(params);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(params, undefined);
     });
     it('should call createItem', function(){
       var payload = {retailItem:{}};
-      ItemImportFactory.createItem(payload);
+      itemImportFactory.createItem(payload);
       expect(itemsService.createItem).toHaveBeenCalledWith(payload);
     });
   });
@@ -64,7 +64,7 @@ describe('Factor: ItemImportFactory', function () {
   describe('itemImportService API', function() {
     it('should call importItems', function() {
       var payload = [2,3,4];
-      ItemImportFactory.importItems(payload);
+      itemImportFactory.importItems(payload);
       expect(itemImportService.importItems).toHaveBeenCalledWith(payload);
     });
   });

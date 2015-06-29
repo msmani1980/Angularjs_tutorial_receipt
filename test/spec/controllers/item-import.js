@@ -8,9 +8,9 @@ describe('Controller: ItemImportCtrl', function () {
 
   var ItemImportCtrl,
     scope,
-    ItemImportFactory,
+    itemImportFactory,
     importedCompaniesResponseJSON,
-    getCompaniesListDeferred,
+    getCompanyListDeferred,
     companyId,
     retailItemsResponseJSON,
     getItemsListDeferred,
@@ -18,7 +18,7 @@ describe('Controller: ItemImportCtrl', function () {
     currentCompanyId = 4;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _ItemImportFactory_) {
+  beforeEach(inject(function ($controller, $rootScope, $q, _itemImportFactory_) {
     scope = $rootScope.$new();
 
     inject(function (_servedStockownerCompanies_, _servedRetailItems_) {
@@ -26,22 +26,22 @@ describe('Controller: ItemImportCtrl', function () {
       retailItemsResponseJSON = _servedRetailItems_;
     });
 
-    ItemImportFactory = _ItemImportFactory_;
+    itemImportFactory = _itemImportFactory_;
 
-    getCompaniesListDeferred = $q.defer();
-    getCompaniesListDeferred.resolve(importedCompaniesResponseJSON);
-    spyOn(ItemImportFactory, 'getCompaniesList').and.returnValue(getCompaniesListDeferred.promise);
+    getCompanyListDeferred = $q.defer();
+    getCompanyListDeferred.resolve(importedCompaniesResponseJSON);
+    spyOn(itemImportFactory, 'getCompanyList').and.returnValue(getCompanyListDeferred.promise);
 
     getItemsListDeferred = $q.defer();
     getItemsListDeferred.resolve(retailItemsResponseJSON);
-    spyOn(ItemImportFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
+    spyOn(itemImportFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
 
     importItemsDeferred = $q.defer();
     importItemsDeferred.resolve({'ImportItems':{'importItems':[1,2,3]}});
-    spyOn(ItemImportFactory, 'importItems').and.returnValue(importItemsDeferred.promise);
+    spyOn(itemImportFactory, 'importItems').and.returnValue(importItemsDeferred.promise);
 
-    spyOn(ItemImportFactory, 'getCompanyId').and.returnValue(currentCompanyId);
-    companyId = ItemImportFactory.getCompanyId();
+    spyOn(itemImportFactory, 'getCompanyId').and.returnValue(currentCompanyId);
+    companyId = itemImportFactory.getCompanyId();
 
     ItemImportCtrl = $controller('ItemImportCtrl', {
       $scope: scope
@@ -87,9 +87,9 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  describe('ItemImportFactory API calls', function () {
-    it('should call getCompaniesList', function () {
-      expect(ItemImportFactory.getCompaniesList).toHaveBeenCalledWith({
+  describe('itemImportFactory API calls', function () {
+    it('should call getCompanyList', function () {
+      expect(itemImportFactory.getCompanyList).toHaveBeenCalledWith({
         companyTypeId: 2,
         limit: null
       });
@@ -99,7 +99,7 @@ describe('Controller: ItemImportCtrl', function () {
       expect(angular.isArray(scope.importCompanyList)).toBe(true);
     });
     it('should call getItemsList', function () {
-      expect(ItemImportFactory.getItemsList).toHaveBeenCalled();
+      expect(itemImportFactory.getItemsList).toHaveBeenCalled();
     });
     it('should have companyRetailItemList attached to scope after API call', function () {
       expect(scope.companyRetailItemList).toBeDefined();
@@ -117,7 +117,7 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.changeSelectedImportCompany()).not.toBe(false);
     });
     it('should call getItemsList', function () {
-      expect(ItemImportFactory.getItemsList).toHaveBeenCalledWith({companyId:companyId});
+      expect(itemImportFactory.getItemsList).toHaveBeenCalledWith({companyId:companyId});
     });
     it('should set importedRetailItemList as an array in scope', function(){
       expect(scope.importedRetailItemList).toBeDefined();
@@ -220,8 +220,8 @@ describe('Controller: ItemImportCtrl', function () {
       scope.$digest();
       scope.submitForm();
     });
-    it('should call ItemImportFactory\' importItems', function(){
-      expect(ItemImportFactory.importItems).toHaveBeenCalledWith(payload);
+    it('should call itemImportFactory\' importItems', function(){
+      expect(itemImportFactory.importItems).toHaveBeenCalledWith(payload);
     });
   });
 
