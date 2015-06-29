@@ -58,6 +58,7 @@ angular.module('ts5App')
         $scope.dailyExchangeRates = angular.extend($scope.previousExchangeRates,
           {
             isSubmitted: false,
+            id: null,
             exchangeRateDate: formatDateForAPI($scope.cashiersDateField)
           });
       }
