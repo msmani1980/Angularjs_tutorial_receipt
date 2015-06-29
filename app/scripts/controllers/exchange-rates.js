@@ -188,10 +188,18 @@ angular.module('ts5App')
       });
     }
 
+    function disableActionButtons(shouldDisable, saveOrSubmit) {
+      var buttonSelector = saveOrSubmit ? '.submit-btn' : '.save-btn';
+      var buttonState = shouldDisable ? 'loading' : 'reset';
+      $scope.requestInProgress = shouldDisable;
+      angular.element(buttonSelector).button(buttonState);
+    }
+
     function successRequestHandler(dailyExchangeRatesData) {
       $scope.dailyExchangeRates = dailyExchangeRatesData || {isSubmitted: false};
       var savedOrSubmitted = $scope.dailyExchangeRates.isSubmitted ? 'submitted' : 'saved';
       setupModels();
+      disableActionButtons(false);
       showSuccessMessage(savedOrSubmitted);
     }
 
@@ -218,6 +226,7 @@ angular.module('ts5App')
       if (!$scope.dailyExchangeRatesForm.$valid){
         return false;
       }
+      disableActionButtons(true, shouldSubmit);
       serializePreviousExchangeRates();
       createPayload(shouldSubmit);
 
