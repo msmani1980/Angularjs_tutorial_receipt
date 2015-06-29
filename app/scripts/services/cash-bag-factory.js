@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('cashBagFactory', function (cashBagService, GlobalMenuService, stationsService, schedulesService, companiesService, currenciesService, dailyExchangeRatesService) {
+  .factory('cashBagFactory', function (cashBagService, GlobalMenuService, stationsService, schedulesService, companiesService, currenciesService, dailyExchangeRatesService, companyPreferencesService) {
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
@@ -61,6 +61,10 @@ angular.module('ts5App')
       return dailyExchangeRatesService.getDailyExchangeRates(id, cashierDate);
     };
 
+    var getCompanyPreferences = function (payload) {
+      return companyPreferencesService.getCompanyPreferences(payload);
+    };
+
     return {
       getCompanyId: getCompanyId,
       getCashBagList: getCashBagList,
@@ -73,6 +77,7 @@ angular.module('ts5App')
       getCompanyCurrencies: getCompanyCurrencies,
       getSchedulesList: getSchedulesList,
       getDailySchedulesList: getDailySchedulesList,
-      getDailyExchangeRates: getDailyExchangeRates
+      getDailyExchangeRates: getDailyExchangeRates,
+      getCompanyPreferences: getCompanyPreferences
     };
   });
