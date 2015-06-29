@@ -73,7 +73,6 @@ angular.module('ts5App')
         dismissButton: true,
         content: '<strong>Cash bag</strong>:' + error
       });
-      $scope.displayError = true;
       $scope.formErrors = {};
     }
 

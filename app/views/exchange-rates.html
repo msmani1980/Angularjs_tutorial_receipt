@@ -127,8 +127,17 @@
       </div>
     </div>
     <div class="panel-footer text-right" ng-show="showActionButtons">
-      <button class="btn btn-default save-btn" ng-click="checkVarianceAndSave(false)">Save</button>
-      <button class="btn btn-primary submit-btn" ng-click="checkVarianceAndSave(true)">Submit</button>
+      <button
+        class="btn btn-default save-btn"
+        data-loading-text="Saving..."
+        ng-disabled="requestInProgress"
+        ng-click="checkVarianceAndSave(false)">Save</button>
+
+      <button
+        class="btn btn-primary submit-btn"
+        data-loading-text="Submitting..."
+        ng-disabled="requestInProgress"
+        ng-click="checkVarianceAndSave(true)">Submit</button>
     </div>
 
   </div>

@@ -188,11 +188,26 @@ angular.module('ts5App')
       });
     }
 
+    function disableActionButtons(shouldDisable, saveOrSubmit) {
+      var buttonSelector = saveOrSubmit ? '.submit-btn' : '.save-btn';
+      var buttonState = shouldDisable ? 'loading' : 'reset';
+      $scope.requestInProgress = shouldDisable;
+      angular.element(buttonSelector).button(buttonState);
+    }
+
     function successRequestHandler(dailyExchangeRatesData) {
       $scope.dailyExchangeRates = dailyExchangeRatesData || {isSubmitted: false};
       var savedOrSubmitted = $scope.dailyExchangeRates.isSubmitted ? 'submitted' : 'saved';
       setupModels();
+      disableActionButtons(false);
       showSuccessMessage(savedOrSubmitted);
+    }
+
+    function getPercentageForCurrency(currencyCode, rateType) {
+      var currentValue = $scope.currenciesFields[currencyCode][rateType];
+      var previousValue = $scope.previousCurrency[currencyCode][rateType];
+      var percentage = Math.floor((100 - (currentValue / previousValue) * 100));
+      return Math.abs(percentage);
     }
 
     function calculateVariance() {
@@ -200,7 +215,7 @@ angular.module('ts5App')
       angular.forEach($scope.currenciesFields, function (currencyObject, currencyCode) {
         if ($scope.previousCurrency[currencyCode]) {
           angular.forEach(currencyObject, function (rate, rateType) {
-            var percentage = Math.floor((100 - ($scope.currenciesFields[currencyCode][rateType] / $scope.previousCurrency[currencyCode][rateType]) * 100));
+            var percentage = getPercentageForCurrency(currencyCode, rateType);
             if (percentage > 10) {
               rateVariance.push({
                   code: currencyCode,
@@ -214,8 +229,14 @@ angular.module('ts5App')
       return rateVariance;
     }
 
-    $scope.checkVarianceAndSave = function(shouldSubmit) {
-      if (!$scope.dailyExchangeRatesForm.$valid){
+    $scope.saveDailyExchangeRates = function (shouldSubmit) {
+      angular.element('.variance-warning-modal').modal('hide');
+      disableActionButtons(true, shouldSubmit);
+      currencyFactory.saveDailyExchangeRates($scope.payload).then(successRequestHandler, showErrors);
+    };
+
+    $scope.checkVarianceAndSave = function (shouldSubmit) {
+      if (!$scope.dailyExchangeRatesForm.$valid) {
         return false;
       }
       serializePreviousExchangeRates();
@@ -226,12 +247,7 @@ angular.module('ts5App')
         angular.element('.variance-warning-modal').modal('show');
         return;
       }
-      $scope.saveDailyExchangeRates();
-    };
-
-    $scope.saveDailyExchangeRates = function () {
-      angular.element('.variance-warning-modal').modal('hide');
-      currencyFactory.saveDailyExchangeRates($scope.payload).then(successRequestHandler, showErrors);
+      $scope.saveDailyExchangeRates(shouldSubmit);
     };
 
     $scope.isBankExchangePreferred = function () {

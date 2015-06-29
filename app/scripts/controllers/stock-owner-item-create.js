@@ -42,12 +42,12 @@ angular.module('ts5App')
       }
     };
 
-    this.setFormAsViewOnly = function (item) {
-      $scope.viewName = 'Viewing Item ' + item.itemName;
-    };
-
     this.updateViewName = function (item) {
-      $scope.viewName = 'Editing ' + item.itemName;
+      var prefix = 'Viewing ';
+      if ($scope.editingItem) {
+        prefix = 'Editing ';
+      }
+      $scope.viewName = prefix + item.itemName;
     };
 
     this.setFormAsEdit = function () {
@@ -81,10 +81,6 @@ angular.module('ts5App')
     };
 
     this.checkIfViewOnly();
-
-    if ($scope.viewOnly) {
-      this.setFormAsViewOnly();
-    }
 
     if ($routeParams.id && !$scope.viewOnly) {
       this.setFormAsEdit();
