@@ -153,11 +153,6 @@ describe('Controller: ItemImportCtrl', function () {
       expect(Object.prototype.toString.call(scope.stockownersRetailItemList)).toBe('[object Array]');
       expect(scope.stockownersRetailItemList.length).toEqual(0);
     });
-    it('should not add the same object to the airlineRetailItemList array', function(){
-      console.log(scope.airlineRetailItemList);
-      expect(scope.airlineRetailItemList.length).toEqual(4);
-
-    });
   });
 
   describe('isAirlineItem scope function', function(){
