@@ -1,6 +1,5 @@
 // TODO: Complete
 'use strict';
-/*global moment:false */
 
 /**
  * @ngdoc service
@@ -18,15 +17,6 @@ angular.module('ts5App')
     };
 
     function transformResponse(data) {
-      data = angular.fromJson(data);
-      data.companyRelationships.forEach(function (companyRelationship) {
-        companyRelationship.startDate = dateUtility.formatDateForApp(companyRelationship.startDate, 'YYYY-MM-DD');
-        companyRelationship.endDate = dateUtility.formatDateForApp(companyRelationship.endDate, 'YYYY-MM-DD');
-      });
-      return data;
-    }
-
-    function transformResponseCompanyRelationshipType(data) {
       data = angular.fromJson(data);
       data.companyRelationships.forEach(function (companyRelationship) {
         companyRelationship.startDate = dateUtility.formatDateForApp(companyRelationship.startDate, 'YYYY-MM-DD');
@@ -73,7 +63,6 @@ angular.module('ts5App')
         method: 'GET'
       },
       getCompanyRelationshipTypeList: {
-        //transformResponse: appendTransform($http.defaults.transformResponse, transformResponseCompanyRelationshipType),
         method: 'GET'
       },
       createCompanyRelationship: {
@@ -86,43 +75,19 @@ angular.module('ts5App')
       }
     };
 
-    var companyRelationshipRequestURL = $resource(companyRelationshipRequestURL, requestParameters, actions);
+    var companyRelationshipRequestResource = $resource(companyRelationshipRequestURL, requestParameters, actions);
     var typeRequestResource = $resource(companyTypeRequestURL, requestParameters, actions);
 
-    var normalizeDateForApp = function (dataFromAPI, startDateKey, endDateKey) {
-      var dateFromAPIFormat = 'YYYY-MM-DD';
-      var dateForAppFormat = 'MM/DD/YYYY';
-      startDateKey = startDateKey || 'startDate';
-      endDateKey = endDateKey || 'endDate';
-
-      dataFromAPI[startDateKey] = formatDate(dataFromAPI[startDateKey], dateFromAPIFormat, dateForAppFormat);
-      dataFromAPI[endDateKey] = formatDate(dataFromAPI[endDateKey], dateFromAPIFormat, dateForAppFormat);
-
-      return dataFromAPI;
-    };
-
-    var normalizeDateForAPI = function (dataFromAPI, startDateKey, endDateKey) {
-      var dateFromAppFormat = 'MM/DD/YYYY';
-      var dateForAPIFormat = 'YYYY-MM-DD';
-      startDateKey = startDateKey || 'startDate';
-      endDateKey = endDateKey || 'endDate';
-
-      dataFromAPI[startDateKey] = formatDate(dataFromAPI[startDateKey], dateFromAppFormat, dateForAPIFormat);
-      dataFromAPI[endDateKey] = formatDate(dataFromAPI[endDateKey], dateFromAppFormat, dateForAPIFormat);
-
-      return dataFromAPI;
-    };
-
     var getCompanyRelationshipList = function (payload) {
-      return companyRelationshipRequestURL.getCompanyRelationshipList(payload).$promise;
+      return companyRelationshipRequestResource.getCompanyRelationshipList(payload).$promise;
     };
 
     var getCompanyRelationshipListByCompany = function (id) {
-      return companyRelationshipRequestURL.getCompanyRelationshipListByCompany({id: id}).$promise;
+      return companyRelationshipRequestResource.getCompanyRelationshipListByCompany({id: id}).$promise;
     };
 
     var getCompanyRelationship = function (id) {
-      return companyRelationshipRequestURL.getCompanyRelationship({id: id}).$promise;
+      return companyRelationshipRequestResource.getCompanyRelationship({id: id}).$promise;
     };
 
     var getCompanyRelationshipTypeList = function (id) {
@@ -130,11 +95,11 @@ angular.module('ts5App')
     };
 
     var createCompanyRelationship = function (payload) {
-      return companyRelationshipRequestURL.createCompanyRelationship({id: payload.companyId}, payload).$promise;
+      return companyRelationshipRequestResource.createCompanyRelationship({id: payload.companyId}, payload).$promise;
     };
 
     var updateCompanyRelationship = function (payload) {
-      return companyRelationshipRequestURL.updateCompanyRelationship({
+      return companyRelationshipRequestResource.updateCompanyRelationship({
         id: payload.companyId,
         companyRelationshipId: payload.id
       }, payload).$promise;

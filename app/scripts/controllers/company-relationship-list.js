@@ -1,4 +1,5 @@
 'use strict';
+/*global $:false */
 
 /**
  * @ngdoc function
@@ -35,7 +36,7 @@ angular.module('ts5App')
 
     function submitCompanyRelationshipError(error) {
       var company = $scope.companyList.filter(function (company) {
-        return company.id === parseInt(error.config.data.relativeCompanyId)
+        return company.id === parseInt(error.config.data.relativeCompanyId);
       });
       ngToast.create({
         className: 'warning',
@@ -60,7 +61,7 @@ angular.module('ts5App')
       $q.all(promises).then(function () {
         $location.path('/company-list/');
         }, submitCompanyRelationshipError
-      )
+      );
     };
 
     $scope.cancel = function () {
@@ -125,5 +126,5 @@ angular.module('ts5App')
       filterCompanyListByTypesScope(response[1]);
     }).then(function () {
       $scope.isLoading = false;
-    })
+    });
   });

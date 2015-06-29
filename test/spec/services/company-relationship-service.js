@@ -12,12 +12,7 @@ describe('Service: companyRelationshipService', function () {
     $httpBackend,
     companyRelationshipResponseJSON,
     companyRelationshipListResponseJSON,
-    companyRelationshipTypesResponseJSON,
-    headers = {
-      companyId: 362,
-      'Accept': 'application/json, text/plain, */*',
-      'userId': 1
-    };
+    companyRelationshipTypesResponseJSON;
 
   beforeEach(inject(function (_companyRelationshipService_, $injector) {
     inject(function (_servedCompanyRelationship_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypeList_) {
@@ -128,13 +123,13 @@ describe('Service: companyRelationshipService', function () {
         var relativeCompanyId = 420;
         var regex = new RegExp('/companies/' + companyId + '/relationships', 'g');
         var data = {
-          "companyId": companyId,
-          "relativeCompanyId": relativeCompanyId,
-          "startDate": "2015-09-20",
-          "endDate": "2015-09-21"
+          'companyId': companyId,
+          'relativeCompanyId': relativeCompanyId,
+          'startDate': '2015-09-20',
+          'endDate': '2015-09-21'
         };
 
-        $httpBackend.whenPOST(regex).respond({ "id": 77});
+        $httpBackend.whenPOST(regex).respond({'id': 77});
 
         companyRelationshipService.createCompanyRelationship(data).then(function (response) {
           companyRelationshipData = response;
