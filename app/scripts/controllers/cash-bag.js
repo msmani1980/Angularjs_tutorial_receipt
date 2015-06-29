@@ -104,7 +104,7 @@ angular.module('ts5App')
       }
 
       return $scope.companyPreferences.filter(function (feature) {
-          return (feature.featureCode === 'EXR' && feature.optionCode === 'ERT' && feature.choiceCode === 'BNK');
+          return (feature.featureCode === 'EXR' && feature.optionCode === 'CSB' && feature.choiceCode === 'CSB');
         }).length > 0;
     };
 
