@@ -30,7 +30,7 @@ describe('Controller: CashBagCtrl', function () {
       companyResponseJSON = _servedCompany_;
       companyCurrencyGlobalsResponseJSON = _servedCompanyCurrencyGlobals_;
       dailyExchangeRatesResponseJSON = _servedDailyExchangeRates_;
-      getCompanyPreferencesJSON = _servedCompanyPreferences_
+      getCompanyPreferencesJSON = _servedCompanyPreferences_;
     });
 
     cashBagFactory = $injector.get('cashBagFactory');
@@ -106,7 +106,7 @@ describe('Controller: CashBagCtrl', function () {
         expect(scope.companyCurrencies).toBeDefined();
       });
       it('should call getDailyExchangeRates', function () {
-        expect(cashBagFactory.getDailyExchangeRates).toHaveBeenCalledWith(companyId, moment().format('YYYYMMDD'));
+        expect(cashBagFactory.getDailyExchangeRates).toHaveBeenCalled();
       });
       it('should have dailyExchangeRates attached to scope after API call', function () {
         expect(scope.dailyExchangeRates).toBeDefined();
