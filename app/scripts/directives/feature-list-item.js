@@ -28,8 +28,6 @@ angular.module('ts5App')
         view: '&',
         func1: '&'
       },
-      //  vm: '&listObject'
-      //},
       restrict: 'E',
       controller: controller,
       templateUrl: templateUrl,
