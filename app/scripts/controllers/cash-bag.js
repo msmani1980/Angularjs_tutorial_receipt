@@ -22,6 +22,7 @@ angular.module('ts5App')
     $scope.displayedScheduleDate = '';
     $scope.displayedCashierDate = '';
     $scope.saveButtonName = '';
+    $scope.state = '';
 
     var helpers = {
       showMessage: function(error, isError, message) {
@@ -141,7 +142,7 @@ angular.module('ts5App')
       };
 
       _factoryHelper.setServices(services);
-
+      $scope.state = $routeParams.state;
       switch ($routeParams.state) {
         case 'create':
           create();

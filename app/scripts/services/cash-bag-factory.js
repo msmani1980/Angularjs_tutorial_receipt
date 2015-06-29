@@ -61,6 +61,10 @@ angular.module('ts5App')
       return dailyExchangeRatesService.getDailyExchangeRates(id, cashierDate);
     };
 
+    var getPreviousExchangeRates = function(id, cashierDate) {
+      return dailyExchangeRatesService.getPreviousExchangeRates(id, cashierDate);
+    };
+
     return {
       getCompanyId: getCompanyId,
       getCashBagList: getCashBagList,
@@ -73,6 +77,7 @@ angular.module('ts5App')
       getCompanyCurrencies: getCompanyCurrencies,
       getSchedulesList: getSchedulesList,
       getDailySchedulesList: getDailySchedulesList,
-      getDailyExchangeRates: getDailyExchangeRates
+      getDailyExchangeRates: getDailyExchangeRates,
+      getPreviousExchangeRates: getPreviousExchangeRates
     };
   });

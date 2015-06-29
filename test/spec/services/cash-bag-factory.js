@@ -38,6 +38,8 @@ describe('Factory: cashBagFactory', function () {
     spyOn(cashBagService, 'createCashBag');
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates');
+    spyOn(dailyExchangeRatesService, 'getPreviousExchangeRates');
+
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -128,6 +130,13 @@ describe('Factory: cashBagFactory', function () {
       var cashierDate = '20150617';
       cashBagFactory.getDailyExchangeRates(companyId, cashierDate);
       expect(dailyExchangeRatesService.getDailyExchangeRates).toHaveBeenCalledWith(companyId, cashierDate);
+    });
+
+    it('should call getPreviousExchangeRates', function(){
+      var companyId = '403';
+      var cashierDate = '20150617';
+      cashBagFactory.getPreviousExchangeRates(companyId, cashierDate);
+      expect(dailyExchangeRatesService.getPreviousExchangeRates).toHaveBeenCalledWith(companyId, cashierDate);
     });
   });
 
