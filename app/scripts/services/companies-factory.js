@@ -19,8 +19,8 @@ angular.module('ts5App')
       return companyService.getCompany(id);
     };
 
-    var getCompaniesList = function (payload) {
-      return companyService.getCompaniesList(payload);
+    var getCompanyList = function (payload) {
+      return companyService.getCompanyList(payload);
     };
 
     // Tags
@@ -59,7 +59,7 @@ angular.module('ts5App')
 
       // Companies
       getCompany: getCompany,
-      getCompaniesList: getCompaniesList,
+      getCompanyList: getCompanyList,
 
       // Tags
       getTagsList: getTagsList,

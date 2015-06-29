@@ -2,18 +2,18 @@
 
 /**
  * @ngdoc service
- * @name ts5App.ItemImportFactory
+ * @name ts5App.itemImportFactory
  * @description
- * # ItemImportFactory
+ * # itemImportFactory
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('ItemImportFactory', function (GlobalMenuService, companiesService, itemsService, itemImportService) {
+  .factory('itemImportFactory', function (GlobalMenuService, companyService, itemsService, itemImportService) {
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
-    var getCompaniesList = function(payload) {
-      return companiesService.getCompaniesList(payload);
+    var getCompanyList = function(payload) {
+      return companyService.getCompanyList(payload);
     };
     var getItemsList = function(searchParameters, fetchFromMaster){
       return itemsService.getItemsList(searchParameters, fetchFromMaster);
@@ -26,7 +26,7 @@ angular.module('ts5App')
     };
     return {
       getCompanyId: getCompanyId,
-      getCompaniesList: getCompaniesList,
+      getCompanyList: getCompanyList,
       getItemsList: getItemsList,
       createItem: createItem,
       importItems: importItems

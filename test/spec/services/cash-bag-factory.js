@@ -13,7 +13,7 @@ describe('Factory: cashBagFactory', function () {
     schedulesService,
     rootScope,
     scope,
-    companiesService,
+    companyService,
     currenciesService,
     dailyExchangeRatesService,
     companyPreferencesService;
@@ -23,7 +23,7 @@ describe('Factory: cashBagFactory', function () {
     GlobalMenuService = _GlobalMenuService_;
     stationsService = _stationsService_;
     schedulesService = _schedulesService_;
-    companiesService = _companyService_;
+    companyService = _companyService_;
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
     companyPreferencesService = _companyPreferencesService_;
@@ -33,7 +33,7 @@ describe('Factory: cashBagFactory', function () {
     spyOn(stationsService, 'getStationList');
     spyOn(schedulesService, 'getSchedules');
     spyOn(schedulesService, 'getDailySchedules');
-    spyOn(companiesService, 'getCompany');
+    spyOn(companyService, 'getCompany');
     spyOn(cashBagService, 'updateCashBag');
     spyOn(cashBagService, 'getCashBag');
     spyOn(cashBagService, 'deleteCashBag');
@@ -110,11 +110,11 @@ describe('Factory: cashBagFactory', function () {
     });
   });
 
-  describe('companiesService API', function() {
+  describe('companyService API', function() {
     it('should call getCompany', function() {
       var id = 1;
       cashBagFactory.getCompany(id);
-      expect(companiesService.getCompany).toHaveBeenCalledWith(id);
+      expect(companyService.getCompany).toHaveBeenCalledWith(id);
     });
   });
 
@@ -133,7 +133,7 @@ describe('Factory: cashBagFactory', function () {
       expect(dailyExchangeRatesService.getDailyExchangeRates).toHaveBeenCalledWith(companyId, cashierDate);
     });
   });
-  
+
   describe('company preferences API', function() {
     it('should call getCompanyPreferences', function(){
       cashBagFactory.getCompanyPreferences();

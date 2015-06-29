@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemImportCtrl', function ($scope, $q, ItemImportFactory, ngToast) {
+  .controller('ItemImportCtrl', function ($scope, $q, itemImportFactory, ngToast) {
 
     // private controller vars
     var _companyId = null,
@@ -24,7 +24,7 @@ angular.module('ts5App')
       if (!angular.isDefined($scope.selectedImportCompany)) {
         return false;
       }
-      ItemImportFactory.getItemsList({companyId: $scope.selectedImportCompany.id}).then(function (response) {
+      itemImportFactory.getItemsList({companyId: $scope.selectedImportCompany.id}).then(function (response) {
         $scope.importedRetailItemList = [];
         angular.forEach(response.retailItems, function (retailItem) {
           if (canBeAddedToCompanyRetailList(retailItem)) {
@@ -92,7 +92,7 @@ angular.module('ts5App')
         }
       });
       var payload = {ImportItems:{importItems: importedRetailItemIds}};
-      ItemImportFactory.importItems(payload).then(function(){
+      itemImportFactory.importItems(payload).then(function(){
         $scope.displayError = false;
         showMessage('successful!', 'success');
         this.constructor();
@@ -184,7 +184,7 @@ angular.module('ts5App')
 
     // Controller constructor
     this.constructor = function(){
-      _companyId = ItemImportFactory.getCompanyId();
+      _companyId = itemImportFactory.getCompanyId();
       _companyRetailItemCodes = [];
       _companyRetailItemNames = [];
       _companyRetailItemOnboardNames = [];
@@ -192,7 +192,7 @@ angular.module('ts5App')
       $scope.companyRetailItemList = [];
       $scope.companiesLoaded = false;
       this.constructorPromises = [
-        ItemImportFactory.getCompaniesList({companyTypeId: 2, limit: null}).then(function (response) {
+        itemImportFactory.getCompanyList({companyTypeId: 2, limit: null}).then(function (response) {
         // TODO - This api request queries the full list of companies until https://jira.egate-solutions.com/browse/TSVPORTAL-2038">TSVPORTAL-2038 is completed.
           angular.forEach(response.companies, function(company){
             if(2 === company.companyTypeId){
@@ -200,7 +200,7 @@ angular.module('ts5App')
             }
           }, $scope.importCompanyList);
         }),
-        ItemImportFactory.getItemsList({companyId: _companyId}).then(function (response) {
+        itemImportFactory.getItemsList({companyId: _companyId}).then(function (response) {
           $scope.companyRetailItemList = response.retailItems;
         })
       ];
