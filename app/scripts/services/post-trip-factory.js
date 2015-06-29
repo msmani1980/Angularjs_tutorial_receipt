@@ -8,18 +8,17 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('postTripFactory', function (GlobalMenuService, stationsService, carrierService) {
+  .factory('postTripFactory', function (GlobalMenuService, stationsService, carrierService, postTripsService) {
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
 
-    var getPostTripDataList = function () {
-      return {response:'mock'};
-      //if(arguments.length > 1) {
-      //  return cashBagService.getCashBagList(id, optionalPayload);
-      //} else {
-      //  return cashBagService.getCashBagList(id);
-      //}
+    var getPostTripDataList = function (id, payload) {
+      if(arguments.length > 1) {
+        return postTripsService.getPostTrips(id, payload);
+      } else {
+        return postTripsService.getPostTrips(id);
+      }
     };
 
     var getStationList = function (id) {

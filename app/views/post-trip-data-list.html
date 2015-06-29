@@ -157,13 +157,12 @@
         </tr>
       </thead>
       <tbody>
-        <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
-        <tr class="ng-scope">
-          <td class="ng-binding">T1</td>
-          <td class="ng-binding">07/15/2015</td>
-          <td class="ng-binding">2:34</td>
-          <td class="ng-binding">Test</td>
-          <td class="ng-binding">5:34</td>
+        <tr class="ng-scope" ng-repeat="trip in postTrips">
+          <td>{{ trip.number }}</td>
+          <td>{{ trip.arrivalStationId}}</td>
+          <td>{{ trip.arrivalTime }}</td>
+          <td>{{ trip.arrivalStationId}}</td>
+          <td>{{ trip.arrivalTime }}</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>
@@ -176,19 +175,6 @@
             </button>
           </td>
         </tr>
-        <tr class="ng-scope">
-          <td class="ng-binding">T2</td>
-          <td class="ng-binding">05/07/2015</td>
-          <td class="ng-binding">12:34</td>
-          <td class="ng-binding">Test</td>
-          <td class="ng-binding">12:34</td>
-          <td>
-            <button class="btn btn-info btn-xs" ng-click="viewPostTrip()" tabindex="0">
-              <i class="fa fa-file"></i>
-            </button>
-          </td>
-        </tr>
-        <!-- end ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
       </tbody>
     </table>
   </div>

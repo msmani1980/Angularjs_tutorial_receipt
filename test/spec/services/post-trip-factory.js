@@ -1,23 +1,26 @@
 'use strict';
 
-describe('Factory: cashBagFactory', function () {
+describe('Factory: postTripFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
 
   // instantiate service
   var postTripFactory,
+    postTripsService,
     GlobalMenuService,
     stationsService,
     carrierService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _postTripFactory_, _GlobalMenuService_, _stationsService_, _carrierService_) {
+  beforeEach(inject(function ($rootScope, _postTripFactory_, _GlobalMenuService_, _stationsService_, _carrierService_, _postTripsService_) {
     GlobalMenuService = _GlobalMenuService_;
     stationsService = _stationsService_;
     carrierService = _carrierService_;
+    postTripsService = _postTripsService_;
 
+    spyOn(postTripsService, 'getPostTrips');
     spyOn(GlobalMenuService.company, 'get');
     spyOn(stationsService, 'getStationList');
     spyOn(carrierService, 'getCarrierTypes');
@@ -35,8 +38,8 @@ describe('Factory: cashBagFactory', function () {
 
   describe('postTripService API', function () {
     it('should call postTripService on getPostTripDataList', function () {
-      //cashBagFactory.getCashBagList(companyId);
-      //expect(cashBagService.getCashBagList).toHaveBeenCalledWith(companyId);
+      postTripFactory.getPostTripDataList(companyId);
+      expect(postTripsService.getPostTrips).toHaveBeenCalledWith(companyId);
     });
   });
 

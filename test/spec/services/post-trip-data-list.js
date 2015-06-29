@@ -7,11 +7,12 @@ describe('Controller: PostFlightDataListCtrl', function () {
   beforeEach(module('served/stations.json'));
   beforeEach(module('served/carrier-types.json'));
   beforeEach(module('served/carrier-numbers.json'));
+  beforeEach(module('served/post-trips.json'));
 
   var PostTripDataListCtrl,
     scope,
-    //postTripDataResponseJSON,
-    //postTripDataDeferred,
+    postTripsResponseJSON,
+    postTripsDeferred,
     stationsListResponseJSON,
     stationsListDeferred,
     carrierTypesResponseJSON,
@@ -25,10 +26,8 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location) {
-    //inject(function (_servedPostTripDataList_) {
-    //  postTripDataResponseJSON = _servedPostTripDataList_;
-    //});
-    inject(function (_servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_) {
+    inject(function (_servedPostTrips_, _servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_) {
+      postTripsResponseJSON = _servedPostTrips_;
       stationsListResponseJSON = _servedStations_;
       carrierTypesResponseJSON = _servedCarrierTypes_;
       carrierNumbersResponseJSON = _servedCarrierNumbers_;
@@ -37,8 +36,8 @@ describe('Controller: PostFlightDataListCtrl', function () {
     postTripFactory = $injector.get('postTripFactory');
     scope = $rootScope.$new();
 
-    //postTripDataDeferred = $q.defer();
-    //postTripDataDeferred.resolve(postTripDataResponseJSON);
+    postTripsDeferred = $q.defer();
+    postTripsDeferred.resolve(postTripsResponseJSON);
     stationsListDeferred = $q.defer();
     stationsListDeferred.resolve(stationsListResponseJSON);
     carrierTypesDeferred = $q.defer();
@@ -46,7 +45,7 @@ describe('Controller: PostFlightDataListCtrl', function () {
     carrierNumbersDeferred = $q.defer();
     carrierNumbersDeferred.resolve(carrierNumbersResponseJSON);
 
-    //spyOn(postTripFactory, 'getPostTripDataList').and.returnValue(postTripDataDeferred.promise);
+    spyOn(postTripFactory, 'getPostTripDataList').and.returnValue(postTripsDeferred.promise);
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
     spyOn(postTripFactory, 'getCarrierNumbers').and.returnValue(carrierNumbersDeferred.promise);
@@ -60,7 +59,7 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
   describe('scope globals', function () {
     it('should have postTripDataList attached to scope', function () {
-      //expect(scope.postTripDataList).toBeDefined();
+      expect(scope.postTrips).toBeDefined();
     });
 
     it('should have viewName attached to scope', function () {
@@ -69,9 +68,23 @@ describe('Controller: PostFlightDataListCtrl', function () {
   });
 
   describe('post trip data constructor calls', function(){
-    //it('should call getPostTripDataList', function(){
-    //  expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
-    //});
+    describe('getPostTripDataList', function(){
+      it('should call getPostTripDataList', function(){
+        expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
+      });
+      it('should attach an array to scope', function(){
+      });
+      it('should contain scheduleNumber', function(){
+
+      });
+      it('should container departure station', function(){
+
+      });
+      it('shoudl contain arrival station', function(){
+
+      });
+    });
+
   });
 
   describe('search post trip data', function() {

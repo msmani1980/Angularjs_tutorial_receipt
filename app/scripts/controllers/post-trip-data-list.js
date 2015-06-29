@@ -26,7 +26,9 @@ angular.module('ts5App')
           });
         },
         getPostTripDataList: function () {
-          return postTripFactory.getPostTripDataList(_companyId, {});
+          return postTripFactory.getPostTripDataList(_companyId, {}).then(function(response){
+            $scope.postTrips = response.postTrips;
+          });
         },
         getStationList: function () {
           return postTripFactory.getStationList(_companyId).then(function (response) {
