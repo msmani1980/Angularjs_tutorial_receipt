@@ -9,7 +9,7 @@ describe('Controller: ItemImportCtrl', function () {
   var ItemImportCtrl,
     scope,
     ItemImportFactory,
-    stockownerCompaniesResponseJSON,
+    importedCompaniesResponseJSON,
     getCompaniesListDeferred,
     companyId,
     retailItemsResponseJSON,
@@ -22,14 +22,14 @@ describe('Controller: ItemImportCtrl', function () {
     scope = $rootScope.$new();
 
     inject(function (_servedStockownerCompanies_, _servedRetailItems_) {
-      stockownerCompaniesResponseJSON = _servedStockownerCompanies_;
+      importedCompaniesResponseJSON = _servedStockownerCompanies_;
       retailItemsResponseJSON = _servedRetailItems_;
     });
 
     ItemImportFactory = _ItemImportFactory_;
 
     getCompaniesListDeferred = $q.defer();
-    getCompaniesListDeferred.resolve(stockownerCompaniesResponseJSON);
+    getCompaniesListDeferred.resolve(importedCompaniesResponseJSON);
     spyOn(ItemImportFactory, 'getCompaniesList').and.returnValue(getCompaniesListDeferred.promise);
 
     getItemsListDeferred = $q.defer();
@@ -53,9 +53,9 @@ describe('Controller: ItemImportCtrl', function () {
     it('should attach a viewName to the scope', function () {
       expect(scope.viewName).toBe('Import Stock Owner Items');
     });
-    it('should have a changeSelectedStockownerCompany function attached to the scope', function(){
-      expect(scope.changeSelectedStockownerCompany).toBeDefined();
-      expect(Object.prototype.toString.call(scope.changeSelectedStockownerCompany)).toBe('[object Function]');
+    it('should have a changeSelectedImportCompany function attached to the scope', function(){
+      expect(scope.changeSelectedImportCompany).toBeDefined();
+      expect(Object.prototype.toString.call(scope.changeSelectedImportCompany)).toBe('[object Function]');
     });
     it('should have a importAll function attached to the scope', function(){
       expect(scope.importAll).toBeDefined();
@@ -94,9 +94,9 @@ describe('Controller: ItemImportCtrl', function () {
         limit: null
       });
     });
-    it('should have stockOwnerList attached to scope after API call', function () {
-      expect(scope.stockOwnerList).toBeDefined();
-      expect(angular.isArray(scope.stockOwnerList)).toBe(true);
+    it('should have importCompanyList attached to scope after API call', function () {
+      expect(scope.importCompanyList).toBeDefined();
+      expect(angular.isArray(scope.importCompanyList)).toBe(true);
     });
     it('should call getItemsList', function () {
       expect(ItemImportFactory.getItemsList).toHaveBeenCalled();
@@ -106,38 +106,38 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  describe('changeSelectedStockownerCompany scope function', function(){
+  describe('changeSelectedImportCompany scope function', function(){
     var companyId = 407;
     beforeEach(function(){
-      scope.selectedStockownerCompany = {id:companyId};
-      scope.changeSelectedStockownerCompany();
+      scope.selectedImportCompany = {id:companyId};
+      scope.changeSelectedImportCompany();
       scope.$digest();
     });
     it('should not return false', function(){
-      expect(scope.changeSelectedStockownerCompany()).not.toBe(false);
+      expect(scope.changeSelectedImportCompany()).not.toBe(false);
     });
     it('should call getItemsList', function () {
       expect(ItemImportFactory.getItemsList).toHaveBeenCalledWith({companyId:companyId});
     });
-    it('should set stockownersRetailItemList as an array in scope', function(){
-      expect(scope.stockownersRetailItemList).toBeDefined();
-      expect(Object.prototype.toString.call(scope.stockownersRetailItemList)).toBe('[object Array]');
+    it('should set importedRetailItemList as an array in scope', function(){
+      expect(scope.importedRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.importedRetailItemList)).toBe('[object Array]');
     });
-    it('should return false if no stockowner company is defined', function(){
-      scope.selectedStockownerCompany = undefined;
+    it('should return false if no import company is defined', function(){
+      scope.selectedImportCompany = undefined;
       scope.$digest();
-      expect(scope.changeSelectedStockownerCompany()).toBe(false);
+      expect(scope.changeSelectedImportCompany()).toBe(false);
     });
   });
 
   describe('importAll scope function', function(){
     var companyId = 407;
     beforeEach(function(){
-      scope.selectedStockownerCompany = {id:companyId};
+      scope.selectedImportCompany = {id:companyId};
       scope.companyRetailItemList = [
         {companyId:currentCompanyId,itemCode:'123re',itemName:'123re',onBoardName:'123re'},
         {companyId:432,itemCode:'456re',itemName:'456re',onBoardName:'456re'}];
-      scope.stockownersRetailItemList = [
+      scope.importedRetailItemList = [
         {companyId:currentCompanyId,itemCode:'123',itemName:'123',onBoardName:'123'},
         {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456'},
         {companyId:432,itemCode:'456re2',itemName:'456re2',onBoardName:'456re'}];
@@ -151,10 +151,10 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.companyRetailItemList).toBeDefined();
       expect(Object.prototype.toString.call(scope.companyRetailItemList)).toBe('[object Array]');
     });
-    it('should set stockownersRetailItemList as an empty array in scope', function(){
-      expect(scope.stockownersRetailItemList).toBeDefined();
-      expect(Object.prototype.toString.call(scope.stockownersRetailItemList)).toBe('[object Array]');
-      expect(scope.stockownersRetailItemList.length).toEqual(0);
+    it('should set importedRetailItemList as an empty array in scope', function(){
+      expect(scope.importedRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.importedRetailItemList)).toBe('[object Array]');
+      expect(scope.importedRetailItemList.length).toEqual(0);
     });
   });
 
@@ -172,18 +172,18 @@ describe('Controller: ItemImportCtrl', function () {
     var retailItem2 = {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456'};
     beforeEach(function(){
       scope.companyRetailItemList = [retailItem2];
-      scope.stockownersRetailItemList = [];
-      scope.selectedStockownerCompany = {id:432};
+      scope.importedRetailItemList = [];
+      scope.selectedImportCompany = {id:432};
       scope.$digest();
     });
     it('should return false when retail Item\'s company ID is the same as current company ID', function(){
       expect(scope.removeRetailItem(retailItem1)).toBe(false);
-      scope.stockownersRetailItemList = [];
+      scope.importedRetailItemList = [];
       scope.$digest();
     });
-    it('should expect stockownersRetailItemList array length to be 1', function() {
+    it('should expect importedRetailItemList array length to be 1', function() {
       scope.removeRetailItem(retailItem2);
-      expect(scope.stockownersRetailItemList.length).toEqual(1);
+      expect(scope.importedRetailItemList.length).toEqual(1);
     });
     it('should expect companyRetailItemList array length to be 0', function() {
       scope.removeRetailItem(retailItem2);
@@ -198,16 +198,16 @@ describe('Controller: ItemImportCtrl', function () {
         {companyId:432,id:2,itemCode:'1234',itemName:'1234',onBoardName:'1234'},
         {companyId:currentCompanyId,id:3,itemCode:'12345',itemName:'12345',onBoardName:'12345'},
         {companyId:34,id:4,itemCode:'123456',itemName:'123456',onBoardName:'123456'}];
-      scope.stockownersRetailItemList = [];
-      scope.selectedStockownerCompany = {id:432};
+      scope.importedRetailItemList = [];
+      scope.selectedImportCompany = {id:432};
       scope.$digest();
       scope.removeAll();
     });
     it('should reset companyRetailItemList to a single array item', function(){
       expect(scope.companyRetailItemList.length).toEqual(1);
     });
-    it('should reset stockownersRetailItemList to a single array item', function(){
-      expect(scope.stockownersRetailItemList.length).toEqual(2);
+    it('should reset importedRetailItemList to a single array item', function(){
+      expect(scope.importedRetailItemList.length).toEqual(2);
     });
   });
 

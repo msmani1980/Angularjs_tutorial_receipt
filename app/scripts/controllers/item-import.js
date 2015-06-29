@@ -20,24 +20,24 @@ angular.module('ts5App')
     $scope.viewName = 'Import Stock Owner Items';
 
     // scope functions
-    $scope.changeSelectedStockownerCompany = function () {
-      if (!angular.isDefined($scope.selectedStockownerCompany)) {
+    $scope.changeSelectedImportCompany = function () {
+      if (!angular.isDefined($scope.selectedImportCompany)) {
         return false;
       }
-      ItemImportFactory.getItemsList({companyId: $scope.selectedStockownerCompany.id}).then(function (response) {
-        $scope.stockownersRetailItemList = [];
+      ItemImportFactory.getItemsList({companyId: $scope.selectedImportCompany.id}).then(function (response) {
+        $scope.importedRetailItemList = [];
         angular.forEach(response.retailItems, function (retailItem) {
           if (canBeAddedToCompanyRetailList(retailItem)) {
             retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
-            retailItem.companyName = $scope.selectedStockownerCompany.companyName;
+            retailItem.companyName = $scope.selectedImportCompany.companyName;
             this.push(retailItem);
           }
-        }, $scope.stockownersRetailItemList);
+        }, $scope.importedRetailItemList);
       });
     };
 
     $scope.importAll = function () {
-      angular.forEach($scope.stockownersRetailItemList, function(retailItem){
+      angular.forEach($scope.importedRetailItemList, function(retailItem){
         if(!canBeAddedToCompanyRetailList(retailItem)){
           return;
         }
@@ -46,7 +46,7 @@ angular.module('ts5App')
         }
         addRetailItemToCompanyRetailItems(retailItem);
       });
-      $scope.stockownersRetailItemList = [];
+      $scope.importedRetailItemList = [];
     };
 
     $scope.isCompanyItem = function (retailItem) {
@@ -61,8 +61,8 @@ angular.module('ts5App')
       _companyRetailItemNames.splice(_companyRetailItemNames.indexOf(retailItem.itemName), 1);
       _companyRetailItemOnboardNames.splice(_companyRetailItemOnboardNames.indexOf(retailItem.onBoardName), 1);
       $scope.companyRetailItemList.splice($scope.companyRetailItemList.indexOf(retailItem), 1);
-      if($scope.selectedStockownerCompany.id === retailItem.companyId) {
-        $scope.stockownersRetailItemList.push(retailItem);
+      if($scope.selectedImportCompany.id === retailItem.companyId) {
+        $scope.importedRetailItemList.push(retailItem);
       }
     };
 
@@ -76,8 +76,8 @@ angular.module('ts5App')
         if($scope.isCompanyItem(retailItem)){
           addRetailItemToCompanyRetailItems(retailItem);
         }
-        else if(retailItem.companyId === $scope.selectedStockownerCompany.id){
-          $scope.stockownersRetailItemList.push(retailItem);
+        else if(retailItem.companyId === $scope.selectedImportCompany.id){
+          $scope.importedRetailItemList.push(retailItem);
         }
       });
       tempList = null;
@@ -188,7 +188,7 @@ angular.module('ts5App')
       _companyRetailItemCodes = [];
       _companyRetailItemNames = [];
       _companyRetailItemOnboardNames = [];
-      $scope.stockOwnerList = [];
+      $scope.importCompanyList = [];
       $scope.companyRetailItemList = [];
       $scope.companiesLoaded = false;
       this.constructorPromises = [
@@ -198,7 +198,7 @@ angular.module('ts5App')
             if(2 === company.companyTypeId){
               this.push(company);
             }
-          }, $scope.stockOwnerList);
+          }, $scope.importCompanyList);
         }),
         ItemImportFactory.getItemsList({companyId: _companyId}).then(function (response) {
           $scope.companyRetailItemList = response.retailItems;
@@ -206,7 +206,7 @@ angular.module('ts5App')
       ];
       // assign random color to all companies and items
       $q.all(this.constructorPromises).then(function () {
-        angular.forEach($scope.stockOwnerList, function (company) {
+        angular.forEach($scope.importCompanyList, function (company) {
           company.hexColor = randomHexColorClass.get(company.id);
         });
         angular.forEach($scope.companyRetailItemList, function (retailItem) {
