@@ -22,7 +22,7 @@ describe('Controller: CashBagCtrl', function () {
     getCompanyPreferencesJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
+  beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_) {
     scope = $rootScope.$new();
 
     inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedCompanyPreferences_) {
@@ -33,7 +33,7 @@ describe('Controller: CashBagCtrl', function () {
       getCompanyPreferencesJSON = _servedCompanyPreferences_;
     });
 
-    cashBagFactory = $injector.get('cashBagFactory');
+    cashBagFactory = _cashBagFactory_;
 
     getCashBagDeferred = $q.defer();
     getCashBagDeferred.resolve(cashBagResponseJSON);
@@ -138,7 +138,7 @@ describe('Controller: CashBagCtrl', function () {
       });
     });
 
-    describe('formSave', function() {
+    describe('formSave form action', function() {
       it('should call cashBagFactory createCashBag', function () {
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.createCashBag).toHaveBeenCalledWith({cashBag: scope.cashBag});
