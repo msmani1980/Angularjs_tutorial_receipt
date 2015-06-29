@@ -90,8 +90,9 @@
 			      <th>Flight Amount</th>
 			      <th>Paper Amount</th>
 			      <th>Coin Amount</th>
-			      <th>Paper Bank Exchange Rate</th>
-			      <th>Coin Bank Exchange Rate</th>
+            <th ng-if="isBankExchangePreferred()">Bank Exchange Rate</th>
+			      <th ng-if="!isBankExchangePreferred()">Paper Bank Exchange Rate</th>
+			      <th ng-if="!isBankExchangePreferred()">Coin Bank Exchange Rate</th>
 			    </tr>
 			    </thead>
 			    <tbody>
@@ -108,8 +109,9 @@
                        ng-model="currency.coinAmountManual"
                        name="coinAmountManual[{{currency.currencyId}}]"
                        ng-readonly="readOnly"></td>
-			      <td>{{ currency.paperAmountEpos }}</td>
-			      <td>{{ currency.coinAmountEpos }}</td>
+            <td ng-if="isBankExchangePreferred()">{{ currency.bankAmount }}</td>
+			      <td ng-if="!isBankExchangePreferred()">{{ currency.paperAmountEpos }}</td>
+			      <td ng-if="!isBankExchangePreferred()">{{ currency.coinAmountEpos }}</td>
 			    </tr>
 			    </tbody>
 			  </table>

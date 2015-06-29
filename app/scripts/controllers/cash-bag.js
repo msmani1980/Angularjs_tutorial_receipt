@@ -98,6 +98,16 @@ angular.module('ts5App')
       }
     };
 
+    $scope.isBankExchangePreferred = function () {
+      if (!$scope.companyPreferences) {
+        return false;
+      }
+
+      return $scope.companyPreferences.filter(function (feature) {
+          return (feature.featureCode === 'EXR' && feature.optionCode === 'ERT' && feature.choiceCode === 'BNK');
+        }).length > 0;
+    };
+
     // Constructor
     (function constructor() {
       // set global controller properties
@@ -133,11 +143,16 @@ angular.module('ts5App')
           );
         },
         getDailyExchangeRates: function () {
-          return cashBagFactory.getDailyExchangeRates(_companyId, $routeParams.scheduleDate).then(
+          return cashBagFactory.getDailyExchangeRates(_companyId, moment().format('YYYYMMDD')).then(
             function (response) {
               $scope.dailyExchangeRates = response.dailyExchangeRates;
             }
           );
+        },
+        getCompanyPreferences: function () {
+          return cashBagFactory.getCompanyPreferences().then(function(response){
+            $scope.companyPreferences = response.preferences;
+          });
         }
       };
 
@@ -163,7 +178,7 @@ angular.module('ts5App')
 
     // CRUD - Create
     function create() {
-      var _promises = _factoryHelper.callServices(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
+      var _promises = _factoryHelper.callServices(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
 
       $scope.readOnly = false;
       $scope.cashBag = {
@@ -179,18 +194,19 @@ angular.module('ts5App')
 
       $q.all(_promises).then(function () {
         if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
-          $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
+          $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
         } else {
             helpers.showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
         }
-        angular.forEach($scope.companyCurrencies, function (currency) {
+        angular.forEach($scope.dailyExchangeRates[0].dailyExchangeRateCurrencies, function (currency) {
           $scope.cashBag.cashBagCurrencies.push(
             {
-              currencyId: currency.id,
-              // TODO - what value should go here, can user's enter the "Flight amount" on the create page
-              bankAmount: '0.0000', // TODO should the user be allowed to set this value on create form?
+              currencyId: currency.retailCompanyCurrencyId,
+              bankAmount: currency.bankExchangeRate,
               paperAmountManual: '0.0000',
-              coinAmountManual: '0.0000'
+              coinAmountManual: '0.0000',
+              paperAmountEpos: currency.paperExchangeRate,
+              coinAmountEpos: currency.coinExchangeRate
             }
           );
         });
@@ -200,18 +216,17 @@ angular.module('ts5App')
 
     // CRUD - Read
     function read() {
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
         $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
-        $scope.canDelete = false;
       });
     }
 
     // CRUD - Update
     function update() {
       $scope.readOnly = false;
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
         $scope.canDelete = helpers.canDelete;
         $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
