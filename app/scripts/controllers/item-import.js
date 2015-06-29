@@ -22,8 +22,10 @@ angular.module('ts5App')
     // scope functions
     $scope.changeSelectedImportCompany = function () {
       if (!angular.isDefined($scope.selectedImportCompany)) {
+        console.log('got here failed');
         return false;
       }
+      console.log('got here');
       ItemImportFactory.getItemsList({companyId: $scope.selectedImportCompany.id}).then(function (response) {
         $scope.importedRetailItemList = [];
         angular.forEach(response.retailItems, function (retailItem) {

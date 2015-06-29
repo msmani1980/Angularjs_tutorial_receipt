@@ -61,7 +61,7 @@
             id="importCompanyId"
             ng-show="companiesLoaded"
             ng-change="changeSelectedImportCompany(company.id)"
-            ng-model="selectedStockownerCompany"
+            ng-model="selectedImportCompany"
             ng-options="company as company.companyName for company in importCompanyList">
           <option selected default value="">Select Stock Owner</option>
         </select>

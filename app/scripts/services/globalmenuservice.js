@@ -52,7 +52,11 @@ angular.module('ts5App')
       '413': {
         id: 413,
         name: 'Stock Owner'
-      }
+      },
+      '407': {
+        id: 407,
+        name: 'GRO 2'
+      },
     };
 
     var defaults = {};
