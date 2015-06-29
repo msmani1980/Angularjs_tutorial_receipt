@@ -55,7 +55,12 @@ angular.module('ts5App')
       var promises = [];
       data.forEach(function (companyRelationship) {
         var messageAction = companyRelationship.id ? 'updated' : 'created';
-        promises.push(companyRelationshipFactory.updateCompanyRelationship(companyRelationship).then(saveCompanyRelationship(messageAction)));
+
+        if (companyRelationship.id) {
+          promises.push(companyRelationshipFactory.updateCompanyRelationship(companyRelationship).then(saveCompanyRelationship(messageAction)));
+        } else {
+          promises.push(companyRelationshipFactory.createCompanyRelationship(companyRelationship).then(saveCompanyRelationship(messageAction)));
+        }
       });
 
       $q.all(promises).then(function () {
