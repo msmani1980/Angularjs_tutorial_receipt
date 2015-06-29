@@ -35,8 +35,8 @@ angular.module('ts5App')
           dismissButton: true,
           content: '<strong>Cash bag</strong>:' + message + '!'
         });
-        $scope.displayError = true;
-        if(error !== null) {
+        if(error !== null && isError) {
+          $scope.displayError = true;
           $scope.formErrors = error.data;
         }
       },
@@ -101,7 +101,6 @@ angular.module('ts5App')
     (function constructor() {
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
-
       // in object of our services, to be called with the factory helper
       var services = {
         getCashBag: function () {
