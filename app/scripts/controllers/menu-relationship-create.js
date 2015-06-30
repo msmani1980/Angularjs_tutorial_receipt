@@ -30,7 +30,20 @@ angular.module('ts5App')
       }
       if ($scope.editingRelationship || $scope.viewOnly) {
         this.getRelationship($routeParams.id);
+      } else {
+        this.getRelationshipDependencies();
       }
+    };
+
+    this.getRelationshipDependencies = function () {
+      angular.element('#loading').modal('show').find('p')
+        .text('Getting catering stations...');
+      var promises = this.makePromises();
+      $q.all(promises).then(function (response) {
+        $this.setCatererStationList(response[0]);
+        $this.setMenuList(response[1]);
+        angular.element('#loading').modal('hide');
+      });
     };
 
     this.checkIfViewOnly = function () {
@@ -56,11 +69,14 @@ angular.module('ts5App')
     };
 
     this.makePromises = function (id) {
-      return [
-        menuCatererStationsService.getRelationship(id),
+      var promises = [
         catererStationService.getCatererStationList(),
         menuService.getMenuList()
       ];
+      if (id) {
+        promises.push(menuCatererStationsService.getRelationship(id));
+      }
+      return promises;
     };
 
     this.getRelationship = function (id) {
@@ -68,9 +84,9 @@ angular.module('ts5App')
         .text('We are getting Relationship ' + $routeParams.id);
       var promises = this.makePromises(id);
       $q.all(promises).then(function (response) {
-        $this.updateFormData(response[0]);
-        $this.setCatererStationList(response[1]);
-        $this.setMenuList(response[2]);
+        $this.setCatererStationList(response[0]);
+        $this.setMenuList(response[1]);
+        $this.updateFormData(response[2]);
         $this.updateViewName();
         angular.element('#loading').modal('hide');
       });
