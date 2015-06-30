@@ -90,8 +90,8 @@
 
           <div class="form-group">
             <label for="menu-station">Catering Stations</label>
-            <select  ng-disabled="viewOnly || menuIsActive" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
-              <option ng-selected="isStationSelected(station.id)" value="{{station.id}}" ng-repeat="(key,station) in stationList | unique: 'id'">{{ station.code }}</option>
+            <select ng-disabled="viewOnly || menuIsActive" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
+              <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
             </select>
 
           </div>
@@ -107,9 +107,6 @@
 </div>
 
 <form-success-modal list-path="menu-relationship-list" create-path="menu-relationship-create"></form-success-modal>
-
 <form-update-modal></form-update-modal>
-
 <leave-view-modal></leave-view-modal>
-
 <left-navigation base-path="menu-relationship"></left-navigation>

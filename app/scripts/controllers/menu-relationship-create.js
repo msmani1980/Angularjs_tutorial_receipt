@@ -42,6 +42,7 @@ angular.module('ts5App')
       $q.all(promises).then(function (response) {
         $this.setCatererStationList(response[0]);
         $this.setMenuList(response[1]);
+        $this.initSelectUI();
         angular.element('#loading').modal('hide');
       });
     };
@@ -64,8 +65,8 @@ angular.module('ts5App')
         prefix = 'Editing';
       }
       var menuIndex = this.findMenuIndex($scope.formData.menuId);
-      $scope.viewName = prefix + ' ' + $scope.menuList[menuIndex].menuName +
-        '\'s Catering Stations';
+      $scope.viewName = prefix + ' Menu ' + $scope.menuList[menuIndex].menuCode +
+        ' Catering Stations';
     };
 
     this.makePromises = function (id) {
@@ -87,6 +88,7 @@ angular.module('ts5App')
         $this.setCatererStationList(response[0]);
         $this.setMenuList(response[1]);
         $this.updateFormData(response[2]);
+        $this.initSelectUI();
         $this.updateViewName();
         angular.element('#loading').modal('hide');
       });
@@ -94,7 +96,6 @@ angular.module('ts5App')
 
     this.setCatererStationList = function (apiResponse) {
       $scope.stationList = apiResponse.response;
-      $this.initSelectUI();
     };
 
     this.setMenuList = function (apiResponse) {
@@ -113,34 +114,58 @@ angular.module('ts5App')
       return menuIndex;
     };
 
-    this.findStationById = function (stationId) {
-      var stationFound = false;
-      for (var key in $scope.formData.catererStationIds) {
-        var station = $scope.formData.catererStationIds[key];
-        if (parseInt(station) === parseInt(stationId)) {
-          stationFound = true;
+    this.findStationIndex = function (stationId) {
+      var stationIndex = null;
+      for (var key in $scope.stationList) {
+        var station = $scope.stationList[key];
+        if (parseInt(station.id) === parseInt(stationId)) {
+          stationIndex = key;
           break;
         }
       }
-      return stationFound;
+      return stationIndex;
     };
 
-    $scope.isStationSelected = function (stationId) {
-      console.log(stationId, $this.findStationById(stationId));
-      return $this.findStationById(stationId);
+    this.generateSelectedOptions = function (data) {
+      for (var key in $scope.formData.catererStationIds) {
+        var stationId = $scope.formData.catererStationIds[key];
+        var stationIndex = this.findStationIndex(stationId);
+        var stationCode = $scope.stationList[stationIndex].code;
+        data.push({
+          id: stationId,
+          text: stationCode
+        });
+      }
+      return data;
     };
 
     this.initSelectUI = function () {
-      angular.element('.multi-select').select2({
-        width: '100%'
-      });
+      var data = [];
+      if ($scope.formData.catererStationIds && $scope.formData.catererStationIds
+        .length > 0) {
+        data = this.generateSelectedOptions(data);
+      }
+      angular.element('select.multi-select').select2({
+        width: '100%',
+        placeholder: 'Search by Station Code',
+        allowClear: true,
+      }).select2('data', data);
+    };
+
+    this.formatStationIds = function (data) {
+      for (var key in data.catererStationIds) {
+        var stationId = data.catererStationIds[key];
+        data.catererStationIds[key] = stationId.toString();
+      }
     };
 
     this.updateFormData = function (data) {
-      data.startDate = dateUtility.formatDate(data.startDate, 'YYYYMMDD',
+      data.startDate = dateUtility.formatDate(data.startDate,
+        'YYYYMMDD',
         'L');
       data.endDate = dateUtility.formatDate(data.endDate,
         'YYYYMMDD', 'L');
+      this.formatStationIds(data);
       $scope.formData = data;
     };
 
@@ -152,6 +177,7 @@ angular.module('ts5App')
         relationshipData).then(
         function (response) {
           $this.updateFormData(response);
+          $this.initSelectUI();
           angular.element('#loading').modal('hide');
           angular.element('#update-success').modal('show');
         },
