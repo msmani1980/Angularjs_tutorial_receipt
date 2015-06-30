@@ -23,7 +23,6 @@ angular.module('ts5App')
     this.initCreateView = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Create Post Trip Data';
-
       // TODO: create/back button
     };
 
@@ -93,15 +92,30 @@ angular.module('ts5App')
 
     $scope.updateArrivalInfo = function () {
       var station = $scope.stationList[$scope.arrivalStationIndex];
-      $scope.postTrip.arrivalStation = station.stationName;
-      $scope.postTrip.arrivalTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
+      $scope.postTrip.arrStationId = station.stationId;
+      $scope.arrivalTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
     };
 
     $scope.updateDepartureInfo = function () {
       var station = $scope.stationList[$scope.departureStationIndex];
-      $scope.postTrip.departureStation = station.stationName;
-      $scope.postTrip.departureTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
+      $scope.postTrip.depStationId = station.stationId;
+      $scope.departureTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
     };
+
+    $scope.formSave = function() {
+      // TODO: validate data and check that values cannot be null
+      $scope.postTrip.scheduleDate = moment($scope.postTrip.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD');
+      $scope.postTrip.postTripEmployeeIdentifiers = [];
+      var employeeIds = $('.employeeID-multiple-select').select2('val');
+      angular.forEach(employeeIds, function(value) {
+        $scope.postTrip.postTripEmployeeIdentifiers.push({employeeIdentifier:value});
+      });
+      console.log($scope.postTrip);
+      postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(function(response){
+        console.log(response);
+      });
+    };
+
 
 
   });

@@ -63,7 +63,7 @@
             <div class="form-group">
               <label for="departure-time-zone">Departure Time Zone *</label>
               <input type="text" class="form-control" id="departure-time-zone" placeholder=""
-                     ng-model="postTrip.departureTimezone" disabled>
+                     ng-model="departureTimezone" disabled>
             </div>
           </div>
         </div>
@@ -92,7 +92,7 @@
             <div class="form-group">
               <label>Arrival Time Zone *</label>
               <input type="text" class="form-control" id="arrivalTime" placeholder=""
-                    ng-model="postTrip.arrivalTimezone" disabled>
+                    ng-model="arrivalTimezone" disabled>
             </div>
           </div>
 
@@ -133,7 +133,7 @@
           <div class="col-xs-12 col-sm-4 employee-id">
             <div class="form-group">
               <label>Employee ID's *</label>
-              <select class="employeeID-multiple-select" multiple="multiple" ng-readonly="readOnly" ng-model="postTrip.employeeID" ng-disabled="readOnly">
+              <select class="employeeID-multiple-select" multiple="multiple" ng-readonly="readOnly" ng-model="employeeIDs" ng-disabled="readOnly">
                 <option value="000001">000001</option>
                 <option value="000002">000002</option>
                 <option value="000003">000003</option>

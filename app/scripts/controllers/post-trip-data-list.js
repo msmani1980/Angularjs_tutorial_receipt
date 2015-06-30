@@ -47,7 +47,7 @@ angular.module('ts5App')
 
 
     $scope.searchPostTripData = function () {
-      console.log($scope.search.scheduleNumber);
+      postTripFactory.getPostTripDataList(_companyId, $scope.search);
       // TODO: call API with search object
     };
 

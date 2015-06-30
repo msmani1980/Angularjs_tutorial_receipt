@@ -21,6 +21,7 @@ describe('Factory: postTripFactory', function () {
     postTripsService = _postTripsService_;
 
     spyOn(postTripsService, 'getPostTrips');
+    spyOn(postTripsService, 'createPostTrip')
     spyOn(GlobalMenuService.company, 'get');
     spyOn(stationsService, 'getStationList');
     spyOn(carrierService, 'getCarrierTypes');
@@ -40,6 +41,10 @@ describe('Factory: postTripFactory', function () {
     it('should call postTripService on getPostTripDataList', function () {
       postTripFactory.getPostTripDataList(companyId);
       expect(postTripsService.getPostTrips).toHaveBeenCalledWith(companyId);
+    });
+    it('should call postTripService on createPostTrip', function(){
+      postTripFactory.createPostTrip(company, {});
+      expect(postTripsService.createPostTrip).toHaveBeenCalled();
     });
   });
 

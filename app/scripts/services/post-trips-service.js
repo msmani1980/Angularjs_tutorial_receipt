@@ -18,7 +18,7 @@ angular.module('ts5App')
       getPostTrips: {
         method: 'GET',
         headers: {companyId: 362} // TODO should this always be here?
-      }
+      },
       //updatePostTrips: {
       //  method: 'PUT',
       //  headers: {companyId: 362} // TODO should this always be here?
@@ -27,10 +27,10 @@ angular.module('ts5App')
       //  method: 'DELETE',
       //  headers: {companyId: 362} // TODO should this always be here?
       //},
-      //creatPostTrips: {
-      //  method: 'POST',
-      //  headers: {companyId: 362} // TODO should this always be here?
-      //}
+      createPostTrips: {
+        method: 'POST',
+        headers: {companyId: 362} // TODO should this always be here?
+      }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
@@ -56,15 +56,16 @@ angular.module('ts5App')
     //  return requestResource.deleteCashBag({id:cashBagId}).$promise;
     //}
     //
-    //function createCashBag(payload) {
-    //  return requestResource.createCashBag(payload).$promise;
-    //}
+    function createPostTrip(companyId, payload) {
+      payload.id = companyId;
+      return requestResource.createPostTrips(companyId, payload).$promise;
+    }
 
     return {
-      getPostTrips: getPostTrips
+      getPostTrips: getPostTrips,
       //getCashBag: getCashBag,
       //updateCashBag: updateCashBag,
       //deleteCashBag: deleteCashBag,
-      //createCashBag: createCashBag
+      createPostTrip: createPostTrip
     };
   });
