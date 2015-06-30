@@ -35,7 +35,6 @@ angular.module('ts5App')
         var relationship = $scope.relationshipList[key];
         var menuIndex = this.findMenuIndex(relationship.menuId);
         if (menuIndex !== null) {
-          console.log(menuIndex, 'menu!');
           $scope.relationshipList[key].menu = $scope.menuList[menuIndex];
         }
       }
@@ -131,7 +130,7 @@ angular.module('ts5App')
       var menuIndex = null;
       for (var key in $scope.menuList) {
         var menu = $scope.menuList[key];
-        if (parseInt(menu.id) === parseInt(menuId)) {
+        if (parseInt(menu.menuId) === parseInt(menuId)) {
           menuIndex = key;
           break;
         }

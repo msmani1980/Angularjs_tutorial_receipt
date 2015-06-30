@@ -8,22 +8,35 @@
  */
 angular.module('ts5App')
   .controller('MenuRelationshipCreateCtrl', function ($scope, $location,
-    $routeParams, menuService, dateUtility) {
+    $routeParams, menuService, catererStationService,
+    menuCatererStationsService, dateUtility, $q) {
 
     var $this = this;
     $scope.formData = {
-      menuCode: '',
-      menuName: '',
-      stations: [],
       startDate: '',
       endDate: ''
     };
-    $scope.viewName = 'Create Menu Relationship';
+    $scope.viewName = 'Create Relationship';
     $scope.buttonText = 'Create';
-    $scope.menuIsActive = false;
-    $scope.menuIsInactive = false;
+    $scope.relationshipIsActive = false;
+    $scope.relationshipIsInactive = false;
     $scope.viewOnly = false;
-    $scope.editingMenu = false;
+    $scope.editingRelationship = false;
+
+    this.init = function () {
+      this.getCatererStationList();
+      this.getMenuList();
+      this.checkIfViewOnly();
+      if ($routeParams.id && !$scope.viewOnly) {
+        this.setFormAsEdit();
+      }
+      if ($scope.editingRelationship || $scope.viewOnly) {
+        $q.all([menuService.getMenuList, catererStationService.getCatererStationList])
+          .then(function () {
+            $this.getRelationship($routeParams.id);
+          });
+      }
+    };
 
     this.checkIfViewOnly = function () {
       var path = $location.path();
@@ -32,45 +45,97 @@ angular.module('ts5App')
       }
     };
 
-    this.setFormAsViewOnly = function () {
-      $scope.viewName = 'Viewing Menu ' + $routeParams.id;
-    };
-
     this.setFormAsEdit = function () {
-      $scope.editingMenu = true;
-      $scope.viewName = 'Edit Menu ' + $routeParams.id;
+      $scope.editingRelationship = true;
       $scope.buttonText = 'Save';
     };
 
-    // gets an menu to $scope.editingMenu
-    this.getMenu = function (id) {
+    this.updateViewName = function () {
+      var prefix = 'Viewing';
+      if ($scope.editingRelationship) {
+        prefix = 'Editing';
+      }
+      var menuIndex = this.findMenuIndex($scope.formData.menuId);
+      $scope.viewName = prefix + ' ' + $scope.menuList[menuIndex].menuName +
+        '\'s Catering Stations';
+    };
 
-      // TODO: Make this use a loadingModal.show() method
-      angular.element('#loading').modal('show').find('p')
-        .text('We are getting Menu ' + id);
-
-      menuService.getMenu(id).then(function (data) {
-
+    // gets an menu to $scope.editingRelationship
+    this.getRelationship = function (id) {
+      menuCatererStationsService.getRelationship(id).then(function (data) {
+        // TODO: Make this use a loadingModal.show() method
+        angular.element('#loading').modal('show').find('p')
+          .text('We are getting Relationship ' + $routeParams.id);
         $this.updateFormData(data);
+        //$this.updateViewName();
         angular.element('#loading').modal('hide');
       });
+    };
 
+    this.getCatererStationList = function () {
+      catererStationService.getCatererStationList().then(function (
+        apiResponse) {
+        $scope.stationList = apiResponse.response;
+        $this.initSelectUI();
+      });
+    };
+
+    this.getMenuList = function () {
+      menuService.getMenuList().then(function (apiResponse) {
+        $scope.menuList = apiResponse.menus;
+      });
+    };
+
+    this.findMenuIndex = function (menuId) {
+      var menuIndex = null;
+      for (var key in $scope.menuList) {
+        var menu = $scope.menuList[key];
+        if (parseInt(menu.menuId) === parseInt(menuId)) {
+          menuIndex = key;
+          break;
+        }
+      }
+      return menuIndex;
+    };
+
+    this.findStationIndex = function (stationId) {
+      var stationIndex = null;
+      for (var key in $scope.stationList) {
+        var station = $scope.stationList[key];
+        if (parseInt(station.id) === parseInt(stationId)) {
+          stationIndex = key;
+          break;
+        }
+      }
+      return stationIndex;
+    };
+
+    /*$scope.isStationSelected = function (stationId) {
+      var stationIndex = $this.findStationIndex(stationId);
+    };*/
+
+    this.initSelectUI = function () {
+      angular.element('.multi-select').select2({
+        width: '100%'
+      });
     };
 
     this.updateFormData = function (data) {
       data.startDate = dateUtility.formatDate(data.startDate, 'YYYYMMDD',
         'L');
-      data.endDate = dateUtility.formatDate(data.endDate, 'YYYYMMDD', 'L');
+      data.endDate = dateUtility.formatDate(data.endDate,
+        'YYYYMMDD', 'L');
       $scope.formData = data;
     };
 
-    this.updateMenu = function (menuData) {
+    this.updateRelationship = function (relationshipData) {
       var $this = this;
       angular.element('#loading').modal('show').find('p').text(
         'We are updating your menu');
-      menuService.createMenu($routeParams.id, menuData).then(
+      menuCatererStationsService.updateRelationship($routeParams.id,
+        relationshipData).then(
         function (response) {
-          $this.upateFormData(response);
+          $this.updateFormData(response);
           angular.element('#loading').modal('hide');
           angular.element('#update-success').modal('show');
         },
@@ -81,52 +146,44 @@ angular.module('ts5App')
         });
     };
 
-    this.createMenu = function (menuData) {
+    this.createRelationship = function (relationshipData) {
       angular.element('#loading').modal('show').find('p').text(
         'We are creating your menu');
-      menuService.createMenu(menuData).then(function () {
-        angular.element('#loading').modal('hide');
-        angular.element('#create-success').modal('show');
-      }, function (error) {
-        angular.element('#loading').modal('hide');
-        $scope.displayError = true;
-        $scope.formErrors = error.data;
-      });
+      menuCatererStationsService.createRelationship(relationshipData).then(
+        function () {
+          angular.element('#loading').modal('hide');
+          angular.element('#create-success').modal('show');
+        },
+        function (error) {
+          angular.element('#loading').modal('hide');
+          $scope.displayError = true;
+          $scope.formErrors = error.data;
+        });
     };
-
 
     $scope.submitForm = function (formData) {
       if (!$scope.form.$valid) {
         $scope.displayError = true;
         return false;
       }
-      var menuData = angular.copy(formData);
-      $this.formatPayloadDates(menuData);
-      if ($scope.editingMenu) {
-        $this.updateMenu(menuData);
+      var relationshipData = angular.copy(formData);
+      console.log(relationshipData);
+      $this.formatPayloadDates(relationshipData);
+      if ($scope.editingRelationship) {
+        $this.updateRelationship(relationshipData);
       } else {
-        $this.createMenu(menuData);
+        $this.createRelationship(relationshipData);
       }
     };
 
-    this.formatPayloadDates = function (menu) {
-      menu.startDate = dateUtility.formatDate(menu.startDate, 'L',
+    this.formatPayloadDates = function (relationship) {
+      relationship.startDate = dateUtility.formatDate(relationship.startDate,
+        'L',
         'YYYYMMDD');
-      menu.endDate = dateUtility.formatDate(menu.endDate, 'L', 'YYYYMMDD');
+      relationship.endDate = dateUtility.formatDate(relationship.endDate,
+        'L', 'YYYYMMDD');
     };
 
-    this.checkIfViewOnly();
-
-    if ($scope.viewOnly) {
-      this.setFormAsViewOnly();
-    }
-
-    if ($routeParams.id && !$scope.viewOnly) {
-      this.setFormAsEdit();
-    }
-
-    if ($scope.editingMenu || $scope.viewOnly) {
-      this.getMenu($routeParams.id);
-    }
+    this.init();
 
   });

@@ -42,21 +42,47 @@
 
 				<div class="col-xs-12 col-sm-6">
 
-						<input-text label="Menu Code" name="menuCode" required="true" pattern="regexp.alpha" placeholder="ORD" min-length="1" max-length="3"></input-text>
+          <div class="row">
 
-            <input-text label="Menu Name" name="menuName" required="true" pattern="regexp.word" placeholder="Main Menu" min-length="1" max-length="20"></input-text>
+            <div class="col-xs-12 col-sm-6">
 
-            <date-picker class="form-group"
-  						element-class="col-xs-6 col-sm-6"
-  						start-date-model="formData.startDate"
-  						end-date-model="formData.endDate"
-  						disable-past="true"
-  						label-from="Effective From"
-  						label-to="Effective To"
-  						disable-start-date="viewOnly || menuIsActive"
-  						disable-end-date="viewOnly || menuIsInactive"
-  						>
-  					</date-picker>
+              <div class="form-group">
+                <label>Menu Code *</label>
+                <select ng-model="formData.menuId" class="form-control">
+                  <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
+                    {{ menu.menuCode }}
+                  </option>
+                </select>
+            </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-6">
+
+              <div class="form-group">
+                <label>Menu Name *</label>
+                <select ng-disabled="true" ng-model="formData.menuId" class="form-control">
+                  <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
+                    {{ menu.menuName }}
+                  </option>
+                </select>
+              </div>
+
+            </div>
+
+          </div>
+
+          <date-picker class="form-group"
+						element-class="col-xs-6 col-sm-6"
+						start-date-model="formData.startDate"
+						end-date-model="formData.endDate"
+						disable-past="true"
+						label-from="Effective From"
+						label-to="Effective To"
+						disable-start-date="viewOnly || menuIsActive"
+						disable-end-date="viewOnly || menuIsInactive"
+						>
+					</date-picker>
 
         </div>
 
@@ -64,8 +90,8 @@
 
           <div class="form-group">
             <label for="menu-station">Catering Stations</label>
-            <select multiple="true" ng-model="search.menuStation" class="form-control" id="menu-station">
-              <option value="{{station.code}}" ng-repeat="station in stationList | unique: 'id'">{{ station.code }}</option>
+            <select  ng-disabled="viewOnly || menuIsActive" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
+              <option value="{{station.id}}" ng-repeat="(key,station) in stationList | unique: 'id'">{{ station.code }}</option>
             </select>
           </div>
 
