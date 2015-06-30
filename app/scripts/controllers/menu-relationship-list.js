@@ -16,19 +16,22 @@ angular.module('ts5App')
     $scope.currentPage = 1;
     $scope.relationshipsPerPage = 10;
     $scope.relationshipList = [];
+    $scope.dateRange = {
+      startDate: '',
+      endDate: ''
+    };
 
     this.init = function () {
       this.getRelationshipList();
-      $scope.$watchCollection('search', function () {
+      $scope.$watch('search', function () {
         $this.updateRelationshipList();
-      });
+      }, true);
       $scope.$watchCollection('dateRange', function () {
         $this.getRelationshipList();
       });
       $scope.$watch('currentPage + relationshipsPerPage', function () {
         $this.updateRelationshipList();
       });
-
     };
 
     this.updateRelationshipList = function () {
@@ -40,6 +43,9 @@ angular.module('ts5App')
     };
 
     this.filterRelationships = function () {
+      console.log($scope.relationshipList, $scope.search, $filter('filter')
+        ($scope.relationshipList,
+          $scope.search));
       return $filter('filter')($scope.relationshipList, $scope.search);
     };
 
@@ -160,7 +166,7 @@ angular.module('ts5App')
     };
 
     this.initSelectUI = function () {
-      angular.element('.multi-select').select2({
+      angular.element('select.multi-select').select2({
         width: '100%'
       });
     };

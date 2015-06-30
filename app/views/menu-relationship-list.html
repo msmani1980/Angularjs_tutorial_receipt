@@ -41,7 +41,7 @@
 
 						<div class="form-group">
 							<label for="menu-code">Menu Code</label>
-							<input ng-model="search.menuCode" type="text" class="form-control" placeholder="MC001" />
+							<input ng-model="search.menu.menuCode" type="text" class="form-control" placeholder="T1" />
 						</div>
 
 					</div>
@@ -50,7 +50,7 @@
 
 						<div class="form-group">
 							<label for="menu-name">Menu Name</label>
-							<input ng-model="search.menuName" type="text" class="form-control" placeholder="Menu Name" />
+							<input ng-model="search.menu.menuName" type="text" class="form-control" placeholder="Menu Name" />
 						</div>
 
 					</div>
@@ -59,8 +59,8 @@
 
 						<div class="form-group">
 							<label for="menu-station">Catering Stations</label>
-							<select multiple="multiple" ng-model="search.menuStations" class="multi-select">
-								<option value="{{station.code}}" ng-repeat="station in stationList | unique: 'id'">{{ station.code }}</option>
+							<select multiple="multiple" ng-model="search.stations" class="multi-select">
+								<option value="{{station.id}}" ng-repeat="station in stationList | unique: 'id'">{{ station.code }}</option>
 							</select>
 						</div>
 					</div>
@@ -112,11 +112,11 @@
             <i class="fa fa-file"></i>
           </a>
 
-          <a class="btn btn-primary btn-xs btn-edit" ng-href="#/menu-relationship-edit/{{relationship.id}}" ng-disabled="isMenuActive(relationship.endDate)">
+          <a class="btn btn-primary btn-xs btn-edit" ng-href="#/menu-relationship-edit/{{relationship.id}}" ng-hide="isMenuActive(relationship.endDate)">
             <i class="fa fa-pencil"></i>
           </a>
 
-          <button class="btn btn-danger btn-xs btn-delete" ng-click="deleteRelationship(relationship.id,key)" ng-disabled="isRelationshipActive(relationship.startDate) || isRelationshipInactive(relationship.endDate)">
+          <button class="btn btn-danger btn-xs btn-delete" ng-click="deleteRecordDialog(item.id)"  ng-hide="isRelationshipActive(relationship.startDate) || isRelationshipInactive(relationship.endDate)">
             <i class="fa fa-trash"></i>
           </button>
 
@@ -159,4 +159,4 @@
 
 <left-navigation base-path="menu-relationship"></left-navigation>
 
-<delete-menu-dialog></delete-menu-dialog>
+<delete-record-dialog></delete-record-dialog>
