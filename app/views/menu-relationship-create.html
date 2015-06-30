@@ -91,8 +91,9 @@
           <div class="form-group">
             <label for="menu-station">Catering Stations</label>
             <select  ng-disabled="viewOnly || menuIsActive" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
-              <option value="{{station.id}}" ng-repeat="(key,station) in stationList | unique: 'id'">{{ station.code }}</option>
+              <option ng-selected="isStationSelected(station.id)" value="{{station.id}}" ng-repeat="(key,station) in stationList | unique: 'id'">{{ station.code }}</option>
             </select>
+
           </div>
 
         </div>

@@ -113,21 +113,24 @@ angular.module('ts5App')
       return menuIndex;
     };
 
-    this.findStationIndex = function (stationId) {
-      var stationIndex = null;
-      for (var key in $scope.stationList) {
-        var station = $scope.stationList[key];
-        if (parseInt(station.id) === parseInt(stationId)) {
-          stationIndex = key;
+    this.findStationById = function (stationId) {
+      var stationFound = false;
+      for (var key in $scope.formData.catererStationIds) {
+        var station = $scope.formData.catererStationIds[key];
+        if (parseInt(station) === parseInt(stationId)) {
+          stationFound = true;
           break;
         }
       }
-      return stationIndex;
+      return stationFound;
     };
 
-    /*$scope.isStationSelected = function (stationId) {
-      var stationIndex = $this.findStationIndex(stationId);
-    };*/
+    $scope.isStationSelected = function (stationId) {
+      console.log(stationId, $this.findStationById(stationId));
+      if ($this.findStationById(stationId)) {
+        return 'selected';
+      }
+    };
 
     this.initSelectUI = function () {
       angular.element('.multi-select').select2({
