@@ -109,7 +109,7 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('hide');
 
       $scope.menu.menuItems = $scope.menu.menuItems.filter(function (item) {
-        return item.itemId !== $scope.itemToDelete.id;
+        return item.itemId !== $scope.itemToDelete.itemId;
       });
 
       $scope.menuEditForm.$setDirty();
