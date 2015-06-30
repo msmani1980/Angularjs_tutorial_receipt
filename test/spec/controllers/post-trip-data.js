@@ -78,9 +78,10 @@ describe('Controller: PostTripDataCtrl', function () {
       });
     });
     describe('update arrival/departure info', function () {
-      beforeEach(function(){
-        scope.stationList =  [{
+      beforeEach(function () {
+        scope.stationList = [{
           stationName: '',
+          stationId: 0,
           timezone: 'US/Chicago',
           utcOffset: '+2:00'
         }];
@@ -90,24 +91,24 @@ describe('Controller: PostTripDataCtrl', function () {
       });
 
       it('should set new arrival station', function () {
-        var testStationName = 'testStation';
-        scope.stationList[0].stationName = testStationName;
+        var testStationId = 1;
+        scope.stationList[0].stationId = testStationId;
         scope.updateArrivalInfo();
-        expect(scope.postTrip.arrivalStation).toEqual(testStationName);
+        expect(scope.postTrip.arrStationId).toEqual(testStationId);
       });
       it('should set new departure station', function () {
-        var testStationName = 'testStation2';
-        scope.stationList[0].stationName = testStationName;
+        var testStationId = 2;
+        scope.stationList[0].stationId = testStationId;
         scope.updateDepartureInfo();
-        expect(scope.postTrip.departureStation).toEqual(testStationName);
+        expect(scope.postTrip.depStationId).toEqual(testStationId);
       });
       it('should set new arrival timezone', function () {
         scope.updateArrivalInfo();
-        expect(scope.postTrip.arrivalTimezone).toEqual('US/Chicago [UTC +2:00]');
+        expect(scope.arrivalTimezone).toEqual('US/Chicago [UTC +2:00]');
       });
       it('should set new departure timezone', function () {
         scope.updateDepartureInfo();
-        expect(scope.postTrip.departureTimezone).toEqual('US/Chicago [UTC +2:00]');
+        expect(scope.departureTimezone).toEqual('US/Chicago [UTC +2:00]');
       });
     });
   });
@@ -131,11 +132,38 @@ describe('Controller: PostTripDataCtrl', function () {
         expect(scope.readOnly).toEqual(false);
       });
     });
+
+    describe('create post trip', function () {
+      beforeEach(function(){
+        scope.postTrip = {};
+      });
+
+      it('should reformat schedule date', function(){
+        scope.postTrip.scheduleDate = '06/01/2015';
+        scope.formSave();
+        expect(scope.postTrip.scheduleDate).toEqual('20150601');
+      });
+      it('should reformat arrival/departure time', function(){
+        scope.postTrip.arrivalTime = '5:30';
+        scope.postTrip.departureTime = '03:22';
+        scope.formSave();
+        expect(scope.postTrip.arrivalTime).toEqual('05:30:00');
+        expect(scope.postTrip.departureTime).toEqual('03:22:00');
+      });
+      it('should format employeeIds into array', function(){
+
+      });
+      it('should call createPostTrip', function(){
+        scope.formSave();
+        expect(postTripFactory.createPostTrip).toHaveBeenCalledWith(companyId, scope.postTrip);
+      });
+    });
   });
 
   describe('read controller action', function () {
     var routeParams = {
-      state: 'view'
+      state: 'view',
+      id: 1
     };
     beforeEach(inject(function ($controller) {
       PostTripDataCtrl = $controller('PostFlightDataCtrl', {
@@ -151,6 +179,15 @@ describe('Controller: PostTripDataCtrl', function () {
       });
       it('should set the readOnly to true in scope', function () {
         expect(scope.readOnly).toEqual(true);
+      });
+    });
+
+    describe('constructor methods', function () {
+      it('should call getPostTrip for routeParams id', function () {
+        //expect(postTripFactory.getPostTrip).toHaveBeenCalledWith(routeParams.id);
+      });
+      it('should attach postTrip data to scope', function () {
+        //expect(scope.postTrip).toBeDefined();
       });
     });
   });

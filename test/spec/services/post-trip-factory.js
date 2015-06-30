@@ -43,7 +43,7 @@ describe('Factory: postTripFactory', function () {
       expect(postTripsService.getPostTrips).toHaveBeenCalledWith(companyId);
     });
     it('should call postTripService on createPostTrip', function(){
-      postTripFactory.createPostTrip(company, {});
+      postTripFactory.createPostTrip(companyId, {});
       expect(postTripsService.createPostTrip).toHaveBeenCalled();
     });
   });

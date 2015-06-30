@@ -23,19 +23,19 @@ angular.module('ts5App')
     this.initCreateView = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Create Post Trip Data';
-      // TODO: create/back button
+      // TODO: show create/back button
     };
 
     this.initReadView = function() {
       $scope.readOnly = true;
       $('.employeeID-multiple-select').prop('disabled', true);
-      // TODO: autopopulate fields
+      // TODO: API call and autopopulate fields
     };
 
     this.initUpdateView = function() {
       $scope.readOnly = false;
-      // TODO: autopopulate fields
-      // TODO: save/back button
+      // TODO: API call and autopopulate fields
+      // TODO: show save/back button
     };
 
     (function initController() {
@@ -103,15 +103,15 @@ angular.module('ts5App')
     };
 
     $scope.formSave = function() {
-      // TODO: validate data and check that values cannot be null
+      // TODO: fix once post trip API is finished and tested
+      // TODO: validate data formats and check that values cannot be null
       $scope.postTrip.scheduleDate = moment($scope.postTrip.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD');
       $scope.postTrip.postTripEmployeeIdentifiers = [];
       var employeeIds = $('.employeeID-multiple-select').select2('val');
       angular.forEach(employeeIds, function(value) {
         $scope.postTrip.postTripEmployeeIdentifiers.push({employeeIdentifier:value});
       });
-      console.log($scope.postTrip);
-      postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(function(response){
+      postTripFactory.createPostTrip(_companyId, {}).then(function(response){
         console.log(response);
       });
     };

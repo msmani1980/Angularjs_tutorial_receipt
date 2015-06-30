@@ -23,7 +23,7 @@ angular.module('ts5App')
 
     var createPostTrip = function (id, payload) {
       return postTripsService.createPostTrip(id, payload);
-    }
+    };
 
     var getStationList = function (id) {
       return stationsService.getStationList(id);
