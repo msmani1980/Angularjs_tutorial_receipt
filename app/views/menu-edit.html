@@ -39,8 +39,7 @@
     <p>All required fields are marked with a *</p>
   </div>
 
-  <h3 id="item-information">Menu Information</h3>
-
+  <h3>Menu Information</h3>
   <div class="form-group col-sm-3">
     <label for="menuCode">Menu Code *</label>
     <input custom-validity
@@ -70,7 +69,7 @@
   </div>
 
   <date-picker
-    class="col-sm-6 col-xs-12"
+    class="form-group col-sm-6 col-xs-12"
     element-class="col-xs-6 col-sm-6"
     start-date-model="menu.startDate"
     end-date-model="menu.endDate"
@@ -90,8 +89,11 @@
            id="menuDescription"
            ng-model="menu.description"
            placeholder="ITM001"
-           ng-readonly="isMenuReadOnly()">
+           ng-readonly="isMenuReadOnly()"/>
   </div>
+
+  <h3>Menu Items</h3>
+
   <table class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
@@ -106,6 +108,5 @@
     </tr>
     </tbody>
   </table>
-
 
 </form>
