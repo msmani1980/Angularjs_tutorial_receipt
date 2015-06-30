@@ -113,6 +113,14 @@ describe('The Item Create Controller', function () {
         expect($scope.formData.prices.length).toBe(1);
       });
 
+    it('should have a isMeasurementValid method', function () {
+      expect($scope.isMeasurementValid).toBeDefined();
+    });
+
+    it('should have a isMeasurementRequired method', function () {
+      expect($scope.isMeasurementRequired).toBeDefined();
+    });
+
   });
 
   describe('view', function () {
