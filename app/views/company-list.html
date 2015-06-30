@@ -3,11 +3,11 @@
   <div class="list-controls">
     <div class="row">
       <div class="col-xs-6">
-        <button class="btn btn-primary" href="#/company-create"><span class="fa fa-plus"></span>
+        <button type="button" class="btn btn-primary" href="#/company-create"><span class="fa fa-plus"></span>
         </button>
       </div>
       <div class="col-xs-6 text-right">
-        <button class="btn btn-default" type="submit" data-toggle="collapse" data-target="#search-collapse"
+        <button type="button" class="btn btn-default" type="submit" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false" aria-controls="search-collapse">
           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
           <span class="hidden-xs">Search</span>
@@ -51,7 +51,7 @@
     </div>
     <feature-list-item ng-repeat="company in filteredCompanies" view-model="company" type="company" class="list-body"
                  view="showCompany(company)" edit="editCompany(company)"
-                 func1="showCompanyRelationshipList(company)"></feature-list-object>
+                 func1="showCompanyRelationshipList(company)"></feature-list-item>
     <div ng-if="companyList.length === 0" class="feature-empty">
       <p>No Employee Messages Found</p>
     </div>
