@@ -10,9 +10,25 @@
 angular.module('ts5App')
   .service('dateUtility', function () {
 
+    var _dateForAPIFormat = 'YYYYMMDD';
+    var _dateForAppFormat = 'MM/DD/YYYY';
+
     this.formatDate = function (dateString, formatFrom, formatTo) {
-      var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
-      return dateToReturn;
+      return moment(dateString, formatFrom).format(formatTo).toString();
+    };
+
+    this.formatDateForAPI = function (dateToFormat, dateForAppFormat, dateForAPIFormat) {
+      dateForAppFormat = dateForAppFormat || _dateForAppFormat;
+      dateForAPIFormat = dateForAPIFormat || _dateForAPIFormat;
+
+      return this.formatDate(dateToFormat, dateForAppFormat, dateForAPIFormat);
+    };
+
+    this.formatDateForApp = function (dateToFormat, dateForAPIFormat, dateForAppFormat) {
+      dateForAPIFormat = dateForAPIFormat || _dateForAPIFormat;
+      dateForAppFormat = dateForAppFormat || _dateForAppFormat;
+
+      return this.formatDate(dateToFormat, dateForAPIFormat, dateForAppFormat);
     };
 
     this.now = function () {

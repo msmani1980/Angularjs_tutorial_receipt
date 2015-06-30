@@ -1,5 +1,4 @@
 'use strict';
-/* global moment */
 /**
  * @ngdoc filter
  * @name ts5App.filter:dateRange
@@ -17,16 +16,14 @@ angular.module('ts5App')
 			}
 
 			var isStartDateAfterOrEqual = function (item, startDateFilter) {
-				return moment(item.startDate).isAfter(startDateFilter) || moment(item.startDate)
-					.isSame(startDateFilter);
+				return Date.parse(item.startDate) >= Date.parse(startDateFilter);
 			};
 
 			var isEndDateBeforeOrEqual = function (item, endDateFilter) {
-				return moment(item.endDate).isBefore(endDateFilter) || moment(item.endDate)
-					.isSame(endDateFilter);
+				return Date.parse(item.endDate) <= Date.parse(endDateFilter);
 			};
 
-			var filteredDate = [];
+			var filteredItems = [];
 
 			// if the items are loaded
 			if (items && items.length > 0) {
@@ -35,12 +32,12 @@ angular.module('ts5App')
 					var itemDateEnd = isEndDateBeforeOrEqual(item, endDateFilter);
 
 					if (itemDateStart && itemDateEnd) {
-						filteredDate.push(item);
+						filteredItems.push(item);
 					}
 
 				});
 
-				return filteredDate;
+				return filteredItems;
 			}
 
 

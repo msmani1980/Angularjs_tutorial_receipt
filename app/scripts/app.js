@@ -21,10 +21,10 @@ angular
     'ngStorage',
     'ui.bootstrap',
     'angular.filter',
-    'dynform',
     'ngFileUpload',
     'ja.qr',
-    'ngToast'
+    'ngToast',
+    'ang-drag-drop'
   ])
   .constant('regexp', {
     word: /^[\w\s]+$/,
@@ -79,13 +79,18 @@ angular
         templateUrl: 'views/stock-owner-item-create.html',
         controller: 'StockOwnerItemCreateCtrl'
       })
-      .when('/companies', {
-        templateUrl: 'views/companies.html',
-        controller: 'CompaniesCtrl'
+      .when('/company-list', {
+        templateUrl: 'views/company-list.html',
+        controller: 'CompanyListCtrl'
       })
       .when('/company/:id', {
         templateUrl: 'views/company.html',
         controller: 'CompanyCtrl'
+      })
+      .when('/company-relationship-list/:id', {
+        templateUrl: 'views/company-relationship.html',
+        controllerAs: 'vm',
+        controller: 'CompanyRelationshipListCtrl'
       })
       .when('/exchange-rates', {
         templateUrl: 'views/exchange-rates.html',
@@ -115,7 +120,7 @@ angular
         templateUrl: 'views/post-trip-data-list.html',
         controller: 'PostFlightDataListCtrl'
       })
-      .when('/post-trip-data', {
+      .when('/post-trip-data/:state/:id?', {
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })
@@ -138,6 +143,10 @@ angular
       .when('/menu-relationship-create', {
         templateUrl: 'views/menu-relationship-create.html',
         controller: 'MenuRelationshipCreateCtrl'
+      })
+      .when('/item-import', {
+        templateUrl: 'views/item-import.html',
+        controller: 'ItemImportCtrl'
       })
       .otherwise({
         redirectTo: '/'

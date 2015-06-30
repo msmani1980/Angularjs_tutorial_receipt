@@ -23,7 +23,7 @@ angular.module('ts5App')
     $scope.search = {};
 
     // Constructor
-    (function CONSTRUCTOR() {
+    (function constructor() {
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
       _services = {
@@ -73,7 +73,6 @@ angular.module('ts5App')
         dismissButton: true,
         content: '<strong>Cash bag</strong>:' + error
       });
-      $scope.displayError = true;
       $scope.formErrors = {};
     }
 

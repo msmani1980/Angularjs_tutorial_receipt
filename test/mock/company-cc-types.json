@@ -1,0 +1,98 @@
+{
+  "companyCCTypes": [{
+    "id": 17,
+    "ccTypeCode": "AmEx",
+    "ccTypeId": 1,
+    "ccTypeName": "AMEX",
+    "description": "American Express",
+    "startDate": "2015-05-05",
+    "endDate": "2050-01-01",
+    "companyId": 403,
+    "companyCreditCardTypePayments": [{
+      "id": 50,
+      "ccPaymentMethodId": 1,
+      "companyCcTypeId": 17,
+      "paymentMethod": "Magnetic Stripe"
+    }, {
+      "id": 51,
+      "ccPaymentMethodId": 3,
+      "companyCcTypeId": 17,
+      "paymentMethod": "Contactless"
+    }, {
+      "id": 52,
+      "ccPaymentMethodId": 4,
+      "companyCcTypeId": 17,
+      "paymentMethod": "Chip&Pin/Signature"
+    }, {
+      "id": 53,
+      "ccPaymentMethodId": 5,
+      "companyCcTypeId": 17,
+      "paymentMethod": "Key Entry"
+    }]
+  }, {
+    "id": 18,
+    "ccTypeCode": "Visa",
+    "ccTypeId": 19,
+    "ccTypeName": "Visa",
+    "description": "Visa",
+    "startDate": "2015-05-05",
+    "endDate": "2050-01-01",
+    "companyId": 403,
+    "companyCreditCardTypePayments": [{
+      "id": 54,
+      "ccPaymentMethodId": 1,
+      "companyCcTypeId": 18,
+      "paymentMethod": "Magnetic Stripe"
+    }, {
+      "id": 55,
+      "ccPaymentMethodId": 3,
+      "companyCcTypeId": 18,
+      "paymentMethod": "Contactless"
+    }, {
+      "id": 56,
+      "ccPaymentMethodId": 4,
+      "companyCcTypeId": 18,
+      "paymentMethod": "Chip&Pin/Signature"
+    }, {
+      "id": 57,
+      "ccPaymentMethodId": 5,
+      "companyCcTypeId": 18,
+      "paymentMethod": "Key Entry"
+    }]
+  }, {
+    "id": 19,
+    "ccTypeCode": "MasterCard",
+    "ccTypeId": 20,
+    "ccTypeName": "MasterCard",
+    "description": "MasterCard",
+    "startDate": "2015-05-05",
+    "endDate": "2050-01-01",
+    "companyId": 403,
+    "companyCreditCardTypePayments": [{
+      "id": 58,
+      "ccPaymentMethodId": 1,
+      "companyCcTypeId": 19,
+      "paymentMethod": "Magnetic Stripe"
+    }, {
+      "id": 59,
+      "ccPaymentMethodId": 3,
+      "companyCcTypeId": 19,
+      "paymentMethod": "Contactless"
+    }, {
+      "id": 60,
+      "ccPaymentMethodId": 4,
+      "companyCcTypeId": 19,
+      "paymentMethod": "Chip&Pin/Signature"
+    }, {
+      "id": 61,
+      "ccPaymentMethodId": 5,
+      "companyCcTypeId": 19,
+      "paymentMethod": "Key Entry"
+    }]
+  }],
+  "meta": {
+    "count": 3,
+    "limit": 3,
+    "start": 0
+  }
+}

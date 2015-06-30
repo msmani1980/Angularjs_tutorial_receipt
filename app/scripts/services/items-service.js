@@ -17,7 +17,8 @@ angular.module('ts5App')
 
     var actions = {
       getItemsList: {
-        method: 'GET'
+        method: 'GET',
+        headers: {}
       },
       getItem: {
         method: 'GET'
@@ -36,10 +37,15 @@ angular.module('ts5App')
     var requestResource = $resource(requestURL, requestParameters, actions);
 
     var getItemsList = function (searchParameters, fetchFromMaster) {
+      var _requestResource = requestResource;
+      if(angular.isDefined(searchParameters.companyId)){
+        actions.getItemsList.headers = {companyId:searchParameters.companyId};
+        _requestResource = $resource(requestURL, requestParameters, actions);
+      }
       searchParameters.fetchFromMaster = fetchFromMaster ? 'master' : null;
       var payload = {};
       angular.extend(payload, searchParameters);
-      return requestResource.getItemsList(payload).$promise;
+      return _requestResource.getItemsList(payload).$promise;
     };
 
     var getItem = function (id) {
@@ -50,12 +56,12 @@ angular.module('ts5App')
       return requestResource.createItem(payload).$promise;
     };
 
-    var updateItem = function (id,payload) {
-      return requestResource.updateItem({id:id},payload).$promise;
+    var updateItem = function (id, payload) {
+      return requestResource.updateItem({id: id}, payload).$promise;
     };
 
     var removeItem = function (id) {
-      return requestResource.removeItem({id:id}).$promise;
+      return requestResource.removeItem({id: id}).$promise;
     };
 
     return {
@@ -66,4 +72,4 @@ angular.module('ts5App')
       removeItem: removeItem
     };
 
-});
+  });

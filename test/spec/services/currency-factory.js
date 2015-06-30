@@ -1,3 +1,4 @@
+// TODO: complete tests
 'use strict';
 
 describe('Factory: currencyFactory', function () {
@@ -9,18 +10,18 @@ describe('Factory: currencyFactory', function () {
   var currencyFactory,
     currenciesService,
     dailyExchangeRatesService,
-    companiesService,
+    companyService,
     companyPreferencesService,
     rootScope,
     scope;
-  beforeEach(inject(function ($rootScope, _currencyFactory_, _currenciesService_, _dailyExchangeRatesService_, _companiesService_, _companyPreferencesService_) {
+  beforeEach(inject(function ($rootScope, _currencyFactory_, _currenciesService_, _dailyExchangeRatesService_, _companyService_, _companyPreferencesService_) {
 
-    companiesService = _companiesService_;
+    companyService = _companyService_;
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
     companyPreferencesService = _companyPreferencesService_;
 
-    spyOn(companiesService, 'getCompany');
+    spyOn(companyService, 'getCompany');
     spyOn(currenciesService, 'getCompanyGlobalCurrencies');
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getPreviousExchangeRates');
@@ -37,10 +38,10 @@ describe('Factory: currencyFactory', function () {
     expect(!!currencyFactory).toBe(true);
   });
 
-  describe('companiesService API', function () {
-    it('should call companiesService on getCompany', function () {
+  describe('companyService API', function () {
+    it('should call companyService on getCompany', function () {
       currencyFactory.getCompany(2);
-      expect(companiesService.getCompany).toHaveBeenCalled();
+      expect(companyService.getCompany).toHaveBeenCalled();
     });
   });
 
@@ -82,5 +83,3 @@ describe('Factory: currencyFactory', function () {
   });
 });
 
-
-// TODO: complete tests

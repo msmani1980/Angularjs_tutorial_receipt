@@ -11,10 +11,10 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
     stationAPIResponse;
 
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/menus.json', 'served/caterer-stations.json'));
+  beforeEach(module('served/menus.json', 'served/catering-stations.json'));
 
   beforeEach(inject(function (_$rootScope_, _$controller_, $injector,
-    _servedMenus_, _servedCatererStations_) {
+    _servedMenus_, _servedCateringStations_) {
     $location = $injector.get('$location');
     $location.path('/menu-relationship-create');
     $rootScope = _$rootScope_;
@@ -26,7 +26,7 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
         '$scope': $scope
       });
     menuAPIResponse = _servedMenus_;
-    stationAPIResponse = _servedCatererStations_;
+    stationAPIResponse = _servedCateringStations_;
   }));
 
   describe('The MenuRelationshipCreateCtrl', function () {
@@ -109,7 +109,7 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
         });
         it('should contain the correct text', function () {
           expect(saveButton.find('.btn-label').text().trim())
-            .toEqual('Save');
+            .toEqual('Create');
         });
       });
 

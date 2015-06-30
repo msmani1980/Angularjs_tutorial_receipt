@@ -1,6 +1,10 @@
-<div class="module-container">
+<form name="employeeCommissionForm" class="form edit-form" ng-submit="submitForm()">
 
-  <form name="form" class="form edit-form employee-commission-form">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
 
     <form-error-dialog></form-error-dialog>
     
@@ -24,8 +28,16 @@
           </div>          
         </div>        
         
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/" class="btn">Back</a>
+        <button ng-show="employeeCommissionForm.$dirty" class="btn btn-success">
+          <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
       </div>
     </div>
+    <p>All required fields are marked with a *</p>
+  </div>
 
     <div class="row">
       
@@ -124,17 +136,87 @@
         </div>
       </div>
 
+  <date-picker
+    class="col-xs-12 col-md-6 col-sm-6"
+    element-class="col-xs-6 col-sm-6"
+    start-date-model="startDate"
+    end-date-model="endDate"
+    label-from="Effective From"
+    label-to="Effective To"
+    required="true"
+    disable-past="true">
+  </date-picker>
+
+  <div class="col-sm-3">
+    <div class="form-group">
+      <label class="control-label" for="itemName">Item Name</label>
+      <select class="form-control" id="itemName">
+        <option ng-repeat="item in itemsList | orderBy:'itemName'" value="{{item.masterId}}">{{item.itemName}}</option>
+      </select>
     </div>
+  </div>
 
-  </form>
+  <div class="col-sm-3">
+    <div class="form-group">
+      <label class="control-label" for="saleType">Sale Type</label>
+      <select class="form-control" id="saleType">
+        <option ng-repeat="priceType in priceTypesList | orderBy:'name'" value="{{priceType.id}}">{{priceType.name}}
+        </option>
+      </select>
+    </div>
+  </div>
 
-</div>
-<!-- /Container -->
+  <div class="col-sm-3">
+    <div class="form-group">
+      <label class="control-label" for="rateType">Rate Type</label>
+      <select
+        class="form-control"
+        id="rateType"
+        ng-options="taxRate.taxRateType for taxRate in taxRateTypes | orderBy:'taxRateType' track by taxRate.id"
+        ng-model="selectedRateType"></select>
+    </div>
+  </div>
 
-<form-success-modal></form-success-modal>
+  <div class="col-sm-3" ng-if="selectedRateType.id == 2">
+    <div class="form-group">
+      <label class="control-label" for="rate">Rate</label>
 
-<form-update-modal></form-update-modal>
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-pie-chart"></i>
+        </span>
+        <input custom-validity
+               custom-pattern="currencyWithTwoDecimalPlace"
+               ng-model="rate"
+               required="true"
+               id="rate"
+               name="rate"
+               placeholder="0.00"
+               class="form-control"
+               aria-label="Amount (to the nearest dollar)"/>
+      </div>
+    </div>
+  </div>
 
-<leave-view-modal></leave-view-modal>
+  <div class="col-sm-3" ng-if="selectedRateType.id == 1">
+    <label class="control-label">Rate for Currency</label>
 
-<left-navigation></left-navigation>
+    <div class="form-group" ng-repeat="currency in companyCurrencies">
+
+      <div class="input-group">
+        <span class="input-group-addon">
+                {{currency.code}}
+        </span>
+        <input custom-validity
+               custom-pattern="currencyWithTwoDecimalPlace"
+               ng-model="currenciesFields[currency.code]"
+               required="true"
+               name="rate{{currency.code}}"
+               placeholder="0.00"
+               class="form-control"
+               aria-label="Amount (to the nearest dollar)"/>
+      </div>
+    </div>
+  </div>
+
+</form>

@@ -1,7 +1,10 @@
-# ts5
+# TS5
 
 This project is generated with [yo angular generator](https://github.com/yeoman/generator-angular)
 version 0.11.1.
+
+1.  [Development environment](section1)
+2.  [TDD](section2) 
 
 ## Development environment
 Below is the IP for the development environment and API
@@ -76,3 +79,24 @@ Create a service named {service-name}-service , appending the keyword -service t
     yo angular:service {service-name}-service
 
     yo angular:service price-types-service
+
+### <a name="section2"></a>TDD
+*   [Using HTML](html2js)
+*   [Using JSON](json2js)
+
+#### <a name="html2js"></a>Using HTML
+HTML is resolved using the [karma-ng-json2js-preprocessor](https://www.npmjs.com/package/karma-ng-html2js-preprocessor) 
+plugin. This is help when testing directives.
+
+*   [Configuration](https://www.npmjs.com/package/karma-ng-html2js-preprocessor#configuration)
+*   [How does it work?](https://www.npmjs.com/package/karma-ng-html2js-preprocessor#how-does-it-work)
+
+#### <a name="json2js"></a>Using JSON
+JSON is resolved using the [karma-ng-json2js-preprocessor](https://www.npmjs.com/package/karma-ng-json2js-preprocessor) 
+plugin.
+
+*   [Configuration](https://www.npmjs.com/package/karma-ng-json2js-preprocessor#configuration)
+*   [How does it work?](https://www.npmjs.com/package/karma-ng-json2js-preprocessor#how-does-it-work)
+
+### Conventions
+It's an Angular convention to have a dollar sign ($) in the front of the names of things that are both injected ($scope, $timeout, $http) and built-in to Angular. If you see $scope being used in the link function of a directive, that is both wrong and confusing since parameters are passed to the link function of directives, not injected.

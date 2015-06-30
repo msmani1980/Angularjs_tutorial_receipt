@@ -1,0 +1,19 @@
+table.sortable {
+  tbody {
+    tr {
+      cursor: move;
+      border: 1px solid #ccc;
+      background: #fff;
+      &.empty-space {
+        background: #C9ECAC;
+      }
+    }
+  }
+}
+.on-drag-enter {
+  background-color: #77C797;
+}
+
+.on-drag-hover {
+  background-color: #249057;
+}

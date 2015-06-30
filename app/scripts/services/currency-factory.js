@@ -8,10 +8,10 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('currencyFactory', function ($resource, currenciesService, dailyExchangeRatesService, companiesService, companyPreferencesService) {
+  .factory('currencyFactory', function ($resource, currenciesService, dailyExchangeRatesService, companyService, companyPreferencesService) {
 
     var getCompany = function (companyId) {
-      return companiesService.getCompany(companyId);
+      return companyService.getCompany(companyId);
     };
 
     var getCompanyGlobalCurrencies = function (payload) {

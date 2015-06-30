@@ -55,8 +55,7 @@
   </div>
 </nav>
 
-<menu-slide>
-</menu-slide>
+<menu-slide></menu-slide>
 
 <div class="container-fluid">
   <div class="main-container" ng-view=""></div>
@@ -98,7 +97,6 @@
 <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 <script src="bower_components/moment/moment.js"></script>
 <script src="bower_components/angular-moment/angular-moment.js"></script>
-<script src="bower_components/angular-dynforms/dynamic-forms.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
 <script src="bower_components/qrcode/lib/qrcode.js"></script>
 <script src="bower_components/angular-qr/src/angular-qr.js"></script>
@@ -106,6 +104,7 @@
 <script src="bower_components/ui-select/src/select3.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/ngtoast/dist/ngToast.js"></script>
+<script src="bower_components/angular-native-dragdrop/draganddrop.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -114,11 +113,13 @@
 <script src="scripts/config.js"></script>
 <script src="scripts/controllers/main.js"></script>
 <script src="scripts/controllers/about.js"></script>
-<script src="scripts/controllers/companies.js"></script>
+<script src="scripts/controllers/company-list.js"></script>
 <script src="scripts/controllers/item-list.js"></script>
-<script src="scripts/services/companieslistfactory.js"></script>
+<script src="scripts/controllers/company-relationship-list.js"></script>
+<script src="scripts/services/company-factory.js"></script>
+<script src="scripts/services/company-relationship-factory.js"></script>
+<script src="scripts/services/company-relationship-service.js"></script>
 <script src="scripts/services/companies-factory.js"></script>
-<script src="scripts/controllers/company.js"></script>
 <script src="scripts/services/items-factory.js"></script>
 <script src="scripts/controllers/item-create.js"></script>
 <script src="scripts/directives/input-text.js"></script>
@@ -131,7 +132,7 @@
 <script src="scripts/services/dailyExchangeRatesService.js"></script>
 <script src="scripts/services/items-service.js"></script>
 <script src="scripts/directives/input-select.js"></script>
-<script src="scripts/services/companies-service.js"></script>
+<script src="scripts/services/company-service.js"></script>
 <script src="scripts/controllers/menu-list.js"></script>
 <script src="scripts/controllers/menu-create.js"></script>
 <script src="scripts/controllers/menu-edit.js"></script>
@@ -149,6 +150,7 @@
 <script src="scripts/services/tax-types-service.js"></script>
 <script src="scripts/services/stations-service.js"></script>
 <script src="scripts/directives/qr-upload.js"></script>
+<script src="scripts/directives/feature-list-item.js"></script>
 <script src="scripts/directives/qr-create.js"></script>
 <script src="scripts/directives/form-error-dialog.js"></script>
 <script src="scripts/directives/form-success-modal.js"></script>
@@ -185,9 +187,18 @@
 <script src="scripts/services/factory-helper.js"></script>
 <script src="scripts/controllers/menu-relationship-list.js"></script>
 <script src="scripts/controllers/menu-relationship-create.js"></script>
+<script src="scripts/controllers/item-import.js"></script>
 <script src="scripts/directives/download-template-modal.js"></script>
 <script src="scripts/directives/delete-record-dialog.js"></script>
 <script src="scripts/services/date-utility.js"></script>
+<script src="scripts/services/item-import-service.js"></script>
+<script src="scripts/services/item-import-factory.js"></script>
+<script src="scripts/services/employee-commission-factory.js"></script>
+<script src="scripts/services/tax-rate-types-service.js"></script>
+<script src="scripts/services/post-trip-factory.js"></script>
+<script src="scripts/services/carrier-service.js"></script>
+<script src="scripts/services/transaction-service.js"></script>
+<script src="scripts/services/company-cc-types-service.js"></script>
 <!-- endbuild -->
 </body>
 </html>

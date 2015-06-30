@@ -42,13 +42,16 @@ angular.module('ts5App')
       }
     };
 
-    this.setFormAsViewOnly = function () {
-      $scope.viewName = 'Viewing Item ' + $routeParams.id;
+    this.updateViewName = function (item) {
+      var prefix = 'Viewing ';
+      if ($scope.editingItem) {
+        prefix = 'Editing ';
+      }
+      $scope.viewName = prefix + item.itemName;
     };
 
     this.setFormAsEdit = function () {
       $scope.editingItem = true;
-      $scope.viewName = 'Edit Item ' + $routeParams.id;
       $scope.buttonText = 'Save';
     };
 
@@ -66,7 +69,8 @@ angular.module('ts5App')
 
       itemsFactory.getItem(id).then(function (data) {
         if ($this.validateItemCompany(data)) {
-          $this.upateFormData(data.retailItem);
+          $this.updateFormData(data.retailItem);
+          $this.updateViewName(data.retailItem);
         } else {
           $location.path('/');
           return false;
@@ -77,10 +81,6 @@ angular.module('ts5App')
     };
 
     this.checkIfViewOnly();
-
-    if ($scope.viewOnly) {
-      this.setFormAsViewOnly();
-    }
 
     if ($routeParams.id && !$scope.viewOnly) {
       this.setFormAsEdit();
@@ -131,7 +131,7 @@ angular.module('ts5App')
     }
 
     // updates the $scope.formData
-    this.upateFormData = function (itemData) {
+    this.updateFormData = function (itemData) {
       if (!itemData) {
         return false;
       }
@@ -464,7 +464,7 @@ angular.module('ts5App')
       };
       itemsFactory.updateItem($routeParams.id, updateItemPayload).then(
         function (response) {
-          $this.upateFormData(response.retailItem);
+          $this.updateFormData(response.retailItem);
           angular.element('#loading').modal('hide');
           angular.element('#update-success').modal('show');
         },

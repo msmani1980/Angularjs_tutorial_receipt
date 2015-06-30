@@ -217,14 +217,12 @@ describe('Directive: leftNavigation', function () {
       it(
         'should have a itemCreatePath variable that contains /stock-owner-item-create',
         function () {
-          expect(isolatedScope.itemCreatePath).toContain(
-            '/stock-owner-item-create');
+          expect(isolatedScope.itemCreatePath).toContain('/stock-owner-item-create');
         });
       it(
         'should have a manageCategoriesPath variable that contains /stock-owner-item',
         function () {
-          expect(isolatedScope.manageCategoriesPath).toContain(
-            '/stock-owner-item');
+          expect(isolatedScope.manageCategoriesPath).toContain('/ember/#/retail-items/categories');
         });
     });
 
