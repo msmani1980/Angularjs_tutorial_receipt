@@ -511,6 +511,25 @@ angular.module('ts5App')
 
     };
 
+    $scope.isMeasurementRequired = function () {
+      if ($scope.formData.width || $scope.formData.length || $scope.formData
+        .height) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    $scope.isMeasurementValid = function () {
+      if ($scope.formData.width && $scope.formData.length && $scope.formData
+        .height && $scope.formData.dimensionType) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+
     // TODO: MOVE ME GLOBAL
     $scope.formScroll = function (id, activeBtn) {
 
