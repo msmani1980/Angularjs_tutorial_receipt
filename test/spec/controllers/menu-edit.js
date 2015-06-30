@@ -39,14 +39,15 @@ describe('Controller: MenuEditCtrl', function () {
 
     scope.menuEditForm = {
       $valid: true,
-      $setPristine: function() {}
+      $setPristine: function () {
+      }
     };
 
     scope.$digest();
     $httpBackend.flush();
   }));
 
-  afterEach(function() {
+  afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
@@ -79,31 +80,35 @@ describe('Controller: MenuEditCtrl', function () {
       });
 
       it('should restrict to start and end dates only', function () {
-        expect(itemsService.getItemsList).toHaveBeenCalledWith({ startDate: '20150501', endDate: '20150531', fetchFromMaster: 'master'}, true);
+        expect(itemsService.getItemsList).toHaveBeenCalledWith({
+          startDate: '20150501',
+          endDate: '20150531',
+          fetchFromMaster: 'master'
+        }, true);
       });
     });
 
-    describe('item list on scope', function() {
+    describe('item list on scope', function () {
       it('should attach a list of items to scope', function () {
         expect(!!scope.masterItemsList).toBe(true);
       });
 
       describe('menuItemList in scope', function () {
-        it('should attach it to scope', function(){
+        it('should attach it to scope', function () {
           expect(!!scope.menuItemsList).toBe(true);
         });
 
-        it('should have itemQty', function(){
+        it('should have itemQty', function () {
           expect(!!scope.menuItemsList[0].itemQty).toBe(true);
         });
 
-        it('should have a itemName', function(){
+        it('should have a itemName', function () {
           expect(!!scope.menuItemsList[0].itemName).toBe(true);
         });
       });
     });
 
-    describe('isMenuReadOnly', function(){
+    describe('isMenuReadOnly', function () {
       it('should have a isMenuReadOnly function', function () {
         expect(!!scope.isMenuReadOnly).toBe(true);
       });
@@ -130,6 +135,23 @@ describe('Controller: MenuEditCtrl', function () {
         delete scope.menu;
         expect(scope.isMenuReadOnly()).toBe(false);
       });
+    });
+
+    describe('Delete items from Menu', function () {
+      it('should have a confirmDelete function', function () {
+        expect(!!scope.showDeleteConfirmation).toBe(true);
+      });
+
+      it('should attach itemToDelete to scope', function () {
+        scope.showDeleteConfirmation({itemName: 'itemToDelete'});
+        expect(scope.itemToDelete.itemName).toBe('itemToDelete');
+      });
+
+      //it('should do a DELETE request to menuService with menuToDelete', function () {
+      //  scope.showDeleteConfirmation({id: '1'});
+      //  scope.deleteMenu();
+      //  expect(menuService.deleteMenu).toHaveBeenCalled();
+      //});
     });
 
   });

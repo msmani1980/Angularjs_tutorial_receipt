@@ -1,3 +1,24 @@
+<div class="modal fade delete-warning-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure?</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about to permanently delete <strong>{{itemToDelete.itemQty}} {{ itemToDelete.itemName }}</strong></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deleteItemFromMenu()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <form name="menuEditForm" class="form edit-form">
 
   <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
@@ -40,6 +61,7 @@
   </div>
 
   <h3>Menu Information</h3>
+
   <div class="form-group col-sm-3">
     <label for="menuCode">Menu Code *</label>
     <input custom-validity
@@ -97,14 +119,20 @@
   <table class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
-      <th>Item Name</th>
-      <th>Quantity</th>
+      <th class="col-xs-10">Item Name</th>
+      <th class="col-xs-1">Quantity</th>
+      <th class="col-xs-1">Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="menuItem in menuItemsList">
       <td>{{menuItem.itemName}}</td>
       <td>{{menuItem.itemQty}}</td>
+      <td>
+        <button ng-show="menuItemsList.length > 1" class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menuItem)">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>
     </tr>
     </tbody>
   </table>

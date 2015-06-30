@@ -92,6 +92,11 @@ angular.module('ts5App')
       setupMenuModelAndFetchItems($scope.menuFromAPI);
     }
 
+    $scope.showDeleteConfirmation = function (itemToDelete) {
+      $scope.itemToDelete = itemToDelete;
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
     $scope.submitForm = function () {
       if (!$scope.menuEditForm.$valid) {
         return false;
