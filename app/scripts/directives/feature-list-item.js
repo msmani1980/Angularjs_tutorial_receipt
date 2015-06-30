@@ -18,7 +18,7 @@ angular.module('ts5App')
     }
 
     function templateUrl(element, attrs) {
-      return 'views/directives/feature-list-item/' + attrs.type + '.html';
+      return 'views/directives/feature-list-item.' + attrs.type + '.html';
     }
 
     return {
