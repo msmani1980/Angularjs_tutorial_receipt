@@ -158,7 +158,7 @@ describe('The Stock Owner Item Create Controller', function () {
 
         it('should have the correct label', function () {
           expect(priceGroupBtn.text().trim()).toEqual(
-            'Add Price Type');
+            'Add Cost');
         });
 
         it('should have an ng-click', function () {
