@@ -51,8 +51,10 @@
         }).$promise;
       };
 
-      var updateRelationship = function (payload) {
-        return requestResource.updateRelationship(payload).$promise;
+      var updateRelationship = function (id, payload) {
+        return requestResource.updateRelationship({
+          id: id
+        }, payload).$promise;
       };
 
       var createRelationship = function (payload) {

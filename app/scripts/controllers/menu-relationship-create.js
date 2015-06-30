@@ -127,9 +127,7 @@ angular.module('ts5App')
 
     $scope.isStationSelected = function (stationId) {
       console.log(stationId, $this.findStationById(stationId));
-      if ($this.findStationById(stationId)) {
-        return 'selected';
-      }
+      return $this.findStationById(stationId);
     };
 
     this.initSelectUI = function () {
