@@ -53,6 +53,8 @@ describe('Controller: MenuEditCtrl', function () {
     expect(!!scope.viewName).toBe(true);
   });
 
+
+
   describe('menu object in scope', function () {
     it('should get the menu list from API', function () {
       expect(menuService.getMenu).toHaveBeenCalled();
