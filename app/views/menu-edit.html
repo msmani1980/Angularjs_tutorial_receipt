@@ -121,15 +121,15 @@
     <tr>
       <th class="col-xs-10">Item Name</th>
       <th class="col-xs-1">Quantity</th>
-      <th class="col-xs-1">Actions</th>
+      <th  ng-show="shouldShowActions()" class="col-xs-1">Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="menuItem in menuItemsList">
       <td>{{menuItem.itemName}}</td>
       <td>{{menuItem.itemQty}}</td>
-      <td>
-        <button ng-show="menuItemsList.length > 1" class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menuItem)">
+      <td ng-show="shouldShowActions()" >
+        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menuItem)">
           <i class="fa fa-trash"></i>
         </button>
       </td>

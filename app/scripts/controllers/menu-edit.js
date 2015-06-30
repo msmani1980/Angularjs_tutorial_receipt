@@ -97,6 +97,10 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('show');
     };
 
+    $scope.shouldShowActions = function () {
+      return $scope.menuItemsList.length > 1;
+    };
+
     $scope.submitForm = function () {
       if (!$scope.menuEditForm.$valid) {
         return false;
