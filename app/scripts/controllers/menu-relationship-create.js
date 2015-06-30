@@ -204,6 +204,7 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function (formData) {
+      $scope.displayError = false;
       if (!$scope.form.$valid) {
         $scope.displayError = true;
         return false;
