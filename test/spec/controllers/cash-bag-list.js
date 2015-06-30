@@ -123,9 +123,9 @@ describe('Controller: CashBagListCtrl', function () {
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {cashBagNumber: testCashBagNumber});
       });
       it('should send searchDate with yyyymmdd format', function(){
-        scope.search = {scheduleDate: '06/20/2015'};
+        scope.search = {startDate: '06/20/2015'};
         scope.searchCashBag();
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {scheduleDate: '20150620'});
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {startDate: '20150620', endDate:'20150620'});
       });
       it('should clear search model and make a API call', function () {
         scope.search = {cashBagNumber: 'fakeCashBagNumber'};
