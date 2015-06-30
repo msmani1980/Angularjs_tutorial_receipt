@@ -1,0 +1,32 @@
+<div class="panel panel-transparent">
+  <div class="panel-body">
+    <div class="row">
+      <div class="form-group col-sm-6">
+        <label>Company Type</label>
+        <select name="companyType" ng-model="search.companyTypeId"
+                ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
+                class="form-control">
+          <option selected disabled value="">Filter by...</option>
+        </select>
+      </div>
+      <div class="form-group col-sm-6">
+        <label>Company Name *</label>
+        <select name="companyName" ng-model="viewModel.relativeCompanyId"
+                ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
+                class="form-control" required>
+          <option selected disabled value="">Please select...</option>
+        </select>
+      </div>
+      <date-picker
+          class="col-sm-6 col-xs-12"
+          element-class="col-xs-6"
+          start-date-model="viewModel.startDate"
+          end-date-model="viewModel.endDate"
+          disable-past="true"
+          label-from="Effective From"
+          label-to="Effective To"
+          required="true">
+      </date-picker>
+    </div>
+  </div>
+</div>

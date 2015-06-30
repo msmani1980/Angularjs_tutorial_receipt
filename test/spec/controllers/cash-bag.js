@@ -4,7 +4,7 @@ describe('Controller: CashBagCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag.json', 'served/company.json', 'served/company-currency-globals.json', 'served/daily-exchange-rates.json'));
+  beforeEach(module('served/cash-bag.json', 'served/company.json', 'served/company-currency-globals.json', 'served/daily-exchange-rates.json', 'served/company-preferences.json'));
 
   var CashBagEditCtrl,
     scope,
@@ -17,20 +17,23 @@ describe('Controller: CashBagCtrl', function () {
     companyCurrencyGlobalsResponseJSON,
     getCompanyCurrenciesDeferred,
     getDailyExchangeRatesDeferred,
-    dailyExchangeRatesResponseJSON;
+    dailyExchangeRatesResponseJSON,
+    getCompanyPreferencesDeferred,
+    getCompanyPreferencesJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
+  beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_) {
     scope = $rootScope.$new();
 
-    inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_) {
+    inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedCompanyPreferences_) {
       cashBagResponseJSON = _servedCashBag_;
       companyResponseJSON = _servedCompany_;
       companyCurrencyGlobalsResponseJSON = _servedCompanyCurrencyGlobals_;
       dailyExchangeRatesResponseJSON = _servedDailyExchangeRates_;
+      getCompanyPreferencesJSON = _servedCompanyPreferences_;
     });
 
-    cashBagFactory = $injector.get('cashBagFactory');
+    cashBagFactory = _cashBagFactory_;
 
     getCashBagDeferred = $q.defer();
     getCashBagDeferred.resolve(cashBagResponseJSON);
@@ -50,6 +53,10 @@ describe('Controller: CashBagCtrl', function () {
     getDailyExchangeRatesDeferred = $q.defer();
     getDailyExchangeRatesDeferred.resolve(dailyExchangeRatesResponseJSON);
     spyOn(cashBagFactory, 'getDailyExchangeRates').and.returnValue(getDailyExchangeRatesDeferred.promise);
+
+    getCompanyPreferencesDeferred = $q.defer();
+    getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
+    spyOn(cashBagFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
 
     companyId = cashBagFactory.getCompanyId();
   }));
@@ -99,10 +106,13 @@ describe('Controller: CashBagCtrl', function () {
         expect(scope.companyCurrencies).toBeDefined();
       });
       it('should call getDailyExchangeRates', function () {
-        expect(cashBagFactory.getDailyExchangeRates).toHaveBeenCalledWith(companyId, routeParams.scheduleDate);
+        expect(cashBagFactory.getDailyExchangeRates).toHaveBeenCalled();
       });
       it('should have dailyExchangeRates attached to scope after API call', function () {
         expect(scope.dailyExchangeRates).toBeDefined();
+      });
+      it('should call getCompanyPreferences', function(){
+        expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalled();
       });
     });
 
@@ -128,7 +138,7 @@ describe('Controller: CashBagCtrl', function () {
       });
     });
 
-    describe('formSave', function() {
+    describe('formSave form action', function() {
       it('should call cashBagFactory createCashBag', function () {
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.createCashBag).toHaveBeenCalledWith({cashBag: scope.cashBag});

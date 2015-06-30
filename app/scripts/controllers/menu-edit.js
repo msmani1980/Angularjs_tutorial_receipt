@@ -93,9 +93,6 @@ angular.module('ts5App')
     }
 
     $scope.submitForm = function () {
-      if (!$scope.menuEditForm.$valid){
-        return false;
-      }
       var formatFrom = 'l',
         formatTo = 'YYYYMMDD',
         payload = angular.copy($scope.menu.toJSON());

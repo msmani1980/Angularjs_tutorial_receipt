@@ -1,0 +1,11 @@
+{
+  "id": 5,
+  "companyId": 326,
+  "companyName": "Virgin Australia",
+  "companyTypeName": "Retail",
+  "relativeCompanyId": 362,
+  "relativeCompany": "ICE Gatwick",
+  "relativeCompanyType": "Cash Handler",
+  "startDate": "2015-02-27",
+  "endDate": "2050-12-31"
+}
