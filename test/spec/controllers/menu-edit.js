@@ -9,29 +9,31 @@ describe('Controller: MenuEditCtrl', function () {
 
   var MenuEditCtrl,
     scope,
-    $httpBackend,
     menuResponseJSON,
     masterItemsResponseJSON,
     itemsService,
-    menuService;
+    menuService,
+    getMenuDeferred,
+    getItemsListDeferred;
 
-  beforeEach(inject(function ($controller, $rootScope, $injector, _menuService_, _itemsService_) {
+  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
     inject(function (_servedMenu_, _servedMasterItemList_) {
       menuResponseJSON = _servedMenu_;
       masterItemsResponseJSON = _servedMasterItemList_;
     });
 
-    $httpBackend = $injector.get('$httpBackend');
+    menuService = $injector.get('menuService');
+    itemsService = $injector.get('itemsService');
 
-    $httpBackend.whenGET(/menus/).respond(menuResponseJSON);
-    $httpBackend.whenGET(/retail-items\/master/).respond(masterItemsResponseJSON);
+    getMenuDeferred = $q.defer();
+    getMenuDeferred.resolve(menuResponseJSON);
 
-    menuService = _menuService_;
-    itemsService = _itemsService_;
+    getItemsListDeferred = $q.defer();
+    getItemsListDeferred.resolve(masterItemsResponseJSON);
 
-    spyOn(menuService, 'getMenu').and.callThrough();
-    spyOn(itemsService, 'getItemsList').and.callThrough();//returnValue(masterItemsResponseJSON);
+    spyOn(menuService, 'getMenu').and.returnValue(getMenuDeferred.promise);
+    spyOn(itemsService, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
 
     MenuEditCtrl = $controller('MenuEditCtrl', {
       $scope: scope
@@ -44,13 +46,7 @@ describe('Controller: MenuEditCtrl', function () {
     };
 
     scope.$digest();
-    $httpBackend.flush();
   }));
-
-  afterEach(function () {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
 
   it('should attach the view name', function () {
     expect(!!scope.viewName).toBe(true);
@@ -82,8 +78,7 @@ describe('Controller: MenuEditCtrl', function () {
       it('should restrict to start and end dates only', function () {
         expect(itemsService.getItemsList).toHaveBeenCalledWith({
           startDate: '20150501',
-          endDate: '20150531',
-          fetchFromMaster: 'master'
+          endDate: '20150531'
         }, true);
       });
     });
@@ -147,11 +142,11 @@ describe('Controller: MenuEditCtrl', function () {
         expect(scope.itemToDelete.itemName).toBe('itemToDelete');
       });
 
-      //it('should do a DELETE request to menuService with menuToDelete', function () {
-      //  scope.showDeleteConfirmation({id: '1'});
-      //  scope.deleteMenu();
-      //  expect(menuService.deleteMenu).toHaveBeenCalled();
-      //});
+      it('should do a DELETE request to menuService with menuToDelete', function () {
+        scope.showDeleteConfirmation({id: '1'});
+        scope.deleteItemFromMenu();
+        expect(menuService.updateMenu).toHaveBeenCalled();
+      });
     });
 
   });

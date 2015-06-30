@@ -65,26 +65,22 @@ angular.module('ts5App')
       attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat);
     }
 
-    function showSuccessMessage() {
+    function showToast(className, message) {
       ngToast.create({
-        className: 'success',
+        className: className,
         dismissButton: true,
-        content: '<strong>Menu</strong>: successfully updated!'
+        content: '<strong>Menu</strong>: ' + message
       });
     }
-
 
     function resetModelAndShowNotification(dataFromAPI) {
       setupMenuModelAndFetchItems(dataFromAPI);
-      showSuccessMessage();
+      showToast('success', 'successfully updated!');
     }
 
     function showErrors(dataFromAPI) {
-      ngToast.create({
-        className: 'warning',
-        dismissButton: true,
-        content: '<strong>Menu</strong>: error updating menu!'
-      });
+      showToast('warning', 'error updating menu!');
+
       $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
@@ -110,8 +106,21 @@ angular.module('ts5App')
         payload = angular.copy($scope.menu.toJSON());
 
       angular.extend(payload, localizeDates(payload, formatFrom, formatTo));
-      payload.menuItems = [];
       menuService.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
+    };
+
+    $scope.deleteItemFromMenu = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+
+      $scope.menu.menuItems = $scope.menu.menuItems.filter(function (item) {
+        return item.itemId !== $scope.itemToDelete.id;
+      });
+
+      $scope.menuItemsList = $scope.menuItemsList.filter(function (item) {
+        return item.id !== $scope.itemToDelete.id;
+      });
+
+      $scope.menuEditForm.$setDirty();
     };
 
     $scope.isMenuReadOnly = function () {
