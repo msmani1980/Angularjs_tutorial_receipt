@@ -93,11 +93,15 @@ angular.module('ts5App')
     }
 
     $scope.submitForm = function () {
+      if (!$scope.menuEditForm.$valid) {
+        return false;
+      }
       var formatFrom = 'l',
         formatTo = 'YYYYMMDD',
         payload = angular.copy($scope.menu.toJSON());
 
       angular.extend(payload, localizeDates(payload, formatFrom, formatTo));
+      payload.menuItems = [];
       menuService.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
     };
 
