@@ -1,6 +1,6 @@
 <h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
 
-<h2>{{ company.companyName }} <small>Flight {{ cashBag.scheduleNumber }} <small><date class="text-right">{{ cashBag.scheduleDate }}</date></small></small></h2>
+<h2>{{ company.companyName }} <small>Flight {{ cashBag.scheduleNumber }} <small><date class="text-right">{{ displayedScheduleDate }}</date></small></small></h2>
 
 <ng-form name="cashBagCreateForm" class="form edit-form">
 
@@ -8,7 +8,7 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
     </button>
     <h4>
-      We weren't able to edit your cash bag!
+      We weren't able to {{ state }} your cash bag!
     </h4>
 
     <ul>
@@ -31,10 +31,11 @@
     <div class="panel-heading">
       <div class="row">
         <div class="col-sm-6">
-          <div>Base currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
+          <div>Cash Handler Base Currency: {{ currencyCodes[cashHandlerCompany.baseCurrencyId] }}</div>
+          <div>Airline Base Currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
         </div>
         <div class="col-sm-6 text-right">
-          <div>Cashier's entry date: <date>{{ cashBag.createdOn }}</date></div>
+          <div>Cashier's entry date: <date>{{ displayedCashierDate }}</date></div>
         </div>
       </div>
     </div>
@@ -69,7 +70,7 @@
 			  </div>
 
 			  <div class="col-sm-4">
-          <label for="totalCashBags">Bank Reference</label>
+          <label for="totalCashBags">Bank Reference #</label>
           <input custom-pattern="regexp.alpha"
                  required
                  type="text"
@@ -90,8 +91,9 @@
 			      <th>Flight Amount</th>
 			      <th>Paper Amount</th>
 			      <th>Coin Amount</th>
-			      <th>Paper Bank Exchange Rate</th>
-			      <th>Coin Bank Exchange Ratev</th>
+            <th ng-if="isBankExchangePreferred()">Bank Exchange Rate</th>
+			      <th ng-if="!isBankExchangePreferred()">Paper Bank Exchange Rate</th>
+			      <th ng-if="!isBankExchangePreferred()">Coin Bank Exchange Rate</th>
 			    </tr>
 			    </thead>
 			    <tbody>
@@ -108,8 +110,9 @@
                        ng-model="currency.coinAmountManual"
                        name="coinAmountManual[{{currency.currencyId}}]"
                        ng-readonly="readOnly"></td>
-			      <td>{{ currency.paperAmountEpos }}</td>
-			      <td>{{ currency.coinAmountEpos }}</td>
+            <td ng-if="isBankExchangePreferred()">{{ currency.bankAmount }}</td>
+			      <td ng-if="!isBankExchangePreferred()">{{ currency.paperAmountEpos }}</td>
+			      <td ng-if="!isBankExchangePreferred()">{{ currency.coinAmountEpos }}</td>
 			    </tr>
 			    </tbody>
 			  </table>
@@ -117,13 +120,19 @@
     </div>
 
     <div class="panel-footer text-center">
+      <button class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly">
+        <span class="hidden-xs">Cancel</span>
+      </button>
       <button class="btn btn-primary" ng-click="formSave(cashBag)" ng-hide="readOnly">
         <span class="fa fa-check-square-o" aria-hidden="true"></span>
-        <span class="hidden-xs">Save</span>
+        <span class="hidden-xs">{{ saveButtonName }}</span>
       </button>
       <button class="btn btn-danger" ng-click="delete(cashBag)" ng-show="canDelete(cashBag)">Delete</button>
     </div>
 
   </div>
+
+  <leave-view-modal></leave-view-modal>
+
 
 </ng-form>

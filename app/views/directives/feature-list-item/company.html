@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyTypeName}}</div>
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyName}}</div>
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.legalName}}</div>
+    <div class="hidden-xs col-sm-4 list-item">{{viewModel.companyLanguages}}</div>
+    <div class="hidden-xs col-sm-1 list-item">{{viewModel.baseCurrencyCode}}</div>
+    <div class="hidden-xs col-sm-1 list-item text-right">
+        <button type="button" class="btn btn-primary btn-xs" aria-label="Manage Company Relationships" ng-click="func1(viewModel)">
+            <i class="fa fa-arrows-h" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-xs" aria-label="View Company" ng-click="view(viewModel)">
+            <i class="fa fa-file" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company" ng-click="edit(viewModel)">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="visible-xs col-xs-3 list-header text-right">Company Type</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.companyTypeName}}</div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="visible-xs col-xs-3 list-header text-right">Company Name</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.companyName}}</div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="visible-xs col-xs-3 list-header text-right">Legal Name</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.legalName}}</div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="visible-xs col-xs-3 list-header text-right">Additional Languages</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.companyLanguages}}</div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="visible-xs col-xs-3 list-header text-right">Base Currency</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.baseCurrencyCode}}</div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="visible-xs col-xs-3 list-header text-right">Actions</div>
+    <div class="visible-xs col-xs-9 list-item">
+        <button type="button" class="btn btn-primary btn-xs" ng-click="func1(viewModel)">
+            <i class="fa fa-arrows-h"></i>
+        </button>
+    </div>
+</div>

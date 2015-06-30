@@ -1,0 +1,61 @@
+<form name="companyRelationshipListForm">
+  <div class="row">
+    <div class="col-xs-6 col-sm-8">
+      <h2 class="view-name">{{viewName}}</h2>
+    </div>
+    <div class="col-xs-6 col-sm-4">
+      <div class="header-buttons pull-right">
+        <button type="button" class="btn btn-default" data-dismiss="alert" aria-label="Cancel" ng-click="cancel()">
+          <span class="fa fa-close" aria-hidden="true"></span> <span class="hidden-xs">Cancel</span>
+        </button>
+        <button type="submit" class="btn btn-primary"
+                ng-click="submit(companyRelationshipListForm.$valid, companyRelationshipListData)">
+          <i class="fa fa-check-square-o" aria-hidden="true"></i> <span class="hidden-xs">Submit</span>
+        </button>
+        <button type="button" class="btn btn-default">
+          <i class="fa fa-question-circle"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div ng-if="isLoading" class="text-center">
+    <p><i class="fa fa-cog fa-spin fa-4x"></i></p>
+    <p>Loading...</p>
+  </div>
+  <div ng-if="!isLoading">
+    <div class="row">
+      <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in col-xs-12" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4>
+          We found errors :( !
+        </h4>
+
+        <ul>
+          <li ng-repeat="error in form.$error.required">
+            <strong>{{ error.$name }}</strong> is required
+          </li>
+          <li ng-repeat="error in form.$error.pattern">
+            <strong>{{ error.$name }}</strong> is invalid
+          </li>
+          <li ng-show="formErrors" ng-repeat="error in formErrors">
+            <strong>{{error.field}}</strong>
+            <span> {{ error.value }}</span>
+            <span> {{ error.code }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="container module-container">
+      <feature-list-item ng-repeat="companyRelationship in companyRelationshipListData" view-model="companyRelationship"
+                   type="company-relationship"></feature-list-item>
+      <div class="row">
+        <div class="col-xs-12 text-right">
+          <button type="button" class="btn btn-primary" ng-click="addCompanyRelationship(company.id)">
+            <span class="fa fa-plus" aria-hidden="true"></span> Add Company Relationship
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
