@@ -148,6 +148,10 @@ angular
         templateUrl: 'views/item-import.html',
         controller: 'ItemImportCtrl'
       })
+      .when('/lmp-locations-list', {
+        templateUrl: 'views/lmp-locations-list.html',
+        controller: 'ManageLmpLocationsCTRL'
+      })
       .otherwise({
         redirectTo: '/'
       });

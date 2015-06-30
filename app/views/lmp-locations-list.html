@@ -1,0 +1,114 @@
+<div class="module-container">
+
+  <div class="edit-controls">
+    <div class="row">
+
+      <div class="col-xs-12">
+        <h2 class="view-name">{{ viewName }}</h2>
+      </div>
+
+    </div>
+  </div>
+  <!--/TopHeader -->
+
+  <div class="post-trip-data-list">
+
+    <div class="row">
+
+      <div class="col-xs-12 text-right">
+        <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+      </div>
+
+    </div>
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form name="menuSearchForm" ng-submit="searchPostTripData()">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-6">
+              <div class="form-group">
+                <label for="location-type">Location Type</label>
+                <select class="form-control" id="location-type" ng-model="search.locationTypeId" ng-change="updateLocationTypes()">
+                  <option value=""></option>
+                  <option ng-repeat="location in locationTypes" value="{{ location.id }}">
+                    {{ location.locationType }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6">
+              <div class="form-group">
+                <label for="location">Location</label>
+                  <input ng-model="search.location" type="text" class="form-control" id="location" placeholder="T1">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+    <table class="table table-bordered table-hover ng-scope">
+      <thead>
+        <tr>
+          <th>LMP Station</th>
+          <th>Input</th>
+          <th>Storage</th>
+          <th>Output</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
+        <tr class="ng-scope">
+          <td class="ng-binding">O'Hare</td>
+          <td class="ng-binding">Dock 1, Dock 3</td>
+          <td class="ng-binding">Aisle 1</td>
+          <td class="ng-binding">Dock 30</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="viewLocation(menu)" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editLocation(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deleteLocation(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr class="ng-scope">
+          <td class="ng-binding">Midway</td>
+          <td class="ng-binding">Dock 2</td>
+          <td class="ng-binding">Aisle 3</td>
+          <td class="ng-binding">Dock 12</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="viewLocation()" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+          </td>
+        </tr>
+        <!-- end ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<download-template-modal></download-template-modal>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<left-navigation></left-navigation>

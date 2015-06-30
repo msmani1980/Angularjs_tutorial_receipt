@@ -259,6 +259,14 @@ angular.module('ts5App')
         icon: 'icon-manage-schedule',
         className: 'dashboard-companyReasonCode'
       }]
+    }, {
+        title: 'LMP Admin',
+        menuItems: [{
+          name: 'Manage LMP Locations',
+          route: '/#/lmp-locations-list',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-lmpLocationsList'
+        }]
     }];
 
   });
