@@ -16,6 +16,11 @@ angular.module('ts5App')
     }, {
       text: 'Download Template'
     }];
+    $scope.modal = null;
+    $scope.modals = [{
+      type: 'excel',
+      url: 'https://s3.amazonaws.com/ts5-dev-portal-images/templates/scheduleUpload.xlsx'
+    }];
 
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
@@ -73,7 +78,11 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('hide');
       menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, showErrors);
     };
-
+    $scope.showExcelDownload = function () {
+      $scope.modal = $scope.modals[0];
+      debugger;
+      angular.element('bs-modal').modal('show');
+    };
     $scope.showDeleteConfirmation = function (menuToDelete) {
       $scope.menuToDelete = menuToDelete;
       angular.element('.delete-warning-modal').modal('show');
