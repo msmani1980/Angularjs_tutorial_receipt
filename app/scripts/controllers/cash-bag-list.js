@@ -107,8 +107,10 @@ angular.module('ts5App')
       }
       cashBagFactory.getCashBagList(_companyId, $scope.search).then(function (response) {
         $scope.cashBagList = response.cashBags;
-        $scope.search.startDate = moment($scope.search.startDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
-        $scope.search.endDate = '';
+        if($scope.search.startDate) {
+          $scope.search.startDate = moment($scope.search.startDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
+          $scope.search.endDate = $scope.search.endDate;
+        }
       });
     };
 
