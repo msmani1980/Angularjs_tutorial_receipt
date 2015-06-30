@@ -33,6 +33,7 @@ describe('Controller: MenuEditCtrl', function () {
     getItemsListDeferred.resolve(masterItemsResponseJSON);
 
     spyOn(menuService, 'getMenu').and.returnValue(getMenuDeferred.promise);
+    spyOn(menuService, 'updateMenu').and.returnValue(getMenuDeferred.promise);
     spyOn(itemsService, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
 
     MenuEditCtrl = $controller('MenuEditCtrl', {
@@ -41,8 +42,8 @@ describe('Controller: MenuEditCtrl', function () {
 
     scope.menuEditForm = {
       $valid: true,
-      $setPristine: function () {
-      }
+      $setDirty: jasmine.createSpy('$setDirty'),
+      $setPristine: jasmine.createSpy('$setPristine')
     };
 
     scope.$digest();
@@ -83,71 +84,51 @@ describe('Controller: MenuEditCtrl', function () {
       });
     });
 
-    describe('item list on scope', function () {
-      it('should attach a list of items to scope', function () {
-        expect(!!scope.masterItemsList).toBe(true);
-      });
-
-      describe('menuItemList in scope', function () {
-        it('should attach it to scope', function () {
-          expect(!!scope.menuItemsList).toBe(true);
-        });
-
-        it('should have itemQty', function () {
-          expect(!!scope.menuItemsList[0].itemQty).toBe(true);
-        });
-
-        it('should have a itemName', function () {
-          expect(!!scope.menuItemsList[0].itemName).toBe(true);
-        });
+    describe('masterItemsList', function () {
+      it('should have copied item name to menu.menuItems', function () {
+        expect(scope.menu.menuItems[0].itemName).toBeDefined();
       });
     });
-
-    describe('isMenuReadOnly', function () {
-      it('should have a isMenuReadOnly function', function () {
-        expect(!!scope.isMenuReadOnly).toBe(true);
-      });
-
-      it('should return true if startDate < today > endDate', function () {
-        scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
-        scope.menu.endDate = moment().subtract(2, 'month').format('L').toString();
-        expect(scope.isMenuReadOnly()).toBe(true);
-      });
-
-      it('should return true if startDate < today < endDate', function () {
-        scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
-        scope.menu.endDate = moment().add(2, 'month').format('L').toString();
-        expect(scope.isMenuReadOnly()).toBe(true);
-      });
-
-      it('should return false if startDate > today > endDate', function () {
-        scope.menu.startDate = moment().add(1, 'month').format('L').toString();
-        scope.menu.endDate = moment().add(2, 'month').format('L').toString();
-        expect(scope.isMenuReadOnly()).toBe(false);
-      });
-
-      it('should return false if menu === null or undefined', function () {
-        delete scope.menu;
-        expect(scope.isMenuReadOnly()).toBe(false);
-      });
-    });
-
-    describe('Delete items from Menu', function () {
-      it('should have a confirmDelete function', function () {
-        expect(!!scope.showDeleteConfirmation).toBe(true);
-      });
-
-      it('should attach itemToDelete to scope', function () {
-        scope.showDeleteConfirmation({itemName: 'itemToDelete'});
-        expect(scope.itemToDelete.itemName).toBe('itemToDelete');
-      });
-
-      it('should do a DELETE request to menuService with menuToDelete', function () {
-        scope.showDeleteConfirmation({id: '1'});
-        scope.deleteItemFromMenu();
-        expect(menuService.updateMenu).toHaveBeenCalled();
-      });
-    });
-
   });
+
+  describe('isMenuReadOnly', function () {
+    it('should have a isMenuReadOnly function', function () {
+      expect(!!scope.isMenuReadOnly).toBe(true);
+    });
+
+    it('should return true if startDate < today > endDate', function () {
+      scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
+      scope.menu.endDate = moment().subtract(2, 'month').format('L').toString();
+      expect(scope.isMenuReadOnly()).toBe(true);
+    });
+
+    it('should return true if startDate < today < endDate', function () {
+      scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
+      scope.menu.endDate = moment().add(2, 'month').format('L').toString();
+      expect(scope.isMenuReadOnly()).toBe(true);
+    });
+
+    it('should return false if startDate > today > endDate', function () {
+      scope.menu.startDate = moment().add(1, 'month').format('L').toString();
+      scope.menu.endDate = moment().add(2, 'month').format('L').toString();
+      expect(scope.isMenuReadOnly()).toBe(false);
+    });
+
+    it('should return false if menu === null or undefined', function () {
+      delete scope.menu;
+      expect(scope.isMenuReadOnly()).toBe(false);
+    });
+  });
+
+  describe('Delete items from Menu', function () {
+    it('should have a confirmDelete function', function () {
+      expect(!!scope.showDeleteConfirmation).toBe(true);
+    });
+
+    it('should attach itemToDelete to scope', function () {
+      scope.showDeleteConfirmation({itemName: 'itemToDelete'});
+      expect(scope.itemToDelete.itemName).toBe('itemToDelete');
+    });
+  });
+
 });
