@@ -1,0 +1,15 @@
+<div class="dropdown" style="display:inline-block" dropdown dropdown-toggle on-toggle="toggled(open)">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="true">
+    <i class="fa fa-table"></i> Import From File
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <a ngf-select="" ng-model="files" class="button" ngf-multiple="false" ngf-accept="'*.xls,*.xlsx'" ng-model-rejected="rejFiles" tabindex="0">{{viewModel[0].text}}</a>
+    </li>
+    <li>
+      <a href="#" ng-click="$event.stopPropagation();">{{viewModel[1].text}}</a>
+    </li>
+  </ul>
+</div>

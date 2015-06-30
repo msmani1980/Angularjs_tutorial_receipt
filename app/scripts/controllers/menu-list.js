@@ -11,6 +11,11 @@ angular.module('ts5App')
   .controller('MenuListCtrl', function ($scope, $location, menuService, ngToast) {
     $scope.viewName = 'Menu Management';
     $scope.search = {};
+    $scope.importDropdown = [{
+      text: 'Upload'
+    }, {
+      text: 'Download Template'
+    }];
 
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
