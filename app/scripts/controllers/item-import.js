@@ -125,7 +125,7 @@ angular.module('ts5App')
       if(retailItem.hasOwnProperty('itemName') && -1 === _companyRetailItemNames.indexOf(retailItem.itemName)) {
         _companyRetailItemNames.push(retailItem.itemName);
       }
-      if(retailItem.hasOwnProperty('onBoardName') && -1 === _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName)) {
+      if(retailItem.hasOwnProperty('onBoardName') && -1 === _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName) && retailItem.onBoardName !== null) {
         _companyRetailItemOnboardNames.push(retailItem.onBoardName);
       }
       if(-1 === $scope.companyRetailItemList.indexOf(retailItem)) {
