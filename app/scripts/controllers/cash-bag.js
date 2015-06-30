@@ -43,6 +43,9 @@ angular.module('ts5App')
       },
       canDelete: function (cashBag) {
         var canDelete = true;
+        if(cashBag.isSubmitted === 'true') {
+          return false;
+        }
         angular.forEach(cashBag.cashBagCurrencies, function (currency) {
           if (canDelete) {
             if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
@@ -64,6 +67,10 @@ angular.module('ts5App')
     $scope.formSave = function (formCashBag) {
       switch ($routeParams.state) {
         case 'edit':
+          if(formCashBag.isSubmitted === 'true') {
+            helpers.showMessage(null, true, 'cannot edit cash bags that have been submitted!');
+            break;
+          }
           var saveCashBag = angular.copy(formCashBag);
           // TODO see how Luis is doing this in company-relationship-service, tsv154 branch
           saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
