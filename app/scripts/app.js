@@ -87,6 +87,10 @@ angular
         templateUrl: 'views/company.html',
         controller: 'CompanyCtrl'
       })
+      .when('/create-store-number', {
+        templateUrl: 'views/create-store-number.html',
+        controller: 'createStoreNumberCtrl'
+      })
       .when('/company-relationship-list/:id', {
         templateUrl: 'views/company-relationship.html',
         controllerAs: 'vm',
