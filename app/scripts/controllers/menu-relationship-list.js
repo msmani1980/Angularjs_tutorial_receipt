@@ -156,11 +156,11 @@ angular.module('ts5App')
       });
     };
 
-    $scope.removeRelationship = function (relationshipId) {
+    $scope.deleteRelationship = function (relationshipId) {
       var relationshipIndex = $this.findRelationshipIndex(relationshipId);
       angular.element('#loading').modal('show').find('p').text(
         'Removing your menu');
-      menuCatererStationsService.removeRelationship(relationshipId).then(
+      menuCatererStationsService.deleteRelationship(relationshipId).then(
         function () {
           angular.element('#loading').modal('hide');
           $scope.relationshipList.splice(relationshipIndex, 1);

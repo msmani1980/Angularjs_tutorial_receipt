@@ -166,7 +166,6 @@ angular.module('ts5App')
         return false;
       }
       var relationshipData = angular.copy(formData);
-      console.log(relationshipData);
       $this.formatPayloadDates(relationshipData);
       if ($scope.editingRelationship) {
         $this.updateRelationship(relationshipData);

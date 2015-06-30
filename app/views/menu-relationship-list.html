@@ -116,7 +116,7 @@
             <i class="fa fa-pencil"></i>
           </a>
 
-          <button class="btn btn-danger btn-xs btn-delete" ng-click="removeMenu(relationship.id,key)" ng-disabled="isMenuActive(relationship.startDate) || isMenuInactive(relationship.endDate)">
+          <button class="btn btn-danger btn-xs btn-delete" ng-click="deleteRelationship(relationship.id,key)" ng-disabled="isRelationshipActive(relationship.startDate) || isRelationshipInactive(relationship.endDate)">
             <i class="fa fa-trash"></i>
           </button>
 
