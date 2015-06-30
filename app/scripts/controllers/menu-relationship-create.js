@@ -24,17 +24,12 @@ angular.module('ts5App')
     $scope.editingRelationship = false;
 
     this.init = function () {
-      this.getCatererStationList();
-      this.getMenuList();
       this.checkIfViewOnly();
       if ($routeParams.id && !$scope.viewOnly) {
         this.setFormAsEdit();
       }
       if ($scope.editingRelationship || $scope.viewOnly) {
-        $q.all([menuService.getMenuList, catererStationService.getCatererStationList])
-          .then(function () {
-            $this.getRelationship($routeParams.id);
-          });
+        this.getRelationship($routeParams.id);
       }
     };
 
@@ -60,30 +55,34 @@ angular.module('ts5App')
         '\'s Catering Stations';
     };
 
-    // gets an menu to $scope.editingRelationship
+    this.makePromises = function (id) {
+      return [
+        menuCatererStationsService.getRelationship(id),
+        catererStationService.getCatererStationList(),
+        menuService.getMenuList()
+      ];
+    };
+
     this.getRelationship = function (id) {
-      menuCatererStationsService.getRelationship(id).then(function (data) {
-        // TODO: Make this use a loadingModal.show() method
-        angular.element('#loading').modal('show').find('p')
-          .text('We are getting Relationship ' + $routeParams.id);
-        $this.updateFormData(data);
-        //$this.updateViewName();
+      angular.element('#loading').modal('show').find('p')
+        .text('We are getting Relationship ' + $routeParams.id);
+      var promises = this.makePromises(id);
+      $q.all(promises).then(function (response) {
+        $this.updateFormData(response[0]);
+        $this.setCatererStationList(response[1]);
+        $this.setMenuList(response[2]);
+        $this.updateViewName();
         angular.element('#loading').modal('hide');
       });
     };
 
-    this.getCatererStationList = function () {
-      catererStationService.getCatererStationList().then(function (
-        apiResponse) {
-        $scope.stationList = apiResponse.response;
-        $this.initSelectUI();
-      });
+    this.setCatererStationList = function (apiResponse) {
+      $scope.stationList = apiResponse.response;
+      $this.initSelectUI();
     };
 
-    this.getMenuList = function () {
-      menuService.getMenuList().then(function (apiResponse) {
-        $scope.menuList = apiResponse.menus;
-      });
+    this.setMenuList = function (apiResponse) {
+      $scope.menuList = apiResponse.menus;
     };
 
     this.findMenuIndex = function (menuId) {
