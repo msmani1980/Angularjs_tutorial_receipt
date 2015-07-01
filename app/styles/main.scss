@@ -2,7 +2,7 @@
 @import 'colors';
 
 // bower:scss
-@import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
+@import 'bootstrap-sass-official/assets/stylesheets/_bootstrap.scss';
 // endbower
 
 @import 'dashboard';
@@ -20,3 +20,5 @@
 @import 'main-menu';
 @import 'sortable';
 @import 'footer';
+@import 'directive/feature-list';
+@import 'panels';

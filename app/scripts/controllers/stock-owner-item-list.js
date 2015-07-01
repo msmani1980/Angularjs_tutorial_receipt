@@ -43,7 +43,12 @@ angular.module('ts5App')
     };
 
     this.generateItemQuery = function () {
-      var query = {};
+      var todaysDate = dateUtility.formatDate(dateUtility.now());
+      var query = {
+        startDate: todaysDate,
+        sortBy: 'ASC',
+        sortOn: 'itemName'
+      };
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
         query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
           'L', 'YYYYMMDD');
@@ -98,12 +103,18 @@ angular.module('ts5App')
       });
     };
 
+    this.parseDate = function (date) {
+      return Date.parse(date);
+    };
+
     $scope.isItemActive = function (startDate) {
-      return Date.parse(startDate) <= dateUtility.now();
+      var parsedDate = $this.parseDate(startDate);
+      return parsedDate <= dateUtility.now();
     };
 
     $scope.isItemInactive = function (endDate) {
-      return Date.parse(endDate) <= dateUtility.now();
+      var parsedDate = $this.parseDate(endDate);
+      return parsedDate <= dateUtility.now();
     };
 
     $scope.clearSearchFilters = function () {

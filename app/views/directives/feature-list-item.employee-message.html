@@ -1,0 +1,83 @@
+<div ng-if="!isExpanded">
+  <div class="row" ng-click="toggleExpand()">
+    <div class="hidden-xs col-sm-7 list-item">{{viewModel.employeeMessageText}}</div>
+    <div class="hidden-xs col-sm-2 list-item text-center">{{viewModel.startDate | date: 'MM/dd/yyyy' }}</div>
+    <div class="hidden-xs col-sm-2 list-item text-center">{{viewModel.endDate | date: 'MM/dd/yyyy' }}</div>
+    <div class="hidden-xs col-sm-1 list-item text-right"><button class="btn btn-primary" ui-sref="employee-messages.edit({ id: viewModel.id, message: viewModel })"><span class="fa fa-pencil"></span></button></div>
+    <div class="visible-xs col-xs-3 list-header text-right">Message</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.employeeMessageText}}</div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="visible-xs col-xs-3 list-header text-right">Start Date</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.startDate | date: 'MM/dd/yyyy' }}</div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="visible-xs col-xs-3 list-header text-right">End Date</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.endDate | date: 'MM/dd/yyyy' }}</div>
+  </div>
+</div>
+<div ng-if="isExpanded" ng-click="toggleExpand()" class="hidden-xs panel panel-list">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="hidden-xs col-sm-7">{{viewModel.employeeMessageText}}</div>
+      <div class="hidden-xs col-sm-2 text-center">{{viewModel.startDate | date: 'MM/dd/yyyy' }}</div>
+      <div class="hidden-xs col-sm-2 text-center">{{viewModel.endDate | date: 'MM/dd/yyyy' }}</div>
+      <div class="hidden-xs col-sm-1 text-right"><button class="btn btn-primary" ui-sref="employee-messages.edit({ id: viewModel.id, message: viewModel })"><span class="fa fa-pencil"></span></button></div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <ul class="list-group">
+      <li class="list-group-item active">Employee ID <span class="badge">{{viewModel.employeeMessageEmployeeIdentifiers.length}}</span></li>
+      <li class="list-group-item"><span ng-if="!viewModel.employeeMessageEmployeeIdentifiers.length">N/A</span>
+        <span ng-if="viewModel.employeeMessageEmployeeIdentifiers.length" ng-repeat="employeeId in viewModel.employeeMessageEmployeeIdentifiers">{{employeeId}}</span></li>
+    </ul>
+    <div class="row">
+      <div class="col-sm-4 panel-item">
+        <p ng-if="!viewModel.employeeMessageSchedules.length">N/A</p>
+        <p ng-if="viewModel.employeeMessageSchedules.length" ng-repeat="schedule in viewModel.employeeMessageSchedules">{{schedule.scheduleNumber}}</p>
+      </div>
+      <div class="col-sm-4 panel-item">
+        <p ng-if="!viewModel.employeeMessageArrivalStations.length">N/A</p>
+        <p ng-if="viewModel.employeeMessageArrivalStations.length" ng-repeat="station in viewModel.employeeMessageArrivalStations">{{station.stationCode}}</p>
+      </div>
+      <div class="col-sm-4 panel-item">
+        <p ng-if="!viewModel.employeeMessageDepartureStations.length">N/A</p>
+        <p ng-if="viewModel.employeeMessageDepartureStations.length" ng-repeat="station in viewModel.employeeMessageDepartureStations">{{station.stationCode}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-if="isExpanded">
+  <div class="visible-xs row" ng-click="toggleExpand()">
+    <div class="col-xs-3 list-header text-right">Message</div>
+    <div class="col-xs-9 list-item">{{viewModel.employeeMessageText}}</div>
+    <div class="clearfix"></div>
+    <div class="col-xs-3 list-header text-right">Start Date</div>
+    <div class="col-xs-9 list-item">{{viewModel.startDate | date: 'MM/dd/yyyy' }}</div>
+    <div class="clearfix"></div>
+    <div class="col-xs-3 list-header text-right">End Date</div>
+    <div class="col-xs-9 list-item">{{viewModel.endDate | date: 'MM/dd/yyyy' }}</div>
+    <div class="clearfix"></div>
+    <div class="col-xs-3 list-header text-right">Employee ID</div>
+    <div class="col-xs-9 list-item">
+      <span ng-if="!viewModel.employeeMessageEmployeeIdentifiers.length">N/A</span>
+      <span ng-if="viewModel.employeeMessageEmployeeIdentifiers.length" ng-repeat="employeeId in viewModel.employeeMessageEmployeeIdentifiers">{{employeeId}}</span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-xs-3 list-header text-right">Number</div>
+    <div class="col-xs-9 list-item">
+      <span ng-if="!viewModel.employeeMessageSchedules.length">N/A</span>
+      <span ng-if="viewModel.employeeMessageSchedules.length" ng-repeat="schedule in viewModel.employeeMessageSchedules">{{schedule.scheduleNumber}}</span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-xs-3 list-header text-right">Arrival Station</div>
+    <div class="col-xs-9 list-item">
+      <span ng-if="!viewModel.employeeMessageArrivalStations.length">N/A</span>
+      <span ng-if="viewModel.employeeMessageArrivalStations.length" ng-repeat="station in viewModel.employeeMessageArrivalStations">{{stations}}</span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-xs-3 list-header text-right">Departure Station</div>
+    <div class="col-xs-9 list-item">
+      <span ng-if="!viewModel.employeeMessageDepartureStations.length">N/A</span>
+      <span ng-if="viewModel.employeeMessageDepartureStations.length" ng-repeat="station in viewModel.employeeMessageDepartureStations">{{station.stationCode}}</span>
+    </div>
+  </div>
+</div>

@@ -52,7 +52,11 @@ angular.module('ts5App')
       '413': {
         id: 413,
         name: 'Stock Owner'
-      }
+      },
+      '407': {
+        id: 407,
+        name: 'GRO 2'
+      },
     };
 
     var defaults = {};
@@ -60,7 +64,7 @@ angular.module('ts5App')
     defaults.settings = settingsModel['1'];
 
     // TODO: Set company object instead of just number, need to refactor so ember will be happy
-    defaults.company = 2;
+    defaults.company = 403;
 
     $localStorage.$default(defaults);
 

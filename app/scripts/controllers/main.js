@@ -73,7 +73,7 @@ angular.module('ts5App')
       'title': 'Company Management',
       'menuItems': [{
         name: 'Manage Companies',
-        route: emberURL + 'companies',
+        route: '/#/company-list',
         icon: 'icon-manage-company',
         className: 'dashboard-manageCompanies'
       }, {

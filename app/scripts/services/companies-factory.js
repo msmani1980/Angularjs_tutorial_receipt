@@ -12,15 +12,15 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('companiesFactory', function (companiesService, tagsService, salesCategoriesService, taxTypesService, stationsService) {
+  .factory('companiesFactory', function (companyService, tagsService, salesCategoriesService, taxTypesService, stationsService) {
 
     // Companies
     var getCompany = function (id) {
-      return companiesService.getCompany(id);
+      return companyService.getCompany(id);
     };
 
-    var getCompaniesList = function (payload) {
-      return companiesService.getCompaniesList(payload);
+    var getCompanyList = function (payload) {
+      return companyService.getCompanyList(payload);
     };
 
     // Tags
@@ -59,7 +59,7 @@ angular.module('ts5App')
 
       // Companies
       getCompany: getCompany,
-      getCompaniesList: getCompaniesList,
+      getCompanyList: getCompanyList,
 
       // Tags
       getTagsList: getTagsList,

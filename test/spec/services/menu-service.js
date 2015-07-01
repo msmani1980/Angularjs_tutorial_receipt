@@ -10,12 +10,13 @@ describe('Service: menuService', function () {
   var menuService,
     $httpBackend,
     menuResponseJSON;
-  beforeEach(inject(function (_menuService_, _$httpBackend_) {
+
+  beforeEach(inject(function (_menuService_, $injector) {
     inject(function (_servedMenus_) {
       menuResponseJSON = _servedMenus_;
     });
 
-    $httpBackend = _$httpBackend_;
+    $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/menus/).respond(menuResponseJSON);
     menuService = _menuService_;
   }));

@@ -19,6 +19,10 @@ angular.module('ts5App')
     $scope.viewName = 'Cash Bag';
     $scope.readOnly = true;
     $scope.displayError = false;
+    $scope.displayedScheduleDate = '';
+    $scope.displayedCashierDate = '';
+    $scope.saveButtonName = '';
+    $scope.state = '';
 
     var helpers = {
       showMessage: function(error, isError, message) {
@@ -32,13 +36,16 @@ angular.module('ts5App')
           dismissButton: true,
           content: '<strong>Cash bag</strong>:' + message + '!'
         });
-        $scope.displayError = true;
-        if(error !== null) {
+        if(error !== null && isError) {
+          $scope.displayError = true;
           $scope.formErrors = error.data;
         }
       },
       canDelete: function (cashBag) {
         var canDelete = true;
+        if(cashBag.isSubmitted === 'true') {
+          return false;
+        }
         angular.forEach(cashBag.cashBagCurrencies, function (currency) {
           if (canDelete) {
             if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
@@ -60,6 +67,10 @@ angular.module('ts5App')
     $scope.formSave = function (formCashBag) {
       switch ($routeParams.state) {
         case 'edit':
+          if(formCashBag.isSubmitted === 'true') {
+            helpers.showMessage(null, true, 'cannot edit cash bags that have been submitted!');
+            break;
+          }
           var saveCashBag = angular.copy(formCashBag);
           // TODO see how Luis is doing this in company-relationship-service, tsv154 branch
           saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
@@ -94,11 +105,20 @@ angular.module('ts5App')
       }
     };
 
+    $scope.isBankExchangePreferred = function () {
+      if (!$scope.companyPreferences) {
+        return false;
+      }
+
+      return $scope.companyPreferences.filter(function (feature) {
+          return (feature.featureCode === 'EXR' && feature.optionCode === 'CSB' && feature.choiceCode === 'CSB');
+        }).length > 0;
+    };
+
     // Constructor
     (function constructor() {
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
-
       // in object of our services, to be called with the factory helper
       var services = {
         getCashBag: function () {
@@ -118,6 +138,14 @@ angular.module('ts5App')
             }
           );
         },
+        getCashHandlerCompany: function () {
+          // TODO: get correct cash handler company
+          return cashBagFactory.getCompany(362).then(
+            function (response) {
+              $scope.cashHandlerCompany = response;
+            }
+          );
+        },
         getCompanyCurrencies: function () {
           return cashBagFactory.getCompanyCurrencies().then(
             function (response) {
@@ -130,16 +158,21 @@ angular.module('ts5App')
           );
         },
         getDailyExchangeRates: function () {
-          return cashBagFactory.getDailyExchangeRates(_companyId, $routeParams.scheduleDate).then(
+          return cashBagFactory.getDailyExchangeRates(_companyId, moment().format('YYYYMMDD')).then(
             function (response) {
               $scope.dailyExchangeRates = response.dailyExchangeRates;
             }
           );
+        },
+        getCompanyPreferences: function () {
+          return cashBagFactory.getCompanyPreferences().then(function(response){
+            $scope.companyPreferences = response.preferences;
+          });
         }
       };
 
       _factoryHelper.setServices(services);
-
+      $scope.state = $routeParams.state;
       switch ($routeParams.state) {
         case 'create':
           create();
@@ -160,7 +193,7 @@ angular.module('ts5App')
 
     // CRUD - Create
     function create() {
-      var _promises = _factoryHelper.callServices(['getCompany', 'getCompanyCurrencies', 'getDailyExchangeRates']);
+      var _promises = _factoryHelper.callServices(['getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
 
       $scope.readOnly = false;
       $scope.cashBag = {
@@ -170,21 +203,25 @@ angular.module('ts5App')
         scheduleNumber: $routeParams.scheduleNumber,
         cashBagCurrencies: []
       };
+      $scope.displayedScheduleDate = moment($routeParams.scheduleDate, 'YYYYMMDD').format('YYYY-MM-DD').toString();
+      $scope.displayedCashierDate = moment().format('YYYY-MM-DD');
+      $scope.saveButtonName = 'Create';
 
       $q.all(_promises).then(function () {
         if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
-          $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id; // TODO: why is dailyExchangeRates an array?
+          $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
         } else {
             helpers.showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
         }
-        angular.forEach($scope.companyCurrencies, function (currency) {
+        angular.forEach($scope.dailyExchangeRates[0].dailyExchangeRateCurrencies, function (currency) {
           $scope.cashBag.cashBagCurrencies.push(
             {
-              currencyId: currency.id,
-              // TODO - what value should go here, can user's enter the "Flight amount" on the create page
-              bankAmount: '0.0000', // TODO should the user be allowed to set this value on create form?
+              currencyId: currency.retailCompanyCurrencyId,
+              bankAmount: currency.bankExchangeRate,
               paperAmountManual: '0.0000',
-              coinAmountManual: '0.0000'
+              coinAmountManual: '0.0000',
+              paperAmountEpos: currency.paperExchangeRate,
+              coinAmountEpos: currency.coinExchangeRate
             }
           );
         });
@@ -194,18 +231,22 @@ angular.module('ts5App')
 
     // CRUD - Read
     function read() {
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
-        $scope.canDelete = false;
+        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
+        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
       });
     }
 
     // CRUD - Update
     function update() {
       $scope.readOnly = false;
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCompanyCurrencies']);
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
         $scope.canDelete = helpers.canDelete;
+        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
+        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
+        $scope.saveButtonName = 'Save';
       });
     }
 

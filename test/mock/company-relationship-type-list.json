@@ -1,0 +1,37 @@
+{
+  "response": [
+    {
+      "id": 10,
+      "companyTypeId": 1,
+      "companyTypeName": "Retail",
+      "relativeCompanyTypeId": 2,
+      "relativeCompanyType": "Stockowner"
+    },
+    {
+      "id": 11,
+      "companyTypeId": 1,
+      "companyTypeName": "Retail",
+      "relativeCompanyTypeId": 4,
+      "relativeCompanyType": "Caterer"
+    },
+    {
+      "id": 12,
+      "companyTypeId": 1,
+      "companyTypeName": "Retail",
+      "relativeCompanyTypeId": 5,
+      "relativeCompanyType": "Cash Handler"
+    },
+    {
+      "id": 14,
+      "companyTypeId": 1,
+      "companyTypeName": "Retail",
+      "relativeCompanyTypeId": 1,
+      "relativeCompanyType": "Retail"
+    }
+  ],
+  "meta": {
+    "count": 4,
+    "limit": 4,
+    "start": 0
+  }
+}

@@ -322,32 +322,30 @@
       </div>
 
       <label>Measurements</label>
-
+      <span class="text-warning" ng-show="isMeasurementRequired() && !isMeasurementValid()"><p>* Length, Width and Height fields are all required if one contains a value.</p></span>
       <div class="row">
 
-        <div class="form-group">
+        <div class="form-group" ng-class="{ 'has-error' : isMeasurementRequired() && !isMeasurementValid() , 'has-success' : isMeasurementValid() }" >
 
           <div class="col-md-3 col-xs-3">
 
-            <input ng-model="formData.length" type="text" class="form-control" placeholder="Length">
+            <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Length" name="Length">
+          </div>
+
+          <div class="col-md-3 col-xs-3">
+
+            <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Width" name="Width">
 
           </div>
 
           <div class="col-md-3 col-xs-3">
 
-            <input ng-model="formData.width" type="text" class="form-control" placeholder="Width">
-
-
-          </div>
-
-          <div class="col-md-3 col-xs-3">
-
-            <input ng-model="formData.height" type="text" class="form-control" placeholder="Height">
+            <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Height" name="Height">
 
           </div>
 
           <div class="col-md-3 col-xs-3">
-            <select ng-model="formData.dimensionType" class="form-control">
+            <select ng-model="formData.dimensionType" class="form-control" ng-required="isMeasurementRequired()" name="Unit of Measurement">
               <option ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }}
               </option>
             </select>

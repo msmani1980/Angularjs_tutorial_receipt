@@ -294,45 +294,44 @@
 				</div>
 
 				<label>Measurements</label>
+	      <span class="text-warning" ng-show="isMeasurementRequired() && !isMeasurementValid()"><p>* Length, Width and Height fields are all required if one contains a value.</p></span>
+	      <div class="row">
 
-				<div class="row">
+	        <div class="form-group" ng-class="{ 'has-error' : isMeasurementRequired() && !isMeasurementValid() , 'has-success' : isMeasurementValid() }" >
 
-					<div class="form-group">
+	          <div class="col-md-3 col-xs-3">
 
-						<div class="col-md-3 col-xs-3">
+	            <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Length" name="Length">
+	          </div>
 
-							<input ng-model="formData.length" type="text" class="form-control" placeholder="Length">
+	          <div class="col-md-3 col-xs-3">
 
-						</div>
+	            <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Width" name="Width">
 
-						<div class="col-md-3 col-xs-3">
+	          </div>
 
-							<input ng-model="formData.width" type="text" class="form-control" placeholder="Width">
+	          <div class="col-md-3 col-xs-3">
 
+	            <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Height" name="Height">
 
-						</div>
+	          </div>
 
-						<div class="col-md-3 col-xs-3">
+	          <div class="col-md-3 col-xs-3">
+	            <select ng-model="formData.dimensionType" class="form-control" ng-required="isMeasurementRequired()" name="Unit of Measurement">
+	              <option ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }}
+	              </option>
+	            </select>
+	          </div>
 
-							<input ng-model="formData.height" type="text" class="form-control" placeholder="Height">
+	        </div>
 
-						</div>
-
-						<div class="col-md-3 col-xs-3">
-							<select ng-model="formData.dimensionType" class="form-control">
-								<option ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }}</option>
-							</select>
-						</div>
-
-					</div>
-
-				</div>
+	      </div>
 
 				<h3 id="price-and-tax">Price</h3>
 
 				<p>
 					<button id="add-price-group" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
-				     <i class="fa fa-plus"></i> Add Price Type
+				     <i class="fa fa-plus"></i> Add Cost
 				  </button>
 				</p>
 
@@ -347,7 +346,7 @@
 		</fieldset>
 
 	</ng-form>
-	
+
 	</div>
 
 </div>

@@ -73,7 +73,6 @@ angular.module('ts5App')
         dismissButton: true,
         content: '<strong>Cash bag</strong>:' + error
       });
-      $scope.displayError = true;
       $scope.formErrors = {};
     }
 
@@ -102,13 +101,16 @@ angular.module('ts5App')
     };
 
     $scope.searchCashBag = function () {
-      if ($scope.search.scheduleDate) {
-        $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
+      if ($scope.search.startDate) {
+        $scope.search.startDate = moment($scope.search.startDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
+        $scope.search.endDate = $scope.search.startDate;
       }
       cashBagFactory.getCashBagList(_companyId, $scope.search).then(function (response) {
         $scope.cashBagList = response.cashBags;
-        $scope.search.scheduleDate = '';
-
+        if($scope.search.startDate) {
+          $scope.search.startDate = moment($scope.search.startDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
+          $scope.search.endDate = $scope.search.endDate;
+        }
       });
     };
 
