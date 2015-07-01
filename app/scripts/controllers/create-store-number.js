@@ -23,6 +23,10 @@ angular.module('ts5App')
 
     // scope functions
     $scope.submitForm = function(){
+      if($scope.createStoreNumberForm.$invalid) {
+        console.log($scope.createStoreNumberForm);
+        return false;
+      }
       var payload = angular.copy($scope.company);
       payload.id = _companyId;
       payload.action = 'stores';
@@ -35,7 +39,7 @@ angular.module('ts5App')
     };
 
     this.constructor = function(){
-      $scope.company = angular.copy(_companyDefault);
+      $scope.formData = angular.copy(_companyDefault);
     };
     this.constructor();
 
