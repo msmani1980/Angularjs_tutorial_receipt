@@ -40,13 +40,20 @@ describe('Controller: CreateStoreNumberCtrl', function () {
     });
   });
 
+  describe('constructor', function(){
+    it('should call the constructor', function(){
+      expect(CreateStoreNumberCtrl.constructor()).toHaveBeenCalled();
+    });
+  });
+
   describe('submitForm scope function', function(){
     beforeEach(function(){
-      scope.company = {
+      scope.formData = {
         storeNumber: '123',
         startDate: '123',
         endDate: '123'
       };
+      scope.createStoreNumberForm = {$invalid:false};
       scope.$digest();
     });
     it('should call companyService\' createStore', function(){
