@@ -226,6 +226,14 @@ angular.module('ts5App')
         'L', 'YYYYMMDD');
     };
 
+    $scope.isRelationshipActive = function () {
+      return Date.parse($scope.formData.startDate) <= dateUtility.now();
+    };
+
+    $scope.isRelationshipInactive = function () {
+      return Date.parse($scope.formData.startDate) <= dateUtility.now();
+    };
+
     this.init();
 
   });

@@ -36,7 +36,7 @@
 
 			<form-error-dialog></form-error-dialog>
 
-      <fieldset ng-disabled="viewOnly || menuIsActive">
+
 
 			<div class="row">
 
@@ -45,29 +45,29 @@
           <div class="row">
 
             <div class="col-xs-12 col-sm-6">
-
-              <div class="form-group">
-                <label>Menu Code *</label>
-                <select ng-model="formData.menuId" class="form-control">
-                  <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
-                    {{ menu.menuCode }}
-                  </option>
-                </select>
-            </div>
-
+              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+                <div class="form-group">
+                  <label>Menu Code *</label>
+                  <select ng-model="formData.menuId" class="form-control">
+                    <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
+                      {{ menu.menuCode }}
+                    </option>
+                  </select>
+                </div>
+              </fieldset>
             </div>
 
             <div class="col-xs-12 col-sm-6">
-
-              <div class="form-group">
-                <label>Menu Name *</label>
-                <select ng-disabled="true" ng-model="formData.menuId" class="form-control">
-                  <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
-                    {{ menu.menuName }}
-                  </option>
-                </select>
-              </div>
-
+              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+                <div class="form-group">
+                  <label>Menu Name *</label>
+                  <select ng-disabled="true" ng-model="formData.menuId" class="form-control">
+                    <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
+                      {{ menu.menuName }}
+                    </option>
+                  </select>
+                </div>
+              </fieldset>
             </div>
 
           </div>
@@ -79,8 +79,8 @@
 						disable-past="true"
 						label-from="Effective From"
 						label-to="Effective To"
-						disable-start-date="viewOnly || menuIsActive"
-						disable-end-date="viewOnly || menuIsInactive"
+						disable-start-date="viewOnly || isRelationshipActive() "
+						disable-end-date="viewOnly"
 						>
 					</date-picker>
 
@@ -88,19 +88,18 @@
 
         <div class="col-xs-12 col-sm-6">
 
-          <div class="form-group">
-            <label for="menu-station">Catering Stations</label>
-            <select ng-disabled="viewOnly || menuIsActive" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
-              <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
-            </select>
-
-          </div>
+          <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+            <div class="form-group">
+              <label for="menu-station">Catering Stations</label>
+              <select ng-disabled="viewOnly || isRelationshipActive()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
+                <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
+              </select>
+            </div>
+          </fieldset>
 
         </div>
 
       </div>
-
-    </fieldset>
 
   </ng-form>
 
