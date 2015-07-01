@@ -23,15 +23,9 @@ angular.module('ts5App')
 
     this.init = function () {
       this.getRelationshipList();
-      $scope.$watch('search', function () {
-        $this.updateRelationshipList();
-      }, true);
-      $scope.$watchCollection('dateRange', function () {
-        $this.getRelationshipList();
-      });
-      $scope.$watch('currentPage + relationshipsPerPage', function () {
-        $this.updateRelationshipList();
-      });
+      $scope.$watch('search', $this.updateRelationshipList, true);
+      $scope.$watchCollection('dateRange', $this.getRelationshipList);
+      $scope.$watch('currentPage + relationshipsPerPage', $this.updateRelationshipList);
     };
 
     this.showSuccessMessage = function (message) {
@@ -43,8 +37,8 @@ angular.module('ts5App')
     };
 
     this.updateRelationshipList = function () {
-      this.associateMenuData();
-      this.associateStationData();
+      $this.associateMenuData();
+      $this.associateStationData();
       var filteredRelationships = $this.filterRelationships();
       $scope.relationshipListCount = filteredRelationships.length;
       $this.setPaginatedRelationships(filteredRelationships);
@@ -76,7 +70,7 @@ angular.module('ts5App')
     };
 
     this.makePromises = function () {
-      var query = this.generateRelationshipQuery();
+      var query = $this.generateRelationshipQuery();
       return [
         catererStationService.getCatererStationList(),
         menuService.getMenuList(),
@@ -85,7 +79,7 @@ angular.module('ts5App')
     };
 
     this.getRelationshipList = function () {
-      var promises = this.makePromises();
+      var promises = $this.makePromises();
       $q.all(promises).then(function (response) {
         $this.setCatererStationList(response[0]);
         $this.setMenuList(response[1]);
