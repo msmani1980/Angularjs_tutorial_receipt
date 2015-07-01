@@ -43,9 +43,6 @@ angular.module('ts5App')
     };
 
     this.filterRelationships = function () {
-      console.log($scope.relationshipList, $scope.search, $filter('filter')
-        ($scope.relationshipList,
-          $scope.search));
       return $filter('filter')($scope.relationshipList, $scope.search);
     };
 
@@ -171,7 +168,7 @@ angular.module('ts5App')
       });
     };
 
-    $scope.deleteRelationship = function (relationshipId) {
+    $scope.removeRecord = function (relationshipId) {
       var relationshipIndex = $this.findRelationshipIndex(relationshipId);
       angular.element('#loading').modal('show').find('p').text(
         'Removing your menu');

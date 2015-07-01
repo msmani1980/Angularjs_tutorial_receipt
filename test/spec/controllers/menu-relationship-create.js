@@ -1,48 +1,102 @@
 'use strict';
 
-describe('Controller: MenuRelationshipCreateCtrl', function () {
+describe('The MenuRelationshipCreateCtrl', function () {
 
-  var $rootScope,
-    $scope,
-    $controller,
-    $location,
+  var $scope,
     MenuRelationshipCreateCtrl,
-    menuAPIResponse,
-    stationAPIResponse;
+    getMenuListDeffered,
+    menuService,
+    menuListJSON,
+    stationListJSON,
+    catererStationService,
+    getCatererStationListDeffered,
+    getRelationshipDeffered,
+    menuCatererStationListJSON,
+    menuCatererStationsService,
+    location,
+    httpBackend,
+    authRequestHandler;
 
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/menus.json', 'served/catering-stations.json'));
+  beforeEach(module('served/menus.json', 'served/catering-stations.json',
+    'served/menu-catering-stations.json'));
 
-  beforeEach(inject(function (_$rootScope_, _$controller_, $injector,
-    _servedMenus_, _servedCateringStations_) {
-    $location = $injector.get('$location');
-    $location.path('/menu-relationship-create');
-    $rootScope = _$rootScope_;
+  beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
+    $location, $httpBackend, _catererStationService_,
+    _menuCatererStationsService_) {
+    inject(function (_servedMenus_, _servedCateringStations_,
+      _servedMenuCateringStations_) {
+      menuListJSON = _servedMenus_;
+      stationListJSON = _servedCateringStations_;
+      menuCatererStationListJSON = _servedMenuCateringStations_;
+    });
+
+    // backend definition common for all tests
+    authRequestHandler = $httpBackend.when('GET', '/auth.py').respond({
+      userId: 'userX'
+    }, {
+      'A-Token': 'xxx'
+    });
+
+    httpBackend = $httpBackend;
+    location = $location;
     $scope = $rootScope.$new();
-    $controller = _$controller_;
+
+    location.path('/menu-relationship-create');
+
+    getMenuListDeffered = $q.defer();
+    getMenuListDeffered.resolve(menuListJSON);
+    menuService = _menuService_;
+    spyOn(menuService, 'getMenuList').and.returnValue(
+      getMenuListDeffered.promise);
+
+    getCatererStationListDeffered = $q.defer();
+    getCatererStationListDeffered.resolve(stationListJSON);
+    catererStationService = _catererStationService_;
+    spyOn(catererStationService, 'getCatererStationList').and.returnValue(
+      getCatererStationListDeffered.promise);
+
+    getRelationshipDeffered = $q.defer();
+    getRelationshipDeffered.resolve(menuCatererStationListJSON);
+    menuCatererStationsService = _menuCatererStationsService_;
+    spyOn(menuCatererStationsService, 'getRelationship').and.returnValue(
+      getRelationshipDeffered.promise);
+
     MenuRelationshipCreateCtrl = $controller(
       'MenuRelationshipCreateCtrl', {
-        '$rootScope': $rootScope,
-        '$scope': $scope
+        $scope: $scope
       });
-    menuAPIResponse = _servedMenus_;
-    stationAPIResponse = _servedCateringStations_;
+
+    spyOn(MenuRelationshipCreateCtrl, 'init');
+    spyOn(MenuRelationshipCreateCtrl, 'setMenuList');
+    spyOn(MenuRelationshipCreateCtrl, 'setCatererStationList');
+    spyOn(MenuRelationshipCreateCtrl, 'getRelationship');
+
+    $scope.$digest();
+
   }));
+
+  /*afterEach(function () {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });*/
 
   describe('The MenuRelationshipCreateCtrl', function () {
     it('should be defined', function () {
       expect(MenuRelationshipCreateCtrl).toBeDefined();
     });
     it('should have a the route /menu-relationship-create', function () {
-      expect($location.path()).toBe('/menu-relationship-create');
+      expect(location.path()).toBe('/menu-relationship-create');
     });
   });
 
   describe('view', function () {
+
     var $templateCache,
       $compile,
       html,
       view;
+
     beforeEach(inject(function (_$templateCache_, _$compile_) {
       $templateCache = _$templateCache_;
       $compile = _$compile_;
@@ -52,6 +106,7 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
       view = angular.element(compiled[0]);
       $scope.$digest();
     }));
+
     it('should be defined', function () {
       expect(view[0]).toBeDefined();
     });
@@ -88,7 +143,7 @@ describe('Controller: MenuRelationshipCreateCtrl', function () {
       });
       it('should have a View Name that contains text', function () {
         expect(controls.find('.view-name').text().trim()).toEqual(
-          'Create Menu Relationship');
+          'Create Relationship');
       });
       it('should have (2) buttons inside the controls', function () {
         expect(controls.find('.btn').length).toEqual(2);

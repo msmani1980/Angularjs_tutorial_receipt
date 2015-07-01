@@ -1,14 +1,44 @@
 {
   "companyMenuCatererStations": [{
-    "id": 66,
-    "menuId": 121,
+    "id": 75,
+    "menuId": 4,
     "catererStationIds": [3],
-    "startDate": "2015-06-26",
-    "endDate": "2015-07-10"
+    "startDate": "2015-07-01",
+    "endDate": "2015-08-08"
+  }, {
+    "id": 76,
+    "menuId": 32,
+    "catererStationIds": [3, 5],
+    "startDate": "2015-10-08",
+    "endDate": "2015-11-07"
+  }, {
+    "id": 77,
+    "menuId": 6,
+    "catererStationIds": [5],
+    "startDate": "2015-07-01",
+    "endDate": "2016-05-07"
+  }, {
+    "id": 90,
+    "menuId": 160,
+    "catererStationIds": [5],
+    "startDate": "2015-07-22",
+    "endDate": "2015-07-22"
+  }, {
+    "id": 91,
+    "menuId": 10,
+    "catererStationIds": [5],
+    "startDate": "2015-07-02",
+    "endDate": "2015-07-02"
+  }, {
+    "id": 93,
+    "menuId": 65,
+    "catererStationIds": [3],
+    "startDate": "2015-07-08",
+    "endDate": "2015-07-08"
   }],
   "meta": {
-    "count": 1,
-    "limit": 1,
+    "count": 7,
+    "limit": 7,
     "start": 0
   }
 }

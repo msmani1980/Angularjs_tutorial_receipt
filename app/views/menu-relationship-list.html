@@ -112,11 +112,11 @@
             <i class="fa fa-file"></i>
           </a>
 
-          <a class="btn btn-primary btn-xs btn-edit" ng-href="#/menu-relationship-edit/{{relationship.id}}" ng-hide="isMenuActive(relationship.endDate)">
+          <a class="btn btn-primary btn-xs btn-edit" ng-href="#/menu-relationship-edit/{{relationship.id}}" ng-hide="isRelationshipActive(relationship.endDate)">
             <i class="fa fa-pencil"></i>
           </a>
 
-          <button class="btn btn-danger btn-xs btn-delete" ng-click="deleteRecordDialog(item.id)"  ng-hide="isRelationshipActive(relationship.startDate) || isRelationshipInactive(relationship.endDate)">
+          <button class="btn btn-danger btn-xs btn-delete" ng-click="deleteRecordDialog(relationship.id)"  ng-hide="isRelationshipActive(relationship.startDate) || isRelationshipInactive(relationship.endDate)">
             <i class="fa fa-trash"></i>
           </button>
 
