@@ -225,11 +225,9 @@ angular.module('ts5App')
       }
       var relationshipData = angular.copy(formData);
       $this.formatPayloadDates(relationshipData);
-      if ($scope.editingRelationship) {
-        $this.updateRelationship(relationshipData);
-      } else {
-        $this.createRelationship(relationshipData);
-      }
+      var action = $scope.editingRelationship ? 'updateRelationship' :
+        'createRelationship';
+      $this[action](relationshipData);
     };
 
     this.formatPayloadDates = function (relationship) {
