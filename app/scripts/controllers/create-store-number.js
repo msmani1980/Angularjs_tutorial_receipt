@@ -11,25 +11,32 @@ angular.module('ts5App')
   .controller('createStoreNumberCtrl', function ($scope, companyService, GlobalMenuService) {
 
     // private controller vars
-    var companyId = GlobalMenuService.company.get();
+    var _companyId = GlobalMenuService.company.get(),
+      _companyDefault = {
+        storeNumber: null,
+        startDate: null,
+        endDate: null
+      };
 
     // scope vars
     $scope.viewName = 'Create Store Number';
 
-    $scope.company = {
-      storeNumber: '',
-      startDate: '',
-      endDate: ''
-    };
-
     // scope functions
     $scope.submitForm = function(){
-      var payload = {id:companyId};
-      companyService.createCompany(payload).then(function(response){
+      var payload = angular.copy($scope.company);
+      payload.id = _companyId;
+      payload.action = 'stores';
+
+      companyService.createStore(payload).then(function(response){
         console.log(response);
       }, function(error){
         console.log(error);
       });
     };
+
+    this.constructor = function(){
+      $scope.company = angular.copy(_companyDefault);
+    };
+    this.constructor();
 
   });

@@ -20,7 +20,7 @@ describe('Controller: CreateStoreNumberCtrl', function () {
 
     createCompanyDeferred = $q.defer();
     createCompanyDeferred.resolve({response:200});
-    spyOn(companyService, 'createCompany').and.returnValue(createCompanyDeferred.promise);
+    spyOn(companyService, 'createStore').and.returnValue(createCompanyDeferred.promise);
 
     companyId = _GlobalMenuService_.company.get();
 
@@ -41,10 +41,21 @@ describe('Controller: CreateStoreNumberCtrl', function () {
   });
 
   describe('submitForm scope function', function(){
-    it('should call companyService\' createCompany', function(){
-      var payload = {id:companyId};
+    beforeEach(function(){
+      scope.company = {
+        storeNumber: '123',
+        startDate: '123',
+        endDate: '123'
+      };
+      scope.$digest();
+    });
+    it('should call companyService\' createStore', function(){
+      var payload = angular.copy(scope.company);
+      payload.id = companyId;
+      payload.action = 'stores';
+
       scope.submitForm();
-      expect(companyService.createCompany).toHaveBeenCalledWith(payload);
+      expect(companyService.createStore).toHaveBeenCalledWith(payload);
     });
   });
 
