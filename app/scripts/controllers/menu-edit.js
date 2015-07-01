@@ -10,8 +10,8 @@
 angular.module('ts5App')
   .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuService, itemsService) {
     $scope.viewName = 'Menu';
-    $scope.selectedMenu = {};
     $scope.masterItemsList = [];
+    $scope.newItemList = [];
 
 
     function formatDate(dateString, formatFrom, formatTo) {
@@ -124,6 +124,10 @@ angular.module('ts5App')
       var startDateBeforeToday = moment($scope.menu.startDate, 'L').format('L') < todayDate;
       var endDateBeforeToday = moment($scope.menu.endDate, 'L').format('L') < todayDate;
       return startDateBeforeToday || endDateBeforeToday;
+    };
+
+    $scope.addItem = function(){
+      $scope.newItemList.push({});
     };
 
     menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);

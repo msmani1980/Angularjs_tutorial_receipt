@@ -114,7 +114,7 @@
            ng-readonly="isMenuReadOnly()"/>
   </div>
 
-  <h3 class="">Menu Items <a class="pull-right" ng-href="#" ng-show="!isMenuReadOnly()">Add Item</a></h3>
+  <h3 class="">Menu Items <a class="pull-right" ng-click="addItem()" ng-show="!isMenuReadOnly()">Add Item</a></h3>
 
   <table class="table table-responsive table-bordered table-hover">
     <thead>
@@ -125,6 +125,38 @@
     </tr>
     </thead>
     <tbody>
+    <tr ng-repeat="blankItem in newItemList track by $index"
+        ng-show="shouldShowActions()">
+      <td>
+        <ui-select
+          required="true"
+          ng-model="newItemList[$index]"
+          theme="bootstrap"
+          placeholder="Select or search an item from the list...">
+          <ui-select-match
+            placeholder="Select or search an item from the list...">{{ $select.selected.itemName}}
+          </ui-select-match>
+          <ui-select-choices repeat="menuItem in masterItemsList | filter: $select.search | orderBy:'itemName'">
+            <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </td>
+      <td>
+        <input custom-validity
+               custom-pattern="number"
+               type="text"
+               maxlength="5"
+               class="form-control"
+               ng-model="menuQty"
+               placeholder="{{$index}}"/>
+      </td>
+      <td>
+        <button class="btn btn-danger btn-xs" ng-click="">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+
     <tr ng-repeat="menuItem in menu.menuItems">
       <td>{{menuItem.itemName}}</td>
       <td>{{menuItem.itemQty}}</td>
@@ -134,22 +166,7 @@
         </button>
       </td>
     </tr>
-    <tr>
-      <td>
-        <ui-select
-          ng-model="selectedMenu"
-          placeholder="Select or search an item from the list..."
-          >
-          <!--<ui-select-match >{{$select.selected.itemCode}}</ui-select-match>-->
-          <ui-select-match placeholder="Select or search an item from the list...">{{ $select.selected.itemName}}</ui-select-match>
-          <ui-select-choices repeat="menuItem in masterItemsList | filter: $select.search | orderBy:'itemName'">
-            <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
-          </ui-select-choices>
-        </ui-select>
-      </td>
-      <td>1</td>
-    </tr>
+
     </tbody>
   </table>
-
 </form>
