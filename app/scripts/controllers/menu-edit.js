@@ -10,7 +10,8 @@
 angular.module('ts5App')
   .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuService, itemsService) {
     $scope.viewName = 'Menu';
-    var masterItemsList = [];
+    $scope.selectedMenu = {};
+    $scope.masterItemsList = [];
 
 
     function formatDate(dateString, formatFrom, formatTo) {
@@ -18,13 +19,13 @@ angular.module('ts5App')
     }
 
     function getMasterItemUsingId(masterItemId) {
-      return masterItemsList.filter(function (masterItem) {
+      return $scope.masterItemsList.filter(function (masterItem) {
         return masterItem.id === masterItemId;
       })[0];
     }
 
     function attachItemsModelToScope(masterItemsFromAPI) {
-      masterItemsList = masterItemsFromAPI.masterItems;
+      $scope.masterItemsList = masterItemsFromAPI.masterItems;
       angular.forEach($scope.menu.menuItems, function (menuItem) {
         menuItem.itemName = getMasterItemUsingId(menuItem.itemId).itemName;
       });

@@ -134,6 +134,21 @@
         </button>
       </td>
     </tr>
+    <tr>
+      <td>
+        <ui-select
+          ng-model="selectedMenu"
+          placeholder="Select or search an item from the list..."
+          >
+          <!--<ui-select-match >{{$select.selected.itemCode}}</ui-select-match>-->
+          <ui-select-match placeholder="Select or search an item from the list...">{{ $select.selected.itemName}}</ui-select-match>
+          <ui-select-choices repeat="menuItem in masterItemsList | filter: $select.search | orderBy:'itemName'">
+            <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </td>
+      <td>1</td>
+    </tr>
     </tbody>
   </table>
 
