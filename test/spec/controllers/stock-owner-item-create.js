@@ -106,6 +106,14 @@ describe('The Stock Owner Item Create Controller', function () {
         expect($scope.formData.costPrices.length).toBe(1);
       });
 
+    it('should have a isMeasurementValid method', function () {
+      expect($scope.isMeasurementValid).toBeDefined();
+    });
+
+    it('should have a isMeasurementRequired method', function () {
+      expect($scope.isMeasurementRequired).toBeDefined();
+    });
+
   });
 
   describe('view', function () {
@@ -158,7 +166,7 @@ describe('The Stock Owner Item Create Controller', function () {
 
         it('should have the correct label', function () {
           expect(priceGroupBtn.text().trim()).toEqual(
-            'Add Price Type');
+            'Add Cost');
         });
 
         it('should have an ng-click', function () {

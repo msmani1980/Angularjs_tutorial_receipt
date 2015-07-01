@@ -103,8 +103,8 @@
 
         <div class="col-md-3 col-sm-6">
           <div class="form-group">
-            <label for="cashBag-schedule">Schedule ID</label>
-            <input ng-model="search.scheduleId" type="text" class="form-control" id="cashBag-schedule">
+            <label for="cashBag-schedule">Schedule Number</label>
+            <input ng-model="search.scheduleNumber" type="text" class="form-control" id="cashBag-schedule">
           </div>
         </div>
 
@@ -112,7 +112,7 @@
           <date-picker
             class="col-sm-6"
             disable-date-range="true"
-            start-date-model="search.scheduleDate"
+            start-date-model="search.startDate"
             is-search-field="true"
             label-from="Schedule Date">
           </date-picker>
@@ -181,7 +181,7 @@
       <button class="btn btn-info btn-xs" ng-click="viewCashBag(cashBag)">
         <i class="fa fa-file"></i>
       </button>
-      <button class="btn btn-primary btn-xs" ng-click="editCashBag(cashBag)">
+      <button class="btn btn-primary btn-xs" ng-click="editCashBag(cashBag)" ng-show="!cashBag.isSubmitted">
         <i class="fa fa-pencil"></i>
       </button>
     </td>
