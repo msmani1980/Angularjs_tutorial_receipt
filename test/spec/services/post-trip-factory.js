@@ -21,7 +21,7 @@ describe('Factory: postTripFactory', function () {
     postTripsService = _postTripsService_;
 
     spyOn(postTripsService, 'getPostTrips');
-    spyOn(postTripsService, 'createPostTrip')
+    spyOn(postTripsService, 'createPostTrip');
     spyOn(GlobalMenuService.company, 'get');
     spyOn(stationsService, 'getStationList');
     spyOn(carrierService, 'getCarrierTypes');
