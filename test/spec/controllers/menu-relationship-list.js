@@ -60,19 +60,15 @@ describe('Menu Relationship List Controller', function () {
     menuCatererStationsService = _menuCatererStationsService_;
     spyOn(menuCatererStationsService, 'getRelationshipList').and.returnValue(
       getRelationshipListDeffered.promise);
-
+    spyOn(menuCatererStationsService, 'deleteRelationship').and.returnValue({
+      then: function () {
+        return;
+      }
+    });
     MenuRelationshipListCtrl = $controller('MenuRelationshipListCtrl', {
       $scope: $scope
     });
     $scope.$digest();
-    spyOn(MenuRelationshipListCtrl, 'init');
-    spyOn(MenuRelationshipListCtrl, 'getRelationshipList');
-    spyOn(MenuRelationshipListCtrl, 'setMenuList');
-    spyOn(MenuRelationshipListCtrl, 'setCatererStationList');
-    MenuRelationshipListCtrl.init();
-    MenuRelationshipListCtrl.getRelationshipList();
-    MenuRelationshipListCtrl.setMenuList();
-    MenuRelationshipListCtrl.setCatererStationList();
   }));
 
   afterEach(function () {
@@ -84,32 +80,17 @@ describe('Menu Relationship List Controller', function () {
     expect(MenuRelationshipListCtrl.init).toBeDefined();
   });
 
-  it('should call the init method', function () {
-    expect(MenuRelationshipListCtrl.init).toHaveBeenCalled();
-  });
-
   it('should have a getRelationshipList method', function () {
     expect(MenuRelationshipListCtrl.getRelationshipList).toBeDefined();
   });
 
-  it('should call the getRelationshipList method', function () {
-    expect(MenuRelationshipListCtrl.getRelationshipList).toHaveBeenCalled();
-  });
 
-  it('should have a setMenuList method', function () {
-    expect(MenuRelationshipListCtrl.setMenuList).toBeDefined();
-  });
+  describe('setMenuList method', function () {
 
-  it('should call the setMenuList method', function () {
-    expect(MenuRelationshipListCtrl.setMenuList).toHaveBeenCalled();
-  });
+    it('should have a setMenuList method', function () {
+      expect(MenuRelationshipListCtrl.setMenuList).toBeDefined();
+    });
 
-  it('should have a setCatererStationList method', function () {
-    expect(MenuRelationshipListCtrl.setCatererStationList).toBeDefined();
-  });
-
-  it('should call the setCatererStationList method', function () {
-    expect(MenuRelationshipListCtrl.setCatererStationList).toHaveBeenCalled();
   });
 
   describe('menus list', function () {
@@ -168,6 +149,10 @@ describe('Menu Relationship List Controller', function () {
 
     });
 
+  });
+
+  it('should have a setCatererStationList method', function () {
+    expect(MenuRelationshipListCtrl.setCatererStationList).toBeDefined();
   });
 
   describe('station list', function () {
