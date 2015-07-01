@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('MenuRelationshipListCtrl', function ($scope, dateUtility,
     $filter, menuService, catererStationService, menuCatererStationsService,
-    $q) {
+    $q, ngToast) {
 
     var $this = this;
     $scope.currentPage = 1;
@@ -31,6 +31,14 @@ angular.module('ts5App')
       });
       $scope.$watch('currentPage + relationshipsPerPage', function () {
         $this.updateRelationshipList();
+      });
+    };
+
+    this.showSuccessMessage = function (message) {
+      ngToast.create({
+        className: 'success',
+        dismissButton: true,
+        content: message
       });
     };
 
@@ -174,6 +182,7 @@ angular.module('ts5App')
       menuCatererStationsService.deleteRelationship(relationshipId).then(
         function () {
           $this.hideLoadingModal();
+          $this.showSuccessMessage('Menu Relationship Removed');
           $scope.relationshipList.splice(relationshipIndex, 1);
           $this.updateRelationshipList();
         });

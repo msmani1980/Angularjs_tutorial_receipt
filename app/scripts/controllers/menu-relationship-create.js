@@ -9,7 +9,7 @@
 angular.module('ts5App')
   .controller('MenuRelationshipCreateCtrl', function ($scope, $location,
     $routeParams, menuService, catererStationService,
-    menuCatererStationsService, dateUtility, $q) {
+    menuCatererStationsService, dateUtility, $q, ngToast) {
 
     var $this = this;
     $scope.formData = {
@@ -81,8 +81,8 @@ angular.module('ts5App')
     };
 
     this.getRelationship = function (id) {
-      angular.element('#loading').modal('show').find('p')
-        .text('We are getting Relationship ' + $routeParams.id);
+      this.displayLoadingModal('We are getting Relationship ' +
+        $routeParams.id);
       var promises = this.makePromises(id);
       $q.all(promises).then(function (response) {
         $this.setCatererStationList(response[0]);
@@ -176,6 +176,14 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
+    this.showSuccessMessage = function (message) {
+      ngToast.create({
+        className: 'success',
+        dismissButton: true,
+        content: message
+      });
+    };
+
     this.updateRelationship = function (relationshipData) {
       var $this = this;
       this.displayLoadingModal('We are updating menu relationship');
@@ -185,7 +193,7 @@ angular.module('ts5App')
           $this.updateFormData(response);
           $this.initSelectUI();
           $this.hideLoadingModal();
-          angular.element('#update-success').modal('show');
+          $this.showSuccessMessage('Relationship updated!');
         },
         function (response) {
           $this.hideLoadingModal();
@@ -195,12 +203,12 @@ angular.module('ts5App')
     };
 
     this.createRelationship = function (relationshipData) {
-      angular.element('#loading').modal('show').find('p').text(
-        'We are creating your menu');
+      $this.displayLoadingModal('We are creating your menu relationship');
       menuCatererStationsService.createRelationship(relationshipData).then(
         function () {
           $this.hideLoadingModal();
-          angular.element('#create-success').modal('show');
+          $this.showSuccessMessage('Relationship created!');
+          $location.path('/menu-relationship-list');
         },
         function (error) {
           $this.hideLoadingModal();
