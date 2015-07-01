@@ -208,7 +208,8 @@ describe('The MenuRelationshipCreateCtrl', function () {
       describe('fieldset', function () {
         var fieldSet;
         beforeEach(function () {
-          fieldSet = angular.element(form.find('fieldset')[
+          fieldSet = angular.element(form.find(
+            '.row fieldset')[
             0]);
         });
         it('should be defined', function () {
@@ -218,10 +219,10 @@ describe('The MenuRelationshipCreateCtrl', function () {
           'should contain ng-disabled with specific expression',
           function () {
             expect(fieldSet.attr('ng-disabled')).toContain(
-              'viewOnly || menuIsActive');
+              'viewOnly || isRelationshipActive()');
           });
-        it('should contain a row', function () {
-          var fieldSetRow = fieldSet.find('.row')[0];
+        it('should contain a form-group', function () {
+          var fieldSetRow = fieldSet.find('.form-group')[0];
           expect(fieldSetRow).toBeDefined();
         });
       });
