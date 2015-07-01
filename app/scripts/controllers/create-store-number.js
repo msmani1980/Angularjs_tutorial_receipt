@@ -22,10 +22,8 @@ angular.module('ts5App')
     $scope.viewName = 'Create Store Number';
 
     // scope functions
-    $scope.submitForm = function(){
+    $scope.submitForm = function(isValid){
       if($scope.createStoreNumberForm.$invalid) {
-        console.log($scope.createStoreNumberForm);
-        console.log($scope.formData);
         return false;
       }
       var payload = angular.copy($scope.formData);

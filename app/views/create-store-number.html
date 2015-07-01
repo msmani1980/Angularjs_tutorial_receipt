@@ -1,7 +1,7 @@
 <div class="container module-container">
 
 
-    <form name="createStoreNumberForm" class="form edit-form create-store-number-form" ng-submit="submitForm()">
+    <form name="createStoreNumberForm" class="form edit-form create-store-number-form" ng-submit="submitForm(createStoreNumberForm.$valid)">
 
 
         <div class="edit-controls">
@@ -39,8 +39,17 @@
       <div class="row">
 
         <div class="col-xs-12 col-sm-6">
-          <input-text label="Store Number" name="storeNumber" required="true" pattern="regexp.alphanumeric"
-            placeholder="Store123" min-length="1" max-length="10" ng-model="formData.storeNumber"></input-text>
+          <label class="control-label" for="storeNumber">Store Number *</label>
+          <input custom-validity
+                 custom-pattern="alphanumeric"
+                 required
+                 type="text"
+                 maxlength="10"
+                 min-length="1"
+                 class="form-control"
+                 id="storeNumber"
+                 ng-model="formData.storeNumber"
+                 placeholder="Store123"/>
         </div>
 
         <div class="col-xs-12 col-sm-6">
@@ -49,6 +58,8 @@
             disable-past="true"
             label-from="Effective From"
             label-to="Effective To"
+            name-from="startDate"
+            name-to="endDate"
             start-date-model="formData.startDate"
             end-date-model="formData.endDate"
             required="required"
