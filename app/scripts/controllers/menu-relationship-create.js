@@ -141,8 +141,7 @@ angular.module('ts5App')
 
     this.initSelectUI = function () {
       var data = [];
-      if ($scope.formData.catererStationIds && $scope.formData.catererStationIds
-        .length > 0) {
+      if (angular.isArray($scope.formData.catererStationIds)) {
         data = this.generateSelectedOptions(data);
       }
       angular.element('select.multi-select').select2({
