@@ -22,7 +22,7 @@ angular.module('ts5App')
     $scope.viewName = 'Create Store Number';
 
     // scope functions
-    $scope.submitForm = function(isValid){
+    $scope.submitForm = function(){
       if($scope.createStoreNumberForm.$invalid) {
         return false;
       }
@@ -31,9 +31,9 @@ angular.module('ts5App')
       payload.action = 'stores';
 
       companyService.createStore(payload).then(function(){
-        this.constructor();
+        init();
         showMessage('successful!', 'success');
-      }, function(error){
+      }, function(response){
         showMessage('failed!', 'warning');
         $scope.displayError = true;
         if ('data' in response) {
@@ -42,20 +42,21 @@ angular.module('ts5App')
       });
     };
 
+    // private controller methods
     function showMessage(message, messageType) {
       ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Create Store Number</strong>: ' + message });
     }
 
-    this.constructor = function(){
+    function init(){
       $scope.formData = angular.copy(_companyDefault);
+      // TODO - Mock data BE not done, show a list of store numbers when API is completed
       $scope.storeNumbersList = [
         {number:'abc123', startDate:'07/01/2015', endDate:'07/02/2015'},
         {number:'abc345', startDate:'07/01/2015', endDate:'07/03/2015'},
         {number:'abc567', startDate:'07/01/2015', endDate:'07/04/2015'},
         {number:'abc789', startDate:'07/01/2015', endDate:'07/05/2015'}
-      ]
-      // TODO - Show a list of store numbers when API is completed
-    };
-    this.constructor();
+      ];
+    }
+    init();
 
   });

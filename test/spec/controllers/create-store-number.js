@@ -15,7 +15,6 @@ describe('Controller: CreateStoreNumberCtrl', function () {
   beforeEach(inject(function ($controller, $rootScope, $q, _GlobalMenuService_, _companyService_) {
     scope = $rootScope.$new();
 
-
     companyService = _companyService_;
 
     createCompanyDeferred = $q.defer();
@@ -27,7 +26,9 @@ describe('Controller: CreateStoreNumberCtrl', function () {
     CreateStoreNumberCtrl = $controller('createStoreNumberCtrl', {
       $scope: scope
     });
+
     scope.$digest();
+
   }));
 
   describe('scope globals', function () {
@@ -40,14 +41,25 @@ describe('Controller: CreateStoreNumberCtrl', function () {
     });
   });
 
-  describe('constructor', function(){
-    it('should call the constructor', function(){
-      expect(CreateStoreNumberCtrl.constructor()).toHaveBeenCalled();
+  describe('init', function(){
+    it('should set formData in scope', function(){
+      expect(scope.formData).toBeDefined();
+      expect(Object.prototype.toString.call(scope.formData)).toBe('[object Object]');
+    });
+    it('should set storeNumbersList in scope', function(){
+      expect(scope.storeNumbersList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.storeNumbersList)).toBe('[object Array]');
     });
   });
 
   describe('submitForm scope function', function(){
-    beforeEach(function(){
+    it('should should return false if createStoreNumberForm is invalid', function(){
+      scope.createStoreNumberForm = {$invalid:true};
+      scope.$digest();
+      var returnVal = scope.submitForm();
+      expect(returnVal).toBe(false);
+    });
+    it('should call companyService\' createStore', function(){
       scope.formData = {
         storeNumber: '123',
         startDate: '123',
@@ -55,9 +67,7 @@ describe('Controller: CreateStoreNumberCtrl', function () {
       };
       scope.createStoreNumberForm = {$invalid:false};
       scope.$digest();
-    });
-    it('should call companyService\' createStore', function(){
-      var payload = angular.copy(scope.company);
+      var payload = angular.copy(scope.formData);
       payload.id = companyId;
       payload.action = 'stores';
 
