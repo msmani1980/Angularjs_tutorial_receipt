@@ -134,14 +134,19 @@ describe('Controller: MenuEditCtrl', function () {
   });
 
   describe('Adding items to Menu', function () {
-    it('should have a newItemList attached to scope', function () {
-      expect(!!scope.newItemList).toBe(true);
-    });
-
-    it('should push empty objects to newItemList on addItem()', function () {
+    it('should push objects to newItemList on addItem()', function () {
       var previousLength = scope.newItemList.length;
       scope.addItem();
       expect(scope.newItemList.length).toBe(previousLength + 1);
+    });
+
+    it('should have a newItemList attached to scope', function () {
+      expect(!!scope.newItemList).toBe(true);
+
+    });
+
+    it('should have a deleteNewItem attached to scope', function () {
+      expect(!!scope.deleteNewItem).toBe(true);
     });
   });
 

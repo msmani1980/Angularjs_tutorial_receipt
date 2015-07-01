@@ -130,6 +130,10 @@ angular.module('ts5App')
       $scope.newItemList.push({});
     };
 
+    $scope.deleteNewItem = function(itemIndex){
+      $scope.newItemList.splice(itemIndex, 1);
+    };
+
     menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);
 
   });

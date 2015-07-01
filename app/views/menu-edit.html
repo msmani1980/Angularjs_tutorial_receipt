@@ -130,7 +130,7 @@
       <td>
         <ui-select
           required="true"
-          ng-model="newItemList[$index]"
+          ng-model="newItemList[$index].masterItem"
           theme="bootstrap"
           placeholder="Select or search an item from the list...">
           <ui-select-match
@@ -151,7 +151,7 @@
                placeholder="{{$index}}"/>
       </td>
       <td>
-        <button class="btn btn-danger btn-xs" ng-click="">
+        <button class="btn btn-danger btn-xs" ng-click="deleteNewItem($index)">
           <i class="fa fa-trash"></i>
         </button>
       </td>
