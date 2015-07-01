@@ -94,11 +94,8 @@
               element-class="col-xs-12 col-sm-3"
               start-date-model="search.startDate"
               end-date-model="search.endDate"
-              disable-past="true"
               label-from="Effective From"
-              label-to="Effective To"
-              disable-start-date="viewOnly"
-              disable-end-date="viewOnly">
+              label-to="Effective To">
             </date-picker>
 
             <div class="col-xs-12 col-sm-3">
@@ -160,8 +157,8 @@
       <tbody>
         <tr class="ng-scope" ng-repeat="trip in postTrips">
           <td>{{ trip.number }}</td>
-          <td>{{ trip.arrivalStationId}}</td>
-          <td>{{ trip.arrivalTime }}</td>
+          <td>{{ trip.depStationId}}</td>
+          <td>{{ trip.depTime }}</td>
           <td>{{ trip.arrivalStationId}}</td>
           <td>{{ trip.arrivalTime }}</td>
           <td>
