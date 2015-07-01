@@ -43,7 +43,7 @@ angular.module('ts5App')
         $this.setCatererStationList(response[0]);
         $this.setMenuList(response[1]);
         $this.initSelectUI();
-        angular.element('#loading').modal('hide');
+        $this.hideLoadingModal();
       });
     };
 
@@ -90,7 +90,7 @@ angular.module('ts5App')
         $this.updateFormData(response[2]);
         $this.initSelectUI();
         $this.updateViewName();
-        angular.element('#loading').modal('hide');
+        $this.hideLoadingModal();
       });
     };
 
@@ -168,20 +168,27 @@ angular.module('ts5App')
       $scope.formData = data;
     };
 
+    this.displayLoadingModal = function (loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+    };
+
     this.updateRelationship = function (relationshipData) {
       var $this = this;
-      angular.element('#loading').modal('show').find('p').text(
-        'We are updating your menu');
+      this.displayLoadingModal('We are updating menu relationship');
       menuCatererStationsService.updateRelationship($routeParams.id,
         relationshipData).then(
         function (response) {
           $this.updateFormData(response);
           $this.initSelectUI();
-          angular.element('#loading').modal('hide');
+          $this.hideLoadingModal();
           angular.element('#update-success').modal('show');
         },
         function (response) {
-          angular.element('#loading').modal('hide');
+          $this.hideLoadingModal();
           $scope.displayError = true;
           $scope.formErrors = response.data;
         });
@@ -192,11 +199,11 @@ angular.module('ts5App')
         'We are creating your menu');
       menuCatererStationsService.createRelationship(relationshipData).then(
         function () {
-          angular.element('#loading').modal('hide');
+          $this.hideLoadingModal();
           angular.element('#create-success').modal('show');
         },
         function (error) {
-          angular.element('#loading').modal('hide');
+          $this.hideLoadingModal();
           $scope.displayError = true;
           $scope.formErrors = error.data;
         });
