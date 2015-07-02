@@ -26,4 +26,29 @@ describe('Service: menuFactory', function () {
     expect(!!menuFactory).toBe(true);
   });
 
+  describe('API Calls', function(){
+
+    it('should call menuService.getMenu with a menuId', function () {
+      menuFactory.getMenu(2);
+      expect(menuService.getMenu).toHaveBeenCalledWith(2);
+    });
+
+    it('should call menuService.updateMenu with a payload', function () {
+      var payload = {
+        fake: 'data'
+      };
+      menuFactory.updateMenu(payload);
+      expect(menuService.updateMenu).toHaveBeenCalledWith(payload);
+    });
+
+    it('should call itemsService.getItemsList with a payload and a flag to get items from master list', function () {
+      var payload = {
+        fake: 'data'
+      };
+      menuFactory.getItemsList(payload, true);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith(payload, true);
+    });
+
+  });
+
 });
