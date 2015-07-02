@@ -26,7 +26,7 @@ angular.module('ts5App')
     };
     var removeItem = function(id){
       return itemsService.removeItem(id);
-    }
+    };
     return {
       getCompanyId: getCompanyId,
       getCompanyList: getCompanyList,

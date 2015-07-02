@@ -71,7 +71,7 @@ angular.module('ts5App')
       removeRetailItemFromCompanyRetailItems(retailItem);
       $scope.changeSelectedImportCompany();
       $scope.formChanged = formChanged();
-    }
+    };
 
     $scope.removeAll = function () {
       var tempList = angular.copy($scope.companyRetailItemList);
@@ -230,7 +230,7 @@ angular.module('ts5App')
 
     function formChanged(){
       return (_onSaveRemoveItems.length > 0 || _onSaveAddItems.length > 0);
-    };
+    }
 
     // private controller classes
     var randomHexColorClass = {
@@ -312,7 +312,7 @@ angular.module('ts5App')
         $scope.companiesLoaded = true;
         $scope.retailItemsLoaded = true;
       });
-    };
+    }
     init();
 
     // scope event handlers
