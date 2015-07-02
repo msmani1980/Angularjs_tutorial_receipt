@@ -3,7 +3,7 @@
   <div class="list-controls">
     <div class="row">
       <div class="col-xs-6">
-        <button type="button" class="btn btn-primary" href="#/company-create"><span class="fa fa-plus"></span>
+        <button type="button" class="btn btn-primary" href="#/company-create"><span class="fa fa-plus"></span> Add Company
         </button>
       </div>
       <div class="col-xs-6 text-right">
@@ -49,11 +49,10 @@
       <div class="hidden-xs col-sm-4 list-header border-right">Additional Languages</div>
       <div class="hidden-xs col-sm-2 list-header border-right">Base Currency</div>
     </div>
-    <feature-list-item ng-repeat="company in filteredCompanies" view-model="company" type="company" class="list-body"
-                 view="showCompany(company)" edit="editCompany(company)"
-                 func1="showCompanyRelationshipList(company)"></feature-list-item>
+    <feature-list-item ng-repeat="company in filteredCompanies track by $index" view-model="company" type="company"
+                       class="list-body"></feature-list-item>
     <div ng-if="companyList.length === 0" class="feature-empty">
-      <p>No Employee Messages Found</p>
+      <p>No Companies Found</p>
     </div>
 
     <div class="list-footer">

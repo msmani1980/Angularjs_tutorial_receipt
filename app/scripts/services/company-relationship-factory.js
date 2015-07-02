@@ -34,12 +34,17 @@ angular.module('ts5App')
       return companyRelationshipService.updateCompanyRelationship(payload);
     };
 
+    var deleteCompanyRelationship = function (payload) {
+      return companyRelationshipService.deleteCompanyRelationship(payload);
+    };
+
     return {
       getCompanyList: getCompanyList,
       getCompanyRelationshipListByCompany: getCompanyRelationshipListByCompany,
       getCompanyRelationshipTypeList: getCompanyRelationshipTypeList,
       createCompanyRelationship: createCompanyRelationship,
-      updateCompanyRelationship: updateCompanyRelationship
+      updateCompanyRelationship: updateCompanyRelationship,
+      deleteCompanyRelationship: deleteCompanyRelationship
     };
 
   });

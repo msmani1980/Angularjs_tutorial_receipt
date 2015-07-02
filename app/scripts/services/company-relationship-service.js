@@ -10,6 +10,7 @@
  */
 angular.module('ts5App')
   .service('companyRelationshipService', function ($resource, $http, ENV, dateUtility) {
+    var $this = this;
     var companyRelationshipRequestURL = ENV.apiUrl + '/api/companies/:id/relationships/:companyRelationshipId';
     var companyTypeRequestURL = ENV.apiUrl + '/api/company-relation/:id/types';
     var requestParameters = {
@@ -33,6 +34,8 @@ angular.module('ts5App')
 
       //Hack for BE
       //data.relativeCompanyId = parseInt(data.companyId) || parseInt(data.relativeCompanyId);
+      delete data.original;
+      delete data.isEditing;
       delete data.companyId;
       delete data.companyType;
       delete data.companyName;
@@ -72,6 +75,9 @@ angular.module('ts5App')
       updateCompanyRelationship: {
         method: 'PUT',
         transformRequest: appendTransform($http.defaults.transformRequest, transformRequest)
+      },
+      deleteCompanyRelationship: {
+        method: 'DELETE'
       }
     };
 
@@ -95,11 +101,20 @@ angular.module('ts5App')
     };
 
     var createCompanyRelationship = function (payload) {
-      return companyRelationshipRequestResource.createCompanyRelationship({id: payload.companyId}, payload).$promise;
+      return companyRelationshipRequestResource.createCompanyRelationship({
+        id: payload.companyId,
+      }, payload).$promise;
     };
 
     var updateCompanyRelationship = function (payload) {
       return companyRelationshipRequestResource.updateCompanyRelationship({
+        id: payload.companyId,
+        companyRelationshipId: payload.id
+      }, payload).$promise;
+    };
+
+    var deleteCompanyRelationship = function (payload) {
+      return companyRelationshipRequestResource.deleteCompanyRelationship({
         id: payload.companyId,
         companyRelationshipId: payload.id
       }, payload).$promise;
@@ -111,6 +126,7 @@ angular.module('ts5App')
       getCompanyRelationship: getCompanyRelationship,
       getCompanyRelationshipTypeList: getCompanyRelationshipTypeList,
       createCompanyRelationship: createCompanyRelationship,
-      updateCompanyRelationship: updateCompanyRelationship
+      updateCompanyRelationship: updateCompanyRelationship,
+      deleteCompanyRelationship: deleteCompanyRelationship
     };
   });

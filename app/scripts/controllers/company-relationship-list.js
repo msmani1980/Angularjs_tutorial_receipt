@@ -9,68 +9,133 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyRelationshipListCtrl', function ($q, $scope, $location, $routeParams, ngToast, companyRelationshipFactory) {
+  .controller('CompanyRelationshipListCtrl', function ($q, $scope, $route, $location, $routeParams, ngToast, dateUtility, companyRelationshipFactory) {
+    var $this = this;
     $scope.viewName = 'Company Relationships';
     $scope.isLoading = true;
+    $scope.isRejected = false;
     $scope.companyRelationshipListData = [];
     $scope.company = {};
     $scope.companyList = [];
     $scope.companyRelationshipTypeList = [];
 
-    $scope.addCompanyRelationship = function (id) {
-      $scope.companyRelationshipListData.push({
-        companyId: id,
-        relativeCompanyId: null,
-        startDate: null,
-        endDate: null
-      });
+    $scope.back = function () {
+      $location.path('/company-list/');
     };
 
-    function saveCompanyRelationship(typeOfSave) {
+    function showToast(className, type, message) {
       ngToast.create({
-        className: 'success',
+        className: className,
         dismissButton: true,
-        content: '<strong>Company Relationship</strong>: successfully ' + typeOfSave + '!'
+        content: '<strong>' + type + '</strong>: ' + message
       });
     }
 
-    function submitCompanyRelationshipError(error) {
-      var company = $scope.companyList.filter(function (company) {
-        return company.id === parseInt(error.config.data.relativeCompanyId);
+    this.parseDate = function (date) {
+      return Date.parse(date);
+    };
+
+    $scope.isActive = function (startDate) {
+      var parsedDate = $this.parseDate(startDate);
+      return parsedDate <= dateUtility.now();
+    };
+
+    $scope.isInactive = function (endDate) {
+      var parsedDate = $this.parseDate(endDate);
+      return parsedDate <= dateUtility.now();
+    };
+
+    $scope.addCompanyRelationship = function (company) {
+      $scope.companyRelationshipListData.unshift({
+        companyId: company.id,
+        companyName: company.companyName,
+        relativeCompanyId: null,
+        startDate: '',
+        endDate: '',
+        isEditing: true
       });
-      ngToast.create({
-        className: 'warning',
-        dismissButton: true,
-        content: '<strong>Company Relationship</strong>: Error submitting ' + company[0].companyName + '!'
+    };
+
+    $scope.showDeleteConfirmation = function (companyRelationship) {
+      $scope.companyRelationshipToDelete = companyRelationship;
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.deleteCompanyRelationship = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+
+      companyRelationshipFactory.deleteCompanyRelationship($scope.companyRelationshipToDelete).then(function (response) {
+        var index = $scope.companyRelationshipListData.indexOf($scope.companyRelationshipToDelete);
+        var messageAction = 'deleted';
+
+        successCompanyRelationship(response, $scope.companyRelationshipToDelete, messageAction);
+
+        if (index > -1) {
+          $scope.companyRelationshipListData.splice(index, 1);
+        }
+      }, function (error) {
+        failCompanyRelationship(error, $scope.companyRelationshipToDelete);
       });
+    };
+
+    $scope.editCompanyRelationship = function (company) {
+      company.original = angular.copy(company);
+      company.isEditing = true;
+    };
+    $scope.cancelCompanyRelationship = function (company) {
+      if (company.id) {
+        company.isEditing = false;
+        company = company.original;
+        return;
+      }
+      removeCompanyFromLocalList(company);
+    };
+
+    function removeCompanyFromLocalList(company) {
+      var index = $scope.companyRelationshipListData.indexOf(company);
+
+      if (index > -1) {
+        $scope.companyRelationshipListData.splice(index, 1);
+      }
+    }
+
+    function successCompanyRelationship(response, companyRelationship, messageAction) {
+      if (!companyRelationship.id) {
+        $route.reload();
+      }
+      companyRelationship.isEditing = false;
+
+      showToast('success', 'successfully' + messageAction, 'Company Relationship');
+    }
+
+    function failCompanyRelationship(error/*, companyRelationship*/) {
+      showToast('warning', 'Company Relationship', 'Error submitting ' + error.companyName + '!');
       $scope.displayError = true;
       $scope.formErrors = error.data;
     }
 
-    $scope.submit = function(isValid, data) {
+    $scope.submit = function (isValid, companyRelationship) {
       if (!isValid) {
         return;
       }
 
-      var promises = [];
-      data.forEach(function (companyRelationship) {
-        var messageAction = companyRelationship.id ? 'updated' : 'created';
+      if (!!companyRelationship.id) {
+        companyRelationshipFactory.updateCompanyRelationship(companyRelationship).then(function (response) {
+          var messageAction = companyRelationship.id ? 'updated' : 'created';
 
-        if (companyRelationship.id) {
-          promises.push(companyRelationshipFactory.updateCompanyRelationship(companyRelationship).then(saveCompanyRelationship(messageAction)));
-        } else {
-          promises.push(companyRelationshipFactory.createCompanyRelationship(companyRelationship).then(saveCompanyRelationship(messageAction)));
-        }
-      });
+          successCompanyRelationship(response, companyRelationship, messageAction);
+        }, function (error) {
+          failCompanyRelationship(error, companyRelationship);
+        });
+      } else {
+        companyRelationshipFactory.createCompanyRelationship(companyRelationship).then(function (response) {
+          var messageAction = companyRelationship.id ? 'updated' : 'created';
 
-      $q.all(promises).then(function () {
-        $location.path('/company-list/');
-        }, submitCompanyRelationshipError
-      );
-    };
-
-    $scope.cancel = function () {
-      $location.path('/company-list/');
+          successCompanyRelationship(response, companyRelationship, messageAction);
+        }, function (error) {
+          failCompanyRelationship(error, companyRelationship);
+        });
+      }
     };
 
     function setupCompanyRelationshipTypeScope(companyRelationshipTypeListFromAPI) {
@@ -107,6 +172,7 @@ angular.module('ts5App')
       });
 
       $scope.companyList = $scope.companyList.filter(function (company) {
+        company.isEditing = false;
         return ($.inArray(company.companyTypeId, typeIdList)) ? company : undefined;
       });
     }
@@ -125,11 +191,18 @@ angular.module('ts5App')
       setupCompanyScope(response);
 
       return $q.all([getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise($scope.company.companyTypeId)]);
+    }, function (error) {
+      return $scope.isRejected = true;
     }).then(function (response) {
+      if (!response) {
+        return;
+      }
       setupCompanyRelationshipScope(response[0]);
       setupCompanyRelationshipTypeScope(response[1]);
       filterCompanyListByTypesScope(response[1]);
     }).then(function () {
       $scope.isLoading = false;
+      $scope.isRejected = true;
+      showToast('warning', 'Company Relationship', 'API unavailable');
     });
   });

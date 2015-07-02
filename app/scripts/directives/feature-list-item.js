@@ -23,10 +23,7 @@ angular.module('ts5App')
 
     return {
       scope: {
-        viewModel: '=',
-        edit: '&',
-        view: '&',
-        func1: '&'
+        viewModel: '='
       },
       restrict: 'E',
       controller: controller,

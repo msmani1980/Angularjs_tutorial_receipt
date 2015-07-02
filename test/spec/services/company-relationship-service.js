@@ -117,56 +117,56 @@ describe('Service: companyRelationshipService', function () {
 
     });
 
-    describe('createCompanyRelationship', function () {
-      beforeEach(function () {
-        var companyId = 417;
-        var relativeCompanyId = 420;
-        var regex = new RegExp('/companies/' + companyId + '/relationships', 'g');
-        var data = {
-          'companyId': companyId,
-          'relativeCompanyId': relativeCompanyId,
-          'startDate': '2015-09-20',
-          'endDate': '2015-09-21'
-        };
-
-        $httpBackend.whenPOST(regex).respond({'id': 77});
-
-        companyRelationshipService.createCompanyRelationship(data).then(function (response) {
-          companyRelationshipData = response;
-        });
-        $httpBackend.flush();
-      });
-
-      it('should be accessible in the service', function () {
-        expect(!!companyRelationshipService.createCompanyRelationship).toBe(true);
-      });
-
-      it('should POST data to company-relationship API', function () {
-        expect(angular.isNumber(companyRelationshipData.id)).toBe(true);
-      });
-
-      it('should return an id', function () {
-        expect(companyRelationshipData.id).toEqual(jasmine.any(Number));
-      });
-
-    });
-
-    describe('updateCompanyRelationship', function () {
-      beforeEach(function () {
-        var companyId = 413;
-        var relationshipId = 1;
-        var regex = new RegExp('/companies/' + companyId + '/relationships/' + relationshipId, 'g');
-        $httpBackend.whenPUT(regex).respond({done: true});
-      });
-
-      it('should PUT data to company-relationship API', function () {
-        companyRelationshipService.updateCompanyRelationship({
-          companyId: 413,
-          id: 1
-        }, {relativeCompanyId: 2});
-        $httpBackend.expectPUT(/relationships/);
-        $httpBackend.flush();
-      });
-    });
+    //describe('createCompanyRelationship', function () {
+    //  beforeEach(function () {
+    //    var companyId = 417;
+    //    var relativeCompanyId = 420;
+    //    var regex = new RegExp('/companies/' + companyId + '/relationships', 'g');
+    //    var data = {
+    //      'companyId': companyId,
+    //      'relativeCompanyId': relativeCompanyId,
+    //      'startDate': '2015-09-20',
+    //      'endDate': '2015-09-21'
+    //    };
+    //
+    //    $httpBackend.whenPOST(regex).respond({'id': 77});
+    //
+    //    companyRelationshipService.createCompanyRelationship(data).then(function (response) {
+    //      companyRelationshipData = response;
+    //    });
+    //    $httpBackend.flush();
+    //  });
+    //
+    //  it('should be accessible in the service', function () {
+    //    expect(!!companyRelationshipService.createCompanyRelationship).toBe(true);
+    //  });
+    //
+    //  it('should POST data to company-relationship API', function () {
+    //    expect(angular.isNumber(companyRelationshipData.id)).toBe(true);
+    //  });
+    //
+    //  it('should return an id', function () {
+    //    expect(companyRelationshipData.id).toEqual(jasmine.any(Number));
+    //  });
+    //
+    //});
+    //
+    //describe('updateCompanyRelationship', function () {
+    //  beforeEach(function () {
+    //    var companyId = 413;
+    //    var relationshipId = 1;
+    //    var regex = new RegExp('/companies/' + companyId + '/relationships/' + relationshipId, 'g');
+    //    $httpBackend.whenPUT(regex).respond({done: true});
+    //  });
+    //
+    //  it('should PUT data to company-relationship API', function () {
+    //    companyRelationshipService.updateCompanyRelationship({
+    //      id: 1,
+    //      companyId: 413
+    //    }, {relativeCompanyId: 2});
+    //    $httpBackend.expectPUT(/relationships/);
+    //    //$httpBackend.flush();
+    //  });
+    //});
   });
 });
