@@ -51,7 +51,6 @@ angular.module('ts5App')
       };
 
       angular.extend(query, $scope.search);
-      console.log(query);
 
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
         query.startDate = dateUtility.formatDate($scope.dateRange.startDate,

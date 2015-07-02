@@ -76,13 +76,16 @@ describe('itemListCtrl', function () {
     });
     scope.$digest();
 
+    spyOn(scope, 'searchRecords');
     spyOn(ItemListCtrl, 'getItemsList');
     spyOn(ItemListCtrl, 'getItemTypesList');
     spyOn(ItemListCtrl, 'getSalesCategoriesList');
+    spyOn(ItemListCtrl, 'generateItemQuery');
 
     ItemListCtrl.getItemsList();
     ItemListCtrl.getItemTypesList();
     ItemListCtrl.getSalesCategoriesList();
+    ItemListCtrl.generateItemQuery();
   }));
 
   afterEach(function () {
@@ -209,6 +212,19 @@ describe('itemListCtrl', function () {
     it('should attach itemsPerPageInt to the scope', function () {
       expect(scope.itemsPerPageInt).toBeDefined();
       expect(scope.itemsPerPageInt).toEqual(10);
+    });
+
+  });
+
+  describe('searchRecords', function () {
+
+    it('should be defined', function () {
+      expect(scope.searchRecords).toBeDefined();
+    });
+
+    it('should be called if initialized', function () {
+      scope.searchRecords();
+      expect(scope.searchRecords).toHaveBeenCalled();
     });
 
   });
