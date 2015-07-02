@@ -68,7 +68,7 @@ describe('Menu Relationship List Controller', function () {
     MenuRelationshipListCtrl = $controller('MenuRelationshipListCtrl', {
       $scope: $scope
     });
-    $scope.$digest();
+
   }));
 
   afterEach(function () {
@@ -84,16 +84,20 @@ describe('Menu Relationship List Controller', function () {
     expect(MenuRelationshipListCtrl.getRelationshipList).toBeDefined();
   });
 
-
-  describe('setMenuList method', function () {
-
-    it('should have a setMenuList method', function () {
-      expect(MenuRelationshipListCtrl.setMenuList).toBeDefined();
-    });
-
+  it('should have a setMenuList method', function () {
+    expect(MenuRelationshipListCtrl.setMenuList).toBeDefined();
   });
 
+  it('should have an empty menu list before the scope is digested',
+    function () {
+      expect($scope.menuList).toBeUndefined();
+    });
+
   describe('menus list', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
 
     it('should be defined', function () {
       expect($scope.menuList).toBeDefined();
@@ -155,7 +159,16 @@ describe('Menu Relationship List Controller', function () {
     expect(MenuRelationshipListCtrl.setCatererStationList).toBeDefined();
   });
 
+  it('should not have a stationList attached to the scope yet',
+    function () {
+      expect($scope.stationList).toBeUndefined();
+    });
+
   describe('station list', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
 
     it('should be defined', function () {
       expect($scope.stationList).toBeDefined();
@@ -216,6 +229,10 @@ describe('Menu Relationship List Controller', function () {
   });
 
   describe('The Pagination', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
 
     it('should attach currentPage to the scope', function () {
       expect($scope.currentPage).toBeDefined();
