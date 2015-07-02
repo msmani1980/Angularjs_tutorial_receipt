@@ -116,7 +116,7 @@ angular.module('ts5App')
 
     $scope.clearForm = function () {
       $scope.search = {};
-      angular.element('.stations-multi-select').select2('data', null);
+      $('.stations-multi-select').select2('data', null);
       $scope.searchCashBag();
     };
 
