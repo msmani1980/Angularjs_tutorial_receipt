@@ -150,7 +150,15 @@ angular
       })
       .when('/lmp-locations-list', {
         templateUrl: 'views/lmp-locations-list.html',
-        controller: 'ManageLmpLocationsCTRL'
+        controller: 'ManageLmpLocationsCtrl'
+      })
+      .when('/delivery-notes-list', {
+        templateUrl: 'views/delivery-notes-list.html',
+        controller: 'DeliveryNotesListCtrl'
+      })
+      .when('/delivery-note', {
+        templateUrl: 'views/delivery-note.html',
+        controller: 'DeliveryNoteCtrl'
       })
       .otherwise({
         redirectTo: '/'

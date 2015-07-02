@@ -267,6 +267,20 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-lmpLocationsList'
         }]
+    }, {
+        title: 'Delivery Notes',
+        menuItems: [{
+          name: 'Manage Delivery Notes',
+          route: '/#/delivery-notes-list',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-deliveryNotesList'
+        }, {
+          name: 'Create Delivery Note',
+          route: '/#/delivery-note',
+          icon: 'icon-manage-retail-category',
+          className: 'dashboard-deliveryNote'
+        }
+      ]
     }];
 
   });
