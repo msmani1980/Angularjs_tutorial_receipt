@@ -59,20 +59,64 @@
     <table class="table table-bordered table-hover ng-scope">
       <thead>
         <tr>
-          <th>LMP Station</th>
-          <th>Input</th>
-          <th>Storage</th>
-          <th>Output</th>
+          <th>Location Type</th>
+          <th>Location</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <td colspan="3">
+          
+            <div class="row">
+  
+              <div class="col-xs-12">
+                <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#add-location-collapse"
+                        aria-expanded="false"
+                        aria-controls="add-location-collapse">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  <span class="hidden-xs">Add Location</span>
+                </button>
+              </div>
+        
+            </div>
+            <div class="panel panel-default collapse no-transition" id="add-location-collapse">
+              <form name="addLocationForm" ng-submit="#">
+                <div class="panel-body">
+                  <div class="row">
+        
+                    <div class="col-xs-12 col-sm-6">
+                      <div class="form-group">
+                        <label for="location-type">Location Type</label>
+                        <select class="form-control" id="location-type" ng-model="add.locationTypeId" ng-change="updateLocationTypes()">
+                          <option value=""></option>
+                          <option ng-repeat="location in locationTypes" value="{{ location.id }}">
+                            {{ location.locationType }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+        
+                    <div class="col-xs-12 col-sm-6">
+                      <div class="form-group">
+                        <label for="location">Location</label>
+                          <input ng-model="add.location" type="text" class="form-control" id="location" placeholder="T1">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel-footer text-right">
+                  <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+              </form>
+            </div>
+          </td>
+        </tr>
+
         <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
         <tr class="ng-scope">
-          <td class="ng-binding">O'Hare</td>
-          <td class="ng-binding">Dock 1, Dock 3</td>
-          <td class="ng-binding">Aisle 1</td>
-          <td class="ng-binding">Dock 30</td>
+          <td class="ng-binding">Input</td>
+          <td class="ng-binding">Dock 1</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="viewLocation(menu)" tabindex="0">
               <i class="fa fa-file"></i>
@@ -86,13 +130,92 @@
           </td>
         </tr>
         <tr class="ng-scope">
-          <td class="ng-binding">Midway</td>
-          <td class="ng-binding">Dock 2</td>
-          <td class="ng-binding">Aisle 3</td>
-          <td class="ng-binding">Dock 12</td>
+          <td class="ng-binding">Input</td>
+          <td class="ng-binding">Dock 3</td>
           <td>
-            <button class="btn btn-info btn-xs" ng-click="viewLocation()" tabindex="0">
+            <button class="btn btn-info btn-xs" ng-click="viewLocation(menu)" tabindex="0">
               <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editLocation(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deleteLocation(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr class="ng-scope">
+          <td class="ng-binding">Storage</td>
+          <td class="ng-binding">Aisle 1</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="viewLocation(menu)" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editLocation(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deleteLocation(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr class="ng-scope">
+          <td class="ng-binding">Storage</td>
+          <td class="ng-binding">Aisle 4</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="viewLocation(menu)" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editLocation(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deleteLocation(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr class="ng-scope">
+          <td class="ng-binding">Storage</td>
+          <td class="ng-binding">Aisle 8</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="viewLocation(menu)" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editLocation(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deleteLocation(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr class="ng-scope">
+          <td class="ng-binding">Storage</td>
+          <td class="ng-binding">Aisle 9</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="viewLocation(menu)" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editLocation(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deleteLocation(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr class="ng-scope">
+          <td class="ng-binding">Output</td>
+          <td class="ng-binding">Dock 14</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="viewLocation(menu)" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editLocation(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deleteLocation(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-trash"></i>
             </button>
           </td>
         </tr>
