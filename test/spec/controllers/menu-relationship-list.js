@@ -269,6 +269,36 @@ describe('Menu Relationship List Controller', function () {
 
   });
 
+  describe('clear filter functionality', function () {
+    beforeEach(function () {
+      $scope.$digest();
+    });
+    it(
+      'should have a clearSearchFilters() method attached to the scope',
+      function () {
+        expect($scope.clearSearchFilters).toBeDefined();
+      });
+
+    it('should clear the search ng-model when called', function () {
+      $scope.search.menu = {
+        menuName: 'A',
+        menuCode: 'A'
+      };
+      $scope.clearSearchFilters();
+      expect($scope.search.menu.menuName).toEqual('');
+      expect($scope.search.menu.menuCode).toEqual('');
+    });
+
+    it('should clear the dateRange ng-model when called', function () {
+      $scope.dateRange.startDate = '07-15-2015';
+      $scope.dateRange.endDate = '08-15-2015';
+      $scope.clearSearchFilters();
+      expect($scope.dateRange.startDate).toEqual('');
+      expect($scope.dateRange.endDate).toEqual('');
+    });
+
+  });
+
   /* E2E Tests */
 
   describe('view', function () {

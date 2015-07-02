@@ -20,6 +20,9 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
+    $scope.search = {
+      menu: {}
+    };
 
     this.init = function () {
       this.getRelationshipList();
@@ -205,7 +208,14 @@ angular.module('ts5App')
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
       for (var filterKey in filters) {
-        $scope.search[filterKey] = '';
+        if (Object.keys(filters[filterKey]).length) {
+          var filterObject = filters[filterKey];
+          for (var key in filterObject) {
+            $scope.search[filterKey][key] = '';
+          }
+        } else {
+          $scope.search[filterKey] = '';
+        }
       }
       $scope.relationshipListCount = $scope.relationshipList.length;
     };
