@@ -24,6 +24,7 @@ describe('Factor: itemImportFactory', function () {
     spyOn(itemsService, 'getItemsList');
     spyOn(itemsService, 'createItem');
     spyOn(itemImportService, 'importItems');
+    spyOn(itemsService, 'removeItem');
 
     itemImportFactory = _itemImportFactory_;
     scope = $rootScope.$new();
@@ -58,6 +59,10 @@ describe('Factor: itemImportFactory', function () {
       var payload = {retailItem:{}};
       itemImportFactory.createItem(payload);
       expect(itemsService.createItem).toHaveBeenCalledWith(payload);
+    });
+    it('should call removeItem', function(){
+      itemImportFactory.removeItem(2);
+      expect(itemsService.removeItem).toHaveBeenCalledWith(2);
     });
   });
 

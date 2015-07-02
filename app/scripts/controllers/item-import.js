@@ -14,10 +14,13 @@ angular.module('ts5App')
     var _companyId = null,
       _companyRetailItemCodes = [],
       _companyRetailItemNames = [],
-      _companyRetailItemOnboardNames = [];
+      _companyRetailItemOnboardNames = [],
+      _onSaveRemoveItems = [],
+      _onSaveAddItems = [];
 
     // scope properties
     $scope.viewName = 'Import Stock Owner Items';
+    $scope.showIdColumn = true;
 
     // scope functions
     $scope.changeSelectedImportCompany = function () {
@@ -34,6 +37,7 @@ angular.module('ts5App')
           }
         }, $scope.importedRetailItemList);
       });
+      // TODO if existing object, copy over
     };
 
     $scope.importAll = function () {
@@ -53,18 +57,10 @@ angular.module('ts5App')
       return retailItem.companyId === _companyId;
     };
 
-    $scope.removeRetailItem = function (retailItem) {
-      if($scope.isCompanyItem(retailItem)){
-        return false;
-      }
-      _companyRetailItemCodes.splice(_companyRetailItemCodes.indexOf(retailItem.itemCode), 1);
-      _companyRetailItemNames.splice(_companyRetailItemNames.indexOf(retailItem.itemName), 1);
-      _companyRetailItemOnboardNames.splice(_companyRetailItemOnboardNames.indexOf(retailItem.onBoardName), 1);
-      $scope.companyRetailItemList.splice($scope.companyRetailItemList.indexOf(retailItem), 1);
-      if($scope.selectedImportCompany.id === retailItem.companyId) {
-        $scope.importedRetailItemList.push(retailItem);
-      }
-    };
+    $scope.removeRetailItem = function(retailItem){
+      removeRetailItemFromCompanyRetailItems(retailItem);
+      $scope.changeSelectedImportCompany();
+    }
 
     $scope.removeAll = function () {
       var tempList = angular.copy($scope.companyRetailItemList);
@@ -73,17 +69,19 @@ angular.module('ts5App')
       _companyRetailItemNames = [];
       _companyRetailItemOnboardNames = [];
       angular.forEach(tempList, function(retailItem){
-        if($scope.isCompanyItem(retailItem)){
+        if(!$scope.canRemove(retailItem)){
           addRetailItemToCompanyRetailItems(retailItem);
         }
-        else if(retailItem.companyId === $scope.selectedImportCompany.id){
-          $scope.importedRetailItemList.push(retailItem);
+        else{
+          removeRetailItemFromCompanyRetailItems(retailItem);
         }
       });
       tempList = null;
+      $scope.changeSelectedImportCompany();
     };
 
     $scope.submitForm = function(){
+      /*
       var importedRetailItemIds = [];
       angular.forEach($scope.companyRetailItemList, function (retailItem) {
         if (!$scope.isCompanyItem(retailItem)) {
@@ -96,7 +94,7 @@ angular.module('ts5App')
         itemImportFactory.importItems(payload).then(function () {
           $scope.displayError = false;
           showMessage('successful!', 'success');
-          this.constructor();
+          init();
         }, function (response) {
           showMessage('failed!', 'warning');
           $scope.displayError = true;
@@ -105,6 +103,11 @@ angular.module('ts5App')
           }
         });
       }
+      */
+    };
+
+    $scope.canRemove = function(retailItem){
+      return (retailItem.stockOwnerCode !== null || !$scope.isCompanyItem(retailItem));
     };
 
     function canBeAddedToCompanyRetailList(retailItem){
@@ -120,7 +123,29 @@ angular.module('ts5App')
       return true;
     }
 
+    function removeRetailItemFromCompanyRetailItems(retailItem){
+      if(!$scope.canRemove(retailItem)){
+        return false;
+      }
+      _companyRetailItemCodes.splice(_companyRetailItemCodes.indexOf(retailItem.itemCode), 1);
+      _companyRetailItemNames.splice(_companyRetailItemNames.indexOf(retailItem.itemName), 1);
+      _companyRetailItemOnboardNames.splice(_companyRetailItemOnboardNames.indexOf(retailItem.onBoardName), 1);
+      $scope.companyRetailItemList.splice($scope.companyRetailItemList.indexOf(retailItem), 1);
+      // TODO remove
+      if(-1 === _onSaveRemoveItems.indexOf(retailItem.id)) {
+        _onSaveRemoveItems.push(retailItem.id);
+      }
+      // TODO need to update imported retail item list, or requery
+      if(angular.isDefined($scope.selectedImportCompany) && $scope.selectedImportCompany.id === retailItem.companyId) {
+        $scope.importedRetailItemList.push(retailItem);
+      }
+      console.log(_onSaveRemoveItems);
+    }
+
     function addRetailItemToCompanyRetailItems(retailItem){
+      if(!$scope.isCompanyItem(retailItem) && $scope.canRemove(retailItem) && -1 === _onSaveAddItems.indexOf(retailItem.id)) {
+        _onSaveAddItems.push(retailItem.id);
+      }
       if(retailItem.hasOwnProperty('itemCode') && -1 === _companyRetailItemCodes.indexOf(retailItem.itemCode)) {
         _companyRetailItemCodes.push(retailItem.itemCode);
       }
@@ -133,6 +158,7 @@ angular.module('ts5App')
       if(-1 === $scope.companyRetailItemList.indexOf(retailItem)) {
         $scope.companyRetailItemList.push(retailItem);
       }
+      console.log(_onSaveAddItems);
     }
 
     function showMessage(message, messageType) {
@@ -181,19 +207,18 @@ angular.module('ts5App')
       }
     };
 
-    // controller properties
-    this.constructorPromises = [];
-
     // Controller constructor
-    this.constructor = function(){
+    function init(){
       _companyId = itemImportFactory.getCompanyId();
       _companyRetailItemCodes = [];
       _companyRetailItemNames = [];
       _companyRetailItemOnboardNames = [];
+      _onSaveRemoveItems = [];
+      _onSaveAddItems = [];
       $scope.importCompanyList = [];
       $scope.companyRetailItemList = [];
       $scope.companiesLoaded = false;
-      this.constructorPromises = [
+      var initPromises = [
         itemImportFactory.getCompanyList({companyTypeId: 2, limit: null}).then(function (response) {
         // TODO - This api request queries the full list of companies until https://jira.egate-solutions.com/browse/TSVPORTAL-2038">TSVPORTAL-2038 is completed.
           angular.forEach(response.companies, function(company){
@@ -207,7 +232,7 @@ angular.module('ts5App')
         })
       ];
       // assign random color to all companies and items
-      $q.all(this.constructorPromises).then(function () {
+      $q.all(initPromises).then(function () {
         angular.forEach($scope.importCompanyList, function (company) {
           company.hexColor = randomHexColorClass.get(company.id);
         });
@@ -219,7 +244,7 @@ angular.module('ts5App')
         $scope.retailItemsLoaded = true;
       });
     };
-    this.constructor();
+    init();
 
     // scope event handlers
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
@@ -229,6 +254,7 @@ angular.module('ts5App')
 
     $scope.onDrop = function ($event, $data, array) {
       array.push($data);
+      addRetailItemToCompanyRetailItems($data);
     };
     // TODO: change BACK button to back/save when models change
   });

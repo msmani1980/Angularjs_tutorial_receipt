@@ -77,6 +77,10 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.submitForm).toBeDefined();
       expect(Object.prototype.toString.call(scope.submitForm)).toBe('[object Function]');
     });
+    it('should have a canRemove function attached to the scope', function(){
+      expect(scope.canRemove).toBeDefined();
+      expect(Object.prototype.toString.call(scope.canRemove)).toBe('[object Function]');
+    });
     it('should have a dropSuccessHandler function attached to the scope', function(){
       expect(scope.dropSuccessHandler).toBeDefined();
       expect(Object.prototype.toString.call(scope.dropSuccessHandler)).toBe('[object Function]');
@@ -168,15 +172,15 @@ describe('Controller: ItemImportCtrl', function () {
   });
 
   describe('removeRetailItem scope function', function(){
-    var retailItem1 = {companyId:currentCompanyId,itemCode:'123',itemName:'123',onBoardName:'123'};
-    var retailItem2 = {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456'};
+    var retailItem1 = {companyId:currentCompanyId,itemCode:'123',itemName:'123',onBoardName:'123',stockOwnerCode:null};
+    var retailItem2 = {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456',stockOwnerCode:'4567'};
     beforeEach(function(){
       scope.companyRetailItemList = [retailItem2];
       scope.importedRetailItemList = [];
       scope.selectedImportCompany = {id:432};
       scope.$digest();
     });
-    it('should return false when retail Item\'s company ID is the same as current company ID', function(){
+    it('should return false when stockOwnerCode is null', function(){
       expect(scope.removeRetailItem(retailItem1)).toBe(false);
       scope.importedRetailItemList = [];
       scope.$digest();
@@ -222,6 +226,15 @@ describe('Controller: ItemImportCtrl', function () {
     });
     it('should call itemImportFactory\' importItems', function(){
       expect(itemImportFactory.importItems).toHaveBeenCalledWith(payload);
+    });
+  });
+
+  describe('canRemove scope function', function(){
+    it('should return false if stockOwnerCode is null', function(){
+      expect(scope.canRemove({stockOwnerCode:null})).toBe(false);
+    });
+    it('should return true if stockOwnerCode is not null', function(){
+      expect(scope.canRemove({stockOwnerCode:'test123'})).toBe(true);
     });
   });
 
