@@ -41,9 +41,6 @@ describe('The MenuRelationshipCreateCtrl', function () {
     httpBackend = $httpBackend;
     location = $location;
     $scope = $rootScope.$new();
-
-    location.path('/menu-relationship-create');
-
     getMenuListDeffered = $q.defer();
     getMenuListDeffered.resolve(menuListJSON);
     menuService = _menuService_;
@@ -67,13 +64,6 @@ describe('The MenuRelationshipCreateCtrl', function () {
         $scope: $scope
       });
 
-    spyOn(MenuRelationshipCreateCtrl, 'init');
-    spyOn(MenuRelationshipCreateCtrl, 'setMenuList');
-    spyOn(MenuRelationshipCreateCtrl, 'setCatererStationList');
-    spyOn(MenuRelationshipCreateCtrl, 'getRelationship');
-
-    $scope.$digest();
-
   }));
 
   /*afterEach(function () {
@@ -86,9 +76,156 @@ describe('The MenuRelationshipCreateCtrl', function () {
       expect(MenuRelationshipCreateCtrl).toBeDefined();
     });
     it('should have a the route /menu-relationship-create', function () {
+      location.path('/menu-relationship-create');
       expect(location.path()).toBe('/menu-relationship-create');
     });
   });
+
+  it('should have a setMenuList method', function () {
+    expect(MenuRelationshipCreateCtrl.setMenuList).toBeDefined();
+  });
+
+  it('should have an empty menu list before the scope is digested',
+    function () {
+      expect($scope.menuList).toBeUndefined();
+    });
+
+  describe('menus list', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should be defined', function () {
+      expect($scope.menuList).toBeDefined();
+    });
+
+    it('should be contain at least one object in the menus array',
+      function () {
+        expect($scope.menuList.length).toBeGreaterThan(0);
+      });
+
+    it('should be match the menus from the menu API Respone',
+      function () {
+        expect($scope.menuList).toEqual(menuListJSON.menus);
+      });
+
+    describe('menu object', function () {
+
+      var menuObject;
+
+      beforeEach(function () {
+        menuObject = $scope.menuList[0];
+      });
+
+      it('should be defined', function () {
+        expect(menuObject).toBeDefined();
+      });
+
+      it('should have an id and it is a number', function () {
+        expect(menuObject.id).toBeDefined();
+        expect(menuObject.id).toEqual(jasmine.any(Number));
+      });
+
+      it('should have a companyId and it is a number',
+        function () {
+          expect(menuObject.companyId).toBeDefined();
+          expect(menuObject.companyId).toEqual(jasmine.any(
+            Number));
+        });
+
+      it('should have a menuCode and it is a number',
+        function () {
+          expect(menuObject.menuCode).toBeDefined();
+          expect(menuObject.menuCode).toEqual(jasmine.any(
+            String));
+        });
+
+      it('should have a menuName and it is a string',
+        function () {
+          expect(menuObject.menuName).toBeDefined();
+          expect(menuObject.menuName).toEqual(jasmine.any(
+            String));
+        });
+
+    });
+
+  });
+
+  it('should have a setCatererStationList method', function () {
+    expect(MenuRelationshipCreateCtrl.setCatererStationList).toBeDefined();
+  });
+
+  it('should not have a stationList attached to the scope yet',
+    function () {
+      expect($scope.stationList).toBeUndefined();
+    });
+
+  describe('station list', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should be defined', function () {
+      expect($scope.stationList).toBeDefined();
+    });
+
+    it('should be contain at least one object in the menus array',
+      function () {
+        expect($scope.stationList.length).toBeGreaterThan(0);
+      });
+
+    it(
+      'should be match the stations from the station API Response',
+      function () {
+        expect($scope.stationList).toEqual(stationListJSON.response);
+      });
+
+    describe('station object', function () {
+
+      var stationObject;
+
+      beforeEach(function () {
+        stationObject = $scope.stationList[0];
+      });
+
+      it('should be defined', function () {
+        expect(stationObject).toBeDefined();
+      });
+
+      it('should have an id and it is a number', function () {
+        expect(stationObject.id).toBeDefined();
+        expect(stationObject.id).toEqual(jasmine.any(
+          Number));
+      });
+
+      it('should have a companyId and it is a number',
+        function () {
+          expect(stationObject.companyId).toBeDefined();
+          expect(stationObject.companyId).toEqual(jasmine.any(
+            Number));
+        });
+
+      it('should have a station Code and it is a number',
+        function () {
+          expect(stationObject.code).toBeDefined();
+          expect(stationObject.code).toEqual(jasmine.any(
+            String));
+        });
+
+      it('should have a station Name and it is a string',
+        function () {
+          expect(stationObject.name).toBeDefined();
+          expect(stationObject.name).toEqual(jasmine.any(
+            String));
+        });
+
+    });
+
+  });
+
+  /* E2E Tests */
 
   describe('view', function () {
 
