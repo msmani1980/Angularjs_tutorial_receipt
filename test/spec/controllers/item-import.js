@@ -180,11 +180,6 @@ describe('Controller: ItemImportCtrl', function () {
       scope.selectedImportCompany = {id:432};
       scope.$digest();
     });
-    it('should return false when stockOwnerCode is null', function(){
-      expect(scope.removeRetailItem(retailItem1)).toBe(false);
-      scope.importedRetailItemList = [];
-      scope.$digest();
-    });
     it('should expect importedRetailItemList array length to be 1', function() {
       scope.removeRetailItem(retailItem2);
       expect(scope.importedRetailItemList.length).toEqual(1);
@@ -198,19 +193,19 @@ describe('Controller: ItemImportCtrl', function () {
   describe('removeAll scope function', function(){
     beforeEach(function(){
       scope.companyRetailItemList = [
-        {companyId:432,id:1,itemCode:'123',itemName:'123',onBoardName:'123'},
-        {companyId:432,id:2,itemCode:'1234',itemName:'1234',onBoardName:'1234'},
-        {companyId:currentCompanyId,id:3,itemCode:'12345',itemName:'12345',onBoardName:'12345'},
-        {companyId:34,id:4,itemCode:'123456',itemName:'123456',onBoardName:'123456'}];
+        {companyId:currentCompanyId,id:1,itemCode:'123',itemName:'123',onBoardName:'123',stockOwnerCode:'123'},
+        {companyId:currentCompanyId,id:2,itemCode:'1234',itemName:'1234',onBoardName:'1234',stockOwnerCode:null},
+        {companyId:432,id:3,itemCode:'12345',itemName:'12345',onBoardName:'12345',stockOwnerCode:null},
+        {companyId:432,id:4,itemCode:'123456',itemName:'123456',onBoardName:'123456',stockOwnerCode:null}];
       scope.importedRetailItemList = [];
       scope.selectedImportCompany = {id:432};
       scope.$digest();
       scope.removeAll();
     });
-    it('should reset companyRetailItemList to a single array item', function(){
+    it('should reset companyRetailItemList to 1 item', function(){
       expect(scope.companyRetailItemList.length).toEqual(1);
     });
-    it('should reset importedRetailItemList to a single array item', function(){
+    it('should reset importedRetailItemList to 2 items', function(){
       expect(scope.importedRetailItemList.length).toEqual(2);
     });
   });
@@ -230,11 +225,17 @@ describe('Controller: ItemImportCtrl', function () {
   });
 
   describe('canRemove scope function', function(){
-    it('should return false if stockOwnerCode is null', function(){
-      expect(scope.canRemove({stockOwnerCode:null})).toBe(false);
+    it('should return false if stockOwnerCode is null and companyID is equal to existing company\'s ID', function(){
+      expect(scope.canRemove({stockOwnerCode:null,companyId:currentCompanyId})).toBe(false);
     });
-    it('should return true if stockOwnerCode is not null', function(){
-      expect(scope.canRemove({stockOwnerCode:'test123'})).toBe(true);
+    it('should return true if stockOwnerCode is null and companyID is NOT equal to existing company\'s ID', function(){
+      expect(scope.canRemove({stockOwnerCode:null,companyId:42342})).toBe(true);
+    });
+    it('should return true if stockOwnerCode is not null and companyID is NOT equal to existing company\'s ID', function(){
+      expect(scope.canRemove({stockOwnerCode:'test123',companyId:42342})).toBe(true);
+    });
+    it('should return true if stockOwnerCode is not null and companyID is equal to existing company\'s ID', function(){
+      expect(scope.canRemove({stockOwnerCode:'test123',companyId:currentCompanyId})).toBe(true);
     });
   });
 
