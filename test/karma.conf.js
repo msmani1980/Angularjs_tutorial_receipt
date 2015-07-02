@@ -81,12 +81,6 @@ module.exports = function (config) {
       'app/scripts/**/*.js',
       'test/mock/**/*.json',
       'test/spec/**/*.js',
-      {
-        pattern: 'test/mock/*.json',
-        watched: true,
-        included: false,
-        served: true
-      },
       //location of templates
       'app/views/**/*.html'
     ],
