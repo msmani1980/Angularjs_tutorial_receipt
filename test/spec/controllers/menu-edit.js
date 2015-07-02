@@ -161,15 +161,27 @@ describe('Controller: MenuEditCtrl', function () {
       expect(menuService.updateMenu).toHaveBeenCalled();
     });
 
-    it('should add newItems to payload on createPayload', function () {
-      scope.addItem();
-      scope.newItemList[0] = {
-        'itemQty': '1979',
-        'masterItem': {
-          'id': 1005}
-      };
-      expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
+    describe('new Items', function () {
+
+      beforeEach(function () {
+        scope.addItem();
+        scope.newItemList[0] = {
+          'itemQty': 1979,
+          'masterItem': {
+            'id': 1005
+          }
+        };
+      });
+
+      it('should add newItems to payload on createPayload', function () {
+        expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
+      });
+
+      it('should newItems in payload not to have id', function () {
+        expect(MenuEditCtrl.createPayload().menuItems[1].id).not.toBeDefined();
+      });
     });
+
   });
 
 });

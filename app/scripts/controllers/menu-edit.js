@@ -101,23 +101,23 @@ angular.module('ts5App')
       angular.forEach($scope.newItemList, function (item) {
         ItemsArray.push({
           itemId: item.masterItem.id,
-          itemQty: item.itemQty,
+          itemQty: parseInt(item.itemQty),
           menuId: menuId
-        })
+        });
       });
       return ItemsArray;
     };
 
     $this.clearCurrentItems = function() {
       var itemsArray = [];//angular.copy($scope.menu.menuItems);
-      return angular.forEach($scope.menu.menuItems, function (item) {
+      angular.forEach($scope.menu.menuItems, function (item) {
         itemsArray.push({
           id: item.id,
           itemId: item.itemId,
           itemQty: item.itemQty,
           menuId: item.menuId,
           sortOrder: item.sortOrder
-        })
+        });
       });
       return itemsArray;
     };
@@ -134,7 +134,6 @@ angular.module('ts5App')
         menuName: $scope.menu.menuName,
         startDate: $scope.menu.startDate
       };
-      console.log(payload);
       return payload;
     };
 
