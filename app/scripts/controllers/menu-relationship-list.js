@@ -170,16 +170,18 @@ angular.module('ts5App')
       });
     };
 
+    this.removeRecordFromList = function (relationshipIndex) {
+      $this.hideLoadingModal();
+      $this.showSuccessMessage('Menu Relationship Removed');
+      $scope.relationshipList.splice(relationshipIndex, 1);
+      $this.updateRelationshipList();
+    };
+
     $scope.removeRecord = function (relationshipId) {
       var relationshipIndex = $this.findRelationshipIndex(relationshipId);
       $this.displayLoadingModal('Removing your menu relationship');
       menuCatererStationsService.deleteRelationship(relationshipId).then(
-        function () {
-          $this.hideLoadingModal();
-          $this.showSuccessMessage('Menu Relationship Removed');
-          $scope.relationshipList.splice(relationshipIndex, 1);
-          $this.updateRelationshipList();
-        });
+        $this.removeRecordFromList(relationshipIndex));
     };
 
     this.displayLoadingModal = function (loadingText) {

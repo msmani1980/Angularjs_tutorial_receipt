@@ -62,7 +62,7 @@ describe('Menu Relationship List Controller', function () {
       getRelationshipListDeffered.promise);
     spyOn(menuCatererStationsService, 'deleteRelationship').and.returnValue({
       then: function () {
-        return;
+        return true;
       }
     });
     MenuRelationshipListCtrl = $controller('MenuRelationshipListCtrl', {
@@ -242,6 +242,29 @@ describe('Menu Relationship List Controller', function () {
     it('should attach relationshipsPerPage to the scope', function () {
       expect($scope.relationshipsPerPage).toBeDefined();
       expect($scope.relationshipsPerPage).toEqual(10);
+    });
+
+  });
+
+  describe('remove relationship functionality', function () {
+
+    var relationshipId,
+      testObject;
+    beforeEach(function () {
+      $scope.$digest();
+      relationshipId = 75;
+      testObject = $scope.relationshipList[0];
+    });
+
+    it('should have a removeRecord() method attached to the scope',
+      function () {
+        expect($scope.removeRecord).toBeDefined();
+      });
+
+    it('should remove the record from the relationshipList', function () {
+      expect($scope.relationshipList.length).toEqual(6);
+      $scope.removeRecord(relationshipId);
+      expect($scope.relationshipList.length).toEqual(5);
     });
 
   });

@@ -88,12 +88,10 @@ describe('Menu Station Relationship Service', function () {
 
     it('Relationship should have startDate', function () {
       expect(testObject.startDate).toBeDefined();
-      expect(testObject.startDate).toEqual('2015-07-01');
     });
 
     it('Relationship should have endDate', function () {
       expect(testObject.endDate).toBeDefined();
-      expect(testObject.endDate).toEqual('2015-08-08');
     });
 
   });

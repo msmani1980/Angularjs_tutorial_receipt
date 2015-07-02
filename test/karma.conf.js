@@ -30,8 +30,7 @@ module.exports = function (config) {
         {
           type: 'html',
           subdir: 'report-html'
-        },
-        {
+        }, {
           type: 'cobertura',
           subdir: '.'
         }
@@ -81,13 +80,6 @@ module.exports = function (config) {
       'app/scripts/**/*.js',
       'test/mock/**/*.json',
       'test/spec/**/*.js',
-      {
-        pattern: 'test/mock/*.json',
-        watched: true,
-        included: false,
-        served: true
-      },
-      //location of templates
       'app/views/**/*.html'
     ],
 
