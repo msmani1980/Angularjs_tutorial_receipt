@@ -46,8 +46,13 @@ angular.module('ts5App')
       var query = {
         startDate: todaysDate,
         sortBy: 'ASC',
-        sortOn: 'itemName'
+        sortOn: 'itemName',
+        limit: 100
       };
+
+      angular.extend(query, $scope.search);
+      console.log(query);
+
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
         query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
           'L', 'YYYYMMDD');
@@ -64,6 +69,7 @@ angular.module('ts5App')
         $scope.itemsList = response.retailItems;
         $scope.itemsListCount = $scope.itemsList.length;
         $this.updateItemList();
+        $this.hideLoadingModal();
       });
     };
 
@@ -123,18 +129,24 @@ angular.module('ts5App')
       for (var filterKey in filters) {
         $scope.search[filterKey] = '';
       }
-      $scope.itemsListCount = $scope.itemsList.length;
+      $this.displayLoadingModal();
+      $this.getItemsList();
     };
 
-    $scope.$watch('search', function () {
-      $this.updateItemList();
-    }, true);
+    this.displayLoadingModal = function (loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
 
-    $scope.$watchCollection('dateRange', function () {
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+    };
+
+    $scope.searchRecords = function () {
+      $this.displayLoadingModal();
       $this.getItemsList();
-    });
+    };
 
-    $scope.$watch('currentPage + itemsPerPage', function () {
+    $scope.$watch('currentPage + itemsPerPage + search', function () {
       $this.updateItemList();
     });
 

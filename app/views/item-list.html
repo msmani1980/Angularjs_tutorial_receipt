@@ -45,7 +45,7 @@
 
 							<div class="form-group">
 								<label for="item-type">Item Type</label>
-								<select ng-model="search.itemType" class="form-control" id="item-type">
+								<select ng-model="search.itemTypeName" class="form-control" id="item-type">
 									<option value="{{type.name}}"  ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>
 								</select>
 							</div>
@@ -87,10 +87,10 @@
 					<div class="panel-footer text-right">
 						<button class="btn btn-default"
 							ng-click="clearSearchFilters()"
-							ng-show="search.itemCode.length || search.itemName.length || search.itemType.length || search.onBoardName.length || search.categoryName.length || dateRange.startDate.length || dateRange.endDate.length">
+							ng-show="search.itemCode.length || search.itemName.length || search.itemTypeName.length || search.onBoardName.length || search.categoryName.length || dateRange.startDate.length || dateRange.endDate.length">
 							<span>Clear</span>
 						</button>
-						<button type="submit" class="btn btn-primary">
+						<button ng-click="searchRecords()" class="btn btn-primary">
 							<span class="fa fa-search" aria-hidden="true"></span>
 							<span class="hidden-sm hidden-xs">Search</span>
 						</button>
