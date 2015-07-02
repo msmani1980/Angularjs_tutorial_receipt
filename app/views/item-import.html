@@ -30,7 +30,7 @@
 
       <div class="col-xs-6 text-right">
         <a class="btn btn-default" ng-href="#/item-list" class="btn">Back</a>
-        <button ng-show="itemImportSearchForm.$dirty" class="btn btn-success" ng-click="submitForm()">
+        <button ng-show="formChanged" class="btn btn-success" ng-click="submitForm()">
           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
