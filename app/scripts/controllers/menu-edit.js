@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuService, itemsService) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuFactory) {
     $scope.viewName = 'Menu';
     $scope.masterItemsList = [];
     $scope.newItemList = [];
@@ -36,7 +36,7 @@ angular.module('ts5App')
       var startDate = formatDate(menuFromAPI.startDate, dateFromAPIFormat, dateForAPIFormat);
       var endDate = formatDate(menuFromAPI.endDate, dateFromAPIFormat, dateForAPIFormat);
 
-      itemsService.getItemsList({
+      menuFactory.getItemsList({
         startDate: startDate,
         endDate: endDate
       }, true).then(attachItemsModelToScope);
@@ -147,7 +147,7 @@ angular.module('ts5App')
       var payload = $this.createPayload();
 
       angular.extend(payload, localizeDates(payload, formatFrom, formatTo));
-      menuService.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
+      menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
     };
 
     $scope.deleteItemFromMenu = function () {
@@ -178,7 +178,7 @@ angular.module('ts5App')
       $scope.newItemList.splice(itemIndex, 1);
     };
 
-    menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);
+    menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);
 
   })
 ;

@@ -11,8 +11,7 @@ describe('Controller: MenuEditCtrl', function () {
     scope,
     menuResponseJSON,
     masterItemsResponseJSON,
-    itemsService,
-    menuService,
+    menuFactory,
     getMenuDeferred,
     getItemsListDeferred;
 
@@ -23,8 +22,7 @@ describe('Controller: MenuEditCtrl', function () {
       masterItemsResponseJSON = _servedMasterItemList_;
     });
 
-    menuService = $injector.get('menuService');
-    itemsService = $injector.get('itemsService');
+    menuFactory = $injector.get('menuFactory');
 
     getMenuDeferred = $q.defer();
     getMenuDeferred.resolve(menuResponseJSON);
@@ -32,9 +30,9 @@ describe('Controller: MenuEditCtrl', function () {
     getItemsListDeferred = $q.defer();
     getItemsListDeferred.resolve(masterItemsResponseJSON);
 
-    spyOn(menuService, 'getMenu').and.returnValue(getMenuDeferred.promise);
-    spyOn(menuService, 'updateMenu').and.returnValue(getMenuDeferred.promise);
-    spyOn(itemsService, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
+    spyOn(menuFactory, 'getMenu').and.returnValue(getMenuDeferred.promise);
+    spyOn(menuFactory, 'updateMenu').and.returnValue(getMenuDeferred.promise);
+    spyOn(menuFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
 
     MenuEditCtrl = $controller('MenuEditCtrl', {
       $scope: scope
@@ -55,7 +53,7 @@ describe('Controller: MenuEditCtrl', function () {
 
   describe('menu object in scope', function () {
     it('should get the menu list from API', function () {
-      expect(menuService.getMenu).toHaveBeenCalled();
+      expect(menuFactory.getMenu).toHaveBeenCalled();
     });
 
     it('should attach a menu object after a API call to getMenu', function () {
@@ -73,11 +71,11 @@ describe('Controller: MenuEditCtrl', function () {
     describe('getItemsList API', function () {
 
       it('should get the items list from service', function () {
-        expect(itemsService.getItemsList).toHaveBeenCalled();
+        expect(menuFactory.getItemsList).toHaveBeenCalled();
       });
 
       it('should restrict to start and end dates only', function () {
-        expect(itemsService.getItemsList).toHaveBeenCalledWith({
+        expect(menuFactory.getItemsList).toHaveBeenCalledWith({
           startDate: '20150501',
           endDate: '20150531'
         }, true);
@@ -153,12 +151,12 @@ describe('Controller: MenuEditCtrl', function () {
     it('should not submit if form is invalid', function () {
       scope.menuEditForm.$valid = false;
       scope.submitForm();
-      expect(menuService.updateMenu).not.toHaveBeenCalled();
+      expect(menuFactory.updateMenu).not.toHaveBeenCalled();
     });
 
     it('should submit if form is valid', function () {
       scope.submitForm();
-      expect(menuService.updateMenu).toHaveBeenCalled();
+      expect(menuFactory.updateMenu).toHaveBeenCalled();
     });
 
     describe('new Items', function () {
