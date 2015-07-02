@@ -178,6 +178,14 @@ describe('Controller: MenuEditCtrl', function () {
       it('should newItems in payload not to have id', function () {
         expect(MenuEditCtrl.createPayload().menuItems[1].id).not.toBeDefined();
       });
+
+      it('should not add new item to payload if new Item not valid', function () {
+        scope.addItem();
+        scope.newItemList[scope.newItemList.length - 1] = {
+          fakeMenu: 'notValidData'
+        };
+        expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
+      });
     });
 
   });

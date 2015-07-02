@@ -99,17 +99,19 @@ angular.module('ts5App')
       var ItemsArray = [];
       var menuId = $scope.menu.id;
       angular.forEach($scope.newItemList, function (item) {
-        ItemsArray.push({
-          itemId: item.masterItem.id,
-          itemQty: parseInt(item.itemQty),
-          menuId: menuId
-        });
+        if (angular.isDefined(item.masterItem) && angular.isDefined(item.itemQty)) {
+          ItemsArray.push({
+            itemId: item.masterItem.id,
+            itemQty: parseInt(item.itemQty),
+            menuId: menuId
+          });
+        }
       });
       return ItemsArray;
     };
 
-    $this.clearCurrentItems = function() {
-      var itemsArray = [];//angular.copy($scope.menu.menuItems);
+    $this.clearCurrentItems = function () {
+      var itemsArray = [];
       angular.forEach($scope.menu.menuItems, function (item) {
         itemsArray.push({
           id: item.id,
