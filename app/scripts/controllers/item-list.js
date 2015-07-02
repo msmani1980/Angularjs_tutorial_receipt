@@ -21,9 +21,8 @@ angular.module('ts5App')
     };
 
     this.updateItemList = function () {
-      var filteredItems = $this.filterItems();
-      $scope.itemsListCount = filteredItems.length;
-      $this.setPaginatedItems(filteredItems);
+      $scope.itemsListCount = $scope.itemsList.length;
+      $this.setPaginatedItems($scope.itemsList);
     };
 
     this.filterItems = function () {
@@ -120,8 +119,6 @@ angular.module('ts5App')
     $scope.clearSearchFilters = function () {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
-      $scope.startDateFilter = '';
-      $scope.endDateFilter = '';
       var filters = $scope.search;
       for (var filterKey in filters) {
         $scope.search[filterKey] = '';
