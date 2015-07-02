@@ -3,7 +3,7 @@
 describe('Controller: CashBagListCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('ts5App'));
+  beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/cash-bag-list.json', 'served/stations.json', 'served/schedules.json', 'served/schedules-daily.json'));
 
   var CashBagListCtrl,
