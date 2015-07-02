@@ -63,27 +63,31 @@ angular.module('ts5App')
       attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat);
     }
 
-    function showToast(className, message) {
+    function showToast(className, type, message) {
       ngToast.create({
         className: className,
         dismissButton: true,
-        content: '<strong>Menu</strong>: ' + message
+        content: '<strong>' + type + '</strong>: ' + message
       });
     }
 
     function resetModelAndShowNotification(dataFromAPI) {
       setupMenuModelAndFetchItems(dataFromAPI);
-      showToast('success', 'successfully updated!');
+      showToast('success', 'Menu', 'successfully updated!');
     }
 
     function showErrors(dataFromAPI) {
-      showToast('warning', 'error updating menu!');
+      showToast('warning', 'Menu', 'error updating menu!');
 
       $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
       }
       setupMenuModelAndFetchItems($scope.menuFromAPI);
+    }
+
+    function showAPIErrors() {
+      showToast('warning', 'Menu', 'API unavailable');
     }
 
     $scope.showDeleteConfirmation = function (itemToDelete) {
@@ -180,7 +184,7 @@ angular.module('ts5App')
       $scope.newItemList.splice(itemIndex, 1);
     };
 
-    menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);
+    menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
 
   })
 ;
