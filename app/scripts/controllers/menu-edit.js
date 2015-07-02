@@ -12,6 +12,7 @@ angular.module('ts5App')
     $scope.viewName = 'Menu';
     $scope.masterItemsList = [];
     $scope.newItemList = [];
+    var $this = this;
 
 
     function formatDate(dateString, formatFrom, formatTo) {
@@ -94,13 +95,57 @@ angular.module('ts5App')
       return ($scope.menu) ? $scope.menu.menuItems.length > 1 : false;
     };
 
+    $this.addNewItems = function () {
+      var ItemsArray = [];
+      var menuId = $scope.menu.id;
+      angular.forEach($scope.newItemList, function (item) {
+        ItemsArray.push({
+          itemId: item.masterItem.id,
+          itemQty: item.itemQty,
+          menuId: menuId
+        })
+      });
+      return ItemsArray;
+    };
+
+    $this.clearCurrentItems = function() {
+      var itemsArray = [];//angular.copy($scope.menu.menuItems);
+      return angular.forEach($scope.menu.menuItems, function (item) {
+        itemsArray.push({
+          id: item.id,
+          itemId: item.itemId,
+          itemQty: item.itemQty,
+          menuId: item.menuId,
+          sortOrder: item.sortOrder
+        })
+      });
+      return itemsArray;
+    };
+
+    $this.createPayload = function () {
+      var payload = {
+        id: $scope.menu.id,
+        companyId: $scope.menu.companyId,
+        description: $scope.menu.description,
+        endDate: $scope.menu.endDate,
+        menuCode: $scope.menu.menuCode,
+        menuId: $scope.menu.menuId,
+        menuItems: $this.clearCurrentItems().concat($this.addNewItems()),
+        menuName: $scope.menu.menuName,
+        startDate: $scope.menu.startDate
+      };
+      console.log(payload);
+      return payload;
+    };
+
     $scope.submitForm = function () {
       if (!$scope.menuEditForm.$valid) {
         return false;
       }
-      var formatFrom = 'l',
-        formatTo = 'YYYYMMDD',
-        payload = angular.copy($scope.menu.toJSON());
+
+      var formatFrom = 'l';
+      var formatTo = 'YYYYMMDD';
+      var payload = $this.createPayload();
 
       angular.extend(payload, localizeDates(payload, formatFrom, formatTo));
       menuService.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
@@ -126,14 +171,15 @@ angular.module('ts5App')
       return startDateBeforeToday || endDateBeforeToday;
     };
 
-    $scope.addItem = function(){
+    $scope.addItem = function () {
       $scope.newItemList.push({});
     };
 
-    $scope.deleteNewItem = function(itemIndex){
+    $scope.deleteNewItem = function (itemIndex) {
       $scope.newItemList.splice(itemIndex, 1);
     };
 
     menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);
 
-  });
+  })
+;

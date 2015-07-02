@@ -53,8 +53,6 @@ describe('Controller: MenuEditCtrl', function () {
     expect(!!scope.viewName).toBe(true);
   });
 
-
-
   describe('menu object in scope', function () {
     it('should get the menu list from API', function () {
       expect(menuService.getMenu).toHaveBeenCalled();
@@ -147,6 +145,30 @@ describe('Controller: MenuEditCtrl', function () {
 
     it('should have a deleteNewItem attached to scope', function () {
       expect(!!scope.deleteNewItem).toBe(true);
+    });
+  });
+
+  describe('Submit Form', function () {
+
+    it('should not submit if form is invalid', function () {
+      scope.menuEditForm.$valid = false;
+      scope.submitForm();
+      expect(menuService.updateMenu).not.toHaveBeenCalled();
+    });
+
+    it('should submit if form is valid', function () {
+      scope.submitForm();
+      expect(menuService.updateMenu).toHaveBeenCalled();
+    });
+
+    it('should add newItems to payload on createPayload', function () {
+      scope.addItem();
+      scope.newItemList[0] = {
+        'itemQty': '1979',
+        'masterItem': {
+          'id': 1005}
+      };
+      expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
     });
   });
 

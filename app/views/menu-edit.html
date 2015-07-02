@@ -147,7 +147,7 @@
                type="text"
                maxlength="5"
                class="form-control"
-               ng-model="menuQty"
+               ng-model="newItemList[$index].itemQty"
                placeholder="{{$index}}"/>
       </td>
       <td>
@@ -169,4 +169,6 @@
 
     </tbody>
   </table>
+
+  {{ newItemList }}
 </form>
