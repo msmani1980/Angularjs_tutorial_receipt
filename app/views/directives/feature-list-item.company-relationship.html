@@ -7,7 +7,7 @@
   <div class="col-sm-2 list-item">
     <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company Relationship"
             ng-disabled="$parent.isInactive(item.endDate)"
-            ng-click="$parent.editCompanyRelationship(viewModel)">
+            ng-click="$parent.editCompanyRelationship(viewModel, companyRelationshipForm)">
       <i class="fa fa-pencil" aria-hidden="true"></i>
     </button>
     <button type="button" class="btn btn-danger btn-xs" ng-click="$parent.showDeleteConfirmation(viewModel)"
@@ -50,7 +50,7 @@
   </div>
   <div class="col-sm-2 list-item">
     <button type="button" class="btn btn-primary btn-xs" data-dismiss="alert" aria-label="Cancel"
-            ng-click="$parent.cancelCompanyRelationship(viewModel)">
+            ng-click="$parent.cancelCompanyRelationship(viewModel, companyRelationshipForm)">
       <span class="fa fa-close" aria-hidden="true"></span>
     </button>
     <button type="submit" class="btn btn-primary btn-xs"
@@ -83,9 +83,8 @@
           element-class="col-xs-6"
           start-date-model="viewModel.startDate"
           end-date-model="viewModel.endDate"
-          disable-past="false"
-          required="true"
-          inline="true">
+          disable-past="true"
+          required="true">
       </date-picker>
     </div>
   </div>

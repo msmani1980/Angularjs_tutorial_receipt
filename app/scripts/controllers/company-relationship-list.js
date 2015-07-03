@@ -82,10 +82,14 @@ angular.module('ts5App')
       company.original = angular.copy(company);
       company.isEditing = true;
     };
+    
     $scope.cancelCompanyRelationship = function (company) {
       if (company.id) {
         company.isEditing = false;
-        company = company.original;
+
+        for (var prop in company.original) {
+          company[prop] = company.original[prop];
+        }
         return;
       }
       removeCompanyFromLocalList(company);
@@ -105,7 +109,7 @@ angular.module('ts5App')
       }
       companyRelationship.isEditing = false;
 
-      showToast('success', 'successfully' + messageAction, 'Company Relationship');
+      showToast('success', 'Company Relationship', 'Successfully ' + messageAction);
     }
 
     function failCompanyRelationship(error/*, companyRelationship*/) {
@@ -191,8 +195,9 @@ angular.module('ts5App')
       setupCompanyScope(response);
 
       return $q.all([getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise($scope.company.companyTypeId)]);
-    }, function (error) {
-      return $scope.isRejected = true;
+    }, function (/*error*/) {
+      $scope.isRejected = true;
+      return;
     }).then(function (response) {
       if (!response) {
         return;
@@ -201,6 +206,8 @@ angular.module('ts5App')
       setupCompanyRelationshipTypeScope(response[1]);
       filterCompanyListByTypesScope(response[1]);
     }).then(function () {
+      $scope.isLoading = false;
+    }, function () {
       $scope.isLoading = false;
       $scope.isRejected = true;
       showToast('warning', 'Company Relationship', 'API unavailable');

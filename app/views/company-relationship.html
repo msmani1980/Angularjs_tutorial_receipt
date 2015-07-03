@@ -52,7 +52,9 @@
       <div class="hidden-xs col-sm-2 list-header border-right">End Date</div>
       <div class="hidden-xs col-sm-2 list-header border-right">Actions</div>
     </div>
-    <feature-list-item ng-repeat="companyRelationship in companyRelationshipListData track by $index"
+    <!--$id() tracks items by their identity-->
+    <!--https://docs.angularjs.org/api/ng/directive/ngRepeat-->
+    <feature-list-item ng-repeat="companyRelationship in companyRelationshipListData track by $id(companyRelationship)"
                        view-model="companyRelationship"
                        type="company-relationship"></feature-list-item>
   </div>
