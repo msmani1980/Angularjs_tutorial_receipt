@@ -14,33 +14,8 @@
   <div class="post-trip-data-list">
     <div class="row">
 
-      <div class="col-xs-12">
-        <div class="btn-group import-from-file">
-          <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#importFromData">
-            Import Post Trip From File <i class="fa fa-caret-right"></i>
-          </button>
-
-          <div id="importFromData" class="collapse width">
-            <input type="file" style="margin:5px; display:block;">
-
-            <button type="button" class="btn btn-info">
-              Upload
-            </button>
-
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target=".download-template-modal" ng-click="downloadTemplate()">
-              <i class="fa fa-download"></i> Download Template
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-
-    <div class="row">
-
       <div class="col-xs-6">
-        <a ng-href="/#/post-trip-data/create" class="btn btn-primary"> + </a>
+        <a ng-href="/#/delivery-note" class="btn btn-primary"> + </a>
       </div>
 
       <div class="col-xs-6 text-right">
@@ -60,36 +35,18 @@
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="schedule-number">Schedule Number</label>
-                <input ng-model="search.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="T1">
+                <label for="purchaseOrderNumber">Purchase Order Number</label>
+                <input ng-model="search.purchaseOrderNumber" type="text" class="form-control" id="purchase-order-number" placeholder="1234">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="carrier-type">Carrier Types</label>
-                <select class="form-control" id="carrier-type" ng-model="search.carrierTypeId" ng-change="updateCarrierNumbers()">
-                  <option value=""></option>
-                  <option ng-repeat="carrier in carrierTypes" value="{{ carrier.id }}">
-                    {{ carrier.carrierType }}
-                  </option>
-                </select>
+                <label for="deliveryNoteNumber">Delivery Note Number</label>
+                <input ng-model="search.deliveryNoteNumber" type="text" class="form-control" id="delivery-note-number" placeholder="1234">
               </div>
             </div>
 
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="tail-number">Tail Number</label>
-                <select class="form-control" id="tail-number" ng-model="search.tailNumber">
-                  <option value=""></option>
-                  <option ng-repeat="number in carrierNumbers" value="{{ number.carrierNumber }}">
-                    {{ number.carrierNumber }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row">
             <date-picker class="form-group"
               element-class="col-xs-12 col-sm-3"
               start-date-model="search.startDate"
@@ -100,40 +57,29 @@
               disable-start-date="viewOnly"
               disable-end-date="viewOnly">
             </date-picker>
-
+            
+          </div>
+          
+          <div class="row">
+        
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="departure-station">Departure Station</label>
-                <select class="stations-multi-select" id="departure-station" multiple="multiple" ng-model="search.departureStation">
-                  <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
-                    {{ station.stationCode }} ({{ station.stationName}})
-                  </option>
-                </select>
+                <label for="itemCode">Item Code</label>
+                <input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="1234">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="departure-time">Departure Time</label>
-                <input ng-model="search.departureTime" type="text" class="form-control" id="departure-time" placeholder="15:43">
+                <label for="itemName">Item Name</label>
+                <input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="1234">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="arrival-station">Arrival Station</label>
-                <select class="stations-multi-select" id="arrival-station" multiple="multiple" ng-model="search.arrivalStation">
-                  <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
-                    {{ station.stationCode }} ({{ station.stationName}})
-                  </option>
-                </select>
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label>Arrival Time</label>
-                <input ng-model="search.arrivalTime" type="text" class="form-control" id="arrival-time" placeholder="20:14">
+                <label for="inputLocation">Input Location</label>
+                <input ng-model="search.inputLocation" type="text" class="form-control" id="input-location" placeholder="1">
               </div>
             </div>
 
@@ -148,22 +94,24 @@
     <table class="table table-bordered table-hover ng-scope">
       <thead>
         <tr>
-          <th>Schedule Number</th>
-          <th>Departure Station</th>
-          <th>Departure Time</th>
-          <th>Arrival Station</th>
-          <th>Arrival Time</th>
+          <th>Purchase Order Number</th>
+          <th>Delivery Note Number</th>
+          <th>Departure Date</th>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Input Location</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
         <tr class="ng-scope">
-          <td class="ng-binding">T1</td>
-          <td class="ng-binding">07/15/2015</td>
-          <td class="ng-binding">2:34</td>
-          <td class="ng-binding">Test</td>
-          <td class="ng-binding">5:34</td>
+          <td class="ng-binding">1234</td>
+          <td class="ng-binding">1234</td>
+          <td class="ng-binding">2/03</td>
+          <td class="ng-binding">1234</td>
+          <td class="ng-binding">Item 1</td>
+          <td class="ng-binding">Dock 1</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>
@@ -177,14 +125,21 @@
           </td>
         </tr>
         <tr class="ng-scope">
-          <td class="ng-binding">T2</td>
-          <td class="ng-binding">05/07/2015</td>
-          <td class="ng-binding">12:34</td>
-          <td class="ng-binding">Test</td>
-          <td class="ng-binding">12:34</td>
+          <td class="ng-binding">1235</td>
+          <td class="ng-binding">1235</td>
+          <td class="ng-binding">2/04</td>
+          <td class="ng-binding">1235</td>
+          <td class="ng-binding">Item 2</td>
+          <td class="ng-binding">Dock 2</td>
           <td>
-            <button class="btn btn-info btn-xs" ng-click="viewPostTrip()" tabindex="0">
+            <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+              <i class="fa fa-trash"></i>
             </button>
           </td>
         </tr>
