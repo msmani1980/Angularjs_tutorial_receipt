@@ -74,15 +74,8 @@ angular.module('ts5App')
 
     $scope.removeAll = function () {
       var tempList = angular.copy($scope.companyRetailItemList);
-      $scope.companyRetailItemList = [];
-      _companyRetailItemCodes = [];
-      _companyRetailItemNames = [];
-      _companyRetailItemOnboardNames = [];
-      angular.forEach(tempList, function(retailItem){
-        if(!$scope.canRemove(retailItem)){
-          addRetailItemToCompanyRetailItems(retailItem);
-        }
-        else{
+      angular.forEach(tempList, function(retailItem) {
+        if ($scope.canRemove(retailItem)) {
           removeRetailItemFromCompanyRetailItems(retailItem);
         }
       });

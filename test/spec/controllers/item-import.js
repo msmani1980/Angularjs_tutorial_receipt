@@ -189,7 +189,7 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  /* // TODO - this test fails, but works properly
+  // TODO - this test fails, but works properly
   describe('removeAll scope function', function(){
     beforeEach(function(){
       scope.companyRetailItemList = [
@@ -199,6 +199,7 @@ describe('Controller: ItemImportCtrl', function () {
         {companyId:432,id:4,itemCode:'123456',itemName:'123456',onBoardName:'123456',stockOwnerCode:null}];
       scope.importedRetailItemList = [];
       scope.selectedImportCompany = {id:432};
+      scope.$digest();
       scope.removeAll();
     });
     it('should reset companyRetailItemList to 1 item', function(){
