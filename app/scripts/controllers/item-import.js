@@ -127,6 +127,14 @@ angular.module('ts5App')
       }, $scope.importedRetailItemList);
     }
 
+    function setFormErrors(response){
+      if ('data' in response) {
+        angular.forEach(response.data,function(error){
+          this.push(error);
+        }, $scope.formErrors);
+      }
+    }
+
     // private controller classes
     var randomHexColorClass = {
       predefined: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#FF1493', '#FFA500', '#FFD700', '#008080', '#9400D3'],
@@ -170,7 +178,6 @@ angular.module('ts5App')
     };
 
     // Controller constructor
-    init();
     function init(){
       _companyId = itemImportFactory.getCompanyId();
       _companyRetailItemCodes = [];
@@ -180,6 +187,7 @@ angular.module('ts5App')
       _onSaveAddItems = [];
       _removedItemCodes = [];
       _removedItemObjects = [];
+      $scope.formErrors = [];
       $scope.importCompanyList = [];
       $scope.companyRetailItemList = [];
       $scope.companiesLoaded = false;
@@ -211,6 +219,7 @@ angular.module('ts5App')
         $scope.retailItemsLoaded = true;
       });
     }
+    init();
 
     // scope properties
     $scope.viewName = 'Import Stock Owner Items';
@@ -270,36 +279,24 @@ angular.module('ts5App')
       // Batch import new items based on ID
       if(_onSaveAddItems.length) {
         var payload = {ImportItems: {importItems: _onSaveAddItems}};
-        submitPromises.push(itemImportFactory.importItems(payload).then(function(){
-        }, function (response) {
-          if ('data' in response) {
-            errors = errors.concat(response.data);
-          }
-        }));
+        submitPromises.push(itemImportFactory.importItems(payload).then(null,setFormErrors));
       }
       // Delete items that were attached
       if(_onSaveRemoveItems.length){
-        // TODO - is there a better way to do this vs looping and calling individually?
         angular.forEach(_onSaveRemoveItems, function(itemId){
-          submitPromises.push(itemImportFactory.removeItem(itemId).then(function(){
-          }, function(response){
-            if ('data' in response) {
-              errors = errors.concat(response.data);
-            }
-          }));
+          submitPromises.push(itemImportFactory.removeItem(itemId).then(null,setFormErrors));
         });
       }
 
       // resolve the promises
       $q.all(submitPromises).then(function(){
-        if(!errors.length){
+        if(!$scope.formErrors.length){
           $scope.displayError = false;
           showMessage('saved!', 'success');
           init();
         }
         else{
           showMessage('failed!', 'warning');
-          $scope.formErrors = errors;
           $scope.displayError = true;
         }
       });
