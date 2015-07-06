@@ -170,6 +170,7 @@ angular.module('ts5App')
     };
 
     // Controller constructor
+    init();
     function init(){
       _companyId = itemImportFactory.getCompanyId();
       _companyRetailItemCodes = [];
@@ -210,7 +211,6 @@ angular.module('ts5App')
         $scope.retailItemsLoaded = true;
       });
     }
-    init();
 
     // scope properties
     $scope.viewName = 'Import Stock Owner Items';
