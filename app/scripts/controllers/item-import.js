@@ -18,7 +18,9 @@ angular.module('ts5App')
       _onSaveRemoveItems = [],
       _onSaveAddItems = [],
       _removedItemCodes = [],
-      _removedItemObjects = [];
+      _removedItemObjects = [],
+      _initPromises = [],
+      _submitPromises = [];
 
     // private controller functions
     function canBeAddedToCompanyRetailList(retailItem){
@@ -127,13 +129,81 @@ angular.module('ts5App')
       }, $scope.importedRetailItemList);
     }
 
-    function setFormErrors(response){
+    function showFormErrors(response){
       if ('data' in response) {
         angular.forEach(response.data,function(error){
           this.push(error);
         }, $scope.formErrors);
       }
+      $scope.displayError = true;
+      hideLoadingModal();
     }
+
+    function setImportItemsPromise(){
+      if(!_onSaveAddItems.length) {
+        return false;
+      }
+      var payload = {ImportItems: {importItems: _onSaveAddItems}};
+      _submitPromises.push(itemImportFactory.importItems(payload));
+    }
+
+    function setRemoveItemsPromises(){
+      if(!_onSaveRemoveItems.length) {
+        return false;
+      }
+      angular.forEach(_onSaveRemoveItems, function(itemId){
+        _submitPromises.push(itemImportFactory.removeItem(itemId));
+      });
+    }
+
+    function resolveSubmitPromises(){
+      $q.all(_submitPromises).then(function(){
+        $scope.displayError = false;
+        showMessage('saved!', 'success');
+        init();
+        hideLoadingModal();
+      }, showFormErrors);
+    }
+
+    function setGetCompaniesListPromise(){
+      _initPromises.push(itemImportFactory.getCompanyList({companyTypeId: 2, limit: null}).then(function (response) {
+        angular.forEach(response.companies, function(company){
+          if(2 === company.companyTypeId){
+            this.push(company);
+          }
+        }, $scope.importCompanyList);
+      }));
+    }
+
+    function setGetItemsListPromise(){
+      _initPromises.push(itemImportFactory.getItemsList({companyId: _companyId}).then(function (response) {
+        $scope.companyRetailItemList = response.retailItems;
+      }));
+    }
+
+    function resolveInitPromises(){
+      $q.all(_initPromises).then(function() {
+        angular.forEach($scope.importCompanyList, function (company) {
+          company.hexColor = randomHexColorClass.get(company.id);
+        });
+        angular.forEach($scope.companyRetailItemList, function (retailItem) {
+          retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
+          addRetailItemToCompanyRetailItems(retailItem);
+        });
+        $scope.companiesLoaded = true;
+        $scope.retailItemsLoaded = true;
+        hideLoadingModal();
+      }, showFormErrors);
+    }
+
+    function displayLoadingModal(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
 
     // private controller classes
     var randomHexColorClass = {
@@ -187,37 +257,19 @@ angular.module('ts5App')
       _onSaveAddItems = [];
       _removedItemCodes = [];
       _removedItemObjects = [];
+      _submitPromises = [];
       $scope.formErrors = [];
       $scope.importCompanyList = [];
       $scope.companyRetailItemList = [];
       $scope.companiesLoaded = false;
       $scope.selectedImportCompany = null;
       $scope.importedRetailItemList = [];
-      var initPromises = [
-        itemImportFactory.getCompanyList({companyTypeId: 2, limit: null}).then(function (response) {
-        // TODO - This api request queries the full list of companies until https://jira.egate-solutions.com/browse/TSVPORTAL-2038">TSVPORTAL-2038 is completed.
-          angular.forEach(response.companies, function(company){
-            if(2 === company.companyTypeId){
-              this.push(company);
-            }
-          }, $scope.importCompanyList);
-        }),
-        itemImportFactory.getItemsList({companyId: _companyId}).then(function (response) {
-          $scope.companyRetailItemList = response.retailItems;
-        })
-      ];
-      // assign random color to all companies and items
-      $q.all(initPromises).then(function () {
-        angular.forEach($scope.importCompanyList, function (company) {
-          company.hexColor = randomHexColorClass.get(company.id);
-        });
-        angular.forEach($scope.companyRetailItemList, function (retailItem) {
-          retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
-          addRetailItemToCompanyRetailItems(retailItem);
-        });
-        $scope.companiesLoaded = true;
-        $scope.retailItemsLoaded = true;
-      });
+
+      displayLoadingModal('Loading');
+      setGetCompaniesListPromise();
+      setGetItemsListPromise();
+      resolveInitPromises();
+
     }
     init();
 
@@ -273,33 +325,10 @@ angular.module('ts5App')
         showMessage(' - Nothing has changed.', 'warning');
         return;
       }
-      var submitPromises = [];
-      var errors = [];
-
-      // Batch import new items based on ID
-      if(_onSaveAddItems.length) {
-        var payload = {ImportItems: {importItems: _onSaveAddItems}};
-        submitPromises.push(itemImportFactory.importItems(payload).then(null,setFormErrors));
-      }
-      // Delete items that were attached
-      if(_onSaveRemoveItems.length){
-        angular.forEach(_onSaveRemoveItems, function(itemId){
-          submitPromises.push(itemImportFactory.removeItem(itemId).then(null,setFormErrors));
-        });
-      }
-
-      // resolve the promises
-      $q.all(submitPromises).then(function(){
-        if(!$scope.formErrors.length){
-          $scope.displayError = false;
-          showMessage('saved!', 'success');
-          init();
-        }
-        else{
-          showMessage('failed!', 'warning');
-          $scope.displayError = true;
-        }
-      });
+      displayLoadingModal('Saving');
+      setImportItemsPromise();
+      setRemoveItemsPromises();
+      resolveSubmitPromises();
     };
 
     $scope.canRemove = function(retailItem){
