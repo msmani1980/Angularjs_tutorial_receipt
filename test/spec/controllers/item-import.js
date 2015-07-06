@@ -172,7 +172,6 @@ describe('Controller: ItemImportCtrl', function () {
   });
 
   describe('removeRetailItem scope function', function(){
-    var retailItem1 = {companyId:currentCompanyId,itemCode:'123',itemName:'123',onBoardName:'123',stockOwnerCode:null};
     var retailItem2 = {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456',stockOwnerCode:'4567'};
     beforeEach(function(){
       scope.companyRetailItemList = [retailItem2];
