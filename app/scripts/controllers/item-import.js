@@ -20,120 +20,7 @@ angular.module('ts5App')
       _removedItemCodes = [],
       _removedItemObjects = [];
 
-    // scope properties
-    $scope.viewName = 'Import Stock Owner Items';
-
-    // scope functions
-    $scope.changeSelectedImportCompany = function () {
-      if (!$scope.selectedImportCompany) {
-        return false;
-      }
-      if(!$scope.selectedImportCompany.id){
-        return false;
-      }
-      itemImportFactory.getItemsList({companyId: $scope.selectedImportCompany.id}).then(function (response) {
-        $scope.importedRetailItemList = [];
-        angular.forEach(response.retailItems, function (retailItem) {
-          if (canBeAddedToCompanyRetailList(retailItem)) {
-            var newRetailItem = angular.copy(retailItem);
-            var removedItemIndex = _removedItemCodes.indexOf(retailItem.itemCode);
-            if(-1 !== removedItemIndex){
-              newRetailItem = angular.copy(_removedItemObjects[removedItemIndex]);
-            }
-            else{
-              newRetailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
-            }
-            newRetailItem.companyName = $scope.selectedImportCompany.companyName;
-            this.push(newRetailItem);
-            newRetailItem = null;
-          }
-        }, $scope.importedRetailItemList);
-      });
-    };
-
-    $scope.importAll = function () {
-      angular.forEach($scope.importedRetailItemList, function(retailItem){
-        if(!canBeAddedToCompanyRetailList(retailItem)){
-          return;
-        }
-        addRetailItemToCompanyRetailItems(retailItem);
-      });
-      $scope.importedRetailItemList = [];
-      $scope.formChanged = formChanged();
-    };
-
-    $scope.isCompanyItem = function (retailItem) {
-      return retailItem.companyId === _companyId;
-    };
-
-    $scope.removeRetailItem = function(retailItem){
-      removeRetailItemFromCompanyRetailItems(retailItem);
-      $scope.changeSelectedImportCompany();
-      $scope.formChanged = formChanged();
-    };
-
-    $scope.removeAll = function () {
-      var tempList = angular.copy($scope.companyRetailItemList);
-      angular.forEach(tempList, function(retailItem) {
-        if ($scope.canRemove(retailItem)) {
-          removeRetailItemFromCompanyRetailItems(retailItem);
-        }
-      });
-      tempList = null;
-      $scope.changeSelectedImportCompany();
-      $scope.formChanged = formChanged();
-    };
-
-    $scope.submitForm = function(){
-      if(!_onSaveAddItems.length && !_onSaveRemoveItems.length) {
-        showMessage(' - Nothing has changed.', 'warning');
-        return;
-      }
-      var submitPromises = [];
-      var errors = [];
-
-      // Batch import new items based on ID
-      if(_onSaveAddItems.length) {
-        var payload = {ImportItems: {importItems: _onSaveAddItems}};
-        submitPromises.push(itemImportFactory.importItems(payload).then(function(){
-        }, function (response) {
-          if ('data' in response) {
-            errors = errors.concat(response.data);
-          }
-        }));
-      }
-      // Delete items that were attached
-      if(_onSaveRemoveItems.length){
-        // TODO - is there a better way to do this vs looping and calling individually?
-        angular.forEach(_onSaveRemoveItems, function(itemId){
-          submitPromises.push(itemImportFactory.removeItem(itemId).then(function(){
-          }, function(response){
-            if ('data' in response) {
-              errors = errors.concat(response.data);
-            }
-          }));
-        });
-      }
-
-      // resolve the promises
-      $q.all(submitPromises).then(function(){
-        if(!errors.length){
-          $scope.displayError = false;
-          showMessage('saved!', 'success');
-          init();
-        }
-        else{
-          showMessage('failed!', 'warning');
-          $scope.formErrors = errors;
-          $scope.displayError = true;
-        }
-      });
-    };
-
-    $scope.canRemove = function(retailItem){
-      return (retailItem.stockOwnerCode !== null || !$scope.isCompanyItem(retailItem));
-    };
-
+    // private controller functions
     function canBeAddedToCompanyRetailList(retailItem){
       if (retailItem.itemCode && -1 !== _companyRetailItemCodes.indexOf(retailItem.itemCode)){
         return false;
@@ -221,6 +108,25 @@ angular.module('ts5App')
       return (_onSaveRemoveItems.length > 0 || _onSaveAddItems.length > 0);
     }
 
+    function setImportedRetailItemList(response){
+      $scope.importedRetailItemList = [];
+      angular.forEach(response.retailItems, function (retailItem) {
+        if (canBeAddedToCompanyRetailList(retailItem)) {
+          var newRetailItem = angular.copy(retailItem);
+          var removedItemIndex = _removedItemCodes.indexOf(retailItem.itemCode);
+          if(-1 !== removedItemIndex){
+            newRetailItem = angular.copy(_removedItemObjects[removedItemIndex]);
+          }
+          else{
+            newRetailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
+          }
+          newRetailItem.companyName = $scope.selectedImportCompany.companyName;
+          this.push(newRetailItem);
+          newRetailItem = null;
+        }
+      }, $scope.importedRetailItemList);
+    }
+
     // private controller classes
     var randomHexColorClass = {
       predefined: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#FF1493', '#FFA500', '#FFD700', '#008080', '#9400D3'],
@@ -276,6 +182,8 @@ angular.module('ts5App')
       $scope.importCompanyList = [];
       $scope.companyRetailItemList = [];
       $scope.companiesLoaded = false;
+      $scope.selectedImportCompany = null;
+      $scope.importedRetailItemList = [];
       var initPromises = [
         itemImportFactory.getCompanyList({companyTypeId: 2, limit: null}).then(function (response) {
         // TODO - This api request queries the full list of companies until https://jira.egate-solutions.com/browse/TSVPORTAL-2038">TSVPORTAL-2038 is completed.
@@ -303,6 +211,103 @@ angular.module('ts5App')
       });
     }
     init();
+
+    // scope properties
+    $scope.viewName = 'Import Stock Owner Items';
+
+    // scope functions
+    $scope.changeSelectedImportCompany = function () {
+      if (!$scope.selectedImportCompany) {
+        return false;
+      }
+      if(!$scope.selectedImportCompany.id){
+        return false;
+      }
+      itemImportFactory.getItemsList({companyId: $scope.selectedImportCompany.id}).then(setImportedRetailItemList);
+    };
+
+    $scope.importAll = function () {
+      angular.forEach($scope.importedRetailItemList, function(retailItem){
+        if(!canBeAddedToCompanyRetailList(retailItem)){
+          return;
+        }
+        addRetailItemToCompanyRetailItems(retailItem);
+      });
+      $scope.importedRetailItemList = [];
+      $scope.formChanged = formChanged();
+    };
+
+    $scope.isCompanyItem = function (retailItem) {
+      return retailItem.companyId === _companyId;
+    };
+
+    $scope.removeRetailItem = function(retailItem){
+      removeRetailItemFromCompanyRetailItems(retailItem);
+      $scope.changeSelectedImportCompany();
+      $scope.formChanged = formChanged();
+    };
+
+    $scope.removeAll = function () {
+      var tempList = angular.copy($scope.companyRetailItemList);
+      angular.forEach(tempList, function(retailItem) {
+        if ($scope.canRemove(retailItem)) {
+          removeRetailItemFromCompanyRetailItems(retailItem);
+        }
+      });
+      tempList = null;
+      $scope.changeSelectedImportCompany();
+      $scope.formChanged = formChanged();
+    };
+
+    $scope.submitForm = function(){
+      if(!_onSaveAddItems.length && !_onSaveRemoveItems.length) {
+        showMessage(' - Nothing has changed.', 'warning');
+        return;
+      }
+      var submitPromises = [];
+      var errors = [];
+
+      // Batch import new items based on ID
+      if(_onSaveAddItems.length) {
+        var payload = {ImportItems: {importItems: _onSaveAddItems}};
+        submitPromises.push(itemImportFactory.importItems(payload).then(function(){
+        }, function (response) {
+          if ('data' in response) {
+            errors = errors.concat(response.data);
+          }
+        }));
+      }
+      // Delete items that were attached
+      if(_onSaveRemoveItems.length){
+        // TODO - is there a better way to do this vs looping and calling individually?
+        angular.forEach(_onSaveRemoveItems, function(itemId){
+          submitPromises.push(itemImportFactory.removeItem(itemId).then(function(){
+          }, function(response){
+            if ('data' in response) {
+              errors = errors.concat(response.data);
+            }
+          }));
+        });
+      }
+
+      // resolve the promises
+      $q.all(submitPromises).then(function(){
+        if(!errors.length){
+          $scope.displayError = false;
+          showMessage('saved!', 'success');
+          init();
+        }
+        else{
+          showMessage('failed!', 'warning');
+          $scope.formErrors = errors;
+          $scope.displayError = true;
+        }
+      });
+    };
+
+    $scope.canRemove = function(retailItem){
+      return (retailItem.stockOwnerCode !== null || !$scope.isCompanyItem(retailItem));
+    };
 
     // scope event handlers
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
