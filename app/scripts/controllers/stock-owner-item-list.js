@@ -96,7 +96,7 @@ angular.module('ts5App')
       return itemIndex;
     };
 
-    $scope.removeItem = function(itemId) {
+    $scope.removeRecord = function(itemId) {
       var itemIndex = $this.findItemIndex(itemId);
       angular.element('#loading').modal('show').find('p').text(
         'Removing your item');
