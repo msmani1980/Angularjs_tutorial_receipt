@@ -293,6 +293,22 @@
   }
 }
 
+.delivery-note-form {
+
+  label {
+    font-weight:100;
+    font-size:16px
+  }
+  
+  .datepicker-container {
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
 .create-form-container {
 	margin-top:18rem;
 }
