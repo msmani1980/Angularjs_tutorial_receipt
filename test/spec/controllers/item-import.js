@@ -189,7 +189,6 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  // TODO - this test fails, but works properly
   describe('removeAll scope function', function(){
     beforeEach(function(){
       scope.companyRetailItemList = [
