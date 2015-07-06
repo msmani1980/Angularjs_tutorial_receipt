@@ -30,7 +30,8 @@ module.exports = function (config) {
         {
           type: 'html',
           subdir: 'report-html'
-        }, {
+        },
+        {
           type: 'cobertura',
           subdir: '.'
         }
@@ -70,16 +71,17 @@ module.exports = function (config) {
       'bower_components/ng-file-upload/ng-file-upload.js',
       'bower_components/qrcode/lib/qrcode.js',
       'bower_components/angular-qr/src/angular-qr.js',
-      'bower_components/select2/select2.js',
-      'bower_components/ui-select/src/select3.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/ngtoast/dist/ngToast.js',
       'bower_components/angular-native-dragdrop/draganddrop.js',
+      'bower_components/angular-ui-select/dist/select.js',
+      'bower_components/select2/select2.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
       'test/mock/**/*.json',
       'test/spec/**/*.js',
+      //location of templates
       'app/views/**/*.html'
     ],
 

@@ -8,8 +8,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuService, itemsService) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuFactory) {
     $scope.viewName = 'Menu';
+    $scope.masterItemsList = [];
+    $scope.newItemList = [];
+    var $this = this;
 
 
     function formatDate(dateString, formatFrom, formatTo) {
@@ -24,13 +27,8 @@ angular.module('ts5App')
 
     function attachItemsModelToScope(masterItemsFromAPI) {
       $scope.masterItemsList = masterItemsFromAPI.masterItems;
-      $scope.menuItemsList = [];
       angular.forEach($scope.menu.menuItems, function (menuItem) {
-        var masterItem = {
-          itemQty: menuItem.itemQty
-        };
-        angular.extend(masterItem, getMasterItemUsingId(menuItem.itemId));
-        $scope.menuItemsList.push(masterItem);
+        menuItem.itemName = getMasterItemUsingId(menuItem.itemId).itemName;
       });
     }
 
@@ -38,7 +36,7 @@ angular.module('ts5App')
       var startDate = formatDate(menuFromAPI.startDate, dateFromAPIFormat, dateForAPIFormat);
       var endDate = formatDate(menuFromAPI.endDate, dateFromAPIFormat, dateForAPIFormat);
 
-      itemsService.getItemsList({
+      menuFactory.getItemsList({
         startDate: startDate,
         endDate: endDate
       }, true).then(attachItemsModelToScope);
@@ -65,26 +63,22 @@ angular.module('ts5App')
       attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat);
     }
 
-    function showSuccessMessage() {
+    function showToast(className, type, message) {
       ngToast.create({
-        className: 'success',
+        className: className,
         dismissButton: true,
-        content: '<strong>Menu</strong>: successfully updated!'
+        content: '<strong>' + type + '</strong>: ' + message
       });
     }
-
 
     function resetModelAndShowNotification(dataFromAPI) {
       setupMenuModelAndFetchItems(dataFromAPI);
-      showSuccessMessage();
+      showToast('success', 'Menu', 'successfully updated!');
     }
 
     function showErrors(dataFromAPI) {
-      ngToast.create({
-        className: 'warning',
-        dismissButton: true,
-        content: '<strong>Menu</strong>: error updating menu!'
-      });
+      showToast('warning', 'Menu', 'error updating menu!');
+
       $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
@@ -92,13 +86,84 @@ angular.module('ts5App')
       setupMenuModelAndFetchItems($scope.menuFromAPI);
     }
 
+    function showAPIErrors() {
+      showToast('warning', 'Menu', 'API unavailable');
+    }
+
+    $scope.showDeleteConfirmation = function (itemToDelete) {
+      $scope.itemToDelete = itemToDelete;
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.shouldShowActions = function () {
+      return ($scope.menu) ? $scope.menu.menuItems.length > 1 : false;
+    };
+
+    $this.addNewItems = function () {
+      var ItemsArray = [];
+      var menuId = $scope.menu.id;
+      angular.forEach($scope.newItemList, function (item) {
+        if (angular.isDefined(item.masterItem) && angular.isDefined(item.itemQty)) {
+          ItemsArray.push({
+            itemId: item.masterItem.id,
+            itemQty: parseInt(item.itemQty),
+            menuId: menuId
+          });
+        }
+      });
+      return ItemsArray;
+    };
+
+    $this.clearCurrentItems = function () {
+      var itemsArray = [];
+      angular.forEach($scope.menu.menuItems, function (item) {
+        itemsArray.push({
+          id: item.id,
+          itemId: item.itemId,
+          itemQty: item.itemQty,
+          menuId: item.menuId,
+          sortOrder: item.sortOrder
+        });
+      });
+      return itemsArray;
+    };
+
+    $this.createPayload = function () {
+      var payload = {
+        id: $scope.menu.id,
+        companyId: $scope.menu.companyId,
+        description: $scope.menu.description,
+        endDate: $scope.menu.endDate,
+        menuCode: $scope.menu.menuCode,
+        menuId: $scope.menu.menuId,
+        menuItems: $this.clearCurrentItems().concat($this.addNewItems()),
+        menuName: $scope.menu.menuName,
+        startDate: $scope.menu.startDate
+      };
+      return payload;
+    };
+
     $scope.submitForm = function () {
-      var formatFrom = 'l',
-        formatTo = 'YYYYMMDD',
-        payload = angular.copy($scope.menu.toJSON());
+      if (!$scope.menuEditForm.$valid) {
+        return false;
+      }
+
+      var formatFrom = 'l';
+      var formatTo = 'YYYYMMDD';
+      var payload = $this.createPayload();
 
       angular.extend(payload, localizeDates(payload, formatFrom, formatTo));
-      menuService.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
+      menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
+    };
+
+    $scope.deleteItemFromMenu = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+
+      $scope.menu.menuItems = $scope.menu.menuItems.filter(function (item) {
+        return item.itemId !== $scope.itemToDelete.itemId;
+      });
+
+      $scope.menuEditForm.$setDirty();
     };
 
     $scope.isMenuReadOnly = function () {
@@ -111,6 +176,15 @@ angular.module('ts5App')
       return startDateBeforeToday || endDateBeforeToday;
     };
 
-    menuService.getMenu($routeParams.id).then(setupMenuModelAndFetchItems);
+    $scope.addItem = function () {
+      $scope.newItemList.push({});
+    };
 
-  });
+    $scope.deleteNewItem = function (itemIndex) {
+      $scope.newItemList.splice(itemIndex, 1);
+    };
+
+    menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
+
+  })
+;

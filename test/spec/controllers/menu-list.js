@@ -163,7 +163,7 @@ describe('Controller: MenuListCtrl', function () {
       expect(scope.menuToDelete.name).toBe('menuToDelete');
     });
 
-    it('should do a DELETE requesto to menuService with menuToDelete',
+    it('should do a DELETE request to menuService with menuToDelete',
       function () {
         scope.showDeleteConfirmation({
           id: '1'
