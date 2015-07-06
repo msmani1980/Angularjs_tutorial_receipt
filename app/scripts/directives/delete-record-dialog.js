@@ -22,7 +22,7 @@ angular.module('ts5App')
 
       $scope.deleteRecord = function () {
         $this.modalElement.modal('hide');
-        $scope.removeItem($scope.itemToDelete);
+        $scope.removeRecord($scope.itemToDelete);
       };
 
     };

@@ -127,6 +127,14 @@ angular.module('ts5App')
               $scope.cashBag = response;
               $scope.displayError = false;
               $scope.formErrors = {};
+
+              if($scope.cashBag.eposCashBagsId === null) {
+                $scope.flightAmount = '0.0000';
+              } else {
+                // TODO: API call to get flight amount based on eposCashBagsId
+                $scope.flightAmount = '-';
+
+              }
             },
             helpers.showMessage
           );

@@ -1,5 +1,5 @@
 'use strict';
-/* global moment */
+
 /**
  * @ngdoc function
  * @name ts5App.controller:MenuRelationshipListCtrl
@@ -8,227 +8,218 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuRelationshipListCtrl', function ($scope) {
-    var menuAPIResponse,
-      stationAPIResponse;
+  .controller('MenuRelationshipListCtrl', function ($scope, dateUtility,
+    $filter, menuService, catererStationService, menuCatererStationsService,
+    $q, ngToast) {
 
-    var todaysDate = Date.parse(new Date());
-
-    // TODO: Move to global function
-    function formatDate(dateString, formatFrom, formatTo) {
-      var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
-      return dateToReturn;
-    }
-
-    // set search and start dates to nothing
-    $scope.search = {
+    var $this = this;
+    $scope.currentPage = 1;
+    $scope.relationshipsPerPage = 10;
+    $scope.relationshipList = [];
+    $scope.dateRange = {
       startDate: '',
       endDate: ''
     };
-    $scope.startDateFilter = '';
-    $scope.endDateFilter = '';
+    $scope.search = {
+      menu: {}
+    };
 
-    $scope.$watch('search.startDate + search.endDate', function () {
-      $scope.formatDateFilter();
-    });
+    this.init = function () {
+      this.getRelationshipList();
+      $scope.$watch('search', $this.updateRelationshipList, true);
+      $scope.$watchCollection('dateRange', $this.getRelationshipList);
+      $scope.$watch('currentPage + relationshipsPerPage', $this.updateRelationshipList);
+    };
 
-    $scope.formatDateFilter = function () {
-      if ($scope.search.startDate && $scope.search.endDate) {
-        $scope.startDateFilter = formatDate($scope.search.startDate, 'L',
-          'YYYY-MM-DD');
-        $scope.endDateFilter = formatDate($scope.search.endDate, 'L',
-          'YYYY-MM-DD');
+    this.showSuccessMessage = function (message) {
+      ngToast.create({
+        className: 'success',
+        dismissButton: true,
+        content: message
+      });
+    };
+
+    this.updateRelationshipList = function () {
+      $this.associateMenuData();
+      $this.associateStationData();
+      var filteredRelationships = $this.filterRelationships();
+      $scope.relationshipListCount = filteredRelationships.length;
+      $this.setPaginatedRelationships(filteredRelationships);
+    };
+
+    this.filterRelationships = function () {
+      return $filter('filter')($scope.relationshipList, $scope.search);
+    };
+
+    this.setPaginatedRelationships = function (filteredRelationships) {
+      var currentPage = parseInt($scope.currentPage);
+      var relationshipsPerPage = parseInt($scope.relationshipsPerPage);
+      var begin = ((currentPage - 1) * relationshipsPerPage);
+      var end = begin + relationshipsPerPage;
+      $scope.paginatedRelationships = filteredRelationships.slice(begin,
+        end);
+    };
+
+    this.generateRelationshipQuery = function () {
+      var query = {};
+      if ($scope.dateRange && $scope.dateRange.startDate && $scope.dateRange
+        .endDate) {
+        query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
+          'L', 'YYYYMMDD');
+        query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
+          'L', 'YYYYMMDD');
+      }
+      return query;
+    };
+
+    this.makePromises = function () {
+      var query = $this.generateRelationshipQuery();
+      return [
+        catererStationService.getCatererStationList(),
+        menuService.getMenuList(),
+        menuCatererStationsService.getRelationshipList(query)
+      ];
+    };
+
+    this.getRelationshipList = function () {
+      var promises = $this.makePromises();
+      $q.all(promises).then(function (response) {
+        $this.setCatererStationList(response[0]);
+        $this.setMenuList(response[1]);
+        $this.setRelationshipList(response[2]);
+        $this.updateRelationshipList();
+        $this.initSelectUI();
+        $this.hideLoadingModal();
+      });
+    };
+
+    this.setRelationshipList = function (apiResponse) {
+      $scope.relationshipList = apiResponse.companyMenuCatererStations;
+      $scope.relationshipListCount = $scope.relationshipList.length;
+    };
+
+    this.setCatererStationList = function (apiResponse) {
+      $scope.stationList = apiResponse.response;
+    };
+
+    this.setMenuList = function (apiResponse) {
+      $scope.menuList = apiResponse.menus;
+    };
+
+    this.associateMenuData = function () {
+      for (var key in $scope.relationshipList) {
+        var relationship = $scope.relationshipList[key];
+        var menuIndex = this.findMenuIndex(relationship.menuId);
+        if (menuIndex !== null) {
+          $scope.relationshipList[key].menu = $scope.menuList[menuIndex];
+        }
       }
     };
 
-    $scope.isItemActive = function (startDate) {
-      return Date.parse(startDate) <= todaysDate;
+    this.associateStationData = function () {
+      for (var key in $scope.relationshipList) {
+        var relationship = $scope.relationshipList[key];
+        relationship.stations = [];
+        for (var stationKey in relationship.catererStationIds) {
+          var stationId = relationship.catererStationIds[stationKey];
+          var stationIndex = this.findStationIndex(stationId);
+          if (stationIndex !== null) {
+            $scope.relationshipList[key].stations[stationKey] = $scope.stationList[
+              stationIndex];
+          }
+        }
+      }
     };
 
-    $scope.isItemInactive = function (endDate) {
-      return Date.parse(endDate) <= todaysDate;
+    this.findRelationshipIndex = function (relationshipId) {
+      var relationshipIndex = null;
+      for (var key in $scope.relationshipList) {
+        var relationship = $scope.relationshipList[key];
+        if (parseInt(relationship.id) === parseInt(relationshipId)) {
+          relationshipIndex = key;
+          break;
+        }
+      }
+      return relationshipIndex;
+    };
+
+    this.findMenuIndex = function (menuId) {
+      var menuIndex = null;
+      for (var key in $scope.menuList) {
+        var menu = $scope.menuList[key];
+        if (parseInt(menu.menuId) === parseInt(menuId)) {
+          menuIndex = key;
+          break;
+        }
+      }
+      return menuIndex;
+    };
+
+    this.findStationIndex = function (stationId) {
+      var stationIndex = null;
+      for (var key in $scope.stationList) {
+        var station = $scope.stationList[key];
+        if (parseInt(station.id) === parseInt(stationId)) {
+          stationIndex = key;
+          break;
+        }
+      }
+      return stationIndex;
+    };
+
+    this.initSelectUI = function () {
+      angular.element('select.multi-select').select2({
+        width: '100%'
+      });
+    };
+
+    this.removeRecordFromList = function (relationshipIndex) {
+      $this.hideLoadingModal();
+      $this.showSuccessMessage('Menu Relationship Removed');
+      $scope.relationshipList.splice(relationshipIndex, 1);
+      $this.updateRelationshipList();
+    };
+
+    $scope.removeRecord = function (relationshipId) {
+      var relationshipIndex = $this.findRelationshipIndex(relationshipId);
+      $this.displayLoadingModal('Removing your menu relationship');
+      menuCatererStationsService.deleteRelationship(relationshipId).then(
+        $this.removeRecordFromList(relationshipIndex));
+    };
+
+    this.displayLoadingModal = function (loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+    };
+
+    $scope.isRelationshipActive = function (startDate) {
+      return Date.parse(startDate) <= dateUtility.now();
+    };
+
+    $scope.isRelationshipInactive = function (endDate) {
+      return Date.parse(endDate) <= dateUtility.now();
     };
 
     $scope.clearSearchFilters = function () {
+      $scope.dateRange.startDate = '';
+      $scope.dateRange.endDate = '';
       var filters = $scope.search;
-      $scope.startDate = '';
-      $scope.endDate = '';
-      $scope.startDateFilter = '';
-      $scope.endDateFilter = '';
       for (var filterKey in filters) {
-        $scope.search[filterKey] = '';
+        if (Object.keys(filters[filterKey]).length) {
+          var filterObject = filters[filterKey];
+          for (var key in filterObject) {
+            $scope.search[filterKey][key] = '';
+          }
+        } else {
+          $scope.search[filterKey] = '';
+        }
       }
+      $scope.relationshipListCount = $scope.relationshipList.length;
     };
 
-    menuAPIResponse = {
-      'menus': [{
-        'id': 121,
-        'companyId': 374,
-        'menuCode': 'Test01',
-        'menuName': 'Test Menu',
-        'description': 'Test Menu',
-        'startDate': '2015-04-15',
-        'endDate': '2015-04-15',
-        'createdBy': 1,
-        'createdOn': '2015-04-14 02:49:35.715873',
-        'updatedBy': null,
-        'updatedOn': null,
-        'menuItems': [{
-          'id': 248,
-          'itemId': 331,
-          'itemName': 'Test Item',
-          'menuId': 121,
-          'itemQty': 1
-        }]
-      }, {
-        'id': 122,
-        'companyId': 374,
-        'menuCode': 'MNCD001',
-        'menuName': 'Menu Name',
-        'description': 'Description for menu, testing 2',
-        'startDate': '2015-04-29',
-        'endDate': '2015-05-30',
-        'createdBy': 1,
-        'createdOn': '2015-04-27 22:04:00.266856',
-        'updatedBy': 1,
-        'updatedOn': '2015-04-28 21:56:11.001683',
-        'menuItems': [{
-          'id': 249,
-          'itemId': 331,
-          'itemName': 'Test Item',
-          'menuId': 122,
-          'itemQty': 4
-        }]
-      }],
-      'meta': {
-        'count': 2,
-        'limit': 2,
-        'start': 0
-      }
-    };
-
-    $scope.menuList = menuAPIResponse.menus;
-
-    stationAPIResponse = {
-
-      'response': [{
-        'id': 1,
-        'companyId': 326,
-        'code': 'ORD',
-        'name': 'Chicago O-hare'
-      }, {
-        'id': 2,
-        'companyId': 326,
-        'code': 'MDW',
-        'name': 'Chicago Midway'
-      }, {
-        'id': 8,
-        'companyId': 326,
-        'code': 'LAX',
-        'name': 'Los Angeles'
-      }, {
-        'id': 9,
-        'companyId': 326,
-        'code': 'MIA',
-        'name': 'Miami'
-      }, {
-        'id': 10,
-        'companyId': 326,
-        'code': 'IAH',
-        'name': 'Houston'
-      }, {
-        'id': 19,
-        'companyId': 326,
-        'code': 'ALC',
-        'name': 'Alicante'
-      }, {
-        'id': 20,
-        'companyId': 326,
-        'code': 'BCN',
-        'name': 'Barcelona'
-      }, {
-        'id': 21,
-        'companyId': 326,
-        'code': 'AGP',
-        'name': 'Malaga'
-      }, {
-        'id': 22,
-        'companyId': 326,
-        'code': 'VLC',
-        'name': 'Valencia'
-      }, {
-        'id': 23,
-        'companyId': 326,
-        'code': 'CPH',
-        'name': 'Copenhagen'
-      }, {
-        'id': 24,
-        'companyId': 326,
-        'code': 'SKS',
-        'name': 'Vojens'
-      }, {
-        'id': 25,
-        'companyId': 326,
-        'code': 'EKHG',
-        'name': 'Herning'
-      }, {
-        'id': 26,
-        'companyId': 326,
-        'code': 'BSL',
-        'name': 'Basel'
-      }, {
-        'id': 27,
-        'companyId': 326,
-        'code': 'GVA',
-        'name': 'Geneva'
-      }, {
-        'id': 28,
-        'companyId': 326,
-        'code': 'ZRH',
-        'name': 'Zurich'
-      }, {
-        'id': 29,
-        'companyId': 326,
-        'code': 'BRN',
-        'name': 'Bern'
-      }, {
-        'id': 30,
-        'companyId': 326,
-        'code': 'ZHI',
-        'name': 'Grenchen'
-      }, {
-        'id': 39,
-        'companyId': 326,
-        'code': 'LON',
-        'name': 'Heathrow Intl'
-      }, {
-        'id': 41,
-        'companyId': 326,
-        'code': 'LGW',
-        'name': 'Gatwick '
-      }, {
-        'id': 43,
-        'companyId': 326,
-        'code': 'LPL',
-        'name': 'Liverpool '
-      }, {
-        'id': 44,
-        'companyId': 326,
-        'code': 'LTN',
-        'name': 'Luton '
-      }, {
-        'id': 45,
-        'companyId': 326,
-        'code': 'MAD',
-        'name': 'Madrid '
-      }],
-      'meta': {
-        'count': 22,
-        'limit': 22,
-        'start': 0
-      }
-    };
-
-    $scope.stationList = stationAPIResponse.response;
+    this.init();
 
   });
