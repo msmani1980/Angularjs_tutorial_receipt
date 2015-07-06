@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The StockOwnerItemListCtrl controller', function () {
+describe('The StockOwnerItemListCtrl controller', function() {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -22,11 +22,11 @@ describe('The StockOwnerItemListCtrl controller', function () {
     httpBackend;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope, _itemsService_,
+  beforeEach(inject(function($q, $controller, $rootScope, _itemsService_,
     _itemTypesService_, _salesCategoriesService_,
     $location, $httpBackend) {
 
-    inject(function (_servedItemsList_, _servedItemTypes_,
+    inject(function(_servedItemsList_, _servedItemTypes_,
       _servedSalesCategories_) {
       itemsListJSON = _servedItemsList_;
       itemTypesJSON = _servedItemTypes_;
@@ -56,7 +56,7 @@ describe('The StockOwnerItemListCtrl controller', function () {
       getSalesCategoriesDeferred.promise);
 
     spyOn(itemsService, 'removeItem').and.returnValue({
-      then: function () {
+      then: function() {
         return;
       }
     });
@@ -66,112 +66,120 @@ describe('The StockOwnerItemListCtrl controller', function () {
     });
     scope.$digest();
 
+
+    spyOn(scope, 'searchRecords');
     spyOn(StockOwnerItemListCtrl, 'getItemsList');
     spyOn(StockOwnerItemListCtrl, 'getItemTypesList');
     spyOn(StockOwnerItemListCtrl, 'getSalesCategoriesList');
+    spyOn(StockOwnerItemListCtrl, 'generateItemQuery');
 
     StockOwnerItemListCtrl.getItemsList();
     StockOwnerItemListCtrl.getItemTypesList();
     StockOwnerItemListCtrl.getSalesCategoriesList();
+    StockOwnerItemListCtrl.generateItemQuery();
   }));
 
-  afterEach(function () {
+  afterEach(function() {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should have a getItemsList method', function () {
+  it('should have a getItemsList method', function() {
     expect(StockOwnerItemListCtrl.getItemsList).toBeDefined();
   });
 
-  it('should call the getItemsList method', function () {
+  it('should call the getItemsList method', function() {
     expect(StockOwnerItemListCtrl.getItemsList).toHaveBeenCalled();
   });
 
-  it('should have a getItemTypesList method', function () {
+  it('should have a getItemTypesList method', function() {
     expect(StockOwnerItemListCtrl.getItemTypesList).toBeDefined();
   });
 
-  it('should call the getItemTypesList method', function () {
+  it('should call the getItemTypesList method', function() {
     expect(StockOwnerItemListCtrl.getItemTypesList).toHaveBeenCalled();
   });
 
-  it('should have a getItemsList method', function () {
+  it('should have a getItemsList method', function() {
     expect(StockOwnerItemListCtrl.getItemsList).toBeDefined();
   });
 
-  it('should call the getSalesCategoriesList method', function () {
+  it('should call the getSalesCategoriesList method', function() {
     expect(StockOwnerItemListCtrl.getSalesCategoriesList).toHaveBeenCalled();
   });
 
-  it('should have a parseDate method', function () {
+  it('should have a parseDate method', function() {
     expect(StockOwnerItemListCtrl.parseDate).toBeDefined();
   });
 
-  it('should have a filterItems method', function () {
+  it('should have a filterItems method', function() {
     expect(StockOwnerItemListCtrl.filterItems).toBeDefined();
   });
 
-  it('should have a generateItemQuery method', function () {
+  it('should have a filterItems method', function() {
+    expect(StockOwnerItemListCtrl.filterItems).toBeDefined();
+  });
+
+  it('should have a generateItemQuery method', function() {
     expect(StockOwnerItemListCtrl.generateItemQuery).toBeDefined();
   });
 
-  describe('The itemsList array', function () {
+  describe('The itemsList array', function() {
 
-    it('should be attached to the scope', function () {
+    it('should be attached to the scope', function() {
       expect(scope.itemsList).toBeDefined();
     });
 
-    it('should have more than 1 item in the itemsList', function () {
+    it('should have more than 1 item in the itemsList', function() {
       expect(scope.itemsList.length).toBeGreaterThan(1);
     });
 
-    it('should match the response from the API', function () {
+    it('should match the response from the API', function() {
       expect(scope.itemsList).toEqual(itemsListJSON.retailItems);
     });
 
-    describe('contains an item object which', function () {
+    describe('contains an item object which', function() {
 
       var item;
-      beforeEach(function () {
+      beforeEach(function() {
         item = scope.itemsList[1];
       });
 
-      it('should be defined', function () {
+      it('should be defined', function() {
         expect(item).toBeDefined();
       });
 
-      it('should have an id property and is a string', function () {
+      it('should have an id property and is a string', function() {
         expect(item.id).toBeDefined();
         expect(item.id).toEqual(jasmine.any(String));
       });
 
       it('should have an itemCode property and is a string',
-        function () {
+        function() {
           expect(item.itemCode).toBeDefined();
           expect(item.itemCode).toEqual(jasmine.any(String));
         });
 
       it('should have an stockOwnerCode property and is a string',
-        function () {
+        function() {
           expect(item.stockOwnerCode).toBeDefined();
           expect(item.stockOwnerCode).toEqual(jasmine.any(String));
         });
 
       it('should have an itemName property and is a string',
-        function () {
+        function() {
           expect(item.itemName).toBeDefined();
           expect(item.itemName).toEqual(jasmine.any(String));
         });
 
       it('should have an itemTypeId property and is a number',
-        function () {
+        function() {
           expect(item.itemTypeId).toBeDefined();
           expect(item.itemTypeId).toEqual(jasmine.any(Number));
         });
 
       it('should have an categoryName property and is a string',
-        function () {
+        function() {
           expect(item.categoryName).toBeDefined();
           expect(item.categoryName).toEqual(jasmine.any(String));
         });
@@ -180,26 +188,39 @@ describe('The StockOwnerItemListCtrl controller', function () {
 
   });
 
-  describe('The Pagination', function () {
+  describe('The Pagination', function() {
 
-    it('should attach currentPage to the scope', function () {
+    it('should attach currentPage to the scope', function() {
       expect(scope.currentPage).toBeDefined();
       expect(scope.currentPage).toEqual(1);
     });
 
-    it('should attach itemsPerPage to the scope', function () {
+    it('should attach itemsPerPage to the scope', function() {
       expect(scope.itemsPerPage).toBeDefined();
       expect(scope.itemsPerPage).toEqual(10);
     });
 
-    it('should attach currentPageInt to the scope', function () {
+    it('should attach currentPageInt to the scope', function() {
       expect(scope.currentPageInt).toBeDefined();
       expect(scope.currentPageInt).toEqual(1);
     });
 
-    it('should attach itemsPerPageInt to the scope', function () {
+    it('should attach itemsPerPageInt to the scope', function() {
       expect(scope.itemsPerPageInt).toBeDefined();
       expect(scope.itemsPerPageInt).toEqual(10);
+    });
+
+  });
+
+  describe('searchRecords', function() {
+
+    it('should be defined', function() {
+      expect(scope.searchRecords).toBeDefined();
+    });
+
+    it('should be called if initialized', function() {
+      scope.searchRecords();
+      expect(scope.searchRecords).toHaveBeenCalled();
     });
 
   });
