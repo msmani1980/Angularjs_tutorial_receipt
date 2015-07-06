@@ -511,6 +511,16 @@ angular.module('ts5App')
 
     };
 
+    $scope.isMeasurementRequired = function () {
+      return ($scope.formData.width || $scope.formData.length || $scope.formData
+        .height);
+    };
+
+    $scope.isMeasurementValid = function () {
+      return ($scope.formData.width && $scope.formData.length && $scope.formData
+        .height && $scope.formData.dimensionType);
+    };
+
     // TODO: MOVE ME GLOBAL
     $scope.formScroll = function (id, activeBtn) {
 

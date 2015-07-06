@@ -621,6 +621,7 @@ angular.module('ts5App')
 
     }
 
+    // TODO: make this a controller function
     // Formats the dates when sending the payload to the API
     function formatPayloadDates(itemData) {
       itemData.startDate = formatDate(itemData.startDate, 'L', 'YYYYMMDD');
@@ -746,6 +747,16 @@ angular.module('ts5App')
         createItem(itemData);
       }
 
+    };
+
+    $scope.isMeasurementRequired = function () {
+      return ($scope.formData.width || $scope.formData.length || $scope.formData
+        .height);
+    };
+
+    $scope.isMeasurementValid = function () {
+      return ($scope.formData.width && $scope.formData.length && $scope.formData
+        .height && $scope.formData.dimensionType);
     };
 
     // TODO: MOVE ME GLOBAL

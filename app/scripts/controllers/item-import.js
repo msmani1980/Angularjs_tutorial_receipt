@@ -91,18 +91,20 @@ angular.module('ts5App')
           importedRetailItemIds.push(parseInt(retailItem.itemMasterId));
         }
       });
-      var payload = {ImportItems:{importItems: importedRetailItemIds}};
-      itemImportFactory.importItems(payload).then(function(){
-        $scope.displayError = false;
-        showMessage('successful!', 'success');
-        this.constructor();
-      }, function(response) {
-        showMessage('failed!', 'warning');
-        $scope.displayError = true;
-        if ('data' in response) {
-          $scope.formErrors = response.data;
-        }
-      });
+      if(importedRetailItemIds.length) {
+        var payload = {ImportItems: {importItems: importedRetailItemIds}};
+        itemImportFactory.importItems(payload).then(function () {
+          $scope.displayError = false;
+          showMessage('successful!', 'success');
+          this.constructor();
+        }, function (response) {
+          showMessage('failed!', 'warning');
+          $scope.displayError = true;
+          if ('data' in response) {
+            $scope.formErrors = response.data;
+          }
+        });
+      }
     };
 
     function canBeAddedToCompanyRetailList(retailItem){
@@ -125,7 +127,7 @@ angular.module('ts5App')
       if(retailItem.hasOwnProperty('itemName') && -1 === _companyRetailItemNames.indexOf(retailItem.itemName)) {
         _companyRetailItemNames.push(retailItem.itemName);
       }
-      if(retailItem.hasOwnProperty('onBoardName') && -1 === _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName)) {
+      if(retailItem.hasOwnProperty('onBoardName') && -1 === _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName) && retailItem.onBoardName !== null) {
         _companyRetailItemOnboardNames.push(retailItem.onBoardName);
       }
       if(-1 === $scope.companyRetailItemList.indexOf(retailItem)) {

@@ -1,3 +1,24 @@
+<div class="modal fade delete-warning-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure?</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about to permanently delete <strong>{{itemToDelete.itemQty}} {{ itemToDelete.itemName }}</strong></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deleteItemFromMenu()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <form name="menuEditForm" class="form edit-form">
 
   <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
@@ -39,7 +60,7 @@
     <p>All required fields are marked with a *</p>
   </div>
 
-  <h3 id="item-information">Menu Information</h3>
+  <h3>Menu Information</h3>
 
   <div class="form-group col-sm-3">
     <label for="menuCode">Menu Code *</label>
@@ -47,7 +68,6 @@
            custom-pattern="alpha"
            required
            type="text"
-           name="menuCode"
            maxlength="10"
            class="form-control"
            id="menuCode"
@@ -63,16 +83,15 @@
            required
            type="text"
            maxlength="25"
-           name="menuName"
            class="form-control"
            id="menuName"
            ng-model="menu.menuName"
-           placeholder="ITM001"
+           placeholder="iPad Mini Retina"
            ng-readonly="isMenuReadOnly()"/>
   </div>
 
   <date-picker
-    class="col-sm-6 col-xs-12"
+    class="form-group col-sm-6 col-xs-12"
     element-class="col-xs-6 col-sm-6"
     start-date-model="menu.startDate"
     end-date-model="menu.endDate"
@@ -88,27 +107,68 @@
            custom-pattern="alpha"
            type="text"
            maxlength="50"
-           name="description"
            class="form-control"
            id="menuDescription"
            ng-model="menu.description"
            placeholder="ITM001"
-           ng-readonly="isMenuReadOnly()">
+           ng-readonly="isMenuReadOnly()"/>
   </div>
+
+  <h3>Menu Items <a class="pull-right" ng-click="addItem()" ng-show="!isMenuReadOnly()">Add Item</a></h3>
+
   <table class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
-      <th>Item Name</th>
-      <th>Quantity</th>
+      <th class="col-xs-10">Item Name</th>
+      <th class="col-xs-1">Quantity</th>
+      <th ng-show="shouldShowActions()" class="col-xs-1">Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="menuItem in menuItemsList">
+    <tr ng-repeat="blankItem in newItemList track by $index"
+        ng-show="shouldShowActions()">
+      <td>
+        <ui-select
+          required="true"
+          ng-model="newItemList[$index].masterItem"
+          theme="bootstrap"
+          placeholder="Select or search an item from the list...">
+          <ui-select-match
+            placeholder="Select or search an item from the list...">{{ $select.selected.itemName}}
+          </ui-select-match>
+          <ui-select-choices repeat="menuItem in masterItemsList | filter: $select.search | orderBy:'itemName'">
+            <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </td>
+      <td>
+        <input custom-validity
+               custom-pattern="number"
+               type="text"
+               required
+               maxlength="5"
+               class="form-control"
+               ng-model="newItemList[$index].itemQty"
+               placeholder="{{$index}}"/>
+      </td>
+      <td>
+        <button class="btn btn-danger btn-xs" ng-click="deleteNewItem($index)">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+
+    <tr ng-repeat="menuItem in menu.menuItems">
       <td>{{menuItem.itemName}}</td>
       <td>{{menuItem.itemQty}}</td>
+      <td ng-show="shouldShowActions()">
+        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menuItem)">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>
     </tr>
+
     </tbody>
   </table>
-
 
 </form>
