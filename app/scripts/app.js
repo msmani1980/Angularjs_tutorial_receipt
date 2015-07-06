@@ -20,6 +20,7 @@ angular
     'ngTouch',
     'ngStorage',
     'ui.bootstrap',
+    'ui.select',
     'angular.filter',
     'ngFileUpload',
     'ja.qr',
