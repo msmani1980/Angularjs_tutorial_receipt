@@ -22,14 +22,13 @@ angular.module('ts5App')
 
     // scope properties
     $scope.viewName = 'Import Stock Owner Items';
-    $scope.showIdColumn = true;
 
     // scope functions
     $scope.changeSelectedImportCompany = function () {
-      if (!angular.isDefined($scope.selectedImportCompany)) {
+      if (!$scope.selectedImportCompany) {
         return false;
       }
-      if(!angular.isDefined($scope.selectedImportCompany.id)){
+      if(!$scope.selectedImportCompany.id){
         return false;
       }
       itemImportFactory.getItemsList({companyId: $scope.selectedImportCompany.id}).then(function (response) {
@@ -127,7 +126,7 @@ angular.module('ts5App')
       $q.all(submitPromises).then(function(){
         if(!errors.length){
           $scope.displayError = false;
-          showMessage('successful!', 'success');
+          showMessage('saved!', 'success');
           init();
         }
         else{
@@ -136,15 +135,6 @@ angular.module('ts5App')
           $scope.displayError = true;
         }
       });
-      /*
-      var importedRetailItemIds = [];
-      angular.forEach($scope.companyRetailItemList, function (retailItem) {
-        if (!$scope.isCompanyItem(retailItem)) {
-          retailItem.stockOwnerCode = retailItem.itemCode;
-          importedRetailItemIds.push(parseInt(retailItem.itemMasterId));
-        }
-      });
-      */
     };
 
     $scope.canRemove = function(retailItem){
@@ -152,13 +142,13 @@ angular.module('ts5App')
     };
 
     function canBeAddedToCompanyRetailList(retailItem){
-      if (-1 !== _companyRetailItemCodes.indexOf(retailItem.itemCode)){
+      if (retailItem.itemCode && -1 !== _companyRetailItemCodes.indexOf(retailItem.itemCode)){
         return false;
       }
-      if (-1 !== _companyRetailItemNames.indexOf(retailItem.itemName)){
+      if (retailItem.itemName && -1 !== _companyRetailItemNames.indexOf(retailItem.itemName.toLowerCase())){
         return false;
       }
-      if (-1 !== _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName)){
+      if (retailItem.onBoardName && -1 !== _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName.toLowerCase())){
         return false;
       }
       if (-1 !== $scope.companyRetailItemList.indexOf(retailItem)){
@@ -175,40 +165,46 @@ angular.module('ts5App')
         _removedItemCodes.push(retailItem.itemCode);
         _removedItemObjects.push(retailItem);
       }
-      _companyRetailItemCodes.splice(_companyRetailItemCodes.indexOf(retailItem.itemCode), 1);
-      _companyRetailItemNames.splice(_companyRetailItemNames.indexOf(retailItem.itemName), 1);
-      _companyRetailItemOnboardNames.splice(_companyRetailItemOnboardNames.indexOf(retailItem.onBoardName), 1);
+      if(retailItem.itemCode) {
+        _companyRetailItemCodes.splice(_companyRetailItemCodes.indexOf(retailItem.itemCode), 1);
+      }
+      if(retailItem.itemName) {
+        _companyRetailItemNames.splice(_companyRetailItemNames.indexOf(retailItem.itemName.toLowerCase()), 1);
+      }
+      if(retailItem.onBoardName) {
+        _companyRetailItemOnboardNames.splice(_companyRetailItemOnboardNames.indexOf(retailItem.onBoardName.toLowerCase()), 1);
+      }
       $scope.companyRetailItemList.splice($scope.companyRetailItemList.indexOf(retailItem), 1);
 
       if($scope.isCompanyItem(retailItem) && -1 === _onSaveRemoveItems.indexOf(parseInt(retailItem.id))) {
         _onSaveRemoveItems.push(parseInt(retailItem.id));
       }
-      var onSaveAddIndex = _onSaveAddItems.indexOf(parseInt(retailItem.id));
+      var onSaveAddIndex = _onSaveAddItems.indexOf(parseInt(retailItem.itemMasterId));
       if(!$scope.isCompanyItem(retailItem) && -1 !== onSaveAddIndex) {
         _onSaveAddItems.splice(onSaveAddIndex, 1);
       }
-      if(angular.isDefined($scope.selectedImportCompany) && $scope.selectedImportCompany.id === retailItem.companyId) {
+      if($scope.selectedImportCompany && $scope.selectedImportCompany.id === retailItem.companyId) {
         $scope.importedRetailItemList.push(retailItem);
       }
       $scope.formChanged = formChanged();
     }
 
     function addRetailItemToCompanyRetailItems(retailItem){
-      if(angular.isDefined(retailItem.itemCode) && -1 === _companyRetailItemCodes.indexOf(retailItem.itemCode)) {
+      if(retailItem.itemCode && -1 === _companyRetailItemCodes.indexOf(retailItem.itemCode)) {
         _companyRetailItemCodes.push(retailItem.itemCode);
       }
-      if(angular.isDefined(retailItem.itemName) && -1 === _companyRetailItemNames.indexOf(retailItem.itemName)) {
-        _companyRetailItemNames.push(retailItem.itemName);
+      if(retailItem.itemName && -1 === _companyRetailItemNames.indexOf(retailItem.itemName.toLowerCase())) {
+        _companyRetailItemNames.push(retailItem.itemName.toLowerCase());
       }
-      if(angular.isDefined(retailItem.onBoardName) && -1 === _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName) && retailItem.onBoardName !== null) {
-        _companyRetailItemOnboardNames.push(retailItem.onBoardName);
+      if(retailItem.onBoardName && -1 === _companyRetailItemOnboardNames.indexOf(retailItem.onBoardName.toLowerCase()) && retailItem.onBoardName !== null) {
+        _companyRetailItemOnboardNames.push(retailItem.onBoardName.toLowerCase());
       }
       if(-1 === $scope.companyRetailItemList.indexOf(retailItem)) {
         $scope.companyRetailItemList.push(retailItem);
       }
 
-      if(!$scope.isCompanyItem(retailItem) && $scope.canRemove(retailItem) && -1 === _onSaveAddItems.indexOf(parseInt(retailItem.id))) {
-        _onSaveAddItems.push(parseInt(retailItem.id));
+      if(!$scope.isCompanyItem(retailItem) && $scope.canRemove(retailItem) && -1 === _onSaveAddItems.indexOf(parseInt(retailItem.itemMasterId))) {
+        _onSaveAddItems.push(parseInt(retailItem.itemMasterId));
       }
 
       if($scope.isCompanyItem(retailItem)) {

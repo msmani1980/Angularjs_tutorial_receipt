@@ -157,7 +157,7 @@
           ui-draggable="true"
           drag="importedRetailItem"
           on-drop-success="dropSuccessHandler($event, $index, importedRetailItemList)"
-          ng-repeat="importedRetailItem in importedRetailItemList | filter:{itemCode:searchImportCompanyList,itemName:searchImportCompanyList}">
+          ng-repeat="importedRetailItem in importedRetailItemList | filter:searchImportCompanyList">
           <td ng-style="{'background-color':importedRetailItem.hexColor}">&nbsp;</td>
           <td>{{ importedRetailItem.companyName }}</td>
           <td>{{ importedRetailItem.itemCode }}</td>
@@ -185,7 +185,7 @@
           ui-draggable="true"
           drag="retailItem"
           on-drop-success="dropSuccessHandler($event, $index, companyRetailItemList)"
-          ng-repeat="retailItem in companyRetailItemList | filter:{itemCode:searchCompanyRetailItemList,itemName:searchCompanyRetailItemList}">
+          ng-repeat="retailItem in companyRetailItemList | filter:searchCompanyRetailItemList">
           <td ng-style="{'background-color':retailItem.hexColor}">&nbsp;</td>
           <td>{{ retailItem.companyName }}</td>
           <td>{{ retailItem.itemCode }}</td>
