@@ -72,11 +72,13 @@ describe('The StockOwnerItemListCtrl controller', function() {
     spyOn(StockOwnerItemListCtrl, 'getItemTypesList');
     spyOn(StockOwnerItemListCtrl, 'getSalesCategoriesList');
     spyOn(StockOwnerItemListCtrl, 'generateItemQuery');
+    spyOn(StockOwnerItemListCtrl, 'displayLoadingModal');
 
     StockOwnerItemListCtrl.getItemsList();
     StockOwnerItemListCtrl.getItemTypesList();
     StockOwnerItemListCtrl.getSalesCategoriesList();
     StockOwnerItemListCtrl.generateItemQuery();
+    StockOwnerItemListCtrl.displayLoadingModal();
   }));
 
   afterEach(function() {
@@ -214,13 +216,24 @@ describe('The StockOwnerItemListCtrl controller', function() {
 
   describe('searchRecords', function() {
 
+    beforeEach(function() {
+      scope.searchRecords();
+    });
+
     it('should be defined', function() {
       expect(scope.searchRecords).toBeDefined();
     });
 
     it('should be called if initialized', function() {
-      scope.searchRecords();
       expect(scope.searchRecords).toHaveBeenCalled();
+    });
+
+    it('should call this.getItemsList', function() {
+      expect(StockOwnerItemListCtrl.getItemsList).toHaveBeenCalled();
+    });
+
+    it('should call this.displayLoadingModal', function() {
+      expect(StockOwnerItemListCtrl.displayLoadingModal).toHaveBeenCalled();
     });
 
   });
