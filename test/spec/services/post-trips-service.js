@@ -99,7 +99,7 @@ describe('Service: postTripService', function () {
         var postTrip = {
 
         };
-        var regex = new RegExp('cash-bags/' + cashBagId, 'g');
+        var regex = new RegExp('/' + cashBagId, 'g');
         $httpBackend.expectGET(regex).respond(postTripDataListResponseJSON);
 
         postTripsService.createPostTrip(companyId, postTrip).then(function (dataFromAPI) {
