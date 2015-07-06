@@ -40,21 +40,30 @@ angular.module('ts5App')
     };
 
     var getMenu = function (menuId) {
-      return requestResource.getMenu({id: menuId}).$promise;
+      return requestResource.getMenu({
+        id: menuId
+      }).$promise;
     };
 
     var deleteMenu = function (menuId) {
-      return requestResource.deleteMenu({id: menuId}).$promise;
+      return requestResource.deleteMenu({
+        id: menuId
+      }).$promise;
     };
 
     var updateMenu = function (payload) {
       return requestResource.updateMenu(payload).$promise;
     };
 
+    var createMenu = function (payload) {
+      return requestResource.createMenu(payload).$promise;
+    };
+
     return {
       getMenuList: getMenuList,
       deleteMenu: deleteMenu,
       getMenu: getMenu,
-      updateMenu: updateMenu
+      updateMenu: updateMenu,
+      createMenu: createMenu
     };
   });
