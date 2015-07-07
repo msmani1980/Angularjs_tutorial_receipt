@@ -82,6 +82,8 @@ angular.module('ts5App')
         elementClass: '@',
         labelFrom: '@',
         labelTo: '@',
+        nameFrom: '@',
+        nameTo: '@',
         disablePast: '@',
         disableStartDate: '=',
         disableEndDate: '=',
