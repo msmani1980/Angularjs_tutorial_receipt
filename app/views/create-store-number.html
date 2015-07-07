@@ -25,11 +25,11 @@
            required
            type="text"
            maxlength="10"
-           min-length="1"
+           minlength="10"
            class="form-control"
            id="storeNumber"
            ng-model="formData.storeNumber"
-           placeholder="Store123"/>
+           placeholder="store12345"/>
       </div>
       <div class="col-xs-12 col-sm-6">
         <date-picker class="form-group"
@@ -59,7 +59,7 @@
     <tbody>
     <tr
       ng-repeat="store in storeNumbersList">
-      <td>{{ store.number }}</td>
+      <td>{{ store.storeNumber }}</td>
       <td>{{ store.startDate }}</td>
       <td>{{ store.endDate }}</td>
     </tr>

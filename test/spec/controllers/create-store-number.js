@@ -1,25 +1,32 @@
 'use strict';
 
-describe('Controller: CreateStoreNumberCtrl', function () {
+describe('Controller: createStoreNumberCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
 
+  beforeEach(module('served/company-stores.json'));
+
   var CreateStoreNumberCtrl,
     scope,
-    createCompanyDeferred,
+    createStoreDeferred,
+    getStoresDeferred,
     companyId,
-    companyService;
+    companyStoresService;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _GlobalMenuService_, _companyService_) {
+  beforeEach(inject(function ($controller, $rootScope, $q, _GlobalMenuService_, _companyStoresService_, _servedCompanyStores_) {
     scope = $rootScope.$new();
 
-    companyService = _companyService_;
+    companyStoresService = _companyStoresService_;
 
-    createCompanyDeferred = $q.defer();
-    createCompanyDeferred.resolve({response:200});
-    spyOn(companyService, 'createStore').and.returnValue(createCompanyDeferred.promise);
+    createStoreDeferred = $q.defer();
+    createStoreDeferred.resolve({response:200});
+    spyOn(companyStoresService, 'createStore').and.returnValue(createStoreDeferred.promise);
+
+    getStoresDeferred = $q.defer();
+    getStoresDeferred.resolve(_servedCompanyStores_);
+    spyOn(companyStoresService, 'getStores').and.returnValue(getStoresDeferred.promise);
 
     companyId = _GlobalMenuService_.company.get();
 
@@ -41,10 +48,13 @@ describe('Controller: CreateStoreNumberCtrl', function () {
     });
   });
 
-  describe('init', function(){
+  describe('controller init function', function(){
     it('should set formData in scope', function(){
       expect(scope.formData).toBeDefined();
       expect(Object.prototype.toString.call(scope.formData)).toBe('[object Object]');
+    });
+    it('should call companyService.getStores', function(){
+      expect(companyStoresService.getStores).toHaveBeenCalledWith(companyId);
     });
     it('should set storeNumbersList in scope', function(){
       expect(scope.storeNumbersList).toBeDefined();
@@ -59,20 +69,20 @@ describe('Controller: CreateStoreNumberCtrl', function () {
       var returnVal = scope.submitForm();
       expect(returnVal).toBe(false);
     });
-    it('should call companyService\' createStore', function(){
+    it('should call companyStoresService.createStore', function(){
       scope.formData = {
-        storeNumber: '123',
-        startDate: '123',
-        endDate: '123'
+        storeNumber: 'qwert12345',
+        startDate: '07/09/2015',
+        endDate: '07/10/2015'
       };
       scope.createStoreNumberForm = {$invalid:false};
       scope.$digest();
       var payload = angular.copy(scope.formData);
-      payload.id = companyId;
-      payload.action = 'stores';
+      payload.startDate = '20150709';
+      payload.endDate = '20150710';
 
       scope.submitForm();
-      expect(companyService.createStore).toHaveBeenCalledWith(payload);
+      expect(companyStoresService.createStore).toHaveBeenCalledWith(payload);
     });
   });
 
