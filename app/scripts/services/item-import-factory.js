@@ -24,11 +24,15 @@ angular.module('ts5App')
     var importItems = function(payload){
       return itemImportService.importItems(payload);
     };
+    var removeItem = function(id){
+      return itemsService.removeItem(id);
+    };
     return {
       getCompanyId: getCompanyId,
       getCompanyList: getCompanyList,
       getItemsList: getItemsList,
       createItem: createItem,
-      importItems: importItems
+      importItems: importItems,
+      removeItem: removeItem
     };
   });
