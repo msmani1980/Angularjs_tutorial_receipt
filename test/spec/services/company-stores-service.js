@@ -31,8 +31,8 @@ describe('Service: companyStoresService', function () {
         expect(Object.prototype.toString.call(companyStoresService.getStores)).toBe('[object Function]');
       });
       it('should make a GET request', function(){
-        companyStoresService.getStores();
         $httpBackend.expectGET(/companies\/\d+\/stores/g).respond(200, '');
+        companyStoresService.getStores();
         $httpBackend.flush();
       });
     });
@@ -49,8 +49,8 @@ describe('Service: companyStoresService', function () {
           startDate: '20150708',
           storeNumber: 'poiuy09887'
         };
-        companyStoresService.createStore(mockPayload);
         $httpBackend.expectPOST(/companies\/\d+\/stores/g, mockPayload).respond(201, '');
+        companyStoresService.createStore(mockPayload);
         $httpBackend.flush();
       });
 
