@@ -118,10 +118,6 @@ describe('The StockOwnerItemListCtrl controller', function() {
     expect(StockOwnerItemListCtrl.filterItems).toBeDefined();
   });
 
-  it('should have a filterItems method', function() {
-    expect(StockOwnerItemListCtrl.filterItems).toBeDefined();
-  });
-
   it('should have a generateItemQuery method', function() {
     expect(StockOwnerItemListCtrl.generateItemQuery).toBeDefined();
   });
@@ -138,6 +134,10 @@ describe('The StockOwnerItemListCtrl controller', function() {
 
     it('should match the response from the API', function() {
       expect(scope.itemsList).toEqual(itemsListJSON.retailItems);
+    });
+
+    it('should have a isItemActive method', function() {
+      expect(scope.isItemActive).toBeDefined();
     });
 
     describe('contains an item object which', function() {

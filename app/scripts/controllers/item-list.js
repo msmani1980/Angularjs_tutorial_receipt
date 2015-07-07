@@ -53,10 +53,10 @@ angular.module('ts5App')
       angular.extend(query, $scope.search);
 
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
-        query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
-          'L', 'YYYYMMDD');
-        query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
-          'L', 'YYYYMMDD');
+        query.startDate = dateUtility.formatDateForAPI($scope.dateRange
+          .startDate);
+        query.endDate = dateUtility.formatDateForAPI($scope.dateRange
+          .endDate);
       }
       return query;
     };
@@ -98,10 +98,9 @@ angular.module('ts5App')
 
     $scope.removeRecord = function(itemId) {
       var itemIndex = $this.findItemIndex(itemId);
-      angular.element('#loading').modal('show').find('p').text(
-        'Removing your item');
+      this.displayLoadingModal('Removing Item');
       itemsFactory.removeItem(itemId).then(function() {
-        angular.element('#loading').modal('hide');
+        this.hideLoadingModal();
         $scope.itemsList.splice(itemIndex, 1);
         $this.updateItemList();
       });
@@ -111,14 +110,10 @@ angular.module('ts5App')
       return Date.parse(date);
     };
 
-    $scope.isItemActive = function(startDate) {
-      var parsedDate = $this.parseDate(startDate);
-      return parsedDate <= dateUtility.now();
-    };
-
-    $scope.isItemInactive = function(endDate) {
-      var parsedDate = $this.parseDate(endDate);
-      return parsedDate <= dateUtility.now();
+    $scope.isItemActive = function(date) {
+      var parsedDate = $this.parseDate(date);
+      var today = dateUtility.now();
+      return parsedDate <= today;
     };
 
     $scope.clearSearchFilters = function() {

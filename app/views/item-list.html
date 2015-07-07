@@ -146,11 +146,11 @@
 							<i class="fa fa-file"></i>
 						</a>
 
-						<a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{item.id}}" ng-hide="isItemInactive(item.endDate)">
+						<a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{item.id}}" ng-hide="isItemActive(item.endDate)">
 							<i class="fa fa-pencil"></i>
 						</a>
 
-						<button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id)" ng-hide="isItemActive(item.startDate) || isItemInactive(item.endDate)">
+						<button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id)" ng-hide="isItemActive(item.startDate) || isItemActive(item.endDate)">
 							<i class="fa fa-trash"></i>
 						</button>
 

@@ -145,6 +145,10 @@ describe('itemListCtrl', function() {
       expect(scope.itemsList).toEqual(itemsListJSON.retailItems);
     });
 
+    it('should have a isItemActive method', function() {
+      expect(scope.isItemActive).toBeDefined();
+    });
+
     describe('contains an item object which', function() {
       var item;
       beforeEach(function() {
