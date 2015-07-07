@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:CreatestorenumberCtrl
+ * @name ts5App.controller:createStoreNumberCtrl
  * @description
- * # CreatestorenumberCtrl
+ * # createStoreNumberCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
