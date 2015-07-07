@@ -113,10 +113,7 @@ angular.module('ts5App')
       angular.forEach(employeeIds, function(value) {
         $scope.postTrip.postTripEmployeeIdentifiers.push({employeeIdentifier:value});
       });
-      console.log($scope.postTrip);
-      postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(function(response){
-        console.log(response);
-      });
+      postTripFactory.createPostTrip(_companyId, $scope.postTrip);
     };
 
 

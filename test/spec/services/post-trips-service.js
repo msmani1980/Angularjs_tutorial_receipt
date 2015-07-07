@@ -56,25 +56,24 @@ describe('Service: postTripService', function () {
         it('should have a company id as payload', function () {
           var companyId = '403';
           var regex = new RegExp('companies/' + companyId + '/posttrips', 'g');
-          $httpBackend.expectGET(regex, headers).respond(200, '');
+          $httpBackend.expectGET(regex, headers);
           postTripsService.getPostTrips(companyId, {});
           $httpBackend.flush();
         });
 
-        //it('should take an optional payload parameter', function () {
-        //  var scheduleNumber = '123';
-        //  var payload = {scheduleNumber: scheduleNumber};
-        //  var regex = new RegExp('companies/403/posttrips?scheduleNumber=' + scheduleNumber, 'g');
-        //  $httpBackend.expectGET(regex, headers).respond(200, '');
-        //  postTripsService.getPostTrips('403', payload);
-        //  $httpBackend.flush();
-        //});
+        it('should take an optional payload parameter', function () {
+          var scheduleNumber = '123';
+          var payload = {scheduleNumber: scheduleNumber};
+          var regex = new RegExp('companies/403/posttrips\\?\.\*scheduleNumber=' + scheduleNumber, 'g');
+          $httpBackend.expectGET(regex, headers);
+          postTripsService.getPostTrips('403', payload);
+          $httpBackend.flush();
+        });
 
         it('should not need a payload parameter', function () {
-          var companyId = '413';
-          var regex = new RegExp('companies/413/posttrips', 'g');
-          $httpBackend.expectGET(regex, headers).respond(200, '');
-          postTripsService.getPostTrips(companyId);
+          var regex = new RegExp('companies/403/posttrips', 'g');
+          $httpBackend.expectGET(regex, headers);
+          postTripsService.getPostTrips('403');
           $httpBackend.flush();
         });
       });
@@ -88,19 +87,16 @@ describe('Service: postTripService', function () {
       });
 
       beforeEach(function () {
-        var regex = new RegExp('companies/' + companyId + '/posttrips', 'g');
+        var regex = new RegExp('companies/403/posttrips', 'g');
         $httpBackend.whenPOST(regex).respond({id: 36});
       });
 
       it('should POST data to posttrips API', function(){
+        var regex = new RegExp('companies/403/posttrips', 'g');
         postTripsService.createPostTrip('403', {});
         $httpBackend.expectPOST(regex);
         $httpBackend.flush();
       });
-
-
-
-
     });
 
     describe('updatePostTrip', function () {

@@ -137,20 +137,21 @@ describe('Controller: PostTripDataCtrl', function () {
 
     describe('create post trip', function () {
       beforeEach(function(){
-        scope.postTrip = {};
+        scope.postTrip = {scheduleDate:'07/17/2015'};
       });
 
       it('should reformat schedule date', function(){
-        scope.postTrip.scheduleDate = '06/01/2015';
+        var _companyId = companyId;
         scope.formSave();
-        expect(scope.postTrip.scheduleDate).toEqual('20150601');
+        expect(scope.postTrip.scheduleDate).toEqual('20150717');
       });
       it('should format employeeIds into array', function(){
+        scope.formSave();
         expect(Object.prototype.toString.call(scope.postTrip.postTripEmployeeIdentifiers)).toBe('[object Array]');
       });
       it('should call createPostTrip', function(){
         scope.formSave();
-        expect(postTripFactory.createPostTrip).toHaveBeenCalledWith(companyId, scope.postTrip);
+        expect(postTripFactory.createPostTrip).toHaveBeenCalled();
       });
     });
   });
