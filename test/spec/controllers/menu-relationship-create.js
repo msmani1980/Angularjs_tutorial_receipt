@@ -290,7 +290,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
         var saveButton;
         beforeEach(function () {
           saveButton = angular.element(controls.find(
-            '.btn-primary')[0]);
+            '.btn-success')[0]);
         });
         it('should be defined', function () {
           expect(saveButton[0]).toBeDefined();
@@ -319,7 +319,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
         });
         it('should contain the correct text', function () {
           expect(cancelButton.find('.btn-label').text().trim())
-            .toEqual('Cancel');
+            .toEqual('Back');
         });
       });
     });
