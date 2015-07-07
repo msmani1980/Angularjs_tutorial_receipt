@@ -37,8 +37,13 @@ angular.module('ts5App')
           });
         },
         getCarrierTypes: function () {
+          $scope.carrierNumbers = [];
           return postTripFactory.getCarrierTypes(_companyId).then(function (response) {
-            $scope.carrierTypes = response.response;
+            angular.forEach(response.response, function(item){
+              postTripFactory.getCarrierNumbers(_companyId, item.id).then(function(response){
+                $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
+              });
+            });
           });
         }
       };
@@ -47,21 +52,20 @@ angular.module('ts5App')
 
 
     $scope.searchPostTripData = function () {
-      postTripFactory.getPostTripDataList(_companyId, $scope.search);
-      // TODO: call API with search object
+      if($scope.search.scheduleDate) {
+        $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD');
+      }
+      postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function(response){
+        $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'YYYYMMDD').format('MM/DD/YYYY');
+        $scope.postTrips = response.postTrips;
+      });
     };
 
     $scope.clearSearchForm = function () {
       $('.stations-multi-select').select2('data', null);
       $scope.search = {};
-      // TODO: call API with empty search object
-    };
-
-    $scope.updateCarrierNumbers = function () {
-      postTripFactory.getCarrierNumbers(_companyId, $scope.search.carrierTypeId).then(function (response) {
-        $scope.carrierNumbers = response.response;
-      }, function () {
-        $scope.carrierNumbers = [];
+      postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function(response){
+        $scope.postTrips = response.postTrips;
       });
     };
 

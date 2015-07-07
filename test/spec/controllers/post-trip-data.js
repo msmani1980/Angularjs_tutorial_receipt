@@ -39,6 +39,7 @@ describe('Controller: PostTripDataCtrl', function () {
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
     spyOn(postTripFactory, 'getCarrierNumbers').and.returnValue(carrierNumbersDeferred.promise);
+    spyOn(postTripFactory, 'createPostTrip').and.returnValue({id:360});
 
     PostTripDataCtrl = $controller('PostFlightDataCtrl', {
       $scope: scope
@@ -77,6 +78,7 @@ describe('Controller: PostTripDataCtrl', function () {
         expect(postTripFactory.getCarrierNumbers).toHaveBeenCalled();
       });
     });
+
     describe('update arrival/departure info', function () {
       beforeEach(function () {
         scope.stationList = [{
@@ -143,15 +145,8 @@ describe('Controller: PostTripDataCtrl', function () {
         scope.formSave();
         expect(scope.postTrip.scheduleDate).toEqual('20150601');
       });
-      it('should reformat arrival/departure time', function(){
-        scope.postTrip.arrivalTime = '5:30';
-        scope.postTrip.departureTime = '03:22';
-        scope.formSave();
-        expect(scope.postTrip.arrivalTime).toEqual('05:30:00');
-        expect(scope.postTrip.departureTime).toEqual('03:22:00');
-      });
       it('should format employeeIds into array', function(){
-
+        expect(Object.prototype.toString.call(scope.postTrip.postTripEmployeeIdentifiers)).toBe('[object Array]');
       });
       it('should call createPostTrip', function(){
         scope.formSave();

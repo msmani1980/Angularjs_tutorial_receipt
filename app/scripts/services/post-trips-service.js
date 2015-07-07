@@ -40,7 +40,7 @@ angular.module('ts5App')
       if (arguments.length === 2) {
         payload = optionalPayload;
       }
-      payload.id = companyId;
+      requestParameters.id = companyId;
       return requestResource.getPostTrips(payload).$promise;
     }
     //
@@ -57,7 +57,7 @@ angular.module('ts5App')
     //}
     //
     function createPostTrip(companyId, payload) {
-      payload.id = companyId;
+      requestParameters.id = companyId;
       return requestResource.createPostTrips(companyId, payload).$promise;
     }
 

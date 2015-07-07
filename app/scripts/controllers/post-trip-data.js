@@ -105,11 +105,8 @@ angular.module('ts5App')
     $scope.formSave = function() {
       // TODO: fix once post trip API is finished and tested
       // TODO: validate data formats and check that values cannot be null
-      $scope.postTrip.scheduleDate = moment($scope.postTrip.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD');
 
-      // TODO: correct values for start and endDate
-      $scope.postTrip.startDate = '20150703';
-      $scope.postTrip.endDate = '20150704';
+      $scope.postTrip.scheduleDate = moment($scope.postTrip.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD');
 
       $scope.postTrip.postTripEmployeeIdentifiers = [];
       var employeeIds = $('.employeeID-multiple-select').select2('val');

@@ -3,11 +3,7 @@
 describe('Controller: PostFlightDataListCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('ts5App'));
-  beforeEach(module('served/stations.json'));
-  beforeEach(module('served/carrier-types.json'));
-  beforeEach(module('served/carrier-numbers.json'));
-  beforeEach(module('served/post-trips.json'));
+  beforeEach(module('ts5App', 'served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trips.json'));
 
   var PostTripDataListCtrl,
     scope,
@@ -73,18 +69,32 @@ describe('Controller: PostFlightDataListCtrl', function () {
         expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
       });
       it('should attach an array to scope', function(){
-      });
-      it('should contain scheduleNumber', function(){
-
-      });
-      it('should container departure station', function(){
-
-      });
-      it('shoudl contain arrival station', function(){
-
+        expect(Object.prototype.toString.call(scope.postTrips)).toBe('[object Array]');
       });
     });
 
+    describe('getStationList', function(){
+      it('should call getStationList', function(){
+        expect(postTripFactory.getStationList).toHaveBeenCalled();
+      });
+      it('should attach stationList array to scope', function(){
+        expect(scope.stationList).toBeDefined();
+        expect(Object.prototype.toString.call(scope.stationList)).toBe('[object Array]');
+      });
+    });
+
+    describe('getAllCarrierNumbers', function(){
+      it('should call getCarrierTypes', function(){
+        expect(postTripFactory.getCarrierTypes).toHaveBeenCalled();
+      });
+      it('should call getCarrierNumbers for each carrierType', function(){
+        expect(postTripFactory.getCarrierNumbers).toHaveBeenCalled();
+      });
+      it('should attach carrierNumbers array to scope', function(){
+        expect(scope.carrierNumbers).toBeDefined();
+        expect(Object.prototype.toString.call(scope.carrierNumbers)).toBe('[object Array]');
+      });
+    });
   });
 
   describe('search post trip data', function() {
@@ -101,21 +111,15 @@ describe('Controller: PostFlightDataListCtrl', function () {
     });
 
     it('should call getPostFlightData with search params', function(){
-      //scope.search = {data: 'data'};
-      //expect(postTripFactory.getPostTripData).toHaveBeenCalledWith(scope.search);
+      scope.searchPostTripData();
+      expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
     });
 
     it('should be able to clear search model and make an API call', function(){
-      //scope.search = {data: 'data'};
-      //scope.clearSearchForm();
-      //expect(postTripFactory.getPostTripData).toHaveBeenCalledWith({});
-    });
-  });
-
-  describe('updateCarrierNumber', function(){
-    it('should call getCarrierNumber', function(){
-      scope.updateCarrierNumbers();
-      expect(postTripFactory.getCarrierNumbers).toHaveBeenCalled();
+      scope.search = {data: 'data'};
+      scope.clearSearchForm();
+      expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
+      expect(scope.search).toEqual({});
     });
   });
 
