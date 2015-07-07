@@ -7,12 +7,10 @@ describe('Service: companyStoresService', function () {
 
   // instantiate service
   var companyStoresService,
-    urlRegex,
     $httpBackend;
-  beforeEach(inject(function (_GlobalMenuService_, $injector) {
+  beforeEach(inject(function ($injector) {
     companyStoresService = $injector.get('companyStoresService');
     $httpBackend = $injector.get('$httpBackend');
-    urlRegex = new RegExp('api/companies/'+_GlobalMenuService_.company.get()+'/stores', 'g');
   }));
 
   afterEach(function () {
@@ -34,7 +32,7 @@ describe('Service: companyStoresService', function () {
       });
       it('should make a GET request', function(){
         companyStoresService.getStores();
-        $httpBackend.expectGET(urlRegex).respond(200, '');
+        $httpBackend.expectGET(/companies\/\d+\/stores/g).respond(200, '');
         $httpBackend.flush();
       });
     });
@@ -52,7 +50,7 @@ describe('Service: companyStoresService', function () {
           storeNumber: 'poiuy09887'
         };
         companyStoresService.createStore(mockPayload);
-        $httpBackend.expectPOST(urlRegex, mockPayload).respond(201, '');
+        $httpBackend.expectPOST(/companies\/\d+\/stores/g, mockPayload).respond(201, '');
         $httpBackend.flush();
       });
 
