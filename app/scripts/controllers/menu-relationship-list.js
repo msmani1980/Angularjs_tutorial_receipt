@@ -20,14 +20,9 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
-    $scope.search = {
-      menu: {}
-    };
 
     this.init = function () {
       this.getRelationshipList();
-      $scope.$watch('search', $this.updateRelationshipList, true);
-      $scope.$watchCollection('dateRange', $this.getRelationshipList);
       $scope.$watch('currentPage + relationshipsPerPage', $this.updateRelationshipList);
     };
 
@@ -42,13 +37,8 @@ angular.module('ts5App')
     this.updateRelationshipList = function () {
       $this.associateMenuData();
       $this.associateStationData();
-      var filteredRelationships = $this.filterRelationships();
-      $scope.relationshipListCount = filteredRelationships.length;
-      $this.setPaginatedRelationships(filteredRelationships);
-    };
-
-    this.filterRelationships = function () {
-      return $filter('filter')($scope.relationshipList, $scope.search);
+      $scope.relationshipListCount = $scope.relationshipList.length;
+      $this.setPaginatedRelationships($scope.relationshipList);
     };
 
     this.setPaginatedRelationships = function (filteredRelationships) {
@@ -61,27 +51,29 @@ angular.module('ts5App')
     };
 
     this.generateRelationshipQuery = function () {
-      var query = {};
-      if ($scope.dateRange && $scope.dateRange.startDate && $scope.dateRange
-        .endDate) {
-        query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
-          'L', 'YYYYMMDD');
-        query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
-          'L', 'YYYYMMDD');
+      var query = {
+        limit: 100
+      };
+      angular.extend(query, $scope.search);
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        query.startDate = dateUtility.formatDateForAPI($scope.dateRange
+          .startDate);
+        query.endDate = dateUtility.formatDateForAPI($scope.dateRange
+          .endDate);
       }
       return query;
     };
 
     this.makePromises = function () {
-      var query = $this.generateRelationshipQuery();
       return [
         catererStationService.getCatererStationList(),
         menuService.getMenuList(),
-        menuCatererStationsService.getRelationshipList(query)
+        menuCatererStationsService.getRelationshipList()
       ];
     };
 
     this.getRelationshipList = function () {
+      $this.displayLoadingModal();
       var promises = $this.makePromises();
       $q.all(promises).then(function (response) {
         $this.setCatererStationList(response[0]);
@@ -92,6 +84,19 @@ angular.module('ts5App')
         $this.hideLoadingModal();
       });
     };
+
+    this.searchRelationshipList = function () {
+      $this.displayLoadingModal();
+      var query = $this.generateRelationshipQuery();
+      menuCatererStationsService.getRelationshipList(query).then(function (
+        response) {
+        $this.setRelationshipList(response);
+        $this.updateRelationshipList();
+        $this.hideLoadingModal();
+      });
+    };
+
+    $scope.searchRecords = this.searchRelationshipList;
 
     this.setRelationshipList = function (apiResponse) {
       $scope.relationshipList = apiResponse.companyMenuCatererStations;
@@ -204,20 +209,9 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchFilters = function () {
-      $scope.dateRange.startDate = '';
-      $scope.dateRange.endDate = '';
-      var filters = $scope.search;
-      for (var filterKey in filters) {
-        if (Object.keys(filters[filterKey]).length) {
-          var filterObject = filters[filterKey];
-          for (var key in filterObject) {
-            $scope.search[filterKey][key] = '';
-          }
-        } else {
-          $scope.search[filterKey] = '';
-        }
-      }
-      $scope.relationshipListCount = $scope.relationshipList.length;
+      $scope.dateRange = {};
+      $scope.search = {};
+      $this.searchRelationshipList();
     };
 
     this.init();

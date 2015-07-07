@@ -16,68 +16,82 @@
 					<span class="fa fa-plus" aria-hidden="true"></span> <span class="btn-label hidden-xs">Create Menu Relationship</span>
 				</a>
 
-        <button class="btn btn-default btn-search" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
-          <span class="fa fa-search" aria-hidden="true"></span>
-          <span class="btn-label hidden-xs">Search</span>
-        </button>
-
-        <button class="btn btn-default btn-search-clear"
-          ng-click="clearSearchFilters()"
-          ng-show="search.menu.menuCode.length || search.menu.menuName.length || search.stations.length || dateRange.startDate.length || dateRange.endDate.length">
-          <span class="btn-label">Clear</span>
-        </button>
+				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+					<span class="hidden-sm hidden-xs">Filter</span>
+				</button>
 
       </div>
 
 		</div>
 
-		<div class="collapse" id="search-collapse">
+		<div class="panel panel-default collapse no-transition" id="search-collapse">
 
 			<form class="form">
 
-				<div class="row">
+				<div class="panel-body">
 
-					<div class="col-xs-12 col-sm-6 col-md-4">
+					<div class="row">
 
-						<div class="form-group">
-							<label for="menu-code">Menu Code</label>
-							<input ng-model="search.menu.menuCode" type="text" class="form-control" placeholder="T1" />
+						<div class="col-xs-12 col-sm-6 col-md-4">
+
+							<div class="form-group">
+								<label for="menu-station">Menu Code</label>
+								<select ng-model="search.menuId" class="form-control">
+									<option value="{{menu.menuId}}" ng-repeat="menu in menuList | unique: 'id'">{{ menu.menuCode }}</option>
+								</select>
+							</div>
+
+						</div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+
+							<div class="form-group">
+								<label for="menu-station">Menu Name</label>
+								<select ng-model="search.menuId" class="form-control">
+									<option value="{{menu.menuId}}" ng-repeat="menu in menuList | unique: 'id'">{{ menu.menuName }}</option>
+								</select>
+							</div>
+
+						</div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+
+							<div class="form-group">
+								<label for="menu-station">Catering Stations</label>
+								<select ng-model="search.catererStationId" class="form-control">
+									<option value="{{station.id}}" ng-repeat="station in stationList | unique: 'id'">{{ station.code }}</option>
+								</select>
+							</div>
+
 						</div>
 
 					</div>
 
-					<div class="col-xs-12 col-sm-6 col-md-4">
-
-						<div class="form-group">
-							<label for="menu-name">Menu Name</label>
-							<input ng-model="search.menu.menuName" type="text" class="form-control" placeholder="Menu Name" />
-						</div>
+					<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
+						start-date-model="dateRange.startDate"
+						end-date-model="dateRange.endDate"
+						is-search-field="true"
+						label-from="Effective From"
+						label-to="Effective To">
+					</date-picker>
 
 					</div>
 
-					<div class="col-xs-12 col-sm-6 col-md-4">
-
-						<div class="form-group">
-							<label for="menu-station">Catering Stations</label>
-							<select multiple="multiple" ng-model="search.stations" class="multi-select">
-								<option value="{{station.id}}" ng-repeat="station in stationList | unique: 'id'">{{ station.code }}</option>
-							</select>
-						</div>
+					<div class="panel-footer text-right">
+						<button class="btn btn-default btn-search-clear"
+							ng-click="clearSearchFilters()"
+							ng-show="search.menuId.length || search.catererStationId.length || dateRange.startDate.length || dateRange.endDate.length">
+							<span class="btn-label">Clear</span>
+						</button>
+						<button ng-click="searchRecords()" class="btn btn-primary btn-search">
+							<span class="fa fa-search" aria-hidden="true"></span>
+							<span class="hidden-sm hidden-xs btn-label">Search</span>
+						</button>
 					</div>
+				</form>
 
-				</div>
-
-				<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
-					start-date-model="dateRange.startDate"
-					end-date-model="dateRange.endDate"
-					is-search-field="true"
-					label-from="Effective From"
-					label-to="Effective To">
-				</date-picker>
-
-			</form>
-
-		</div>
+			</div>
 
 	</div>
 

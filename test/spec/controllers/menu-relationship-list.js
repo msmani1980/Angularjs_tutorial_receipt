@@ -280,21 +280,18 @@ describe('Menu Relationship List Controller', function () {
       });
 
     it('should clear the search ng-model when called', function () {
-      $scope.search.menu = {
-        menuName: 'A',
-        menuCode: 'A'
+      $scope.search = {
+        menuId: 4
       };
       $scope.clearSearchFilters();
-      expect($scope.search.menu.menuName).toEqual('');
-      expect($scope.search.menu.menuCode).toEqual('');
+      expect($scope.search).toEqual({});
     });
 
     it('should clear the dateRange ng-model when called', function () {
       $scope.dateRange.startDate = '07-15-2015';
       $scope.dateRange.endDate = '08-15-2015';
       $scope.clearSearchFilters();
-      expect($scope.dateRange.startDate).toEqual('');
-      expect($scope.dateRange.endDate).toEqual('');
+      expect($scope.dateRange).toEqual({});
     });
 
   });
@@ -356,8 +353,8 @@ describe('Menu Relationship List Controller', function () {
         expect(controls.find('.view-name').text().trim()).toEqual(
           'Menu Relationship List');
       });
-      it('should have (3) buttons inside the controls', function () {
-        expect(controls.find('.btn').length).toEqual(3);
+      it('should have (4) buttons inside the controls', function () {
+        expect(controls.find('.btn').length).toEqual(4);
       });
 
       describe('create button', function () {
@@ -436,19 +433,19 @@ describe('Menu Relationship List Controller', function () {
               expect(formGroup.find('label').text().trim())
                 .toEqual('Menu Code');
             });
-          it('should contain an input field', function () {
-            expect(formGroup.find('input')[0]).toBeDefined();
+          it('should contain an select', function () {
+            expect(formGroup.find('select')[0]).toBeDefined();
           });
           it('should contain .form-control class', function () {
-            expect(formGroup.find('input').hasClass(
+            expect(formGroup.find('select').hasClass(
               'form-control')).toBeTruthy();
           });
           it(
-            'should contain an input field with the correct ng-model',
+            'should contain an select field with the correct ng-model',
             function () {
-              expect(formGroup.find('input').attr(
+              expect(formGroup.find('select').attr(
                   'ng-model'))
-                .toEqual('search.menu.menuCode');
+                .toEqual('search.menuId');
             });
         });
 
@@ -469,19 +466,19 @@ describe('Menu Relationship List Controller', function () {
               expect(formGroup.find('label').text().trim())
                 .toEqual('Menu Name');
             });
-          it('should contain an input field', function () {
-            expect(formGroup.find('input')[0]).toBeDefined();
+          it('should contain an select field', function () {
+            expect(formGroup.find('select')[0]).toBeDefined();
           });
           it('should contain .form-control class', function () {
-            expect(formGroup.find('input').hasClass(
+            expect(formGroup.find('select').hasClass(
               'form-control')).toBeTruthy();
           });
           it(
             'should contain an input field with the correct ng-model',
             function () {
-              expect(formGroup.find('input').attr(
+              expect(formGroup.find('select').attr(
                   'ng-model'))
-                .toEqual('search.menu.menuName');
+                .toEqual('search.menuId');
             });
         });
 
@@ -505,33 +502,25 @@ describe('Menu Relationship List Controller', function () {
           it('should contain an select element', function () {
             expect(formGroup.find('select')[0]).toBeDefined();
           });
-          it('should contain .multi-select class', function () {
-            expect(formGroup.find('select').hasClass(
-              'multi-select')).toBeTruthy();
-          });
-          it('should be a multiple select input', function () {
-            expect(formGroup.find('select').attr(
-              'multiple')).toBeTruthy();
-          });
           it(
             'should contain an input field with the correct ng-model',
             function () {
               expect(formGroup.find('select').attr(
                   'ng-model'))
-                .toEqual('search.stations');
+                .toEqual('search.catererStationId');
             });
           it(
             'should contain all stations in apiResponse as options',
             function () {
               expect(formGroup.find('option').length).toEqual(
-                $scope.stationList.length);
+                $scope.stationList.length + 1);
             });
 
           describe('catering station option', function () {
             var option;
             beforeEach(function () {
               option = angular.element(formGroup
-                .find('option')[0]);
+                .find('option')[1]);
             });
             it(
               'should have a value set from the stationList',
@@ -552,66 +541,6 @@ describe('Menu Relationship List Controller', function () {
             expect(datePicker[0]).toBeDefined();
           });
           // TODO: Test directive element injection, talk to Rodrigo about replace
-        });
-      });
-
-      describe('search functionality', function () {
-        var table;
-        beforeEach(function () {
-          table = angular.element(view.find('table')[0]);
-        });
-
-        describe('menu code filter', function () {
-          var menuCodeInput;
-          beforeEach(function () {
-            menuCodeInput = angular.element(view.find(
-              'input[ng-model="search.menu.menuCode"]'
-            )[0]);
-          });
-          it(
-            'should return all items in the table when the menu code is not set ',
-            function () {
-              expect(table.find('tbody tr').length).toEqual(
-                $scope.paginatedRelationships.length);
-            });
-          it(
-            'should contain (1) item in the table when the menu code is filtered by "T" ',
-            function () {
-
-              menuCodeInput.val('T');
-              $scope.$digest();
-              menuCodeInput.triggerHandler('input');
-              expect(table.find('tbody tr').length).toEqual(
-                $scope.paginatedRelationships.length);
-            });
-        });
-
-        describe('menu name filter', function () {
-          var menuNameInput;
-          beforeEach(function () {
-            menuNameInput = angular.element(view.find(
-              'input[ng-model="search.menu.menuName"]'
-            )[
-              0]);
-          });
-          it(
-            'should return all items in the table when the menu name is not set ',
-            function () {
-              menuNameInput.val('');
-              $scope.$digest();
-              menuNameInput.triggerHandler('input');
-              expect(table.find('tbody tr').length).toEqual(
-                $scope.paginatedRelationships.length);
-            });
-          it(
-            'should contain (1) item in the table when the menu name is filtered by "Drink" ',
-            function () {
-              menuNameInput.val('Drink');
-              $scope.$digest();
-              menuNameInput.triggerHandler('input');
-              expect(table.find('tbody tr').length).toEqual(
-                1);
-            });
         });
       });
 
