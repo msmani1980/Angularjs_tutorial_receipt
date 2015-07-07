@@ -134,7 +134,7 @@
 
           <div class="form-group">
             <label>Item Characteristics</label>
-            <select ng-model="formData.characteristics" class="multi-select" multiple="multiple">
+            <select ng-model="formData.characteristics" class="multi-select" id="itemCharacteristics" multiple="multiple">
               <option ng-repeat="character in filteredCharacteristics" value="{{ character.id }}">{{ character.name }}</option>
             </select>
           </div>
@@ -145,14 +145,14 @@
 
           <div class="form-group">
             <label>Item Substitutions</label>
-            <select ng-model="formData.substitutions" class="multi-select" multiple="multiple">
+            <select ng-model="formData.substitutions" id="itemSubstitutions" class="multi-select" multiple="multiple">
               <option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
             </select>
           </div>
 
           <div class="form-group">
             <label>Item Recommendations</label>
-            <select ng-model="formData.recommendations" class="multi-select" multiple="multiple">
+            <select ng-model="formData.recommendations" id="itemRecommendations" class="multi-select" multiple="multiple">
               <option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
             </select>
           </div>
@@ -167,14 +167,14 @@
 
           <div class="form-group">
             <label>Item Tags</label>
-            <select ng-model="formData.tags" class="multi-select" multiple="multiple">
+            <select ng-model="formData.tags" id="itemTags" class="multi-select" multiple="multiple">
               <option ng-repeat="tag in tags" value="{{ tag.id }}">{{ tag.name }}</option>
             </select>
           </div>
 
           <div class="form-group">
             <label>Allergen</label>
-            <select ng-model="formData.allergens" class="multi-select" multiple="multiple">
+            <select ng-model="formData.allergens" id="allergen" class="multi-select" multiple="multiple">
               <option ng-repeat="allergen in allergens" value="{{ allergen.allergenId }}">{{ allergen.name }}</option>
             </select>
           </div>
