@@ -35,18 +35,18 @@
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="purchaseOrderNumber">Purchase Order Number</label>
-                <input ng-model="search.purchaseOrderNumber" type="text" class="form-control" id="purchase-order-number" placeholder="1234">
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
                 <label for="deliveryNoteNumber">Delivery Note Number</label>
                 <input ng-model="search.deliveryNoteNumber" type="text" class="form-control" id="delivery-note-number" placeholder="1234">
               </div>
             </div>
-
+            
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="purchaseOrderNumber">Purchase Order Number</label>
+                <input ng-model="search.purchaseOrderNumber" type="text" class="form-control" id="purchase-order-number" placeholder="1234">
+              </div>
+            </div>
+            
             <date-picker class="form-group"
               element-class="col-xs-12 col-sm-3"
               start-date-model="search.startDate"
@@ -79,7 +79,11 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="inputLocation">Input Location</label>
-                <input ng-model="search.inputLocation" type="text" class="form-control" id="input-location" placeholder="1">
+                <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="updateinputLocation()" ng-disabled="readOnly">
+                  <option ng-repeat="inputLocation in inputLocationList" value="{{ $index }}">
+                    {{ item.inputLocationCode }} ({{ item.inputLocationName}})
+                  </option>
+                </select>
               </div>
             </div>
 
@@ -94,8 +98,8 @@
     <table class="table table-bordered table-hover ng-scope">
       <thead>
         <tr>
-          <th>Purchase Order Number</th>
           <th>Delivery Note Number</th>
+          <th>Purchase Order Number</th>
           <th>Departure Date</th>
           <th>Item Code</th>
           <th>Item Name</th>

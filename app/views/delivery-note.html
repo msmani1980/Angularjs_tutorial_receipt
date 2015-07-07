@@ -35,14 +35,6 @@
       <div class="panel-body">
 
         <div class="row">
-        
-          <div class="col-xs-12 col-sm-3">
-            <div class="form-group">
-              <label for="purchaseOrderNumber">Purchase Order Number *</label>
-              <input ng-model="purchaseOrderNumber" type="text" class="form-control" id="purchase-order-number"
-                     placeholder="1234" required="true" custom-validity custom-pattern="time" ng-readonly="readOnly">
-            </div>
-          </div>
 
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
@@ -52,6 +44,14 @@
             </div>
           </div>
           
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label for="purchaseOrderNumber">Purchase Order Number *</label>
+              <input ng-model="purchaseOrderNumber" type="text" class="form-control" id="purchase-order-number"
+                     placeholder="1234" required="true" custom-validity custom-pattern="time" ng-readonly="readOnly">
+            </div>
+          </div>
+                    
           <date-picker
             class="col-xs-12 col-sm-3"
             disable-date-range="true"
