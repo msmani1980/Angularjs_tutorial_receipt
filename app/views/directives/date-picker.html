@@ -8,7 +8,7 @@
         <input type="text"
                ng-model="startDateModel"
                placeholder="mm/dd/YYYY"
-               name="{{ nameFrom ? nameFrom : labelFrom }}"
+               name="{{ nameFrom || labelFrom }}"
                ng-disabled="shouldDisableStartDate || disableStartDate"
                class="startDate form-control"
                ng-required="required"/>
@@ -22,7 +22,7 @@
         <input type="text"
                ng-model="endDateModel"
                placeholder="mm/dd/YYYY"
-               name="{{ nameTo ? nameTo : labelTo }}"
+               name="{{ nameTo || labelTo }}"
                ng-disabled="shouldDisableEndDate || disableEndDate"
                ng-required="required && !isSearchField"
                class="endDate form-control"/>
