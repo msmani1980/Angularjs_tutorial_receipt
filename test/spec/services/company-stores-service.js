@@ -9,8 +9,8 @@ describe('Service: companyStoresService', function () {
   var companyStoresService,
     urlRegex,
     $httpBackend;
-  beforeEach(inject(function (_companyStoresService_, _GlobalMenuService_, $injector) {
-    companyStoresService = _companyStoresService_;
+  beforeEach(inject(function (_GlobalMenuService_, $injector) {
+    companyStoresService = $injector.get('companyStoresService');
     $httpBackend = $injector.get('$httpBackend');
     urlRegex = new RegExp('api/companies/'+_GlobalMenuService_.company.get()+'/stores', 'g');
   }));
