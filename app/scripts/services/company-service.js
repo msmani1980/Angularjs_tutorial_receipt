@@ -10,9 +10,10 @@
  */
 angular.module('ts5App')
   .service('companyService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/companies/:id';
+    var requestURL = ENV.apiUrl + '/api/companies/:id/:action';
     var requestParameters = {
-      id: '@id'
+      id: '@id',
+      action: '@action'
     };
 
     var actions = {
@@ -35,7 +36,11 @@ angular.module('ts5App')
       },
       updateCompany: {
         method: 'PUT'
+      },
+      createStore: {
+        method: 'POST'
       }
+
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
@@ -60,10 +65,15 @@ angular.module('ts5App')
       return requestResource.updateCompany(payload).$promise;
     };
 
+    var createStore = function (payload) {
+      return requestResource.createStore(payload).$promise;
+    };
+
     return {
       getCompanyList: getCompanyList,
       getCompany: getCompany,
       createCompany: createCompany,
-      updateCompany: updateCompany
+      updateCompany: updateCompany,
+      createStore: createStore
     };
   });
