@@ -73,7 +73,7 @@ angular.module('ts5App')
     };
 
     this.getRelationshipList = function () {
-      $this.displayLoadingModal();
+      $this.displayLoadingModal('Getting all the relationships for you');
       var promises = $this.makePromises();
       $q.all(promises).then(function (response) {
         $this.setCatererStationList(response[0]);
@@ -86,7 +86,7 @@ angular.module('ts5App')
     };
 
     this.searchRelationshipList = function () {
-      $this.displayLoadingModal();
+      $this.displayLoadingModal('Searching the relationships for you');
       var query = $this.generateRelationshipQuery();
       menuCatererStationsService.getRelationshipList(query).then(function (
         response) {
