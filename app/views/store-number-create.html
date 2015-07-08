@@ -1,5 +1,5 @@
 <div class="container module-container">
-  <form name="createStoreNumberForm" class="form edit-form create-store-number-form" ng-submit="submitForm(createStoreNumberForm.$valid)">
+  <form class="form edit-form create-store-number-form" ng-submit="submitForm()">
     <div class="edit-controls">
       <div class="row">
         <div class="col-xs-6">
@@ -22,7 +22,7 @@
         <label class="control-label" for="storeNumber">Store Number *</label>
         <input custom-validity
            custom-pattern="alphanumeric"
-           required
+           required="true"
            type="text"
            maxlength="10"
            minlength="10"
