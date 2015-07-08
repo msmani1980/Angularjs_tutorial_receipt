@@ -21,11 +21,9 @@
       <div class="col-xs-12 col-sm-6">
         <label class="control-label" for="storeNumber">Store Number *</label>
         <input custom-validity
-           custom-pattern="alphanumeric"
+           custom-pattern="alphanumericExactlyTenChars"
            required="true"
            type="text"
-           maxlength="10"
-           minlength="10"
            class="form-control"
            id="storeNumber"
            ng-model="formData.storeNumber"
