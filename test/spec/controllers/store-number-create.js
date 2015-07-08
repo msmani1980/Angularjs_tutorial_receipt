@@ -63,12 +63,6 @@ describe('Controller: storeNumberCreateCtrl', function () {
   });
 
   describe('submitForm scope function', function(){
-    it('should should return false if createStoreNumberForm is invalid', function(){
-      scope.createStoreNumberForm = {$invalid:true};
-      scope.$digest();
-      var returnVal = scope.submitForm();
-      expect(returnVal).toBe(false);
-    });
     it('should call companyStoresService.createStore', function(){
       scope.formData = {
         storeNumber: 'qwert12345',

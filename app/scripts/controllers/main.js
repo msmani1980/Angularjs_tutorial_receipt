@@ -82,14 +82,6 @@ angular.module('ts5App')
         icon: 'icon-create-company',
         className: 'dashboard-createCompany'
       }]
-    },{
-      title: 'Manage Store Number',
-      menuItems: [{
-        name: 'Store Number Create',
-        route: '/#/store-number-create',
-        icon: 'icon-create-company',
-        className: 'dashboard-storeNumberCreate'
-      }]
     }, {
       title: 'Schedule Management',
       menuItems: [{
@@ -266,6 +258,14 @@ angular.module('ts5App')
         route: '/#/company-reason-code',
         icon: 'icon-manage-schedule',
         className: 'dashboard-companyReasonCode'
+      }]
+    }, {
+      title: 'Manage Store Number',
+      menuItems: [{
+        name: 'Store Number Create',
+        route: '/#/store-number-create',
+        icon: 'icon-create-company',
+        className: 'dashboard-storeNumberCreate'
       }]
     }];
 
