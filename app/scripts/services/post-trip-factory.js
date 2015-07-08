@@ -21,6 +21,10 @@ angular.module('ts5App')
       }
     };
 
+    var getPostTrip = function(id, tripId) {
+      return postTripsService.getPostTrip(id, tripId);
+    };
+
     var createPostTrip = function (id, payload) {
       return postTripsService.createPostTrip(id, payload);
     };
@@ -39,6 +43,7 @@ angular.module('ts5App')
 
     return {
       getPostTripDataList: getPostTripDataList,
+      getPostTrip: getPostTrip,
       createPostTrip: createPostTrip,
       getCompanyId: getCompanyId,
       getStationList: getStationList,

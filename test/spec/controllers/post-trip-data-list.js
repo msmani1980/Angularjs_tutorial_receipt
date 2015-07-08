@@ -3,7 +3,7 @@
 describe('Controller: PostFlightDataListCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('ts5App', 'served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trips.json'));
+  beforeEach(module('ts5App', 'served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data-list.json'));
 
   var PostTripDataListCtrl,
     scope,
@@ -22,8 +22,8 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location) {
-    inject(function (_servedPostTrips_, _servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_) {
-      postTripsResponseJSON = _servedPostTrips_;
+    inject(function (_servedPostTripDataList_, _servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_) {
+      postTripsResponseJSON = _servedPostTripDataList_;
       stationsListResponseJSON = _servedStations_;
       carrierTypesResponseJSON = _servedCarrierTypes_;
       carrierNumbersResponseJSON = _servedCarrierNumbers_;

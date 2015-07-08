@@ -10,26 +10,31 @@
 angular.module('ts5App')
   .service('postTripsService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/companies/:id/posttrips';
+    var requestURL = ENV.apiUrl + '/api/companies/:id/posttrips/:tripid';
     var requestParameters = {
-      id: '@id'
+      id: '@id',
+      tripid:'@tripid'
     };
     var actions = {
       getPostTrips: {
         method: 'GET',
-        headers: {companyId: 362} // TODO should this always be here?
+        headers: {companyId: 362}
+      },
+      getPostTrip: {
+        method: 'GET',
+        headers: {comanyId: 362}
       },
       //updatePostTrips: {
       //  method: 'PUT',
-      //  headers: {companyId: 362} // TODO should this always be here?
+      //  headers: {companyId: 362}
       //},
       //deletePostTrips: {
       //  method: 'DELETE',
-      //  headers: {companyId: 362} // TODO should this always be here?
+      //  headers: {companyId: 362}
       //},
       createPostTrips: {
         method: 'POST',
-        headers: {companyId: 362} // TODO should this always be here?
+        headers: {companyId: 362}
       }
     };
 
@@ -42,6 +47,12 @@ angular.module('ts5App')
       }
       requestParameters.id = companyId;
       return requestResource.getPostTrips(payload).$promise;
+    }
+
+    function getPostTrip(companyId, postTripId) {
+      requestParameters.id = companyId;
+      requestParameters.tripid = postTripId;
+      return requestResource.getPostTrip({}).$promise;
     }
     //
     //function getCashBag(cashBagId) {
@@ -63,6 +74,7 @@ angular.module('ts5App')
 
     return {
       getPostTrips: getPostTrips,
+      getPostTrip: getPostTrip,
       //getCashBag: getCashBag,
       //updateCashBag: updateCashBag,
       //deleteCashBag: deleteCashBag,

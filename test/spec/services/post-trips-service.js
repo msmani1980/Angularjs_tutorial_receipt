@@ -64,7 +64,7 @@ describe('Service: postTripService', function () {
         it('should take an optional payload parameter', function () {
           var scheduleNumber = '123';
           var payload = {scheduleNumber: scheduleNumber};
-          var regex = new RegExp('companies/403/posttrips\\?\.\*scheduleNumber=' + scheduleNumber, 'g');
+          var regex = new RegExp('companies/403/posttrips\.\*scheduleNumber=' + scheduleNumber, 'g');
           $httpBackend.expectGET(regex, headers);
           postTripsService.getPostTrips('403', payload);
           $httpBackend.flush();
@@ -79,6 +79,19 @@ describe('Service: postTripService', function () {
       });
     });
 
+    describe('getPostTrip', function(){
+      it('should be accessible in the service', function () {
+        expect(!!postTripsService.getPostTrip).toBe(true);
+      });
+
+      it('should append postTrip id to request URL', function(){
+        var postTripId = '123';
+        var regex = new RegExp('posttrips/' + postTripId, 'g');
+        $httpBackend.expectGET(regex).respond('202');
+        postTripsService.getPostTrip('403', postTripId);
+        $httpBackend.flush();
+      });
+    });
 
     describe('createPostTrip', function () {
 
