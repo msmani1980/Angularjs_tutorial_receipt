@@ -246,6 +246,76 @@ describe('Menu Relationship List Controller', function () {
 
   });
 
+  describe('the findRelationshipIndex functionality', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should have a findRelationshipIndex method', function () {
+      expect(MenuRelationshipListCtrl.findRelationshipIndex).toBeDefined();
+    });
+
+    it('should return the correct relationship index', function () {
+      var relationshipIndex = MenuRelationshipListCtrl.findRelationshipIndex(
+        $scope.relationshipList[0]);
+      expect(relationshipIndex).toEqual(0);
+    });
+
+  });
+
+  describe('the findMenuIndex functionality', function () {
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should have a findMenuIndex method', function () {
+      expect(MenuRelationshipListCtrl.findMenuIndex).toBeDefined();
+    });
+
+    it('should return the correct menu index when passed a menuId',
+      function () {
+        var menuIndex = MenuRelationshipListCtrl.findMenuIndex(6);
+        expect(menuIndex).toEqual(2);
+      });
+  });
+
+  describe('the findMenuIndex functionality', function () {
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should have a findMenuIndex method', function () {
+      expect(MenuRelationshipListCtrl.findMenuIndex).toBeDefined();
+    });
+
+    it('should return the correct menu index when passed a menuId',
+      function () {
+        var menuId = 6;
+        var menuIndex = MenuRelationshipListCtrl.findMenuIndex(menuId);
+        expect(menuIndex).toEqual(2);
+      });
+  });
+
+  describe('the findStationIndex functionality', function () {
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should have a findStationIndex method', function () {
+      expect(MenuRelationshipListCtrl.findStationIndex).toBeDefined();
+    });
+
+    it(
+      'should return the correct station index when passed a stationId',
+      function () {
+        var stationId = 9;
+        var stationIndex = MenuRelationshipListCtrl.findStationIndex(
+          stationId);
+        expect(stationIndex).toEqual(3);
+      });
+  });
+
   describe('remove relationship functionality', function () {
 
     var relationshipId,
@@ -831,7 +901,7 @@ describe('Menu Relationship List Controller', function () {
               function () {
                 expect(deleteButton.attr(
                   'ng-click')).toEqual(
-                  'deleteRecordDialog(relationship.id)'
+                  'deleteRecordDialog(relationship)'
                 );
               });
             it(

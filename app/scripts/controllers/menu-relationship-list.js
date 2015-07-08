@@ -136,16 +136,9 @@ angular.module('ts5App')
       }
     };
 
-    this.findRelationshipIndex = function (relationshipId) {
-      var relationshipIndex = null;
-      for (var key in $scope.relationshipList) {
-        var relationship = $scope.relationshipList[key];
-        if (parseInt(relationship.id) === parseInt(relationshipId)) {
-          relationshipIndex = key;
-          break;
-        }
-      }
-      return relationshipIndex;
+    this.findRelationshipIndex = function (relationship) {
+      var index = $scope.relationshipList.indexOf(relationship);
+      return parseInt(index);
     };
 
     this.findMenuIndex = function (menuId) {
@@ -157,7 +150,7 @@ angular.module('ts5App')
           break;
         }
       }
-      return menuIndex;
+      return parseInt(menuIndex);
     };
 
     this.findStationIndex = function (stationId) {
@@ -169,7 +162,7 @@ angular.module('ts5App')
           break;
         }
       }
-      return stationIndex;
+      return parseInt(stationIndex);
     };
 
     this.initSelectUI = function () {
@@ -180,15 +173,17 @@ angular.module('ts5App')
 
     this.removeRecordFromList = function (relationshipIndex) {
       $this.hideLoadingModal();
-      $this.showSuccessMessage('Menu Relationship Removed');
+      $this.showSuccessMessage(
+        'Menu to Caterer Station Relationship Removed');
       $scope.relationshipList.splice(relationshipIndex, 1);
       $this.updateRelationshipList();
     };
 
-    $scope.removeRecord = function (relationshipId) {
-      var relationshipIndex = $this.findRelationshipIndex(relationshipId);
-      $this.displayLoadingModal('Removing your menu relationship');
-      menuCatererStationsService.deleteRelationship(relationshipId).then(
+    $scope.removeRecord = function (relationship) {
+      var relationshipIndex = $this.findRelationshipIndex(relationship);
+      $this.displayLoadingModal(
+        'Removing Menu to Caterer Station Relationship');
+      menuCatererStationsService.deleteRelationship(relationship.id).then(
         $this.removeRecordFromList(relationshipIndex));
     };
 

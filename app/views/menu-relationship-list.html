@@ -116,7 +116,7 @@
 
         <td>{{ relationship.menu.menuCode }}</td>
         <td>{{ relationship.menu.menuName }}</td>
-        <td> <span class="label label-info" ng-repeat="(stationKey,station) in relationship.stations track by station.id"> {{ station.code }} </span> </td>
+        <td> <span class="label label-info" ng-repeat="(stationKey,station) in relationship.stations track by stationKey"> {{ station.code }} </span> </td>
         <td>{{ relationship.startDate | date: 'MM/dd/yyyy' }}</td>
         <td>{{ relationship.endDate | date: 'MM/dd/yyyy' }}</td>
 
@@ -130,7 +130,7 @@
             <i class="fa fa-pencil"></i>
           </a>
 
-          <button class="btn btn-danger btn-xs btn-delete" ng-click="deleteRecordDialog(relationship.id)"  ng-hide="isRelationshipActive(relationship.startDate) || isRelationshipInactive(relationship.endDate)">
+          <button class="btn btn-danger btn-xs btn-delete" ng-click="deleteRecordDialog(relationship)"  ng-hide="isRelationshipActive(relationship.startDate) || isRelationshipInactive(relationship.endDate)">
             <i class="fa fa-trash"></i>
           </button>
 
