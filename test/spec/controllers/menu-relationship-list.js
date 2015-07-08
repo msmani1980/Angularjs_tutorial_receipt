@@ -309,10 +309,10 @@ describe('Menu Relationship List Controller', function () {
     it(
       'should return the correct station index when passed a stationId',
       function () {
-        var stationId = 9;
+        var stationId = 3;
         var stationIndex = MenuRelationshipListCtrl.findStationIndex(
           stationId);
-        expect(stationIndex).toEqual(3);
+        expect(stationIndex).toEqual(0);
       });
   });
 
@@ -365,6 +365,79 @@ describe('Menu Relationship List Controller', function () {
     });
 
   });
+
+  describe('the functionality that associates menus to relationships',
+    function () {
+
+      it('should have a associateStationData method', function () {
+        expect(MenuRelationshipListCtrl.associateStationData).toBeDefined();
+      });
+
+      it(
+        'should not have any relations or stations associated to the relationship yet',
+        function () {
+          expect($scope.relationshipList).toEqual([]);
+        });
+
+      it(
+        'should associate stations with relationships when the controller inits',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[0].stations).toBeDefined();
+          expect($scope.relationshipList[0].stations).toEqual(jasmine.any(
+            Array));
+        });
+
+      it('should associate (1) station with the first relationship',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[0].stations.length).toEqual(1);
+        });
+
+      it('should contain the station data inside the first relationship',
+        function () {
+          $scope.$digest();
+          var stations = [$scope.stationList[0]];
+          expect($scope.relationshipList[0].stations).toEqual(stations);
+        });
+
+    });
+
+  describe('the functionality that associates menus to relationships',
+    function () {
+
+      it('should have a associateMenuData method', function () {
+        expect(MenuRelationshipListCtrl.associateMenuData).toBeDefined();
+      });
+
+      it(
+        'should not have any relations or menus associated to the relationship yet',
+        function () {
+          expect($scope.relationshipList).toEqual([]);
+        });
+
+      it(
+        'should associate menu with relationships when the controller inits',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[3].menu).toBeDefined();
+        });
+
+      it('should contain the correct menuCode',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[3].menu.menuCode).toEqual(
+            'MN14351');
+        });
+
+      it('should contain the correct menuName',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[3].menu.menuName).toEqual(
+            'MN14351');
+        });
+
+    });
 
   /* E2E Tests */
 
