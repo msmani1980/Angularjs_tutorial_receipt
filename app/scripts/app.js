@@ -163,6 +163,10 @@ angular
         templateUrl: 'views/item-import.html',
         controller: 'ItemImportCtrl'
       })
+      .when('/employee-commission-list', {
+        templateUrl: 'views/employee-commission-list.html',
+        controller: 'EmployeeCommissionListCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
