@@ -30,7 +30,7 @@
 
       <div class="col-xs-6 text-right">
         <a class="btn btn-default" ng-href="#/item-list" class="btn">Back</a>
-        <button ng-show="formChanged" class="btn btn-success" ng-click="submitForm()">
+        <button ng-show="companyRetailItemList.length" class="btn btn-success" ng-click="submitForm()">
           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
@@ -149,7 +149,6 @@
           <th>S.O.</th>
           <th>S.O. Ref. #</th>
           <th>Name</th>
-          <td ng-show="showIdColumn">id</td>
         </tr>
         </thead>
         <tbody>
@@ -162,7 +161,6 @@
           <td>{{ importedRetailItem.companyName }}</td>
           <td>{{ importedRetailItem.itemCode }}</td>
           <td>{{ importedRetailItem.itemName }}</td>
-          <td ng-show="showIdColumn">{{ importedRetailItem.id }}</td>
         </tr>
         </tbody>
       </table>
@@ -177,7 +175,6 @@
           <th>S.O. Ref. #</th>
           <th>Name</th>
           <th>&nbsp;</th>
-          <td ng-show="showIdColumn">id</td>
         </tr>
         </thead>
         <tbody>
@@ -190,8 +187,7 @@
           <td>{{ retailItem.companyName }}</td>
           <td>{{ retailItem.itemCode }}</td>
           <td>{{ retailItem.itemName }}</td>
-          <td><a ng-click="removeRetailItem(retailItem)" ng-show="canRemove(retailItem)">X</a></td>
-          <td ng-show="showIdColumn">{{ retailItem.id }}</td>
+          <td><a ng-click="removeRetailItem(retailItem)">X</a></td>
         </tr>
         </tbody>
       </table>
