@@ -18,21 +18,13 @@ angular.module('ts5App')
     var getItemsList = function(searchParameters, fetchFromMaster){
       return itemsService.getItemsList(searchParameters, fetchFromMaster);
     };
-    var createItem = function(payload){
-      return itemsService.createItem(payload);
-    };
     var importItems = function(payload){
       return itemImportService.importItems(payload);
-    };
-    var removeItem = function(id){
-      return itemsService.removeItem(id);
     };
     return {
       getCompanyId: getCompanyId,
       getCompanyList: getCompanyList,
       getItemsList: getItemsList,
-      createItem: createItem,
-      importItems: importItems,
-      removeItem: removeItem
+      importItems: importItems
     };
   });
