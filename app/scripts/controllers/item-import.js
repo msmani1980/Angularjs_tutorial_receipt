@@ -54,18 +54,16 @@ angular.module('ts5App')
       _importedRetailList = response.retailItems;
       $scope.importedRetailItemList = [];
       angular.forEach(_importedRetailList, function (retailItem) {
-        retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
-        retailItem.companyName = $scope.selectedImportCompany.companyName;
-        addToImportedRetailItemList(retailItem);
+        if(canBeAddedToCompanyRetailList(retailItem)) {
+          retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
+          retailItem.companyName = $scope.selectedImportCompany.companyName;
+          addToImportedRetailItemList(retailItem);
+        }
       });
       hideLoadingModal();
     }
 
     function addToImportedRetailItemList(retailItem){
-      /*
-      if (!canBeAddedToCompanyRetailList(retailItem)) {
-        return;
-      }*/
       if (!$scope.selectedImportCompany){
         return;
       }
