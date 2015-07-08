@@ -131,7 +131,7 @@ angular
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })
-      .when('/employee-commission', {
+      .when('/employee-commission/:state/:id?', {
         templateUrl: 'views/employee-commission-edit.html',
         controller: 'EmployeeCommissionEditCtrl'
       })
