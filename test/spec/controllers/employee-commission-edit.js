@@ -1,12 +1,12 @@
 'use strict';
 
-describe('Controller: EmployeeCommissionCtrl', function () {
+describe('Controller: EmployeeCommissionEditCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/company-currency-globals.json'));
 
 
-  var EmployeeCommissionCtrl,
+  var EmployeeCommissionEditCtrl,
     employeeCommissionFactory,
     getItemsListDeferred,
     getPriceTypesListDeferred,
@@ -45,7 +45,7 @@ describe('Controller: EmployeeCommissionCtrl', function () {
     spyOn(employeeCommissionFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeferred.promise);
 
     scope = $rootScope.$new();
-    EmployeeCommissionCtrl = $controller('EmployeeCommissionCtrl', {
+    EmployeeCommissionEditCtrl = $controller('EmployeeCommissionEditCtrl', {
       $scope: scope
     });
     scope.$digest();

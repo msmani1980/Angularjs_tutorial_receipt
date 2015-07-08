@@ -248,7 +248,7 @@ angular.module('ts5App')
       title: 'Employee Commission',
       menuItems: [{
         name: 'Employee Commission',
-        route: '/#/employee-commission',
+        route: '/#/employee-commission-list',
         icon: 'icon-manage-schedule',
         className: 'dashboard-employeeCommission'
       }]
