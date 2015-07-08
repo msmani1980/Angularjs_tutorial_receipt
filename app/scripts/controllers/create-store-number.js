@@ -8,55 +8,75 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('createStoreNumberCtrl', function ($scope, companyService, GlobalMenuService, ngToast) {
+  .controller('createStoreNumberCtrl', function ($scope, companyStoresService, GlobalMenuService, ngToast, dateUtility) {
+
+    // scope vars
+    $scope.viewName = 'Create Store Number';
 
     // private controller vars
-    var _companyId = GlobalMenuService.company.get(),
+    var _companyId = null,
       _companyDefault = {
         storeNumber: null,
         startDate: null,
         endDate: null
       };
 
-    // scope vars
-    $scope.viewName = 'Create Store Number';
+    // private controller functions
+    function setCompany(response){
+      if(!response.meta.count){
+        return;
+      }
+      angular.forEach(response.response, function(store){
+        store.startDate = dateUtility.formatDateForApp(store.startDate);
+        store.endDate = dateUtility.formatDateForApp(store.endDate);
+        this.push(store);
+      }, $scope.storeNumbersList);
+    }
+
+    function submitFormSuccess(){
+      init();
+      showMessage('successful!', 'success');
+    }
+
+    function showApiErrors(response){
+      showMessage('failed!', 'warning');
+      $scope.displayError = true;
+      if ('data' in response) {
+        $scope.formErrors = response.data;
+      }
+    }
+
+    function showMessage(message, messageType) {
+      hideLoadingModal();
+      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Create Store Number</strong>: ' + message });
+    }
+
+    function displayLoadingModal(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    function init(){
+      _companyId = GlobalMenuService.company.get();
+      $scope.formData = angular.copy(_companyDefault);
+      $scope.storeNumbersList = [];
+      companyStoresService.getStores(_companyId).then(setCompany,showApiErrors);
+    }
+    init();
 
     // scope functions
     $scope.submitForm = function(){
       if($scope.createStoreNumberForm.$invalid) {
         return false;
       }
+      displayLoadingModal('Saving');
       var payload = angular.copy($scope.formData);
-      payload.id = _companyId;
-      payload.action = 'stores';
-
-      companyService.createStore(payload).then(function(){
-        init();
-        showMessage('successful!', 'success');
-      }, function(response){
-        showMessage('failed!', 'warning');
-        $scope.displayError = true;
-        if ('data' in response) {
-          $scope.formErrors = response.data;
-        }
-      });
+      payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+      payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+      companyStoresService.createStore(payload).then(submitFormSuccess, showApiErrors);
     };
-
-    // private controller methods
-    function showMessage(message, messageType) {
-      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Create Store Number</strong>: ' + message });
-    }
-
-    function init(){
-      $scope.formData = angular.copy(_companyDefault);
-      // TODO - Mock data BE not done, show a list of store numbers when API is completed
-      $scope.storeNumbersList = [
-        {number:'abc123', startDate:'07/01/2015', endDate:'07/02/2015'},
-        {number:'abc345', startDate:'07/01/2015', endDate:'07/03/2015'},
-        {number:'abc567', startDate:'07/01/2015', endDate:'07/04/2015'},
-        {number:'abc789', startDate:'07/01/2015', endDate:'07/05/2015'}
-      ];
-    }
-    init();
 
   });
