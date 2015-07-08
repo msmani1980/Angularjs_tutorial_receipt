@@ -62,6 +62,7 @@ angular.module('ts5App')
     function init(){
       _companyId = GlobalMenuService.company.get();
       $scope.formData = angular.copy(_companyDefault);
+      $scope.displayError = false;
       $scope.storeNumbersList = [];
       companyStoresService.getStores(_companyId).then(setCompany,showApiErrors);
     }
