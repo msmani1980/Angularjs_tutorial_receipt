@@ -175,6 +175,10 @@ angular
         templateUrl: 'views/delivery-note.html',
         controller: 'DeliveryNoteCtrl'
       })
+      .when('/employee-commission-list', {
+        templateUrl: 'views/employee-commission-list.html',
+        controller: 'EmployeeCommissionListCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

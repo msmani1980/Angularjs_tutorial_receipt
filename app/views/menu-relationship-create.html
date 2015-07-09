@@ -14,12 +14,12 @@
 
         <fieldset ng-hide="viewOnly">
 
-          <button class="btn btn-default" ng-click="leaveView()">
-            <span class="fa fa-remove" aria-hidden="true"></span>
-            <span class="hidden-xs btn-label">Cancel</span>
-          </button>
+          <a class="btn btn-default" ng-href="/#/menu-relationship-list">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="hidden-xs btn-label">Back</span>
+          </a>
 
-          <button class="btn btn-primary" ng-click="submitForm(formData)">
+          <buttonn ng-show="form.$dirty" class="btn btn-success" ng-click="submitForm(formData)">
             <span class="fa fa-check-square-o" aria-hidden="true"></span>
             <span class="hidden-xs btn-label">{{ buttonText }}</span>
           </button>
@@ -35,7 +35,7 @@
   <ng-form name="form" class="form">
 
 			<form-error-dialog></form-error-dialog>
-      
+
 			<div class="row">
 
 				<div class="col-xs-12 col-sm-6">

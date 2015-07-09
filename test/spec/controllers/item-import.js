@@ -61,10 +61,6 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.importAll).toBeDefined();
       expect(Object.prototype.toString.call(scope.importAll)).toBe('[object Function]');
     });
-    it('should have a isCompanyItem function attached to the scope', function(){
-      expect(scope.isCompanyItem).toBeDefined();
-      expect(Object.prototype.toString.call(scope.isCompanyItem)).toBe('[object Function]');
-    });
     it('should have a removeRetailItem function attached to the scope', function(){
       expect(scope.removeRetailItem).toBeDefined();
       expect(Object.prototype.toString.call(scope.removeRetailItem)).toBe('[object Function]');
@@ -76,10 +72,6 @@ describe('Controller: ItemImportCtrl', function () {
     it('should have a submitForm function attached to the scope', function(){
       expect(scope.submitForm).toBeDefined();
       expect(Object.prototype.toString.call(scope.submitForm)).toBe('[object Function]');
-    });
-    it('should have a canRemove function attached to the scope', function(){
-      expect(scope.canRemove).toBeDefined();
-      expect(Object.prototype.toString.call(scope.canRemove)).toBe('[object Function]');
     });
     it('should have a dropSuccessHandler function attached to the scope', function(){
       expect(scope.dropSuccessHandler).toBeDefined();
@@ -162,15 +154,6 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  describe('isCompanyItem scope function', function(){
-    it('should return false when invalid companyId is passed', function(){
-      expect(scope.isCompanyItem({companyId:2})).toBe(false);
-    });
-    it('should return true when same companyId is passed', function(){
-      expect(scope.isCompanyItem({companyId:currentCompanyId})).toBe(true);
-    });
-  });
-
   describe('removeRetailItem scope function', function(){
     var retailItem2 = {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456',stockOwnerCode:'4567'};
     beforeEach(function(){
@@ -202,39 +185,23 @@ describe('Controller: ItemImportCtrl', function () {
       scope.removeAll();
     });
     it('should reset companyRetailItemList to 1 item', function(){
-      expect(scope.companyRetailItemList.length).toEqual(1);
+      expect(scope.companyRetailItemList.length).toEqual(0);
     });
-    it('should reset importedRetailItemList to 2 items', function(){
+    it('should reset importedRetailItemList to 2 items', function() {
       expect(scope.importedRetailItemList.length).toEqual(2);
     });
   });
-  /**/
 
   describe('submitForm scope function', function(){
     var payload;
     beforeEach(function(){
-      scope.onDrop({},{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:'1234'},[]);
+      scope.onDrop({},{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:1234},[]);
       payload = {ImportItems:{importItems: [1234]}};
       scope.$digest();
       scope.submitForm();
     });
     it('should call itemImportFactory\' importItems', function(){
       expect(itemImportFactory.importItems).toHaveBeenCalledWith(payload);
-    });
-  });
-
-  describe('canRemove scope function', function(){
-    it('should return false if stockOwnerCode is null and companyID is equal to existing company\'s ID', function(){
-      expect(scope.canRemove({stockOwnerCode:null,companyId:currentCompanyId})).toBe(false);
-    });
-    it('should return true if stockOwnerCode is null and companyID is NOT equal to existing company\'s ID', function(){
-      expect(scope.canRemove({stockOwnerCode:null,companyId:42342})).toBe(true);
-    });
-    it('should return true if stockOwnerCode is not null and companyID is NOT equal to existing company\'s ID', function(){
-      expect(scope.canRemove({stockOwnerCode:'test123',companyId:42342})).toBe(true);
-    });
-    it('should return true if stockOwnerCode is not null and companyID is equal to existing company\'s ID', function(){
-      expect(scope.canRemove({stockOwnerCode:'test123',companyId:currentCompanyId})).toBe(true);
     });
   });
 
