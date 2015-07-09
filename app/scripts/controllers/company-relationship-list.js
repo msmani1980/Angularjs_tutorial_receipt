@@ -149,7 +149,7 @@ angular.module('ts5App')
     function setupCompanyRelationshipScope(companyRelationshipsFromAPI) {
       companyRelationshipsFromAPI = companyRelationshipsFromAPI.companyRelationships;
       if (!companyRelationshipsFromAPI.length) {
-        $scope.addCompanyRelationship($routeParams.id);
+        $scope.addCompanyRelationship($scope.company);
       } else {
         $scope.companyRelationshipListData = companyRelationshipsFromAPI.filter(function (companyRelationship) {
           return (companyRelationship.companyId === $scope.company.id) ? companyRelationship : undefined;

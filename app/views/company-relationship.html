@@ -20,43 +20,48 @@
   <p>Loading...</p>
 </div>
 <div ng-if="!isLoading && !isRejected">
-  <div class="row">
-    <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in col-xs-12" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-      </button>
-      <h4>
-        We found errors :( !
-      </h4>
+  <div ng-if="companyRelationshipListData.length">
+    <div class="row">
+      <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in col-xs-12" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4>
+          We found errors :( !
+        </h4>
 
-      <ul>
-        <li ng-repeat="error in form.$error.required track by $index">
-          <strong>{{ error.$name }}</strong> is required
-        </li>
-        <li ng-repeat="error in form.$error.pattern">
-          <strong>{{ error.$name }}</strong> is invalid
-        </li>
-        <li ng-show="formErrors" ng-repeat="error in formErrors track by $index">
-          <strong>{{ error.field }}</strong>
-          <span> {{ error.value }}</span>
-          <span> {{ error.code }}</span>
-        </li>
-      </ul>
+        <ul>
+          <li ng-repeat="error in form.$error.required track by $index">
+            <strong>{{ error.$name }}</strong> is required
+          </li>
+          <li ng-repeat="error in form.$error.pattern">
+            <strong>{{ error.$name }}</strong> is invalid
+          </li>
+          <li ng-show="formErrors" ng-repeat="error in formErrors track by $index">
+            <strong>{{ error.field }}</strong>
+            <span> {{ error.value }}</span>
+            <span> {{ error.code }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="feature-list">
+      <div class="row list-head">
+        <div class="hidden-xs col-sm-2 list-header border-right">Company Name</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Type</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Related Company</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Start Date</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">End Date</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Actions</div>
+      </div>
+      <!--$id() tracks items by their identity-->
+      <!--https://docs.angularjs.org/api/ng/directive/ngRepeat-->
+      <feature-list-item ng-repeat="companyRelationship in companyRelationshipListData track by $id(companyRelationship)"
+                         view-model="companyRelationship"
+                         type="company-relationship"></feature-list-item>
     </div>
   </div>
-  <div class="feature-list">
-    <div class="row list-head">
-      <div class="hidden-xs col-sm-2 list-header border-right">Company Name</div>
-      <div class="hidden-xs col-sm-2 list-header border-right">Type</div>
-      <div class="hidden-xs col-sm-2 list-header border-right">Related Company</div>
-      <div class="hidden-xs col-sm-2 list-header border-right">Start Date</div>
-      <div class="hidden-xs col-sm-2 list-header border-right">End Date</div>
-      <div class="hidden-xs col-sm-2 list-header border-right">Actions</div>
-    </div>
-    <!--$id() tracks items by their identity-->
-    <!--https://docs.angularjs.org/api/ng/directive/ngRepeat-->
-    <feature-list-item ng-repeat="companyRelationship in companyRelationshipListData track by $id(companyRelationship)"
-                       view-model="companyRelationship"
-                       type="company-relationship"></feature-list-item>
+  <div ng-if="companyRelationshipListData.length === 0" class="feature-empty">
+    No Company Relationships Found
   </div>
 </div>
 
