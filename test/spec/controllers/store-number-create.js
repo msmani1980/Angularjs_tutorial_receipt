@@ -1,13 +1,13 @@
 'use strict';
 
-describe('Controller: createStoreNumberCtrl', function () {
+describe('Controller: StoreNumberCreateCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
 
   beforeEach(module('served/company-stores.json'));
 
-  var CreateStoreNumberCtrl,
+  var StoreNumberCreateCtrl,
     scope,
     createStoreDeferred,
     getStoresDeferred,
@@ -30,7 +30,7 @@ describe('Controller: createStoreNumberCtrl', function () {
 
     companyId = _GlobalMenuService_.company.get();
 
-    CreateStoreNumberCtrl = $controller('createStoreNumberCtrl', {
+    StoreNumberCreateCtrl = $controller('StoreNumberCreateCtrl', {
       $scope: scope
     });
 
@@ -63,12 +63,6 @@ describe('Controller: createStoreNumberCtrl', function () {
   });
 
   describe('submitForm scope function', function(){
-    it('should should return false if createStoreNumberForm is invalid', function(){
-      scope.createStoreNumberForm = {$invalid:true};
-      scope.$digest();
-      var returnVal = scope.submitForm();
-      expect(returnVal).toBe(false);
-    });
     it('should call companyStoresService.createStore', function(){
       scope.formData = {
         storeNumber: 'qwert12345',
