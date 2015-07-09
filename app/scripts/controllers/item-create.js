@@ -1,6 +1,5 @@
 'use strict';
 /*global moment*/
-/*global $*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -44,6 +43,16 @@ angular.module('ts5App')
     $scope.shouldDisplayURLField = false;
     $scope.uiSelectTemplateReady = false;
 
+    this.init = function() {
+      this.checkIfViewOnly();
+      this.getDependencies();
+      if ($routeParams.id && !$scope.viewOnly) {
+        this.setFormAsEdit();
+      }
+      if ($scope.editingItem || $scope.viewOnly) {
+        this.getItem($routeParams.id);
+      }
+    };
 
     this.checkIfViewOnly = function() {
       var path = $location.path();
@@ -90,16 +99,6 @@ angular.module('ts5App')
       });
 
     };
-
-    this.checkIfViewOnly();
-
-    if ($routeParams.id && !$scope.viewOnly) {
-      this.setFormAsEdit();
-    }
-
-    if ($scope.editingItem || $scope.viewOnly) {
-      this.getItem($routeParams.id);
-    }
 
     // deserialize tag object from api
     function deserializeTags(itemData) {
@@ -190,44 +189,40 @@ angular.module('ts5App')
 
     };
 
-    // gets a list of all currencies for the item
-    this.getMasterCurrenciesList = function() {
-      currencyFactory.getCompanyCurrencies(function(data) {
-        var masterCurrenciesList = [];
-        for (var key in data.response) {
-          var currency = data.response[key];
-          masterCurrenciesList[currency.id] = currency.code;
-        }
-        $scope.masterCurrenciesList = masterCurrenciesList;
+    this.getDependencies = function() {
+      var dependencyPromises = this.makeDependencyPromises();
+      $q.all(
+        dependencyPromises).then(function(response) {
+        $this.setSalesCategories(response[0]);
+        $this.setTagsList(response[1]);
+        $this.setTaxTypesList(response[2]);
+        $this.setMasterCurrenciesList(response[3]);
+        $this.setAllergens(response[4]);
+        $this.setItemTypes(response[5]);
+        $this.setCharacteristics(response[6]);
+        $this.setDimensionList(response[7]);
+        $this.setVolumeList(response[8]);
+        $this.setWeightList(response[9]);
+        $this.setItemPriceTypes(response[10]);
+        $this.setItemList(response[11]);
+        $scope.uiSelectTemplateReady = true;
       });
     };
-
-    // gets a list of price types for price group
-    this.getPriceTypesList = function() {
-
-      itemsFactory.getPriceTypesList(function(data) {
-        $scope.priceTypes = data;
-      });
-
-    };
-
-    this.getMasterCurrenciesList();
-    this.getPriceTypesList();
-
-    itemsFactory.getItemsList({}).then(function(data) {
-      $scope.items = data.retailItems;
-    });
 
     this.makeDependencyPromises = function() {
       return [
         companiesFactory.getSalesCategoriesList(),
+        companiesFactory.getTagsList(),
+        companiesFactory.getTaxTypesList(),
+        currencyFactory.getCompanyCurrencies(),
         itemsFactory.getAllergensList(),
         itemsFactory.getItemTypesList(),
         itemsFactory.getCharacteristicsList(),
         itemsFactory.getDimensionList(),
         itemsFactory.getVolumeList(),
         itemsFactory.getWeightList(),
-        companiesFactory.getTagsList()
+        itemsFactory.getPriceTypesList(),
+        itemsFactory.getItemsList({})
       ];
     };
 
@@ -263,33 +258,30 @@ angular.module('ts5App')
       $scope.tags = data.response;
     };
 
-    var dependencyPromises = this.makeDependencyPromises();
-    $q.all(
-      dependencyPromises).then(function(response) {
-      $this.setSalesCategories(response[0]);
-      $this.setAllergens(response[1]);
-      $this.setItemTypes(response[2]);
-      $this.setCharacteristics(response[3]);
-      $this.setDimensionList(response[4]);
-      $this.setVolumeList(response[5]);
-      $this.setWeightList(response[6]);
-      $this.setTagsList(response[7]);
-      $scope.uiSelectTemplateReady = true;
-    });
-
-    $q.all([itemsFactory.getItemsList, itemsFactory.getAllergensList,
-      itemsFactory.getTagsList, itemsFactory.getCharacteristicsList
-    ]).then(function() {
-      $('.multi-select').select2({
-        width: '100%'
+    this.setItemPriceTypes = function() {
+      itemsFactory.getPriceTypesList(function(data) {
+        $scope.priceTypes = data;
       });
-    });
+    };
 
-    companiesFactory.getTaxTypesList(function(data) {
+    this.setItemList = function(data) {
+      $scope.items = data.retailItems;
+    };
+
+    this.setMasterCurrenciesList = function(data) {
+      var masterCurrenciesList = [];
+      for (var key in data.response) {
+        var currency = data.response[key];
+        masterCurrenciesList[currency.id] = currency.code;
+      }
+      $scope.masterCurrenciesList = masterCurrenciesList;
+    };
+
+    this.setTaxTypesList = function(data) {
       $scope.taxTypes = data.response;
-    });
+    };
 
-
+    this.init();
 
     // TODO: Move to global function
     function formatDate(dateString, formatFrom, formatTo) {
@@ -307,7 +299,6 @@ angular.module('ts5App')
         $scope.displayError = false;
       }
     });
-
 
     // when a price date is change for a price groupd or station, need to update currencies
     this.refreshPriceGroups = function(newData, oldData) {
@@ -372,74 +363,6 @@ angular.module('ts5App')
 
     };
 
-    /*
-          // check date ranges on items, price groups and station exceptions
-          function checkItemDates(newData,oldData) {
-
-            if(newData.startDate !== oldData.startDate || newData.endDate !== oldData.endDate) {
-
-              // TODO: Move this to it's own function
-              if(newData.prices.length > 0) {
-
-                // loop through all the price groups
-                for(var priceIndex in $scope.formData.prices) {
-
-                  var price = $scope.formData.prices[priceIndex];
-
-                  // if new item end date is before price start date
-                  if( moment(newData.endDate).isBefore(price.startDate) ) {
-
-                    // set price start date as new item end date
-                    price.startDate = newData.endDate;
-
-                  }
-
-                  // if new item start date is after price start date
-                  if( moment(newData.startDate).isAfter(price.startDate) ) {
-
-                    // set price start date as new item start date
-                    price.startDate = newData.startDate;
-
-                  }
-
-                  // TODO: Move this to it's own function
-                  if(price.stationExceptions.length > 0) {
-
-                    // loop through all the station exceptions
-                    for(var stationIndex in price.stationExceptions) {
-
-                      var stationException = price.stationExceptions[stationIndex];
-
-                      // if new item end date is before station exception start date
-                      if( moment(newData.endDate).isBefore(stationException.startDate) ) {
-
-                        // set station exception start date as new item end date
-                        stationException.startDate = newData.endDate;
-
-                      }
-
-                      // if new item start date is after station exception start date
-                      if( moment(newData.startDate).isAfter(stationException.startDate) ) {
-
-                        // set station exception start date as new item start date
-                        stationException.startDate = newData.startDate;
-
-                      }
-
-                    } // end station exception loop
-
-                  } // end if exceptions list is greater than 0
-
-                } // end price for loop
-
-              } // if price length is greater than 0
-
-            } // end if newData.startDate is different
-
-          } // end checkItemDates
-
-          */
-
     $scope.removeQRCode = function() {
       $scope.formData.qrCodeImgUrl = '';
       $scope.formData.qrCodeValue = '';
@@ -470,7 +393,6 @@ angular.module('ts5App')
      * Station Exceptions
      *
      */
-
 
     // Adds a station exception collection in the form
     $scope.addStationException = function(priceIndex) {
@@ -595,7 +517,6 @@ angular.module('ts5App')
      * Price Groups
      *
      */
-
 
     $scope.addPriceGroup = function() {
       $scope.formData.prices.push({

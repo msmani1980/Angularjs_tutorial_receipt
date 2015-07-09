@@ -120,8 +120,11 @@
 
           <div class="form-group">
             <label>Sales Category *</label>
-            <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.salesCategories"
-             theme="bootstrap"
+            <ui-select multiple
+              ng-if="uiSelectTemplateReady"
+              ng-model="formData.salesCategories"
+              theme="bootstrap"
+              ng-disabled="disabled"
              >
               <ui-select-match placeholder="Sales Categories">{{ $item.name }}</ui-select-match>
               <ui-select-choices repeat="category in salesCategories">
@@ -131,10 +134,18 @@
           </div>
 
           <div class="form-group">
-            <label>Item Type *</label>
-            <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
-              <option ng-repeat="type in itemTypes" value="{{ type.id }}">{{ type.name }}</option>
-            </select>
+            <ui-select
+              ng-if="uiSelectTemplateReady"
+              ng-model="formData.itemTypeId"
+              theme="bootstrap"
+              ng-disabled="disabled"
+              ng-change="filterCharacteristics()"
+             >
+              <ui-select-match placeholder="Item Type">{{ $item.name }}</ui-select-match>
+              <ui-select-choices repeat="type in itemTypes">
+                <div ng-bind-html="type.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
           <div class="form-group">
