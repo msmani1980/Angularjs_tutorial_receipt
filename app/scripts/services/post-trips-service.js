@@ -28,10 +28,10 @@ angular.module('ts5App')
         method: 'PUT',
         headers: {companyId: 362}
       },
-      //deletePostTrips: {
-      //  method: 'DELETE',
-      //  headers: {companyId: 362}
-      //},
+      deletePostTrip: {
+        method: 'DELETE',
+        headers: {companyId: 362}
+      },
       createPostTrips: {
         method: 'POST',
         headers: {companyId: 362}
@@ -54,20 +54,17 @@ angular.module('ts5App')
       requestParameters.tripid = postTripId;
       return requestResource.getPostTrip({}).$promise;
     }
-    //
-    //function getCashBag(cashBagId) {
-    //  return requestResource.getCashBag({id:cashBagId}).$promise;
-    //}
-    //
+
     function updatePostTrip(companyId, payload){
       requestParameters.id = companyId;
       return requestResource.updatePostTrip(payload).$promise;
     }
-    //
-    //function deleteCashBag(cashBagId){
-    //  return requestResource.deleteCashBag({id:cashBagId}).$promise;
-    //}
-    //
+
+    function deletePostTrip(companyId, postTripId){
+      requestParameters.id = companyId;
+      return requestResource.deleteCashBag({id:postTripId}).$promise;
+    }
+
     function createPostTrip(companyId, payload) {
       requestParameters.id = companyId;
       return requestResource.createPostTrips(companyId, payload).$promise;
@@ -77,7 +74,7 @@ angular.module('ts5App')
       getPostTrips: getPostTrips,
       getPostTrip: getPostTrip,
       updatePostTrip: updatePostTrip,
-      //deleteCashBag: deleteCashBag,
+      deletePostTrip: deletePostTrip,
       createPostTrip: createPostTrip
     };
   });

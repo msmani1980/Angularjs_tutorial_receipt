@@ -57,6 +57,7 @@ angular.module('ts5App')
       }
       postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function(response){
         $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'YYYYMMDD').format('MM/DD/YYYY');
+        $scope.search.depTime = $scope.search.depTime.toString();
         $scope.postTrips = response.postTrips;
       });
     };

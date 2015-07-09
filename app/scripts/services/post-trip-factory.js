@@ -29,6 +29,14 @@ angular.module('ts5App')
       return postTripsService.createPostTrip(id, payload);
     };
 
+    var updatePostTrip = function (id, payload) {
+      return postTripsService.updatePostTrip(id, payload);
+    };
+
+    var deletePostTrip = function (id, tripId) {
+      return postTripsService.deletePostTrip(id, tripId);
+    };
+
     var getStationList = function (id) {
       return stationsService.getStationList(id);
     };
@@ -45,6 +53,8 @@ angular.module('ts5App')
       getPostTripDataList: getPostTripDataList,
       getPostTrip: getPostTrip,
       createPostTrip: createPostTrip,
+      updatePostTrip: updatePostTrip,
+      deletePostTrip: deletePostTrip,
       getCompanyId: getCompanyId,
       getStationList: getStationList,
       getCarrierNumbers:getCarrierNumbers,

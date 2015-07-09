@@ -101,6 +101,7 @@ angular.module('ts5App')
 
     $scope.updateArrivalInfo = function () {
       if($scope.arrivalStationIndex && $scope.arrivalStationIndex < $scope.stationList.length) {
+        console.log('hi');
         var station = $scope.stationList[$scope.arrivalStationIndex];
         $scope.postTrip.arrStationId = station.stationId;
         $scope.arrivalTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
