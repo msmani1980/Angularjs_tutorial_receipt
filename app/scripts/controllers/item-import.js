@@ -252,6 +252,9 @@ angular.module('ts5App')
     // scope event handlers
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
     $scope.dropSuccessHandler = function ($event, index, array) {
+      $event.preventDefault();
+      console.log('success');
+      console.log($event);
       array.splice(index, 1);
     };
 
