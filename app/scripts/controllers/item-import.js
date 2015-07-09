@@ -250,7 +250,7 @@ angular.module('ts5App')
     };
 
     $scope.onDrop = function ($event, $data, array) {
-      array.push($data);
+      array.unshift($data);
       addRetailItemToCompanyRetailItems($data);
     };
     // TODO: change BACK button to back/save when models change
