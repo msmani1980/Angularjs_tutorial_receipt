@@ -149,17 +149,39 @@
           </div>
           
           <div class="row">
-            <div class="col-xs-12">
-              <label class="btn btn-default">
-                <input type="radio" name="inlineRadioOptions" id="radioInputLocation1" value="option1" checked="checked"> Input Location 1
-              </label>
-              <label class="btn btn-default">
-                <input type="radio" name="inlineRadioOptions" id="radioInputLocation2" value="option2">  Input Location 2
-              </label>
-              <label class="btn btn-default">
-                <input type="radio" name="inlineRadioOptions" id="radioInputLocation3" value="option3">  Input Location 3
-              </label>
+            <div class="col-xs-12 col-sm-3">
+              <label>Input Location</label>
+              <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="inputLocationInfo()" ng-disabled="readOnly">
+                <option ng-repeat="item in inputLocationList" value="{{ $index }}">
+                  {{ item.inputLocationCode }} ({{ item.inputLocationName}})
+                </option>
+              </select>
             </div>
+                          
+            <div class="col-xs-12 col-sm-3">
+              <label></label>          
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" value="">Apply Input Location to all Items
+                </label>
+              </div>
+            </div>
+                        
+<!-- TODO: REMOVE, UX TEST FOR INPUT LOCATIONS RADIO BUTTONS -->
+<!--           <div class="row"> -->
+<!--             <div class="col-xs-12"> -->
+<!--               <label class="btn btn-default"> -->
+<!--                 <input type="radio" name="inlineRadioOptions" id="radioInputLocation1" value="option1" checked="checked"> Input Location 1 -->
+<!--               </label> -->
+<!--               <label class="btn btn-default"> -->
+<!--                 <input type="radio" name="inlineRadioOptions" id="radioInputLocation2" value="option2">  Input Location 2 -->
+<!--               </label> -->
+<!--               <label class="btn btn-default"> -->
+<!--                 <input type="radio" name="inlineRadioOptions" id="radioInputLocation3" value="option3">  Input Location 3 -->
+<!--               </label> -->
+<!--             </div> -->
+<!--           </div> -->
+
           </div>
                  
         </div>
@@ -251,17 +273,16 @@
           </div>         
           
           <div class="row">
-            <div class="col-xs-12">
-              <label class="btn btn-default">
-                <input type="radio" name="inlineRadioOptions2" id="radioInputLocation11" value="option11" checked="checked"> Input Location 1
-              </label>
-              <label class="btn btn-default">
-                <input type="radio" name="inlineRadioOptions2" id="radioInputLocation22" value="option22">  Input Location 2
-              </label>
-              <label class="btn btn-default">
-                <input type="radio" name="inlineRadioOptions2" id="radioInputLocation33" value="option33">  Input Location 3
-              </label>
+          
+            <div class="col-xs-12 col-sm-3">
+              <label>Input Location</label>
+              <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="inputLocationInfo()" ng-disabled="readOnly">
+                <option ng-repeat="item in inputLocationList" value="{{ $index }}">
+                  {{ item.inputLocationCode }} ({{ item.inputLocationName}})
+                </option>
+              </select>
             </div>
+            
           </div>
 
         </div>
@@ -353,16 +374,13 @@
           </div>
           
           <div class="row">
-            <div class="col-xs-12">
-              <label class="btn btn-default">
-                <input type="radio" name="inlineRadioOptions3" id="radioInputLocation111" value="option111" checked="checked"> Input Location 1
-              </label>
-              <label class="btn btn-default">
-                <input type="radio" name="inlineRadioOptions3" id="radioInputLocation222" value="option222">  Input Location 2
-              </label>
-              <label class="btn btn-default">
-                <input type="radio" name="inlineRadioOptions3" id="radioInputLocation333" value="option333">  Input Location 3
-              </label>
+            <div class="col-xs-12 col-sm-3">
+              <label>Input Location</label>
+              <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="inputLocationInfo()" ng-disabled="readOnly">
+                <option ng-repeat="item in inputLocationList" value="{{ $index }}">
+                  {{ item.inputLocationCode }} ({{ item.inputLocationName}})
+                </option>
+              </select>
             </div>
           </div>
 
