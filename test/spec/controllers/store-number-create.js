@@ -1,13 +1,13 @@
 'use strict';
 
-describe('Controller: storeNumberCreateCtrl', function () {
+describe('Controller: StoreNumberCreateCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
 
   beforeEach(module('served/company-stores.json'));
 
-  var storeNumberCreateCtrl,
+  var StoreNumberCreateCtrl,
     scope,
     createStoreDeferred,
     getStoresDeferred,
@@ -30,7 +30,7 @@ describe('Controller: storeNumberCreateCtrl', function () {
 
     companyId = _GlobalMenuService_.company.get();
 
-    storeNumberCreateCtrl = $controller('storeNumberCreateCtrl', {
+    StoreNumberCreateCtrl = $controller('StoreNumberCreateCtrl', {
       $scope: scope
     });
 

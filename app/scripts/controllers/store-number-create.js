@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:storeNumberCreateCtrl
+ * @name ts5App.controller:StoreNumberCreateCtrl
  * @description
- * # storeNumberCreateCtrl
+ * # StoreNumberCreateCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('storeNumberCreateCtrl', function ($scope, companyStoresService, GlobalMenuService, ngToast, dateUtility) {
+  .controller('StoreNumberCreateCtrl', function ($scope, companyStoresService, GlobalMenuService, ngToast, dateUtility) {
 
     // scope vars
     $scope.viewName = 'Create Store Number';
