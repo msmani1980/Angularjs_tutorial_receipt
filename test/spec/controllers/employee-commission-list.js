@@ -14,7 +14,11 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
+  it('should attach a viewName to the scope', function () {
+    expect(scope.viewName).toBeDefined();
+  });
+
+  it('should have startDate defined', function () {
+    expect(scope.startDate).toBeDefined();
   });
 });

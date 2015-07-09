@@ -9,9 +9,7 @@
  */
 angular.module('ts5App')
   .controller('EmployeeCommissionListCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    $scope.viewName = 'Employee Commission';
+    $scope.startDate = moment().add(1, 'days').format('L').toString();
+
   });
