@@ -54,19 +54,23 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
 
     it('should have required properties', function () {
-      expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemList', 'priceTypesList', 'taxRateTypesList']);
+      expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemsList', 'priceTypesList', 'taxRateTypesList']);
     });
 
   });
 
   describe('API requests', function () {
 
-    it('should call get price type from factory', function () {
+    it('should fetch price type from factory', function () {
       expect(employeeCommissionFactory.getPriceTypesList).toHaveBeenCalled();
     });
 
-    it('should call get tax rate type from factory', function () {
+    it('should fetch tax rate type from factory', function () {
       expect(employeeCommissionFactory.getTaxRateTypes).toHaveBeenCalled();
+    });
+
+    it('should fetch items from factory', function () {
+      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith();
     });
 
   });

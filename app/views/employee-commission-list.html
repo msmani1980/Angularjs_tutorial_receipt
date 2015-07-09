@@ -82,7 +82,7 @@
           <div class="form-group">
             <label class="control-label" for="itemName">Item Name</label>
             <select class="form-control" id="itemName">
-              <option ng-repeat="item in search.itemList | orderBy:'itemName'" value="{{item.masterId}}">
+              <option ng-repeat="item in search.itemsList | orderBy:'itemName'" value="{{item.masterId}}">
                 {{item.itemName}}
               </option>
             </select>

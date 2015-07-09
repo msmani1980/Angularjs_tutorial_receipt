@@ -14,24 +14,24 @@ angular.module('ts5App')
     $scope.search = {
       startDate: '',
       endDate: '',
-      itemList: [],
+      itemsList: [],
       priceTypesList: [],
       taxRateTypesList: []
     };
 
-    $scope.$watchGroup(['startDate', 'endDate'], function () {
+    $scope.$watchGroup(['search.startDate', 'search.endDate'], function () {
       var payload = {};
 
       if (angular.isDefined($scope.search.startDate) && dateUtility.isDateValidForApp($scope.search.startDate)) {
-        payload.startDate = dateUtility.formatDateForAPI($scope.startDate);
+        payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
       }
 
       if (angular.isDefined($scope.search.endDate) && dateUtility.isDateValidForApp($scope.search.endDate)) {
-        payload.endDate = dateUtility.formatDateForAPI($scope.endDate);
+        payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
       }
 
       employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
-        $scope.itemsList = dataFromAPI.retailItems;
+        $scope.search.itemsList = dataFromAPI.retailItems;
       });
     });
 
