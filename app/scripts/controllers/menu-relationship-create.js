@@ -69,10 +69,21 @@ angular.module('ts5App')
         ' Catering Stations';
     };
 
+    this.generateItemQuery = function () {
+      var todaysDate = dateUtility.formatDate(dateUtility.now());
+      var query = {
+        startDate: todaysDate,
+        sortBy: 'ASC',
+        limit: 100
+      };
+      return query;
+    };
+
     this.makePromises = function (id) {
+      var query = this.generateItemQuery();
       var promises = [
-        catererStationService.getCatererStationList(),
-        menuService.getMenuList()
+        catererStationService.getCatererStationList(query),
+        menuService.getMenuList(query)
       ];
       if (id) {
         promises.push(menuCatererStationsService.getRelationship(id));
