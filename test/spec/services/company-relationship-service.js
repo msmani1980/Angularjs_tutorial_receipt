@@ -10,13 +10,11 @@ describe('Service: companyRelationshipService', function () {
 
   var companyRelationshipService,
     $httpBackend,
-    companyRelationshipResponseJSON,
     companyRelationshipListResponseJSON,
     companyRelationshipTypesResponseJSON;
 
   beforeEach(inject(function (_companyRelationshipService_, $injector) {
     inject(function (_servedCompanyRelationship_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypeList_) {
-      companyRelationshipResponseJSON = _servedCompanyRelationship_;
       companyRelationshipListResponseJSON = _servedCompanyRelationshipList_;
       companyRelationshipTypesResponseJSON = _servedCompanyRelationshipTypeList_;
     });
@@ -37,14 +35,16 @@ describe('Service: companyRelationshipService', function () {
 
   });
 
-  describe('API calls', function () {
+  describe('API Calls:', function () {
     var companyRelationshipListByCompanyData;
     var companyRelationshipTypeData;
-    var companyRelationshipData;
 
     describe('getCompanyRelationshipListByCompany', function () {
       beforeEach(function () {
-        companyRelationshipService.getCompanyRelationshipListByCompany().then(function (companyRelationshipListFromAPI) {
+        var payload = {
+          someKey: 'someValue'
+        };
+        companyRelationshipService.getCompanyRelationshipListByCompany(payload).then(function (companyRelationshipListFromAPI) {
           companyRelationshipListByCompanyData = companyRelationshipListFromAPI;
         });
         $httpBackend.flush();
@@ -52,10 +52,6 @@ describe('Service: companyRelationshipService', function () {
 
       it('should be an array', function () {
         expect(angular.isArray(companyRelationshipListByCompanyData.companyRelationships)).toBe(true);
-      });
-
-      it('should have an array of company-relationship', function () {
-        expect(companyRelationshipListByCompanyData.companyRelationships.length).toBeGreaterThan(0);
       });
 
       it('should have a companyName property', function () {
@@ -73,10 +69,6 @@ describe('Service: companyRelationshipService', function () {
 
       it('should be an array', function () {
         expect(angular.isArray(companyRelationshipTypeData.response)).toBe(true);
-      });
-
-      it('should have an array of available company-relationship-type by company-type', function () {
-        expect(companyRelationshipTypeData.response.length).toBeGreaterThan(0);
       });
 
       it('should have a companyTypeName property', function () {
@@ -117,56 +109,90 @@ describe('Service: companyRelationshipService', function () {
 
     });
 
-    //describe('createCompanyRelationship', function () {
-    //  beforeEach(function () {
-    //    var companyId = 417;
-    //    var relativeCompanyId = 420;
-    //    var regex = new RegExp('/companies/' + companyId + '/relationships', 'g');
-    //    var data = {
-    //      'companyId': companyId,
-    //      'relativeCompanyId': relativeCompanyId,
-    //      'startDate': '2015-09-20',
-    //      'endDate': '2015-09-21'
-    //    };
-    //
-    //    $httpBackend.whenPOST(regex).respond({'id': 77});
-    //
-    //    companyRelationshipService.createCompanyRelationship(data).then(function (response) {
-    //      companyRelationshipData = response;
-    //    });
-    //    $httpBackend.flush();
-    //  });
-    //
-    //  it('should be accessible in the service', function () {
-    //    expect(!!companyRelationshipService.createCompanyRelationship).toBe(true);
-    //  });
-    //
-    //  it('should POST data to company-relationship API', function () {
-    //    expect(angular.isNumber(companyRelationshipData.id)).toBe(true);
-    //  });
-    //
-    //  it('should return an id', function () {
-    //    expect(companyRelationshipData.id).toEqual(jasmine.any(Number));
-    //  });
-    //
-    //});
-    //
-    //describe('updateCompanyRelationship', function () {
-    //  beforeEach(function () {
-    //    var companyId = 413;
-    //    var relationshipId = 1;
-    //    var regex = new RegExp('/companies/' + companyId + '/relationships/' + relationshipId, 'g');
-    //    $httpBackend.whenPUT(regex).respond({done: true});
-    //  });
-    //
-    //  it('should PUT data to company-relationship API', function () {
-    //    companyRelationshipService.updateCompanyRelationship({
-    //      id: 1,
-    //      companyId: 413
-    //    }, {relativeCompanyId: 2});
-    //    $httpBackend.expectPUT(/relationships/);
-    //    //$httpBackend.flush();
-    //  });
-    //});
+    describe('updateCompanyRelationship', function () {
+      beforeEach(function () {
+        $httpBackend.whenPUT(/relationships/).respond({
+          done: true
+        });
+      });
+
+      it('it should POST data to company-relationship API', function () {
+        companyRelationshipService.updateCompanyRelationship({
+          companyRelationshipData: 'fakeCompanyRelationshipPayload'
+        });
+        $httpBackend.expectPUT(/relationships/);
+        $httpBackend.flush();
+      });
+    });
+
+    describe('createCompanyRelationship', function () {
+      var companyRelationshipData;
+
+      beforeEach(function () {
+        var companyId = 417;
+        var relativeCompanyId = 420;
+        var regex = new RegExp('/companies/' + companyId + '/relationships', 'g');
+        var mockPayload = {
+          'companyId': companyId,
+          'relativeCompanyId': relativeCompanyId,
+          'startDate': '09/20/2015',
+          'endDate': '09/21/2015'
+        };
+
+        var mockDataFromService = {
+          'relativeCompanyId': relativeCompanyId,
+          'startDate': '20150920',
+          'endDate': '20150921'
+        };
+
+        $httpBackend.expectPOST(regex, mockDataFromService).respond(201, {'id': 77});
+
+        companyRelationshipService.createCompanyRelationship(mockPayload).then(function (dataFromAPI) {
+          companyRelationshipData = dataFromAPI;
+        });
+        $httpBackend.flush();
+      });
+
+      it('should be an object', function () {
+        expect(Object.prototype.toString.call(companyRelationshipData)).toBe('[object Object]');
+      });
+
+      it('should have an id property', function () {
+        expect(companyRelationshipData.id).toEqual(jasmine.any(Number));
+      });
+
+    });
+
+    describe('updateCompanyRelationship', function () {
+      beforeEach(function () {
+        $httpBackend.whenPUT(/relationships/).respond({
+          done: true
+        });
+      });
+
+      it('it should POST data to company-relationship API', function () {
+        companyRelationshipService.updateCompanyRelationship({
+          companyRelationshipData: 'fakeCompanyRelationshipPayload'
+        });
+        $httpBackend.expectPUT(/relationships/);
+        $httpBackend.flush();
+      });
+    });
+
+    describe('deleteCompanyRelationship', function () {
+      beforeEach(function () {
+        $httpBackend.whenDELETE(/relationships/).respond({
+          done: true
+        });
+      });
+
+      it('it should DELETE data to company-relationship API', function () {
+        companyRelationshipService.deleteCompanyRelationship({
+          companyRelationshipData: 'fakeCompanyRelationshipPayload'
+        });
+        $httpBackend.expectDELETE(/relationships/);
+        $httpBackend.flush();
+      });
+    });
   });
 });

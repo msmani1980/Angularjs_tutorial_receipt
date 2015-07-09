@@ -101,7 +101,7 @@ angular.module('ts5App')
 
     var createCompanyRelationship = function (payload) {
       return companyRelationshipRequestResource.createCompanyRelationship({
-        id: payload.companyId,
+        id: payload.companyId
       }, payload).$promise;
     };
 
