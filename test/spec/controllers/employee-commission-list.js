@@ -47,26 +47,54 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     expect(scope.viewName).toBeDefined();
   });
 
-  describe('search object', function(){
+  describe('search object', function () {
 
     it('should exists in scope', function () {
       expect(scope.search).toBeDefined();
     });
 
     it('should have required properties', function () {
-      expect(Object.keys(scope.search)).toEqual(['startDate', 'itemList', 'priceTypesList', 'taxRateTypesList']);
+      expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemList', 'priceTypesList', 'taxRateTypesList']);
     });
 
   });
 
-  describe('API requests', function(){
+  describe('API requests', function () {
 
-    it('should call get price type from factory', function(){
+    it('should call get price type from factory', function () {
       expect(employeeCommissionFactory.getPriceTypesList).toHaveBeenCalled();
     });
 
-    it('should call get tax rate type from factory', function(){
+    it('should call get tax rate type from factory', function () {
       expect(employeeCommissionFactory.getTaxRateTypes).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('form reset', function () {
+
+    beforeEach(function(){
+      scope.search.selectedPriceType = 'fakeData';
+      scope.search.selectedRateType = 'fakeData';
+      scope.search.startDate = 'fakeData';
+      scope.search.endDate = 'fakeData';
+      scope.clearForm();
+    });
+
+    it('should reset the selected price type', function () {
+      expect(scope.search.selectedPriceType).toBeUndefined();
+    });
+
+    it('should reset the selected rate type', function () {
+      expect(scope.search.selectedRateType).toBeUndefined();
+    });
+
+    it('should reset the startDate', function () {
+      expect(scope.search.startDate).toBe('');
+    });
+
+    it('should reset the endDate', function () {
+      expect(scope.search.endDate).toBe('');
     });
 
   });

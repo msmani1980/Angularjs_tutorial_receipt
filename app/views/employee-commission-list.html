@@ -75,7 +75,6 @@
           end-date-model="search.endDate"
           label-from="Effective From"
           label-to="Effective To"
-          required="true"
           disable-past="true">
         </date-picker>
 
@@ -83,7 +82,9 @@
           <div class="form-group">
             <label class="control-label" for="itemName">Item Name</label>
             <select class="form-control" id="itemName">
-              <option ng-repeat="item in search.itemList | orderBy:'itemName'" value="{{item.masterId}}">{{item.itemName}}</option>
+              <option ng-repeat="item in search.itemList | orderBy:'itemName'" value="{{item.masterId}}">
+                {{item.itemName}}
+              </option>
             </select>
           </div>
         </div>
@@ -91,9 +92,11 @@
         <div class="col-sm-3">
           <div class="form-group">
             <label class="control-label" for="saleType">Sale Type</label>
-            <select class="form-control" id="saleType">
-              <option ng-repeat="priceType in search.priceTypesList | orderBy:'name'" value="{{priceType.id}}">{{priceType.name}}
-              </option>
+            <select class="form-control"
+                    id="saleType"
+                    ng-options="priceType.name for priceType in search.priceTypesList | orderBy:'name' track by priceType.id"
+                    ng-model="search.selectedPriceType">
+            </select>
             </select>
           </div>
         </div>
@@ -105,7 +108,8 @@
               class="form-control"
               id="rateType"
               ng-options="taxRate.taxRateType for taxRate in search.taxRateTypesList | orderBy:'taxRateType' track by taxRate.id"
-              ng-model="search.selectedRateType"></select>
+              ng-model="search.selectedRateType">
+            </select>
           </div>
         </div>
 
@@ -140,10 +144,12 @@
       <button class="btn btn-info btn-xs" ng-click="showCommission(commission)">
         <i class="fa fa-file"></i>
       </button>
-      <button class="btn btn-primary btn-xs" ng-click="showCommission(commission)" ng-show="!isCommissionEditable(commission)">
+      <button class="btn btn-primary btn-xs" ng-click="showCommission(commission)"
+              ng-show="!isCommissionEditable(commission)">
         <i class="fa fa-pencil"></i>
       </button>
-      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)" ng-show="!isCommissionReadOnly(commission)">
+      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)"
+              ng-show="!isCommissionReadOnly(commission)">
         <i class="fa fa-trash"></i>
       </button>
     </td>

@@ -1,4 +1,5 @@
 'use strict';
+/*global moment*/
 
 /**
  * @ngdoc function
@@ -11,10 +12,26 @@ angular.module('ts5App')
   .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast) {
     $scope.viewName = 'Employee Commission';
     $scope.search = {
-      startDate: moment().add(1, 'days').format('L').toString(),
+      startDate: '',
+      endDate: '',
       itemList: [],
       priceTypesList: [],
       taxRateTypesList: []
+    };
+
+    function showToastMessage(className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    }
+
+    $scope.clearForm = function () {
+      delete $scope.search.selectedPriceType;
+      delete $scope.search.selectedRateType;
+      $scope.search.startDate = '';
+      $scope.search.endDate = '';
     };
 
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
@@ -22,7 +39,7 @@ angular.module('ts5App')
     });
 
     employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {
-      $scope.search.taxRateTypes = dataFromAPI;
+      $scope.search.taxRateTypesList = dataFromAPI;
     });
 
   });
