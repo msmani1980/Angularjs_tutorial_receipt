@@ -189,10 +189,14 @@ angular.module('ts5App')
       return companyRelationshipFactory.getCompanyList();
     };
 
+    var generateCompanyRelationshipPromises = function () {
+      return [getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise($scope.company.companyTypeId)];
+    };
+
     var getCompanyListSuccessHandler = function (response) {
       setupCompanyScope(response);
-
-      return $q.all([getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise($scope.company.companyTypeId)]);
+      var promises = generateCompanyRelationshipPromises();
+      return $q.all(promises);
     };
 
     var errorHandler = function (/*error*/) {
