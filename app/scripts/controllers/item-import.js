@@ -32,7 +32,7 @@ angular.module('ts5App')
       addToImportedRetailItemList(retailItem);
     }
 
-    function addRetailItemToCompanyRetailItems(retailItem, onlyIndex){
+    function addRetailItemToCompanyRetailItems(retailItem, onlyIndex, atIndex){
       if(!canBeAddedToCompanyRetailList(retailItem)){
         return;
       }
@@ -43,7 +43,12 @@ angular.module('ts5App')
       if (-1 !== $scope.companyRetailItemList.indexOf(retailItem)) {
         return;
       }
-      $scope.companyRetailItemList.push(retailItem);
+      if(atIndex >= 0){
+        $scope.companyRetailItemList.splice(atIndex, 0, retailItem);
+      }
+      else{
+        $scope.companyRetailItemList.push(retailItem);
+      }
     }
 
     function showMessage(message, messageType) {
@@ -250,8 +255,12 @@ angular.module('ts5App')
     };
 
     $scope.onDrop = function ($event, $data, array) {
-      array.unshift($data);
-      addRetailItemToCompanyRetailItems($data);
+      var index = false;
+      if($event.currentTarget.id !== 'item-drop-init'){
+        var targetRetailItem = angular.element($event.currentTarget).scope().retailItem;
+        index = array.indexOf(targetRetailItem);
+      }
+      addRetailItemToCompanyRetailItems($data, false, index);
     };
     // TODO: change BACK button to back/save when models change
   });
