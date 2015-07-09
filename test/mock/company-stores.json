@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "count": 10,
+    "limit": 10,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 1,
+      "companyId": 403,
+      "storeNumber": "abcde12345",
+      "startDate": "2015-06-27",
+      "endDate": "2050-01-05"
+    },
+    {
+      "id": 4,
+      "companyId": 403,
+      "storeNumber": "abcde1234",
+      "startDate": "2015-06-27",
+      "endDate": "2050-01-05"
+    },
+    {
+      "id": 5,
+      "companyId": 403,
+      "storeNumber": "abcde123--",
+      "startDate": "2015-06-27",
+      "endDate": "2050-01-01"
+    },
+    {
+      "id": 6,
+      "companyId": 403,
+      "storeNumber": "abcde123-a",
+      "startDate": "2015-06-27",
+      "endDate": "2050-01-01"
+    },
+    {
+      "id": 7,
+      "companyId": 403,
+      "storeNumber": "abcde123a4",
+      "startDate": "2015-06-28",
+      "endDate": "2050-01-01"
+    },
+    {
+      "id": 9,
+      "companyId": 403,
+      "storeNumber": "abcde123a5",
+      "startDate": "2015-06-28",
+      "endDate": "2050-01-01"
+    },
+    {
+      "id": 13,
+      "companyId": 403,
+      "storeNumber": "abcde12347",
+      "startDate": "2015-07-02",
+      "endDate": "2050-01-02"
+    },
+    {
+      "id": 14,
+      "companyId": 403,
+      "storeNumber": "abcde12341",
+      "startDate": "2015-07-01",
+      "endDate": "2015-07-01"
+    },
+    {
+      "id": 16,
+      "companyId": 403,
+      "storeNumber": "abcde12346",
+      "startDate": "2015-07-28",
+      "endDate": "2050-01-01"
+    },
+    {
+      "id": 403,
+      "companyId": 403,
+      "storeNumber": "store12345",
+      "startDate": "2015-07-08",
+      "endDate": "2015-07-09"
+    }
+  ]
+}

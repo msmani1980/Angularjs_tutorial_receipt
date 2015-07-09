@@ -1,95 +1,192 @@
 'use strict';
 /* global moment */
-describe('Controller: MenuRelationshipListCtrl', function () {
-  var $rootScope,
+describe('Menu Relationship List Controller', function () {
+
+  beforeEach(module('ts5App'));
+  beforeEach(module('served/menus.json', 'served/catering-stations.json',
+    'served/menu-catering-stations.json'));
+  beforeEach(module('template-module'));
+
+  var MenuRelationshipListCtrl,
     $scope,
-    $controller,
-    $location,
-    MenuRelationshipListCtrl,
-    menuAPIResponse,
-    stationAPIResponse;
+    getMenuListDeffered,
+    menuService,
+    menuListJSON,
+    stationListJSON,
+    catererStationService,
+    getCatererStationListDeffered,
+    getRelationshipListDeffered,
+    menuCatererStationListJSON,
+    menuCatererStationsService,
+    location,
+    httpBackend,
+    authRequestHandler;
 
-  beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/menus.json', 'served/catering-stations.json'));
-
-  beforeEach(inject(function (_$rootScope_, _$controller_, $injector,
-    _servedMenus_, _servedCateringStations_) {
-    $location = $injector.get('$location');
-    $location.path('/menu-relationship-list');
-    $rootScope = _$rootScope_;
-    $scope = $rootScope.$new();
-    $controller = _$controller_;
-    MenuRelationshipListCtrl = $controller('MenuRelationshipListCtrl', {
-      '$rootScope': $rootScope,
-      '$scope': $scope
+  beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
+    $location, $httpBackend, _catererStationService_,
+    _menuCatererStationsService_) {
+    inject(function (_servedMenus_, _servedCateringStations_,
+      _servedMenuCateringStations_) {
+      menuListJSON = _servedMenus_;
+      stationListJSON = _servedCateringStations_;
+      menuCatererStationListJSON = _servedMenuCateringStations_;
     });
-    menuAPIResponse = _servedMenus_;
-    stationAPIResponse = _servedCateringStations_;
+
+    // backend definition common for all tests
+    authRequestHandler = $httpBackend.when('GET', '/auth.py').respond({
+      userId: 'userX'
+    }, {
+      'A-Token': 'xxx'
+    });
+
+    httpBackend = $httpBackend;
+    location = $location;
+    $scope = $rootScope.$new();
+
+    getMenuListDeffered = $q.defer();
+    getMenuListDeffered.resolve(menuListJSON);
+    menuService = _menuService_;
+    spyOn(menuService, 'getMenuList').and.returnValue(
+      getMenuListDeffered.promise);
+
+    getCatererStationListDeffered = $q.defer();
+    getCatererStationListDeffered.resolve(stationListJSON);
+    catererStationService = _catererStationService_;
+    spyOn(catererStationService, 'getCatererStationList').and.returnValue(
+      getCatererStationListDeffered.promise);
+
+    getRelationshipListDeffered = $q.defer();
+    getRelationshipListDeffered.resolve(menuCatererStationListJSON);
+    menuCatererStationsService = _menuCatererStationsService_;
+    spyOn(menuCatererStationsService, 'getRelationshipList').and.returnValue(
+      getRelationshipListDeffered.promise);
+    spyOn(menuCatererStationsService, 'deleteRelationship').and.returnValue({
+      then: function () {
+        return true;
+      }
+    });
+    MenuRelationshipListCtrl = $controller('MenuRelationshipListCtrl', {
+      $scope: $scope
+    });
+
   }));
 
-  describe('The MenuRelationshipListCtrl', function () {
-    it('should be defined', function () {
-      expect(MenuRelationshipListCtrl).toBeDefined();
-    });
-    it('should have a the route /menu-relationship-list', function () {
-      expect($location.path()).toBe('/menu-relationship-list');
-    });
+  afterEach(function () {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
   });
 
+  it('should have a init method', function () {
+    expect(MenuRelationshipListCtrl.init).toBeDefined();
+  });
+
+  it('should have a getRelationshipList method', function () {
+    expect(MenuRelationshipListCtrl.getRelationshipList).toBeDefined();
+  });
+
+  it('should have a setMenuList method', function () {
+    expect(MenuRelationshipListCtrl.setMenuList).toBeDefined();
+  });
+
+  it('should have an empty menu list before the scope is digested',
+    function () {
+      expect($scope.menuList).toBeUndefined();
+    });
+
   describe('menus list', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
     it('should be defined', function () {
       expect($scope.menuList).toBeDefined();
     });
+
     it('should be contain at least one object in the menus array',
       function () {
         expect($scope.menuList.length).toBeGreaterThan(0);
       });
+
     it('should be match the menus from the menu API Respone',
       function () {
-        expect($scope.menuList).toEqual(menuAPIResponse.menus);
+        expect($scope.menuList).toEqual(menuListJSON.menus);
       });
 
     describe('menu object', function () {
+
       var menuObject;
+
       beforeEach(function () {
         menuObject = $scope.menuList[0];
       });
+
       it('should be defined', function () {
         expect(menuObject).toBeDefined();
       });
+
       it('should have an id and it is a number', function () {
         expect(menuObject.id).toBeDefined();
         expect(menuObject.id).toEqual(jasmine.any(Number));
       });
-      it('should have a companyId and it is a number', function () {
-        expect(menuObject.companyId).toBeDefined();
-        expect(menuObject.companyId).toEqual(jasmine.any(Number));
-      });
-      it('should have a menuCode and it is a number', function () {
-        expect(menuObject.menuCode).toBeDefined();
-        expect(menuObject.menuCode).toEqual(jasmine.any(String));
-      });
-      it('should have a menuName and it is a string', function () {
-        expect(menuObject.menuName).toBeDefined();
-        expect(menuObject.menuName).toEqual(jasmine.any(String));
-      });
+
+      it('should have a companyId and it is a number',
+        function () {
+          expect(menuObject.companyId).toBeDefined();
+          expect(menuObject.companyId).toEqual(jasmine.any(
+            Number));
+        });
+
+      it('should have a menuCode and it is a number',
+        function () {
+          expect(menuObject.menuCode).toBeDefined();
+          expect(menuObject.menuCode).toEqual(jasmine.any(
+            String));
+        });
+
+      it('should have a menuName and it is a string',
+        function () {
+          expect(menuObject.menuName).toBeDefined();
+          expect(menuObject.menuName).toEqual(jasmine.any(
+            String));
+        });
+
     });
+
   });
 
+  it('should have a setCatererStationList method', function () {
+    expect(MenuRelationshipListCtrl.setCatererStationList).toBeDefined();
+  });
+
+  it('should not have a stationList attached to the scope yet',
+    function () {
+      expect($scope.stationList).toBeUndefined();
+    });
+
   describe('station list', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
     it('should be defined', function () {
       expect($scope.stationList).toBeDefined();
     });
+
     it('should be contain at least one object in the menus array',
       function () {
         expect($scope.stationList.length).toBeGreaterThan(0);
       });
-    it('should be match the stations from the station API Response',
+
+    it(
+      'should be match the stations from the station API Response',
       function () {
-        expect($scope.stationList).toEqual(stationAPIResponse.response);
+        expect($scope.stationList).toEqual(stationListJSON.response);
       });
 
     describe('station object', function () {
+
       var stationObject;
 
       beforeEach(function () {
@@ -99,33 +196,258 @@ describe('Controller: MenuRelationshipListCtrl', function () {
       it('should be defined', function () {
         expect(stationObject).toBeDefined();
       });
+
       it('should have an id and it is a number', function () {
         expect(stationObject.id).toBeDefined();
-        expect(stationObject.id).toEqual(jasmine.any(Number));
-      });
-      it('should have a companyId and it is a number', function () {
-        expect(stationObject.companyId).toBeDefined();
-        expect(stationObject.companyId).toEqual(jasmine.any(
+        expect(stationObject.id).toEqual(jasmine.any(
           Number));
       });
-      it('should have a station Code and it is a number', function () {
-        expect(stationObject.code).toBeDefined();
-        expect(stationObject.code).toEqual(jasmine.any(
-          String));
-      });
-      it('should have a station Name and it is a string', function () {
-        expect(stationObject.name).toBeDefined();
-        expect(stationObject.name).toEqual(jasmine.any(
-          String));
-      });
+
+      it('should have a companyId and it is a number',
+        function () {
+          expect(stationObject.companyId).toBeDefined();
+          expect(stationObject.companyId).toEqual(jasmine.any(
+            Number));
+        });
+
+      it('should have a station Code and it is a number',
+        function () {
+          expect(stationObject.code).toBeDefined();
+          expect(stationObject.code).toEqual(jasmine.any(
+            String));
+        });
+
+      it('should have a station Name and it is a string',
+        function () {
+          expect(stationObject.name).toBeDefined();
+          expect(stationObject.name).toEqual(jasmine.any(
+            String));
+        });
+
     });
+
   });
 
+  describe('The Pagination', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should attach currentPage to the scope', function () {
+      expect($scope.currentPage).toBeDefined();
+      expect($scope.currentPage).toEqual(1);
+    });
+
+    it('should attach relationshipsPerPage to the scope', function () {
+      expect($scope.relationshipsPerPage).toBeDefined();
+      expect($scope.relationshipsPerPage).toEqual(10);
+    });
+
+  });
+
+  describe('the findRelationshipIndex functionality', function () {
+
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should have a findRelationshipIndex method', function () {
+      expect(MenuRelationshipListCtrl.findRelationshipIndex).toBeDefined();
+    });
+
+    it('should return the correct relationship index', function () {
+      var relationshipIndex = MenuRelationshipListCtrl.findRelationshipIndex(
+        $scope.relationshipList[0]);
+      expect(relationshipIndex).toEqual(0);
+    });
+
+  });
+
+  describe('the findMenuIndex functionality', function () {
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should have a findMenuIndex method', function () {
+      expect(MenuRelationshipListCtrl.findMenuIndex).toBeDefined();
+    });
+
+    it('should return the correct menu index when passed a menuId',
+      function () {
+        var menuIndex = MenuRelationshipListCtrl.findMenuIndex(6);
+        expect(menuIndex).toEqual(2);
+      });
+  });
+
+  describe('the findMenuIndex functionality', function () {
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should have a findMenuIndex method', function () {
+      expect(MenuRelationshipListCtrl.findMenuIndex).toBeDefined();
+    });
+
+    it('should return the correct menu index when passed a menuId',
+      function () {
+        var menuId = 6;
+        var menuIndex = MenuRelationshipListCtrl.findMenuIndex(menuId);
+        expect(menuIndex).toEqual(2);
+      });
+  });
+
+  describe('the findStationIndex functionality', function () {
+    beforeEach(function () {
+      $scope.$digest();
+    });
+
+    it('should have a findStationIndex method', function () {
+      expect(MenuRelationshipListCtrl.findStationIndex).toBeDefined();
+    });
+
+    it(
+      'should return the correct station index when passed a stationId',
+      function () {
+        var stationId = 3;
+        var stationIndex = MenuRelationshipListCtrl.findStationIndex(
+          stationId);
+        expect(stationIndex).toEqual(0);
+      });
+  });
+
+  describe('remove relationship functionality', function () {
+
+    var relationshipId,
+      testObject;
+    beforeEach(function () {
+      $scope.$digest();
+      relationshipId = 75;
+      testObject = $scope.relationshipList[0];
+    });
+
+    it('should have a removeRecord() method attached to the scope',
+      function () {
+        expect($scope.removeRecord).toBeDefined();
+      });
+
+    it('should remove the record from the relationshipList', function () {
+      expect($scope.relationshipList.length).toEqual(6);
+      $scope.removeRecord(relationshipId);
+      expect($scope.relationshipList.length).toEqual(5);
+    });
+
+  });
+
+  describe('clear filter functionality', function () {
+    beforeEach(function () {
+      $scope.$digest();
+    });
+    it(
+      'should have a clearSearchFilters() method attached to the scope',
+      function () {
+        expect($scope.clearSearchFilters).toBeDefined();
+      });
+
+    it('should clear the search ng-model when called', function () {
+      $scope.search = {
+        menuId: 4
+      };
+      $scope.clearSearchFilters();
+      expect($scope.search).toEqual({});
+    });
+
+    it('should clear the dateRange ng-model when called', function () {
+      $scope.dateRange.startDate = '07-15-2015';
+      $scope.dateRange.endDate = '08-15-2015';
+      $scope.clearSearchFilters();
+      expect($scope.dateRange).toEqual({});
+    });
+
+  });
+
+  describe('the functionality that associates menus to relationships',
+    function () {
+
+      it('should have a associateStationData method', function () {
+        expect(MenuRelationshipListCtrl.associateStationData).toBeDefined();
+      });
+
+      it(
+        'should not have any relations or stations associated to the relationship yet',
+        function () {
+          expect($scope.relationshipList).toEqual([]);
+        });
+
+      it(
+        'should associate stations with relationships when the controller inits',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[0].stations).toBeDefined();
+          expect($scope.relationshipList[0].stations).toEqual(jasmine.any(
+            Array));
+        });
+
+      it('should associate (1) station with the first relationship',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[0].stations.length).toEqual(1);
+        });
+
+      it('should contain the station data inside the first relationship',
+        function () {
+          $scope.$digest();
+          var stations = [$scope.stationList[0]];
+          expect($scope.relationshipList[0].stations).toEqual(stations);
+        });
+
+    });
+
+  describe('the functionality that associates menus to relationships',
+    function () {
+
+      it('should have a associateMenuData method', function () {
+        expect(MenuRelationshipListCtrl.associateMenuData).toBeDefined();
+      });
+
+      it(
+        'should not have any relations or menus associated to the relationship yet',
+        function () {
+          expect($scope.relationshipList).toEqual([]);
+        });
+
+      it(
+        'should associate menu with relationships when the controller inits',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[3].menu).toBeDefined();
+        });
+
+      it('should contain the correct menuCode',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[3].menu.menuCode).toEqual(
+            'MN14351');
+        });
+
+      it('should contain the correct menuName',
+        function () {
+          $scope.$digest();
+          expect($scope.relationshipList[3].menu.menuName).toEqual(
+            'MN14351');
+        });
+
+    });
+
+  /* E2E Tests */
+
   describe('view', function () {
+
     var $templateCache,
       $compile,
       html,
       view;
+
     beforeEach(inject(function (_$templateCache_, _$compile_) {
       $templateCache = _$templateCache_;
       $compile = _$compile_;
@@ -135,8 +457,9 @@ describe('Controller: MenuRelationshipListCtrl', function () {
       view = angular.element(compiled[0]);
       $scope.$digest();
     }));
+
     it('should be defined', function () {
-      expect(view).toBeDefined();
+      expect(view[0]).toBeDefined();
     });
 
     describe('container', function () {
@@ -173,8 +496,8 @@ describe('Controller: MenuRelationshipListCtrl', function () {
         expect(controls.find('.view-name').text().trim()).toEqual(
           'Menu Relationship List');
       });
-      it('should have (3) buttons inside the controls', function () {
-        expect(controls.find('.btn').length).toEqual(3);
+      it('should have (4) buttons inside the controls', function () {
+        expect(controls.find('.btn').length).toEqual(4);
       });
 
       describe('create button', function () {
@@ -253,19 +576,19 @@ describe('Controller: MenuRelationshipListCtrl', function () {
               expect(formGroup.find('label').text().trim())
                 .toEqual('Menu Code');
             });
-          it('should contain an input field', function () {
-            expect(formGroup.find('input')[0]).toBeDefined();
+          it('should contain an select', function () {
+            expect(formGroup.find('select')[0]).toBeDefined();
           });
           it('should contain .form-control class', function () {
-            expect(formGroup.find('input').hasClass(
+            expect(formGroup.find('select').hasClass(
               'form-control')).toBeTruthy();
           });
           it(
-            'should contain an input field with the correct ng-model',
+            'should contain an select field with the correct ng-model',
             function () {
-              expect(formGroup.find('input').attr(
+              expect(formGroup.find('select').attr(
                   'ng-model'))
-                .toEqual('search.menuCode');
+                .toEqual('search.menuId');
             });
         });
 
@@ -286,19 +609,19 @@ describe('Controller: MenuRelationshipListCtrl', function () {
               expect(formGroup.find('label').text().trim())
                 .toEqual('Menu Name');
             });
-          it('should contain an input field', function () {
-            expect(formGroup.find('input')[0]).toBeDefined();
+          it('should contain an select field', function () {
+            expect(formGroup.find('select')[0]).toBeDefined();
           });
           it('should contain .form-control class', function () {
-            expect(formGroup.find('input').hasClass(
+            expect(formGroup.find('select').hasClass(
               'form-control')).toBeTruthy();
           });
           it(
             'should contain an input field with the correct ng-model',
             function () {
-              expect(formGroup.find('input').attr(
+              expect(formGroup.find('select').attr(
                   'ng-model'))
-                .toEqual('search.menuName');
+                .toEqual('search.menuId');
             });
         });
 
@@ -322,39 +645,31 @@ describe('Controller: MenuRelationshipListCtrl', function () {
           it('should contain an select element', function () {
             expect(formGroup.find('select')[0]).toBeDefined();
           });
-          it('should contain .form-control class', function () {
-            expect(formGroup.find('select').hasClass(
-              'form-control')).toBeTruthy();
-          });
-          it('should be a multiple select input', function () {
-            expect(formGroup.find('select').attr(
-              'multiple')).toBeTruthy();
-          });
           it(
             'should contain an input field with the correct ng-model',
             function () {
               expect(formGroup.find('select').attr(
                   'ng-model'))
-                .toEqual('search.menuStation');
+                .toEqual('search.catererStationId');
             });
           it(
             'should contain all stations in apiResponse as options',
             function () {
               expect(formGroup.find('option').length).toEqual(
-                $scope.stationList.length);
+                $scope.stationList.length + 1);
             });
 
           describe('catering station option', function () {
             var option;
             beforeEach(function () {
               option = angular.element(formGroup
-                .find('option')[0]);
+                .find('option')[1]);
             });
             it(
               'should have a value set from the stationList',
               function () {
                 expect(option.val()).toEqual($scope.stationList[
-                  0].code);
+                  0].id.toString());
               });
           });
         });
@@ -369,67 +684,6 @@ describe('Controller: MenuRelationshipListCtrl', function () {
             expect(datePicker[0]).toBeDefined();
           });
           // TODO: Test directive element injection, talk to Rodrigo about replace
-        });
-      });
-
-      describe('search functionality', function () {
-        var table;
-        beforeEach(function () {
-          table = angular.element(view.find('table')[0]);
-        });
-
-        describe('menu code filter', function () {
-          var menuCodeInput;
-          beforeEach(function () {
-            menuCodeInput = angular.element(view.find(
-              'input[ng-model="search.menuCode"]')[
-              0]);
-          });
-          it(
-            'should return all items in the table when the menu code is not set ',
-            function () {
-              menuCodeInput.val('');
-              $scope.$digest();
-              menuCodeInput.triggerHandler('input');
-              expect(table.find('tbody tr').length).toEqual(
-                $scope.menuList.length);
-            });
-          it(
-            'should contain (1) item in the table when the menu code is filtered by "M" ',
-            function () {
-              menuCodeInput.val('M');
-              $scope.$digest();
-              menuCodeInput.triggerHandler('input');
-              expect(table.find('tbody tr').length).toEqual(
-                1);
-            });
-        });
-
-        describe('menu name filter', function () {
-          var menuNameInput;
-          beforeEach(function () {
-            menuNameInput = angular.element(view.find(
-              'input[ng-model="search.menuName"]')[
-              0]);
-          });
-          it(
-            'should return all items in the table when the menu name is not set ',
-            function () {
-              menuNameInput.val('');
-              $scope.$digest();
-              menuNameInput.triggerHandler('input');
-              expect(table.find('tbody tr').length).toEqual(
-                $scope.menuList.length);
-            });
-          it(
-            'should contain (1) item in the table when the menu name is filtered by "Name" ',
-            function () {
-              menuNameInput.val('Name');
-              $scope.$digest();
-              menuNameInput.triggerHandler('input');
-              expect(table.find('tbody tr').length).toEqual(
-                1);
-            });
         });
       });
 
@@ -521,27 +775,26 @@ describe('Controller: MenuRelationshipListCtrl', function () {
             0]);
         });
         it(
-          'should contain a list tr element which is the same length as the menu list ',
+          'should contain a list tr element which is the same length as the relationship list ',
           function () {
             expect(tbody.find('tr').length).toEqual(
-              $scope.menuList
-              .length);
+              $scope.relationshipList.length);
           });
 
         describe('first row', function () {
           var testRow,
             testCell,
-            testMenuData;
+            testRelationshipData;
           beforeEach(function () {
-            testMenuData = menuAPIResponse.menus[
-              0];
-            testRow = angular.element(tbody.find(
-              'tr')[
+            testRelationshipData =
+              $scope.relationshipList[0];
+            testRow = angular.element(tbody.find('tr')[
               0]);
           });
           it('should contain ng-repeat', function () {
             expect(testRow.attr('ng-repeat')).toContain(
-              '(key,menu) in menuList');
+              '(key,relationship) in paginatedRelationships'
+            );
           });
           it('should contain a Menu Code cell',
             function () {
@@ -555,7 +808,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
               testCell = angular.element(testRow.find(
                 'td')[0]);
               expect(testCell.text().trim()).toEqual(
-                testMenuData.menuCode);
+                testRelationshipData.menu.menuCode);
             });
           it('should contain a Menu Name cell',
             function () {
@@ -569,7 +822,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
               testCell = angular.element(testRow.find(
                 'td')[1]);
               expect(testCell.text().trim()).toEqual(
-                testMenuData.menuName);
+                testRelationshipData.menu.menuName);
             });
           it(
             'should contain a Catering Stations cell',
@@ -596,7 +849,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                 .toString();
               expect(
                 formattedDate).toEqual(
-                testMenuData.startDate);
+                testRelationshipData.startDate);
             });
           it('should contain a End Date cell',
             function () {
@@ -614,7 +867,7 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                   'MM/DD/YYYY').format('YYYY-MM-DD')
                 .toString();
               expect(formattedDate).toEqual(
-                testMenuData.endDate);
+                testRelationshipData.endDate);
             });
 
           describe('view button', function () {
@@ -639,10 +892,12 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                   .toBeTruthy();
               });
             it(
-              'should have an ng-href to view the menu',
+              'should have an ng-href to view the relationship',
               function () {
-                var testObject = $scope.menuList[0];
-                var testUrl = '#/menu-view/' +
+                var testObject = $scope.relationshipList[
+                  0];
+                var testUrl =
+                  '#/menu-relationship-view/' +
                   testObject.id;
                 expect(viewButton.attr('ng-href')).toEqual(
                   testUrl);
@@ -651,13 +906,16 @@ describe('Controller: MenuRelationshipListCtrl', function () {
           });
 
           describe('edit button', function () {
-            var editButton;
+            var editButton,
+              testObject;
             beforeEach(function () {
               testCell = angular.element(testRow.find(
                 'td')[5]);
               editButton = angular.element(
                 testCell
-                .find('.btn-edit'));
+                .find('.btn-edit')[0]);
+              testObject = $scope.relationshipList[
+                0];
             });
             it('should be defined', function () {
               expect(editButton[0]).toBeDefined();
@@ -674,23 +932,18 @@ describe('Controller: MenuRelationshipListCtrl', function () {
             it(
               'should have an ng-href to edit the menu',
               function () {
-                var testObject = $scope.menuList[
-                  0];
-                var testUrl = '#/menu-edit/' +
+                var testUrl =
+                  '#/menu-relationship-edit/' +
                   testObject.id;
                 expect(editButton.attr('ng-href'))
-                  .toEqual(
-                    testUrl);
+                  .toEqual(testUrl);
               });
             it(
-              'should be disabled if the menu is inactive',
+              'should be shown if the menu is  inactive',
               function () {
-                var testObject = $scope.menuList[0];
-                var itemIsInactive = $scope.isItemInactive(
+                var menuIsInactive = $scope.isRelationshipInactive(
                   testObject.endDate);
-                expect(itemIsInactive).toBeTruthy();
-                expect(editButton.attr('disabled')).toEqual(
-                  'disabled');
+                expect(menuIsInactive).toBeFalsy();
               });
           });
 
@@ -717,37 +970,35 @@ describe('Controller: MenuRelationshipListCtrl', function () {
                   'btn-danger')).toBeTruthy();
               });
             it(
-              'should have ng-click with removeMenu function',
+              'should have ng-click with deleteRecordDialog function',
               function () {
                 expect(deleteButton.attr(
                   'ng-click')).toEqual(
-                  'removeMenu(menu.id,key)');
+                  'deleteRecordDialog(relationship)'
+                );
               });
             it(
-              'should be disabled if the menu is active',
+              'should be hidden if the menu is active',
               function () {
                 var testObject = $scope.menuList[0];
-                var itemIsActive = $scope.isItemActive(
+                var menuIsActive = $scope.isRelationshipActive(
                   testObject.endDate);
-                expect(itemIsActive).toBeTruthy();
-                expect(deleteButton.attr('disabled'))
-                  .toEqual(
-                    'disabled');
+                expect(menuIsActive).toBeTruthy();
+                expect(deleteButton.attr('ng-hide')).toBeTruthy();
               });
             it(
-              'should be disabled if the menu is inactive',
+              'should be hidden if the menu is inactive',
               function () {
                 var testObject = $scope.menuList[0];
-                var itemIsInactive = $scope.isItemInactive(
+                var menuIsInactive = $scope.isRelationshipInactive(
                   testObject.endDate);
-                expect(itemIsInactive).toBeTruthy();
-                expect(deleteButton.attr('disabled'))
-                  .toEqual(
-                    'disabled');
+                expect(menuIsInactive).toBeTruthy();
+                expect(deleteButton.attr('ng-hide')).toBeTruthy();
               });
           });
         });
       });
     });
   });
+
 });
