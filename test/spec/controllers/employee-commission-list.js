@@ -54,7 +54,8 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
 
     it('should have required properties', function () {
-      expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemsList', 'priceTypesList', 'taxRateTypesList']);
+      expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemsList', 'priceTypesList',
+        'taxRateTypesList']);
     });
 
   });
@@ -70,14 +71,14 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
 
     it('should fetch items from factory', function () {
-      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith();
+      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalled();
     });
 
   });
 
   describe('form reset', function () {
 
-    beforeEach(function(){
+    beforeEach(function () {
       scope.search.selectedPriceType = 'fakeData';
       scope.search.selectedRateType = 'fakeData';
       scope.search.startDate = 'fakeData';
@@ -99,6 +100,14 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
 
     it('should reset the endDate', function () {
       expect(scope.search.endDate).toBe('');
+    });
+
+  });
+
+  describe('Search', function () {
+
+    it('should have a searchCommissions function', function () {
+      expect(scope.searchCommissions).toBeDefined();
     });
 
   });

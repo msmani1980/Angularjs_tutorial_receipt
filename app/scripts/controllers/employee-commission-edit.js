@@ -54,7 +54,7 @@ angular.module('ts5App')
     }
 
     $scope.submitForm = function() {
-      showToastMessage('warning', 'Employee Commission', 'API not ready yet');
+      showToastMessage('warning', 'Employee Commission', 'API not ready');
     };
 
   });

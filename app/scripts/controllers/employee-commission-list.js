@@ -43,6 +43,10 @@ angular.module('ts5App')
       });
     }
 
+    $scope.searchCommissions = function(){
+      showToastMessage('warning', 'Employee Commission', 'API not ready');
+    };
+
     $scope.clearForm = function () {
       delete $scope.search.selectedPriceType;
       delete $scope.search.selectedRateType;
