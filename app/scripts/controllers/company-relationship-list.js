@@ -184,32 +184,43 @@ angular.module('ts5App')
     var getCompanyRelationshipListByCompanyPromise = function (companyId) {
       return companyRelationshipFactory.getCompanyRelationshipListByCompany(companyId);
     };
+
     var getCompanyListPromise = function () {
       return companyRelationshipFactory.getCompanyList();
     };
+
+    var getCompanyListSuccessHandler = function (response) {
+      setupCompanyScope(response);
+
+      return $q.all([getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise($scope.company.companyTypeId)]);
+    };
+
+    var errorHandler = function (/*error*/) {
+      $scope.isLoading = false;
+      $scope.isRejected = true;
+      showToast('warning', $scope.viewName, 'API unavailable');
+      return;
+    };
+
     var getCompanyRelationshipTypeListPromise = function (companyTypeId) {
       return companyRelationshipFactory.getCompanyRelationshipTypeList(companyTypeId);
     };
 
-    getCompanyListPromise().then(function (response) {
-      setupCompanyScope(response);
-
-      return $q.all([getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise($scope.company.companyTypeId)]);
-    }, function (/*error*/) {
-      $scope.isRejected = true;
-      return;
-    }).then(function (response) {
+    var getCompanyRelationshipListByCompanyAndTypeSuccessHandler = function (response) {
       if (!response) {
         return;
       }
       setupCompanyRelationshipScope(response[0]);
       setupCompanyRelationshipTypeScope(response[1]);
       filterCompanyListByTypesScope(response[1]);
-    }).then(function () {
       $scope.isLoading = false;
-    }, function () {
-      $scope.isLoading = false;
-      $scope.isRejected = true;
-      showToast('warning', 'Company Relationship', 'API unavailable');
-    });
+    };
+
+    var setupController = function () {
+      getCompanyListPromise()
+        .then(getCompanyListSuccessHandler, errorHandler)
+        .then(getCompanyRelationshipListByCompanyAndTypeSuccessHandler, errorHandler);
+    };
+
+    setupController();
   });

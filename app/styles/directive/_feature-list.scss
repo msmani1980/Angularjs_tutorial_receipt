@@ -1,3 +1,19 @@
+//https://gist.github.com/seemus790/e48e89af4e9442d42f55
+@supports (display: flex) {
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .row:before,
+  .row:after,
+  .row > .clearfix:before,
+  .row > .clearfix:after {
+    display: none !important;
+  }
+}
+
 :focus {
   outline: 0;
   outline: none;
@@ -19,9 +35,12 @@
   padding: 12px 15px;
   line-height: 24px;
 }
+feature-list-item {
+  display: block;
+}
 feature-list-item > .row {
   margin: 1px 0;
-  background-color: #efefef;
+
   .list-header {
     background-color: #ffffff;
 
@@ -30,9 +49,11 @@ feature-list-item > .row {
       cursor: default;
     }
   }
-  &:hover {
+  & .hidden-xs:hover {
     background-color: #e6e6e6;
-    cursor: pointer;
+  }
+  .list-item {
+    background-color: #efefef;
   }
   .list-item:not(.visible-xs) {
     border-right: 1px solid #ffffff;
