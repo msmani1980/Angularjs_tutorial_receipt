@@ -124,22 +124,22 @@
 <table class="table table-bordered table-hover">
   <thead>
   <tr>
+    <th>Effective From</th>
+    <th>Effective To</th>
     <th>Item Name</th>
     <th>Sale Type</th>
     <th>Rate Type</th>
-    <th>Effective From</th>
-    <th>Effective To</th>
     <th>Actions</th>
   </tr>
   </thead>
   <tbody>
   <tr
     ng-repeat="commission in commissionList | filter:{commissionCode: search.commissionCode, commissionName: search.commissionName}">
+    <td>{{ commission.startDate }}</td>
+    <td>{{ commission.endDate }}</td>
     <td>{{ commission.itemName }}</td>
     <td>{{ commission.saleType }}</td>
     <td>{{ commission.rateType }}</td>
-    <td>{{ commission.startDate }}</td>
-    <td>{{ commission.endDate }}</td>
     <td>
       <button class="btn btn-info btn-xs" ng-click="showCommission(commission)">
         <i class="fa fa-file"></i>

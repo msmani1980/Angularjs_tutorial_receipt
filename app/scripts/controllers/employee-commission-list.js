@@ -19,6 +19,22 @@ angular.module('ts5App')
       taxRateTypesList: []
     };
 
+    $scope.$watchGroup(['startDate', 'endDate'], function () {
+      var payload = {};
+
+      if (angular.isDefined($scope.search.startDate) && dateUtility.isDateValidForApp($scope.search.startDate)) {
+        payload.startDate = dateUtility.formatDateForAPI($scope.startDate);
+      }
+
+      if (angular.isDefined($scope.search.endDate) && dateUtility.isDateValidForApp($scope.search.endDate)) {
+        payload.endDate = dateUtility.formatDateForAPI($scope.endDate);
+      }
+
+      employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
+        $scope.itemsList = dataFromAPI.retailItems;
+      });
+    });
+
     function showToastMessage(className, type, message) {
       ngToast.create({
         className: className,
