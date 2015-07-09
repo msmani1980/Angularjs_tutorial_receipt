@@ -157,14 +157,14 @@
         <td>{{ trip.arrivalStationId}}</td>
         <td>{{ trip.arrivalTime }}</td>
         <td>
-          <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
+          <button class="btn btn-info btn-xs" ng-click="viewPostTrip(trip.id)" tabindex="0">
             <i class="fa fa-file"></i>
           </button>
-          <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)"
+          <button class="btn btn-primary btn-xs" ng-click="editPostTrip(trip.id)" ng-disabled="isMenuEditable(menu)"
                   tabindex="0" aria-disabled="true" disabled="disabled">
             <i class="fa fa-pencil"></i>
           </button>
-          <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)"
+          <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(trip.id)" ng-disabled="isMenuReadOnly(menu)"
                   tabindex="0" aria-disabled="true" disabled="disabled">
             <i class="fa fa-trash"></i>
           </button>

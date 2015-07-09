@@ -23,19 +23,28 @@ angular.module('ts5App')
     this.initCreateView = function() {
       $scope.readOnly = false;
       $scope.viewName = 'Create Post Trip Data';
-      // TODO: show create/back button
     };
 
     this.initReadView = function() {
       $scope.readOnly = true;
       $('.employeeID-multiple-select').prop('disabled', true);
-      // TODO: API call and autopopulate fields
+      $this.getPostTrip();
     };
 
     this.initUpdateView = function() {
       $scope.readOnly = false;
-      // TODO: API call and autopopulate fields
-      // TODO: show save/back button
+      $this.getPostTrip();
+    };
+
+    this.getPostTrip = function() {
+      return postTripFactory.getPostTrip(_companyId, $routeParams.id).then(function(response){
+        $scope.postTrip = response;
+        $scope.departureStationIndex = response.depStationId;
+        $scope.updateDepartureInfo();
+        $scope.arrivalStationIndex = response.arrivalStationId;
+        $scope.updateArrivalInfo();
+
+      });
     };
 
     (function initController() {
@@ -91,15 +100,20 @@ angular.module('ts5App')
     };
 
     $scope.updateArrivalInfo = function () {
-      var station = $scope.stationList[$scope.arrivalStationIndex];
-      $scope.postTrip.arrStationId = station.stationId;
-      $scope.arrivalTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
+      if($scope.arrivalStationIndex && $scope.arrivalStationIndex < $scope.stationList.length) {
+        var station = $scope.stationList[$scope.arrivalStationIndex];
+        $scope.postTrip.arrStationId = station.stationId;
+        $scope.arrivalTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
+      }
     };
 
     $scope.updateDepartureInfo = function () {
-      var station = $scope.stationList[$scope.departureStationIndex];
-      $scope.postTrip.depStationId = station.stationId;
-      $scope.departureTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
+      if($scope.departureStationIndex && $scope.departureStationIndex < $scope.stationList.length) {
+        var station = $scope.stationList[$scope.departureStationIndex];
+        $scope.postTrip.depStationId = station.stationId;
+        $scope.departureTimezone = station.timezone + ' [UTC ' + station.utcOffset + ']';
+      }
+
     };
 
     $scope.formSave = function() {
@@ -113,7 +127,12 @@ angular.module('ts5App')
       angular.forEach(employeeIds, function(value) {
         $scope.postTrip.postTripEmployeeIdentifiers.push({employeeIdentifier:value});
       });
-      postTripFactory.createPostTrip(_companyId, $scope.postTrip);
+      if($routeParams.state === 'create') {
+        postTripFactory.createPostTrip(_companyId, $scope.postTrip);
+      } else {
+        console.log($scope.postTrip);
+        postTripFactory.editPostTrip(_companyId, $scope.postTrip);
+      }
     };
 
 

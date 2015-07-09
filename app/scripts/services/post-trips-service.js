@@ -24,10 +24,10 @@ angular.module('ts5App')
         method: 'GET',
         headers: {comanyId: 362}
       },
-      //updatePostTrips: {
-      //  method: 'PUT',
-      //  headers: {companyId: 362}
-      //},
+      updatePostTrip: {
+        method: 'PUT',
+        headers: {companyId: 362}
+      },
       //deletePostTrips: {
       //  method: 'DELETE',
       //  headers: {companyId: 362}
@@ -59,9 +59,10 @@ angular.module('ts5App')
     //  return requestResource.getCashBag({id:cashBagId}).$promise;
     //}
     //
-    //function updateCashBag(cashBagId, payload){
-    //  return requestResource.updateCashBag({id:cashBagId}, payload).$promise;
-    //}
+    function updatePostTrip(companyId, payload){
+      requestParameters.id = companyId;
+      return requestResource.updatePostTrip(payload).$promise;
+    }
     //
     //function deleteCashBag(cashBagId){
     //  return requestResource.deleteCashBag({id:cashBagId}).$promise;
@@ -75,8 +76,7 @@ angular.module('ts5App')
     return {
       getPostTrips: getPostTrips,
       getPostTrip: getPostTrip,
-      //getCashBag: getCashBag,
-      //updateCashBag: updateCashBag,
+      updatePostTrip: updatePostTrip,
       //deleteCashBag: deleteCashBag,
       createPostTrip: createPostTrip
     };

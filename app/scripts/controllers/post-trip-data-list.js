@@ -69,15 +69,15 @@ angular.module('ts5App')
       });
     };
 
-    $scope.viewPostTrip = function () {
-      $location.path('post-trip-data/view/' + 1);
+    $scope.viewPostTrip = function (id) {
+      $location.path('post-trip-data/view/' + id);
     };
 
-    $scope.editPostTrip = function () {
-      $location.path('post-trip-data/edit/' + 1);
+    $scope.editPostTrip = function (id) {
+      $location.path('post-trip-data/edit/' + id);
     };
 
-    $scope.deletePostTrip = function () {
+    $scope.deletePostTrip = function (id) {
       // TODO: delete
     };
 

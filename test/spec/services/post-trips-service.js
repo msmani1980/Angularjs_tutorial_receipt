@@ -113,14 +113,21 @@ describe('Service: postTripService', function () {
     });
 
     describe('updatePostTrip', function () {
-      it('should send a payload parameter', function () {
-
+      it('should be accessible in the service', function () {
+        expect(!!postTripsService.updatePostTrip).toBe(true);
       });
 
-      it('should return a post trip object', function () {
-
-      });
-
+      //beforeEach(function () {
+      //  var regex = new RegExp('posttrips', 'g');
+      //  $httpBackend.whenPUT(regex).respond('202');
+      //});
+      //
+      //it('should PUT data to posttrips API', function(){
+      //  var regex = new RegExp('posttrips', 'g');
+      //  postTripsService.updatePostTrip('403', {});
+      //  $httpBackend.expectPUT(regex);
+      //  $httpBackend.flush();
+      //});
     });
 
     describe('deletePostTrip', function(){
