@@ -120,9 +120,14 @@
 
           <div class="form-group">
             <label>Sales Category *</label>
-            <select name="categoryId" required ng-model="formData.categoryId" class="form-control">
-              <option ng-repeat="category in salesCategories" value="{{ category.id }}">{{ category.name }}</option>
-            </select>
+            <ui-select ng-if="uiSelectTemplateReady" multiple ng-model="formData.salesCategories"
+             theme="bootstrap"
+             >
+              <ui-select-match placeholder="Sales Categories">{{ $item.name }}</ui-select-match>
+              <ui-select-choices repeat="category in salesCategories">
+                <div ng-bind-html="category.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
           <div class="form-group">

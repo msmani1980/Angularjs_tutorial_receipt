@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ItemCreateCtrl', function ($scope, $compile, ENV, $resource,
+  .controller('ItemCreateCtrl', function($scope, $compile, ENV, $resource,
     $location, $anchorScroll, itemsFactory, companiesFactory, currencyFactory,
     $routeParams, GlobalMenuService, $q) {
 
@@ -42,16 +42,17 @@ angular.module('ts5App')
     $scope.viewOnly = false;
     $scope.editingItem = false;
     $scope.shouldDisplayURLField = false;
+    $scope.uiSelectTemplateReady = false;
 
 
-    this.checkIfViewOnly = function () {
+    this.checkIfViewOnly = function() {
       var path = $location.path();
       if (path.search('/item-view') !== -1) {
         $scope.viewOnly = true;
       }
     };
 
-    this.updateViewName = function (item) {
+    this.updateViewName = function(item) {
       var prefix = 'Viewing ';
       if ($scope.editingItem) {
         prefix = 'Editing ';
@@ -59,17 +60,17 @@ angular.module('ts5App')
       $scope.viewName = prefix + item.itemName;
     };
 
-    this.setFormAsEdit = function () {
+    this.setFormAsEdit = function() {
       $scope.editingItem = true;
       $scope.buttonText = 'Save';
     };
 
-    this.validateItemCompany = function (data) {
+    this.validateItemCompany = function(data) {
       return data.retailItem.companyId === companyId;
     };
 
     // gets an item to $scope.editingItem
-    this.getItem = function (id) {
+    this.getItem = function(id) {
 
       var $this = this;
 
@@ -77,7 +78,7 @@ angular.module('ts5App')
       angular.element('#loading').modal('show').find('p')
         .text('We are getting Item ' + id);
 
-      itemsFactory.getItem(id).then(function (data) {
+      itemsFactory.getItem(id).then(function(data) {
         if ($this.validateItemCompany(data)) {
           $this.updateFormData(data.retailItem);
           $this.updateViewName(data.retailItem);
@@ -141,7 +142,7 @@ angular.module('ts5App')
     }
 
     // updates the $scope.formData
-    this.updateFormData = function (itemData) {
+    this.updateFormData = function(itemData) {
       if (!itemData) {
         return false;
       }
@@ -190,8 +191,8 @@ angular.module('ts5App')
     };
 
     // gets a list of all currencies for the item
-    this.getMasterCurrenciesList = function () {
-      currencyFactory.getCompanyCurrencies(function (data) {
+    this.getMasterCurrenciesList = function() {
+      currencyFactory.getCompanyCurrencies(function(data) {
         var masterCurrenciesList = [];
         for (var key in data.response) {
           var currency = data.response[key];
@@ -202,9 +203,9 @@ angular.module('ts5App')
     };
 
     // gets a list of price types for price group
-    this.getPriceTypesList = function () {
+    this.getPriceTypesList = function() {
 
-      itemsFactory.getPriceTypesList(function (data) {
+      itemsFactory.getPriceTypesList(function(data) {
         $scope.priceTypes = data;
       });
 
@@ -213,53 +214,68 @@ angular.module('ts5App')
     this.getMasterCurrenciesList();
     this.getPriceTypesList();
 
-    itemsFactory.getItemsList({}).then(function (data) {
+    itemsFactory.getItemsList({}).then(function(data) {
       $scope.items = data.retailItems;
     });
 
-    itemsFactory.getAllergensList(function (data) {
+    itemsFactory.getAllergensList(function(data) {
       $scope.allergens = data;
     });
 
-    itemsFactory.getItemTypesList(function (data) {
+    itemsFactory.getItemTypesList(function(data) {
       $scope.itemTypes = data;
     });
 
-    itemsFactory.getCharacteristicsList(function (data) {
+    itemsFactory.getCharacteristicsList(function(data) {
       $scope.characteristics = data;
     });
 
-    itemsFactory.getDimensionList(function (data) {
+    itemsFactory.getDimensionList(function(data) {
       $scope.dimensionUnits = data.units;
     });
 
-    itemsFactory.getVolumeList(function (data) {
+    itemsFactory.getVolumeList(function(data) {
       $scope.volumeUnits = data.units;
     });
 
-    itemsFactory.getWeightList(function (data) {
+    itemsFactory.getWeightList(function(data) {
       $scope.weightUnits = data.units;
     });
 
-    companiesFactory.getTagsList(function (data) {
+    companiesFactory.getTagsList(function(data) {
       $scope.tags = data.response;
     });
 
-    companiesFactory.getSalesCategoriesList(function (data) {
-      $scope.salesCategories = data.salesCategories;
-    });
+    this.makeDependencyPromises = function() {
+      return [
+        companiesFactory.getSalesCategoriesList()
+      ];
 
-    companiesFactory.getTaxTypesList(function (data) {
-      $scope.taxTypes = data.response;
+    };
+
+    this.setSalesCategories = function(data) {
+      $scope.salesCategories = data.salesCategories;
+    };
+
+    var dependencyPromises = this.makeDependencyPromises();
+    $q.all(dependencyPromises).then(function(response) {
+      $this.setSalesCategories(response[0]);
+      $scope.uiSelectTemplateReady = true;
     });
 
     $q.all([itemsFactory.getItemsList, itemsFactory.getAllergensList,
       itemsFactory.getTagsList, itemsFactory.getCharacteristicsList
-    ]).then(function () {
+    ]).then(function() {
       $('.multi-select').select2({
         width: '100%'
       });
     });
+
+    companiesFactory.getTaxTypesList(function(data) {
+      $scope.taxTypes = data.response;
+    });
+
+
 
     // TODO: Move to global function
     function formatDate(dateString, formatFrom, formatTo) {
@@ -267,12 +283,12 @@ angular.module('ts5App')
       return dateToReturn;
     }
 
-    $scope.$watch('formData', function (newData, oldData) {
+    $scope.$watch('formData', function(newData, oldData) {
       //checkItemDates(newData,oldData);
       $this.refreshPriceGroups(newData, oldData);
     }, true);
 
-    $scope.$watch('form.$valid', function (validity) {
+    $scope.$watch('form.$valid', function(validity) {
       if (validity) {
         $scope.displayError = false;
       }
@@ -280,7 +296,7 @@ angular.module('ts5App')
 
 
     // when a price date is change for a price groupd or station, need to update currencies
-    this.refreshPriceGroups = function (newData, oldData) {
+    this.refreshPriceGroups = function(newData, oldData) {
 
       if (!oldData) {
         return false;
@@ -410,28 +426,28 @@ angular.module('ts5App')
 
           */
 
-    $scope.removeQRCode = function () {
+    $scope.removeQRCode = function() {
       $scope.formData.qrCodeImgUrl = '';
       $scope.formData.qrCodeValue = '';
     };
 
-    $scope.removeImage = function (key) {
+    $scope.removeImage = function(key) {
       $scope.formData.images.splice(key, 1);
     };
 
-    $scope.addTaxType = function () {
+    $scope.addTaxType = function() {
       $scope.formData.taxes.push({});
     };
 
-    $scope.removeTaxType = function (key) {
+    $scope.removeTaxType = function(key) {
       $scope.formData.taxes.splice(key, 1);
     };
 
-    $scope.addGTIN = function () {
+    $scope.addGTIN = function() {
       $scope.formData.globalTradeNumbers.push({});
     };
 
-    $scope.removeGTIN = function (key) {
+    $scope.removeGTIN = function(key) {
       $scope.formData.globalTradeNumbers.splice(key, 1);
     };
 
@@ -443,7 +459,7 @@ angular.module('ts5App')
 
 
     // Adds a station exception collection in the form
-    $scope.addStationException = function (priceIndex) {
+    $scope.addStationException = function(priceIndex) {
       $scope.formData.prices[priceIndex].stationExceptions.push({
         startDate: '',
         endDate: '',
@@ -452,15 +468,15 @@ angular.module('ts5App')
     };
 
     // Removes a station exception collection from the form
-    $scope.removeStationException = function (priceIndex, key) {
+    $scope.removeStationException = function(priceIndex, key) {
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
     };
 
-    $scope.filterCharacteristics = function () {
+    $scope.filterCharacteristics = function() {
       if ($scope.itemTypes[$scope.formData.itemTypeId - 1].name ===
         'Virtual') {
         $scope.filteredCharacteristics = [];
-        angular.forEach($scope.characteristics, function (value) {
+        angular.forEach($scope.characteristics, function(value) {
           if (value.name === 'Downloadable' || value.name === 'Link') {
             $scope.filteredCharacteristics.push(value);
           }
@@ -473,7 +489,7 @@ angular.module('ts5App')
     };
 
     // gets a list of stations from the API filtered by station's start and end date
-    this.getGlobalStationList = function (stationException) {
+    this.getGlobalStationList = function(stationException) {
       var startDate = formatDate(stationException.startDate, 'L',
         'YYYYMMDD');
       var endDate = formatDate(stationException.endDate, 'L', 'YYYYMMDD');
@@ -485,12 +501,12 @@ angular.module('ts5App')
     };
 
     // sets the stations list for the station exception
-    this.setStationsList = function (stationException, data) {
+    this.setStationsList = function(stationException, data) {
       stationException.stations = data.response;
     };
 
     // gets a list of a stations available currencies filtered on the start and end date
-    this.getStationsCurrenciesList = function (stationException) {
+    this.getStationsCurrenciesList = function(stationException) {
       var startDate = formatDate(stationException.startDate, 'L',
         'YYYYMMDD');
       var endDate = formatDate(stationException.endDate, 'L', 'YYYYMMDD');
@@ -503,7 +519,7 @@ angular.module('ts5App')
     };
 
     // sets the stations currenies list
-    this.setStationsCurrenciesList = function (stationException, data) {
+    this.setStationsCurrenciesList = function(stationException, data) {
       var stationExceptionCurrencies = this.generateStationCurrenciesList(
         data.response);
       stationException.stationExceptionCurrencies =
@@ -511,7 +527,7 @@ angular.module('ts5App')
     };
 
     // generate a list of station exception currencies
-    this.generateStationCurrenciesList = function (currenciesList) {
+    this.generateStationCurrenciesList = function(currenciesList) {
       var listToReturn = [];
       for (var key in currenciesList) {
         var currency = currenciesList[key];
@@ -524,20 +540,20 @@ angular.module('ts5App')
     };
 
     // Updates the station exception with stations list and currencies list
-    this.updateStationException = function (priceIndex, stationExceptionIndex) {
+    this.updateStationException = function(priceIndex, stationExceptionIndex) {
       var $this = this;
       var stationException = $scope.formData.prices[priceIndex].stationExceptions[
         stationExceptionIndex];
-      this.getGlobalStationList(stationException).then(function (data) {
+      this.getGlobalStationList(stationException).then(function(data) {
         $this.setStationsList(stationException, data);
       });
-      this.getStationsCurrenciesList(stationException).then(function (data) {
+      this.getStationsCurrenciesList(stationException).then(function(data) {
         $this.setStationsCurrenciesList(stationException, data);
       });
     };
 
     // reaches out to the stations API per each station exception and update set stations list
-    this.updateStationsList = function () {
+    this.updateStationsList = function() {
       var stationPromises = [];
       for (var priceIndex in $scope.formData.prices) {
         var price = $scope.formData.prices[priceIndex];
@@ -551,9 +567,9 @@ angular.module('ts5App')
     };
 
     // Handles all of the station promises and sets the stations list per price group
-    this.handleStationPromises = function (stationPromises, price) {
+    this.handleStationPromises = function(stationPromises, price) {
       var $this = this;
-      $q.all(stationPromises).then(function (data) {
+      $q.all(stationPromises).then(function(data) {
         for (var key in data) {
           var stationException = price.stationExceptions[key];
           $this.setStationsList(stationException, data[key]);
@@ -567,7 +583,7 @@ angular.module('ts5App')
      */
 
 
-    $scope.addPriceGroup = function () {
+    $scope.addPriceGroup = function() {
       $scope.formData.prices.push({
         startDate: '',
         endDate: '',
@@ -579,7 +595,7 @@ angular.module('ts5App')
     // Add the first price group
     $scope.addPriceGroup();
 
-    $scope.removePriceGroup = function (key) {
+    $scope.removePriceGroup = function(key) {
       $scope.formData.prices.splice(key, 1);
     };
 
@@ -612,7 +628,7 @@ angular.module('ts5App')
         endDate: endDate,
         isOperatedCurrency: true
       };
-      currencyFactory.getCompanyCurrencies(currencyFilters).then(function (
+      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(
         data) {
         var priceCurrencies = generatePriceCurrenciesList(data.response);
         $scope.formData.prices[priceIndex].priceCurrencies =
@@ -693,7 +709,7 @@ angular.module('ts5App')
       }
     }
 
-    this.updateItem = function (itemData) {
+    this.updateItem = function(itemData) {
       var $this = this;
       angular.element('#loading').modal('show').find('p').text(
         'We are updating your item');
@@ -701,12 +717,12 @@ angular.module('ts5App')
         retailItem: itemData
       };
       itemsFactory.updateItem($routeParams.id, updateItemPayload).then(
-        function (response) {
+        function(response) {
           $this.updateFormData(response.retailItem);
           angular.element('#loading').modal('hide');
           angular.element('#update-success').modal('show');
         },
-        function (response) {
+        function(response) {
           angular.element('#loading').modal('hide');
           $scope.displayError = true;
           $scope.formErrors = response.data;
@@ -719,17 +735,17 @@ angular.module('ts5App')
       var newItemPayload = {
         retailItem: itemData
       };
-      itemsFactory.createItem(newItemPayload).then(function () {
+      itemsFactory.createItem(newItemPayload).then(function() {
         angular.element('#loading').modal('hide');
         angular.element('#create-success').modal('show');
-      }, function (error) {
+      }, function(error) {
         angular.element('#loading').modal('hide');
         $scope.displayError = true;
         $scope.formErrors = error.data;
       });
     }
 
-    $scope.submitForm = function (formData) {
+    $scope.submitForm = function(formData) {
 
       if (!$scope.form.$valid) {
         $scope.displayError = true;
@@ -749,18 +765,18 @@ angular.module('ts5App')
 
     };
 
-    $scope.isMeasurementRequired = function () {
+    $scope.isMeasurementRequired = function() {
       return ($scope.formData.width || $scope.formData.length || $scope.formData
         .height);
     };
 
-    $scope.isMeasurementValid = function () {
+    $scope.isMeasurementValid = function() {
       return ($scope.formData.width && $scope.formData.length && $scope.formData
         .height && $scope.formData.dimensionType);
     };
 
     // TODO: MOVE ME GLOBAL
-    $scope.formScroll = function (id, activeBtn) {
+    $scope.formScroll = function(id, activeBtn) {
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);
       var body = angular.element('body');
