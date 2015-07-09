@@ -70,8 +70,23 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       expect(employeeCommissionFactory.getTaxRateTypes).toHaveBeenCalled();
     });
 
-    it('should fetch items from factory', function () {
-      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalled();
+    it('should fetch items with startDate from factory', function () {
+      scope.search.startDate = '05/10/1979';
+      scope.$digest();
+      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({startDate: '19790510'});
+    });
+
+    it('should fetch items with endDate from factory', function () {
+      scope.search.endDate = '05/10/1979';
+      scope.$digest();
+      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({endDate: '19790510'});
+    });
+
+    it('should fetch items with endDate from factory', function () {
+      scope.search.startDate = '05/10/1979';
+      scope.search.endDate = '05/10/1979';
+      scope.$digest();
+      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({startDate: '19790510', endDate: '19790510'});
     });
 
   });
