@@ -256,6 +256,7 @@ angular.module('ts5App')
 
     $scope.onDrop = function ($event, $data, array) {
       var index = false;
+      $scope.searchCompanyRetailItemList = null;
       if($event.currentTarget.id !== 'item-drop-init'){
         var targetRetailItem = angular.element($event.currentTarget).scope().retailItem;
         index = array.indexOf(targetRetailItem);
