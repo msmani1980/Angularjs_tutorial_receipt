@@ -157,7 +157,7 @@ angular.module('ts5App')
       }
     }
 
-    function setupCompanyScope(companyListFromAPI) {
+    function setupCompanyAndCompanyListScope(companyListFromAPI) {
       $scope.companyList = companyListFromAPI.companies.filter(function (company) {
         if (company.id === parseInt($routeParams.id)) {
           $scope.company = company;
@@ -194,7 +194,7 @@ angular.module('ts5App')
     };
 
     var getCompanyListSuccessHandler = function (response) {
-      setupCompanyScope(response);
+      setupCompanyAndCompanyListScope(response);
       var promises = generateCompanyRelationshipPromises();
       return $q.all(promises);
     };

@@ -1,5 +1,3 @@
-//TODO: Add Tests
-
 'use strict';
 
 describe('Service: companyRelationshipService', function () {

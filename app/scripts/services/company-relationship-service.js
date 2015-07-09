@@ -1,4 +1,3 @@
-// TODO: Complete
 'use strict';
 
 /**
