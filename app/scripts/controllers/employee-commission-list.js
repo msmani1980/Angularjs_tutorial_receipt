@@ -10,6 +10,11 @@
 angular.module('ts5App')
   .controller('EmployeeCommissionListCtrl', function ($scope) {
     $scope.viewName = 'Employee Commission';
-    $scope.startDate = moment().add(1, 'days').format('L').toString();
+    $scope.search = {
+      startDate: moment().add(1, 'days').format('L').toString(),
+      itemList: [],
+      priceTypesList: [],
+      taxRateTypesList: []
+    }
 
   });

@@ -18,7 +18,15 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     expect(scope.viewName).toBeDefined();
   });
 
-  it('should have startDate defined', function () {
-    expect(scope.startDate).toBeDefined();
+  describe('search object', function(){
+
+    it('should exists in scope', function () {
+      expect(scope.search).toBeDefined();
+    });
+
+    it('should have required properties', function () {
+      expect(Object.keys(scope.search)).toEqual(['startDate', 'itemList', 'priceTypesList', 'taxRateTypesList']);
+    });
+
   });
 });
