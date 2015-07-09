@@ -218,48 +218,62 @@ angular.module('ts5App')
       $scope.items = data.retailItems;
     });
 
-    itemsFactory.getAllergensList(function(data) {
-      $scope.allergens = data;
-    });
-
-    itemsFactory.getItemTypesList(function(data) {
-      $scope.itemTypes = data;
-    });
-
-    itemsFactory.getCharacteristicsList(function(data) {
-      $scope.characteristics = data;
-    });
-
-    itemsFactory.getDimensionList(function(data) {
-      $scope.dimensionUnits = data.units;
-    });
-
-    itemsFactory.getVolumeList(function(data) {
-      $scope.volumeUnits = data.units;
-    });
-
-    itemsFactory.getWeightList(function(data) {
-      $scope.weightUnits = data.units;
-    });
-
-    companiesFactory.getTagsList(function(data) {
-      $scope.tags = data.response;
-    });
-
     this.makeDependencyPromises = function() {
       return [
-        companiesFactory.getSalesCategoriesList()
+        companiesFactory.getSalesCategoriesList(),
+        itemsFactory.getAllergensList(),
+        itemsFactory.getItemTypesList(),
+        itemsFactory.getCharacteristicsList(),
+        itemsFactory.getDimensionList(),
+        itemsFactory.getVolumeList(),
+        itemsFactory.getWeightList(),
+        companiesFactory.getTagsList()
       ];
-
     };
 
     this.setSalesCategories = function(data) {
       $scope.salesCategories = data.salesCategories;
     };
 
+    this.setAllergens = function(data) {
+      $scope.allergens = data;
+    };
+
+    this.setItemTypes = function(data) {
+      $scope.itemTypes = data;
+    };
+
+    this.setCharacteristics = function(data) {
+      $scope.characteristics = data;
+    };
+
+    this.setDimensionList = function(data) {
+      $scope.dimensionUnits = data.units;
+    };
+
+    this.setVolumeList = function(data) {
+      $scope.volumeUnits = data.units;
+    };
+
+    this.setWeightList = function(data) {
+      $scope.weightUnits = data.units;
+    };
+
+    this.setTagsList = function(data) {
+      $scope.tags = data.response;
+    };
+
     var dependencyPromises = this.makeDependencyPromises();
-    $q.all(dependencyPromises).then(function(response) {
+    $q.all(
+      dependencyPromises).then(function(response) {
       $this.setSalesCategories(response[0]);
+      $this.setAllergens(response[1]);
+      $this.setItemTypes(response[2]);
+      $this.setCharacteristics(response[3]);
+      $this.setDimensionList(response[4]);
+      $this.setVolumeList(response[5]);
+      $this.setWeightList(response[6]);
+      $this.setTagsList(response[7]);
       $scope.uiSelectTemplateReady = true;
     });
 
