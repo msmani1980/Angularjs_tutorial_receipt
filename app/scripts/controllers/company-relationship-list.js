@@ -35,15 +35,12 @@ angular.module('ts5App')
       return Date.parse(date);
     };
 
-    $scope.isActive = function (startDate) {
-      var parsedDate = $this.parseDate(startDate);
+    $scope.isActive = function (date) {
+      var parsedDate = $this.parseDate(date);
       return parsedDate <= dateUtility.now();
     };
 
-    $scope.isInactive = function (endDate) {
-      var parsedDate = $this.parseDate(endDate);
-      return parsedDate <= dateUtility.now();
-    };
+    $scope.isInactive = $scope.isActive;
 
     $scope.addCompanyRelationship = function (company) {
       $scope.companyRelationshipListData.unshift({
