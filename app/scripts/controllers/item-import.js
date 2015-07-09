@@ -206,6 +206,7 @@ angular.module('ts5App')
     };
 
     $scope.importAll = function () {
+      $scope.searchCompanyRetailItemList = null;
       angular.forEach($scope.importedRetailItemList, function(retailItem){
         if(!canBeAddedToCompanyRetailList(retailItem)){
           return;
