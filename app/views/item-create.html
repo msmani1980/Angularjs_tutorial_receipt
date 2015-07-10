@@ -116,13 +116,14 @@
           >
         </date-picker>
 
-        <fieldset ng-disabled="viewOnly || itemIsActive">
+        <fieldset ng-disabled="viewOnly || itemIsActive" ng-if="uiSelectTemplateReady">
 
           <div class="form-group">
             <label>Sales Category *</label>
             <ui-select multiple
-              ng-if="uiSelectTemplateReady"
-              ng-model="formData.salesCategories"
+              required
+              name="categoryId"
+              ng-model="formData.categoryId"
               theme="bootstrap"
               ng-disabled="disabled"
              >
@@ -134,8 +135,10 @@
           </div>
 
           <div class="form-group">
+            <label>Item Type *</label>
             <ui-select
-              ng-if="uiSelectTemplateReady"
+              required
+              name="itemTypeId"
               ng-model="formData.itemTypeId"
               theme="bootstrap"
               ng-disabled="disabled"
@@ -150,9 +153,17 @@
 
           <div class="form-group">
             <label>Item Characteristics</label>
-            <select ng-model="formData.characteristics" class="multi-select" multiple="multiple">
-              <option ng-repeat="character in filteredCharacteristics" value="{{ character.id }}">{{ character.name }}</option>
-            </select>
+            <ui-select multiple
+              ng-model="formData.characteristics"
+              theme="bootstrap"
+              ng-disabled="disabled"
+              id="itemCharacteristics"
+             >
+              <ui-select-match placeholder="Item Characteristics">{{ $item.name }}</ui-select-match>
+              <ui-select-choices repeat="character in filteredCharacteristics">
+                <div ng-bind-html="character.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
           <div class="form-group">
@@ -161,16 +172,30 @@
 
           <div class="form-group">
             <label>Item Substitutions</label>
-            <select ng-model="formData.substitutions" class="multi-select" multiple="multiple">
-              <option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
-            </select>
+            <ui-select multiple
+              ng-model="formData.substitutions"
+              theme="bootstrap"
+              ng-disabled="disabled"
+             >
+              <ui-select-match placeholder="Item Substitutions">{{ $item.itemName }}</ui-select-match>
+              <ui-select-choices repeat="item in items">
+                <div ng-bind-html="item.itemName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
           <div class="form-group">
             <label>Item Recommendations</label>
-            <select ng-model="formData.recommendations" class="multi-select" multiple="multiple">
-              <option ng-repeat="item in items" value="{{ item.id }}">{{ item.itemName }}</option>
-            </select>
+            <ui-select multiple
+              ng-model="formData.recommendations"
+              theme="bootstrap"
+              ng-disabled="disabled"
+             >
+              <ui-select-match placeholder="Item Recommendations">{{ $item.itemName }}</ui-select-match>
+              <ui-select-choices repeat="item in items">
+                <div ng-bind-html="item.itemName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
         </fieldset>
@@ -179,20 +204,34 @@
 
       <div class="col-xs-12 col-sm-6">
 
-        <fieldset ng-disabled="viewOnly || itemIsActive">
+        <fieldset ng-disabled="viewOnly || itemIsActive" ng-if="uiSelectTemplateReady">
 
           <div class="form-group">
             <label>Item Tags</label>
-            <select ng-model="formData.tags" class="multi-select" multiple="multiple">
-              <option ng-repeat="tag in tags" value="{{ tag.id }}">{{ tag.name }}</option>
-            </select>
+            <ui-select multiple
+              ng-model="formData.tags"
+              theme="bootstrap"
+              ng-disabled="disabled"
+             >
+              <ui-select-match placeholder="Item Tags">{{ $item.name }}</ui-select-match>
+              <ui-select-choices repeat="tag in tags">
+                <div ng-bind-html="tag.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
           <div class="form-group">
             <label>Allergen</label>
-            <select ng-model="formData.allergens" class="multi-select" multiple="multiple">
-              <option ng-repeat="allergen in allergens" value="{{ allergen.allergenId }}">{{ allergen.name }}</option>
-            </select>
+            <ui-select multiple
+              ng-model="formData.allergens"
+              theme="bootstrap"
+              ng-disabled="disabled"
+             >
+              <ui-select-match placeholder="Allergens">{{ $item.name }}</ui-select-match>
+              <ui-select-choices repeat="allergen in allergens">
+                <div ng-bind-html="allergen.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
           <image-upload ng-hide="viewOnly || itemIsActive"></image-upload>
@@ -271,7 +310,7 @@
 
     </div>
 
-    <fieldset ng-disabled="viewOnly || itemIsActive">
+    <fieldset ng-disabled="viewOnly || itemIsActive" ng-if="uiSelectTemplateReady">
 
       <h3 id="measurements">Measurements</h3>
 
@@ -293,11 +332,16 @@
 
               <div class="col-xs-3">
 
-                <select ng-model="formData.weightType" class="form-control col-xs-2">
-
-                  <option ng-repeat="weight in weightUnits" value="{{ weight.id }}">{{ weight.unitCode }}</option>
-
-                </select>
+                <ui-select
+                  ng-model="formData.weightType"
+                  theme="bootstrap"
+                  ng-disabled="disabled"
+                 >
+                  <ui-select-match placeholder="Units">{{ $item.unitCode }}</ui-select-match>
+                  <ui-select-choices repeat="weight in weightUnits">
+                    <div ng-bind-html="weight.unitCode | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
 
               </div>
 
@@ -323,9 +367,17 @@
 
               <div class="col-xs-3">
 
-                <select ng-model="formData.volumeType" class="form-control">
-                  <option ng-repeat="volume in volumeUnits" value="{{ volume.id }}">{{ volume.unitCode }}</option>
-                </select>
+                <ui-select
+                  name="Unit of Measurement"
+                  ng-model="formData.volumeType"
+                  theme="bootstrap"
+                  ng-disabled="disabled"
+                 >
+                  <ui-select-match placeholder="Units">{{ $item.unitCode }}</ui-select-match>
+                  <ui-select-choices repeat="volume in volumeUnits">
+                    <div ng-bind-html="volume.unitCode | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
 
               </div>
 
@@ -361,12 +413,19 @@
           </div>
 
           <div class="col-md-3 col-xs-3">
-            <select ng-model="formData.dimensionType" class="form-control" ng-required="isMeasurementRequired()" name="Unit of Measurement">
-              <option ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }}
-              </option>
-            </select>
+            <ui-select
+              ng-required="isMeasurementRequired()"
+              name="Unit of Measurement"
+              ng-model="formData.dimensionType"
+              theme="bootstrap"
+              ng-disabled="disabled"
+             >
+              <ui-select-match placeholder="Units">{{ $item.name }}</ui-select-match>
+              <ui-select-choices repeat="dimension in dimensionUnits">
+                <div ng-bind-html="dimension.unitCode | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
-
         </div>
 
       </div>

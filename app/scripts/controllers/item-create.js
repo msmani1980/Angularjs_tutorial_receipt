@@ -189,6 +189,23 @@ angular.module('ts5App')
 
     };
 
+    this.makeDependencyPromises = function() {
+      return [
+        companiesFactory.getSalesCategoriesList(),
+        companiesFactory.getTagsList(),
+        companiesFactory.getTaxTypesList(),
+        currencyFactory.getCompanyCurrencies(),
+        itemsFactory.getAllergensList(),
+        itemsFactory.getItemTypesList(),
+        itemsFactory.getCharacteristicsList(),
+        itemsFactory.getDimensionList(),
+        itemsFactory.getVolumeList(),
+        itemsFactory.getWeightList(),
+        itemsFactory.getPriceTypesList(),
+        itemsFactory.getItemsList({})
+      ];
+    };
+
     this.getDependencies = function() {
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(
@@ -207,23 +224,6 @@ angular.module('ts5App')
         $this.setItemList(response[11]);
         $scope.uiSelectTemplateReady = true;
       });
-    };
-
-    this.makeDependencyPromises = function() {
-      return [
-        companiesFactory.getSalesCategoriesList(),
-        companiesFactory.getTagsList(),
-        companiesFactory.getTaxTypesList(),
-        currencyFactory.getCompanyCurrencies(),
-        itemsFactory.getAllergensList(),
-        itemsFactory.getItemTypesList(),
-        itemsFactory.getCharacteristicsList(),
-        itemsFactory.getDimensionList(),
-        itemsFactory.getVolumeList(),
-        itemsFactory.getWeightList(),
-        itemsFactory.getPriceTypesList(),
-        itemsFactory.getItemsList({})
-      ];
     };
 
     this.setSalesCategories = function(data) {
