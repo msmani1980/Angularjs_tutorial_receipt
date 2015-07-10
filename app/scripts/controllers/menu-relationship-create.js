@@ -231,6 +231,7 @@ angular.module('ts5App')
     $scope.submitForm = function (formData) {
       $scope.displayError = false;
       if (!$scope.form.$valid) {
+        console.log($scope.form);
         $scope.displayError = true;
         return false;
       }
@@ -254,7 +255,7 @@ angular.module('ts5App')
     };
 
     $scope.isRelationshipInactive = function () {
-      return Date.parse($scope.formData.startDate) <= dateUtility.now();
+      return Date.parse($scope.formData.endDate) <= dateUtility.now();
     };
 
     this.init();

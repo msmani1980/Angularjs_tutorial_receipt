@@ -17,22 +17,33 @@ angular.module('ts5App')
       return moment(dateString, formatFrom).format(formatTo).toString();
     };
 
-    this.formatDateForAPI = function (dateToFormat, dateForAppFormat, dateForAPIFormat) {
+    this.formatDateForAPI = function (dateToFormat, dateForAppFormat,
+      dateForAPIFormat) {
       dateForAppFormat = dateForAppFormat || _dateForAppFormat;
       dateForAPIFormat = dateForAPIFormat || _dateForAPIFormat;
 
-      return this.formatDate(dateToFormat, dateForAppFormat, dateForAPIFormat);
+      return this.formatDate(dateToFormat, dateForAppFormat,
+        dateForAPIFormat);
     };
 
-    this.formatDateForApp = function (dateToFormat, dateForAPIFormat, dateForAppFormat) {
+    this.formatDateForApp = function (dateToFormat, dateForAPIFormat,
+      dateForAppFormat) {
       dateForAPIFormat = dateForAPIFormat || _dateForAPIFormat;
       dateForAppFormat = dateForAppFormat || _dateForAppFormat;
 
-      return this.formatDate(dateToFormat, dateForAPIFormat, dateForAppFormat);
+      return this.formatDate(dateToFormat, dateForAPIFormat,
+        dateForAppFormat);
     };
 
     this.now = function () {
       return Date.parse(new Date());
+    };
+
+    this.nowFormatted = function (formatTo) {
+      var formatFrom = 'x';
+      formatTo = formatTo || _dateForAppFormat;
+      var now = this.now();
+      return this.formatDate(now, formatFrom, formatTo);
     };
 
   });
