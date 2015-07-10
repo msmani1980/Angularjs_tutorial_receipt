@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:createStoreNumberCtrl
+ * @name ts5App.controller:StoreNumberCreateCtrl
  * @description
- * # createStoreNumberCtrl
+ * # StoreNumberCreateCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('createStoreNumberCtrl', function ($scope, companyStoresService, GlobalMenuService, ngToast, dateUtility) {
+  .controller('StoreNumberCreateCtrl', function ($scope, companyStoresService, GlobalMenuService, ngToast, dateUtility) {
 
     // scope vars
     $scope.viewName = 'Create Store Number';
@@ -62,6 +62,7 @@ angular.module('ts5App')
     function init(){
       _companyId = GlobalMenuService.company.get();
       $scope.formData = angular.copy(_companyDefault);
+      $scope.displayError = false;
       $scope.storeNumbersList = [];
       companyStoresService.getStores(_companyId).then(setCompany,showApiErrors);
     }
@@ -69,9 +70,6 @@ angular.module('ts5App')
 
     // scope functions
     $scope.submitForm = function(){
-      if($scope.createStoreNumberForm.$invalid) {
-        return false;
-      }
       displayLoadingModal('Saving');
       var payload = angular.copy($scope.formData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
