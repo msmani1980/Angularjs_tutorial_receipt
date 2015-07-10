@@ -1,8 +1,8 @@
-<div class="datepicker-container input-daterange form-group">
+<div class="datepicker-container input-daterange {'form-group': !inline}">
 
   <div class="row">
     <div class="startDateContainer {{elementClass}}">
-      <label>{{labelFrom}}</label>
+      <label ng-if="labelFrom">{{labelFrom}}</label>
       <div class="input-group col-xs-12">
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         <input type="text"
@@ -16,7 +16,7 @@
     </div>
 
     <div class="endDateContainer {{elementClass}}">
-      <label>{{labelTo}}</label>
+      <label ng-if="labelTo">{{labelTo}}</label>
       <div class="input-group col-xs-12">
         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         <input type="text"

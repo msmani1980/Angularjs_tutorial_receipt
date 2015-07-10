@@ -8,21 +8,19 @@ describe('Factory: companyRelationshipFactory', function () {
   // instantiate service
   var companyRelationshipFactory,
     companyRelationshipService,
-    companyService,
-    rootScope,
-    scope;
+    companyService;
 
   beforeEach(inject(function ($rootScope, _companyRelationshipFactory_, _companyRelationshipService_, _companyService_) {
     companyService = _companyService_;
     companyRelationshipService = _companyRelationshipService_;
 
-    spyOn(companyService, 'getCompany');
-    spyOn(companyService, 'getCompanyList');
-    spyOn(companyRelationshipService, 'getCompanyRelationshipListByCompany');
-    spyOn(companyRelationshipService, 'getCompanyRelationshipTypeList');
+    spyOn(companyService, 'getCompanyList').and.stub();
+    spyOn(companyRelationshipService, 'getCompanyRelationshipListByCompany').and.stub();
+    spyOn(companyRelationshipService, 'getCompanyRelationshipTypeList').and.stub();
+    spyOn(companyRelationshipService, 'createCompanyRelationship').and.stub();
+    spyOn(companyRelationshipService, 'updateCompanyRelationship').and.stub();
+    spyOn(companyRelationshipService, 'deleteCompanyRelationship').and.stub();
 
-    rootScope = $rootScope;
-    scope = $rootScope.$new();
     companyRelationshipFactory = _companyRelationshipFactory_;
   }));
 
@@ -30,22 +28,56 @@ describe('Factory: companyRelationshipFactory', function () {
     expect(!!companyRelationshipFactory).toBe(true);
   });
 
-  describe('companyService API', function () {
-    it('should call companyService on getCompanyList', function () {
+  describe('API Calls', function () {
+
+    it('should fetch companyList from companyService', function () {
       companyRelationshipFactory.getCompanyList();
       expect(companyService.getCompanyList).toHaveBeenCalled();
     });
-  });
 
-  describe('companyRelationshipService API', function () {
-    it('should call companyRelationshipService on getCompanyRelationshipListByCompany', function () {
-      companyRelationshipFactory.getCompanyRelationshipListByCompany();
-      expect(companyRelationshipService.getCompanyRelationshipListByCompany).toHaveBeenCalled();
+    it('should fetch companyRelationshipListByCompany from companyRelationshipService', function () {
+      var payload = {
+        fake: 'data'
+      };
+
+      companyRelationshipFactory.getCompanyRelationshipListByCompany(payload);
+      expect(companyRelationshipService.getCompanyRelationshipListByCompany).toHaveBeenCalledWith(payload);
     });
 
-    it('should call companyRelationshipService on getCompanyRelationshipTypeList', function () {
-      companyRelationshipFactory.getCompanyRelationshipTypeList();
-      expect(companyRelationshipService.getCompanyRelationshipTypeList).toHaveBeenCalled();
+    it('should fetch companyRelationshipTypeList from companyRelationshipService', function () {
+      var payload = {
+        fake: 'data'
+      };
+
+      companyRelationshipFactory.getCompanyRelationshipTypeList(payload);
+      expect(companyRelationshipService.getCompanyRelationshipTypeList).toHaveBeenCalledWith(payload);
+    });
+
+    it('should createCompanyRelationship from companyRelationshipService', function () {
+      var payload = {
+        fake: 'data'
+      };
+
+      companyRelationshipFactory.createCompanyRelationship(payload);
+      expect(companyRelationshipService.createCompanyRelationship).toHaveBeenCalledWith(payload);
+    });
+
+    it('should updateCompanyRelationship from companyRelationshipService', function () {
+      var payload = {
+        fake: 'data'
+      };
+
+      companyRelationshipFactory.updateCompanyRelationship(payload);
+      expect(companyRelationshipService.updateCompanyRelationship).toHaveBeenCalledWith(payload);
+    });
+
+    it('should deleteCompanyRelationship from companyRelationshipService', function () {
+      var payload = {
+        fake: 'data'
+      };
+
+      companyRelationshipFactory.deleteCompanyRelationship(payload);
+      expect(companyRelationshipService.deleteCompanyRelationship).toHaveBeenCalledWith(payload);
     });
   });
 

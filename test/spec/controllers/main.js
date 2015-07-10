@@ -22,7 +22,7 @@ describe('Controller: MainCtrl', function () {
     expect(scope.viewName).toBeDefined();
   });
   it('should have a retail menu collection', function () {
-    expect(MainCtrl.retailMenu.length).toBe(16);
+    expect(MainCtrl.retailMenu.length).toBe(17);
   });
   it('should have a title property', function () {
     expect(MainCtrl.retailMenu[0].title).toMatch(
@@ -128,4 +128,35 @@ describe('Controller: MainCtrl', function () {
       });
     });
   });
+
+
+  describe('Manage Store Number', function () {
+    var menuRelationship;
+    beforeEach(function () {
+      menuRelationship = MainCtrl.retailMenu[16];
+    });
+    it('should have the correct title', function () {
+      expect(menuRelationship.title.trim()).toEqual(
+        'Manage Store Number');
+    });
+    it('should have (1) navigation items', function () {
+      expect(menuRelationship.menuItems.length).toEqual(1);
+    });
+
+    describe('Store Number Create', function () {
+      var navigationItem;
+      beforeEach(function () {
+        navigationItem = menuRelationship.menuItems[0];
+      });
+      it('should have the correct label', function () {
+        expect(navigationItem.name.trim()).toEqual(
+          'Store Number Create');
+      });
+      it('should have the correct route', function () {
+        expect(navigationItem.route).toEqual(
+          '/#/store-number-create');
+      });
+    });
+  });
+
 });

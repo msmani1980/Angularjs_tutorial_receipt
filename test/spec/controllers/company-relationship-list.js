@@ -1,3 +1,4 @@
+//TODO Complete test cases
 'use strict';
 
 describe('Controller: CompanyRelationshipListCtrl', function () {
@@ -18,8 +19,10 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     companyRelationshipListByCompanyJSON,
     companyRelationshipTypeListJSON,
     location,
-  getASDF,
-    getFDSA;
+    createCompanyRelationship,
+    updateCompanyRelationship,
+    deleteCompanyRelationship,
+    routeParams;
 
   beforeEach(inject(function ($q, $controller, $rootScope, _companyRelationshipFactory_, $location) {
     inject(function (_servedCompanyList_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypeList_) {
@@ -30,6 +33,7 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
 
     location = $location;
     scope = $rootScope.$new();
+    routeParams = {id: 765};
 
     getCompanyListDeferred = $q.defer();
     getCompanyListDeferred.resolve(companyListJSON);
@@ -37,83 +41,115 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     getCompanyRelationshipListByCompanyDeferred.resolve(companyRelationshipListByCompanyJSON);
     getCompanyRelationshipTypeListDeferred = $q.defer();
     getCompanyRelationshipTypeListDeferred.resolve(companyRelationshipTypeListJSON);
-    getASDF = $q.defer();
-    getASDF.resolve({});
-    getFDSA = $q.defer();
-    getFDSA.resolve({});
+    createCompanyRelationship = $q.defer();
+    createCompanyRelationship.resolve({});
+    updateCompanyRelationship = $q.defer();
+    updateCompanyRelationship.resolve({});
+    deleteCompanyRelationship = $q.defer();
+    deleteCompanyRelationship.resolve({});
 
     companyRelationshipFactory = _companyRelationshipFactory_;
 
     spyOn(companyRelationshipFactory, 'getCompanyList').and.returnValue(getCompanyListDeferred.promise);
     spyOn(companyRelationshipFactory, 'getCompanyRelationshipListByCompany').and.returnValue(getCompanyRelationshipListByCompanyDeferred.promise);
     spyOn(companyRelationshipFactory, 'getCompanyRelationshipTypeList').and.returnValue(getCompanyRelationshipTypeListDeferred.promise);
-    spyOn(companyRelationshipFactory, 'createCompanyRelationship').and.returnValue(getASDF.promise);
-    spyOn(companyRelationshipFactory, 'updateCompanyRelationship').and.returnValue(getFDSA.promise);
+    spyOn(companyRelationshipFactory, 'createCompanyRelationship').and.returnValue(createCompanyRelationship.promise);
+    spyOn(companyRelationshipFactory, 'updateCompanyRelationship').and.returnValue(updateCompanyRelationship.promise);
+    spyOn(companyRelationshipFactory, 'deleteCompanyRelationship').and.returnValue(deleteCompanyRelationship.promise);
 
     CompanyRelationshipListCtrl = $controller('CompanyRelationshipListCtrl', {
-      $scope: scope
+      $scope: scope,
+      $routeParams: routeParams
     });
+
+    scope.companyRelationshipForm = {
+      $valid: true,
+      $setDirty: jasmine.createSpy('$setDirty'),
+      $setPristine: jasmine.createSpy('$setPristine')
+    };
+    
     scope.$digest();
+
   }));
 
   it('should attach a viewName to the scope', function () {
     expect(scope.viewName).toBe('Company Relationships');
   });
 
-  it('should get the company relationship list from API', function () {
-    expect(companyRelationshipFactory.getCompanyRelationshipListByCompany).toHaveBeenCalled();
-  });
+  describe('companyRelationshipListData object in scope', function () {
+    it('should resolve getCompanyListPromise', function () {
+      expect(companyRelationshipFactory.getCompanyList).toHaveBeenCalled();
+    });
 
-  describe('companyRelationshipList in scope', function () {
-    it('should attach a companyRelationshipList after a API call to getCompanyRelationshipList', function () {
-      expect(!!scope.companyRelationshipListData).toBe(true);
+    it('should resolve getCompanyRelationshipListByCompanyPromise', function () {
+      expect(companyRelationshipFactory.getCompanyRelationshipListByCompany).toHaveBeenCalledWith(routeParams.id);
+    });
+
+    it('should resolve getCompanyRelationshipTypeListPromise', function () {
+      expect(companyRelationshipFactory.getCompanyRelationshipTypeList).toHaveBeenCalledWith(companyListJSON.companies[0].companyTypeId);
+    });
+
+    it('should set company in scope', function () {
+      expect(!!scope.company).toBe(true);
+    });
+
+    it('should set companyListScope in scope', function () {
+      expect(scope.companyList.length).toBe(10);
+    });
+
+    it('should set companyRelationshipTypeList in scope', function () {
+      expect(scope.companyRelationshipTypeList.length).toBe(4);
+    });
+
+    it('should add companyRelationship to companyRelationshipListData in scope', function () {
+      scope.addCompanyRelationship(scope.company);
+      expect(scope.companyRelationshipListData.length).toBe(1);
     });
   });
 
-  describe('submit scope function', function () {
-    var companyRelationshipList;
+  describe('Edit companyRelationship', function () {
+    it('should have a edit function', function () {
+      expect(!!scope.editCompanyRelationship).toBe(true);
+    });
+  });
+
+  describe('Delete companyRelationship', function () {
+    it('should have a confirmDelete function', function () {
+      expect(!!scope.showDeleteConfirmation).toBe(true);
+    });
+
+    it('should attach companyRelationship from companyRelationshipListData in scope', function () {
+      scope.showDeleteConfirmation(scope.companyRelationshipListData[0]);
+      expect(scope.companyRelationshipToDelete).toBe(scope.companyRelationshipListData[0]);
+    });
+  });
+
+  describe('Submit scope function', function () {
+    var companyRelationship;
     beforeEach(function () {
-      companyRelationshipList = [
-        {
-          'id': 26,
-          'companyId': 413,
-          'companyName': 'GRO 555',
-          'companyTypeName': 'Stockowner',
-          'relativeCompanyId': 396,
-          'relativeCompany': 'stockCom12',
-          'relativeCompanyType': 'Stockowner',
-          'startDate': '06/30/2015',
-          'endDate': '07/08/2015'
-        },
-        {
-          'id': 44,
-          'companyId': 413,
-          'companyName': 'GRO 555',
-          'companyTypeName': 'Stockowner',
-          'relativeCompanyId': 404,
-          'relativeCompany': 'StockOwner1',
-          'relativeCompanyType': 'Stockowner',
-          'startDate': '06/24/2015',
-          'endDate': '07/22/2015'
-        },
-        {
-          'companyId': 413,
-          'relativeCompanyId': 407,
-          'startDate': '07/07/2015',
-          'endDate': '07/08/2015'
-        }
-      ];
-      scope.$digest();
-      scope.submit(true, companyRelationshipList);
+      companyRelationship = {
+        'relativeCompanyId': 366,
+        'startDate': '20150717',
+        'endDate': '20150724'
+      };
     });
 
-    it('should call updateCompanyRelationship', function () {
-      expect(companyRelationshipFactory.updateCompanyRelationship).toHaveBeenCalledWith(companyRelationshipList[0]);
-      expect(companyRelationshipFactory.updateCompanyRelationship).toHaveBeenCalledWith(companyRelationshipList[1]);
+    it('should not submit if form is invalid', function () {
+      scope.companyRelationshipForm.$valid = false;
+      scope.submit();
+      expect(companyRelationshipFactory.createCompanyRelationship).not.toHaveBeenCalled();
     });
 
-    it('should call createCompanyRelationship', function () {
-      expect(companyRelationshipFactory.createCompanyRelationship).toHaveBeenCalledWith(companyRelationshipList[2]);
+    it('should submit and create if form is valid', function () {
+      scope.submit(true, companyRelationship);
+      expect(companyRelationshipFactory.createCompanyRelationship).toHaveBeenCalled();
     });
+
+    it('should submit if update form is valid', function () {
+      companyRelationship.id = 1;
+      scope.submit(true, companyRelationship);
+      expect(companyRelationshipFactory.updateCompanyRelationship).toHaveBeenCalled();
+    });
+
   });
 });

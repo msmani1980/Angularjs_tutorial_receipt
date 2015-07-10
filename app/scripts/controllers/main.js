@@ -81,12 +81,6 @@ angular.module('ts5App')
         route: emberURL + 'companies/create',
         icon: 'icon-create-company',
         className: 'dashboard-createCompany'
-      },
-      {
-        name: 'Create Store Number',
-        route: '/#/create-store-number',
-        icon: 'icon-create-company',
-        className: 'dashboard-createStoreNumber'
       }]
     }, {
       title: 'Schedule Management',
@@ -296,6 +290,13 @@ angular.module('ts5App')
           className: 'dashboard-stockDashboard'
         }
       ]
+      title: 'Manage Store Number',
+      menuItems: [{
+        name: 'Store Number Create',
+        route: '/#/store-number-create',
+        icon: 'icon-create-company',
+        className: 'dashboard-storeNumberCreate'
+      }]
     }];
 
   });
