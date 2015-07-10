@@ -91,7 +91,8 @@
                class="form-control"
                placeholder="Search..."
                ng-model="searchImportCompanyList"
-               id="searchImportCompanyList"/>
+               id="searchImportCompanyList"
+               ng-disabled="isDragging()"/>
       </div>
 
 
@@ -120,7 +121,8 @@
                class="form-control"
                placeholder="Search..."
                ng-model="searchCompanyRetailItemList"
-               id="searchCompanyRetailItemList"/>
+               id="searchCompanyRetailItemList"
+               ng-disabled="isDragging()"/>
       </div>
       <div class="col-xs-2">
         <label class="control-label" for="retailItemSortBy">Sort By</label>
