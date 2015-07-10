@@ -8,7 +8,34 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('postTripsService', function ($resource, ENV, dateUtility) {
+  .service('postTripsService', function ($resource, $http, ENV, dateUtility) {
+
+    function transformRequest(data) {
+      data = angular.fromJson(data);
+      if(data.scheduleDate !== null) {
+        data.scheduleDate = dateUtility.formatDateForAPI(data.scheduleDate);
+        console.log(data.scheduleDate);
+      }
+      data = angular.toJson(data);
+      return data;
+    }
+    //TODO!
+    //function transformResponse(data) {
+    //  data = angular.fromJson(data);
+    //  if(data.scheduleDate !== null) {
+    //    data.scheduleDate = dateUtility.format(data.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+    //    console.log(data.scheduleDate);
+    //  }
+    //  data = angular.toJson(data);
+    //  return data;
+    //}
+
+    // this function is from the docs: https://docs.angularjs.org/api/ng/service/$http#overriding-the-default-transformations-per-request
+    var appendTransform = function appendTransform(defaults, transform) {
+      console.log('hi');
+      defaults = angular.isArray(defaults) ? defaults : [defaults];
+      return defaults.concat(transform);
+    };
 
     var requestURL = ENV.apiUrl + '/api/companies/:id/posttrips/:tripid';
     var requestParameters = {
@@ -22,11 +49,12 @@ angular.module('ts5App')
       },
       getPostTrip: {
         method: 'GET',
-        headers: {comanyId: 362}
+        headers: {companyId: 362}
       },
       updatePostTrip: {
         method: 'PUT',
-        headers: {companyId: 362}
+        headers: {companyId: 362},
+        transformRequest: appendTransform($http.defaults.transformRequest, transformRequest)
       },
       deletePostTrip: {
         method: 'DELETE',
@@ -58,13 +86,7 @@ angular.module('ts5App')
 
     function updatePostTrip(companyId, payload){
       requestParameters.id = companyId;
-      console.log(payload.scheduleDate);
-      if(payload.scheduleDate !== null) {
-        payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
-        console.log(payload.scheduleDate);
-
-      }
-      //return requestResource.updatePostTrip(payload).$promise;
+      return requestResource.updatePostTrip(payload).$promise;
     }
 
     function deletePostTrip(companyId, postTripId){
@@ -75,9 +97,6 @@ angular.module('ts5App')
 
     function createPostTrip(companyId, payload) {
       requestParameters.id = companyId;
-      if(payload.scheduleDate !== null) {
-        payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
-      }
       return requestResource.createPostTrips(companyId, payload).$promise;
     }
 

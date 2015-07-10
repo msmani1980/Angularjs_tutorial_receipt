@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast) {
+  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast, dateUtility) {
     $('.employeeID-multiple-select').select2();
 
     var _companyId = '403',
@@ -39,9 +39,10 @@ angular.module('ts5App')
     this.getPostTrip = function () {
       return postTripFactory.getPostTrip(_companyId, $routeParams.id).then(function (response) {
         $scope.postTrip = response;
+        $scope.postTrip.scheduleDate = dateUtility.formatDateForApp($scope.postTrip.scheduleDate);
+        console.log($scope.postTrip.scheduleDate);
         $scope.updateArrivalTimeZone();
         $scope.updateDepartureTimeZone();
-        $scope.postTrip.scheduleDate = moment($scope.postTrip.scheduleDate, 'YYYY-MM-DD').format('MM/DD/YYYY');
       });
     };
 
@@ -122,8 +123,6 @@ angular.module('ts5App')
     };
 
     $scope.formSave = function () {
-      $scope.postTrip.scheduleDate = moment($scope.postTrip.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD');
-
       $scope.postTrip.postTripEmployeeIdentifiers = [];
       var employeeIds = $('.employeeID-multiple-select').select2('val');
       angular.forEach(employeeIds, function (value) {
@@ -140,11 +139,13 @@ angular.module('ts5App')
         // TODO: temporary -- remove once API is fixed and can accept depTImeZone and arrTimeZone
         delete $scope.postTrip.depTimeZone;
         delete $scope.postTrip.arrTimeZone;
-        postTripFactory.updatePostTrip(_companyId, $scope.postTrip).then(function(){
-          $this.showMessage(null, false, 'PostTrip successfully updated');
-        }, function(error) {
-          $this.showMessage(error);
-        });
+        var payload = angular.copy($scope.postTrip);
+        postTripFactory.updatePostTrip(_companyId, payload);
+        //  .then(function(){
+        //  $this.showMessage(null, false, 'PostTrip successfully updated');
+        //}, function(error) {
+        //  $this.showMessage(error);
+        //});
       }
     };
 
