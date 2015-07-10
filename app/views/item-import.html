@@ -156,7 +156,6 @@
           drag="importedRetailItem"
           id="item-id-{{ importedRetailItem.id }}"
           on-drop-success="dropSuccessHandler($event, $index, importedRetailItemList)"
-          on-drop-failure="dropfailureHandler($event)"
           ng-repeat="importedRetailItem in importedRetailItemList | filter:searchImportCompanyList">
           <td ng-style="{'background-color':importedRetailItem.hexColor}">&nbsp;</td>
           <td>{{ importedRetailItem.companyName }}</td>
