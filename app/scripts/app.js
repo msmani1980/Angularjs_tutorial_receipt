@@ -179,6 +179,10 @@ angular
         templateUrl: 'views/employee-commission-list.html',
         controller: 'EmployeeCommissionListCtrl'
       })
+      .when('/stock-dashboard', {
+        templateUrl: 'views/stock-dashboard.html',
+        controller: 'StockDashboardCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

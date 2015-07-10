@@ -287,6 +287,15 @@ angular.module('ts5App')
           className: 'dashboard-deliveryNote'
         }
       ]
+    }, {
+        title: 'Stock Management',
+        menuItems: [{
+          name: 'Stock Dashboard',
+          route: '/#/stock-dashboard',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-stockDashboard'
+        }
+      ]
     }];
 
   });

@@ -352,3 +352,56 @@
   margin:0 auto;
   max-width: 48px;
 }
+
+.stock-dashboard {
+  
+  .table-scrollable {
+    width: 100%;
+    
+    tr {
+      display: block;
+    }
+    
+    tr:after {
+      content: ' ';
+      display: block;
+      visibility: hidden;
+      clear: both;
+    }
+    
+    thead {
+      display: block;
+      
+      th {
+        display: block;
+        height: 36px;
+        width: 14%;
+        float: left;
+        
+        &.stock-dashboard-category {
+          width: 28%;
+          text-align: center;
+          border-left: 1px solid #ddd;
+        }
+        
+        &.stock-dashboard-subcategory {
+          text-align: center;
+          border-left: 1px solid #ddd;
+        }
+      }
+    }
+    
+    tbody {
+      display: block;    
+      height: 380px;
+      overflow-y: auto;
+      border-bottom: 1px solid #ddd;
+      
+      td {
+        display: block;
+        width: 14%;
+        float: left;
+      }
+    }
+  }
+}
