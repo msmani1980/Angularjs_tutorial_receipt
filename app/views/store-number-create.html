@@ -7,6 +7,9 @@
         </div>
         <div class="col-xs-6 text-right">
           <fieldset>
+            <a class="btn btn-default" href="/#/">
+              <span class="hidden-xs">Cancel</span>
+            </a>
             <button class="btn btn-primary" type="submit">
               <span class="fa fa-check-square-o" aria-hidden="true"></span>
               <span class="hidden-xs">Create</span>
@@ -56,7 +59,7 @@
     </thead>
     <tbody>
     <tr
-      ng-repeat="store in storeNumbersList">
+      ng-repeat="store in storeNumbersList track by $index">
       <td>{{ store.storeNumber }}</td>
       <td>{{ store.startDate }}</td>
       <td>{{ store.endDate }}</td>
