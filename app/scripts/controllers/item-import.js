@@ -249,10 +249,6 @@ angular.module('ts5App')
 
     };
 
-    $scope.isDragging = function(){
-
-    };
-
     // scope event handlers
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
     $scope.dropSuccessHandler = function ($event, index, array) {
