@@ -3,13 +3,13 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:EmployeeCommissionCtrl
+ * @name ts5App.controller:EmployeeCommissionEditCtrl
  * @description
- * # EmployeeCommissionCtrl
+ * # EmployeeCommissionEditCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast) {
+  .controller('EmployeeCommissionEditCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast) {
 
     $scope.viewName = 'Employee Commission';
     $scope.startDate = moment().add(1, 'days').format('L').toString();
@@ -45,16 +45,16 @@ angular.module('ts5App')
       $scope.taxRateTypes = dataFromAPI;
     });
 
-    function showToastMessage(message) {
+    function showToastMessage(className, type, message) {
       ngToast.create({
-        className: 'warning',
+        className: className,
         dismissButton: true,
-        content: '<strong>Cash bag</strong>: ' + message
+        content: '<strong>' + type + '</strong>: ' + message
       });
     }
 
     $scope.submitForm = function() {
-      showToastMessage('API not ready yet');
+      showToastMessage('warning', 'Employee Commission', 'API not ready');
     };
 
   });
