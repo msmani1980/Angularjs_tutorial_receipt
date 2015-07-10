@@ -99,7 +99,7 @@ angular.module('ts5App')
     $scope.delete = function (cashBag) {
       if ($scope.canDelete(cashBag)) {
         cashBagFactory.deleteCashBag(cashBag.id).then(function () {
-            window.alert('deleted');
+            helpers.showMessage(null, false, 'successfully deleted');
           },
           helpers.showMessage);
       }
