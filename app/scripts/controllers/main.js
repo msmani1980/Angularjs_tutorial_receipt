@@ -242,7 +242,7 @@ angular.module('ts5App')
       title: 'Employee Commission',
       menuItems: [{
         name: 'Employee Commission',
-        route: '/#/employee-commission',
+        route: '/#/employee-commission-list',
         icon: 'icon-manage-schedule',
         className: 'dashboard-employeeCommission'
       }]
@@ -258,6 +258,14 @@ angular.module('ts5App')
         route: '/#/company-reason-code',
         icon: 'icon-manage-schedule',
         className: 'dashboard-companyReasonCode'
+      }]
+    }, {
+      title: 'Manage Store Number',
+      menuItems: [{
+        name: 'Store Number Create',
+        route: '/#/store-number-create',
+        icon: 'icon-create-company',
+        className: 'dashboard-storeNumberCreate'
       }]
     }];
 

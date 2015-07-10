@@ -1,0 +1,67 @@
+<div class="container module-container">
+  <form class="form edit-form create-store-number-form" ng-submit="submitForm()">
+    <div class="edit-controls">
+      <div class="row">
+        <div class="col-xs-6">
+          <h2 class="view-name">{{ viewName }}</h2>
+        </div>
+        <div class="col-xs-6 text-right">
+          <fieldset>
+            <button class="btn btn-primary" type="submit">
+              <span class="fa fa-check-square-o" aria-hidden="true"></span>
+              <span class="hidden-xs">Create</span>
+            </button>
+          </fieldset>
+        </div>
+      </div>
+      <p>All required fields are marked with a *.</p>
+    </div>
+    <form-error-dialog></form-error-dialog>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <label class="control-label" for="storeNumber">Store Number *</label>
+        <input custom-validity
+           custom-pattern="alphanumericExactlyTenChars"
+           required="true"
+           type="text"
+           class="form-control"
+           id="storeNumber"
+           ng-model="formData.storeNumber"
+           placeholder="store12345"/>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <date-picker class="form-group"
+          element-class="col-xs-6 col-sm-6"
+          disable-past="true"
+          label-from="Effective From *"
+          label-to="Effective To *"
+          name-from="startDate"
+          name-to="endDate"
+          start-date-model="formData.startDate"
+          end-date-model="formData.endDate"
+          required="required"
+          >
+        </date-picker>
+      </div>
+    </div>
+  </form>
+  <h3>Saved Store Numbers</h3>
+  <table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Store Number</th>
+      <th>Effective From</th>
+      <th>Effective To</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr
+      ng-repeat="store in storeNumbersList">
+      <td>{{ store.storeNumber }}</td>
+      <td>{{ store.startDate }}</td>
+      <td>{{ store.endDate }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<!-- /Container -->

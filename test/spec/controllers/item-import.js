@@ -15,7 +15,7 @@ describe('Controller: ItemImportCtrl', function () {
     retailItemsResponseJSON,
     getItemsListDeferred,
     importItemsDeferred,
-    currentCompanyId = 4;
+    currentCompanyId = 403;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _itemImportFactory_) {
@@ -60,10 +60,6 @@ describe('Controller: ItemImportCtrl', function () {
     it('should have a importAll function attached to the scope', function(){
       expect(scope.importAll).toBeDefined();
       expect(Object.prototype.toString.call(scope.importAll)).toBe('[object Function]');
-    });
-    it('should have a isCompanyItem function attached to the scope', function(){
-      expect(scope.isCompanyItem).toBeDefined();
-      expect(Object.prototype.toString.call(scope.isCompanyItem)).toBe('[object Function]');
     });
     it('should have a removeRetailItem function attached to the scope', function(){
       expect(scope.removeRetailItem).toBeDefined();
@@ -158,27 +154,12 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  describe('isCompanyItem scope function', function(){
-    it('should return false when invalid companyId is passed', function(){
-      expect(scope.isCompanyItem({companyId:2})).toBe(false);
-    });
-    it('should return true when same companyId is passed', function(){
-      expect(scope.isCompanyItem({companyId:currentCompanyId})).toBe(true);
-    });
-  });
-
   describe('removeRetailItem scope function', function(){
-    var retailItem1 = {companyId:currentCompanyId,itemCode:'123',itemName:'123',onBoardName:'123'};
-    var retailItem2 = {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456'};
+    var retailItem2 = {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456',stockOwnerCode:'4567'};
     beforeEach(function(){
       scope.companyRetailItemList = [retailItem2];
       scope.importedRetailItemList = [];
       scope.selectedImportCompany = {id:432};
-      scope.$digest();
-    });
-    it('should return false when retail Item\'s company ID is the same as current company ID', function(){
-      expect(scope.removeRetailItem(retailItem1)).toBe(false);
-      scope.importedRetailItemList = [];
       scope.$digest();
     });
     it('should expect importedRetailItemList array length to be 1', function() {
@@ -194,19 +175,19 @@ describe('Controller: ItemImportCtrl', function () {
   describe('removeAll scope function', function(){
     beforeEach(function(){
       scope.companyRetailItemList = [
-        {companyId:432,id:1,itemCode:'123',itemName:'123',onBoardName:'123'},
-        {companyId:432,id:2,itemCode:'1234',itemName:'1234',onBoardName:'1234'},
-        {companyId:currentCompanyId,id:3,itemCode:'12345',itemName:'12345',onBoardName:'12345'},
-        {companyId:34,id:4,itemCode:'123456',itemName:'123456',onBoardName:'123456'}];
+        {companyId:currentCompanyId,id:1,itemCode:'123',itemName:'123',onBoardName:'123',stockOwnerCode:'123'},
+        {companyId:currentCompanyId,id:2,itemCode:'1234',itemName:'1234',onBoardName:'1234',stockOwnerCode:null},
+        {companyId:432,id:3,itemCode:'12345',itemName:'12345',onBoardName:'12345',stockOwnerCode:null},
+        {companyId:432,id:4,itemCode:'123456',itemName:'123456',onBoardName:'123456',stockOwnerCode:null}];
       scope.importedRetailItemList = [];
       scope.selectedImportCompany = {id:432};
       scope.$digest();
       scope.removeAll();
     });
-    it('should reset companyRetailItemList to a single array item', function(){
-      expect(scope.companyRetailItemList.length).toEqual(1);
+    it('should reset companyRetailItemList to 1 item', function(){
+      expect(scope.companyRetailItemList.length).toEqual(0);
     });
-    it('should reset importedRetailItemList to a single array item', function(){
+    it('should reset importedRetailItemList to 2 items', function() {
       expect(scope.importedRetailItemList.length).toEqual(2);
     });
   });
@@ -214,8 +195,7 @@ describe('Controller: ItemImportCtrl', function () {
   describe('submitForm scope function', function(){
     var payload;
     beforeEach(function(){
-      var items = [{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:'1234'}];
-      scope.companyRetailItemList = items;
+      scope.onDrop({},{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:1234},[]);
       payload = {ImportItems:{importItems: [1234]}};
       scope.$digest();
       scope.submitForm();

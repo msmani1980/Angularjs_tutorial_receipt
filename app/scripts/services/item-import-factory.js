@@ -18,9 +18,6 @@ angular.module('ts5App')
     var getItemsList = function(searchParameters, fetchFromMaster){
       return itemsService.getItemsList(searchParameters, fetchFromMaster);
     };
-    var createItem = function(payload){
-      return itemsService.createItem(payload);
-    };
     var importItems = function(payload){
       return itemImportService.importItems(payload);
     };
@@ -28,7 +25,6 @@ angular.module('ts5App')
       getCompanyId: getCompanyId,
       getCompanyList: getCompanyList,
       getItemsList: getItemsList,
-      createItem: createItem,
       importItems: importItems
     };
   });

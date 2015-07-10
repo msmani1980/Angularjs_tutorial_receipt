@@ -14,84 +14,90 @@
         </a>
 
 				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
-          <span class="fa fa-search" aria-hidden="true"></span>
-					<span class="hidden-sm hidden-xs">Search</span>
-				</button>
-
-				<button class="btn btn-default"
-					ng-click="clearSearchFilters()"
-					ng-show="search.itemCode.length || search.itemName.length || search.itemType.length || search.onBoardName.length || search.categoryName.length || dateRange.startDate.length || dateRange.endDate.length">
-					<span>Clear</span>
+          <span class="fa fa-filter" aria-hidden="true"></span>
+					<span class="hidden-sm hidden-xs">Filter</span>
 				</button>
 
 			</div>
-
 		</div>
 
-		<div class="collapse" id="search-collapse">
+		<div class="panel panel-default collapse no-transition" id="search-collapse">
 			<form class="form">
-				<div class="row">
+				<div class="panel-body">
+					<div class="row">
 
-					<div class="col-xs-12 col-sm-6 col-md-4">
-						<div class="form-group">
-							<label for="item-code">Item Code</label>
-							<input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="Item012">
-						</div>
-					</div>
-
-					<div class="col-xs-12 col-sm-6 col-md-4">
-						<div class="form-group">
-							<label for="item-name">Item Name</label>
-							<input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="Turkey">
+						<div class="col-xs-12 col-sm-6 col-md-4">
+							<div class="form-group">
+								<label for="item-code">Item Code</label>
+								<input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="Item012">
+							</div>
 						</div>
 
-					</div>
+						<div class="col-xs-12 col-sm-6 col-md-4">
+							<div class="form-group">
+								<label for="item-name">Item Name</label>
+								<input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="Turkey">
+							</div>
 
-					<div class="col-xs-12 col-sm-6 col-md-4">
+						</div>
 
-						<div class="form-group">
-							<label for="item-type">Item Type</label>
-							<select ng-model="search.itemType" class="form-control" id="item-type">
-								<option value="{{type.name}}"  ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>
-							</select>
+						<div class="col-xs-12 col-sm-6 col-md-4">
+
+							<div class="form-group">
+								<label for="item-type">Item Type</label>
+								<select ng-model="search.itemTypeName" class="form-control" id="item-type">
+									<option value="{{type.name}}"  ng-repeat="type in itemTypes | unique: 'id'">{{ type.name }}</option>
+								</select>
+							</div>
+
+						</div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+
+							<div class="form-group">
+								<label for="item-onboard-name">Onboard Name</label>
+								<input ng-model="search.onBoardName" type="text" class="form-control" id="item-onboard-name" placeholder="Turkey Delight">
+							</div>
+
+						</div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+
+							<div class="form-group">
+								<label for="item-sales-category">Sales Category</label>
+								<select ng-model="search.categoryName" class="form-control" id="item-sales-category">
+									<option value="{{salesCategory.name}}" ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name }}</option>
+								</select>
+							</div>
+
 						</div>
 
 					</div>
 
-					<div class="col-xs-12 col-sm-6 col-md-4">
-
-						<div class="form-group">
-							<label for="item-onboard-name">Onboard Name</label>
-							<input ng-model="search.onBoardName" type="text" class="form-control" id="item-onboard-name" placeholder="Turkey Delight">
-						</div>
-
-					</div>
-
-					<div class="col-xs-12 col-sm-6 col-md-4">
-
-						<div class="form-group">
-							<label for="item-sales-category">Sales Category</label>
-							<select ng-model="search.categoryName" class="form-control" id="item-sales-category">
-								<option value="{{salesCategory.name}}" ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name }}</option>
-							</select>
-						</div>
+					<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
+						start-date-model="dateRange.startDate"
+						end-date-model="dateRange.endDate"
+						is-search-field="true"
+						label-from="Effective From"
+						label-to="Effective To">
+					</date-picker>
 
 					</div>
 
-				</div>
+					<div class="panel-footer text-right">
+						<button class="btn btn-default"
+							ng-click="clearSearchFilters()"
+							ng-show="search.itemCode.length || search.itemName.length || search.itemTypeName.length || search.onBoardName.length || search.categoryName.length || dateRange.startDate.length || dateRange.endDate.length">
+							<span>Clear</span>
+						</button>
+						<button ng-click="searchRecords()" class="btn btn-primary btn-search">
+							<span class="fa fa-search" aria-hidden="true"></span>
+							<span class="hidden-sm hidden-xs btn-label">Search</span>
+						</button>
+					</div>
+				</form>
 
-				<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
-					start-date-model="dateRange.startDate"
-					end-date-model="dateRange.endDate"
-					is-search-field="true"
-					label-from="Effective From"
-					label-to="Effective To">
-				</date-picker>
-
-			</form>
-
-		</div>
-
+			</div>
 	</div>
 
 	<alert ng-hide="!item.length" ng-show="!paginatedItems.length" type="info">
@@ -140,11 +146,11 @@
 							<i class="fa fa-file"></i>
 						</a>
 
-						<a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{item.id}}" ng-disabled="isItemInactive(item.endDate)">
+						<a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{item.id}}" ng-hide="isItemActive(item.endDate)">
 							<i class="fa fa-pencil"></i>
 						</a>
 
-						<button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id)" ng-disabled="isItemActive(item.startDate) || isItemInactive(item.endDate)">
+						<button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id)" ng-hide="isItemActive(item.startDate) || isItemActive(item.endDate)">
 							<i class="fa fa-trash"></i>
 						</button>
 
@@ -174,5 +180,4 @@
 
 <form-success-modal></form-success-modal>
 <left-navigation base-path="retail-items"></left-navigation>
-
 <delete-record-dialog></delete-record-dialog>

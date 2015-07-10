@@ -621,6 +621,7 @@ angular.module('ts5App')
 
     }
 
+    // TODO: make this a controller function
     // Formats the dates when sending the payload to the API
     function formatPayloadDates(itemData) {
       itemData.startDate = formatDate(itemData.startDate, 'L', 'YYYYMMDD');

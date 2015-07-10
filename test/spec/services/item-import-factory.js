@@ -22,7 +22,6 @@ describe('Factor: itemImportFactory', function () {
     spyOn(GlobalMenuService.company, 'get');
     spyOn(companyService, 'getCompanyList');
     spyOn(itemsService, 'getItemsList');
-    spyOn(itemsService, 'createItem');
     spyOn(itemImportService, 'importItems');
 
     itemImportFactory = _itemImportFactory_;
@@ -53,11 +52,6 @@ describe('Factor: itemImportFactory', function () {
       var params = {companyId:413};
       itemImportFactory.getItemsList(params);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(params, undefined);
-    });
-    it('should call createItem', function(){
-      var payload = {retailItem:{}};
-      itemImportFactory.createItem(payload);
-      expect(itemsService.createItem).toHaveBeenCalledWith(payload);
     });
   });
 

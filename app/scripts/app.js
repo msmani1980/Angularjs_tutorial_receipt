@@ -20,6 +20,7 @@ angular
     'ngTouch',
     'ngStorage',
     'ui.bootstrap',
+    'ui.select',
     'angular.filter',
     'ngFileUpload',
     'ja.qr',
@@ -37,7 +38,9 @@ angular
     cc: /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/,
     zip: /^(([0-9]{5})|([0-9]{5}[-][0-9]{4}))$/,
     decimal: /^\d+\.\d{0,4}$/,
-    currencyWithFourDecimalPlace: [/^\d+\.\d{4}$/, 'This field should use format 0.0000'],
+    currencyWithFourDecimalPlace: [/^\d+\.\d{4}$/,
+      'This field should use format 0.0000'
+    ],
     price: /^\$?\s?[0-9\,]+(\.\d{0,4})?$/,
     url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
   })
@@ -87,6 +90,10 @@ angular
         templateUrl: 'views/company.html',
         controller: 'CompanyCtrl'
       })
+      .when('/store-number-create', {
+        templateUrl: 'views/store-number-create.html',
+        controller: 'StoreNumberCreateCtrl'
+      })
       .when('/company-relationship-list/:id', {
         templateUrl: 'views/company-relationship.html',
         controllerAs: 'vm',
@@ -124,9 +131,9 @@ angular
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })
-      .when('/employee-commission', {
-        templateUrl: 'views/employee-commission.html',
-        controller: 'EmployeeCommissionCtrl'
+      .when('/employee-commission/:state/:id?', {
+        templateUrl: 'views/employee-commission-edit.html',
+        controller: 'EmployeeCommissionEditCtrl'
       })
       .when('/global-reason-code', {
         templateUrl: 'views/global-reason-code.html',
@@ -144,16 +151,29 @@ angular
         templateUrl: 'views/menu-relationship-create.html',
         controller: 'MenuRelationshipCreateCtrl'
       })
+      .when('/menu-relationship-edit/:id', {
+        templateUrl: 'views/menu-relationship-create.html',
+        controller: 'MenuRelationshipCreateCtrl'
+      })
+      .when('/menu-relationship-view/:id', {
+        templateUrl: 'views/menu-relationship-create.html',
+        controller: 'MenuRelationshipCreateCtrl'
+      })
       .when('/item-import', {
         templateUrl: 'views/item-import.html',
         controller: 'ItemImportCtrl'
+      })
+      .when('/employee-commission-list', {
+        templateUrl: 'views/employee-commission-list.html',
+        controller: 'EmployeeCommissionListCtrl'
       })
       .otherwise({
         redirectTo: '/'
       });
 
   })
-  .run(['$rootScope', 'regexp', 'GlobalMenuService', '$http', function ($rootScope, regexp, GlobalMenuService, $http) {
+  .run(['$rootScope', 'regexp', 'GlobalMenuService', '$http', function (
+    $rootScope, regexp, GlobalMenuService, $http) {
 
     // get the user and company
     var user = GlobalMenuService.user.get();
@@ -169,30 +189,24 @@ angular
     // set regexp object into root scope for use in any template
     $rootScope.regexp = regexp;
 
-    $rootScope.sideMenu = [
-      {
-        'title': 'Stock Owner Item Management',
-        menuItems: [
-          {
-            name: 'Manage SO Items',
-            route: '/#/stock-owner-item-list',
-            icon: 'icon-manage-retail-item',
-            className: 'dashboard-managemenuItems'
-          },
-          {
-            name: 'Create SO Item',
-            route: '/#/stock-owner-item-create',
-            icon: 'icon-create-retail-item',
-            className: 'dashboard-createItem'
-          },
-          {
-            name: 'Manage SO Categories',
-            route: 'retail-items/categories',
-            icon: 'icon-manage-retail-category',
-            className: 'dashboard-manageItemCategories'
-          }
-        ]
-      }
-    ];
+    $rootScope.sideMenu = [{
+      'title': 'Stock Owner Item Management',
+      menuItems: [{
+        name: 'Manage SO Items',
+        route: '/#/stock-owner-item-list',
+        icon: 'icon-manage-retail-item',
+        className: 'dashboard-managemenuItems'
+      }, {
+        name: 'Create SO Item',
+        route: '/#/stock-owner-item-create',
+        icon: 'icon-create-retail-item',
+        className: 'dashboard-createItem'
+      }, {
+        name: 'Manage SO Categories',
+        route: 'retail-items/categories',
+        icon: 'icon-manage-retail-category',
+        className: 'dashboard-manageItemCategories'
+      }]
+    }];
 
   }]);
