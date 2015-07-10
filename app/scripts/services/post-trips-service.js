@@ -62,7 +62,7 @@ angular.module('ts5App')
 
     function deletePostTrip(companyId, postTripId){
       requestParameters.id = companyId;
-      return requestResource.deleteCashBag({id:postTripId}).$promise;
+      return requestResource.deletePostTrip({id:postTripId}).$promise;
     }
 
     function createPostTrip(companyId, payload) {

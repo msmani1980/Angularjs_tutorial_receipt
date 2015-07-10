@@ -8,9 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location) {
+  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast) {
     var _companyId = '403',
       _services = null;
+    var $this = this;
 
     $scope.viewName = 'Post Trip Data Management';
     $scope.search = {};
@@ -26,7 +27,7 @@ angular.module('ts5App')
           });
         },
         getPostTripDataList: function () {
-          return postTripFactory.getPostTripDataList(_companyId, {}).then(function(response){
+          return postTripFactory.getPostTripDataList(_companyId, {}).then(function (response) {
             $scope.postTrips = response.postTrips;
           });
         },
@@ -36,28 +37,43 @@ angular.module('ts5App')
             $('.stations-multi-select').select2({width: '100%'});
           });
         },
-        getCarrierTypes: function () {
+        getCarrierNumbers: function () {
           $scope.carrierNumbers = [];
           return postTripFactory.getCarrierTypes(_companyId).then(function (response) {
-            angular.forEach(response.response, function(item){
-              postTripFactory.getCarrierNumbers(_companyId, item.id).then(function(response){
+            angular.forEach(response.response, function (item) {
+              postTripFactory.getCarrierNumbers(_companyId, item.id).then(function (response) {
                 $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
               });
             });
           });
         }
       };
-      _services.call(['getPostTripDataList', 'getStationList', 'getCarrierTypes']);
+      _services.call(['getPostTripDataList', 'getStationList', 'getCarrierNumbers']);
     })();
 
+    this.showMessage = function (isError, message) {
+      console.log('hi');
+      var messageType = isError ? 'danger' : 'success';
+      ngToast.create({
+        className: messageType,
+        dismissButton: true,
+        content: '<strong>Post Trip</strong>:' + message
+      });
+    };
 
     $scope.searchPostTripData = function () {
-      if($scope.search.scheduleDate) {
+      // TODO: switch to date utility
+      if ($scope.search.scheduleDate) {
         $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD');
       }
-      postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function(response){
-        $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'YYYYMMDD').format('MM/DD/YYYY');
-        $scope.search.depTime = $scope.search.depTime.toString();
+      postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function (response) {
+
+        if ($scope.search.scheduleDate) {
+          $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'YYYYMMDD').format('MM/DD/YYYY');
+        }
+        if ($scope.search.depTime) {
+          $scope.search.depTime = $scope.search.depTime.toString();
+        }
         $scope.postTrips = response.postTrips;
       });
     };
@@ -65,7 +81,7 @@ angular.module('ts5App')
     $scope.clearSearchForm = function () {
       $('.stations-multi-select').select2('data', null);
       $scope.search = {};
-      postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function(response){
+      postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function (response) {
         $scope.postTrips = response.postTrips;
       });
     };
@@ -79,8 +95,23 @@ angular.module('ts5App')
     };
 
     $scope.deletePostTrip = function (id) {
-      // TODO: delete
+      postTripFactory.deletePostTrip(_companyId, id).then(
+        function () {
+          $this.showMessage(false, 'Post Trip successfully deleted');
+          postTripFactory.getPostTripDataList(_companyId).then(function (response) {
+            $scope.postTrips = response.postTrips;
+          });
+        }, function () {
+          $this.showMessage(true, 'Post Trip could not be deleted')
+        }
+      );
     };
+
+    $scope.showEditButton = function (dateString) {
+      var scheduleDate = moment(dateString, 'YYYY-MM-DD');
+      var today = moment();
+      return scheduleDate.isBefore(today);
+    }
 
 
   });
