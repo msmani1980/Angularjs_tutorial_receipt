@@ -1,28 +1,26 @@
-<form name="companyRelationshipListForm">
+<h2 class="view-name">{{viewName}}</h2>
+<div class="list-controls">
   <div class="row">
-    <div class="col-xs-6 col-sm-8">
-      <h2 class="view-name">{{viewName}}</h2>
+    <div class="col-xs-6 text-left">
+      <button type="button" ng-if="!isLoading && !isRejected" class="btn btn-primary" ng-click="addCompanyRelationship(company)">
+        <span class="fa fa-plus" aria-hidden="true"></span> Add Company Relationship
+      </button>
     </div>
-    <div class="col-xs-6 col-sm-4">
+    <div class="col-xs-6">
       <div class="header-buttons pull-right">
-        <button type="button" class="btn btn-default" data-dismiss="alert" aria-label="Cancel" ng-click="cancel()">
-          <span class="fa fa-close" aria-hidden="true"></span> <span class="hidden-xs">Cancel</span>
-        </button>
-        <button type="submit" class="btn btn-primary"
-                ng-click="submit(companyRelationshipListForm.$valid, companyRelationshipListData)">
-          <i class="fa fa-check-square-o" aria-hidden="true"></i> <span class="hidden-xs">Submit</span>
-        </button>
-        <button type="button" class="btn btn-default">
-          <i class="fa fa-question-circle"></i>
+        <button type="button" class="btn btn-default" data-dismiss="alert" aria-label="Back" ng-click="back()">
+          <span class="fa fa-arrow-left" aria-hidden="true"></span> <span class="hidden-xs">Back</span>
         </button>
       </div>
     </div>
   </div>
-  <div ng-if="isLoading" class="text-center">
-    <p><i class="fa fa-cog fa-spin fa-4x"></i></p>
-    <p>Loading...</p>
-  </div>
-  <div ng-if="!isLoading">
+</div>
+<div ng-if="isLoading && !isRejected" class="text-center">
+  <p><i class="fa fa-cog fa-spin fa-4x"></i></p>
+  <p>Loading...</p>
+</div>
+<div ng-if="!isLoading && !isRejected">
+  <div ng-if="companyRelationshipListData.length">
     <div class="row">
       <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in col-xs-12" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
@@ -32,30 +30,58 @@
         </h4>
 
         <ul>
-          <li ng-repeat="error in form.$error.required">
+          <li ng-repeat="error in form.$error.required track by $index">
             <strong>{{ error.$name }}</strong> is required
           </li>
           <li ng-repeat="error in form.$error.pattern">
             <strong>{{ error.$name }}</strong> is invalid
           </li>
-          <li ng-show="formErrors" ng-repeat="error in formErrors">
-            <strong>{{error.field}}</strong>
+          <li ng-show="formErrors" ng-repeat="error in formErrors track by $index">
+            <strong>{{ error.field }}</strong>
             <span> {{ error.value }}</span>
             <span> {{ error.code }}</span>
           </li>
         </ul>
       </div>
     </div>
-    <div class="container module-container">
-      <feature-list-item ng-repeat="companyRelationship in companyRelationshipListData" view-model="companyRelationship"
-                   type="company-relationship"></feature-list-item>
-      <div class="row">
-        <div class="col-xs-12 text-right">
-          <button type="button" class="btn btn-primary" ng-click="addCompanyRelationship(company.id)">
-            <span class="fa fa-plus" aria-hidden="true"></span> Add Company Relationship
-          </button>
-        </div>
+    <div class="feature-list">
+      <div class="row list-head">
+        <div class="hidden-xs col-sm-2 list-header border-right">Company Name</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Type</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Related Company</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Start Date</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">End Date</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Actions</div>
       </div>
+      <!--$id() tracks items by their identity-->
+      <!--https://docs.angularjs.org/api/ng/directive/ngRepeat-->
+      <feature-list-item ng-repeat="companyRelationship in companyRelationshipListData track by $id(companyRelationship)"
+                         view-model="companyRelationship"
+                         type="company-relationship"></feature-list-item>
     </div>
   </div>
-</form>
+  <div ng-if="companyRelationshipListData.length === 0" class="feature-empty">
+    No Company Relationships Found
+  </div>
+</div>
+
+<div class="modal fade delete-warning-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure?</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about to permanently delete <strong>{{ companyRelationshipToDelete.relativeCompany }}</strong></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deleteCompanyRelationship()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
