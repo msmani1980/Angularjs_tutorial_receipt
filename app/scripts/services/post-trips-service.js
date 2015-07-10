@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('postTripsService', function ($resource, ENV) {
+  .service('postTripsService', function ($resource, ENV, dateUtility) {
 
     var requestURL = ENV.apiUrl + '/api/companies/:id/posttrips/:tripid';
     var requestParameters = {
@@ -44,6 +44,7 @@ angular.module('ts5App')
       var payload = {};
       if (arguments.length === 2) {
         payload = optionalPayload;
+        // TODO: encode colon in time query parameter -- or wait for backend to fix
       }
       requestParameters.id = companyId;
       return requestResource.getPostTrips(payload).$promise;
@@ -57,16 +58,26 @@ angular.module('ts5App')
 
     function updatePostTrip(companyId, payload){
       requestParameters.id = companyId;
-      return requestResource.updatePostTrip(payload).$promise;
+      console.log(payload.scheduleDate);
+      if(payload.scheduleDate !== null) {
+        payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
+        console.log(payload.scheduleDate);
+
+      }
+      //return requestResource.updatePostTrip(payload).$promise;
     }
 
     function deletePostTrip(companyId, postTripId){
       requestParameters.id = companyId;
-      return requestResource.deletePostTrip({id:postTripId}).$promise;
+      requestParameters.tripid = postTripId;
+      return requestResource.deletePostTrip().$promise;
     }
 
     function createPostTrip(companyId, payload) {
       requestParameters.id = companyId;
+      if(payload.scheduleDate !== null) {
+        payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
+      }
       return requestResource.createPostTrips(companyId, payload).$promise;
     }
 

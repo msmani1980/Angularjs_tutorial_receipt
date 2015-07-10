@@ -45,8 +45,13 @@ angular.module('ts5App')
       });
     };
 
-    this.showMessage = function(isError, message) {
-      var messageType = isError ? 'error' : 'success';
+    this.showMessage = function(error, isError, message) {
+      // TODO: add displayError dialog once API is fixed and returns error codes
+      if(arguments.length < 2) {
+        isError = true;
+        message = 'error';
+      }
+      var messageType = isError ? 'danger' : 'success';
       ngToast.create({
         className: messageType,
         dismissButton: true,
@@ -98,16 +103,7 @@ angular.module('ts5App')
           $this.initReadView();
           break;
       }
-
     })();
-
-    $scope.updateCarrierNumbers = function () {
-      postTripFactory.getCarrierNumbers(_companyId, $scope.carrierTypeId).then(function (response) {
-        $scope.carrierNumbers = response.response;
-      }, function () {
-        $scope.carrierNumbers = [];
-      });
-    };
 
     $scope.updateArrivalTimeZone = function () {
       angular.forEach($scope.stationList, function(value){
@@ -126,9 +122,6 @@ angular.module('ts5App')
     };
 
     $scope.formSave = function () {
-      // TODO: fix once post trip API is finished and tested
-      // TODO: validate data formats and check that values cannot be null
-
       $scope.postTrip.scheduleDate = moment($scope.postTrip.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD');
 
       $scope.postTrip.postTripEmployeeIdentifiers = [];
@@ -136,18 +129,22 @@ angular.module('ts5App')
       angular.forEach(employeeIds, function (value) {
         $scope.postTrip.postTripEmployeeIdentifiers.push({employeeIdentifier: value});
       });
+
       if ($routeParams.state === 'create') {
-        console.log($scope.postTrip);
         postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(function(response){
-          // TODO: ngToast succes
+          $location.path('post-trip-data-list');
         }, function(error){
-          // TODO: ngToast error
+          $this.showMessage(error);
         });
       } else {
+        // TODO: temporary -- remove once API is fixed and can accept depTImeZone and arrTimeZone
         delete $scope.postTrip.depTimeZone;
         delete $scope.postTrip.arrTimeZone;
-        console.log($scope.postTrip);
-        postTripFactory.updatePostTrip(_companyId, $scope.postTrip);
+        postTripFactory.updatePostTrip(_companyId, $scope.postTrip).then(function(){
+          $this.showMessage(null, false, 'PostTrip successfully updated');
+        }, function(error) {
+          $this.showMessage(error);
+        });
       }
     };
 

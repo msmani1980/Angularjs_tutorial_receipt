@@ -63,17 +63,7 @@ angular.module('ts5App')
 
     $scope.searchPostTripData = function () {
       // TODO: switch to date utility
-      if ($scope.search.scheduleDate) {
-        $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD');
-      }
       postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function (response) {
-
-        if ($scope.search.scheduleDate) {
-          $scope.search.scheduleDate = moment($scope.search.scheduleDate, 'YYYYMMDD').format('MM/DD/YYYY');
-        }
-        if ($scope.search.depTime) {
-          $scope.search.depTime = $scope.search.depTime.toString();
-        }
         $scope.postTrips = response.postTrips;
       });
     };
@@ -97,11 +87,13 @@ angular.module('ts5App')
     $scope.deletePostTrip = function (id) {
       postTripFactory.deletePostTrip(_companyId, id).then(
         function () {
+          console.log('hi');
           $this.showMessage(false, 'Post Trip successfully deleted');
-          postTripFactory.getPostTripDataList(_companyId).then(function (response) {
-            $scope.postTrips = response.postTrips;
-          });
+          //postTripFactory.getPostTripDataList(_companyId, {}).then(function (response) {
+          //  $scope.postTrips = response.postTrips;
+          //});
         }, function () {
+          console.log('hiya');
           $this.showMessage(true, 'Post Trip could not be deleted')
         }
       );
@@ -110,7 +102,7 @@ angular.module('ts5App')
     $scope.showEditButton = function (dateString) {
       var scheduleDate = moment(dateString, 'YYYY-MM-DD');
       var today = moment();
-      return scheduleDate.isBefore(today);
+      return !scheduleDate.isBefore(today);
     }
 
 

@@ -1,7 +1,7 @@
 <div class="module-container">
   <h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
   <br>
-  <ng-form name="form" class="form edit-form post-trip-data-form">
+  <form name="form" class="form edit-form post-trip-data-form">
 
     <form-error-dialog></form-error-dialog>
     <!--/TopHeader -->
@@ -45,7 +45,7 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="departureStation">Departure Station *</label>
-              <select class="form-control" id="departureStation" ng-model="postTrip.depStationId" ng-change="updateDepartureTimeZone()" ng-disabled="readOnly">
+              <select class="form-control" id="departureStation" ng-model="postTrip.depStationId" ng-change="updateDepartureTimeZone()" ng-disabled="readOnly" required="true">
                 <option ng-repeat="station in stationList" value="{{ station.stationId }}">
                   {{ station.stationCode }} ({{ station.stationName}})
                 </option>
@@ -55,15 +55,24 @@
 
           <div class="col-xs-12 col-sm-4">
             <label for="departure-time">Departure Time *</label>
-            <input ng-model="postTrip.depTime" type="text" class="form-control departure-time" id="departure-time"
-                   placeholder="21:34" required="true" custom-validity custom-pattern="time" ng-readonly="readOnly">
+            <input custom-validity custom-pattern="time"
+                   ng-model="postTrip.depTime"
+                   type="text"
+                   class="form-control departure-time"
+                   id="departure-time"
+                   placeholder="21:34"
+                   ng-readonly="readOnly">
           </div>
 
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="departure-time-zone">Departure Time Zone *</label>
-              <input type="text" class="form-control" id="departure-time-zone" placeholder=""
-                     ng-model="departureTimezone" disabled>
+              <input type="text"
+                     class="form-control"
+                     id="departure-time-zone"
+                     placeholder=""
+                     ng-model="departureTimezone"
+                     disabled>
             </div>
           </div>
         </div>
@@ -72,7 +81,7 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="arrival-station">Arrival Station *</label>
-              <select class="form-control" id="arrival-station" ng-model="postTrip.arrStationId" ng-change="updateArrivalTimeZone()" ng-disabled="readOnly">
+              <select class="form-control" id="arrival-station" ng-model="postTrip.arrStationId" ng-change="updateArrivalTimeZone()" ng-disabled="readOnly" required="true">
                 <option ng-repeat="station in stationList" value="{{ station.stationId }}">
                   {{ station.stationCode }} ({{ station.stationName}})
                 </option>
@@ -83,8 +92,14 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Arrival Time *</label>
-              <input ng-model="postTrip.arrTime" type="text" class="form-control departure-time" id="departure-time"
-                     placeholder="23:34" required="true" custom-validity custom-pattern="time" ng-readonly="readOnly">
+              <input custom-validity
+                     custom-pattern="time"
+                     ng-model="postTrip.arrTime"
+                     type="text"
+                     class="form-control departure-time"
+                     id="departure-time"
+                     placeholder="23:34"
+                     ng-readonly="readOnly">
             </div>
           </div>
 
@@ -102,8 +117,13 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Passenger Count *</label>
-              <input ng-model="postTrip.passengerCount" type="text" class="form-control passenger-count"
-                     placeholder="123" required="true" ng-readonly="readOnly">
+              <input custom-validity
+                     custom-pattern="number"
+                     ng-model="postTrip.passengerCount"
+                     type="text"
+                     class="form-control passenger-count"
+                     placeholder="123"
+                     ng-readonly="readOnly">
             </div>
           </div>
 
@@ -139,7 +159,7 @@
 
       </div>
     </div>
-  </ng-form>
+  </form>
 
 </div>
 <!-- /Container -->
