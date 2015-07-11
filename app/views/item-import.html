@@ -141,8 +141,7 @@
 
   <div class="form-group">
     <div class="col-xs-6">
-      <table ui-on-Drop="onDrop($event, $data, importedRetailItemList)"
-             class="sortable table table-bordered table-hover">
+      <table class="sortable table table-bordered table-hover">
         <thead>
         <tr>
           <th ng-style="{'background-color':selectedImportCompany.hexColor}">&nbsp;</th>
@@ -155,6 +154,7 @@
         <tr
           ui-draggable="true"
           drag="importedRetailItem"
+          id="item-id-{{ importedRetailItem.id }}"
           on-drop-success="dropSuccessHandler($event, $index, importedRetailItemList)"
           ng-repeat="importedRetailItem in importedRetailItemList | filter:searchImportCompanyList">
           <td ng-style="{'background-color':importedRetailItem.hexColor}">&nbsp;</td>
@@ -166,8 +166,7 @@
       </table>
     </div>
     <div class="col-xs-6">
-      <table ui-on-Drop="onDrop($event, $data, companyRetailItemList)"
-             class="sortable table table-bordered table-hover">
+      <table class="sortable table table-bordered drop-table">
         <thead>
         <tr>
           <th>&nbsp;</th>
@@ -179,9 +178,8 @@
         </thead>
         <tbody>
         <tr
-          ui-draggable="true"
-          drag="retailItem"
-          on-drop-success="dropSuccessHandler($event, $index, companyRetailItemList)"
+          id="item-id-{{ retailItem.id }}"
+          ui-on-Drop="onDrop($event, $data, companyRetailItemList)"
           ng-repeat="retailItem in companyRetailItemList | filter:searchCompanyRetailItemList">
           <td ng-style="{'background-color':retailItem.hexColor}">&nbsp;</td>
           <td>{{ retailItem.companyName }}</td>
@@ -189,6 +187,7 @@
           <td>{{ retailItem.itemName }}</td>
           <td><a ng-click="removeRetailItem(retailItem)">X</a></td>
         </tr>
+        <tr id="item-drop-init" ui-on-Drop="onDrop($event, $data, companyRetailItemList)"><td colspan="5">&nbsp;</td></tr>
         </tbody>
       </table>
       <p ng-hide="retailItemsLoaded"><em>Loading retail items...</em></p>
