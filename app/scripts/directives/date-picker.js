@@ -1,5 +1,7 @@
 'use strict';
 /*global moment*/
+// jshint maxcomplexity:8
+
 /**
  * @ngdoc directive
  * @name ts5App.directive:datePicker
