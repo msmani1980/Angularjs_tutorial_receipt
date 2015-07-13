@@ -70,7 +70,7 @@ angular.module('ts5App')
     };
 
     this.generateItemQuery = function () {
-      var todaysDate = dateUtility.formatDate(dateUtility.now());
+      var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
       var query = {
         startDate: todaysDate,
         sortBy: 'ASC',
@@ -231,7 +231,6 @@ angular.module('ts5App')
     $scope.submitForm = function (formData) {
       $scope.displayError = false;
       if (!$scope.form.$valid) {
-        console.log($scope.form);
         $scope.displayError = true;
         return false;
       }
@@ -255,7 +254,7 @@ angular.module('ts5App')
     };
 
     $scope.isRelationshipInactive = function () {
-      return Date.parse($scope.formData.endDate) <= dateUtility.now();
+      return Date.parse($scope.formData.endDate) <= dateUtility.tomorrow();
     };
 
     this.init();

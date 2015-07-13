@@ -54,4 +54,16 @@ angular.module('ts5App')
       return this.formatDate(now, formatFrom, formatTo);
     };
 
+    this.tomorrow = function () {
+      var today = new Date();
+      var tomorrow = today.setDate(today.getDate() + 1);
+      return tomorrow;
+    };
+
+    this.yesterday = function () {
+      var today = new Date();
+      var yesterday = today.setDate(today.getDate() - 1);
+      return yesterday;
+    };
+
   });
