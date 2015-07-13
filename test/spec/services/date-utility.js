@@ -53,4 +53,32 @@ describe('Date Utility service', function () {
 
   });
 
+  describe('isValid() method', function(){
+
+    it('should be defined for APP', function () {
+      expect(dateUtility.isDateValidForApp).toBeDefined();
+    });
+
+    it('should return true for app', function () {
+      expect(dateUtility.isDateValidForApp('05/10/1979')).toBe(true);
+    });
+
+    it('should return false for app', function () {
+      expect(dateUtility.isDateValidForApp('19791005')).toBe(false);
+    });
+
+    it('should be defined for API', function () {
+      expect(dateUtility.isDateValidForAPI).toBeDefined();
+    });
+
+    it('should return true for API', function () {
+      expect(dateUtility.isDateValidForAPI('19791005')).toBe(true);
+    });
+
+    it('should return false for API', function () {
+      expect(dateUtility.isDateValidForAPI('05/10/1979')).toBe(false);
+    });
+
+  });
+
 });
