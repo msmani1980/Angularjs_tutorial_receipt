@@ -145,11 +145,12 @@
           <div class="col-xs-12 col-sm-4 employee-id">
             <div class="form-group">
               <label>Employee ID's *</label>
-              <select class="employeeID-multiple-select" multiple="multiple" ng-disabled="readOnly" required="true">
-                <option ng-repeat="employee in employees" value="{{ employee.id }}">
-                  {{ employee.id }} ({{ employee.name}})
-                </option>
-              </select>
+              <ui-select multiple ng-model="employees.employeeIds" theme="bootstrap" ng-disabled="readOnly">
+                <ui-select-match placeholder="Select Employee IDs from list">{{ $item.id }}</ui-select-match>
+                <ui-select-choices repeat="employee in employees | filter: $select.search">
+                  {{employee.id}} - {{ employee.name }}
+                </ui-select-choices>
+              </ui-select>
             </div>
           </div>
         </div>

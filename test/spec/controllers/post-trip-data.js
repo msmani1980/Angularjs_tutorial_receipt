@@ -103,7 +103,7 @@ describe('Controller: PostTripDataCtrl', function () {
         scope.stationList = [{
           stationId: 1,
           timezone: timeZoneString,
-          utcOffset: utcArrOffset
+          utcOffset: utcArrOffset,
         }, {
           stationId: 2,
           timezone: timeZoneString,
@@ -125,6 +125,32 @@ describe('Controller: PostTripDataCtrl', function () {
         expect(scope.arrivalTimezone).toEqual('Europe/Madrid [UTC +1]');
       });
     });
+    describe('form save helper function', function () {
+      it('should format employeeIdentifiers into array of employee objects', function () {
+        scope.postTripDataForm = {
+          $valid: true
+        };
+        scope.employees = {
+          employeeIds: [
+            {id: 62, name: 'employee1'},
+            {id: 63, name: 'employee2'}
+          ]
+        };
+        scope.formSave();
+        var expectedObject = [{employeeId: 62}, {employeeId: 63}];
+        expect(Object.prototype.toString.call(scope.postTrip.postTripEmployeeIdentifiers)).toBe('[object Array]');
+        expect(scope.postTrip.postTripEmployeeIdentifiers).toEqual(expectedObject);
+      });
+
+      it('should immediately return is form is invalid', function () {
+        scope.postTripDataForm = {
+          $valid: false
+        };
+        scope.postTrip = {};
+        scope.formSave();
+        expect(scope.postTrip.postTripEmployeeIdentifiers).not.toBeDefined();
+      });
+    });
   });
 
   describe('update controller action', function () {
@@ -143,17 +169,20 @@ describe('Controller: PostTripDataCtrl', function () {
       expect(scope.readOnly).toEqual(false);
     });
 
-    it('should set view name', function(){
+    it('should set view name', function () {
       expect(scope.viewName).toEqual('Edit Post Trip Data');
     });
 
-    it('should call getPostTrip', function() {
+    it('should call getPostTrip', function () {
       expect(postTripFactory.getPostTrip).toHaveBeenCalled();
       expect(scope.postTrip).toBeDefined();
     });
 
-    describe('save form', function() {
-      it('should call updatePostTrip', function() {
+    describe('save form', function () {
+      it('should call updatePostTrip', function () {
+        scope.postTripDataForm = {
+          $valid: true
+        };
         scope.formSave();
         expect(postTripFactory.updatePostTrip).toHaveBeenCalled();
       });
@@ -176,12 +205,15 @@ describe('Controller: PostTripDataCtrl', function () {
       expect(scope.readOnly).toEqual(false);
     });
 
-    it('should set view name', function(){
+    it('should set view name', function () {
       expect(scope.viewName).toEqual('Create Post Trip Data');
     });
 
-    describe('save form', function() {
-      it('should call updatePostTrip', function() {
+    describe('save form', function () {
+      it('should call updatePostTrip', function () {
+        scope.postTripDataForm = {
+          $valid: true
+        };
         scope.formSave();
         expect(postTripFactory.createPostTrip).toHaveBeenCalled();
       });
@@ -205,11 +237,11 @@ describe('Controller: PostTripDataCtrl', function () {
       expect(scope.readOnly).toEqual(true);
     });
 
-    it('should set view name', function(){
+    it('should set view name', function () {
       expect(scope.viewName).toEqual('Post Trip Data');
     });
 
-    it('should call getPostTrip', function() {
+    it('should call getPostTrip', function () {
       expect(postTripFactory.getPostTrip).toHaveBeenCalled();
       expect(scope.postTrip).toBeDefined();
     });

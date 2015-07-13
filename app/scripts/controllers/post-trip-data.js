@@ -16,6 +16,7 @@ angular.module('ts5App')
     $scope.viewName = 'Post Trip Data';
     $scope.readOnly = false;
     $scope.postTrip = {};
+    $scope.employees = {};
 
     this.initCreateView = function () {
       $scope.readOnly = false;
@@ -25,7 +26,6 @@ angular.module('ts5App')
     this.initReadView = function () {
       $scope.readOnly = true;
       $this.getPostTrip();
-      angular.element('.employeeID-multiple-select').prop('disabled', true);
     };
 
     this.initUpdateView = function () {
@@ -39,7 +39,15 @@ angular.module('ts5App')
         $scope.postTrip = response;
         $scope.updateArrivalTimeZone();
         $scope.updateDepartureTimeZone();
+        $this.populateEmployees();
       });
+    };
+
+    this.populateEmployees = function () {
+      // TODO: populate employee Id field once employees API is fixed on BE
+      //angular.forEach($scope.postTrip.postTripEmployeeIdentifiers, function(value){
+      //  $scope.employees.employeeIds.push({id: value.id});
+      //});
     };
 
     this.showMessage = function (error, isError, message) {
@@ -108,7 +116,8 @@ angular.module('ts5App')
           return postTripFactory.getEmployees(_companyId).then(
             function (response) {
               $scope.employees = response.companyEmployees;
-              angular.element('.employeeID-multiple-select').select2({width:'100%'});
+              $scope.employees = [{id: 63, name: 'ted'}, {id: 66, name:'lily'}];
+              //angular.element('.employeeID-multiple-select').select2({width:'100%'});
             }
           );
         }
@@ -132,6 +141,9 @@ angular.module('ts5App')
     })();
 
     $scope.updateArrivalTimeZone = function () {
+      if($scope.postTrip === undefined || $scope.postTrip.arrStationId === undefined) {
+        return;
+      }
       angular.forEach($scope.stationList, function (value) {
         if (value.stationId.toString() === $scope.postTrip.arrStationId.toString()) {
           $scope.arrivalTimezone = value.timezone + ' [UTC ' + value.utcOffset + ']';
@@ -140,6 +152,9 @@ angular.module('ts5App')
     };
 
     $scope.updateDepartureTimeZone = function () {
+      if($scope.postTrip === undefined || $scope.postTrip.depStationId === undefined) {
+        return;
+      }
       angular.forEach($scope.stationList, function (value) {
         if (value.stationId.toString() === $scope.postTrip.depStationId.toString()) {
           $scope.departureTimezone = value.timezone + ' [UTC ' + value.utcOffset + ']';
@@ -149,14 +164,16 @@ angular.module('ts5App')
     };
 
     $scope.formSave = function () {
+      // TODO: move employeeId data validation to HTML (currently open bug https://github.com/angular-ui/ui-select/issues/258)
+      // TODO: do employeeId data validation when employeeId API is fixed on BE
+      //if (!$scope.postTripDataForm.$valid || $scope.employees.employeeIds === undefined || $scope.employees.employeeIds.length <= 0) {
       if (!$scope.postTripDataForm.$valid) {
         $this.showMessage(null, true, 'Please complete all fields');
         return;
       }
       $scope.postTrip.postTripEmployeeIdentifiers = [];
-      var employeeIds = angular.element('.employeeID-multiple-select').select2('val');
-      angular.forEach(employeeIds, function (value) {
-        $scope.postTrip.postTripEmployeeIdentifiers.push({employeeId: value});
+      angular.forEach($scope.employees.employeeIds, function (value) {
+        $scope.postTrip.postTripEmployeeIdentifiers.push({employeeId: value.id});
       });
 
       if ($routeParams.state === 'create') {
