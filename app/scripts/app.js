@@ -92,7 +92,7 @@ angular
       })
       .when('/store-number-create', {
         templateUrl: 'views/store-number-create.html',
-        controller: 'storeNumberCreateCtrl'
+        controller: 'StoreNumberCreateCtrl'
       })
       .when('/company-relationship-list/:id', {
         templateUrl: 'views/company-relationship.html',
@@ -131,9 +131,9 @@ angular
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })
-      .when('/employee-commission', {
-        templateUrl: 'views/employee-commission.html',
-        controller: 'EmployeeCommissionCtrl'
+      .when('/employee-commission/:state/:id?', {
+        templateUrl: 'views/employee-commission-edit.html',
+        controller: 'EmployeeCommissionEditCtrl'
       })
       .when('/global-reason-code', {
         templateUrl: 'views/global-reason-code.html',
