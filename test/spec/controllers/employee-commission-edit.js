@@ -3,7 +3,7 @@
 describe('Controller: EmployeeCommissionEditCtrl', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/company-currency-globals.json'));
+  beforeEach(module('served/master-item-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/company-currency-globals.json'));
 
 
   var EmployeeCommissionEditCtrl,
@@ -12,22 +12,22 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     getPriceTypesListDeferred,
     getTaxRateTypesDeferred,
     getCompanyCurrenciesDeferred,
-    itemsListJSON,
+    masterItemsListJSON,
     priceTypeListJSON,
     taxRateTypesJSON,
     companyCurrencyJSON,
     scope;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
-    inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedCompanyCurrencyGlobals_) {
-      itemsListJSON = _servedItemsList_;
+    inject(function (_servedMasterItemList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedCompanyCurrencyGlobals_) {
+      masterItemsListJSON = _servedMasterItemList_;
       priceTypeListJSON = _servedPriceTypes_;
       taxRateTypesJSON = _servedTaxRateTypes_;
       companyCurrencyJSON = _servedCompanyCurrencyGlobals_;
     });
 
     getItemsListDeferred = $q.defer();
-    getItemsListDeferred.resolve(itemsListJSON);
+    getItemsListDeferred.resolve(masterItemsListJSON);
 
     getPriceTypesListDeferred = $q.defer();
     getPriceTypesListDeferred.resolve(priceTypeListJSON);
