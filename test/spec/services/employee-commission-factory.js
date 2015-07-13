@@ -51,6 +51,7 @@ describe('Service: employeeCommissionFactory', function () {
       employeeCommissionFactory.getCompanyCurrencies();
       expect(currenciesService.getCompanyCurrencies).toHaveBeenCalled();
     });
+
   });
 
 });
