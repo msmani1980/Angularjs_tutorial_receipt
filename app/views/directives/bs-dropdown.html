@@ -6,6 +6,8 @@
   </button>
   <ul class="dropdown-menu">
     <li>
+      <button ngf-select="" ng-model="files" ngf-multiple="true">Attach File
+      </button>
       <a ngf-select="" ng-model="files" class="button" ngf-multiple="false" ngf-accept="'*.xls,*.xlsx'" ng-model-rejected="rejFiles" tabindex="0"><i class="fa fa-upload"></i> {{viewModel[0].text}}</a>
     </li>
     <li>
