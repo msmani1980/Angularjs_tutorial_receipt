@@ -15,6 +15,7 @@ describe('Controller: PostFlightDataListCtrl', function () {
     carrierTypesDeferred,
     carrierNumbersResponseJSON,
     carrierNumbersDeferred,
+    deletedPostTripDeferred,
     companyId,
     postTripFactory,
     location;
@@ -40,14 +41,18 @@ describe('Controller: PostFlightDataListCtrl', function () {
     carrierTypesDeferred.resolve(carrierTypesResponseJSON);
     carrierNumbersDeferred = $q.defer();
     carrierNumbersDeferred.resolve(carrierNumbersResponseJSON);
+    deletedPostTripDeferred = $q.defer();
+    deletedPostTripDeferred.resolve({id: 1});
 
     spyOn(postTripFactory, 'getPostTripDataList').and.returnValue(postTripsDeferred.promise);
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
     spyOn(postTripFactory, 'getCarrierNumbers').and.returnValue(carrierNumbersDeferred.promise);
+    spyOn(postTripFactory, 'deletePostTrip').and.returnValue(deletedPostTripDeferred.promise);
 
     PostTripDataListCtrl = $controller('PostFlightDataListCtrl', {
-      $scope: scope
+      $scope: scope,
+      _companyId: companyId
     });
     scope.$digest();
   }));
@@ -125,17 +130,36 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
   describe('action buttons', function(){
     it('should allow view button to redirect to a new page', function(){
-      //expect(location.path()).toBe('/cash-bag/view/1');
-
+      var tripId = 1;
+      scope.viewPostTrip(tripId);
+      expect(location.path()).toBe('/post-trip-data/view/' + tripId);
     });
-    it('should only allow edit button to redirect if date is in future', function(){
 
+    it('should allow edit button to redirect to a new page', function(){
+      var tripId = 1;
+      scope.editPostTrip(tripId);
+      expect(location.path()).toBe('/post-trip-data/edit/' + tripId);
     });
-    it('should only allow delete button to redirect if date is in future', function(){
 
+    it('should only show edit/delete button if date is in future', function(){
+      var now = new Date(2015, 7, 12);
+      var pastString = '2015-05-10';
+      var futureString = '2015-10-15';
+      jasmine.clock().mockDate(now);
+      expect(scope.showEditButton(pastString)).toEqual(false);
+      expect(scope.showEditButton(futureString)).toEqual(true);
     });
-    it('should change the url based on the row selected', function(){
-      //expect(location.path()).toBe('/cash-bag/edit/1');
+
+    describe('delete post trip', function() {
+      it('should call delete post trip', function() {
+        scope.deletePostTrip(1);
+        expect(postTripFactory.deletePostTrip).toHaveBeenCalled();
+      });
+
+      it('should reload post trip data', function() {
+        scope.deletePostTrip(1);
+        expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
+      });
     });
   });
 

@@ -33,6 +33,7 @@ angular.module('ts5App')
 
     this.initUpdateView = function () {
       $scope.readOnly = false;
+      $scope.viewName = 'Edit Post Trip Data';
       $this.getPostTrip();
     };
 
@@ -44,9 +45,9 @@ angular.module('ts5App')
       });
     };
 
-    this.showMessage = function(error, isError, message) {
+    this.showMessage = function (error, isError, message) {
       // TODO: add displayError dialog once API is fixed and returns error codes
-      if(arguments.length < 2) {
+      if (arguments.length < 2) {
         isError = true;
         message = 'error';
       }
@@ -55,6 +56,26 @@ angular.module('ts5App')
         className: messageType,
         dismissButton: true,
         content: '<strong>Post Trip</strong>:' + message
+      });
+    };
+
+    this.saveNewTrip = function () {
+      postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(function (response) {
+        $location.path('post-trip-data-list');
+      }, function (error) {
+        $this.showMessage(error);
+      });
+    };
+
+    this.saveUpdatedTrip = function () {
+      // TODO: temporary -- remove once API is fixed and can accept depTImeZone and arrTimeZone
+      delete $scope.postTrip.depTimeZone;
+      delete $scope.postTrip.arrTimeZone;
+      var payload = angular.copy($scope.postTrip);
+      postTripFactory.updatePostTrip(_companyId, payload).then(function () {
+        $this.showMessage(null, false, 'PostTrip successfully updated');
+      }, function (error) {
+        $this.showMessage(error);
       });
     };
 
@@ -105,16 +126,16 @@ angular.module('ts5App')
     })();
 
     $scope.updateArrivalTimeZone = function () {
-      angular.forEach($scope.stationList, function(value){
-        if(value.stationId == $scope.postTrip.arrStationId) {
+      angular.forEach($scope.stationList, function (value) {
+        if (value.stationId == $scope.postTrip.arrStationId) {
           $scope.arrivalTimezone = value.timezone + ' [UTC ' + value.utcOffset + ']';
         }
       });
     };
 
     $scope.updateDepartureTimeZone = function () {
-      angular.forEach($scope.stationList, function(value){
-        if(value.stationId == $scope.postTrip.depStationId) {
+      angular.forEach($scope.stationList, function (value) {
+        if (value.stationId == $scope.postTrip.depStationId) {
           $scope.departureTimezone = value.timezone + ' [UTC ' + value.utcOffset + ']';
         }
       });
@@ -128,23 +149,10 @@ angular.module('ts5App')
       });
 
       if ($routeParams.state === 'create') {
-        postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(function(response){
-          $location.path('post-trip-data-list');
-        }, function(error){
-          $this.showMessage(error);
-        });
+        $this.saveNewTrip();
       } else {
-        // TODO: temporary -- remove once API is fixed and can accept depTImeZone and arrTimeZone
-        delete $scope.postTrip.depTimeZone;
-        delete $scope.postTrip.arrTimeZone;
-        var payload = angular.copy($scope.postTrip);
-        postTripFactory.updatePostTrip(_companyId, payload).then(function(){
-          $this.showMessage(null, false, 'PostTrip successfully updated');
-        }, function(error) {
-          $this.showMessage(error);
-        });
+        $this.saveUpdatedTrip();
       }
     };
-
 
   });

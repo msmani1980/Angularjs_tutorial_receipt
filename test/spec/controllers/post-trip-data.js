@@ -16,6 +16,7 @@ describe('Controller: PostTripDataCtrl', function () {
     carrierNumbersDeferred,
     postTripResponseJSON,
     postTripDeferred,
+    newPostTripDeferred,
     postTripFactory,
     companyId;
 
@@ -38,19 +39,21 @@ describe('Controller: PostTripDataCtrl', function () {
     carrierNumbersDeferred.resolve(carrierNumbersResponseJSON);
     postTripDeferred = $q.defer();
     postTripDeferred.resolve(postTripResponseJSON);
+    newPostTripDeferred = $q.defer();
+    newPostTripDeferred.resolve({id: 1});
 
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
     spyOn(postTripFactory, 'getCarrierNumbers').and.returnValue(carrierNumbersDeferred.promise);
-    spyOn(postTripFactory, 'createPostTrip').and.returnValue({id:360});
+    spyOn(postTripFactory, 'createPostTrip').and.returnValue(newPostTripDeferred.promise);
+    spyOn(postTripFactory, 'updatePostTrip').and.returnValue(postTripDeferred.promise);
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(postTripDeferred.promise);
 
-
-
-    PostTripDataCtrl = $controller('PostFlightDataCtrl', {
-      $scope: scope
-    });
     companyId = '403';
+    PostTripDataCtrl = $controller('PostFlightDataCtrl', {
+      $scope: scope,
+      _companyId: companyId
+    });
   }));
 
 
@@ -72,51 +75,77 @@ describe('Controller: PostTripDataCtrl', function () {
         expect(scope.stationList).toBeDefined();
 
       });
-      it('should call getCarrierTypes', function () {
-        expect(postTripFactory.getCarrierTypes).toHaveBeenCalled();
-        expect(scope.carrierTypes).toBeDefined();
-      });
-    });
-
-    describe('updateCarrierNumbers', function () {
       it('should call getCarrierNumbers', function () {
-        scope.updateCarrierNumbers();
-        expect(postTripFactory.getCarrierNumbers).toHaveBeenCalled();
+        expect(postTripFactory.getCarrierTypes).toHaveBeenCalled();
+      });
+      it('should call getCarrierNumbers for each carrierType', function () {
+        for (var i = 0; i < carrierTypesResponseJSON.response.length; i++) {
+          expect(postTripFactory.getCarrierNumbers).toHaveBeenCalled();
+        }
       });
     });
 
-    describe('update arrival/departure info', function () {
+    describe('timezone helper functions', function () {
+      var timeZoneString = 'Europe/Madrid';
+      var utcArrOffset = '+1';
+      var utcDepOffset = '+2';
       beforeEach(function () {
         scope.stationList = [{
-          stationName: '',
-          stationId: 0,
-          timezone: 'US/Chicago',
-          utcOffset: '+2:00'
+          stationId: 1,
+          timezone: timeZoneString,
+          utcOffset: utcArrOffset
+        }, {
+          stationId: 2,
+          timezone: timeZoneString,
+          utcOffset: utcDepOffset
         }];
-        scope.postTrip = {};
-        scope.arrivalStationIndex = 0;
-        scope.departureStationIndex = 0;
+        scope.postTrip = {
+          arrStationId: 1,
+          depStationId: 2
+        };
       });
+      it('should populate and format departureTimezone', function () {
+        scope.updateDepartureTimeZone();
+        expect(scope.departureTimezone).toBeDefined();
+        expect(scope.departureTimezone).toEqual('Europe/Madrid [UTC +2]');
+      });
+      it('should populate and format arrivalTimeZone', function () {
+        scope.updateArrivalTimeZone();
+        expect(scope.arrivalTimezone).toBeDefined();
+        expect(scope.arrivalTimezone).toEqual('Europe/Madrid [UTC +1]');
+      });
+    });
+  });
 
-      it('should set new arrival station', function () {
-        var testStationId = 1;
-        scope.stationList[0].stationId = testStationId;
-        scope.updateArrivalInfo();
-        expect(scope.postTrip.arrStationId).toEqual(testStationId);
+  describe('update controller action', function () {
+    var routeParams = {
+      state: 'edit'
+    };
+    beforeEach(inject(function ($controller) {
+      PostTripDataCtrl = $controller('PostFlightDataCtrl', {
+        $scope: scope,
+        $routeParams: routeParams
       });
-      it('should set new departure station', function () {
-        var testStationId = 2;
-        scope.stationList[0].stationId = testStationId;
-        scope.updateDepartureInfo();
-        expect(scope.postTrip.depStationId).toEqual(testStationId);
-      });
-      it('should set new arrival timezone', function () {
-        scope.updateArrivalInfo();
-        expect(scope.arrivalTimezone).toEqual('US/Chicago [UTC +2:00]');
-      });
-      it('should set new departure timezone', function () {
-        scope.updateDepartureInfo();
-        expect(scope.departureTimezone).toEqual('US/Chicago [UTC +2:00]');
+      scope.$digest();
+    }));
+
+    it('should set readOnly to false', function () {
+      expect(scope.readOnly).toEqual(false);
+    });
+
+    it('should set view name', function(){
+      expect(scope.viewName).toEqual('Edit Post Trip Data');
+    });
+
+    it('should call getPostTrip', function() {
+      expect(postTripFactory.getPostTrip).toHaveBeenCalled();
+      expect(scope.postTrip).toBeDefined();
+    });
+
+    describe('save form', function() {
+      it('should call updatePostTrip', function() {
+        scope.formSave();
+        expect(postTripFactory.updatePostTrip).toHaveBeenCalled();
       });
     });
   });
@@ -132,30 +161,17 @@ describe('Controller: PostTripDataCtrl', function () {
       });
       scope.$digest();
     }));
-    describe('scope globals', function () {
-      it('should attach a viewName to the scope', function () {
-        expect(scope.viewName).toBe('Create Post Trip Data');
-      });
-      it('should set the readOnly to false in scope', function () {
-        expect(scope.readOnly).toEqual(false);
-      });
+
+    it('should set readOnly to false', function () {
+      expect(scope.readOnly).toEqual(false);
     });
 
-    describe('create post trip', function () {
-      beforeEach(function(){
-        scope.postTrip = {scheduleDate:'07/17/2015'};
-      });
+    it('should set view name', function(){
+      expect(scope.viewName).toEqual('Create Post Trip Data');
+    });
 
-      it('should reformat schedule date', function(){
-        var _companyId = companyId;
-        scope.formSave();
-        expect(scope.postTrip.scheduleDate).toEqual('20150717');
-      });
-      it('should format employeeIds into array', function(){
-        scope.formSave();
-        expect(Object.prototype.toString.call(scope.postTrip.postTripEmployeeIdentifiers)).toBe('[object Array]');
-      });
-      it('should call createPostTrip', function(){
+    describe('save form', function() {
+      it('should call updatePostTrip', function() {
         scope.formSave();
         expect(postTripFactory.createPostTrip).toHaveBeenCalled();
       });
@@ -175,46 +191,17 @@ describe('Controller: PostTripDataCtrl', function () {
       scope.$digest();
     }));
 
-    describe('scope globals', function () {
-      it('should attach a viewName to the scope', function () {
-        console.log(routeParams.id);
-        expect(scope.viewName).toBe('Post Trip Data');
-      });
-      it('should set the readOnly to true in scope', function () {
-        expect(scope.readOnly).toEqual(true);
-      });
+    it('should set readOnly to true', function () {
+      expect(scope.readOnly).toEqual(true);
     });
 
-    describe('constructor methods', function () {
-      it('should call getPostTrip for routeParams id', function () {
-        //expect(postTripFactory.getPostTrip).toHaveBeenCalled();
-      });
-      it('should attach postTrip data to scope', function () {
-        //expect(scope.postTrip).toBeDefined();
-      });
+    it('should set view name', function(){
+      expect(scope.viewName).toEqual('Post Trip Data');
+    });
+
+    it('should call getPostTrip', function() {
+      expect(postTripFactory.getPostTrip).toHaveBeenCalled();
+      expect(scope.postTrip).toBeDefined();
     });
   });
-
-  describe('update controller action', function () {
-    var routeParams = {
-      state: 'edit'
-    };
-    beforeEach(inject(function ($controller) {
-      PostTripDataCtrl = $controller('PostFlightDataCtrl', {
-        $scope: scope,
-        $routeParams: routeParams
-      });
-      scope.$digest();
-    }));
-
-    describe('scope globals', function () {
-      it('should attach a viewName to the scope', function () {
-        expect(scope.viewName).toBe('Post Trip Data');
-      });
-      it('should set the readOnly to false in scope', function () {
-        expect(scope.readOnly).toEqual(false);
-      });
-    });
-  });
-
 });

@@ -52,7 +52,6 @@ angular.module('ts5App')
     })();
 
     this.showMessage = function (isError, message) {
-      console.log('hi');
       var messageType = isError ? 'danger' : 'success';
       ngToast.create({
         className: messageType,
@@ -93,7 +92,6 @@ angular.module('ts5App')
             $scope.postTrips = response.postTrips;
           });
         }, function () {
-          console.log('hiya');
           $this.showMessage(true, 'Post Trip could not be deleted')
         }
       );
