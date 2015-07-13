@@ -74,5 +74,4 @@ describe('Service: employeeCommissionService', function () {
 
   });
 
-
 });
