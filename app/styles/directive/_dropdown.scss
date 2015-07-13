@@ -1,0 +1,59 @@
+.dropdown {
+  .fa-caret-down {
+    margin-left: 7px;
+  }
+  &.open {
+    .fa-caret-down {
+      margin-left: 10px;
+      @extend .fa-caret-right;
+    }
+    & > .dropdown-menu.horizontal-inline-menu {
+      height: 34px;
+      display: inline-block;
+      position: absolute;
+      top: auto;
+      left: auto;
+      z-index: 1000;
+      float: none;
+      min-width: 160px;
+      padding: 5px 0;
+      margin: 0 0 0 5px;
+      list-style: none;
+      font-size: 14px;
+      text-align: left;
+      li {
+        display: inline-block;
+      }
+    }
+    & > .dropdown-menu.horizontal-menu {
+      height: 34px;
+      display: inline-block;
+      position: absolute;
+      top: auto;
+      left: auto;
+      z-index: 1000;
+      float: none;
+      min-width: 160px;
+      padding: 0;
+      margin: 0 0 0 5px;
+      list-style: none;
+      font-size: 14px;
+      text-align: left;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      &.menu-inline {
+        li {
+          display: inline-block;
+          height: 32px;
+          a {
+            line-height: 24px;
+            height: 100%;
+            &:hover, &:focus {
+              background: inherit;
+            }
+          }
+        }
+      }
+    }
+  }
+}

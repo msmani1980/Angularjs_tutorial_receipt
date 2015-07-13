@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companyRelationshipService', function ($resource, $http, ENV, dateUtility) {
+  .service('companyRelationshipService', ['$resource', '$http', 'ENV', 'dateUtility', function ($resource, $http, ENV, dateUtility) {
     var companyRelationshipRequestURL = ENV.apiUrl + '/api/companies/:id/relationships/:companyRelationshipId';
     var companyTypeRequestURL = ENV.apiUrl + '/api/company-relation/:id/types';
     var requestParameters = {
@@ -127,4 +127,4 @@ angular.module('ts5App')
       updateCompanyRelationship: updateCompanyRelationship,
       deleteCompanyRelationship: deleteCompanyRelationship
     };
-  });
+  }]);
