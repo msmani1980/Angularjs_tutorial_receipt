@@ -133,7 +133,7 @@ angular.module('ts5App')
 
     $scope.updateArrivalTimeZone = function () {
       angular.forEach($scope.stationList, function (value) {
-        if (value.stationId === $scope.postTrip.arrStationId) {
+        if (value.stationId.toString() === $scope.postTrip.arrStationId.toString()) {
           $scope.arrivalTimezone = value.timezone + ' [UTC ' + value.utcOffset + ']';
         }
       });
@@ -141,13 +141,18 @@ angular.module('ts5App')
 
     $scope.updateDepartureTimeZone = function () {
       angular.forEach($scope.stationList, function (value) {
-        if (value.stationId === $scope.postTrip.depStationId) {
+        if (value.stationId.toString() === $scope.postTrip.depStationId.toString()) {
           $scope.departureTimezone = value.timezone + ' [UTC ' + value.utcOffset + ']';
         }
       });
+
     };
 
     $scope.formSave = function () {
+      if (!$scope.postTripDataForm.$valid) {
+        $this.showMessage(null, true, 'Please complete all fields');
+        return;
+      }
       $scope.postTrip.postTripEmployeeIdentifiers = [];
       var employeeIds = angular.element('.employeeID-multiple-select').select2('val');
       angular.forEach(employeeIds, function (value) {

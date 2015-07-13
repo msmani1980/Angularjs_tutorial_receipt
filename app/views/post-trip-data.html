@@ -2,7 +2,7 @@
   <h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
   <br>
 
-  <form name="post-trip-data-form">
+  <form name="postTripDataForm">
 
     <form-error-dialog></form-error-dialog>
     <!--/TopHeader -->
@@ -134,7 +134,7 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="tailNumber">Tail Number</label>
-              <select class="form-control" id="tailNumber" ng-model="postTrip.tailNumber" ng-disabled="readOnly">
+              <select class="form-control" id="tailNumber" ng-model="postTrip.tailNumber" ng-disabled="readOnly" required="true">
                 <option ng-repeat="number in carrierNumbers" value="{{ number.carrierNumber }}">
                   {{ number.carrierNumber }}
                 </option>
@@ -145,7 +145,7 @@
           <div class="col-xs-12 col-sm-4 employee-id">
             <div class="form-group">
               <label>Employee ID's *</label>
-              <select class="employeeID-multiple-select" multiple="multiple" ng-disabled="readOnly">
+              <select class="employeeID-multiple-select" multiple="multiple" ng-disabled="readOnly" required="true">
                 <option ng-repeat="employee in employees" value="{{ employee.id }}">
                   {{ employee.id }} ({{ employee.name}})
                 </option>
