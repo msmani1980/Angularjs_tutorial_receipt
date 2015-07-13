@@ -102,10 +102,18 @@ angular.module('ts5App')
               });
             });
           });
+        },
+        getEmployees: function() {
+          $scope.employees = [];
+          return postTripFactory.getEmployees(_companyId).then(
+            function (response) {
+              $scope.employees = response.companyEmployees;
+              angular.element('.employeeID-multiple-select').select2({width:'100%'});
+            }
+          );
         }
       };
-      _services.call(['getStationList', 'getCarrierNumbers']);
-      angular.element('.employeeID-multiple-select').select2({width:'100%'});
+      _services.call(['getStationList', 'getCarrierNumbers', 'getEmployees']);
 
       switch ($routeParams.state) {
         case 'create':

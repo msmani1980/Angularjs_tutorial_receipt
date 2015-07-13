@@ -11,14 +11,16 @@ describe('Factory: postTripFactory', function () {
     GlobalMenuService,
     stationsService,
     carrierService,
+    employeesService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _postTripFactory_, _GlobalMenuService_, _stationsService_, _carrierService_, _postTripsService_) {
+  beforeEach(inject(function ($rootScope, _postTripFactory_, _GlobalMenuService_, _stationsService_, _carrierService_, _postTripsService_, _employeesService_) {
     GlobalMenuService = _GlobalMenuService_;
     stationsService = _stationsService_;
     carrierService = _carrierService_;
     postTripsService = _postTripsService_;
+    employeesService = _employeesService_;
 
     spyOn(postTripsService, 'getPostTrips');
     spyOn(postTripsService, 'createPostTrip');
@@ -29,6 +31,7 @@ describe('Factory: postTripFactory', function () {
     spyOn(stationsService, 'getStationList');
     spyOn(carrierService, 'getCarrierTypes');
     spyOn(carrierService, 'getCarrierNumbers');
+    spyOn(employeesService, 'getEmployees');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -86,6 +89,13 @@ describe('Factory: postTripFactory', function () {
       var carrierType = 2;
       postTripFactory.getCarrierNumbers(companyId, carrierType);
       expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierType);
+    });
+  });
+
+  describe('employeesService API', function () {
+    it('should call employeesService on getEmployees', function () {
+      postTripFactory.getEmployees(companyId);
+      expect(employeesService.getEmployees).toHaveBeenCalledWith(companyId);
     });
   });
 

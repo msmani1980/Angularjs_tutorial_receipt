@@ -4,7 +4,7 @@ describe('Controller: PostTripDataCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data.json'));
+  beforeEach(module('served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data.json', 'served/employees.json'));
 
   var PostTripDataCtrl,
     scope,
@@ -17,17 +17,21 @@ describe('Controller: PostTripDataCtrl', function () {
     postTripResponseJSON,
     postTripDeferred,
     newPostTripDeferred,
+    employeesDeferred,
+    employeesResponseJSON,
     postTripFactory,
     companyId;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_, _servedPostTripData_) {
+    inject(function (_servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_, _servedPostTripData_, _servedEmployees_) {
       stationsListResponseJSON = _servedStations_;
       carrierTypesResponseJSON = _servedCarrierTypes_;
       carrierNumbersResponseJSON = _servedCarrierNumbers_;
       postTripResponseJSON = _servedPostTripData_;
+      employeesResponseJSON = _servedEmployees_;
     });
+
     postTripFactory = $injector.get('postTripFactory');
     scope = $rootScope.$new();
 
@@ -41,6 +45,8 @@ describe('Controller: PostTripDataCtrl', function () {
     postTripDeferred.resolve(postTripResponseJSON);
     newPostTripDeferred = $q.defer();
     newPostTripDeferred.resolve({id: 1});
+    employeesDeferred = $q.defer();
+    employeesDeferred.resolve(employeesResponseJSON);
 
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
@@ -48,6 +54,7 @@ describe('Controller: PostTripDataCtrl', function () {
     spyOn(postTripFactory, 'createPostTrip').and.returnValue(newPostTripDeferred.promise);
     spyOn(postTripFactory, 'updatePostTrip').and.returnValue(postTripDeferred.promise);
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(postTripDeferred.promise);
+    spyOn(postTripFactory, 'getEmployees').and.returnValue(employeesDeferred.promise);
 
     companyId = '403';
     PostTripDataCtrl = $controller('PostFlightDataCtrl', {
@@ -82,6 +89,9 @@ describe('Controller: PostTripDataCtrl', function () {
         for (var i = 0; i < carrierTypesResponseJSON.response.length; i++) {
           expect(postTripFactory.getCarrierNumbers).toHaveBeenCalled();
         }
+      });
+      it('should call getEmployees', function () {
+        expect(postTripFactory.getEmployees).toHaveBeenCalled();
       });
     });
 

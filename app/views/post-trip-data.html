@@ -146,9 +146,9 @@
             <div class="form-group">
               <label>Employee ID's *</label>
               <select class="employeeID-multiple-select" multiple="multiple" ng-disabled="readOnly">
-                <option value="1">000001</option>
-                <option value="2">000002</option>
-                <option value="3">000003</option>
+                <option ng-repeat="employee in employees" value="{{ employee.id }}">
+                  {{ employee.id }} ({{ employee.name}})
+                </option>
               </select>
             </div>
           </div>
