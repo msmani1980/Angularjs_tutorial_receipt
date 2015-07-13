@@ -2,11 +2,9 @@
 
 describe('Service: employeeCommissionService', function () {
 
-  // load the service's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/menus.json'));
 
-  // instantiate service
   var employeeCommissionService,
     $httpBackend;
 
