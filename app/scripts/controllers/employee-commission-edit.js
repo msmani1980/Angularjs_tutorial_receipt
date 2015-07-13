@@ -56,21 +56,34 @@ angular.module('ts5App')
       });
     }
 
+    function createPayload() {
+      var payload = {
+        employeeCommission: {
+          startDate: dateUtility.formatDateForAPI($scope.commission.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.commission.endDate),
+          itemMasterId: $scope.commission.selectedItem.id,
+          types: [{priceTypeId: $scope.commission.selectedPriceType.id}]
+          //percentage: $scope.currenciesFields.percentage
+        }
+      };
+      return payload;
+    }
+
+    function createRequestSuccessHandler(dataFromAPI) {
+      showToastMessage('success', 'Employee Commission', dataFromAPI);
+    }
+
+    function createRequestErrorHandler(dataFromAPI) {
+      showToastMessage('warning', 'Employee Commission', dataFromAPI);
+    }
+
     $scope.submitForm = function () {
       if (!$scope.employeeCommissionForm.$valid) {
         return false;
       }
-      console.log({
-        employeeCommission: {
-          startDate: dateUtility.formatDateForAPI($scope.commission.startDate),
-          endDate: dateUtility.formatDateForAPI($scope.commission.endDate),
-          itemMasterId: $scope.selectedItem.id,
-          types: [{priceTypeId: $scope.commission.selectedPriceType.id}],
-          percentage: $scope.currenciesFields.percentage
-        }
-      });
-      //employeeCommissionFactory.createCommission(payload).then();
-      showToastMessage('warning', 'Employee Commission', 'API not ready');
+
+      var payload = createPayload();
+      employeeCommissionFactory.createCommission(payload).then(createRequestSuccessHandler, createRequestErrorHandler);
     };
 
   });

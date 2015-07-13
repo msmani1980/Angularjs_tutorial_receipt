@@ -3,6 +3,7 @@
 describe('Controller: EmployeeCommissionEditCtrl', function () {
 
   beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
   beforeEach(module('served/master-item-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/company-currency-globals.json'));
 
 
@@ -49,25 +50,55 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     EmployeeCommissionEditCtrl = $controller('EmployeeCommissionEditCtrl', {
       $scope: scope
     });
+    scope.employeeCommissionForm = {
+      $valid: true
+    };
     scope.$digest();
   }));
 
-  describe('initialize', function(){
+  describe('initialize', function () {
 
-    it('should have a list of items attached to scope', function(){
+    it('should have a list of items attached to scope', function () {
       expect(scope.itemsList).toBeDefined();
     });
 
-    it('should have a list of price types attached to scope', function(){
+    it('should have a list of price types attached to scope', function () {
       expect(scope.priceTypesList).toBeDefined();
     });
 
-    it('should have a list of price types attached to scope', function(){
+    it('should have a list of price types attached to scope', function () {
       expect(scope.taxRateTypes).toBeDefined();
     });
 
-    it('should have a list of currencies attached to scope', function(){
+    it('should have a list of currencies attached to scope', function () {
       expect(scope.companyCurrencies).toBeDefined();
+    });
+  });
+
+  describe('submit form', function () {
+    it('should not call API if form is not valid', function () {
+      scope.employeeCommissionForm.$valid = false;
+      scope.submitForm();
+      scope.$digest();
+
+      expect(employeeCommissionFactory.createCommission).not.toHaveBeenCalled();
+    });
+
+    it('should call API if form is valid', function () {
+      scope.commission = {
+        startDate: '05/10/2020',
+        endDate: '05/10/2055',
+        selectedItem: {
+          id: 1
+        },
+        selectedPriceType: {
+          id: 1
+        }
+      };
+      scope.submitForm();
+      scope.$digest();
+
+      expect(employeeCommissionFactory.createCommission).toHaveBeenCalled();
     });
   });
 
