@@ -39,8 +39,6 @@ angular.module('ts5App')
     this.getPostTrip = function () {
       return postTripFactory.getPostTrip(_companyId, $routeParams.id).then(function (response) {
         $scope.postTrip = response;
-        $scope.postTrip.scheduleDate = dateUtility.formatDateForApp($scope.postTrip.scheduleDate);
-        console.log($scope.postTrip.scheduleDate);
         $scope.updateArrivalTimeZone();
         $scope.updateDepartureTimeZone();
       });
@@ -140,12 +138,11 @@ angular.module('ts5App')
         delete $scope.postTrip.depTimeZone;
         delete $scope.postTrip.arrTimeZone;
         var payload = angular.copy($scope.postTrip);
-        postTripFactory.updatePostTrip(_companyId, payload);
-        //  .then(function(){
-        //  $this.showMessage(null, false, 'PostTrip successfully updated');
-        //}, function(error) {
-        //  $this.showMessage(error);
-        //});
+        postTripFactory.updatePostTrip(_companyId, payload).then(function(){
+          $this.showMessage(null, false, 'PostTrip successfully updated');
+        }, function(error) {
+          $this.showMessage(error);
+        });
       }
     };
 

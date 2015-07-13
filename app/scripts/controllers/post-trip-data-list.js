@@ -63,7 +63,8 @@ angular.module('ts5App')
 
     $scope.searchPostTripData = function () {
       // TODO: switch to date utility
-      postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function (response) {
+      var payload = angular.copy($scope.search);
+      postTripFactory.getPostTripDataList(_companyId, payload).then(function (response) {
         $scope.postTrips = response.postTrips;
       });
     };
@@ -87,11 +88,10 @@ angular.module('ts5App')
     $scope.deletePostTrip = function (id) {
       postTripFactory.deletePostTrip(_companyId, id).then(
         function () {
-          console.log('hi');
           $this.showMessage(false, 'Post Trip successfully deleted');
-          //postTripFactory.getPostTripDataList(_companyId, {}).then(function (response) {
-          //  $scope.postTrips = response.postTrips;
-          //});
+          postTripFactory.getPostTripDataList(_companyId, {}).then(function (response) {
+            $scope.postTrips = response.postTrips;
+          });
         }, function () {
           console.log('hiya');
           $this.showMessage(true, 'Post Trip could not be deleted')
