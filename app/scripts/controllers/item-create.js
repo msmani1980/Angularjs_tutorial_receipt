@@ -254,6 +254,7 @@ angular.module('ts5App')
 
     this.setCharacteristics = function(data) {
       $scope.characteristics = data;
+      $scope.filterCharacteristics();
     };
 
     this.setDimensionList = function(data) {
@@ -405,7 +406,6 @@ angular.module('ts5App')
       $scope.formData.globalTradeNumbers.splice(key, 1);
     };
 
-
     /*
      * Station Exceptions
      *
@@ -429,7 +429,8 @@ angular.module('ts5App')
     $scope.filterCharacteristics = function() {
       $scope.filteredCharacteristics = $scope.characteristics;
       $scope.shouldDisplayURLField = false;
-      if ($scope.formData.itemTypeId.name === 'Virtual') {
+      if ($scope.formData.itemTypeId && $scope.formData.itemTypeId.name ===
+        'Virtual') {
         $scope.filteredCharacteristics = [];
         angular.forEach($scope.characteristics, function(value) {
           if (value.name === 'Downloadable' || value.name ===
