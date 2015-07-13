@@ -125,7 +125,6 @@
               name="categoryId"
               ng-model="formData.categoryId"
               theme="bootstrap"
-              ng-disabled="disabled"
              >
               <ui-select-match placeholder="Sales Categories">{{ $item.name }}</ui-select-match>
               <ui-select-choices repeat="category in salesCategories">
@@ -141,22 +140,20 @@
               name="itemTypeId"
               ng-model="formData.itemTypeId"
               theme="bootstrap"
-              ng-disabled="disabled"
               ng-change="filterCharacteristics()"
              >
-              <ui-select-match placeholder="Item Type">{{ $item.name }}</ui-select-match>
+              <ui-select-match placeholder="Item Type">{{ $select.selected.name }}</ui-select-match>
               <ui-select-choices repeat="type in itemTypes">
                 <div ng-bind-html="type.name | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" ng-show="filteredCharacteristics">
             <label>Item Characteristics</label>
             <ui-select multiple
               ng-model="formData.characteristics"
               theme="bootstrap"
-              ng-disabled="disabled"
               id="itemCharacteristics"
              >
               <ui-select-match placeholder="Item Characteristics">{{ $item.name }}</ui-select-match>
@@ -167,7 +164,7 @@
           </div>
 
           <div class="form-group">
-          <input-text label="URL" name="sellingPoint" pattern="regexp.word" ng-show="shouldDisplayURLField"></input-text>
+          <input-text label="URL" name="sellingPoint" pattern="regexp.word" ng-show="shouldDisplayURLField" placeholder="http://www.website.com"></input-text>
           </div>
 
           <div class="form-group">
@@ -175,7 +172,6 @@
             <ui-select multiple
               ng-model="formData.substitutions"
               theme="bootstrap"
-              ng-disabled="disabled"
              >
               <ui-select-match placeholder="Item Substitutions">{{ $item.itemName }}</ui-select-match>
               <ui-select-choices repeat="item in items">
@@ -189,7 +185,6 @@
             <ui-select multiple
               ng-model="formData.recommendations"
               theme="bootstrap"
-              ng-disabled="disabled"
              >
               <ui-select-match placeholder="Item Recommendations">{{ $item.itemName }}</ui-select-match>
               <ui-select-choices repeat="item in items">
@@ -204,14 +199,13 @@
 
       <div class="col-xs-12 col-sm-6">
 
-        <fieldset ng-disabled="viewOnly || itemIsActive" ng-if="uiSelectTemplateReady">
+        <fieldset ng-disabled="viewOnly || itemIsActive" >
 
           <div class="form-group">
             <label>Item Tags</label>
             <ui-select multiple
               ng-model="formData.tags"
               theme="bootstrap"
-              ng-disabled="disabled"
              >
               <ui-select-match placeholder="Item Tags">{{ $item.name }}</ui-select-match>
               <ui-select-choices repeat="tag in tags">
@@ -225,7 +219,6 @@
             <ui-select multiple
               ng-model="formData.allergens"
               theme="bootstrap"
-              ng-disabled="disabled"
              >
               <ui-select-match placeholder="Allergens">{{ $item.name }}</ui-select-match>
               <ui-select-choices repeat="allergen in allergens">
@@ -337,7 +330,7 @@
                   theme="bootstrap"
                   ng-disabled="disabled"
                  >
-                  <ui-select-match placeholder="Units">{{ $item.unitCode }}</ui-select-match>
+                  <ui-select-match placeholder="Units">{{ $select.selected.unitCode }}</ui-select-match>
                   <ui-select-choices repeat="weight in weightUnits">
                     <div ng-bind-html="weight.unitCode | highlight: $select.search"></div>
                   </ui-select-choices>
@@ -373,7 +366,7 @@
                   theme="bootstrap"
                   ng-disabled="disabled"
                  >
-                  <ui-select-match placeholder="Units">{{ $item.unitCode }}</ui-select-match>
+                  <ui-select-match placeholder="Units">{{ $select.selected.unitCode }}</ui-select-match>
                   <ui-select-choices repeat="volume in volumeUnits">
                     <div ng-bind-html="volume.unitCode | highlight: $select.search"></div>
                   </ui-select-choices>
@@ -420,7 +413,7 @@
               theme="bootstrap"
               ng-disabled="disabled"
              >
-              <ui-select-match placeholder="Units">{{ $item.name }}</ui-select-match>
+              <ui-select-match placeholder="Units">{{ $select.selected.unitCode }}</ui-select-match>
               <ui-select-choices repeat="dimension in dimensionUnits">
                 <div ng-bind-html="dimension.unitCode | highlight: $select.search"></div>
               </ui-select-choices>

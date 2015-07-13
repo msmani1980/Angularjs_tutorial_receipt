@@ -109,14 +109,28 @@ angular.module('ts5App')
     }
 
     // deserialize characteristics object from api
-    function deserializeCharacteristics(itemData) {
+    this.deserializeCharacteristics = function(itemData) {
       for (var characteristicKey in itemData.characteristics) {
         var characteristic = itemData.characteristics[characteristicKey];
-        itemData.characteristics[characteristicKey] = characteristic.characteristicId
-          .toString();
+        var index = $this.findCharacteristicIndex(characteristic.characteristicId);
+        itemData.characteristics[characteristicKey] = {
+          id: characteristic.characteristicId,
+          name: $scope.characteristics[index].name
+        };
       }
+    };
 
-    }
+    this.findCharacteristicIndex = function(characteristicId) {
+      var characteristicIndex = null;
+      for (var key in $scope.characteristics) {
+        var characteristic = $scope.characteristics[key];
+        if (parseInt(characteristic.id) === parseInt(characteristicId)) {
+          characteristicIndex = key;
+          break;
+        }
+      }
+      return characteristicIndex;
+    };
 
     // deserialize allergens object from api
     function deserializeAllergens(itemData) {
@@ -152,7 +166,7 @@ angular.module('ts5App')
         checkIfItemIsActive(itemData);
       }
       deserializeTags(itemData);
-      deserializeCharacteristics(itemData);
+      this.deserializeCharacteristics(itemData);
       deserializeAllergens(itemData);
 
       // TODO: turn this into a function
@@ -342,16 +356,19 @@ angular.module('ts5App')
               stationExceptionIndex];
 
             // if threre isn't old data yet, exit out of loop
-            if (!oldStationException || oldStationException.endDate === '') {
+            if (!oldStationException || oldStationException.endDate ===
+              '') {
               return false;
             }
 
             // if the startDate or endDate is different
             if (newStationException.startDate !== oldStationException.startDate ||
-              newStationException.endDate !== oldStationException.endDate) {
+              newStationException.endDate !== oldStationException.endDate
+            ) {
 
               // update the price group
-              this.updateStationException(priceIndex, stationExceptionIndex);
+              this.updateStationException(priceIndex,
+                stationExceptionIndex);
 
             }
 
@@ -405,22 +422,22 @@ angular.module('ts5App')
 
     // Removes a station exception collection from the form
     $scope.removeStationException = function(priceIndex, key) {
-      $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
+      $scope.formData.prices[priceIndex].stationExceptions.splice(key,
+        1);
     };
 
     $scope.filterCharacteristics = function() {
-      if ($scope.itemTypes[$scope.formData.itemTypeId - 1].name ===
-        'Virtual') {
+      $scope.filteredCharacteristics = $scope.characteristics;
+      $scope.shouldDisplayURLField = false;
+      if ($scope.formData.itemTypeId.name === 'Virtual') {
         $scope.filteredCharacteristics = [];
         angular.forEach($scope.characteristics, function(value) {
-          if (value.name === 'Downloadable' || value.name === 'Link') {
+          if (value.name === 'Downloadable' || value.name ===
+            'Link') {
             $scope.filteredCharacteristics.push(value);
           }
           $scope.shouldDisplayURLField = true;
         });
-      } else {
-        $scope.filteredCharacteristics = $scope.characteristics;
-        $scope.shouldDisplayURLField = false;
       }
     };
 
@@ -428,7 +445,8 @@ angular.module('ts5App')
     this.getGlobalStationList = function(stationException) {
       var startDate = formatDate(stationException.startDate, 'L',
         'YYYYMMDD');
-      var endDate = formatDate(stationException.endDate, 'L', 'YYYYMMDD');
+      var endDate = formatDate(stationException.endDate, 'L',
+        'YYYYMMDD');
       var stationsFilter = {
         startDate: startDate,
         endDate: endDate
@@ -445,7 +463,8 @@ angular.module('ts5App')
     this.getStationsCurrenciesList = function(stationException) {
       var startDate = formatDate(stationException.startDate, 'L',
         'YYYYMMDD');
-      var endDate = formatDate(stationException.endDate, 'L', 'YYYYMMDD');
+      var endDate = formatDate(stationException.endDate, 'L',
+        'YYYYMMDD');
       var currencyFilters = {
         startDate: startDate,
         endDate: endDate,
@@ -476,14 +495,16 @@ angular.module('ts5App')
     };
 
     // Updates the station exception with stations list and currencies list
-    this.updateStationException = function(priceIndex, stationExceptionIndex) {
+    this.updateStationException = function(priceIndex,
+      stationExceptionIndex) {
       var $this = this;
       var stationException = $scope.formData.prices[priceIndex].stationExceptions[
         stationExceptionIndex];
       this.getGlobalStationList(stationException).then(function(data) {
         $this.setStationsList(stationException, data);
       });
-      this.getStationsCurrenciesList(stationException).then(function(data) {
+      this.getStationsCurrenciesList(stationException).then(function(
+        data) {
         $this.setStationsCurrenciesList(stationException, data);
       });
     };
@@ -496,7 +517,8 @@ angular.module('ts5App')
         for (var stationExceptionIndex in price.stationExceptions) {
           var stationException = price.stationExceptions[
             stationExceptionIndex];
-          stationPromises.push(this.getGlobalStationList(stationException));
+          stationPromises.push(this.getGlobalStationList(
+            stationException));
         }
         this.handleStationPromises(stationPromises, price);
       }
@@ -592,7 +614,8 @@ angular.module('ts5App')
         for (var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
           var station = itemData.prices[priceIndex].stationExceptions[
             stationExceptionIndex];
-          station.startDate = formatDate(station.startDate, 'L', 'YYYYMMDD');
+          station.startDate = formatDate(station.startDate, 'L',
+            'YYYYMMDD');
           station.endDate = formatDate(station.endDate, 'L', 'YYYYMMDD');
         }
       }
@@ -701,12 +724,14 @@ angular.module('ts5App')
     };
 
     $scope.isMeasurementRequired = function() {
-      return ($scope.formData.width || $scope.formData.length || $scope.formData
+      return ($scope.formData.width || $scope.formData.length || $scope
+        .formData
         .height);
     };
 
     $scope.isMeasurementValid = function() {
-      return ($scope.formData.width && $scope.formData.length && $scope.formData
+      return ($scope.formData.width && $scope.formData.length && $scope
+        .formData
         .height && $scope.formData.dimensionType);
     };
 
