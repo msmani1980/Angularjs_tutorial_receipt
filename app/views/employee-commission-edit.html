@@ -29,7 +29,7 @@
         </div>        
         
       <div class="col-xs-6 text-right">
-        <a class="btn btn-default" ng-href="#/" class="btn">Back</a>
+        <a class="btn btn-default" ng-href="#/employee-commission-list" class="btn">Back</a>
         <button ng-show="employeeCommissionForm.$dirty" class="btn btn-success">
           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
@@ -189,6 +189,7 @@
                custom-pattern="currencyWithTwoDecimalPlace"
                ng-model="rate"
                required="true"
+               type="text"
                id="rate"
                name="rate"
                placeholder="0.00"
@@ -211,6 +212,7 @@
                custom-pattern="currencyWithTwoDecimalPlace"
                ng-model="currenciesFields[currency.code]"
                required="true"
+               type="text"
                name="rate{{currency.code}}"
                placeholder="0.00"
                class="form-control"
