@@ -18,12 +18,16 @@ angular.module('ts5App')
 
     // private controller functions
     function canBeAddedToCompanyRetailList(retailItem){
-      var uniqueFilter = {
-        itemCode: retailItem.itemCode,
-        itemName: retailItem.itemName,
-        onBoardName: retailItem.onBoardName
-      };
-      return 0 === $filter('filter')(_companyRetailItems, uniqueFilter).length;
+      if($filter('filter')(_companyRetailItems, {itemCode: retailItem.itemCode}).length){
+        return false;
+      }
+      if($filter('filter')(_companyRetailItems, {itemName: retailItem.itemName}).length){
+        return false;
+      }
+      if($filter('filter')(_companyRetailItems, {onBoardName: retailItem.onBoardName}).length){
+        return false;
+      }
+      return true;
     }
 
     function removeRetailItemFromCompanyRetailItems(retailItem){
@@ -32,7 +36,7 @@ angular.module('ts5App')
       addToImportedRetailItemList(retailItem);
     }
 
-    function addRetailItemToCompanyRetailItems(retailItem, onlyIndex){
+    function addRetailItemToCompanyRetailItems(retailItem, onlyIndex, atIndex){
       if(!canBeAddedToCompanyRetailList(retailItem)){
         return;
       }
@@ -43,7 +47,12 @@ angular.module('ts5App')
       if (-1 !== $scope.companyRetailItemList.indexOf(retailItem)) {
         return;
       }
-      $scope.companyRetailItemList.push(retailItem);
+      if(atIndex >= 0){
+        $scope.companyRetailItemList.splice(atIndex, 0, retailItem);
+      }
+      else{
+        $scope.companyRetailItemList.push(retailItem);
+      }
     }
 
     function showMessage(message, messageType) {
@@ -201,6 +210,7 @@ angular.module('ts5App')
     };
 
     $scope.importAll = function () {
+      $scope.searchCompanyRetailItemList = null;
       angular.forEach($scope.importedRetailItemList, function(retailItem){
         if(!canBeAddedToCompanyRetailList(retailItem)){
           return;
@@ -246,12 +256,18 @@ angular.module('ts5App')
     // scope event handlers
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
     $scope.dropSuccessHandler = function ($event, index, array) {
+      $event.preventDefault();
       array.splice(index, 1);
     };
 
     $scope.onDrop = function ($event, $data, array) {
-      array.push($data);
-      addRetailItemToCompanyRetailItems($data);
+      var index = false;
+      $scope.searchCompanyRetailItemList = null;
+      if($event.currentTarget.id !== 'item-drop-init'){
+        var targetRetailItem = angular.element($event.currentTarget).scope().retailItem;
+        index = array.indexOf(targetRetailItem);
+      }
+      addRetailItemToCompanyRetailItems($data, false, index);
     };
     // TODO: change BACK button to back/save when models change
   });

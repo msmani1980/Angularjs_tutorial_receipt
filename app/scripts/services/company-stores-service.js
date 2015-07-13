@@ -8,10 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companyStoresService', function ($resource, ENV, GlobalMenuService) {
+  .service('companyStoresService', function ($resource, ENV) {
 
-    var companyId = GlobalMenuService.company.get();
-    var storesRequestURL = ENV.apiUrl + '/api/companies/'+companyId+'/stores';
+    var storesRequestURL = ENV.apiUrl + '/api/companies/stores';
 
     var storesActions = {
       createStore: {
