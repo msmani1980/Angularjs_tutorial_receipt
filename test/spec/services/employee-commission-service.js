@@ -44,7 +44,7 @@ describe('Service: employeeCommissionService', function () {
     });
 
     it('should POST a commission', function () {
-      $httpBackend.expectPOST(/employee-commissions/).respond(200, {fakeResponseKey: 'POST'});
+      $httpBackend.expectPOST(/employee-commissions/).respond(201, {fakeResponseKey: 'POST'});
 
       employeeCommissionService.createCommission().then(function (response) {
         expect(response.fakeResponseKey).toBe('POST');
