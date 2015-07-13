@@ -195,7 +195,7 @@ describe('Controller: ItemImportCtrl', function () {
   describe('submitForm scope function', function(){
     var payload;
     beforeEach(function(){
-      scope.onDrop({},{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:1234},[]);
+      scope.onDrop({currentTarget:{id:'item-drop-init'}},{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:1234},[]);
       payload = {ImportItems:{importItems: [1234]}};
       scope.$digest();
       scope.submitForm();
