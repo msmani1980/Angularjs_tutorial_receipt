@@ -101,12 +101,28 @@ angular.module('ts5App')
     };
 
     // deserialize tag object from api
-    function deserializeTags(itemData) {
+    this.deserializeTags = function(itemData) {
       for (var tagKey in itemData.tags) {
         var tag = itemData.tags[tagKey];
-        itemData.tags[tagKey] = tag.tagId.toString();
+        var index = $this.findTagsIndex(tag.tagId);
+        itemData.tags[tagKey] = {
+          id: tag.tagId,
+          name: $scope.tags[index].name
+        };
       }
-    }
+    };
+
+    this.findTagsIndex = function(tagId) {
+      var tagIndex = null;
+      for (var key in $scope.tags) {
+        var tag = $scope.tags[key];
+        if (parseInt(tag.id) === parseInt(tagId)) {
+          tagIndex = key;
+          break;
+        }
+      }
+      return tagIndex;
+    };
 
     // deserialize characteristics object from api
     this.deserializeCharacteristics = function(itemData) {
@@ -133,12 +149,28 @@ angular.module('ts5App')
     };
 
     // deserialize allergens object from api
-    function deserializeAllergens(itemData) {
-      for (var allergenkey in itemData.allergens) {
-        var allergen = itemData.allergens[allergenkey];
-        itemData.allergens[allergenkey] = allergen.allergenId.toString();
+    this.deserializeAllergens = function(itemData) {
+      for (var allergenKey in itemData.allergens) {
+        var allergen = itemData.allergens[allergenKey];
+        var index = $this.findAllergenIndex(allergen.allergenId);
+        itemData.allergens[allergenKey] = {
+          id: allergen.allergenId,
+          name: $scope.allergens[index].name
+        };
       }
-    }
+    };
+
+    this.findAllergenIndex = function(allergenId) {
+      var allergenIndex = null;
+      for (var key in $scope.allergens) {
+        var allergen = $scope.allergens[key];
+        if (parseInt(allergen.allergenId) === parseInt(allergenId)) {
+          allergenIndex = key;
+          break;
+        }
+      }
+      return allergenIndex;
+    };
 
     // checks to see if the item is active
     function checkIfItemIsActive(itemData) {
@@ -165,9 +197,9 @@ angular.module('ts5App')
       if (!$scope.itemIsInactive) {
         checkIfItemIsActive(itemData);
       }
-      deserializeTags(itemData);
+      this.deserializeTags(itemData);
       this.deserializeCharacteristics(itemData);
-      deserializeAllergens(itemData);
+      this.deserializeAllergens(itemData);
 
       // TODO: turn this into a function
       for (var imageIndex in itemData.images) {

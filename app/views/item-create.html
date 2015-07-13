@@ -126,7 +126,7 @@
               ng-model="formData.categoryId"
               theme="bootstrap"
              >
-              <ui-select-match placeholder="Sales Categories">{{ $item.name }}</ui-select-match>
+              <ui-select-match placeholder="Sales Categories" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
               <ui-select-choices repeat="category in salesCategories">
                 <div ng-bind-html="category.name | highlight: $select.search"></div>
               </ui-select-choices>
@@ -141,8 +141,9 @@
               ng-model="formData.itemTypeId"
               theme="bootstrap"
               ng-change="filterCharacteristics()"
+              ng-disabled="viewOnly || itemIsActive"
              >
-              <ui-select-match placeholder="Item Type">{{ $select.selected.name }}</ui-select-match>
+              <ui-select-match placeholder="Item Type" ui-lock-choice="viewOnly || itemIsActive">{{ $select.selected.name }}</ui-select-match>
               <ui-select-choices repeat="type in itemTypes">
                 <div ng-bind-html="type.name | highlight: $select.search"></div>
               </ui-select-choices>
@@ -156,7 +157,7 @@
               theme="bootstrap"
               id="itemCharacteristics"
              >
-              <ui-select-match placeholder="Item Characteristics">{{ $item.name }}</ui-select-match>
+              <ui-select-match placeholder="Item Characteristics" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
               <ui-select-choices repeat="character in filteredCharacteristics">
                 <div ng-bind-html="character.name | highlight: $select.search"></div>
               </ui-select-choices>
@@ -173,7 +174,7 @@
               ng-model="formData.substitutions"
               theme="bootstrap"
              >
-              <ui-select-match placeholder="Item Substitutions">{{ $item.itemName }}</ui-select-match>
+              <ui-select-match placeholder="Item Substitutions" ui-lock-choice="viewOnly || itemIsActive">{{ $item.itemName }}</ui-select-match>
               <ui-select-choices repeat="item in items">
                 <div ng-bind-html="item.itemName | highlight: $select.search"></div>
               </ui-select-choices>
@@ -186,7 +187,7 @@
               ng-model="formData.recommendations"
               theme="bootstrap"
              >
-              <ui-select-match placeholder="Item Recommendations">{{ $item.itemName }}</ui-select-match>
+              <ui-select-match placeholder="Item Recommendations" ui-lock-choice="viewOnly || itemIsActive">{{ $item.itemName }}</ui-select-match>
               <ui-select-choices repeat="item in items">
                 <div ng-bind-html="item.itemName | highlight: $select.search"></div>
               </ui-select-choices>
@@ -207,7 +208,7 @@
               ng-model="formData.tags"
               theme="bootstrap"
              >
-              <ui-select-match placeholder="Item Tags">{{ $item.name }}</ui-select-match>
+              <ui-select-match placeholder="Item Tags" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
               <ui-select-choices repeat="tag in tags">
                 <div ng-bind-html="tag.name | highlight: $select.search"></div>
               </ui-select-choices>
@@ -220,7 +221,7 @@
               ng-model="formData.allergens"
               theme="bootstrap"
              >
-              <ui-select-match placeholder="Allergens">{{ $item.name }}</ui-select-match>
+              <ui-select-match placeholder="Allergens" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
               <ui-select-choices repeat="allergen in allergens">
                 <div ng-bind-html="allergen.name | highlight: $select.search"></div>
               </ui-select-choices>
@@ -328,9 +329,9 @@
                 <ui-select
                   ng-model="formData.weightType"
                   theme="bootstrap"
-                  ng-disabled="disabled"
+                  ng-disabled="viewOnly || itemIsActive"
                  >
-                  <ui-select-match placeholder="Units">{{ $select.selected.unitCode }}</ui-select-match>
+                  <ui-select-match placeholder="Units" ui-lock-choice="viewOnly || itemIsActive">{{ $select.selected.unitCode }}</ui-select-match>
                   <ui-select-choices repeat="weight in weightUnits">
                     <div ng-bind-html="weight.unitCode | highlight: $select.search"></div>
                   </ui-select-choices>
@@ -364,9 +365,9 @@
                   name="Unit of Measurement"
                   ng-model="formData.volumeType"
                   theme="bootstrap"
-                  ng-disabled="disabled"
+                  ng-disabled="viewOnly || itemIsActive"
                  >
-                  <ui-select-match placeholder="Units">{{ $select.selected.unitCode }}</ui-select-match>
+                  <ui-select-match placeholder="Units" ui-lock-choice="viewOnly || itemIsActive">{{ $select.selected.unitCode }}</ui-select-match>
                   <ui-select-choices repeat="volume in volumeUnits">
                     <div ng-bind-html="volume.unitCode | highlight: $select.search"></div>
                   </ui-select-choices>
@@ -411,9 +412,9 @@
               name="Unit of Measurement"
               ng-model="formData.dimensionType"
               theme="bootstrap"
-              ng-disabled="disabled"
+              ng-disabled="viewOnly || itemIsActive"
              >
-              <ui-select-match placeholder="Units">{{ $select.selected.unitCode }}</ui-select-match>
+              <ui-select-match placeholder="Units" ui-lock-choice="viewOnly || itemIsActive">{{ $select.selected.unitCode }}</ui-select-match>
               <ui-select-choices repeat="dimension in dimensionUnits">
                 <div ng-bind-html="dimension.unitCode | highlight: $select.search"></div>
               </ui-select-choices>
