@@ -149,11 +149,10 @@ angular.module('ts5App')
 
     $scope.formSave = function () {
       $scope.postTrip.postTripEmployeeIdentifiers = [];
-      // TODO: add employee IDs once API is fixed
-      //var employeeIds = angular.element('.employeeID-multiple-select').select2('val');
-      //angular.forEach(employeeIds, function (value) {
-      //  $scope.postTrip.postTripEmployeeIdentifiers.push({employeeId: value});
-      //});
+      var employeeIds = angular.element('.employeeID-multiple-select').select2('val');
+      angular.forEach(employeeIds, function (value) {
+        $scope.postTrip.postTripEmployeeIdentifiers.push({employeeId: value});
+      });
 
       if ($routeParams.state === 'create') {
         $this.saveNewTrip();
