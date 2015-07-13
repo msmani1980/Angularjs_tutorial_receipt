@@ -12,21 +12,24 @@ angular.module('ts5App')
   .controller('EmployeeCommissionEditCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast) {
 
     $scope.viewName = 'Employee Commission';
-    $scope.startDate = moment().add(1, 'days').format('L').toString();
+    $scope.commission = {
+      startDate: moment().add(1, 'days').format('L').toString(),
+      currenciesFields: {}
+    };
 
-    $scope.$watchGroup(['startDate', 'endDate'], function () {
+    $scope.$watchGroup(['commission.startDate', 'commission.endDate'], function () {
       var payload = {};
 
-      if (!angular.isUndefined($scope.startDate)) {
-        payload.startDate = dateUtility.formatDateForAPI($scope.startDate);
+      if (!angular.isUndefined($scope.commission.startDate)) {
+        payload.startDate = dateUtility.formatDateForAPI($scope.commission.startDate);
       }
 
-      if (!angular.isUndefined($scope.endDate)) {
-        payload.endDate = dateUtility.formatDateForAPI($scope.endDate);
+      if (!angular.isUndefined($scope.commission.endDate)) {
+        payload.endDate = dateUtility.formatDateForAPI($scope.commission.endDate);
       }
 
-      employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
-        $scope.itemsList = dataFromAPI.retailItems;
+      employeeCommissionFactory.getItemsList(payload, true).then(function (dataFromAPI) {
+        $scope.itemsList = dataFromAPI.masterItems;
       });
 
       var currencyFilters = angular.extend(payload, {
@@ -53,7 +56,20 @@ angular.module('ts5App')
       });
     }
 
-    $scope.submitForm = function() {
+    $scope.submitForm = function () {
+      if (!$scope.employeeCommissionForm.$valid) {
+        return false;
+      }
+      console.log({
+        employeeCommission: {
+          startDate: dateUtility.formatDateForAPI($scope.commission.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.commission.endDate),
+          itemMasterId: $scope.selectedItem.id,
+          types: [{priceTypeId: $scope.commission.selectedPriceType.id}],
+          percentage: $scope.currenciesFields.percentage
+        }
+      });
+      //employeeCommissionFactory.createCommission(payload).then();
       showToastMessage('warning', 'Employee Commission', 'API not ready');
     };
 

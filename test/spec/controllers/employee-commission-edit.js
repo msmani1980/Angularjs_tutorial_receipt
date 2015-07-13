@@ -43,6 +43,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     spyOn(employeeCommissionFactory, 'getPriceTypesList').and.returnValue(getPriceTypesListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getTaxRateTypes').and.returnValue(getTaxRateTypesDeferred.promise);
     spyOn(employeeCommissionFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeferred.promise);
+    spyOn(employeeCommissionFactory, 'createCommission').and.returnValue(getCompanyCurrenciesDeferred.promise);
 
     scope = $rootScope.$new();
     EmployeeCommissionEditCtrl = $controller('EmployeeCommissionEditCtrl', {

@@ -10,8 +10,8 @@
 angular.module('ts5App')
   .factory('employeeCommissionFactory', function (itemsService, priceTypesService, taxRateTypesService, currenciesService, employeeCommissionService) {
 
-    var getItemsList = function (payload) {
-      return itemsService.getItemsList(payload);
+    var getItemsList = function (payload, fetchFromMaster) {
+      return itemsService.getItemsList(payload, fetchFromMaster);
     };
 
     var getPriceTypesList = function (payload) {
