@@ -24,7 +24,7 @@ angular.module('ts5App')
       if($filter('filter')(_companyRetailItems, {itemName: retailItem.itemName}).length){
         return false;
       }
-      if($filter('filter')(_companyRetailItems, {onBoardName: retailItem.onBoardName}).length){
+      if(retailItem.onBoardName !== null && $filter('filter')(_companyRetailItems, {onBoardName: retailItem.onBoardName}).length){
         return false;
       }
       return true;
