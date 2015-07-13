@@ -100,6 +100,7 @@ angular.module('ts5App')
       if ($scope.canDelete(cashBag)) {
         cashBagFactory.deleteCashBag(cashBag.id).then(function () {
             helpers.showMessage(null, false, 'successfully deleted');
+            $scope.readOnly = true;
           },
           helpers.showMessage);
       }
