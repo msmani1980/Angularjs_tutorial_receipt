@@ -64,6 +64,7 @@ angular.module('ts5App')
           itemMasterId: $scope.commission.selectedItem.id,
           types: [{priceTypeId: $scope.commission.selectedPriceType.id}]
           //percentage: $scope.currenciesFields.percentage
+          //commission.selectedRateType
         }
       };
       return payload;
