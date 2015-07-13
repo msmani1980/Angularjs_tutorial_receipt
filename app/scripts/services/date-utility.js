@@ -10,8 +10,8 @@
 angular.module('ts5App')
   .service('dateUtility', function () {
 
-    var _dateForAPIFormat = 'YYYYMMDD';
-    var _dateForAppFormat = 'MM/DD/YYYY';
+    var _dateFormatForAPI = 'YYYYMMDD';
+    var _dateFormatForApp = 'MM/DD/YYYY';
 
     this.formatDate = function (dateString, formatFrom, formatTo) {
       return moment(dateString, formatFrom).format(formatTo).toString();
@@ -19,8 +19,8 @@ angular.module('ts5App')
 
     this.formatDateForAPI = function (dateToFormat, dateForAppFormat,
       dateForAPIFormat) {
-      dateForAppFormat = dateForAppFormat || _dateForAppFormat;
-      dateForAPIFormat = dateForAPIFormat || _dateForAPIFormat;
+      dateForAppFormat = dateForAppFormat || _dateFormatForApp;
+      dateForAPIFormat = dateForAPIFormat || _dateFormatForAPI;
 
       return this.formatDate(dateToFormat, dateForAppFormat,
         dateForAPIFormat);
@@ -28,11 +28,19 @@ angular.module('ts5App')
 
     this.formatDateForApp = function (dateToFormat, dateForAPIFormat,
       dateForAppFormat) {
-      dateForAPIFormat = dateForAPIFormat || _dateForAPIFormat;
-      dateForAppFormat = dateForAppFormat || _dateForAppFormat;
+      dateForAPIFormat = dateForAPIFormat || _dateFormatForAPI;
+      dateForAppFormat = dateForAppFormat || _dateFormatForApp;
 
       return this.formatDate(dateToFormat, dateForAPIFormat,
         dateForAppFormat);
+    };
+
+    this.isDateValidForApp = function (dateToCheck) {
+      return moment(dateToCheck, _dateFormatForApp, true).isValid();
+    };
+
+    this.isDateValidForAPI = function (dateToCheck) {
+      return moment(dateToCheck, _dateFormatForAPI, true).isValid();
     };
 
     this.now = function () {
@@ -41,7 +49,7 @@ angular.module('ts5App')
 
     this.nowFormatted = function (formatTo) {
       var formatFrom = 'x';
-      formatTo = formatTo || _dateForAppFormat;
+      formatTo = formatTo || _dateFormatForApp;
       var now = this.now();
       return this.formatDate(now, formatFrom, formatTo);
     };
