@@ -33,7 +33,6 @@ describe('Service: postTripService', function () {
   });
 
   describe('API calls', function () {
-
     describe('getPostTrips', function () {
       it('should be accessible in the service', function () {
         expect(!!postTripsService.getPostTrips).toBe(true);
@@ -79,12 +78,12 @@ describe('Service: postTripService', function () {
       });
     });
 
-    describe('getPostTrip', function(){
+    describe('getPostTrip', function () {
       it('should be accessible in the service', function () {
         expect(!!postTripsService.getPostTrip).toBe(true);
       });
 
-      it('should append postTrip id to request URL', function(){
+      it('should append postTrip id to request URL', function () {
         var postTripId = '123';
         var regex = new RegExp('posttrips/' + postTripId, 'g');
         $httpBackend.expectGET(regex).respond('202');
@@ -104,7 +103,7 @@ describe('Service: postTripService', function () {
         $httpBackend.whenPOST(regex).respond({id: 36});
       });
 
-      it('should POST data to posttrips API', function(){
+      it('should POST data to posttrips API', function () {
         var regex = new RegExp('companies/403/posttrips', 'g');
         postTripsService.createPostTrip('403', {});
         $httpBackend.expectPOST(regex);
@@ -117,29 +116,44 @@ describe('Service: postTripService', function () {
         expect(!!postTripsService.updatePostTrip).toBe(true);
       });
 
-      //beforeEach(function () {
-      //  var regex = new RegExp('posttrips', 'g');
-      //  $httpBackend.whenPUT(regex).respond('202');
-      //});
-      //
-      //it('should PUT data to posttrips API', function(){
-      //  var regex = new RegExp('posttrips', 'g');
-      //  postTripsService.updatePostTrip('403', {});
-      //  $httpBackend.expectPUT(regex);
-      //  $httpBackend.flush();
-      //});
-    });
-
-    describe('deletePostTrip', function(){
-      it('should send postTrip id', function(){
-
+      beforeEach(function () {
+        var regex = new RegExp('companies/403/posttrips', 'g');
+        $httpBackend.whenPUT(regex).respond('202');
       });
 
-      it('should make a DELETE request', function(){
+      it('should PUT data to posttrips API', function () {
+        var regex = new RegExp('posttrips', 'g');
+        postTripsService.updatePostTrip('403', {});
+        $httpBackend.expectPUT(regex);
+        $httpBackend.flush();
+      });
+    });
 
+    describe('deletePostTrip', function () {
+      it('should be accessible in service', function () {
+        expect(!!postTripsService.deletePostTrip).toBe(true);
+      });
+
+      beforeEach(function () {
+        var regex = new RegExp('companies/403/posttrips', 'g');
+        $httpBackend.whenDELETE(regex).respond('202');
+      });
+
+      it('should send DELETE request', function () {
+        var regex = new RegExp('posttrips', 'g');
+        $httpBackend.expectDELETE(regex);
+        postTripsService.deletePostTrip('403', '1');
+        $httpBackend.flush();
+      });
+
+      it('should append postTrip id to request URL', function () {
+        var postTripId = '123';
+        var regex = new RegExp('posttrips/' + postTripId, 'g');
+        $httpBackend.expectDELETE(regex).respond('202');
+        postTripsService.deletePostTrip('403', postTripId);
+        $httpBackend.flush();
       });
 
     });
-
   });
 });

@@ -22,6 +22,8 @@ describe('Factory: postTripFactory', function () {
 
     spyOn(postTripsService, 'getPostTrips');
     spyOn(postTripsService, 'createPostTrip');
+    spyOn(postTripsService, 'updatePostTrip');
+    spyOn(postTripsService, 'deletePostTrip');
     spyOn(postTripsService, 'getPostTrip');
     spyOn(GlobalMenuService.company, 'get');
     spyOn(stationsService, 'getStationList');
@@ -43,14 +45,22 @@ describe('Factory: postTripFactory', function () {
       postTripFactory.getPostTripDataList(companyId);
       expect(postTripsService.getPostTrips).toHaveBeenCalledWith(companyId);
     });
-    it('should call postTripService on createPostTrip', function(){
-      postTripFactory.createPostTrip(companyId, {});
-      expect(postTripsService.createPostTrip).toHaveBeenCalled();
-    })
     it('should call postTripService on getPostTrip', function(){
       postTripFactory.getPostTrip(companyId, '123');
       expect(postTripsService.getPostTrip).toHaveBeenCalled();
-    });;
+    });
+    it('should call postTripService on createPostTrip', function(){
+      postTripFactory.createPostTrip(companyId, {});
+      expect(postTripsService.createPostTrip).toHaveBeenCalled();
+    });
+    it('should call postTripService on updatePostTrip', function(){
+      postTripFactory.updatePostTrip('123', {});
+      expect(postTripsService.updatePostTrip).toHaveBeenCalled();
+    });
+    it('should call postTripService on deletePostTrip', function(){
+      postTripFactory.deletePostTrip(companyId, '123');
+      expect(postTripsService.deletePostTrip).toHaveBeenCalled();
+    });
   });
 
   describe('stationsService API', function () {

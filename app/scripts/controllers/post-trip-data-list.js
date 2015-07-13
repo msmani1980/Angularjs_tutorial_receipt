@@ -1,5 +1,5 @@
 'use strict';
-/* global $*/
+/* global moment*/
 /**
  * @ngdoc function
  * @name ts5App.controller:PostFlightDataCtrl
@@ -34,7 +34,7 @@ angular.module('ts5App')
         getStationList: function () {
           return postTripFactory.getStationList(_companyId).then(function (response) {
             $scope.stationList = response.response;
-            $('.stations-multi-select').select2({width: '100%'});
+            angular.element('.stations-multi-select').select2({width: '100%'});
           });
         },
         getCarrierNumbers: function () {
@@ -69,7 +69,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchForm = function () {
-      $('.stations-multi-select').select2('data', null);
+      angular.element('.stations-multi-select').select2('data', null);
       $scope.search = {};
       postTripFactory.getPostTripDataList(_companyId, $scope.search).then(function (response) {
         $scope.postTrips = response.postTrips;
@@ -92,7 +92,7 @@ angular.module('ts5App')
             $scope.postTrips = response.postTrips;
           });
         }, function () {
-          $this.showMessage(true, 'Post Trip could not be deleted')
+          $this.showMessage(true, 'Post Trip could not be deleted');
         }
       );
     };
@@ -101,7 +101,7 @@ angular.module('ts5App')
       var scheduleDate = moment(dateString, 'YYYY-MM-DD');
       var today = moment();
       return !scheduleDate.isBefore(today);
-    }
+    };
 
 
   });

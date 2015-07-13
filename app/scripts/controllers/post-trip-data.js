@@ -1,5 +1,4 @@
 'use strict';
-/*global $*/
 
 /**
  * @ngdoc function
@@ -9,9 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast, dateUtility) {
-    $('.employeeID-multiple-select').select2();
-
+  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast) {
     var _companyId = '403',
       _services = null;
     var $this = this;
@@ -28,7 +25,7 @@ angular.module('ts5App')
     this.initReadView = function () {
       $scope.readOnly = true;
       $this.getPostTrip();
-      $('.employeeID-multiple-select').prop('disabled', true);
+      angular.element('.employeeID-multiple-select').prop('disabled', true);
     };
 
     this.initUpdateView = function () {
@@ -60,7 +57,7 @@ angular.module('ts5App')
     };
 
     this.saveNewTrip = function () {
-      postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(function (response) {
+      postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(function () {
         $location.path('post-trip-data-list');
       }, function (error) {
         $this.showMessage(error);
@@ -108,6 +105,7 @@ angular.module('ts5App')
         }
       };
       _services.call(['getStationList', 'getCarrierNumbers']);
+      angular.element('.employeeID-multiple-select').select2({width:'100%'});
 
       switch ($routeParams.state) {
         case 'create':
@@ -127,7 +125,7 @@ angular.module('ts5App')
 
     $scope.updateArrivalTimeZone = function () {
       angular.forEach($scope.stationList, function (value) {
-        if (value.stationId == $scope.postTrip.arrStationId) {
+        if (value.stationId === $scope.postTrip.arrStationId) {
           $scope.arrivalTimezone = value.timezone + ' [UTC ' + value.utcOffset + ']';
         }
       });
@@ -135,7 +133,7 @@ angular.module('ts5App')
 
     $scope.updateDepartureTimeZone = function () {
       angular.forEach($scope.stationList, function (value) {
-        if (value.stationId == $scope.postTrip.depStationId) {
+        if (value.stationId === $scope.postTrip.depStationId) {
           $scope.departureTimezone = value.timezone + ' [UTC ' + value.utcOffset + ']';
         }
       });
@@ -143,10 +141,11 @@ angular.module('ts5App')
 
     $scope.formSave = function () {
       $scope.postTrip.postTripEmployeeIdentifiers = [];
-      var employeeIds = $('.employeeID-multiple-select').select2('val');
-      angular.forEach(employeeIds, function (value) {
-        $scope.postTrip.postTripEmployeeIdentifiers.push({employeeIdentifier: value});
-      });
+      // TODO: add employee IDs once API is fixed
+      //var employeeIds = angular.element('.employeeID-multiple-select').select2('val');
+      //angular.forEach(employeeIds, function (value) {
+      //  $scope.postTrip.postTripEmployeeIdentifiers.push({employeeId: value});
+      //});
 
       if ($routeParams.state === 'create') {
         $this.saveNewTrip();
