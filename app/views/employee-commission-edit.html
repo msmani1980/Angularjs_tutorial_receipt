@@ -20,47 +20,59 @@
   <date-picker
     class="col-xs-12 col-md-6 col-sm-6"
     element-class="col-xs-6 col-sm-6"
-    start-date-model="startDate"
-    end-date-model="endDate"
-    label-from="Effective From"
-    label-to="Effective To"
+    start-date-model="commission.startDate"
+    end-date-model="commission.endDate"
+    label-from="Effective From *"
+    label-to="Effective To *"
     required="true"
     disable-past="true">
   </date-picker>
 
   <div class="col-sm-3">
     <div class="form-group">
-      <label class="control-label" for="itemName">Item Name</label>
-      <select class="form-control" id="itemName">
-        <option ng-repeat="item in itemsList | orderBy:'itemName'" value="{{item.masterId}}">{{item.itemName}}</option>
+      <label class="control-label" for="itemName">Item Name *</label>
+      <select
+        class="form-control"
+        id="itemName"
+        required="true"
+        ng-options="item.itemName for item in itemsList | orderBy:'itemName' track by item.id"
+        ng-model="commission.selectedItem">
+        <option selected="selected" disabled value>Select Item</option>
       </select>
     </div>
   </div>
 
   <div class="col-sm-3">
     <div class="form-group">
-      <label class="control-label" for="saleType">Sale Type</label>
-      <select class="form-control" id="saleType">
-        <option ng-repeat="priceType in priceTypesList | orderBy:'name'" value="{{priceType.id}}">{{priceType.name}}
-        </option>
+      <label class="control-label" for="saleType">Sale Type *</label>
+      <select
+        class="form-control"
+        id="saleType"
+        required="true"
+        ng-options="priceType.name for priceType in priceTypesList | orderBy:'name' track by priceType.id"
+        ng-model="commission.selectedPriceType">
+        <option selected disabled value>Select Sale Type</option>
       </select>
     </div>
   </div>
 
   <div class="col-sm-3">
     <div class="form-group">
-      <label class="control-label" for="rateType">Rate Type</label>
+      <label class="control-label" for="rateType">Rate Type *</label>
       <select
         class="form-control"
         id="rateType"
+        required="true"
         ng-options="taxRate.taxRateType for taxRate in taxRateTypes | orderBy:'taxRateType' track by taxRate.id"
-        ng-model="selectedRateType"></select>
+        ng-model="commission.selectedRateType">
+        <option selected disabled value>Select Rate Type</option>
+      </select>
     </div>
   </div>
 
-  <div class="col-sm-3" ng-if="selectedRateType.id == 2">
+  <div class="col-sm-3" ng-if="commission.selectedRateType.id == 2">
     <div class="form-group">
-      <label class="control-label" for="rate">Rate</label>
+      <label class="control-label">Rate *</label>
 
       <div class="input-group">
         <span class="input-group-addon">
@@ -68,11 +80,10 @@
         </span>
         <input custom-validity
                custom-pattern="currencyWithTwoDecimalPlace"
-               ng-model="rate"
+               ng-model="commission.percentage"
                required="true"
                type="text"
-               id="rate"
-               name="rate"
+               name="percentage"
                placeholder="0.00"
                class="form-control"
                aria-label="Amount (to the nearest dollar)"/>
@@ -80,8 +91,8 @@
     </div>
   </div>
 
-  <div class="col-sm-3" ng-if="selectedRateType.id == 1">
-    <label class="control-label">Rate for Currency</label>
+  <div class="col-sm-3" ng-if="commission.selectedRateType.id == 1">
+    <label class="control-label">Rate for Currency *</label>
 
     <div class="form-group" ng-repeat="currency in companyCurrencies">
 
@@ -91,7 +102,7 @@
         </span>
         <input custom-validity
                custom-pattern="currencyWithTwoDecimalPlace"
-               ng-model="currenciesFields[currency.code]"
+               ng-model="commission.currenciesFields[currency.code]"
                required="true"
                type="text"
                name="rate{{currency.code}}"

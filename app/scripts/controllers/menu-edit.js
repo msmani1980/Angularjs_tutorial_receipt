@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuFactory) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuFactory, dateUtility) {
     $scope.viewName = 'Menu';
     $scope.masterItemsList = [];
     $scope.newItemList = [];
@@ -95,10 +95,6 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $scope.shouldShowActions = function () {
-      return ($scope.menu) ? $scope.menu.menuItems.length > 1 : false;
-    };
-
     $this.addNewItems = function () {
       var ItemsArray = [];
       var menuId = $scope.menu.id;
@@ -170,10 +166,22 @@ angular.module('ts5App')
       if (angular.isUndefined($scope.menu)) {
         return false;
       }
-      var todayDate = moment().format('L');
-      var startDateBeforeToday = moment($scope.menu.startDate, 'L').format('L') < todayDate;
-      var endDateBeforeToday = moment($scope.menu.endDate, 'L').format('L') < todayDate;
-      return startDateBeforeToday || endDateBeforeToday;
+      if ($routeParams.state === 'view') {
+        return true;
+      }
+      return !dateUtility.isAfterToday($scope.menu.startDate);
+    };
+
+    $scope.isMenuEditable = function () {
+      if (angular.isUndefined($scope.menu)) {
+        return false;
+      }
+      return dateUtility.isAfterToday($scope.menu.startDate);
+    };
+
+    $scope.canDeleteItems = function() {
+      var totalItems = $scope.menu.menuItems.length;
+      return $scope.isMenuEditable() && totalItems > 1
     };
 
     $scope.addItem = function () {

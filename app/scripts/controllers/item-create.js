@@ -1,6 +1,7 @@
 'use strict';
 /*global moment*/
 /*global $*/
+// jshint maxcomplexity:14
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
