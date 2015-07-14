@@ -56,18 +56,26 @@ angular.module('ts5App')
       });
     }
 
+    var getValuesFor = {
+      'Percentage': function () {
+        return {
+          percentage: $scope.commission.percentage
+        };
+      }
+    };
+
     function createPayload() {
+      var rateValues = getValuesFor[$scope.commission.selectedRateType.taxRateType]();
       var payload = {
-        employeeCommission: {
-          startDate: dateUtility.formatDateForAPI($scope.commission.startDate),
-          endDate: dateUtility.formatDateForAPI($scope.commission.endDate),
-          itemMasterId: $scope.commission.selectedItem.id,
-          types: [{priceTypeId: $scope.commission.selectedPriceType.id}]
-          //percentage: $scope.currenciesFields.percentage
-          //commission.selectedRateType
-        }
+        startDate: dateUtility.formatDateForAPI($scope.commission.startDate),
+        endDate: dateUtility.formatDateForAPI($scope.commission.endDate),
+        itemMasterId: $scope.commission.selectedItem.id,
+        types: [{priceTypeId: $scope.commission.selectedPriceType.id}]
       };
-      return payload;
+      return {
+        employeeCommission: angular.extend(payload, rateValues)
+      };
+
     }
 
     function createRequestSuccessHandler(dataFromAPI) {
@@ -87,4 +95,5 @@ angular.module('ts5App')
       employeeCommissionFactory.createCommission(payload).then(createRequestSuccessHandler, createRequestErrorHandler);
     };
 
-  });
+  })
+;

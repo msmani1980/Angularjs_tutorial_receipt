@@ -76,7 +76,10 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
   });
 
   describe('submit form', function () {
+    var expectedPayload;
+
     beforeEach(function () {
+
       scope.commission = {
         startDate: '05/10/2020',
         endDate: '05/10/2055',
@@ -87,6 +90,16 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
           id: 1
         }
       };
+
+      expectedPayload = {
+        employeeCommission: {
+          startDate: '20200510',
+          endDate: '20550510',
+          itemMasterId: scope.commission.selectedItem.id,
+          types: [{priceTypeId: scope.commission.selectedPriceType.id}]
+        }
+      };
+
     });
 
     it('should not call API if form is not valid', function () {
@@ -97,22 +110,17 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
       expect(employeeCommissionFactory.createCommission).not.toHaveBeenCalled();
     });
 
-    it('should call API if form is valid', function () {
-
-      var expectedPayload = {
-        employeeCommission: {
-          startDate: '20200510',
-          endDate: '20550510',
-          itemMasterId: scope.commission.selectedItem.id,
-          types: [{priceTypeId: scope.commission.selectedPriceType.id}]
-        }
-      };
+    it('should add percentage to payload if proper rate type', function () {
+      scope.commission.selectedRateType = {taxRateType: 'Percentage'};
+      scope.commission.percentage = 1.66;
+      expectedPayload.employeeCommission.percentage = scope.commission.percentage;
 
       scope.submitForm();
       scope.$digest();
 
       expect(employeeCommissionFactory.createCommission).toHaveBeenCalledWith(expectedPayload);
     });
+
   });
 
 });
