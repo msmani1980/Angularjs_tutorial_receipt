@@ -55,7 +55,7 @@ angular.module('ts5App')
     this.showNewPostTripSuccess = function() {
       if($location.search().updateType === 'create') {
         $this.showToastMessage('success', 'Create Post Trip', 'successfully added post trip id:' + $location.search().id);
-      } else {
+      } else if($location.search().updateType === 'edit'){
         $this.showToastMessage('success', 'Edit Post Trip', 'successfully updated post trip id:' + $location.search().id);
       }
     };
