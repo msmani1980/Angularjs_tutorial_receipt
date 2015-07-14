@@ -21,6 +21,9 @@ angular.module('ts5App')
 
     this.getStationById = function (stationId) {
       var stationCode = '';
+      if(stationId === undefined || $scope.stationList.length <= 0) {
+        return '';
+      }
       angular.forEach($scope.stationList, function(value) {
         if(value.stationId.toString() === stationId.toString()) {
           stationCode =  value.stationCode.toString();
@@ -142,6 +145,10 @@ angular.module('ts5App')
     };
 
     $scope.deletePostTrip = function () {
+      if($scope.postTrips.length <= 0) {
+        $this.deletePostTripFailure();
+        return;
+      }
       var postTripId = $scope.postTrips[$scope.tempDeleteIndex].id;
       postTripFactory.deletePostTrip(_companyId, postTripId).then(
         $this.deletePostTripSuccess,
