@@ -83,6 +83,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
       scope.commission = {
         startDate: '05/10/2020',
         endDate: '05/10/2055',
+        currenciesFields: {},
         selectedItem: {
           id: 1
         },
