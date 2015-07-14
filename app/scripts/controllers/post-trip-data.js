@@ -18,8 +18,8 @@ angular.module('ts5App')
     $scope.postTrip = {};
     $scope.selectedEmployees = {};
 
-    this.showLoadingModal = function() {
-      angular.element('#loading').modal('show').find('p').text('Loading Post Trip Data');
+    this.showLoadingModal = function(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
     };
 
     this.hideLoadingModal = function() {
@@ -33,14 +33,14 @@ angular.module('ts5App')
 
     this.initReadView = function () {
       $scope.readOnly = true;
-      $this.showLoadingModal();
+      $this.showLoadingModal('Loading Post Trip Data');
       $this.getPostTrip();
     };
 
     this.initUpdateView = function () {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Post Trip Data';
-      $this.showLoadingModal();
+      $this.showLoadingModal('Loading Post Trip Data');
       $this.getPostTrip();
     };
 
@@ -70,9 +70,11 @@ angular.module('ts5App')
 
     this.saveFormSuccess = function (response) {
       if($routeParams.state === 'create') {
+        $this.hideLoadingModal();
         $location.path('post-trip-data-list').search({updateType: 'create', id: response.id});
       } else {
-        $location.path('post-trip-data-list').search({updateType: 'edit', id: $scope.postTrip.id});
+        $this.hideLoadingModal();
+        $this.showToastMessage('success', 'Edit Post Trip', 'success');
       }
     };
 
@@ -183,6 +185,7 @@ angular.module('ts5App')
 
     $scope.formSave = function () {
       // TODO: move employeeId data validation to HTML (currently open bug https://github.com/angular-ui/ui-select/issues/258)
+      $this.showLoadingModal('Saving Post Trip Data');
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
       if (!$scope.postTripDataForm.$valid || (shouldValidateEmployeeIds && isSelectedEmployeesInvalid)) {
