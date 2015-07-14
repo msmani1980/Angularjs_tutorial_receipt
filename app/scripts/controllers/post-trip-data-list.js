@@ -17,16 +17,37 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.selectedStations = {};
     $scope.stationList = [];
+    $scope.postTrips = [];
+
+    this.getStationById = function (stationId) {
+      var stationCode = '';
+      angular.forEach($scope.stationList, function(value) {
+        if(value.stationId.toString() === stationId.toString()) {
+          stationCode =  value.stationCode.toString();
+        }
+      });
+      return stationCode;
+    };
+
+    this.updateStationCodes = function() {
+      if($scope.postTrips.length > 0 && $scope.stationList.length > 0) {
+        angular.forEach($scope.postTrips, function(trip) {
+          trip.depStationCode = $this.getStationById(trip.depStationId);
+          trip.arrStationCode = $this.getStationById(trip.arrStationId);
+        });
+      }
+    };
 
     this.getPostTripSuccess = function (response) {
       $scope.postTrips = response.postTrips;
+      $this.updateStationCodes();
     };
 
     this.getStationsSuccess = function (response) {
-      console.log('getStationsSuccess');
       $scope.stationList = response.response;
       // TODO: fix this hack! currently ui-select doesn't populate correctly when collapsed or when multiple
       angular.element('#search-collapse').addClass('collapse');
+      $this.updateStationCodes();
     };
 
     this.getCarrierSuccess = function (response) {
@@ -83,7 +104,7 @@ angular.module('ts5App')
           return postTripFactory.getCarrierTypes(_companyId).then($this.getCarrierSuccess);
         }
       };
-      _services.call(['getPostTripDataList', 'getStationList', 'getCarrierNumbers']);
+      _services.call(['getStationList', 'getPostTripDataList', 'getCarrierNumbers']);
       $this.showNewPostTripSuccess();
     })();
 
@@ -111,11 +132,18 @@ angular.module('ts5App')
     };
 
     $scope.redirectToPostTrip = function (id, state) {
-      $location.path('post-trip-data/' + state + '/' + id);
+      $location.search({});
+      $location.path('post-trip-data/' + state + '/' + id).search();
     };
 
-    $scope.deletePostTrip = function (id) {
-      postTripFactory.deletePostTrip(_companyId, id).then(
+    $scope.promptDeleteModal = function (index) {
+      $scope.tempDeleteIndex = index;
+      angular.element('#delete-modal').modal('show');
+    };
+
+    $scope.deletePostTrip = function () {
+      var postTripId = $scope.postTrips[$scope.tempDeleteIndex].id;
+      postTripFactory.deletePostTrip(_companyId, postTripId).then(
         $this.deletePostTripSuccess,
         $this.deletePostTripFailure
       );
@@ -126,6 +154,5 @@ angular.module('ts5App')
       var today = moment();
       return !scheduleDate.isBefore(today);
     };
-
 
   });

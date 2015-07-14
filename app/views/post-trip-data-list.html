@@ -4,6 +4,7 @@
       <div class="col-xs-4">
         <h2 class="view-name">{{ viewName }}</h2>
       </div>
+
       <div class="col-xs-8 text-right">
         <a href="#/post-trip-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Post Trip</span></a>
 
@@ -18,7 +19,30 @@
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-xs">Filter</span>
         </button>
+      </div>
+    </div>
+  </div>
 
+  <div id="delete-modal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Are you sure you want to delete this post trip?</h4>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li>ScheduleNumber: {{ postTrips[tempDeleteIndex].scheduleNumber }}</li>
+            <li>Departure Station: {{ postTrips[tempDeleteIndex].arrStationCode }}</li>
+            <li>Departure Time: {{ postTrips[tempDeleteIndex].depTime }}</li>
+            <li>Arrival Station: {{ postTrips[tempDeleteIndex].arrStationCode }}</li>
+            <li>Arrival Time: {{ postTrips[tempDeleteIndex].arrTime }}</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="deletePostTrip()">Delete</button>
+
+        </div>
       </div>
 
     </div>
@@ -124,9 +148,9 @@
     <tbody>
     <tr class="ng-scope" ng-repeat="trip in postTrips">
       <td>{{ trip.scheduleNumber }}</td>
-      <td>{{ trip.depStationId}}</td>
+      <td>{{ trip.depStationCode}}</td>
       <td>{{ trip.depTime }}</td>
-      <td>{{ trip.arrStationId}}</td>
+      <td>{{ trip.arrStationCode}}</td>
       <td>{{ trip.arrTime }}</td>
       <td>
         <button class="btn btn-info btn-xs" ng-click="redirectToPostTrip(trip.id, 'view')" tabindex="0">
@@ -137,7 +161,7 @@
                 tabindex="0" aria-disabled="true" disabled="disabled" ng-show="showEditButton(trip.scheduleDate)">
           <i class="fa fa-pencil"></i>
         </button>
-        <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(trip.id)" ng-disabled="isMenuReadOnly(menu)"
+        <button class="btn btn-danger btn-xs" ng-click="promptDeleteModal($index)" ng-disabled="isMenuReadOnly(menu)"
                 tabindex="0" aria-disabled="true" disabled="disabled" ng-show="showEditButton(trip.scheduleDate)">
           <i class="fa fa-trash"></i>
         </button>
