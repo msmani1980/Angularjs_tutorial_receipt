@@ -181,7 +181,7 @@ angular.module('ts5App')
 
     $scope.canDeleteItems = function() {
       var totalItems = $scope.menu.menuItems.length;
-      return $scope.isMenuEditable() && totalItems > 1
+      return $scope.isMenuEditable() && totalItems > 1;
     };
 
     $scope.addItem = function () {
