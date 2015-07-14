@@ -18,6 +18,14 @@ angular.module('ts5App')
     $scope.postTrip = {};
     $scope.selectedEmployees = {};
 
+    this.showLoadingModal = function() {
+      angular.element('#loading').modal('show').find('p').text('Loading Post Trip Data');
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+
     this.initCreateView = function () {
       $scope.readOnly = false;
       $scope.viewName = 'Create Post Trip Data';
@@ -25,12 +33,14 @@ angular.module('ts5App')
 
     this.initReadView = function () {
       $scope.readOnly = true;
+      $this.showLoadingModal();
       $this.getPostTrip();
     };
 
     this.initUpdateView = function () {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Post Trip Data';
+      $this.showLoadingModal();
       $this.getPostTrip();
     };
 
@@ -39,6 +49,7 @@ angular.module('ts5App')
       $scope.updateArrivalTimeZone();
       $scope.updateDepartureTimeZone();
       $this.populateEmployees();
+      $this.hideLoadingModal();
     };
 
     this.getStationsSuccess = function (response) {
