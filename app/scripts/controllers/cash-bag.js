@@ -101,6 +101,9 @@ angular.module('ts5App')
         cashBagFactory.deleteCashBag(cashBag.id).then(function () {
             helpers.showMessage(null, false, 'successfully deleted');
             $scope.readOnly = true;
+            $scope.canDelete = function () {
+              return false;
+            };
           },
           helpers.showMessage);
       }
