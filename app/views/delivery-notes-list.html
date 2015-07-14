@@ -19,6 +19,14 @@
       </div>
 
       <div class="col-xs-6 text-right">
+        <button type="button" class="btn btn-info">
+          <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+          <span class="hidden-xs">Export (Excel)</span>
+        </button>
+        <button type="button" class="btn btn-info">
+          <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+          <span class="hidden-xs">Export (PDF)</span>
+        </button>
         <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
                 aria-controls="search-collapse">
@@ -100,10 +108,11 @@
         <tr>
           <th>Delivery Note Number</th>
           <th>Purchase Order Number</th>
-          <th>Departure Date</th>
-          <th>Item Code</th>
-          <th>Item Name</th>
+          <th>Delivery Date</th>
+          <th>Status</th>
           <th>Input Location</th>
+          <th>Created By</th>
+          <th>Updated By</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -113,9 +122,10 @@
           <td class="ng-binding">1234</td>
           <td class="ng-binding">1234</td>
           <td class="ng-binding">2/03</td>
-          <td class="ng-binding">1234</td>
-          <td class="ng-binding">Item 1</td>
+          <td class="ng-binding">Delivered</td>
           <td class="ng-binding">Dock 1</td>
+          <td class="ng-binding">2/03 - 12:34pm</td>
+          <td class="ng-binding">2/05 - 12:34pm</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>
@@ -131,10 +141,11 @@
         <tr class="ng-scope">
           <td class="ng-binding">1235</td>
           <td class="ng-binding">1235</td>
-          <td class="ng-binding">2/04</td>
-          <td class="ng-binding">1235</td>
-          <td class="ng-binding">Item 2</td>
+          <td class="ng-binding">2/03</td>
+          <td class="ng-binding">Delivered</td>
           <td class="ng-binding">Dock 2</td>
+          <td class="ng-binding">2/03 - 12:34pm</td>
+          <td class="ng-binding">2/05 - 12:34pm</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>

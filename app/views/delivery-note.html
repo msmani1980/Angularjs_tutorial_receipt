@@ -36,7 +36,7 @@
 
         <div class="row">
 
-          <div class="col-xs-12 col-sm-3">
+          <div class="col-xs-12 col-sm-2">
             <div class="form-group">
               <label for="deliveryNoteNumber">Delivery Note Number *</label>
               <input ng-model="deliveryNoteNumber" type="text" class="form-control" id="delivery-note-number"
@@ -44,7 +44,7 @@
             </div>
           </div>
           
-          <div class="col-xs-12 col-sm-3">
+          <div class="col-xs-12 col-sm-2">
             <div class="form-group">
               <label for="purchaseOrderNumber">Purchase Order Number *</label>
               <input ng-model="purchaseOrderNumber" type="text" class="form-control" id="purchase-order-number"
@@ -53,19 +53,57 @@
           </div>
                     
           <date-picker
-            class="col-xs-12 col-sm-3"
+            class="col-xs-12 col-sm-2"
             disable-date-range="true"
             start-date-model="postTrip.deliveryDate"
             is-search-field="true"
             label-from="Delivery Date *">
           </date-picker>
+                  
+          <div class="col-xs-12 col-sm-2">
+            <label>Status</label>
+            <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="inputLocationInfo()" ng-disabled="readOnly">
+              <option ng-repeat="item in inputLocationList" value="{{ $index }}">
+                {{ item.inputLocationCode }} ({{ item.inputLocationName}})
+              </option>
+            </select>
+          </div>
+          
+          <div class="col-xs-12 col-sm-2">
+            <label>Input Location</label>
+            <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="inputLocationInfo()" ng-disabled="readOnly">
+              <option ng-repeat="item in inputLocationList" value="{{ $index }}">
+                {{ item.inputLocationCode }} ({{ item.inputLocationName}})
+              </option>
+            </select>
+          </div>
 
-          <div class="col-xs-12 col-sm-3 text-right">
+          <div class="col-xs-12 col-sm-2 text-right">
             <button type="button" class="btn btn-primary">
               <i class="fa fa-plus"></i> Add Item
             </button>
           </div>
           
+        </div>
+        
+        <div class="row">
+          
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="deliveryNoteNumber">Created By</label>
+              <input ng-model="deliveryNoteCreatedBy" type="text" class="form-control" id="delivery-note-created-by"
+                     placeholder="2/03 - 12:34pm" required="true" custom-validity custom-pattern="time" ng-readonly="readOnly">
+            </div>
+          </div>
+          
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="deliveryNoteUpdatedBy">Updated By</label>
+              <input ng-model="purchaseOrderNumber" type="text" class="form-control" id="delivery-note-updated-by"
+                     placeholder="2/05 - 12:34pm" required="true" custom-validity custom-pattern="time" ng-readonly="readOnly">
+            </div>
+          </div>
+  
         </div>
         
         <div class="well">
@@ -84,7 +122,7 @@
   
   <!-- TODO: ITEM CODE (ABOVE) & ITEM NAME (BELOW) WILL AFFECT EACH OTHER AND PULL CORRECT DATA INTO EACH OTHER -->
           
-            <div class="col-xs-12 col-sm-2">
+            <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Item Name *</label>
                 <select class="form-control" id="item-code" ng-model="itemCode" ng-change="updateItemCodeInfo()" ng-disabled="readOnly">
@@ -92,14 +130,6 @@
                     {{ item.itemNameCode }} ({{ item.itemNameName}})
                   </option>
                 </select>
-              </div>
-            </div>
-  
-            <div class="col-xs-12 col-sm-1">
-              <div class="form-group">
-                <label>UOM</label>
-                <input ng-model="unitOfMeasurement" type="text" class="form-control" id="unit-of-measurement"
-                       placeholder="10g" custom-validity custom-pattern="time" ng-readonly="readOnly" disabled>
               </div>
             </div>
   
@@ -113,7 +143,7 @@
           
             <div class="col-xs-12 col-sm-1">
               <div class="form-group">
-                <label>Delivered</label>
+                <label>Delivered *</label>
                 <input ng-model="deliveredQty" type="text" class="form-control" id="delivered-qty"
                        placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
               </div>
@@ -123,13 +153,14 @@
               <div class="form-group">
                 <label>Ullage</label>
                 <input ng-model="ullageQty" type="text" class="form-control" id="ullage-qty"
-                       placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
+                       placeholder="0" custom-validity custom-pattern="time" ng-readonly="readOnly">
               </div>
             </div>
   
+<!-- TODO: ULLAGE REASON WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
-                <label>Ullage Reason</label>
+                <label>Ullage Reason *</label>
                 <select class="form-control" id="ullage-reason" ng-model="ullageReason" ng-change="updateUllageReasonsInfo()" ng-disabled="readOnly">
                   <option ng-repeat="station in stationList" value="{{ $index }}">
                     {{ item.ullageReasonCode }} ({{ item.ullageReasonName}})
@@ -146,42 +177,6 @@
               </div>
             </div>
             
-          </div>
-          
-          <div class="row">
-            <div class="col-xs-12 col-sm-3">
-              <label>Input Location</label>
-              <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="inputLocationInfo()" ng-disabled="readOnly">
-                <option ng-repeat="item in inputLocationList" value="{{ $index }}">
-                  {{ item.inputLocationCode }} ({{ item.inputLocationName}})
-                </option>
-              </select>
-            </div>
-                          
-            <div class="col-xs-12 col-sm-3">
-              <label></label>          
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="">Apply Input Location to all Items
-                </label>
-              </div>
-            </div>
-                        
-<!-- TODO: REMOVE, UX TEST FOR INPUT LOCATIONS RADIO BUTTONS -->
-<!--           <div class="row"> -->
-<!--             <div class="col-xs-12"> -->
-<!--               <label class="btn btn-default"> -->
-<!--                 <input type="radio" name="inlineRadioOptions" id="radioInputLocation1" value="option1" checked="checked"> Input Location 1 -->
-<!--               </label> -->
-<!--               <label class="btn btn-default"> -->
-<!--                 <input type="radio" name="inlineRadioOptions" id="radioInputLocation2" value="option2">  Input Location 2 -->
-<!--               </label> -->
-<!--               <label class="btn btn-default"> -->
-<!--                 <input type="radio" name="inlineRadioOptions" id="radioInputLocation3" value="option3">  Input Location 3 -->
-<!--               </label> -->
-<!--             </div> -->
-<!--           </div> -->
-
           </div>
                  
         </div>
@@ -202,108 +197,7 @@
   
   <!-- TODO: ITEM CODE (ABOVE) & ITEM NAME (BELOW) WILL AFFECT EACH OTHER AND PULL CORRECT DATA INTO EACH OTHER -->
           
-            <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label>Item Name *</label>
-                <select class="form-control" id="item-code" ng-model="itemCode" ng-change="updateItemCodeInfo()" ng-disabled="readOnly">
-                  <option ng-repeat="station in stationList" value="{{ $index }}">
-                    {{ item.itemNameCode }} ({{ item.itemNameName}})
-                  </option>
-                </select>
-              </div>
-            </div>
-  
-            <div class="col-xs-12 col-sm-1">
-              <div class="form-group">
-                <label>UOM</label>
-                <input ng-model="unitOfMeasurement" type="text" class="form-control" id="unit-of-measurement"
-                       placeholder="10g" custom-validity custom-pattern="time" ng-readonly="readOnly" disabled>
-              </div>
-            </div>
-  
-            <div class="col-xs-12 col-sm-1">
-              <div class="form-group">
-                <label>Expected</label>
-                <input ng-model="expectedQty" type="text" class="form-control" id="expected-qty"
-                       placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
-              </div>
-            </div>
-          
-            <div class="col-xs-12 col-sm-1">
-              <div class="form-group">
-                <label>Delivered</label>
-                <input ng-model="deliveredQty" type="text" class="form-control" id="delivered-qty"
-                       placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
-              </div>
-            </div>
-          
-            <div class="col-xs-12 col-sm-1">
-              <div class="form-group">
-                <label>Ullage</label>
-                <input ng-model="ullageQty" type="text" class="form-control" id="ullage-qty"
-                       placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
-              </div>
-            </div>
-  
-            <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label>Ullage Reason</label>
-                <select class="form-control" id="ullage-reason" ng-model="ullageReason" ng-change="updateUllageReasonsInfo()" ng-disabled="readOnly">
-                  <option ng-repeat="station in stationList" value="{{ $index }}">
-                    {{ item.ullageReasonCode }} ({{ item.ullageReasonName}})
-                  </option>
-                </select>
-              </div>
-            </div>
-  
-            <div class="col-xs-12 col-sm-1">
-              <div class="form-group">
-                <label>Booked</label>
-                <input ng-model="bookedQty" type="text" class="form-control" id="booked-qty"
-                       placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly" disabled>
-              </div>
-            </div>
-            
-            <div class="col-xs-12 col-sm-1 text-right">
-              <button type="button" class="btn btn-sm btn-danger">
-                <i class="fa fa-close"></i>
-              </button>
-            </div>
- 
-          </div>         
-          
-          <div class="row">
-          
             <div class="col-xs-12 col-sm-3">
-              <label>Input Location</label>
-              <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="inputLocationInfo()" ng-disabled="readOnly">
-                <option ng-repeat="item in inputLocationList" value="{{ $index }}">
-                  {{ item.inputLocationCode }} ({{ item.inputLocationName}})
-                </option>
-              </select>
-            </div>
-            
-          </div>
-
-        </div>
-        
-        <div class="well">
-          <div class="row">
-          
-            <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label for="itemCode">Item Code *</label>
-                <select class="form-control" id="item-code" ng-model="itemCode" ng-change="updateItemCodeInfo()" ng-disabled="readOnly">
-                  <option ng-repeat="station in stationList" value="{{ $index }}">
-                    {{ item.itemCodeCode }} ({{ item.itemCodeName}})
-                  </option>
-                </select>
-              </div>
-            </div>
-  
-  <!-- TODO: ITEM CODE (ABOVE) & ITEM NAME (BELOW) WILL AFFECT EACH OTHER AND PULL CORRECT DATA INTO EACH OTHER -->
-          
-            <div class="col-xs-12 col-sm-2">
               <div class="form-group">
                 <label>Item Name *</label>
                 <select class="form-control" id="item-code" ng-model="itemCode" ng-change="updateItemCodeInfo()" ng-disabled="readOnly">
@@ -311,14 +205,6 @@
                     {{ item.itemNameCode }} ({{ item.itemNameName}})
                   </option>
                 </select>
-              </div>
-            </div>
-  
-            <div class="col-xs-12 col-sm-1">
-              <div class="form-group">
-                <label>UOM</label>
-                <input ng-model="unitOfMeasurement" type="text" class="form-control" id="unit-of-measurement"
-                       placeholder="10g" custom-validity custom-pattern="time" ng-readonly="readOnly" disabled>
               </div>
             </div>
   
@@ -332,7 +218,7 @@
           
             <div class="col-xs-12 col-sm-1">
               <div class="form-group">
-                <label>Delivered</label>
+                <label>Delivered *</label>
                 <input ng-model="deliveredQty" type="text" class="form-control" id="delivered-qty"
                        placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
               </div>
@@ -342,14 +228,15 @@
               <div class="form-group">
                 <label>Ullage</label>
                 <input ng-model="ullageQty" type="text" class="form-control" id="ullage-qty"
-                       placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
+                       placeholder="0" custom-validity custom-pattern="time" ng-readonly="readOnly">
               </div>
             </div>
   
+<!-- TODO: ULLAGE REASON WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
-                <label>Ullage Reason</label>
-                <select class="form-control" id="ullage-reason" ng-model="ullageReason" ng-change="updateUllageReasonsInfo()" ng-disabled="readOnly">
+                <label>Ullage Reason *</label>
+                <select class="form-control" id="ullage-reason" ng-model="ullageReason" ng-change="updateUllageReasonsInfo()" ng-disabled="readOnly" disabled>
                   <option ng-repeat="station in stationList" value="{{ $index }}">
                     {{ item.ullageReasonCode }} ({{ item.ullageReasonName}})
                   </option>
@@ -372,29 +259,39 @@
             </div>
  
           </div>
-          
-          <div class="row">
-            <div class="col-xs-12 col-sm-3">
-              <label>Input Location</label>
-              <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="inputLocationInfo()" ng-disabled="readOnly">
-                <option ng-repeat="item in inputLocationList" value="{{ $index }}">
-                  {{ item.inputLocationCode }} ({{ item.inputLocationName}})
-                </option>
-              </select>
-            </div>
-          </div>
 
         </div>
-        
+      
       </div>
       
-      <div class="panel-footer text-right">
-        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
-          <span class="fa fa-check-square-o" aria-hidden="true"></span>
-          <span class="hidden-xs">Save</span>
-        </button>
-        <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
-
+      <div class="panel-footer">
+        <div class="row">
+        
+          <div class="col-xs-12 col-sm-6">
+            <button type="button" class="btn btn-info">
+              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+              <span>Export (Excel)</span>
+            </button>
+            <button type="button" class="btn btn-info">
+              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+              <span>Export (PDF)</span>
+            </button>
+          </div>
+          
+          <div class="col-xs-12 col-sm-6 text-right">
+            <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+              <span>Save</span>
+            </button>
+            
+            <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
+            
+            <button class="btn btn-primary" ng-click="submitForm(formData)">
+              <span class="fa fa-check-square-o" aria-hidden="true"></span>
+              <span>Submit</span>
+            </button>
+          </div>
+          
+        </div>
       </div>
     </div>
   </ng-form>
