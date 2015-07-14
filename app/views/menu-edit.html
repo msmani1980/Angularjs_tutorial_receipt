@@ -114,14 +114,14 @@
            ng-readonly="isMenuReadOnly()"/>
   </div>
 
-  <h3>Menu Items <a class="pull-right" ng-click="addItem()" ng-show="!isMenuReadOnly()">Add Item</a></h3>
+  <h3>Menu Items <a class="pull-right" ng-click="addItem()" ng-hide="isMenuReadOnly()">Add Item</a></h3>
 
   <table class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
       <th class="col-xs-10">Item Name</th>
       <th class="col-xs-1">Quantity</th>
-      <th ng-show="!isMenuReadOnly()" class="col-xs-1">Actions</th>
+      <th ng-hide="isMenuReadOnly()" class="col-xs-1">Actions</th>
     </tr>
     </thead>
     <tbody>
