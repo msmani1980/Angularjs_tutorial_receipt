@@ -68,8 +68,12 @@ angular.module('ts5App')
       var watchListener = $scope.$watchGroup(['startDateModel', 'endDateModel'], function () {
         if (!$scope.isSearchField && $scope.disablePast && !angular.isUndefined($scope.startDateModel)) {
           // TODO: update to use isBefore and isAfter methods
-          $scope.shouldDisableStartDate = !dateUtility.isAfterToday($scope.startDateModel);
-          $scope.shouldDisableEndDate = !dateUtility.isAfterToday($scope.endDateModel);
+          if ($scope.startDateModel) {
+            $scope.shouldDisableStartDate = !dateUtility.isAfterToday($scope.startDateModel);
+          }
+          if ($scope.endDateModel) {
+            $scope.shouldDisableEndDate = !dateUtility.isAfterToday($scope.endDateModel);
+          }
           watchListener();
           initializeDatePicker($scope, $element);
         }
