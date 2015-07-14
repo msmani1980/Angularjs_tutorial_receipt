@@ -47,7 +47,11 @@ angular.module('ts5App')
     var companyModel = {
       '403': {
         id: 403,
-        name: 'EasyJet'
+        name: 'British Airways'
+      },
+      '438': {
+        id: 438,
+        name: 'easyJet'
       },
       '413': {
         id: 413,
@@ -56,7 +60,7 @@ angular.module('ts5App')
       '407': {
         id: 407,
         name: 'GRO 2'
-      },
+      }
     };
 
     var defaults = {};

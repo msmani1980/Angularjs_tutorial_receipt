@@ -77,4 +77,8 @@ angular.module('ts5App')
       companyStoresService.createStore(payload).then(submitFormSuccess, showApiErrors);
     };
 
+    $scope.formDefault = function(){
+      return angular.equals($scope.formData,_companyDefault);
+    };
+
   });
