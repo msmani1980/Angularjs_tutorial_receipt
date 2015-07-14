@@ -81,4 +81,14 @@ describe('Date Utility service', function () {
 
   });
 
+  describe('date comparison', function(){
+    it('should return true is date is after today', function(){
+      expect(dateUtility.isAfterToday('05/10/2080')).toBe(true);
+    });
+
+    it('should return false is date is not after today', function(){
+      expect(dateUtility.isAfterToday('05/10/2000')).toBe(false);
+    });
+  });
+
 });
