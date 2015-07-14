@@ -44,56 +44,70 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="deliveryNoteNumber">Delivery Note Number</label>
-                <input ng-model="search.deliveryNoteNumber" type="text" class="form-control" id="delivery-note-number" placeholder="1234">
+                <select class="form-control" id="delivery-note-number" ng-model="deliveryNoteNumber" ng-change="deliveryNoteNumberInfo()" ng-disabled="readOnly">
+                  <option ng-repeat="" value="{{ $index }}">
+                    {{ search.deliveryNoteNumberCode }} (){{ search.deliveryNoteNumberName}})
+                  </option>
+                </select>
               </div>
             </div>
             
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="purchaseOrderNumber">Purchase Order Number</label>
-                <input ng-model="search.purchaseOrderNumber" type="text" class="form-control" id="purchase-order-number" placeholder="1234">
+                <select class="form-control" id="purchase-order-number" ng-model="purchaseOrderNumber" ng-change="purchaseOrderNumberInfo()" ng-disabled="readOnly">
+                  <option ng-repeat="" value="{{ $index }}">
+                    {{ search.purchaseOrderNumberCode }} ({{ search.purchaseOrderNumberName}})
+                  </option>
+                </select>
               </div>
             </div>
             
-            <date-picker class="form-group"
-              element-class="col-xs-12 col-sm-3"
-              start-date-model="search.startDate"
-              end-date-model="search.endDate"
-              disable-past="true"
-              label-from="Effective From"
-              label-to="Effective To"
-              disable-start-date="viewOnly"
-              disable-end-date="viewOnly">
+            <date-picker
+              class="col-xs-12 col-sm-2"
+              disable-date-range="true"
+              start-date-model="deliveryNote.deliveryDate"
+              is-search-field="true"
+              label-from="Received Date">
             </date-picker>
+            
+          <div class="col-xs-12 col-sm-2">
+            <label>Status</label>
+            <select class="form-control" id="delivery-status" ng-model="deliveryStatus" ng-change="deliveryStatusInfo()" ng-disabled="readOnly">
+              <option ng-repeat="" value="{{ $index }}">
+                {{ item.deliveryStatusCode }} ({{ item.deliveryStatusName}})
+              </option>
+            </select>
+          </div>
             
           </div>
           
           <div class="row">
         
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="itemCode">Item Code</label>
-                <input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="1234">
-              </div>
-            </div>
+<!--             <div class="col-xs-12 col-sm-3"> -->
+<!--               <div class="form-group"> -->
+<!--                 <label for="itemCode">Item Code</label> -->
+<!--                 <input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="1234"> -->
+<!--               </div> -->
+<!--             </div> -->
 
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="itemName">Item Name</label>
-                <input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="1234">
-              </div>
-            </div>
+<!--             <div class="col-xs-12 col-sm-3"> -->
+<!--               <div class="form-group"> -->
+<!--                 <label for="itemName">Item Name</label> -->
+<!--                 <input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="1234"> -->
+<!--               </div> -->
+<!--             </div> -->
 
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="inputLocation">Input Location</label>
-                <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="updateinputLocation()" ng-disabled="readOnly">
-                  <option ng-repeat="inputLocation in inputLocationList" value="{{ $index }}">
-                    {{ item.inputLocationCode }} ({{ item.inputLocationName}})
-                  </option>
-                </select>
-              </div>
-            </div>
+<!--             <div class="col-xs-12 col-sm-3"> -->
+<!--               <div class="form-group"> -->
+<!--                 <label for="inputLocation">Input Location</label> -->
+<!--                 <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="updateinputLocation()" ng-disabled="readOnly"> -->
+<!--                   <option ng-repeat="inputLocation in inputLocationList" value="{{ $index }}"> -->
+<!--                     {{ item.inputLocationCode }} ({{ item.inputLocationName}}) -->
+<!--                   </option> -->
+<!--                 </select> -->
+<!--               </div> -->
+<!--             </div> -->
 
           </div>
         </div>
@@ -110,7 +124,6 @@
           <th>Purchase Order Number</th>
           <th>Delivery Date</th>
           <th>Status</th>
-          <th>Input Location</th>
           <th>Created By</th>
           <th>Updated By</th>
           <th>Actions</th>
@@ -122,18 +135,19 @@
           <td class="ng-binding">1234</td>
           <td class="ng-binding">1234</td>
           <td class="ng-binding">2/03</td>
-          <td class="ng-binding">Delivered</td>
-          <td class="ng-binding">Dock 1</td>
+          <td class="ng-binding">Saved</td>
           <td class="ng-binding">2/03 - 12:34pm</td>
           <td class="ng-binding">2/05 - 12:34pm</td>
           <td>
+          
+          <!-- TODO: WHEN STATUS=SUBMITTED (ABOVE) EDIT & DELETE (BELOW) ARE REMOVED -->
             <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true">
               <i class="fa fa-pencil"></i>
             </button>
-            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true">
               <i class="fa fa-trash"></i>
             </button>
           </td>
@@ -142,18 +156,19 @@
           <td class="ng-binding">1235</td>
           <td class="ng-binding">1235</td>
           <td class="ng-binding">2/03</td>
-          <td class="ng-binding">Delivered</td>
-          <td class="ng-binding">Dock 2</td>
+          <td class="ng-binding">Submitted</td>
           <td class="ng-binding">2/03 - 12:34pm</td>
           <td class="ng-binding">2/05 - 12:34pm</td>
           <td>
+          
+          <!-- TODO: WHEN STATUS=SUBMITTED (ABOVE) EDIT & DELETE (BELOW) ARE REMOVED -->
             <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>
             </button>
-            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" ng-show="false">
               <i class="fa fa-pencil"></i>
             </button>
-            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
+            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" ng-show="false">
               <i class="fa fa-trash"></i>
             </button>
           </td>

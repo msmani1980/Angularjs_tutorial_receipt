@@ -310,6 +310,20 @@
   }
 }
 
+@media(min-width:$screen-sm-min){
+
+  .delivery-note-form {
+
+    .well {
+      padding: 10px 19px;
+      
+      .form-group {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
 .create-form-container {
 	margin-top:18rem;
 }
@@ -323,7 +337,7 @@
     }
 
   }
-
+  
 }
 
 @media(max-width:$screen-sm-min){
