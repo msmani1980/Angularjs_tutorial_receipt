@@ -250,11 +250,19 @@ angular.module('ts5App')
     };
 
     $scope.isRelationshipActive = function () {
-      return Date.parse($scope.formData.startDate) <= dateUtility.now();
+      if ($scope.editingRelationship) {
+        return dateUtility.isDateTodayOrEarlier($scope.formData.startDate);
+      } else {
+        return false;
+      }
     };
 
     $scope.isRelationshipInactive = function () {
-      return Date.parse($scope.formData.endDate) <= dateUtility.tomorrow();
+      if ($scope.editingRelationship) {
+        return dateUtility.isDateTodayOrEarlier($scope.formData.endDate);
+      } else {
+        return false;
+      }
     };
 
     this.init();
