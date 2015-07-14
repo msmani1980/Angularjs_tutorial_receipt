@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "count": 3,
+    "limit": 3,
+    "start": 0
+  },
+  "postTrips": [
+    {
+      "id": 18,
+      "number": null,
+      "scheduleDate": "2015-07-05",
+      "carrierTypeId": null,
+      "carrierId": null,
+      "carrierNumber": null,
+      "passengerCount": 123,
+      "tailNumber": "G-EZTB",
+      "postTripEmployeeIdentifiers": [
+        {
+          "id": 23,
+          "employeeIdentifier": "1",
+          "postTripId": 18
+        }
+      ],
+      "departure": null,
+      "depStationId": "10",
+      "arrival": null,
+      "arrivalStationId": null,
+      "depTime": "12:34:00",
+      "arrivalTime": null,
+      "depTimeZone": null,
+      "arrTimeZone": null,
+      "createdBy": 1,
+      "createdOn": "2015-07-01 16:56:16.061989",
+      "updatedBy": null,
+      "updatedOn": null,
+      "companyId": 403,
+      "startDate": "2015-07-03",
+      "endDate": "2015-07-04"
+    },
+    {
+      "id": 20,
+      "number": null,
+      "scheduleDate": "2015-07-05",
+      "carrierTypeId": null,
+      "carrierId": null,
+      "carrierNumber": null,
+      "passengerCount": 123,
+      "tailNumber": "G-EZTB",
+      "postTripEmployeeIdentifiers": [
+        {
+          "id": 24,
+          "employeeIdentifier": "1",
+          "postTripId": 20
+        }
+      ],
+      "departure": null,
+      "depStationId": "10",
+      "arrival": null,
+      "arrivalStationId": null,
+      "depTime": "12:34:00",
+      "arrivalTime": null,
+      "depTimeZone": null,
+      "arrTimeZone": null,
+      "createdBy": 1,
+      "createdOn": "2015-07-01 16:56:40.271834",
+      "updatedBy": null,
+      "updatedOn": null,
+      "companyId": 403,
+      "startDate": "2015-07-03",
+      "endDate": "2015-07-04"
+    },
+    {
+      "id": 403,
+      "number": null,
+      "scheduleDate": "2015-07-13",
+      "carrierTypeId": null,
+      "carrierId": null,
+      "carrierNumber": null,
+      "passengerCount": 12,
+      "tailNumber": "G-EZAB",
+      "postTripEmployeeIdentifiers": [
+        {
+          "id": 22,
+          "employeeIdentifier": "1",
+          "postTripId": 403
+        }
+      ],
+      "departure": null,
+      "depStationId": "24",
+      "arrival": null,
+      "arrivalStationId": null,
+      "depTime": "12:23:00",
+      "arrivalTime": null,
+      "depTimeZone": null,
+      "arrTimeZone": null,
+      "createdBy": 2,
+      "createdOn": "2015-07-01 16:08:44.298175",
+      "updatedBy": null,
+      "updatedOn": null,
+      "companyId": 403,
+      "startDate": "2015-07-02",
+      "endDate": "2015-07-03"
+    }
+  ]
+}
