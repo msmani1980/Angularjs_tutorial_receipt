@@ -58,14 +58,14 @@ angular.module('ts5App')
     };
 
     this.saveFormSuccess = function (response) {
-      if($routeParams.state == 'create') {
+      if($routeParams.state === 'create') {
         $location.path('post-trip-data-list').search({updateType: 'create', id: response.id});
       } else {
         $location.path('post-trip-data-list').search({updateType: 'edit', id: $scope.postTrip.id});
       }
     };
 
-    this.saveFormFailure = function (error) {
+    this.saveFormFailure = function () {
       // TODO: add displayError dialog once API is fixed and returns error codes
       $this.showToastMessage('danger', 'Post Trips', 'error');
     };
