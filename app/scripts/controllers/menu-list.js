@@ -15,7 +15,6 @@ angular.module('ts5App')
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
       angular.forEach(formattedMenuArray, function (menu) {
-        var formatFromAPI = 'YYYY-MM-DD';
         menu.startDate = dateUtility.formatDateForApp(menu.startDate);
         menu.endDate = dateUtility.formatDateForApp(menu.endDate);
       });
