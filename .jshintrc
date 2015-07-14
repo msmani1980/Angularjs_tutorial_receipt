@@ -12,6 +12,8 @@
   "newcap": true,
   "noarg": true,
   "quotmark": "single",
+  "maxcomplexity": 5,
+  "maxdepth": 4,
   "undef": true,
   "unused": true,
   "strict": true,

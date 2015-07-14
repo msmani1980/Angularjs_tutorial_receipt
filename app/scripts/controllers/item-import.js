@@ -24,7 +24,7 @@ angular.module('ts5App')
       if($filter('filter')(_companyRetailItems, {itemName: retailItem.itemName}).length){
         return false;
       }
-      if($filter('filter')(_companyRetailItems, {onBoardName: retailItem.onBoardName}).length){
+      if(retailItem.onBoardName !== null && $filter('filter')(_companyRetailItems, {onBoardName: retailItem.onBoardName}).length){
         return false;
       }
       return true;
@@ -185,6 +185,8 @@ angular.module('ts5App')
       $scope.companiesLoaded = false;
       $scope.selectedImportCompany = null;
       $scope.importedRetailItemList = [];
+      $scope.retailItemsSortOrder = null;
+      $scope.importItemsSortOrder = null;
 
       displayLoadingModal('Loading');
       setGetCompaniesListPromise();
@@ -260,12 +262,14 @@ angular.module('ts5App')
       array.splice(index, 1);
     };
 
-    $scope.onDrop = function ($event, $data, array) {
-      var index = false;
+    $scope.onDrop = function ($event, $data) {
+      var index = $scope.companyRetailItemList.length;
+      $scope.companyRetailItemList = $filter('orderBy')($scope.companyRetailItemList, $scope.retailItemsSortOrder);
+      $scope.retailItemsSortOrder = null;
       $scope.searchCompanyRetailItemList = null;
       if($event.currentTarget.id !== 'item-drop-init'){
         var targetRetailItem = angular.element($event.currentTarget).scope().retailItem;
-        index = array.indexOf(targetRetailItem);
+        index = $scope.companyRetailItemList.indexOf(targetRetailItem);
       }
       addRetailItemToCompanyRetailItems($data, false, index);
     };
