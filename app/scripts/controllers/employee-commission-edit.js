@@ -56,23 +56,27 @@ angular.module('ts5App')
       });
     }
 
-    var getValuesFor = {
-      'Percentage': function () {
-        return {
-          percentage: $scope.commission.percentage
-        };
-      },
-      'Amount': function () {
-        var currencies = [];
-        angular.forEach($scope.companyCurrencies, function (currency) {
-          var currencyValue = $scope.commission.currenciesFields[currency.code];
-          currencies.push({
-            fixedValue: currencyValue,
-            currencyId: currency.id
-          });
+    function getRatePercentage() {
+      return {
+        percentage: $scope.commission.percentage
+      };
+    }
+
+    function getRateAmount() {
+      var currencies = [];
+      angular.forEach($scope.companyCurrencies, function (currency) {
+        var currencyValue = $scope.commission.currenciesFields[currency.code];
+        currencies.push({
+          fixedValue: currencyValue,
+          currencyId: currency.id
         });
-        return {fixeds: currencies};
-      }
+      });
+      return {fixeds: currencies};
+    }
+
+    var getValuesFor = {
+      'Percentage': getRatePercentage,
+      'Amount': getRateAmount
     };
 
     function createPayload() {
