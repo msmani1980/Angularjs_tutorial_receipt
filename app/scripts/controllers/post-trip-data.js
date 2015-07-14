@@ -34,13 +34,44 @@ angular.module('ts5App')
       $this.getPostTrip();
     };
 
-    this.getPostTrip = function () {
-      return postTripFactory.getPostTrip(_companyId, $routeParams.id).then(function (response) {
-        $scope.postTrip = response;
-        $scope.updateArrivalTimeZone();
-        $scope.updateDepartureTimeZone();
-        $this.populateEmployees();
+    this.getPostTripSuccess = function (response) {
+      $scope.postTrip = response;
+      $scope.updateArrivalTimeZone();
+      $scope.updateDepartureTimeZone();
+      $this.populateEmployees();
+    };
+
+    this.getStationsSuccess = function (response) {
+      $scope.stationList = response.response;
+    };
+
+    this.getEmployeesSuccess = function (response) {
+      $scope.employees = response.companyEmployees;
+    };
+
+    this.getCarrierSuccess = function (response) {
+      angular.forEach(response.response, function (item) {
+        postTripFactory.getCarrierNumbers(_companyId, item.id).then(function (response) {
+          $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
+        });
       });
+    };
+
+    this.saveFormSuccess = function (response) {
+      if($routeParams.state == 'create') {
+        $location.path('post-trip-data-list').search({updateType: 'create', id: response.id});
+      } else {
+        $location.path('post-trip-data-list').search({updateType: 'edit', id: $scope.postTrip.id});
+      }
+    };
+
+    this.saveFormFailure = function (error) {
+      // TODO: add displayError dialog once API is fixed and returns error codes
+      $this.showToastMessage('danger', 'Post Trips', 'error');
+    };
+
+    this.getPostTrip = function () {
+      return postTripFactory.getPostTrip(_companyId, $routeParams.id).then($this.getPostTripSuccess);
     };
 
     this.populateEmployees = function () {
@@ -50,26 +81,19 @@ angular.module('ts5App')
       //});
     };
 
-    this.showMessage = function (error, isError, message) {
-      // TODO: add displayError dialog once API is fixed and returns error codes
-      if (arguments.length < 2) {
-        isError = true;
-        message = 'error';
-      }
-      var messageType = isError ? 'danger' : 'success';
+    this.showToastMessage = function (className, type, message) {
       ngToast.create({
-        className: messageType,
+        className: className,
         dismissButton: true,
-        content: '<strong>Post Trip</strong>:' + message
+        content: '<strong>' + type + '</strong>: ' + message
       });
     };
 
     this.saveNewTrip = function () {
-      postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(function () {
-        $location.path('post-trip-data-list');
-      }, function (error) {
-        $this.showMessage(error);
-      });
+      postTripFactory.createPostTrip(_companyId, $scope.postTrip).then(
+        $this.saveFormSuccess,
+        $this.saveFormFailure
+      );
     };
 
     this.saveUpdatedTrip = function () {
@@ -77,11 +101,10 @@ angular.module('ts5App')
       delete $scope.postTrip.depTimeZone;
       delete $scope.postTrip.arrTimeZone;
       var payload = angular.copy($scope.postTrip);
-      postTripFactory.updatePostTrip(_companyId, payload).then(function () {
-        $this.showMessage(null, false, 'PostTrip successfully updated');
-      }, function (error) {
-        $this.showMessage(error);
-      });
+      postTripFactory.updatePostTrip(_companyId, payload).then(
+        $this.saveFormSuccess,
+        $this.saveFormFailure
+      );
     };
 
     (function initController() {
@@ -95,29 +118,15 @@ angular.module('ts5App')
           });
         },
         getStationList: function () {
-          return postTripFactory.getStationList(_companyId).then(
-            function (response) {
-              $scope.stationList = response.response;
-            }
-          );
+          return postTripFactory.getStationList(_companyId).then($this.getStationsSuccess);
         },
         getCarrierNumbers: function () {
           $scope.carrierNumbers = [];
-          return postTripFactory.getCarrierTypes(_companyId).then(function (response) {
-            angular.forEach(response.response, function (item) {
-              postTripFactory.getCarrierNumbers(_companyId, item.id).then(function (response) {
-                $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
-              });
-            });
-          });
+          return postTripFactory.getCarrierTypes(_companyId).then($this.getCarrierSuccess);
         },
         getEmployees: function() {
           $scope.employees = [];
-          return postTripFactory.getEmployees(_companyId).then(
-            function (response) {
-              $scope.employees = response.companyEmployees;
-            }
-          );
+          return postTripFactory.getEmployees(_companyId).then($this.getEmployeesSuccess);
         }
       };
       _services.call(['getStationList', 'getCarrierNumbers', 'getEmployees']);
@@ -166,7 +175,7 @@ angular.module('ts5App')
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
       if (!$scope.postTripDataForm.$valid || (shouldValidateEmployeeIds && isSelectedEmployeesInvalid)) {
-        $this.showMessage(null, true, 'Please complete all fields');
+        $this.showToastMessage('success', 'Post Trips', 'Please complete all fields');
         return;
       }
       $scope.postTrip.postTripEmployeeIdentifiers = [];

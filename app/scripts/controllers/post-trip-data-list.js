@@ -15,6 +15,8 @@ angular.module('ts5App')
 
     $scope.viewName = 'Post Trip Data Management';
     $scope.search = {};
+    $scope.selectedStations = {};
+    $scope.stationList= [];
 
     this.getPostTripSuccess = function(response) {
       $scope.postTrips = response.postTrips;
@@ -22,8 +24,7 @@ angular.module('ts5App')
 
     this.getStationsSuccess = function(response) {
       $scope.stationList = response.response;
-      // TODO: change to ui-select
-      angular.element('.stations-multi-select').select2({width: '100%'});
+      // TODO: reload/refresh ui-select
     };
 
     this.getCarrierSuccess = function(response) {
@@ -34,6 +35,14 @@ angular.module('ts5App')
       });
     };
 
+    this.showToastMessage = function (className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    };
+
     this.deletePostTripSuccess = function() {
       $this.showToastMessage('success', 'Post Trip', 'Post Trip successfully deleted');
       postTripFactory.getPostTripDataList(_companyId, {}).then($this.getPostTripSuccess);
@@ -41,6 +50,14 @@ angular.module('ts5App')
 
     this.deletePostTripFailure = function() {
       $this.showToastMessage('danger', 'Post Trip', 'Post Trip could not be deleted');
+    };
+
+    this.showNewPostTripSuccess = function() {
+      if($location.search().updateType === 'create') {
+        $this.showToastMessage('success', 'Create Post Trip', 'successfully added post trip id:' + $location.search().id);
+      } else {
+        $this.showToastMessage('success', 'Edit Post Trip', 'successfully updated post trip id:' + $location.search().id);
+      }
     };
 
     (function constructor() {
@@ -65,25 +82,28 @@ angular.module('ts5App')
         }
       };
       _services.call(['getPostTripDataList', 'getStationList', 'getCarrierNumbers']);
+      $this.showNewPostTripSuccess();
     })();
 
-
-    this.showToastMessage = function (className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
+    this.formatStationsForSearch = function() {
+      $scope.search.depStationId = [];
+      $scope.search.arrStationId = [];
+      angular.forEach($scope.selectedStations.depStations, function(station) {
+        $scope.search.depStationId.push(station.stationId);
+      });
+      angular.forEach($scope.selectedStations.arrStations, function(station) {
+        $scope.search.arrStationId.push(station.stationId);
       });
     };
 
     $scope.searchPostTripData = function () {
+      $this.formatStationsForSearch();
       var payload = angular.copy($scope.search);
       postTripFactory.getPostTripDataList(_companyId, payload).then($this.getPostTripSuccess);
     };
 
     $scope.clearSearchForm = function () {
-      // TODO: switch to ui-select
-      angular.element('.stations-multi-select').select2('data', null);
+      $scope.selectedStations = {};
       $scope.search = {};
       postTripFactory.getPostTripDataList(_companyId, $scope.search).then($this.getPostTripSuccess);
     };
