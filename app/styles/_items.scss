@@ -337,3 +337,7 @@
 .drop-table tr.on-drag-enter{
   background-color: #77c797;
 }
+
+table.drop-table.sortable tbody tr{
+  cursor: default;
+}
