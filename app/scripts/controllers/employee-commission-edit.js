@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionEditCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast) {
+  .controller('EmployeeCommissionEditCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location) {
 
     $scope.viewName = 'Employee Commission';
     $scope.commission = {
@@ -93,12 +93,13 @@ angular.module('ts5App')
 
     }
 
-    function createRequestSuccessHandler(dataFromAPI) {
-      showToastMessage('success', 'Employee Commission', dataFromAPI);
+    function requestSuccessHandler() {
+      showToastMessage('success', 'Employee Commission', 'successfully created!');
+      $location.path('/employee-commission-list');
     }
 
-    function createRequestErrorHandler(dataFromAPI) {
-      showToastMessage('warning', 'Employee Commission', dataFromAPI);
+    function requestErrorHandler() {
+      showToastMessage('warning', 'Employee Commission', 'Error on API call');
     }
 
     $scope.submitForm = function () {
@@ -107,7 +108,7 @@ angular.module('ts5App')
       }
 
       var payload = createPayload();
-      employeeCommissionFactory.createCommission(payload).then(createRequestSuccessHandler, createRequestErrorHandler);
+      employeeCommissionFactory.createCommission(payload).then(requestSuccessHandler, requestErrorHandler);
     };
 
   })
