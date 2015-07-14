@@ -13,7 +13,7 @@ angular.module('ts5App')
       _services = null;
     var $this = this;
 
-    $scope.viewName = 'Post Trip Data Management';
+    $scope.viewName = 'Post Trip Data';
     $scope.search = {};
     $scope.selectedStations = {};
     $scope.stationList = [];
