@@ -33,7 +33,11 @@ angular.module('ts5App')
     }
 
     $scope.showMenu = function (menu) {
-      $location.path('menu-edit/' + menu.id);
+      $location.path('menu/view/' + menu.id);
+    };
+
+    $scope.editMenu = function (menu) {
+      $location.path('menu/edit/' + menu.id);
     };
 
     $scope.searchMenus = function () {
