@@ -17,6 +17,14 @@ angular.module('ts5App')
       currenciesFields: {}
     };
 
+    function showLoadingModal(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
     $scope.$watchGroup(['commission.startDate', 'commission.endDate'], function () {
       var payload = {};
 
@@ -49,6 +57,7 @@ angular.module('ts5App')
     });
 
     function showToastMessage(className, type, message) {
+      hideLoadingModal();
       ngToast.create({
         className: className,
         dismissButton: true,
@@ -107,6 +116,7 @@ angular.module('ts5App')
         return false;
       }
 
+      showLoadingModal('Saving');
       var payload = createPayload();
       employeeCommissionFactory.createCommission(payload).then(requestSuccessHandler, requestErrorHandler);
     };
