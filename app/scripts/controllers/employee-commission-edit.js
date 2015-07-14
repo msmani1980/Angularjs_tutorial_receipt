@@ -121,5 +121,4 @@ angular.module('ts5App')
       employeeCommissionFactory.createCommission(payload).then(requestSuccessHandler, requestErrorHandler);
     };
 
-  })
-;
+  });
