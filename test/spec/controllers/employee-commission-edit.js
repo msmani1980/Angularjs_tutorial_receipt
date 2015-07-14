@@ -110,10 +110,29 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
       expect(employeeCommissionFactory.createCommission).not.toHaveBeenCalled();
     });
 
-    it('should add percentage to payload if proper rate type', function () {
+    it('should add percentage to payload if percentage selected', function () {
       scope.commission.selectedRateType = {taxRateType: 'Percentage'};
       scope.commission.percentage = 1.66;
       expectedPayload.employeeCommission.percentage = scope.commission.percentage;
+
+      scope.submitForm();
+      scope.$digest();
+
+      expect(employeeCommissionFactory.createCommission).toHaveBeenCalledWith(expectedPayload);
+    });
+
+    it('should add currencies to payload if Amount selected', function () {
+      scope.commission.selectedRateType = {taxRateType: 'Amount'};
+      expectedPayload.employeeCommission.fixeds = [];
+
+      angular.forEach(scope.companyCurrencies, function (currency) {
+        var currencyValue = 10.05;
+        expectedPayload.employeeCommission.fixeds.push({
+          fixedValue: currencyValue,
+          currencyId: currency.id
+        });
+        scope.commission.currenciesFields[currency.code] = currencyValue;
+      });
 
       scope.submitForm();
       scope.$digest();

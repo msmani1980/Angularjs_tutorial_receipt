@@ -61,6 +61,18 @@ angular.module('ts5App')
         return {
           percentage: $scope.commission.percentage
         };
+      },
+      'Amount' : function() {
+        var fixeds = [];
+
+        angular.forEach(scope.companyCurrencies, function (currency) {
+          var currencyValue = 10.05;
+          expectedPayload.employeeCommission.fixeds.push({
+            fixedValue: currencyValue,
+            currencyId: currency.id
+          });
+          scope.commission.currenciesFields[currency.code] = currencyValue;
+        });
       }
     };
 

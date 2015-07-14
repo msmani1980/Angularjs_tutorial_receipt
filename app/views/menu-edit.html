@@ -121,12 +121,11 @@
     <tr>
       <th class="col-xs-10">Item Name</th>
       <th class="col-xs-1">Quantity</th>
-      <th ng-show="shouldShowActions()" class="col-xs-1">Actions</th>
+      <th ng-show="!isMenuReadOnly()" class="col-xs-1">Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="blankItem in newItemList track by $index"
-        ng-show="shouldShowActions()">
+    <tr ng-repeat="blankItem in newItemList track by $index">
       <td>
         <ui-select
           required="true"
@@ -161,8 +160,11 @@
     <tr ng-repeat="menuItem in menu.menuItems">
       <td>{{menuItem.itemName}}</td>
       <td>{{menuItem.itemQty}}</td>
-      <td ng-show="shouldShowActions()">
-        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menuItem)">
+      <td>
+        <button
+          class="btn btn-danger btn-xs"
+          ng-click="showDeleteConfirmation(menuItem)"
+          ng-show="shouldShowActions()">
           <i class="fa fa-trash"></i>
         </button>
       </td>
