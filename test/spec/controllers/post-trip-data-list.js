@@ -131,13 +131,13 @@ describe('Controller: PostFlightDataListCtrl', function () {
   describe('action buttons', function(){
     it('should allow view button to redirect to a new page', function(){
       var tripId = 1;
-      scope.viewPostTrip(tripId);
+      scope.redirectToPostTrip(tripId, 'view');
       expect(location.path()).toBe('/post-trip-data/view/' + tripId);
     });
 
     it('should allow edit button to redirect to a new page', function(){
       var tripId = 1;
-      scope.editPostTrip(tripId);
+      scope.redirectToPostTrip(tripId, 'edit');
       expect(location.path()).toBe('/post-trip-data/edit/' + tripId);
     });
 

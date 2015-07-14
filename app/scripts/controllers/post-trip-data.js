@@ -16,7 +16,7 @@ angular.module('ts5App')
     $scope.viewName = 'Post Trip Data';
     $scope.readOnly = false;
     $scope.postTrip = {};
-    $scope.employees = {};
+    $scope.selectedEmployees = {};
 
     this.initCreateView = function () {
       $scope.readOnly = false;
@@ -116,8 +116,6 @@ angular.module('ts5App')
           return postTripFactory.getEmployees(_companyId).then(
             function (response) {
               $scope.employees = response.companyEmployees;
-              $scope.employees = [{id: 63, name: 'ted'}, {id: 66, name:'lily'}];
-              //angular.element('.employeeID-multiple-select').select2({width:'100%'});
             }
           );
         }
@@ -165,9 +163,9 @@ angular.module('ts5App')
 
     $scope.formSave = function () {
       // TODO: move employeeId data validation to HTML (currently open bug https://github.com/angular-ui/ui-select/issues/258)
-      // TODO: do employeeId data validation when employeeId API is fixed on BE
-      //if (!$scope.postTripDataForm.$valid || $scope.employees.employeeIds === undefined || $scope.employees.employeeIds.length <= 0) {
-      if (!$scope.postTripDataForm.$valid) {
+      var shouldValidateEmployeeIds = ($scope.employees.length > 0);
+      var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
+      if (!$scope.postTripDataForm.$valid || (shouldValidateEmployeeIds && isSelectedEmployeesInvalid)) {
         $this.showMessage(null, true, 'Please complete all fields');
         return;
       }

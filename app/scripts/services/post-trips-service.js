@@ -66,6 +66,7 @@ angular.module('ts5App')
     var requestResource = $resource(requestURL, requestParameters, actions);
 
     function getPostTrips(companyId, optionalPayload) {
+      requestParameters.tripid = '';
       var payload = {};
       if (arguments.length === 2) {
         payload = optionalPayload;

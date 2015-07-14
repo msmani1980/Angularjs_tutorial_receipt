@@ -183,6 +183,7 @@ describe('Controller: PostTripDataCtrl', function () {
         scope.postTripDataForm = {
           $valid: true
         };
+        scope.employees = [];
         scope.formSave();
         expect(postTripFactory.updatePostTrip).toHaveBeenCalled();
       });
@@ -214,6 +215,7 @@ describe('Controller: PostTripDataCtrl', function () {
         scope.postTripDataForm = {
           $valid: true
         };
+        scope.employees = [];
         scope.formSave();
         expect(postTripFactory.createPostTrip).toHaveBeenCalled();
       });
