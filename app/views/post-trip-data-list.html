@@ -1,5 +1,5 @@
 <div class="module-container">
-  <div class="edit-controls">
+  <div>
     <div class="row">
       <div class="col-xs-4">
         <h2 class="view-name">{{ viewName }}</h2>
@@ -8,10 +8,19 @@
       <div class="col-xs-8 text-right">
         <a href="#/post-trip-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Post Trip</span></a>
 
-        <a href="#/item-import" class="btn btn-default">
-          <span class="fa fa-copy" aria-hidden="true"></span>
-          <span class="hidden-sm hidden-xs">Import PostTrip From File</span>
-        </a>
+        <div class="btn-group" dropdown>
+          <button type="button" class="btn btn-info">
+            <span class="fa fa-copy" aria-hidden="true"></span>
+            Import PostTrip From File
+          </button>
+          <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Import Post Trip From File</a></li>
+            <li><a href="#">Download Excel Template</a></li>
+          </ul>
+        </div>
 
         <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
@@ -65,7 +74,7 @@
             <div class="form-group">
               <label for="tail-number">Tail Number</label>
               <select class="form-control" id="tail-number" ng-model="search.tailNumber">
-                <option value=""></option>
+                <option value="" disabled selected>placeholder</option>
                 <option ng-repeat="number in carrierNumbers" value="{{ number.carrierNumber }}">
                   {{ number.carrierNumber }}
                 </option>
