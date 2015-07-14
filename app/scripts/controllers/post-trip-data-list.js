@@ -16,18 +16,20 @@ angular.module('ts5App')
     $scope.viewName = 'Post Trip Data Management';
     $scope.search = {};
     $scope.selectedStations = {};
-    $scope.stationList= [];
+    $scope.stationList = [];
 
-    this.getPostTripSuccess = function(response) {
+    this.getPostTripSuccess = function (response) {
       $scope.postTrips = response.postTrips;
     };
 
-    this.getStationsSuccess = function(response) {
+    this.getStationsSuccess = function (response) {
+      console.log('getStationsSuccess');
       $scope.stationList = response.response;
-      // TODO: reload/refresh ui-select
+      // TODO: fix this hack! currently ui-select doesn't populate correctly when collapsed or when multiple
+      angular.element('#search-collapse').addClass('collapse');
     };
 
-    this.getCarrierSuccess = function(response) {
+    this.getCarrierSuccess = function (response) {
       angular.forEach(response.response, function (item) {
         postTripFactory.getCarrierNumbers(_companyId, item.id).then(function (response) {
           $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
@@ -43,19 +45,19 @@ angular.module('ts5App')
       });
     };
 
-    this.deletePostTripSuccess = function() {
+    this.deletePostTripSuccess = function () {
       $this.showToastMessage('success', 'Post Trip', 'Post Trip successfully deleted');
       postTripFactory.getPostTripDataList(_companyId, {}).then($this.getPostTripSuccess);
     };
 
-    this.deletePostTripFailure = function() {
+    this.deletePostTripFailure = function () {
       $this.showToastMessage('danger', 'Post Trip', 'Post Trip could not be deleted');
     };
 
-    this.showNewPostTripSuccess = function() {
-      if($location.search().updateType === 'create') {
+    this.showNewPostTripSuccess = function () {
+      if ($location.search().updateType === 'create') {
         $this.showToastMessage('success', 'Create Post Trip', 'successfully added post trip id:' + $location.search().id);
-      } else if($location.search().updateType === 'edit'){
+      } else if ($location.search().updateType === 'edit') {
         $this.showToastMessage('success', 'Edit Post Trip', 'successfully updated post trip id:' + $location.search().id);
       }
     };
@@ -85,13 +87,13 @@ angular.module('ts5App')
       $this.showNewPostTripSuccess();
     })();
 
-    this.formatStationsForSearch = function() {
+    this.formatStationsForSearch = function () {
       $scope.search.depStationId = [];
       $scope.search.arrStationId = [];
-      angular.forEach($scope.selectedStations.depStations, function(station) {
+      angular.forEach($scope.selectedStations.depStations, function (station) {
         $scope.search.depStationId.push(station.stationId);
       });
-      angular.forEach($scope.selectedStations.arrStations, function(station) {
+      angular.forEach($scope.selectedStations.arrStations, function (station) {
         $scope.search.arrStationId.push(station.stationId);
       });
     };
@@ -108,7 +110,7 @@ angular.module('ts5App')
       postTripFactory.getPostTripDataList(_companyId, $scope.search).then($this.getPostTripSuccess);
     };
 
-    $scope.redirectToPostTrip = function(id, state) {
+    $scope.redirectToPostTrip = function (id, state) {
       $location.path('post-trip-data/' + state + '/' + id);
     };
 

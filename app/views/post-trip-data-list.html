@@ -54,7 +54,7 @@
       </div>
 
     </div>
-    <div class="panel panel-default collapse no-transition" id="search-collapse">
+    <div class="panel panel-default no-transition" id="search-collapse">
       <form name="menuSearchForm" ng-submit="searchPostTripData()">
         <div class="panel-body">
           <div class="row">
@@ -96,7 +96,7 @@
                 <ui-select id="departure-station" multiple ng-model="selectedStations.depStations" theme="bootstrap">
                   <ui-select-match placeholder="Select Stations from list">{{ $item.stationCode }}</ui-select-match>
                   <ui-select-choices repeat="station in stationList | filter: $select.search">
-                    {{ station.stationCode }} ({{ station.stationName}})
+                    {{ station.stationCode }} ({{ station.stationName }})
                   </ui-select-choices>
                 </ui-select>
               </div>
@@ -116,7 +116,7 @@
                 <ui-select id="arrival-station" multiple ng-model="selectedStations.arrStations" theme="bootstrap">
                   <ui-select-match placeholder="Select Stations from list">{{ $item.stationCode }}</ui-select-match>
                   <ui-select-choices repeat="station in stationList | filter: $select.search">
-                    {{ station.stationCode }} ({{ station.stationName}})
+                    {{ station.stationCode }} ({{ station.stationName }})
                   </ui-select-choices>
                 </ui-select>
               </div>
