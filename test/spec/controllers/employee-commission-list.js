@@ -188,11 +188,11 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         expect(!!scope.isCommissionEditable).toBe(true);
       });
 
-      it('should return true if menu is editable', function () {
+      it('should return true if commission is editable', function () {
         expect(scope.isCommissionEditable(fakeCommissionObject)).toBe(true);
       });
 
-      it('should return false if menu is not editable', function () {
+      it('should return false if commission is not editable', function () {
         fakeCommissionObject.endDate = moment().subtract(1, 'month').format('L').toString();
         expect(scope.isCommissionEditable(fakeCommissionObject)).toBe(false);
       });
@@ -221,7 +221,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
           fakeCommissionObject.endDate = moment().add(2, 'month').format('L').toString();
           expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(false);
         });
-      it('should return true if menu === null or undefined',
+      it('should return true if commission === null or undefined',
         function () {
           expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(true);
         });
@@ -231,19 +231,19 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       expect(!!scope.showDeleteConfirmation).toBe(true);
     });
 
-    it('should attach menuToDelete to scope', function () {
+    it('should attach commissionToDelete to scope', function () {
       scope.showDeleteConfirmation({
-        name: 'menuToDelete'
+        name: 'commissionToDelete'
       });
-      expect(scope.menuToDelete.name).toBe('menuToDelete');
+      expect(scope.commissionToDelete.name).toBe('commissionToDelete');
     });
 
-    it('should do a DELETE request to menuService with menuToDelete',
+    it('should do a DELETE request to commissionService with commissionToDelete',
       function () {
         scope.showDeleteConfirmation({
           id: '1'
         });
-        scope.deleteMenu();
+        scope.deleteCommission();
         expect(employeeCommissionFactory.deleteCommission).toHaveBeenCalled();
       });
 

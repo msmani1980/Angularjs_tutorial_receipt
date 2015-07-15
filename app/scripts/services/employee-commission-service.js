@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('employeeCommissionService', function ($resource, ENV, $http, dateUtility) {
+  .service('employeeCommissionService', function ($resource, ENV) {
     var requestURL = ENV.apiUrl + '/api/employee-commissions/:commissionId';
     var requestParameters = {
       commissionId: '@id',
