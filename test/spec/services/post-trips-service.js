@@ -6,6 +6,7 @@ describe('Service: postTripService', function () {
   beforeEach(module('served/post-trip-data-list.json'));
 
   var postTripsService,
+    Upload,
     $httpBackend,
     postTripDataListResponseJSON,
     headers = {
@@ -153,7 +154,49 @@ describe('Service: postTripService', function () {
         postTripsService.deletePostTrip('403', postTripId);
         $httpBackend.flush();
       });
-
     });
+
+    var mockFile;
+    var mockFunction;
+    describe('uploadPostTrip', function () {
+      it('should be accessible in service', function () {
+        expect(!!postTripsService.deletePostTrip).toBe(true);
+      });
+
+      beforeEach(inject(function (_Upload_) {
+        Upload = _Upload_;
+        spyOn(Upload, 'upload').and.callFake(function (id, file) {
+          return 123;
+        });
+        var regex = new RegExp('companies/403/file/posttrip', 'g');
+        $httpBackend.whenPOST(regex).respond('202');
+
+        mockFile =
+          {
+            $$hashKey: 'object:277',
+            lastModified: 1430772953000,
+            lastModifiedDate: 'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+            name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4636.png',
+            size: 7801,
+            type: 'file/spreadsheet',
+            webkitRelativePath: ''
+          };
+        mockFunction = function() { return; };
+      }));
+
+      it('should call the upload function', function () {
+        postTripsService.uploadPostTrip('403', mockFile, mockFunction, mockFunction);
+        expect(Upload.upload).toHaveBeenCalled();
+      });
+
+      it('should send POST request', function () {
+        var regex = new RegExp('posttrip', 'g');
+        $httpBackend.expectPOST(regex);
+        postTripsService.uploadPostTrip('403', mockFile, mockFunction, mockFunction);
+        $httpBackend.flush();
+      });
+
+    })
+
   });
 });
