@@ -19,26 +19,17 @@ angular.module('ts5App')
         required: '='
       },
       controller: function ($scope, $element) {
-
         var datePickerOptions = {
           orientation: 'auto top',
           autoclose: true,
           todayHighlight: true,
           startDate: dateUtility.nowFormatted()
         };
-
         this.init = function ($element) {
           var options = angular.extend({}, datePickerOptions);
           $element.find('input[type="text"]').datepicker(options);
         };
-
-        /*  $scope.$watch('ngModel', function () {
-            console.log($scope.ngModel);
-          });*/
-
         this.init($element);
-
       }
-
     };
   });
