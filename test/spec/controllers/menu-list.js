@@ -99,21 +99,21 @@ describe('Controller: MenuListCtrl', function () {
         id: 1
       });
       scope.$digest();
-      expect(location.path()).toBe('/menu-edit/1');
+      expect(location.path()).toBe('/menu/view/1');
     });
     describe('can user edit / delete menu', function () {
       it('should have a isMenuEditable function', function () {
         expect(!!scope.isMenuEditable).toBe(true);
       });
 
-      it('should return false if endDate > today', function () {
-        expect(scope.isMenuEditable(fakeMenuItem)).toBe(false);
+      it('should return true if menu is editable', function () {
+        expect(scope.isMenuEditable(fakeMenuItem)).toBe(true);
       });
 
-      it('should return true if end date <= today', function () {
+      it('should return false if menu is not editable', function () {
         fakeMenuItem.endDate = moment().subtract(1, 'month').format(
           'L').toString();
-        expect(scope.isMenuEditable(fakeMenuItem)).toBe(true);
+        expect(scope.isMenuEditable(fakeMenuItem)).toBe(false);
       });
 
       it('should have a isMenuReadOnly function', function () {
@@ -146,9 +146,9 @@ describe('Controller: MenuListCtrl', function () {
             'L').toString();
           expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(false);
         });
-      it('should return false if menu === null or undefined',
+      it('should return true if menu === null or undefined',
         function () {
-          expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(false);
+          expect(scope.isMenuReadOnly(fakeMenuItem)).toBe(true);
         });
     });
 
