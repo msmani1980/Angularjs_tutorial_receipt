@@ -15,34 +15,9 @@ angular.module('ts5App')
       limit: 50
     };
 
-    // TODO: will implement dates serializer at a later point
-    function formatDatesForAPI(dataFromAPI) {
-      dataFromAPI.employeeCommissions.forEach(function (companyRelationship) {
-        if (companyRelationship.startDate) {
-          companyRelationship.startDate = dateUtility.formatDateForApp(companyRelationship.startDate);
-        }
-
-        if (companyRelationship.endDate) {
-          companyRelationship.endDate = dateUtility.formatDateForApp(companyRelationship.endDate);
-        }
-      });
-      return dataFromAPI;
-    }
-
-    function transformRequest(requestData) {
-      requestData.startDate = dateUtility.formatDateForAPI(requestData.startDate);
-      requestData.endDate = dateUtility.formatDateForAPI(requestData.endDate);
-      return requestData;
-    }
-
-    var appendTransform = function appendTransform(transform) {
-      return $http.defaults.transformResponse.concat(transform);
-    };
-
     var actions = {
       getCommissionList: {
-        method: 'GET'//,
-        //transformResponse: appendTransform(formatDatesForAPI)
+        method: 'GET'
       },
       getCommission: {
         method: 'GET'

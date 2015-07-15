@@ -50,9 +50,9 @@ angular.module('ts5App')
     }
 
     function setRateAndSaleTypes(commissionListData) {
-      commissionListData.forEach(function (commissionObject) {
+      //commissionListData.forEach(function (commissionObject) {
         //TODO: wait on API fix to transform data here
-      });
+      //});
       return commissionListData;
     }
 
