@@ -1,26 +1,31 @@
 'use strict';
+/*global moment*/
 
 describe('Controller: EmployeeCommissionListCtrl', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json'));
+  beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/employee-commission-list.json'));
 
 
   var EmployeeCommissionListCtrl,
     employeeCommissionFactory,
+    dateUtility,
     getItemsListDeferred,
     getPriceTypesListDeferred,
     getTaxRateTypesDeferred,
+    getCommissionListDeferred,
     itemsListJSON,
     priceTypeListJSON,
     taxRateTypesJSON,
+    employeeCommissionListJSON,
     scope;
 
   beforeEach(inject(function ($controller, $rootScope, $q, $injector) {
-    inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_) {
+    inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedEmployeeCommissionList_) {
       itemsListJSON = _servedItemsList_;
       priceTypeListJSON = _servedPriceTypes_;
       taxRateTypesJSON = _servedTaxRateTypes_;
+      employeeCommissionListJSON = _servedEmployeeCommissionList_;
     });
 
     getItemsListDeferred = $q.defer();
@@ -32,10 +37,15 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     getTaxRateTypesDeferred = $q.defer();
     getTaxRateTypesDeferred.resolve(taxRateTypesJSON);
 
+    getCommissionListDeferred = $q.defer();
+    getCommissionListDeferred.resolve(employeeCommissionListJSON);
+
+    dateUtility = $injector.get('dateUtility');
     employeeCommissionFactory = $injector.get('employeeCommissionFactory');
     spyOn(employeeCommissionFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getPriceTypesList').and.returnValue(getPriceTypesListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getTaxRateTypes').and.returnValue(getTaxRateTypesDeferred.promise);
+    spyOn(employeeCommissionFactory, 'getCommissionList').and.returnValue(getCommissionListDeferred.promise);
 
     scope = $rootScope.$new();
     EmployeeCommissionListCtrl = $controller('EmployeeCommissionListCtrl', {
@@ -70,26 +80,46 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       expect(employeeCommissionFactory.getTaxRateTypes).toHaveBeenCalled();
     });
 
-    it('should fetch items with startDate from factory', function () {
-      scope.search.startDate = '05/10/1979';
+    it('should fetch items with startDate and endDate from factory', function () {
+      var expectedDate = moment().add(1, 'days').format('YYYYMMDD').toString();
+      scope.search.startDate = moment().add(1, 'days').format('L').toString();
+      scope.search.endDate = scope.search.startDate;
       scope.$digest();
-      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({startDate: '19790510'});
+      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({startDate: expectedDate, endDate: expectedDate});
     });
 
-    it('should fetch items with endDate from factory', function () {
-      scope.search.endDate = '05/10/1979';
-      scope.$digest();
-      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({endDate: '19790510'});
-    });
 
     it('should fetch items with endDate from factory', function () {
       scope.search.startDate = '05/10/1979';
       scope.search.endDate = '05/10/1979';
       scope.$digest();
-      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({startDate: '19790510', endDate: '19790510'});
+      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({
+        startDate: '19790510',
+        endDate: '19790510'
+      });
     });
 
+    describe('getCommissionList', function () {
+
+      it('should fetch commissions from factory', function () {
+        expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalled();
+      });
+
+      it('should attach commissionList to scope', function () {
+        scope.$digest();
+        expect(scope.commissionList).toBeDefined();
+      });
+
+      it('should change the dates to valid App Format', function () {
+        scope.$digest();
+        console.log(scope.commissionList[0]);
+        expect(dateUtility.isDateValidForApp(scope.commissionList[0].startDate)).toBe(true);
+        expect(dateUtility.isDateValidForApp(scope.commissionList[0].endDate)).toBe(true);
+      });
+
+    });
   });
+
 
   describe('form reset', function () {
 

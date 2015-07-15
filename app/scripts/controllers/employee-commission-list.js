@@ -29,10 +29,37 @@ angular.module('ts5App')
         payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
       }
 
-      employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
-        $scope.search.itemsList = dataFromAPI.retailItems;
-      });
+      if (payload.startDate && payload.endDate) {
+        employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
+          $scope.search.itemsList = dataFromAPI.retailItems;
+        });
+      }
     });
+
+    function formatDatesForApp(commissionListData) {
+      commissionListData.forEach(function (commissionObject) {
+        if (commissionObject.startDate) {
+          commissionObject.startDate = dateUtility.formatDateForApp(commissionObject.startDate);
+        }
+
+        if (commissionObject.endDate) {
+          commissionObject.endDate = dateUtility.formatDateForApp(commissionObject.endDate);
+        }
+      });
+      return commissionListData;
+    }
+
+    function setRateAndSaleTypes(commissionListData) {
+      commissionListData.forEach(function (commissionObject) {
+        //TODO: wait on API fix to transform data here
+      });
+      return commissionListData;
+    }
+
+    function prepareDataForTable(dataFromAPI) {
+      var transformedData = formatDatesForApp(angular.copy(dataFromAPI));
+      return setRateAndSaleTypes(transformedData);
+    }
 
     function showToastMessage(className, type, message) {
       ngToast.create({
@@ -42,7 +69,7 @@ angular.module('ts5App')
       });
     }
 
-    $scope.searchCommissions = function(){
+    $scope.searchCommissions = function () {
       showToastMessage('warning', 'Employee Commission', 'API not ready');
     };
 
@@ -59,6 +86,10 @@ angular.module('ts5App')
 
     employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {
       $scope.search.taxRateTypesList = dataFromAPI;
+    });
+
+    employeeCommissionFactory.getCommissionList().then(function (dataFromAPI) {
+      $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
     });
 
   });
