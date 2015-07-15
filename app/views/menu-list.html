@@ -21,26 +21,10 @@
     </li>
   </ul>
 </div>
-<div class="dropdown" dropdown dropdown-toggle on-toggle="toggled(open)">
-  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="true">
-    <i class="fa fa-table"></i> Import From File <i class="fa fa-caret-down"></i>
-
-  </button>
-  <ul class="dropdown-menu horizontal-menu menu-inline">
-    <li>
-      <button ngf-select="" ng-model="files" ngf-multiple="true" class="btn">Attach File
-      </button>
-      <a ngf-select="" ng-model="files" class="button" ngf-multiple="false" ngf-accept="'*.xls,*.xlsx'" ng-model-rejected="rejFiles" tabindex="0"><i class="fa fa-upload"></i> Select File</a>
-    </li>
-    <li>
-      <a href="#" ng-click="$parent.showExcelDownload(); $event.stopPropagation();"><i class="fa fa-download"></i> {{viewModel[1].text}}</a>
-    </li><ul><li>s</li></ul>
-  </ul>
-</div>
 <div class="row">
   <div class="col-xs-6">
-    <a ng-href="ember/#/menus/create" class="btn btn-primary">+ Create Menu</a>
+    <button type="button" ng-href="ember/#/menus/create" class="btn btn-primary">+ Create Menu</button>
+    <excel-upload type="menu"></excel-upload>
   </div>
 
   <div class="col-xs-6 text-right">

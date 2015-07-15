@@ -11,16 +11,15 @@ angular.module('ts5App')
   .controller('MenuListCtrl', function ($scope, $location, menuService, ngToast) {
     $scope.viewName = 'Menu Management';
     $scope.search = {};
-    $scope.importDropdown = [{
-      text: 'Upload'
-    }, {
-      text: 'Download Template'
-    }];
     $scope.modal = null;
-    $scope.modals = [{
-      type: 'excel',
-      url: 'https://s3.amazonaws.com/ts5-dev-portal-images/templates/scheduleUpload.xlsx'
-    }];
+    $scope.displayModalImportInfo = false;
+    function showToast(className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    }
 
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
@@ -80,8 +79,7 @@ angular.module('ts5App')
     };
     $scope.showExcelDownload = function () {
       $scope.modal = $scope.modals[0];
-      debugger;
-      angular.element('bs-modal').modal('show');
+      angular.element('#addCashBagModal').modal('show');
     };
     $scope.showDeleteConfirmation = function (menuToDelete) {
       $scope.menuToDelete = menuToDelete;

@@ -7,15 +7,15 @@
  * # listObject
  */
 angular.module('ts5App')
-  .directive('featureListItem', function () {
-    function controller($scope/*, element, attrs*/) {
-      // set attributes of directive to the scope to use in template
-      $scope.isExpanded = false;
+  .controller('FeatureListCtrl', function ($scope/*, element, attrs*/) {
+    // set attributes of directive to the scope to use in template
+    $scope.isExpanded = false;
 
-      $scope.toggleExpand = function() {
-        $scope.isExpanded = !$scope.isExpanded;
-      };
-    }
+    $scope.toggleExpand = function() {
+      $scope.isExpanded = !$scope.isExpanded;
+    };
+  })
+  .directive('featureListItem', function () {
 
     function templateUrl(element, attrs) {
       return 'views/directives/feature-list-item.' + attrs.type + '.html';
@@ -26,7 +26,7 @@ angular.module('ts5App')
         viewModel: '='
       },
       restrict: 'E',
-      controller: controller,
+      controller: 'FeatureListCtrl',
       templateUrl: templateUrl,
       transclude: true
     };
