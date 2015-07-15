@@ -251,17 +251,15 @@ angular.module('ts5App')
     $scope.isRelationshipActive = function () {
       if ($scope.editingRelationship) {
         return dateUtility.isDateTodayOrEarlier($scope.formData.startDate);
-      } else {
-        return false;
       }
+      return false;
     };
 
     $scope.isRelationshipInactive = function () {
       if ($scope.editingRelationship) {
         return dateUtility.isDateAfterYesterday($scope.formData.endDate);
-      } else {
-        return false;
       }
+      return false;
     };
 
     this.init();

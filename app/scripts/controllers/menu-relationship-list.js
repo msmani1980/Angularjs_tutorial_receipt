@@ -65,7 +65,7 @@ angular.module('ts5App')
     };
 
     this.generateItemQuery = function () {
-      var todaysDate = dateUtility.formatDate(dateUtility.now());
+      var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
       var query = {
         startDate: todaysDate,
         sortBy: 'ASC',
