@@ -92,12 +92,59 @@ describe('Directive: datePickerField', function () {
           expect(inputGroupBtn).toBeDefined();
         });
 
+        describe('button', function () {
+          var button;
+          beforeEach(function () {
+            button = angular.element(inputGroupBtn.find(
+              'button')[0]);
+          });
+
+          it('should be present in the DOM', function () {
+            expect(button).toBeDefined();
+          });
+
+          it('should have a .btn class', function () {
+            expect(button.hasClass('btn')).toBeTruthy();
+          });
+
+          it('should have a .btn-default class', function () {
+            expect(button.hasClass('btn-default')).toBeTruthy();
+          });
+
+          it('should contain an icon', function () {
+            expect(button.find('i').hasClass(
+              'glyphicon-calendar')).toBeTruthy();
+          });
+
+        });
+
       });
 
-    });
+      describe('input', function () {
+        var input;
+        beforeEach(function () {
+          input = angular.element(inputGroup.find('input')[
+            0]);
+        });
 
-    it('should have 1 input field', function () {
-      expect(element.find('input').length).toBe(1);
+        it('should be present in the DOM', function () {
+          expect(input).toBeDefined();
+        });
+
+        it('should be a text input', function () {
+          expect(input.attr('type')).toEqual('text');
+        });
+
+        it('should have a .form-control class', function () {
+          expect(input.hasClass('form-control')).toBeTruthy();
+        });
+
+        it('should have the model set to ngModel', function () {
+          expect(input.attr('ng-model')).toEqual('ngModel');
+        });
+
+      });
+
     });
 
   });
