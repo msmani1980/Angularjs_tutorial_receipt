@@ -88,16 +88,14 @@
             is-search-field="true"
             label-from="Delivery Date *">
           </date-picker>
-          
-          <div class="col-xs-12 col-sm-2">
-            <label>Input Location</label>
-            <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="inputLocationInfo()" ng-disabled="readOnly">
-              <option ng-repeat="item in inputLocationList" value="{{ $index }}">
-                {{ item.inputLocationCode }} ({{ item.inputLocationName}})
-              </option>
-            </select>
-          </div>
 
+          <!-- TODO: STATUS ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
+          <div class="col-xs-12 col-sm-2">
+            <label>Status</label>
+            <input ng-model="deliveryStatus" type="text" class="form-control" id="delivery-status"
+                   placeholder="Saved" ng-readonly="readOnly" ng-disabled="true">
+          </div>
+          
           <div class="col-xs-12 col-sm-2 text-right">
             <button type="button" class="btn btn-primary">
               <i class="fa fa-plus"></i> Add Item
@@ -108,15 +106,6 @@
         
         <div class="row">
         <!-- TODO: THIS ROW ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
-        
-          <div class="col-xs-12 col-sm-2">
-            <label>Status</label>
-            <select class="form-control" id="delivery-status" ng-model="deliveryStatus" ng-change="deliveryStatusInfo()" ng-disabled="readOnly">
-              <option ng-repeat="" value="{{ $index }}">
-                {{ item.deliveryStatusCode }} ({{ item.deliveryStatusName}})
-              </option>
-            </select>
-          </div>
           
           <div class="col-xs-12 col-sm-2">
             <div class="form-group">
@@ -290,7 +279,7 @@
               <div class="form-group">
                 <label>Booked</label>
                 <input ng-model="bookedQty" type="text" class="form-control" id="booked-qty"
-                       placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly" disabled>
+                       placeholder="8" custom-validity custom-pattern="time" ng-readonly="readOnly" disabled>
               </div>
             </div>
             

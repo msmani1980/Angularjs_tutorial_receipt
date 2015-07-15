@@ -28,7 +28,7 @@
   </div>
   <!--/TopHeader -->
 
-  <div class="post-trip-data-list">
+  <div class="delivery-notes-list">
     <div class="row">
 
       <div class="col-xs-6">
@@ -45,6 +45,7 @@
       </div>
 
     </div>
+    
     <div class="panel panel-default collapse no-transition" id="search-collapse">
       <form name="menuSearchForm" ng-submit="searchPostTripData()">
         <div class="panel-body">
@@ -80,45 +81,17 @@
               label-from="Received Date">
             </date-picker>
             
-          <div class="col-xs-12 col-sm-2">
-            <label>Status</label>
-            <select class="form-control" id="delivery-status" ng-model="deliveryStatus" ng-change="deliveryStatusInfo()" ng-disabled="readOnly">
-              <option ng-repeat="" value="{{ $index }}">
-                {{ item.deliveryStatusCode }} ({{ item.deliveryStatusName}})
-              </option>
-            </select>
-          </div>
+            <div class="col-xs-12 col-sm-2">
+              <label>Status</label>
+              <select class="form-control" id="delivery-status" ng-model="deliveryStatus" ng-change="deliveryStatusInfo()" ng-disabled="readOnly">
+                <option ng-repeat="" value="{{ $index }}">
+                  {{ item.deliveryStatusCode }} ({{ item.deliveryStatusName}})
+                </option>
+              </select>
+            </div>
             
           </div>
           
-          <div class="row">
-        
-<!--             <div class="col-xs-12 col-sm-3"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label for="itemCode">Item Code</label> -->
-<!--                 <input ng-model="search.itemCode" type="text" class="form-control" id="item-code" placeholder="1234"> -->
-<!--               </div> -->
-<!--             </div> -->
-
-<!--             <div class="col-xs-12 col-sm-3"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label for="itemName">Item Name</label> -->
-<!--                 <input ng-model="search.itemName" type="text" class="form-control" id="item-name" placeholder="1234"> -->
-<!--               </div> -->
-<!--             </div> -->
-
-<!--             <div class="col-xs-12 col-sm-3"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label for="inputLocation">Input Location</label> -->
-<!--                 <select class="form-control" id="input-location" ng-model="inputLocation" ng-change="updateinputLocation()" ng-disabled="readOnly"> -->
-<!--                   <option ng-repeat="inputLocation in inputLocationList" value="{{ $index }}"> -->
-<!--                     {{ item.inputLocationCode }} ({{ item.inputLocationName}}) -->
-<!--                   </option> -->
-<!--                 </select> -->
-<!--               </div> -->
-<!--             </div> -->
-
-          </div>
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
@@ -126,6 +99,7 @@
         </div>
       </form>
     </div>
+    
     <table class="table table-bordered table-hover ng-scope">
       <thead>
         <tr>
