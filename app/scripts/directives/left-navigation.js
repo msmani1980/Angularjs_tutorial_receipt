@@ -45,7 +45,7 @@ angular.module('ts5App')
 
         $scope.manageCategoriesPath = '/ember/#/retail-items/categories';
         $scope.manageRetailCatIcon = 'icon-manage-retail-category';
-        $scope.manageRetailCatLabel = 'Manage Retail Item Categories';
+        $scope.manageRetailCatLabel = 'Manage Item Categories';
 
         $scope.itemPrefix = 'Retail';
 
@@ -63,8 +63,7 @@ angular.module('ts5App')
 
         $scope.manageCategoriesPath = '/ember/#/retail-items/categories';
         $scope.manageRetailCatIcon = 'icon-manage-retail-category';
-        $scope.manageRetailCatLabel = 'Manage Stock Owner Item Categories';
-        $scope.manageRetailCatLabelSm = 'Manage SO Item Categories';
+        $scope.manageRetailCatLabel = 'Manage Item Categories';
 
         $scope.itemPrefix = 'Stock Owner';
 
