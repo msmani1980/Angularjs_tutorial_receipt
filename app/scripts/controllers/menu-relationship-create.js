@@ -217,7 +217,6 @@ angular.module('ts5App')
       $this.displayLoadingModal('We are creating your menu relationship');
       menuCatererStationsService.createRelationship(relationshipData).then(
         function () {
-          $this.hideLoadingModal();
           $this.showSuccessMessage('Relationship created!');
           $location.path('/menu-relationship-list');
         },
@@ -259,7 +258,7 @@ angular.module('ts5App')
 
     $scope.isRelationshipInactive = function () {
       if ($scope.editingRelationship) {
-        return dateUtility.isDateTodayOrEarlier($scope.formData.endDate);
+        return dateUtility.isDateAfterYesterday($scope.formData.endDate);
       } else {
         return false;
       }

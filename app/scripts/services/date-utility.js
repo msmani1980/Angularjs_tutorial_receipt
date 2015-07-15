@@ -70,4 +70,8 @@ angular.module('ts5App')
       return this.now() >= Date.parse(date);
     };
 
+    this.isDateAfterYesterday = function (date) {
+      return this.yesterday() >= Date.parse(date);
+    };
+
   });

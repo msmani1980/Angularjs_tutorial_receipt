@@ -213,12 +213,12 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    $scope.isRelationshipActive = function (startDate) {
-      return Date.parse(startDate) <= dateUtility.now();
+    $scope.isRelationshipActive = function (date) {
+      return dateUtility.isDateTodayOrEarlier(date);
     };
 
-    $scope.isRelationshipInactive = function (endDate) {
-      return Date.parse(endDate) <= dateUtility.now();
+    $scope.isRelationshipInactive = function (date) {
+      return dateUtility.isDateAfterYesterday(date);
     };
 
     $scope.clearSearchFilters = function () {
