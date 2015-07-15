@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast) {
+  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location) {
     $scope.viewName = 'Employee Commission';
     $scope.search = {
       startDate: '',
@@ -36,6 +36,59 @@ angular.module('ts5App')
       }
     });
 
+    $scope.showCommission = function (commission) {
+      $location.path('employee-commission/view/' + commission.id);
+    };
+
+    $scope.editCommission = function (commission) {
+      $location.path('employee-commission/edit/' + commission.id);
+    };
+
+    $scope.isCommissionReadOnly = function(commission) {
+      if (angular.isUndefined(commission)) {
+        return false;
+      }
+      return !dateUtility.isAfterToday(commission.startDate);
+    };
+
+    $scope.isCommissionEditable = function(commission) {
+      if (angular.isUndefined(commission)) {
+        return false;
+      }
+      return dateUtility.isAfterToday(commission.endDate);
+    };
+
+    function showToastMessage(className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    }
+
+    function showErrors(dataFromAPI) {
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+      $scope.displayError = true;
+      showToastMessage('warning','Employee Commission', 'error deleting commission!');
+
+    }
+
+    function successDeleteHandler() {
+      showToastMessage('success','Employee Commission', 'successfully deleted commission!');
+    }
+
+    $scope.deleteCommission = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+      employeeCommissionFactory.deleteCommission($scope.commissionToDelete.id).then(successDeleteHandler, showErrors);
+    };
+
+    $scope.showDeleteConfirmation = function (commissionToDelete) {
+      $scope.commissionToDelete = commissionToDelete;
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
     function formatDatesForApp(commissionListData) {
       commissionListData.forEach(function (commissionObject) {
         if (commissionObject.startDate) {
@@ -59,14 +112,6 @@ angular.module('ts5App')
     function prepareDataForTable(dataFromAPI) {
       var transformedData = formatDatesForApp(angular.copy(dataFromAPI));
       return setRateAndSaleTypes(transformedData);
-    }
-
-    function showToastMessage(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
     }
 
     $scope.searchCommissions = function () {

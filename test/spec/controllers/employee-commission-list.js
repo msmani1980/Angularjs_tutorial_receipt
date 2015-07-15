@@ -46,6 +46,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     spyOn(employeeCommissionFactory, 'getPriceTypesList').and.returnValue(getPriceTypesListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getTaxRateTypes').and.returnValue(getTaxRateTypesDeferred.promise);
     spyOn(employeeCommissionFactory, 'getCommissionList').and.returnValue(getCommissionListDeferred.promise);
+    spyOn(employeeCommissionFactory, 'deleteCommission').and.returnValue(getCommissionListDeferred.promise);
 
     scope = $rootScope.$new();
     EmployeeCommissionListCtrl = $controller('EmployeeCommissionListCtrl', {
@@ -153,6 +154,98 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     it('should have a searchCommissions function', function () {
       expect(scope.searchCommissions).toBeDefined();
     });
+
+  });
+
+  describe('Action buttons', function () {
+    var fakeCommissionObject;
+
+    beforeEach(function () {
+      fakeCommissionObject = {
+        endDate: moment().add(1, 'month').format('L').toString(),
+        startDate: moment().format('L').toString()
+      };
+    });
+
+    it('should change the url based on the commission object for view', function () {
+      scope.showCommission({
+        id: 1
+      });
+      scope.$digest();
+      expect(location.path()).toBe('/employee-commission/view/1');
+    });
+
+    it('should change the url based on the commission object for edit', function () {
+      scope.editCommission({
+        id: 2
+      });
+      scope.$digest();
+      expect(location.path()).toBe('/employee-commission/edit/2');
+    });
+
+    describe('can user edit / delete commission', function () {
+      it('should have a isCommissionEditable function', function () {
+        expect(!!scope.isCommissionEditable).toBe(true);
+      });
+
+      it('should return true if menu is editable', function () {
+        expect(scope.isCommissionEditable(fakeCommissionObject)).toBe(true);
+      });
+
+      it('should return false if menu is not editable', function () {
+        fakeCommissionObject.endDate = moment().subtract(1, 'month').format('L').toString();
+        expect(scope.isCommissionEditable(fakeCommissionObject)).toBe(false);
+      });
+
+      it('should have a isCommissionReadOnly function', function () {
+        expect(!!scope.isCommissionReadOnly).toBe(true);
+      });
+
+      it('should return true if startDate < today > endDate',
+        function () {
+          fakeCommissionObject.startDate = moment().subtract(1, 'month').format('L').toString();
+          fakeCommissionObject.endDate = moment().subtract(2, 'month').format('L').toString();
+          expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(true);
+        });
+
+      it('should return true if startDate < today < endDate',
+        function () {
+          fakeCommissionObject.startDate = moment().subtract(1, 'month').format('L').toString();
+          fakeCommissionObject.endDate = moment().add(2, 'month').format('L').toString();
+          expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(true);
+        });
+
+      it('should return false if startDate > today > endDate',
+        function () {
+          fakeCommissionObject.startDate = moment().add(1, 'month').format('L').toString();
+          fakeCommissionObject.endDate = moment().add(2, 'month').format('L').toString();
+          expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(false);
+        });
+      it('should return true if menu === null or undefined',
+        function () {
+          expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(true);
+        });
+    });
+
+    it('should have a confirmDelete function', function () {
+      expect(!!scope.showDeleteConfirmation).toBe(true);
+    });
+
+    it('should attach menuToDelete to scope', function () {
+      scope.showDeleteConfirmation({
+        name: 'menuToDelete'
+      });
+      expect(scope.menuToDelete.name).toBe('menuToDelete');
+    });
+
+    it('should do a DELETE request to menuService with menuToDelete',
+      function () {
+        scope.showDeleteConfirmation({
+          id: '1'
+        });
+        scope.deleteMenu();
+        expect(employeeCommissionFactory.deleteCommission).toHaveBeenCalled();
+      });
 
   });
 

@@ -31,11 +31,12 @@
       </div>
 
       <div class="modal-body">
-        <p>You are about to permanently delete <strong>object to delete here...</strong></p>
+        <p>You are about to permanently <strong>delete the following commission</strong></p>
       </div>
 
       <ul>
-        <li><strong>commissionCode: </strong>list of properties</li>
+        <li><strong>startDate: </strong>{{ commissionToDelete.startDate }}</li>
+        <li><strong>endDate: </strong>{{ commissionToDelete.endDate }}</li>
       </ul>
 
       <div class="modal-footer">
@@ -147,12 +148,10 @@
       <button class="btn btn-info btn-xs" ng-click="showCommission(commission)">
         <i class="fa fa-file"></i>
       </button>
-      <button class="btn btn-primary btn-xs" ng-click="showCommission(commission)"
-              ng-show="!isCommissionEditable(commission)">
+      <button class="btn btn-primary btn-xs" ng-click="editCommission(commission)" ng-show="isCommissionEditable(commission)">
         <i class="fa fa-pencil"></i>
       </button>
-      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)"
-              ng-show="!isCommissionReadOnly(commission)">
+      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)" ng-hide="isCommissionReadOnly(commission)">
         <i class="fa fa-trash"></i>
       </button>
     </td>
