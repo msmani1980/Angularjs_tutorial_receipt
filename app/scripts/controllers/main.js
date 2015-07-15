@@ -282,12 +282,12 @@ angular.module('ts5App')
         }
       ]
     }, {
-        title: 'Stock Management',
+        title: 'Stock Dashboard',
         menuItems: [{
-          name: 'Stock Dashboard',
-          route: '/#/stock-dashboard',
+          name: 'Stock Management',
+          route: '/#/stock-list',
           icon: 'icon-manage-schedule',
-          className: 'dashboard-stockDashboard'
+          className: 'dashboard-stockList'
         }
       ]
       title: 'Manage Store Number',

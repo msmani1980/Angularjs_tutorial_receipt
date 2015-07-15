@@ -2,17 +2,17 @@
 /* global $*/
 /**
  * @ngdoc function
- * @name ts5App.controller:StockDashboardCtrl
+ * @name ts5App.controller:StockListCtrl
  * @description
- * # StockDashboardCtrl
+ * # StockListCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockDashboardCtrl', function ($scope) {
+  .controller('StockListCtrl', function ($scope) {
     var _companyId = '403',
       _services = null;
 
-    $scope.viewName = 'Stock Dashboard';
+    $scope.viewName = 'Stock Management';
     $scope.search = {};
 
   });

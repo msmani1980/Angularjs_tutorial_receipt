@@ -367,9 +367,9 @@
   max-width: 48px;
 }
 
-.stock-dashboard {
+.stock-list {
   
-  .table-scrollable {
+  .table {
     width: 100%;
     
     tr {
@@ -392,13 +392,13 @@
         width: 14%;
         float: left;
         
-        &.stock-dashboard-category {
+        &.stock-list-category {
           width: 28%;
           text-align: center;
           border-left: 1px solid #ddd;
         }
         
-        &.stock-dashboard-subcategory {
+        &.stock-list-subcategory {
           text-align: center;
           border-left: 1px solid #ddd;
         }
@@ -406,9 +406,7 @@
     }
     
     tbody {
-      display: block;    
-      height: 380px;
-      overflow-y: auto;
+      display: block;
       border-bottom: 1px solid #ddd;
       
       td {

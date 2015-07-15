@@ -179,9 +179,9 @@ angular
         templateUrl: 'views/employee-commission-list.html',
         controller: 'EmployeeCommissionListCtrl'
       })
-      .when('/stock-dashboard', {
-        templateUrl: 'views/stock-dashboard.html',
-        controller: 'StockDashboardCtrl'
+      .when('/stock-list', {
+        templateUrl: 'views/stock-list.html',
+        controller: 'StockListCtrl'
       })
       .otherwise({
         redirectTo: '/'
