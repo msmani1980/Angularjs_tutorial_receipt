@@ -205,4 +205,20 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
+  describe('onDrop scope function / drag event handler', function(){
+    beforeEach(function(){
+      scope.companyRetailItemList = [
+        {companyId:currentCompanyId,id:1,itemCode:'123',itemName:'123',onBoardName:'123',stockOwnerCode:'123'},
+        {companyId:currentCompanyId,id:2,itemCode:'1234',itemName:'1234',onBoardName:'1234',stockOwnerCode:null},
+        {companyId:432,id:3,itemCode:'12345',itemName:'12345',onBoardName:null,stockOwnerCode:null}];
+      var newItem = {companyId:432,id:4,itemCode:'7653',itemName:'7653',onBoardName:null,stockOwnerCode:null};
+      scope.$digest();
+      var event = {currentTarget:{id:'item-drop-init'}};
+      scope.onDrop(event,newItem);
+    });
+    it('should add the new item to companyRetailItemList, which should end up with a length of 4', function(){
+      expect(scope.companyRetailItemList.length).toBe(4);
+    });
+  });
+
 });

@@ -1,5 +1,7 @@
 'use strict';
 /*global moment*/
+// jshint maxcomplexity:9
+
 /**
  * @ngdoc function
  * @name ts5App.controller:StockOwnerItemCreateCtrl
