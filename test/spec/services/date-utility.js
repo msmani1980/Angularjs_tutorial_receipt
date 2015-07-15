@@ -96,19 +96,119 @@ describe('Date Utility service', function () {
     });
   });
 
+  describe('tomorrow() method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.tomorrow).toBeDefined();
+    });
+
+    it('should be return tomorrow timestamp', function () {
+      var today = new Date();
+      var tomorrowControl = today.setDate(today.getDate() + 1);
+      var tomorrow = dateUtility.tomorrow();
+      expect(tomorrow).toEqual(tomorrowControl);
+    });
+
+  });
+
+  describe('yesterday() method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.yesterday).toBeDefined();
+    });
+
+    it('should be return yesterday timestamp', function () {
+      var today = new Date();
+      var yesterdayControl = today.setDate(today.getDate() - 1);
+      var yesterday = dateUtility.yesterday();
+      expect(yesterday).toEqual(yesterdayControl);
+    });
+
+  });
+
+  describe('isTodayOrEarlier() method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.isTodayOrEarlier).toBeDefined();
+    });
+
+    it('should return true if the date is today', function () {
+      var today = dateUtility.nowFormatted();
+      var dateIsTodayOrEarlier = dateUtility.isTodayOrEarlier(
+        today);
+      expect(dateIsTodayOrEarlier).toBeTruthy();
+    });
+
+    it('should return true if the date is earlier than today', function () {
+      var yesterday = dateUtility.formatDateForApp(dateUtility.yesterday(),
+        'x');
+      var dateIsTodayOrEarlier = dateUtility.isTodayOrEarlier(
+        yesterday);
+      expect(dateIsTodayOrEarlier).toBeTruthy();
+    });
+
+    it('should return false if the date is later than today', function () {
+      var tomorrow = dateUtility.formatDateForApp(dateUtility.tomorrow(),
+        'x');
+      var dateIsTodayOrEarlier = dateUtility.isTodayOrEarlier(
+        tomorrow);
+      expect(dateIsTodayOrEarlier).toBeFalsy();
+    });
+
+  });
+
+  describe('isYesterdayOrEarlier() method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.isYesterdayOrEarlier).toBeDefined();
+    });
+
+    it('should return false if the date is today', function () {
+      var today = dateUtility.nowFormatted();
+      var dateIsBeforeYesterday = dateUtility.isYesterdayOrEarlier(
+        today);
+      expect(dateIsBeforeYesterday).toBeFalsy();
+    });
+
+    it('should return true if the date is earlier than yesterday',
+      function () {
+        var today = new Date();
+        var twoDaysAgo = today.setDate(today.getDate() - 2);
+        var testDate = dateUtility.formatDateForApp(twoDaysAgo,
+          'x');
+        var dateIsBeforeYesterday = dateUtility.isYesterdayOrEarlier(
+          testDate);
+        expect(dateIsBeforeYesterday).toBeTruthy();
+      });
+
+  });
+
   describe('nowFormatted method', function () {
+
     it('should be defined', function () {
       expect(dateUtility.nowFormatted).toBeDefined();
     });
 
-    /*it(
+    it(
       'should return a formatted date in MM/DD/YYYY when no format is passed',
       function () {
-        var testTimestamp = Date.parse(new Date());
+        var now = Date.parse(new Date());
         var formattedTimeStamp = dateUtility.nowFormatted();
-        console.log(testTimestamp, formattedTimeStamp);
-        //expect(dateUtility.nowFormatted()).toEqual('');
-      });*/
+        var formatControl = dateUtility.formatDate(now, 'x',
+          'MM/DD/YYYY');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+    it(
+      'should return a formatted date in YYYYMMDD when YYYYMMDD format is passed',
+      function () {
+        var now = Date.parse(new Date());
+        var formattedTimeStamp = dateUtility.nowFormatted('YYYYMMDD');
+        var formatControl = dateUtility.formatDate(now, 'x',
+          'YYYYMMDD');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
   });
 
 });

@@ -214,11 +214,11 @@ angular.module('ts5App')
     };
 
     $scope.isRelationshipActive = function (date) {
-      return dateUtility.isDateTodayOrEarlier(date);
+      return dateUtility.isTodayOrEarlier(date);
     };
 
     $scope.isRelationshipInactive = function (date) {
-      return dateUtility.isDateAfterYesterday(date);
+      return dateUtility.isYesterdayOrEarlier(date);
     };
 
     $scope.clearSearchFilters = function () {

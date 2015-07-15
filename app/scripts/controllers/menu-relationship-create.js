@@ -250,14 +250,14 @@ angular.module('ts5App')
 
     $scope.isRelationshipActive = function () {
       if ($scope.editingRelationship) {
-        return dateUtility.isDateTodayOrEarlier($scope.formData.startDate);
+        return dateUtility.isTodayOrEarlier($scope.formData.startDate);
       }
       return false;
     };
 
     $scope.isRelationshipInactive = function () {
       if ($scope.editingRelationship) {
-        return dateUtility.isDateAfterYesterday($scope.formData.endDate);
+        return dateUtility.isYesterdayOrEarlier($scope.formData.endDate);
       }
       return false;
     };

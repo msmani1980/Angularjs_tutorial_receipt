@@ -66,11 +66,11 @@ angular.module('ts5App')
       return yesterday;
     };
 
-    this.isDateTodayOrEarlier = function (date) {
+    this.isTodayOrEarlier = function (date) {
       return this.now() >= Date.parse(date);
     };
 
-    this.isDateAfterYesterday = function (date) {
+    this.isYesterdayOrEarlier = function (date) {
       return this.yesterday() >= Date.parse(date);
     };
 
