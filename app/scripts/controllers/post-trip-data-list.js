@@ -21,20 +21,20 @@ angular.module('ts5App')
 
     this.getStationById = function (stationId) {
       var stationCode = '';
-      if(stationId === undefined || $scope.stationList.length <= 0) {
+      if (stationId === undefined || $scope.stationList.length <= 0) {
         return '';
       }
-      angular.forEach($scope.stationList, function(value) {
-        if(value.stationId.toString() === stationId.toString()) {
-          stationCode =  value.stationCode.toString();
+      angular.forEach($scope.stationList, function (value) {
+        if (value.stationId.toString() === stationId.toString()) {
+          stationCode = value.stationCode.toString();
         }
       });
       return stationCode;
     };
 
-    this.updateStationCodes = function() {
-      if($scope.postTrips.length > 0 && $scope.stationList.length > 0) {
-        angular.forEach($scope.postTrips, function(trip) {
+    this.updateStationCodes = function () {
+      if ($scope.postTrips.length > 0 && $scope.stationList.length > 0) {
+        angular.forEach($scope.postTrips, function (trip) {
           trip.depStationCode = $this.getStationById(trip.depStationId);
           trip.arrStationCode = $this.getStationById(trip.arrStationId);
         });
@@ -67,6 +67,15 @@ angular.module('ts5App')
         dismissButton: true,
         content: '<strong>' + type + '</strong>: ' + message
       });
+    };
+
+
+    this.uploadPostTripSuccess = function (response) {
+      this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
+    };
+
+    this.uploadPostTripFailure = function () {
+      $this.showToastMessage('danger', 'Upload Post Trip', 'upload failed');
     };
 
     this.deletePostTripSuccess = function () {
@@ -145,7 +154,7 @@ angular.module('ts5App')
     };
 
     $scope.deletePostTrip = function () {
-      if($scope.postTrips.length <= 0) {
+      if ($scope.postTrips.length <= 0) {
         $this.deletePostTripFailure();
         return;
       }
@@ -162,4 +171,12 @@ angular.module('ts5App')
       return !scheduleDate.isBefore(today);
     };
 
+    $scope.uploadPostTripFileToApi = function (files) {
+      if (files && files.length) {
+        for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          postTripFactory.uploadPostTrip(_companyId, file, $this.uploadPostTripSuccess, $this.uploadPostTripFailure);
+        }
+      }
+    }
   });
