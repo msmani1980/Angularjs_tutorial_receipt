@@ -1,0 +1,12 @@
+{
+  "companyEmployees": [
+    {
+      id: 1
+    }
+  ],
+  "meta": {
+    "count": 0,
+    "limit": 0,
+    "start": 0
+  }
+}

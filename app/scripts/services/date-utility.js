@@ -74,4 +74,9 @@ angular.module('ts5App')
       return this.yesterday() >= Date.parse(date);
     };
 
+    this.isAfterToday = function (dateToCompare) {
+      var parsedDate = Date.parse(dateToCompare);
+      return parsedDate > this.now();
+    };
+
   });
