@@ -166,7 +166,7 @@
 	}
 
   .import-from-file {
-    height: 34px;
+    height: 35px;
 
   	input[type="file"] {
   		padding: 6px;
@@ -175,6 +175,10 @@
   		margin: 0 !important;
   	}
 
+    li {
+      cursor: pointer;
+    }
+    
   	#importFromData {
     	display: inline-block;
     	white-space: nowrap;

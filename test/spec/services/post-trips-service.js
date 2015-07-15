@@ -9,7 +9,6 @@ describe('Service: postTripService', function () {
     Upload,
     $httpBackend,
     postTripDataListResponseJSON,
-    uploadDeferred,
     headers = {
       companyId: 362,
       'Accept': 'application/json, text/plain, */*',
