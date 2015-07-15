@@ -75,7 +75,7 @@
 
       <div class="col-xs-12 col-sm-6">
 
-        <fieldset ng-disabled="viewOnly || itemIsActive">
+        <fieldset ng-disabled="viewOnly || itemIsActive" ng-if="uiSelectTemplateReady">
 
           <input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.alphanumeric"
                       placeholder="Item123" min-length="1" max-length="10"></input-text>
@@ -109,45 +109,28 @@
                      start-date-model="formData.startDate"
                      end-date-model="formData.endDate"
                      disable-past="true"
-                     label-from="Effective From"
-                     label-to="Effective To"
+                     label-from="Effective From *"
+                     label-to="Effective To *"
                      disable-start-date="viewOnly || itemIsActive"
                      disable-end-date="viewOnly || itemIsInactive"
+                     required="true"
           >
         </date-picker>
 
         <fieldset ng-disabled="viewOnly || itemIsActive" ng-if="uiSelectTemplateReady">
 
           <div class="form-group">
-            <label>Sales Category *</label>
-            <ui-select multiple
-              required
-              name="categoryId"
-              ng-model="formData.categoryId"
-              theme="bootstrap"
-             >
-              <ui-select-match placeholder="Sales Categories" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
-              <ui-select-choices repeat="category in salesCategories">
-                <div ng-bind-html="category.name | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
+          <label>Sales Category *</label>
+            <select name="categoryId" required ng-model="formData.categoryId" class="form-control">
+              <option ng-selected="formData.categoryId === category.id" ng-repeat="category in salesCategories" value="{{ category.id }}">{{ category.name }}</option>
+            </select>
           </div>
 
           <div class="form-group">
             <label>Item Type *</label>
-            <ui-select
-              required
-              name="itemTypeId"
-              ng-model="formData.itemTypeId"
-              theme="bootstrap"
-              ng-change="filterCharacteristics()"
-              ng-disabled="viewOnly || itemIsActive"
-             >
-              <ui-select-match placeholder="Item Type" ui-lock-choice="viewOnly || itemIsActive">{{ $select.selected.name }}</ui-select-match>
-              <ui-select-choices repeat="type in itemTypes">
-                <div ng-bind-html="type.name | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
+            <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
+              <option ng-selected="formData.itemTypeId === type.id" ng-repeat="type in itemTypes" value="{{ type.id }}">{{ type.name }}</option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -165,7 +148,7 @@
           </div>
 
           <div class="form-group">
-          <input-text label="URL" name="sellingPoint" pattern="regexp.word" ng-show="shouldDisplayURLField" placeholder="http://www.website.com"></input-text>
+            <input-text label="URL" name="sellingPoint" pattern="regexp.word" ng-show="shouldDisplayURLField" placeholder="http://www.website.com"></input-text>
           </div>
 
           <div class="form-group">
@@ -175,8 +158,8 @@
               theme="bootstrap"
              >
               <ui-select-match placeholder="Item Substitutions" ui-lock-choice="viewOnly || itemIsActive">{{ $item.itemName }}</ui-select-match>
-              <ui-select-choices repeat="item in items">
-                <div ng-bind-html="item.itemName | highlight: $select.search"></div>
+              <ui-select-choices repeat="substitution in substitutions">
+                <div ng-bind-html="substitution.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </div>
@@ -188,8 +171,8 @@
               theme="bootstrap"
              >
               <ui-select-match placeholder="Item Recommendations" ui-lock-choice="viewOnly || itemIsActive">{{ $item.itemName }}</ui-select-match>
-              <ui-select-choices repeat="item in items">
-                <div ng-bind-html="item.itemName | highlight: $select.search"></div>
+              <ui-select-choices repeat="recommendation in recommendations">
+                <div ng-bind-html="recommendation.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </div>
@@ -308,34 +291,59 @@
 
       <h3 id="measurements">Measurements</h3>
 
-      <div class="row">
+        <div class="row">
 
-        <div class="col-xs-12 col-sm-6">
+          <div class="col-xs-12 col-sm-6">
 
-          <label>Item Weight</label>
+            <label>Item Weight</label>
 
-          <div class="row">
+            <div class="row">
 
-            <div class="form-group">
+              <div class="form-group">
 
-              <div class="col-xs-9">
+                <div class="col-xs-9">
 
-                <input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
+                  <input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
+
+                </div>
+
+                <div class="col-xs-3">
+
+                  <select ng-model="formData.weightType" class="form-control col-xs-2" placeholder="Units">
+
+                    <option ng-repeat="weight in weightUnits" value="{{ weight.id }}">{{ weight.unitCode }}</option>
+
+                  </select>
+
+                </div>
 
               </div>
 
-              <div class="col-xs-3">
+            </div>
 
-                <ui-select
-                  ng-model="formData.weightType"
-                  theme="bootstrap"
-                  ng-disabled="viewOnly || itemIsActive"
-                 >
-                  <ui-select-match placeholder="Units" ui-lock-choice="viewOnly || itemIsActive">{{ $select.selected.unitCode }}</ui-select-match>
-                  <ui-select-choices repeat="weight in weightUnits">
-                    <div ng-bind-html="weight.unitCode | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
+          </div>
+
+          <div class="col-xs-12 col-sm-6">
+
+            <label>Item Volume</label>
+
+            <div class="row">
+
+              <div class="form-group">
+
+                <div class="col-xs-9">
+
+                  <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
+
+                </div>
+
+                <div class="col-xs-3">
+
+                  <select ng-model="formData.volumeType" class="form-control" placeholder="Units">
+                    <option ng-repeat="volume in volumeUnits" value="{{ volume.id }}">{{ volume.unitCode }}</option>
+                  </select>
+
+                </div>
 
               </div>
 
@@ -345,84 +353,39 @@
 
         </div>
 
-        <div class="col-xs-12 col-sm-6">
+        <label>Measurements</label>
+        <span class="text-warning" ng-show="isMeasurementRequired() && !isMeasurementValid()"><p>* Length, Width and Height fields are all required if one contains a value.</p></span>
+        <div class="row">
 
-          <label>Item Volume</label>
+          <div class="form-group" ng-class="{ 'has-error' : isMeasurementRequired() && !isMeasurementValid() , 'has-success' : isMeasurementValid() }" >
 
-          <div class="row">
+            <div class="col-md-3 col-xs-3">
 
-            <div class="form-group">
+              <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Length" name="Length">
 
-              <div class="col-xs-9">
+            </div>
 
-                <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
+            <div class="col-md-3 col-xs-3">
 
-              </div>
+              <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Width" name="Width">
 
-              <div class="col-xs-3">
+            </div>
 
-                <ui-select
-                  name="Unit of Measurement"
-                  ng-model="formData.volumeType"
-                  theme="bootstrap"
-                  ng-disabled="viewOnly || itemIsActive"
-                 >
-                  <ui-select-match placeholder="Units" ui-lock-choice="viewOnly || itemIsActive">{{ $select.selected.unitCode }}</ui-select-match>
-                  <ui-select-choices repeat="volume in volumeUnits">
-                    <div ng-bind-html="volume.unitCode | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
+            <div class="col-md-3 col-xs-3">
 
-              </div>
+              <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Height" name="Height">
 
+            </div>
+
+            <div class="col-md-3 col-xs-3">
+              <select ng-model="formData.dimensionType" class="form-control" ng-required="isMeasurementRequired()" name="Unit of Measurement">
+                <option ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }}</option>
+              </select>
             </div>
 
           </div>
 
         </div>
-
-      </div>
-
-      <label>Measurements</label>
-      <span class="text-warning" ng-show="isMeasurementRequired() && !isMeasurementValid()"><p>* Length, Width and Height fields are all required if one contains a value.</p></span>
-      <div class="row">
-
-        <div class="form-group" ng-class="{ 'has-error' : isMeasurementRequired() && !isMeasurementValid() , 'has-success' : isMeasurementValid() }" >
-
-          <div class="col-md-3 col-xs-3">
-
-            <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Length" name="Length">
-          </div>
-
-          <div class="col-md-3 col-xs-3">
-
-            <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Width" name="Width">
-
-          </div>
-
-          <div class="col-md-3 col-xs-3">
-
-            <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Height" name="Height">
-
-          </div>
-
-          <div class="col-md-3 col-xs-3">
-            <ui-select
-              ng-required="isMeasurementRequired()"
-              name="Unit of Measurement"
-              ng-model="formData.dimensionType"
-              theme="bootstrap"
-              ng-disabled="viewOnly || itemIsActive"
-             >
-              <ui-select-match placeholder="Units" ui-lock-choice="viewOnly || itemIsActive">{{ $select.selected.unitCode }}</ui-select-match>
-              <ui-select-choices repeat="dimension in dimensionUnits">
-                <div ng-bind-html="dimension.unitCode | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </div>
-        </div>
-
-      </div>
 
       <h3 id="price-and-tax">Price & Tax</h3>
 

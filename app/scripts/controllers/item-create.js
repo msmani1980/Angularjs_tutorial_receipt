@@ -100,18 +100,6 @@ angular.module('ts5App')
 
     };
 
-    // deserialize tag object from api
-    this.deserializeTags = function(itemData) {
-      for (var tagKey in itemData.tags) {
-        var tag = itemData.tags[tagKey];
-        var index = $this.findTagsIndex(tag.tagId);
-        itemData.tags[tagKey] = {
-          id: tag.tagId,
-          name: $scope.tags[index].name
-        };
-      }
-    };
-
     this.findTagsIndex = function(tagId) {
       var tagIndex = null;
       for (var key in $scope.tags) {
@@ -124,14 +112,23 @@ angular.module('ts5App')
       return tagIndex;
     };
 
-    // deserialize characteristics object from api
-    this.deserializeCharacteristics = function(itemData) {
-      for (var characteristicKey in itemData.characteristics) {
-        var characteristic = itemData.characteristics[characteristicKey];
-        var index = $this.findCharacteristicIndex(characteristic.characteristicId);
-        itemData.characteristics[characteristicKey] = {
-          id: characteristic.characteristicId,
-          name: $scope.characteristics[index].name
+    this.deserializeTags = function(itemData) {
+      for (var tagKey in itemData.tags) {
+        var tag = itemData.tags[tagKey];
+        var index = $this.findTagsIndex(tag.tagId);
+        itemData.tags[tagKey] = {
+          id: tag.tagId,
+          name: $scope.tags[index].name
+        };
+      }
+    };
+
+    this.formatTags = function(itemData) {
+      for (var tagKey in itemData.tags) {
+        var tag = itemData.tags[tagKey];
+        itemData.tags[tagKey] = {
+          tagId: tag.id,
+          itemId: itemData.id
         };
       }
     };
@@ -148,14 +145,22 @@ angular.module('ts5App')
       return characteristicIndex;
     };
 
-    // deserialize allergens object from api
-    this.deserializeAllergens = function(itemData) {
-      for (var allergenKey in itemData.allergens) {
-        var allergen = itemData.allergens[allergenKey];
-        var index = $this.findAllergenIndex(allergen.allergenId);
-        itemData.allergens[allergenKey] = {
-          id: allergen.allergenId,
-          name: $scope.allergens[index].name
+    this.deserializeCharacteristics = function(itemData) {
+      for (var characteristicKey in itemData.characteristics) {
+        var characteristic = itemData.characteristics[characteristicKey];
+        var index = $this.findCharacteristicIndex(characteristic.characteristicId);
+        itemData.characteristics[characteristicKey] = {
+          id: characteristic.characteristicId,
+          name: $scope.characteristics[index].name
+        };
+      }
+    };
+
+    this.formatCharacteristics = function(itemData) {
+      for (var characteristicKey in itemData.characteristics) {
+        var characteristic = itemData.characteristics[characteristicKey];
+        itemData.characteristics[characteristicKey] = {
+          characteristicId: characteristic.id
         };
       }
     };
@@ -172,34 +177,118 @@ angular.module('ts5App')
       return allergenIndex;
     };
 
-    // checks to see if the item is active
-    function checkIfItemIsActive(itemData) {
+    this.deserializeAllergens = function(itemData) {
+      for (var allergenKey in itemData.allergens) {
+        var allergen = itemData.allergens[allergenKey];
+        var index = $this.findAllergenIndex(allergen.allergenId);
+        itemData.allergens[allergenKey] = {
+          id: allergen.allergenId,
+          name: $scope.allergens[index].name
+        };
+      }
+    };
+
+    this.formatAllergens = function(itemData) {
+      for (var allergenKey in itemData.allergens) {
+        var allergen = itemData.allergens[allergenKey];
+        itemData.allergens[allergenKey] = {
+          allergenId: allergen.allergenId,
+          itemId: itemData.id
+        };
+      }
+    };
+
+    this.findSubstitutionIndex = function(substitutionId) {
+      var substitutionIndex = null;
+      for (var key in $scope.substitutions) {
+        var substitution = $scope.substitutions[key];
+        if (parseInt(substitution.id) === parseInt(substitutionId)) {
+          substitutionIndex = key;
+          break;
+        }
+      }
+      return substitutionIndex;
+    };
+
+    this.deserializeSubstitutions = function(itemData) {
+      for (var substitutionKey in itemData.substitutions) {
+        var substitutionId = itemData.substitutions[substitutionKey];
+        var index = $this.findSubstitutionIndex(substitutionId);
+        itemData.substitutions[substitutionKey] = {
+          id: substitutionId,
+          itemName: $scope.substitutions[index].itemName
+        };
+      }
+    };
+
+    this.formatSubstitutions = function(itemData) {
+      for (var substitutionKey in itemData.substitutions) {
+        var substitution = itemData.substitutions[substitutionKey];
+        itemData.substitutions[substitutionKey] = substitution.id;
+      }
+    };
+
+    this.findRecommendationIndex = function(recommendationId) {
+      var recommendationIndex = null;
+      for (var key in $scope.recommendations) {
+        var recommendation = $scope.recommendations[key];
+        if (parseInt(recommendation.id) === parseInt(recommendationId)) {
+          recommendationIndex = key;
+          break;
+        }
+      }
+      return recommendationIndex;
+    };
+
+    this.deserializeRecommendations = function(itemData) {
+      for (var recommendationKey in itemData.recommendations) {
+        var recommendationId = itemData.recommendations[
+          recommendationKey];
+        var index = $this.findRecommendationIndex(recommendationId);
+        itemData.recommendations[recommendationKey] = {
+          id: recommendationId,
+          itemName: $scope.recommendations[index].itemName
+        };
+      }
+    };
+
+    this.formatRecommendations = function(itemData) {
+      for (var recommendationKey in itemData.recommendations) {
+        var recommendation = itemData.recommendations[recommendationKey];
+        itemData.recommendations[recommendationKey] = recommendation.id;
+      }
+    };
+
+    this.checkIfItemIsActive = function(itemData) {
       var today = new Date();
       var itemStartDate = new Date(itemData.startDate);
       $scope.itemIsActive = itemStartDate <= today;
-    }
+    };
 
     // checks to see if the item is inactive
-    function checkIfItemIsInactive(itemData) {
+    this.checkIfItemIsInactive = function(itemData) {
       var today = new Date();
       var itemEndDate = new Date(itemData.endDate);
       $scope.itemIsInactive = itemEndDate <= today;
-    }
+    };
 
     // updates the $scope.formData
     this.updateFormData = function(itemData) {
       if (!itemData) {
         return false;
       }
-      itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
+      itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD',
+        'L');
       itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
-      checkIfItemIsInactive(itemData);
+      this.checkIfItemIsInactive(itemData);
       if (!$scope.itemIsInactive) {
-        checkIfItemIsActive(itemData);
+        this.checkIfItemIsActive(itemData);
       }
       this.deserializeTags(itemData);
-      this.deserializeCharacteristics(itemData);
       this.deserializeAllergens(itemData);
+      this.deserializeCharacteristics(itemData);
+      this.deserializeSubstitutions(itemData);
+      this.deserializeRecommendations(itemData);
 
       // TODO: turn this into a function
       for (var imageIndex in itemData.images) {
@@ -286,7 +375,9 @@ angular.module('ts5App')
 
     this.setCharacteristics = function(data) {
       $scope.characteristics = data;
-      $scope.filterCharacteristics();
+      if ($scope.itemTypeId && $scope.itemTypes) {
+        $scope.filterCharacteristics();
+      }
     };
 
     this.setDimensionList = function(data) {
@@ -313,6 +404,8 @@ angular.module('ts5App')
 
     this.setItemList = function(data) {
       $scope.items = data.retailItems;
+      $scope.substitutions = data.retailItems;
+      $scope.recommendations = data.retailItems;
     };
 
     this.setMasterCurrenciesList = function(data) {
@@ -329,6 +422,66 @@ angular.module('ts5App')
     };
 
     this.init();
+
+    // TODO: make this a controller function
+    // Formats the dates when sending the payload to the API
+    this.formatPayloadDates = function(itemData) {
+      itemData.startDate = formatDate(itemData.startDate, 'L', 'YYYYMMDD');
+      itemData.endDate = formatDate(itemData.endDate, 'L', 'YYYYMMDD');
+      // TODO: Turn this into a function
+      for (var imageIndex in itemData.images) {
+        var image = itemData.images[imageIndex];
+        image.startDate = formatDate(image.startDate, 'L', 'YYYYMMDD');
+        image.endDate = formatDate(image.endDate, 'L', 'YYYYMMDD');
+      }
+      // TODO: Turn this into a function
+      for (var priceIndex in itemData.prices) {
+        var price = itemData.prices[priceIndex];
+        price.startDate = formatDate(price.startDate, 'L', 'YYYYMMDD');
+        price.endDate = formatDate(price.endDate, 'L', 'YYYYMMDD');
+        // TODO: Turn this into a function
+        for (var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
+          var station = itemData.prices[priceIndex].stationExceptions[
+            stationExceptionIndex];
+          station.startDate = formatDate(station.startDate, 'L',
+            'YYYYMMDD');
+          station.endDate = formatDate(station.endDate, 'L', 'YYYYMMDD');
+        }
+      }
+    };
+
+    // cleans up invalid properties of payload before submitting
+    this.cleanUpPayload = function(itemData) {
+      for (var priceIndex in itemData.prices) {
+        for (var currencyIndex in itemData.prices[priceIndex].priceCurrencies) {
+          var currency = itemData.prices[priceIndex].priceCurrencies[
+            currencyIndex];
+          delete currency.code;
+        }
+        for (var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
+          var stationException = itemData.prices[priceIndex].stationExceptions[
+            stationExceptionIndex];
+          delete stationException.stations;
+        }
+      }
+    };
+
+    $scope.filterCharacteristics = function() {
+      if ($scope.itemTypes[$scope.formData.itemTypeId - 1].name ===
+        'Virtual') {
+        $scope.filteredCharacteristics = [];
+        angular.forEach($scope.characteristics, function(value) {
+          if (value.name === 'Downloadable' || value.name ===
+            'Link') {
+            $scope.filteredCharacteristics.push(value);
+          }
+          $scope.shouldDisplayURLField = true;
+        });
+      } else {
+        $scope.filteredCharacteristics = $scope.characteristics;
+        $scope.shouldDisplayURLField = false;
+      }
+    };
 
     // TODO: Move to global function
     function formatDate(dateString, formatFrom, formatTo) {
@@ -375,7 +528,7 @@ angular.module('ts5App')
             newPriceGroup.endDate !== oldPriceGroup.endDate) {
 
             // update the price group
-            updatePriceGroup(priceIndex);
+            this.updatePriceGroup(priceIndex);
 
           }
 
@@ -400,8 +553,7 @@ angular.module('ts5App')
             ) {
 
               // update the price group
-              this.updateStationException(priceIndex,
-                stationExceptionIndex);
+              this.updateStationException(priceIndex, stationExceptionIndex);
 
             }
 
@@ -458,22 +610,6 @@ angular.module('ts5App')
         1);
     };
 
-    $scope.filterCharacteristics = function() {
-      $scope.filteredCharacteristics = $scope.characteristics;
-      $scope.shouldDisplayURLField = false;
-      if ($scope.formData.itemTypeId && $scope.formData.itemTypeId.name ===
-        'Virtual') {
-        $scope.filteredCharacteristics = [];
-        angular.forEach($scope.characteristics, function(value) {
-          if (value.name === 'Downloadable' || value.name ===
-            'Link') {
-            $scope.filteredCharacteristics.push(value);
-          }
-          $scope.shouldDisplayURLField = true;
-        });
-      }
-    };
-
     // gets a list of stations from the API filtered by station's start and end date
     this.getGlobalStationList = function(stationException) {
       var startDate = formatDate(stationException.startDate, 'L',
@@ -508,7 +644,7 @@ angular.module('ts5App')
 
     // sets the stations currenies list
     this.setStationsCurrenciesList = function(stationException, data) {
-      var stationExceptionCurrencies = this.generateStationCurrenciesList(
+      var stationExceptionCurrencies = this.CurrenciesList(
         data.response);
       stationException.stationExceptionCurrencies =
         stationExceptionCurrencies;
@@ -589,9 +725,7 @@ angular.module('ts5App')
       $scope.formData.prices.splice(key, 1);
     };
 
-
-    // generate a list of price currencies
-    function generatePriceCurrenciesList(currenciesList) {
+    this.generatePriceCurrenciesList = function(currenciesList) {
       var priceCurrencies = [];
       for (var key in currenciesList) {
         var currency = currenciesList[key];
@@ -602,10 +736,9 @@ angular.module('ts5App')
         });
       }
       return priceCurrencies;
-    }
+    };
 
-    // pulls a list of currencies from the API and updates the price group
-    function updatePriceGroup(priceIndex) {
+    this.updatePriceGroup = function(priceIndex) {
       var startDate = formatDate($scope.formData.prices[priceIndex].startDate,
         'L', 'YYYYMMDD');
       var endDate = formatDate($scope.formData.prices[priceIndex].endDate,
@@ -620,85 +753,11 @@ angular.module('ts5App')
       };
       currencyFactory.getCompanyCurrencies(currencyFilters).then(function(
         data) {
-        var priceCurrencies = generatePriceCurrenciesList(data.response);
+        var priceCurrencies = this.generatePriceCurrenciesList(data.response);
         $scope.formData.prices[priceIndex].priceCurrencies =
           priceCurrencies;
       });
-
-    }
-
-    // TODO: make this a controller function
-    // Formats the dates when sending the payload to the API
-    function formatPayloadDates(itemData) {
-      itemData.startDate = formatDate(itemData.startDate, 'L', 'YYYYMMDD');
-      itemData.endDate = formatDate(itemData.endDate, 'L', 'YYYYMMDD');
-      // TODO: Turn this into a function
-      for (var imageIndex in itemData.images) {
-        var image = itemData.images[imageIndex];
-        image.startDate = formatDate(image.startDate, 'L', 'YYYYMMDD');
-        image.endDate = formatDate(image.endDate, 'L', 'YYYYMMDD');
-      }
-      // TODO: Turn this into a function
-      for (var priceIndex in itemData.prices) {
-        var price = itemData.prices[priceIndex];
-        price.startDate = formatDate(price.startDate, 'L', 'YYYYMMDD');
-        price.endDate = formatDate(price.endDate, 'L', 'YYYYMMDD');
-        // TODO: Turn this into a function
-        for (var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
-          var station = itemData.prices[priceIndex].stationExceptions[
-            stationExceptionIndex];
-          station.startDate = formatDate(station.startDate, 'L',
-            'YYYYMMDD');
-          station.endDate = formatDate(station.endDate, 'L', 'YYYYMMDD');
-        }
-      }
-    }
-
-    // cleans up invalid properties of payload before submitting
-    function cleanUpPayload(itemData) {
-      for (var priceIndex in itemData.prices) {
-        for (var currencyIndex in itemData.prices[priceIndex].priceCurrencies) {
-          var currency = itemData.prices[priceIndex].priceCurrencies[
-            currencyIndex];
-          delete currency.code;
-        }
-        for (var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
-          var stationException = itemData.prices[priceIndex].stationExceptions[
-            stationExceptionIndex];
-          delete stationException.stations;
-        }
-      }
-    }
-
-    // formats the tags for payload
-    function formatTags(itemData) {
-      for (var tagKey in itemData.tags) {
-        var tagId = itemData.tags[tagKey];
-        itemData.tags[tagKey] = {
-          tagId: tagId
-        };
-      }
-    }
-
-    // formats the allergens for payload
-    function formatAllergens(itemData) {
-      for (var allergenKey in itemData.allergens) {
-        var allergenId = itemData.allergens[allergenKey];
-        itemData.allergens[allergenKey] = {
-          allergenId: allergenId
-        };
-      }
-    }
-
-    // formats the characteristics for payload
-    function formatCharacteristics(itemData) {
-      for (var characteristicKey in itemData.characteristics) {
-        var characteristicId = itemData.characteristics[characteristicKey];
-        itemData.characteristics[characteristicKey] = {
-          characteristicId: characteristicId
-        };
-      }
-    }
+    };
 
     this.updateItem = function(itemData) {
       var $this = this;
@@ -720,7 +779,7 @@ angular.module('ts5App')
         });
     };
 
-    function createItem(itemData) {
+    this.createItem = function(itemData) {
       angular.element('#loading').modal('show').find('p').text(
         'We are creating your item');
       var newItemPayload = {
@@ -734,26 +793,26 @@ angular.module('ts5App')
         $scope.displayError = true;
         $scope.formErrors = error.data;
       });
-    }
+    };
 
     $scope.submitForm = function(formData) {
-
       if (!$scope.form.$valid) {
         $scope.displayError = true;
         return false;
       }
       var itemData = angular.copy(formData);
-      formatTags(itemData);
-      formatCharacteristics(itemData);
-      formatAllergens(itemData);
-      formatPayloadDates(itemData);
-      cleanUpPayload(itemData);
+      $this.formatTags(itemData);
+      $this.formatCharacteristics(itemData);
+      $this.formatSubstitutions(itemData);
+      $this.formatAllergens(itemData);
+      $this.formatRecommendations(itemData);
+      $this.formatPayloadDates(itemData);
+      $this.cleanUpPayload(itemData);
       if ($scope.editingItem) {
         $this.updateItem(itemData);
       } else {
-        createItem(itemData);
+        $this.createItem(itemData);
       }
-
     };
 
     $scope.isMeasurementRequired = function() {
