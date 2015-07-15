@@ -70,7 +70,7 @@ angular.module('ts5App')
     };
 
 
-    this.uploadPostTripSuccess = function (response) {
+    this.uploadPostTripSuccess = function () {
       this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
     };
 
@@ -178,5 +178,5 @@ angular.module('ts5App')
           postTripFactory.uploadPostTrip(_companyId, file, $this.uploadPostTripSuccess, $this.uploadPostTripFailure);
         }
       }
-    }
+    };
   });
