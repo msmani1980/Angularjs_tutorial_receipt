@@ -164,12 +164,9 @@ describe('Service: postTripService', function () {
         expect(!!postTripsService.deletePostTrip).toBe(true);
       });
 
-      beforeEach(inject(function (_Upload_, $q) {
+      beforeEach(inject(function (_Upload_) {
         Upload = _Upload_;
-        uploadDeferred = $q.defer();
-        uploadDeferred.resolve({id: 123});
-
-        var mockFn = {};
+        mockFn = {};
 
         mockFn.progress = jasmine.createSpy('progressFn').and.returnValue(mockFn);
         mockFn.success = jasmine.createSpy('successFn').and.returnValue(mockFn);
