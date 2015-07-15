@@ -112,7 +112,6 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
 
       it('should change the dates to valid App Format', function () {
         scope.$digest();
-        console.log(scope.commissionList[0]);
         expect(dateUtility.isDateValidForApp(scope.commissionList[0].startDate)).toBe(true);
         expect(dateUtility.isDateValidForApp(scope.commissionList[0].endDate)).toBe(true);
       });
