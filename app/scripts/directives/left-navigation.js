@@ -12,12 +12,41 @@ angular.module('ts5App')
     var leftNavigationController = function ($scope, $location) {
 
       $scope.locationPath = $location.path();
+
       switch ($scope.basePath) {
+      case 'cash-bag' :
+
+        $scope.itemListPath = '/exchange-rates';
+        $scope.manageRetailItemIcon = 'icon-manage-transactions';
+        $scope.manageRetailItemLabel = 'Manage Transactions';
+
+
+        $scope.itemCreatePath = '/cash-bag-list';
+        $scope.itemCreateIcon = 'icon-create-receipt-rules';
+        $scope.itemCreateLabel = 'Manage Cash Bag';
+
+        $scope.manageCategoriesPath = '/ember/#/cash-bag-submission';
+        $scope.manageRetailCatIcon = 'icon-manage-retail-category';
+        $scope.manageRetailCatLabel = 'Cash Bag Submission';
+
+        $scope.itemPrefix = 'Cash Bag';
+
+        break;
+
       case 'retail-items':
 
         $scope.itemListPath = '/item-list';
+        $scope.manageRetailItemIcon = 'icon-manage-retail-item';
+        $scope.manageRetailItemLabel = 'Manage Retail Items';
+
         $scope.itemCreatePath = '/item-create';
+        $scope.itemCreateIcon = 'icon-create-retail-item';
+        $scope.itemCreateLabel = 'Create Retail Item';
+
         $scope.manageCategoriesPath = '/ember/#/retail-items/categories';
+        $scope.manageRetailCatIcon = 'icon-manage-retail-category';
+        $scope.manageRetailCatLabel = 'Manage Retail Item Categories';
+
         $scope.itemPrefix = 'Retail';
 
         break;
@@ -25,11 +54,19 @@ angular.module('ts5App')
       case 'stock-owner-items':
 
         $scope.itemListPath = '/stock-owner-item-list';
+        $scope.manageRetailItemIcon = 'icon-manage-retail-item';
+        $scope.manageRetailItemLabel = 'Manage Stock Owner Items';
+
         $scope.itemCreatePath = '/stock-owner-item-create';
-        $scope.manageCategoriesPath =
-          '/ember/#/retail-items/categories';
+        $scope.itemCreateIcon = 'icon-create-retail-item';
+        $scope.itemCreateLabel = 'Create Stock Owner Item';
+
+        $scope.manageCategoriesPath = '/ember/#/retail-items/categories';
+        $scope.manageRetailCatIcon = 'icon-manage-retail-category';
+        $scope.manageRetailCatLabel = 'Manage Stock Owner Item Categories';
+        $scope.manageRetailCatLabelSm = 'Manage SO Item Categories';
+
         $scope.itemPrefix = 'Stock Owner';
-        $scope.itemPrefixSm = 'SO';
 
         break;
 
@@ -47,7 +84,6 @@ angular.module('ts5App')
 
       // Show leave view modal
       $scope.leaveViewNav = function (path) {
-
         $scope.leavePathNav = path;
         var currentPath = $location.path();
         var onEditView = $this.checkIfEditing();
