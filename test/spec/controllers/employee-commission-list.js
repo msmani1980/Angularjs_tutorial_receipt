@@ -18,9 +18,11 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     priceTypeListJSON,
     taxRateTypesJSON,
     employeeCommissionListJSON,
+    location,
     scope;
 
-  beforeEach(inject(function ($controller, $rootScope, $q, $injector) {
+  beforeEach(inject(function ($controller, $rootScope, $q, $injector, $location) {
+    location = $location;
     inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedEmployeeCommissionList_) {
       itemsListJSON = _servedItemsList_;
       priceTypeListJSON = _servedPriceTypes_;
