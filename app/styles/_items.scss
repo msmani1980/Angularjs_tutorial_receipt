@@ -369,52 +369,9 @@
 
 .stock-list {
   
-  .table {
-    width: 100%;
-    
-    tr {
-      display: block;
-    }
-    
-    tr:after {
-      content: ' ';
-      display: block;
-      visibility: hidden;
-      clear: both;
-    }
-    
-    thead {
-      display: block;
-      
-      th {
-        display: block;
-        height: 36px;
-        width: 14%;
-        float: left;
-        
-        &.stock-list-category {
-          width: 28%;
-          text-align: center;
-          border-left: 1px solid #ddd;
-        }
-        
-        &.stock-list-subcategory {
-          text-align: center;
-          border-left: 1px solid #ddd;
-        }
-      }
-    }
-    
-    tbody {
-      display: block;
-      border-bottom: 1px solid #ddd;
-      
-      td {
-        display: block;
-        width: 14%;
-        float: left;
-      }
-    }
+  label {
+    font-weight:100;
+    font-size:16px
   }
 }
 
