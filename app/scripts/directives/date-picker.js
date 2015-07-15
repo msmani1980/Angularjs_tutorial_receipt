@@ -9,7 +9,7 @@
  * # datePicker
  */
 angular.module('ts5App')
-  .directive('datePicker', function () {
+  .directive('datePicker', function (dateUtility) {
 
     var datePickerOptions = {
       orientation: 'auto top',
@@ -68,8 +68,12 @@ angular.module('ts5App')
       var watchListener = $scope.$watchGroup(['startDateModel', 'endDateModel'], function () {
         if (!$scope.isSearchField && $scope.disablePast && !angular.isUndefined($scope.startDateModel)) {
           // TODO: update to use isBefore and isAfter methods
-          $scope.shouldDisableStartDate = moment($scope.startDateModel, 'L').format('L') < moment().format('L');
-          $scope.shouldDisableEndDate = moment($scope.endDateModel, 'L').format('L') < moment().format('L');
+          if ($scope.startDateModel) {
+            $scope.shouldDisableStartDate = !dateUtility.isAfterToday($scope.startDateModel);
+          }
+          if ($scope.endDateModel) {
+            $scope.shouldDisableEndDate = !dateUtility.isAfterToday($scope.endDateModel);
+          }
           watchListener();
           initializeDatePicker($scope, $element);
         }
