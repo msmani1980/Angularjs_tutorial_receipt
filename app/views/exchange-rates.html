@@ -1,144 +1,147 @@
-<h1 class="ng-scope">{{viewName}}</h1>
-<form name="dailyExchangeRatesForm">
-  <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-    </button>
-    <h4>
-      We found errors :( !
-    </h4>
+<div class="fluid-container module-container">
+  <h1 class="ng-scope">{{viewName}}</h1>
+  <form name="dailyExchangeRatesForm">
+    <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+      </button>
+      <h4>
+        We found errors :( !
+      </h4>
 
-    <ul>
-      <li ng-repeat="error in form.$error.required">
-        <strong>{{ error.$name }}</strong> is required
-      </li>
-      <li ng-repeat="error in form.$error.pattern">
-        <strong>{{ error.$name }}</strong> is invalid
-      </li>
-      <li ng-show="formErrors" ng-repeat="error in formErrors">
-        <strong>{{error.field}}</strong>
-        <span> {{ error.value }}</span>
-        <span> {{ error.code }}</span>
-      </li>
-    </ul>
-  </div>
-
-  <div class="modal fade variance-warning-modal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h4 class="modal-title">Daily Exchange Rate Variance Warning!</h4>
-        </div>
-
-        <div class="modal-body">
-          <p>Are you sure you want to continue, there is more than 10% variance on the exchange rates</p>
-        </div>
-
-        <ul ng-repeat="variance in varianceObject">
-          <li>{{variance.code}} - {{variance.percentage}} %</li>
-        </ul>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" ng-click="saveDailyExchangeRates()">Continue</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
-        </div>
-
-      </div>
+      <ul>
+        <li ng-repeat="error in form.$error.required">
+          <strong>{{ error.$name }}</strong> is required
+        </li>
+        <li ng-repeat="error in form.$error.pattern">
+          <strong>{{ error.$name }}</strong> is invalid
+        </li>
+        <li ng-show="formErrors" ng-repeat="error in formErrors">
+          <strong>{{error.field}}</strong>
+          <span> {{ error.value }}</span>
+          <span> {{ error.code }}</span>
+        </li>
+      </ul>
     </div>
-  </div>
 
-  <div class="panel panel-default">
+    <div class="modal fade variance-warning-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
 
-    <div class="panel-heading">
-      <div class="row">
-        <h3 class="col-xs-8">{{company.companyName}}</h3>
+          <div class="modal-header">
+            <h4 class="modal-title">Daily Exchange Rate Variance Warning!</h4>
+          </div>
 
-        <date-picker
-          class="col-xs-4 text-right pull-right"
-          disable-date-range="true"
-          element-class="col-xs-12 col-lg-12 pull-right"
-          start-date-model="cashiersDateField"
-          is-search-field="true"
-          label-from="Cashier's entry date"
-          required="true">
-        </date-picker>
+          <div class="modal-body">
+            <p>Are you sure you want to continue, there is more than 10% variance on the exchange rates</p>
+          </div>
+
+          <ul ng-repeat="variance in varianceObject">
+            <li>{{variance.code}} - {{variance.percentage}} %</li>
+          </ul>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="saveDailyExchangeRates()">Continue</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
+          </div>
+
+        </div>
       </div>
     </div>
 
-    <div class="panel-body">
+    <div class="panel panel-default">
 
-      <div class="row">
-        <div class="col-xs-2">{{cashHandlerCompany.companyName}}</div>
-        <div class="col-xs-10 text-right">Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></div>
-      </div>
-      <div class="row">
-        <label class="col-xs-2 control-label">Currency</label>
-        <label class="col-xs-3 control-label" ng-if="isBankExchangePreferred()">Bank Exchange Rate</label>
-        <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred()">Paper Exchange Rate</label>
-        <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred()">Coin Exchange Rate</label>
-      </div>
-      <div class="row" ng-repeat="currency in companyCurrencies">
-        <div class="col-xs-2">{{currency.code}}</div>
+      <div class="panel-heading">
+        <div class="row">
+          <h3 class="col-xs-8">{{company.companyName}}</h3>
 
-        <div class="col-xs-3" ng-if="isBankExchangePreferred()">
-          <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-money"></i></span>
-            <input custom-validity
-                   custom-pattern="currencyWithFourDecimalPlace"
-                   ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
-                   ng-model="currenciesFields[currency.code].bankExchangeRate"
-                   ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                   name="{{currency.code}}bankExchangeRate"
-                   currencyType="bankExchangeRate" placeholder="0.0000"
-                   class="form-control"
-                   aria-label="Amount (to the nearest dollar)"/>
+          <date-picker
+            class="col-xs-4 text-right pull-right"
+            disable-date-range="true"
+            element-class="col-xs-12 col-lg-12 pull-right"
+            start-date-model="cashiersDateField"
+            is-search-field="true"
+            label-from="Cashier's entry date"
+            required="true">
+          </date-picker>
+        </div>
+      </div>
+
+      <div class="panel-body">
+
+        <div class="row">
+          <div class="col-xs-2">{{cashHandlerCompany.companyName}}</div>
+          <div class="col-xs-10 text-right">Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></div>
+        </div>
+        <div class="row">
+          <label class="col-xs-2 control-label">Currency</label>
+          <label class="col-xs-3 control-label" ng-if="isBankExchangePreferred()">Bank Exchange Rate</label>
+          <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred()">Paper Exchange Rate</label>
+          <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred()">Coin Exchange Rate</label>
+        </div>
+        <div class="row" ng-repeat="currency in companyCurrencies">
+          <div class="col-xs-2">{{currency.code}}</div>
+
+          <div class="col-xs-3" ng-if="isBankExchangePreferred()">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-money"></i></span>
+              <input custom-validity
+                     custom-pattern="currencyWithFourDecimalPlace"
+                     ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
+                     ng-model="currenciesFields[currency.code].bankExchangeRate"
+                     ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                     name="{{currency.code}}bankExchangeRate"
+                     currencyType="bankExchangeRate" placeholder="0.0000"
+                     class="form-control"
+                     aria-label="Amount (to the nearest dollar)"/>
+            </div>
+          </div>
+
+          <div class="col-xs-5" ng-if="!isBankExchangePreferred()">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-money"></i></span>
+              <input custom-validity
+                     custom-pattern="currencyWithFourDecimalPlace"
+                     ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
+                     ng-model="currenciesFields[currency.code].paperExchangeRate"
+                     ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                     name="{{currency.code}}paperExchangeRate"
+                     currencyType="paperExchangeRate" placeholder="0.0000"
+                     class="form-control"
+                     aria-label="Amount (to the nearest dollar)"/>
+            </div>
+          </div>
+
+          <div class="col-xs-5" ng-if="!isBankExchangePreferred()">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-money"></i></span>
+              <input custom-validity
+                     custom-pattern="currencyWithFourDecimalPlace"
+                     ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
+                     ng-model="currenciesFields[currency.code].coinExchangeRate"
+                     ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                     name="{{currency.code}}coinExchangeRate"
+                     currencyType="coinExchangeRate" placeholder="0.0000"
+                     class="form-control"
+                     aria-label="Amount (to the nearest dollar)"/>
+            </div>
           </div>
         </div>
-
-        <div class="col-xs-5" ng-if="!isBankExchangePreferred()">
-          <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-money"></i></span>
-            <input custom-validity
-                   custom-pattern="currencyWithFourDecimalPlace"
-                   ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
-                   ng-model="currenciesFields[currency.code].paperExchangeRate"
-                   ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                   name="{{currency.code}}paperExchangeRate"
-                   currencyType="paperExchangeRate" placeholder="0.0000"
-                   class="form-control"
-                   aria-label="Amount (to the nearest dollar)"/>
-          </div>
-        </div>
-
-        <div class="col-xs-5" ng-if="!isBankExchangePreferred()">
-          <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-money"></i></span>
-            <input custom-validity
-                   custom-pattern="currencyWithFourDecimalPlace"
-                   ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
-                   ng-model="currenciesFields[currency.code].coinExchangeRate"
-                   ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                   name="{{currency.code}}coinExchangeRate"
-                   currencyType="coinExchangeRate" placeholder="0.0000"
-                   class="form-control"
-                   aria-label="Amount (to the nearest dollar)"/>
-          </div>
-        </div>
       </div>
-    </div>
-    <div class="panel-footer text-right" ng-show="showActionButtons">
-      <button
-        class="btn btn-default save-btn"
-        data-loading-text="Saving..."
-        ng-disabled="requestInProgress"
-        ng-click="checkVarianceAndSave(false)">Save</button>
+      <div class="panel-footer text-right" ng-show="showActionButtons">
+        <button
+          class="btn btn-default save-btn"
+          data-loading-text="Saving..."
+          ng-disabled="requestInProgress"
+          ng-click="checkVarianceAndSave(false)">Save</button>
 
-      <button
-        class="btn btn-primary submit-btn"
-        data-loading-text="Submitting..."
-        ng-disabled="requestInProgress"
-        ng-click="checkVarianceAndSave(true)">Submit</button>
-    </div>
+        <button
+          class="btn btn-primary submit-btn"
+          data-loading-text="Submitting..."
+          ng-disabled="requestInProgress"
+          ng-click="checkVarianceAndSave(true)">Submit</button>
+      </div>
 
-  </div>
-</form>
+    </div>
+  </form>
+</div>
+<left-navigation base-path="cash-bag"></left-navigation>
