@@ -91,7 +91,7 @@ angular.module('ts5App')
           if (currency.coinAmountManual !== null) {
             canDelete = false;
           }
-          if (currency.coinAmountManual !== null) {
+          if (currency.paperAmountManual !== null) {
             canDelete = false;
           }
         }
@@ -99,9 +99,9 @@ angular.module('ts5App')
       return canDelete;
     };
 
-    $scope.delete = function (cashBag) {
+    $scope.removeRecord = function (cashBag) {
       if (!$scope.canDelete(cashBag)) {
-        return;
+        return false;
       }
       cashBagFactory.deleteCashBag(cashBag.id).then(function () {
           showMessage(null, false, 'successfully deleted');
