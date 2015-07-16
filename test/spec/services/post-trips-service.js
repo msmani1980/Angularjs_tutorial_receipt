@@ -160,7 +160,7 @@ describe('Service: postTripService', function () {
     var mockFn;
     describe('uploadPostTrip', function () {
       it('should be accessible in service', function () {
-        expect(!!postTripsService.deletePostTrip).toBe(true);
+        expect(!!postTripsService.uploadPostTrip).toBe(true);
       });
 
       beforeEach(inject(function (_Upload_) {
