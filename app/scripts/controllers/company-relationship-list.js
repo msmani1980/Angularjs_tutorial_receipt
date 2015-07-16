@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyRelationshipListCtrl', ['$q', '$scope', '$route', '$location', '$routeParams', 'ngToast', 'dateUtility', 'companyRelationshipFactory', function ($q, $scope, $route, $location, $routeParams, ngToast, dateUtility, companyRelationshipFactory) {
+  .controller('CompanyRelationshipListCtrl', function ($q, $scope, $route, $location, $routeParams, ngToast, dateUtility, companyRelationshipFactory) {
     var $this = this;
     $scope.viewName = 'Company Relationships';
     $scope.isLoading = true;
@@ -21,6 +21,14 @@ angular.module('ts5App')
 
     $scope.back = function () {
       $location.path('/company-list/');
+    };
+
+    $scope.isPending = function () {
+      return isLoading && !isRejected;
+    };
+
+    $scope.loadedSuccessfully = function () {
+      return !isLoading && !isRejected;
     };
 
     function showToast(className, type, message) {
@@ -224,4 +232,4 @@ angular.module('ts5App')
     };
 
     setupController();
-  }]);
+  });

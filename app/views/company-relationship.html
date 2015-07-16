@@ -16,11 +16,11 @@
   </div>
 </div>
 <div><p>All required fields are marked with a *</p></div>
-<div ng-if="isLoading && !isRejected" class="text-center">
+<div ng-if="isPending()" class="text-center">
   <p><i class="fa fa-cog fa-spin fa-4x"></i></p>
   <p>Loading...</p>
 </div>
-<div ng-if="!isLoading && !isRejected">
+<div ng-if="isFulfilled()">
   <div ng-if="companyRelationshipListData.length">
     <div class="row">
       <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in col-xs-12" role="alert">

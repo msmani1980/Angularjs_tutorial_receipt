@@ -9,6 +9,15 @@ angular.module('ts5App')
   .controller('ExcelUploadCtrl', function ($scope, $http, $q, $injector, Upload, ENV, GlobalMenuService, ngToast) {
     var $this = this;
     this.service;
+
+    function showToast(className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    }
+
     $scope.$watchCollection('rejFiles', function (oldObj, newObj) {
       oldObj = oldObj || [];
       if (oldObj.length >= 1) {
@@ -37,14 +46,6 @@ angular.module('ts5App')
 
     function errorHandler (response) {
       showToast('danger', 'Import from file', response.config.file[0].name + ' was rejected');
-    }
-
-    function showToast(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
     }
 
     $scope.clearFile = function (filesIndex) {

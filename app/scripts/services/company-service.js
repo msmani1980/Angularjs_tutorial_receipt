@@ -9,7 +9,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companyService', ['$resource', 'ENV', function ($resource, ENV) {
+  .service('companyService', function ($resource, ENV) {
     var requestURL = ENV.apiUrl + '/api/companies/:id';
     var requestParameters = {
       id: '@id'
@@ -66,4 +66,4 @@ angular.module('ts5App')
       createCompany: createCompany,
       updateCompany: updateCompany
     };
-  }]);
+  });
