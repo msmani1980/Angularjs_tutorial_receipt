@@ -269,8 +269,6 @@ describe('The Item Create Controller', function() {
 
   });
 
-
-
   /*
    * Station Exceptions
    */

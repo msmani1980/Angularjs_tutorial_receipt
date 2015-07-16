@@ -4,7 +4,7 @@
   <div class="panel-heading">
     <p class="panel-title">
 			<i class="fa fa-tags"></i> Tax Type {{ $parent.key+1 }}
-      <span class="btn-remove-tax-type pull-right btn btn-danger btn-xs" ng-click="removeTaxType($parent.key)">
+      <span class="btn-remove-tax-type pull-right btn btn-danger btn-xs" ng-hide="viewOnly || itemIsActive" ng-click="removeTaxType($parent.key)">
         <i class="fa fa-close"></i>
       </span>
 		</p>
