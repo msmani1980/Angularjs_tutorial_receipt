@@ -61,6 +61,10 @@ angular.module('ts5App')
       });
     };
 
+    this.getEmployeesSuccess = function (response) {
+      $scope.employees = response.companyEmployees;
+    };
+
     this.showToastMessage = function (className, type, message) {
       ngToast.create({
         className: className,
@@ -114,9 +118,13 @@ angular.module('ts5App')
         getCarrierNumbers: function () {
           $scope.carrierNumbers = [];
           return postTripFactory.getCarrierTypes(_companyId).then($this.getCarrierSuccess);
+        },
+        getEmployees: function() {
+          $scope.employees = [];
+          return postTripFactory.getEmployees(_companyId).then($this.getEmployeesSuccess);
         }
       };
-      _services.call(['getStationList', 'getPostTripDataList', 'getCarrierNumbers']);
+      _services.call(['getStationList', 'getPostTripDataList', 'getCarrierNumbers', 'getEmployees']);
       $this.showNewPostTripSuccess();
     })();
 
@@ -124,6 +132,7 @@ angular.module('ts5App')
       $scope.search.depStationId = [];
       $scope.search.arrStationId = [];
       $scope.search.tailNumber = [];
+      $scope.search.employeeId = [];
       angular.forEach($scope.multiSelectedValues.tailNumbers, function (number) {
         $scope.search.tailNumber.push(number.carrierNumber);
       });
@@ -132,6 +141,9 @@ angular.module('ts5App')
       });
       angular.forEach($scope.multiSelectedValues.arrStations, function (station) {
         $scope.search.arrStationId.push(station.stationId);
+      });
+      angular.forEach($scope.multiSelectedValues.employeeIds, function (employee) {
+        $scope.search.employeeId.push(employee.id);
       });
     };
 

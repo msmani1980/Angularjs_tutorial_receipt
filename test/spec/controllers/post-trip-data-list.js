@@ -3,7 +3,7 @@
 describe('Controller: PostFlightDataListCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('ts5App', 'served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data-list.json'));
+  beforeEach(module('ts5App', 'served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data-list.json', 'served/employees.json'));
 
   var PostTripDataListCtrl,
     scope,
@@ -16,6 +16,8 @@ describe('Controller: PostFlightDataListCtrl', function () {
     carrierNumbersResponseJSON,
     carrierNumbersDeferred,
     deletedPostTripDeferred,
+    employeesDeferred,
+    employeesResponseJSON,
     uploadPostTripDeferred,
     companyId,
     postTripFactory,
@@ -24,11 +26,12 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location) {
-    inject(function (_servedPostTripDataList_, _servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_) {
+    inject(function (_servedPostTripDataList_, _servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_, _servedEmployees_) {
       postTripsResponseJSON = _servedPostTripDataList_;
       stationsListResponseJSON = _servedStations_;
       carrierTypesResponseJSON = _servedCarrierTypes_;
       carrierNumbersResponseJSON = _servedCarrierNumbers_;
+      employeesResponseJSON = _servedEmployees_;
     });
     location = $location;
     postTripFactory = $injector.get('postTripFactory');
@@ -46,6 +49,8 @@ describe('Controller: PostFlightDataListCtrl', function () {
     deletedPostTripDeferred.resolve({id: 1});
     uploadPostTripDeferred = $q.defer();
     uploadPostTripDeferred.resolve({id: 1});
+    employeesDeferred = $q.defer();
+    employeesDeferred.resolve(employeesResponseJSON);
 
     spyOn(postTripFactory, 'getPostTripDataList').and.returnValue(postTripsDeferred.promise);
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
@@ -53,6 +58,7 @@ describe('Controller: PostFlightDataListCtrl', function () {
     spyOn(postTripFactory, 'getCarrierNumbers').and.returnValue(carrierNumbersDeferred.promise);
     spyOn(postTripFactory, 'deletePostTrip').and.returnValue(deletedPostTripDeferred.promise);
     spyOn(postTripFactory, 'uploadPostTrip').and.returnValue(uploadPostTripDeferred.promise);
+    spyOn(postTripFactory, 'getEmployees').and.returnValue(employeesDeferred.promise);
 
 
     PostTripDataListCtrl = $controller('PostFlightDataListCtrl', {
@@ -105,6 +111,16 @@ describe('Controller: PostFlightDataListCtrl', function () {
         expect(Object.prototype.toString.call(scope.carrierNumbers)).toBe('[object Array]');
       });
     });
+
+    describe('getEmployees', function(){
+      it('should call getEmployees', function(){
+        expect(postTripFactory.getEmployees).toHaveBeenCalled();
+      });
+      it('should attach employee array to scope', function(){
+        expect(scope.employees).toBeDefined();
+        expect(Object.prototype.toString.call(scope.employees)).toBe('[object Array]');
+      });
+    });
   });
 
   describe('search post trip data', function() {
@@ -137,14 +153,17 @@ describe('Controller: PostFlightDataListCtrl', function () {
       scope.multiSelectedValues = {
         tailNumbers: [{carrierNumber: 'ABC'}, {carrierNumber: 'DEF'}],
         depStations: [{stationId: 1}, {stationId: 2}],
-        arrStations: [{stationId: 1}, {stationId: 2}]
+        arrStations: [{stationId: 1}, {stationId: 2}],
+        employeeIds: [{id: 3}, {id: 4}]
       };
       var expectedTailNumbersArray = ['ABC', 'DEF'];
       var expectedStationsArray = [1, 2];
+      var expectedEmployeeArray = [3, 4];
       scope.searchPostTripData();
       expect(scope.search.tailNumber).toEqual(expectedTailNumbersArray);
       expect(scope.search.depStationId).toEqual(expectedStationsArray);
       expect(scope.search.arrStationId).toEqual(expectedStationsArray);
+      expect(scope.search.employeeId).toEqual(expectedEmployeeArray);
     });
   });
 

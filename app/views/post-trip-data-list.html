@@ -138,6 +138,18 @@
               </div>
             </div>
 
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="employee-id">Employee Id</label>
+                <ui-select id="employee-id" multiple ng-model="multiSelectedValues.employeeIds" theme="bootstrap">
+                  <ui-select-match placeholder="Select EmployeeIds..">{{ $item.employeeIdentifier }}</ui-select-match>
+                  <ui-select-choices repeat="employee in employees | filter: $select.search">
+                    {{ employee.employeeIdentifier }} ({{employee.lastName}}, {{ employee.firstName }})
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
           </div>
         </div>
         <div class="panel-footer text-right">
