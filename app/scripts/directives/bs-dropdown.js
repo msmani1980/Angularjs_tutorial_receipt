@@ -22,7 +22,7 @@ angular.module('ts5App')
         };
         element.bind('click', function (event) {
           event.stopPropagation();
-        })
+        });
       }
     };
   });

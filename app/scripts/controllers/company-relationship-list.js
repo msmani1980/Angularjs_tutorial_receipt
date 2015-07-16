@@ -24,11 +24,11 @@ angular.module('ts5App')
     };
 
     $scope.isPending = function () {
-      return isLoading && !isRejected;
+      return $scope.isLoading && !$scope.isRejected;
     };
 
     $scope.loadedSuccessfully = function () {
-      return !isLoading && !isRejected;
+      return !$scope.isLoading && !$scope.isRejected;
     };
 
     function showToast(className, type, message) {
