@@ -358,6 +358,7 @@ angular.module('ts5App')
         $this.setItemPriceTypes(response[10]);
         $this.setItemList(response[11]);
         $scope.uiSelectTemplateReady = true;
+        $scope.filterCharacteristics();
       });
     };
 
@@ -396,10 +397,8 @@ angular.module('ts5App')
       $scope.tags = data.response;
     };
 
-    this.setItemPriceTypes = function() {
-      itemsFactory.getPriceTypesList(function(data) {
-        $scope.priceTypes = data;
-      });
+    this.setItemPriceTypes = function(data) {
+      $scope.priceTypes = data;
     };
 
     this.setItemList = function(data) {
@@ -467,18 +466,17 @@ angular.module('ts5App')
     };
 
     $scope.filterCharacteristics = function() {
+      $scope.filteredCharacteristics = $scope.characteristics;
       if ($scope.itemTypes[$scope.formData.itemTypeId - 1].name ===
         'Virtual') {
         $scope.filteredCharacteristics = [];
         angular.forEach($scope.characteristics, function(value) {
-          if (value.name === 'Downloadable' || value.name ===
-            'Link') {
+          if (value.name === 'Downloadable' || value.name === 'Link') {
             $scope.filteredCharacteristics.push(value);
           }
           $scope.shouldDisplayURLField = true;
         });
       } else {
-        $scope.filteredCharacteristics = $scope.characteristics;
         $scope.shouldDisplayURLField = false;
       }
     };
