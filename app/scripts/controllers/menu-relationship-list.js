@@ -64,11 +64,29 @@ angular.module('ts5App')
       return query;
     };
 
+    this.generateItemQuery = function () {
+      var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
+      var query = {
+        startDate: todaysDate,
+        sortBy: 'ASC',
+        limit: 100
+      };
+      angular.extend(query, $scope.search);
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        query.startDate = dateUtility.formatDateForAPI($scope.dateRange
+          .startDate);
+        query.endDate = dateUtility.formatDateForAPI($scope.dateRange
+          .endDate);
+      }
+      return query;
+    };
+
     this.makePromises = function () {
+      var query = this.generateItemQuery();
       return [
-        catererStationService.getCatererStationList(),
-        menuService.getMenuList(),
-        menuCatererStationsService.getRelationshipList()
+        catererStationService.getCatererStationList(query),
+        menuService.getMenuList(query),
+        menuCatererStationsService.getRelationshipList(query)
       ];
     };
 
@@ -195,12 +213,12 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    $scope.isRelationshipActive = function (startDate) {
-      return Date.parse(startDate) <= dateUtility.now();
+    $scope.isRelationshipActive = function (date) {
+      return dateUtility.isTodayOrEarlier(date);
     };
 
-    $scope.isRelationshipInactive = function (endDate) {
-      return Date.parse(endDate) <= dateUtility.now();
+    $scope.isRelationshipInactive = function (date) {
+      return dateUtility.isYesterdayOrEarlier(date);
     };
 
     $scope.clearSearchFilters = function () {

@@ -46,7 +46,7 @@
               <fieldset ng-disabled="viewOnly || isRelationshipActive()">
                 <div class="form-group">
                   <label>Menu Code *</label>
-                  <select ng-model="formData.menuId" class="form-control">
+                  <select required name="Menu Code" ng-model="formData.menuId" class="form-control">
                     <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
                       {{ menu.menuCode }}
                     </option>
@@ -59,7 +59,7 @@
               <fieldset ng-disabled="viewOnly || isRelationshipActive()">
                 <div class="form-group">
                   <label>Menu Name *</label>
-                  <select ng-disabled="true" ng-model="formData.menuId" class="form-control">
+                  <select required name="Menu Name" ng-disabled="true" ng-model="formData.menuId" class="form-control">
                     <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
                       {{ menu.menuName }}
                     </option>
@@ -68,19 +68,19 @@
               </fieldset>
             </div>
 
-          </div>
+            <div class="col-xs-12 col-sm-6">
+              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+                <date-picker-field label="Effective From" name="Effective From" ng-model="formData.startDate" required="true"></date-picker-field>
+              </fieldset>
+            </div>
 
-          <date-picker class="form-group"
-						element-class="col-xs-6 col-sm-6"
-						start-date-model="formData.startDate"
-						end-date-model="formData.endDate"
-						disable-past="true"
-						label-from="Effective From"
-						label-to="Effective To"
-						disable-start-date="viewOnly || isRelationshipActive() "
-						disable-end-date="viewOnly"
-						>
-					</date-picker>
+            <div class="col-xs-12 col-sm-6">
+              <fieldset ng-disabled="viewOnly || isRelationshipInactive()">
+                <date-picker-field label="Effective To" name="Effective From" ng-model="formData.endDate" required="true"></date-picker-field>
+              </fieldset>
+            </div>
+
+          </div>
 
         </div>
 

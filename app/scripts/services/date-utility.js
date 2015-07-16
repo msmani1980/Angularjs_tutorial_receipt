@@ -54,6 +54,26 @@ angular.module('ts5App')
       return this.formatDate(now, formatFrom, formatTo);
     };
 
+    this.tomorrow = function () {
+      var today = new Date();
+      var tomorrow = today.setDate(today.getDate() + 1);
+      return tomorrow;
+    };
+
+    this.yesterday = function () {
+      var today = new Date();
+      var yesterday = today.setDate(today.getDate() - 1);
+      return yesterday;
+    };
+
+    this.isTodayOrEarlier = function (date) {
+      return this.now() >= Date.parse(date);
+    };
+
+    this.isYesterdayOrEarlier = function (date) {
+      return this.yesterday() >= Date.parse(date);
+    };
+
     this.isAfterToday = function (dateToCompare) {
       var parsedDate = Date.parse(dateToCompare);
       return parsedDate > this.now();

@@ -28,15 +28,11 @@ angular.module('ts5App')
           todayHighlight: true,
           startDate: dateUtility.nowFormatted()
         };
-
         this.init = function ($element) {
           var options = angular.extend({}, datePickerOptions);
           $element.find('input[type="text"]').datepicker(options);
         };
-
         this.init($element);
-
       }
-
     };
   });
