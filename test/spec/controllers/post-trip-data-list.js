@@ -135,11 +135,11 @@ describe('Controller: PostFlightDataListCtrl', function () {
     it('should add and reformat multiselect values before search', function (){
       scope.search = {};
       scope.multiSelectedValues = {
-        tailNumbers: [{carrierNumber: "ABC"}, {carrierNumber: "DEF"}],
+        tailNumbers: [{carrierNumber: 'ABC'}, {carrierNumber: 'DEF'}],
         depStations: [{stationId: 1}, {stationId: 2}],
         arrStations: [{stationId: 1}, {stationId: 2}]
       };
-      var expectedTailNumbersArray = ["ABC", "DEF"];
+      var expectedTailNumbersArray = ['ABC', 'DEF'];
       var expectedStationsArray = [1, 2];
       scope.searchPostTripData();
       expect(scope.search.tailNumber).toEqual(expectedTailNumbersArray);
