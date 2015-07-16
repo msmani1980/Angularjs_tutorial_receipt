@@ -13,13 +13,6 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.modal = null;
     $scope.displayModalImportInfo = false;
-    function showToast(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
-    }
 
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);

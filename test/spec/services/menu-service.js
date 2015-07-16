@@ -100,9 +100,8 @@ describe('Service: menuService', function () {
       });
     });
 
-
     var mockFile;
-    var mockFn;
+
     describe('Import Menus from Excel', function () {
       beforeEach(inject(function (_Upload_) {
         Upload = _Upload_;

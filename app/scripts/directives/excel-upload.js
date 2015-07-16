@@ -8,7 +8,7 @@
 angular.module('ts5App')
   .controller('ExcelUploadCtrl', function ($scope, $http, $q, $injector, Upload, ENV, GlobalMenuService, ngToast) {
     var $this = this;
-    this.service;
+    this.service = null;
 
     function showToast(className, type, message) {
       ngToast.create({
@@ -18,17 +18,17 @@ angular.module('ts5App')
       });
     }
 
-    $scope.$watchCollection('rejFiles', function (oldObj, newObj) {
+    $scope.$watchCollection('rejFiles', function (oldObj/*, newObj*/) {
       oldObj = oldObj || [];
       if (oldObj.length >= 1) {
-        showToast('warning', 'Import from file', oldObj[0].name + ' does not meet file criteria')
+        showToast('warning', 'Import from file', oldObj[0].name + ' does not meet file criteria');
       }
     });
 
-    $scope.$watchCollection('files', function (oldObj, newObj) {
+    $scope.$watchCollection('files', function (oldObj/*, newObj*/) {
       oldObj = oldObj || [];
       if (oldObj.length >= 1) {
-        showToast('success', 'Import from file', oldObj[0].name + ' is ready to be uploaded')
+        showToast('success', 'Import from file', oldObj[0].name + ' is ready to be uploaded');
       }
     });
 
@@ -69,7 +69,7 @@ angular.module('ts5App')
 
     function setupController () {
       try {
-        $this.service = $injector.get($scope.type + 'Factory')
+        $this.service = $injector.get($scope.type + 'Factory');
       } catch (error) {
         console.log(error);
       } finally {
