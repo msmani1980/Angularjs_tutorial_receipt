@@ -97,8 +97,11 @@ angular.module('ts5App')
       var payload = {};
       if (arguments.length === 2) {
         payload = optionalPayload;
-        if (payload.scheduleDate !== undefined && payload.scheduleDate !== null) {
-          payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
+        if (payload.scheduleFromDate && payload.scheduleFromDate !== null) {
+          payload.scheduleFromDate = dateUtility.formatDateForAPI(payload.scheduleFromDate);
+        }
+        if (payload.scheduleToDate && payload.scheduleToDate !== null) {
+          payload.scheduleToDate = dateUtility.formatDateForAPI(payload.scheduleToDate);
         }
         // TODO: encode colon in time query parameter -- or wait for backend to fix
       }
