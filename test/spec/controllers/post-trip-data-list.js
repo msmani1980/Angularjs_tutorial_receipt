@@ -131,6 +131,21 @@ describe('Controller: PostFlightDataListCtrl', function () {
       expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
       expect(scope.search).toEqual({});
     });
+
+    it('should add and reformat multiselect values before search', function (){
+      scope.search = {};
+      scope.multiSelectedValues = {
+        tailNumbers: [{carrierNumber: "ABC"}, {carrierNumber: "DEF"}],
+        depStations: [{stationId: 1}, {stationId: 2}],
+        arrStations: [{stationId: 1}, {stationId: 2}]
+      };
+      var expectedTailNumbersArray = ["ABC", "DEF"];
+      var expectedStationsArray = [1, 2];
+      scope.searchPostTripData();
+      expect(scope.search.tailNumber).toEqual(expectedTailNumbersArray);
+      expect(scope.search.depStationId).toEqual(expectedStationsArray);
+      expect(scope.search.arrStationId).toEqual(expectedStationsArray);
+    });
   });
 
   describe('action buttons', function(){
