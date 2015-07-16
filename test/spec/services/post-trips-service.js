@@ -6,6 +6,7 @@ describe('Service: postTripService', function () {
   beforeEach(module('served/post-trip-data-list.json'));
 
   var postTripsService,
+    Upload,
     $httpBackend,
     postTripDataListResponseJSON,
     headers = {
@@ -153,7 +154,41 @@ describe('Service: postTripService', function () {
         postTripsService.deletePostTrip('403', postTripId);
         $httpBackend.flush();
       });
-
     });
+
+    var mockFile;
+    var mockFn;
+    describe('uploadPostTrip', function () {
+      it('should be accessible in service', function () {
+        expect(!!postTripsService.uploadPostTrip).toBe(true);
+      });
+
+      beforeEach(inject(function (_Upload_) {
+        Upload = _Upload_;
+        mockFn = {};
+
+        mockFn.progress = jasmine.createSpy('progressFn').and.returnValue(mockFn);
+        mockFn.success = jasmine.createSpy('successFn').and.returnValue(mockFn);
+        mockFn.error = jasmine.createSpy('errorFn').and.returnValue(mockFn);
+        spyOn(Upload, 'upload').and.returnValue(mockFn);
+
+        mockFile =
+        {
+          $$hashKey: 'object:277',
+          lastModified: 1430772953000,
+          lastModifiedDate: 'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4636.png',
+          size: 7801,
+          type: 'file/spreadsheet',
+          webkitRelativePath: ''
+        };
+      }));
+
+      it('should call the upload function', function () {
+        postTripsService.uploadPostTrip('403', mockFile, mockFn, mockFn);
+        expect(Upload.upload).toHaveBeenCalled();
+      });
+    });
+
   });
 });
