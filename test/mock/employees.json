@@ -1,12 +1,79 @@
 {
   "companyEmployees": [
     {
-      id: 1
+      "id": 61,
+      "baseStationId": 41,
+      "companyId": 403,
+      "employeeIdentifier": "1001",
+      "firstName": "John",
+      "lastName": "Doe",
+      "title": null,
+      "startDate": "2015-05-07",
+      "endDate": "2050-01-01",
+      "stationCode": "LGW",
+      "stationName": "Gatwick ",
+      "passcode": "ABC10"
+    },
+    {
+      "id": 62,
+      "baseStationId": 41,
+      "companyId": 403,
+      "employeeIdentifier": "1002",
+      "firstName": "Max",
+      "lastName": "Felker",
+      "title": null,
+      "startDate": "2015-05-07",
+      "endDate": "2050-01-01",
+      "stationCode": "LGW",
+      "stationName": "Gatwick ",
+      "passcode": "ABC10"
+    },
+    {
+      "id": 63,
+      "baseStationId": 41,
+      "companyId": 403,
+      "employeeIdentifier": "1003",
+      "firstName": "Jeff",
+      "lastName": "Wright",
+      "title": null,
+      "startDate": "2015-05-07",
+      "endDate": "2050-01-01",
+      "stationCode": "LGW",
+      "stationName": "Gatwick ",
+      "passcode": "ABC10"
+    },
+    {
+      "id": 64,
+      "baseStationId": 41,
+      "companyId": 403,
+      "employeeIdentifier": "1004",
+      "firstName": "Nate",
+      "lastName": "Wilson",
+      "title": null,
+      "startDate": "2015-05-07",
+      "endDate": "2050-01-01",
+      "stationCode": "LGW",
+      "stationName": "Gatwick ",
+      "passcode": "ABC10"
+    },
+    {
+      "id": 65,
+      "baseStationId": 41,
+      "companyId": 403,
+      "employeeIdentifier": "1005",
+      "firstName": "Thomas",
+      "lastName": "Jefferson",
+      "title": null,
+      "startDate": "2015-05-07",
+      "endDate": "2050-01-01",
+      "stationCode": "LGW",
+      "stationName": "Gatwick ",
+      "passcode": "ABC10"
     }
   ],
   "meta": {
-    "count": 0,
-    "limit": 0,
+    "count": 5,
+    "limit": 5,
     "start": 0
   }
 }

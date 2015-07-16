@@ -120,14 +120,12 @@
     </div>
 
     <div class="panel-footer text-center">
-      <button class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly">
-        <span class="hidden-xs">Cancel</span>
-      </button>
+      <button class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly">Cancel</button>
       <button class="btn btn-primary" ng-click="formSave(cashBag)" ng-hide="readOnly">
         <span class="fa fa-check-square-o" aria-hidden="true"></span>
         <span class="hidden-xs">{{ saveButtonName }}</span>
       </button>
-      <button class="btn btn-danger" ng-click="delete(cashBag)" ng-show="canDelete(cashBag)" ng-disabled="readOnly">Delete</button>
+      <button class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="canDelete(cashBag)" ng-disabled="readOnly">Delete</button>
     </div>
 
   </div>
@@ -136,3 +134,4 @@
 
 
 </ng-form>
+<delete-record-dialog></delete-record-dialog>

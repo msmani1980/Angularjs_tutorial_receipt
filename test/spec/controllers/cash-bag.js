@@ -58,6 +58,8 @@ describe('Controller: CashBagCtrl', function () {
     getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
     spyOn(cashBagFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
 
+    spyOn(cashBagFactory, 'deleteCashBag').and.returnValue(getCompanyDeferred.promise);
+
     companyId = cashBagFactory.getCompanyId();
   }));
 
@@ -89,6 +91,18 @@ describe('Controller: CashBagCtrl', function () {
       it('should have a formSave function attached to the scope', function () {
         expect(scope.formSave).toBeDefined();
         expect(Object.prototype.toString.call(scope.formSave)).toBe('[object Function]');
+      });
+      it('should have a canDelete function attached to the scope', function () {
+        expect(scope.canDelete).toBeDefined();
+        expect(Object.prototype.toString.call(scope.canDelete)).toBe('[object Function]');
+      });
+      it('should have a removeRecord function attached to the scope', function () {
+        expect(scope.removeRecord).toBeDefined();
+        expect(Object.prototype.toString.call(scope.removeRecord)).toBe('[object Function]');
+      });
+      it('should have a isBankExchangePreferred function attached to the scope', function () {
+        expect(scope.isBankExchangePreferred).toBeDefined();
+        expect(Object.prototype.toString.call(scope.isBankExchangePreferred)).toBe('[object Function]');
       });
     });
 
@@ -273,4 +287,142 @@ describe('Controller: CashBagCtrl', function () {
 
   });
 
+  describe('canDelete scope function', function(){
+    beforeEach(inject(function ($controller) {
+      CashBagEditCtrl = $controller('CashBagCtrl', {
+        $scope: scope,
+        $routeParams: {
+          state: 'view',
+          id: 95
+        }
+      });
+      scope.$digest();
+    }));
+    it('should return false if state is not edit', function(){
+      scope.state = 'view';
+      scope.$digest();
+      expect(scope.canDelete({})).toBe(false);
+    });
+    it('should return false if readOnly is true', function(){
+      scope.state = 'edit';
+      scope.readOnly = true;
+      scope.$digest();
+      expect(scope.canDelete({})).toBe(false);
+    });
+    it('should return false if cashBag has a property isSubmitted which is set to string value true', function(){
+      scope.state = 'edit';
+      scope.readOnly = false;
+      scope.$digest();
+      expect(scope.canDelete({isSubmitted:'true'})).toBe(false);
+    });
+    it('should return false if a cashBag has a cashBagCurrencies.bankAmount value set to a value and not 0.0000', function(){
+      var cashBag = {
+        cashBagCurrencies:[
+          {bankAmount:'1.000'}
+        ]
+      };
+      scope.state = 'edit';
+      scope.readOnly = false;
+      scope.$digest();
+      expect(scope.canDelete(cashBag)).toBe(false);
+    });
+    it('should return false if a cashBag has a cashBagCurrencies.coinAmountManual that is not null', function(){
+      var cashBag = {
+        cashBagCurrencies:[
+          {
+            bankAmount:null,
+            coinAmountManual: '1'
+          }
+        ]
+      };
+      scope.state = 'edit';
+      scope.readOnly = false;
+      scope.$digest();
+      expect(scope.canDelete(cashBag)).toBe(false);
+    });
+    it('should return false if a cashBag has a cashBagCurrencies.paperAmountManual that is not null', function(){
+      var cashBag = {
+        cashBagCurrencies:[
+          {
+            bankAmount:'0.000',
+            coinAmountManual:null,
+            paperAmountManual: '1'
+          }
+        ]
+      };
+      scope.state = 'edit';
+      scope.readOnly = false;
+      scope.$digest();
+      expect(scope.canDelete(cashBag)).toBe(false);
+    });
+    it('should return true if a cashBag cashBagCurrencies are null', function(){
+      var cashBag = {
+        cashBagCurrencies:[
+          {
+            bankAmount:null,
+            coinAmountManual:null,
+            paperAmountManual:null
+          }
+        ]
+      };
+      scope.state = 'edit';
+      scope.readOnly = false;
+      scope.$digest();
+      expect(scope.canDelete(cashBag)).toBe(true);
+    });
+  });
+
+  describe('removeRecord scope function', function() {
+    beforeEach(inject(function ($controller) {
+      CashBagEditCtrl = $controller('CashBagCtrl', {
+        $scope: scope,
+        $routeParams: {
+          state: 'edit',
+          id: 95
+        }
+      });
+      scope.$digest();
+    }));
+
+    it('should call deleteCashBag with ID passed to scope function', function () {
+      var cbid = 503;
+      var cashBag = {
+        id: cbid,
+        cashBagCurrencies:[
+          {
+            bankAmount:null,
+            coinAmountManual:null,
+            paperAmountManual:null
+          }
+        ]
+      };
+      scope.removeRecord(cashBag);
+      expect(cashBagFactory.deleteCashBag).toHaveBeenCalledWith(cbid);
+    });
+
+    it('should return false if cannot delete', function(){
+      scope.state = 'view';
+      scope.$digest();
+      expect(scope.removeRecord({})).toBe(false);
+    });
+  });
+
+  describe('isBankExchangePreferred scope function', function(){
+    beforeEach(inject(function ($controller) {
+      CashBagEditCtrl = $controller('CashBagCtrl', {
+        $scope: scope,
+        $routeParams: {
+          state: 'edit',
+          id: 95
+        }
+      });
+      scope.$digest();
+    }));
+    it('should return false if companyPreferences is set to false', function(){
+      scope.companyPreferences = false;
+      scope.$digest();
+      expect(scope.isBankExchangePreferred()).toBe(false);
+    });
+    // TODO - reactor and write test for $scope.companyPreferences.filter
+  });
 });
