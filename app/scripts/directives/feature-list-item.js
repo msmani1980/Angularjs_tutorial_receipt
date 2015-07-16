@@ -8,7 +8,6 @@
  */
 angular.module('ts5App')
   .controller('FeatureListCtrl', function ($scope/*, element, attrs*/) {
-    // set attributes of directive to the scope to use in template
     $scope.isExpanded = false;
 
     $scope.toggleExpand = function() {
