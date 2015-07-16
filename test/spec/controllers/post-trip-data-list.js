@@ -16,6 +16,7 @@ describe('Controller: PostFlightDataListCtrl', function () {
     carrierNumbersResponseJSON,
     carrierNumbersDeferred,
     deletedPostTripDeferred,
+    uploadPostTripDeferred,
     companyId,
     postTripFactory,
     location;
@@ -43,12 +44,16 @@ describe('Controller: PostFlightDataListCtrl', function () {
     carrierNumbersDeferred.resolve(carrierNumbersResponseJSON);
     deletedPostTripDeferred = $q.defer();
     deletedPostTripDeferred.resolve({id: 1});
+    uploadPostTripDeferred = $q.defer();
+    uploadPostTripDeferred.resolve({id: 1});
 
     spyOn(postTripFactory, 'getPostTripDataList').and.returnValue(postTripsDeferred.promise);
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
     spyOn(postTripFactory, 'getCarrierNumbers').and.returnValue(carrierNumbersDeferred.promise);
     spyOn(postTripFactory, 'deletePostTrip').and.returnValue(deletedPostTripDeferred.promise);
+    spyOn(postTripFactory, 'uploadPostTrip').and.returnValue(uploadPostTripDeferred.promise);
+
 
     PostTripDataListCtrl = $controller('PostFlightDataListCtrl', {
       $scope: scope,
@@ -163,6 +168,25 @@ describe('Controller: PostFlightDataListCtrl', function () {
         scope.tempDeleteIndex = 0;
         scope.deletePostTrip();
         expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
+      });
+    });
+
+    describe('upload post trip', function() {
+      it('should call upload post trip', function() {
+        scope.postTrips = [{id: 1}];
+        scope.tempDeleteIndex = 0;
+        var mockFiles =
+        [{
+          $$hashKey: 'object:277',
+          lastModified: 1430772953000,
+          lastModifiedDate: 'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4636.png',
+          size: 7801,
+          type: 'file/spreadsheet',
+          webkitRelativePath: ''
+        }];
+        scope.uploadPostTripFileToApi(mockFiles);
+        expect(postTripFactory.uploadPostTrip).toHaveBeenCalled();
       });
     });
   });

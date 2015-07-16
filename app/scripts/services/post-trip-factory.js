@@ -37,6 +37,10 @@ angular.module('ts5App')
       return postTripsService.deletePostTrip(id, tripId);
     };
 
+    var uploadPostTrip = function (id, file, successHandler, failureHandler) {
+      return postTripsService.uploadPostTrip(id, file, successHandler, failureHandler);
+    };
+
     var getStationList = function (id) {
       return stationsService.getStationList(id);
     };
@@ -59,6 +63,7 @@ angular.module('ts5App')
       createPostTrip: createPostTrip,
       updatePostTrip: updatePostTrip,
       deletePostTrip: deletePostTrip,
+      uploadPostTrip: uploadPostTrip,
       getCompanyId: getCompanyId,
       getStationList: getStationList,
       getCarrierNumbers:getCarrierNumbers,
