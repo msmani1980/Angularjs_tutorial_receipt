@@ -20,9 +20,34 @@ angular.module('ts5App')
 
     function transformResponse(data) {
       data = angular.fromJson(data);
-      if (data !== undefined && data.scheduleDate !== null && data.scheduleDate !== undefined) {
+      if (!data) {
+        return data;
+      }
+      if (data.scheduleDate !== null && data.scheduleDate !== undefined) {
         data.scheduleDate = dateUtility.formatDate(data.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
+      if (data.arrTime && data.arrTime !== null) {
+        data.arrTime = moment(data.arrTime, 'HH:mm:ss').format('HH:mm');
+      }
+      if (data.depTime && data.depTime !== null) {
+        data.depTime = moment(data.depTime, 'HH:mm:ss').format('HH:mm');
+      }
+      return data;
+    }
+
+    function transformResponseArray(data) {
+      data = angular.fromJson(data);
+      if(!data) {
+        return;
+      }
+      angular.forEach(data.postTrips, function (trip) {
+        if (trip.arrTime && trip.arrTime !== null) {
+          trip.arrTime = moment(trip.arrTime, 'HH:mm:ss').format('HH:mm');
+        }
+        if (trip.depTime && trip.depTime !== null) {
+          trip.depTime = moment(trip.depTime, 'HH:mm:ss').format('HH:mm');
+        }
+      });
       return data;
     }
 
@@ -40,7 +65,9 @@ angular.module('ts5App')
     var actions = {
       getPostTrips: {
         method: 'GET',
-        headers: {companyId: 362}
+        headers: {companyId: 362},
+        transformResponse: appendTransform($http.defaults.transformResponse, transformResponseArray)
+
       },
       getPostTrip: {
         method: 'GET',
