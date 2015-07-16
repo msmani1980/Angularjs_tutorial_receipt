@@ -146,13 +146,13 @@ describe('Controller: PostFlightDataListCtrl', function () {
       expect(location.path()).toBe('/post-trip-data/edit/' + tripId);
     });
 
-    it('should only show edit/delete button if date is in future', function(){
+    it('should only show delete button if date is in future', function(){
       var now = new Date(2015, 7, 12);
       var pastString = '2015-05-10';
       var futureString = '2015-10-15';
       jasmine.clock().mockDate(now);
-      expect(scope.showEditButton(pastString)).toEqual(false);
-      expect(scope.showEditButton(futureString)).toEqual(true);
+      expect(scope.showDeleteButton(pastString)).toEqual(false);
+      expect(scope.showDeleteButton(futureString)).toEqual(true);
     });
 
     describe('delete post trip', function() {

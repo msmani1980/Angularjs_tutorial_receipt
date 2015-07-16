@@ -69,17 +69,17 @@ angular.module('ts5App')
     };
 
     this.saveFormSuccess = function (response) {
+      $this.hideLoadingModal();
       if($routeParams.state === 'create') {
-        $this.hideLoadingModal();
         $location.path('post-trip-data-list').search({updateType: 'create', id: response.id});
       } else {
-        $this.hideLoadingModal();
         $this.showToastMessage('success', 'Edit Post Trip', 'success');
       }
     };
 
     this.saveFormFailure = function () {
       // TODO: add displayError dialog once API is fixed and returns error codes
+      $this.hideLoadingModal();
       $this.showToastMessage('danger', 'Post Trips', 'error');
     };
 
@@ -185,7 +185,6 @@ angular.module('ts5App')
 
     $scope.formSave = function () {
       // TODO: move employeeId data validation to HTML (currently open bug https://github.com/angular-ui/ui-select/issues/258)
-      $this.showLoadingModal('Saving Post Trip Data');
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
       if (!$scope.postTripDataForm.$valid || (shouldValidateEmployeeIds && isSelectedEmployeesInvalid)) {
@@ -197,6 +196,7 @@ angular.module('ts5App')
         $scope.postTrip.postTripEmployeeIdentifiers.push({employeeId: value.id});
       });
 
+      $this.showLoadingModal('Saving Post Trip Data');
       if ($routeParams.state === 'create') {
         $this.saveNewTrip();
       } else {

@@ -165,7 +165,7 @@ angular.module('ts5App')
       );
     };
 
-    $scope.showEditButton = function (dateString) {
+    $scope.showDeleteButton = function (dateString) {
       var scheduleDate = moment(dateString, 'YYYY-MM-DD');
       var today = moment();
       return !scheduleDate.isBefore(today);
