@@ -104,17 +104,14 @@
 
         </fieldset>
 
-        <date-picker class="form-group"
-                     element-class="col-xs-6 col-sm-6"
-                     start-date-model="formData.startDate"
-                     end-date-model="formData.endDate"
-                     disable-past="true"
-                     label-from="Effective From"
-                     label-to="Effective To"
-                     disable-start-date="viewOnly || itemIsActive"
-                     disable-end-date="viewOnly || itemIsInactive"
-          >
-        </date-picker>
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <date-picker-field disabled="viewOnly || itemIsActive" form="form" name="EffectiveFrom" label="Effective From" required="true" ng-model="formData.startDate"></date-picker-field>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <date-picker-field disabled="viewOnly || itemIsInactive" form="form" name="EffectiveTo" label="Effective To" required="true" ng-model="formData.endDate"></date-picker-field>
+          </div>
+        </div>
 
         <fieldset ng-disabled="viewOnly || itemIsActive">
 
