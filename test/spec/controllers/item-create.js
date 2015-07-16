@@ -229,7 +229,7 @@ describe('The Item Create Controller', function() {
         priceTypesJSON = _servedPriceTypes_;
       });
 
-      spyOn(ItemCreateCtrl, 'getPriceTypesList').and.callFake(
+      spyOn(ItemCreateCtrl, 'getDependencies').and.callFake(
         function() {
           return priceTypesJSON;
         });
@@ -243,14 +243,6 @@ describe('The Item Create Controller', function() {
       testObject = response[0];
 
     }));
-
-    it('should have a getPriceTypesList method', function() {
-      expect(ItemCreateCtrl.getPriceTypesList).toBeDefined();
-    });
-
-    it('should have a getPriceTypesList method', function() {
-      expect(ItemCreateCtrl.getPriceTypesList).toHaveBeenCalled();
-    });
 
     it('should have a response ', function() {
       expect(response).toBeDefined();
