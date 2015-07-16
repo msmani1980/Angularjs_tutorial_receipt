@@ -97,6 +97,12 @@
                     {{ number.carrierNumber }}
                   </option>
                 </select>
+                <ui-select id="tail-number" multiple ng-model="selectedStations.depStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations from list">{{ $item.stationCode }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{ station.stationCode }} ({{ station.stationName }})
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
