@@ -79,7 +79,7 @@ angular.module('ts5App')
       if($scope.readOnly){
         return false;
       }
-      if(cashBag.isSubmitted === 'true') {
+      if(cashBag.isSubmitted && cashBag.isSubmitted === 'true') {
         return false;
       }
       var canDelete = true;
