@@ -288,8 +288,14 @@ angular.module('ts5App')
           route: '/#/stock-list',
           icon: 'icon-manage-schedule',
           className: 'dashboard-stockList'
-        }
+        }, {
+	      name: 'Stock Take',
+	      route: '/#/stock-take',
+	      icon: 'icon-manage-schedule',
+	      className: 'dashboard-stockTake'
+      	}
       ]
+  	}, {
       title: 'Manage Store Number',
       menuItems: [{
         name: 'Store Number Create',

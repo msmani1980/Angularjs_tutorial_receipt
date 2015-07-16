@@ -183,6 +183,10 @@ angular
         templateUrl: 'views/stock-list.html',
         controller: 'StockListCtrl'
       })
+      .when('/stock-take', {
+        templateUrl: 'views/stock-take.html',
+        controller: 'StockTakeCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

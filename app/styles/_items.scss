@@ -375,6 +375,18 @@
   }
 }
 
+.popover {
+  min-width: 200px;
+  
+  .popover-title {
+  
+    .close {
+      position: relative;
+      bottom: 3px;
+    }
+  }
+}
+
 /* item import */
 .drop-table tr.on-drag-hover{
   border-top: 24px solid #249507;
