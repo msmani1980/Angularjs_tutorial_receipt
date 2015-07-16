@@ -21,7 +21,7 @@
   					<label>Tax Type *</label>
 
   					<select required name="Tax Type" ng-model="itemTax.companyTaxId" class="form-control">
-  						<option ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }}</option>
+  						<option ng-selected="itemTax.companyTaxId === type.id"ng-repeat="type in taxTypes" value="{{ type.id }}">{{ type.taxTypeCode }}</option>
   					</select>
 
   				</div>

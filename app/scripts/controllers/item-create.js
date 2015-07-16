@@ -1,5 +1,4 @@
 'use strict';
-/*global moment*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -10,7 +9,7 @@
 angular.module('ts5App')
   .controller('ItemCreateCtrl', function($scope, $compile, ENV, $resource,
     $location, $anchorScroll, itemsFactory, companiesFactory, currencyFactory,
-    $routeParams, GlobalMenuService, $q) {
+    $routeParams, GlobalMenuService, $q, dateUtility) {
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
     var companyId = GlobalMenuService.company.get();
@@ -277,9 +276,8 @@ angular.module('ts5App')
       if (!itemData) {
         return false;
       }
-      itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD',
-        'L');
-      itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
+      itemData.startDate = dateUtility.formatDateForApp(itemData.startDate);
+      itemData.endDate = dateUtility.formatDateForApp(itemData.endDate);
       this.checkIfItemIsInactive(itemData);
       if (!$scope.itemIsInactive) {
         this.checkIfItemIsActive(itemData);
@@ -293,16 +291,16 @@ angular.module('ts5App')
       // TODO: turn this into a function
       for (var imageIndex in itemData.images) {
         var image = itemData.images[imageIndex];
-        image.startDate = formatDate(image.startDate, false, 'L');
-        image.endDate = formatDate(image.endDate, false, 'L');
+        image.startDate = dateUtility.formatDateForApp(image.startDate);
+        image.endDate = dateUtility.formatDateForApp(image.endDate);
       }
 
       // TODO: turn this into a function
       for (var priceIndex in itemData.prices) {
 
         var price = itemData.prices[priceIndex];
-        price.startDate = formatDate(price.startDate, false, 'L');
-        price.endDate = formatDate(price.endDate, false, 'L');
+        price.startDate = dateUtility.formatDateForApp(price.startDate);
+        price.endDate = dateUtility.formatDateForApp(price.endDate);
 
         // TODO: turn this into a function
         for (var stationExceptionIndex in price.stationExceptions) {
@@ -310,10 +308,10 @@ angular.module('ts5App')
           var stationException = price
             .stationExceptions[stationExceptionIndex];
 
-          stationException.startDate = formatDate(stationException.startDate,
-            false, 'L');
-          stationException.endDate = formatDate(stationException.endDate,
-            false, 'L');
+          stationException.startDate = dateUtility.formatDateForApp(
+            stationException.startDate);
+          stationException.endDate = dateUtility.formatDateForApp(
+            stationException.endDate);
 
         }
 
@@ -358,7 +356,7 @@ angular.module('ts5App')
         $this.setItemPriceTypes(response[10]);
         $this.setItemList(response[11]);
         $scope.uiSelectTemplateReady = true;
-        $scope.filterCharacteristics();
+        $scope.filteredCharacteristics = $scope.characteristics;
       });
     };
 
@@ -376,9 +374,6 @@ angular.module('ts5App')
 
     this.setCharacteristics = function(data) {
       $scope.characteristics = data;
-      if ($scope.itemTypeId && $scope.itemTypes) {
-        $scope.filterCharacteristics();
-      }
     };
 
     this.setDimensionList = function(data) {
@@ -422,34 +417,39 @@ angular.module('ts5App')
 
     this.init();
 
-    // TODO: make this a controller function
-    // Formats the dates when sending the payload to the API
-    this.formatPayloadDates = function(itemData) {
-      itemData.startDate = formatDate(itemData.startDate, 'L', 'YYYYMMDD');
-      itemData.endDate = formatDate(itemData.endDate, 'L', 'YYYYMMDD');
-      // TODO: Turn this into a function
-      for (var imageIndex in itemData.images) {
-        var image = itemData.images[imageIndex];
-        image.startDate = formatDate(image.startDate, 'L', 'YYYYMMDD');
-        image.endDate = formatDate(image.endDate, 'L', 'YYYYMMDD');
-      }
-      // TODO: Turn this into a function
-      for (var priceIndex in itemData.prices) {
-        var price = itemData.prices[priceIndex];
-        price.startDate = formatDate(price.startDate, 'L', 'YYYYMMDD');
-        price.endDate = formatDate(price.endDate, 'L', 'YYYYMMDD');
-        // TODO: Turn this into a function
-        for (var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
-          var station = itemData.prices[priceIndex].stationExceptions[
-            stationExceptionIndex];
-          station.startDate = formatDate(station.startDate, 'L',
-            'YYYYMMDD');
-          station.endDate = formatDate(station.endDate, 'L', 'YYYYMMDD');
-        }
+    this.formatStationExceptionDates = function(itemData, priceIndex) {
+      for (var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
+        var station = itemData.prices[priceIndex].stationExceptions[
+          stationExceptionIndex];
+        station.startDate = dateUtility.formatDateForAPI(station.startDate);
+        station.endDate = dateUtility.formatDateForAPI(station.endDate);
       }
     };
 
-    // cleans up invalid properties of payload before submitting
+    this.formatPricePayloadDates = function(itemData) {
+      for (var priceIndex in itemData.prices) {
+        var price = itemData.prices[priceIndex];
+        price.startDate = dateUtility.formatDateForAPI(price.startDate);
+        price.endDate = dateUtility.formatDateForAPI(price.endDate);
+        this.formatStationExceptionDates(itemData, priceIndex);
+      }
+    };
+
+    this.formatImagePayloadDates = function(itemData) {
+      for (var imageIndex in itemData.images) {
+        var image = itemData.images[imageIndex];
+        image.startDate = dateUtility.formatDateForAPI(image.startDate);
+        image.endDate = dateUtility.formatDateForAPI(image.endDate);
+      }
+    };
+
+    this.formatPayloadDates = function(itemData) {
+      itemData.startDate = dateUtility.formatDateForAPI(itemData.startDate);
+      itemData.endDate = dateUtility.formatDateForAPI(itemData.endDate);
+      this.formatImagePayloadDates(itemData);
+      this.formatPricePayloadDates(itemData);
+    };
+
     this.cleanUpPayload = function(itemData) {
       for (var priceIndex in itemData.prices) {
         for (var currencyIndex in itemData.prices[priceIndex].priceCurrencies) {
@@ -466,7 +466,6 @@ angular.module('ts5App')
     };
 
     $scope.filterCharacteristics = function() {
-      $scope.filteredCharacteristics = $scope.characteristics;
       if ($scope.itemTypes[$scope.formData.itemTypeId - 1].name ===
         'Virtual') {
         $scope.filteredCharacteristics = [];
@@ -477,15 +476,10 @@ angular.module('ts5App')
           $scope.shouldDisplayURLField = true;
         });
       } else {
+        $scope.filteredCharacteristics = $scope.characteristics;
         $scope.shouldDisplayURLField = false;
       }
     };
-
-    // TODO: Move to global function
-    function formatDate(dateString, formatFrom, formatTo) {
-      var dateToReturn = moment(dateString, formatFrom).format(formatTo).toString();
-      return dateToReturn;
-    }
 
     $scope.$watch('formData', function(newData, oldData) {
       //checkItemDates(newData,oldData);
@@ -610,10 +604,8 @@ angular.module('ts5App')
 
     // gets a list of stations from the API filtered by station's start and end date
     this.getGlobalStationList = function(stationException) {
-      var startDate = formatDate(stationException.startDate, 'L',
-        'YYYYMMDD');
-      var endDate = formatDate(stationException.endDate, 'L',
-        'YYYYMMDD');
+      var startDate = dateUtility.formatDateForAPI(stationException.startDate);
+      var endDate = dateUtility.formatDateForAPI(stationException.endDate);
       var stationsFilter = {
         startDate: startDate,
         endDate: endDate
@@ -628,10 +620,8 @@ angular.module('ts5App')
 
     // gets a list of a stations available currencies filtered on the start and end date
     this.getStationsCurrenciesList = function(stationException) {
-      var startDate = formatDate(stationException.startDate, 'L',
-        'YYYYMMDD');
-      var endDate = formatDate(stationException.endDate, 'L',
-        'YYYYMMDD');
+      var startDate = dateUtility.formatDateForAPI(stationException.startDate);
+      var endDate = dateUtility.formatDateForAPI(stationException.endDate);
       var currencyFilters = {
         startDate: startDate,
         endDate: endDate,
@@ -642,7 +632,7 @@ angular.module('ts5App')
 
     // sets the stations currenies list
     this.setStationsCurrenciesList = function(stationException, data) {
-      var stationExceptionCurrencies = this.CurrenciesList(
+      var stationExceptionCurrencies = this.generateStationCurrenciesList(
         data.response);
       stationException.stationExceptionCurrencies =
         stationExceptionCurrencies;
@@ -723,7 +713,7 @@ angular.module('ts5App')
       $scope.formData.prices.splice(key, 1);
     };
 
-    this.generatePriceCurrenciesList = function(currenciesList) {
+    $scope.generatePriceCurrenciesList = function(currenciesList) {
       var priceCurrencies = [];
       for (var key in currenciesList) {
         var currency = currenciesList[key];
@@ -737,10 +727,10 @@ angular.module('ts5App')
     };
 
     this.updatePriceGroup = function(priceIndex) {
-      var startDate = formatDate($scope.formData.prices[priceIndex].startDate,
-        'L', 'YYYYMMDD');
-      var endDate = formatDate($scope.formData.prices[priceIndex].endDate,
-        'L', 'YYYYMMDD');
+      var startDate = dateUtility.formatDateForAPI($scope.formData.prices[
+        priceIndex].startDate);
+      var endDate = dateUtility.formatDateForAPI($scope.formData.prices[
+        priceIndex].endDate);
       if (startDate === 'Invalid date' || endDate === 'Invalid date') {
         return false;
       }
@@ -751,7 +741,7 @@ angular.module('ts5App')
       };
       currencyFactory.getCompanyCurrencies(currencyFilters).then(function(
         data) {
-        var priceCurrencies = this.generatePriceCurrenciesList(data.response);
+        var priceCurrencies = $scope.generatePriceCurrenciesList(data.response);
         $scope.formData.prices[priceIndex].priceCurrencies =
           priceCurrencies;
       });

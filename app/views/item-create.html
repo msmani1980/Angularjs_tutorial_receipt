@@ -105,15 +105,15 @@
         </fieldset>
 
         <date-picker class="form-group"
-                     element-class="col-xs-6 col-sm-6"
-                     start-date-model="formData.startDate"
-                     end-date-model="formData.endDate"
-                     disable-past="true"
-                     label-from="Effective From *"
-                     label-to="Effective To *"
-                     disable-start-date="viewOnly || itemIsActive"
-                     disable-end-date="viewOnly || itemIsInactive"
-                     required="true"
+          element-class="col-xs-6 col-sm-6"
+          start-date-model="formData.startDate"
+          end-date-model="formData.endDate"
+          disable-past="true"
+          label-from="Effective From *"
+          label-to="Effective To *"
+          disable-start-date="viewOnly || itemIsActive"
+          disable-end-date="viewOnly || itemIsInactive"
+          required="true"
           >
         </date-picker>
 
@@ -141,7 +141,7 @@
               id="itemCharacteristics"
              >
               <ui-select-match placeholder="Item Characteristics" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
-              <ui-select-choices repeat="character in filteredCharacteristics">
+              <ui-select-choices repeat="character in filteredCharacteristics | filter: $select.search | orderBy:'name'">
                 <div ng-bind-html="character.name | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -158,7 +158,7 @@
               theme="bootstrap"
              >
               <ui-select-match placeholder="Item Substitutions" ui-lock-choice="viewOnly || itemIsActive">{{ $item.itemName }}</ui-select-match>
-              <ui-select-choices repeat="substitution in substitutions">
+              <ui-select-choices repeat="substitution in substitutions | filter: $select.search | orderBy:'itemName'">
                 <div ng-bind-html="substitution.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -171,7 +171,7 @@
               theme="bootstrap"
              >
               <ui-select-match placeholder="Item Recommendations" ui-lock-choice="viewOnly || itemIsActive">{{ $item.itemName }}</ui-select-match>
-              <ui-select-choices repeat="recommendation in recommendations">
+              <ui-select-choices repeat="recommendation in recommendations | filter: $select.search | orderBy:'itemName'">
                 <div ng-bind-html="recommendation.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -192,7 +192,7 @@
               theme="bootstrap"
              >
               <ui-select-match placeholder="Item Tags" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
-              <ui-select-choices repeat="tag in tags">
+              <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
                 <div ng-bind-html="tag.name | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -205,7 +205,7 @@
               theme="bootstrap"
              >
               <ui-select-match placeholder="Allergens" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
-              <ui-select-choices repeat="allergen in allergens">
+              <ui-select-choices repeat="allergen in allergens | filter: $select.search | orderBy:'name'">
                 <div ng-bind-html="allergen.name | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -310,9 +310,7 @@
                 <div class="col-xs-3">
 
                   <select ng-model="formData.weightType" class="form-control col-xs-2" placeholder="Units">
-
                     <option ng-selected="formData.weightType === weight.id" ng-repeat="weight in weightUnits" value="{{ weight.id }}">{{ weight.unitCode }}</option>
-
                   </select>
 
                 </div>
