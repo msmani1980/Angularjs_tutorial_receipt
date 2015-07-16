@@ -17,9 +17,10 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     priceTypeListJSON,
     taxRateTypesJSON,
     companyCurrencyJSON,
+    routeParams,
     scope;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
+  beforeEach(inject(function ($q, $controller, $rootScope, $injector, $routeParams) {
     inject(function (_servedMasterItemList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedCompanyCurrencyGlobals_) {
       masterItemsListJSON = _servedMasterItemList_;
       priceTypeListJSON = _servedPriceTypes_;
@@ -47,6 +48,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     spyOn(employeeCommissionFactory, 'createCommission').and.returnValue(getCompanyCurrenciesDeferred.promise);
 
     scope = $rootScope.$new();
+    routeParams = $routeParams;
     EmployeeCommissionEditCtrl = $controller('EmployeeCommissionEditCtrl', {
       $scope: scope
     });
@@ -142,5 +144,34 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     });
 
   });
+
+  describe('view/edit commission', function () {
+    it('should have a function to determine if commission is readOnly', function () {
+      expect(scope.isCommissionReadOnly).toBeDefined();
+    });
+
+    it('should return false if creating new commission', function () {
+      routeParams = {state: 'create'};
+      expect(scope.isCommissionReadOnly()).toBe(false);
+    });
+
+    it('should return true if editing and starDate in the past', function () {
+      routeParams = {state: 'edit'};
+      scope.commission = {startDate: '05/10/1979'};
+      expect(scope.isCommissionReadOnly()).toBe(true);
+    });
+
+    it('should return false if editing and startDate in the future', function () {
+      routeParams = {state: 'edit'};
+      scope.commission = {startDate: '05/10/2079'};
+      expect(scope.isCommissionReadOnly()).toBe(false);
+    });
+
+    it('should return false if viewing and startDate in the future', function () {
+      routeParams = {state: 'view'};
+      scope.commission = {startDate: '05/10/2079'};
+      expect(scope.isCommissionReadOnly()).toBe(true);
+    });
+  })
 
 });

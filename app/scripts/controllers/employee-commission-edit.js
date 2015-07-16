@@ -25,8 +25,12 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    function isCommissionReadOnly () {
-      if (angular.isUndefined(commission)) {
+    $scope.isCommissionReadOnly = function () {
+      if (angular.isUndefined($scope.commission)) {
+        return false;
+      }
+
+      if ($routeParams.state === 'create') {
         return false;
       }
 
@@ -34,20 +38,8 @@ angular.module('ts5App')
         return true;
       }
 
-      return !dateUtility.isAfterToday(commission.startDate);
-    }
-
-    function isCommissionEditable () {
-      if (angular.isUndefined(commission)) {
-        return false;
-      }
-
-      if ($routeParams.state === 'view') {
-        return true;
-      }
-
-      return dateUtility.isAfterToday(commission.endDate);
-    }
+      return !dateUtility.isAfterToday($scope.commission.startDate);
+    };
 
     $scope.$watchGroup(['commission.startDate', 'commission.endDate'], function () {
       var payload = {};
@@ -123,7 +115,6 @@ angular.module('ts5App')
       return {
         employeeCommission: angular.extend(payload, rateValues)
       };
-
     }
 
     function requestSuccessHandler() {

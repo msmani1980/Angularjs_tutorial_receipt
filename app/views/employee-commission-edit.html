@@ -35,6 +35,7 @@
         class="form-control"
         id="itemName"
         required="true"
+        ng-readonly="isCommissionReadOnly()"
         ng-options="item.itemName for item in itemsList | orderBy:'itemName' track by item.id"
         ng-model="commission.selectedItem">
         <option selected="selected" disabled value>Select Item</option>
@@ -49,6 +50,7 @@
         class="form-control"
         id="saleType"
         required="true"
+        ng-readonly="isCommissionReadOnly()"
         ng-options="priceType.name for priceType in priceTypesList | orderBy:'name' track by priceType.id"
         ng-model="commission.selectedPriceType">
         <option selected disabled value>Select Sale Type</option>
@@ -63,6 +65,7 @@
         class="form-control"
         id="rateType"
         required="true"
+        ng-readonly="isCommissionReadOnly()"
         ng-options="taxRate.taxRateType for taxRate in taxRateTypes | orderBy:'taxRateType' track by taxRate.id"
         ng-model="commission.selectedRateType">
         <option selected disabled value>Select Rate Type</option>
@@ -82,6 +85,7 @@
                custom-pattern="currencyWithTwoDecimalPlace"
                ng-model="commission.percentage"
                required="true"
+               ng-readonly="isCommissionReadOnly()"
                type="text"
                name="percentage"
                placeholder="0.00"
@@ -103,6 +107,7 @@
         <input custom-validity
                custom-pattern="currencyWithTwoDecimalPlace"
                ng-model="commission.currenciesFields[currency.code]"
+               ng-readonly="isCommissionReadOnly()"
                required="true"
                type="text"
                name="rate{{currency.code}}"
