@@ -15,7 +15,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Post Trip Data';
     $scope.search = {};
-    $scope.selectedStations = {};
+    $scope.multiSelectedValues = {};
     $scope.stationList = [];
     $scope.postTrips = [];
 
@@ -120,25 +120,29 @@ angular.module('ts5App')
       $this.showNewPostTripSuccess();
     })();
 
-    this.formatStationsForSearch = function () {
+    this.formatMultiSelectedValuesForSearch = function () {
       $scope.search.depStationId = [];
       $scope.search.arrStationId = [];
-      angular.forEach($scope.selectedStations.depStations, function (station) {
+      $scope.search.tailNumber = [];
+      angular.forEach($scope.multiSelectedValues.tailNumbers, function (number) {
+        $scope.search.tailNumber.push(number.carrierNumber);
+      });
+      angular.forEach($scope.multiSelectedValues.depStations, function (station) {
         $scope.search.depStationId.push(station.stationId);
       });
-      angular.forEach($scope.selectedStations.arrStations, function (station) {
+      angular.forEach($scope.multiSelectedValues.arrStations, function (station) {
         $scope.search.arrStationId.push(station.stationId);
       });
     };
 
     $scope.searchPostTripData = function () {
-      $this.formatStationsForSearch();
+      $this.formatMultiSelectedValuesForSearch();
       var payload = angular.copy($scope.search);
       postTripFactory.getPostTripDataList(_companyId, payload).then($this.getPostTripSuccess);
     };
 
     $scope.clearSearchForm = function () {
-      $scope.selectedStations = {};
+      $scope.multiSelectedValues = {};
       $scope.search = {};
       postTripFactory.getPostTripDataList(_companyId, $scope.search).then($this.getPostTripSuccess);
     };
