@@ -130,7 +130,7 @@ describe('Controller: PostTripDataCtrl', function () {
         scope.postTripDataForm = {
           $valid: true
         };
-        scope.employees = {
+        scope.selectedEmployees = {
           employeeIds: [
             {id: 62, name: 'employee1'},
             {id: 63, name: 'employee2'}
