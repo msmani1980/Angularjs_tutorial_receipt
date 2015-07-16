@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionEditCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location) {
+  .controller('EmployeeCommissionEditCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location, $routeParams) {
 
     $scope.viewName = 'Employee Commission';
     $scope.commission = {
@@ -23,6 +23,30 @@ angular.module('ts5App')
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+    }
+
+    function isCommissionReadOnly () {
+      if (angular.isUndefined(commission)) {
+        return false;
+      }
+
+      if ($routeParams.state === 'view') {
+        return true;
+      }
+
+      return !dateUtility.isAfterToday(commission.startDate);
+    }
+
+    function isCommissionEditable () {
+      if (angular.isUndefined(commission)) {
+        return false;
+      }
+
+      if ($routeParams.state === 'view') {
+        return true;
+      }
+
+      return dateUtility.isAfterToday(commission.endDate);
     }
 
     $scope.$watchGroup(['commission.startDate', 'commission.endDate'], function () {
