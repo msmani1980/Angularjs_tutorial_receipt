@@ -8,7 +8,6 @@
  */
 angular.module('ts5App')
   .directive('datePickerField', function (dateUtility) {
-
     return {
       templateUrl: '/views/directives/date-picker-field.html',
       restrict: 'E',
@@ -21,7 +20,6 @@ angular.module('ts5App')
         disabled: '='
       },
       controller: function ($scope, $element) {
-
         var datePickerOptions = {
           orientation: 'auto top',
           autoclose: true,
