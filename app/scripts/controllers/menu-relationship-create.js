@@ -228,16 +228,13 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function (formData) {
-      $scope.displayError = false;
-      if (!$scope.form.$valid) {
-        $scope.displayError = true;
-        return false;
+      if ($this.validateForm()) {
+        var relationshipData = angular.copy(formData);
+        $this.formatPayloadDates(relationshipData);
+        var action = $scope.editingRelationship ? 'updateRelationship' :
+          'createRelationship';
+        $this[action](relationshipData);
       }
-      var relationshipData = angular.copy(formData);
-      $this.formatPayloadDates(relationshipData);
-      var action = $scope.editingRelationship ? 'updateRelationship' :
-        'createRelationship';
-      $this[action](relationshipData);
     };
 
     this.formatPayloadDates = function (relationship) {
@@ -261,6 +258,21 @@ angular.module('ts5App')
       }
       return false;
     };
+
+    this.validateForm = function () {
+      $scope.form.$setSubmitted(true);
+      $scope.displayError = false;
+      if (!$scope.form.$valid) {
+        $scope.displayError = true;
+      }
+      return $scope.form.$valid;
+    };
+
+    $scope.$watchCollection('form', function (form) {
+      if (form && form.$submitted) {
+        $scope.displayError = form.$invalid;
+      }
+    });
 
     this.init();
 

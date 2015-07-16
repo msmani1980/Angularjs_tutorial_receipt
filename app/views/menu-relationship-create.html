@@ -44,9 +44,9 @@
 
             <div class="col-xs-12 col-sm-6">
               <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-                <div class="form-group">
-                  <label>Menu Code *</label>
-                  <select required name="Menu Code" ng-model="formData.menuId" class="form-control">
+                <div class="form-group" ng-class="{ 'has-error' : form['MenuCode'].$touched && form['MenuCode'].$invalid || displayError && form['MenuCode'].$invalid , 'has-success' : form['MenuCode'].$touched && form['MenuCode'].$valid }">
+                  <label class="control-label" for="MenuCode">Menu Code *</label>
+                  <select required name="MenuCode" ng-model="formData.menuId" class="form-control">
                     <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
                       {{ menu.menuCode }}
                     </option>
@@ -57,9 +57,9 @@
 
             <div class="col-xs-12 col-sm-6">
               <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-                <div class="form-group">
-                  <label>Menu Name *</label>
-                  <select required name="Menu Name" ng-disabled="true" ng-model="formData.menuId" class="form-control">
+                <div class="form-group" ng-class="{ 'has-error' : form['MenuCode'].$touched && form['MenuCode'].$invalid, 'has-success' : form['MenuCode'].$valid  }">
+                  <label class="control-label" for="MenuName">Menu Name *</label>
+                  <select required name="MenuName" ng-disabled="true" ng-model="formData.menuId" class="form-control">
                     <option ng-selected="formData.menuId === menu.menuId" ng-repeat="(key,menu) in menuList" value="{{ menu.menuId }}">
                       {{ menu.menuName }}
                     </option>
@@ -87,9 +87,9 @@
         <div class="col-xs-12 col-sm-6">
 
           <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-            <div class="form-group">
-              <label for="menu-station">Catering Stations</label>
-              <select ng-disabled="viewOnly || isRelationshipActive()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
+            <div class="form-group" ng-class="{ 'has-error' : formData.catererStationIds.length < 1 || displayError && form['CateringStations'].$invalid , 'has-success' : formData.catererStationIds.length > 0 }">
+              <label class="control-label" for="CateringStations">Catering Stations *</label>
+              <select name="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
                 <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
               </select>
             </div>
