@@ -188,7 +188,7 @@ angular.module('ts5App')
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
       if (!$scope.postTripDataForm.$valid || (shouldValidateEmployeeIds && isSelectedEmployeesInvalid)) {
-        $this.showToastMessage('success', 'Post Trips', 'Please complete all fields');
+        $this.showToastMessage('danger', 'Post Trips', 'Please complete all fields');
         return;
       }
       $scope.postTrip.postTripEmployeeIdentifiers = [];
