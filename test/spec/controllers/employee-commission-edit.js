@@ -226,6 +226,6 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
       scope.commission = {startDate: '05/10/2079'};
       expect(scope.isCommissionReadOnly()).toBe(true);
     });
-  })
+  });
 
 });
