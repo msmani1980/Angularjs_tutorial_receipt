@@ -192,7 +192,7 @@ angular.module('ts5App')
         return;
       }
       $scope.postTrip.postTripEmployeeIdentifiers = [];
-      angular.forEach($scope.employees.employeeIds, function (value) {
+      angular.forEach($scope.selectedEmployees.employeeIds, function (value) {
         $scope.postTrip.postTripEmployeeIdentifiers.push({employeeId: value.id});
       });
 
