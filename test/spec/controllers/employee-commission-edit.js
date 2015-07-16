@@ -13,6 +13,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     getPriceTypesListDeferred,
     getTaxRateTypesDeferred,
     getCompanyCurrenciesDeferred,
+    getCommissionDeferred,
     masterItemsListJSON,
     priceTypeListJSON,
     taxRateTypesJSON,
@@ -20,7 +21,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     routeParams,
     scope;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $injector, $routeParams) {
+  beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
     inject(function (_servedMasterItemList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedCompanyCurrencyGlobals_) {
       masterItemsListJSON = _servedMasterItemList_;
       priceTypeListJSON = _servedPriceTypes_;
@@ -40,21 +41,26 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     getCompanyCurrenciesDeferred = $q.defer();
     getCompanyCurrenciesDeferred.resolve(companyCurrencyJSON);
 
+    getCommissionDeferred = $q.defer();
+    getCommissionDeferred.resolve(companyCurrencyJSON);
+
     employeeCommissionFactory = $injector.get('employeeCommissionFactory');
     spyOn(employeeCommissionFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getPriceTypesList').and.returnValue(getPriceTypesListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getTaxRateTypes').and.returnValue(getTaxRateTypesDeferred.promise);
     spyOn(employeeCommissionFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeferred.promise);
     spyOn(employeeCommissionFactory, 'createCommission').and.returnValue(getCompanyCurrenciesDeferred.promise);
+    spyOn(employeeCommissionFactory, 'getCommission').and.returnValue({});
 
+    routeParams = {};
     scope = $rootScope.$new();
-    routeParams = $routeParams;
-    EmployeeCommissionEditCtrl = $controller('EmployeeCommissionEditCtrl', {
-      $scope: scope
-    });
     scope.employeeCommissionForm = {
       $valid: true
     };
+    EmployeeCommissionEditCtrl = $controller('EmployeeCommissionEditCtrl', {
+      $scope: scope,
+      $routeParams: routeParams
+    });
     scope.$digest();
   }));
 
@@ -75,6 +81,24 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     it('should have a list of currencies attached to scope', function () {
       expect(scope.companyCurrencies).toBeDefined();
     });
+
+    describe('READ controller action', function () {
+      beforeEach(inject(function ($controller) {
+        EmployeeCommissionEditCtrl = $controller('EmployeeCommissionEditCtrl', {
+          $scope: scope,
+          $routeParams: {
+            state: 'view',
+            id: 49
+          }
+        });
+        scope.$digest();
+      }));
+      it('should call getCommission if state !== create', function () {
+        expect(employeeCommissionFactory.getCommission).toHaveBeenCalledWith(49);
+      });
+    });
+
+
   });
 
   describe('submit form', function () {
@@ -151,24 +175,24 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     });
 
     it('should return false if creating new commission', function () {
-      routeParams = {state: 'create'};
+      routeParams.state = 'create';
       expect(scope.isCommissionReadOnly()).toBe(false);
     });
 
     it('should return true if editing and starDate in the past', function () {
-      routeParams = {state: 'edit'};
+      routeParams.state = 'edit';
       scope.commission = {startDate: '05/10/1979'};
       expect(scope.isCommissionReadOnly()).toBe(true);
     });
 
     it('should return false if editing and startDate in the future', function () {
-      routeParams = {state: 'edit'};
+      routeParams.state = 'edit';
       scope.commission = {startDate: '05/10/2079'};
       expect(scope.isCommissionReadOnly()).toBe(false);
     });
 
-    it('should return false if viewing and startDate in the future', function () {
-      routeParams = {state: 'view'};
+    it('should return true if viewing and startDate in the future', function () {
+      routeParams.state = 'view';
       scope.commission = {startDate: '05/10/2079'};
       expect(scope.isCommissionReadOnly()).toBe(true);
     });

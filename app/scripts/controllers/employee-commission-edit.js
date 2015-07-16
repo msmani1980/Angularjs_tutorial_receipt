@@ -64,6 +64,16 @@ angular.module('ts5App')
       });
     });
 
+    function shouldFetchCommission() {
+      return $routeParams.state && $routeParams.id;
+    }
+
+    if (shouldFetchCommission()) {
+      employeeCommissionFactory.getCommission($routeParams.id).then(function (dataFromAPI) {
+        console.log(dataFromAPI);
+      });
+    }
+
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
       $scope.priceTypesList = dataFromAPI;
     });
