@@ -187,7 +187,11 @@ angular.module('ts5App')
       // TODO: move employeeId data validation to HTML (currently open bug https://github.com/angular-ui/ui-select/issues/258)
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
-      if (!$scope.postTripDataForm.$valid || (shouldValidateEmployeeIds && isSelectedEmployeesInvalid)) {
+      if(shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
+        $this.showToastMessage('danger', 'Post Trips', 'Please complete employee ID field');
+        return;
+      }
+      if (!$scope.postTripDataForm.$valid) {
         $this.showToastMessage('danger', 'Post Trips', 'Please complete all fields');
         return;
       }
