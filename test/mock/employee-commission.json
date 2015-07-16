@@ -1,0 +1,17 @@
+{
+  "employeeCommission" : {
+    "startDate" : "2015-07-14",
+    "endDate" : "2015-07-31",
+    "id" : 28,
+    "companyId" : 403,
+    "fixeds" : [ ],
+    "types" : [ {
+      "id" : 16,
+      "commissionId" : 28,
+      "priceTypeId" : 2
+    } ],
+    "itemMasterId" : "30",
+    "percentage" : "0.0",
+    "description" : null
+  }
+}

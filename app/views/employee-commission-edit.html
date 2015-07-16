@@ -25,6 +25,8 @@
     label-from="Effective From *"
     label-to="Effective To *"
     required="true"
+    disable-start-date="isCommissionReadOnly()"
+    disable-end-date="isViewOnly()"
     disable-past="true">
   </date-picker>
 
@@ -35,7 +37,7 @@
         class="form-control"
         id="itemName"
         required="true"
-        ng-readonly="isCommissionReadOnly()"
+        ng-disabled="isCommissionReadOnly()"
         ng-options="item.itemName for item in itemsList | orderBy:'itemName' track by item.id"
         ng-model="commission.selectedItem">
         <option selected="selected" disabled value>Select Item</option>
@@ -50,7 +52,7 @@
         class="form-control"
         id="saleType"
         required="true"
-        ng-readonly="isCommissionReadOnly()"
+        ng-disabled="isCommissionReadOnly()"
         ng-options="priceType.name for priceType in priceTypesList | orderBy:'name' track by priceType.id"
         ng-model="commission.selectedPriceType">
         <option selected disabled value>Select Sale Type</option>
@@ -65,7 +67,7 @@
         class="form-control"
         id="rateType"
         required="true"
-        ng-readonly="isCommissionReadOnly()"
+        ng-disabled="isCommissionReadOnly()"
         ng-options="taxRate.taxRateType for taxRate in taxRateTypes | orderBy:'taxRateType' track by taxRate.id"
         ng-model="commission.selectedRateType">
         <option selected disabled value>Select Rate Type</option>
