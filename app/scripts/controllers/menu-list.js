@@ -92,7 +92,6 @@ angular.module('ts5App')
         return false;
       }
       return !dateUtility.isAfterToday(menu.startDate);
-
     };
 
     var attachMenuListToScope = function (menuListFromAPI) {

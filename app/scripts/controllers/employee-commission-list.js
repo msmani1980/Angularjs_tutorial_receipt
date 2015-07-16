@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast) {
+  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location) {
     $scope.viewName = 'Employee Commission';
     $scope.search = {
       startDate: '',
@@ -29,10 +29,34 @@ angular.module('ts5App')
         payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
       }
 
-      employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
-        $scope.search.itemsList = dataFromAPI.retailItems;
-      });
+      if (payload.startDate && payload.endDate) {
+        employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
+          $scope.search.itemsList = dataFromAPI.retailItems;
+        });
+      }
     });
+
+    $scope.showCommission = function (commission) {
+      $location.path('employee-commission/view/' + commission.id);
+    };
+
+    $scope.editCommission = function (commission) {
+      $location.path('employee-commission/edit/' + commission.id);
+    };
+
+    $scope.isCommissionReadOnly = function(commission) {
+      if (angular.isUndefined(commission)) {
+        return false;
+      }
+      return !dateUtility.isAfterToday(commission.startDate);
+    };
+
+    $scope.isCommissionEditable = function(commission) {
+      if (angular.isUndefined(commission)) {
+        return false;
+      }
+      return dateUtility.isAfterToday(commission.endDate);
+    };
 
     function showToastMessage(className, type, message) {
       ngToast.create({
@@ -42,7 +66,55 @@ angular.module('ts5App')
       });
     }
 
-    $scope.searchCommissions = function(){
+    function showErrors(dataFromAPI) {
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+      $scope.displayError = true;
+      showToastMessage('warning','Employee Commission', 'error deleting commission!');
+
+    }
+
+    function successDeleteHandler() {
+      showToastMessage('success','Employee Commission', 'successfully deleted commission!');
+    }
+
+    $scope.deleteCommission = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+      employeeCommissionFactory.deleteCommission($scope.commissionToDelete.id).then(successDeleteHandler, showErrors);
+    };
+
+    $scope.showDeleteConfirmation = function (commissionToDelete) {
+      $scope.commissionToDelete = commissionToDelete;
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    function formatDatesForApp(commissionListData) {
+      commissionListData.forEach(function (commissionObject) {
+        if (commissionObject.startDate) {
+          commissionObject.startDate = dateUtility.formatDateForApp(commissionObject.startDate);
+        }
+
+        if (commissionObject.endDate) {
+          commissionObject.endDate = dateUtility.formatDateForApp(commissionObject.endDate);
+        }
+      });
+      return commissionListData;
+    }
+
+    function setRateAndSaleTypes(commissionListData) {
+      //commissionListData.forEach(function (commissionObject) {
+        //TODO: wait on API fix to transform data here
+      //});
+      return commissionListData;
+    }
+
+    function prepareDataForTable(dataFromAPI) {
+      var transformedData = formatDatesForApp(angular.copy(dataFromAPI));
+      return setRateAndSaleTypes(transformedData);
+    }
+
+    $scope.searchCommissions = function () {
       showToastMessage('warning', 'Employee Commission', 'API not ready');
     };
 
@@ -59,6 +131,10 @@ angular.module('ts5App')
 
     employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {
       $scope.search.taxRateTypesList = dataFromAPI;
+    });
+
+    employeeCommissionFactory.getCommissionList().then(function (dataFromAPI) {
+      $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
     });
 
   });
