@@ -49,18 +49,6 @@ describe('Controller: CompanyListCtrl', function () {
   });
 
   describe('action button', function () {
-    it('view should change the URL based on the company object', function() {
-      scope.showCompany({id: 1});
-      scope.$digest();
-      expect(location.path()).toBe('/company-view/1');
-    });
-
-    it('edit should change the URL based on the company object', function() {
-      scope.editCompany({id: 1});
-      scope.$digest();
-      expect(location.path()).toBe('/company-edit/1');
-    });
-
     it('manage company-relationship should change the URL based on the company object', function() {
       scope.showCompanyRelationshipList({id: 1});
       scope.$digest();

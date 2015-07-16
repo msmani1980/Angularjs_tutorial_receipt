@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('menuService', function ($resource, ENV) {
+  .service('menuService', function ($resource, ENV, Upload) {
     var requestURL = ENV.apiUrl + '/api/menus/:id';
     var requestParameters = {
       id: '@id',
@@ -59,11 +59,20 @@ angular.module('ts5App')
       return requestResource.createMenu(payload).$promise;
     };
 
+    var importFromExcel = function (companyId, file) {
+      var uploadRequestURL = ENV.apiUrl + '/services/companies/' + companyId + '/file/menu';
+      return Upload.upload({
+        url: uploadRequestURL,
+        file: file
+      });
+    };
+
     return {
       getMenuList: getMenuList,
       deleteMenu: deleteMenu,
       getMenu: getMenu,
       updateMenu: updateMenu,
-      createMenu: createMenu
+      createMenu: createMenu,
+      importFromExcel: importFromExcel
     };
   });

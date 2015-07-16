@@ -11,6 +11,15 @@ angular.module('ts5App')
   .controller('MenuListCtrl', function ($scope, $location, menuService, ngToast, dateUtility) {
     $scope.viewName = 'Menu Management';
     $scope.search = {};
+    $scope.modal = null;
+    $scope.displayModalImportInfo = false;
+    function showToast(className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    }
 
     function formatDates(menuArray) {
       var formattedMenuArray = angular.copy(menuArray);
@@ -69,7 +78,10 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('hide');
       menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, showErrors);
     };
-
+    $scope.showExcelDownload = function () {
+      $scope.modal = $scope.modals[0];
+      angular.element('#addCashBagModal').modal('show');
+    };
     $scope.showDeleteConfirmation = function (menuToDelete) {
       $scope.menuToDelete = menuToDelete;
       angular.element('.delete-warning-modal').modal('show');
