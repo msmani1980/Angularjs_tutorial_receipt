@@ -69,10 +69,21 @@ angular.module('ts5App')
         ' Catering Stations';
     };
 
+    this.generateItemQuery = function () {
+      var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
+      var query = {
+        startDate: todaysDate,
+        sortBy: 'ASC',
+        limit: 100
+      };
+      return query;
+    };
+
     this.makePromises = function (id) {
+      var query = this.generateItemQuery();
       var promises = [
-        catererStationService.getCatererStationList(),
-        menuService.getMenuList()
+        catererStationService.getCatererStationList(query),
+        menuService.getMenuList(query)
       ];
       if (id) {
         promises.push(menuCatererStationsService.getRelationship(id));
@@ -206,7 +217,6 @@ angular.module('ts5App')
       $this.displayLoadingModal('We are creating your menu relationship');
       menuCatererStationsService.createRelationship(relationshipData).then(
         function () {
-          $this.hideLoadingModal();
           $this.showSuccessMessage('Relationship created!');
           $location.path('/menu-relationship-list');
         },
@@ -239,11 +249,17 @@ angular.module('ts5App')
     };
 
     $scope.isRelationshipActive = function () {
-      return Date.parse($scope.formData.startDate) <= dateUtility.now();
+      if ($scope.editingRelationship) {
+        return dateUtility.isTodayOrEarlier($scope.formData.startDate);
+      }
+      return false;
     };
 
     $scope.isRelationshipInactive = function () {
-      return Date.parse($scope.formData.startDate) <= dateUtility.now();
+      if ($scope.editingRelationship) {
+        return dateUtility.isYesterdayOrEarlier($scope.formData.endDate);
+      }
+      return false;
     };
 
     this.init();

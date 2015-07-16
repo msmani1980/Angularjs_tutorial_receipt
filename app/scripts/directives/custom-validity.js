@@ -14,7 +14,7 @@ angular.module('ts5App')
       number: [/^-?([0-9]*)$/, 'Error message for number'],
       alpha: [/^[a-zA-z]+$/, 'Error message for alpha'],
       alphanumeric: [/^[a-zA-Z0-9]+$/, 'Error message for alphanumeric'],
-      alphanumericExactlyTenChars: [/^[a-zA-Z0-9]{10}$/, 'Error message for alphanumeric exactly 10 characters'],
+      alphanumericExactlyTenChars: [/^[a-zA-Z0-9]{10}$/, 'You must enter exactly 10 characters, letters and numbers only.'],
       email: [/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/, 'Error message for email'],
       phone: [/^([0-9]{3}( |-|.)?)?(\(?[0-9]{3}\)?|[0-9]{3})( |-|.)?([0-9]{3}( |-|.)?[0-9]{4}|[a-zA-Z0-9]{7})$/, 'Error message for phone'],
       cc: [/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/, 'Error message for cc'],
