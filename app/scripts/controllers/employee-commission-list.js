@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location) {
+  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location, $filter) {
     $scope.viewName = 'Employee Commission';
     $scope.search = {
       startDate: '',
@@ -35,6 +35,30 @@ angular.module('ts5App')
         });
       }
     });
+
+    function getSelectedObjectFromArrayUsingId(fromArray, id) {
+      var filteredObject = $filter('filter')(fromArray, {id: id}, function (expected, actual) {
+        return angular.equals(parseInt(expected), parseInt(actual));
+      });
+
+      if (filteredObject && filteredObject.length > 0) {
+        return filteredObject[0];
+      }
+      return {};
+    }
+
+    $scope.getSelectedPriceTypeObject = function(commissionObject) {
+      if (commissionObject.types.length === 0) {
+        return {};
+      }
+      var priceId = commissionObject.types[0].priceTypeId;
+      return getSelectedObjectFromArrayUsingId($scope.search.priceTypesList, priceId);
+    };
+
+    $scope.getSelectedRateTypeObject = function (commissionObject) {
+      var rateTypeId = commissionObject.fixeds.length > 0 ? 1 : 2;
+      return getSelectedObjectFromArrayUsingId($scope.search.taxRateTypesList, rateTypeId);
+    };
 
     $scope.showCommission = function (commission) {
       $location.path('employee-commission/view/' + commission.id);

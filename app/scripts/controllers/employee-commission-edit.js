@@ -82,6 +82,14 @@ angular.module('ts5App')
       if ($scope.isCommissionReadOnly()) {
         datesWatcher();
       }
+
+      if (shouldFetchCommission()) {
+        employeeCommissionFactory.getCommission($routeParams.id).then(function (dataFromAPI) {
+          $scope.commission = formatDatesForApp(angular.copy(dataFromAPI.employeeCommission));
+
+          populateValuesFromAPI();
+        });
+      }
     });
 
     function shouldFetchCommission() {
@@ -93,7 +101,7 @@ angular.module('ts5App')
         return angular.equals(parseInt(expected), parseInt(actual));
       });
 
-      if (filteredObject.length > 0) {
+      if (filteredObject && filteredObject.length > 0) {
         return filteredObject[0];
       }
       return {};
@@ -101,12 +109,17 @@ angular.module('ts5App')
 
     function getSelectedItemObject() {
       var itemId = $scope.commission.itemMasterId;
+      //console.log(getSelectedObjectFromArrayUsingId($scope.itemsList, itemId));
       return getSelectedObjectFromArrayUsingId($scope.itemsList, itemId);
     }
 
     function getSelectedPriceTypeObject() {
+      if ($scope.commission.types.length === 0) {
+        return {};
+      }
+
       var priceId = $scope.commission.types[0].priceTypeId;
-      return getSelectedObjectFromArrayUsingId($scope.taxRateTypes, priceId);
+      return getSelectedObjectFromArrayUsingId($scope.priceTypesList, priceId);
     }
 
     function getSelectedRateTypeObject() {
@@ -124,14 +137,6 @@ angular.module('ts5App')
       angular.forEach($scope.commission.fixeds, function (currencyValue) {
         var currency = $filter('filter')($scope.companyCurrencies, {id: currencyValue.currencyId}, true)[0];
         $scope.commission.currenciesFields[currency.code] = currencyValue.fixedValue;
-      });
-    }
-
-    if (shouldFetchCommission()) {
-      employeeCommissionFactory.getCommission($routeParams.id).then(function (dataFromAPI) {
-        $scope.commission = formatDatesForApp(angular.copy(dataFromAPI.employeeCommission));
-
-        populateValuesFromAPI();
       });
     }
 

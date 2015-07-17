@@ -229,6 +229,10 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         });
     });
 
+    it('should have a getSelectedRateTypeObject defined', function(){
+      expect(!!scope.getSelectedRateTypeObject).toBe(true);
+    });
+
     it('should have a confirmDelete function', function () {
       expect(!!scope.showDeleteConfirmation).toBe(true);
     });
