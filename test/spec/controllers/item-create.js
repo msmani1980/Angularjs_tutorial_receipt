@@ -717,11 +717,11 @@ describe('The Item Create Controller', function() {
 
     });
 
-    describe('The ItemCreateCtrl.getDependencies', function() {
-      var getDependenciesDeffered,
-        responseArray;
+    describe('The getDependencies method', function() {
+      var promise, deferred, responseArray;
 
-      beforeEach(inject(function($q, _servedSalesCategories_,
+      beforeEach(inject(function($q, $rootScope,
+        _servedSalesCategories_,
         _servedTags_, _servedTaxTypes_, _servedCurrencies_,
         _servedAllergens_, _servedItemTypes_,
         _servedCharacteristics_, _servedUnitsDimension_,
@@ -741,16 +741,74 @@ describe('The Item Create Controller', function() {
           _servedPriceTypes_,
           _servedItemsList_
         ];
-        getDependenciesDeffered = $q.defer();
-        getDependenciesDeffered.resolve(responseArray);
+
+        deferred = $q.defer();
+        promise = deferred.promise;
+
+        promise.then(function(value) {
+          responseArray = value;
+        });
+
         spyOn(ItemCreateCtrl, 'getDependencies').and.returnValue(
-          getDependenciesDeffered.promise);
-        $scope.$digest();
+          responseArray);
+
       }));
 
+      it('should have responseArray defined', function() {
+        expect(responseArray).toBeDefined();
+      });
+
       it('should be defined', function() {
-        console.log(responseArray);
         expect(ItemCreateCtrl.getDependencies).toBeDefined();
+      });
+
+      it('should have been called', function() {
+        ItemCreateCtrl.getDependencies();
+        expect(ItemCreateCtrl.getDependencies).toHaveBeenCalled();
+      });
+
+      describe('servedSalesCategories', function() {
+
+        it('should be returned', function() {
+          expect(responseArray[0]).toBeDefined();
+        });
+
+        it('should contain salesCategories', function() {
+          expect(responseArray[0].salesCategories).toBeDefined();
+        });
+
+        it('should have setSalesCategories defined',
+          function() {
+            expect(ItemCreateCtrl.setSalesCategories).toBeDefined();
+          });
+
+        it('should set $scope.salesCategories to undefined',
+          function() {
+            expect($scope.salesCategories).toBeUndefined();
+          });
+      });
+
+      describe('servedTagsList', function() {
+
+        it('should be returned', function() {
+          expect(responseArray[1]).toBeDefined();
+        });
+
+        it('should contain tags', function() {
+          expect(responseArray[1].response).toBeDefined();
+        });
+      });
+
+      describe('servedTaxTypes', function() {
+
+        it('should be returned', function() {
+          expect(responseArray[2]).toBeDefined();
+        });
+
+        it('should contain tax-types', function() {
+          expect(responseArray[2].response).toBeDefined();
+        });
+
       });
 
     });
