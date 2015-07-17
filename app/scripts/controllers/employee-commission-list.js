@@ -127,7 +127,7 @@ angular.module('ts5App')
     }
 
     function prepareDataForTable(dataFromAPI) {
-      var transformedData = formatDatesForApp(angular.copy(dataFromAPI));
+      return formatDatesForApp(angular.copy(dataFromAPI));
     }
 
     $scope.searchCommissions = function () {
