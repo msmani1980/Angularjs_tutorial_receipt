@@ -228,7 +228,7 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function (formData) {
-      if ($this.validateForm()) {
+      if (formData && $this.validateForm()) {
         var relationshipData = angular.copy(formData);
         $this.formatPayloadDates(relationshipData);
         var action = $scope.editingRelationship ? 'updateRelationship' :

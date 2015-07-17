@@ -15,20 +15,37 @@ describe('The MenuRelationshipCreateCtrl', function () {
     menuCatererStationsService,
     location,
     httpBackend,
-    authRequestHandler;
+    authRequestHandler,
+    newRelationshipJSON;
 
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/menus.json', 'served/catering-stations.json',
-    'served/menu-catering-stations.json'));
+  beforeEach(module(
+    'served/menus.json',
+    'served/catering-stations.json',
+    'served/menu-catering-stations.json',
+    'served/menu-catering-stations-relationship.json'
+  ));
+
+  function renderView($templateCache, $compile) {
+    var html = $templateCache.get(
+      '/views/menu-relationship-create.html');
+    var compiled = $compile(angular.element(html))($scope);
+    var view = angular.element(compiled[0]);
+    $scope.$digest();
+    return view;
+  }
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
     $location, $httpBackend, _catererStationService_,
-    _menuCatererStationsService_) {
+    _menuCatererStationsService_,
+    _servedMenuCateringStationsRelationship_) {
     inject(function (_servedMenus_, _servedCateringStations_,
       _servedMenuCateringStations_) {
       menuListJSON = _servedMenus_;
       stationListJSON = _servedCateringStations_;
       menuCatererStationListJSON = _servedMenuCateringStations_;
+      newRelationshipJSON =
+        _servedMenuCateringStationsRelationship_;
     });
 
     // backend definition common for all tests
@@ -225,23 +242,67 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
   });
 
+  describe('submitting the form', function () {
+    var formData,
+      view;
+    beforeEach(inject(function (_$templateCache_, _$compile_) {
+      formData = {
+        startDate: '20150717',
+        endDate: '20150731',
+        menuId: '68',
+        catererStationIds: ['3']
+      };
+      view = renderView(_$templateCache_, _$compile_);
+    }));
+
+    it('should have a submitForm() method attached to the scope',
+      function () {
+        expect($scope.submitForm).toBeDefined();
+      });
+
+    it('should return false if formData is not passed to it',
+      function () {
+        var result = $scope.submitForm();
+        expect(result).toBeFalsy();
+      });
+
+    it('should return false if the form is invalid',
+      function () {
+        var result = $scope.submitForm(formData);
+        expect(result).toBeFalsy();
+      });
+
+    describe('validating the form', function () {
+
+      beforeEach(function () {
+        spyOn(MenuRelationshipCreateCtrl, 'validateForm');
+      });
+
+      it('should have a method attached to the controller',
+        function () {
+          expect(MenuRelationshipCreateCtrl.validateForm).toBeDefined();
+        });
+
+      it('should be called during the submission',
+        function () {
+          $scope.submitForm(formData);
+          expect(MenuRelationshipCreateCtrl.validateForm).toHaveBeenCalled();
+        });
+
+    });
+
+  });
+
+
+
   /* E2E Tests */
 
   describe('view', function () {
 
-    var $templateCache,
-      $compile,
-      html,
-      view;
+    var view;
 
     beforeEach(inject(function (_$templateCache_, _$compile_) {
-      $templateCache = _$templateCache_;
-      $compile = _$compile_;
-      html = $templateCache.get(
-        '/views/menu-relationship-create.html');
-      var compiled = $compile(angular.element(html))($scope);
-      view = angular.element(compiled[0]);
-      $scope.$digest();
+      view = renderView(_$templateCache_, _$compile_);
     }));
 
     it('should be defined', function () {
@@ -338,9 +399,10 @@ describe('The MenuRelationshipCreateCtrl', function () {
       it('should have a .form class', function () {
         expect(form.hasClass('form')).toBeTruthy();
       });
-      it('should inject the form-error-dialog directive', function () {
-        expect(form.find('form-error-dialog')[0]).toBeDefined();
-      });
+      it('should inject the form-error-dialog directive',
+        function () {
+          expect(form.find('form-error-dialog')[0]).toBeDefined();
+        });
 
       describe('fieldset', function () {
         var fieldSet;
@@ -359,7 +421,8 @@ describe('The MenuRelationshipCreateCtrl', function () {
               'viewOnly || isRelationshipActive()');
           });
         it('should contain a form-group', function () {
-          var fieldSetRow = fieldSet.find('.form-group')[0];
+          var fieldSetRow = fieldSet.find('.form-group')[
+            0];
           expect(fieldSetRow).toBeDefined();
         });
       });
