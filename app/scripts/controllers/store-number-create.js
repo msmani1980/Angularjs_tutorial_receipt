@@ -35,10 +35,11 @@ angular.module('ts5App')
 
     function submitFormSuccess(){
       init();
-      showMessage('successful!', 'success');
+      showMessage('created!', 'success');
     }
 
     function showApiErrors(response){
+      hideLoadingModal();
       showMessage('failed!', 'warning');
       $scope.displayError = true;
       if ('data' in response) {
@@ -48,7 +49,7 @@ angular.module('ts5App')
 
     function showMessage(message, messageType) {
       hideLoadingModal();
-      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Create Store Number</strong>: ' + message });
+      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Store Number</strong>: ' + message });
     }
 
     function displayLoadingModal(loadingText) {
@@ -81,4 +82,19 @@ angular.module('ts5App')
       return angular.equals($scope.formData,_companyDefault);
     };
 
+    $scope.canDelete = function(store){
+      return dateUtility.isAfterToday(store.startDate);
+    };
+
+    $scope.removeRecord = function(store) {
+      if(!$scope.canDelete(store)){
+        return false;
+      }
+      displayLoadingModal('Removing Item');
+      companyStoresService.deleteStore(store.id).then(function() {
+        hideLoadingModal();
+        showMessage('deleted!', 'success');
+        init();
+      }, showApiErrors);
+    };
   });
