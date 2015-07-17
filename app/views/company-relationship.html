@@ -2,7 +2,7 @@
 <div class="list-controls">
   <div class="row">
     <div class="col-xs-6 text-left">
-      <button type="button" ng-if="!isLoading && !isRejected" class="btn btn-primary" ng-click="addCompanyRelationship(company)">
+      <button type="button" class="btn btn-primary" ng-click="addCompanyRelationship(company)">
         <span class="fa fa-plus" aria-hidden="true"></span> Add Company Relationship
       </button>
     </div>
@@ -15,11 +15,12 @@
     </div>
   </div>
 </div>
-<div ng-if="isLoading && !isRejected" class="text-center">
+<div><p>All required fields are marked with a *</p></div>
+<div ng-if="isPending()" class="text-center">
   <p><i class="fa fa-cog fa-spin fa-4x"></i></p>
   <p>Loading...</p>
 </div>
-<div ng-if="!isLoading && !isRejected">
+<div ng-if="isFulfilled()">
   <div ng-if="companyRelationshipListData.length">
     <div class="row">
       <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in col-xs-12" role="alert">
@@ -48,9 +49,9 @@
       <div class="row list-head">
         <div class="hidden-xs col-sm-2 list-header border-right">Company Name</div>
         <div class="hidden-xs col-sm-2 list-header border-right">Type</div>
-        <div class="hidden-xs col-sm-2 list-header border-right">Related Company</div>
-        <div class="hidden-xs col-sm-2 list-header border-right">Start Date</div>
-        <div class="hidden-xs col-sm-2 list-header border-right">End Date</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Related Company *</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Start Date *</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">End Date *</div>
         <div class="hidden-xs col-sm-2 list-header border-right">Actions</div>
       </div>
       <!--$id() tracks items by their identity-->

@@ -1,0 +1,38 @@
+<div class="modal fade info-import-model" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span class="fa fa-close"></span></button>
+        <h4 class="modal-title">Understanding the Excel Template</h4>
+      </div>
+      <div class="modal-body">
+        <p>The file is an Excel (.xls, .xlsx) file and has only one sheet.<br>
+          The first line should be the header with the column names.
+        </p>
+
+        <p><b>The column order and name should match the following:</b></p>
+        <ul>
+          <li><b>Menu Code</b> – Optional. Alphanumeric and 10 characters maximum allowed. If missing replace by Menu
+            Name.
+          </li>
+          <li><b>Menu Name</b> – Required. Alphanumeric and 10 characters maximum allowed.
+          </li>
+          <li><b>Menu Start Date</b> – Required. Effective Date of the Menu, Format = yyyymmdd.
+          </li>
+          <li><b>Menu End Date</b> – Required. End Date of the Menu, Format = yyyymmdd.
+          </li>
+          <li><b>Item Code</b> – Required. Item that is part of the Menu; should match Item Code already setup.
+          </li>
+          <li><b>Item Name</b> – Required. Item that is part of the Menu; should match Item Name already setup.<br/>
+            Note: Item Code should match Item Name already setup.
+          </li>
+          <li><b>Qty</b> – Required. Item quantity for the Menu; Numeric.Number</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/menuUpload.xlsx" type="button" class="btn btn-primary" ng-click="hideModalImportInfo(); $event.preventDefault(); $event.stopPropagation()">Download</a>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModalImportInfo()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

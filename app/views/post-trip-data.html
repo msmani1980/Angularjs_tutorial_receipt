@@ -1,5 +1,14 @@
 <div class="module-container">
-  <h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
+  <div class="row">
+    <div class="col-xs-6">
+      <h2 class="view-name">{{viewName}}</h2>
+    </div>
+
+    <div class="col-xs-6 text-right">
+      <a class="btn btn-default" ng-href="#/post-trip-data-list" class="btn" ng-show="readOnly">Back</a>
+    </div>
+  </div>
+
   <br>
 
   <form name="postTripDataForm">
@@ -25,7 +34,8 @@
                 disable-date-range="true"
                 start-date-model="postTrip.scheduleDate"
                 is-search-field="true"
-                label-from="Schedule Date *">
+                label-from="Schedule Date *"
+                required="true">
               </date-picker>
             </div>
           </div>
@@ -146,9 +156,9 @@
             <div class="form-group">
               <label>Employee ID's *</label>
               <ui-select multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly">
-                <ui-select-match placeholder="Select Employee IDs from list">{{ $item.id }}</ui-select-match>
+                <ui-select-match placeholder="Select Employee IDs from list">{{ $item.employeeIdentifier }}</ui-select-match>
                 <ui-select-choices repeat="employee in employees | filter: $select.search">
-                  {{employee.id}} - {{ employee.name }}
+                  {{employee.employeeIdentifier}} ({{ employee.lastName }}, {{ employee.firstName }})
                 </ui-select-choices>
               </ui-select>
             </div>
