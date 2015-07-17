@@ -62,10 +62,11 @@
     <td>{{ store.startDate }}</td>
     <td>{{ store.endDate }}</td>
     <td>
-      <button class="btn btn-primary btn-xs" ng-click="deleteStoreNumber(store.id)">
-        <i class="fa fa-pencil"></i>
+      <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(store)" ng-show="canDelete(store)">
+        <i class="fa fa-trash"></i>
       </button>
     </td>
   </tr>
   </tbody>
 </table>
+<delete-record-dialog></delete-record-dialog>

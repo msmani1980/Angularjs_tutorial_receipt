@@ -10,7 +10,11 @@
 angular.module('ts5App')
   .service('companyStoresService', function ($resource, ENV) {
 
-    var storesRequestURL = ENV.apiUrl + '/api/companies/stores';
+    var storesRequestURL = ENV.apiUrl + '/api/companies/stores/:id';
+
+    var requestParameters = {
+      id: '@id'
+    };
 
     var storesActions = {
       createStore: {
@@ -23,7 +27,7 @@ angular.module('ts5App')
         method: 'DELETE'
       }
     };
-    var storesRequestResource = $resource(storesRequestURL, {}, storesActions);
+    var storesRequestResource = $resource(storesRequestURL, requestParameters, storesActions);
 
     var createStore = function (payload) {
       return storesRequestResource.createStore(payload).$promise;
@@ -31,8 +35,8 @@ angular.module('ts5App')
     var getStores = function () {
       return storesRequestResource.getStores().$promise;
     };
-    var deleteStore = function () {
-      return storesRequestResource.deleteStore().$promise;
+    var deleteStore = function (_id) {
+      return storesRequestResource.deleteStore({id:_id}).$promise;
     };
     return {
       createStore: createStore,

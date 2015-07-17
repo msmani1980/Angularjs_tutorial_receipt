@@ -68,7 +68,7 @@ describe('Service: companyStoresService', function () {
         companyStoresService.deleteStore(mockPayload);
         $httpBackend.flush();
       });
-    })
+    });
 
   });
 
