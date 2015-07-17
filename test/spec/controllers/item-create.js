@@ -5,8 +5,21 @@ describe('The Item Create Controller', function() {
   // load the controller's module
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module(
+    'served/items-list.json',
+    'served/item-types.json',
+    'served/sales-categories.json',
     'served/stations-date-filtered.json',
     'served/station-exception-currencies.json',
+    'served/price-types.json',
+    'served/tags.json',
+    'served/tax-types.json',
+    'served/currencies.json',
+    'served/allergens.json',
+    'served/item-types.json',
+    'served/characteristics.json',
+    'served/units-dimension.json',
+    'served/units-volume.json',
+    'served/units-weight.json',
     'served/price-types.json'
   ));
 
@@ -692,47 +705,55 @@ describe('The Item Create Controller', function() {
       expect(ItemCreateCtrl.handleStationPromises).toBeDefined();
     });
 
-    /*describe('The ItemCreateCtrl.handleStationPromises method', function () {
+    describe('$scope.uiSelectTemplateReady variable', function() {
 
-      var $q,
-        stationException1,
-        stationException2;
+      it('should be defined', function() {
+        expect($scope.uiSelectTemplateReady).toBeDefined();
+      });
 
-      beforeEach(inject(function ($injector) {
+      it('should return false', function() {
+        expect($scope.uiSelectTemplateReady).toBeFalsy();
+      });
 
-        $scope.addStationException(0);
-        $scope.addStationException(0);
+    });
 
-        inject(function (_servedStationsDateFiltered_) {
-          stationsJSON = _servedStationsDateFiltered_;
-        });
+    describe('The ItemCreateCtrl.getDependencies', function() {
+      var getDependenciesDeffered,
+        responseArray;
 
-        $q = $injector.get('$q');
-
-        var stationPromise1 = jasmine.createSpyObj('stationPromise1', ['getGlobalStationList']);
-        var stationPromise2 = jasmine.createSpyObj('stationPromise2', ['getGlobalStationList']);
-
-        stationPromise1.getGlobalStationList.and.returnValue($q.when(stationsJSON));
-        stationPromise2.getGlobalStationList.and.returnValue($q.when(stationsJSON));
-
-        spyOn(ItemCreateCtrl, 'handleStationPromises').and.callThrough();
-
-        stationException1 = $scope.formData.prices[0].stationExceptions[0];
-        stationException2 = $scope.formData.prices[0].stationExceptions[1];
-
-        ItemCreateCtrl.handleStationPromises(0,0);
-
+      beforeEach(inject(function($q, _servedSalesCategories_,
+        _servedTags_, _servedTaxTypes_, _servedCurrencies_,
+        _servedAllergens_, _servedItemTypes_,
+        _servedCharacteristics_, _servedUnitsDimension_,
+        _servedUnitsVolume_, _servedUnitsWeight_,
+        _servedPriceTypes_, _servedItemsList_) {
+        responseArray = [
+          _servedSalesCategories_,
+          _servedTags_,
+          _servedTaxTypes_,
+          _servedCurrencies_,
+          _servedAllergens_,
+          _servedItemTypes_,
+          _servedCharacteristics_,
+          _servedUnitsDimension_,
+          _servedUnitsVolume_,
+          _servedUnitsWeight_,
+          _servedPriceTypes_,
+          _servedItemsList_
+        ];
+        getDependenciesDeffered = $q.defer();
+        getDependenciesDeffered.resolve(responseArray);
+        spyOn(ItemCreateCtrl, 'getDependencies').and.returnValue(
+          getDependenciesDeffered.promise);
+        $scope.$digest();
       }));
 
-      it('should have been called', function () {
-        expect(ItemCreateCtrl.handleStationPromises).toHaveBeenCalled();
+      it('should be defined', function() {
+        console.log(responseArray);
+        expect(ItemCreateCtrl.getDependencies).toBeDefined();
       });
 
-      it('should have been called', function () {
-        expect(stationException1.stations).toBeDefined();
-      });
-
-    });*/
+    });
 
   });
 
