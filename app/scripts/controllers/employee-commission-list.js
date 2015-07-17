@@ -48,7 +48,7 @@ angular.module('ts5App')
     }
 
     $scope.getSelectedPriceTypeObject = function(commissionObject) {
-      if (commissionObject.types.length === 0) {
+      if (!commissionObject.types || commissionObject.types.length === 0) {
         return {};
       }
       var priceId = commissionObject.types[0].priceTypeId;
@@ -56,6 +56,10 @@ angular.module('ts5App')
     };
 
     $scope.getSelectedRateTypeObject = function (commissionObject) {
+      if (!commissionObject.fixeds) {
+        return {};
+      }
+
       var rateTypeId = commissionObject.fixeds.length > 0 ? 1 : 2;
       return getSelectedObjectFromArrayUsingId($scope.search.taxRateTypesList, rateTypeId);
     };
