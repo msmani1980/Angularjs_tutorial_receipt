@@ -119,9 +119,14 @@ angular.module('ts5App')
         var path = $location.path();
         if (path.search('create') !== -1) {
           return true;
-        } else {
-          return false;
         }
+        if (path.search('edit') !== -1) {
+          return true;
+        }
+        if (path.search('exchange-rates') !== -1) {
+          return true;
+        }
+        return false;
       };
 
       $scope.leaveViewClose = function () {
