@@ -3,7 +3,7 @@
 
   <h2>{{ company.companyName }} <small>Flight {{ cashBag.scheduleNumber }} <small><date class="text-right">{{ displayedScheduleDate }}</date></small></small></h2>
 
-  <ng-form name="cashBagCreateForm" class="form edit-form">
+  <form name="cashBagCreateForm" class="form edit-form">
 
     <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
@@ -134,7 +134,7 @@
     <leave-view-modal></leave-view-modal>
 
 
-  </ng-form>
+  </form>
 </div>
 <left-navigation base-path="cash-bag"></left-navigation>
 <delete-record-dialog></delete-record-dialog>

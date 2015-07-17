@@ -82,6 +82,10 @@ angular.module('ts5App')
       return angular.equals($scope.formData,_companyDefault);
     };
 
+    $scope.canDelete = function(store){
+      return dateUtility.isAfterToday(store.startDate);
+    };
+
     $scope.removeRecord = function(store) {
       if(!$scope.canDelete(store)){
         return false;
@@ -92,9 +96,5 @@ angular.module('ts5App')
         showMessage('deleted!', 'success');
         init();
       }, showApiErrors);
-    };
-
-    $scope.canDelete = function(store){
-      return dateUtility.isAfterToday(store.startDate);
     };
   });
