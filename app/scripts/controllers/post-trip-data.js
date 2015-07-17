@@ -33,6 +33,7 @@ angular.module('ts5App')
 
     this.initReadView = function () {
       $scope.readOnly = true;
+      $scope.viewName = 'View Post Trip Data';
       $this.showLoadingModal('Loading Post Trip Data');
       $this.getPostTrip();
     };
