@@ -172,7 +172,7 @@
         id="saleType"
         required="true"
         ng-disabled="isCommissionReadOnly()"
-        ng-options="priceType.name for priceType in priceTypesList | orderBy:'name' track by priceType.id"
+        ng-options="priceType.name for priceType in priceTypeList | orderBy:'name' track by priceType.id"
         ng-model="commission.selectedPriceType">
         <option selected disabled value>Select Sale Type</option>
       </select>

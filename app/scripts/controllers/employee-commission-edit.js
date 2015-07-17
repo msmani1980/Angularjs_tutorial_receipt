@@ -73,7 +73,7 @@ angular.module('ts5App')
       }
 
       employeeCommissionFactory.getItemsList(payload, true).then(function (dataFromAPI) {
-        $scope.itemsList = dataFromAPI.masterItems;
+        $scope.itemList = dataFromAPI.masterItems;
       });
 
       var currencyFilters = angular.extend(payload, {
@@ -87,6 +87,14 @@ angular.module('ts5App')
       if ($scope.isCommissionReadOnly()) {
         datesWatcher();
       }
+
+      if (shouldFetchCommission()) {
+        employeeCommissionFactory.getCommission($routeParams.id).then(function (dataFromAPI) {
+          $scope.commission = formatDatesForApp(angular.copy(dataFromAPI.employeeCommission));
+
+          populateValuesFromAPI();
+        });
+      }
     });
 
     function shouldFetchCommission() {
@@ -98,7 +106,7 @@ angular.module('ts5App')
         return angular.equals(parseInt(expected), parseInt(actual));
       });
 
-      if (filteredObject.length > 0) {
+      if (filteredObject && filteredObject.length > 0) {
         return filteredObject[0];
       }
       return {};
@@ -106,12 +114,16 @@ angular.module('ts5App')
 
     function getSelectedItemObject() {
       var itemId = $scope.commission.itemMasterId;
-      return getSelectedObjectFromArrayUsingId($scope.itemsList, itemId);
+      return getSelectedObjectFromArrayUsingId($scope.itemList, itemId);
     }
 
     function getSelectedPriceTypeObject() {
+      if ($scope.commission.types.length === 0) {
+        return {};
+      }
+
       var priceId = $scope.commission.types[0].priceTypeId;
-      return getSelectedObjectFromArrayUsingId($scope.taxRateTypes, priceId);
+      return getSelectedObjectFromArrayUsingId($scope.priceTypeList, priceId);
     }
 
     function getSelectedRateTypeObject() {
@@ -132,16 +144,8 @@ angular.module('ts5App')
       });
     }
 
-    if (shouldFetchCommission()) {
-      employeeCommissionFactory.getCommission($routeParams.id).then(function (dataFromAPI) {
-        $scope.commission = formatDatesForApp(angular.copy(dataFromAPI.employeeCommission));
-
-        populateValuesFromAPI();
-      });
-    }
-
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
-      $scope.priceTypesList = angular.copy(dataFromAPI);
+      $scope.priceTypeList = angular.copy(dataFromAPI);
     });
 
     employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {

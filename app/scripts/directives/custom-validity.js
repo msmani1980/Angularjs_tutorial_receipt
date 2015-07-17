@@ -12,6 +12,7 @@ angular.module('ts5App')
       word: [/^[\w\s]+$/, 'Error message for word'],
       bit: [/^(0|1)$/, 'Error message for bit'],
       number: [/^-?([0-9]*)$/, 'Error message for number'],
+      numberUpToFiveChars: [/^-?([0-9]{0,5})$/, 'This field can only contain numbers with up to 5 digits'],
       alpha: [/^[a-zA-z]+$/, 'Error message for alpha'],
       alphanumeric: [/^[a-zA-Z0-9]+$/, 'Error message for alphanumeric'],
       alphanumericExactlyTenChars: [/^[a-zA-Z0-9]{10}$/, 'You must enter exactly 10 characters, letters and numbers only.'],
@@ -24,7 +25,7 @@ angular.module('ts5App')
       currencyWithTwoDecimalPlace: [/^\d+\.\d{2}$/, 'This field should use format 0.00'],
       price: [/^\$?\s?[0-9\,]+(\.\d{0,4})?$/, 'Error message for price'],
       url: [/(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/, 'Error for URL'],
-      time:[/[0-2][0-9]\:[0-5][0-9](?:\:[0-9][0-9])?$/, 'This field should use 24 hour time format (hh:mm) or (hh:mm:ss)']
+      time:[/^([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)?$/, 'This field should use 24 hour time format (hh:mm) or (hh:mm:ss)']
     };
     return {
       restrict: 'A',

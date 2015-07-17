@@ -75,7 +75,7 @@ angular.module('ts5App')
 
 
     this.uploadPostTripSuccess = function () {
-      this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
+      $this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
     };
 
     this.uploadPostTripFailure = function () {

@@ -28,6 +28,8 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     getStoresDeferred.resolve(_servedCompanyStores_);
     spyOn(companyStoresService, 'getStores').and.returnValue(getStoresDeferred.promise);
 
+    spyOn(companyStoresService, 'deleteStore').and.returnValue(getStoresDeferred.promise);
+
     companyId = _GlobalMenuService_.company.get();
 
     StoreNumberCreateCtrl = $controller('StoreNumberCreateCtrl', {
@@ -45,6 +47,14 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     it('should have a submitForm function attached to the scope', function(){
       expect(scope.submitForm).toBeDefined();
       expect(Object.prototype.toString.call(scope.submitForm)).toBe('[object Function]');
+    });
+    it('should have a removeRecord function attached to the scope', function(){
+      expect(scope.removeRecord).toBeDefined();
+      expect(Object.prototype.toString.call(scope.removeRecord)).toBe('[object Function]');
+    });
+    it('should have a canDelete function attached to the scope', function(){
+      expect(scope.canDelete).toBeDefined();
+      expect(Object.prototype.toString.call(scope.canDelete)).toBe('[object Function]');
     });
   });
 
@@ -77,6 +87,29 @@ describe('Controller: StoreNumberCreateCtrl', function () {
 
       scope.submitForm();
       expect(companyStoresService.createStore).toHaveBeenCalledWith(payload);
+    });
+  });
+
+  describe('canDelete scope function', function(){
+    it('should return true if the start date is in the future', function(){
+      expect(scope.canDelete({startDate:'01/05/2050'})).toBe(true);
+    });
+    it('should return false if the start date is in the past', function(){
+      expect(scope.canDelete({startDate:'01/05/2015'})).toBe(false);
+    });
+  });
+
+  describe('removeRecord scope function', function(){
+    it('should return false if the start date is in the past', function(){
+      expect(scope.removeRecord({startDate:'01/05/2015'})).toBe(false);
+    });
+    it('should call deleteStore API', function(){
+      var store = {
+        id: 123,
+        startDate:'01/05/2050'
+      };
+      scope.removeRecord(store);
+      expect(companyStoresService.deleteStore).toHaveBeenCalledWith(store.id);
     });
   });
 
