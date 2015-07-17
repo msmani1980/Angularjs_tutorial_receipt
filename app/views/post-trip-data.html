@@ -132,7 +132,9 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Passenger Count *</label>
-              <input required="true"
+              <input custom-validity
+                     custom-pattern="numberUpToFiveChars"
+                     required="true"
                      ng-model="postTrip.passengerCount"
                      type="text"
                      class="form-control passenger-count"
