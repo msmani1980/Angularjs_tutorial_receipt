@@ -70,7 +70,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
   describe('initialize', function () {
 
     it('should have a list of items attached to scope', function () {
-      expect(scope.itemsList).toBeDefined();
+      expect(scope.itemList).toBeDefined();
     });
 
     it('should have a list of price types attached to scope', function () {

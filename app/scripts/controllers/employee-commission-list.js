@@ -13,7 +13,7 @@ angular.module('ts5App')
     $scope.search = {
       startDate: '',
       endDate: '',
-      itemsList: [],
+      itemList: [],
       priceTypeList: [],
       taxRateTypesList: []
     };
@@ -31,7 +31,7 @@ angular.module('ts5App')
 
       if (payload.startDate && payload.endDate) {
         employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
-          $scope.search.itemsList = dataFromAPI.retailItems;
+          $scope.search.itemList = dataFromAPI.retailItems;
         });
       }
     });

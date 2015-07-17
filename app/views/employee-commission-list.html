@@ -85,7 +85,7 @@
             <select
               class="form-control"
               id="itemName"
-              ng-options="item.itemName for item in search.itemsList | orderBy:'itemName' track by item.id"
+              ng-options="item.itemName for item in search.itemList | orderBy:'itemName' track by item.id"
               ng-model="search.selectedItem">
               <option selected="selected" disabled value>Select Item</option>
             </select>

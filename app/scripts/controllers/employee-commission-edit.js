@@ -68,7 +68,7 @@ angular.module('ts5App')
       }
 
       employeeCommissionFactory.getItemsList(payload, true).then(function (dataFromAPI) {
-        $scope.itemsList = dataFromAPI.masterItems;
+        $scope.itemList = dataFromAPI.masterItems;
       });
 
       var currencyFilters = angular.extend(payload, {
@@ -109,8 +109,8 @@ angular.module('ts5App')
 
     function getSelectedItemObject() {
       var itemId = $scope.commission.itemMasterId;
-      //console.log(getSelectedObjectFromArrayUsingId($scope.itemsList, itemId));
-      return getSelectedObjectFromArrayUsingId($scope.itemsList, itemId);
+      //console.log(getSelectedObjectFromArrayUsingId($scope.itemList, itemId));
+      return getSelectedObjectFromArrayUsingId($scope.itemList, itemId);
     }
 
     function getSelectedPriceTypeObject() {

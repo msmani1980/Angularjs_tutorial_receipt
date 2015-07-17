@@ -14,7 +14,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     getPriceTypesListDeferred,
     getTaxRateTypesDeferred,
     getCommissionListDeferred,
-    itemsListJSON,
+    itemListJSON,
     priceTypeListJSON,
     taxRateTypesJSON,
     employeeCommissionListJSON,
@@ -24,14 +24,14 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
   beforeEach(inject(function ($controller, $rootScope, $q, $injector, $location) {
     location = $location;
     inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedEmployeeCommissionList_) {
-      itemsListJSON = _servedItemsList_;
+      itemListJSON = _servedItemsList_;
       priceTypeListJSON = _servedPriceTypes_;
       taxRateTypesJSON = _servedTaxRateTypes_;
       employeeCommissionListJSON = _servedEmployeeCommissionList_;
     });
 
     getItemsListDeferred = $q.defer();
-    getItemsListDeferred.resolve(itemsListJSON);
+    getItemsListDeferred.resolve(itemListJSON);
 
     getPriceTypesListDeferred = $q.defer();
     getPriceTypesListDeferred.resolve(priceTypeListJSON);
@@ -67,7 +67,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
 
     it('should have required properties', function () {
-      expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemsList', 'priceTypeList',
+      expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemList', 'priceTypeList',
         'taxRateTypesList']);
     });
 
