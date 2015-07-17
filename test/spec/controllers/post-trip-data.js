@@ -240,7 +240,7 @@ describe('Controller: PostTripDataCtrl', function () {
     });
 
     it('should set view name', function () {
-      expect(scope.viewName).toEqual('Post Trip Data');
+      expect(scope.viewName).toEqual('View Post Trip Data');
     });
 
     it('should call getPostTrip', function () {
