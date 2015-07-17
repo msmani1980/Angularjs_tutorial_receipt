@@ -109,7 +109,6 @@ angular.module('ts5App')
 
     function getSelectedItemObject() {
       var itemId = $scope.commission.itemMasterId;
-      //console.log(getSelectedObjectFromArrayUsingId($scope.itemList, itemId));
       return getSelectedObjectFromArrayUsingId($scope.itemList, itemId);
     }
 

@@ -126,16 +126,8 @@ angular.module('ts5App')
       return commissionListData;
     }
 
-    function setRateAndSaleTypes(commissionListData) {
-      //commissionListData.forEach(function (commissionObject) {
-        //TODO: wait on API fix to transform data here
-      //});
-      return commissionListData;
-    }
-
     function prepareDataForTable(dataFromAPI) {
       var transformedData = formatDatesForApp(angular.copy(dataFromAPI));
-      return setRateAndSaleTypes(transformedData);
     }
 
     $scope.searchCommissions = function () {
