@@ -18,7 +18,7 @@ angular.module('ts5App')
 
         $scope.itemListPath = '/exchange-rates';
         $scope.manageRetailItemIcon = 'icon-manage-transactions';
-        $scope.manageRetailItemLabel = 'Manage Transactions';
+        $scope.manageRetailItemLabel = 'Daily Exchange Rates';
 
 
         $scope.itemCreatePath = '/cash-bag-list';

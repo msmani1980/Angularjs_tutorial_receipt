@@ -52,6 +52,7 @@
     <th>Store Number</th>
     <th>Effective From</th>
     <th>Effective To</th>
+    <th>Actions</th>
   </tr>
   </thead>
   <tbody>
@@ -60,6 +61,11 @@
     <td>{{ store.storeNumber }}</td>
     <td>{{ store.startDate }}</td>
     <td>{{ store.endDate }}</td>
+    <td>
+      <button class="btn btn-primary btn-xs" ng-click="deleteStoreNumber(store.id)">
+        <i class="fa fa-pencil"></i>
+      </button>
+    </td>
   </tr>
   </tbody>
 </table>

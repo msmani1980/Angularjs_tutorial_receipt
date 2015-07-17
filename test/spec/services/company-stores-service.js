@@ -56,6 +56,20 @@ describe('Service: companyStoresService', function () {
 
     });
 
+
+    describe('deleteStore', function(){
+      it('should be accessible as a function', function(){
+        expect(companyStoresService.deleteStore).toBeDefined();
+        expect(Object.prototype.toString.call(companyStoresService.deleteStore)).toBe('[object Function]');
+      });
+      it('should make a DELETE request', function(){
+        $httpBackend.expectDELETE(/stores/g).respond(201, '');
+        var mockPayload = {id:1};
+        companyStoresService.deleteStore(mockPayload);
+        $httpBackend.flush();
+      });
+    })
+
   });
 
 });
