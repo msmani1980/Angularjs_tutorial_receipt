@@ -85,7 +85,7 @@
             <select
               class="form-control"
               id="itemName"
-              ng-options="item.itemName for item in search.itemsList | orderBy:'itemName' track by item.id"
+              ng-options="item.itemName for item in search.itemList | orderBy:'itemName' track by item.id"
               ng-model="search.selectedItem">
               <option selected="selected" disabled value>Select Item</option>
             </select>
@@ -97,7 +97,7 @@
             <label class="control-label" for="saleType">Sale Type</label>
             <select class="form-control"
                     id="saleType"
-                    ng-options="priceType.name for priceType in search.priceTypesList | orderBy:'name' track by priceType.id"
+                    ng-options="priceType.name for priceType in search.priceTypeList | orderBy:'name' track by priceType.id"
                     ng-model="search.selectedPriceType">
               <option selected="selected" disabled value>Select Price Type</option>
             </select>
@@ -141,9 +141,9 @@
     ng-repeat="commission in commissionList | filter:{commissionCode: search.commissionCode, commissionName: search.commissionName}">
     <td>{{ commission.startDate }}</td>
     <td>{{ commission.endDate }}</td>
-    <td>{{ commission.itemMasterId }}</td>
-    <td>{{ commission.saleType }}</td>
-    <td>{{ commission.rateType }}</td>
+    <td>{{ commission.item[0].itemName }}</td>
+    <td>{{ getSelectedPriceTypeObject(commission).name }}</td>
+    <td>{{ getSelectedRateTypeObject(commission).taxRateType }}</td>
     <td>
       <button class="btn btn-info btn-xs" ng-click="showCommission(commission)">
         <i class="fa fa-file"></i>
