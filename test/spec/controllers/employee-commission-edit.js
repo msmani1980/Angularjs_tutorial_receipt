@@ -74,7 +74,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     });
 
     it('should have a list of price types attached to scope', function () {
-      expect(scope.priceTypesList).toBeDefined();
+      expect(scope.priceTypeList).toBeDefined();
     });
 
     it('should have a list of price types attached to scope', function () {

@@ -119,7 +119,7 @@ angular.module('ts5App')
       }
 
       var priceId = $scope.commission.types[0].priceTypeId;
-      return getSelectedObjectFromArrayUsingId($scope.priceTypesList, priceId);
+      return getSelectedObjectFromArrayUsingId($scope.priceTypeList, priceId);
     }
 
     function getSelectedRateTypeObject() {
@@ -141,7 +141,7 @@ angular.module('ts5App')
     }
 
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
-      $scope.priceTypesList = angular.copy(dataFromAPI);
+      $scope.priceTypeList = angular.copy(dataFromAPI);
     });
 
     employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {

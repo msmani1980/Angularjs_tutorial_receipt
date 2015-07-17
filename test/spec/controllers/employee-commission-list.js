@@ -67,7 +67,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
 
     it('should have required properties', function () {
-      expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemsList', 'priceTypesList',
+      expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemsList', 'priceTypeList',
         'taxRateTypesList']);
     });
 

@@ -97,7 +97,7 @@
             <label class="control-label" for="saleType">Sale Type</label>
             <select class="form-control"
                     id="saleType"
-                    ng-options="priceType.name for priceType in search.priceTypesList | orderBy:'name' track by priceType.id"
+                    ng-options="priceType.name for priceType in search.priceTypeList | orderBy:'name' track by priceType.id"
                     ng-model="search.selectedPriceType">
               <option selected="selected" disabled value>Select Price Type</option>
             </select>

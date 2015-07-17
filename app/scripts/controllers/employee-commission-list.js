@@ -14,7 +14,7 @@ angular.module('ts5App')
       startDate: '',
       endDate: '',
       itemsList: [],
-      priceTypesList: [],
+      priceTypeList: [],
       taxRateTypesList: []
     };
 
@@ -52,7 +52,7 @@ angular.module('ts5App')
         return {};
       }
       var priceId = commissionObject.types[0].priceTypeId;
-      return getSelectedObjectFromArrayUsingId($scope.search.priceTypesList, priceId);
+      return getSelectedObjectFromArrayUsingId($scope.search.priceTypeList, priceId);
     };
 
     $scope.getSelectedRateTypeObject = function (commissionObject) {
@@ -150,7 +150,7 @@ angular.module('ts5App')
     };
 
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
-      $scope.search.priceTypesList = dataFromAPI;
+      $scope.search.priceTypeList = dataFromAPI;
     });
 
     employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {
