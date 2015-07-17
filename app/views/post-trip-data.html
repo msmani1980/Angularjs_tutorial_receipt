@@ -19,7 +19,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <!-- form header-->
-        <div class="row" ng-hide="readOnly">
+        <div class="row">
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Schedule Number *</label>
@@ -35,19 +35,10 @@
                 start-date-model="postTrip.scheduleDate"
                 is-search-field="true"
                 label-from="Schedule Date *"
-                required="true">
+                required="true"
+                disable-start-date="true">
               </date-picker>
             </div>
-          </div>
-        </div>
-
-        <!-- readOnly header-->
-        <div class="row" ng-show="readOnly">
-          <div class="col-sm-6">
-            <h4>Schedule {{ postTrip.scheduleNumber }}</h4>
-          </div>
-          <div class="col-sm-6 text-right">
-            <h4>Schedule Date {{ postTrip.scheduleDate }}</h4>
           </div>
         </div>
       </div>
