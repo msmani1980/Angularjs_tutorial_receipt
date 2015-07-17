@@ -234,11 +234,9 @@ describe('The Item Create Controller', function() {
           return priceTypesJSON;
         });
 
-      ItemCreateCtrl.getDependencies();
-
       $scope.addStationException(0);
 
-      response = ItemCreateCtrl.getPriceTypesList();
+      response = ItemCreateCtrl.getDependencies();
 
       testObject = response[0];
 
@@ -251,6 +249,7 @@ describe('The Item Create Controller', function() {
 
     it('should have contain a price type object in the response ',
       function() {
+
         expect(testObject).toBeDefined();
         expect(testObject.id).toBeDefined();
         expect(testObject.id).toEqual(jasmine.any(Number));
