@@ -27,7 +27,7 @@ angular.module('ts5App')
       return $scope.isLoading && !$scope.isRejected;
     };
 
-    $scope.loadedSuccessfully = function () {
+    $scope.isFulfilled = function () {
       return !$scope.isLoading && !$scope.isRejected;
     };
 
