@@ -30,22 +30,23 @@ describe('The Item Create Controller', function() {
     ItemCreateCtrl,
     $httpBackend;
 
-  beforeEach(inject(function(_$rootScope_, _$controller_, $injector) {
-    $httpBackend = $injector.get('$httpBackend');
-    //FIXME: Test these calls on the controller
-    $httpBackend.whenGET(/./).respond(200, '');
+  function createController($injector) {
     $location = $injector.get('$location');
     $location.path('/item-create');
-    $rootScope = _$rootScope_;
+    $rootScope = $injector.get('$rootScope');
+    $httpBackend = $injector.get('$httpBackend');
     $scope = $rootScope.$new();
-    $controller = _$controller_;
+    $controller = $injector.get('$controller');
     ItemCreateCtrl = $controller('ItemCreateCtrl', {
-      '$rootScope': $rootScope,
       '$scope': $scope
     });
-  }));
+  }
 
   describe('The ItemCreateCtrl', function() {
+
+    beforeEach(inject(function($injector) {
+      createController($injector);
+    }));
 
     it('should be defined', function() {
       expect(ItemCreateCtrl).toBeDefined();
@@ -136,6 +137,89 @@ describe('The Item Create Controller', function() {
 
   });
 
+  describe('init() method', function() {
+
+    it('should be defined', function() {
+      expect(ItemCreateCtrl.init).toBeDefined();
+    });
+
+    describe('getDependencies() method', function() {
+      var /*promise, deferred, , deferredDependancies, */
+        responseArray,
+        salesCategoriesDeffered,
+        companiesFactory;
+
+      beforeEach(inject(function($injector, $q, $rootScope,
+        _servedSalesCategories_,
+        _servedTags_, _servedTaxTypes_, _servedCurrencies_,
+        _servedAllergens_, _servedItemTypes_,
+        _servedCharacteristics_, _servedUnitsDimension_,
+        _servedUnitsVolume_, _servedUnitsWeight_,
+        _servedPriceTypes_, _servedItemsList_) {
+        responseArray = [
+          _servedSalesCategories_,
+          _servedTags_,
+          _servedTaxTypes_,
+          _servedCurrencies_,
+          _servedAllergens_,
+          _servedItemTypes_,
+          _servedCharacteristics_,
+          _servedUnitsDimension_,
+          _servedUnitsVolume_,
+          _servedUnitsWeight_,
+          _servedPriceTypes_,
+          _servedItemsList_
+        ];
+
+        companiesFactory = $injector.get('companiesFactory');
+
+        salesCategoriesDeffered = $q.defer();
+        spyOn(companiesFactory, 'getSalesCategoriesList').and
+          .returnValue(responseArray[0]);
+
+        createController($injector);
+        $httpBackend.whenGET(/./).respond(200, '');
+
+      }));
+
+      it('should be defined', function() {
+        expect(ItemCreateCtrl.getDependencies).toBeDefined();
+      });
+
+      describe('setSalesCategories method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setSalesCategories').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.salesCategories to be undefined',
+          function() {
+            expect($scope.salesCategories).toBeUndefined();
+          });
+
+        it(
+          'should have been calledd after the promise is resolved',
+          function() {
+            $scope.$digest();
+            salesCategoriesDeffered.resolve();
+            expect(ItemCreateCtrl.setSalesCategories).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.salesCategories after the promise is resolved',
+          function() {
+            $scope.$digest();
+            salesCategoriesDeffered.resolve();
+            expect($scope.salesCategories).toBeDefined();
+          });
+
+      });
+
+    });
+
+  });
+
   describe('view', function() {
 
     var $templateCache,
@@ -150,7 +234,6 @@ describe('The Item Create Controller', function() {
       var compiled = $compile(angular.element(html))($scope);
       view = angular.element(compiled[0]);
       $scope.uiSelectTemplateReady = true;
-      $scope.$digest();
     }));
 
     it('should be defined', function() {
@@ -290,11 +373,11 @@ describe('The Item Create Controller', function() {
     var stationsJSON,
       stationException;
 
-    beforeEach(function() {
-
+    beforeEach(inject(function($injector) {
+      createController($injector);
       $scope.addStationException(0);
 
-    });
+    }));
 
     it('should be have a addStationException method', function() {
       expect($scope.addStationException).toBeDefined();
@@ -705,114 +788,20 @@ describe('The Item Create Controller', function() {
       expect(ItemCreateCtrl.handleStationPromises).toBeDefined();
     });
 
-    describe('$scope.uiSelectTemplateReady variable', function() {
+  });
 
-      it('should be defined', function() {
-        expect($scope.uiSelectTemplateReady).toBeDefined();
-      });
+  describe('$scope.uiSelectTemplateReady variable', function() {
 
-      it('should return false', function() {
-        expect($scope.uiSelectTemplateReady).toBeFalsy();
-      });
-
+    it('should be defined', function() {
+      expect($scope.uiSelectTemplateReady).toBeDefined();
     });
 
-    describe('The getDependencies method', function() {
-      var promise, deferred, responseArray;
-
-      beforeEach(inject(function($q, $rootScope,
-        _servedSalesCategories_,
-        _servedTags_, _servedTaxTypes_, _servedCurrencies_,
-        _servedAllergens_, _servedItemTypes_,
-        _servedCharacteristics_, _servedUnitsDimension_,
-        _servedUnitsVolume_, _servedUnitsWeight_,
-        _servedPriceTypes_, _servedItemsList_) {
-        responseArray = [
-          _servedSalesCategories_,
-          _servedTags_,
-          _servedTaxTypes_,
-          _servedCurrencies_,
-          _servedAllergens_,
-          _servedItemTypes_,
-          _servedCharacteristics_,
-          _servedUnitsDimension_,
-          _servedUnitsVolume_,
-          _servedUnitsWeight_,
-          _servedPriceTypes_,
-          _servedItemsList_
-        ];
-
-        deferred = $q.defer();
-        promise = deferred.promise;
-
-        promise.then(function(value) {
-          responseArray = value;
-        });
-
-        spyOn(ItemCreateCtrl, 'getDependencies').and.returnValue(
-          responseArray);
-
-      }));
-
-      it('should have responseArray defined', function() {
-        expect(responseArray).toBeDefined();
-      });
-
-      it('should be defined', function() {
-        expect(ItemCreateCtrl.getDependencies).toBeDefined();
-      });
-
-      it('should have been called', function() {
-        ItemCreateCtrl.getDependencies();
-        expect(ItemCreateCtrl.getDependencies).toHaveBeenCalled();
-      });
-
-      describe('servedSalesCategories', function() {
-
-        it('should be returned', function() {
-          expect(responseArray[0]).toBeDefined();
-        });
-
-        it('should contain salesCategories', function() {
-          expect(responseArray[0].salesCategories).toBeDefined();
-        });
-
-        it('should have setSalesCategories defined',
-          function() {
-            expect(ItemCreateCtrl.setSalesCategories).toBeDefined();
-          });
-
-        it('should set $scope.salesCategories to undefined',
-          function() {
-            expect($scope.salesCategories).toBeUndefined();
-          });
-      });
-
-      describe('servedTagsList', function() {
-
-        it('should be returned', function() {
-          expect(responseArray[1]).toBeDefined();
-        });
-
-        it('should contain tags', function() {
-          expect(responseArray[1].response).toBeDefined();
-        });
-      });
-
-      describe('servedTaxTypes', function() {
-
-        it('should be returned', function() {
-          expect(responseArray[2]).toBeDefined();
-        });
-
-        it('should contain tax-types', function() {
-          expect(responseArray[2].response).toBeDefined();
-        });
-
-      });
-
+    it('should return false', function() {
+      expect($scope.uiSelectTemplateReady).toBeFalsy();
     });
 
   });
+
+
 
 });

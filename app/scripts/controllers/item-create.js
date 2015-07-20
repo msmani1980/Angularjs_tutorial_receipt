@@ -325,7 +325,7 @@ angular.module('ts5App')
     this.makeDependencyPromises = function() {
       return [
         companiesFactory.getSalesCategoriesList(),
-        companiesFactory.getTagsList(),
+        /*companiesFactory.getTagsList(),
         companiesFactory.getTaxTypesList(),
         currencyFactory.getCompanyCurrencies(),
         itemsFactory.getAllergensList(),
@@ -335,7 +335,7 @@ angular.module('ts5App')
         itemsFactory.getVolumeList(),
         itemsFactory.getWeightList(),
         itemsFactory.getPriceTypesList(),
-        itemsFactory.getItemsList({})
+        itemsFactory.getItemsList({})*/
       ];
     };
 
@@ -343,23 +343,26 @@ angular.module('ts5App')
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(
         dependencyPromises).then(function(response) {
-        $this.setSalesCategories(response[0]);
-        $this.setTagsList(response[1]);
-        $this.setTaxTypesList(response[2]);
-        $this.setMasterCurrenciesList(response[3]);
-        $this.setAllergens(response[4]);
-        $this.setItemTypes(response[5]);
-        $this.setCharacteristics(response[6]);
-        $this.setDimensionList(response[7]);
-        $this.setVolumeList(response[8]);
-        $this.setWeightList(response[9]);
-        $this.setItemPriceTypes(response[10]);
-        $this.setItemList(response[11]);
+        $this.setDependencies(response);
         $scope.uiSelectTemplateReady = true;
         $scope.filteredCharacteristics = $scope.characteristics;
       });
     };
 
+    this.setDependencies = function(response) {
+      $this.setSalesCategories(response[0]);
+      /*$this.setTagsList(response[1]);
+      $this.setTaxTypesList(response[2]);
+      $this.setMasterCurrenciesList(response[3]);
+      $this.setAllergens(response[4]);
+      $this.setItemTypes(response[5]);
+      $this.setCharacteristics(response[6]);
+      $this.setDimensionList(response[7]);
+      $this.setVolumeList(response[8]);
+      $this.setWeightList(response[9]);
+      $this.setItemPriceTypes(response[10]);
+      $this.setItemList(response[11]);*/
+    };
     this.setSalesCategories = function(data) {
       $scope.salesCategories = data.salesCategories;
     };
