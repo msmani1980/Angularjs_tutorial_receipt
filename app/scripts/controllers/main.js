@@ -260,7 +260,7 @@ angular.module('ts5App')
         className: 'dashboard-companyReasonCode'
       }]
     }, {
-        title: 'LMP Admin',
+        title: 'Station Operations',
         menuItems: [{
           name: 'Manage LMP Locations',
           route: '/#/lmp-locations-list',
@@ -268,33 +268,23 @@ angular.module('ts5App')
           className: 'dashboard-lmpLocationsList'
         }]
     }, {
-        title: 'Delivery Notes',
+        title: 'Stock Manager',
         menuItems: [{
-          name: 'Manage Delivery Notes',
-          route: '/#/delivery-notes-list',
+	      name: 'Stock Dashboard',
+	      route: '/#/stock-dashboard',
+	      icon: 'icon-manage-schedule',
+	      className: 'dashboard-stockDashboard'
+      	},{
+          name: 'Manage Goods Received',
+          route: '/#/manage-goods-received',
           icon: 'icon-manage-schedule',
-          className: 'dashboard-deliveryNotesList'
+          className: 'dashboard-manageGoodsReceived'
         }, {
           name: 'Create Delivery Note',
           route: '/#/delivery-note',
           icon: 'icon-manage-retail-category',
           className: 'dashboard-deliveryNote'
-        }
-      ]
-    }, {
-        title: 'Stock Dashboard',
-        menuItems: [{
-          name: 'Stock Management',
-          route: '/#/stock-list',
-          icon: 'icon-manage-schedule',
-          className: 'dashboard-stockList'
-        }, {
-	      name: 'Stock Take',
-	      route: '/#/stock-take',
-	      icon: 'icon-manage-schedule',
-	      className: 'dashboard-stockTake'
-      	}
-      ]
+        }]
   	}, {
       title: 'Manage Store Number',
       menuItems: [{

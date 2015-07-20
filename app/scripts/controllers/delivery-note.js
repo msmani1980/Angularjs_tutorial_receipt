@@ -12,6 +12,5 @@ angular.module('ts5App')
   .controller('DeliveryNoteCtrl', function ($scope) {
 
     $scope.viewName = 'Create Delivery Note';
-    $scope.postTrip = {};
 
   });

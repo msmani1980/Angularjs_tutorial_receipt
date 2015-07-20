@@ -228,7 +228,7 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Item Name*</label>
-                <select class="form-control" id="item-code" ng-model="itemCode" ng-change="updateItemCodeInfo()" ng-disabled="readOnly">
+                <select class="form-control" id="item-code" ng-model="itemCode" ng-change="updateItemCodeInfo()" ng-disabled="true">
                   <option ng-repeat="" value="{{ $index }}">
                     {{ item.itemNameCode }} ({{ item.itemNameName}})
                   </option>

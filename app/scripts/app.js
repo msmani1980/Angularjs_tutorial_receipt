@@ -167,9 +167,9 @@ angular
         templateUrl: 'views/lmp-locations-list.html',
         controller: 'ManageLmpLocationsCtrl'
       })
-      .when('/delivery-notes-list', {
-        templateUrl: 'views/delivery-notes-list.html',
-        controller: 'DeliveryNotesListCtrl'
+      .when('/manage-goods-received', {
+        templateUrl: 'views/manage-goods-received.html',
+        controller: 'ManageGoodsReceivedCtrl'
       })
       .when('/delivery-note', {
         templateUrl: 'views/delivery-note.html',
@@ -179,13 +179,9 @@ angular
         templateUrl: 'views/employee-commission-list.html',
         controller: 'EmployeeCommissionListCtrl'
       })
-      .when('/stock-list', {
-        templateUrl: 'views/stock-list.html',
-        controller: 'StockListCtrl'
-      })
-      .when('/stock-take', {
-        templateUrl: 'views/stock-take.html',
-        controller: 'StockTakeCtrl'
+      .when('/stock-dashboard', {
+        templateUrl: 'views/stock-dashboard.html',
+        controller: 'StockDashboardCtrl'
       })
       .otherwise({
         redirectTo: '/'

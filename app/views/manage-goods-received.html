@@ -32,7 +32,7 @@
     <div class="row">
 
       <div class="col-xs-6">
-        <a ng-href="/#/delivery-note" class="btn btn-primary"> + </a>
+        <a ng-href="/#/delivery-note" class="btn btn-primary"> + Create Delivery Note </a>
       </div>
 
       <div class="col-xs-6 text-right">
@@ -73,13 +73,17 @@
               </div>
             </div>
             
-            <date-picker
-              class="col-xs-12 col-sm-2"
-              disable-date-range="true"
-              start-date-model="deliveryNote.deliveryDate"
+            <date-picker class="col-xs-12 col-sm-4"
+              element-class="col-xs-12 col-sm-6"
+              start-date-model="dateRange.startDate"
+              end-date-model="dateRange.endDate"
               is-search-field="true"
-              label-from="Received Date">
+              label-from="Effective From"
+              label-to="Effective To">
             </date-picker>
+          
+<!--           </div> -->
+<!--           <div class="row"> -->
             
             <div class="col-xs-12 col-sm-2">
               <label>Status</label>
@@ -160,6 +164,24 @@
       </tbody>
     </table>
   </div>
+  
+  <div class="list-footer">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        Show
+        <select class="form-control" ng-model="itemsPerPage">
+          <option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
+        </select>
+        Items per Page
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 text-right">
+        <pagination total-items="itemsListCount" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+      </div>
+    </div>
+  </div>
+  
 
 </div>
 
