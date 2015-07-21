@@ -155,7 +155,8 @@ describe('Controller: PostTripDataCtrl', function () {
 
   describe('update controller action', function () {
     var routeParams = {
-      state: 'edit'
+      state: 'edit',
+      id: '1'
     };
     beforeEach(inject(function ($controller) {
       PostTripDataCtrl = $controller('PostFlightDataCtrl', {
