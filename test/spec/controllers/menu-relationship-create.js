@@ -15,15 +15,13 @@ describe('The MenuRelationshipCreateCtrl', function () {
     menuCatererStationsService,
     location,
     httpBackend,
-    authRequestHandler,
-    newRelationshipJSON;
+    authRequestHandler;
 
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module(
     'served/menus.json',
     'served/catering-stations.json',
-    'served/menu-catering-stations.json',
-    'served/menu-catering-stations-relationship.json'
+    'served/menu-catering-stations.json'
   ));
 
   function renderView($templateCache, $compile) {
@@ -37,15 +35,12 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
     $location, $httpBackend, _catererStationService_,
-    _menuCatererStationsService_,
-    _servedMenuCateringStationsRelationship_) {
+    _menuCatererStationsService_) {
     inject(function (_servedMenus_, _servedCateringStations_,
       _servedMenuCateringStations_) {
       menuListJSON = _servedMenus_;
       stationListJSON = _servedCateringStations_;
       menuCatererStationListJSON = _servedMenuCateringStations_;
-      newRelationshipJSON =
-        _servedMenuCateringStationsRelationship_;
     });
 
     // backend definition common for all tests
