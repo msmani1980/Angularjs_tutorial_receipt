@@ -14,7 +14,8 @@ angular.module('ts5App')
     var $this = this;
     $scope.formData = {
       startDate: '',
-      endDate: ''
+      endDate: '',
+      catererStationIds: []
     };
     $scope.viewName = 'Create Relationship';
     $scope.buttonText = 'Create';
@@ -267,6 +268,26 @@ angular.module('ts5App')
         $scope.displayError = true;
       }
       return $scope.form.$valid;
+    };
+
+    $scope.setInputValidClass = function (inputName) {
+      if($scope.form[inputName].$touched && $scope.form[inputName].$invalid || $scope.displayError && $scope.form[inputName].$invalid) {
+        return 'has-error';
+      }
+      if($scope.form[inputName].$touched && $scope.form[inputName].$valid) {
+        return 'has-success';
+      }
+      return '';
+    };
+
+    $scope.setStationsValidClass = function (inputName) {
+      if($scope.form[inputName].$touched && $scope.form[inputName].length < 1 || $scope.displayError && $scope.form[inputName].length < 1) {
+        return 'has-error';
+      }
+      if($scope.form[inputName].$touched && $scope.form[inputName].$valid) {
+        return 'has-success';
+      }
+      return '';
     };
 
     $scope.$watchCollection('form', function (form) {
