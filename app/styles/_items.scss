@@ -178,7 +178,7 @@
     li {
       cursor: pointer;
     }
-    
+
   	#importFromData {
     	display: inline-block;
     	white-space: nowrap;
@@ -332,15 +332,15 @@
 }
 
 /* item import */
+.drop-table tbody .empty-drop-zone{
+  cursor: default;
+}
 .drop-table tr.on-drag-hover{
+  border: 2px solid #77c797;
   border-top: 24px solid #249507;
-  background-color: #77c797;
 }
 
 .drop-table tr.on-drag-enter{
-  background-color: #77c797;
-}
-
-table.drop-table.sortable tbody tr{
-  cursor: default;
+  border: 2px solid #77c797;
+  border-top: 2px solid #77c797;
 }

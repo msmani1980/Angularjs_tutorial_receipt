@@ -1,114 +1,495 @@
 {
   "employeeCommissions": [
     {
-      "startDate": "2015-08-08",
-      "endDate": "2018-07-20",
+      "startDate": "2015-07-06",
+      "endDate": "2015-07-06",
       "createdBy": 1,
-      "createdOn": "1979-07-09 13:49:00.091976",
+      "createdOn": "2015-07-06 18:04:25.787104",
       "updatedBy": null,
       "updatedOn": null,
       "id": 22,
       "companyId": 403,
-      "fixeds": null,
-      "types": null,
-      "itemMasterId": "35",
+      "fixeds": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-06 18:04:26.148092",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 8,
+          "commissionId": 22,
+          "fixedValue": 1.23,
+          "currencyId": 9
+        }
+      ],
+      "types": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-06 18:04:25.97272",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 10,
+          "commissionId": 22,
+          "priceTypeId": 1
+        }
+      ],
+      "item": [
+        {
+          "id": 1,
+          "companyId": 403,
+          "itemCode": "Sk001",
+          "itemName": "Skittles",
+          "onBoardName": "Skittles",
+          "createdBy": null,
+          "createdOn": "2015-05-04 18:08:05.318101",
+          "updatedBy": null,
+          "updatedOn": "2015-06-25 16:46:59.930458",
+          "versions": null
+        }
+      ],
+      "itemMasterId": "1",
       "percentage": "0.0",
-      "description": "Multiple selection for sale type idtest"
+      "description": "test1"
     },
     {
-      "startDate": "2015-07-16",
-      "endDate": "2015-07-31",
+      "startDate": "2015-07-06",
+      "endDate": "2015-07-06",
       "createdBy": 1,
-      "createdOn": "2015-07-15 13:42:13.482719",
+      "createdOn": "2015-07-08 15:02:18.48941",
       "updatedBy": null,
       "updatedOn": null,
       "id": 23,
       "companyId": 403,
-      "fixeds": null,
-      "types": null,
-      "itemMasterId": "36",
+      "fixeds": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-08 15:02:19.084202",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 9,
+          "commissionId": 23,
+          "fixedValue": 1.23,
+          "currencyId": 9
+        }
+      ],
+      "types": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-08 15:02:18.796232",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 11,
+          "commissionId": 23,
+          "priceTypeId": 1
+        }
+      ],
+      "item": [
+        {
+          "id": 2,
+          "companyId": 403,
+          "itemCode": "SD001",
+          "itemName": "Coke",
+          "onBoardName": "Coke",
+          "createdBy": null,
+          "createdOn": "2015-05-04 18:08:07.229498",
+          "updatedBy": null,
+          "updatedOn": "2015-05-11 19:33:35.590292",
+          "versions": null
+        }
+      ],
+      "itemMasterId": "2",
+      "percentage": "0.0",
+      "description": "test1"
+    },
+    {
+      "startDate": "2015-07-17",
+      "endDate": "2015-07-17",
+      "createdBy": 2,
+      "createdOn": "2015-07-13 18:44:22.035594",
+      "updatedBy": 2,
+      "updatedOn": "2015-07-16 19:43:17.827947",
+      "id": 27,
+      "companyId": 403,
+      "fixeds": [],
+      "types": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-16 19:43:18.367905",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 25,
+          "commissionId": 27,
+          "priceTypeId": 2
+        }
+      ],
+      "item": [
+        {
+          "id": 6,
+          "companyId": 403,
+          "itemCode": "Sn003",
+          "itemName": "Snickers",
+          "onBoardName": "Snickers",
+          "createdBy": null,
+          "createdOn": "2015-05-04 18:28:32.818806",
+          "updatedBy": null,
+          "updatedOn": null,
+          "versions": null
+        }
+      ],
+      "itemMasterId": "6",
+      "percentage": "2.55",
+      "description": null
+    },
+    {
+      "startDate": "2015-07-14",
+      "endDate": "2015-07-18",
+      "createdBy": 2,
+      "createdOn": "2015-07-13 18:58:26.07753",
+      "updatedBy": 2,
+      "updatedOn": "2015-07-16 19:42:35.829499",
+      "id": 28,
+      "companyId": 403,
+      "fixeds": [],
+      "types": [],
+      "item": [
+        {
+          "id": 30,
+          "companyId": 403,
+          "itemCode": "DC123",
+          "itemName": "Diet Coke",
+          "onBoardName": null,
+          "createdBy": null,
+          "createdOn": "2015-05-14 20:48:35.982239",
+          "updatedBy": null,
+          "updatedOn": "2015-05-20 20:41:25.304643",
+          "versions": null
+        }
+      ],
+      "itemMasterId": "30",
       "percentage": "0.0",
       "description": null
     },
     {
-      "startDate": "2015-07-16",
-      "endDate": "2015-07-30",
-      "createdBy": 1,
-      "createdOn": "2015-07-15 13:45:05.664695",
+      "startDate": "2015-07-15",
+      "endDate": "2015-07-16",
+      "createdBy": 2,
+      "createdOn": "2015-07-14 16:46:29.522459",
       "updatedBy": null,
       "updatedOn": null,
       "id": 29,
       "companyId": 403,
-      "fixeds": null,
-      "types": null,
-      "itemMasterId": "104",
-      "percentage": "0.0",
-      "description": null
-    },
-    {
-      "startDate": "2015-07-16",
-      "endDate": "2015-07-20",
-      "createdBy": 1,
-      "createdOn": "2015-07-15 13:52:06.147645",
-      "updatedBy": null,
-      "updatedOn": null,
-      "id": 32,
-      "companyId": 403,
-      "fixeds": null,
-      "types": null,
-      "itemMasterId": "67",
-      "percentage": "2.0",
-      "description": null
-    },
-    {
-      "startDate": "2080-07-16",
-      "endDate": "2080-07-16",
-      "createdBy": 1,
-      "createdOn": "2015-07-15 13:59:53.690939",
-      "updatedBy": null,
-      "updatedOn": null,
-      "id": 37,
-      "companyId": 403,
-      "fixeds": null,
-      "types": null,
-      "itemMasterId": "104",
-      "percentage": "0.0",
-    "description": null
-    },
-    {
-      "startDate": "2015-07-16",
-      "endDate": "2015-07-16",
-      "createdBy": 1,
-      "createdOn": "2015-07-15 14:29:58.485765",
-      "updatedBy": null,
-      "updatedOn": null,
-      "id": 43,
-      "companyId": 403,
-      "fixeds": null,
-      "types": null,
+      "fixeds": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 16:46:30.006546",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 11,
+          "commissionId": 29,
+          "fixedValue": 1.22,
+          "currencyId": 8
+        },
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 16:46:30.218216",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 12,
+          "commissionId": 29,
+          "fixedValue": 3.22,
+          "currencyId": 9
+        }
+      ],
+      "types": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 16:46:29.791532",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 17,
+          "commissionId": 29,
+          "priceTypeId": 2
+        }
+      ],
+      "item": [
+        {
+          "id": 36,
+          "companyId": 403,
+          "itemCode": "7up123",
+          "itemName": "7up",
+          "onBoardName": "7up",
+          "createdBy": null,
+          "createdOn": "2015-05-20 02:42:32.875049",
+          "updatedBy": null,
+          "updatedOn": "2015-07-14 16:59:49.791066",
+          "versions": null
+        }
+      ],
       "itemMasterId": "36",
       "percentage": "0.0",
       "description": null
     },
     {
-      "startDate": "2015-07-16",
-      "endDate": "2015-07-16",
-      "createdBy": 1,
-      "createdOn": "2015-07-15 14:30:38.629034",
+      "startDate": "2015-07-15",
+      "endDate": "2015-07-18",
+      "createdBy": 2,
+      "createdOn": "2015-07-14 16:58:29.665238",
       "updatedBy": null,
       "updatedOn": null,
-      "id": 44,
+      "id": 30,
       "companyId": 403,
-      "fixeds": null,
-      "types": null,
-      "itemMasterId": "104",
+      "fixeds": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 16:58:30.093125",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 13,
+          "commissionId": 30,
+          "fixedValue": 2.33,
+          "currencyId": 8
+        },
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 16:58:30.234576",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 14,
+          "commissionId": 30,
+          "fixedValue": 4.33,
+          "currencyId": 9
+        }
+      ],
+      "types": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 16:58:29.945756",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 18,
+          "commissionId": 30,
+          "priceTypeId": 2
+        }
+      ],
+      "item": [
+        {
+          "id": 12,
+          "companyId": 403,
+          "itemCode": "C0101",
+          "itemName": "Coors",
+          "onBoardName": "Coors",
+          "createdBy": null,
+          "createdOn": "2015-05-06 18:31:22.737798",
+          "updatedBy": null,
+          "updatedOn": null,
+          "versions": null
+        }
+      ],
+      "itemMasterId": "12",
       "percentage": "0.0",
+      "description": null
+    },
+    {
+      "startDate": "2015-07-15",
+      "endDate": "2015-07-15",
+      "createdBy": 2,
+      "createdOn": "2015-07-14 17:34:38.986383",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 35,
+      "companyId": 403,
+      "fixeds": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 17:34:39.266538",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 15,
+          "commissionId": 35,
+          "fixedValue": 1.11,
+          "currencyId": 8
+        },
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 17:34:39.405442",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 16,
+          "commissionId": 35,
+          "fixedValue": 2.11,
+          "currencyId": 9
+        }
+      ],
+      "types": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 17:34:39.127322",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 20,
+          "commissionId": 35,
+          "priceTypeId": 2
+        }
+      ],
+      "item": [
+        {
+          "id": 15,
+          "companyId": 403,
+          "itemCode": "W0101",
+          "itemName": "WaterMelon",
+          "onBoardName": "WaterMelon",
+          "createdBy": null,
+          "createdOn": "2015-05-06 19:07:08.31907",
+          "updatedBy": null,
+          "updatedOn": null,
+          "versions": null
+        }
+      ],
+      "itemMasterId": "15",
+      "percentage": "0.0",
+      "description": null
+    },
+    {
+      "startDate": "2015-07-15",
+      "endDate": "2015-07-25",
+      "createdBy": 2,
+      "createdOn": "2015-07-14 17:57:37.959059",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 36,
+      "companyId": 403,
+      "fixeds": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 17:57:38.574763",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 17,
+          "commissionId": 36,
+          "fixedValue": 1.22,
+          "currencyId": 8
+        },
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 17:57:38.823902",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 18,
+          "commissionId": 36,
+          "fixedValue": 2.33,
+          "currencyId": 9
+        }
+      ],
+      "types": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 17:57:38.190177",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 21,
+          "commissionId": 36,
+          "priceTypeId": 1
+        }
+      ],
+      "item": [
+        {
+          "id": 4,
+          "companyId": 403,
+          "itemCode": "Ru-002",
+          "itemName": "BabyRuth",
+          "onBoardName": "BabyRuth",
+          "createdBy": null,
+          "createdOn": "2015-05-04 18:22:54.208061",
+          "updatedBy": null,
+          "updatedOn": null,
+          "versions": null
+        }
+      ],
+      "itemMasterId": "4",
+      "percentage": "0.0",
+      "description": null
+    },
+    {
+      "startDate": "2015-07-15",
+      "endDate": "2015-07-20",
+      "createdBy": 2,
+      "createdOn": "2015-07-14 17:58:24.578355",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 37,
+      "companyId": 403,
+      "fixeds": [],
+      "types": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 17:58:24.780869",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 22,
+          "commissionId": 37,
+          "priceTypeId": 2
+        }
+      ],
+      "item": [
+        {
+          "id": 34,
+          "companyId": 403,
+          "itemCode": "VW328",
+          "itemName": "Veggie Wrap",
+          "onBoardName": "Veggie Wrap",
+          "createdBy": null,
+          "createdOn": "2015-05-20 00:26:00.601019",
+          "updatedBy": null,
+          "updatedOn": null,
+          "versions": null
+        }
+      ],
+      "itemMasterId": "34",
+      "percentage": "2.22",
+      "description": null
+    },
+    {
+      "startDate": "2015-07-15",
+      "endDate": "2015-07-16",
+      "createdBy": 2,
+      "createdOn": "2015-07-14 18:03:00.476689",
+      "updatedBy": null,
+      "updatedOn": null,
+      "id": 38,
+      "companyId": 403,
+      "fixeds": [],
+      "types": [
+        {
+          "createdBy": null,
+          "createdOn": "2015-07-14 18:03:00.711194",
+          "updatedBy": null,
+          "updatedOn": null,
+          "id": 23,
+          "commissionId": 38,
+          "priceTypeId": 2
+        }
+      ],
+      "item": [
+        {
+          "id": 92,
+          "companyId": 403,
+          "itemCode": "666",
+          "itemName": "Testing Item 666",
+          "onBoardName": null,
+          "createdBy": null,
+          "createdOn": "2015-06-26 20:13:09.512808",
+          "updatedBy": null,
+          "updatedOn": null,
+          "versions": null
+        }
+      ],
+      "itemMasterId": "92",
+      "percentage": "3.33",
       "description": null
     }
   ],
   "meta": {
-    "count": 20,
-    "limit": 20,
+    "count": 10,
+    "limit": 10,
     "start": 0
   }
 }

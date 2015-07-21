@@ -90,6 +90,11 @@ describe('Controller: MenuEditCtrl', function () {
   });
 
   describe('isMenuReadOnly', function () {
+
+    it('should have a function to determine if page is viewOnly', function () {
+      expect(scope.isViewOnly).toBeDefined();
+    });
+    
     it('should have a isMenuReadOnly function', function () {
       expect(!!scope.isMenuReadOnly).toBe(true);
     });

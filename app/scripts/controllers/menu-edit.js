@@ -162,6 +162,10 @@ angular.module('ts5App')
       $scope.menuEditForm.$setDirty();
     };
 
+    $scope.isViewOnly = function () {
+      return ($routeParams.state === 'view');
+    };
+
     $scope.isMenuReadOnly = function () {
       if (angular.isUndefined($scope.menu)) {
         return false;
