@@ -114,6 +114,7 @@ angular.module('ts5App')
 
     function successDeleteHandler() {
       showToastMessage('success', 'Employee Commission', 'successfully deleted commission!');
+      $scope.searchCommissions();
     }
 
     $scope.deleteCommission = function () {
