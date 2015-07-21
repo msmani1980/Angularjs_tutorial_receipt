@@ -332,12 +332,15 @@
 }
 
 /* item import */
-.drop-table tbody{
-  cursor: move !important;
-}
 .drop-table tbody .empty-drop-zone{
   cursor: default;
 }
 .drop-table tr.on-drag-hover{
+  border: 2px solid #77c797;
   border-top: 24px solid #249507;
+}
+
+.drop-table tr.on-drag-enter{
+  border: 2px solid #77c797;
+  border-top: 2px solid #77c797;
 }
