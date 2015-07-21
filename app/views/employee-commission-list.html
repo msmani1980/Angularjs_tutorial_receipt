@@ -138,7 +138,7 @@
   </thead>
   <tbody>
   <tr
-    ng-repeat="commission in commissionList | filter:{commissionCode: search.commissionCode, commissionName: search.commissionName}">
+    ng-repeat="commission in commissionList | filter:{commissionCode: search.commissionCode, commissionName: search.commissionName} | orderBy:'item[0].itemName'">
     <td>{{ commission.startDate }}</td>
     <td>{{ commission.endDate }}</td>
     <td>{{ commission.item[0].itemName }}</td>
