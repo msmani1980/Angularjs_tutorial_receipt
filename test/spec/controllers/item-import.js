@@ -73,13 +73,17 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.submitForm).toBeDefined();
       expect(Object.prototype.toString.call(scope.submitForm)).toBe('[object Function]');
     });
-    it('should have a dropSuccessHandler function attached to the scope', function(){
-      expect(scope.dropSuccessHandler).toBeDefined();
-      expect(Object.prototype.toString.call(scope.dropSuccessHandler)).toBe('[object Function]');
+    it('should have a dropSuccessImportedRetailItemList function attached to the scope', function(){
+      expect(scope.dropSuccessImportedRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.dropSuccessImportedRetailItemList)).toBe('[object Function]');
     });
-    it('should have a onDrop function attached to the scope', function(){
-      expect(scope.onDrop).toBeDefined();
-      expect(Object.prototype.toString.call(scope.onDrop)).toBe('[object Function]');
+    it('should have a onDropCompanyRetailItemList function attached to the scope', function(){
+      expect(scope.onDropCompanyRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.onDropCompanyRetailItemList)).toBe('[object Function]');
+    });
+    it('should have a dropSuccessCompanyRetailItemList function attached to the scope', function(){
+      expect(scope.dropSuccessCompanyRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.dropSuccessCompanyRetailItemList)).toBe('[object Function]');
     });
   });
 
@@ -195,7 +199,9 @@ describe('Controller: ItemImportCtrl', function () {
   describe('submitForm scope function', function(){
     var payload;
     beforeEach(function(){
-      scope.onDrop({currentTarget:{id:'item-drop-init'}},{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:1234},[]);
+      var event = {currentTarget:{id:'company-retail-item-list-drop-init'}};
+      var data = {companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:1234};
+      scope.onDropCompanyRetailItemList(event,data);
       payload = {ImportItems:{importItems: [1234]}};
       scope.$digest();
       scope.submitForm();
@@ -205,7 +211,7 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  describe('onDrop scope function / drag event handler', function(){
+  describe('onDropCompanyRetailItemList scope function / drag event handler', function(){
     beforeEach(function(){
       scope.companyRetailItemList = [
         {companyId:currentCompanyId,id:1,itemCode:'123',itemName:'123',onBoardName:'123',stockOwnerCode:'123'},
@@ -213,8 +219,8 @@ describe('Controller: ItemImportCtrl', function () {
         {companyId:432,id:3,itemCode:'12345',itemName:'12345',onBoardName:null,stockOwnerCode:null}];
       var newItem = {companyId:432,id:4,itemCode:'7653',itemName:'7653',onBoardName:null,stockOwnerCode:null};
       scope.$digest();
-      var event = {currentTarget:{id:'item-drop-init'}};
-      scope.onDrop(event,newItem);
+      var event = {currentTarget:{id:'company-retail-item-list-drop-init'}};
+      scope.onDropCompanyRetailItemList(event,newItem);
     });
     it('should add the new item to companyRetailItemList, which should end up with a length of 4', function(){
       expect(scope.companyRetailItemList.length).toBe(4);

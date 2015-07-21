@@ -125,6 +125,7 @@
     </div>
   </form>
 </div>
+{{search.selectedItem.itemName}}
 <table class="table table-bordered table-hover">
   <thead>
   <tr>
@@ -138,20 +139,22 @@
   </thead>
   <tbody>
   <tr
-    ng-repeat="commission in commissionList | filter:{commissionCode: search.commissionCode, commissionName: search.commissionName}">
+    ng-repeat="commission in commissionList | filter:{priceTypeName: search.selectedPriceType.name, taxRateTypeName:search.selectedRateType.taxRateType, itemName:search.selectedItem.itemName, startDate: search.startDate, endDate: search.endDate} | orderBy:'item[0].itemName'">
     <td>{{ commission.startDate }}</td>
     <td>{{ commission.endDate }}</td>
-    <td>{{ commission.item[0].itemName }}</td>
-    <td>{{ getSelectedPriceTypeObject(commission).name }}</td>
-    <td>{{ getSelectedRateTypeObject(commission).taxRateType }}</td>
+    <td>{{ commission.itemName }}</td>
+    <td>{{ commission.priceTypeName }}</td>
+    <td>{{ commission.taxRateTypeName }}</td>
     <td>
       <button class="btn btn-info btn-xs" ng-click="showCommission(commission)">
         <i class="fa fa-file"></i>
       </button>
-      <button class="btn btn-primary btn-xs" ng-click="editCommission(commission)" ng-show="isCommissionEditable(commission)">
+      <button class="btn btn-primary btn-xs" ng-click="editCommission(commission)"
+              ng-show="isCommissionEditable(commission)">
         <i class="fa fa-pencil"></i>
       </button>
-      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)" ng-hide="isCommissionReadOnly(commission)">
+      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)"
+              ng-hide="isCommissionReadOnly(commission)">
         <i class="fa fa-trash"></i>
       </button>
     </td>

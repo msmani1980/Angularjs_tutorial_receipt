@@ -157,7 +157,7 @@
         id="itemName"
         required="true"
         ng-disabled="isCommissionReadOnly()"
-        ng-options="item.itemName for item in itemsList | orderBy:'itemName' track by item.id"
+        ng-options="item.itemName for item in itemList | orderBy:'itemName' track by item.id"
         ng-model="commission.selectedItem">
         <option selected="selected" disabled value>Select Item</option>
       </select>
