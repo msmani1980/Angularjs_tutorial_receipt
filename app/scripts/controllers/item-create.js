@@ -123,13 +123,15 @@ angular.module('ts5App')
     };
 
     this.formatTags = function(itemData) {
+      var tagsPayload = [];
       for (var tagKey in itemData.tags) {
         var tag = itemData.tags[tagKey];
-        itemData.tags[tagKey] = {
+        tagsPayload[tagKey] = {
           tagId: tag.id,
           itemId: itemData.id
         };
       }
+      return tagsPayload;
     };
 
     this.findCharacteristicIndex = function(characteristicId) {
@@ -156,12 +158,14 @@ angular.module('ts5App')
     };
 
     this.formatCharacteristics = function(itemData) {
+      var characteristicsPayload = [];
       for (var characteristicKey in itemData.characteristics) {
         var characteristic = itemData.characteristics[characteristicKey];
-        itemData.characteristics[characteristicKey] = {
+        characteristicsPayload[characteristicKey] = {
           characteristicId: characteristic.id
         };
       }
+      return characteristicsPayload;
     };
 
     this.findAllergenIndex = function(allergenId) {
@@ -792,18 +796,23 @@ angular.module('ts5App')
         return false;
       }
       var itemData = angular.copy(formData);
-      $this.formatTags(itemData);
-      $this.formatCharacteristics(itemData);
-      $this.formatSubstitutions(itemData);
-      $this.formatAllergens(itemData);
-      $this.formatRecommendations(itemData);
-      $this.formatPayloadDates(itemData);
-      $this.cleanUpPayload(itemData);
+      var payload = $this.formatPayload(itemData);
       if ($scope.editingItem) {
-        $this.updateItem(itemData);
+        $this.updateItem(payload);
       } else {
-        $this.createItem(itemData);
+        $this.createItem(payload);
       }
+    };
+
+    this.formatPayload = function(itemData) {
+      itemData.tags = $this.formatTags(itemData);
+      itemData.characteristics = $this.formatCharacteristics(itemData);
+      itemData.substitutions = $this.formatSubstitutions(itemData);
+      itemData.allergens = $this.formatAllergens(itemData);
+      itemData.recommendations = $this.formatRecommendations(itemData);
+      this.formatPayloadDates(itemData);
+      this.cleanUpPayload(itemData);
+      return itemData;
     };
 
     $scope.isMeasurementRequired = function() {
