@@ -22,7 +22,6 @@ angular.module('ts5App')
       controller: function ($scope, $element) {
         var tomorrow = dateUtility.formatDateForApp(dateUtility.tomorrow(),
           'x');
-        console.log(tomorrow);
         var datePickerOptions = {
           orientation: 'auto top',
           autoclose: true,
