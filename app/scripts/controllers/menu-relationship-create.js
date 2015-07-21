@@ -22,6 +22,7 @@ angular.module('ts5App')
     $scope.relationshipIsInactive = false;
     $scope.viewOnly = false;
     $scope.editingRelationship = false;
+    $scope.displayError = false;
 
     this.init = function () {
       this.checkIfViewOnly();
@@ -228,6 +229,7 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function (formData) {
+      $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm()) {
         var relationshipData = angular.copy(formData);
         $this.formatPayloadDates(relationshipData);
@@ -260,7 +262,6 @@ angular.module('ts5App')
     };
 
     this.validateForm = function () {
-      $scope.form.$setSubmitted(true);
       $scope.displayError = false;
       if (!$scope.form.$valid) {
         $scope.displayError = true;

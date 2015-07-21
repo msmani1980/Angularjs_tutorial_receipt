@@ -247,8 +247,8 @@ describe('The MenuRelationshipCreateCtrl', function () {
       view;
     beforeEach(inject(function (_$templateCache_, _$compile_) {
       formData = {
-        startDate: '20150717',
-        endDate: '20150731',
+        startDate: '07/21/2015',
+        endDate: '07/25/2015',
         menuId: '68',
         catererStationIds: ['3']
       };
@@ -266,15 +266,20 @@ describe('The MenuRelationshipCreateCtrl', function () {
         expect(result).toBeFalsy();
       });
 
-    it('should return false if the form is invalid',
+    it('should set the form submitted flag when called',
       function () {
-        var result = $scope.submitForm(formData);
-        expect(result).toBeFalsy();
+        expect($scope.form.$submitted).toBeFalsy();
+        $scope.submitForm(formData);
+        expect($scope.form.$submitted).toBeTruthy();
       });
 
     describe('validating the form', function () {
-
+      var badFormData;
       beforeEach(function () {
+        badFormData = {
+          startDate: '20150717',
+          menuId: '68'
+        };
         spyOn(MenuRelationshipCreateCtrl, 'validateForm');
       });
 
@@ -289,11 +294,27 @@ describe('The MenuRelationshipCreateCtrl', function () {
           expect(MenuRelationshipCreateCtrl.validateForm).toHaveBeenCalled();
         });
 
+      it(
+        'should set the displayError to true if the form is invalid',
+        function () {
+          expect($scope.displayError).toBeFalsy();
+          $scope.submitForm(badFormData);
+          $scope.$digest();
+          expect($scope.displayError).toBeTruthy();
+        });
+
+      /*it(
+        'should set the displayError to false flag if the form is valid',
+        function () {
+          expect($scope.displayError).toBeFalsy();
+          $scope.submitForm(formData);
+          $scope.$digest();
+          expect($scope.displayError).toBeFalsy();
+        });*/
+
     });
 
   });
-
-
 
   /* E2E Tests */
 
