@@ -13,8 +13,10 @@ angular.module('ts5App')
       _services = null;
     var $this = this;
 
+
     $scope.viewName = 'Post Trip Data';
     $scope.readOnly = false;
+    $scope.areAllDependenciesOver = false;
     $scope.postTrip = {};
     $scope.selectedEmployees = {};
 
@@ -51,6 +53,8 @@ angular.module('ts5App')
       $scope.updateDepartureTimeZone();
       $this.populateEmployees();
       $this.hideLoadingModal();
+      $scope.areAllDependenciesOver = true;
+
     };
 
     this.getStationsSuccess = function (response) {
@@ -89,10 +93,15 @@ angular.module('ts5App')
     };
 
     this.populateEmployees = function () {
-      // TODO: populate employee Id field once employees API is fixed on BE
-      //angular.forEach($scope.postTrip.postTripEmployeeIdentifiers, function(value){
-      //  $scope.employees.employeeIds.push({id: value.id});
-      //});
+      $scope.selectedEmployees.employeeIds = [];
+      angular.forEach($scope.postTrip.postTripEmployeeIdentifiers, function(value){
+        var employeeMatch =  $scope.employees.filter(function (employee) {
+          return employee.id === value.employeeId;
+        })[0];
+        if(employeeMatch) {
+          $scope.selectedEmployees.employeeIds.push(employeeMatch);
+        }
+      });
     };
 
     this.showToastMessage = function (className, type, message) {
