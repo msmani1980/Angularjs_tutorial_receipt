@@ -6,17 +6,17 @@
     <div class="hidden-xs col-sm-4 list-item">{{viewModel.companyLanguages}}</div>
     <div class="hidden-xs col-sm-1 list-item">{{viewModel.baseCurrencyCode}}</div>
     <div class="hidden-xs col-sm-1 list-item">
-      <button type="button" class="btn btn-primary btn-xs" aria-label="Manage Company Relationships"
-              ng-click="$parent.showCompanyRelationshipList(viewModel)">
-        <i class="fa fa-arrows-h" aria-hidden="true"></i>
+      <button type="button" class="btn btn-info btn-xs" aria-label="View Company"
+              ng-click="$parent.viewCompany(viewModel)">
+        <i class="fa fa-file" aria-hidden="true"></i>
       </button>
-      <!--<button type="button" class="btn btn-primary btn-xs" aria-label="View Company"-->
-              <!--ng-click="$parent.viewCompany(viewModel)">-->
-        <!--<i class="fa fa-file" aria-hidden="true"></i>-->
-      <!--</button>-->
       <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company"
               ng-click="$parent.editCompany(viewModel)">
         <i class="fa fa-pencil" aria-hidden="true"></i>
+        <button type="button" class="btn btn-primary btn-xs" aria-label="Manage Company Relationships"
+                ng-click="$parent.showCompanyRelationshipList(viewModel)">
+          <i class="fa fa-arrows-h" aria-hidden="true"></i>
+        </button>
       </button>
     </div>
   </div>
@@ -43,16 +43,16 @@
   <div class="row">
     <div class="visible-xs col-xs-3 list-header text-right">Actions</div>
     <div class="visible-xs col-xs-9 list-item">
-      <button type="button" class="btn btn-primary btn-xs" ng-click="$parent.showCompanyRelationshipList(viewModel)">
-        <i class="fa fa-arrows-h"></i>
+      <button type="button" class="btn btn-info btn-xs" aria-label="View Company"
+              ng-click="$parent.viewCompany(viewModel)">
+        <i class="fa fa-file" aria-hidden="true"></i>
       </button>
-      <!--<button type="button" class="btn btn-primary btn-xs" aria-label="View Company"-->
-              <!--ng-click="$parent.viewCompany(viewModel)">-->
-        <!--<i class="fa fa-file" aria-hidden="true"></i>-->
-      <!--</button>-->
       <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company"
               ng-click="$parent.editCompany(viewModel)">
         <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="btn btn-primary btn-xs" ng-click="$parent.showCompanyRelationshipList(viewModel)">
+        <i class="fa fa-arrows-h"></i>
       </button>
     </div>
   </div>
