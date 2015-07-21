@@ -244,7 +244,8 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
   describe('submitting the form', function () {
     var formData,
-      view;
+      view,
+      form;
     beforeEach(inject(function (_$templateCache_, _$compile_) {
       formData = {
         startDate: '07/21/2015',
@@ -253,7 +254,15 @@ describe('The MenuRelationshipCreateCtrl', function () {
         catererStationIds: ['3']
       };
       view = renderView(_$templateCache_, _$compile_);
+      form = angular.element(view.find('form')[0]);
     }));
+
+    function mockFormSubmission(formData) {
+      $scope.formData = formData;
+      $scope.submitForm(formData);
+      $scope.$digest();
+      form.triggerHandler('submit');
+    }
 
     it('should have a submitForm() method attached to the scope',
       function () {
@@ -262,14 +271,14 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
     it('should return false if formData is not passed to it',
       function () {
-        var result = $scope.submitForm();
+        var result = mockFormSubmission();
         expect(result).toBeFalsy();
       });
 
     it('should set the form submitted flag when called',
       function () {
         expect($scope.form.$submitted).toBeFalsy();
-        $scope.submitForm(formData);
+        mockFormSubmission(formData);
         expect($scope.form.$submitted).toBeTruthy();
       });
 
@@ -290,7 +299,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
       it('should be called during the submission',
         function () {
-          $scope.submitForm(formData);
+          mockFormSubmission(formData);
           expect(MenuRelationshipCreateCtrl.validateForm).toHaveBeenCalled();
         });
 
@@ -298,19 +307,17 @@ describe('The MenuRelationshipCreateCtrl', function () {
         'should set the displayError to true if the form is invalid',
         function () {
           expect($scope.displayError).toBeFalsy();
-          $scope.submitForm(badFormData);
-          $scope.$digest();
+          mockFormSubmission(badFormData);
           expect($scope.displayError).toBeTruthy();
         });
 
-      /*it(
+      it(
         'should set the displayError to false flag if the form is valid',
         function () {
           expect($scope.displayError).toBeFalsy();
-          $scope.submitForm(formData);
-          $scope.$digest();
+          mockFormSubmission(formData);
           expect($scope.displayError).toBeFalsy();
-        });*/
+        });
 
     });
 
