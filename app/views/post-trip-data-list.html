@@ -10,7 +10,7 @@
   <div class="post-trip-data-list">
     <div class="row">
       <div class="col-xs-12 text-left">
-        <button href="#/post-trip-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Post Trip</span></button>
+        <a href="#/post-trip-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Post Trip</span></a>
 
         <div class="btn-group import-from-file">
           <div class="btn-group" dropdown>
@@ -22,7 +22,6 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li><a data-toggle="collapse" data-target="#importFromData">Import Post Trip From File</a></li>
               <li><a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/FileUpload-PostTripManagement.xlsx">Download Excel Template</a></li>
               <li><a data-toggle="modal" data-target=".download-template-modal"
                      ng-click="downloadTemplate()">View Excel Specifications</a></li>
@@ -91,21 +90,23 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="tail-number">Tail Number</label>
-                <select class="form-control" id="tail-number" ng-model="search.tailNumber">
-                  <option value="" disabled selected>placeholder</option>
-                  <option ng-repeat="number in carrierNumbers" value="{{ number.carrierNumber }}">
+                <ui-select id="tail-number" multiple ng-model="multiSelectedValues.tailNumbers" theme="bootstrap">
+                  <ui-select-match placeholder="Select Tail Number..">{{ $item.carrierNumber }}</ui-select-match>
+                  <ui-select-choices repeat="number in carrierNumbers | filter: $select.search">
                     {{ number.carrierNumber }}
-                  </option>
-                </select>
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
-            <div class="col-xs-12 col-sm-3">
+            <div class="col-xs-12 col-sm-6">
               <date-picker
                 class="form-group"
-                disable-date-range="true"
-                start-date-model="search.scheduleDate"
-                label-from="Schedule Date"
+                element-class="col-xs-6"
+                start-date-model="search.scheduleFromDate"
+                end-date-model="search.scheduleToDate"
+                label-from="Schedule Date From"
+                label-to="Schedule Date To"
                 is-search-field="true">
               </date-picker>
             </div>
@@ -115,28 +116,20 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="departure-station">Departure Station</label>
-                <ui-select id="departure-station" multiple ng-model="selectedStations.depStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select Stations from list">{{ $item.stationCode }}</ui-select-match>
+                <ui-select id="departure-station" multiple ng-model="multiSelectedValues.depStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
                   <ui-select-choices repeat="station in stationList | filter: $select.search">
                     {{ station.stationCode }} ({{ station.stationName }})
                   </ui-select-choices>
                 </ui-select>
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="departure-time">Departure Time</label>
-                <input ng-model="search.depTime" type="text" class="form-control" id="departure-time"
-                       placeholder="15:43">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="arrival-station">Arrival Station</label>
-                <ui-select id="arrival-station" multiple ng-model="selectedStations.arrStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select Stations from list">{{ $item.stationCode }}</ui-select-match>
+                <ui-select id="arrival-station" multiple ng-model="multiSelectedValues.arrStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
                   <ui-select-choices repeat="station in stationList | filter: $select.search">
                     {{ station.stationCode }} ({{ station.stationName }})
                   </ui-select-choices>
@@ -146,9 +139,13 @@
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label>Arrival Time</label>
-                <input ng-model="search.arrTime" type="text" class="form-control" id="arrival-time"
-                       placeholder="20:14">
+                <label for="employee-id">Employee Id</label>
+                <ui-select id="employee-id" multiple ng-model="multiSelectedValues.employeeIds" theme="bootstrap">
+                  <ui-select-match placeholder="Select EmployeeIds..">{{ $item.employeeIdentifier }}</ui-select-match>
+                  <ui-select-choices repeat="employee in employees | filter: $select.search">
+                    {{ employee.employeeIdentifier }} ({{employee.lastName}}, {{ employee.firstName }})
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
@@ -185,11 +182,11 @@
           </button>
           <button class="btn btn-primary btn-xs" ng-click="redirectToPostTrip(trip.id, 'edit')"
                   ng-disabled="isMenuEditable(menu)"
-                  tabindex="0" aria-disabled="true" disabled="disabled" ng-show="showEditButton(trip.scheduleDate)">
+                  tabindex="0" aria-disabled="true" disabled="disabled">
             <i class="fa fa-pencil"></i>
           </button>
           <button class="btn btn-danger btn-xs" ng-click="promptDeleteModal($index)" ng-disabled="isMenuReadOnly(menu)"
-                  tabindex="0" aria-disabled="true" disabled="disabled" ng-show="showEditButton(trip.scheduleDate)">
+                  tabindex="0" aria-disabled="true" disabled="disabled" ng-show="showDeleteButton(trip.scheduleDate)">
             <i class="fa fa-trash"></i>
           </button>
         </td>

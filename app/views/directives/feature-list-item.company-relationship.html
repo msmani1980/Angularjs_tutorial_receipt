@@ -26,15 +26,15 @@
     <div class="visible-xs col-xs-9 list-item">{{viewModel.companyTypeName}}</div>
   </div>
   <div class="row">
-    <div class="visible-xs col-xs-3 list-header text-right">Related Company</div>
+    <div class="visible-xs col-xs-3 list-header text-right">Related Company *</div>
     <div class="visible-xs col-xs-9 list-item">{{viewModel.relativeCompany}}</div>
   </div>
   <div class="row">
-    <div class="visible-xs col-xs-3 list-header text-right">Start Date</div>
+    <div class="visible-xs col-xs-3 list-header text-right">Start Date *</div>
     <div class="visible-xs col-xs-9 list-item">{{viewModel.startDate}}</div>
   </div>
   <div class="row">
-    <div class="visible-xs col-xs-3 list-header text-right">End Date</div>
+    <div class="visible-xs col-xs-3 list-header text-right">End Date *</div>
     <div class="visible-xs col-xs-9 list-item">{{viewModel.endDate}}</div>
   </div>
   <div class="row">
@@ -113,7 +113,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="visible-xs col-xs-3 list-header text-right">Related Company</div>
+    <div class="visible-xs col-xs-3 list-header text-right">Related Company *</div>
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyName" ng-model="viewModel.relativeCompanyId"
       ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
@@ -124,7 +124,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="visible-xs col-xs-3 list-header text-right">Start Date / End Date</div>
+    <div class="visible-xs col-xs-3 list-header text-right">Start Date / End Date *</div>
     <div class="visible-xs col-xs-9 list-item">
       <div class="row">
         <date-picker
@@ -210,7 +210,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="visible-xs col-xs-3 list-header text-right">Related Company</div>
+    <div class="visible-xs col-xs-3 list-header text-right">Related Company *</div>
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyName" ng-model="viewModel.relativeCompanyId"
       ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
@@ -220,7 +220,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="visible-xs col-xs-3 list-header text-right">Start Date / End Date</div>
+    <div class="visible-xs col-xs-3 list-header text-right">Start Date / End Date *</div>
     <div class="visible-xs col-xs-9 list-item">
       <div class="row">
         <date-picker

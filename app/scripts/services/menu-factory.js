@@ -22,9 +22,14 @@ angular.module('ts5App')
       return itemsService.getItemsList(payload, fetchFromMaster);
     };
 
+    var importFromExcel = function (companyId, file) {
+      return itemsService.importFromExcel(companyId, file);
+    };
+
     return {
       getMenu: getMenu,
       updateMenu: updateMenu,
-      getItemsList: getItemsList
+      getItemsList: getItemsList,
+      importFromExcel: importFromExcel
     };
   });

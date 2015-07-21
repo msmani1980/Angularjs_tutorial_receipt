@@ -1,4 +1,5 @@
 'use strict';
+/*global moment*/
 
 /**
  * @ngdoc service
@@ -20,9 +21,34 @@ angular.module('ts5App')
 
     function transformResponse(data) {
       data = angular.fromJson(data);
-      if (data !== undefined && data.scheduleDate !== null && data.scheduleDate !== undefined) {
+      if (!data) {
+        return data;
+      }
+      if (data.scheduleDate !== null && data.scheduleDate !== undefined) {
         data.scheduleDate = dateUtility.formatDate(data.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
+      if (data.arrTime && data.arrTime !== null) {
+        data.arrTime = moment(data.arrTime, 'HH:mm:ss').format('HH:mm');
+      }
+      if (data.depTime && data.depTime !== null) {
+        data.depTime = moment(data.depTime, 'HH:mm:ss').format('HH:mm');
+      }
+      return data;
+    }
+
+    function transformResponseArray(data) {
+      data = angular.fromJson(data);
+      if(!data) {
+        return;
+      }
+      angular.forEach(data.postTrips, function (trip) {
+        if (trip.arrTime && trip.arrTime !== null) {
+          trip.arrTime = moment(trip.arrTime, 'HH:mm:ss').format('HH:mm');
+        }
+        if (trip.depTime && trip.depTime !== null) {
+          trip.depTime = moment(trip.depTime, 'HH:mm:ss').format('HH:mm');
+        }
+      });
       return data;
     }
 
@@ -40,7 +66,9 @@ angular.module('ts5App')
     var actions = {
       getPostTrips: {
         method: 'GET',
-        headers: {companyId: 362}
+        headers: {companyId: 362},
+        transformResponse: appendTransform($http.defaults.transformResponse, transformResponseArray)
+
       },
       getPostTrip: {
         method: 'GET',
@@ -70,8 +98,11 @@ angular.module('ts5App')
       var payload = {};
       if (arguments.length === 2) {
         payload = optionalPayload;
-        if (payload.scheduleDate !== undefined && payload.scheduleDate !== null) {
-          payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
+        if (payload.scheduleFromDate && payload.scheduleFromDate !== null) {
+          payload.scheduleFromDate = dateUtility.formatDateForAPI(payload.scheduleFromDate);
+        }
+        if (payload.scheduleToDate && payload.scheduleToDate !== null) {
+          payload.scheduleToDate = dateUtility.formatDateForAPI(payload.scheduleToDate);
         }
         // TODO: encode colon in time query parameter -- or wait for backend to fix
       }

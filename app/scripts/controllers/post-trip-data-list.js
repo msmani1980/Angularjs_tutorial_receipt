@@ -15,7 +15,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Post Trip Data';
     $scope.search = {};
-    $scope.selectedStations = {};
+    $scope.multiSelectedValues = {};
     $scope.stationList = [];
     $scope.postTrips = [];
 
@@ -61,6 +61,10 @@ angular.module('ts5App')
       });
     };
 
+    this.getEmployeesSuccess = function (response) {
+      $scope.employees = response.companyEmployees;
+    };
+
     this.showToastMessage = function (className, type, message) {
       ngToast.create({
         className: className,
@@ -71,7 +75,7 @@ angular.module('ts5App')
 
 
     this.uploadPostTripSuccess = function () {
-      this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
+      $this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
     };
 
     this.uploadPostTripFailure = function () {
@@ -114,31 +118,43 @@ angular.module('ts5App')
         getCarrierNumbers: function () {
           $scope.carrierNumbers = [];
           return postTripFactory.getCarrierTypes(_companyId).then($this.getCarrierSuccess);
+        },
+        getEmployees: function() {
+          $scope.employees = [];
+          return postTripFactory.getEmployees(_companyId).then($this.getEmployeesSuccess);
         }
       };
-      _services.call(['getStationList', 'getPostTripDataList', 'getCarrierNumbers']);
+      _services.call(['getStationList', 'getPostTripDataList', 'getCarrierNumbers', 'getEmployees']);
       $this.showNewPostTripSuccess();
     })();
 
-    this.formatStationsForSearch = function () {
+    this.formatMultiSelectedValuesForSearch = function () {
       $scope.search.depStationId = [];
       $scope.search.arrStationId = [];
-      angular.forEach($scope.selectedStations.depStations, function (station) {
+      $scope.search.tailNumber = [];
+      $scope.search.employeeId = [];
+      angular.forEach($scope.multiSelectedValues.tailNumbers, function (number) {
+        $scope.search.tailNumber.push(number.carrierNumber);
+      });
+      angular.forEach($scope.multiSelectedValues.depStations, function (station) {
         $scope.search.depStationId.push(station.stationId);
       });
-      angular.forEach($scope.selectedStations.arrStations, function (station) {
+      angular.forEach($scope.multiSelectedValues.arrStations, function (station) {
         $scope.search.arrStationId.push(station.stationId);
+      });
+      angular.forEach($scope.multiSelectedValues.employeeIds, function (employee) {
+        $scope.search.employeeId.push(employee.id);
       });
     };
 
     $scope.searchPostTripData = function () {
-      $this.formatStationsForSearch();
+      $this.formatMultiSelectedValuesForSearch();
       var payload = angular.copy($scope.search);
       postTripFactory.getPostTripDataList(_companyId, payload).then($this.getPostTripSuccess);
     };
 
     $scope.clearSearchForm = function () {
-      $scope.selectedStations = {};
+      $scope.multiSelectedValues = {};
       $scope.search = {};
       postTripFactory.getPostTripDataList(_companyId, $scope.search).then($this.getPostTripSuccess);
     };
@@ -165,7 +181,7 @@ angular.module('ts5App')
       );
     };
 
-    $scope.showEditButton = function (dateString) {
+    $scope.showDeleteButton = function (dateString) {
       var scheduleDate = moment(dateString, 'YYYY-MM-DD');
       var today = moment();
       return !scheduleDate.isBefore(today);

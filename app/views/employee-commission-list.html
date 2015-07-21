@@ -31,11 +31,12 @@
       </div>
 
       <div class="modal-body">
-        <p>You are about to permanently delete <strong>object to delete here...</strong></p>
+        <p>You are about to permanently <strong>delete the following commission</strong></p>
       </div>
 
       <ul>
-        <li><strong>commissionCode: </strong>list of properties</li>
+        <li><strong>startDate: </strong>{{ commissionToDelete.startDate }}</li>
+        <li><strong>endDate: </strong>{{ commissionToDelete.endDate }}</li>
       </ul>
 
       <div class="modal-footer">
@@ -73,18 +74,20 @@
           element-class="col-xs-6 col-sm-6"
           start-date-model="search.startDate"
           end-date-model="search.endDate"
+          is-search-field="true"
           label-from="Effective From"
-          label-to="Effective To"
-          disable-past="true">
+          label-to="Effective To">
         </date-picker>
 
         <div class="col-sm-3">
           <div class="form-group">
             <label class="control-label" for="itemName">Item Name</label>
-            <select class="form-control" id="itemName">
-              <option ng-repeat="item in search.itemsList | orderBy:'itemName'" value="{{item.masterId}}">
-                {{item.itemName}}
-              </option>
+            <select
+              class="form-control"
+              id="itemName"
+              ng-options="item.itemName for item in search.itemList | orderBy:'itemName' track by item.id"
+              ng-model="search.selectedItem">
+              <option selected="selected" disabled value>Select Item</option>
             </select>
           </div>
         </div>
@@ -94,9 +97,9 @@
             <label class="control-label" for="saleType">Sale Type</label>
             <select class="form-control"
                     id="saleType"
-                    ng-options="priceType.name for priceType in search.priceTypesList | orderBy:'name' track by priceType.id"
+                    ng-options="priceType.name for priceType in search.priceTypeList | orderBy:'name' track by priceType.id"
                     ng-model="search.selectedPriceType">
-            </select>
+              <option selected="selected" disabled value>Select Price Type</option>
             </select>
           </div>
         </div>
@@ -109,6 +112,7 @@
               id="rateType"
               ng-options="taxRate.taxRateType for taxRate in search.taxRateTypesList | orderBy:'taxRateType' track by taxRate.id"
               ng-model="search.selectedRateType">
+              <option selected="selected" disabled value>Select Tax Rate</option>
             </select>
           </div>
         </div>
@@ -134,22 +138,20 @@
   </thead>
   <tbody>
   <tr
-    ng-repeat="commission in commissionList | filter:{commissionCode: search.commissionCode, commissionName: search.commissionName}">
+    ng-repeat="commission in commissionList | filter:{commissionCode: search.commissionCode, commissionName: search.commissionName} | orderBy:'item[0].itemName'">
     <td>{{ commission.startDate }}</td>
     <td>{{ commission.endDate }}</td>
-    <td>{{ commission.itemName }}</td>
-    <td>{{ commission.saleType }}</td>
-    <td>{{ commission.rateType }}</td>
+    <td>{{ commission.item[0].itemName }}</td>
+    <td>{{ getSelectedPriceTypeObject(commission).name }}</td>
+    <td>{{ getSelectedRateTypeObject(commission).taxRateType }}</td>
     <td>
       <button class="btn btn-info btn-xs" ng-click="showCommission(commission)">
         <i class="fa fa-file"></i>
       </button>
-      <button class="btn btn-primary btn-xs" ng-click="showCommission(commission)"
-              ng-show="!isCommissionEditable(commission)">
+      <button class="btn btn-primary btn-xs" ng-click="editCommission(commission)" ng-show="isCommissionEditable(commission)">
         <i class="fa fa-pencil"></i>
       </button>
-      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)"
-              ng-show="!isCommissionReadOnly(commission)">
+      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)" ng-hide="isCommissionReadOnly(commission)">
         <i class="fa fa-trash"></i>
       </button>
     </td>

@@ -9,9 +9,9 @@
  */
 angular.module('ts5App')
   .service('employeeCommissionService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/employee-commissions/:commissionId';
+    var requestURL = ENV.apiUrl + '/api/employee-commissions/:id';
     var requestParameters = {
-      commissionId: '@id',
+      id: '@id',
       limit: 50
     };
 
@@ -26,7 +26,10 @@ angular.module('ts5App')
         method: 'POST'
       },
       updateCommission: {
-        method: 'PUT'
+        method: 'PUT',
+        params: {
+          id: '@employeeCommission.id'
+        }
       },
       deleteCommission: {
         method: 'DELETE'
@@ -41,7 +44,7 @@ angular.module('ts5App')
 
     var getCommission = function (commissionId) {
       var payload = {
-        commissionId: commissionId
+        id: commissionId
       };
       return requestResource.getCommission(payload).$promise;
     };
@@ -56,7 +59,7 @@ angular.module('ts5App')
 
     var deleteCommission = function (commissionId) {
       var payload = {
-        commissionId: commissionId
+        id: commissionId
       };
       return requestResource.deleteCommission(payload).$promise;
     };

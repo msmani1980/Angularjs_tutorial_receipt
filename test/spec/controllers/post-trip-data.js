@@ -130,7 +130,7 @@ describe('Controller: PostTripDataCtrl', function () {
         scope.postTripDataForm = {
           $valid: true
         };
-        scope.employees = {
+        scope.selectedEmployees = {
           employeeIds: [
             {id: 62, name: 'employee1'},
             {id: 63, name: 'employee2'}
@@ -240,7 +240,7 @@ describe('Controller: PostTripDataCtrl', function () {
     });
 
     it('should set view name', function () {
-      expect(scope.viewName).toEqual('Post Trip Data');
+      expect(scope.viewName).toEqual('View Post Trip Data');
     });
 
     it('should call getPostTrip', function () {

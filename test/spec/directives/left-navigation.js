@@ -339,8 +339,8 @@ describe('Directive: leftNavigation', function () {
     it('should have a manageRetailItemIcon variable that is set to icon-manage-transactions', function () {
       expect(isolatedScope.manageRetailItemIcon).toBe('icon-manage-transactions');
     });
-    it('should have a manageRetailItemLabel variable that is set to Manage Transactions', function () {
-      expect(isolatedScope.manageRetailItemLabel).toBe('Manage Transactions');
+    it('should have a manageRetailItemLabel variable that is set to Daily Exchange Rates', function () {
+      expect(isolatedScope.manageRetailItemLabel).toBe('Daily Exchange Rates');
     });
     it('should have a itemCreatePath variable that is set to /cash-bag-list', function () {
       expect(isolatedScope.itemCreatePath).toBe('/cash-bag-list');
