@@ -51,11 +51,10 @@
               <select class="form-control"
                       id="departureStation"
                       ng-change="updateDepartureTimeZone()"
-                      ng-model="selectedDepStation"
-                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-model="postTrip.depStationId"
+                      ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
                       ng-disabled="readOnly"
-                      required="true"
-                      ng-if="arePostTripDependenciesOver">
+                      required="true">
               </select>
             </div>
           </div>
@@ -80,7 +79,6 @@
                      id="departure-time-zone"
                      placeholder=""
                      ng-model="departureTimezone"
-                     ng-if="arePostTripDependenciesOver"
                      disabled>
             </div>
           </div>
@@ -93,11 +91,10 @@
               <select class="form-control"
                       id="arrival-station"
                       ng-change="updateArrivalTimeZone()"
-                      ng-model="selectedStation"
-                      ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-model="postTrip.arrStationId"
+                      ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
                       ng-disabled="readOnly"
-                      required="true"
-                      ng-if="arePostTripDependenciesOver">
+                      required="true">
               </select>
             </div>
           </div>
@@ -123,7 +120,6 @@
                      id="arrivalTimeZone"
                      placeholder=""
                      ng-model="arrivalTimezone"
-                     ng-if="arePostTripDependenciesOver"
                      disabled>
             </div>
           </div>
@@ -150,9 +146,8 @@
               <label for="tailNumber">Tail Number *</label>
               <select class="form-control"
                       id="tailNumber"
-                      ng-change="updateArrivalTimeZone()"
-                      ng-model="selectedTailNumber"
-                      ng-options="number.carrierNumber for number in carrierNumbers"
+                      ng-model="postTrip.tailNumber"
+                      ng-options="number.carrierNumber as number.carrierNumber for number in carrierNumbers"
                       ng-disabled="readOnly"
                       required="true">
               </select>
@@ -162,7 +157,7 @@
           <div class="col-xs-12 col-sm-4 employee-id">
             <div class="form-group">
               <label>Employee ID's *</label>
-              <ui-select multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly" ng-if="arePostTripDependenciesOver">
+              <ui-select multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly">
                 <ui-select-match placeholder="Select Employee IDs from list">{{ $item.employeeIdentifier }}</ui-select-match>
                 <ui-select-choices repeat="employee in employees | filter: $select.search">
                   {{employee.employeeIdentifier}} ({{ employee.lastName }}, {{ employee.firstName }})
