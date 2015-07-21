@@ -98,9 +98,9 @@ angular.module('ts5App')
 
     $scope.removeRecord = function(itemId) {
       var itemIndex = $this.findItemIndex(itemId);
-      this.displayLoadingModal('Removing SO Item');
+      $this.displayLoadingModal('Removing SO Item');
       itemsFactory.removeItem(itemId).then(function() {
-        this.hideLoadingModal();
+        $this.hideLoadingModal();
         $scope.itemsList.splice(itemIndex, 1);
         $this.updateItemList();
       });
