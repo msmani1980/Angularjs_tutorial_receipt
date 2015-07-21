@@ -69,6 +69,8 @@ angular.module('ts5App')
           addToImportedRetailItemList(retailItem);
         }
       });
+      $scope.showLeftDropZoneMessage = ($scope.importedRetailItemList.length);
+      $scope.showRightDropZoneMessage = (!$scope.importedRetailItemList.length);
       hideLoadingModal();
     }
 
@@ -198,8 +200,6 @@ angular.module('ts5App')
 
     // scope properties
     $scope.viewName = 'Import Stock Owner Items';
-    $scope.companyRetailItemListDropInitId = 'company-retail-item-list-drop-init';
-    $scope.importedRetailItemListInitId = 'imported-retail-item-list-init';
 
     // scope functions
     $scope.changeSelectedImportCompany = function () {
@@ -259,21 +259,29 @@ angular.module('ts5App')
 
     // scope event handlers
     // TODO: documentation here: http://angular-dragdrop.github.io/angular-dragdrop/
-    $scope.dropSuccessHandler = function ($event, index, array) {
+    $scope.dropSuccessImportedRetailItemList = function ($event, index, array) {
       $event.preventDefault();
       array.splice(index, 1);
     };
 
-    $scope.onDrop = function ($event, $data) {
+    $scope.onDropCompanyRetailItemList = function ($event, $data) {
       var index = $scope.companyRetailItemList.length;
       $scope.companyRetailItemList = $filter('orderBy')($scope.companyRetailItemList, $scope.retailItemsSortOrder);
       $scope.retailItemsSortOrder = null;
       $scope.searchCompanyRetailItemList = null;
-      if($event.currentTarget.id !== $scope.companyRetailItemListDropInitId){
+      if($event.currentTarget.id !== 'company-retail-item-list-drop-init'){
         var targetRetailItem = angular.element($event.currentTarget).scope().retailItem;
         index = $scope.companyRetailItemList.indexOf(targetRetailItem);
       }
       addRetailItemToCompanyRetailItems($data, false, index);
+      if($scope.showLeftDropZoneMessage){
+        $scope.showLeftDropZoneMessage = false;
+      }
     };
-    // TODO: change BACK button to back/save when models change
+
+    $scope.dropSuccessCompanyRetailItemList = function($event, index){
+      $event.preventDefault();
+      var retailItem = $scope.companyRetailItemList[index];
+      removeRetailItemFromCompanyRetailItems(retailItem);
+    };
   });
