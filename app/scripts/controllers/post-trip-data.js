@@ -8,15 +8,15 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast) {
+  .controller('PostFlightDataCtrl', function ($scope, postTripFactory, $location, $routeParams, ngToast, $q) {
     var _companyId = '403',
       _services = null;
     var $this = this;
 
-
     $scope.viewName = 'Post Trip Data';
     $scope.readOnly = false;
     $scope.areAllDependenciesOver = false;
+    $scope.areTailNumberDependenciesOver = true;
     $scope.postTrip = {};
     $scope.selectedEmployees = {};
 
@@ -37,24 +37,17 @@ angular.module('ts5App')
       $scope.readOnly = true;
       $scope.viewName = 'View Post Trip Data';
       $this.showLoadingModal('Loading Post Trip Data');
-      $this.getPostTrip();
     };
 
     this.initUpdateView = function () {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Post Trip Data';
       $this.showLoadingModal('Loading Post Trip Data');
-      $this.getPostTrip();
     };
 
     this.getPostTripSuccess = function (response) {
       $scope.postTrip = response;
-      $scope.updateArrivalTimeZone();
-      $scope.updateDepartureTimeZone();
       $this.populateEmployees();
-      $this.hideLoadingModal();
-      $scope.areAllDependenciesOver = true;
-
     };
 
     this.getStationsSuccess = function (response) {
@@ -66,7 +59,9 @@ angular.module('ts5App')
     };
 
     this.getCarrierSuccess = function (response) {
-      angular.forEach(response.response, function (item) {
+      $this.carrierTypes = response.response;
+      $scope.carrierNumbers = [];
+      angular.forEach($this.carrierTypes, function (item) {
         postTripFactory.getCarrierNumbers(_companyId, item.id).then(function (response) {
           $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
         });
@@ -86,10 +81,6 @@ angular.module('ts5App')
       // TODO: add displayError dialog once API is fixed and returns error codes
       $this.hideLoadingModal();
       $this.showToastMessage('danger', 'Post Trips', 'error');
-    };
-
-    this.getPostTrip = function () {
-      return postTripFactory.getPostTrip(_companyId, $routeParams.id).then($this.getPostTripSuccess);
     };
 
     this.populateEmployees = function () {
@@ -144,15 +135,25 @@ angular.module('ts5App')
           return postTripFactory.getStationList(_companyId).then($this.getStationsSuccess);
         },
         getCarrierNumbers: function () {
-          $scope.carrierNumbers = [];
           return postTripFactory.getCarrierTypes(_companyId).then($this.getCarrierSuccess);
         },
         getEmployees: function() {
           $scope.employees = [];
           return postTripFactory.getEmployees(_companyId).then($this.getEmployeesSuccess);
+        },
+        getPostTrips: function() {
+          if($routeParams.id) {
+            return postTripFactory.getPostTrip(_companyId, $routeParams.id).then($this.getPostTripSuccess);
+          }
         }
       };
-      _services.call(['getStationList', 'getCarrierNumbers', 'getEmployees']);
+      _services.call(['getPostTrips', 'getStationList', 'getCarrierNumbers', 'getEmployees']);
+      $q.all(_services.promises).then(function () {
+        $this.hideLoadingModal();
+        $scope.updateArrivalTimeZone();
+        $scope.updateDepartureTimeZone();
+        $scope.arePostTripDependenciesOver = true;
+      });
 
       switch ($routeParams.state) {
         case 'create':
