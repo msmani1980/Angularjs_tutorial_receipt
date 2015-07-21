@@ -149,6 +149,7 @@ angular.module('ts5App')
         $this.hideLoadingModal();
         $scope.updateArrivalTimeZone();
         $scope.updateDepartureTimeZone();
+        $scope.postTrip.passengerCount = $scope.postTrip.passengerCount.toString();
       });
 
       switch ($routeParams.state) {
