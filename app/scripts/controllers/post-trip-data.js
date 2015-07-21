@@ -43,6 +43,7 @@ angular.module('ts5App')
 
     this.getPostTripSuccess = function (response) {
       $scope.postTrip = response;
+      $scope.postTrip.passengerCount = $scope.postTrip.passengerCount.toString();
       $this.populateEmployees();
     };
 
@@ -55,9 +56,8 @@ angular.module('ts5App')
     };
 
     this.getCarrierSuccess = function (response) {
-      $this.carrierTypes = response.response;
       $scope.carrierNumbers = [];
-      angular.forEach($this.carrierTypes, function (item) {
+      angular.forEach(response.response, function (item) {
         postTripFactory.getCarrierNumbers(_companyId, item.id).then(function (response) {
           $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
         });
@@ -149,7 +149,6 @@ angular.module('ts5App')
         $this.hideLoadingModal();
         $scope.updateArrivalTimeZone();
         $scope.updateDepartureTimeZone();
-        $scope.postTrip.passengerCount = $scope.postTrip.passengerCount.toString();
       });
 
       switch ($routeParams.state) {
