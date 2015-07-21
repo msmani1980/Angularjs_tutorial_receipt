@@ -9,8 +9,7 @@
  */
 angular.module('ts5App')
   .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast) {
-    var _companyId = '403',
-      _services = null;
+    var companyId = '';
     var $this = this;
 
     $scope.viewName = 'Post Trip Data';
@@ -55,7 +54,7 @@ angular.module('ts5App')
 
     this.getCarrierSuccess = function (response) {
       angular.forEach(response.response, function (item) {
-        postTripFactory.getCarrierNumbers(_companyId, item.id).then(function (response) {
+        postTripFactory.getCarrierNumbers(companyId, item.id).then(function (response) {
           $scope.carrierNumbers = $scope.carrierNumbers.concat(response.response);
         });
       });
@@ -84,7 +83,7 @@ angular.module('ts5App')
 
     this.deletePostTripSuccess = function () {
       $this.showToastMessage('success', 'Post Trip', 'Post Trip successfully deleted');
-      postTripFactory.getPostTripDataList(_companyId, {}).then($this.getPostTripSuccess);
+      postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
     };
 
     this.deletePostTripFailure = function () {
@@ -97,34 +96,19 @@ angular.module('ts5App')
       }
     };
 
-    (function constructor() {
-      // set global controller properties
-      _companyId = postTripFactory.getCompanyId();
-      _services = {
-        promises: [],
-        call: function (servicesArray) {
-          angular.forEach(servicesArray, function (_service) {
-            _services.promises.push(_services[_service]());
-          });
-        },
-        getPostTripDataList: function () {
-          return postTripFactory.getPostTripDataList(_companyId, {}).then($this.getPostTripSuccess);
-        },
-        getStationList: function () {
-          return postTripFactory.getStationList(_companyId).then($this.getStationsSuccess);
-        },
-        getCarrierNumbers: function () {
-          $scope.carrierNumbers = [];
-          return postTripFactory.getCarrierTypes(_companyId).then($this.getCarrierSuccess);
-        },
-        getEmployees: function() {
-          $scope.employees = [];
-          return postTripFactory.getEmployees(_companyId).then($this.getEmployeesSuccess);
-        }
-      };
-      _services.call(['getStationList', 'getPostTripDataList', 'getCarrierNumbers', 'getEmployees']);
+    this.init = function () {
+      companyId = postTripFactory.getCompanyId();
+      $scope.carrierNumbers = [];
+      $scope.employees = [];
+      postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
+      postTripFactory.getStationList(companyId).then($this.getStationsSuccess);
+      postTripFactory.getCarrierTypes(companyId).then($this.getCarrierSuccess);
+      postTripFactory.getEmployees(companyId).then($this.getEmployeesSuccess);
       $this.showNewPostTripSuccess();
-    })();
+    };
+
+    this.init();
+
 
     this.formatMultiSelectedValuesForSearch = function () {
       $scope.search.depStationId = [];
@@ -148,13 +132,13 @@ angular.module('ts5App')
     $scope.searchPostTripData = function () {
       $this.formatMultiSelectedValuesForSearch();
       var payload = angular.copy($scope.search);
-      postTripFactory.getPostTripDataList(_companyId, payload).then($this.getPostTripSuccess);
+      postTripFactory.getPostTripDataList(companyId, payload).then($this.getPostTripSuccess);
     };
 
     $scope.clearSearchForm = function () {
       $scope.multiSelectedValues = {};
       $scope.search = {};
-      postTripFactory.getPostTripDataList(_companyId, $scope.search).then($this.getPostTripSuccess);
+      postTripFactory.getPostTripDataList(companyId, $scope.search).then($this.getPostTripSuccess);
     };
 
     $scope.redirectToPostTrip = function (id, state) {
@@ -173,7 +157,7 @@ angular.module('ts5App')
         return;
       }
       var postTripId = $scope.postTrips[$scope.tempDeleteIndex].id;
-      postTripFactory.deletePostTrip(_companyId, postTripId).then(
+      postTripFactory.deletePostTrip(companyId, postTripId).then(
         $this.deletePostTripSuccess,
         $this.deletePostTripFailure
       );
@@ -189,7 +173,7 @@ angular.module('ts5App')
       if (files && files.length) {
         for (var i = 0; i < files.length; i++) {
           var file = files[i];
-          postTripFactory.uploadPostTrip(_companyId, file, $this.uploadPostTripSuccess, $this.uploadPostTripFailure);
+          postTripFactory.uploadPostTrip(companyId, file, $this.uploadPostTripSuccess, $this.uploadPostTripFailure);
         }
       }
     };
