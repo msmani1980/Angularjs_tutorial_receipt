@@ -144,10 +144,22 @@ describe('The Item Create Controller', function() {
     });
 
     describe('getDependencies() method', function() {
-      var /*promise, deferred, , deferredDependancies, */
-        responseArray,
-        salesCategoriesDeffered,
-        companiesFactory;
+      var responseArray,
+        companiesFactory,
+        currencyFactory,
+        itemsFactory,
+        salesCategoriesDeferred,
+        tagsListDeferred,
+        taxTypeDeferred,
+        masterCurrenciesListDeferred,
+        allergenListDeferred,
+        itemTypesDeferred,
+        characteristicsDeferred,
+        dimensionListDeferred,
+        volumeListDeferred,
+        weightListDeferred,
+        priceTypeListDeferred,
+        itemsListDeferred;
 
       beforeEach(inject(function($injector, $q, $rootScope,
         _servedSalesCategories_,
@@ -172,10 +184,46 @@ describe('The Item Create Controller', function() {
         ];
 
         companiesFactory = $injector.get('companiesFactory');
+        currencyFactory = $injector.get('currencyFactory');
+        itemsFactory = $injector.get('itemsFactory');
 
-        salesCategoriesDeffered = $q.defer();
+        salesCategoriesDeferred = $q.defer();
+        tagsListDeferred = $q.defer();
+        taxTypeDeferred = $q.defer();
+        masterCurrenciesListDeferred = $q.defer();
+        allergenListDeferred = $q.defer();
+        itemTypesDeferred = $q.defer();
+        characteristicsDeferred = $q.defer();
+        dimensionListDeferred = $q.defer();
+        volumeListDeferred = $q.defer();
+        weightListDeferred = $q.defer();
+        priceTypeListDeferred = $q.defer();
+        itemsListDeferred = $q.defer();
+
         spyOn(companiesFactory, 'getSalesCategoriesList').and
           .returnValue(responseArray[0]);
+        spyOn(companiesFactory, 'getTagsList').and
+          .returnValue(responseArray[1]);
+        spyOn(companiesFactory, 'getTaxTypesList').and
+          .returnValue(responseArray[2]);
+        spyOn(currencyFactory, 'getCompanyCurrencies').and
+          .returnValue(responseArray[3]);
+        spyOn(itemsFactory, 'getAllergensList').and
+          .returnValue(responseArray[4]);
+        spyOn(itemsFactory, 'getItemTypesList').and
+          .returnValue(responseArray[5]);
+        spyOn(itemsFactory, 'getCharacteristicsList').and
+          .returnValue(responseArray[6]);
+        spyOn(itemsFactory, 'getDimensionList').and
+          .returnValue(responseArray[7]);
+        spyOn(itemsFactory, 'getVolumeList').and
+          .returnValue(responseArray[8]);
+        spyOn(itemsFactory, 'getWeightList').and
+          .returnValue(responseArray[9]);
+        spyOn(itemsFactory, 'getPriceTypesList').and
+          .returnValue(responseArray[10]);
+        spyOn(itemsFactory, 'getItemsList').and
+          .returnValue(responseArray[11]);
 
         createController($injector);
         $httpBackend.whenGET(/./).respond(200, '');
@@ -199,10 +247,10 @@ describe('The Item Create Controller', function() {
           });
 
         it(
-          'should have been calledd after the promise is resolved',
+          'should have been called after the promise is resolved',
           function() {
             $scope.$digest();
-            salesCategoriesDeffered.resolve();
+            salesCategoriesDeferred.resolve();
             expect(ItemCreateCtrl.setSalesCategories).toHaveBeenCalled();
           });
 
@@ -210,8 +258,367 @@ describe('The Item Create Controller', function() {
           'should set the $scope.salesCategories after the promise is resolved',
           function() {
             $scope.$digest();
-            salesCategoriesDeffered.resolve();
+            salesCategoriesDeferred.resolve();
             expect($scope.salesCategories).toBeDefined();
+          });
+
+      });
+
+      describe('setTagsList method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setTagsList').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.tags to be undefined',
+          function() {
+            expect($scope.tags).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            tagsListDeferred.resolve();
+            expect(ItemCreateCtrl.setTagsList).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.tags after the promise is resolved',
+          function() {
+            $scope.$digest();
+            tagsListDeferred.resolve();
+            expect($scope.tags).toBeDefined();
+          });
+
+      });
+
+      describe('setTaxTypesList method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setTaxTypesList').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.taxTypes to be undefined',
+          function() {
+            expect($scope.taxTypes).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            taxTypeDeferred.resolve();
+            expect(ItemCreateCtrl.setTaxTypesList).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.taxTypes after the promise is resolved',
+          function() {
+            $scope.$digest();
+            taxTypeDeferred.resolve();
+            expect($scope.taxTypes).toBeDefined();
+          });
+
+      });
+
+      describe('setMasterCurrenciesList method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setMasterCurrenciesList').and
+            .callThrough();
+        });
+
+        it(
+          'should expect $scope.masterCurrenciesList to be undefined',
+          function() {
+            expect($scope.masterCurrenciesList).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            masterCurrenciesListDeferred.resolve();
+            expect(ItemCreateCtrl.setMasterCurrenciesList).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.masterCurrenciesList after the promise is resolved',
+          function() {
+            $scope.$digest();
+            masterCurrenciesListDeferred.resolve();
+            expect($scope.masterCurrenciesList).toBeDefined();
+          });
+
+      });
+
+      describe('setAllergens method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setAllergens').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.allergens to be undefined',
+          function() {
+            expect($scope.allergens).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            allergenListDeferred.resolve();
+            expect(ItemCreateCtrl.setAllergens).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.allergens after the promise is resolved',
+          function() {
+            $scope.$digest();
+            allergenListDeferred.resolve();
+            expect($scope.allergens).toBeDefined();
+          });
+
+      });
+
+      describe('setItemTypes method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setItemTypes').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.itemTypes to be undefined',
+          function() {
+            expect($scope.itemTypes).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            itemTypesDeferred.resolve();
+            expect(ItemCreateCtrl.setItemTypes).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.itemTypes after the promise is resolved',
+          function() {
+            $scope.$digest();
+            itemTypesDeferred.resolve();
+            expect($scope.itemTypes).toBeDefined();
+          });
+
+      });
+
+      describe('setCharacteristics method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setCharacteristics').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.characteristics to be undefined',
+          function() {
+            expect($scope.characteristics).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            characteristicsDeferred.resolve();
+            expect(ItemCreateCtrl.setCharacteristics).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.characteristics after the promise is resolved',
+          function() {
+            $scope.$digest();
+            characteristicsDeferred.resolve();
+            expect($scope.characteristics).toBeDefined();
+          });
+
+      });
+
+      describe('setDimensionList method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setDimensionList').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.dimensionUnits to be undefined',
+          function() {
+            expect($scope.dimensionUnits).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            dimensionListDeferred.resolve();
+            expect(ItemCreateCtrl.setDimensionList).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.dimensionUnits after the promise is resolved',
+          function() {
+            $scope.$digest();
+            dimensionListDeferred.resolve();
+            expect($scope.dimensionUnits).toBeDefined();
+          });
+
+      });
+
+      describe('setVolumeList method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setVolumeList').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.volumeUnits to be undefined',
+          function() {
+            expect($scope.volumeUnits).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            volumeListDeferred.resolve();
+            expect(ItemCreateCtrl.setVolumeList).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.dimensionUnits after the promise is resolved',
+          function() {
+            $scope.$digest();
+            volumeListDeferred.resolve();
+            expect($scope.volumeUnits).toBeDefined();
+          });
+
+      });
+
+      describe('setWeightList method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setWeightList').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.weightUnits to be undefined',
+          function() {
+            expect($scope.weightUnits).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            weightListDeferred.resolve();
+            expect(ItemCreateCtrl.setWeightList).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.weightUnits after the promise is resolved',
+          function() {
+            $scope.$digest();
+            weightListDeferred.resolve();
+            expect($scope.weightUnits).toBeDefined();
+          });
+
+      });
+
+      describe('setItemPriceTypes method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setItemPriceTypes').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.priceTypes to be undefined',
+          function() {
+            expect($scope.priceTypes).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            priceTypeListDeferred.resolve();
+            expect(ItemCreateCtrl.setItemPriceTypes).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.priceTypes after the promise is resolved',
+          function() {
+            $scope.$digest();
+            priceTypeListDeferred.resolve();
+            expect($scope.priceTypes).toBeDefined();
+          });
+
+      });
+
+      describe('setItemList method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl, 'setItemList').and.callThrough();
+        });
+
+        it(
+          'should expect $scope.items to be undefined',
+          function() {
+            expect($scope.items).toBeUndefined();
+          });
+
+        it(
+          'should expect $scope.substitutions to be undefined',
+          function() {
+            expect($scope.substitutions).toBeUndefined();
+          });
+
+        it(
+          'should expect $scope.recommendations to be undefined',
+          function() {
+            expect($scope.recommendations).toBeUndefined();
+          });
+
+        it(
+          'should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            itemsListDeferred.resolve();
+            expect(ItemCreateCtrl.setItemList).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.items after the promise is resolved',
+          function() {
+            $scope.$digest();
+            itemsListDeferred.resolve();
+            expect($scope.items).toBeDefined();
+          });
+
+        it(
+          'should set the $scope.substitutions after the promise is resolved',
+          function() {
+            $scope.$digest();
+            itemsListDeferred.resolve();
+            expect($scope.substitutions).toBeDefined();
+          });
+
+        it(
+          'should set the $scope.recommendations after the promise is resolved',
+          function() {
+            $scope.$digest();
+            itemsListDeferred.resolve();
+            expect($scope.recommendations).toBeDefined();
           });
 
       });
