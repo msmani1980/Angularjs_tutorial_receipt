@@ -253,14 +253,6 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         expect(employeeCommissionFactory.deleteCommission).toHaveBeenCalled();
       });
 
-    it('should re-initilize the employee commission list after delete', function(){
-      scope.showDeleteConfirmation({
-        id: '1'
-      });
-      scope.deleteCommission();
-      expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalled();
-    });
-
   });
 
 });

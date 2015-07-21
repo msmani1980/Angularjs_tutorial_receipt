@@ -105,7 +105,6 @@ angular.module('ts5App')
 
     function successDeleteHandler() {
       showToastMessage('success','Employee Commission', 'successfully deleted commission!');
-      init();
     }
 
     $scope.deleteCommission = function () {
@@ -154,11 +153,8 @@ angular.module('ts5App')
       $scope.search.taxRateTypesList = dataFromAPI;
     });
 
-    function init() {
-      employeeCommissionFactory.getCommissionList().then(function (dataFromAPI) {
-        $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
-      });
-    }
-    init();
+    employeeCommissionFactory.getCommissionList().then(function (dataFromAPI) {
+      $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
+    });
 
   });
