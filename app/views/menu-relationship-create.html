@@ -70,13 +70,13 @@
 
             <div class="col-xs-12 col-sm-6">
               <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-                <date-picker-field label="Effective From" name="Effective From" ng-model="formData.startDate" required="true"></date-picker-field>
+                <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate" required="true"></date-picker-field>
               </fieldset>
             </div>
 
             <div class="col-xs-12 col-sm-6">
               <fieldset ng-disabled="viewOnly || isRelationshipInactive()">
-                <date-picker-field label="Effective To" name="Effective From" ng-model="formData.endDate" required="true"></date-picker-field>
+                <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate" required="true"></date-picker-field>
               </fieldset>
             </div>
 

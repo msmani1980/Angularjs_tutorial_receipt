@@ -20,15 +20,18 @@ angular.module('ts5App')
         disabled: '='
       },
       controller: function ($scope, $element) {
+        var tomorrow = dateUtility.formatDateForApp(dateUtility.tomorrow(),
+          'x');
+        console.log(tomorrow);
         var datePickerOptions = {
           orientation: 'auto top',
           autoclose: true,
-          todayHighlight: true,
-          startDate: dateUtility.nowFormatted()
+          startDate: tomorrow
         };
         this.init = function ($element) {
           var options = angular.extend({}, datePickerOptions);
-          $element.find('input[type="text"]').datepicker(options);
+          $element.find('input[type="text"]').datepicker(
+            options);
         };
         this.init($element);
       }
