@@ -195,7 +195,7 @@ describe('Controller: ItemImportCtrl', function () {
   describe('submitForm scope function', function(){
     var payload;
     beforeEach(function(){
-      scope.onDrop({currentTarget:{id:'item-drop-init'}},{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:1234},[]);
+      scope.onDrop({currentTarget:{id:'company-retail-item-list-drop-init'}},{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:1234},[]);
       payload = {ImportItems:{importItems: [1234]}};
       scope.$digest();
       scope.submitForm();
@@ -213,7 +213,7 @@ describe('Controller: ItemImportCtrl', function () {
         {companyId:432,id:3,itemCode:'12345',itemName:'12345',onBoardName:null,stockOwnerCode:null}];
       var newItem = {companyId:432,id:4,itemCode:'7653',itemName:'7653',onBoardName:null,stockOwnerCode:null};
       scope.$digest();
-      var event = {currentTarget:{id:'item-drop-init'}};
+      var event = {currentTarget:{id:'company-retail-item-list-drop-init'}};
       scope.onDrop(event,newItem);
     });
     it('should add the new item to companyRetailItemList, which should end up with a length of 4', function(){

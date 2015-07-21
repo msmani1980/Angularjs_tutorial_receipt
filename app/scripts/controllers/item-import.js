@@ -198,6 +198,8 @@ angular.module('ts5App')
 
     // scope properties
     $scope.viewName = 'Import Stock Owner Items';
+    $scope.companyRetailItemListDropInitId = 'company-retail-item-list-drop-init';
+    $scope.importedRetailItemListInitId = 'imported-retail-item-list-init';
 
     // scope functions
     $scope.changeSelectedImportCompany = function () {
@@ -267,7 +269,7 @@ angular.module('ts5App')
       $scope.companyRetailItemList = $filter('orderBy')($scope.companyRetailItemList, $scope.retailItemsSortOrder);
       $scope.retailItemsSortOrder = null;
       $scope.searchCompanyRetailItemList = null;
-      if($event.currentTarget.id !== 'item-drop-init'){
+      if($event.currentTarget.id !== $scope.companyRetailItemListDropInitId){
         var targetRetailItem = angular.element($event.currentTarget).scope().retailItem;
         index = $scope.companyRetailItemList.indexOf(targetRetailItem);
       }

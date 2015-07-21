@@ -153,14 +153,16 @@
         <tr
           ui-draggable="true"
           drag="importedRetailItem"
-          id="item-id-{{ importedRetailItem.id }}"
           on-drop-success="dropSuccessHandler($event, $index, importedRetailItemList)"
+          id="item-id-{{ importedRetailItem.id }}"
           ng-repeat="importedRetailItem in importedRetailItemList | orderBy:importItemsSortOrder | filter:searchImportCompanyList">
           <td ng-style="{'background-color':importedRetailItem.hexColor}">&nbsp;</td>
           <td>{{ importedRetailItem.companyName }}</td>
           <td>{{ importedRetailItem.itemCode }}</td>
           <td>{{ importedRetailItem.itemName }}</td>
         </tr>
+        <tr id="{{importedRetailItemListInitId}}"
+            ui-on-Drop="onDrop($event, $data, importedRetailItemList)"><td colspan="4">&nbsp;</td></tr>
         </tbody>
       </table>
     </div>
@@ -177,8 +179,8 @@
         </thead>
         <tbody>
         <tr
-          id="item-id-{{ retailItem.id }}"
           ui-on-Drop="onDrop($event, $data, companyRetailItemList)"
+          id="item-id-{{ retailItem.id }}"
           ng-repeat="retailItem in companyRetailItemList | orderBy:retailItemsSortOrder | filter:searchCompanyRetailItemList track by $index">
           <td ng-style="{'background-color':retailItem.hexColor}">&nbsp;</td>
           <td>{{ retailItem.companyName }}</td>
@@ -186,7 +188,8 @@
           <td>{{ retailItem.itemName }}</td>
           <td><a ng-click="removeRetailItem(retailItem)">X</a></td>
         </tr>
-        <tr id="item-drop-init" ui-on-Drop="onDrop($event, $data)"><td colspan="5">&nbsp;</td></tr>
+        <tr id="{{companyRetailItemListDropInitId}}"
+            ui-on-Drop="onDrop($event, $data, companyRetailItemList)"><td colspan="5">&nbsp;</td></tr>
         </tbody>
       </table>
       <p ng-hide="retailItemsLoaded"><em>Loading retail items...</em></p>
