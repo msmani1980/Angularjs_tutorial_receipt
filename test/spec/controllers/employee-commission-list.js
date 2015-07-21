@@ -119,6 +119,16 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         expect(dateUtility.isDateValidForApp(scope.commissionList[0].endDate)).toBe(true);
       });
 
+      it('should have a rateTypeName property defined', function(){
+        scope.$digest();
+        expect(!!scope.commissionList[4].priceTypeName).toBe(true);
+      });
+
+      it('should have a taxRateTypeName property defined', function(){
+        scope.$digest();
+        expect(!!scope.commissionList[4].taxRateTypeName).toBe(true);
+      });
+
     });
   });
 
@@ -227,10 +237,6 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         function () {
           expect(scope.isCommissionReadOnly(fakeCommissionObject)).toBe(true);
         });
-    });
-
-    it('should have a getSelectedRateTypeObject defined', function(){
-      expect(!!scope.getSelectedRateTypeObject).toBe(true);
     });
 
     it('should have a confirmDelete function', function () {
