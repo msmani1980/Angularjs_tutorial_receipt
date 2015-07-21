@@ -15,8 +15,6 @@ angular.module('ts5App')
 
     $scope.viewName = 'Post Trip Data';
     $scope.readOnly = false;
-    $scope.areAllDependenciesOver = false;
-    $scope.areTailNumberDependenciesOver = true;
     $scope.postTrip = {};
     $scope.selectedEmployees = {};
 
@@ -36,13 +34,11 @@ angular.module('ts5App')
     this.initReadView = function () {
       $scope.readOnly = true;
       $scope.viewName = 'View Post Trip Data';
-      $this.showLoadingModal('Loading Post Trip Data');
     };
 
     this.initUpdateView = function () {
       $scope.readOnly = false;
       $scope.viewName = 'Edit Post Trip Data';
-      $this.showLoadingModal('Loading Post Trip Data');
     };
 
     this.getPostTripSuccess = function (response) {
@@ -123,6 +119,7 @@ angular.module('ts5App')
 
     (function initController() {
       // set global controller properties
+      $this.showLoadingModal('Loading Post Trip Data');
       _companyId = postTripFactory.getCompanyId();
       _services = {
         promises: [],
@@ -152,7 +149,6 @@ angular.module('ts5App')
         $this.hideLoadingModal();
         $scope.updateArrivalTimeZone();
         $scope.updateDepartureTimeZone();
-        $scope.arePostTripDependenciesOver = true;
       });
 
       switch ($routeParams.state) {
@@ -195,15 +191,15 @@ angular.module('ts5App')
     };
 
     $scope.formSave = function () {
+      if (!$scope.postTripDataForm.$valid) {
+        $this.showToastMessage('danger', 'Post Trips', 'Please complete all fields');
+        return;
+      }
       // TODO: move employeeId data validation to HTML (currently open bug https://github.com/angular-ui/ui-select/issues/258)
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
       if(shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
         $this.showToastMessage('danger', 'Post Trips', 'Please complete employee ID field');
-        return;
-      }
-      if (!$scope.postTripDataForm.$valid) {
-        $this.showToastMessage('danger', 'Post Trips', 'Please complete all fields');
         return;
       }
       $scope.postTrip.postTripEmployeeIdentifiers = [];

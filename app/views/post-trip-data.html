@@ -55,6 +55,7 @@
                       ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
                       ng-disabled="readOnly"
                       required="true">
+                <option selected="selected" value>Select a Departure Station</option>
               </select>
             </div>
           </div>
@@ -95,6 +96,7 @@
                       ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
                       ng-disabled="readOnly"
                       required="true">
+                <option selected="selected" value>Select an Arrival Station</option>
               </select>
             </div>
           </div>
@@ -150,6 +152,7 @@
                       ng-options="number.carrierNumber as number.carrierNumber for number in carrierNumbers"
                       ng-disabled="readOnly"
                       required="true">
+                <option selected="selected" value>Select a Tail Number</option>
               </select>
             </div>
           </div>
