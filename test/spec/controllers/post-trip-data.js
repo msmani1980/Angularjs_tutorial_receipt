@@ -59,7 +59,7 @@ describe('Controller: PostTripDataCtrl', function () {
     companyId = '403';
     PostTripDataCtrl = $controller('PostFlightDataCtrl', {
       $scope: scope,
-      _companyId: companyId
+      companyId: companyId
     });
   }));
 
@@ -136,6 +136,7 @@ describe('Controller: PostTripDataCtrl', function () {
             {id: 63, name: 'employee2'}
           ]
         };
+        scope.postTrip = {};
         scope.formSave();
         var expectedObject = [{employeeId: 62}, {employeeId: 63}];
         expect(Object.prototype.toString.call(scope.postTrip.postTripEmployeeIdentifiers)).toBe('[object Array]');
@@ -155,7 +156,8 @@ describe('Controller: PostTripDataCtrl', function () {
 
   describe('update controller action', function () {
     var routeParams = {
-      state: 'edit'
+      state: 'edit',
+      id: '1'
     };
     beforeEach(inject(function ($controller) {
       PostTripDataCtrl = $controller('PostFlightDataCtrl', {
@@ -216,6 +218,7 @@ describe('Controller: PostTripDataCtrl', function () {
           $valid: true
         };
         scope.employees = [];
+        scope.postTrip = {};
         scope.formSave();
         expect(postTripFactory.createPostTrip).toHaveBeenCalled();
       });

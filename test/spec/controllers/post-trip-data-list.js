@@ -63,7 +63,7 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
     PostTripDataListCtrl = $controller('PostFlightDataListCtrl', {
       $scope: scope,
-      _companyId: companyId
+      companyId: companyId
     });
     scope.$digest();
   }));
