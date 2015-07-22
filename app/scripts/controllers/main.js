@@ -261,12 +261,12 @@ angular.module('ts5App')
       }]
     }, {
         title: 'Station Operations',
-        menuItems: [{
-          name: 'Manage LMP Locations',
-          route: '/#/lmp-locations-list',
-          icon: 'icon-manage-schedule',
-          className: 'dashboard-lmpLocationsList'
-        }]
+//        menuItems: [{
+//          name: 'Manage LMP Locations',
+//          route: '/#/lmp-locations-list',
+//          icon: 'icon-manage-schedule',
+//          className: 'dashboard-lmpLocationsList'
+//        }]
     }, {
         title: 'Stock Manager',
         menuItems: [{

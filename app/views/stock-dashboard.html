@@ -1,47 +1,47 @@
-<div class="module-container">
+<div class="container module-container">
 
-  <div class="edit-controls">
-    <div class="row">
-
-      <div class="col-xs-4">
-        <h2 class="view-name">{{ viewName }}</h2>
-      </div>
-
-      <div class="col-xs-8 text-right">
-        <fieldset ng-hide="viewOnly">
-
-          <a ng-href="#" class="btn btn-primary">Start Stock Take</a>
-      
-          <button type="button" class="btn btn-info">
-            <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
-            <span>Export (Excel)</span>
-          </button>
-          <button type="button" class="btn btn-info">
-            <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
-            <span>Export (PDF)</span>
-          </button>
-        
-          <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
-            <span>Save</span>
-          </button>
+  <div class="top-header">
+  
+    <div class="container stock-dashboard">
+  
+      <div class="edit-controls">
+        <div class="row">
+    
+          <div class="col-xs-4">
+            <h2 class="view-name">{{ viewName }}</h2>
+          </div>
+    
+          <div class="col-xs-8 text-right">
+            <fieldset ng-hide="viewOnly">
+    
+              <a ng-href="/#/stock-take" class="btn btn-primary">Start Stock Take</a>
           
-          <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
-          
-          <button class="btn btn-primary" ng-click="submitForm(formData)">
-            <span class="fa fa-check-square-o" aria-hidden="true"></span>
-            <span>Submit</span>
-          </button>
-
-        </fieldset>
+              <button type="button" class="btn btn-info">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                <span>Export (Excel)</span>
+              </button>
+              <button type="button" class="btn btn-info">
+                <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+                <span>Export (PDF)</span>
+              </button>
+            
+              <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+                <span>Save</span>
+              </button>
+              
+              <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
+              
+              <button class="btn btn-primary" ng-click="submitForm(formData)">
+                <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                <span>Submit</span>
+              </button>
+    
+            </fieldset>
+          </div>
+    
+        </div>
       </div>
-
-    </div>
-  </div>
-  <!--/TopHeader -->
-
-  <div class="panel panel-default stock-list">
-    <div class="panel-heading">
-      <!-- form header-->
+    
       <div class="row" ng-hide="readOnly">
         <div class="col-xs-12 col-sm-4">
           <div class="form-group">
@@ -51,110 +51,191 @@
                 {{ station.stationCode }} ({{ station.stationName}})
               </option>
             </select>
+
+<!-- TODO: IF ONLY ONE LMP STATION IS AVAILABLE, USE READ-ONLY (BELOW) INSTEAD OF SELECT (ABOVE)  -->
+<!--               <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true"> -->
+          
           </div>
         </div>
+        
         <div class="col-xs-12 col-sm-8 text-right">
           <label>02/03/2015</label>
         </div>
+        
       </div>
     </div>
+    
   </div>
+  <!--/TopHeader -->
+
+  <div class="stock-dashboard-container">
 
 <!-- TODO: FILTER DYNAMICALLY ADJUSTS TABLE DATA BELOW -->
-  <div class="row">
-    <div class="col-xs-12 col-sm-1">
-      <div class="form-group">
-        <label>Filter by:</label>
-      </div>
-    </div>
-    <div class="col-xs-12 col-sm-2">
-      <div class="form-group">
-        <label>Item Code</label>
-        <input ng-model="ullageQty" type="text" class="form-control" id="ullage-qty"
-               placeholder="Coke" custom-validity custom-pattern="time" ng-readonly="readOnly">
-      </div>
-    </div>
-    <div class="col-xs-12 col-sm-2">
-      <div class="form-group">
-        <label>Item Name</label>
-        <input ng-model="ullageQty" type="text" class="form-control" id="ullage-qty"
-               placeholder="12345" custom-validity custom-pattern="time" ng-readonly="readOnly">
-      </div>
-    </div>
-  </div>
-  
-  <table class="table table-bordered table-hover ng-scope">
-    <thead>
-      <tr>
-        <th>Item Code</th>
-        <th>Item Name</th>
-        <th>Opening Count</th>
-        <th>Goods Received</th>
-        <th>Current Count</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="ng-scope">
-        <td class="ng-binding">1234</td>
-        <td class="ng-binding">Coke</td>
-        <td class="ng-binding">
-          <input type="text" class="form-control" placeholder="198" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
-        </td>
-        <td class="ng-binding">
-          <input type="text" class="form-control" placeholder="198">
-        </td>
-        <td class="ng-binding">
-          <input type="text" class="form-control" placeholder="198">
-        </td>
-      </tr>
-      
-      <tr class="ng-scope">
-        <td class="ng-binding">1222</td>
-        <td class="ng-binding">Sprite</td>
-        <td class="ng-binding">
-          <input type="text" class="form-control" placeholder="198">
-        </td>
-        <td class="ng-binding">
-          <input type="text" class="form-control" placeholder="198">
-        </td>
-        <td class="ng-binding">
-          <input type="text" class="form-control" placeholder="198">
-        </td>
-      </tr>
-      
-      <tr class="ng-scope">
-        <td class="ng-binding">1444</td>
-        <td class="ng-binding">Chicken Sandwich</td>
-        <td class="ng-binding">
-          <input type="text" class="form-control" placeholder="198">
-        </td>
-        <td class="ng-binding">
-          <input type="text" class="form-control" placeholder="198">
-        </td>
-        <td class="ng-binding">
-          <input type="text" class="form-control" placeholder="198">
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="list-footer">
     <div class="row">
-      <div class="col-xs-12 col-sm-6">
-        Show
-        <select class="form-control" ng-model="itemsPerPage">
-          <option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
-        </select>
-        Items per Page
-
+      <div class="col-xs-12 col-sm-1">
+        <div class="form-group">
+          <label>Filter by:</label>
+        </div>
       </div>
-
-      <div class="col-xs-12 col-sm-6 text-right">
-        <pagination total-items="itemsListCount" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label>Item Code</label>
+          <input ng-model="ullageQty" type="text" class="form-control" id="ullage-qty"
+                 placeholder="Coke" custom-validity custom-pattern="time" ng-readonly="readOnly">
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label>Item Name</label>
+          <input ng-model="ullageQty" type="text" class="form-control" id="ullage-qty"
+                 placeholder="12345" custom-validity custom-pattern="time" ng-readonly="readOnly">
+        </div>
       </div>
     </div>
+    
+    <table class="table table-bordered table-hover ng-scope">
+      <thead>
+        <tr>
+          <th>Item Code</th>
+          <th>Item Name</th>
+          <th>Opening Count</th>
+          <th>Goods Received</th>
+          <th>Current Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="ng-scope">
+          <td class="ng-binding">1234</td>
+          <td class="ng-binding">Coke</td>
+          <td class="ng-binding">
+          
+<!-- TODO: STOCK ADJUSTMENT POPOVER IMPLEMENTED HERE -->
+            <input type="text" class="form-control" placeholder="198 - Stock Adj." data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+        </tr>
+        
+        <tr class="ng-scope">
+          <td class="ng-binding">1222</td>
+          <td class="ng-binding">Sprite</td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+        </tr>
+        
+        <tr class="ng-scope">
+          <td class="ng-binding">1444</td>
+          <td class="ng-binding">Chicken Sandwich</td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+        </tr>
+        
+        <tr class="ng-scope">
+          <td class="ng-binding">1234</td>
+          <td class="ng-binding">Coke</td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+        </tr>
+        
+        <tr class="ng-scope">
+          <td class="ng-binding">1222</td>
+          <td class="ng-binding">Sprite</td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+        </tr>
+        
+        <tr class="ng-scope">
+          <td class="ng-binding">1444</td>
+          <td class="ng-binding">Chicken Sandwich</td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+        </tr>
+        
+        <tr class="ng-scope">
+          <td class="ng-binding">1234</td>
+          <td class="ng-binding">Coke</td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+        </tr>
+        
+        <tr class="ng-scope">
+          <td class="ng-binding">1222</td>
+          <td class="ng-binding">Sprite</td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+        </tr>
+        
+        <tr class="ng-scope">
+          <td class="ng-binding">1444</td>
+          <td class="ng-binding">Chicken Sandwich</td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="198">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
   </div>
-  
+
 </div>
 
 <!-- Content for Stock Adjustment Popover -->    
