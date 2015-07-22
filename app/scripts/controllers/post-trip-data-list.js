@@ -73,8 +73,12 @@ angular.module('ts5App')
     };
 
 
-    this.uploadPostTripSuccess = function () {
-      $this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
+    this.uploadPostTripSuccess = function (response) {
+      if(response.toString() === 'OK_BUT_EMAIL_FAILURE') {
+        $this.showToastMessage('warning', 'Upload Post Trip', 'upload successful, but email notifications have failed');
+      } else {
+        $this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
+      }
     };
 
     this.uploadPostTripFailure = function () {
