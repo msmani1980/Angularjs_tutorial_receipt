@@ -19,6 +19,7 @@ describe('Controller: PostTripDataCtrl', function () {
     newPostTripDeferred,
     employeesDeferred,
     employeesResponseJSON,
+    searchPostTripDeferred,
     postTripFactory,
     companyId;
 
@@ -47,6 +48,8 @@ describe('Controller: PostTripDataCtrl', function () {
     newPostTripDeferred.resolve({id: 1});
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesResponseJSON);
+    searchPostTripDeferred = $q.defer();
+    searchPostTripDeferred.resolve({postTrips:[]});
 
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
@@ -55,6 +58,7 @@ describe('Controller: PostTripDataCtrl', function () {
     spyOn(postTripFactory, 'updatePostTrip').and.returnValue(postTripDeferred.promise);
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(postTripDeferred.promise);
     spyOn(postTripFactory, 'getEmployees').and.returnValue(employeesDeferred.promise);
+    spyOn(postTripFactory, 'getPostTripDataList').and.returnValue(searchPostTripDeferred.promise);
 
     companyId = '403';
     PostTripDataCtrl = $controller('PostFlightDataCtrl', {
@@ -213,14 +217,14 @@ describe('Controller: PostTripDataCtrl', function () {
     });
 
     describe('save form', function () {
-      it('should call updatePostTrip', function () {
+      it('should call getPostTripDataList to search for duplicates', function () {
         scope.postTripDataForm = {
           $valid: true
         };
         scope.employees = [];
         scope.postTrip = {};
         scope.formSave();
-        expect(postTripFactory.createPostTrip).toHaveBeenCalled();
+        expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
       });
     });
   });
