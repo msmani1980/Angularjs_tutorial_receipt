@@ -1,4 +1,4 @@
-<form class="form edit-form create-store-number-form" ng-submit="submitForm()">
+<form class="form edit-form create-store-number-form" id="form-store-number" ng-submit="submitForm()">
   <div class="edit-controls">
     <div class="row">
       <div class="col-xs-6">
@@ -27,6 +27,7 @@
          class="form-control"
          id="storeNumber"
          ng-model="formData.storeNumber"
+         ng-disabled="fieldDisabled(formData)"
          placeholder="store12345"/>
     </div>
     <div class="col-xs-12 col-sm-6">
@@ -34,6 +35,7 @@
         element-class="col-xs-6 col-sm-6"
         disable-past="true"
         label-from="Effective From *"
+        disable-start-date="fieldDisabled(formData)"
         label-to="Effective To *"
         name-from="startDate"
         name-to="endDate"
@@ -62,6 +64,9 @@
     <td>{{ store.startDate }}</td>
     <td>{{ store.endDate }}</td>
     <td>
+      <button class="btn btn-primary btn-xs" ng-click="editStoreNumber(store)" ng-show="canEdit(store)">
+        <i class="fa fa-pencil"></i>
+      </button>
       <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(store)" ng-show="canDelete(store)">
         <i class="fa fa-trash"></i>
       </button>

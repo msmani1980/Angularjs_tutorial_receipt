@@ -90,7 +90,7 @@ angular
         templateUrl: 'views/company.html',
         controller: 'CompanyCtrl'
       })
-      .when('/store-number-create', {
+      .when('/store-number', {
         templateUrl: 'views/store-number-create.html',
         controller: 'StoreNumberCreateCtrl'
       })

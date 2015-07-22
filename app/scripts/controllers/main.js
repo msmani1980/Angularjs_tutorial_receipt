@@ -263,7 +263,7 @@ angular.module('ts5App')
       title: 'Manage Store Number',
       menuItems: [{
         name: 'Store Number Create',
-        route: '/#/store-number-create',
+        route: '/#/store-number',
         icon: 'icon-create-company',
         className: 'dashboard-storeNumberCreate'
       }]
