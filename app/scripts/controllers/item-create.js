@@ -237,7 +237,7 @@ angular.module('ts5App')
     };
 
     this.formatSubstitutions = function(itemData) {
-      var substitutionsPayload = [{}];
+      var substitutionsPayload = [];
       for (var substitutionKey in itemData.substitutions) {
         var substitution = itemData.substitutions[substitutionKey];
         substitutionsPayload[substitutionKey] = substitution.id;
@@ -270,7 +270,7 @@ angular.module('ts5App')
     };
 
     this.formatRecommendations = function(itemData) {
-      var recommendationPayload = [{}];
+      var recommendationPayload = [];
       for (var recommendationKey in itemData.recommendations) {
         var recommendation = itemData.recommendations[recommendationKey];
         recommendationPayload[recommendationKey] = recommendation.id;
