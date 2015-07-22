@@ -30,7 +30,7 @@
 
       <div class="col-xs-6 text-right">
         <a class="btn btn-default" ng-href="#/item-list" class="btn">Back</a>
-        <button ng-show="formChanged" class="btn btn-success" ng-click="submitForm()">
+        <button ng-show="companyRetailItemList.length" class="btn btn-success" ng-click="submitForm()">
           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
@@ -46,7 +46,7 @@
       <h3>Stock Owner Items</h3>
     </div>
     <div class="col-xs-6">
-      <h3>Airline Items</h3>
+      <h3>Retail Items</h3>
     </div>
   </div>
 
@@ -102,11 +102,10 @@
         <select type="text"
                 name="importedRetailItemSortBy"
                 class="form-control"
-                placeholder="Search..."
+                ng-model="importItemsSortOrder"
                 id="importedRetailItemSortBy">
-          <option>Last Modified</option>
-          <option>Reference Number</option>
-          <option>Another one</option>
+          <option value="itemCode">S.O Ref #</option>
+          <option value="itemName">Name</option>
         </select>
       </div>
 
@@ -129,11 +128,11 @@
         <select type="text"
                 name="retailItemSortBy"
                 class="form-control"
-                placeholder="Search..."
+                ng-model="retailItemsSortOrder"
                 id="retailItemSortBy">
-          <option>Last Modified</option>
-          <option>Reference Number</option>
-          <option>Another one</option>
+          <option value="companyName">S.O</option>
+          <option value="itemCode">S.O Ref #</option>
+          <option value="itemName">Name</option>
         </select>
       </div>
     </div>
@@ -141,35 +140,37 @@
 
   <div class="form-group">
     <div class="col-xs-6">
-      <table ui-on-Drop="onDrop($event, $data, importedRetailItemList)"
-             class="sortable table table-bordered table-hover">
+      <table class="sortable table table-bordered drop-table drag-table">
         <thead>
         <tr>
           <th ng-style="{'background-color':selectedImportCompany.hexColor}">&nbsp;</th>
           <th>S.O.</th>
           <th>S.O. Ref. #</th>
           <th>Name</th>
-          <td ng-show="showIdColumn">id</td>
         </tr>
         </thead>
         <tbody>
         <tr
           ui-draggable="true"
           drag="importedRetailItem"
-          on-drop-success="dropSuccessHandler($event, $index, importedRetailItemList)"
-          ng-repeat="importedRetailItem in importedRetailItemList | filter:searchImportCompanyList">
+          on-drop-success="dropSuccessImportedRetailItemList($event, $index, importedRetailItemList)"
+          id="item-id-{{ importedRetailItem.id }}"
+          drag-channel="A"
+          ng-repeat="importedRetailItem in importedRetailItemList | orderBy:importItemsSortOrder | filter:searchImportCompanyList">
           <td ng-style="{'background-color':importedRetailItem.hexColor}">&nbsp;</td>
           <td>{{ importedRetailItem.companyName }}</td>
           <td>{{ importedRetailItem.itemCode }}</td>
           <td>{{ importedRetailItem.itemName }}</td>
-          <td ng-show="showIdColumn">{{ importedRetailItem.id }}</td>
+        </tr>
+        <tr ui-on-Drop="onDropImportedRetailItemList($event, $data)"
+            class="empty-drop-zone">
+          <td colspan="4"><em ng-show="showRightDropZoneMessage">No results</em>&nbsp;</td>
         </tr>
         </tbody>
       </table>
     </div>
     <div class="col-xs-6">
-      <table ui-on-Drop="onDrop($event, $data, companyRetailItemList)"
-             class="sortable table table-bordered table-hover">
+      <table class="sortable table table-bordered drop-table">
         <thead>
         <tr>
           <th>&nbsp;</th>
@@ -177,21 +178,28 @@
           <th>S.O. Ref. #</th>
           <th>Name</th>
           <th>&nbsp;</th>
-          <td ng-show="showIdColumn">id</td>
         </tr>
         </thead>
         <tbody>
         <tr
           ui-draggable="true"
           drag="retailItem"
-          on-drop-success="dropSuccessHandler($event, $index, companyRetailItemList)"
-          ng-repeat="retailItem in companyRetailItemList | filter:searchCompanyRetailItemList">
+          on-drop-success="dropSuccessCompanyRetailItemList($event, $index)"
+          ui-on-Drop="onDropCompanyRetailItemList($event, $data)"
+          drop-channel="A"
+          id="item-id-{{ retailItem.id }}"
+          ng-repeat="retailItem in companyRetailItemList | orderBy:retailItemsSortOrder | filter:searchCompanyRetailItemList track by $index">
           <td ng-style="{'background-color':retailItem.hexColor}">&nbsp;</td>
           <td>{{ retailItem.companyName }}</td>
           <td>{{ retailItem.itemCode }}</td>
           <td>{{ retailItem.itemName }}</td>
-          <td><a ng-click="removeRetailItem(retailItem)" ng-show="canRemove(retailItem)">X</a></td>
-          <td ng-show="showIdColumn">{{ retailItem.id }}</td>
+          <td><a class="btn btn-danger btn-xs" ng-click="removeRetailItem(retailItem)" class="remove-imported-item" title="Remove"><i class="fa fa-trash"></i></a></td>
+        </tr>
+        <tr id="company-retail-item-list-drop-init"
+            class="empty-drop-zone"
+            ui-on-Drop="onDropCompanyRetailItemList($event, $data)"
+            drop-channel="A">
+            <td colspan="5"><em ng-show="showLeftDropZoneMessage">Drag from left list and drop here</em>&nbsp;</td>
         </tr>
         </tbody>
       </table>

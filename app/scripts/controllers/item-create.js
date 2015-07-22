@@ -1,4 +1,5 @@
 'use strict';
+// jshint maxcomplexity:14
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -359,12 +360,15 @@ angular.module('ts5App')
     };
 
     this.getDependencies = function() {
+      angular.element('#loading').modal('show').find('p').text(
+        'We are loading the Items data!');
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(
         dependencyPromises).then(function(response) {
         $this.setDependencies(response);
         $scope.uiSelectTemplateReady = true;
         $scope.filteredCharacteristics = $scope.characteristics;
+        angular.element('#loading').modal('hide');
       });
     };
 

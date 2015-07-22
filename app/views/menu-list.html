@@ -22,6 +22,23 @@
   </ul>
 </div>
 
+<div class="row">
+  <div class="col-xs-6">
+    <button type="button" ng-href="ember/#/menus/create" class="btn btn-primary">+ Create Menu</button>
+    <excel-upload type="menu"></excel-upload>
+  </div>
+
+  <div class="col-xs-6 text-right">
+    <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+            aria-expanded="false"
+            aria-controls="search-collapse">
+      <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      <span class="hidden-xs">Search</span>
+    </button>
+
+  </div>
+</div>
+
 <div class="modal fade delete-warning-modal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -41,52 +58,35 @@
         <li><strong>endDate: </strong>{{ menuToDelete.endDate }}</li>
       </ul>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" ng-click="deleteMenu()">Continue</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deleteMenu()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default collapse no-transition" id="search-collapse">
+  <form name="menuSearchForm" ng-submit="searchMenus()">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="item-code">Menu Code</label>
+            <input ng-model="search.menuCode" type="text" class="form-control" id="item-code" placeholder="MENU012">
+          </div>
+
         </div>
 
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-6">
-      <a ng-href="ember/#/menus/create" class="btn btn-primary">+ Create Menu</a>
-    </div>
-
-    <div class="col-xs-6 text-right">
-      <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
-              aria-expanded="false"
-              aria-controls="search-collapse">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        <span class="hidden-xs">Search</span>
-      </button>
-
-    </div>
-  </div>
-
-
-  <div class="panel panel-default collapse no-transition" id="search-collapse">
-    <form name="menuSearchForm" ng-submit="searchMenus()">
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-md-3 col-sm-6">
-            <div class="form-group">
-              <label for="item-code">Menu Code</label>
-              <input ng-model="search.menuCode" type="text" class="form-control" id="item-code" placeholder="MENU012">
-            </div>
-
+        <div class="col-md-3 col-sm-6">
+          <div class="form-group">
+            <label for="item-name">Menu Name</label>
+            <input ng-model="search.menuName" type="text" class="form-control" id="item-name" placeholder="iPad Mini">
           </div>
+        </div>
 
-          <div class="col-md-3 col-sm-6">
-            <div class="form-group">
-              <label for="item-name">Menu Name</label>
-              <input ng-model="search.menuName" type="text" class="form-control" id="item-name" placeholder="iPad Mini">
-            </div>
-          </div>
-
-          <date-picker
+        <date-picker
             class="col-xs-12 col-md-6 col-sm-12"
             element-class="col-xs-6 col-sm-6"
             start-date-model="search.startDate"
@@ -94,46 +94,46 @@
             label-from="Effective From"
             label-to="Effective To"
             is-search-field="true">
-          </date-picker>
+        </date-picker>
 
-        </div>
       </div>
-      <div class="panel-footer text-right">
-        <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
-        <button type="submit" class="btn btn-primary">Search</button>
-      </div>
-    </form>
-  </div>
-  <table class="table table-bordered table-hover">
-    <thead>
-    <tr>
-      <th>Menu Code</th>
-      <th>Menu Name</th>
-      <th>Description</th>
-      <th>Effective From</th>
-      <th>Effective To</th>
-      <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr
+    </div>
+    <div class="panel-footer text-right">
+      <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+</div>
+<table class="table table-bordered table-hover">
+  <thead>
+  <tr>
+    <th>Menu Code</th>
+    <th>Menu Name</th>
+    <th>Description</th>
+    <th>Effective From</th>
+    <th>Effective To</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr
       ng-repeat="menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName}">
-      <td>{{ menu.menuCode }}</td>
-      <td>{{ menu.menuName }}</td>
-      <td>{{ menu.description }}</td>
-      <td>{{ menu.startDate }}</td>
-      <td>{{ menu.endDate }}</td>
-      <td>
-        <button class="btn btn-info btn-xs" ng-click="showMenu(menu)">
-          <i class="fa fa-file"></i>
-        </button>
-        <button class="btn btn-primary btn-xs" ng-click="showMenu(menu)" ng-show="!isMenuEditable(menu)">
-          <i class="fa fa-pencil"></i>
-        </button>
-        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menu)" ng-show="!isMenuReadOnly(menu)">
-          <i class="fa fa-trash"></i>
-        </button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+    <td>{{ menu.menuCode }}</td>
+    <td>{{ menu.menuName }}</td>
+    <td>{{ menu.description }}</td>
+    <td>{{ menu.startDate }}</td>
+    <td>{{ menu.endDate }}</td>
+    <td>
+      <button class="btn btn-info btn-xs" ng-click="showMenu(menu)">
+        <i class="fa fa-file"></i>
+      </button>
+      <button class="btn btn-primary btn-xs" ng-click="editMenu(menu)" ng-show="isMenuEditable(menu)">
+        <i class="fa fa-pencil"></i>
+      </button>
+      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menu)" ng-hide="isMenuReadOnly(menu)">
+        <i class="fa fa-trash"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

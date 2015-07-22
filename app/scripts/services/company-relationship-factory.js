@@ -12,7 +12,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('companyRelationshipFactory', function ($resource, ENV, companyRelationshipService, companyService) {
+  .factory('companyRelationshipFactory', ['$resource', 'ENV', 'companyRelationshipService', 'companyService', function ($resource, ENV, companyRelationshipService, companyService) {
 
     var getCompanyList = function (payload) {
       return companyService.getCompanyList(payload);
@@ -34,12 +34,17 @@ angular.module('ts5App')
       return companyRelationshipService.updateCompanyRelationship(payload);
     };
 
+    var deleteCompanyRelationship = function (payload) {
+      return companyRelationshipService.deleteCompanyRelationship(payload);
+    };
+
     return {
       getCompanyList: getCompanyList,
       getCompanyRelationshipListByCompany: getCompanyRelationshipListByCompany,
       getCompanyRelationshipTypeList: getCompanyRelationshipTypeList,
       createCompanyRelationship: createCompanyRelationship,
-      updateCompanyRelationship: updateCompanyRelationship
+      updateCompanyRelationship: updateCompanyRelationship,
+      deleteCompanyRelationship: deleteCompanyRelationship
     };
 
-  });
+  }]);

@@ -22,9 +22,7 @@ describe('Factor: itemImportFactory', function () {
     spyOn(GlobalMenuService.company, 'get');
     spyOn(companyService, 'getCompanyList');
     spyOn(itemsService, 'getItemsList');
-    spyOn(itemsService, 'createItem');
     spyOn(itemImportService, 'importItems');
-    spyOn(itemsService, 'removeItem');
 
     itemImportFactory = _itemImportFactory_;
     scope = $rootScope.$new();
@@ -54,15 +52,6 @@ describe('Factor: itemImportFactory', function () {
       var params = {companyId:413};
       itemImportFactory.getItemsList(params);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(params, undefined);
-    });
-    it('should call createItem', function(){
-      var payload = {retailItem:{}};
-      itemImportFactory.createItem(payload);
-      expect(itemsService.createItem).toHaveBeenCalledWith(payload);
-    });
-    it('should call removeItem', function(){
-      itemImportFactory.removeItem(2);
-      expect(itemsService.removeItem).toHaveBeenCalledWith(2);
     });
   });
 

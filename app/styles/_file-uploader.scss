@@ -1,6 +1,26 @@
 /* Uploader Styles */
 
-.drop-box {
+.drop-box.retail-drop-box {
+    background: $upload-bg-color;
+    border: 5px dashed #DDD;
+    min-width: 200px;
+    min-height: 100px;
+    height: auto;
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom:25px;
+    font-size: 2em;
+    margin-bottom:10px;
+    line-height:1.5;
+
+    p {
+        font-size:16px;
+        font-style:italic;
+    }
+
+}
+
+.drop-box{
     background: $upload-bg-color;
     border: 5px dashed #DDD;
     min-width: 200px;

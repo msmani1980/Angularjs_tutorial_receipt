@@ -20,27 +20,27 @@ describe('Service: versionService', function () {
     expect(!!versionService).toBe(true);
   });
 
-  describe('API calls', function () {
-    var dataFromAPI;
+  describe('API calls for versionService', function () {
+    var responseData;
 
-    describe('getMenuList', function () {
+    describe('getProjectInfo', function () {
       beforeEach(function () {
-        $httpBackend.whenGET(/project/).respond({
+        $httpBackend.expectGET(/project/).respond({
           'PROJECT_VERSION': '0.2.10',
           'BUILD_NUMBER': '06'
         });
-        versionService.getProjectInfo().then(function (_dataFromAPI_) {
-          dataFromAPI = _dataFromAPI_;
+        versionService.getProjectInfo().then(function (dataFromAPI) {
+          responseData = dataFromAPI;
         });
         $httpBackend.flush();
       });
 
       it('should include PROJECT_VERSION property', function () {
-        expect(dataFromAPI.PROJECT_VERSION).toBe('0.2.10');
+        expect(responseData.PROJECT_VERSION).toBe('0.2.10');
       });
 
       it('should have a BUILD_NUMBER property', function () {
-        expect(dataFromAPI.BUILD_NUMBER).toBe('06');
+        expect(responseData.BUILD_NUMBER).toBe('06');
       });
 
     });

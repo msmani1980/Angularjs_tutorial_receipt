@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Units Service |', function () {
+describe('Units Service', function () {
 
   // instantiate service
   var unitsService,

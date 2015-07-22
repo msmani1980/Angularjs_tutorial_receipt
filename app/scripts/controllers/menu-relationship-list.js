@@ -20,14 +20,9 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
-    $scope.search = {
-      menu: {}
-    };
 
     this.init = function () {
       this.getRelationshipList();
-      $scope.$watch('search', $this.updateRelationshipList, true);
-      $scope.$watchCollection('dateRange', $this.getRelationshipList);
       $scope.$watch('currentPage + relationshipsPerPage', $this.updateRelationshipList);
     };
 
@@ -42,13 +37,8 @@ angular.module('ts5App')
     this.updateRelationshipList = function () {
       $this.associateMenuData();
       $this.associateStationData();
-      var filteredRelationships = $this.filterRelationships();
-      $scope.relationshipListCount = filteredRelationships.length;
-      $this.setPaginatedRelationships(filteredRelationships);
-    };
-
-    this.filterRelationships = function () {
-      return $filter('filter')($scope.relationshipList, $scope.search);
+      $scope.relationshipListCount = $scope.relationshipList.length;
+      $this.setPaginatedRelationships($scope.relationshipList);
     };
 
     this.setPaginatedRelationships = function (filteredRelationships) {
@@ -61,27 +51,47 @@ angular.module('ts5App')
     };
 
     this.generateRelationshipQuery = function () {
-      var query = {};
-      if ($scope.dateRange && $scope.dateRange.startDate && $scope.dateRange
-        .endDate) {
-        query.startDate = dateUtility.formatDate($scope.dateRange.startDate,
-          'L', 'YYYYMMDD');
-        query.endDate = dateUtility.formatDate($scope.dateRange.endDate,
-          'L', 'YYYYMMDD');
+      var query = {
+        limit: 100
+      };
+      angular.extend(query, $scope.search);
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        query.startDate = dateUtility.formatDateForAPI($scope.dateRange
+          .startDate);
+        query.endDate = dateUtility.formatDateForAPI($scope.dateRange
+          .endDate);
+      }
+      return query;
+    };
+
+    this.generateItemQuery = function () {
+      var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
+      var query = {
+        startDate: todaysDate,
+        sortBy: 'ASC',
+        limit: 100
+      };
+      angular.extend(query, $scope.search);
+      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+        query.startDate = dateUtility.formatDateForAPI($scope.dateRange
+          .startDate);
+        query.endDate = dateUtility.formatDateForAPI($scope.dateRange
+          .endDate);
       }
       return query;
     };
 
     this.makePromises = function () {
-      var query = $this.generateRelationshipQuery();
+      var query = this.generateItemQuery();
       return [
-        catererStationService.getCatererStationList(),
-        menuService.getMenuList(),
+        catererStationService.getCatererStationList(query),
+        menuService.getMenuList(query),
         menuCatererStationsService.getRelationshipList(query)
       ];
     };
 
     this.getRelationshipList = function () {
+      $this.displayLoadingModal('Getting all the relationships for you');
       var promises = $this.makePromises();
       $q.all(promises).then(function (response) {
         $this.setCatererStationList(response[0]);
@@ -92,6 +102,19 @@ angular.module('ts5App')
         $this.hideLoadingModal();
       });
     };
+
+    this.searchRelationshipList = function () {
+      $this.displayLoadingModal('Searching the relationships for you');
+      var query = $this.generateRelationshipQuery();
+      menuCatererStationsService.getRelationshipList(query).then(function (
+        response) {
+        $this.setRelationshipList(response);
+        $this.updateRelationshipList();
+        $this.hideLoadingModal();
+      });
+    };
+
+    $scope.searchRecords = this.searchRelationshipList;
 
     this.setRelationshipList = function (apiResponse) {
       $scope.relationshipList = apiResponse.companyMenuCatererStations;
@@ -131,16 +154,9 @@ angular.module('ts5App')
       }
     };
 
-    this.findRelationshipIndex = function (relationshipId) {
-      var relationshipIndex = null;
-      for (var key in $scope.relationshipList) {
-        var relationship = $scope.relationshipList[key];
-        if (parseInt(relationship.id) === parseInt(relationshipId)) {
-          relationshipIndex = key;
-          break;
-        }
-      }
-      return relationshipIndex;
+    this.findRelationshipIndex = function (relationship) {
+      var index = $scope.relationshipList.indexOf(relationship);
+      return parseInt(index);
     };
 
     this.findMenuIndex = function (menuId) {
@@ -152,7 +168,7 @@ angular.module('ts5App')
           break;
         }
       }
-      return menuIndex;
+      return parseInt(menuIndex);
     };
 
     this.findStationIndex = function (stationId) {
@@ -164,7 +180,7 @@ angular.module('ts5App')
           break;
         }
       }
-      return stationIndex;
+      return parseInt(stationIndex);
     };
 
     this.initSelectUI = function () {
@@ -175,15 +191,17 @@ angular.module('ts5App')
 
     this.removeRecordFromList = function (relationshipIndex) {
       $this.hideLoadingModal();
-      $this.showSuccessMessage('Menu Relationship Removed');
+      $this.showSuccessMessage(
+        'Menu to Caterer Station Relationship Removed');
       $scope.relationshipList.splice(relationshipIndex, 1);
       $this.updateRelationshipList();
     };
 
-    $scope.removeRecord = function (relationshipId) {
-      var relationshipIndex = $this.findRelationshipIndex(relationshipId);
-      $this.displayLoadingModal('Removing your menu relationship');
-      menuCatererStationsService.deleteRelationship(relationshipId).then(
+    $scope.removeRecord = function (relationship) {
+      var relationshipIndex = $this.findRelationshipIndex(relationship);
+      $this.displayLoadingModal(
+        'Removing Menu to Caterer Station Relationship');
+      menuCatererStationsService.deleteRelationship(relationship.id).then(
         $this.removeRecordFromList(relationshipIndex));
     };
 
@@ -195,29 +213,18 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    $scope.isRelationshipActive = function (startDate) {
-      return Date.parse(startDate) <= dateUtility.now();
+    $scope.isRelationshipActive = function (date) {
+      return dateUtility.isTodayOrEarlier(date);
     };
 
-    $scope.isRelationshipInactive = function (endDate) {
-      return Date.parse(endDate) <= dateUtility.now();
+    $scope.isRelationshipInactive = function (date) {
+      return dateUtility.isYesterdayOrEarlier(date);
     };
 
     $scope.clearSearchFilters = function () {
-      $scope.dateRange.startDate = '';
-      $scope.dateRange.endDate = '';
-      var filters = $scope.search;
-      for (var filterKey in filters) {
-        if (Object.keys(filters[filterKey]).length) {
-          var filterObject = filters[filterKey];
-          for (var key in filterObject) {
-            $scope.search[filterKey][key] = '';
-          }
-        } else {
-          $scope.search[filterKey] = '';
-        }
-      }
-      $scope.relationshipListCount = $scope.relationshipList.length;
+      $scope.dateRange = {};
+      $scope.search = {};
+      $this.searchRelationshipList();
     };
 
     this.init();

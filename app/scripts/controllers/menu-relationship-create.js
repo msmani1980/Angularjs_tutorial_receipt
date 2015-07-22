@@ -14,7 +14,8 @@ angular.module('ts5App')
     var $this = this;
     $scope.formData = {
       startDate: '',
-      endDate: ''
+      endDate: '',
+      catererStationIds: []
     };
     $scope.viewName = 'Create Relationship';
     $scope.buttonText = 'Create';
@@ -22,6 +23,7 @@ angular.module('ts5App')
     $scope.relationshipIsInactive = false;
     $scope.viewOnly = false;
     $scope.editingRelationship = false;
+    $scope.displayError = false;
 
     this.init = function () {
       this.checkIfViewOnly();
@@ -69,10 +71,21 @@ angular.module('ts5App')
         ' Catering Stations';
     };
 
+    this.generateItemQuery = function () {
+      var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
+      var query = {
+        startDate: todaysDate,
+        sortBy: 'ASC',
+        limit: 100
+      };
+      return query;
+    };
+
     this.makePromises = function (id) {
+      var query = this.generateItemQuery();
       var promises = [
-        catererStationService.getCatererStationList(),
-        menuService.getMenuList()
+        catererStationService.getCatererStationList(query),
+        menuService.getMenuList(query)
       ];
       if (id) {
         promises.push(menuCatererStationsService.getRelationship(id));
@@ -206,7 +219,6 @@ angular.module('ts5App')
       $this.displayLoadingModal('We are creating your menu relationship');
       menuCatererStationsService.createRelationship(relationshipData).then(
         function () {
-          $this.hideLoadingModal();
           $this.showSuccessMessage('Relationship created!');
           $location.path('/menu-relationship-list');
         },
@@ -218,16 +230,14 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function (formData) {
-      $scope.displayError = false;
-      if (!$scope.form.$valid) {
-        $scope.displayError = true;
-        return false;
+      $scope.form.$setSubmitted(true);
+      if (formData && $this.validateForm()) {
+        var relationshipData = angular.copy(formData);
+        $this.formatPayloadDates(relationshipData);
+        var action = $scope.editingRelationship ? 'updateRelationship' :
+          'createRelationship';
+        $this[action](relationshipData);
       }
-      var relationshipData = angular.copy(formData);
-      $this.formatPayloadDates(relationshipData);
-      var action = $scope.editingRelationship ? 'updateRelationship' :
-        'createRelationship';
-      $this[action](relationshipData);
     };
 
     this.formatPayloadDates = function (relationship) {
@@ -239,12 +249,52 @@ angular.module('ts5App')
     };
 
     $scope.isRelationshipActive = function () {
-      return Date.parse($scope.formData.startDate) <= dateUtility.now();
+      if ($scope.editingRelationship) {
+        return dateUtility.isTodayOrEarlier($scope.formData.startDate);
+      }
+      return false;
     };
 
     $scope.isRelationshipInactive = function () {
-      return Date.parse($scope.formData.startDate) <= dateUtility.now();
+      if ($scope.editingRelationship) {
+        return dateUtility.isYesterdayOrEarlier($scope.formData.endDate);
+      }
+      return false;
     };
+
+    this.validateForm = function () {
+      $scope.displayError = false;
+      if (!$scope.form.$valid) {
+        $scope.displayError = true;
+      }
+      return $scope.form.$valid;
+    };
+
+    $scope.setInputValidClass = function (inputName) {
+      if($scope.form[inputName].$touched && $scope.form[inputName].$invalid || $scope.displayError && $scope.form[inputName].$invalid) {
+        return 'has-error';
+      }
+      if($scope.form[inputName].$touched && $scope.form[inputName].$valid) {
+        return 'has-success';
+      }
+      return '';
+    };
+
+    $scope.setStationsValidClass = function (inputName) {
+      if($scope.form[inputName].$touched && $scope.form[inputName].length < 1 || $scope.displayError && $scope.form[inputName].length < 1) {
+        return 'has-error';
+      }
+      if($scope.form[inputName].$touched && $scope.form[inputName].$valid) {
+        return 'has-success';
+      }
+      return '';
+    };
+
+    $scope.$watchCollection('form', function (form) {
+      if (form && form.$submitted) {
+        $scope.displayError = form.$invalid;
+      }
+    });
 
     this.init();
 

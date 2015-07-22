@@ -286,4 +286,83 @@ describe('Directive: leftNavigation', function () {
           expect(controller.checkIfEditing).toBeDefined();
         });
     });
+
+  describe('when the base-path cash-bag attribute is passed, it', function () {
+    var isolatedScope;
+    beforeEach(inject(function ($compile) {
+      element = angular.element(
+        '<left-navigation base-path="cash-bag"></left-navigation>'
+      );
+      element = $compile(element)(scope);
+      scope.$digest();
+      isolatedScope = element.isolateScope();
+    }));
+    it('should have have a base path attribute', function () {
+      expect(element.attr('base-path')).toBeDefined();
+    });
+    it('should match the basePath variable passed to the directive', function () {
+      expect(element.attr('base-path')).toEqual(isolatedScope.basePath);
+    });
+    it('should have a itemListPath variable', function () {
+      expect(isolatedScope.itemListPath).toBeDefined();
+    });
+    it('should have a manageRetailItemIcon variable', function () {
+      expect(isolatedScope.manageRetailItemIcon).toBeDefined();
+    });
+    it('should have a manageRetailItemLabel variable', function () {
+      expect(isolatedScope.manageRetailItemLabel).toBeDefined();
+    });
+    it('should have a itemCreatePath variable', function () {
+      expect(isolatedScope.itemCreatePath).toBeDefined();
+    });
+    it('should have a itemCreateIcon variable', function () {
+      expect(isolatedScope.itemCreateIcon).toBeDefined();
+    });
+    it('should have a itemCreateLabel variable', function () {
+      expect(isolatedScope.itemCreateLabel).toBeDefined();
+    });
+    it('should have a manageCategoriesPath variable', function () {
+      expect(isolatedScope.manageCategoriesPath).toBeDefined();
+    });
+    it('should have a manageRetailCatIcon variable', function () {
+      expect(isolatedScope.manageRetailCatIcon).toBeDefined();
+    });
+    it('should have a manageRetailCatLabel variable', function () {
+      expect(isolatedScope.manageRetailCatLabel).toBeDefined();
+    });
+    it('should have a itemPrefix variable', function () {
+      expect(isolatedScope.itemPrefix).toBeDefined();
+    });
+    it('should have a itemListPath variable that is set to /exchange-rates', function () {
+      expect(isolatedScope.itemListPath).toBe('/exchange-rates');
+    });
+    it('should have a manageRetailItemIcon variable that is set to icon-manage-transactions', function () {
+      expect(isolatedScope.manageRetailItemIcon).toBe('icon-manage-transactions');
+    });
+    it('should have a manageRetailItemLabel variable that is set to Daily Exchange Rates', function () {
+      expect(isolatedScope.manageRetailItemLabel).toBe('Daily Exchange Rates');
+    });
+    it('should have a itemCreatePath variable that is set to /cash-bag-list', function () {
+      expect(isolatedScope.itemCreatePath).toBe('/cash-bag-list');
+    });
+    it('should have a itemCreateIcon variable that is set to icon-create-receipt-rules', function () {
+      expect(isolatedScope.itemCreateIcon).toBe('icon-create-receipt-rules');
+    });
+    it('should have a itemCreateLabel variable that is set to Manage Cash Bag', function () {
+      expect(isolatedScope.itemCreateLabel).toBe('Manage Cash Bag');
+    });
+    it('should have a manageCategoriesPath variable that is set to /ember/#/cash-bag-submission', function () {
+      expect(isolatedScope.manageCategoriesPath).toBe('/ember/#/cash-bag-submission');
+    });
+    it('should have a manageRetailCatIcon variable that is set to icon-manage-retail-category', function () {
+      expect(isolatedScope.manageRetailCatIcon).toBe('icon-manage-retail-category');
+    });
+    it('should have a manageRetailCatLabel variable that is set to Cash Bag Submission', function () {
+      expect(isolatedScope.manageRetailCatLabel).toBe('Cash Bag Submission');
+    });
+    it('should have a itemPrefix variable that is set to Cash Bag', function () {
+      expect(isolatedScope.itemPrefix).toBe('Cash Bag');
+    });
+  });
+
 });

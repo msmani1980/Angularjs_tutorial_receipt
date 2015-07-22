@@ -1,32 +1,250 @@
-<div class="panel panel-transparent">
-  <div class="panel-body">
-    <div class="row">
-      <div class="form-group col-sm-6">
-        <label>Company Type</label>
-        <select name="companyType" ng-model="search.companyTypeId"
-                ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
-                class="form-control">
-          <option selected disabled value="">Filter by...</option>
-        </select>
-      </div>
-      <div class="form-group col-sm-6">
-        <label>Company Name *</label>
-        <select name="companyName" ng-model="viewModel.relativeCompanyId"
-                ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
-                class="form-control" required>
-          <option selected disabled value="">Please select...</option>
-        </select>
-      </div>
-      <date-picker
-          class="col-sm-6 col-xs-12"
-          element-class="col-xs-6"
-          start-date-model="viewModel.startDate"
-          end-date-model="viewModel.endDate"
-          disable-past="true"
-          label-from="Effective From"
-          label-to="Effective To"
-          required="true">
-      </date-picker>
+<div ng-show="!viewModel.isEditing" class="container-fluid">
+  <div class="row">
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyName}}</div>
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyTypeName}}</div>
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.relativeCompany}}</div>
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.startDate}}</div>
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.endDate}}</div>
+    <div class="hidden-xs col-sm-2 list-item">
+      <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company Relationship"
+              ng-disabled="$parent.isInactive(item.endDate)"
+              ng-click="$parent.editCompanyRelationship(viewModel, companyRelationshipForm)">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="btn btn-danger btn-xs" ng-click="$parent.showDeleteConfirmation(viewModel)"
+              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)">
+        <i class="fa fa-trash"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Company Name</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.companyName}}</div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Type</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.companyTypeName}}</div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Related Company *</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.relativeCompany}}</div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Start Date *</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.startDate}}</div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">End Date *</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.endDate}}</div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Actions</div>
+    <div class="visible-xs col-xs-9 list-item">
+      <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company Relationship"
+              ng-disabled="$parent.isInactive(item.endDate)"
+              ng-click="$parent.editCompanyRelationship(viewModel, companyRelationshipForm)">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="btn btn-danger btn-xs" ng-click="$parent.showDeleteConfirmation(viewModel)"
+              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)">
+        <i class="fa fa-trash"></i>
+      </button>
     </div>
   </div>
 </div>
+<form name="companyRelationshipForm" ng-show="viewModel.isEditing && viewModel.id" class="container-fluid">
+  <!-- edit -->
+  <div class="row">
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyName}}</div>
+    <div class="hidden-xs col-sm-2 list-item">
+      <select name="companyType" ng-model="search.companyTypeId"
+              ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
+              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+              class="form-control">
+        <option selected disabled value="">Filter by...</option>
+      </select>
+    </div>
+    <div class="hidden-xs col-sm-2 list-item">
+      <select name="companyName" ng-model="viewModel.relativeCompanyId"
+              ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
+              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+              class="form-control" required>
+        <option selected disabled value="">Please select...</option>
+      </select>
+    </div>
+    <div class="hidden-xs col-sm-4 list-item">
+      <div class="row">
+        <date-picker
+            class="col-xs-12"
+            element-class="col-xs-6"
+            start-date-model="viewModel.startDate"
+            end-date-model="viewModel.endDate"
+            disable-past="true"
+            required="true"
+            inline="true">
+        </date-picker>
+      </div>
+    </div>
+    <div class="hidden-xs col-sm-2 list-item">
+      <button type="button" class="btn btn-primary btn-xs" data-dismiss="alert" aria-label="Cancel"
+              ng-click="$parent.cancelCompanyRelationship(viewModel, companyRelationshipForm)">
+        <span class="fa fa-close" aria-hidden="true"></span>
+      </button>
+      <button type="submit" class="btn btn-primary btn-xs"
+              ng-click="$parent.submit(companyRelationshipForm.$valid, viewModel)">
+        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <!-- edit xs -->
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Company Name</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.companyName}}</div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Type</div>
+    <div class="visible-xs col-xs-9 list-item">
+      <select name="companyType" ng-model="search.companyTypeId"
+      ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
+      ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+      class="form-control">
+        <option selected disabled value="">Filter by...</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Related Company *</div>
+    <div class="visible-xs col-xs-9 list-item">
+      <select name="companyName" ng-model="viewModel.relativeCompanyId"
+      ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
+      ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+      class="form-control" required>
+        <option selected disabled value="">Please select...</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Start Date / End Date *</div>
+    <div class="visible-xs col-xs-9 list-item">
+      <div class="row">
+        <date-picker
+        class="col-xs-12"
+        element-class="col-xs-12"
+        start-date-model="viewModel.startDate"
+        end-date-model="viewModel.endDate"
+        disable-past="true"
+        required="true"
+        inline="true">
+        </date-picker>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Actions</div>
+    <div class="visible-xs col-xs-9 list-item">
+      <button type="button" class="btn btn-primary btn-xs" data-dixsiss="alert" aria-label="Cancel"
+              ng-click="$parent.cancelCompanyRelationship(viewModel, companyRelationshipForm)">
+        <span class="fa fa-close" aria-visible="true"></span>
+      </button>
+      <button type="submit" class="btn btn-primary btn-xs"
+              ng-click="$parent.submit(companyRelationshipForm.$valid, viewModel)">
+        <i class="fa fa-check-square-o" aria-visible="true"></i>
+      </button>
+    </div>
+  </div>
+</form>
+<form name="companyRelationshipForm" ng-show="viewModel.isEditing && !viewModel.id" class="container-fluid">
+  <!-- new -->
+  <div class="row">
+    <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyName}}</div>
+    <div class="hidden-xs col-sm-2 list-item">
+      <select name="companyType" ng-model="search.companyTypeId"
+              ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
+              class="form-control">
+        <option selected disabled value="">Filter by...</option>
+      </select>
+    </div>
+    <div class="hidden-xs col-sm-2 list-item">
+      <select name="companyName" ng-model="viewModel.relativeCompanyId"
+              ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
+              class="form-control" required>
+        <option selected disabled value="">Please select...</option>
+      </select>
+    </div>
+    <div class="hidden-xs col-sm-4 list-item">
+      <div class="row">
+        <date-picker
+            class="col-xs-12"
+            element-class="col-xs-6"
+            start-date-model="viewModel.startDate"
+            end-date-model="viewModel.endDate"
+            disable-past="true"
+            required="true">
+        </date-picker>
+      </div>
+    </div>
+    <div class="hidden-xs col-sm-2 list-item">
+      <button type="button" class="btn btn-primary btn-xs" data-dismiss="alert" aria-label="Cancel"
+              ng-click="$parent.cancelCompanyRelationship(viewModel)">
+        <span class="fa fa-close" aria-hidden="true"></span>
+      </button>
+      <button type="submit" class="btn btn-primary btn-xs"
+              ng-click="$parent.submit(companyRelationshipForm.$valid, viewModel)">
+        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <!-- new xs -->
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Company Name</div>
+    <div class="visible-xs col-xs-9 list-item">{{viewModel.companyName}}</div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Type</div>
+    <div class="visible-xs col-xs-9 list-item">
+      <select name="companyType" ng-model="search.companyTypeId"
+      ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
+      class="form-control">
+        <option selected disabled value="">Filter by...</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Related Company *</div>
+    <div class="visible-xs col-xs-9 list-item">
+      <select name="companyName" ng-model="viewModel.relativeCompanyId"
+      ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
+      class="form-control" required>
+        <option selected disabled value="">Please select...</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Start Date / End Date *</div>
+    <div class="visible-xs col-xs-9 list-item">
+      <div class="row">
+        <date-picker
+        class="col-xs-12"
+        element-class="col-xs-12"
+        start-date-model="viewModel.startDate"
+        end-date-model="viewModel.endDate"
+        disable-past="true"
+        required="true">
+        </date-picker>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="visible-xs col-xs-3 list-header text-right">Actions</div>
+    <div class="visible-xs col-xs-9 list-item">
+      <button type="button" class="btn btn-primary btn-xs" data-dismiss="alert" aria-label="Cancel"
+              ng-click="$parent.cancelCompanyRelationship(viewModel)">
+        <span class="fa fa-close" aria-hidden="true"></span>
+      </button>
+      <button type="submit" class="btn btn-primary btn-xs"
+              ng-click="$parent.submit(companyRelationshipForm.$valid, viewModel)">
+        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</form>

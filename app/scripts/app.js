@@ -90,9 +90,9 @@ angular
         templateUrl: 'views/company.html',
         controller: 'CompanyCtrl'
       })
-      .when('/create-store-number', {
-        templateUrl: 'views/create-store-number.html',
-        controller: 'createStoreNumberCtrl'
+      .when('/store-number-create', {
+        templateUrl: 'views/store-number-create.html',
+        controller: 'StoreNumberCreateCtrl'
       })
       .when('/company-relationship-list/:id', {
         templateUrl: 'views/company-relationship.html',
@@ -111,7 +111,7 @@ angular
         templateUrl: 'views/menu-create.html',
         controller: 'MenuCreateCtrl'
       })
-      .when('/menu-edit/:id', {
+      .when('/menu/:state/:id', {
         templateUrl: 'views/menu-edit.html',
         controller: 'MenuEditCtrl'
       })
@@ -131,9 +131,9 @@ angular
         templateUrl: 'views/post-trip-data.html',
         controller: 'PostFlightDataCtrl'
       })
-      .when('/employee-commission', {
-        templateUrl: 'views/employee-commission.html',
-        controller: 'EmployeeCommissionCtrl'
+      .when('/employee-commission/:state/:id?', {
+        templateUrl: 'views/employee-commission-edit.html',
+        controller: 'EmployeeCommissionEditCtrl'
       })
       .when('/global-reason-code', {
         templateUrl: 'views/global-reason-code.html',
@@ -162,6 +162,10 @@ angular
       .when('/item-import', {
         templateUrl: 'views/item-import.html',
         controller: 'ItemImportCtrl'
+      })
+      .when('/employee-commission-list', {
+        templateUrl: 'views/employee-commission-list.html',
+        controller: 'EmployeeCommissionListCtrl'
       })
       .otherwise({
         redirectTo: '/'

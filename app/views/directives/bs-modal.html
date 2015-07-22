@@ -1,0 +1,66 @@
+<div class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Download Excel Template</h4>
+
+        <div>
+          <a href="url"
+             class="btn button-primary importPanel-download"><i class="fa fa-download"></i> Download Template</a>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p>The file is an Excel (.xls, .xlsx) file and has only one sheet.<br/>
+          The first line should be the header with the column names.
+        </p>
+
+        <p><b>The column order and name should match the following:</b>
+        <ul>
+          <li><b>Number</b> – Required. This is the Flight Number of the Flight Schedule.</li>
+          <li><b>Aircraft Type</b> – Optional. Should match an Aircraft Type setup in the system.</li>
+          <li><b>Tail Number</b> – Required if Aircraft Type is entered. Should match a Tail Number setup in the system.
+          </li>
+          <li><b>Seat Config</b> – Required if both Aircraft Type and Tail Number is entered. Should match a Seat Config
+            setup in the system.
+          </li>
+          <li><b>Departure Station</b> – Required. This is the 3-letter airport code.</li>
+          <li><b>Departure Time</b> – Required. This is the time of Flight Departure (HH:MM). Enter in 24 hour format.
+            (Ex. 15:24 for 3:24PM or 10:15 for 10:15AM)
+          </li>
+          <li><b>Arrival Station</b> – Required. This is the 3-letter airport code.</li>
+          <li><b>Arrival Time</b> – Required. This is the time of Flight Arrival (HH:MM). Enter in 24 hour format. (Ex.
+            15:24 for 3:24PM or 10:15 for 10:15AM)
+          </li>
+          <li><b>Days of Operation</b> – Required. Number representing the day of the week. 1 = Monday, 2 = Tuesday, 3 =
+            Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday, 7 = Sunday. Multiple days can be comma separated.
+          </li>
+          <li><b>Block Time</b> – Optional. 6 digit whole number e.g. 123456 (not 123456.00).</li>
+          <li><b>Ground Time</b> – Optional. 6 digit whole number e.g. 123456 (not 123456.00).</li>
+          <li><b>Trip Distance</b> – Optional. 5 digit whole number e.g. 12345 (not 12345.00).</li>
+          <li><b>Trip Distance - Miles (mi) or Kilometer (km)</b> – Optional. mi to represent miles or km to represent
+            kilometer.
+          </li>
+          <li><b>Previous Number</b> – Optional. This is the previous Flight Number of this Flight Schedule.</li>
+          <li><b>Next Number</b> – Optional. This is the next Flight Number of this Flight Schedule.
+          <li>
+          <li><b>First Trip of Day</b> – Optional. Y for Yes and N for No to represent if this is the first flight for
+            the day.
+          </li>
+          <li><b>Last Trip of Day</b> – Optional. Y for Yes and N for No to represent if this is the last flight for the
+            day.
+          </li>
+          <li><b>Schedule Effective Date</b> – Effective Date of the Flight Schedule, Format = yyyymmdd</li>
+          <li><b>Schedule End Date</b> – End Date of the Flight Schedule. Format = yyyymmdd</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div><!-- /.modal -->

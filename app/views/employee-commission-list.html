@@ -1,0 +1,163 @@
+<h1>{{viewName}}</h1>
+
+<div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+  </button>
+  <h4>
+    We found errors :( !
+  </h4>
+
+  <ul>
+    <li ng-repeat="error in form.$error.required">
+      <strong>{{ error.$name }}</strong> is required
+    </li>
+    <li ng-repeat="error in form.$error.pattern">
+      <strong>{{ error.$name }}</strong> is invalid
+    </li>
+    <li ng-show="formErrors" ng-repeat="error in formErrors">
+      <strong>{{error.field}}</strong>
+      <span> {{ error.value }}</span>
+      <span> {{ error.code }}</span>
+    </li>
+  </ul>
+</div>
+
+<div class="modal fade delete-warning-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure?</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>You are about to permanently <strong>delete the following commission</strong></p>
+      </div>
+
+      <ul>
+        <li><strong>startDate: </strong>{{ commissionToDelete.startDate }}</li>
+        <li><strong>endDate: </strong>{{ commissionToDelete.endDate }}</li>
+      </ul>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="deleteCommission()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-6">
+    <a ng-href="#/employee-commission/create" class="btn btn-primary">+ Create Commission</a>
+  </div>
+
+  <div class="col-xs-6 text-right">
+    <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+            aria-expanded="false"
+            aria-controls="search-collapse">
+      <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      <span class="hidden-xs">Search</span>
+    </button>
+
+  </div>
+</div>
+
+
+<div class="panel panel-default collapse no-transition" id="search-collapse">
+  <form name="commissionSearchForm" ng-submit="searchCommissions()">
+    <div class="panel-body">
+      <div class="row">
+        <date-picker
+          class="col-xs-12 col-md-6 col-sm-6"
+          element-class="col-xs-6 col-sm-6"
+          start-date-model="search.startDate"
+          end-date-model="search.endDate"
+          is-search-field="true"
+          label-from="Effective From"
+          label-to="Effective To">
+        </date-picker>
+
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label class="control-label" for="itemName">Item Name</label>
+            <select
+              class="form-control"
+              id="itemName"
+              ng-options="item.itemName for item in search.itemList | orderBy:'itemName' track by item.id"
+              ng-model="search.selectedItem">
+              <option selected="selected" disabled value>Select Item</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label class="control-label" for="saleType">Sale Type</label>
+            <select class="form-control"
+                    id="saleType"
+                    ng-options="priceType.name for priceType in search.priceTypeList | orderBy:'name' track by priceType.id"
+                    ng-model="search.selectedPriceType">
+              <option selected="selected" disabled value>Select Price Type</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label class="control-label" for="rateType">Rate Type</label>
+            <select
+              class="form-control"
+              id="rateType"
+              ng-options="taxRate.taxRateType for taxRate in search.taxRateTypesList | orderBy:'taxRateType' track by taxRate.id"
+              ng-model="search.selectedRateType">
+              <option selected="selected" disabled value>Select Tax Rate</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="panel-footer text-right">
+      <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+</div>
+{{search.selectedItem.itemName}}
+<table class="table table-bordered table-hover">
+  <thead>
+  <tr>
+    <th>Effective From</th>
+    <th>Effective To</th>
+    <th>Item Name</th>
+    <th>Sale Type</th>
+    <th>Rate Type</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr
+    ng-repeat="commission in commissionList | filter:{priceTypeName: search.selectedPriceType.name, taxRateTypeName:search.selectedRateType.taxRateType, itemName:search.selectedItem.itemName, startDate: search.startDate, endDate: search.endDate} | orderBy:'item[0].itemName'">
+    <td>{{ commission.startDate }}</td>
+    <td>{{ commission.endDate }}</td>
+    <td>{{ commission.itemName }}</td>
+    <td>{{ commission.priceTypeName }}</td>
+    <td>{{ commission.taxRateTypeName }}</td>
+    <td>
+      <button class="btn btn-info btn-xs" ng-click="showCommission(commission)">
+        <i class="fa fa-file"></i>
+      </button>
+      <button class="btn btn-primary btn-xs" ng-click="editCommission(commission)"
+              ng-show="isCommissionEditable(commission)">
+        <i class="fa fa-pencil"></i>
+      </button>
+      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)"
+              ng-hide="isCommissionReadOnly(commission)">
+        <i class="fa fa-trash"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

@@ -20,7 +20,6 @@
 </div>
 
 <form name="menuEditForm" class="form edit-form">
-
   <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
     </button>
@@ -98,6 +97,8 @@
     disable-past="true"
     label-from="Effective From"
     label-to="Effective To"
+    disable-start-date="isMenuReadOnly()"
+    disable-end-date="isViewOnly()"
     required="true">
   </date-picker>
 
@@ -114,19 +115,18 @@
            ng-readonly="isMenuReadOnly()"/>
   </div>
 
-  <h3>Menu Items <a class="pull-right" ng-click="addItem()" ng-show="!isMenuReadOnly()">Add Item</a></h3>
+  <h3>Menu Items <a class="pull-right" ng-click="addItem()" ng-show="isMenuEditable()">Add Item</a></h3>
 
   <table class="table table-responsive table-bordered table-hover">
     <thead>
     <tr>
       <th class="col-xs-10">Item Name</th>
       <th class="col-xs-1">Quantity</th>
-      <th ng-show="shouldShowActions()" class="col-xs-1">Actions</th>
+      <th ng-hide="isMenuReadOnly()" class="col-xs-1">Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="blankItem in newItemList track by $index"
-        ng-show="shouldShowActions()">
+    <tr ng-repeat="blankItem in newItemList track by $index">
       <td>
         <ui-select
           required="true"
@@ -161,8 +161,11 @@
     <tr ng-repeat="menuItem in menu.menuItems">
       <td>{{menuItem.itemName}}</td>
       <td>{{menuItem.itemQty}}</td>
-      <td ng-show="shouldShowActions()">
-        <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(menuItem)">
+      <td ng-hide="isMenuReadOnly()">
+        <button
+          ng-show="canDeleteItems()"
+          class="btn btn-danger btn-xs"
+          ng-click="showDeleteConfirmation(menuItem)">
           <i class="fa fa-trash"></i>
         </button>
       </td>

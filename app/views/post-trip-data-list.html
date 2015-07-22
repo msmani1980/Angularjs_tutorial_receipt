@@ -1,59 +1,80 @@
 <div class="module-container">
-
   <div class="edit-controls">
     <div class="row">
-
       <div class="col-xs-12">
         <h2 class="view-name">{{ viewName }}</h2>
       </div>
-
     </div>
   </div>
-  <!--/TopHeader -->
 
   <div class="post-trip-data-list">
     <div class="row">
+      <div class="col-xs-12 text-left">
+        <a href="#/post-trip-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Post Trip</span></a>
 
-      <div class="col-xs-12">
         <div class="btn-group import-from-file">
-          <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#importFromData">
-            Import Post Trip From File <i class="fa fa-caret-right"></i>
-          </button>
-
-          <div id="importFromData" class="collapse width">
-            <input type="file" style="margin:5px; display:block;">
-
-            <button type="button" class="btn btn-info">
-              Upload
+          <div class="btn-group" dropdown>
+            <button type="button" class="btn btn-info"data-toggle="collapse" data-target="#importFromData" >
+              <span class="fa fa-copy" aria-hidden="true"></span>
+              Import PostTrip From File
             </button>
-
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target=".download-template-modal" ng-click="downloadTemplate()">
-              <i class="fa fa-download"></i> Download Template
+            <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle>
+              <span class="caret"></span>
             </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/FileUpload-PostTripManagement.xlsx">Download Excel Template</a></li>
+              <li><a data-toggle="modal" data-target=".download-template-modal"
+                     ng-click="downloadTemplate()">View Excel Specifications</a></li>
+            </ul>
           </div>
 
+          <div id="importFromData" class="collapse width">
+            <input type="file"
+                   ngf-select
+                   ng-model="postTripFile"
+                   accept=".xls,.xlsx">
+            <button type="button" class="btn btn-info" ng-click="uploadPostTripFileToApi(postTripFile)">
+              Upload
+            </button>
+          </div>
         </div>
-      </div>
 
-    </div>
-
-    <div class="row">
-
-      <div class="col-xs-6">
-        <a ng-href="/#/post-trip-data/create" class="btn btn-primary"> + </a>
-      </div>
-
-      <div class="col-xs-6 text-right">
-        <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+        <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
                 aria-controls="search-collapse">
-          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          <span class="fa fa-search" aria-hidden="true"></span>
           <span class="hidden-xs">Search</span>
         </button>
       </div>
-
     </div>
-    <div class="panel panel-default collapse no-transition" id="search-collapse">
+
+    <div id="delete-modal" class="modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4>Are you sure you want to delete this post trip?</h4>
+          </div>
+          <div class="modal-body">
+            <ul>
+              <li>ScheduleNumber: {{ postTrips[tempDeleteIndex].scheduleNumber }}</li>
+              <li>Departure Station: {{ postTrips[tempDeleteIndex].arrStationCode }}</li>
+              <li>Departure Time: {{ postTrips[tempDeleteIndex].depTime }}</li>
+              <li>Arrival Station: {{ postTrips[tempDeleteIndex].arrStationCode }}</li>
+              <li>Arrival Time: {{ postTrips[tempDeleteIndex].arrTime }}</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="deletePostTrip()">Delete
+            </button>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel panel-default no-transition" id="search-collapse">
       <form name="menuSearchForm" ng-submit="searchPostTripData()">
         <div class="panel-body">
           <div class="row">
@@ -61,79 +82,70 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="schedule-number">Schedule Number</label>
-                <input ng-model="search.scheduleNumber" type="text" class="form-control" id="schedule-number" placeholder="T1">
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="carrier-type">Carrier Types</label>
-                <select class="form-control" id="carrier-type" ng-model="search.carrierTypeId" ng-change="updateCarrierNumbers()">
-                  <option value=""></option>
-                  <option ng-repeat="carrier in carrierTypes" value="{{ carrier.id }}">
-                    {{ carrier.carrierType }}
-                  </option>
-                </select>
+                <input ng-model="search.scheduleNumber" type="text" class="form-control" id="schedule-number"
+                       placeholder="T1">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="tail-number">Tail Number</label>
-                <select class="form-control" id="tail-number" ng-model="search.tailNumber">
-                  <option value=""></option>
-                  <option ng-repeat="number in carrierNumbers" value="{{ number.carrierNumber }}">
+                <ui-select id="tail-number" multiple ng-model="multiSelectedValues.tailNumbers" theme="bootstrap">
+                  <ui-select-match placeholder="Select Tail Number..">{{ $item.carrierNumber }}</ui-select-match>
+                  <ui-select-choices repeat="number in carrierNumbers | filter: $select.search">
                     {{ number.carrierNumber }}
-                  </option>
-                </select>
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <date-picker class="form-group"
-              element-class="col-xs-12 col-sm-3"
-              start-date-model="search.startDate"
-              end-date-model="search.endDate"
-              disable-past="true"
-              label-from="Effective From"
-              label-to="Effective To"
-              disable-start-date="viewOnly"
-              disable-end-date="viewOnly">
-            </date-picker>
 
+            <div class="col-xs-12 col-sm-6">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.scheduleFromDate"
+                end-date-model="search.scheduleToDate"
+                label-from="Schedule Date From"
+                label-to="Schedule Date To"
+                is-search-field="true">
+              </date-picker>
+            </div>
+          </div>
+
+          <div class="row">
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="departure-station">Departure Station</label>
-                <select class="stations-multi-select" id="departure-station" multiple="multiple" ng-model="search.departureStation">
-                  <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
-                    {{ station.stationCode }} ({{ station.stationName}})
-                  </option>
-                </select>
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="departure-time">Departure Time</label>
-                <input ng-model="search.departureTime" type="text" class="form-control" id="departure-time" placeholder="15:43">
+                <ui-select id="departure-station" multiple ng-model="multiSelectedValues.depStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{ station.stationCode }} ({{ station.stationName }})
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="arrival-station">Arrival Station</label>
-                <select class="stations-multi-select" id="arrival-station" multiple="multiple" ng-model="search.arrivalStation">
-                  <option ng-repeat="station in stationList" value="{{ station.stationCode }}">
-                    {{ station.stationCode }} ({{ station.stationName}})
-                  </option>
-                </select>
+                <ui-select id="arrival-station" multiple ng-model="multiSelectedValues.arrStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{ station.stationCode }} ({{ station.stationName }})
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label>Arrival Time</label>
-                <input ng-model="search.arrivalTime" type="text" class="form-control" id="arrival-time" placeholder="20:14">
+                <label for="employee-id">Employee Id</label>
+                <ui-select id="employee-id" multiple ng-model="multiSelectedValues.employeeIds" theme="bootstrap">
+                  <ui-select-match placeholder="Select EmployeeIds..">{{ $item.employeeIdentifier }}</ui-select-match>
+                  <ui-select-choices repeat="employee in employees | filter: $select.search">
+                    {{ employee.employeeIdentifier }} ({{employee.lastName}}, {{ employee.firstName }})
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
@@ -145,50 +157,40 @@
         </div>
       </form>
     </div>
+    <br>
     <table class="table table-bordered table-hover ng-scope">
       <thead>
-        <tr>
-          <th>Schedule Number</th>
-          <th>Departure Station</th>
-          <th>Departure Time</th>
-          <th>Arrival Station</th>
-          <th>Arrival Time</th>
-          <th>Actions</th>
-        </tr>
+      <tr>
+        <th>Schedule Number</th>
+        <th>Departure Station</th>
+        <th>Departure Time</th>
+        <th>Arrival Station</th>
+        <th>Arrival Time</th>
+        <th>Actions</th>
+      </tr>
       </thead>
       <tbody>
-        <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
-        <tr class="ng-scope">
-          <td class="ng-binding">T1</td>
-          <td class="ng-binding">07/15/2015</td>
-          <td class="ng-binding">2:34</td>
-          <td class="ng-binding">Test</td>
-          <td class="ng-binding">5:34</td>
-          <td>
-            <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
-              <i class="fa fa-file"></i>
-            </button>
-            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
-              <i class="fa fa-pencil"></i>
-            </button>
-            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" disabled="disabled">
-              <i class="fa fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-        <tr class="ng-scope">
-          <td class="ng-binding">T2</td>
-          <td class="ng-binding">05/07/2015</td>
-          <td class="ng-binding">12:34</td>
-          <td class="ng-binding">Test</td>
-          <td class="ng-binding">12:34</td>
-          <td>
-            <button class="btn btn-info btn-xs" ng-click="viewPostTrip()" tabindex="0">
-              <i class="fa fa-file"></i>
-            </button>
-          </td>
-        </tr>
-        <!-- end ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
+      <tr class="ng-scope" ng-repeat="trip in postTrips">
+        <td>{{ trip.scheduleNumber }}</td>
+        <td>{{ trip.depStationCode}}</td>
+        <td>{{ trip.depTime }}</td>
+        <td>{{ trip.arrStationCode}}</td>
+        <td>{{ trip.arrTime }}</td>
+        <td>
+          <button class="btn btn-info btn-xs" ng-click="redirectToPostTrip(trip.id, 'view')" tabindex="0">
+            <i class="fa fa-file"></i>
+          </button>
+          <button class="btn btn-primary btn-xs" ng-click="redirectToPostTrip(trip.id, 'edit')"
+                  ng-disabled="isMenuEditable(menu)"
+                  tabindex="0" aria-disabled="true" disabled="disabled">
+            <i class="fa fa-pencil"></i>
+          </button>
+          <button class="btn btn-danger btn-xs" ng-click="promptDeleteModal($index)" ng-disabled="isMenuReadOnly(menu)"
+                  tabindex="0" aria-disabled="true" disabled="disabled" ng-show="showDeleteButton(trip.scheduleDate)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

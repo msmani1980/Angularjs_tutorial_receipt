@@ -81,12 +81,6 @@ angular.module('ts5App')
         route: emberURL + 'companies/create',
         icon: 'icon-create-company',
         className: 'dashboard-createCompany'
-      },
-      {
-        name: 'Create Store Number',
-        route: '/#/create-store-number',
-        icon: 'icon-create-company',
-        className: 'dashboard-createStoreNumber'
       }]
     }, {
       title: 'Schedule Management',
@@ -239,8 +233,8 @@ angular.module('ts5App')
         icon: 'icon-manage-menu',
         className: 'dashboard-postTripDataList'
       }, {
-        name: 'Post Trip Data',
-        route: '/#/post-trip-data',
+        name: 'Create Post Trip Data',
+        route: '/#/post-trip-data/create',
         icon: 'icon-create-menu',
         className: 'dashboard-postTripData'
       }]
@@ -248,7 +242,7 @@ angular.module('ts5App')
       title: 'Employee Commission',
       menuItems: [{
         name: 'Employee Commission',
-        route: '/#/employee-commission',
+        route: '/#/employee-commission-list',
         icon: 'icon-manage-schedule',
         className: 'dashboard-employeeCommission'
       }]
@@ -264,6 +258,14 @@ angular.module('ts5App')
         route: '/#/company-reason-code',
         icon: 'icon-manage-schedule',
         className: 'dashboard-companyReasonCode'
+      }]
+    }, {
+      title: 'Manage Store Number',
+      menuItems: [{
+        name: 'Store Number Create',
+        route: '/#/store-number-create',
+        icon: 'icon-create-company',
+        className: 'dashboard-storeNumberCreate'
       }]
     }];
 

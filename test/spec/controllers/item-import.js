@@ -61,10 +61,6 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.importAll).toBeDefined();
       expect(Object.prototype.toString.call(scope.importAll)).toBe('[object Function]');
     });
-    it('should have a isCompanyItem function attached to the scope', function(){
-      expect(scope.isCompanyItem).toBeDefined();
-      expect(Object.prototype.toString.call(scope.isCompanyItem)).toBe('[object Function]');
-    });
     it('should have a removeRetailItem function attached to the scope', function(){
       expect(scope.removeRetailItem).toBeDefined();
       expect(Object.prototype.toString.call(scope.removeRetailItem)).toBe('[object Function]');
@@ -77,17 +73,17 @@ describe('Controller: ItemImportCtrl', function () {
       expect(scope.submitForm).toBeDefined();
       expect(Object.prototype.toString.call(scope.submitForm)).toBe('[object Function]');
     });
-    it('should have a canRemove function attached to the scope', function(){
-      expect(scope.canRemove).toBeDefined();
-      expect(Object.prototype.toString.call(scope.canRemove)).toBe('[object Function]');
+    it('should have a dropSuccessImportedRetailItemList function attached to the scope', function(){
+      expect(scope.dropSuccessImportedRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.dropSuccessImportedRetailItemList)).toBe('[object Function]');
     });
-    it('should have a dropSuccessHandler function attached to the scope', function(){
-      expect(scope.dropSuccessHandler).toBeDefined();
-      expect(Object.prototype.toString.call(scope.dropSuccessHandler)).toBe('[object Function]');
+    it('should have a onDropCompanyRetailItemList function attached to the scope', function(){
+      expect(scope.onDropCompanyRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.onDropCompanyRetailItemList)).toBe('[object Function]');
     });
-    it('should have a onDrop function attached to the scope', function(){
-      expect(scope.onDrop).toBeDefined();
-      expect(Object.prototype.toString.call(scope.onDrop)).toBe('[object Function]');
+    it('should have a dropSuccessCompanyRetailItemList function attached to the scope', function(){
+      expect(scope.dropSuccessCompanyRetailItemList).toBeDefined();
+      expect(Object.prototype.toString.call(scope.dropSuccessCompanyRetailItemList)).toBe('[object Function]');
     });
   });
 
@@ -162,15 +158,6 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  describe('isCompanyItem scope function', function(){
-    it('should return false when invalid companyId is passed', function(){
-      expect(scope.isCompanyItem({companyId:2})).toBe(false);
-    });
-    it('should return true when same companyId is passed', function(){
-      expect(scope.isCompanyItem({companyId:currentCompanyId})).toBe(true);
-    });
-  });
-
   describe('removeRetailItem scope function', function(){
     var retailItem2 = {companyId:432,itemCode:'456',itemName:'456',onBoardName:'456',stockOwnerCode:'4567'};
     beforeEach(function(){
@@ -202,18 +189,19 @@ describe('Controller: ItemImportCtrl', function () {
       scope.removeAll();
     });
     it('should reset companyRetailItemList to 1 item', function(){
-      expect(scope.companyRetailItemList.length).toEqual(1);
+      expect(scope.companyRetailItemList.length).toEqual(0);
     });
-    it('should reset importedRetailItemList to 2 items', function(){
+    it('should reset importedRetailItemList to 2 items', function() {
       expect(scope.importedRetailItemList.length).toEqual(2);
     });
   });
-  /**/
 
   describe('submitForm scope function', function(){
     var payload;
     beforeEach(function(){
-      scope.onDrop({},{companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:'1234'},[]);
+      var event = {currentTarget:{id:'company-retail-item-list-drop-init'}};
+      var data = {companyId:5,id:4,itemCode:'a123456',itemName:'a123456',onBoardName:'a123456',itemMasterId:1234};
+      scope.onDropCompanyRetailItemList(event,data);
       payload = {ImportItems:{importItems: [1234]}};
       scope.$digest();
       scope.submitForm();
@@ -223,18 +211,19 @@ describe('Controller: ItemImportCtrl', function () {
     });
   });
 
-  describe('canRemove scope function', function(){
-    it('should return false if stockOwnerCode is null and companyID is equal to existing company\'s ID', function(){
-      expect(scope.canRemove({stockOwnerCode:null,companyId:currentCompanyId})).toBe(false);
+  describe('onDropCompanyRetailItemList scope function / drag event handler', function(){
+    beforeEach(function(){
+      scope.companyRetailItemList = [
+        {companyId:currentCompanyId,id:1,itemCode:'123',itemName:'123',onBoardName:'123',stockOwnerCode:'123'},
+        {companyId:currentCompanyId,id:2,itemCode:'1234',itemName:'1234',onBoardName:'1234',stockOwnerCode:null},
+        {companyId:432,id:3,itemCode:'12345',itemName:'12345',onBoardName:null,stockOwnerCode:null}];
+      var newItem = {companyId:432,id:4,itemCode:'7653',itemName:'7653',onBoardName:null,stockOwnerCode:null};
+      scope.$digest();
+      var event = {currentTarget:{id:'company-retail-item-list-drop-init'}};
+      scope.onDropCompanyRetailItemList(event,newItem);
     });
-    it('should return true if stockOwnerCode is null and companyID is NOT equal to existing company\'s ID', function(){
-      expect(scope.canRemove({stockOwnerCode:null,companyId:42342})).toBe(true);
-    });
-    it('should return true if stockOwnerCode is not null and companyID is NOT equal to existing company\'s ID', function(){
-      expect(scope.canRemove({stockOwnerCode:'test123',companyId:42342})).toBe(true);
-    });
-    it('should return true if stockOwnerCode is not null and companyID is equal to existing company\'s ID', function(){
-      expect(scope.canRemove({stockOwnerCode:'test123',companyId:currentCompanyId})).toBe(true);
+    it('should add the new item to companyRetailItemList, which should end up with a length of 4', function(){
+      expect(scope.companyRetailItemList.length).toBe(4);
     });
   });
 
