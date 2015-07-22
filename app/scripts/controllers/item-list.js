@@ -8,7 +8,7 @@
  * Contoller for the Retail Items List View
  */
 angular.module('ts5App')
-  .controller('ItemListCtrl', function($scope, $http, itemsFactory,
+  .controller('ItemListCtrl', function ($scope, $http, itemsFactory,
     companiesFactory, dateUtility, $filter) {
 
     var $this = this;
@@ -34,7 +34,7 @@ angular.module('ts5App')
       $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
     };
 
-    this.setPaginatedItems = function(filteredItems) {
+    this.setPaginatedItems = function (filteredItems) {
       this.parsePaginationToInt();
       var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
       var end = begin + $scope.itemsPerPageInt;
@@ -64,7 +64,7 @@ angular.module('ts5App')
     this.getItemsList = function() {
       var query = this.generateItemQuery();
       var $this = this;
-      itemsFactory.getItemsList(query).then(function(response) {
+      itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
         $scope.itemsListCount = $scope.itemsList.length;
         $this.updateItemList();
@@ -73,18 +73,18 @@ angular.module('ts5App')
     };
 
     this.getItemTypesList = function() {
-      itemsFactory.getItemTypesList().then(function(itemTypes) {
+      itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });
     };
 
     this.getSalesCategoriesList = function() {
-      companiesFactory.getSalesCategoriesList(function(data) {
+      companiesFactory.getSalesCategoriesList(function (data) {
         $scope.salesCategories = data.salesCategories;
       });
     };
 
-    this.findItemIndex = function(itemId) {
+    this.findItemIndex = function (itemId) {
       var itemIndex = 0;
       for (var key in $scope.itemsList) {
         var item = $scope.itemsList[key];
@@ -96,21 +96,21 @@ angular.module('ts5App')
       return itemIndex;
     };
 
-    $scope.removeRecord = function(itemId) {
+    $scope.removeRecord = function (itemId) {
       var itemIndex = $this.findItemIndex(itemId);
-      this.displayLoadingModal('Removing Item');
+      $this.displayLoadingModal('Removing Retail Item');
       itemsFactory.removeItem(itemId).then(function() {
-        this.hideLoadingModal();
+        $this.hideLoadingModal();
         $scope.itemsList.splice(itemIndex, 1);
         $this.updateItemList();
       });
     };
 
-    this.parseDate = function(date) {
+    this.parseDate = function (date) {
       return Date.parse(date);
     };
 
-    $scope.isItemActive = function(date) {
+    $scope.isItemActive = function (date) {
       var parsedDate = $this.parseDate(date);
       var today = dateUtility.now();
       return parsedDate <= today;
@@ -127,7 +127,7 @@ angular.module('ts5App')
       $this.getItemsList();
     };
 
-    this.displayLoadingModal = function(loadingText) {
+    this.displayLoadingModal = function (loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
     };
 
