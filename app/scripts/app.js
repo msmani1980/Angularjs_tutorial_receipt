@@ -107,11 +107,7 @@ angular
         templateUrl: 'views/menu-list.html',
         controller: 'MenuListCtrl'
       })
-      .when('/menu-create', {
-        templateUrl: 'views/menu-create.html',
-        controller: 'MenuCreateCtrl'
-      })
-      .when('/menu/:state/:id', {
+      .when('/menu/:state/:id?', {
         templateUrl: 'views/menu-edit.html',
         controller: 'MenuEditCtrl'
       })
