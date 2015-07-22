@@ -118,7 +118,6 @@ angular.module('ts5App')
         angular.element('#overwrite-modal').modal('show');
         $scope.overwritePostTripId = response.postTrips[0].id;
       } else {
-        $this.showLoadingModal('Saving Post Trip Data');
         postTripFactory.createPostTrip(companyId, $scope.postTrip).then(
           $this.saveFormSuccess,
           $this.saveFormFailure
