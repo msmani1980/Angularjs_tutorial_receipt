@@ -151,7 +151,8 @@ angular.module('ts5App')
         var characteristic = itemData.characteristics[characteristicKey];
         var index = $this.findCharacteristicIndex(characteristic.characteristicId);
         itemData.characteristics[characteristicKey] = {
-          id: characteristic.characteristicId,
+          id: characteristic.id,
+          characteristicId: characteristic.characteristicId,
           name: $scope.characteristics[index].name
         };
       }
@@ -161,9 +162,16 @@ angular.module('ts5App')
       var characteristicsPayload = [];
       for (var characteristicKey in itemData.characteristics) {
         var characteristic = itemData.characteristics[characteristicKey];
-        characteristicsPayload[characteristicKey] = {
-          characteristicId: characteristic.id
+        var newCharacteristic = {
+          id: null,
+          characteristicId: characteristic.id,
+          itemId: itemData.id
         };
+        if (characteristic.characteristicId) {
+          newCharacteristic.id = characteristic.id;
+          newCharacteristic.characteristicId = characteristic.characteristicId;
+        }
+        characteristicsPayload[characteristicKey] = newCharacteristic;
       }
       return characteristicsPayload;
     };
@@ -185,20 +193,23 @@ angular.module('ts5App')
         var allergen = itemData.allergens[allergenKey];
         var index = $this.findAllergenIndex(allergen.allergenId);
         itemData.allergens[allergenKey] = {
-          id: allergen.allergenId,
+          id: allergen.id,
+          allergenId: allergen.allergenId,
           name: $scope.allergens[index].name
         };
       }
     };
-
     this.formatAllergens = function(itemData) {
+      var allergenPayload = [];
       for (var allergenKey in itemData.allergens) {
         var allergen = itemData.allergens[allergenKey];
-        itemData.allergens[allergenKey] = {
+        allergenPayload[allergenKey] = {
+          id: allergen.id,
           allergenId: allergen.allergenId,
           itemId: itemData.id
         };
       }
+      return allergenPayload;
     };
 
     this.findSubstitutionIndex = function(substitutionId) {
@@ -225,10 +236,12 @@ angular.module('ts5App')
     };
 
     this.formatSubstitutions = function(itemData) {
+      var substitutionsPayload = [{}];
       for (var substitutionKey in itemData.substitutions) {
         var substitution = itemData.substitutions[substitutionKey];
-        itemData.substitutions[substitutionKey] = substitution.id;
+        substitutionsPayload[substitutionKey] = substitution.id;
       }
+      return substitutionsPayload;
     };
 
     this.findRecommendationIndex = function(recommendationId) {
@@ -256,10 +269,12 @@ angular.module('ts5App')
     };
 
     this.formatRecommendations = function(itemData) {
+      var recommendationPayload = [{}];
       for (var recommendationKey in itemData.recommendations) {
         var recommendation = itemData.recommendations[recommendationKey];
-        itemData.recommendations[recommendationKey] = recommendation.id;
+        recommendationPayload[recommendationKey] = recommendation.id;
       }
+      return recommendationPayload;
     };
 
     this.checkIfItemIsActive = function(itemData) {
@@ -806,9 +821,9 @@ angular.module('ts5App')
 
     this.formatPayload = function(itemData) {
       itemData.tags = $this.formatTags(itemData);
+      itemData.allergens = $this.formatAllergens(itemData);
       itemData.characteristics = $this.formatCharacteristics(itemData);
       itemData.substitutions = $this.formatSubstitutions(itemData);
-      itemData.allergens = $this.formatAllergens(itemData);
       itemData.recommendations = $this.formatRecommendations(itemData);
       this.formatPayloadDates(itemData);
       this.cleanUpPayload(itemData);

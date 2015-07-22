@@ -621,6 +621,24 @@ describe('The Item Create Controller', function() {
             expect($scope.recommendations).toBeDefined();
           });
 
+        describe('formatPayload method', function() {
+
+          beforeEach(function() {
+            spyOn(ItemCreateCtrl, 'formatPayload');
+            ItemCreateCtrl.formatPayload();
+            $scope.$digest();
+          });
+
+          it('should be defined', function() {
+            expect(ItemCreateCtrl.formatPayload).toBeDefined();
+          });
+
+          it('should have be called', function() {
+            expect(ItemCreateCtrl.formatPayload).toHaveBeenCalled();
+          });
+
+        });
+
       });
 
     });
