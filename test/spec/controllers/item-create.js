@@ -735,56 +735,56 @@ describe('The Item Create Controller', function() {
   /*
    * Price Groups
    */
-
   describe('Price Groups |', function() {
 
-    var priceTypesJSON,
-      response,
-      testObject;
-
-    // Inject the service and responshandler
-    beforeEach(inject(function() {
-
-      // Inject the JSON fixtures
-      inject(function(_servedPriceTypes_) {
-        priceTypesJSON = _servedPriceTypes_;
-      });
-
-      spyOn(ItemCreateCtrl, 'getDependencies').and.callFake(
-        function() {
-          return priceTypesJSON;
-        });
-
-      $scope.addStationException(0);
-
-      response = ItemCreateCtrl.getDependencies();
-
-      testObject = response[0];
-
+    beforeEach(inject(function($injector) {
+      createController($injector);
     }));
 
-    it('should have a response ', function() {
-      expect(response).toBeDefined();
-      expect(response.length).toBeGreaterThan(0);
+    it('should have prices array defined in the scope ', function() {
+      expect($scope.formData.prices).toBeDefined();
     });
 
-    it('should have contain a price type object in the response ',
-      function() {
+    it('should have one price group added to the scope when the controller inits', function() {
+      var priceGroup = $scope.formData.prices[0];
+      expect(priceGroup).toBeDefined();
+    });
 
-        expect(testObject).toBeDefined();
-        expect(testObject.id).toBeDefined();
-        expect(testObject.id).toEqual(jasmine.any(Number));
+    describe('addPriceGroup()', function() {
+
+      it('should be a method attached to the scope', function() {
+        expect($scope.addPriceGroup).toBeDefined();
       });
 
-    it('should have a price type object with an id ', function() {
-      expect(testObject.id).toBeDefined();
-      expect(testObject.id).toEqual(jasmine.any(Number));
+      it('should be able to add a price group to the prices array',function() {
+        $scope.addPriceGroup();
+        expect($scope.formData.prices.length).toBe(2);
+      });
+
+      it('should create the correct price group data set',function() {
+        $scope.addPriceGroup();
+        var priceGroup = $scope.formData.prices[1];
+        expect(priceGroup.startDate).toBeDefined();
+        expect(priceGroup.endDate).toBeDefined();
+        expect(priceGroup.priceCurrencies).toBeDefined();
+        expect(priceGroup.priceCurrencies).toEqual([]);
+        expect(priceGroup.stationExceptions).toBeDefined();
+        expect(priceGroup.stationExceptions).toEqual([]);
+      });
+
     });
 
-    it('should have a price type object with an name ', function() {
-      expect(testObject.name).toBeDefined();
-      expect(testObject.name).toEqual(jasmine.any(String));
-      expect(testObject.name.length).toBeGreaterThan(1);
+    describe('removePriceGroup()', function() {
+
+      it('should be a method attached to the scope', function() {
+        expect($scope.removePriceGroup).toBeDefined();
+      });
+
+      it('should remove a price group from the prices array',function() {
+        $scope.removePriceGroup(0);
+        expect($scope.formData.prices.length).toBe(0);
+      });
+
     });
 
   });
