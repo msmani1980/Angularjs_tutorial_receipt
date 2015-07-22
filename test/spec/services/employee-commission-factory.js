@@ -2,10 +2,8 @@
 
 describe('Service: employeeCommissionFactory', function () {
 
-  // load the service's module
   beforeEach(module('ts5App'));
 
-  // instantiate service
   var employeeCommissionFactory,
     itemsService,
     priceTypesService,

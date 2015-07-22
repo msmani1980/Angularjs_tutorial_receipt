@@ -55,9 +55,13 @@ angular.module('ts5App')
       $location.path('/company-relationship-list/' + company.id);
     };
 
-    $scope.showCompany = function (company) {
+    $scope.viewCompany = function (company) {
       //$location.path('/company-view/' + company.id);
-      window.location = 'ember/#/companies/' + company.id;
+      window.location = 'ember/#/companies/' + company.id + '/view';
+    };
+
+    $scope.createCompany = function () {
+      window.location = 'ember/#/companies/create';
     };
 
     $scope.editCompany = function (company) {

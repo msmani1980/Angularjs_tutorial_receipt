@@ -233,8 +233,8 @@ angular.module('ts5App')
         icon: 'icon-manage-menu',
         className: 'dashboard-postTripDataList'
       }, {
-        name: 'Post Trip Data',
-        route: '/#/post-trip-data',
+        name: 'Create Post Trip Data',
+        route: '/#/post-trip-data/create',
         icon: 'icon-create-menu',
         className: 'dashboard-postTripData'
       }]

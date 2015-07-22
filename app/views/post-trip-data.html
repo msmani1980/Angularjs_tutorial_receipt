@@ -19,7 +19,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <!-- form header-->
-        <div class="row" ng-hide="readOnly">
+        <div class="row">
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Schedule Number *</label>
@@ -35,19 +35,10 @@
                 start-date-model="postTrip.scheduleDate"
                 is-search-field="true"
                 label-from="Schedule Date *"
-                required="true">
+                required="true"
+                disable-start-date="readOnly">
               </date-picker>
             </div>
-          </div>
-        </div>
-
-        <!-- readOnly header-->
-        <div class="row" ng-show="readOnly">
-          <div class="col-sm-6">
-            <h4>Schedule {{ postTrip.scheduleNumber }}</h4>
-          </div>
-          <div class="col-sm-6 text-right">
-            <h4>Schedule Date {{ postTrip.scheduleDate }}</h4>
           </div>
         </div>
       </div>
@@ -57,11 +48,14 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="departureStation">Departure Station *</label>
-              <select class="form-control" id="departureStation" ng-model="postTrip.depStationId"
-                      ng-change="updateDepartureTimeZone()" ng-disabled="readOnly" required="true">
-                <option ng-repeat="station in stationList" value="{{ station.stationId }}">
-                  {{ station.stationCode }} ({{ station.stationName}})
-                </option>
+              <select class="form-control"
+                      id="departureStation"
+                      ng-change="updateDepartureTimeZone()"
+                      ng-model="postTrip.depStationId"
+                      ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Select a Departure Station</option>
               </select>
             </div>
           </div>
@@ -95,11 +89,14 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="arrival-station">Arrival Station *</label>
-              <select class="form-control" id="arrival-station" ng-model="postTrip.arrStationId"
-                      ng-change="updateArrivalTimeZone()" ng-disabled="readOnly" required="true">
-                <option ng-repeat="station in stationList" value="{{ station.stationId }}">
-                  {{ station.stationCode }} ({{ station.stationName}})
-                </option>
+              <select class="form-control"
+                      id="arrival-station"
+                      ng-change="updateArrivalTimeZone()"
+                      ng-model="postTrip.arrStationId"
+                      ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Select an Arrival Station</option>
               </select>
             </div>
           </div>
@@ -121,8 +118,11 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Arrival Time Zone *</label>
-              <input type="text" class="form-control" id="arrivalTimeZone" placeholder=""
-                     ng-model="arrivalTimezone" disabled>
+              <input type="text" class="form-control"
+                     id="arrivalTimeZone"
+                     placeholder=""
+                     ng-model="arrivalTimezone"
+                     disabled>
             </div>
           </div>
 
@@ -132,7 +132,9 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Passenger Count *</label>
-              <input required="true"
+              <input custom-validity
+                     custom-pattern="numberUpToFiveChars"
+                     required="true"
                      ng-model="postTrip.passengerCount"
                      type="text"
                      class="form-control passenger-count"
@@ -143,11 +145,14 @@
 
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
-              <label for="tailNumber">Tail Number</label>
-              <select class="form-control" id="tailNumber" ng-model="postTrip.tailNumber" ng-disabled="readOnly" required="true">
-                <option ng-repeat="number in carrierNumbers" value="{{ number.carrierNumber }}">
-                  {{ number.carrierNumber }}
-                </option>
+              <label for="tailNumber">Tail Number *</label>
+              <select class="form-control"
+                      id="tailNumber"
+                      ng-model="postTrip.tailNumber"
+                      ng-options="number.carrierNumber as number.carrierNumber for number in carrierNumbers"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Select a Tail Number</option>
               </select>
             </div>
           </div>

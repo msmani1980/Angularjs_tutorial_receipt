@@ -85,7 +85,7 @@
             <select
               class="form-control"
               id="itemName"
-              ng-options="item.itemName for item in search.itemsList | orderBy:'itemName' track by item.id"
+              ng-options="item.itemName for item in search.itemList | orderBy:'itemName' track by item.id"
               ng-model="search.selectedItem">
               <option selected="selected" disabled value>Select Item</option>
             </select>
@@ -97,7 +97,7 @@
             <label class="control-label" for="saleType">Sale Type</label>
             <select class="form-control"
                     id="saleType"
-                    ng-options="priceType.name for priceType in search.priceTypesList | orderBy:'name' track by priceType.id"
+                    ng-options="priceType.name for priceType in search.priceTypeList | orderBy:'name' track by priceType.id"
                     ng-model="search.selectedPriceType">
               <option selected="selected" disabled value>Select Price Type</option>
             </select>
@@ -125,6 +125,7 @@
     </div>
   </form>
 </div>
+{{search.selectedItem.itemName}}
 <table class="table table-bordered table-hover">
   <thead>
   <tr>
@@ -138,20 +139,22 @@
   </thead>
   <tbody>
   <tr
-    ng-repeat="commission in commissionList | filter:{commissionCode: search.commissionCode, commissionName: search.commissionName}">
+    ng-repeat="commission in commissionList | filter:{priceTypeName: search.selectedPriceType.name, taxRateTypeName:search.selectedRateType.taxRateType, itemName:search.selectedItem.itemName, startDate: search.startDate, endDate: search.endDate} | orderBy:'item[0].itemName'">
     <td>{{ commission.startDate }}</td>
     <td>{{ commission.endDate }}</td>
-    <td>{{ commission.itemMasterId }}</td>
-    <td>{{ commission.saleType }}</td>
-    <td>{{ commission.rateType }}</td>
+    <td>{{ commission.itemName }}</td>
+    <td>{{ commission.priceTypeName }}</td>
+    <td>{{ commission.taxRateTypeName }}</td>
     <td>
       <button class="btn btn-info btn-xs" ng-click="showCommission(commission)">
         <i class="fa fa-file"></i>
       </button>
-      <button class="btn btn-primary btn-xs" ng-click="editCommission(commission)" ng-show="isCommissionEditable(commission)">
+      <button class="btn btn-primary btn-xs" ng-click="editCommission(commission)"
+              ng-show="isCommissionEditable(commission)">
         <i class="fa fa-pencil"></i>
       </button>
-      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)" ng-hide="isCommissionReadOnly(commission)">
+      <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation(commission)"
+              ng-hide="isCommissionReadOnly(commission)">
         <i class="fa fa-trash"></i>
       </button>
     </td>

@@ -8,13 +8,13 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location) {
+  .controller('EmployeeCommissionListCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location, $filter) {
     $scope.viewName = 'Employee Commission';
     $scope.search = {
       startDate: '',
       endDate: '',
-      itemsList: [],
-      priceTypesList: [],
+      itemList: [],
+      priceTypeList: [],
       taxRateTypesList: []
     };
 
@@ -31,10 +31,47 @@ angular.module('ts5App')
 
       if (payload.startDate && payload.endDate) {
         employeeCommissionFactory.getItemsList(payload).then(function (dataFromAPI) {
-          $scope.search.itemsList = dataFromAPI.retailItems;
+          $scope.search.itemList = dataFromAPI.retailItems;
         });
       }
     });
+
+    function showLoadingModal(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
+    }
+
+    function getSelectedObjectFromArrayUsingId(fromArray, id) {
+      var filteredObject = $filter('filter')(fromArray, {id: id}, function (expected, actual) {
+        return angular.equals(parseInt(expected), parseInt(actual));
+      });
+
+      if (filteredObject && filteredObject.length > 0) {
+        return filteredObject[0];
+      }
+      return {};
+    }
+
+    function getSelectedPriceTypeObject (commissionObject) {
+      if (!commissionObject.types || commissionObject.types.length === 0) {
+        return {};
+      }
+      var priceId = commissionObject.types[0].priceTypeId;
+      return getSelectedObjectFromArrayUsingId($scope.search.priceTypeList, priceId);
+    }
+
+    function getSelectedRateTypeObject (commissionObject) {
+      if (!commissionObject.fixeds) {
+        return {};
+      }
+
+      var rateTypeId = commissionObject.fixeds.length > 0 ? 1 : 2;
+      return getSelectedObjectFromArrayUsingId($scope.search.taxRateTypesList, rateTypeId);
+    }
 
     $scope.showCommission = function (commission) {
       $location.path('employee-commission/view/' + commission.id);
@@ -44,14 +81,14 @@ angular.module('ts5App')
       $location.path('employee-commission/edit/' + commission.id);
     };
 
-    $scope.isCommissionReadOnly = function(commission) {
+    $scope.isCommissionReadOnly = function (commission) {
       if (angular.isUndefined(commission)) {
         return false;
       }
       return !dateUtility.isAfterToday(commission.startDate);
     };
 
-    $scope.isCommissionEditable = function(commission) {
+    $scope.isCommissionEditable = function (commission) {
       if (angular.isUndefined(commission)) {
         return false;
       }
@@ -71,12 +108,13 @@ angular.module('ts5App')
         $scope.formErrors = dataFromAPI.data;
       }
       $scope.displayError = true;
-      showToastMessage('warning','Employee Commission', 'error deleting commission!');
+      showToastMessage('warning', 'Employee Commission', 'error deleting commission!');
 
     }
 
     function successDeleteHandler() {
-      showToastMessage('success','Employee Commission', 'successfully deleted commission!');
+      showToastMessage('success', 'Employee Commission', 'successfully deleted commission!');
+      $scope.searchCommissions();
     }
 
     $scope.deleteCommission = function () {
@@ -102,39 +140,48 @@ angular.module('ts5App')
       return commissionListData;
     }
 
-    function setRateAndSaleTypes(commissionListData) {
-      //commissionListData.forEach(function (commissionObject) {
-        //TODO: wait on API fix to transform data here
-      //});
-      return commissionListData;
+    function setupTableData(dataToExtract) {
+      dataToExtract.forEach(function (commissionObject) {
+        commissionObject.itemName = commissionObject.item[0].itemName;
+        commissionObject.priceTypeName = getSelectedPriceTypeObject(commissionObject).name;
+        commissionObject.taxRateTypeName = getSelectedRateTypeObject(commissionObject).taxRateType;
+      });
+      return dataToExtract;
     }
 
     function prepareDataForTable(dataFromAPI) {
-      var transformedData = formatDatesForApp(angular.copy(dataFromAPI));
-      return setRateAndSaleTypes(transformedData);
+      var formattedData = formatDatesForApp(angular.copy(dataFromAPI));
+      return setupTableData(formattedData);
+    }
+
+    function getCommissionSuccessHandler(dataFromAPI) {
+      $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
+      hideLoadingModal();
     }
 
     $scope.searchCommissions = function () {
-      showToastMessage('warning', 'Employee Commission', 'API not ready');
+      showLoadingModal('Loading Employee Commission List');
+      // TODO filtering on FE for now, since BE search is not ready!
+      employeeCommissionFactory.getCommissionList().then(getCommissionSuccessHandler);
     };
 
     $scope.clearForm = function () {
       delete $scope.search.selectedPriceType;
       delete $scope.search.selectedRateType;
+      delete $scope.search.selectedItem;
+      delete $scope.search.itemList;
       $scope.search.startDate = '';
       $scope.search.endDate = '';
     };
 
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
-      $scope.search.priceTypesList = dataFromAPI;
+      $scope.search.priceTypeList = dataFromAPI;
     });
 
     employeeCommissionFactory.getTaxRateTypes().then(function (dataFromAPI) {
       $scope.search.taxRateTypesList = dataFromAPI;
     });
 
-    employeeCommissionFactory.getCommissionList().then(function (dataFromAPI) {
-      $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
-    });
+    $scope.searchCommissions();
 
   });
