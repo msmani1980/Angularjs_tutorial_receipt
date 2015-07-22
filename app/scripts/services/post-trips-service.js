@@ -98,11 +98,11 @@ angular.module('ts5App')
       var payload = {};
       if (arguments.length === 2) {
         payload = optionalPayload;
-        if (payload.scheduleFromDate && payload.scheduleFromDate !== null) {
-          payload.scheduleFromDate = dateUtility.formatDateForAPI(payload.scheduleFromDate);
+        if (payload.scheduleStartDate) {
+          payload.scheduleStartDate = dateUtility.formatDateForAPI(payload.scheduleStartDate);
         }
-        if (payload.scheduleToDate && payload.scheduleToDate !== null) {
-          payload.scheduleToDate = dateUtility.formatDateForAPI(payload.scheduleToDate);
+        if (payload.scheduleEndDate) {
+          payload.scheduleEndDate = dateUtility.formatDateForAPI(payload.scheduleEndDate);
         }
         // TODO: encode colon in time query parameter -- or wait for backend to fix
       }
@@ -118,6 +118,7 @@ angular.module('ts5App')
 
     function updatePostTrip(companyId, payload) {
       requestParameters.id = companyId;
+      requestParameters.tripid = payload.id;
       return requestResource.updatePostTrip(payload).$promise;
     }
 
