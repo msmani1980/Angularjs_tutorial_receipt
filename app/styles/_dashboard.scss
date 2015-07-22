@@ -13,7 +13,7 @@
 @media (min-width: $screen-lg-min) {
   .menu-container {
     &:nth-child(odd) {
-      clear: initial;
+      clear: inherit;
     }
     &:nth-child(3n+4) {
       clear: left;
