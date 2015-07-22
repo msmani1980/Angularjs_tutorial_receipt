@@ -118,6 +118,7 @@ angular.module('ts5App')
 
     function updatePostTrip(companyId, payload) {
       requestParameters.id = companyId;
+      requestParameters.tripid = payload.id;
       return requestResource.updatePostTrip(payload).$promise;
     }
 
