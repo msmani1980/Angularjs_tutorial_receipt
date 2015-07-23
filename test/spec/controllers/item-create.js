@@ -724,6 +724,36 @@ describe('The Item Create Controller', function() {
           expect($scope.displayError).toBeTruthy();
         });
 
+      describe('Create Item method', function() {
+        var itemsFactory;
+        beforeEach(inject(function($injector) {
+          itemsFactory = $injector.get('itemsFactory');
+          spyOn(ItemCreateCtrl, 'createItem').and.callThrough();
+          spyOn(itemsFactory, 'createItem').and.returnValue({
+            then: function(callback) {
+              return callback();
+            }
+          });
+        }));
+
+        it('should be defined', function() {
+          expect(ItemCreateCtrl.createItem).toBeDefined();
+        });
+
+        it('should be called after form submission', function() {
+          $scope.form.itemTypeId.$setViewValue(2);
+          $scope.form.categoryId.$setViewValue(109);
+          mockFormSubmission(formData);
+          expect(ItemCreateCtrl.createItem).toHaveBeenCalled();
+        });
+
+        it('should return true if item was created',
+          function() {
+            expect(itemsFactory.createItem).toBeTruthy();
+          });
+
+      });
+
     });
 
   });
@@ -925,72 +955,73 @@ describe('The Item Create Controller', function() {
       expect(ItemCreateCtrl.getGlobalStationList).toBeDefined();
     });
 
-    describe('The ItemCreateCtrl.getGlobalStationList method', function() {
+    describe('The ItemCreateCtrl.getGlobalStationList method',
+      function() {
 
-      var response,
-        testObject;
+        var response,
+          testObject;
 
-      beforeEach(inject(function() {
+        beforeEach(inject(function() {
 
-        inject(function(_servedStationsDateFiltered_) {
-          stationsJSON = _servedStationsDateFiltered_;
-        });
-
-        // spy on the query of the items service
-        spyOn(ItemCreateCtrl, 'getGlobalStationList').and.callFake(
-          function() {
-            return stationsJSON;
+          inject(function(_servedStationsDateFiltered_) {
+            stationsJSON = _servedStationsDateFiltered_;
           });
 
-        // make the mock query call
-        response = ItemCreateCtrl.getGlobalStationList();
+          // spy on the query of the items service
+          spyOn(ItemCreateCtrl, 'getGlobalStationList').and.callFake(
+            function() {
+              return stationsJSON;
+            });
 
-        // grab first item in list
-        testObject = response.response[0];
+          // make the mock query call
+          response = ItemCreateCtrl.getGlobalStationList();
 
-      }));
+          // grab first item in list
+          testObject = response.response[0];
 
-      it('should have been called', function() {
-        expect(ItemCreateCtrl.getGlobalStationList).toHaveBeenCalled();
+        }));
+
+        it('should have been called', function() {
+          expect(ItemCreateCtrl.getGlobalStationList).toHaveBeenCalled();
+        });
+
+        it('should return a response from the API', function() {
+          expect(response).toBeDefined();
+        });
+
+        it(
+          'should return a response from the API containg a response array',
+          function() {
+            expect(response.response).toBeDefined();
+          });
+
+        it(
+          'should return an array of stations containing at least station',
+          function() {
+            expect(response.response.length).toBeGreaterThan(0);
+          });
+
+        it('should contain a station object with a station code',
+          function() {
+            expect(testObject.code).toBeDefined();
+            expect(testObject.code).toEqual(jasmine.any(String));
+            expect(testObject.code.length).toEqual(3);
+          });
+
+        it('should contain a station object with a station id',
+          function() {
+            expect(testObject.id).toBeDefined();
+            expect(testObject.id).toEqual(jasmine.any(Number));
+          });
+
+        it('should contain a station object with a company id',
+          function() {
+            expect(testObject.companyId).toBeDefined();
+            expect(testObject.companyId).toEqual(jasmine.any(
+              Number));
+          });
+
       });
-
-      it('should return a response from the API', function() {
-        expect(response).toBeDefined();
-      });
-
-      it(
-        'should return a response from the API containg a response array',
-        function() {
-          expect(response.response).toBeDefined();
-        });
-
-      it(
-        'should return an array of stations containing at least station',
-        function() {
-          expect(response.response.length).toBeGreaterThan(0);
-        });
-
-      it('should contain a station object with a station code',
-        function() {
-          expect(testObject.code).toBeDefined();
-          expect(testObject.code).toEqual(jasmine.any(String));
-          expect(testObject.code.length).toEqual(3);
-        });
-
-      it('should contain a station object with a station id',
-        function() {
-          expect(testObject.id).toBeDefined();
-          expect(testObject.id).toEqual(jasmine.any(Number));
-        });
-
-      it('should contain a station object with a company id',
-        function() {
-          expect(testObject.companyId).toBeDefined();
-          expect(testObject.companyId).toEqual(jasmine.any(
-            Number));
-        });
-
-    });
 
     it('should be have a setStationsList method', function() {
       expect(ItemCreateCtrl.setStationsList).toBeDefined();

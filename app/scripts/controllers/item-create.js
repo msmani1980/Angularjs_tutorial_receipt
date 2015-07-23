@@ -803,10 +803,12 @@ angular.module('ts5App')
       itemsFactory.createItem(newItemPayload).then(function() {
         angular.element('#loading').modal('hide');
         angular.element('#create-success').modal('show');
+        return true;
       }, function(error) {
         angular.element('#loading').modal('hide');
         $scope.displayError = true;
         $scope.formErrors = error.data;
+        return false;
       });
     };
 
