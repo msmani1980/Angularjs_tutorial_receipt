@@ -8,15 +8,33 @@
  * # cashBagService
  * Service in the ts5App.
  */
+// jshint maxcomplexity:7
+
 angular.module('ts5App')
   .service('postTripsService', function ($resource, $http, ENV, dateUtility, Upload) {
 
-    function transformRequest(data) {
+    function transformRequest(data, shouldTransformForGETRequest) {
       data = angular.fromJson(data);
-      if (data !== undefined && data.scheduleDate !== null && data.scheduleDate !== undefined) {
+      if (data && data.scheduleDate) {
         data.scheduleDate = dateUtility.formatDateForAPI(data.scheduleDate);
       }
+      if (data && data.scheduleStartDate) {
+        data.scheduleStartDate = dateUtility.formatDateForAPI(data.scheduleStartDate);
+      }
+      if (data && data.scheduleEndDate) {
+        data.scheduleEndDate = dateUtility.formatDateForAPI(data.scheduleEndDate);
+      }
+      if (data && data.scheduleNumber) {
+        data.scheduleNumber = data.scheduleNumber.toString().toUpperCase();
+      }
+      if (shouldTransformForGETRequest) {
+        return data;
+      }
       return angular.toJson(data);
+    }
+
+    function transformRequestForPostAndPut(data) {
+      return transformRequest(data, false);
     }
 
     function transformResponse(data) {
@@ -24,30 +42,28 @@ angular.module('ts5App')
       if (!data) {
         return data;
       }
-      if (data.scheduleDate !== null && data.scheduleDate !== undefined) {
+      if (data.scheduleDate) {
         data.scheduleDate = dateUtility.formatDate(data.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
-      if (data.arrTime && data.arrTime !== null) {
+      if (data.arrTime) {
         data.arrTime = moment(data.arrTime, 'HH:mm:ss').format('HH:mm');
       }
-      if (data.depTime && data.depTime !== null) {
+      if (data.depTime) {
         data.depTime = moment(data.depTime, 'HH:mm:ss').format('HH:mm');
+      }
+      if (data && data.scheduleNumber) {
+        data.scheduleNumber = data.scheduleNumber.toString().toUpperCase();
       }
       return data;
     }
 
     function transformResponseArray(data) {
       data = angular.fromJson(data);
-      if(!data) {
+      if (!data) {
         return;
       }
       angular.forEach(data.postTrips, function (trip) {
-        if (trip.arrTime && trip.arrTime !== null) {
-          trip.arrTime = moment(trip.arrTime, 'HH:mm:ss').format('HH:mm');
-        }
-        if (trip.depTime && trip.depTime !== null) {
-          trip.depTime = moment(trip.depTime, 'HH:mm:ss').format('HH:mm');
-        }
+        trip = transformResponse(trip);
       });
       return data;
     }
@@ -68,7 +84,6 @@ angular.module('ts5App')
         method: 'GET',
         headers: {companyId: 362},
         transformResponse: appendTransform($http.defaults.transformResponse, transformResponseArray)
-
       },
       getPostTrip: {
         method: 'GET',
@@ -78,7 +93,7 @@ angular.module('ts5App')
       updatePostTrip: {
         method: 'PUT',
         headers: {companyId: 362},
-        transformRequest: appendTransform($http.defaults.transformRequest, transformRequest)
+        transformRequest: appendTransform($http.defaults.transformRequest, transformRequestForPostAndPut)
       },
       deletePostTrip: {
         method: 'DELETE',
@@ -87,7 +102,7 @@ angular.module('ts5App')
       createPostTrips: {
         method: 'POST',
         headers: {companyId: 362},
-        transformRequest: appendTransform($http.defaults.transformRequest, transformRequest)
+        transformRequest: appendTransform($http.defaults.transformRequest, transformRequestForPostAndPut)
       }
     };
 
@@ -97,14 +112,8 @@ angular.module('ts5App')
       requestParameters.tripid = '';
       var payload = {};
       if (arguments.length === 2) {
-        payload = optionalPayload;
-        if (payload.scheduleStartDate) {
-          payload.scheduleStartDate = dateUtility.formatDateForAPI(payload.scheduleStartDate);
-        }
-        if (payload.scheduleEndDate) {
-          payload.scheduleEndDate = dateUtility.formatDateForAPI(payload.scheduleEndDate);
-        }
         // TODO: encode colon in time query parameter -- or wait for backend to fix
+        payload = transformRequest(optionalPayload, true);
       }
       requestParameters.id = companyId;
       return requestResource.getPostTrips(payload).$promise;
