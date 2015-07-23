@@ -674,7 +674,7 @@ angular.module('ts5App')
       $scope.formData.prices.splice(key, 1);
     };
 
-    $scope.generatePriceCurrenciesList = function(currenciesList) {
+    this.generatePriceCurrenciesList = function(currenciesList) {
       var priceCurrencies = [];
       for (var key in currenciesList) {
         var currency = currenciesList[key];
@@ -687,11 +687,21 @@ angular.module('ts5App')
       return priceCurrencies;
     };
 
+    this.getPriceCurrenciesList = function(priceIndex,currencyFilters) {
+      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(data) {
+        var priceCurrencies = $this.generatePriceCurrenciesList(data.response);
+        $this.setPriceCurrenciesList(priceIndex,priceCurrencies);
+      });
+    };
+
+    this.setPriceCurrenciesList = function(priceIndex,priceCurrencies) {
+      $scope.formData.prices[priceIndex].priceCurrencies =priceCurrencies;
+    };
+
     this.updatePriceGroup = function(priceIndex) {
-      var startDate = dateUtility.formatDateForAPI($scope.formData.prices[
-        priceIndex].startDate);
-      var endDate = dateUtility.formatDateForAPI($scope.formData.prices[
-        priceIndex].endDate);
+      var priceGroup = $scope.formData.prices[priceIndex];
+      var startDate = dateUtility.formatDateForAPI(priceGroup.startDate);
+      var endDate = dateUtility.formatDateForAPI(priceGroup.endDate);
       if (startDate === 'Invalid date' || endDate === 'Invalid date') {
         return false;
       }
@@ -700,12 +710,7 @@ angular.module('ts5App')
         endDate: endDate,
         isOperatedCurrency: true
       };
-      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(
-        data) {
-        var priceCurrencies = $scope.generatePriceCurrenciesList(data.response);
-        $scope.formData.prices[priceIndex].priceCurrencies =
-          priceCurrencies;
-      });
+      this.getPriceCurrenciesList(priceIndex,currencyFilters);
     };
 
     this.watchPriceGroups = function(newPrices, oldPrices) {
@@ -729,7 +734,7 @@ angular.module('ts5App')
       }
       if (newPriceGroup.startDate !== oldPriceGroup.startDate ||
         newPriceGroup.endDate !== oldPriceGroup.endDate) {
-        this.updatePriceGroup(priceIndex);
+        $this.updatePriceGroup(priceIndex);
       }
     };
 
