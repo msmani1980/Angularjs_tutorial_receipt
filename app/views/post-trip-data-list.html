@@ -117,9 +117,9 @@
               <div class="form-group">
                 <label for="departure-station">Departure Station</label>
                 <ui-select id="departure-station" multiple ng-model="multiSelectedValues.depStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
+                  <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
                   <ui-select-choices repeat="station in stationList | filter: $select.search">
-                    {{ station.stationCode }} ({{ station.stationName }})
+                    {{ station.code }} ({{ station.name }})
                   </ui-select-choices>
                 </ui-select>
               </div>
@@ -129,9 +129,9 @@
               <div class="form-group">
                 <label for="arrival-station">Arrival Station</label>
                 <ui-select id="arrival-station" multiple ng-model="multiSelectedValues.arrStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
+                  <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
                   <ui-select-choices repeat="station in stationList | filter: $select.search">
-                    {{ station.stationCode }} ({{ station.stationName }})
+                    {{ station.code }} ({{ station.name }})
                   </ui-select-choices>
                 </ui-select>
               </div>

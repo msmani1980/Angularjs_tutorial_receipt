@@ -20,12 +20,12 @@ angular.module('ts5App')
 
     this.getStationById = function (stationId) {
       var stationCode = '';
-      if (stationId === undefined || $scope.stationList.length <= 0) {
+      if (!stationId || $scope.stationList.length <= 0) {
         return '';
       }
       angular.forEach($scope.stationList, function (value) {
-        if (value.stationId.toString() === stationId.toString()) {
-          stationCode = value.stationCode.toString();
+        if (value.id.toString() === stationId.toString()) {
+          stationCode = value.code.toString();
         }
       });
       return stationCode;
@@ -79,6 +79,7 @@ angular.module('ts5App')
       } else {
         $this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
       }
+      postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
     };
 
     this.uploadPostTripFailure = function () {
@@ -123,10 +124,10 @@ angular.module('ts5App')
         $scope.search.tailNumber.push(number.carrierNumber);
       });
       angular.forEach($scope.multiSelectedValues.depStations, function (station) {
-        $scope.search.depStationId.push(station.stationId);
+        $scope.search.depStationId.push(station.id);
       });
       angular.forEach($scope.multiSelectedValues.arrStations, function (station) {
-        $scope.search.arrStationId.push(station.stationId);
+        $scope.search.arrStationId.push(station.id);
       });
       angular.forEach($scope.multiSelectedValues.employeeIds, function (employee) {
         $scope.search.employeeId.push(employee.id);
