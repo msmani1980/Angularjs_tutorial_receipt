@@ -66,7 +66,7 @@ angular.module('ts5App')
 
     function submitFormSuccess(){
       init();
-      showMessage('created!', 'success');
+      showMessage('saved!', 'success');
     }
 
     function showApiErrors(response){
@@ -109,7 +109,14 @@ angular.module('ts5App')
       var payload = angular.copy($scope.formData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
-      companyStoresService.createStore(payload).then(submitFormSuccess, showApiErrors);
+      // If store has an ID, is editing
+      if(payload.id){
+        companyStoresService.saveStore(payload).then(submitFormSuccess, showApiErrors);
+      }
+      // Otherwise, creating
+      else {
+        companyStoresService.createStore(payload).then(submitFormSuccess, showApiErrors);
+      }
     };
 
     $scope.formDefault = function(){
