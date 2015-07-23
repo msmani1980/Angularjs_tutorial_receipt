@@ -128,6 +128,16 @@ describe('Controller: PostTripDataCtrl', function () {
         expect(scope.arrivalTimezone).toBeDefined();
         expect(scope.arrivalTimezone).toEqual('Europe/Madrid [UTC +1]');
       });
+      it('should return empty string if stationId is not valid', function(){
+        scope.postTrip = {
+          arrStationId: 3,
+          depStationId: 4
+        };
+        scope.updateDepartureTimeZone();
+        expect(scope.departureTimezone).toEqual('');
+        scope.updateArrivalTimeZone();
+        expect(scope.arrivalTimezone).toEqual('');
+      });
     });
     describe('form save helper function', function () {
       it('should format employeeIdentifiers into array of employee objects', function () {

@@ -176,7 +176,10 @@ angular.module('ts5App')
       var matchingStation = $scope.stationList.filter(function (station) {
         return station.stationId.toString() === stationId.toString();
       })[0];
-      return matchingStation.timezone + ' [UTC ' + matchingStation.utcOffset + ']';
+      if(matchingStation) {
+        return matchingStation.timezone + ' [UTC ' + matchingStation.utcOffset + ']';
+      }
+      return '';
     };
 
     $scope.updateArrivalTimeZone = function () {
