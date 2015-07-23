@@ -197,5 +197,6 @@ angular.module('ts5App')
     };
 
     menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
+
   })
 ;
