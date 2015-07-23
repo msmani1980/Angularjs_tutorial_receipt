@@ -1,5 +1,5 @@
 'use strict';
-// jshint maxcomplexity:15
+// jshint maxcomplexity:6
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
