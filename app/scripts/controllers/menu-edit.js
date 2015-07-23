@@ -32,7 +32,10 @@ angular.module('ts5App')
       });
     }
 
-    function fetchMasterItemsList(startDate, endDate) {
+    function fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, dateForAPIFormat) {
+      var startDate = formatDate(menuFromAPI.startDate, dateFromAPIFormat, dateForAPIFormat);
+      var endDate = formatDate(menuFromAPI.endDate, dateFromAPIFormat, dateForAPIFormat);
+
       menuFactory.getItemsList({
         startDate: startDate,
         endDate: endDate
@@ -53,14 +56,10 @@ angular.module('ts5App')
     }
 
     function setupMenuModelAndFetchItems(menuFromAPI) {
+      var dateFromAPIFormat = 'YYYY-MM-DD';
       $scope.menuFromAPI = angular.copy(menuFromAPI);
 
-      var dateFromAPIFormat = 'YYYY-MM-DD';
-      var dateForAPIFormat = 'YYYYMMDD';
-      var startDateFromAPI = formatDate(menuFromAPI.startDate, dateFromAPIFormat, dateForAPIFormat);
-      var endDateFromAPI = formatDate(menuFromAPI.endDate, dateFromAPIFormat, dateForAPIFormat);
-
-      fetchMasterItemsList(startDateFromAPI, endDateFromAPI);
+      fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, 'YYYYMMDD');
       attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat);
     }
 
@@ -189,30 +188,23 @@ angular.module('ts5App')
     };
 
     $scope.isMenuReadOnly = function () {
-      if($routeParams.state == 'create') {
+      if (angular.isUndefined($scope.menu)) {
         return false;
       }
-      else if ($routeParams.state === 'view') {
+      if ($routeParams.state === 'view') {
         return true;
       }
-      else if (angular.isUndefined($scope.menu)) {
-        return false;
-      } else {
-        return !dateUtility.isAfterToday($scope.menu.startDate);
-      }
+      return !dateUtility.isAfterToday($scope.menu.startDate);
     };
 
     $scope.isMenuEditable = function () {
-      if ($routeParams.state === 'create') {
-        return true;
-      }
       if (angular.isUndefined($scope.menu)) {
         return false;
       }
       return dateUtility.isAfterToday($scope.menu.startDate);
     };
 
-    $scope.canDeleteItems = function () {
+    $scope.canDeleteItems = function() {
       var totalItems = $scope.menu.menuItems.length;
       return $scope.isMenuEditable() && totalItems > 1;
     };
@@ -229,25 +221,7 @@ angular.module('ts5App')
       $scope.newItemList.splice(itemIndex, 1);
     };
 
-    $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
-      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
-        fetchMasterItemsList($scope.menu.startDate, $scope.menu.endDate);
-      }
-    });
-
-    function initializeMenu() {
-      if ($routeParams.id) {
-        menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
-      } else {
-        var companyId = menuFactory.getCompanyId();
-        $scope.menu = {
-          startDate: '',
-          endDate: '',
-          companyId: companyId
-        };
-      }
-    }
-    initializeMenu();
+    menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
 
   })
 ;
