@@ -52,20 +52,26 @@ describe('Controller: MenuEditCtrl', function () {
   });
 
   describe('menu object in scope', function () {
-    it('should get the menu list from API', function () {
-      expect(menuFactory.getMenu).toHaveBeenCalled();
+    describe('menu object for view or edit page', function () {
+      it('should get the menu list from API if viewing or editing', function () {
+        expect(menuFactory.getMenu).toHaveBeenCalled();
+      });
+
+      it('should attach a menu object after a API call to getMenu', function () {
+        expect(!!scope.menu).toBe(true);
+      });
+
+      it('should have an array of items', function () {
+        expect(scope.menu.menuItems.length).toBeGreaterThan(0);
+      });
+
+      it('should have date formatted to local', function () {
+        expect(scope.menu.endDate).toBe('05/31/2015');
+      });
     });
 
-    it('should attach a menu object after a API call to getMenu', function () {
-      expect(!!scope.menu).toBe(true);
-    });
 
-    it('should have an array of items', function () {
-      expect(scope.menu.menuItems.length).toBeGreaterThan(0);
-    });
-
-    it('should have date formatted to local', function () {
-      expect(scope.menu.endDate).toBe('05/31/2015');
+    describe('menu object for create page', function () {
     });
 
     describe('getItemsList API', function () {
@@ -94,7 +100,7 @@ describe('Controller: MenuEditCtrl', function () {
     it('should have a function to determine if page is viewOnly', function () {
       expect(scope.isViewOnly).toBeDefined();
     });
-    
+
     it('should have a isMenuReadOnly function', function () {
       expect(!!scope.isMenuReadOnly).toBe(true);
     });
