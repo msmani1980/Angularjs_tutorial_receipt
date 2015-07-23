@@ -18,13 +18,13 @@ angular.module('ts5App')
 
     // private controller functions
     function canBeAddedToCompanyRetailList(retailItem){
-      if($filter('filter')(_companyRetailItems, {itemCode: retailItem.itemCode}).length){
+      if($filter('filter')(_companyRetailItems, {itemCode: retailItem.itemCode}, true).length){
         return false;
       }
-      if($filter('filter')(_companyRetailItems, {itemName: retailItem.itemName}).length){
+      if($filter('filter')(_companyRetailItems, {itemName: retailItem.itemName}, true).length){
         return false;
       }
-      if(retailItem.onBoardName !== null && $filter('filter')(_companyRetailItems, {onBoardName: retailItem.onBoardName}).length){
+      if(retailItem.onBoardName !== null && $filter('filter')(_companyRetailItems, {onBoardName: retailItem.onBoardName}, true).length){
         return false;
       }
       return true;

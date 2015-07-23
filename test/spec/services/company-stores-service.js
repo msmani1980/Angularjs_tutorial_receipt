@@ -70,6 +70,19 @@ describe('Service: companyStoresService', function () {
       });
     });
 
+    describe('saveStore', function(){
+      it('should be accessible as a function', function(){
+        expect(companyStoresService.saveStore).toBeDefined();
+        expect(Object.prototype.toString.call(companyStoresService.saveStore)).toBe('[object Function]');
+      });
+      it('should make a PUT request', function(){
+        $httpBackend.expectPUT(/stores/g).respond(201, '');
+        var mockPayload = {id:1};
+        companyStoresService.saveStore(mockPayload);
+        $httpBackend.flush();
+      });
+    });
+
   });
 
 });
