@@ -152,8 +152,8 @@ describe('Controller: PostFlightDataListCtrl', function () {
       scope.search = {};
       scope.multiSelectedValues = {
         tailNumbers: [{carrierNumber: 'ABC'}, {carrierNumber: 'DEF'}],
-        depStations: [{stationId: 1}, {stationId: 2}],
-        arrStations: [{stationId: 1}, {stationId: 2}],
+        depStations: [{id: 1}, {id: 2}],
+        arrStations: [{id: 1}, {id: 2}],
         employeeIds: [{id: 3}, {id: 4}]
       };
       var expectedTailNumbersArray = ['ABC', 'DEF'];
