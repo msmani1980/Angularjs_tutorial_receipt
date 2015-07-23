@@ -1,5 +1,5 @@
 'use strict';
-// jshint maxcomplexity:14
+// jshint maxcomplexity:15
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -493,7 +493,8 @@ angular.module('ts5App')
     };
 
     $scope.filterCharacteristics = function() {
-      if ($scope.itemTypes[$scope.formData.itemTypeId - 1].name ===
+      if ($scope.formData.itemTypeId && $scope.itemTypes[$scope.formData.itemTypeId -
+          1].name ===
         'Virtual') {
         $scope.filteredCharacteristics = [];
         angular.forEach($scope.characteristics, function(value) {
@@ -779,25 +780,31 @@ angular.module('ts5App')
       itemsFactory.createItem(newItemPayload).then(function() {
         angular.element('#loading').modal('hide');
         angular.element('#create-success').modal('show');
+        return true;
       }, function(error) {
         angular.element('#loading').modal('hide');
         $scope.displayError = true;
         $scope.formErrors = error.data;
+        return false;
       });
     };
 
     $scope.submitForm = function(formData) {
+      $scope.form.$setSubmitted(true);
+      if (formData && $this.validateForm()) {
+        var itemData = angular.copy(formData);
+        var payload = $this.formatPayload(itemData);
+        var action = $scope.editingItem ? 'updateItem' : 'createItem';
+        $this[action](payload);
+      }
+    };
+
+    this.validateForm = function() {
+      $scope.displayError = false;
       if (!$scope.form.$valid) {
         $scope.displayError = true;
-        return false;
       }
-      var itemData = angular.copy(formData);
-      var payload = $this.formatPayload(itemData);
-      if ($scope.editingItem) {
-        $this.updateItem(payload);
-      } else {
-        $this.createItem(payload);
-      }
+      return $scope.form.$valid;
     };
 
     this.formatPayload = function(itemData) {

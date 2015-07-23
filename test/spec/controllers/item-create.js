@@ -5,6 +5,8 @@ describe('The Item Create Controller', function() {
   // load the controller's module
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module(
+    'served/item.json',
+    'served/item-create.json',
     'served/items-list.json',
     'served/item-types.json',
     'served/sales-categories.json',
@@ -45,6 +47,15 @@ describe('The Item Create Controller', function() {
     ItemCreateCtrl = $controller('ItemCreateCtrl', {
       '$scope': $scope
     });
+  }
+
+  function renderView($templateCache, $compile) {
+    var html = $templateCache.get(
+      '/views/item-create.html');
+    var compiled = $compile(angular.element(html))($scope);
+    var view = angular.element(compiled[0]);
+    $scope.$digest();
+    return view;
   }
 
   describe('The ItemCreateCtrl', function() {
@@ -650,20 +661,114 @@ describe('The Item Create Controller', function() {
 
   });
 
+  describe('submitting the form', function() {
+    var formData,
+      view,
+      form;
+    beforeEach(inject(function(_$templateCache_, _$compile_,
+      _servedItemCreate_) {
+      formData = _servedItemCreate_;
+      view = renderView(_$templateCache_, _$compile_);
+      form = angular.element(view.find('form')[0]);
+      $httpBackend.expectPOST(/\/api\/retail-items/).respond(200,
+        '');
+    }));
+
+    function mockFormSubmission(formData) {
+      form.triggerHandler('submit');
+      $scope.submitForm(formData);
+      $scope.$digest();
+    }
+
+    it('should have a submitForm() method attached to the scope',
+      function() {
+        expect($scope.submitForm).toBeDefined();
+      });
+
+    it('should set the form submitted flag when called',
+      function() {
+        expect($scope.form.$submitted).toBeFalsy();
+        mockFormSubmission(formData);
+        expect($scope.form.$submitted).toBeTruthy();
+      });
+
+    describe('validating the form', function() {
+
+      beforeEach(function() {
+        spyOn(ItemCreateCtrl, 'validateForm').and.callThrough();
+      });
+
+      it('should have a method attached to the controller',
+        function() {
+          expect(ItemCreateCtrl.validateForm).toBeDefined();
+        });
+
+      it('should be called during the submission',
+        function() {
+          mockFormSubmission(formData);
+          expect(ItemCreateCtrl.validateForm).toHaveBeenCalled();
+        });
+
+      it(
+        'should set the displayError to false flag if the form is valid',
+        function() {
+          expect($scope.displayError).toBeFalsy();
+          $scope.form.itemTypeId.$setViewValue(2);
+          $scope.form.categoryId.$setViewValue(109);
+          mockFormSubmission(formData);
+          expect($scope.displayError).toBeFalsy();
+        });
+
+      it(
+        'should set the displayError to true if the form is invalid',
+        function() {
+          expect($scope.displayError).toBeFalsy();
+          $scope.form.itemTypeId.$setViewValue(null);
+          $scope.form.categoryId.$setViewValue(null);
+          mockFormSubmission(formData);
+          expect($scope.displayError).toBeTruthy();
+        });
+
+      describe('Create Item method', function() {
+        var itemsFactory;
+        beforeEach(inject(function($injector) {
+          itemsFactory = $injector.get('itemsFactory');
+          spyOn(ItemCreateCtrl, 'createItem').and.callThrough();
+          spyOn(itemsFactory, 'createItem').and.returnValue({
+            then: function(callback) {
+              return callback();
+            }
+          });
+        }));
+
+        it('should be defined', function() {
+          expect(ItemCreateCtrl.createItem).toBeDefined();
+        });
+
+        it('should be called after form submission', function() {
+          $scope.form.itemTypeId.$setViewValue(2);
+          $scope.form.categoryId.$setViewValue(109);
+          mockFormSubmission(formData);
+          expect(ItemCreateCtrl.createItem).toHaveBeenCalled();
+        });
+
+        it('should return true if item was created',
+          function() {
+            expect(itemsFactory.createItem).toBeTruthy();
+          });
+
+      });
+
+    });
+
+  });
+
   describe('view', function() {
 
-    var $templateCache,
-      $compile,
-      html,
-      view;
+    var view;
 
     beforeEach(inject(function(_$templateCache_, _$compile_) {
-      $templateCache = _$templateCache_;
-      $compile = _$compile_;
-      html = $templateCache.get('/views/item-create.html');
-      var compiled = $compile(angular.element(html))($scope);
-      view = angular.element(compiled[0]);
-      $scope.uiSelectTemplateReady = true;
+      view = renderView(_$templateCache_, _$compile_);
     }));
 
     it('should be defined', function() {
@@ -924,72 +1029,73 @@ describe('The Item Create Controller', function() {
       expect(ItemCreateCtrl.getGlobalStationList).toBeDefined();
     });
 
-    describe('The ItemCreateCtrl.getGlobalStationList method', function() {
+    describe('The ItemCreateCtrl.getGlobalStationList method',
+      function() {
 
-      var response,
-        testObject;
+        var response,
+          testObject;
 
-      beforeEach(inject(function() {
+        beforeEach(inject(function() {
 
-        inject(function(_servedStationsDateFiltered_) {
-          stationsJSON = _servedStationsDateFiltered_;
-        });
-
-        // spy on the query of the items service
-        spyOn(ItemCreateCtrl, 'getGlobalStationList').and.callFake(
-          function() {
-            return stationsJSON;
+          inject(function(_servedStationsDateFiltered_) {
+            stationsJSON = _servedStationsDateFiltered_;
           });
 
-        // make the mock query call
-        response = ItemCreateCtrl.getGlobalStationList();
+          // spy on the query of the items service
+          spyOn(ItemCreateCtrl, 'getGlobalStationList').and.callFake(
+            function() {
+              return stationsJSON;
+            });
 
-        // grab first item in list
-        testObject = response.response[0];
+          // make the mock query call
+          response = ItemCreateCtrl.getGlobalStationList();
 
-      }));
+          // grab first item in list
+          testObject = response.response[0];
 
-      it('should have been called', function() {
-        expect(ItemCreateCtrl.getGlobalStationList).toHaveBeenCalled();
+        }));
+
+        it('should have been called', function() {
+          expect(ItemCreateCtrl.getGlobalStationList).toHaveBeenCalled();
+        });
+
+        it('should return a response from the API', function() {
+          expect(response).toBeDefined();
+        });
+
+        it(
+          'should return a response from the API containg a response array',
+          function() {
+            expect(response.response).toBeDefined();
+          });
+
+        it(
+          'should return an array of stations containing at least station',
+          function() {
+            expect(response.response.length).toBeGreaterThan(0);
+          });
+
+        it('should contain a station object with a station code',
+          function() {
+            expect(testObject.code).toBeDefined();
+            expect(testObject.code).toEqual(jasmine.any(String));
+            expect(testObject.code.length).toEqual(3);
+          });
+
+        it('should contain a station object with a station id',
+          function() {
+            expect(testObject.id).toBeDefined();
+            expect(testObject.id).toEqual(jasmine.any(Number));
+          });
+
+        it('should contain a station object with a company id',
+          function() {
+            expect(testObject.companyId).toBeDefined();
+            expect(testObject.companyId).toEqual(jasmine.any(
+              Number));
+          });
+
       });
-
-      it('should return a response from the API', function() {
-        expect(response).toBeDefined();
-      });
-
-      it(
-        'should return a response from the API containg a response array',
-        function() {
-          expect(response.response).toBeDefined();
-        });
-
-      it(
-        'should return an array of stations containing at least station',
-        function() {
-          expect(response.response.length).toBeGreaterThan(0);
-        });
-
-      it('should contain a station object with a station code',
-        function() {
-          expect(testObject.code).toBeDefined();
-          expect(testObject.code).toEqual(jasmine.any(String));
-          expect(testObject.code.length).toEqual(3);
-        });
-
-      it('should contain a station object with a station id',
-        function() {
-          expect(testObject.id).toBeDefined();
-          expect(testObject.id).toEqual(jasmine.any(Number));
-        });
-
-      it('should contain a station object with a company id',
-        function() {
-          expect(testObject.companyId).toBeDefined();
-          expect(testObject.companyId).toEqual(jasmine.any(
-            Number));
-        });
-
-    });
 
     it('should be have a setStationsList method', function() {
       expect(ItemCreateCtrl.setStationsList).toBeDefined();

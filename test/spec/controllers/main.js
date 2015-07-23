@@ -154,7 +154,7 @@ describe('Controller: MainCtrl', function () {
       });
       it('should have the correct route', function () {
         expect(navigationItem.route).toEqual(
-          '/#/store-number-create');
+          '/#/store-number');
       });
     });
   });
