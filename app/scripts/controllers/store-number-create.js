@@ -31,10 +31,6 @@ angular.module('ts5App')
     }
 
     function getCurrentStoreNumber(_id){
-      if(!_id){
-        hideLoadingModal();
-        return;
-      }
       // Lets not hit the API again if it exists in our current list
       var store = $filter('filter')($scope.storeNumbersList, {id: _id}, true);
       if(store.length){

@@ -24,6 +24,7 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     createStoreDeferred.resolve({response:200});
     spyOn(companyStoresService, 'createStore').and.returnValue(createStoreDeferred.promise);
     spyOn(companyStoresService, 'saveStore').and.returnValue(createStoreDeferred.promise);
+    spyOn(companyStoresService, 'getStore').and.returnValue(createStoreDeferred.promise);
 
     getStoresDeferred = $q.defer();
     getStoresDeferred.resolve(_servedCompanyStores_);
@@ -163,6 +164,35 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     });
     it('should return false', function(){
       expect(scope.canEdit({endDate: '12/30/2000'})).toBe(false);
+    });
+  });
+
+  describe('fieldDisabled scope function', function(){
+    it('should return true', function(){
+      expect(scope.fieldDisabled({startDate: '12/30/2000', endDate: '12/30/2050'})).toBe(true);
+    });
+    it('should return false', function(){
+      expect(scope.fieldDisabled({startDate: '12/30/1999', endDate: '12/30/2000'})).toBe(false);
+    });
+  });
+
+  describe('editStoreNumber scope function', function(){
+    it('should return false if cannot delete', function(){
+      expect(scope.editStoreNumber({endDate: '12/30/2000'})).toBe(false);
+    });
+    it('should get the store from the current storelist if cached', function(){
+      var store = {id:1,endDate: '12/30/2050'};
+      scope.storeNumbersList = [store];
+      scope.$digest();
+      scope.editStoreNumber(store);
+      expect(scope.formData.id).toBe(store.id);
+    });
+    it('should call get store from service if not cached in storeNumbersList', function(){
+      var store = {id:1,endDate: '12/30/2050'};
+      scope.storeNumbersList = [];
+      scope.$digest();
+      scope.editStoreNumber(store);
+      expect(companyStoresService.getStore).toHaveBeenCalledWith(store.id);
     });
   });
 
