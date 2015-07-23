@@ -174,7 +174,7 @@ angular.module('ts5App')
 
     this.getTimeZoneForStationId = function (stationId) {
       var matchingStation = $scope.stationList.filter(function (station) {
-        return station.stationId.toString() === stationId.toString();
+        return station.id.toString() === stationId.toString();
       })[0];
       if(matchingStation) {
         return matchingStation.timezone + ' [UTC ' + matchingStation.utcOffset + ']';

@@ -6,7 +6,7 @@
     <p class="panel-title">
 			<i class="fa fa-tags"></i> Price Type {{ $parent.key+1 }}
 
-      <span class="btn-remove-price-group pull-right btn btn-danger btn-xs" ng-click="removePriceGroup($parent.key)">
+      <span class="btn-remove-price-group pull-right btn btn-danger btn-xs" ng-hide="viewOnly || itemIsActive" ng-click="removePriceGroup($parent.key)">
         <i class="fa fa-close"></i>
       </span>
 
@@ -19,14 +19,17 @@
 
 			<div class="col-xs-12 col-sm-8">
 
-        <date-picker class="form-group"
-          element-class="col-xs-6 col-sm-6"
-					start-date-model="itemPrice.startDate"
-					end-date-model="itemPrice.endDate"
-					disable-past="true"
-					label-from="Effective From"
-					label-to="Effective To">
-				</date-picker>
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-6">
+            <date-picker-field form="form" label="Effective From" name="PriceEffectiveFrom" ng-model="itemPrice.startDate" required="true"></date-picker-field>
+          </div>
+
+          <div class="col-xs-12 col-sm-6">
+            <date-picker-field form="form" label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" required="true"></date-picker-field>
+          </div>
+
+        </div>
 
 				<div class="row">
 

@@ -8,7 +8,7 @@
 
 			<i class="fa fa-image"></i> Saved Image {{ $parent.key+1 }}
 
-      <span class="pull-right btn btn-danger btn-xs" ng-click="removeImage($parent.key)">
+      <span class="pull-right btn btn-danger btn-xs" ng-hide="viewOnly || itemIsActive" ng-click="removeImage($parent.key)">
         <i class="fa fa-close"></i>
       </span>
 
