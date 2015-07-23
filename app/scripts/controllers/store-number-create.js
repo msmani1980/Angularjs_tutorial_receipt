@@ -20,11 +20,10 @@ angular.module('ts5App')
 
     // private controller functions
     function getStoreNumbers(response){
+      hideLoadingModal();
       if(!response.meta.count){
-        hideLoadingModal();
         return;
       }
-      hideLoadingModal();
       angular.forEach(response.response, function(store){
         this.push(formatForForm(store));
       }, $scope.storeNumbersList);
