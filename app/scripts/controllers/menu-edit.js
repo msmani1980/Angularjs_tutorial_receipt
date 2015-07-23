@@ -210,11 +210,7 @@ angular.module('ts5App')
     };
 
     $scope.addItem = function () {
-      if($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
-        $scope.newItemList.push({});
-      } else {
-        showToast('warning', 'Add Menu Item', 'Please select a date range first!');
-      }
+      $scope.newItemList.push({});
     };
 
     $scope.deleteNewItem = function (itemIndex) {
