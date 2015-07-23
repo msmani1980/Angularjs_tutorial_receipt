@@ -79,6 +79,7 @@ angular.module('ts5App')
       } else {
         $this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
       }
+      postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
     };
 
     this.uploadPostTripFailure = function () {
