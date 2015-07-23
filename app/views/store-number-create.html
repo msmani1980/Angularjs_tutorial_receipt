@@ -9,7 +9,7 @@
           <a class="btn btn-default" ng-href="#/" class="btn">Back</a>
           <button class="btn btn-primary" type="submit" ng-hide="formDefault()">
             <span class="fa fa-check-square-o" aria-hidden="true"></span>
-            <span class="hidden-xs">Create</span>
+            <span class="hidden-xs">{{ submitText }}</span>
           </button>
         </fieldset>
       </div>
@@ -21,7 +21,9 @@
     <div class="col-xs-12 col-sm-6">
       <label class="control-label" for="storeNumber">Store Number *</label>
       <input custom-validity
-         custom-pattern="alphanumericExactlyTenChars"
+         custom-pattern="alphanumericUpToTenChars"
+         min="1"
+         max="10"
          required="true"
          type="text"
          class="form-control"

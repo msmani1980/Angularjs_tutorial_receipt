@@ -21,6 +21,7 @@ angular.module('ts5App')
     // private controller functions
     function getStoreNumbers(response){
       if(!response.meta.count){
+        hideLoadingModal();
         return;
       }
       hideLoadingModal();
@@ -56,6 +57,7 @@ angular.module('ts5App')
 
     function setCurrentStore(store){
       $scope.viewName = 'Edit Store Number';
+      $scope.submitText = 'Save';
       $scope.editing = store.id;
       $scope.formData = store;
       hideLoadingModal();
@@ -91,6 +93,7 @@ angular.module('ts5App')
     function init(){
       _companyId = GlobalMenuService.company.get();
       $scope.viewName = 'Create Store Number';
+      $scope.submitText = 'Create';
       $scope.formData = angular.copy(_companyDefault);
       $scope.displayError = false;
       $scope.editing = false;
@@ -123,8 +126,8 @@ angular.module('ts5App')
       }
       displayLoadingModal('Removing Item');
       companyStoresService.deleteStore(store.id).then(function() {
-        showMessage('deleted!', 'success');
         init();
+        showMessage('deleted!', 'success');
       }, showApiErrors);
     };
 
