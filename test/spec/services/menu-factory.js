@@ -53,6 +53,11 @@ describe('Service: menuFactory', function () {
       expect(menuService.createMenu).toHaveBeenCalledWith(payload);
     });
 
+    it('should call GlobalMenuService.company.get', function () {
+      menuFactory.getCompanyId();
+      expect(GlobalMenuService.company.get).toHaveBeenCalled();
+    });
+
     it('should call itemsService.getItemsList with a payload and a flag to get items from master list', function () {
       var payload = {
         fake: 'data'
