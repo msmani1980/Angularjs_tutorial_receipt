@@ -61,20 +61,21 @@ angular.module('ts5App')
 
     function submitFormSuccess(){
       init();
-      showMessage('saved!', 'success');
+      hideLoadingModal();
+      showMessage('success', 'Store Number', 'saved!');
     }
 
     function showApiErrors(response){
-      showMessage('failed!', 'warning');
+      hideLoadingModal();
+      showMessage('warning', 'Store Number', 'failed!');
       $scope.displayError = true;
       if ('data' in response) {
         $scope.formErrors = response.data;
       }
     }
 
-    function showMessage(message, messageType) {
-      hideLoadingModal();
-      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Store Number</strong>: ' + message });
+    function showMessage(className, type, message) {
+      ngToast.create({className: className, dismissButton: true, content: '<strong>'+type+'</strong>: '+message});
     }
 
     function displayLoadingModal(loadingText) {
@@ -106,6 +107,7 @@ angular.module('ts5App')
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
       // If store has an ID, is editing
       if(payload.id){
+        console.log('is saving');
         companyStoresService.saveStore(payload).then(submitFormSuccess, showApiErrors);
       }
       // Otherwise, creating
@@ -129,7 +131,8 @@ angular.module('ts5App')
       displayLoadingModal('Removing Item');
       companyStoresService.deleteStore(store.id).then(function() {
         init();
-        showMessage('deleted!', 'success');
+        hideLoadingModal();
+        showMessage('success', 'Store Number', 'deleted!');
       }, showApiErrors);
     };
 
