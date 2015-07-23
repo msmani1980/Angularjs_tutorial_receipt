@@ -8,20 +8,16 @@ describe('Service: menuFactory', function () {
   // instantiate service
   var menuFactory,
     menuService,
-    itemsService,
-    GlobalMenuService;
+    itemsService;
 
   beforeEach(inject(function (_menuFactory_, $injector) {
 
     menuService = $injector.get('menuService');
     itemsService = $injector.get('itemsService');
-    GlobalMenuService = $injector.get('GlobalMenuService');
 
     spyOn(menuService, 'getMenu').and.stub();
     spyOn(menuService, 'updateMenu').and.stub();
-    spyOn(menuService, 'createMenu').and.stub();
     spyOn(itemsService, 'getItemsList').and.stub();
-    spyOn(GlobalMenuService.company, 'get').and.stub();
 
     menuFactory = _menuFactory_;
   }));
@@ -43,19 +39,6 @@ describe('Service: menuFactory', function () {
       };
       menuFactory.updateMenu(payload);
       expect(menuService.updateMenu).toHaveBeenCalledWith(payload);
-    });
-
-    it('should call menuService.createMenu with a payload', function () {
-      var payload = {
-        fake: 'data'
-      };
-      menuFactory.createMenu(payload);
-      expect(menuService.createMenu).toHaveBeenCalledWith(payload);
-    });
-
-    it('should call GlobalMenuService.company.get', function () {
-      menuFactory.getCompanyId();
-      expect(GlobalMenuService.company.get).toHaveBeenCalled();
     });
 
     it('should call itemsService.getItemsList with a payload and a flag to get items from master list', function () {
