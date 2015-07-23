@@ -29,7 +29,7 @@ describe('Factory: postTripFactory', function () {
     spyOn(postTripsService, 'getPostTrip');
     spyOn(postTripsService, 'uploadPostTrip');
     spyOn(GlobalMenuService.company, 'get');
-    spyOn(stationsService, 'getGlobalStationList');
+    spyOn(stationsService, 'getStationList');
     spyOn(carrierService, 'getCarrierTypes');
     spyOn(carrierService, 'getCarrierNumbers');
     spyOn(employeesService, 'getEmployees');
@@ -74,7 +74,7 @@ describe('Factory: postTripFactory', function () {
   describe('stationsService API', function () {
     it('should call stationsService on getStationService', function () {
       postTripFactory.getStationList(companyId);
-      expect(stationsService.getGlobalStationList).toHaveBeenCalledWith({companyId: companyId});
+      expect(stationsService.getStationList).toHaveBeenCalledWith(companyId);
     });
   });
 

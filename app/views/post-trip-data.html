@@ -52,7 +52,7 @@
                       id="departureStation"
                       ng-change="updateDepartureTimeZone()"
                       ng-model="postTrip.depStationId"
-                      ng-options="station.id.toString() as (station.code + ' (' + station.name +')') for station in stationList"
+                      ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
                       ng-disabled="readOnly"
                       required="true">
                 <option selected="selected" value>Select a Departure Station</option>
@@ -93,7 +93,7 @@
                       id="arrival-station"
                       ng-change="updateArrivalTimeZone()"
                       ng-model="postTrip.arrStationId"
-                      ng-options="station.id.toString() as (station.code + ' (' + station.name +')') for station in stationList"
+                      ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
                       ng-disabled="readOnly"
                       required="true">
                 <option selected="selected" value>Select an Arrival Station</option>

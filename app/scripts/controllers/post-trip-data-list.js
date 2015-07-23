@@ -24,8 +24,8 @@ angular.module('ts5App')
         return '';
       }
       angular.forEach($scope.stationList, function (value) {
-        if (value.id.toString() === stationId.toString()) {
-          stationCode = value.code.toString();
+        if (value.stationId.toString() === stationId.toString()) {
+          stationCode = value.stationCode.toString();
         }
       });
       return stationCode;
@@ -124,13 +124,13 @@ angular.module('ts5App')
         $scope.search.tailNumber.push(number.carrierNumber);
       });
       angular.forEach($scope.multiSelectedValues.depStations, function (station) {
-        $scope.search.depStationId.push(station.id);
+        $scope.search.depStationId.push(station.stationId);
       });
       angular.forEach($scope.multiSelectedValues.arrStations, function (station) {
-        $scope.search.arrStationId.push(station.id);
+        $scope.search.arrStationId.push(station.stationId);
       });
       angular.forEach($scope.multiSelectedValues.employeeIds, function (employee) {
-        $scope.search.employeeId.push(employee.id);
+        $scope.search.employeeId.push(employee.stationId);
       });
     };
 
