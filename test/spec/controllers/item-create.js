@@ -30,7 +30,12 @@ describe('The Item Create Controller', function() {
     $controller,
     $location,
     ItemCreateCtrl,
-    $httpBackend;
+    $httpBackend,
+    dateUtility;
+
+  beforeEach(inject(function(_dateUtility_) {
+    dateUtility = _dateUtility_;
+  }));
 
   function createController($injector) {
     $location = $injector.get('$location');
@@ -840,56 +845,125 @@ describe('The Item Create Controller', function() {
   /*
    * Price Groups
    */
+  describe('Price Groups', function() {
 
-  describe('Price Groups |', function() {
-
-    var priceTypesJSON,
-      response,
-      testObject;
-
-    // Inject the service and responshandler
-    beforeEach(inject(function() {
-
-      // Inject the JSON fixtures
-      inject(function(_servedPriceTypes_) {
-        priceTypesJSON = _servedPriceTypes_;
-      });
-
-      spyOn(ItemCreateCtrl, 'getDependencies').and.callFake(
-        function() {
-          return priceTypesJSON;
-        });
-
-      $scope.addStationException(0);
-
-      response = ItemCreateCtrl.getDependencies();
-
-      testObject = response[0];
-
+    beforeEach(inject(function($injector) {
+      createController($injector);
+      $httpBackend.whenGET(/./).respond(200, '');
     }));
 
-    it('should have a response ', function() {
-      expect(response).toBeDefined();
-      expect(response.length).toBeGreaterThan(0);
+    it('should have one price group added to the scope when the controller inits', function() {
+      var priceGroup = $scope.formData.prices[0];
+      expect(priceGroup).toBeDefined();
     });
 
-    it('should have contain a price type object in the response ',
-      function() {
+    describe('addPriceGroup()', function() {
 
-        expect(testObject).toBeDefined();
-        expect(testObject.id).toBeDefined();
-        expect(testObject.id).toEqual(jasmine.any(Number));
+      it('should be able to add a price group to the prices array',function() {
+        $scope.addPriceGroup();
+        expect($scope.formData.prices.length).toBe(2);
       });
 
-    it('should have a price type object with an id ', function() {
-      expect(testObject.id).toBeDefined();
-      expect(testObject.id).toEqual(jasmine.any(Number));
+      it('should create the correct price group data set',function() {
+        $scope.addPriceGroup();
+        var priceGroup = $scope.formData.prices[1];
+        expect(priceGroup.startDate).toBeDefined();
+        expect(priceGroup.endDate).toBeDefined();
+        expect(priceGroup.priceCurrencies).toBeDefined();
+        expect(priceGroup.priceCurrencies).toEqual([]);
+        expect(priceGroup.stationExceptions).toBeDefined();
+        expect(priceGroup.stationExceptions).toEqual([]);
+      });
+
     });
 
-    it('should have a price type object with an name ', function() {
-      expect(testObject.name).toBeDefined();
-      expect(testObject.name).toEqual(jasmine.any(String));
-      expect(testObject.name.length).toBeGreaterThan(1);
+    describe('removePriceGroup()', function() {
+
+      it('should remove a price group from the prices array',function() {
+        $scope.removePriceGroup(0);
+        expect($scope.formData.prices.length).toBe(0);
+      });
+
+    });
+
+    describe('watchPriceGroups()', function() {
+
+      var currenciesListJSON,
+      getCurrenciesListDeferred,
+      currencyFactory,
+      priceGroup;
+
+      function mockDateChange() {
+        $scope.$digest();
+        var priceGroup = $scope.formData.prices[0];
+        priceGroup.startDate = dateUtility.nowFormatted();
+        priceGroup.endDate = dateUtility.nowFormatted();
+        $scope.$digest();
+      }
+
+      beforeEach(inject(function($q,$injector,_servedCurrencies_) {
+        priceGroup = $scope.formData.prices[0];
+        currenciesListJSON = _servedCurrencies_;
+        currencyFactory = $injector.get('currencyFactory');
+        getCurrenciesListDeferred = $q.defer();
+        getCurrenciesListDeferred.resolve(currenciesListJSON);
+        spyOn(ItemCreateCtrl, 'watchPriceGroups').and.callThrough();
+        spyOn(ItemCreateCtrl, 'checkPriceGroup').and.callThrough();
+        spyOn(ItemCreateCtrl,'updatePriceGroup').and.callThrough();
+        spyOn(currencyFactory, 'getCompanyCurrencies').and.returnValue(getCurrenciesListDeferred.promise);
+        spyOn(ItemCreateCtrl, 'getPriceCurrenciesList').and.callThrough();
+        spyOn(ItemCreateCtrl, 'generatePriceCurrenciesList').and.callThrough();
+        spyOn(ItemCreateCtrl, 'setPriceCurrenciesList').and.callThrough();
+      }));
+
+      it('should be called when the data in the price group changes',function() {
+        mockDateChange();
+        expect(ItemCreateCtrl.watchPriceGroups).toHaveBeenCalled();
+      });
+
+      it('should call checkPriceGroup() ',function() {
+        mockDateChange();
+        expect(ItemCreateCtrl.checkPriceGroup).toHaveBeenCalled();
+      });
+
+      it('should be called when the data in the price group changes',function() {
+        mockDateChange();
+        expect(ItemCreateCtrl.updatePriceGroup).toHaveBeenCalled();
+      });
+
+      it('should have no currencies associated to the price before the API call', function() {
+        expect(priceGroup.priceCurrencies).toEqual([]);
+      });
+
+      describe('getPriceCurrenciesList()', function() {
+
+        beforeEach(function() {
+          priceGroup = $scope.formData.prices[0];
+        });
+
+        it('should be called',function() {
+          mockDateChange();
+          expect(ItemCreateCtrl.getPriceCurrenciesList).toHaveBeenCalled();
+        });
+
+        it('should call generatePriceCurrenciesList',function() {
+          mockDateChange();
+          expect(ItemCreateCtrl.generatePriceCurrenciesList).toHaveBeenCalled();
+        });
+
+        it('should generate a list of currencies for the price group',function() {
+          mockDateChange();
+          var controlPriceList = ItemCreateCtrl.generatePriceCurrenciesList(currenciesListJSON.response);
+          expect(priceGroup.priceCurrencies).toEqual(controlPriceList);
+        });
+
+        it('should have called the setPriceCurrenciesList method',function() {
+          mockDateChange();
+          expect(ItemCreateCtrl.setPriceCurrenciesList).toHaveBeenCalled();
+        });
+
+      });
+
     });
 
   });

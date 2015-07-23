@@ -1,5 +1,5 @@
 'use strict';
-// jshint maxcomplexity:15
+// jshint maxcomplexity:6
 /**
  * @ngdoc function
  * @name ts5App.controller:ItemCreateCtrl
@@ -200,6 +200,7 @@ angular.module('ts5App')
         };
       }
     };
+
     this.formatAllergens = function(itemData) {
       var allergenPayload = [];
       for (var allergenKey in itemData.allergens) {
@@ -508,81 +509,11 @@ angular.module('ts5App')
       }
     };
 
-    $scope.$watch('formData', function(newData, oldData) {
-      //checkItemDates(newData,oldData);
-      $this.refreshPriceGroups(newData, oldData);
-    }, true);
-
     $scope.$watch('form.$valid', function(validity) {
       if (validity) {
         $scope.displayError = false;
       }
     });
-
-    // when a price date is change for a price groupd or station, need to update currencies
-    this.refreshPriceGroups = function(newData, oldData) {
-
-      if (!oldData || !newData) {
-        return false;
-      }
-
-      // if the prices data has changed
-      if (newData.prices !== oldData.prices) {
-
-        // loop through all the price groups
-        for (var priceIndex in $scope.formData.prices) {
-
-          // the new and old price groups
-          var newPriceGroup = newData.prices[priceIndex];
-          var oldPriceGroup = oldData.prices[priceIndex];
-
-          // if threre isn't old data yet, exit out of loop
-          if (!oldPriceGroup || oldPriceGroup.startDate === '' ||
-            oldPriceGroup.endDate === '') {
-            return false;
-          }
-
-          // if the startDate or endDate is different
-          if (newPriceGroup.startDate !== oldPriceGroup.startDate ||
-            newPriceGroup.endDate !== oldPriceGroup.endDate) {
-
-            // update the price group
-            this.updatePriceGroup(priceIndex);
-
-          }
-
-          // loop through all the stations exceptions
-          for (var stationExceptionIndex in $scope.formData.prices[
-              priceIndex].stationExceptions) {
-
-            var newStationException = newData.prices[priceIndex].stationExceptions[
-              stationExceptionIndex];
-            var oldStationException = oldData.prices[priceIndex].stationExceptions[
-              stationExceptionIndex];
-
-            // if threre isn't old data yet, exit out of loop
-            if (!oldStationException || oldStationException.endDate ===
-              '') {
-              return false;
-            }
-
-            // if the startDate or endDate is different
-            if (newStationException.startDate !== oldStationException.startDate ||
-              newStationException.endDate !== oldStationException.endDate
-            ) {
-
-              // update the price group
-              this.updateStationException(priceIndex, stationExceptionIndex);
-
-            }
-
-          } // end loop on stationExceptions
-
-        } // end loop on price groups
-
-      }
-
-    };
 
     $scope.removeQRCode = function() {
       $scope.formData.qrCodeImgUrl = '';
@@ -724,6 +655,10 @@ angular.module('ts5App')
      *
      */
 
+   $scope.$watch('formData.prices', function(newData, oldData) {
+     $this.watchPriceGroups(newData, oldData);
+   }, true);
+
     $scope.addPriceGroup = function() {
       $scope.formData.prices.push({
         startDate: '',
@@ -740,7 +675,7 @@ angular.module('ts5App')
       $scope.formData.prices.splice(key, 1);
     };
 
-    $scope.generatePriceCurrenciesList = function(currenciesList) {
+    this.generatePriceCurrenciesList = function(currenciesList) {
       var priceCurrencies = [];
       for (var key in currenciesList) {
         var currency = currenciesList[key];
@@ -753,11 +688,21 @@ angular.module('ts5App')
       return priceCurrencies;
     };
 
+    this.getPriceCurrenciesList = function(priceIndex,currencyFilters) {
+      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(data) {
+        var priceCurrencies = $this.generatePriceCurrenciesList(data.response);
+        $this.setPriceCurrenciesList(priceIndex,priceCurrencies);
+      });
+    };
+
+    this.setPriceCurrenciesList = function(priceIndex,priceCurrencies) {
+      $scope.formData.prices[priceIndex].priceCurrencies =priceCurrencies;
+    };
+
     this.updatePriceGroup = function(priceIndex) {
-      var startDate = dateUtility.formatDateForAPI($scope.formData.prices[
-        priceIndex].startDate);
-      var endDate = dateUtility.formatDateForAPI($scope.formData.prices[
-        priceIndex].endDate);
+      var priceGroup = $scope.formData.prices[priceIndex];
+      var startDate = dateUtility.formatDateForAPI(priceGroup.startDate);
+      var endDate = dateUtility.formatDateForAPI(priceGroup.endDate);
       if (startDate === 'Invalid date' || endDate === 'Invalid date') {
         return false;
       }
@@ -766,12 +711,44 @@ angular.module('ts5App')
         endDate: endDate,
         isOperatedCurrency: true
       };
-      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(
-        data) {
-        var priceCurrencies = $scope.generatePriceCurrenciesList(data.response);
-        $scope.formData.prices[priceIndex].priceCurrencies =
-          priceCurrencies;
-      });
+      this.getPriceCurrenciesList(priceIndex,currencyFilters);
+    };
+
+    this.watchPriceGroups = function(newPrices, oldPrices) {
+      if (!oldPrices) {
+        return false;
+      }
+      for (var priceIndex in $scope.formData.prices) {
+        this.checkPriceGroup(newPrices,oldPrices,priceIndex);
+        for (var stationExceptionIndex in $scope.formData.prices[
+            priceIndex].stationExceptions) {
+            this.checkStationException(newPrices,oldPrices,priceIndex,stationExceptionIndex);
+        }
+      }
+    };
+
+    this.checkPriceGroup = function(newPrices,oldPrices,priceIndex) {
+      var newPriceGroup = newPrices[priceIndex];
+      var oldPriceGroup = oldPrices[priceIndex];
+      if (!oldPriceGroup) {
+        return false;
+      }
+      if (newPriceGroup.startDate !== oldPriceGroup.startDate ||
+        newPriceGroup.endDate !== oldPriceGroup.endDate) {
+        $this.updatePriceGroup(priceIndex);
+      }
+    };
+
+    this.checkStationException = function(newPrices,oldPrices,priceIndex,stationExceptionIndex) {
+      var newStationException = newPrices.prices[priceIndex].stationExceptions[stationExceptionIndex];
+      var oldStationException = oldPrices.prices[priceIndex].stationExceptions[ stationExceptionIndex];
+      if (!oldStationException) {
+        return false;
+      }
+      if (newStationException.startDate !== oldStationException.startDate ||
+        newStationException.endDate !== oldStationException.endDate ) {
+        this.updateStationException(priceIndex, stationExceptionIndex);
+      }
     };
 
     this.updateItem = function(itemData) {
