@@ -99,13 +99,34 @@ angular.module('ts5App')
     };
 
     this.createPostTrip = function () {
-      postTripFactory.createPostTrip(companyId, $scope.postTrip).then(
-        $this.saveFormSuccess,
-        $this.saveFormFailure
-      );
+      $this.checkForExistingPostTripThenCreateOrOverwrite();
+    };
+
+    this.checkForExistingPostTripThenCreateOrOverwrite = function () {
+      $this.showLoadingModal('Saving Post Trip Data');
+      postTripFactory.getPostTripDataList(companyId, {
+        scheduleNumber: $scope.postTrip.scheduleNumber,
+        scheduleStartDate: $scope.postTrip.scheduleDate,
+        scheduleEndDate: $scope.postTrip.scheduleDate
+      })
+        .then($this.callCreateOrEditIfPostTripExists);
+    };
+
+    this.callCreateOrEditIfPostTripExists = function (response) {
+      if (response.postTrips.length > 0) {
+        $this.hideLoadingModal();
+        angular.element('#overwrite-modal').modal('show');
+        $scope.overwritePostTripId = response.postTrips[0].id;
+      } else {
+        postTripFactory.createPostTrip(companyId, $scope.postTrip).then(
+          $this.saveFormSuccess,
+          $this.saveFormFailure
+        );
+      }
     };
 
     this.editPostTrip = function () {
+      $this.showLoadingModal('Saving Post Trip Data');
       // TODO: temporary -- remove once API is fixed and can accept depTImeZone and arrTimeZone
       delete $scope.postTrip.depTimeZone;
       delete $scope.postTrip.arrTimeZone;
@@ -114,6 +135,11 @@ angular.module('ts5App')
         $this.saveFormSuccess,
         $this.saveFormFailure
       );
+    };
+
+    $scope.overwritePostTrip = function () {
+      $scope.postTrip.id = $scope.overwritePostTripId;
+      $this.editPostTrip();
     };
 
     this.init = function () {
@@ -150,7 +176,10 @@ angular.module('ts5App')
       var matchingStation = $scope.stationList.filter(function (station) {
         return station.stationId.toString() === stationId.toString();
       })[0];
-      return matchingStation.timezone + ' [UTC ' + matchingStation.utcOffset + ']';
+      if(matchingStation) {
+        return matchingStation.timezone + ' [UTC ' + matchingStation.utcOffset + ']';
+      }
+      return '';
     };
 
     $scope.updateArrivalTimeZone = function () {
@@ -187,8 +216,6 @@ angular.module('ts5App')
         return;
       }
       $this.formatEmployeeIdentifiersForAPI();
-
-      $this.showLoadingModal('Saving Post Trip Data');
 
       var saveFunctionName = ($routeParams.state + 'PostTrip');
       if ($this[saveFunctionName]) {
