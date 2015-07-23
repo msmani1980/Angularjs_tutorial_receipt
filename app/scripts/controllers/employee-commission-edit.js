@@ -56,6 +56,34 @@ angular.module('ts5App')
       return commissionObject;
     }
 
+    function shouldFetchCommission() {
+      return ($routeParams.state && $routeParams.id) && !$scope.commission.selectedItem;
+    }
+
+    function populateValuesFromAPI() {
+      hideLoadingModal();
+      $scope.commission.currenciesFields = {};
+      $scope.commission.selectedItem = getSelectedItemObject();
+      $scope.commission.selectedPriceType = getSelectedPriceTypeObject();
+      $scope.commission.selectedRateType = getSelectedRateTypeObject();
+
+      angular.forEach($scope.commission.fixeds, function (currencyValue) {
+        var currency = $filter('filter')($scope.companyCurrencies, {id: currencyValue.currencyId}, true)[0];
+        $scope.commission.currenciesFields[currency.code] = currencyValue.fixedValue;
+      });
+    }
+
+    function fetchEmployeeCommissionFromAPI() {
+      if (shouldFetchCommission()) {
+        showLoadingModal('Loading Employee Commission');
+        employeeCommissionFactory.getCommission($routeParams.id).then(function (dataFromAPI) {
+          $scope.commission = formatDatesForApp(angular.copy(dataFromAPI.employeeCommission));
+
+          populateValuesFromAPI();
+        });
+      }
+    }
+
     var datesWatcher = $scope.$watchGroup(['commission.startDate', 'commission.endDate'], function () {
       var payload = {};
 
@@ -69,6 +97,7 @@ angular.module('ts5App')
 
       employeeCommissionFactory.getItemsList(payload, true).then(function (dataFromAPI) {
         $scope.itemList = dataFromAPI.masterItems;
+        fetchEmployeeCommissionFromAPI();
       });
 
       var currencyFilters = angular.extend(payload, {
@@ -83,18 +112,7 @@ angular.module('ts5App')
         datesWatcher();
       }
 
-      if (shouldFetchCommission()) {
-        employeeCommissionFactory.getCommission($routeParams.id).then(function (dataFromAPI) {
-          $scope.commission = formatDatesForApp(angular.copy(dataFromAPI.employeeCommission));
-
-          populateValuesFromAPI();
-        });
-      }
     });
-
-    function shouldFetchCommission() {
-      return $routeParams.state && $routeParams.id;
-    }
 
     function getSelectedObjectFromArrayUsingId(fromArray, id) {
       var filteredObject = $filter('filter')(fromArray, {id: id}, function (expected, actual) {
@@ -124,19 +142,6 @@ angular.module('ts5App')
     function getSelectedRateTypeObject() {
       var rateTypeId = $scope.commission.fixeds.length > 0 ? 1 : 2;
       return getSelectedObjectFromArrayUsingId($scope.taxRateTypes, rateTypeId);
-    }
-
-    function populateValuesFromAPI() {
-
-      $scope.commission.currenciesFields = {};
-      $scope.commission.selectedItem = getSelectedItemObject();
-      $scope.commission.selectedPriceType = getSelectedPriceTypeObject();
-      $scope.commission.selectedRateType = getSelectedRateTypeObject();
-
-      angular.forEach($scope.commission.fixeds, function (currencyValue) {
-        var currency = $filter('filter')($scope.companyCurrencies, {id: currencyValue.currencyId}, true)[0];
-        $scope.commission.currenciesFields[currency.code] = currencyValue.fixedValue;
-      });
     }
 
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {

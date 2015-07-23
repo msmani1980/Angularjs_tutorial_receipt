@@ -52,7 +52,7 @@
                       id="departureStation"
                       ng-change="updateDepartureTimeZone()"
                       ng-model="postTrip.depStationId"
-                      ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-options="station.id.toString() as (station.code + ' (' + station.name +')') for station in stationList"
                       ng-disabled="readOnly"
                       required="true">
                 <option selected="selected" value>Select a Departure Station</option>
@@ -93,7 +93,7 @@
                       id="arrival-station"
                       ng-change="updateArrivalTimeZone()"
                       ng-model="postTrip.arrStationId"
-                      ng-options="station.stationId.toString() as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
+                      ng-options="station.id.toString() as (station.code + ' (' + station.name +')') for station in stationList"
                       ng-disabled="readOnly"
                       required="true">
                 <option selected="selected" value>Select an Arrival Station</option>
@@ -183,6 +183,24 @@
 
 </div>
 <!-- /Container -->
+
+<div id="overwrite-modal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Overwrite Post Trip?</h3>
+      </div>
+      <div class="modal-body">
+        A Post Trip already exists with schedule Number: <b>{{ postTrip.scheduleNumber }}</b> and scheduleDate: <b>{{ postTrip.scheduleDate }}</b>.
+        If you continue, your changes will overwrite the existing post trip. Would you still like to continue and save this post trip?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="overwritePostTrip()">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <form-success-modal></form-success-modal>
 

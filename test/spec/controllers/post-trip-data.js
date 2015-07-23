@@ -4,7 +4,7 @@ describe('Controller: PostTripDataCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data.json', 'served/employees.json'));
+  beforeEach(module('served/global-stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data.json', 'served/employees.json'));
 
   var PostTripDataCtrl,
     scope,
@@ -19,13 +19,14 @@ describe('Controller: PostTripDataCtrl', function () {
     newPostTripDeferred,
     employeesDeferred,
     employeesResponseJSON,
+    searchPostTripDeferred,
     postTripFactory,
     companyId;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_, _servedPostTripData_, _servedEmployees_) {
-      stationsListResponseJSON = _servedStations_;
+    inject(function (_servedGlobalStations_, _servedCarrierTypes_, _servedCarrierNumbers_, _servedPostTripData_, _servedEmployees_) {
+      stationsListResponseJSON = _servedGlobalStations_;
       carrierTypesResponseJSON = _servedCarrierTypes_;
       carrierNumbersResponseJSON = _servedCarrierNumbers_;
       postTripResponseJSON = _servedPostTripData_;
@@ -47,6 +48,8 @@ describe('Controller: PostTripDataCtrl', function () {
     newPostTripDeferred.resolve({id: 1});
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesResponseJSON);
+    searchPostTripDeferred = $q.defer();
+    searchPostTripDeferred.resolve({postTrips:[]});
 
     spyOn(postTripFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
@@ -55,6 +58,7 @@ describe('Controller: PostTripDataCtrl', function () {
     spyOn(postTripFactory, 'updatePostTrip').and.returnValue(postTripDeferred.promise);
     spyOn(postTripFactory, 'getPostTrip').and.returnValue(postTripDeferred.promise);
     spyOn(postTripFactory, 'getEmployees').and.returnValue(employeesDeferred.promise);
+    spyOn(postTripFactory, 'getPostTripDataList').and.returnValue(searchPostTripDeferred.promise);
 
     companyId = '403';
     PostTripDataCtrl = $controller('PostFlightDataCtrl', {
@@ -101,11 +105,11 @@ describe('Controller: PostTripDataCtrl', function () {
       var utcDepOffset = '+2';
       beforeEach(function () {
         scope.stationList = [{
-          stationId: 1,
+          id: 1,
           timezone: timeZoneString,
           utcOffset: utcArrOffset,
         }, {
-          stationId: 2,
+          id: 2,
           timezone: timeZoneString,
           utcOffset: utcDepOffset
         }];
@@ -123,6 +127,16 @@ describe('Controller: PostTripDataCtrl', function () {
         scope.updateArrivalTimeZone();
         expect(scope.arrivalTimezone).toBeDefined();
         expect(scope.arrivalTimezone).toEqual('Europe/Madrid [UTC +1]');
+      });
+      it('should return empty string if stationId is not valid', function(){
+        scope.postTrip = {
+          arrStationId: 3,
+          depStationId: 4
+        };
+        scope.updateDepartureTimeZone();
+        expect(scope.departureTimezone).toEqual('');
+        scope.updateArrivalTimeZone();
+        expect(scope.arrivalTimezone).toEqual('');
       });
     });
     describe('form save helper function', function () {
@@ -213,14 +227,14 @@ describe('Controller: PostTripDataCtrl', function () {
     });
 
     describe('save form', function () {
-      it('should call updatePostTrip', function () {
+      it('should call getPostTripDataList to search for duplicates', function () {
         scope.postTripDataForm = {
           $valid: true
         };
         scope.employees = [];
         scope.postTrip = {};
         scope.formSave();
-        expect(postTripFactory.createPostTrip).toHaveBeenCalled();
+        expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
       });
     });
   });
