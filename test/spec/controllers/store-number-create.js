@@ -46,34 +46,6 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     it('should attach a viewName to the scope', function () {
       expect(scope.viewName).toBe('Create Store Number');
     });
-    it('should have a submitForm function attached to the scope', function(){
-      expect(scope.submitForm).toBeDefined();
-      expect(Object.prototype.toString.call(scope.submitForm)).toBe('[object Function]');
-    });
-    it('should have a removeRecord function attached to the scope', function(){
-      expect(scope.removeRecord).toBeDefined();
-      expect(Object.prototype.toString.call(scope.removeRecord)).toBe('[object Function]');
-    });
-    it('should have a canDelete function attached to the scope', function(){
-      expect(scope.canDelete).toBeDefined();
-      expect(Object.prototype.toString.call(scope.canDelete)).toBe('[object Function]');
-    });
-    it('should have a formDefault function attached to the scope', function(){
-      expect(scope.formDefault).toBeDefined();
-      expect(Object.prototype.toString.call(scope.formDefault)).toBe('[object Function]');
-    });
-    it('should have a canEdit function attached to the scope', function(){
-      expect(scope.canEdit).toBeDefined();
-      expect(Object.prototype.toString.call(scope.canEdit)).toBe('[object Function]');
-    });
-    it('should have a fieldDisabled function attached to the scope', function(){
-      expect(scope.fieldDisabled).toBeDefined();
-      expect(Object.prototype.toString.call(scope.fieldDisabled)).toBe('[object Function]');
-    });
-    it('should have a editStoreNumber function attached to the scope', function(){
-      expect(scope.editStoreNumber).toBeDefined();
-      expect(Object.prototype.toString.call(scope.editStoreNumber)).toBe('[object Function]');
-    });
   });
 
   describe('controller init function', function(){
