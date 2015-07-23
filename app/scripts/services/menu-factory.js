@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('menuFactory', function (menuService, itemsService, GlobalMenuService) {
+  .factory('menuFactory', function (menuService, itemsService) {
 
     var getMenu = function (menuId) {
       return menuService.getMenu(menuId);
@@ -16,10 +16,6 @@ angular.module('ts5App')
 
     var updateMenu = function (payload) {
       return menuService.updateMenu(payload);
-    };
-
-    var createMenu = function (payload) {
-      return menuService.createMenu(payload);
     };
 
     var getItemsList = function (payload, fetchFromMaster) {
@@ -30,16 +26,10 @@ angular.module('ts5App')
       return itemsService.importFromExcel(companyId, file);
     };
 
-    var getCompanyId = function () {
-      return GlobalMenuService.company.get();
-    };
-
     return {
       getMenu: getMenu,
       updateMenu: updateMenu,
-      createMenu: createMenu,
       getItemsList: getItemsList,
-      importFromExcel: importFromExcel,
-      getCompanyId: getCompanyId
+      importFromExcel: importFromExcel
     };
   });

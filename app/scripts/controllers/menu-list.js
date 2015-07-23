@@ -35,12 +35,10 @@ angular.module('ts5App')
     }
 
     $scope.showMenu = function (menu) {
-      $location.search({});
       $location.path('menu/view/' + menu.id);
     };
 
     $scope.editMenu = function (menu) {
-      $location.search({});
       $location.path('menu/edit/' + menu.id);
     };
 
@@ -48,20 +46,16 @@ angular.module('ts5App')
       menuService.getMenuList(serializeDates($scope.search)).then(attachMenuListToScope);
     };
 
-    function showToast(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
-    }
-
     function showErrors(dataFromAPI) {
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
       }
       $scope.displayError = true;
-      showToast('warning', 'Menu Management', 'error deleting menu!');
+      ngToast.create({
+        className: 'warning',
+        dismissButton: true,
+        content: '<strong>Menu Management</strong>: error deleting menu!'
+      });
     }
 
     function successDeleteHandler() {
@@ -109,11 +103,5 @@ angular.module('ts5App')
       $scope.searchMenus();
     };
 
-    function initializeList() {
-      menuService.getMenuList().then(attachMenuListToScope);
-      if($location.search().newMenuName) {
-        showToast('success', 'Create Menu', 'successfully created menu named ' + $location.search().newMenuName);
-      }
-    }
-    initializeList();
+    menuService.getMenuList().then(attachMenuListToScope);
   });
