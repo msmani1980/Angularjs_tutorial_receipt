@@ -216,6 +216,7 @@ describe('The Item Create Controller', function() {
         priceTypeListDeferred = $q.defer();
         itemsListDeferred = $q.defer();
 
+        spyOn(ItemCreateCtrl, 'setSalesCategories').and.callThrough();
         spyOn(companiesFactory, 'getSalesCategoriesList').and
           .returnValue(responseArray[0]);
         spyOn(companiesFactory, 'getTagsList').and
@@ -240,15 +241,8 @@ describe('The Item Create Controller', function() {
           .returnValue(responseArray[10]);
         spyOn(itemsFactory, 'getItemsList').and
           .returnValue(responseArray[11]);
-
         createController($injector);
-        $httpBackend.whenGET(/./).respond(200, '');
-
       }));
-
-      it('should be defined', function() {
-        expect(ItemCreateCtrl.getDependencies).toBeDefined();
-      });
 
       describe('setSalesCategories method', function() {
 
@@ -653,6 +647,28 @@ describe('The Item Create Controller', function() {
             expect(ItemCreateCtrl.formatPayload).toHaveBeenCalled();
           });
 
+        });
+
+      });
+
+      describe('setUIReady() method', function() {
+
+        beforeEach(function() {
+          spyOn(ItemCreateCtrl,'setUIReady').and.callThrough();
+        });
+
+        it('should expect the UI ready flag to be false',function() {
+          expect($scope.uiSelectTemplateReady).toBeFalsy();
+        });
+
+        it('should expect to have been called',function() {
+          $scope.$digest();
+          expect(ItemCreateCtrl.setUIReady).toHaveBeenCalled();
+        });
+
+        it('should expect the UI ready flag to be true after promises are resovled',function() {
+          $scope.$digest();
+          expect($scope.uiSelectTemplateReady).toBeTruthy();
         });
 
       });
