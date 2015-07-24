@@ -62,6 +62,7 @@ angular.module('ts5App')
     }
 
     function redirectToListPageAfterSuccess(dataFromAPI) {
+      hideLoadingModal();
       $location.path('menu-list').search({newMenuName: dataFromAPI.id});
     }
 
