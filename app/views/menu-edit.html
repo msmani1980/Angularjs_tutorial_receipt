@@ -64,7 +64,7 @@
   <div class="form-group col-sm-3">
     <label for="menuCode">Menu Code *</label>
     <input custom-validity
-           custom-pattern="alphanumeric"
+           custom-pattern="word"
            required
            type="text"
            maxlength="10"
@@ -76,9 +76,9 @@
   </div>
 
   <div class="form-group col-sm-3">
-    <label for="menuCode">Menu Name *</label>
+    <label for="menuName">Menu Name *</label>
     <input custom-validity
-           custom-pattern="alphanumeric"
+           custom-pattern="word"
            required
            type="text"
            maxlength="25"
@@ -103,9 +103,9 @@
   </date-picker>
 
   <div class="form-group col-sm-12">
-    <label for="menuCode">Description</label>
+    <label for="menuDescription">Description</label>
     <input custom-validity
-           custom-pattern="alphanumeric"
+           custom-pattern="word"
            type="text"
            maxlength="50"
            class="form-control"

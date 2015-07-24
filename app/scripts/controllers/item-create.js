@@ -45,13 +45,10 @@ angular.module('ts5App')
 
     this.init = function() {
       this.checkIfViewOnly();
-      this.getDependencies();
       if ($routeParams.id && !$scope.viewOnly) {
         this.setFormAsEdit();
       }
-      if ($scope.editingItem || $scope.viewOnly) {
-        this.getItem($routeParams.id);
-      }
+      this.getDependencies();
     };
 
     this.checkIfViewOnly = function() {
@@ -80,13 +77,7 @@ angular.module('ts5App')
 
     // gets an item to $scope.editingItem
     this.getItem = function(id) {
-
-      var $this = this;
-
-      // TODO: Make this use a loadingModal.show() method
-      angular.element('#loading').modal('show').find('p')
-        .text('We are getting Item ' + id);
-
+      this.showLoadingModal('We are getting Item ' + id);
       itemsFactory.getItem(id).then(function(data) {
         if ($this.validateItemCompany(data)) {
           $this.updateFormData(data.retailItem);
@@ -95,9 +86,16 @@ angular.module('ts5App')
           $location.path('/');
           return false;
         }
-        angular.element('#loading').modal('hide');
+        $this.setUIReady();
       });
+    };
 
+    this.showLoadingModal = function(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
     };
 
     this.findTagsIndex = function(tagId) {
@@ -360,16 +358,18 @@ angular.module('ts5App')
       ];
     };
 
+    this.setUIReady = function() {
+      $scope.uiSelectTemplateReady = true;
+      this.hideLoadingModal();
+    };
+
     this.getDependencies = function() {
-      angular.element('#loading').modal('show').find('p').text(
-        'We are loading the Items data!');
+      $this.showLoadingModal('We are loading the Items data!');
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(
         dependencyPromises).then(function(response) {
+
         $this.setDependencies(response);
-        $scope.uiSelectTemplateReady = true;
-        $scope.filteredCharacteristics = $scope.characteristics;
-        angular.element('#loading').modal('hide');
       });
     };
 
@@ -386,7 +386,13 @@ angular.module('ts5App')
       $this.setWeightList(response[9]);
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11]);
+      if ($scope.editingItem || $scope.viewOnly) {
+        this.getItem($routeParams.id);
+      } else {
+        $this.setUIReady();
+      }
     };
+
     this.setSalesCategories = function(data) {
       $scope.salesCategories = data.salesCategories;
     };
@@ -401,6 +407,7 @@ angular.module('ts5App')
 
     this.setCharacteristics = function(data) {
       $scope.characteristics = data;
+      $scope.filteredCharacteristics = data;
     };
 
     this.setDimensionList = function(data) {
@@ -613,13 +620,11 @@ angular.module('ts5App')
     this.updateStationException = function(priceIndex,
       stationExceptionIndex) {
       var $this = this;
-      var stationException = $scope.formData.prices[priceIndex].stationExceptions[
-        stationExceptionIndex];
+      var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex];
       this.getGlobalStationList(stationException).then(function(data) {
         $this.setStationsList(stationException, data);
       });
-      this.getStationsCurrenciesList(stationException).then(function(
-        data) {
+      this.getStationsCurrenciesList(stationException).then(function(data) {
         $this.setStationsCurrenciesList(stationException, data);
       });
     };
@@ -630,10 +635,8 @@ angular.module('ts5App')
       for (var priceIndex in $scope.formData.prices) {
         var price = $scope.formData.prices[priceIndex];
         for (var stationExceptionIndex in price.stationExceptions) {
-          var stationException = price.stationExceptions[
-            stationExceptionIndex];
-          stationPromises.push(this.getGlobalStationList(
-            stationException));
+          var stationException = price.stationExceptions[stationExceptionIndex];
+          stationPromises.push(this.getGlobalStationList(stationException));
         }
         this.handleStationPromises(stationPromises, price);
       }
@@ -645,7 +648,9 @@ angular.module('ts5App')
       $q.all(stationPromises).then(function(data) {
         for (var key in data) {
           var stationException = price.stationExceptions[key];
-          $this.setStationsList(stationException, data[key]);
+          if(stationException) {
+            $this.setStationsList(stationException, data[key]);
+          }
         }
       });
     };
@@ -740,9 +745,9 @@ angular.module('ts5App')
     };
 
     this.checkStationException = function(newPrices,oldPrices,priceIndex,stationExceptionIndex) {
-      var newStationException = newPrices.prices[priceIndex].stationExceptions[stationExceptionIndex];
-      var oldStationException = oldPrices.prices[priceIndex].stationExceptions[ stationExceptionIndex];
-      if (!oldStationException) {
+      var newStationException = newPrices[priceIndex].stationExceptions[stationExceptionIndex];
+      var oldStationException = oldPrices[priceIndex].stationExceptions[stationExceptionIndex];
+      if (!oldStationException || !newStationException.startDate || !newStationException.endDate) {
         return false;
       }
       if (newStationException.startDate !== oldStationException.startDate ||

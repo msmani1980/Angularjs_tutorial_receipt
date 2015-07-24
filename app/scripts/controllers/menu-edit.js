@@ -14,6 +14,15 @@ angular.module('ts5App')
     $scope.newItemList = [];
     var $this = this;
 
+    function showLoadingModal(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
+    }
+
 
     function getMasterItemUsingId(masterItemId) {
       return $scope.masterItemsList.filter(function (masterItem) {
@@ -44,6 +53,7 @@ angular.module('ts5App')
     }
 
     function showToast(className, type, message) {
+      hideLoadingModal();
       ngToast.create({
         className: className,
         dismissButton: true,
@@ -56,6 +66,7 @@ angular.module('ts5App')
     }
 
     function resetModelAndShowNotification(dataFromAPI) {
+      $scope.newItemList = [];
       setupMenuModelAndFetchItems(dataFromAPI);
       showToast('success', 'Menu', 'successfully updated!');
     }
@@ -135,6 +146,7 @@ angular.module('ts5App')
       if (!$scope.menuEditForm.$valid) {
         return false;
       }
+      showLoadingModal('Saving Menu');
       var payload = $this.createPayload();
       eval($routeParams.state + 'Menu')(payload);
 
@@ -155,7 +167,8 @@ angular.module('ts5App')
         return item.itemId !== $scope.itemToDelete.itemId;
       });
 
-      $scope.menuEditForm.$setDirty();
+      //$scope.menuEditForm.$setDirty();
+      $scope.submitForm();
     };
 
     $scope.isViewOnly = function () {
