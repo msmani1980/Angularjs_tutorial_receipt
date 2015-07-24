@@ -29,6 +29,29 @@
   <!--/TopHeader -->
 
   <div class="delivery-notes-list">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <!-- form header-->
+        <div class="row" ng-hide="readOnly">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label>LMP Station*</label>
+              <select class="form-control" id="deliveryStation" ng-model="deliveryStationIndex" ng-change="updateDeliveryInfo()" ng-disabled="readOnly">
+                <option ng-repeat="station in stationList" value="{{ $index }}">
+                  {{ station.stationCode }} ({{ station.stationName}})
+                </option>
+              </select>
+              
+  <!-- TODO: IF ONLY ONE LMP STATION IS AVAILABLE, USE READ-ONLY (BELOW) INSTEAD OF SELECT (ABOVE)  -->
+  <!--               <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true"> -->
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
     <div class="row">
 
       <div class="col-xs-6">
@@ -119,8 +142,8 @@
       <tbody>
         <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
         <tr class="ng-scope">
-          <td class="ng-binding">1234</td>
-          <td class="ng-binding">1234</td>
+          <td class="ng-binding">1A2B3C4D</td>
+          <td class="ng-binding">2A3B4C5D</td>
           <td class="ng-binding">2/03</td>
           <td class="ng-binding">Saved</td>
           <td class="ng-binding">2/03 - 12:34pm</td>
@@ -140,8 +163,8 @@
           </td>
         </tr>
         <tr class="ng-scope">
-          <td class="ng-binding">1235</td>
-          <td class="ng-binding">1235</td>
+          <td class="ng-binding">9Z8Y7X6W</td>
+          <td class="ng-binding">8Z7Y6X5W</td>
           <td class="ng-binding">2/03</td>
           <td class="ng-binding">Submitted</td>
           <td class="ng-binding">2/03 - 12:34pm</td>
