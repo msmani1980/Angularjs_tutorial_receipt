@@ -58,10 +58,10 @@
     <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyName}}</div>
     <div class="hidden-xs col-sm-2 list-item">
       <select name="companyType" ng-model="search.companyTypeId"
-              ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
+              ng-options="companyType.relativeCompanyTypeId as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
               ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
               class="form-control">
-        <option selected disabled value="">Filter by...</option>
+        <option selected disabled value="">ASD Filter by...</option>
       </select>
     </div>
     <div class="hidden-xs col-sm-2 list-item">
@@ -105,7 +105,7 @@
     <div class="visible-xs col-xs-3 list-header text-right">Type</div>
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyType" ng-model="search.companyTypeId"
-      ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
+      ng-options="companyType.relativeCompanyTypeId as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
       ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
       class="form-control">
         <option selected disabled value="">Filter by...</option>
@@ -159,7 +159,7 @@
     <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyName}}</div>
     <div class="hidden-xs col-sm-2 list-item">
       <select name="companyType" ng-model="search.companyTypeId"
-              ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
+              ng-options="companyType.relativeCompanyTypeId as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
               class="form-control">
         <option selected disabled value="">Filter by...</option>
       </select>
@@ -203,7 +203,7 @@
     <div class="visible-xs col-xs-3 list-header text-right">Type</div>
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyType" ng-model="search.companyTypeId"
-      ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList"
+      ng-options="companyType.relativeCompanyTypeId as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
       class="form-control">
         <option selected disabled value="">Filter by...</option>
       </select>
