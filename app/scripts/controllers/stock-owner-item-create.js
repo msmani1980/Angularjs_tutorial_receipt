@@ -183,14 +183,11 @@ angular.module('ts5App')
 
     // gets a list of price types for price group
     this.getPriceTypesList = function() {
-
       itemsFactory.getPriceTypesList(function(data) {
         $scope.priceTypes = data;
       });
-
     };
 
-    this.getMasterCurrenciesList();
     this.getPriceTypesList();
 
     this.makeDependencyPromises = function() {
@@ -452,62 +449,28 @@ angular.module('ts5App')
       });
 
     }
-
-    // Formats the dates when sending the payload to the API
-    function formatPayloadDates(itemData) {
-      itemData.startDate = dateUtility.formatDateForAPI(itemData.startDate);
-      itemData.endDate = dateUtility.formatDateForAPI(itemData.endDate);
-      // TODO: Turn this into a function
-      for (var imageIndex in itemData.images) {
-        var image = itemData.images[imageIndex];
-        itemData.startDate = dateUtility.formatDateForAPI(itemData.startDate);
-        itemData.endDate = dateUtility.formatDateForAPI(itemData.endDate);
-      }
-      // TODO: Turn this into a function
-      for (var priceIndex in itemData.costPrices) {
-        var price = itemData.costPrices[priceIndex];
-        itemData.startDate = dateUtility.formatDateForAPI(itemData.startDate);
-        itemData.endDate = dateUtility.formatDateForAPI(itemData.endDate);
-      }
-    }
-
     // cleans up invalid properties of payload before submitting
-    function cleanUpPayload(itemData) {
+    this.cleanUpPayload = function(itemData) {
       for (var priceIndex in itemData.costPrices) {
         var price = itemData.costPrices[priceIndex];
         delete price.code;
       }
-    }
+    };
 
-    // formats the tags for payload
-    function formatTags(itemData) {
-      for (var tagKey in itemData.tags) {
-        var tagId = itemData.tags[tagKey];
-        itemData.tags[tagKey] = {
-          tagId: tagId
-        };
+    this.formatImagePayloadDates = function(itemData) {
+      for (var imageIndex in itemData.images) {
+        var image = itemData.images[imageIndex];
+        image.startDate = dateUtility.formatDateForAPI(image.startDate);
+        image.endDate = dateUtility.formatDateForAPI(image.endDate);
       }
-    }
+    };
 
-    // formats the allergens for payload
-    function formatAllergens(itemData) {
-      for (var allergenKey in itemData.allergens) {
-        var allergenId = itemData.allergens[allergenKey];
-        itemData.allergens[allergenKey] = {
-          allergenId: allergenId
-        };
-      }
-    }
-
-    // formats the characteristics for payload
-    function formatCharacteristics(itemData) {
-      for (var characteristicKey in itemData.characteristics) {
-        var characteristicId = itemData.characteristics[characteristicKey];
-        itemData.characteristics[characteristicKey] = {
-          characteristicId: characteristicId
-        };
-      }
-    }
+    this.formatPayloadDates = function(itemData) {
+      itemData.startDate = dateUtility.formatDateForAPI(itemData.startDate);
+      itemData.endDate = dateUtility.formatDateForAPI(itemData.endDate);
+      this.formatImagePayloadDates(itemData);
+      this.formatPricePayloadDates(itemData);
+    };
 
     this.updateItem = function(itemData) {
       var $this = this;
@@ -572,7 +535,6 @@ angular.module('ts5App')
       itemData.substitutions = $this.formatSubstitutions(itemData);
       itemData.recommendations = $this.formatRecommendations(itemData);
       this.formatPayloadDates(itemData);
-      this.cleanUpPayload(itemData);
       return itemData;
     };
 
@@ -588,9 +550,7 @@ angular.module('ts5App')
 
     // TODO: MOVE ME GLOBAL
     $scope.formScroll = function(id, activeBtn) {
-
       $scope.activeBtn = id;
-
       var elm = angular.element('#' + id);
       var body = angular.element('body');
       var navBar = angular.element('.navbar-header').height();
