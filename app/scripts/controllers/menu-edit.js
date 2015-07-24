@@ -158,8 +158,39 @@ angular.module('ts5App')
     }
 
     function createMenu(payload) {
-      menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+      checkForDuplicateRecord(payload);
     }
+
+    function overwriteMenu() {
+      $scope.menu.id = $scope.overwriteMenuId;
+      var payload = $this.createPayload();
+      console.log(payload);
+      //editMenu(payload);
+    }
+
+    function checkForDuplicateRecord(payload) {
+      menuFactory.getMenuList({
+        menuCode: payload.menuCode,
+        menuName: payload.menuName
+      }).then(checkToOverwriteOrCreate);
+    }
+
+    function checkToOverwriteOrCreate(response) {
+      var duplicateExists = response.menus.length;
+      var dateIsInTheFuture = dateUtility.isAfterToday(response.menus.startDate);
+
+      if(duplicateExists && !dateIsInTheFuture) {
+        hideLoadingModal();
+        showToast('danger', 'Create Menu Failure', 'a menu with this name and code already exists and cannot be overwritten')
+      } else if(duplicateExists && dateIsInTheFuture) {
+        hideLoadingModal();
+        $scope.overwriteMenuId = response.menus[0].id;
+        angular.element('#overwrite-modal').modal('show');
+      } else {
+        //menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+      }
+    }
+
 
     $scope.deleteItemFromMenu = function () {
       angular.element('.delete-warning-modal').modal('hide');

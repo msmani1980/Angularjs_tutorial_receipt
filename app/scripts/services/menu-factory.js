@@ -14,6 +14,10 @@ angular.module('ts5App')
       return menuService.getMenu(menuId);
     };
 
+    var getMenuList = function (payload) {
+      return menuService.getMenuList(payload);
+    };
+
     var updateMenu = function (payload) {
       return menuService.updateMenu(payload);
     };
@@ -41,6 +45,7 @@ angular.module('ts5App')
 
     return {
       getMenu: getMenu,
+      getMenuList: getMenuList,
       updateMenu: updateMenu,
       createMenu: createMenu,
       getItemsList: getItemsList,
