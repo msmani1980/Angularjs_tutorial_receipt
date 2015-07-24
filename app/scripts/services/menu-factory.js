@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('menuFactory', function (menuService, itemsService, GlobalMenuService) {
+  .factory('menuFactory', function (menuService, itemsService, GlobalMenuService, dateUtility) {
 
     var getMenu = function (menuId) {
       return menuService.getMenu(menuId);
@@ -23,6 +23,11 @@ angular.module('ts5App')
     };
 
     var getItemsList = function (payload, fetchFromMaster) {
+      // TODO: move date formatting to service level
+      if(payload.startDate && payload.endDate) {
+        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+        payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+      }
       return itemsService.getItemsList(payload, fetchFromMaster);
     };
 

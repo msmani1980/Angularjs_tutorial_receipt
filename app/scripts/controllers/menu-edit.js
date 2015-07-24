@@ -29,8 +29,6 @@ angular.module('ts5App')
     }
 
     function fetchMasterItemsList(startDate, endDate) {
-      startDate = dateUtility.formatDateForAPI(startDate);
-      endDate = dateUtility.formatDateForAPI(endDate);
       menuFactory.getItemsList({
         startDate: startDate,
         endDate: endDate
