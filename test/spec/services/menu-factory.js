@@ -61,6 +61,19 @@ describe('Service: menuFactory', function () {
       expect(itemsService.getItemsList).toHaveBeenCalledWith(payload, true);
     });
 
+    it('should call itemsService and reformat date payloads', function () {
+      var payload = {
+        startDate: '07/11/2015',
+        endDate: '08/12/2015'
+      };
+      var reformattedPayload = {
+        startDate: '20150711',
+        endDate: '20150812'
+      };
+      menuFactory.getItemsList(payload, true);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith(reformattedPayload, true);
+    });
+
     it('should call GlobalMenuService.company.get with a payload and a flag to get items from master list', function () {
       menuFactory.getCompanyId();
       expect(GlobalMenuService.company.get).toHaveBeenCalled();
