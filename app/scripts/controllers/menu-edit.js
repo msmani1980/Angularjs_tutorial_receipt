@@ -15,10 +15,6 @@ angular.module('ts5App')
     var $this = this;
 
 
-    function formatDate(dateString, formatFrom, formatTo) {
-      return moment(dateString, formatFrom).format(formatTo).toString();
-    }
-
     function getMasterItemUsingId(masterItemId) {
       return $scope.masterItemsList.filter(function (masterItem) {
         return masterItem.id === masterItemId;
@@ -33,35 +29,20 @@ angular.module('ts5App')
     }
 
     function fetchMasterItemsList(startDate, endDate) {
+      startDate = dateUtility.formatDateForAPI(startDate);
+      endDate = dateUtility.formatDateForAPI(endDate);
       menuFactory.getItemsList({
         startDate: startDate,
         endDate: endDate
       }, true).then(attachItemsModelToScope);
     }
 
-    function localizeDates(datesContainer, formatDateFrom, formatDateTo) {
-      return {
-        startDate: formatDate(datesContainer.startDate, formatDateFrom, formatDateTo),
-        endDate: formatDate(datesContainer.endDate, formatDateFrom, formatDateTo)
-      };
-    }
-
-    function attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat) {
-      $scope.menu = angular.copy(menuFromAPI);
-      angular.extend($scope.menu, localizeDates($scope.menu, dateFromAPIFormat, 'L'));
-      $scope.menuEditForm.$setPristine();
-    }
-
     function setupMenuModelAndFetchItems(menuFromAPI) {
       $scope.menuFromAPI = angular.copy(menuFromAPI);
 
-      var dateFromAPIFormat = 'YYYY-MM-DD';
-      var dateForAPIFormat = 'YYYYMMDD';
-      var startDateFromAPI = formatDate(menuFromAPI.startDate, dateFromAPIFormat, dateForAPIFormat);
-      var endDateFromAPI = formatDate(menuFromAPI.endDate, dateFromAPIFormat, dateForAPIFormat);
-
-      fetchMasterItemsList(startDateFromAPI, endDateFromAPI);
-      attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat);
+      fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
+      $scope.menu = angular.copy(menuFromAPI);
+      $scope.menuEditForm.$setPristine();
     }
 
     function showToast(className, type, message) {
@@ -109,7 +90,7 @@ angular.module('ts5App')
             itemId: item.masterItem.id,
             itemQty: parseInt(item.itemQty)
           };
-          if(menuId) {
+          if (menuId) {
             itemObject.menuId = menuId;
           }
           ItemsArray.push(itemObject);
@@ -127,7 +108,7 @@ angular.module('ts5App')
           itemQty: item.itemQty,
           sortOrder: item.sortOrder
         };
-        if(item.menuId) {
+        if (item.menuId) {
           itemObject.menuId = item.menuId;
         }
         itemsArray.push(itemObject);
@@ -137,7 +118,6 @@ angular.module('ts5App')
 
     $this.createPayload = function () {
       var payload = {
-        id: $scope.menu.id,
         companyId: $scope.menu.companyId,
         description: $scope.menu.description,
         endDate: $scope.menu.endDate,
@@ -147,7 +127,7 @@ angular.module('ts5App')
         menuName: $scope.menu.menuName,
         startDate: $scope.menu.startDate
       };
-      if($scope.menu.id) {
+      if ($scope.menu.id) {
         payload.id = $scope.menu.id;
       }
       return payload;
@@ -157,12 +137,7 @@ angular.module('ts5App')
       if (!$scope.menuEditForm.$valid) {
         return false;
       }
-
-      var formatFrom = 'l';
-      var formatTo = 'YYYYMMDD';
       var payload = $this.createPayload();
-
-      angular.extend(payload, localizeDates(payload, formatFrom, formatTo));
       eval($routeParams.state + 'Menu')(payload);
 
     };
@@ -225,7 +200,7 @@ angular.module('ts5App')
     };
 
     $scope.addItem = function () {
-      if($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
+      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
         $scope.newItemList.push({});
       } else {
         showToast('warning', 'Add Menu Item', 'Please select a date range first!');
@@ -237,7 +212,6 @@ angular.module('ts5App')
     };
 
     $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
-      console.log('hi');
       if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
         fetchMasterItemsList($scope.menu.startDate, $scope.menu.endDate);
       }
