@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuFactory, dateUtility) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuFactory, dateUtility, $location) {
     $scope.viewName = 'Menu';
     $scope.masterItemsList = [];
     $scope.newItemList = [];
@@ -72,6 +72,10 @@ angular.module('ts5App')
       });
     }
 
+    function redirectToListPageAfterSuccess(dataFromAPI) {
+      $location.path('menu-list').search({newMenuName: dataFromAPI.id});
+    }
+
     function resetModelAndShowNotification(dataFromAPI) {
       setupMenuModelAndFetchItems(dataFromAPI);
       showToast('success', 'Menu', 'successfully updated!');
@@ -101,11 +105,14 @@ angular.module('ts5App')
       var menuId = $scope.menu.id;
       angular.forEach($scope.newItemList, function (item) {
         if (angular.isDefined(item.masterItem) && angular.isDefined(item.itemQty)) {
-          ItemsArray.push({
+          var itemObject = {
             itemId: item.masterItem.id,
-            itemQty: parseInt(item.itemQty),
-            menuId: menuId
-          });
+            itemQty: parseInt(item.itemQty)
+          };
+          if(menuId) {
+            itemObject.menuId = menuId;
+          }
+          ItemsArray.push(itemObject);
         }
       });
       return ItemsArray;
@@ -114,13 +121,16 @@ angular.module('ts5App')
     $this.clearCurrentItems = function () {
       var itemsArray = [];
       angular.forEach($scope.menu.menuItems, function (item) {
-        itemsArray.push({
+        var itemObject = {
           id: item.id,
           itemId: item.itemId,
           itemQty: item.itemQty,
-          menuId: item.menuId,
           sortOrder: item.sortOrder
-        });
+        };
+        if(item.menuId) {
+          itemObject.menuId = item.menuId;
+        }
+        itemsArray.push(itemObject);
       });
       return itemsArray;
     };
@@ -132,11 +142,14 @@ angular.module('ts5App')
         description: $scope.menu.description,
         endDate: $scope.menu.endDate,
         menuCode: $scope.menu.menuCode,
-        menuId: $scope.menu.menuId,
+        menuId: $scope.menu.menuId ? $scope.menu.menuId : null,
         menuItems: $this.clearCurrentItems().concat($this.addNewItems()),
         menuName: $scope.menu.menuName,
         startDate: $scope.menu.startDate
       };
+      if($scope.menu.id) {
+        payload.id = $scope.menu.id;
+      }
       return payload;
     };
 
@@ -150,8 +163,17 @@ angular.module('ts5App')
       var payload = $this.createPayload();
 
       angular.extend(payload, localizeDates(payload, formatFrom, formatTo));
-      menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
+      eval($routeParams.state + 'Menu')(payload);
+
     };
+
+    function editMenu(payload) {
+      menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
+    }
+
+    function createMenu(payload) {
+      menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+    }
 
     $scope.deleteItemFromMenu = function () {
       angular.element('.delete-warning-modal').modal('hide');
@@ -186,7 +208,6 @@ angular.module('ts5App')
       }
       return !dateUtility.isAfterToday($scope.menu.startDate);
     };
-
 
     $scope.isMenuEditable = function () {
       if ($routeParams.state === 'create') {
@@ -226,9 +247,11 @@ angular.module('ts5App')
       if ($routeParams.id) {
         menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
       } else {
+        var companyId = menuFactory.getCompanyId();
         $scope.menu = {
           startDate: '',
-          endDate: ''
+          endDate: '',
+          companyId: companyId
         };
       }
     }
