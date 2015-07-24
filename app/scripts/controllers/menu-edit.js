@@ -161,7 +161,7 @@ angular.module('ts5App')
       checkForDuplicateRecord(payload);
     }
 
-    function overwriteMenu() {
+    $scope.overwriteMenu = function () {
       $scope.menu.id = $scope.overwriteMenuId;
       var payload = $this.createPayload();
       console.log(payload);
@@ -177,11 +177,11 @@ angular.module('ts5App')
 
     function checkToOverwriteOrCreate(response) {
       var duplicateExists = response.menus.length;
-      var dateIsInTheFuture = dateUtility.isAfterToday(response.menus.startDate);
+      var dateIsInTheFuture = dateUtility.isAfterToday(response.menus[0].startDate);
 
       if(duplicateExists && !dateIsInTheFuture) {
         hideLoadingModal();
-        showToast('danger', 'Create Menu Failure', 'a menu with this name and code already exists and cannot be overwritten')
+        showToast('danger', 'Create Menu Failure', 'a menu with this name and code already exist and cannot be overwritten')
       } else if(duplicateExists && dateIsInTheFuture) {
         hideLoadingModal();
         $scope.overwriteMenuId = response.menus[0].id;

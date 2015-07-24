@@ -46,7 +46,7 @@ angular.module('ts5App')
 
     var actions = {
       getMenuList: {
-        method: 'GET'
+        method: 'GET',
       },
       getMenu: {
         method: 'GET',
