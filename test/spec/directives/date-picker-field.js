@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: datePickerField', function () {
+describe('The Date Picker Field directive', function () {
 
   // load the directive's module
   beforeEach(module('ts5App'));
@@ -8,22 +8,85 @@ describe('Directive: datePickerField', function () {
   beforeEach(module('template-module'));
 
   var element,
-    scope;
+    $scope,
+    formGroup;
 
   beforeEach(inject(function ($rootScope) {
-    scope = $rootScope.$new();
+    $scope = $rootScope.$new();
   }));
 
-  describe('date picker template', function () {
-    var formGroup;
+  function generateDirectiveTemplate(config) {
+    var template = '<date-picker-field ';
+    if(config.form) {
+      template += 'form="'+config.form+'" ';
+    }
+    if(config.label) {
+      template += 'label="'+config.label+'" ';
+    }
+    if(config.name) {
+      template += 'name="'+config.name+'" ';
+    }
+    if(config.ngModel) {
+      template += 'ng-model="'+config.ngModel+'" ';
+    }
+    if(config.required) {
+      template += 'required="'+config.required+'" ';
+    }
+    if(config.disablePast) {
+      template += 'disable-past="'+config.disablePast+'" ';
+    }
+    template += '></date-picker-field>';
+    return template;
+  }
+
+  function renderDirective(config,$compile) {
+    var template = generateDirectiveTemplate(config);
+    element = angular.element(template);
+    element = $compile(element)($scope);
+    $scope.$digest();
+    formGroup = angular.element(element.find('.form-group')[0]);
+  }
+
+  describe('when the directive is rendered', function () {
+
+    var config;
     beforeEach(inject(function ($compile) {
-      element = angular.element(
-        '<date-picker-field label="labelFrom" required></date-picker-field>'
-      );
-      element = $compile(element)(scope);
-      scope.$digest();
-      formGroup = angular.element(element.find('.form-group')[0]);
+      config = {
+        form: 'form',
+        ngModel: 'formData.startDate',
+        label: 'Effective From',
+        name: 'EffectiveFrom',
+        required: true,
+        disablePast:true
+      };
+      renderDirective(config,$compile);
     }));
+
+    it('should set the form attribute on the directive', function () {
+      expect(element.attr('form')).toEqual(config.form);
+    });
+
+    it('should set the ng-model attribute on the directive', function () {
+      expect(element.attr('ng-model')).toEqual(config.ngModel);
+    });
+
+    it('should set the label attribute on the directive', function () {
+      expect(element.attr('label')).toEqual(config.label);
+    });
+
+    it('should set the label attribute on the directive', function () {
+      expect(element.attr('name')).toEqual(config.name);
+    });
+
+    it('should set the disable-past attribute on the directive', function () {
+      expect(element.attr('disable-past')).toEqual(config.disablePast.toString());
+    });
+
+    it('should set the required attribut on the directive', function () {
+      if(config.required) {
+        expect(element.attr('required')).toEqual('required');
+      }
+    });
 
     it('should be wrapped in a form-group', function () {
       expect(formGroup).toBeDefined();
