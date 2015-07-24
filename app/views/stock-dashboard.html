@@ -1,4 +1,4 @@
-<div class="container module-container">
+<div class="module-container">
 
   <div class="top-header">
   
@@ -18,22 +18,11 @@
           
               <button type="button" class="btn btn-info">
                 <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
-                <span>Export (Excel)</span>
+                <span>Export (CSV)</span>
               </button>
               <button type="button" class="btn btn-info">
                 <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
                 <span>Export (PDF)</span>
-              </button>
-            
-              <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
-                <span>Save</span>
-              </button>
-              
-              <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
-              
-              <button class="btn btn-primary" ng-click="submitForm(formData)">
-                <span class="fa fa-check-square-o" aria-hidden="true"></span>
-                <span>Submit</span>
               </button>
     
             </fieldset>
@@ -63,14 +52,48 @@
         </div>
         
       </div>
+      <div class="row">
+      
+        <div class="col-xs-12">
+          <div class="form-group">
+            <div class="btn-group import-from-file">
+              <div class="btn-group" dropdown>
+                <button type="button" class="btn btn-info"data-toggle="collapse" data-target="#importFromData" >
+                  <span class="fa fa-copy" aria-hidden="true"></span>
+                  Import Stock From File
+                </button>
+                <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle>
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/FileUpload-PostTripManagement.xlsx">Download Excel Template</a></li>
+                  <li><a data-toggle="modal" data-target=".download-template-modal"
+                         ng-click="downloadTemplate()">View Excel Specifications</a></li>
+                </ul>
+              </div>
+    
+              <div id="importFromData" class="collapse width">
+                <input type="file"
+                       ngf-select
+                       ng-model="postTripFile"
+                       accept=".xls,.xlsx">
+                <button type="button" class="btn btn-info" ng-click="uploadPostTripFileToApi(postTripFile)">
+                  Upload
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
     </div>
     
   </div>
   <!--/TopHeader -->
 
-  <div class="stock-dashboard-container">
+  <div class="container stock-dashboard-container">
 
-<!-- TODO: FILTER DYNAMICALLY ADJUSTS TABLE DATA BELOW -->
+<!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
     <div class="row">
       <div class="col-xs-12 col-sm-1">
         <div class="form-group">
@@ -100,6 +123,7 @@
           <th>Item Name</th>
           <th>Opening Count</th>
           <th>Goods Received</th>
+          <th>Dispatched Count</th>
           <th>Current Count</th>
         </tr>
       </thead>
@@ -110,13 +134,16 @@
           <td class="ng-binding">
           
 <!-- TODO: STOCK ADJUSTMENT POPOVER IMPLEMENTED HERE -->
-            <input type="text" class="form-control" placeholder="100">
+            <input type="text" class="form-control" placeholder="100" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="10">
+            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="110 (Stock Adjust - Click Here)" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
+            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="100" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
         
@@ -124,27 +151,34 @@
           <td class="ng-binding">0002</td>
           <td class="ng-binding">Sprite</td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="50">
+            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="0">
+            <input type="text" class="form-control" placeholder="0" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="50">
+            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="40" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
         
-        <tr class="ng-scope">
+        <!-- TODO: ROW BACKGROUND SHOWS DISCREPANCY IN ITEM COUNT -->
+        <tr class="ng-scope bg-danger">
           <td class="ng-binding">0003</td>
           <td class="ng-binding">Chicken Sandwich</td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="200">
+            <input type="text" class="form-control" placeholder="200" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="100">
+            <input type="text" class="form-control" placeholder="100" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="300">
+            <input type="text" class="form-control" placeholder="100" ng-disabled="true">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="500" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
         
@@ -152,13 +186,16 @@
           <td class="ng-binding">0004</td>
           <td class="ng-binding">Coffee</td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="100">
+            <input type="text" class="form-control" placeholder="100" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="0">
+            <input type="text" class="form-control" placeholder="0" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="100">
+            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="50" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
         
@@ -166,13 +203,16 @@
           <td class="ng-binding">0005</td>
           <td class="ng-binding">Cheeseburger</td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="60">
+            <input type="text" class="form-control" placeholder="60" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="40">
+            <input type="text" class="form-control" placeholder="40" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="100">
+            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="90" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
         
@@ -180,13 +220,16 @@
           <td class="ng-binding">0006</td>
           <td class="ng-binding">Chips</td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="130">
+            <input type="text" class="form-control" placeholder="130" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="20">
+            <input type="text" class="form-control" placeholder="20" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="150">
+            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="100" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
         
@@ -194,13 +237,16 @@
           <td class="ng-binding">0007</td>
           <td class="ng-binding">Root Beer</td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="200">
+            <input type="text" class="form-control" placeholder="200" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="50">
+            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="250">
+            <input type="text" class="form-control" placeholder="0" ng-disabled="true">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="250" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
         
@@ -208,13 +254,16 @@
           <td class="ng-binding">0008</td>
           <td class="ng-binding">Fries</td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="75">
+            <input type="text" class="form-control" placeholder="75" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="75">
+            <input type="text" class="form-control" placeholder="75" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="150">
+            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="140" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
         
@@ -222,13 +271,16 @@
           <td class="ng-binding">0009</td>
           <td class="ng-binding">Orange Soda</td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="225">
+            <input type="text" class="form-control" placeholder="225" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="25">
+            <input type="text" class="form-control" placeholder="25" ng-disabled="true">
           </td>
           <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="250">
+            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
+          </td>
+          <td class="ng-binding">
+            <input type="text" class="form-control" placeholder="200" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
       </tbody>
@@ -240,30 +292,35 @@
 
 <!-- Content for Stock Adjustment Popover -->    
 <div id="stockAdjustmentPopover" class="hidden">
-    <div class="popover-heading">Adjustment<a href="#" class="close" data-dismiss="alert">&times</a></div>
-    
-    <div class="popover-body">
-      
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label>Reason*</label>
+  <div class="popover-heading">Adjustment<a href="#" class="close" data-dismiss="alert">&times</a></div>
   
-            <ui-select id="stock-adjustment-reason" ng-model="stockAdjustmentReason" theme="bootstrap">
-              <ui-select-match placeholder="Broken">{{ $item.stockAdjustmentReasonCode }}</ui-select-match>
-              <ui-select-choices repeat="">{ item.ullageReasonCode }} ({{ item.stockAdjustmentReasonName }})</ui-select-choices>
-            </ui-select>
+  <div class="popover-body">
+    
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <label>Reason*</label>
+
+          <ui-select id="stock-adjustment-reason" ng-model="stockAdjustmentReason" theme="bootstrap">
+            <ui-select-match placeholder="Broken">{{ $item.stockAdjustmentReasonCode }}</ui-select-match>
+            <ui-select-choices repeat="">{ item.ullageReasonCode }} ({{ item.stockAdjustmentReasonName }})</ui-select-choices>
+          </ui-select>
+          
+        </div>
         
-          </div>
+        <div class="form-group">
+          <label>Comments</label>
+            <textarea rows="2"></textarea>
         </div>
       </div>
-        
-      <div class="row">
-        <div class="col-xs-12 text-right">
-          <a ng-href="#" class="btn btn-primary">Save</a>
-        </div>        
-      </div>    
     </div>
+      
+    <div class="row">
+      <div class="col-xs-12 text-right">
+        <a ng-href="#" class="btn btn-primary">Save</a>
+      </div>        
+    </div>    
+  </div>
 </div>   
 
 <download-template-modal></download-template-modal>
