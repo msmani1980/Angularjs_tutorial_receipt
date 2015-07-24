@@ -274,7 +274,12 @@ angular.module('ts5App')
 	      route: '/#/stock-dashboard',
 	      icon: 'icon-manage-schedule',
 	      className: 'dashboard-stockDashboard'
-      	},{
+      	}, {
+          name: 'Stock Take Report',
+          route: '/#/stock-take-report',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-stockTakeReport'
+        }, {
           name: 'Manage Goods Received',
           route: '/#/manage-goods-received',
           icon: 'icon-manage-schedule',
