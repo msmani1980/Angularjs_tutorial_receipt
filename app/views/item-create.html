@@ -106,10 +106,10 @@
 
         <div class="row">
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field disabled="viewOnly || itemIsActive" form="form" name="EffectiveFrom" label="Effective From" required="true" ng-model="formData.startDate"></date-picker-field>
+            <date-picker-field ng-disabled="viewOnly || itemIsActive" form="form" name="EffectiveFrom" label="Effective From" required="true" ng-model="formData.startDate"></date-picker-field>
           </div>
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field disabled="viewOnly || itemIsInactive" form="form" name="EffectiveTo" label="Effective To" required="true" ng-model="formData.endDate"></date-picker-field>
+            <date-picker-field ng-disabled="viewOnly || itemIsInactive" form="form" name="EffectiveTo" label="Effective To" required="true" ng-model="formData.endDate"></date-picker-field>
           </div>
         </div>
 
