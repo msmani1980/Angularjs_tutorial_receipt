@@ -1,0 +1,375 @@
+<div class="module-container">
+
+  <div class="top-header">
+  
+    <div class="container stock-dashboard">
+        
+      <div class="edit-controls">
+        <div class="row">
+          
+          <div class="col-xs-6">
+            <h2 class="view-name"> {{ viewName }} </h2>
+          </div>
+    
+          <div class="col-xs-6 text-right">
+    
+            <fieldset ng-hide="viewOnly">
+              
+                <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+                  <span>Save</span>
+                </button>
+                
+                <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
+                
+                <button class="btn btn-primary" ng-click="submitForm(formData)">
+                  <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                  <span>Submit</span>
+                </button>
+    
+            </fieldset>
+    
+          </div>        
+    
+        </div>
+        
+      </div>
+      
+      <div class="row" ng-hide="readOnly">
+        <div class="col-xs-12 col-sm-4">
+          <div class="form-group">
+            <label>LMP Station</label>
+            <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true">
+                   
+<!-- LMP STATION SELECTOR (BELOW) REPLACED BY READ-ONLY DATA ABOVE -->
+<!--               <select class="form-control" id="deliveryStation" ng-model="deliveryStationIndex" ng-change="updateDeliveryInfo()" ng-disabled="readOnly"> -->
+<!--                 <option ng-repeat="station in stationList" value="{{ $index }}"> -->
+<!--                   {{ station.stationCode }} ({{ station.stationName}}) -->
+<!--                 </option> -->
+<!--               </select> -->
+          </div>
+        </div>
+      </div>
+        
+    </div>
+    
+  </div>
+  <!--/TopHeader -->
+  
+  <div class="container stock-take-container">
+  
+    <div class="row">
+    <!-- TODO: THIS ROW ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
+      
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label for="deliveryNoteCreatedBy">Created By</label>
+          <input ng-model="deliveryNoteCreatedBy" type="text" class="form-control" id="delivery-note-created-by"
+                 placeholder="User 0001" ng-readonly="readOnly">
+        </div>
+      </div>
+      
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label for="deliveryNoteCreatedDateTime">Created Date/Time</label>
+          <input ng-model="deliveryNoteCreatedDateTime" type="text" class="form-control" id="delivery-note-created-date-time"
+                 placeholder="2/05 - 12:34pm" ng-readonly="readOnly">
+        </div>
+      </div>
+      
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label for="deliveryNoteUpdatedBy">Updated By</label>
+          <input ng-model="deliveryNoteUpdatedBy" type="text" class="form-control" id="delivery-note-updated-by"
+                 placeholder="User 0002" ng-readonly="readOnly">
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label for="deliveryNoteUpdatedDateTime">Updated Date/Time</label>
+          <input ng-model="deliveryNoteUpdatedDateTime" type="text" class="form-control" id="delivery-note-updated-date-time"
+                 placeholder="2/07 - 12:34pm" ng-readonly="readOnly">
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-2">
+        <div class="form-group">
+          <label for="stockTakeID">Stock Take ID</label>
+          <input ng-model="stockTakeID" type="text" class="form-control" id="stock-take-id"
+                 placeholder="123456789" ng-readonly="readOnly">
+        </div>
+      </div>
+              
+    </div>
+  
+    <ng-form name="form" class="form edit-form delivery-note-form">
+  
+      <form-error-dialog></form-error-dialog>
+
+          
+      <div class="well">
+        <div class="row">
+        
+          <div class="col-xs-10">
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group">
+                <label for="itemCode">Item Code*</label>
+                <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0001" ng-readonly="readOnly">
+              </div>
+            </div>
+  
+<!-- TODO: ITEM CODE (ABOVE) WILL AFFECT ITEM NAME (BELOW) AND PULL CORRECT DATA -->
+            <div class="col-xs-12 col-sm-5">
+              <div class="form-group">
+                <label>Item Name</label>
+                 <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Coke" ng-readonly="readOnly" ng-disabled="true">
+              </div>
+            </div>
+  
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Quantity</label>
+                <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="10" ng-readonly="readOnly">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-5">
+            </div>
+          </div>
+                      
+          <div class="col-xs-2 text-right">
+            <button type="button" class="btn btn-sm btn-danger">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+      
+      <div class="well">
+        <div class="row">
+        
+          <div class="col-xs-10">
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group">
+                <label for="itemCode">Item Code*</label>
+                <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0002" ng-readonly="readOnly">
+              </div>
+            </div>
+  
+<!-- TODO: ITEM CODE (ABOVE) WILL AFFECT ITEM NAME (BELOW) AND PULL CORRECT DATA -->
+            <div class="col-xs-12 col-sm-5">
+              <div class="form-group">
+                <label>Item Name</label>
+                 <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Sprite" ng-readonly="readOnly" ng-disabled="true">
+              </div>
+            </div>
+  
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Quantity</label>
+                <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="30" ng-readonly="readOnly">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-5">
+            </div>
+          </div>
+                      
+          <div class="col-xs-2 text-right">
+            <button type="button" class="btn btn-sm btn-danger">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+      
+      <div class="well">
+        <div class="row">
+        
+          <div class="col-xs-10">
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group">
+                <label for="itemCode">Item Code*</label>
+                <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0003" ng-readonly="readOnly">
+              </div>
+            </div>
+  
+<!-- TODO: ITEM CODE (ABOVE) WILL AFFECT ITEM NAME (BELOW) AND PULL CORRECT DATA -->
+            <div class="col-xs-12 col-sm-5">
+              <div class="form-group">
+                <label>Item Name</label>
+                 <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Chicken Sandwich" ng-readonly="readOnly" ng-disabled="true">
+              </div>
+            </div>
+  
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Quantity</label>
+                <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="12" ng-readonly="readOnly">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-5">
+            </div>
+          </div>
+                      
+          <div class="col-xs-2 text-right">
+            <button type="button" class="btn btn-sm btn-danger">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+      
+      <div class="well">
+        <div class="row">
+        
+          <div class="col-xs-10">
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group">
+                <label for="itemCode">Item Code*</label>
+                <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0004" ng-readonly="readOnly">
+              </div>
+            </div>
+  
+<!-- TODO: ITEM CODE (ABOVE) WILL AFFECT ITEM NAME (BELOW) AND PULL CORRECT DATA -->
+            <div class="col-xs-12 col-sm-5">
+              <div class="form-group">
+                <label>Item Name</label>
+                 <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Coffee" ng-readonly="readOnly" ng-disabled="true">
+              </div>
+            </div>
+  
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Quantity</label>
+                <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="25" ng-readonly="readOnly">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-5">
+            </div>
+          </div>
+                      
+          <div class="col-xs-2 text-right">
+            <button type="button" class="btn btn-sm btn-danger">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+      
+      <div class="well">
+        <div class="row">
+        
+          <div class="col-xs-10">
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group">
+                <label for="itemCode">Item Code*</label>
+                <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0005" ng-readonly="readOnly">
+              </div>
+            </div>
+  
+<!-- TODO: ITEM CODE (ABOVE) WILL AFFECT ITEM NAME (BELOW) AND PULL CORRECT DATA -->
+            <div class="col-xs-12 col-sm-5">
+              <div class="form-group">
+                <label>Item Name</label>
+                 <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Cheeseburger" ng-readonly="readOnly" ng-disabled="true">
+              </div>
+            </div>
+  
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Quantity</label>
+                <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="18" ng-readonly="readOnly">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-5">
+            </div>
+          </div>
+                      
+          <div class="col-xs-2 text-right">
+            <button type="button" class="btn btn-sm btn-danger">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+      
+      <div class="well">
+        <div class="row">
+        
+          <div class="col-xs-10">
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group">
+                <label for="itemCode">Item Code*</label>
+                <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0006" ng-readonly="readOnly">
+              </div>
+            </div>
+  
+<!-- TODO: ITEM CODE (ABOVE) WILL AFFECT ITEM NAME (BELOW) AND PULL CORRECT DATA -->
+            <div class="col-xs-12 col-sm-5">
+              <div class="form-group">
+                <label>Item Name</label>
+                 <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Chips" ng-readonly="readOnly" ng-disabled="true">
+              </div>
+            </div>
+  
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Quantity</label>
+                <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="30" ng-readonly="readOnly">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-5">
+            </div>
+          </div>
+                      
+          <div class="col-xs-2 text-right">
+            <button type="button" class="btn btn-sm btn-danger">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+      
+      <div class="row">
+        <div class="col-xs-12 col-sm-9"></div>
+        <div class="col-xs-12 col-sm-3 text-right">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="10">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add Items</button>
+            </span>
+          </div>
+        </div>
+      </div>
+                        
+    </ng-form>
+  
+  </div>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<left-navigation></left-navigation>
