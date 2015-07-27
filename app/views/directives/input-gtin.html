@@ -23,7 +23,7 @@
 
     </div>
 
-    <div class="col-xs-1">
+    <div class="col-xs-1" ng-hide="viewOnly || itemIsActive">
       <label class="hidden-sm">Remove</label>
       <span class="btn btn-danger btn-xs" ng-click="removeGTIN($parent.key)">
         <i class="fa fa-close"></i>

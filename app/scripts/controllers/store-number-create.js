@@ -107,7 +107,6 @@ angular.module('ts5App')
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
       // If store has an ID, is editing
       if(payload.id){
-        console.log('is saving');
         companyStoresService.saveStore(payload).then(submitFormSuccess, showApiErrors);
       }
       // Otherwise, creating

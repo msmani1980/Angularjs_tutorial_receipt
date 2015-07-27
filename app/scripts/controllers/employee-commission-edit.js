@@ -12,6 +12,11 @@ angular.module('ts5App')
   .controller('EmployeeCommissionEditCtrl', function ($scope, employeeCommissionFactory, dateUtility, ngToast, $location, $routeParams, $filter) {
 
     $scope.viewName = 'Employee Commission';
+
+    angular.element('.retail-name-multiple-select').select2();
+
+    $scope.startDate = moment().add(1, 'days').format('L').toString();
+
     $scope.commission = {
       startDate: moment().add(1, 'days').format('L').toString(),
       currenciesFields: {}
@@ -23,6 +28,7 @@ angular.module('ts5App')
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
     }
 
     $scope.isViewOnly = function () {

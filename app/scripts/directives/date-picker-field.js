@@ -17,15 +17,22 @@ angular.module('ts5App')
         label: '@',
         required: '=',
         form: '=',
-        disabled: '='
+        disable: '=',
+        disablePast: '=',
+        minDate: '=',
+        maxDate: '='
       },
       controller: function ($scope, $element) {
-        var tomorrow = dateUtility.formatDateForApp(dateUtility.tomorrow(),
-          'x');
+        var today = dateUtility.nowFormatted();
+        var startDate = ( $scope.minDate ? $scope.minDate : today );
+        if ($scope.disablePast) {
+          startDate = '+1d';
+        }
         var datePickerOptions = {
           orientation: 'auto top',
           autoclose: true,
-          startDate: tomorrow
+          startDate: startDate,
+          maxDate: $scope.maxDate
         };
         this.init = function ($element) {
           var options = angular.extend({}, datePickerOptions);
