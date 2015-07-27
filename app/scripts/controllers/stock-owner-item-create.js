@@ -12,7 +12,7 @@
 angular.module('ts5App')
   .controller('StockOwnerItemCreateCtrl', function ($scope, $compile, ENV,
     $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, GlobalMenuService) {
+    currencyFactory, $routeParams, GlobalMenuService,dateUtility) {
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
     var companyId = GlobalMenuService.company.get();
@@ -237,93 +237,11 @@ angular.module('ts5App')
       return moment(dateString, formatFrom).format(formatTo).toString();
     }
 
-    $scope.$watch('formData', function (newData, oldData) {
-      //checkItemDates(newData,oldData);
-      $this.refreshPriceGroups(newData, oldData);
-    }, true);
-
     $scope.$watch('form.$valid', function (validity) {
       if (validity) {
         $scope.displayError = false;
       }
     });
-
-
-    // when a price date is change for a price groupd or station, need to update currencies
-    this.refreshPriceGroups = function (newData, oldData) {
-
-      if (!oldData) {
-        return false;
-      }
-
-      // if the costPrices data has changed
-      if (newData.costPrices !== oldData.costPrices) {
-
-        // loop through all the price groups
-        for (var priceIndex in $scope.formData.costPrices) {
-
-          // the new and old price groups
-          var newPriceGroup = newData.costPrices[priceIndex];
-          var oldPriceGroup = oldData.costPrices[priceIndex];
-
-          // if threre isn't old data yet, exit out of loop
-          if (!oldPriceGroup || oldPriceGroup.startDate === '' ||
-            oldPriceGroup.endDate === '') {
-            return false;
-          }
-
-          // if the startDate or endDate is different
-          if (newPriceGroup.startDate !== oldPriceGroup.startDate ||
-            newPriceGroup.endDate !== oldPriceGroup.endDate) {
-
-            // update the price group
-            updatePriceGroup(priceIndex);
-
-          }
-
-        } // end loop on price groups
-
-      }
-
-    };
-
-    // check date ranges on items, price groups
-    /*  function checkItemDates(newData, oldData) {
-
-        if (newData.startDate !== oldData.startDate || newData.endDate !==
-          oldData.endDate) {
-
-          // TODO: Move this to it's own function
-          if (newData.costPrices.length > 0) {
-
-            // loop through all the price groups
-            for (var priceIndex in $scope.formData.costPrices) {
-
-              var price = $scope.formData.costPrices[priceIndex];
-
-              // if new item end date is before price start date
-              if (moment(newData.endDate).isBefore(price.startDate)) {
-
-                // set price start date as new item end date
-                price.startDate = newData.endDate;
-
-              }
-
-              // if new item start date is after price start date
-              if (moment(newData.startDate).isAfter(price.startDate)) {
-
-                // set price start date as new item start date
-                price.startDate = newData.startDate;
-
-              }
-
-            } // end price for loop
-
-          } // if price length is greater than 0
-
-        } // end if newData.startDate is different
-
-      } // end checkItemDates */
 
     $scope.removeQRCode = function () {
       $scope.formData.qrCodeImgUrl = '';
@@ -354,6 +272,10 @@ angular.module('ts5App')
      * Price Groups
      *
      */
+
+    $scope.$watch('formData.prices', function(newData, oldData) {
+      $this.watchPriceGroups(newData, oldData);
+    }, true);
 
     $scope.addPriceGroup = function () {
 
@@ -400,6 +322,79 @@ angular.module('ts5App')
       });
 
     }
+
+    this.setBaseCurrencyId = function(baseCurrencyId) {
+      this.baseCurrencyId = baseCurrencyId;
+    };
+
+    this.getBaseCurrencyId = function() {
+      companiesFactory.getCompany(companyId).then(function (response) {
+        $this.setBaseCurrencyId(response.baseCurrencyId);
+      });
+    };
+
+    this.getCompanyGlobalCurrencies = function(priceIndex) {
+      currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
+
+        var response = companyBaseCurrencyData.response;
+        var baseCurrency = getCurrencyFromArrayUsingId(
+          response,
+          $this.baseCurrencyId
+        );
+
+        $scope.formData.costPrices[priceIndex].code = baseCurrency.currencyCode;
+
+      });
+    };
+
+    this.updatePriceGroup = function(priceIndex) {
+      var priceGroup = $scope.formData.prices[priceIndex];
+      var startDate = dateUtility.formatDateForAPI(priceGroup.startDate);
+      var endDate = dateUtility.formatDateForAPI(priceGroup.endDate);
+      if (startDate === 'Invalid date' || endDate === 'Invalid date') {
+        return false;
+      }
+      var currencyFilters = {
+        startDate: startDate,
+        endDate: endDate,
+        isOperatedCurrency: true
+      };
+      this.getPriceCurrenciesList(priceIndex,currencyFilters);
+    };
+
+    /*this.getPriceCurrenciesList = function(priceIndex,currencyFilters) {
+      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(data) {
+        var priceCurrencies = $this.generatePriceCurrenciesList(data.response);
+        $this.setPriceCurrenciesList(priceIndex,priceCurrencies);
+      });
+    };
+
+    this.setPriceCurrenciesList = function(priceIndex,priceCurrencies) {
+      $scope.formData.prices[priceIndex].priceCurrencies =priceCurrencies;
+    };*/
+
+
+
+    this.watchPriceGroups = function(newPrices, oldPrices) {
+      if (!oldPrices) {
+        return false;
+      }
+      for (var priceIndex in $scope.formData.prices) {
+        this.checkPriceGroup(newPrices,oldPrices,priceIndex);
+      }
+    };
+
+    this.checkPriceGroup = function(newPrices,oldPrices,priceIndex) {
+      var newPriceGroup = newPrices[priceIndex];
+      var oldPriceGroup = oldPrices[priceIndex];
+      if (!oldPriceGroup) {
+        return false;
+      }
+      if (newPriceGroup.startDate !== oldPriceGroup.startDate ||
+        newPriceGroup.endDate !== oldPriceGroup.endDate) {
+        $this.updatePriceGroup(priceIndex);
+      }
+    };
 
     // Formats the dates when sending the payload to the API
     function formatPayloadDates(itemData) {
