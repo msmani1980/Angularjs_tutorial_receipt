@@ -8,17 +8,30 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('menuFactory', function (menuService, itemsService) {
+  .factory('menuFactory', function (menuService, itemsService, GlobalMenuService, dateUtility) {
 
     var getMenu = function (menuId) {
       return menuService.getMenu(menuId);
+    };
+
+    var getMenuList = function (payload) {
+      return menuService.getMenuList(payload);
     };
 
     var updateMenu = function (payload) {
       return menuService.updateMenu(payload);
     };
 
+    var createMenu = function (payload) {
+      return menuService.createMenu(payload);
+    };
+
     var getItemsList = function (payload, fetchFromMaster) {
+      // TODO: move date formatting to service level
+      if(payload.startDate && payload.endDate) {
+        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+        payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+      }
       return itemsService.getItemsList(payload, fetchFromMaster);
     };
 
@@ -26,10 +39,17 @@ angular.module('ts5App')
       return itemsService.importFromExcel(companyId, file);
     };
 
+    var getCompanyId = function () {
+      return GlobalMenuService.company.get();
+    };
+
     return {
       getMenu: getMenu,
+      getMenuList: getMenuList,
       updateMenu: updateMenu,
+      createMenu: createMenu,
       getItemsList: getItemsList,
-      importFromExcel: importFromExcel
+      importFromExcel: importFromExcel,
+      getCompanyId: getCompanyId
     };
   });
