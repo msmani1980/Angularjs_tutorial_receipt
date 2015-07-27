@@ -9,8 +9,6 @@
  */
 angular.module('ts5App')
   .controller('StockDashboardCtrl', function ($scope) {
-    var _companyId = '403',
-      _services = null;
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};

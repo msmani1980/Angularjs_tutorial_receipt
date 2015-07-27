@@ -1,6 +1,4 @@
 'use strict';
-/*global $*/
-
 /**
  * @ngdoc function
  * @name ts5App.controller:DeliveryNoteCtrl
