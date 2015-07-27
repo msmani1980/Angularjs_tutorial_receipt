@@ -148,36 +148,39 @@ angular.module('ts5App')
         return false;
       }
       showLoadingModal('Saving Menu');
-      var payload = $this.createPayload();
-      eval($routeParams.state + 'Menu')(payload);
+      eval($routeParams.state + 'Menu')();
 
     };
 
     function editMenu(payload) {
+      var payload = $this.createPayload();
       menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
     }
 
-    function createMenu(payload) {
-      checkForDuplicateRecord(payload);
+    function createMenu() {
+      checkForDuplicateRecord();
     }
 
     $scope.overwriteMenu = function () {
+      showLoadingModal('Saving Menu');
       $scope.menu.id = $scope.overwriteMenuId;
       var payload = $this.createPayload();
-      console.log(payload);
-      //editMenu(payload);
-    }
+      menuFactory.updateMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+    };
 
-    function checkForDuplicateRecord(payload) {
+    function checkForDuplicateRecord() {
       menuFactory.getMenuList({
-        menuCode: payload.menuCode,
-        menuName: payload.menuName
+        menuCode: $scope.menu.menuCode,
+        menuName: $scope.menu.menuName
       }).then(checkToOverwriteOrCreate);
     }
 
     function checkToOverwriteOrCreate(response) {
       var duplicateExists = response.menus.length;
-      var dateIsInTheFuture = dateUtility.isAfterToday(response.menus[0].startDate);
+      var dateIsInTheFuture = false;
+      if(duplicateExists) {
+        dateIsInTheFuture = dateUtility.isAfterToday(response.menus[0].startDate);
+      }
 
       if(duplicateExists && !dateIsInTheFuture) {
         hideLoadingModal();
@@ -187,7 +190,8 @@ angular.module('ts5App')
         $scope.overwriteMenuId = response.menus[0].id;
         angular.element('#overwrite-modal').modal('show');
       } else {
-        //menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+        var payload = $this.createPayload();
+        menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
       }
     }
 
