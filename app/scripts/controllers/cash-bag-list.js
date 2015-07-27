@@ -34,7 +34,7 @@ angular.module('ts5App')
           });
         },
         getCashBagList: function () {
-          return cashBagFactory.getCashBagList(_companyId).then(
+          return cashBagFactory.getCashBagList(_companyId,{isDelete:"false"}).then(
             function (response) {
               $scope.cashBagList = response.cashBags;
               angular.forEach($scope.cashBagList, function(_cb){

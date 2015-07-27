@@ -85,6 +85,9 @@ angular.module('ts5App')
       if(cashBag.hasOwnProperty('isSubmitted') && cashBag.isSubmitted === 'true') {
         return false;
       }
+      if(cashBag.hasOwnProperty('isDelete') && cashBag.isSubmitted === 'true') {
+        return false;
+      }
       var canDelete = true;
       angular.forEach(cashBag.cashBagCurrencies, function (currency) {
         if (canDelete) {
