@@ -79,31 +79,32 @@ angular.module('ts5App')
       if($scope.readOnly){
         return false;
       }
-      if(!cashBag){
-        return false;
-      }
       if(cashBag.hasOwnProperty('isSubmitted') && cashBag.isSubmitted === 'true') {
         return false;
       }
-      if(cashBag.hasOwnProperty('isDelete') && cashBag.isSubmitted === 'true') {
+      if(cashBag.hasOwnProperty('isDelete') && cashBag.isDelete === 'true') {
         return false;
       }
-      var canDelete = true;
-      angular.forEach(cashBag.cashBagCurrencies, function (currency) {
-        if (canDelete) {
+      return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
+    };
+
+    function cashBagCurrenciesIsSet(cashBagCurrencies){
+      var isSet = true;
+      angular.forEach(cashBagCurrencies, function (currency) {
+        if (isSet) {
           if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
-            canDelete = false;
+            isSet = false;
           }
           if (currency.coinAmountManual !== null) {
-            canDelete = false;
+            isSet = false;
           }
           if (currency.paperAmountManual !== null) {
-            canDelete = false;
+            isSet = false;
           }
         }
       });
-      return canDelete;
-    };
+      return isSet;
+    }
 
     $scope.removeRecord = function (cashBag) {
       if (!$scope.canDelete(cashBag)) {
