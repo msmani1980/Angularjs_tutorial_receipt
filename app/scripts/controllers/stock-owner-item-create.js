@@ -40,13 +40,10 @@ angular.module('ts5App')
 
     this.init = function() {
       this.checkIfViewOnly();
-      this.getDependencies();
       if ($routeParams.id && !$scope.viewOnly) {
         this.setFormAsEdit();
       }
-      if ($scope.editingItem || $scope.viewOnly) {
-        this.getItem($routeParams.id);
-      }
+      this.getDependencies();
     };
 
     this.checkIfViewOnly = function() {
@@ -74,13 +71,7 @@ angular.module('ts5App')
     };
 
     this.getItem = function(id) {
-
-      var $this = this;
-
-      // TODO: Make this use a loadingModal.show() method
-      angular.element('#loading').modal('show').find('p')
-        .text('We are getting Item ' + id);
-
+      this.showLoadingModal('We are getting Item ' + id);
       itemsFactory.getItem(id).then(function(data) {
         if ($this.validateItemCompany(data)) {
           $this.updateFormData(data.retailItem);
@@ -89,11 +80,17 @@ angular.module('ts5App')
           $location.path('/');
           return false;
         }
-        angular.element('#loading').modal('hide');
+        $this.setUIReady();
       });
-
     };
 
+    this.showLoadingModal = function(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
 
     this.findTagsIndex = function(tagId) {
       var tagIndex = null;
@@ -353,16 +350,18 @@ angular.module('ts5App')
       ];
     };
 
+
+    this.setUIReady = function() {
+      $scope.uiSelectTemplateReady = true;
+      this.hideLoadingModal();
+    };
+
     this.getDependencies = function() {
-      angular.element('#loading').modal('show').find('p').text(
-        'We are loading the Items data!');
+      $this.showLoadingModal('We are loading the Items data!');
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(
         dependencyPromises).then(function(response) {
         $this.setDependencies(response);
-        $scope.uiSelectTemplateReady = true;
-        $scope.filteredCharacteristics = $scope.characteristics;
-        angular.element('#loading').modal('hide');
       });
     };
 
@@ -378,6 +377,11 @@ angular.module('ts5App')
       $this.setVolumeList(response[8]);
       $this.setWeightList(response[9]);
       $this.setItemList(response[10]);
+      if ($scope.editingItem || $scope.viewOnly) {
+        this.getItem($routeParams.id);
+      } else {
+        $this.setUIReady();
+      }
     };
 
     this.setSalesCategories = function(data) {
@@ -566,11 +570,10 @@ angular.module('ts5App')
     };
 
     this.formatPricePayloadDates = function(itemData) {
-      for (var priceIndex in itemData.prices) {
-        var price = itemData.prices[priceIndex];
+      for (var priceIndex in itemData.costPrices) {
+        var price = itemData.costPrices[priceIndex];
         price.startDate = dateUtility.formatDateForAPI(price.startDate);
         price.endDate = dateUtility.formatDateForAPI(price.endDate);
-        this.formatStationExceptionDates(itemData, priceIndex);
       }
     };
 
@@ -590,37 +593,34 @@ angular.module('ts5App')
     };
 
     this.updateItem = function(itemData) {
-      var $this = this;
-      angular.element('#loading').modal('show').find('p').text(
-        'We are updating your item');
+      $this.showLoadingModal('We are updating your item');
       var updateItemPayload = {
         retailItem: itemData
       };
       itemsFactory.updateItem($routeParams.id, updateItemPayload).then(
         function(response) {
           $this.updateFormData(response.retailItem);
-          angular.element('#loading').modal('hide');
+          $this.hideLoadingModal();
           angular.element('#update-success').modal('show');
         },
         function(response) {
-          angular.element('#loading').modal('hide');
+          $this.hideLoadingModal();
           $scope.displayError = true;
           $scope.formErrors = response.data;
         });
     };
 
     this.createItem = function(itemData) {
-      angular.element('#loading').modal('show').find('p').text(
-        'We are creating your item');
+      $this.showLoadingModal('We are creating your item');
       var newItemPayload = {
         retailItem: itemData
       };
       itemsFactory.createItem(newItemPayload).then(function() {
-        angular.element('#loading').modal('hide');
+        this.hideLoadingModal();
         angular.element('#create-success').modal('show');
         return true;
       }, function(error) {
-        angular.element('#loading').modal('hide');
+        this.hideLoadingModal();
         $scope.displayError = true;
         $scope.formErrors = error.data;
         return false;
@@ -664,6 +664,13 @@ angular.module('ts5App')
     $scope.isMeasurementValid = function() {
       return ($scope.formData.width && $scope.formData.length && $scope.formData
         .height && $scope.formData.dimensionType);
+    };
+
+    $scope.isQrCodeSet = function() {
+      if ($scope.formData && $scope.formData.qrCodeImgUrl) {
+        return true;
+      }
+      return false;
     };
 
     // TODO: MOVE ME GLOBAL
