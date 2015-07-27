@@ -24,8 +24,8 @@ angular.module('ts5App')
         return '';
       }
       angular.forEach($scope.stationList, function (value) {
-        if (value.stationId.toString() === stationId.toString()) {
-          stationCode = value.stationCode.toString();
+        if (value.stationId === stationId) {
+          stationCode = value.stationCode;
         }
       });
       return stationCode;

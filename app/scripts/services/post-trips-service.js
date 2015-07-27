@@ -8,7 +8,7 @@
  * # cashBagService
  * Service in the ts5App.
  */
-// jshint maxcomplexity:7
+// jshint maxcomplexity:10
 
 angular.module('ts5App')
   .service('postTripsService', function ($resource, $http, ENV, dateUtility, Upload) {
@@ -27,6 +27,13 @@ angular.module('ts5App')
       if (data && data.scheduleNumber) {
         data.scheduleNumber = data.scheduleNumber.toString().toUpperCase();
       }
+      if (data && data.depStationId) {
+        data.depStationId = data.depStationId.toString();
+      }
+      if (data && data.arrStationId) {
+        data.arrStationId = data.arrStationId.toString();
+      }
+
       if (shouldTransformForGETRequest) {
         return data;
       }
@@ -53,6 +60,12 @@ angular.module('ts5App')
       }
       if (data && data.scheduleNumber) {
         data.scheduleNumber = data.scheduleNumber.toString().toUpperCase();
+      }
+      if (data && data.depStationId) {
+        data.depStationId = parseInt(data.depStationId, 10);
+      }
+      if (data && data.arrStationId) {
+        data.arrStationId = parseInt(data.arrStationId, 10);
       }
       return data;
     }

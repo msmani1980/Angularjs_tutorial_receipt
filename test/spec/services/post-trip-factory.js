@@ -80,7 +80,7 @@ describe('Factory: postTripFactory', function () {
       var offset = 20;
       postTripFactory.getStationList(companyId, offset);
       expect(stationsService.getStationList).toHaveBeenCalledWith(companyId, offset);
-    })
+    });
   });
 
   describe('GlobalMenuService API', function () {
