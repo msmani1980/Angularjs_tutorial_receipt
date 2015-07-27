@@ -284,4 +284,9 @@ angular.module('ts5App')
       var retailItem = $scope.companyRetailItemList[index];
       removeRetailItemFromCompanyRetailItems(retailItem);
     };
+
+    $scope.nullOp = function($event, $data){
+      $event.preventDefault();
+      return false;
+    };
   });
