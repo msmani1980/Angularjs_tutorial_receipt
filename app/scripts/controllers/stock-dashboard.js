@@ -1,5 +1,5 @@
 'use strict';
-/* global $*/
+
 /**
  * @ngdoc function
  * @name ts5App.controller:StockDashboardCtrl
@@ -12,21 +12,21 @@ angular.module('ts5App')
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
-    
-    $('[data-toggle=popover]').popover({
+
+    angular.element('[data-toggle=popover]').popover({
         placement : 'top',
         html : true,
         title: function() {
-            var title = $(this).attr('data-popover-content');
-            return $(title).children('.popover-heading').html();
+            var title = angular.element(this).attr('data-popover-content');
+            return angular.element(title).children('.popover-heading').html();
         },
     	content: function() {
-          var content = $(this).attr('data-popover-content');
-          return $(content).children('.popover-body').html();
+          var content = angular.element(this).attr('data-popover-content');
+          return angular.element(content).children('.popover-body').html();
         }
     });
-    $('[data-toggle=popover]').on('click', '.popover .close' , function(){
-        $(this).popover('hide');
+    angular.element('[data-toggle=popover]').on('click', '.popover .close' , function(){
+        angular.element(this).popover('hide');
     });
-    
+
   });

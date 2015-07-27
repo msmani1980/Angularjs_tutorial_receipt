@@ -11,5 +11,5 @@ angular.module('ts5App')
 
     $scope.viewName = 'Stock Take Report';
     $scope.search = {};
-        
+    
   });
