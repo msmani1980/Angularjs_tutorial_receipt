@@ -41,7 +41,10 @@ angular.module('ts5App')
       return postTripsService.uploadPostTrip(id, file, successHandler, failureHandler);
     };
 
-    var getStationList = function (id) {
+    var getStationList = function (id, offset) {
+      if(offset) {
+        return stationsService.getStationList(id, offset);
+      }
       return stationsService.getStationList(id);
     };
 
