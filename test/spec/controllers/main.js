@@ -22,7 +22,7 @@ describe('Controller: MainCtrl', function () {
     expect(scope.viewName).toBeDefined();
   });
   it('should have a retail menu collection', function () {
-    expect(MainCtrl.retailMenu.length).toBe(17);
+    expect(MainCtrl.retailMenu.length).toBe(19);
   });
   it('should have a title property', function () {
     expect(MainCtrl.retailMenu[0].title).toMatch(
@@ -133,7 +133,7 @@ describe('Controller: MainCtrl', function () {
   describe('Manage Store Number', function () {
     var menuRelationship;
     beforeEach(function () {
-      menuRelationship = MainCtrl.retailMenu[16];
+      menuRelationship = MainCtrl.retailMenu[18];
     });
     it('should have the correct title', function () {
       expect(menuRelationship.title.trim()).toEqual(
