@@ -555,38 +555,6 @@ describe('The Stock Owner Item Create Controller', function() {
 
       });
 
-      describe('setItemPriceTypes method', function() {
-
-        beforeEach(function() {
-          spyOn(StockOwnerItemCreateCtrl,
-            'setItemPriceTypes').and.callThrough();
-        });
-
-        it(
-          'should expect $scope.priceTypes to be undefined',
-          function() {
-            expect($scope.priceTypes).toBeUndefined();
-          });
-
-        it(
-          'should have been called after the promise is resolved',
-          function() {
-            $scope.$digest();
-            priceTypeListDeferred.resolve();
-            expect(StockOwnerItemCreateCtrl.setItemPriceTypes)
-              .toHaveBeenCalled();
-          });
-
-        it(
-          'should set the $scope.priceTypes after the promise is resolved',
-          function() {
-            $scope.$digest();
-            priceTypeListDeferred.resolve();
-            expect($scope.priceTypes).toBeDefined();
-          });
-
-      });
-
       describe('setItemList method', function() {
 
         beforeEach(function() {
@@ -852,68 +820,6 @@ describe('The Stock Owner Item Create Controller', function() {
 
       });
 
-    });
-
-  });
-
-  /*
-   * Price Groups
-   */
-
-  describe('Price Groups |', function() {
-
-    var priceTypesJSON,
-      response,
-      testObject;
-
-    // Inject the service and responshandler
-    beforeEach(inject(function() {
-
-      // Inject the JSON fixtures
-      inject(function(_servedPriceTypes_) {
-        priceTypesJSON = _servedPriceTypes_;
-      });
-
-      spyOn(StockOwnerItemCreateCtrl, 'getPriceTypesList').and.callFake(
-        function() {
-          return priceTypesJSON;
-        });
-
-      response = StockOwnerItemCreateCtrl.getPriceTypesList();
-
-      testObject = response[0];
-
-    }));
-
-    it('should have a getPriceTypesList method', function() {
-      expect(StockOwnerItemCreateCtrl.getPriceTypesList).toBeDefined();
-    });
-
-    it('should have a getPriceTypesList method', function() {
-      expect(StockOwnerItemCreateCtrl.getPriceTypesList).toHaveBeenCalled();
-    });
-
-    it('should have a response ', function() {
-      expect(response).toBeDefined();
-      expect(response.length).toBeGreaterThan(0);
-    });
-
-    it('should have contain a price type object in the response ',
-      function() {
-        expect(testObject).toBeDefined();
-        expect(testObject.id).toBeDefined();
-        expect(testObject.id).toEqual(jasmine.any(Number));
-      });
-
-    it('should have a price type object with an id ', function() {
-      expect(testObject.id).toBeDefined();
-      expect(testObject.id).toEqual(jasmine.any(Number));
-    });
-
-    it('should have a price type object with an name ', function() {
-      expect(testObject.name).toBeDefined();
-      expect(testObject.name).toEqual(jasmine.any(String));
-      expect(testObject.name.length).toBeGreaterThan(1);
     });
 
   });
