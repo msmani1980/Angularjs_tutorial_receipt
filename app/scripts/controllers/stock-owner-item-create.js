@@ -565,6 +565,15 @@ angular.module('ts5App')
       }
     };
 
+    this.formatPricePayloadDates = function(itemData) {
+      for (var priceIndex in itemData.prices) {
+        var price = itemData.prices[priceIndex];
+        price.startDate = dateUtility.formatDateForAPI(price.startDate);
+        price.endDate = dateUtility.formatDateForAPI(price.endDate);
+        this.formatStationExceptionDates(itemData, priceIndex);
+      }
+    };
+
     this.formatImagePayloadDates = function(itemData) {
       for (var imageIndex in itemData.images) {
         var image = itemData.images[imageIndex];

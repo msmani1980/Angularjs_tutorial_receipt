@@ -45,10 +45,13 @@ angular.module('ts5App')
 
     this.init = function() {
       this.checkIfViewOnly();
+      this.getDependencies();
       if ($routeParams.id && !$scope.viewOnly) {
         this.setFormAsEdit();
       }
-      this.getDependencies();
+      if ($scope.editingItem || $scope.viewOnly) {
+        this.getItem($routeParams.id);
+      }
     };
 
     this.checkIfViewOnly = function() {
@@ -77,7 +80,13 @@ angular.module('ts5App')
 
     // gets an item to $scope.editingItem
     this.getItem = function(id) {
-      this.showLoadingModal('We are getting Item ' + id);
+
+      var $this = this;
+
+      // TODO: Make this use a loadingModal.show() method
+      angular.element('#loading').modal('show').find('p')
+        .text('We are getting Item ' + id);
+
       itemsFactory.getItem(id).then(function(data) {
         if ($this.validateItemCompany(data)) {
           $this.updateFormData(data.retailItem);
@@ -86,16 +95,9 @@ angular.module('ts5App')
           $location.path('/');
           return false;
         }
-        $this.setUIReady();
+        angular.element('#loading').modal('hide');
       });
-    };
 
-    this.showLoadingModal = function(text) {
-      angular.element('#loading').modal('show').find('p').text(text);
-    };
-
-    this.hideLoadingModal = function() {
-      angular.element('#loading').modal('hide');
     };
 
     this.findTagsIndex = function(tagId) {
@@ -358,18 +360,16 @@ angular.module('ts5App')
       ];
     };
 
-    this.setUIReady = function() {
-      $scope.uiSelectTemplateReady = true;
-      this.hideLoadingModal();
-    };
-
     this.getDependencies = function() {
-      $this.showLoadingModal('We are loading the Items data!');
+      angular.element('#loading').modal('show').find('p').text(
+        'We are loading the Items data!');
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(
         dependencyPromises).then(function(response) {
-
         $this.setDependencies(response);
+        $scope.uiSelectTemplateReady = true;
+        $scope.filteredCharacteristics = $scope.characteristics;
+        angular.element('#loading').modal('hide');
       });
     };
 
@@ -386,13 +386,7 @@ angular.module('ts5App')
       $this.setWeightList(response[9]);
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11]);
-      if ($scope.editingItem || $scope.viewOnly) {
-        this.getItem($routeParams.id);
-      } else {
-        $this.setUIReady();
-      }
     };
-
     this.setSalesCategories = function(data) {
       $scope.salesCategories = data.salesCategories;
     };
@@ -407,7 +401,6 @@ angular.module('ts5App')
 
     this.setCharacteristics = function(data) {
       $scope.characteristics = data;
-      $scope.filteredCharacteristics = data;
     };
 
     this.setDimensionList = function(data) {
@@ -620,11 +613,13 @@ angular.module('ts5App')
     this.updateStationException = function(priceIndex,
       stationExceptionIndex) {
       var $this = this;
-      var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex];
+      var stationException = $scope.formData.prices[priceIndex].stationExceptions[
+        stationExceptionIndex];
       this.getGlobalStationList(stationException).then(function(data) {
         $this.setStationsList(stationException, data);
       });
-      this.getStationsCurrenciesList(stationException).then(function(data) {
+      this.getStationsCurrenciesList(stationException).then(function(
+        data) {
         $this.setStationsCurrenciesList(stationException, data);
       });
     };
@@ -635,8 +630,10 @@ angular.module('ts5App')
       for (var priceIndex in $scope.formData.prices) {
         var price = $scope.formData.prices[priceIndex];
         for (var stationExceptionIndex in price.stationExceptions) {
-          var stationException = price.stationExceptions[stationExceptionIndex];
-          stationPromises.push(this.getGlobalStationList(stationException));
+          var stationException = price.stationExceptions[
+            stationExceptionIndex];
+          stationPromises.push(this.getGlobalStationList(
+            stationException));
         }
         this.handleStationPromises(stationPromises, price);
       }
@@ -648,9 +645,7 @@ angular.module('ts5App')
       $q.all(stationPromises).then(function(data) {
         for (var key in data) {
           var stationException = price.stationExceptions[key];
-          if(stationException) {
-            $this.setStationsList(stationException, data[key]);
-          }
+          $this.setStationsList(stationException, data[key]);
         }
       });
     };
@@ -660,9 +655,9 @@ angular.module('ts5App')
      *
      */
 
-   $scope.$watch('formData.prices', function(newData, oldData) {
-     $this.watchPriceGroups(newData, oldData);
-   }, true);
+    $scope.$watch('formData.prices', function(newData, oldData) {
+      $this.watchPriceGroups(newData, oldData);
+    }, true);
 
     $scope.addPriceGroup = function() {
       $scope.formData.prices.push({
@@ -693,15 +688,16 @@ angular.module('ts5App')
       return priceCurrencies;
     };
 
-    this.getPriceCurrenciesList = function(priceIndex,currencyFilters) {
-      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(data) {
+    this.getPriceCurrenciesList = function(priceIndex, currencyFilters) {
+      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(
+        data) {
         var priceCurrencies = $this.generatePriceCurrenciesList(data.response);
-        $this.setPriceCurrenciesList(priceIndex,priceCurrencies);
+        $this.setPriceCurrenciesList(priceIndex, priceCurrencies);
       });
     };
 
-    this.setPriceCurrenciesList = function(priceIndex,priceCurrencies) {
-      $scope.formData.prices[priceIndex].priceCurrencies =priceCurrencies;
+    this.setPriceCurrenciesList = function(priceIndex, priceCurrencies) {
+      $scope.formData.prices[priceIndex].priceCurrencies = priceCurrencies;
     };
 
     this.updatePriceGroup = function(priceIndex) {
@@ -716,7 +712,7 @@ angular.module('ts5App')
         endDate: endDate,
         isOperatedCurrency: true
       };
-      this.getPriceCurrenciesList(priceIndex,currencyFilters);
+      this.getPriceCurrenciesList(priceIndex, currencyFilters);
     };
 
     this.watchPriceGroups = function(newPrices, oldPrices) {
@@ -724,15 +720,16 @@ angular.module('ts5App')
         return false;
       }
       for (var priceIndex in $scope.formData.prices) {
-        this.checkPriceGroup(newPrices,oldPrices,priceIndex);
+        this.checkPriceGroup(newPrices, oldPrices, priceIndex);
         for (var stationExceptionIndex in $scope.formData.prices[
             priceIndex].stationExceptions) {
-            this.checkStationException(newPrices,oldPrices,priceIndex,stationExceptionIndex);
+          this.checkStationException(newPrices, oldPrices, priceIndex,
+            stationExceptionIndex);
         }
       }
     };
 
-    this.checkPriceGroup = function(newPrices,oldPrices,priceIndex) {
+    this.checkPriceGroup = function(newPrices, oldPrices, priceIndex) {
       var newPriceGroup = newPrices[priceIndex];
       var oldPriceGroup = oldPrices[priceIndex];
       if (!oldPriceGroup) {
@@ -744,14 +741,17 @@ angular.module('ts5App')
       }
     };
 
-    this.checkStationException = function(newPrices,oldPrices,priceIndex,stationExceptionIndex) {
-      var newStationException = newPrices[priceIndex].stationExceptions[stationExceptionIndex];
-      var oldStationException = oldPrices[priceIndex].stationExceptions[stationExceptionIndex];
-      if (!oldStationException || !newStationException.startDate || !newStationException.endDate) {
+    this.checkStationException = function(newPrices, oldPrices, priceIndex,
+      stationExceptionIndex) {
+      var newStationException = newPrices.prices[priceIndex].stationExceptions[
+        stationExceptionIndex];
+      var oldStationException = oldPrices.prices[priceIndex].stationExceptions[
+        stationExceptionIndex];
+      if (!oldStationException) {
         return false;
       }
       if (newStationException.startDate !== oldStationException.startDate ||
-        newStationException.endDate !== oldStationException.endDate ) {
+        newStationException.endDate !== oldStationException.endDate) {
         this.updateStationException(priceIndex, stationExceptionIndex);
       }
     };
