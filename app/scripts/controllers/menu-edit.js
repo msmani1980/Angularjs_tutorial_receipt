@@ -1,5 +1,4 @@
 'use strict';
-/*global moment*/
 /**
  * @ngdoc function
  * @name ts5App.controller:MenuEditCtrl
@@ -148,18 +147,21 @@ angular.module('ts5App')
         return false;
       }
       showLoadingModal('Saving Menu');
-      eval($routeParams.state + 'Menu')();
 
+      var submitFunctionName = $routeParams.state + 'Menu';
+      if($this[submitFunctionName]) {
+        $this[submitFunctionName]();
+      }
     };
 
-    function editMenu(payload) {
+    $this.editMenu = function () {
       var payload = $this.createPayload();
       menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
-    }
+    };
 
-    function createMenu() {
+    $this.createMenu = function () {
       checkForDuplicateRecord();
-    }
+    };
 
     $scope.overwriteMenu = function () {
       showLoadingModal('Saving Menu');
@@ -178,14 +180,14 @@ angular.module('ts5App')
     function checkToOverwriteOrCreate(response) {
       var duplicateExists = response.menus.length;
       var dateIsInTheFuture = false;
-      if(duplicateExists) {
+      if (duplicateExists) {
         dateIsInTheFuture = dateUtility.isAfterToday(response.menus[0].startDate);
       }
 
-      if(duplicateExists && !dateIsInTheFuture) {
+      if (duplicateExists && !dateIsInTheFuture) {
         hideLoadingModal();
-        showToast('danger', 'Create Menu Failure', 'a menu with this name and code already exist and cannot be overwritten')
-      } else if(duplicateExists && dateIsInTheFuture) {
+        showToast('danger', 'Create Menu Failure', 'a menu with this name and code already exist and cannot be overwritten');
+      } else if (duplicateExists && dateIsInTheFuture) {
         hideLoadingModal();
         $scope.overwriteMenuId = response.menus[0].id;
         angular.element('#overwrite-modal').modal('show');
@@ -212,17 +214,7 @@ angular.module('ts5App')
     };
 
     $scope.isMenuReadOnly = function () {
-      if (angular.isUndefined($scope.menu)) {
-        return false;
-      }
-      if ($routeParams.state === 'view') {
-        return true;
-      }
-      return !dateUtility.isAfterToday($scope.menu.startDate);
-    };
-
-    $scope.isMenuReadOnly = function () {
-      if ($routeParams.state == 'create' || (angular.isUndefined($scope.menu))) {
+      if ($routeParams.state === 'create' || (angular.isUndefined($scope.menu))) {
         return false;
       }
       if ($routeParams.state === 'view') {

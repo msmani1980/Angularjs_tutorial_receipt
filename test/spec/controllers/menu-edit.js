@@ -120,6 +120,34 @@ describe('Controller: MenuEditCtrl', function () {
       });
     });
 
+    describe('can edit or delete item', function () {
+      var pastString = '05/10/1999';
+      var futureString = '10/12/2050';
+
+      it('should allow editing for dates in the future', function () {
+        scope.menu = {startDate: futureString};
+        expect(scope.isMenuEditable()).toBe(true);
+      });
+      it('should not allow editing for dates in the future', function () {
+        scope.menu = {startDate: pastString};
+        expect(scope.isMenuEditable()).toBe(false);
+      });
+      it('should allow deleting for editable menus with more than one item', function () {
+        scope.menu = {
+          startDate: futureString,
+          menuItems: [{itemCode: 1}, {itemCode: 2}]
+        };
+        expect(scope.canDeleteItems()).toBe(true);
+      });
+      it('should allow deleting for editable menus with less than two item', function () {
+        scope.menu = {
+          startDate: futureString,
+          menuItems: [{itemCode: 1}]
+        };
+        expect(scope.canDeleteItems()).toBe(false);
+      });
+    });
+
     describe('Delete items from Menu', function () {
       it('should have a confirmDelete function', function () {
         expect(!!scope.showDeleteConfirmation).toBe(true);
@@ -215,22 +243,22 @@ describe('Controller: MenuEditCtrl', function () {
       });
     });
 
-    it('should not be readOnly', function() {
+    it('should not be readOnly', function () {
       expect(scope.isMenuReadOnly()).toBe(false);
     });
 
-    it('should be editable', function() {
+    it('should be editable', function () {
       expect(scope.isMenuEditable()).toBe(true);
     });
 
+    it('should not be viewOnly', function () {
+      expect(scope.isViewOnly()).toBe(false);
+    });
+
     describe('submit form', function () {
-      it('should call create Menu when form is valid', function () {
-        scope.menuEditForm.$valid = true;
-        scope.submitForm();
-        expect(menuFactory.createMenu).toHaveBeenCalled();
-      });
-      it('should call update menu when creating a duplicate', function () {
-        // TODO!
+      it('should call updateMenu on overwrite', function () {
+        scope.overwriteMenu();
+        expect(menuFactory.updateMenu).toHaveBeenCalled();
       });
     });
   });
