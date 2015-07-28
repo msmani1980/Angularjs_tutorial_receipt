@@ -79,10 +79,10 @@ angular.module('ts5App')
       if($scope.readOnly){
         return false;
       }
-      if(cashBag.isSubmitted === "true") {
+      if(cashBag.isSubmitted === 'true') {
         return false;
       }
-      if(cashBag.isDelete === "true") {
+      if(cashBag.isDelete === 'true') {
         return false;
       }
       return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
