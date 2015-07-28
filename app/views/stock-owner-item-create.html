@@ -197,7 +197,7 @@
 
 						<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="0987654321" max-length="25"></input-text>
 
-						<tabset justified="true" ng-hide="isQrCodeHidden()">
+						<tabset justified="true" ng-hide="isQrCreateHidden()">
 
 							<tab heading="QR Create">
 
@@ -221,7 +221,7 @@
 
 									<i class="fa fa-image"></i> QR Code
 
-						      <span class="pull-right btn btn-danger btn-xs" ng-click="removeQRCode()">
+						      <span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removeQRCode()">
 						        <i class="fa fa-close"></i>
 						      </span>
 

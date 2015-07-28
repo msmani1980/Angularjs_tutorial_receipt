@@ -270,6 +270,22 @@ angular.module('ts5App')
       return recommendationPayload;
     };
 
+    this.formatImageDates = function(itemData) {
+      for (var imageIndex in itemData.images) {
+        var image = itemData.images[imageIndex];
+        image.startDate = dateUtility.formatDateForApp(image.startDate);
+        image.endDate = dateUtility.formatDateForApp(image.endDate);
+      }
+    };
+
+    this.formatCostDates = function(itemData) {
+      for (var priceIndex in itemData.costPrices) {
+        var price = itemData.costPrices[priceIndex];
+        price.startDate = dateUtility.formatDateForApp(price.startDate);
+        price.endDate = dateUtility.formatDateForApp(price.endDate);
+        this.updatePriceGroup(priceIndex);
+      }
+    };
 
     this.checkIfItemIsActive = function(itemData) {
       var today = new Date();
@@ -300,27 +316,11 @@ angular.module('ts5App')
       this.deserializeCharacteristics(itemData);
       this.deserializeSubstitutions(itemData);
       this.deserializeRecommendations(itemData);
-
-      // TODO: turn this into a function
-      for (var imageIndex in itemData.images) {
-        var image = itemData.images[imageIndex];
-        image.startDate = dateUtility.formatDateForApp(image.startDate);
-        image.endDate = dateUtility.formatDateForApp(image.endDate);
-      }
-
-      // TODO: turn this into a function
-      for (var priceIndex in itemData.costPrices) {
-        var price = itemData.costPrices[priceIndex];
-        price.startDate = dateUtility.formatDateForApp(price.startDate);
-        price.endDate = dateUtility.formatDateForApp(price.endDate);
-        this.updatePriceGroup(priceIndex);
-      }
-
+      this.formatImageDates(itemData);
+      this.formatCostDates(itemData);
       $scope.formData = itemData;
-
     };
 
-    // gets a list of all currencies for the item
     this.getMasterCurrenciesList = function() {
       currencyFactory.getCompanyCurrencies(function(data) {
         var masterCurrenciesList = [];
@@ -357,8 +357,7 @@ angular.module('ts5App')
     this.getDependencies = function() {
       $this.showLoadingModal('We are loading the Items data!');
       var dependencyPromises = this.makeDependencyPromises();
-      $q.all(
-        dependencyPromises).then(function(response) {
+      $q.all(dependencyPromises).then(function(response) {
         $this.setDependencies(response);
       });
     };
@@ -484,7 +483,6 @@ angular.module('ts5App')
       });
     };
 
-    // Add the first price group
     $scope.addPriceGroup();
 
     $scope.removePriceGroup = function(key) {
@@ -556,7 +554,6 @@ angular.module('ts5App')
       }
     };
 
-    // cleans up invalid properties of payload before submitting
     this.cleanUpPayload = function(itemData) {
       for (var priceIndex in itemData.costPrices) {
         var price = itemData.costPrices[priceIndex];
@@ -665,8 +662,9 @@ angular.module('ts5App')
       return ($scope.formData && $scope.formData.qrCodeImgUrl);
     };
 
-    $scope.isQrCodeHidden = function() {
-      return ($scope.viewOnly || $scope.itemIsActive || $scope.isQrCodeSet);
+    $scope.isQrCreateHidden = function() {
+      var isQrCodeSet = $scope.isQrCodeSet();
+      return ($scope.viewOnly || $scope.itemIsActive || isQrCodeSet);
     };
 
     $scope.isDisabled = function() {

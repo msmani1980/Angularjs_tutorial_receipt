@@ -832,15 +832,16 @@ angular.module('ts5App')
     };
 
     $scope.isMeasurementValid = function() {
-      return ($scope.formData.width && $scope.formData.length && $scope.formData.height && $scope.formData.dimensionType);
+      return ($scope.formData && $scope.formData.length && $scope.formData.height && $scope.formData.dimensionType);
     };
 
     $scope.isQrCodeSet = function() {
       return ($scope.formData && $scope.formData.qrCodeImgUrl);
     };
 
-    $scope.isQrCodeHidden = function() {
-      return ($scope.viewOnly || $scope.itemIsActive || $scope.isQrCodeSet);
+    $scope.isQrCreateHidden = function() {
+      var isQrCodeSet = $scope.isQrCodeSet();
+      return ($scope.viewOnly || $scope.itemIsActive || isQrCodeSet);
     };
 
     $scope.isDisabled = function() {

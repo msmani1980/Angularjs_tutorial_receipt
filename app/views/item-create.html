@@ -223,7 +223,7 @@
           <input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="0987654321"
                       max-length="25"></input-text>
 
-          <tabset justified="true" ng-hide="isQrCodeHidden()">
+          <tabset justified="true" ng-hide="isQrCreateHidden()">
 
             <tab heading="QR Create">
 
@@ -247,7 +247,7 @@
 
                 <i class="fa fa-image"></i> QR Code
 
-						      <span class="pull-right btn btn-danger btn-xs" ng-hide="viewOnly" ng-click="removeQRCode()">
+						      <span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removeQRCode()">
 						        <i class="fa fa-close"></i>
 						      </span>
 
@@ -282,17 +282,13 @@
               <div class="form-group">
 
                 <div class="col-xs-9">
-
                   <input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
-
                 </div>
 
                 <div class="col-xs-3">
-
                   <select ng-model="formData.weightType" class="form-control col-xs-2" placeholder="Units"
                     ng-options="weight.id as weight.unitCode for weight in weightUnits">
                   </select>
-
                 </div>
 
               </div>
@@ -310,17 +306,13 @@
               <div class="form-group">
 
                 <div class="col-xs-9">
-
                   <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
-
                 </div>
 
                 <div class="col-xs-3">
-
                   <select ng-model="formData.volumeType" class="form-control" placeholder="Units"
                     ng-options="volume.id as volume.unitCode for volume in volumeUnits">
                   </select>
-
                 </div>
 
               </div>
@@ -336,23 +328,16 @@
         <div class="row">
 
           <div class="form-group" ng-class="{ 'has-error' : isMeasurementRequired() && !isMeasurementValid() , 'has-success' : isMeasurementValid() }" >
-
             <div class="col-md-3 col-xs-3">
-
               <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Length" name="Length">
-
             </div>
 
             <div class="col-md-3 col-xs-3">
-
               <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Width" name="Width">
-
             </div>
 
             <div class="col-md-3 col-xs-3">
-
               <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control" placeholder="Height" name="Height">
-
             </div>
 
             <div class="col-md-3 col-xs-3">
