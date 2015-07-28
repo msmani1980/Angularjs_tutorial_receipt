@@ -72,21 +72,21 @@ angular.module('ts5App')
       }
     };
 
-    $scope.canDelete = function(cashBag) {
+    function canDelete(cashBag){
       if($scope.state !== 'edit'){
         return false;
       }
       if($scope.readOnly){
         return false;
       }
-      if(cashBag.isSubmitted) {
+      if(cashBag.isSubmitted === "true") {
         return false;
       }
-      if(cashBag.isDelete) {
+      if(cashBag.isDelete === "true") {
         return false;
       }
       return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
-    };
+    }
 
     function cashBagCurrenciesIsSet(cashBagCurrencies){
       var isSet = true;
@@ -107,7 +107,7 @@ angular.module('ts5App')
     }
 
     $scope.removeRecord = function (cashBag) {
-      if (!$scope.canDelete(cashBag)) {
+      if (!canDelete(cashBag)) {
         return false;
       }
       cashBagFactory.deleteCashBag(cashBag.id).then(function () {
@@ -138,6 +138,7 @@ angular.module('ts5App')
               $scope.cashBag = response;
               $scope.displayError = false;
               $scope.formErrors = {};
+              $scope.canDelete = canDelete(response);
 
               if($scope.cashBag.eposCashBagsId === null) {
                 $scope.flightAmount = '0.0000';
