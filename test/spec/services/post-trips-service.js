@@ -5,7 +5,7 @@ describe('Service: postTripService', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/post-trip-data-list.json'));
 
-  var postTripsService,
+  var postTripService,
     Upload,
     $httpBackend,
     postTripDataListResponseJSON,
@@ -15,13 +15,13 @@ describe('Service: postTripService', function () {
       'userId': 1
     };
 
-  beforeEach(inject(function (_postTripsService_, $injector) {
+  beforeEach(inject(function (_postTripService_, $injector) {
     inject(function (_servedPostTripDataList_) {
       postTripDataListResponseJSON = _servedPostTripDataList_;
     });
 
     $httpBackend = $injector.get('$httpBackend');
-    postTripsService = _postTripsService_;
+    postTripService = _postTripService_;
   }));
 
   afterEach(function () {
@@ -30,19 +30,19 @@ describe('Service: postTripService', function () {
   });
 
   it('should exist', function () {
-    expect(!!postTripsService).toBe(true);
+    expect(!!postTripService).toBe(true);
   });
 
   describe('API calls', function () {
     describe('getPostTrips', function () {
       it('should be accessible in the service', function () {
-        expect(!!postTripsService.getPostTrips).toBe(true);
+        expect(!!postTripService.getPostTrips).toBe(true);
       });
 
       var postTripDataList;
       beforeEach(function () {
         $httpBackend.whenGET(/posttrips/, headers).respond(postTripDataListResponseJSON);
-        postTripsService.getPostTrips().then(function (dataFromAPI) {
+        postTripService.getPostTrips().then(function (dataFromAPI) {
           postTripDataList = dataFromAPI;
         });
         $httpBackend.flush();
@@ -57,7 +57,7 @@ describe('Service: postTripService', function () {
           var companyId = '403';
           var regex = new RegExp('companies/' + companyId + '/posttrips', 'g');
           $httpBackend.expectGET(regex, headers);
-          postTripsService.getPostTrips(companyId, {});
+          postTripService.getPostTrips(companyId, {});
           $httpBackend.flush();
         });
 
@@ -66,14 +66,14 @@ describe('Service: postTripService', function () {
           var payload = {scheduleNumber: scheduleNumber};
           var regex = new RegExp('companies/403/posttrips\.\*scheduleNumber=' + scheduleNumber, 'g');
           $httpBackend.expectGET(regex, headers);
-          postTripsService.getPostTrips('403', payload);
+          postTripService.getPostTrips('403', payload);
           $httpBackend.flush();
         });
 
         it('should not need a payload parameter', function () {
           var regex = new RegExp('companies/403/posttrips', 'g');
           $httpBackend.expectGET(regex, headers);
-          postTripsService.getPostTrips('403');
+          postTripService.getPostTrips('403');
           $httpBackend.flush();
         });
       });
@@ -81,14 +81,14 @@ describe('Service: postTripService', function () {
 
     describe('getPostTrip', function () {
       it('should be accessible in the service', function () {
-        expect(!!postTripsService.getPostTrip).toBe(true);
+        expect(!!postTripService.getPostTrip).toBe(true);
       });
 
       it('should append postTrip id to request URL', function () {
         var postTripId = '123';
         var regex = new RegExp('posttrips/' + postTripId, 'g');
         $httpBackend.expectGET(regex).respond('202');
-        postTripsService.getPostTrip('403', postTripId);
+        postTripService.getPostTrip('403', postTripId);
         $httpBackend.flush();
       });
     });
@@ -96,7 +96,7 @@ describe('Service: postTripService', function () {
     describe('createPostTrip', function () {
 
       it('should be accessible in the service', function () {
-        expect(!!postTripsService.createPostTrip).toBe(true);
+        expect(!!postTripService.createPostTrip).toBe(true);
       });
 
       beforeEach(function () {
@@ -106,7 +106,7 @@ describe('Service: postTripService', function () {
 
       it('should POST data to posttrips API', function () {
         var regex = new RegExp('companies/403/posttrips', 'g');
-        postTripsService.createPostTrip('403', {});
+        postTripService.createPostTrip('403', {});
         $httpBackend.expectPOST(regex);
         $httpBackend.flush();
       });
@@ -114,7 +114,7 @@ describe('Service: postTripService', function () {
 
     describe('updatePostTrip', function () {
       it('should be accessible in the service', function () {
-        expect(!!postTripsService.updatePostTrip).toBe(true);
+        expect(!!postTripService.updatePostTrip).toBe(true);
       });
 
       beforeEach(function () {
@@ -124,7 +124,7 @@ describe('Service: postTripService', function () {
 
       it('should PUT data to posttrips API', function () {
         var regex = new RegExp('posttrips', 'g');
-        postTripsService.updatePostTrip('403', {});
+        postTripService.updatePostTrip('403', {});
         $httpBackend.expectPUT(regex);
         $httpBackend.flush();
       });
@@ -132,7 +132,7 @@ describe('Service: postTripService', function () {
 
     describe('deletePostTrip', function () {
       it('should be accessible in service', function () {
-        expect(!!postTripsService.deletePostTrip).toBe(true);
+        expect(!!postTripService.deletePostTrip).toBe(true);
       });
 
       beforeEach(function () {
@@ -143,7 +143,7 @@ describe('Service: postTripService', function () {
       it('should send DELETE request', function () {
         var regex = new RegExp('posttrips', 'g');
         $httpBackend.expectDELETE(regex);
-        postTripsService.deletePostTrip('403', '1');
+        postTripService.deletePostTrip('403', '1');
         $httpBackend.flush();
       });
 
@@ -151,25 +151,21 @@ describe('Service: postTripService', function () {
         var postTripId = '123';
         var regex = new RegExp('posttrips/' + postTripId, 'g');
         $httpBackend.expectDELETE(regex).respond('202');
-        postTripsService.deletePostTrip('403', postTripId);
+        postTripService.deletePostTrip('403', postTripId);
         $httpBackend.flush();
       });
     });
 
     var mockFile;
     var mockFn;
-    describe('uploadPostTrip', function () {
+    describe('importFromExcel', function () {
       it('should be accessible in service', function () {
-        expect(!!postTripsService.uploadPostTrip).toBe(true);
+        expect(!!postTripService.importFromExcel).toBe(true);
       });
 
       beforeEach(inject(function (_Upload_) {
         Upload = _Upload_;
         mockFn = {};
-
-        mockFn.progress = jasmine.createSpy('progressFn').and.returnValue(mockFn);
-        mockFn.success = jasmine.createSpy('successFn').and.returnValue(mockFn);
-        mockFn.error = jasmine.createSpy('errorFn').and.returnValue(mockFn);
         spyOn(Upload, 'upload').and.returnValue(mockFn);
 
         mockFile =
@@ -185,7 +181,7 @@ describe('Service: postTripService', function () {
       }));
 
       it('should call the upload function', function () {
-        postTripsService.uploadPostTrip('403', mockFile, mockFn, mockFn);
+        postTripService.importFromExcel('403', mockFile);
         expect(Upload.upload).toHaveBeenCalled();
       });
     });
