@@ -165,59 +165,6 @@
 		width: 100%
 	}
 
-  .import-from-file {
-  	margin-bottom: 10px;
-    height: 36px;
-
-  	input[type="file"] {
-  		padding: 6px;
-  		border: 1px solid #46b8da;
-  		float: left;
-  		margin: 0 !important;
-  	}
-
-  	#importFromData {
-    	display: inline-block;
-    	white-space: nowrap;
-		}
-
-		.collapse {
-  		display: none;
-  		visibility: hidden;
-		}
-
-		.collapse.in {
- 			display: block;
-	 		visibility: visible;
-		}
-
-		tr.collapse.in {
-  		display: table-row;
-		}
-
-		tbody.collapse.in {
-  		display: table-row-group;
-		}
-
-		.collapsing {
-  		position: relative;
-  		height: 0;
-  		overflow: hidden;
-  		-webkit-transition-property: height, visibility;
-  		transition-property: height, visibility;
- 			-webkit-transition-duration: 0.35s;
-  		transition-duration: 0.35s;
-  		-webkit-transition-timing-function: ease;
-  		transition-timing-function: ease;
-		}
-
-		.collapsing.width {
-  		-webkit-transition-property: width, visibility;
-  		transition-property: width, visibility;
-  		width: 0;
-  		height: auto;
-		}
-  }
   .datepicker-container {
 
     .row {
@@ -242,6 +189,63 @@
  	}
 }
 
+.import-from-file {
+  height: 35px;
+
+  input[type="file"] {
+    padding: 6px;
+    border: 1px solid #46b8da;
+    float: left;
+    margin: 0 !important;
+  }
+
+  li {
+    cursor: pointer;
+  }
+
+  #importFromData {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .collapse {
+    display: none;
+    visibility: hidden;
+  }
+
+  .collapse.in {
+    display: block;
+    visibility: visible;
+  }
+
+  tr.collapse.in {
+    display: table-row;
+  }
+
+  tbody.collapse.in {
+    display: table-row-group;
+  }
+
+  .collapsing {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    -webkit-transition-property: height, visibility;
+    transition-property: height, visibility;
+    -webkit-transition-duration: 0.35s;
+    transition-duration: 0.35s;
+    -webkit-transition-timing-function: ease;
+    transition-timing-function: ease;
+  }
+
+  .collapsing.width {
+    -webkit-transition-property: width, visibility;
+    transition-property: width, visibility;
+    width: 0;
+    height: auto;
+  }
+}
+
 .employee-commission-form {
 
   label {
@@ -254,6 +258,15 @@
   	.startDateContainer {
   		margin-bottom: 15px;
   	}
+  }
+  .retail-name-multiple-select {
+    width: 100%;
+    margin-right: 10px;
+    
+    .select2-choices {
+      border-color: #ccc;
+      border-radius: 2px;
+    }
   }
 }
 
@@ -285,6 +298,44 @@
   }
 }
 
+.delivery-note-form {
+
+  label {
+    font-weight:100;
+    font-size:16px
+  }
+  
+  .datepicker-container {
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+@media(min-width:$screen-sm-min){
+
+  .delivery-note-form {
+
+    .well {
+      padding: 10px 19px;
+      
+      .form-group {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.delivery-notes-list {
+  
+  label {
+    font-weight:100;
+    font-size:16px
+  }
+}
+
 .create-form-container {
 	margin-top:18rem;
 }
@@ -298,7 +349,7 @@
     }
 
   }
-
+  
 }
 
 @media(max-width:$screen-sm-min){
@@ -328,16 +379,57 @@
   max-width: 48px;
 }
 
+.stock-dashboard {
+  
+  label {
+    font-weight:100;
+    font-size:16px
+  }
+}
+ 
+.stock-dashboard-container {
+  margin-top:29rem;
+}
+
+.stock-take-container {
+  margin-top:24rem;
+}
+
+.stock-take-report {
+  
+  label {
+    font-weight:100;
+    font-size:16px
+  }
+}
+
+.popover {
+  min-width: 300px;
+  
+  .popover-title {
+  
+    .close {
+      position: relative;
+      bottom: 3px;
+    }
+  }
+  
+  textarea {
+    width: 100%;
+    border-color: #ccc;
+  }
+}
+
 /* item import */
+.drop-table tbody .empty-drop-zone{
+  cursor: default;
+}
 .drop-table tr.on-drag-hover{
+  border: 2px solid #77c797;
   border-top: 24px solid #249507;
-  background-color: #77c797;
 }
 
 .drop-table tr.on-drag-enter{
-  background-color: #77c797;
-}
-
-table.drop-table.sortable tbody tr{
-  cursor: default;
+  border: 2px solid #77c797;
+  border-top: 2px solid #77c797;
 }

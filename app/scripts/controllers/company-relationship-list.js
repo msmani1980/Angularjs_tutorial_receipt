@@ -23,6 +23,14 @@ angular.module('ts5App')
       $location.path('/company-list/');
     };
 
+    $scope.isPending = function () {
+      return $scope.isLoading && !$scope.isRejected;
+    };
+
+    $scope.isFulfilled = function () {
+      return !$scope.isLoading && !$scope.isRejected;
+    };
+
     function showToast(className, type, message) {
       ngToast.create({
         className: className,

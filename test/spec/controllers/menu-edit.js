@@ -32,10 +32,19 @@ describe('Controller: MenuEditCtrl', function () {
 
     spyOn(menuFactory, 'getMenu').and.returnValue(getMenuDeferred.promise);
     spyOn(menuFactory, 'updateMenu').and.returnValue(getMenuDeferred.promise);
+    spyOn(menuFactory, 'createMenu').and.returnValue(getMenuDeferred.promise);
     spyOn(menuFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
+    spyOn(menuFactory, 'getCompanyId');
+
+
+    var routeParams = {
+      id: 1,
+      state: 'edit'
+    };
 
     MenuEditCtrl = $controller('MenuEditCtrl', {
-      $scope: scope
+      $scope: scope,
+      $routeParams: routeParams
     });
 
     scope.menuEditForm = {
@@ -47,11 +56,12 @@ describe('Controller: MenuEditCtrl', function () {
     scope.$digest();
   }));
 
-  it('should attach the view name', function () {
-    expect(!!scope.viewName).toBe(true);
-  });
+  describe('general edit page', function () {
 
-  describe('menu object in scope', function () {
+    it('should attach the view name', function () {
+      expect(!!scope.viewName).toBe(true);
+    });
+
     it('should get the menu list from API', function () {
       expect(menuFactory.getMenu).toHaveBeenCalled();
     });
@@ -64,21 +74,9 @@ describe('Controller: MenuEditCtrl', function () {
       expect(scope.menu.menuItems.length).toBeGreaterThan(0);
     });
 
-    it('should have date formatted to local', function () {
-      expect(scope.menu.endDate).toBe('05/31/2015');
-    });
-
     describe('getItemsList API', function () {
-
       it('should get the items list from service', function () {
         expect(menuFactory.getItemsList).toHaveBeenCalled();
-      });
-
-      it('should restrict to start and end dates only', function () {
-        expect(menuFactory.getItemsList).toHaveBeenCalledWith({
-          startDate: '20150501',
-          endDate: '20150531'
-        }, true);
       });
     });
 
@@ -87,107 +85,183 @@ describe('Controller: MenuEditCtrl', function () {
         expect(scope.menu.menuItems[0].itemName).toBeDefined();
       });
     });
+
+    describe('isMenuReadOnly', function () {
+
+      it('should have a function to determine if page is viewOnly', function () {
+        expect(scope.isViewOnly).toBeDefined();
+      });
+
+      it('should have a isMenuReadOnly function', function () {
+        expect(!!scope.isMenuReadOnly).toBe(true);
+      });
+
+      it('should return true if startDate < today > endDate', function () {
+        scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
+        scope.menu.endDate = moment().subtract(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly()).toBe(true);
+      });
+
+      it('should return true if startDate < today < endDate', function () {
+        scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
+        scope.menu.endDate = moment().add(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly()).toBe(true);
+      });
+
+      it('should return false if startDate > today > endDate', function () {
+        scope.menu.startDate = moment().add(1, 'month').format('L').toString();
+        scope.menu.endDate = moment().add(2, 'month').format('L').toString();
+        expect(scope.isMenuReadOnly()).toBe(false);
+      });
+
+      it('should return false if menu === null or undefined', function () {
+        delete scope.menu;
+        expect(scope.isMenuReadOnly()).toBe(false);
+      });
+    });
+
+    describe('can edit or delete item', function () {
+      var pastString = '05/10/1999';
+      var futureString = '10/12/2050';
+
+      it('should allow editing for dates in the future', function () {
+        scope.menu = {startDate: futureString};
+        expect(scope.isMenuEditable()).toBe(true);
+      });
+      it('should not allow editing for dates in the future', function () {
+        scope.menu = {startDate: pastString};
+        expect(scope.isMenuEditable()).toBe(false);
+      });
+      it('should allow deleting for editable menus with more than one item', function () {
+        scope.menu = {
+          startDate: futureString,
+          menuItems: [{itemCode: 1}, {itemCode: 2}]
+        };
+        expect(scope.canDeleteItems()).toBe(true);
+      });
+      it('should allow deleting for editable menus with less than two item', function () {
+        scope.menu = {
+          startDate: futureString,
+          menuItems: [{itemCode: 1}]
+        };
+        expect(scope.canDeleteItems()).toBe(false);
+      });
+    });
+
+    describe('Delete items from Menu', function () {
+      it('should have a confirmDelete function', function () {
+        expect(!!scope.showDeleteConfirmation).toBe(true);
+      });
+
+      it('should attach itemToDelete to scope', function () {
+        scope.showDeleteConfirmation({itemName: 'itemToDelete'});
+        expect(scope.itemToDelete.itemName).toBe('itemToDelete');
+      });
+    });
+
+    describe('Adding items to Menu', function () {
+      it('should push objects to newItemList on addItem()', function () {
+        var previousLength = scope.newItemList.length;
+        scope.addItem();
+        expect(scope.newItemList.length).toBe(previousLength + 1);
+      });
+
+      it('should have a newItemList attached to scope', function () {
+        expect(!!scope.newItemList).toBe(true);
+      });
+
+      it('should have a deleteNewItem attached to scope', function () {
+        expect(!!scope.deleteNewItem).toBe(true);
+      });
+    });
+
+    describe('Submit Form', function () {
+
+      it('should not submit if form is invalid', function () {
+        scope.menuEditForm.$valid = false;
+        scope.submitForm();
+        expect(menuFactory.updateMenu).not.toHaveBeenCalled();
+      });
+
+      it('should submit if form is valid', function () {
+        scope.submitForm();
+        expect(menuFactory.updateMenu).toHaveBeenCalled();
+      });
+
+      describe('new Items', function () {
+
+        beforeEach(function () {
+          scope.addItem();
+          scope.newItemList[0] = {
+            'itemQty': 1979,
+            'masterItem': {
+              'id': 1005
+            }
+          };
+        });
+
+        it('should add newItems to payload on createPayload', function () {
+          expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
+        });
+
+        it('should newItems in payload not to have id', function () {
+          expect(MenuEditCtrl.createPayload().menuItems[1].id).not.toBeDefined();
+        });
+
+        it('should not add new item to payload if new Item not valid', function () {
+          scope.addItem();
+          scope.newItemList[scope.newItemList.length - 1] = {
+            fakeMenu: 'notValidData'
+          };
+          expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
+        });
+      });
+
+    });
   });
 
-  describe('isMenuReadOnly', function () {
-    it('should have a isMenuReadOnly function', function () {
-      expect(!!scope.isMenuReadOnly).toBe(true);
+  describe('create page', function () {
+
+    var routeParams = {
+      state: 'create'
+    };
+    beforeEach(inject(function ($controller) {
+      MenuEditCtrl = $controller('MenuEditCtrl', {
+        $scope: scope,
+        $routeParams: routeParams
+      });
+      scope.$digest();
+    }));
+
+    describe('initialization', function () {
+      it('should call get company Id', function () {
+        expect(menuFactory.getCompanyId).toHaveBeenCalled();
+      });
+
+      it('should attach a menu object to scope', function () {
+        expect(scope.menu).toBeDefined();
+      });
     });
 
-    it('should return true if startDate < today > endDate', function () {
-      scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
-      scope.menu.endDate = moment().subtract(2, 'month').format('L').toString();
-      expect(scope.isMenuReadOnly()).toBe(true);
-    });
-
-    it('should return true if startDate < today < endDate', function () {
-      scope.menu.startDate = moment().subtract(1, 'month').format('L').toString();
-      scope.menu.endDate = moment().add(2, 'month').format('L').toString();
-      expect(scope.isMenuReadOnly()).toBe(true);
-    });
-
-    it('should return false if startDate > today > endDate', function () {
-      scope.menu.startDate = moment().add(1, 'month').format('L').toString();
-      scope.menu.endDate = moment().add(2, 'month').format('L').toString();
+    it('should not be readOnly', function () {
       expect(scope.isMenuReadOnly()).toBe(false);
     });
 
-    it('should return false if menu === null or undefined', function () {
-      delete scope.menu;
-      expect(scope.isMenuReadOnly()).toBe(false);
+    it('should be editable', function () {
+      expect(scope.isMenuEditable()).toBe(true);
+    });
+
+    it('should not be viewOnly', function () {
+      expect(scope.isViewOnly()).toBe(false);
+    });
+
+    describe('submit form', function () {
+      it('should call updateMenu on overwrite', function () {
+        scope.overwriteMenu();
+        expect(menuFactory.updateMenu).toHaveBeenCalled();
+      });
     });
   });
 
-  describe('Delete items from Menu', function () {
-    it('should have a confirmDelete function', function () {
-      expect(!!scope.showDeleteConfirmation).toBe(true);
-    });
-
-    it('should attach itemToDelete to scope', function () {
-      scope.showDeleteConfirmation({itemName: 'itemToDelete'});
-      expect(scope.itemToDelete.itemName).toBe('itemToDelete');
-    });
-  });
-
-  describe('Adding items to Menu', function () {
-    it('should push objects to newItemList on addItem()', function () {
-      var previousLength = scope.newItemList.length;
-      scope.addItem();
-      expect(scope.newItemList.length).toBe(previousLength + 1);
-    });
-
-    it('should have a newItemList attached to scope', function () {
-      expect(!!scope.newItemList).toBe(true);
-
-    });
-
-    it('should have a deleteNewItem attached to scope', function () {
-      expect(!!scope.deleteNewItem).toBe(true);
-    });
-  });
-
-  describe('Submit Form', function () {
-
-    it('should not submit if form is invalid', function () {
-      scope.menuEditForm.$valid = false;
-      scope.submitForm();
-      expect(menuFactory.updateMenu).not.toHaveBeenCalled();
-    });
-
-    it('should submit if form is valid', function () {
-      scope.submitForm();
-      expect(menuFactory.updateMenu).toHaveBeenCalled();
-    });
-
-    describe('new Items', function () {
-
-      beforeEach(function () {
-        scope.addItem();
-        scope.newItemList[0] = {
-          'itemQty': 1979,
-          'masterItem': {
-            'id': 1005
-          }
-        };
-      });
-
-      it('should add newItems to payload on createPayload', function () {
-        expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
-      });
-
-      it('should newItems in payload not to have id', function () {
-        expect(MenuEditCtrl.createPayload().menuItems[1].id).not.toBeDefined();
-      });
-
-      it('should not add new item to payload if new Item not valid', function () {
-        scope.addItem();
-        scope.newItemList[scope.newItemList.length - 1] = {
-          fakeMenu: 'notValidData'
-        };
-        expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
-      });
-    });
-
-  });
-
-});
+})
+;

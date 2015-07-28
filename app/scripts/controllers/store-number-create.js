@@ -8,10 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreNumberCreateCtrl', function ($scope, companyStoresService, GlobalMenuService, ngToast, dateUtility) {
-
-    // scope vars
-    $scope.viewName = 'Create Store Number';
+  .controller('StoreNumberCreateCtrl', function ($scope, $location, $filter, $anchorScroll, companyStoresService, GlobalMenuService, ngToast, dateUtility) {
 
     // private controller vars
     var _companyId = null,
@@ -22,33 +19,63 @@ angular.module('ts5App')
       };
 
     // private controller functions
-    function setCompany(response){
+    function getStoreNumbers(response){
+      hideLoadingModal();
       if(!response.meta.count){
         return;
       }
       angular.forEach(response.response, function(store){
-        store.startDate = dateUtility.formatDateForApp(store.startDate);
-        store.endDate = dateUtility.formatDateForApp(store.endDate);
-        this.push(store);
+        this.push(formatForForm(store));
       }, $scope.storeNumbersList);
+    }
+
+    function getCurrentStoreNumber(_id){
+      // Lets not hit the API again if it exists in our current list
+      var store = $filter('filter')($scope.storeNumbersList, {id: _id}, true);
+      if(store.length){
+        setCurrentStore(store[0]);
+        return;
+      }
+      companyStoresService.getStore(_id).then(getStoreResolution,showApiErrors);
+    }
+
+    function formatForForm(store){
+      store.startDate = dateUtility.formatDateForApp(store.startDate);
+      store.endDate = dateUtility.formatDateForApp(store.endDate);
+      return store;
+    }
+
+    function getStoreResolution(response){
+      var store = formatForForm(response);
+      setCurrentStore(store);
+    }
+
+    function setCurrentStore(store){
+      $scope.viewName = 'Edit Store Number';
+      $scope.submitText = 'Save';
+      $scope.editing = store.id;
+      $scope.formData = store;
+      hideLoadingModal();
+      $anchorScroll(0);
     }
 
     function submitFormSuccess(){
       init();
-      showMessage('successful!', 'success');
+      hideLoadingModal();
+      showMessage('success', 'Store Number', 'saved!');
     }
 
     function showApiErrors(response){
-      showMessage('failed!', 'warning');
+      hideLoadingModal();
+      showMessage('warning', 'Store Number', 'failed!');
       $scope.displayError = true;
       if ('data' in response) {
         $scope.formErrors = response.data;
       }
     }
 
-    function showMessage(message, messageType) {
-      hideLoadingModal();
-      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Create Store Number</strong>: ' + message });
+    function showMessage(className, type, message) {
+      ngToast.create({className: className, dismissButton: true, content: '<strong>'+type+'</strong>: '+message});
     }
 
     function displayLoadingModal(loadingText) {
@@ -61,10 +88,14 @@ angular.module('ts5App')
 
     function init(){
       _companyId = GlobalMenuService.company.get();
+      $scope.viewName = 'Create Store Number';
+      $scope.submitText = 'Create';
       $scope.formData = angular.copy(_companyDefault);
       $scope.displayError = false;
+      $scope.editing = false;
       $scope.storeNumbersList = [];
-      companyStoresService.getStores(_companyId).then(setCompany,showApiErrors);
+      displayLoadingModal();
+      companyStoresService.getStores(_companyId).then(getStoreNumbers,showApiErrors);
     }
     init();
 
@@ -74,11 +105,49 @@ angular.module('ts5App')
       var payload = angular.copy($scope.formData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
-      companyStoresService.createStore(payload).then(submitFormSuccess, showApiErrors);
+      // If store has an ID, is editing
+      if(payload.id){
+        companyStoresService.saveStore(payload).then(submitFormSuccess, showApiErrors);
+      }
+      // Otherwise, creating
+      else {
+        companyStoresService.createStore(payload).then(submitFormSuccess, showApiErrors);
+      }
     };
 
     $scope.formDefault = function(){
       return angular.equals($scope.formData,_companyDefault);
     };
 
+    $scope.canDelete = function(store){
+      return dateUtility.isAfterToday(store.startDate);
+    };
+
+    $scope.removeRecord = function(store) {
+      if(!$scope.canDelete(store)){
+        return false;
+      }
+      displayLoadingModal('Removing Item');
+      companyStoresService.deleteStore(store.id).then(function() {
+        init();
+        hideLoadingModal();
+        showMessage('success', 'Store Number', 'deleted!');
+      }, showApiErrors);
+    };
+
+    $scope.canEdit = function(store){
+      return dateUtility.isAfterToday(store.endDate);
+    };
+
+    $scope.fieldDisabled = function(store){
+      return $scope.canEdit(store) && dateUtility.isTodayOrEarlier(store.startDate);
+    };
+
+    $scope.editStoreNumber = function(store){
+      if(!$scope.canEdit(store)){
+        return false;
+      }
+      displayLoadingModal();
+      getCurrentStoreNumber(store.id);
+    };
   });

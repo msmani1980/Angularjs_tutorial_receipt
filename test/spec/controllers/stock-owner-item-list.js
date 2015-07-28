@@ -8,7 +8,7 @@ describe('The StockOwnerItemListCtrl controller', function() {
     'served/sales-categories.json'));
 
   var StockOwnerItemListCtrl,
-    scope,
+    $scope,
     getItemsListDeferred,
     itemsService,
     itemsListJSON,
@@ -21,7 +21,7 @@ describe('The StockOwnerItemListCtrl controller', function() {
     location,
     httpBackend;
 
-  // Initialize the controller and a mock scope
+  // Initialize the controller and a mock $scope
   beforeEach(inject(function($q, $controller, $rootScope, _itemsService_,
     _itemTypesService_, _salesCategoriesService_,
     $location, $httpBackend) {
@@ -35,7 +35,7 @@ describe('The StockOwnerItemListCtrl controller', function() {
 
     httpBackend = $httpBackend;
     location = $location;
-    scope = $rootScope.$new();
+    $scope = $rootScope.$new();
 
     getItemsListDeferred = $q.defer();
     getItemsListDeferred.resolve(itemsListJSON);
@@ -56,18 +56,18 @@ describe('The StockOwnerItemListCtrl controller', function() {
       getSalesCategoriesDeferred.promise);
 
     spyOn(itemsService, 'removeItem').and.returnValue({
-      then: function() {
-        return;
+      then: function (callBack) {
+        return callBack();
       }
     });
 
     StockOwnerItemListCtrl = $controller('StockOwnerItemListCtrl', {
-      $scope: scope
+      $scope: $scope
     });
-    scope.$digest();
+    $scope.$digest();
 
 
-    spyOn(scope, 'searchRecords');
+    spyOn($scope, 'searchRecords');
     spyOn(StockOwnerItemListCtrl, 'getItemsList');
     spyOn(StockOwnerItemListCtrl, 'getItemTypesList');
     spyOn(StockOwnerItemListCtrl, 'getSalesCategoriesList');
@@ -124,27 +124,27 @@ describe('The StockOwnerItemListCtrl controller', function() {
 
   describe('The itemsList array', function() {
 
-    it('should be attached to the scope', function() {
-      expect(scope.itemsList).toBeDefined();
+    it('should be attached to the $scope', function() {
+      expect($scope.itemsList).toBeDefined();
     });
 
     it('should have more than 1 item in the itemsList', function() {
-      expect(scope.itemsList.length).toBeGreaterThan(1);
+      expect($scope.itemsList.length).toBeGreaterThan(1);
     });
 
     it('should match the response from the API', function() {
-      expect(scope.itemsList).toEqual(itemsListJSON.retailItems);
+      expect($scope.itemsList).toEqual(itemsListJSON.retailItems);
     });
 
     it('should have a isItemActive method', function() {
-      expect(scope.isItemActive).toBeDefined();
+      expect($scope.isItemActive).toBeDefined();
     });
 
     describe('contains an item object which', function() {
 
       var item;
       beforeEach(function() {
-        item = scope.itemsList[1];
+        item = $scope.itemsList[0];
       });
 
       it('should be defined', function() {
@@ -192,24 +192,24 @@ describe('The StockOwnerItemListCtrl controller', function() {
 
   describe('The Pagination', function() {
 
-    it('should attach currentPage to the scope', function() {
-      expect(scope.currentPage).toBeDefined();
-      expect(scope.currentPage).toEqual(1);
+    it('should attach currentPage to the $scope', function() {
+      expect($scope.currentPage).toBeDefined();
+      expect($scope.currentPage).toEqual(1);
     });
 
-    it('should attach itemsPerPage to the scope', function() {
-      expect(scope.itemsPerPage).toBeDefined();
-      expect(scope.itemsPerPage).toEqual(10);
+    it('should attach itemsPerPage to the $scope', function() {
+      expect($scope.itemsPerPage).toBeDefined();
+      expect($scope.itemsPerPage).toEqual(10);
     });
 
-    it('should attach currentPageInt to the scope', function() {
-      expect(scope.currentPageInt).toBeDefined();
-      expect(scope.currentPageInt).toEqual(1);
+    it('should attach currentPageInt to the $scope', function() {
+      expect($scope.currentPageInt).toBeDefined();
+      expect($scope.currentPageInt).toEqual(1);
     });
 
-    it('should attach itemsPerPageInt to the scope', function() {
-      expect(scope.itemsPerPageInt).toBeDefined();
-      expect(scope.itemsPerPageInt).toEqual(10);
+    it('should attach itemsPerPageInt to the $scope', function() {
+      expect($scope.itemsPerPageInt).toBeDefined();
+      expect($scope.itemsPerPageInt).toEqual(10);
     });
 
   });
@@ -217,15 +217,15 @@ describe('The StockOwnerItemListCtrl controller', function() {
   describe('searchRecords', function() {
 
     beforeEach(function() {
-      scope.searchRecords();
+      $scope.searchRecords();
     });
 
     it('should be defined', function() {
-      expect(scope.searchRecords).toBeDefined();
+      expect($scope.searchRecords).toBeDefined();
     });
 
     it('should be called if initialized', function() {
-      expect(scope.searchRecords).toHaveBeenCalled();
+      expect($scope.searchRecords).toHaveBeenCalled();
     });
 
     it('should call this.getItemsList', function() {
@@ -234,6 +234,21 @@ describe('The StockOwnerItemListCtrl controller', function() {
 
     it('should call this.displayLoadingModal', function() {
       expect(StockOwnerItemListCtrl.displayLoadingModal).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('remove item functionality', function () {
+
+    it('should have a removeRecord() method attached to the scope',
+      function () {
+        expect($scope.removeRecord).toBeDefined();
+      });
+
+    it('should remove the item from the itemList', function () {
+      expect($scope.itemsList.length).toEqual(16);
+      $scope.removeRecord(332);
+      expect($scope.itemsList.length).toEqual(15);
     });
 
   });

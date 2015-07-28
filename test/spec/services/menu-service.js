@@ -9,7 +9,8 @@ describe('Service: menuService', function () {
   // instantiate service
   var menuService,
     $httpBackend,
-    menuResponseJSON;
+    menuResponseJSON,
+    Upload;
 
   beforeEach(inject(function (_menuService_, $injector) {
     inject(function (_servedMenus_) {
@@ -99,5 +100,28 @@ describe('Service: menuService', function () {
       });
     });
 
+    var mockFile;
+
+    describe('Import Menus from Excel', function () {
+      beforeEach(inject(function (_Upload_) {
+        Upload = _Upload_;
+        spyOn(Upload, 'upload').and.returnValue({mockData: 'mock'});
+
+        mockFile = {
+          $$hashKey: 'object:277',
+          lastModified: 1430772953000,
+          lastModifiedDate: 'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4636.png',
+          size: 7801,
+          type: 'file/spreadsheet',
+          webkitRelativePath: ''
+        };
+      }));
+
+      it('should call the importFromExcel function', function () {
+        menuService.importFromExcel('403', mockFile);
+        expect(Upload.upload).toHaveBeenCalled();
+      });
+    });
   });
 });

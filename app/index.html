@@ -9,8 +9,8 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css(.) styles/vendor.css -->
   <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
   <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
   <link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast.css" />
@@ -103,9 +103,9 @@
 <script src="bower_components/angular-qr/src/angular-qr.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/ngtoast/dist/ngToast.js"></script>
-<script src="bower_components/angular-native-dragdrop/draganddrop.js"></script>
 <script src="bower_components/angular-ui-select/dist/select.js"></script>
 <script src="bower_components/select2/select2.js"></script>
+<script src="bower_components/angular-dragdrop/draganddrop.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
@@ -125,7 +125,7 @@
 <script src="scripts/controllers/item-create.js"></script>
 <script src="scripts/directives/input-text.js"></script>
 <script src="scripts/services/globalmenuservice.js"></script>
-<script src="scripts/directives/menudropdown.js"></script>
+<script src="scripts/directives/menu-dropdown.js"></script>
 <script src="scripts/controllers/headermenu.js"></script>
 <script src="scripts/controllers/exchange-rates.js"></script>
 <script src="scripts/services/currency-factory.js"></script>
@@ -135,10 +135,10 @@
 <script src="scripts/directives/input-select.js"></script>
 <script src="scripts/services/company-service.js"></script>
 <script src="scripts/controllers/menu-list.js"></script>
-<script src="scripts/controllers/menu-create.js"></script>
 <script src="scripts/controllers/menu-edit.js"></script>
 <script src="scripts/directives/date-picker.js"></script>
 <script src="scripts/directives/item-price-type.js"></script>
+<script src="scripts/directives/excel-upload.js"></script>
 <script src="scripts/directives/image-upload.js"></script>
 <script src="scripts/services/allergens-service.js"></script>
 <script src="scripts/services/item-types.js"></script>
@@ -204,10 +204,17 @@
 <script src="scripts/services/menu-caterer-stations-service.js"></script>
 <script src="scripts/services/transaction-service.js"></script>
 <script src="scripts/services/company-cc-types-service.js"></script>
+<script src="scripts/controllers/lmp-locations-list.js"></script>
+<script src="scripts/controllers/manage-goods-received.js"></script>
+<script src="scripts/controllers/delivery-note.js"></script>
 <script src="scripts/services/menu-factory.js"></script>
 <script src="scripts/controllers/store-number-create.js"></script>
 <script src="scripts/services/company-stores-service.js"></script>
 <script src="scripts/controllers/employee-commission-list.js"></script>
+<script src="scripts/controllers/stock-list.js"></script>
+<script src="scripts/controllers/stock-dashboard.js"></script>
+<script src="scripts/controllers/stock-take.js"></script>
+<script src="scripts/controllers/stock-take-report.js"></script>
 <script src="scripts/directives/date-picker-field.js"></script>
 <script src="scripts/services/employee-commission-service.js"></script>
 <!-- endbuild -->

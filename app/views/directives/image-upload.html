@@ -1,115 +1,70 @@
 <div class="form-group upload-container">
+  <label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
 
-    <label for="item-type">Item Image (max size: 10kb and 128 x 128 pixels)</label>
+  <div ngf-select="" ngf-drop="" class="drop-box retail-drop-box" ng-model="files" ng-model-rejected="rejFiles"
+       ngf-change="filesChanged()" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
+       ngf-accept="'.jpg,.png,.gif'" ngf-min-size='10' ngf-max-size='10000'>
+    <b>Drop Images, or Click.</b>
 
-    <div ngf-select="" ngf-drop="" class="drop-box"
-    	ng-model="files"
-    	ng-model-rejected="rejFiles"
-    	ngf-change="filesChanged()"
-       	ngf-drag-over-class="dragover"
-        ngf-multiple="true"
-        ngf-allow-dir="true"
-        ngf-accept="'.jpg,.png,.gif'"
-        ngf-min-size='10'
-		ngf-max-size='10000'
-    >
+    <p>Accepted file formats: jpg, png, gif.</p>
+  </div>
 
-  	  <b>Drop Images, or Click.</b>
+  <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
 
-  		<p>Accepted file formats: jpg, png, gif.</p>
+  <button class="btn button btn-success" ng-model="files" ng-hide="file.uploadSuccess" ng-disabled="!files.length"
+          ng-click="upload()"> Upload
+  </button>
 
-    </div>
+  <button class="btn button btn-default" ng-model="files" ng-show="files.length"
+          ng-click="clearAllFiles()"> Clear All Files
+  </button>
 
-    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+  <p class="alert alert-danger" ng-show="rejFiles.length">
+    <b>Your file doesn't meet the requirements:</b>
+    <br/>
+    <i ng-show="rejFiles[0].size > 10000">max size: 10kb and 128 x 128 pixels.</i>
+    <i ng-show="rejFiles[0].size < 10001">
+      '{{rejFiles[0].name}}' is invalid, OR '{{rejFiles[0].type}}' is not an accepted file type.
+    </i>
+  </p>
 
-    <button class="btn button btn-success" ng-model="files" ng-hide="file.uploadSuccess" ng-disabled="!files.length" ng-click="upload()">	Upload
-    </button>
-
-    <button class="btn button btn-default" ng-model="files" ng-show="files.length" ng-click="clearAllFiles()">	Clear All Files
-    </button>
-
-    <p class="alert alert-danger" ng-show="rejFiles.length">
-
-	    <b>Your file doesn't meet the requirements:</b>
-	    <br>
-
-	    <i ng-show="rejFiles[0].size > 10000">
-        max size: 10kb and 128 x 128 pixels.
-	    </i>
-
-	     <i ng-show="rejFiles[0].size < 10001">
-	    	'{{rejFiles[0].name}}' is invalid, OR '{{rejFiles[0].type}}' is not an accepted file type.
-	    </i>
-
-    </p>
-
-    <div class="thumbnails" ng-show="files.length" ng-repeat="(fileKey, file) in files">
-
-        <div class="panel panel-default">
-
-          <div class="panel-heading">
-
-            <p class="panel-title">
-
-        			<i class="fa fa-image"></i> New Image {{ fileKey+1 }}
-
-              <span class="pull-right btn btn-danger btn-xs" ng-click="clearFile(fileKey)">
-                <i class="fa fa-close"></i>
-              </span>
-
-        		</p>
-
+  <div class="thumbnails" ng-show="files.length" ng-repeat="(fileKey, file) in files">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <p class="panel-title">
+          <i class="fa fa-image"></i> New Image {{ fileKey+1 }}
+          <span class="pull-right btn btn-danger btn-xs" ng-click="clearFile(fileKey)">
+            <i class="fa fa-close"></i>
+          </span>
+        </p>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-4 col-sm-4 col-md-2">
+            <label>Preview</label>
+            <img ngf-thumbnail="file" class="fileTest"/>
+            <img class="item-image-thumbnail" ngf-thumbnail="file"/>
           </div>
+          <div class="col-xs-8 col-sm-8 col-md-10">
+            <label> {{ file.name }} </label>
 
-          <div class="panel-body">
-
-            <div class="row">
-
-              <div class="col-xs-4 col-sm-4 col-md-2">
-
-                <label>Preview</label>
-
-                <img ngf-thumbnail="file" class="fileTest" />
-
-                <img class="item-image-thumbnail" ngf-thumbnail="file" />
-
-              </div>
-
-              <div class="col-xs-8 col-sm-8 col-md-10">
-
-                <label> {{ file.name }} </label>
-
-                <p class="alert alert-danger" ng-model="files" ng-show="file.imageTooLarge">
-
-              	    <i>
-                      Your file doesn't meet the requirements: max size: 10kb and 128 x 128 pixels.
-              		  </i>
-
-              	</p>
-
-          			<progressbar class="progress-striped" ng-model="files"
-                  ng-show="!file.imageTooLarge && !file.uploadFail && !file.uploadSuccess"
-                  ng-show="files.length" value="file.uploadProgress"
-                >
-          				<b>{{file.uploadProgress}}%</b>
-          			</progressbar>
-
-          			<progressbar class="progress-striped" ng-model="files" ng-show="file.uploadSuccess" value="100" type="success">
-          				<b>Success!</b>
-          			</progressbar>
-
-          			<progressbar class="progress-striped" ng-model="files" ng-show="file.uploadFail" value="100" type="danger">
-          				<b>Fail</b>
-          			</progressbar>
-
-              </div>
-
-            </div>
-
+            <p class="alert alert-danger" ng-model="files" ng-show="file.imageTooLarge">
+              <i>Your file doesn't meet the requirements: max size: 10kb and 128 x 128 pixels.</i>
+            </p>
+            <progressbar class="progress-striped" ng-model="files"
+                         ng-show="!file.imageTooLarge && !file.uploadFail && !file.uploadSuccess"
+                         ng-show="files.length" value="file.uploadProgress">
+              <b>{{file.uploadProgress}}%</b>
+            </progressbar>
+            <progressbar class="progress-striped" ng-model="files" ng-show="file.uploadSuccess" value="100" type="success">
+              <b>Success!</b>
+            </progressbar>
+            <progressbar class="progress-striped" ng-model="files" ng-show="file.uploadFail" value="100" type="danger">
+              <b>Fail</b>
+            </progressbar>
           </div>
-
         </div>
-
+      </div>
     </div>
-
+  </div>
 </div>

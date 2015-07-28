@@ -90,7 +90,7 @@ angular
         templateUrl: 'views/company.html',
         controller: 'CompanyCtrl'
       })
-      .when('/store-number-create', {
+      .when('/store-number', {
         templateUrl: 'views/store-number-create.html',
         controller: 'StoreNumberCreateCtrl'
       })
@@ -107,11 +107,7 @@ angular
         templateUrl: 'views/menu-list.html',
         controller: 'MenuListCtrl'
       })
-      .when('/menu-create', {
-        templateUrl: 'views/menu-create.html',
-        controller: 'MenuCreateCtrl'
-      })
-      .when('/menu/:state/:id', {
+      .when('/menu/:state/:id?', {
         templateUrl: 'views/menu-edit.html',
         controller: 'MenuEditCtrl'
       })
@@ -163,9 +159,33 @@ angular
         templateUrl: 'views/item-import.html',
         controller: 'ItemImportCtrl'
       })
+      .when('/lmp-locations-list', {
+        templateUrl: 'views/lmp-locations-list.html',
+        controller: 'ManageLmpLocationsCtrl'
+      })
+      .when('/manage-goods-received', {
+        templateUrl: 'views/manage-goods-received.html',
+        controller: 'ManageGoodsReceivedCtrl'
+      })
+      .when('/delivery-note', {
+        templateUrl: 'views/delivery-note.html',
+        controller: 'DeliveryNoteCtrl'
+      })
       .when('/employee-commission-list', {
         templateUrl: 'views/employee-commission-list.html',
         controller: 'EmployeeCommissionListCtrl'
+      })
+      .when('/stock-dashboard', {
+        templateUrl: 'views/stock-dashboard.html',
+        controller: 'StockDashboardCtrl'
+      })
+      .when('/stock-take', {
+        templateUrl: 'views/stock-take.html',
+        controller: 'StockTakeCtrl'
+      })
+      .when('/stock-take-report', {
+        templateUrl: 'views/stock-take-report.html',
+        controller: 'StockTakeReportCtrl'
       })
       .otherwise({
         redirectTo: '/'

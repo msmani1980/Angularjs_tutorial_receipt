@@ -27,8 +27,9 @@ describe('Factory: postTripFactory', function () {
     spyOn(postTripsService, 'updatePostTrip');
     spyOn(postTripsService, 'deletePostTrip');
     spyOn(postTripsService, 'getPostTrip');
+    spyOn(postTripsService, 'uploadPostTrip');
     spyOn(GlobalMenuService.company, 'get');
-    spyOn(stationsService, 'getStationList');
+    spyOn(stationsService, 'getGlobalStationList');
     spyOn(carrierService, 'getCarrierTypes');
     spyOn(carrierService, 'getCarrierNumbers');
     spyOn(employeesService, 'getEmployees');
@@ -64,12 +65,16 @@ describe('Factory: postTripFactory', function () {
       postTripFactory.deletePostTrip(companyId, '123');
       expect(postTripsService.deletePostTrip).toHaveBeenCalled();
     });
+    it('should call postTripService on uploadPostTrip', function(){
+      postTripFactory.uploadPostTrip(companyId, null, null, null);
+      expect(postTripsService.uploadPostTrip).toHaveBeenCalled();
+    });
   });
 
   describe('stationsService API', function () {
     it('should call stationsService on getStationService', function () {
       postTripFactory.getStationList(companyId);
-      expect(stationsService.getStationList).toHaveBeenCalledWith(companyId);
+      expect(stationsService.getGlobalStationList).toHaveBeenCalledWith({companyId: companyId});
     });
   });
 

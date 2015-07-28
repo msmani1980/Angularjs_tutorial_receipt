@@ -1,1 +1,183 @@
-{"response":[{"id":55,"cityId":11,"cityName":"San Diego","companyId":2,"countryId":240,"countryName":"United States","description":null,"isCaterer":null,"endDate":"2014-09-17","startDate":"2014-07-10","regionId":4,"regionName":"California","stationCode":"SAN","stationId":3,"stationName":"San Jose","timezone":"America/Santa_Isabel","timezoneId":"515","utcDstOffset":"-07:00","utcOffset":"-08:00","companyStationRelationships":[]},{"id":59,"cityId":1,"cityName":"Chicago","companyId":2,"countryId":240,"countryName":"United States","description":null,"isCaterer":null,"endDate":"2015-12-10","startDate":"2014-05-11","regionId":1,"regionName":"Illinois","stationCode":"LON","stationId":2,"stationName":"London","timezone":"America/El_Salvador","timezoneId":"461","utcDstOffset":"-06:00","utcOffset":"-06:00","companyStationRelationships":[]},{"id":117,"cityId":1,"cityName":"Chicago","companyId":2,"countryId":240,"countryName":"United States","description":null,"isCaterer":null,"endDate":"2015-03-11","startDate":"2015-03-11","regionId":1,"regionName":"Illinois","stationCode":"DEL","stationId":4,"stationName":"Delhi","timezone":"America/El_Salvador","timezoneId":"461","utcDstOffset":"-06:00","utcOffset":"-06:00","companyStationRelationships":[]},{"id":118,"cityId":1,"cityName":"Chicago","companyId":2,"countryId":240,"countryName":"United States","description":"Chicago 4","isCaterer":null,"endDate":"2015-03-11","startDate":"2015-03-11","regionId":1,"regionName":"Illinois","stationCode":"ORD5","stationId":25,"stationName":"Chicago O-hare5","timezone":"America/El_Salvador","timezoneId":"461","utcDstOffset":"-06:00","utcOffset":"-06:00","companyStationRelationships":[]},{"id":122,"cityId":1,"cityName":"Chicago","companyId":2,"countryId":240,"countryName":"United States","description":"afggs","isCaterer":null,"endDate":"2015-04-11","startDate":"2015-04-10","regionId":1,"regionName":"Illinois","stationCode":"asdf","stationId":30,"stationName":"A89D","timezone":"America/El_Salvador","timezoneId":"461","utcDstOffset":"-06:00","utcOffset":"-06:00","companyStationRelationships":[]},{"id":126,"cityId":3,"cityName":"Indianapolis","companyId":2,"countryId":240,"countryName":"United States","description":"LUTON","isCaterer":true,"endDate":"2015-04-13","startDate":"2015-04-12","regionId":3,"regionName":"Indiana","stationCode":"LTN","stationId":28,"stationName":"Luton","timezone":"America/Indiana/Petersburg","timezoneId":"427","utcDstOffset":"-04:00","utcOffset":"-05:00","companyStationRelationships":[]},{"id":127,"cityId":2,"cityName":"Rockford","companyId":2,"countryId":240,"countryName":"United States","description":"BUDAPEST","isCaterer":true,"endDate":"2015-04-13","startDate":"2015-04-12","regionId":1,"regionName":"Illinois","stationCode":"BUD","stationId":27,"stationName":"Budapest","timezone":"America/El_Salvador","timezoneId":"461","utcDstOffset":"-06:00","utcOffset":"-06:00","companyStationRelationships":[]},{"id":129,"cityId":1,"cityName":"Chicago","companyId":2,"countryId":240,"countryName":"United States","description":"Chicago 1","isCaterer":true,"endDate":"2015-04-20","startDate":"2015-04-12","regionId":1,"regionName":"Illinois","stationCode":"ORD12","stationId":23,"stationName":"Chicago O-hare2","timezone":"America/El_Salvador","timezoneId":"461","utcDstOffset":"-06:00","utcOffset":"-06:00","companyStationRelationships":[{"id":9,"companyId":291,"companyStationId":129,"startDate":"2015-04-15","endDate":"2015-04-16"}]},{"id":131,"cityId":1,"cityName":"Chicago","companyId":2,"countryId":240,"countryName":"United States","description":"Chicago 4","isCaterer":true,"endDate":"2015-04-20","startDate":"2015-04-12","regionId":1,"regionName":"Illinois","stationCode":"ORD13","stationId":24,"stationName":"Chicago O-hare3","timezone":"America/El_Salvador","timezoneId":"461","utcDstOffset":"-06:00","utcOffset":"-06:00","companyStationRelationships":[{"id":11,"companyId":291,"companyStationId":131,"startDate":"2015-04-15","endDate":"2015-04-16"}]},{"id":136,"cityId":1,"cityName":"Chicago","companyId":2,"countryId":240,"countryName":"United States","description":"Chicago","isCaterer":true,"endDate":"2015-04-20","startDate":"2015-04-12","regionId":1,"regionName":"Illinois","stationCode":"ORD1","stationId":17,"stationName":"Chicago O-hare1","timezone":"America/El_Salvador","timezoneId":"461","utcDstOffset":"-06:00","utcOffset":"-06:00","companyStationRelationships":[{"id":13,"companyId":291,"companyStationId":136,"startDate":"2015-04-15","endDate":"2015-04-16"},{"id":14,"companyId":291,"companyStationId":136,"startDate":"2015-04-17","endDate":"2015-04-18"},{"id":15,"companyId":291,"companyStationId":136,"startDate":"2015-04-19","endDate":"2015-04-19"}]}],"meta":{"count":10,"limit":10,"start":0}}
+{
+  "response": [
+    {
+      "id": 1,
+      "companyId": 403,
+      "code": "ORD",
+      "name": "Chicago O-hare"
+    },
+    {
+      "id": 2,
+      "companyId": 403,
+      "code": "MDW",
+      "name": "Chicago Midway"
+    },
+    {
+      "id": 3,
+      "companyId": 403,
+      "code": "LON3",
+      "name": "London"
+    },
+    {
+      "id": 4,
+      "companyId": 403,
+      "code": "SAN",
+      "name": "San Jose"
+    },
+    {
+      "id": 5,
+      "companyId": 403,
+      "code": "DEL",
+      "name": "Delhi"
+    },
+    {
+      "id": 6,
+      "companyId": 403,
+      "code": "JFK",
+      "name": "New York"
+    },
+    {
+      "id": 7,
+      "companyId": 403,
+      "code": "EWR",
+      "name": "Newark"
+    },
+    {
+      "id": 8,
+      "companyId": 403,
+      "code": "LAX",
+      "name": "Los Angeles"
+    },
+    {
+      "id": 9,
+      "companyId": 403,
+      "code": "MIA",
+      "name": "Miami"
+    },
+    {
+      "id": 10,
+      "companyId": 403,
+      "code": "IAH",
+      "name": "Houston"
+    },
+    {
+      "id": 11,
+      "companyId": 403,
+      "code": "BOS",
+      "name": "Boston"
+    },
+    {
+      "id": 13,
+      "companyId": 403,
+      "code": "CD123",
+      "name": "CHICAGO-NEW"
+    },
+    {
+      "id": 19,
+      "companyId": 403,
+      "code": "ALC",
+      "name": "Alicante"
+    },
+    {
+      "id": 20,
+      "companyId": 403,
+      "code": "BCN",
+      "name": "Barcelona"
+    },
+    {
+      "id": 21,
+      "companyId": 403,
+      "code": "AGP",
+      "name": "Malaga"
+    },
+    {
+      "id": 22,
+      "companyId": 403,
+      "code": "VLC",
+      "name": "Valencia"
+    },
+    {
+      "id": 23,
+      "companyId": 403,
+      "code": "CPH",
+      "name": "Copenhagen"
+    },
+    {
+      "id": 24,
+      "companyId": 403,
+      "code": "SKS",
+      "name": "Vojens"
+    },
+    {
+      "id": 25,
+      "companyId": 403,
+      "code": "EKHG",
+      "name": "Herning"
+    },
+    {
+      "id": 26,
+      "companyId": 403,
+      "code": "BSL",
+      "name": "Basel"
+    },
+    {
+      "id": 27,
+      "companyId": 403,
+      "code": "GVA",
+      "name": "Geneva"
+    },
+    {
+      "id": 28,
+      "companyId": 403,
+      "code": "ZRH",
+      "name": "Zurich"
+    },
+    {
+      "id": 29,
+      "companyId": 403,
+      "code": "BRN",
+      "name": "Bern"
+    },
+    {
+      "id": 30,
+      "companyId": 403,
+      "code": "ZHI",
+      "name": "Grenchen"
+    },
+    {
+      "id": 39,
+      "companyId": 403,
+      "code": "LON",
+      "name": "Heathrow Intl"
+    },
+    {
+      "id": 41,
+      "companyId": 403,
+      "code": "LGW",
+      "name": "Gatwick "
+    },
+    {
+      "id": 43,
+      "companyId": 403,
+      "code": "LPL",
+      "name": "Liverpool "
+    },
+    {
+      "id": 44,
+      "companyId": 403,
+      "code": "LTN",
+      "name": "Luton "
+    },
+    {
+      "id": 45,
+      "companyId": 403,
+      "code": "MAD",
+      "name": "Madrid "
+    }
+  ],
+  "meta": {
+    "count": 29,
+    "limit": 29,
+    "start": 0
+  }
+}

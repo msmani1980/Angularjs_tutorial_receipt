@@ -79,29 +79,36 @@ angular.module('ts5App')
       if($scope.readOnly){
         return false;
       }
-      if(cashBag.isSubmitted === 'true') {
+      if(cashBag.isSubmitted) {
         return false;
       }
-      var canDelete = true;
-      angular.forEach(cashBag.cashBagCurrencies, function (currency) {
-        if (canDelete) {
+      if(cashBag.isDelete) {
+        return false;
+      }
+      return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
+    };
+
+    function cashBagCurrenciesIsSet(cashBagCurrencies){
+      var isSet = true;
+      angular.forEach(cashBagCurrencies, function (currency) {
+        if (isSet) {
           if (currency.bankAmount !== '0.0000' && currency.bankAmount !== null) {
-            canDelete = false;
+            isSet = false;
           }
           if (currency.coinAmountManual !== null) {
-            canDelete = false;
+            isSet = false;
           }
-          if (currency.coinAmountManual !== null) {
-            canDelete = false;
+          if (currency.paperAmountManual !== null) {
+            isSet = false;
           }
         }
       });
-      return canDelete;
-    };
+      return isSet;
+    }
 
-    $scope.delete = function (cashBag) {
+    $scope.removeRecord = function (cashBag) {
       if (!$scope.canDelete(cashBag)) {
-        return;
+        return false;
       }
       cashBagFactory.deleteCashBag(cashBag.id).then(function () {
           showMessage(null, false, 'successfully deleted');

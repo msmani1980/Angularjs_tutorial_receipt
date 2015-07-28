@@ -1,82 +1,91 @@
 <h2 class="view-name">{{viewName}}</h2>
-<div ng-if="companyList.length">
-  <div class="list-controls">
-    <div class="row">
-      <div class="col-xs-6">
-        <button type="button" class="btn btn-primary" href="#/company-create"><span class="fa fa-plus"></span> Add Company
-        </button>
-      </div>
-      <div class="col-xs-6 text-right">
-        <button type="button" class="btn btn-default" type="submit" data-toggle="collapse" data-target="#search-collapse"
-                aria-expanded="false" aria-controls="search-collapse">
-          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          <span class="hidden-xs">Search</span>
-        </button>
-      </div>
-    </div>
-  </div>
 
-  <div class="panel panel-default collapse" id="search-collapse">
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label for="company-type">Company Type</label>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label for="company-name">Company Name</label>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="form-group">
-            <label for="company-code">Company Code</label>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="panel-footer text-right">
-      <button class="btn btn-default" type="button">Clear</button>
-      <button class="btn btn-primary" type="submit">Search</button>
-    </div>
-  </div>
-  <div class="feature-list">
-    <div class="row list-head">
-      <div class="hidden-xs col-sm-2 list-header border-right">Company Type</div>
-      <div class="hidden-xs col-sm-2 list-header border-right">Company Name</div>
-      <div class="hidden-xs col-sm-2 list-header border-right">Company Code</div>
-      <div class="hidden-xs col-sm-4 list-header border-right">Additional Languages</div>
-      <div class="hidden-xs col-sm-2 list-header border-right">Base Currency</div>
-    </div>
-    <feature-list-item ng-repeat="company in filteredCompanies track by $index" view-model="company" type="company"
-                       class="list-body"></feature-list-item>
-    <div ng-if="companyList.length === 0" class="feature-empty">
-      <p>No Companies Found</p>
-    </div>
+<div ng-show="isLoading && !isRejected" class="text-center">
+  <p><i class="fa fa-cog fa-spin fa-4x"></i></p>
 
-    <div class="list-footer">
-      <div class="row">
-        <div class="col-xs-12 col-sm-3">
-          Show
-          <select class="form-control" ng-model="itemsPerPage">
-            <option>10</option>
-            <option>25</option>
-            <option>50</option>
-            <option>100</option>
-          </select>
-          Items per Page
-        </div>
-        <div class="col-xs-12 col-sm-9 text-right">
-          <pagination total-items="totalItems" items-per-page="itemsPerPage" max-size="maxSize"
-                      boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
-        </div>
-      </div>
-    </div>
-  </div>
+  <p>Loading...</p>
 </div>
-<!-- //TODO: Add create link -->
-<div ng-if="companyList.length === 0" class="feature-empty">
-  <button class="btn btn-primary" ng-href="#/-create"><span class="fa fa-plus" aria-hidden="true"></span> Create Company
-  </button>
+<div ng-show="!isLoading && !isRejected">
+  <div ng-show="companyList.length">
+    <div class="list-controls">
+      <div class="row">
+        <div class="col-xs-6">
+          <button type="button" class="btn btn-primary" ng-click="createCompany()"><span class="fa fa-plus"></span> Add
+            Company
+          </button>
+        </div>
+        <div class="col-xs-6 text-right">
+          <button type="button" class="btn btn-default" type="submit" data-toggle="collapse"
+                  data-target="#search-collapse"
+                  aria-expanded="false" aria-controls="search-collapse">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            <span class="hidden-xs">Search</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default collapse" id="search-collapse">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="company-type">Company Type</label>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="company-name">Company Name</label>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="company-code">Company Code</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer text-right">
+        <button class="btn btn-default" type="button">Clear</button>
+        <button class="btn btn-primary" type="submit">Search</button>
+      </div>
+    </div>
+    <div class="feature-list">
+      <div class="row list-head">
+        <div class="hidden-xs col-sm-2 list-header border-right">Company Type</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Company Name</div>
+        <div class="hidden-xs col-sm-2 list-header border-right">Company Code</div>
+        <div class="hidden-xs col-sm-4 list-header border-right">Additional Languages</div>
+        <div class="hidden-xs col-sm-1 list-header border-right">Base Currency</div>
+        <div class="hidden-xs col-sm-1 list-header border-right">Actions</div>
+      </div>
+      <feature-list-item ng-repeat="company in filteredCompanyList" view-model="company" type="company"
+                         class="list-body"></feature-list-item>
+      <div ng-show="companyList.length === 0" class="feature-empty">
+        <p>No Companies Found</p>
+      </div>
+      <div class="list-footer">
+        <div class="row">
+          <div class="col-xs-12 col-sm-3">
+            Show
+            <select class="form-control" ng-model="itemsPerPage"
+                    ng-options="value for value in [10, 25, 50, 100]"></select>
+            Items per Page
+
+          </div>
+
+          <div class="col-xs-12 col-sm-9 text-right">
+            <pagination total-items="itemsListCount" items-per-page="itemsPerPage" max-size="maxSize"
+                        boundary-links="true" ng-model="currentPage"></pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- //TODO: Add create link -->
+  <div ng-show="companyList.length === 0" class="feature-empty">
+    <button type=button" class="btn btn-primary" ng-click="createCompany()"><span class="fa fa-plus" aria-hidden="true"></span> Create
+      Company
+    </button>
+  </div>
 </div>
