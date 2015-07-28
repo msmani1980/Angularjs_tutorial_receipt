@@ -92,10 +92,6 @@ describe('Controller: CashBagCtrl', function () {
         expect(scope.formSave).toBeDefined();
         expect(Object.prototype.toString.call(scope.formSave)).toBe('[object Function]');
       });
-      it('should have a canDelete function attached to the scope', function () {
-        expect(scope.canDelete).toBeDefined();
-        expect(Object.prototype.toString.call(scope.canDelete)).toBe('[object Function]');
-      });
       it('should have a removeRecord function attached to the scope', function () {
         expect(scope.removeRecord).toBeDefined();
         expect(Object.prototype.toString.call(scope.removeRecord)).toBe('[object Function]');
@@ -287,7 +283,7 @@ describe('Controller: CashBagCtrl', function () {
 
   });
 
-  describe('canDelete scope function', function(){
+  describe('removeRecord scope function cannot delete', function(){
     beforeEach(inject(function ($controller) {
       CashBagEditCtrl = $controller('CashBagCtrl', {
         $scope: scope,
@@ -301,25 +297,25 @@ describe('Controller: CashBagCtrl', function () {
     it('should return false if state is not edit', function(){
       scope.state = 'view';
       scope.$digest();
-      expect(scope.canDelete({})).toBe(false);
+      expect(scope.removeRecord({})).toBe(false);
     });
     it('should return false if readOnly is true', function(){
       scope.state = 'edit';
       scope.readOnly = true;
       scope.$digest();
-      expect(scope.canDelete({})).toBe(false);
+      expect(scope.removeRecord({})).toBe(false);
     });
     it('should return false if cashBag has a property isSubmitted which is set to string value true', function(){
       scope.state = 'edit';
       scope.readOnly = false;
       scope.$digest();
-      expect(scope.canDelete({isSubmitted:'true'})).toBe(false);
+      expect(scope.removeRecord({isSubmitted:'true'})).toBe(false);
     });
     it('should return false if cashBag has a property isDelete which is set to string value true', function(){
       scope.state = 'edit';
       scope.readOnly = false;
       scope.$digest();
-      expect(scope.canDelete({isDelete:'true'})).toBe(false);
+      expect(scope.removeRecord({isDelete:'true'})).toBe(false);
     });
     it('should return false if a cashBag has a cashBagCurrencies.bankAmount value set to a value and not 0.0000', function(){
       var cashBag = {
@@ -330,7 +326,7 @@ describe('Controller: CashBagCtrl', function () {
       scope.state = 'edit';
       scope.readOnly = false;
       scope.$digest();
-      expect(scope.canDelete(cashBag)).toBe(false);
+      expect(scope.removeRecord(cashBag)).toBe(false);
     });
     it('should return false if a cashBag has a cashBagCurrencies.coinAmountManual that is not null', function(){
       var cashBag = {
@@ -344,7 +340,7 @@ describe('Controller: CashBagCtrl', function () {
       scope.state = 'edit';
       scope.readOnly = false;
       scope.$digest();
-      expect(scope.canDelete(cashBag)).toBe(false);
+      expect(scope.removeRecord(cashBag)).toBe(false);
     });
     it('should return false if a cashBag has a cashBagCurrencies.paperAmountManual that is not null', function(){
       var cashBag = {
@@ -359,22 +355,7 @@ describe('Controller: CashBagCtrl', function () {
       scope.state = 'edit';
       scope.readOnly = false;
       scope.$digest();
-      expect(scope.canDelete(cashBag)).toBe(false);
-    });
-    it('should return true if a cashBag cashBagCurrencies are null', function(){
-      var cashBag = {
-        cashBagCurrencies:[
-          {
-            bankAmount:null,
-            coinAmountManual:null,
-            paperAmountManual:null
-          }
-        ]
-      };
-      scope.state = 'edit';
-      scope.readOnly = false;
-      scope.$digest();
-      expect(scope.canDelete(cashBag)).toBe(true);
+      expect(scope.removeRecord(cashBag)).toBe(false);
     });
   });
 

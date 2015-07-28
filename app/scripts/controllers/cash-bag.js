@@ -72,10 +72,6 @@ angular.module('ts5App')
       }
     };
 
-    $scope.canDelete = function(cashBag){
-      return canDelete(cashBag);
-    }
-
     function canDelete(cashBag){
       if($scope.state !== 'edit'){
         return false;
