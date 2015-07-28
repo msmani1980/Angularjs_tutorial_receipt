@@ -169,7 +169,7 @@ angular.module('ts5App')
         payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
       }
       if($scope.search.selectedItem) {
-        payload.itemId = $scope.search.selectedItem.id;
+        payload.itemId = $scope.search.selectedItem.itemMasterId;
       }
       if($scope.search.selectedPriceType) {
         payload.priceTypeId = $scope.search.selectedPriceType.id;
@@ -187,7 +187,6 @@ angular.module('ts5App')
 
     $scope.searchCommissions = function (payload) {
       var payload = createSearchPayload();
-      console.log(payload);
       getCommissions(payload);
     };
 
