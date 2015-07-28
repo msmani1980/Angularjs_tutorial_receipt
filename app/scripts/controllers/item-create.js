@@ -368,7 +368,6 @@ angular.module('ts5App')
       var dependencyPromises = this.makeDependencyPromises();
       $q.all(
         dependencyPromises).then(function(response) {
-
         $this.setDependencies(response);
       });
     };
@@ -620,7 +619,8 @@ angular.module('ts5App')
     this.updateStationException = function(priceIndex,
       stationExceptionIndex) {
       var $this = this;
-      var stationException = $scope.formData.prices[priceIndex].stationExceptions[stationExceptionIndex];
+      var stationException = $scope.formData.prices[priceIndex].stationExceptions[
+        stationExceptionIndex];
       this.getGlobalStationList(stationException).then(function(data) {
         $this.setStationsList(stationException, data);
       });
@@ -635,7 +635,8 @@ angular.module('ts5App')
       for (var priceIndex in $scope.formData.prices) {
         var price = $scope.formData.prices[priceIndex];
         for (var stationExceptionIndex in price.stationExceptions) {
-          var stationException = price.stationExceptions[stationExceptionIndex];
+          var stationException = price.stationExceptions[
+            stationExceptionIndex];
           stationPromises.push(this.getGlobalStationList(stationException));
         }
         this.handleStationPromises(stationPromises, price);
@@ -648,7 +649,7 @@ angular.module('ts5App')
       $q.all(stationPromises).then(function(data) {
         for (var key in data) {
           var stationException = price.stationExceptions[key];
-          if(stationException) {
+          if (stationException) {
             $this.setStationsList(stationException, data[key]);
           }
         }
@@ -660,9 +661,9 @@ angular.module('ts5App')
      *
      */
 
-   $scope.$watch('formData.prices', function(newData, oldData) {
-     $this.watchPriceGroups(newData, oldData);
-   }, true);
+    $scope.$watch('formData.prices', function(newData, oldData) {
+      $this.watchPriceGroups(newData, oldData);
+    }, true);
 
     $scope.addPriceGroup = function() {
       $scope.formData.prices.push({
@@ -693,15 +694,16 @@ angular.module('ts5App')
       return priceCurrencies;
     };
 
-    this.getPriceCurrenciesList = function(priceIndex,currencyFilters) {
-      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(data) {
+    this.getPriceCurrenciesList = function(priceIndex, currencyFilters) {
+      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(
+        data) {
         var priceCurrencies = $this.generatePriceCurrenciesList(data.response);
-        $this.setPriceCurrenciesList(priceIndex,priceCurrencies);
+        $this.setPriceCurrenciesList(priceIndex, priceCurrencies);
       });
     };
 
-    this.setPriceCurrenciesList = function(priceIndex,priceCurrencies) {
-      $scope.formData.prices[priceIndex].priceCurrencies =priceCurrencies;
+    this.setPriceCurrenciesList = function(priceIndex, priceCurrencies) {
+      $scope.formData.prices[priceIndex].priceCurrencies = priceCurrencies;
     };
 
     this.updatePriceGroup = function(priceIndex) {
@@ -716,7 +718,7 @@ angular.module('ts5App')
         endDate: endDate,
         isOperatedCurrency: true
       };
-      this.getPriceCurrenciesList(priceIndex,currencyFilters);
+      this.getPriceCurrenciesList(priceIndex, currencyFilters);
     };
 
     this.watchPriceGroups = function(newPrices, oldPrices) {
@@ -724,15 +726,16 @@ angular.module('ts5App')
         return false;
       }
       for (var priceIndex in $scope.formData.prices) {
-        this.checkPriceGroup(newPrices,oldPrices,priceIndex);
+        this.checkPriceGroup(newPrices, oldPrices, priceIndex);
         for (var stationExceptionIndex in $scope.formData.prices[
             priceIndex].stationExceptions) {
-            this.checkStationException(newPrices,oldPrices,priceIndex,stationExceptionIndex);
+          this.checkStationException(newPrices, oldPrices, priceIndex,
+            stationExceptionIndex);
         }
       }
     };
 
-    this.checkPriceGroup = function(newPrices,oldPrices,priceIndex) {
+    this.checkPriceGroup = function(newPrices, oldPrices, priceIndex) {
       var newPriceGroup = newPrices[priceIndex];
       var oldPriceGroup = oldPrices[priceIndex];
       if (!oldPriceGroup) {
@@ -744,14 +747,18 @@ angular.module('ts5App')
       }
     };
 
-    this.checkStationException = function(newPrices,oldPrices,priceIndex,stationExceptionIndex) {
-      var newStationException = newPrices[priceIndex].stationExceptions[stationExceptionIndex];
-      var oldStationException = oldPrices[priceIndex].stationExceptions[stationExceptionIndex];
-      if (!oldStationException || !newStationException.startDate || !newStationException.endDate) {
+    this.checkStationException = function(newPrices, oldPrices, priceIndex,
+      stationExceptionIndex) {
+      var newStationException = newPrices[priceIndex].stationExceptions[
+        stationExceptionIndex];
+      var oldStationException = oldPrices[priceIndex].stationExceptions[
+        stationExceptionIndex];
+      if (!oldStationException || !newStationException.startDate || !
+        newStationException.endDate) {
         return false;
       }
       if (newStationException.startDate !== oldStationException.startDate ||
-        newStationException.endDate !== oldStationException.endDate ) {
+        newStationException.endDate !== oldStationException.endDate) {
         this.updateStationException(priceIndex, stationExceptionIndex);
       }
     };
@@ -833,6 +840,13 @@ angular.module('ts5App')
       return ($scope.formData.width && $scope.formData.length && $scope
         .formData
         .height && $scope.formData.dimensionType);
+    };
+
+    $scope.isQrCodeSet = function() {
+      if ($scope.formData && $scope.formData.qrCodeImgUrl) {
+        return true;
+      }
+      return false;
     };
 
     // TODO: MOVE ME GLOBAL
