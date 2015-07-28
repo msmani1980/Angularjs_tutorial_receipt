@@ -22,7 +22,7 @@ describe('The Stock Owner Item Create Controller', function() {
     'served/units-dimension.json',
     'served/units-volume.json',
     'served/units-weight.json',
-    'served/price-types.json'
+    'served/company.json'
   ));
 
   var $rootScope,
@@ -169,7 +169,7 @@ describe('The Stock Owner Item Create Controller', function() {
         dimensionListDeferred,
         volumeListDeferred,
         weightListDeferred,
-        priceTypeListDeferred,
+        companyDeferred,
         itemsListDeferred;
 
       beforeEach(inject(function($injector, $q, $rootScope,
@@ -178,7 +178,7 @@ describe('The Stock Owner Item Create Controller', function() {
         _servedAllergens_, _servedItemTypes_,
         _servedCharacteristics_, _servedUnitsDimension_,
         _servedUnitsVolume_, _servedUnitsWeight_,
-        _servedPriceTypes_, _servedItemsList_) {
+        _servedCompany_, _servedItemsList_) {
         responseArray = [
           _servedSalesCategories_,
           _servedTags_,
@@ -190,8 +190,8 @@ describe('The Stock Owner Item Create Controller', function() {
           _servedUnitsDimension_,
           _servedUnitsVolume_,
           _servedUnitsWeight_,
-          _servedPriceTypes_,
-          _servedItemsList_
+          _servedItemsList_,
+          _servedCompany_
         ];
 
         companiesFactory = $injector.get('companiesFactory');
@@ -208,8 +208,8 @@ describe('The Stock Owner Item Create Controller', function() {
         dimensionListDeferred = $q.defer();
         volumeListDeferred = $q.defer();
         weightListDeferred = $q.defer();
-        priceTypeListDeferred = $q.defer();
         itemsListDeferred = $q.defer();
+        companyDeferred = $q.defer();
 
         spyOn(StockOwnerItemCreateCtrl, 'setSalesCategories')
           .and.callThrough();
@@ -233,9 +233,9 @@ describe('The Stock Owner Item Create Controller', function() {
           .returnValue(responseArray[8]);
         spyOn(itemsFactory, 'getWeightList').and
           .returnValue(responseArray[9]);
-        spyOn(itemsFactory, 'getPriceTypesList').and
-          .returnValue(responseArray[10]);
         spyOn(itemsFactory, 'getItemsList').and
+          .returnValue(responseArray[10]);
+        spyOn(companiesFactory, 'getCompany').and
           .returnValue(responseArray[11]);
         createController($injector);
       }));
