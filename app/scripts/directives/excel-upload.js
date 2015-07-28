@@ -21,7 +21,7 @@ angular.module('ts5App')
     $scope.$watchCollection('rejFiles', function (oldObj/*, newObj*/) {
       oldObj = oldObj || [];
       if (oldObj.length >= 1) {
-        showToast('warning', 'Import from file', oldObj[0].name + ' does not meet file criteria');
+        showToast('danger', 'Import from file', oldObj[0].name + ' does not meet file criteria');
       }
     });
 
@@ -40,11 +40,15 @@ angular.module('ts5App')
       $this.service.importFromExcel(GlobalMenuService.company.get(), files).then(successHandler, errorHandler);
     };
 
-    function successHandler (response) {
-      showToast('success', 'Import from file', response.config.file[0].name + ' was successful');
+    function successHandler(response) {
+      if (response.toString() === 'OK_BUT_EMAIL_FAILURE') {
+        showToast('warning', 'Import from file', 'upload successful, but email notifications have failed');
+      } else {
+        showToast('success', 'Import from file', response.config.file[0].name + ' was successful');
+      }
     }
 
-    function errorHandler (response) {
+    function errorHandler(response) {
       showToast('danger', 'Import from file', response.config.file[0].name + ' was rejected');
     }
 
@@ -67,7 +71,17 @@ angular.module('ts5App')
       angular.element('.info-import-model').modal('hide');
     };
 
-    function setupController () {
+
+    function setTemplateName() {
+      if ($scope.type === 'menu') {
+        $scope.templateName = 'menuUpload';
+      } else if ($scope.type === 'postTrip') {
+        $scope.templateName = 'FileUpload-PostTripManagement';
+      }
+    }
+
+    function setupController() {
+      setTemplateName();
       try {
         $this.service = $injector.get($scope.type + 'Factory');
       } catch (error) {

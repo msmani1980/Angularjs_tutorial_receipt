@@ -4,7 +4,7 @@ describe('Controller: PostTripDataCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/global-stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data.json', 'served/employees.json'));
+  beforeEach(module('served/stations.json', 'served/carrier-types.json', 'served/carrier-numbers.json', 'served/post-trip-data.json', 'served/employees.json'));
 
   var PostTripDataCtrl,
     scope,
@@ -25,8 +25,8 @@ describe('Controller: PostTripDataCtrl', function () {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedGlobalStations_, _servedCarrierTypes_, _servedCarrierNumbers_, _servedPostTripData_, _servedEmployees_) {
-      stationsListResponseJSON = _servedGlobalStations_;
+    inject(function (_servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_, _servedPostTripData_, _servedEmployees_) {
+      stationsListResponseJSON = _servedStations_;
       carrierTypesResponseJSON = _servedCarrierTypes_;
       carrierNumbersResponseJSON = _servedCarrierNumbers_;
       postTripResponseJSON = _servedPostTripData_;
@@ -105,11 +105,11 @@ describe('Controller: PostTripDataCtrl', function () {
       var utcDepOffset = '+2';
       beforeEach(function () {
         scope.stationList = [{
-          id: 1,
+          stationId: 1,
           timezone: timeZoneString,
           utcOffset: utcArrOffset,
         }, {
-          id: 2,
+          stationId: 2,
           timezone: timeZoneString,
           utcOffset: utcDepOffset
         }];
