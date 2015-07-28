@@ -6,28 +6,6 @@
         <h2 class="view-name">{{viewName}}</h2>
       </div>
 
-    <form-error-dialog></form-error-dialog>
-    
-    <div class="edit-controls">
-      <div class="row">
-      
-        <div class="col-xs-6 col-sm-8">
-          <h2 class="view-name">{{ viewName }}</h2>
-        </div>
-        
-        <div class="col-xs-6 col-sm-4">
-          <div class="header-buttons pull-right">
-<!-- TODO: BUTTONS FUNCTIONALITY -->
-<!--               <button type="button" class="btn button-additional" {{action "cancel"}}>{{t "menus.form.button.secondary.cancel"}}</button> -->
-            <button type="button" class="btn btn-default">Cancel</button>
-<!--               <button type="button" class="btn button-primary" {{action "save"}}>{{t "menus.form.button.primary.create"}}</button> -->
-            <button type="button" class="btn btn-primary">Create</button>
-            <button type="button" class="btn btn-default">
-                <i class="fa fa-question-circle"></i>
-            </button>
-          </div>          
-        </div>        
-        
       <div class="col-xs-6 text-right">
         <a class="btn btn-default" ng-href="#/employee-commission-list" class="btn">Back</a>
         <button ng-show="employeeCommissionForm.$dirty" class="btn btn-success">
@@ -38,103 +16,6 @@
     </div>
     <p>All required fields are marked with a *</p>
   </div>
-
-    <div class="row">
-      
-      <div class="col-xs-12 col-sm-3">
-        <div class="form-group">
-          <label for="saleType">Sale Type *</label>
-          <select class="form-control" id="saleType" required>
-            <option>Regular Sale</option>
-            <option>Complimentary Sale</option>
-            <option>Employee Purchase</option>
-            <option>Other</option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="col-xs-12 col-sm-4">
-        <date-picker class="form-group"
-          element-class="col-xs-12 col-sm-6"
-          start-date-model="formData.startDate"
-          end-date-model="formData.endDate"
-          disable-past="true"
-          label-from="Effective From *"
-          label-to="Effective To *"
-          disable-start-date="viewOnly || itemIsActive"
-          disable-end-date="viewOnly || itemIsInactive"
-          >
-        </date-picker>
-      </div>
-      
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="itemCategory">Item Category</label>
-          <select class="form-control" id="itemCategory">
-            <option>Soft drinks</option>
-            <option>Rentals</option>
-            <option>Snacks</option>
-            <option>Hot Drinks</option>
-            <option>Chocolates</option>
-            <option>Lunch</option>
-            <option>Parent Test</option>
-            <option>Fruits</option>
-            <option>Gadgets</option>
-            <option>Frarances</option>
-            <option>Virtual Items</option>
-          </select>
-        </div>
-      </div>
-
-<!-- TODO: RETAIL NAMES CORRESPOND TO ITEM CATEGORY ABOVE -->
-      <div class="col-xs-12 col-sm-3">
-        <div class="form-group">
-          <label for="retailName">Retail Name *</label>
-          <select class="retail-name-multiple-select" multiple="multiple" id="retailName" required>
-            <option>Coke</option>
-            <option>Pepsi</option>
-            <option>Sprite</option>
-            <option>7-Up</option>
-            <option>Orange Crush</option>
-            <option>Ginger Ale</option>
-            <option>Root Beer</option>
-          </select>
-        </div>
-      </div>
-
-    </div>
-    
-    <div class="row">
-      
-      <div class="col-xs-12 col-sm-3">
-        <div class="form-group">
-          <label for="rateType">Rate Type *</label>
-          <select class="form-control" id="rateType" required>
-            <option>Percentage</option>
-            <option>Fixed Amount</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="rate">Rate *</label>
-          <input type="text" class="form-control" id="rate" placeholder="$10" required>
-        </div>
-      </div>
-
-<!-- TODO: CURRENCY SHOWN ONLY WHEN RATE TYPE = FIXED AMOUNT -->
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="saleType">Currency *</label>
-          <select class="form-control" id="saleType" required>
-            <option>USD</option>
-            <option>GBP</option>
-            <option>EUR</option>
-            <option>DKK</option>
-          </select>
-        </div>
-      </div>
 
   <date-picker
     class="col-xs-12 col-md-6 col-sm-6"
