@@ -160,7 +160,7 @@ angular.module('ts5App')
         var price = itemData.costPrices[priceIndex];
         price.startDate = formatDate(price.startDate, false, 'L');
         price.endDate = formatDate(price.endDate, false, 'L');
-        updatePriceGroup(priceIndex);
+        this.updatePriceGroup(priceIndex);
 
       }
 
@@ -273,7 +273,7 @@ angular.module('ts5App')
      *
      */
 
-    $scope.$watch('formData.prices', function(newData, oldData) {
+    $scope.$watch('formData.costPrices', function(newData, oldData) {
       $this.watchPriceGroups(newData, oldData);
     }, true);
 
@@ -294,34 +294,11 @@ angular.module('ts5App')
       $scope.formData.costPrices.splice(key, 1);
     };
 
-    var getCurrencyFromArrayUsingId = function (currenciesArray,
-      baseCurrencyId) {
+    this.getCurrencyFromArrayUsingId = function (currenciesArray, baseCurrencyId) {
       return currenciesArray.filter(function (currencyItem) {
         return currencyItem.id === baseCurrencyId;
       })[0];
     };
-
-    // pulls a list of currencies from the API and updates the price group
-    function updatePriceGroup(priceIndex) {
-
-      // TODO: Make this call only once and then access locally
-      companiesFactory.getCompany(companyId).then(function (response) {
-
-        var baseCurrencyId = response.baseCurrencyId;
-
-        currencyFactory.getCompanyGlobalCurrencies().then(function (
-          companyBaseCurrencyData) {
-
-          var baseCurrency = getCurrencyFromArrayUsingId(
-            companyBaseCurrencyData.response, baseCurrencyId);
-
-          $scope.formData.costPrices[priceIndex].code = baseCurrency.currencyCode;
-
-        });
-
-      });
-
-    }
 
     this.setBaseCurrencyId = function(baseCurrencyId) {
       this.baseCurrencyId = baseCurrencyId;
@@ -333,22 +310,25 @@ angular.module('ts5App')
       });
     };
 
+    this.getBaseCurrencyId();
+
     this.getCompanyGlobalCurrencies = function(priceIndex) {
       currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
-
-        var response = companyBaseCurrencyData.response;
-        var baseCurrency = getCurrencyFromArrayUsingId(
-          response,
-          $this.baseCurrencyId
-        );
-
-        $scope.formData.costPrices[priceIndex].code = baseCurrency.currencyCode;
-
+        $this.setPriceCurrenciesList(priceIndex,companyBaseCurrencyData);
       });
     };
 
+    this.setPriceCurrenciesList = function(priceIndex,companyBaseCurrencyData) {
+      var response = companyBaseCurrencyData.response;
+      var baseCurrency = this.getCurrencyFromArrayUsingId(
+        response,
+        this.baseCurrencyId
+      );
+      $scope.formData.costPrices[priceIndex].code = baseCurrency.currencyCode;
+    };
+
     this.updatePriceGroup = function(priceIndex) {
-      var priceGroup = $scope.formData.prices[priceIndex];
+      var priceGroup = $scope.formData.costPrices[priceIndex];
       var startDate = dateUtility.formatDateForAPI(priceGroup.startDate);
       var endDate = dateUtility.formatDateForAPI(priceGroup.endDate);
       if (startDate === 'Invalid date' || endDate === 'Invalid date') {
@@ -359,27 +339,14 @@ angular.module('ts5App')
         endDate: endDate,
         isOperatedCurrency: true
       };
-      this.getPriceCurrenciesList(priceIndex,currencyFilters);
+      this.getCompanyGlobalCurrencies(priceIndex,currencyFilters);
     };
-
-    /*this.getPriceCurrenciesList = function(priceIndex,currencyFilters) {
-      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(data) {
-        var priceCurrencies = $this.generatePriceCurrenciesList(data.response);
-        $this.setPriceCurrenciesList(priceIndex,priceCurrencies);
-      });
-    };
-
-    this.setPriceCurrenciesList = function(priceIndex,priceCurrencies) {
-      $scope.formData.prices[priceIndex].priceCurrencies =priceCurrencies;
-    };*/
-
-
 
     this.watchPriceGroups = function(newPrices, oldPrices) {
       if (!oldPrices) {
         return false;
       }
-      for (var priceIndex in $scope.formData.prices) {
+      for (var priceIndex in $scope.formData.costPrices) {
         this.checkPriceGroup(newPrices,oldPrices,priceIndex);
       }
     };
