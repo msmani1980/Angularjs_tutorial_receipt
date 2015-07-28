@@ -345,10 +345,10 @@ angular.module('ts5App')
         itemsFactory.getDimensionList(),
         itemsFactory.getVolumeList(),
         itemsFactory.getWeightList(),
-        itemsFactory.getItemsList({})
+        itemsFactory.getItemsList({}),
+        companiesFactory.getCompany(companyId)
       ];
     };
-
 
     this.setUIReady = function() {
       $scope.uiSelectTemplateReady = true;
@@ -376,6 +376,7 @@ angular.module('ts5App')
       $this.setVolumeList(response[8]);
       $this.setWeightList(response[9]);
       $this.setItemList(response[10]);
+      $this.setBaseCurrencyId(response[11]);
       if ($scope.editingItem || $scope.viewOnly) {
         this.getItem($routeParams.id);
       } else {
@@ -497,17 +498,9 @@ angular.module('ts5App')
       })[0];
     };
 
-    this.setBaseCurrencyId = function(baseCurrencyId) {
-      this.baseCurrencyId = baseCurrencyId;
+    this.setBaseCurrencyId = function(response) {
+      this.baseCurrencyId = response.baseCurrencyId;
     };
-
-    this.getBaseCurrencyId = function() {
-      companiesFactory.getCompany(companyId).then(function (response) {
-        $this.setBaseCurrencyId(response.baseCurrencyId);
-      });
-    };
-
-    this.getBaseCurrencyId();
 
     this.getCompanyGlobalCurrencies = function(priceIndex) {
       currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
