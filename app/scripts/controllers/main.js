@@ -260,6 +260,37 @@ angular.module('ts5App')
         className: 'dashboard-companyReasonCode'
       }]
     }, {
+        title: 'Station Operations',
+//        menuItems: [{
+//          name: 'Manage LMP Locations',
+//          route: '/#/lmp-locations-list',
+//          icon: 'icon-manage-schedule',
+//          className: 'dashboard-lmpLocationsList'
+//        }]
+    }, {
+        title: 'Stock Manager',
+        menuItems: [{
+	      name: 'Stock Dashboard',
+	      route: '/#/stock-dashboard',
+	      icon: 'icon-manage-schedule',
+	      className: 'dashboard-stockDashboard'
+      	}, {
+          name: 'Stock Take Report',
+          route: '/#/stock-take-report',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-stockTakeReport'
+        }, {
+          name: 'Manage Goods Received',
+          route: '/#/manage-goods-received',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-manageGoodsReceived'
+        }, {
+          name: 'Create Delivery Note',
+          route: '/#/delivery-note',
+          icon: 'icon-manage-retail-category',
+          className: 'dashboard-deliveryNote'
+        }]
+  	}, {
       title: 'Manage Store Number',
       menuItems: [{
         name: 'Store Number Create',

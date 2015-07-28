@@ -77,7 +77,7 @@
 					<div class="input-group">
 
 						<div class="input-group-addon">
-							* {{currency.code}}
+              {{ masterCurrenciesList[currency.companyCurrencyId] }} *
 						</div>
 
 						<input ng-model="currency.price" type="text" class="form-control" maxlength="8"/>

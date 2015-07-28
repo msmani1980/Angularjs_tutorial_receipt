@@ -72,7 +72,7 @@ describe('Controller: CashBagListCtrl', function () {
   describe('cash bag constructor calls', function () {
     describe('get cashBag list', function () {
       it('should call getCashBagList with companyId', function () {
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId);
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, { isDelete: 'false' });
       });
       describe('sorted bankRefList results', function () {
         it('should have bankRefList attached to scope', function () {

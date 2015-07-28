@@ -17,7 +17,7 @@ angular.module('ts5App')
         label: '@',
         required: '=',
         form: '=',
-        disabled: '=',
+        disable: '=',
         disablePast: '=',
         minDate: '=',
         maxDate: '='
