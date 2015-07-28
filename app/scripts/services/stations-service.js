@@ -34,8 +34,11 @@ angular.module('ts5App')
       return globalRequestResource.getGlobalStationList(payload).$promise;
     };
 
-    var getStationList = function (companyId) {
+    var getStationList = function (companyId, offset) {
       var payload = {id:companyId};
+      if(offset) {
+        payload.offset = offset;
+      }
       return stationRequestResource.getStationList(payload).$promise;
     };
 

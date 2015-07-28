@@ -16,6 +16,7 @@ angular.module('ts5App')
     $scope.viewName = 'Post Trip Data';
     $scope.readOnly = false;
     $scope.selectedEmployees = {};
+    $scope.stationList = [];
 
     this.showLoadingModal = function (message) {
       angular.element('#loading').modal('show').find('p').text(message);
@@ -47,7 +48,13 @@ angular.module('ts5App')
     };
 
     this.getStationsSuccess = function (response) {
-      $scope.stationList = response.response;
+      // TODO: move offset to service layer
+      var newStationList = $scope.stationList.concat(response.response);
+      $scope.stationList = newStationList;
+
+      if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
+        postTripFactory.getStationList(companyId, response.meta.limit + 1).then($this.getStationsSuccess);
+      }
     };
 
     this.getEmployeesSuccess = function (response) {
@@ -174,7 +181,7 @@ angular.module('ts5App')
 
     this.getTimeZoneForStationId = function (stationId) {
       var matchingStation = $scope.stationList.filter(function (station) {
-        return station.id.toString() === stationId.toString();
+        return station.stationId.toString() === stationId.toString();
       })[0];
       if(matchingStation) {
         return matchingStation.timezone + ' [UTC ' + matchingStation.utcOffset + ']';
