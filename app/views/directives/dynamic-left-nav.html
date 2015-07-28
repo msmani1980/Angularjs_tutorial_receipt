@@ -2,14 +2,14 @@
   <div class="container">
     <ul class="navbar ng-cloak">
 
-      <li ng-click="leaveViewNav('{{itemListPath}}')"
-          ng-class="{'active':locationPath == itemListPath}"
-          ng-show="itemListPath">
+      <li ng-repeat="menuItem in menuItems"
+          ng-click="leaveViewNav(menuItem.route)"
+          ng-class="itemClass(menuItem.route)">
 
-        <i class="{{ manageRetailItemIcon }}"></i>
-        <div class="left-nav-option" ng-class="{'lg':itemPrefix}">
-          <i class="{{ manageRetailItemIcon }}"></i>
-          <p>{{ manageRetailItemLabel }}</p>
+        <i class="{{ menuItem.icon }}"></i>
+        <div class="left-nav-option" ng-class="{'lg':menuItem.className}">
+          <i class="{{ menuItem.icon }}"></i>
+          <p>{{ menuItem.name }}</p>
         </div>
       </li>
 
