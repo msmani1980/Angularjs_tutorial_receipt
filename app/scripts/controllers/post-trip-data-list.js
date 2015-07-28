@@ -78,20 +78,6 @@ angular.module('ts5App')
       });
     };
 
-
-    this.uploadPostTripSuccess = function (response) {
-      if(response.toString() === 'OK_BUT_EMAIL_FAILURE') {
-        $this.showToastMessage('warning', 'Upload Post Trip', 'upload successful, but email notifications have failed');
-      } else {
-        $this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
-      }
-      postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
-    };
-
-    this.uploadPostTripFailure = function () {
-      $this.showToastMessage('danger', 'Upload Post Trip', 'upload failed');
-    };
-
     this.deletePostTripSuccess = function () {
       $this.showToastMessage('success', 'Post Trip', 'Post Trip successfully deleted');
       postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
@@ -178,14 +164,5 @@ angular.module('ts5App')
       var scheduleDate = moment(dateString, 'YYYY-MM-DD');
       var today = moment();
       return !scheduleDate.isBefore(today);
-    };
-
-    $scope.uploadPostTripFileToApi = function (files) {
-      if (files && files.length) {
-        for (var i = 0; i < files.length; i++) {
-          var file = files[i];
-          postTripFactory.uploadPostTrip(companyId, file, $this.uploadPostTripSuccess, $this.uploadPostTripFailure);
-        }
-      }
     };
   });
