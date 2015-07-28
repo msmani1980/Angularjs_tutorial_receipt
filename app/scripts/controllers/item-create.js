@@ -744,15 +744,36 @@ angular.module('ts5App')
       }
     };
 
-    this.checkStationException = function(newPrices,oldPrices,priceIndex,stationExceptionIndex) {
-      var newStationException = newPrices[priceIndex].stationExceptions[stationExceptionIndex];
-      var oldStationException = oldPrices[priceIndex].stationExceptions[stationExceptionIndex];
+    this.stationExceptionExist = function(newPrice,oldPrice) {
+      if(!newPrice || !oldPrice) {
+        return false;
+      }
+      if(newPrice.stationExceptions && oldPrice.stationExceptions) {
+        return true;
+      }
+      return false;
+    };
+
+    this.stationExceptionDatesAreValid = function(newPrice,oldPrice,stationExceptionIndex) {
+      var newStationException = newPrice.stationExceptions[stationExceptionIndex];
+      var oldStationException = oldPrice.stationExceptions[stationExceptionIndex];
       if (!oldStationException || !newStationException.startDate || !newStationException.endDate) {
         return false;
       }
       if (newStationException.startDate !== oldStationException.startDate ||
         newStationException.endDate !== oldStationException.endDate ) {
-        this.updateStationException(priceIndex, stationExceptionIndex);
+          return true;
+      }
+      return false;
+    };
+
+    this.checkStationException = function(newPrices,oldPrices,priceIndex,stationExceptionIndex) {
+      var newPrice = newPrices[priceIndex];
+      var oldPrice = oldPrices[priceIndex];
+      if(this.stationExceptionExist(newPrice,oldPrice) ) {
+        if(this.stationExceptionDatesAreValid(newPrice,oldPrice,stationExceptionIndex)) {
+          this.updateStationException(priceIndex, stationExceptionIndex);
+        }
       }
     };
 
