@@ -41,8 +41,8 @@ angular.module('ts5App')
     };
 
     function successHandler(response) {
-      if(response.toString() === 'OK_BUT_EMAIL_FAILURE') {
-        showToastMessage('warning', 'Import from file', 'upload successful, but email notifications have failed');
+      if (response.toString() === 'OK_BUT_EMAIL_FAILURE') {
+        showToast('warning', 'Import from file', 'upload successful, but email notifications have failed');
       } else {
         showToast('success', 'Import from file', response.config.file[0].name + ' was successful');
       }
@@ -73,10 +73,10 @@ angular.module('ts5App')
 
 
     function setTemplateName() {
-      if ($scope.type === "menu") {
-        $scope.templateName = "menuUpload"
-      } else if ($scope.type == "postTrip") {
-        $scope.templateName = "FileUpload-PostTripManagement"
+      if ($scope.type === 'menu') {
+        $scope.templateName = 'menuUpload';
+      } else if ($scope.type === 'postTrip') {
+        $scope.templateName = 'FileUpload-PostTripManagement';
       }
     }
 
