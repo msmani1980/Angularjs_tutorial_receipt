@@ -9,9 +9,11 @@
 angular.module('ts5App')
   .directive('dynamicLeftNav', function () {
 
-    var dynamicLeftNavController = function ($scope, $location) {
+    var dynamicLeftNavController = function ($scope, $location, mainMenuService) {
       $scope.locationPath = $location.path();
+      var menu = mainMenuService.getMenu();
       console.log($scope.locationPath);
+      console.log($filter('filter')(menu, {route: $scope.locationPath})[0]);
     };
 
     return {
