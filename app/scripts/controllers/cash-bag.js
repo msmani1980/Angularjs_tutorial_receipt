@@ -72,6 +72,10 @@ angular.module('ts5App')
       }
     };
 
+    $scope.canDelete = function(cashBag){
+      return canDelete(cashBag);
+    }
+
     function canDelete(cashBag){
       if($scope.state !== 'edit'){
         return false;
@@ -138,7 +142,7 @@ angular.module('ts5App')
               $scope.cashBag = response;
               $scope.displayError = false;
               $scope.formErrors = {};
-              $scope.canDelete = canDelete(response);
+              $scope.canDeleteCashBag = canDelete(response);
 
               if($scope.cashBag.eposCashBagsId === null) {
                 $scope.flightAmount = '0.0000';
