@@ -727,10 +727,8 @@ angular.module('ts5App')
       }
       for (var priceIndex in $scope.formData.prices) {
         this.checkPriceGroup(newPrices, oldPrices, priceIndex);
-        for (var stationExceptionIndex in $scope.formData.prices[
-            priceIndex].stationExceptions) {
-          this.checkStationException(newPrices, oldPrices, priceIndex,
-            stationExceptionIndex);
+        for (var stationExceptionIndex in $scope.formData.prices[priceIndex].stationExceptions) {
+          this.checkStationException(newPrices, oldPrices, priceIndex, stationExceptionIndex);
         }
       }
     };
@@ -749,16 +747,13 @@ angular.module('ts5App')
 
     this.checkStationException = function(newPrices, oldPrices, priceIndex,
       stationExceptionIndex) {
-      var newStationException = newPrices[priceIndex].stationExceptions[
-        stationExceptionIndex];
-      var oldStationException = oldPrices[priceIndex].stationExceptions[
-        stationExceptionIndex];
-      if (!oldStationException || !newStationException.startDate || !
-        newStationException.endDate) {
+      var newStationException = newPrices[priceIndex].stationExceptions[stationExceptionIndex];
+      var oldStationException = oldPrices[priceIndex].stationExceptions[stationExceptionIndex];
+      if (!oldStationException || !newStationException.startDate || !newStationException.endDate) {
         return false;
       }
-      if (newStationException.startDate !== oldStationException.startDate ||
-        newStationException.endDate !== oldStationException.endDate) {
+      if (newStationException.startDate !== oldStationException.startDate || newStationException.endDate !==
+        oldStationException.endDate) {
         this.updateStationException(priceIndex, stationExceptionIndex);
       }
     };
@@ -837,16 +832,19 @@ angular.module('ts5App')
     };
 
     $scope.isMeasurementValid = function() {
-      return ($scope.formData.width && $scope.formData.length && $scope
-        .formData
-        .height && $scope.formData.dimensionType);
+      return ($scope.formData.width && $scope.formData.length && $scope.formData.height && $scope.formData.dimensionType);
     };
 
     $scope.isQrCodeSet = function() {
-      if ($scope.formData && $scope.formData.qrCodeImgUrl) {
-        return true;
-      }
-      return false;
+      return ($scope.formData && $scope.formData.qrCodeImgUrl);
+    };
+
+    $scope.isQrCodeHidden = function() {
+      return ($scope.viewOnly || $scope.itemIsActive || $scope.isQrCodeSet);
+    };
+
+    $scope.isDisabled = function() {
+      return ($scope.viewOnly || $scope.itemIsActive);
     };
 
     // TODO: MOVE ME GLOBAL
