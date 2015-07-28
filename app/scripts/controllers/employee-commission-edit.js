@@ -13,7 +13,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Employee Commission';
 
-    $('.retail-name-multiple-select').select2();
+    angular.element('.retail-name-multiple-select').select2();
 
     $scope.startDate = moment().add(1, 'days').format('L').toString();
 

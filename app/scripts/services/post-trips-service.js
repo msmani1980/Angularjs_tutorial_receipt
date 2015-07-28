@@ -11,7 +11,7 @@
 // jshint maxcomplexity:7
 
 angular.module('ts5App')
-  .service('postTripsService', function ($resource, $http, ENV, dateUtility, Upload) {
+  .service('postTripService', function ($resource, $http, ENV, dateUtility, Upload) {
 
     function transformRequest(data, shouldTransformForGETRequest) {
       data = angular.fromJson(data);
@@ -142,14 +142,12 @@ angular.module('ts5App')
       return requestResource.createPostTrips(companyId, payload).$promise;
     }
 
-    function uploadPostTrip(companyId, file, successHandler, errorHandler) {
+    function importFromExcel(companyId, file) {
       var uploadRequestURL = ENV.apiUrl + '/services/companies/' + companyId + '/file/posttrip';
       return Upload.upload({
         url: uploadRequestURL,
         file: file
-      }).progress(function (evt) {
-        file.uploadProgress = parseInt(100.0 * evt.loaded / evt.total);
-      }).success(successHandler).error(errorHandler);
+      });
     }
 
     return {
@@ -158,6 +156,6 @@ angular.module('ts5App')
       updatePostTrip: updatePostTrip,
       deletePostTrip: deletePostTrip,
       createPostTrip: createPostTrip,
-      uploadPostTrip: uploadPostTrip
+      importFromExcel: importFromExcel
     };
   });

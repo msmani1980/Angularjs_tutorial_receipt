@@ -8,16 +8,20 @@ describe('Service: menuFactory', function () {
   // instantiate service
   var menuFactory,
     menuService,
-    itemsService;
+    itemsService,
+    GlobalMenuService;
 
   beforeEach(inject(function (_menuFactory_, $injector) {
 
     menuService = $injector.get('menuService');
     itemsService = $injector.get('itemsService');
+    GlobalMenuService = $injector.get('GlobalMenuService');
 
     spyOn(menuService, 'getMenu').and.stub();
     spyOn(menuService, 'updateMenu').and.stub();
+    spyOn(menuService, 'createMenu').and.stub();
     spyOn(itemsService, 'getItemsList').and.stub();
+    spyOn(GlobalMenuService.company, 'get').and.stub();
 
     menuFactory = _menuFactory_;
   }));
@@ -41,12 +45,38 @@ describe('Service: menuFactory', function () {
       expect(menuService.updateMenu).toHaveBeenCalledWith(payload);
     });
 
+    it('should call menuService.createMenu with a payload', function () {
+      var payload = {
+        fake: 'data'
+      };
+      menuFactory.createMenu(payload);
+      expect(menuService.createMenu).toHaveBeenCalledWith(payload);
+    });
+
     it('should call itemsService.getItemsList with a payload and a flag to get items from master list', function () {
       var payload = {
         fake: 'data'
       };
       menuFactory.getItemsList(payload, true);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(payload, true);
+    });
+
+    it('should call itemsService and reformat date payloads', function () {
+      var payload = {
+        startDate: '07/11/2015',
+        endDate: '08/12/2015'
+      };
+      var reformattedPayload = {
+        startDate: '20150711',
+        endDate: '20150812'
+      };
+      menuFactory.getItemsList(payload, true);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith(reformattedPayload, true);
+    });
+
+    it('should call GlobalMenuService.company.get with a payload and a flag to get items from master list', function () {
+      menuFactory.getCompanyId();
+      expect(GlobalMenuService.company.get).toHaveBeenCalled();
     });
 
   });
