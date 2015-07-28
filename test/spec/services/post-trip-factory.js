@@ -7,7 +7,7 @@ describe('Factory: postTripFactory', function () {
 
   // instantiate service
   var postTripFactory,
-    postTripsService,
+    postTripService,
     GlobalMenuService,
     stationsService,
     carrierService,
@@ -15,19 +15,19 @@ describe('Factory: postTripFactory', function () {
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _postTripFactory_, _GlobalMenuService_, _stationsService_, _carrierService_, _postTripsService_, _employeesService_) {
+  beforeEach(inject(function ($rootScope, _postTripFactory_, _GlobalMenuService_, _stationsService_, _carrierService_, _postTripService_, _employeesService_) {
     GlobalMenuService = _GlobalMenuService_;
     stationsService = _stationsService_;
     carrierService = _carrierService_;
-    postTripsService = _postTripsService_;
+    postTripService = _postTripService_;
     employeesService = _employeesService_;
 
-    spyOn(postTripsService, 'getPostTrips');
-    spyOn(postTripsService, 'createPostTrip');
-    spyOn(postTripsService, 'updatePostTrip');
-    spyOn(postTripsService, 'deletePostTrip');
-    spyOn(postTripsService, 'getPostTrip');
-    spyOn(postTripsService, 'uploadPostTrip');
+    spyOn(postTripService, 'getPostTrips');
+    spyOn(postTripService, 'createPostTrip');
+    spyOn(postTripService, 'updatePostTrip');
+    spyOn(postTripService, 'deletePostTrip');
+    spyOn(postTripService, 'getPostTrip');
+    spyOn(postTripService, 'importFromExcel');
     spyOn(GlobalMenuService.company, 'get');
     spyOn(stationsService, 'getGlobalStationList');
     spyOn(carrierService, 'getCarrierTypes');
@@ -47,27 +47,27 @@ describe('Factory: postTripFactory', function () {
   describe('postTripService API', function () {
     it('should call postTripService on getPostTripDataList', function () {
       postTripFactory.getPostTripDataList(companyId);
-      expect(postTripsService.getPostTrips).toHaveBeenCalledWith(companyId);
+      expect(postTripService.getPostTrips).toHaveBeenCalledWith(companyId);
     });
-    it('should call postTripService on getPostTrip', function(){
+    it('should call postTripService on getPostTrip', function () {
       postTripFactory.getPostTrip(companyId, '123');
-      expect(postTripsService.getPostTrip).toHaveBeenCalled();
+      expect(postTripService.getPostTrip).toHaveBeenCalled();
     });
-    it('should call postTripService on createPostTrip', function(){
+    it('should call postTripService on createPostTrip', function () {
       postTripFactory.createPostTrip(companyId, {});
-      expect(postTripsService.createPostTrip).toHaveBeenCalled();
+      expect(postTripService.createPostTrip).toHaveBeenCalled();
     });
-    it('should call postTripService on updatePostTrip', function(){
+    it('should call postTripService on updatePostTrip', function () {
       postTripFactory.updatePostTrip('123', {});
-      expect(postTripsService.updatePostTrip).toHaveBeenCalled();
+      expect(postTripService.updatePostTrip).toHaveBeenCalled();
     });
-    it('should call postTripService on deletePostTrip', function(){
+    it('should call postTripService on deletePostTrip', function () {
       postTripFactory.deletePostTrip(companyId, '123');
-      expect(postTripsService.deletePostTrip).toHaveBeenCalled();
+      expect(postTripService.deletePostTrip).toHaveBeenCalled();
     });
-    it('should call postTripService on uploadPostTrip', function(){
+    it('should call postTripService on uploadPostTrip', function () {
       postTripFactory.uploadPostTrip(companyId, null, null, null);
-      expect(postTripsService.uploadPostTrip).toHaveBeenCalled();
+      expect(postTripService.importFromExcel).toHaveBeenCalled();
     });
   });
 
