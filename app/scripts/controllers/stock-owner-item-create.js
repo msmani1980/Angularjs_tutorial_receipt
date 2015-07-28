@@ -436,13 +436,13 @@ angular.module('ts5App')
 
     this.init();
 
-    $scope.$watch('form.$valid', function (validity) {
+    $scope.$watch('form.$valid', function(validity) {
       if (validity) {
         $scope.displayError = false;
       }
     });
 
-    $scope.removeQRCode = function () {
+    $scope.removeQRCode = function() {
       $scope.formData.qrCodeImgUrl = '';
       $scope.formData.qrCodeValue = '';
     };
@@ -476,7 +476,7 @@ angular.module('ts5App')
       $this.watchPriceGroups(newData, oldData);
     }, true);
 
-    $scope.addPriceGroup = function () {
+    $scope.addPriceGroup = function() {
       $scope.formData.costPrices.push({
         startDate: '',
         endDate: '',
@@ -491,8 +491,9 @@ angular.module('ts5App')
       $scope.formData.costPrices.splice(key, 1);
     };
 
-    this.getCurrencyFromArrayUsingId = function (currenciesArray, baseCurrencyId) {
-      return currenciesArray.filter(function (currencyItem) {
+    this.getCurrencyFromArrayUsingId = function(currenciesArray,
+      baseCurrencyId) {
+      return currenciesArray.filter(function(currencyItem) {
         return currencyItem.id === baseCurrencyId;
       })[0];
     };
@@ -502,12 +503,15 @@ angular.module('ts5App')
     };
 
     this.getCompanyGlobalCurrencies = function(priceIndex) {
-      currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
-        $this.setPriceCurrenciesList(priceIndex,companyBaseCurrencyData);
+      currencyFactory.getCompanyGlobalCurrencies().then(function(
+        companyBaseCurrencyData) {
+        $this.setPriceCurrenciesList(priceIndex,
+          companyBaseCurrencyData);
       });
     };
 
-    this.setPriceCurrenciesList = function(priceIndex,companyBaseCurrencyData) {
+    this.setPriceCurrenciesList = function(priceIndex,
+      companyBaseCurrencyData) {
       var response = companyBaseCurrencyData.response;
       var baseCurrency = this.getCurrencyFromArrayUsingId(
         response,
@@ -528,7 +532,7 @@ angular.module('ts5App')
         endDate: endDate,
         isOperatedCurrency: true
       };
-      this.getCompanyGlobalCurrencies(priceIndex,currencyFilters);
+      this.getCompanyGlobalCurrencies(priceIndex, currencyFilters);
     };
 
     this.watchPriceGroups = function(newPrices, oldPrices) {
@@ -536,11 +540,11 @@ angular.module('ts5App')
         return false;
       }
       for (var priceIndex in $scope.formData.costPrices) {
-        this.checkPriceGroup(newPrices,oldPrices,priceIndex);
+        this.checkPriceGroup(newPrices, oldPrices, priceIndex);
       }
     };
 
-    this.checkPriceGroup = function(newPrices,oldPrices,priceIndex) {
+    this.checkPriceGroup = function(newPrices, oldPrices, priceIndex) {
       var newPriceGroup = newPrices[priceIndex];
       var oldPriceGroup = oldPrices[priceIndex];
       if (!oldPriceGroup) {
@@ -658,10 +662,15 @@ angular.module('ts5App')
     };
 
     $scope.isQrCodeSet = function() {
-      if ($scope.formData && $scope.formData.qrCodeImgUrl) {
-        return true;
-      }
-      return false;
+      return ($scope.formData && $scope.formData.qrCodeImgUrl);
+    };
+
+    $scope.isQrCodeHidden = function() {
+      return ($scope.viewOnly || $scope.itemIsActive || $scope.isQrCodeSet);
+    };
+
+    $scope.isDisabled = function() {
+      return ($scope.viewOnly || $scope.itemIsActive);
     };
 
     // TODO: MOVE ME GLOBAL

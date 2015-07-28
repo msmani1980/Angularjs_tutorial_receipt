@@ -48,7 +48,7 @@
 
 			 	<a ng-click="formScroll('price-and-tax')" ng-class="{'active':activeBtn === 'price-and-tax'}" type="button" class="btn btn-default">
 			  	Price & Tax
-			  	</a>
+			  </a>
 
 			</div>
 
@@ -71,7 +71,7 @@
 
 				<div class="col-xs-12 col-sm-6">
 
-					<fieldset ng-disabled="viewOnly || itemIsActive">
+					<fieldset ng-disabled="isDisabled()">
 
 						<input-text label="Stock Owner Item Code" name="itemCode" required="true" pattern="regexp.word" placeholder="Item123" min-length="1" max-length="10"></input-text>
 
@@ -87,14 +87,14 @@
 
 					<div class="row">
 	          <div class="col-xs-12 col-sm-6">
-	            <date-picker-field disable="viewOnly || itemIsActive" form="form" name="EffectiveFrom" label="Effective From" required="true" ng-model="formData.startDate"></date-picker-field>
+	            <date-picker-field disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From" required="true" ng-model="formData.startDate"></date-picker-field>
 	          </div>
 	          <div class="col-xs-12 col-sm-6">
-	            <date-picker-field disable="viewOnly || itemIsInactive" form="form" name="EffectiveTo" label="Effective To" required="true" ng-model="formData.endDate"></date-picker-field>
+	            <date-picker-field disable="isDisabled()" form="form" name="EffectiveTo" label="Effective To" required="true" ng-model="formData.endDate"></date-picker-field>
 	          </div>
 	        </div>
 
-					<fieldset ng-disabled="viewOnly || itemIsActive">
+					<fieldset ng-disabled="isDisabled()">
 
 						<div class="form-group">
 							<label>Sales Category *</label>
@@ -113,7 +113,7 @@
 						<div class="form-group">
 							<label>Item Characteristics</label>
 							<ui-select multiple ng-model="formData.characteristics" theme="bootstrap" id="itemCharacteristics">
-	              <ui-select-match placeholder="Item Characteristics" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
+	              <ui-select-match placeholder="Item Characteristics" ui-lock-choice="isDisabled()">{{ $item.name }}</ui-select-match>
 	              <ui-select-choices repeat="character in characteristics | filter: $select.search | orderBy:'name'">
 	                <div ng-bind-html="character.name | highlight: $select.search"></div>
 	              </ui-select-choices>
@@ -123,7 +123,7 @@
 						<div class="form-group">
 							<label>Item Substitutions</label>
 							<ui-select multiple ng-model="formData.substitutions" theme="bootstrap">
-								<ui-select-match placeholder="Item Substitutions" ui-lock-choice="viewOnly || itemIsActive">{{ $item.itemName }}</ui-select-match>
+								<ui-select-match placeholder="Item Substitutions" ui-lock-choice="isDisabled()">{{ $item.itemName }}</ui-select-match>
 								<ui-select-choices repeat="substitution in substitutions | filter: $select.search | orderBy:'itemName'">
 									<div ng-bind-html="substitution.itemName | highlight: $select.search"></div>
 								</ui-select-choices>
@@ -133,7 +133,7 @@
 						<div class="form-group">
 							<label>Item Recommendations</label>
 							<ui-select multiple ng-model="formData.recommendations" theme="bootstrap">
-								<ui-select-match placeholder="Item Recommendations" ui-lock-choice="viewOnly || itemIsActive">{{ $item.itemName }}</ui-select-match>
+								<ui-select-match placeholder="Item Recommendations" ui-lock-choice="isDisabled()">{{ $item.itemName }}</ui-select-match>
 								<ui-select-choices repeat="recommendation in recommendations | filter: $select.search | orderBy:'itemName'">
 									<div ng-bind-html="recommendation.itemName | highlight: $select.search"></div>
 								</ui-select-choices>
@@ -146,12 +146,12 @@
 
 				<div class="col-xs-12 col-sm-6">
 
-					<fieldset ng-disabled="viewOnly || itemIsActive" ng-if="uiSelectTemplateReady">
+					<fieldset ng-disabled="isDisabled()" ng-if="uiSelectTemplateReady">
 
 						<div class="form-group">
 							<label>Item Tags</label>
 							<ui-select multiple ng-model="formData.tags" theme="bootstrap">
-	              <ui-select-match placeholder="Item Tags" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
+	              <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}</ui-select-match>
 	              <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
 	                <div ng-bind-html="tag.name | highlight: $select.search"></div>
 	              </ui-select-choices>
@@ -161,7 +161,7 @@
 						<div class="form-group">
 							<label>Allergen</label>
 							<ui-select multiple ng-model="formData.allergens" theme="bootstrap">
-	              <ui-select-match placeholder="Allergens" ui-lock-choice="viewOnly || itemIsActive">{{ $item.name }}</ui-select-match>
+	              <ui-select-match placeholder="Allergens" ui-lock-choice="isDisabled()">{{ $item.name }}</ui-select-match>
 	              <ui-select-choices repeat="allergen in allergens | filter: $select.search | orderBy:'name'">
 	                <div ng-bind-html="allergen.name | highlight: $select.search"></div>
 	              </ui-select-choices>
@@ -197,7 +197,7 @@
 
 						<input-text label="Stock Keeping Unit (SKU)" name="skuNumber" pattern="regexp.word" placeholder="0987654321" max-length="25"></input-text>
 
-						<tabset justified="true"  ng-hide="viewOnly || itemIsActive || isQrCodeSet()">
+						<tabset justified="true" ng-hide="isQrCodeHidden()">
 
 							<tab heading="QR Create">
 
@@ -239,7 +239,7 @@
 
 			</div>
 
-			<fieldset ng-disabled="viewOnly || itemIsActive">
+			<fieldset ng-disabled="isDisabled()">
 
 				<h3 id="measurements">Measurements</h3>
 
