@@ -661,6 +661,35 @@ describe('The Stock Owner Item Create Controller', function() {
 
       });
 
+      describe('setBaseCurrencyId method', function() {
+
+        beforeEach(function() {
+          spyOn(StockOwnerItemCreateCtrl, 'setBaseCurrencyId').and.callThrough();
+        });
+
+        it('should expect the base currency id to undefined',
+          function() {
+            expect(StockOwnerItemCreateCtrl.baseCurrencyId).toBeUndefined();
+          });
+
+        it('should have been called after the promise is resolved',
+          function() {
+            $scope.$digest();
+            companyDeferred.resolve();
+            expect(StockOwnerItemCreateCtrl.setBaseCurrencyId).toHaveBeenCalled();
+          });
+
+        it(
+          'should set the $scope.weightUnits after the promise is resolved',
+          function() {
+            $scope.$digest();
+            companyDeferred.resolve();
+            var baseCurrencyIdControl = responseArray[11].baseCurrencyId;
+            expect(StockOwnerItemCreateCtrl.baseCurrencyId).toEqual(baseCurrencyIdControl);
+          });
+
+      });
+
     });
 
   });
