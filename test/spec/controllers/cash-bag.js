@@ -315,6 +315,12 @@ describe('Controller: CashBagCtrl', function () {
       scope.$digest();
       expect(scope.canDelete({isSubmitted:'true'})).toBe(false);
     });
+    it('should return false if cashBag has a property isDelete which is set to string value true', function(){
+      scope.state = 'edit';
+      scope.readOnly = false;
+      scope.$digest();
+      expect(scope.canDelete({isDelete:'true'})).toBe(false);
+    });
     it('should return false if a cashBag has a cashBagCurrencies.bankAmount value set to a value and not 0.0000', function(){
       var cashBag = {
         cashBagCurrencies:[
