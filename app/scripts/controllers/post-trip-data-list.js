@@ -24,8 +24,8 @@ angular.module('ts5App')
         return '';
       }
       angular.forEach($scope.stationList, function (value) {
-        if (value.id.toString() === stationId.toString()) {
-          stationCode = value.code.toString();
+        if (value.stationId === stationId) {
+          stationCode = value.stationCode;
         }
       });
       return stationCode;
@@ -46,7 +46,13 @@ angular.module('ts5App')
     };
 
     this.getStationsSuccess = function (response) {
-      $scope.stationList = response.response;
+      // TODO: move offset to service layer
+      var newStationList = $scope.stationList.concat(response.response);
+      $scope.stationList = newStationList;
+
+      if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
+        postTripFactory.getStationList(companyId, response.meta.limit + 1).then($this.getStationsSuccess);
+      }
       // TODO: fix this hack! currently ui-select doesn't populate correctly when collapsed or when multiple
       angular.element('#search-collapse').addClass('collapse');
       $this.updateStationCodes();
@@ -110,13 +116,13 @@ angular.module('ts5App')
         $scope.search.tailNumber.push(number.carrierNumber);
       });
       angular.forEach($scope.multiSelectedValues.depStations, function (station) {
-        $scope.search.depStationId.push(station.id);
+        $scope.search.depStationId.push(station.stationId);
       });
       angular.forEach($scope.multiSelectedValues.arrStations, function (station) {
-        $scope.search.arrStationId.push(station.id);
+        $scope.search.arrStationId.push(station.stationId);
       });
       angular.forEach($scope.multiSelectedValues.employeeIds, function (employee) {
-        $scope.search.employeeId.push(employee.id);
+        $scope.search.employeeId.push(employee.stationId);
       });
     };
 

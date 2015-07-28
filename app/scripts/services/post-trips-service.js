@@ -1,5 +1,4 @@
 'use strict';
-/*global moment*/
 
 /**
  * @ngdoc service
@@ -8,25 +7,57 @@
  * # cashBagService
  * Service in the ts5App.
  */
-// jshint maxcomplexity:7
 
 angular.module('ts5App')
   .service('postTripService', function ($resource, $http, ENV, dateUtility, Upload) {
 
+    function formatDateRequest(date) {
+      if(date) {
+        return dateUtility.formatDateForAPI(date);
+      }
+      return date;
+    }
+
+    function formatStationIdRequest(stationId) {
+      if(stationId) {
+        return stationId.toString();
+      }
+      return stationId;
+    }
+
+    function formatStationIdResponse(stationId) {
+      if(stationId) {
+        return parseInt(stationId, 10);
+      }
+      return stationId;
+    }
+
+    function formatTimeResponse(time) {
+      if(time) {
+        return dateUtility.formatDate(time, 'HH:mm:ss', 'HH:mm');
+      }
+      return time;
+    }
+
+    function formatToUpperCase(number) {
+      if(number) {
+        return number.toString().toUpperCase();
+      }
+      return number;
+    }
+
     function transformRequest(data, shouldTransformForGETRequest) {
+      if(!data) {
+        return data;
+      }
       data = angular.fromJson(data);
-      if (data && data.scheduleDate) {
-        data.scheduleDate = dateUtility.formatDateForAPI(data.scheduleDate);
-      }
-      if (data && data.scheduleStartDate) {
-        data.scheduleStartDate = dateUtility.formatDateForAPI(data.scheduleStartDate);
-      }
-      if (data && data.scheduleEndDate) {
-        data.scheduleEndDate = dateUtility.formatDateForAPI(data.scheduleEndDate);
-      }
-      if (data && data.scheduleNumber) {
-        data.scheduleNumber = data.scheduleNumber.toString().toUpperCase();
-      }
+      data.scheduleDate = formatDateRequest(data.scheduleDate);
+      data.scheduleStartDate = formatDateRequest(data.scheduleStartDate);
+      data.scheduleEndDate = formatDateRequest(data.scheduleEndDate);
+      data.depStationId = formatStationIdRequest(data.depStationId);
+      data.arrStationId = formatStationIdRequest(data.arrStationId);
+      data.scheduleNumber = formatToUpperCase(data.scheduleNumber);
+
       if (shouldTransformForGETRequest) {
         return data;
       }
@@ -45,15 +76,12 @@ angular.module('ts5App')
       if (data.scheduleDate) {
         data.scheduleDate = dateUtility.formatDate(data.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
       }
-      if (data.arrTime) {
-        data.arrTime = moment(data.arrTime, 'HH:mm:ss').format('HH:mm');
-      }
-      if (data.depTime) {
-        data.depTime = moment(data.depTime, 'HH:mm:ss').format('HH:mm');
-      }
-      if (data && data.scheduleNumber) {
-        data.scheduleNumber = data.scheduleNumber.toString().toUpperCase();
-      }
+      data.arrTime = formatTimeResponse(data.arrTime);
+      data.depTime = formatTimeResponse(data.depTime);
+      data.scheduleNumber = formatToUpperCase(data.scheduleNumber);
+      data.depStationId = formatStationIdResponse(data.depStationId);
+      data.arrStationId = formatStationIdResponse(data.arrStationId);
+
       return data;
     }
 
@@ -112,7 +140,6 @@ angular.module('ts5App')
       requestParameters.tripid = '';
       var payload = {};
       if (arguments.length === 2) {
-        // TODO: encode colon in time query parameter -- or wait for backend to fix
         payload = transformRequest(optionalPayload, true);
       }
       requestParameters.id = companyId;

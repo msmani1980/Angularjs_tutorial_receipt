@@ -41,9 +41,11 @@ angular.module('ts5App')
       return postTripService.importFromExcel(id, file);
     };
 
-    var getStationList = function (id) {
-      var payload  = {companyId: id};
-      return stationsService.getGlobalStationList(payload);
+    var getStationList = function (id, offset) {
+      if(offset) {
+        return stationsService.getStationList(id, offset);
+      }
+      return stationsService.getStationList(id);
     };
 
     var getCarrierNumbers = function(id, carrierType) {
