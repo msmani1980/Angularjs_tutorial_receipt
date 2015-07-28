@@ -2,14 +2,15 @@
   <button type="button" class="btn btn-default btn-info" ngf-select="" ng-model="files" class="btn" ngf-multiple="false"
           ngf-accept="'*.xls,*.xlsx,*.csv'" ng-click="$event.preventDefault();"
           ng-model-rejected="rejFiles" tabindex="0" ngf-stop-propagation="true">
-    <i class="fa fa-table"></i> Import From File
+    <i class="fa fa-upload"></i> Import From File
   </button>
   <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
     <i class="fa fa-caret-down"></i>
   </button>
   <ul class="dropdown-menu">
-    <li><a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/menuUpload.xlsx">Download Template</a>
+    <li><a ng-href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/{{ templateName }}.xlsx">Download Template</a>
+
     </li>
     <li><a href="#" ng-click="showModalImportInfo(); $event.preventDefault(); $event.stopPropagation();">Template
       Help</a></li>
@@ -23,3 +24,4 @@
   <button type="button" class="btn btn-info" ng-if="files" ng-click="upload(files)">Upload</button>
 </div>
 <div ng-include="modalHtml()"></div>
+

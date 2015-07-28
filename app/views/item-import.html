@@ -91,7 +91,8 @@
                class="form-control"
                placeholder="Search..."
                ng-model="searchImportCompanyList"
-               id="searchImportCompanyList"/>
+               id="searchImportCompanyList"
+               ui-on-Drop="nullOperation($event)"/>
       </div>
 
 
@@ -119,7 +120,8 @@
                class="form-control"
                placeholder="Search..."
                ng-model="searchCompanyRetailItemList"
-               id="searchCompanyRetailItemList"/>
+               id="searchCompanyRetailItemList"
+               ui-on-Drop="nullOperation($event)"/>
       </div>
       <div class="col-xs-2">
         <label class="control-label" for="retailItemSortBy">Sort By</label>

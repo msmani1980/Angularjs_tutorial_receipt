@@ -8,42 +8,44 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('postTripFactory', function (GlobalMenuService, stationsService, carrierService, postTripsService, employeesService) {
+  .factory('postTripFactory', function (GlobalMenuService, stationsService, carrierService, postTripService, employeesService) {
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
 
     var getPostTripDataList = function (id, payload) {
       if(arguments.length > 1) {
-        return postTripsService.getPostTrips(id, payload);
+        return postTripService.getPostTrips(id, payload);
       } else {
-        return postTripsService.getPostTrips(id);
+        return postTripService.getPostTrips(id);
       }
     };
 
     var getPostTrip = function(id, tripId) {
-      return postTripsService.getPostTrip(id, tripId);
+      return postTripService.getPostTrip(id, tripId);
     };
 
     var createPostTrip = function (id, payload) {
-      return postTripsService.createPostTrip(id, payload);
+      return postTripService.createPostTrip(id, payload);
     };
 
     var updatePostTrip = function (id, payload) {
-      return postTripsService.updatePostTrip(id, payload);
+      return postTripService.updatePostTrip(id, payload);
     };
 
     var deletePostTrip = function (id, tripId) {
-      return postTripsService.deletePostTrip(id, tripId);
+      return postTripService.deletePostTrip(id, tripId);
     };
 
-    var uploadPostTrip = function (id, file, successHandler, failureHandler) {
-      return postTripsService.uploadPostTrip(id, file, successHandler, failureHandler);
+    var uploadPostTrip = function (id, file) {
+      return postTripService.importFromExcel(id, file);
     };
 
-    var getStationList = function (id) {
-      var payload  = {companyId: id};
-      return stationsService.getGlobalStationList(payload);
+    var getStationList = function (id, offset) {
+      if(offset) {
+        return stationsService.getStationList(id, offset);
+      }
+      return stationsService.getStationList(id);
     };
 
     var getCarrierNumbers = function(id, carrierType) {

@@ -11,33 +11,7 @@
     <div class="row">
       <div class="col-xs-12 text-left">
         <a href="#/post-trip-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Post Trip</span></a>
-
-        <div class="btn-group import-from-file">
-          <div class="btn-group" dropdown>
-            <button type="button" class="btn btn-info"data-toggle="collapse" data-target="#importFromData" >
-              <span class="fa fa-copy" aria-hidden="true"></span>
-              Import PostTrip From File
-            </button>
-            <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/FileUpload-PostTripManagement.xlsx">Download Excel Template</a></li>
-              <li><a data-toggle="modal" data-target=".download-template-modal"
-                     ng-click="downloadTemplate()">View Excel Specifications</a></li>
-            </ul>
-          </div>
-
-          <div id="importFromData" class="collapse width">
-            <input type="file"
-                   ngf-select
-                   ng-model="postTripFile"
-                   accept=".xls,.xlsx">
-            <button type="button" class="btn btn-info" ng-click="uploadPostTripFileToApi(postTripFile)">
-              Upload
-            </button>
-          </div>
-        </div>
+        <excel-upload type="postTrip"></excel-upload>
 
         <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
                 aria-expanded="false"
@@ -117,9 +91,9 @@
               <div class="form-group">
                 <label for="departure-station">Departure Station</label>
                 <ui-select id="departure-station" multiple ng-model="multiSelectedValues.depStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
                   <ui-select-choices repeat="station in stationList | filter: $select.search">
-                    {{ station.code }} ({{ station.name }})
+                    {{ station.stationCode }} ({{ station.stationName }})
                   </ui-select-choices>
                 </ui-select>
               </div>
@@ -129,9 +103,9 @@
               <div class="form-group">
                 <label for="arrival-station">Arrival Station</label>
                 <ui-select id="arrival-station" multiple ng-model="multiSelectedValues.arrStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
                   <ui-select-choices repeat="station in stationList | filter: $select.search">
-                    {{ station.code }} ({{ station.name }})
+                    {{ station.stationCode }} ({{ station.stationName }})
                   </ui-select-choices>
                 </ui-select>
               </div>
@@ -196,8 +170,6 @@
   </div>
 
 </div>
-
-<download-template-modal></download-template-modal>
 
 <form-success-modal></form-success-modal>
 
