@@ -953,8 +953,10 @@ describe('The Item Create Controller', function() {
 
       describe('getPriceCurrenciesList()', function() {
 
+        var priceIndex;
         beforeEach(function() {
-          priceGroup = $scope.formData.prices[0];
+          priceIndex = 0;
+          priceGroup = $scope.formData.prices[priceIndex];
         });
 
         it('should be called',function() {
@@ -969,7 +971,7 @@ describe('The Item Create Controller', function() {
 
         it('should generate a list of currencies for the price group',function() {
           mockDateChange();
-          var controlPriceList = ItemCreateCtrl.generatePriceCurrenciesList(currenciesListJSON.response);
+          var controlPriceList = ItemCreateCtrl.generatePriceCurrenciesList(priceIndex,currenciesListJSON.response);
           expect(priceGroup.priceCurrencies).toEqual(controlPriceList);
         });
 
