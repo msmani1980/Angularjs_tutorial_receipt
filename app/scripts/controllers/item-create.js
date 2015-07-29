@@ -767,13 +767,18 @@ angular.module('ts5App')
       return false;
     };
 
+    this.isStationExceptionValid = function(newPrice,oldPrice,stationExceptionIndex) {
+      if(this.stationExceptionExist(newPrice,oldPrice)) {
+        return this.stationExceptionDatesAreValid(newPrice,oldPrice,stationExceptionIndex);
+      }
+      return false;
+    };
+
     this.checkStationException = function(newPrices,oldPrices,priceIndex,stationExceptionIndex) {
       var newPrice = newPrices[priceIndex];
       var oldPrice = oldPrices[priceIndex];
-      if(this.stationExceptionExist(newPrice,oldPrice) ) {
-        if(this.stationExceptionDatesAreValid(newPrice,oldPrice,stationExceptionIndex)) {
-          this.updateStationException(priceIndex, stationExceptionIndex);
-        }
+      if(this.isStationExceptionValid(newPrice,oldPrice,stationExceptionIndex) ) {
+        this.updateStationException(priceIndex, stationExceptionIndex);
       }
     };
 
