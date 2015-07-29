@@ -11,6 +11,15 @@ angular.module('ts5App')
     return {
       templateUrl: '/views/directives/input-tax-type.html',
       restrict: 'E',
-      scope: true
+      scope: false,
+      controller: function ($scope) {
+        $scope.appliedTaxTypes = [{
+          name: 'Gross'
+        }, {
+          name: 'Net'
+        }, {
+          name: 'None'
+        }];
+      }
     };
   });
