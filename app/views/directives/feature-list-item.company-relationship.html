@@ -75,13 +75,13 @@
     <div class="hidden-xs col-sm-4 list-item">
       <div class="row">
         <date-picker
-            class="col-xs-12"
-            element-class="col-xs-6"
-            start-date-model="viewModel.startDate"
-            end-date-model="viewModel.endDate"
-            disable-past="true"
-            required="true"
-            inline="true">
+          class="col-xs-12"
+          element-class="col-xs-6"
+          start-date-model="viewModel.startDate"
+          end-date-model="viewModel.endDate"
+          disable-past="true"
+          required="true"
+          inline="true">
         </date-picker>
       </div>
     </div>
@@ -105,9 +105,9 @@
     <div class="visible-xs col-xs-3 list-header text-right">Type</div>
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyType" ng-model="search.companyTypeId"
-      ng-options="companyType.relativeCompanyTypeId as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
-      ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
-      class="form-control">
+              ng-options="companyType.relativeCompanyTypeId as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
+              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+              class="form-control">
         <option selected disabled value="">Filter by...</option>
       </select>
     </div>
@@ -116,9 +116,9 @@
     <div class="visible-xs col-xs-3 list-header text-right">Related Company *</div>
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyName" ng-model="viewModel.relativeCompanyId"
-      ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
-      ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
-      class="form-control" required>
+              ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
+              ng-disabled="$parent.isActive(viewModel.startDate) || $parent.isInactive(viewModel.endDate)"
+              class="form-control" required>
         <option selected disabled value="">Please select...</option>
       </select>
     </div>
@@ -128,13 +128,13 @@
     <div class="visible-xs col-xs-9 list-item">
       <div class="row">
         <date-picker
-        class="col-xs-12"
-        element-class="col-xs-12"
-        start-date-model="viewModel.startDate"
-        end-date-model="viewModel.endDate"
-        disable-past="true"
-        required="true"
-        inline="true">
+          class="col-xs-12"
+          element-class="col-xs-12"
+          start-date-model="viewModel.startDate"
+          end-date-model="viewModel.endDate"
+          disable-past="true"
+          required="true"
+          inline="true">
         </date-picker>
       </div>
     </div>
@@ -159,27 +159,28 @@
     <div class="hidden-xs col-sm-2 list-item">{{viewModel.companyName}}</div>
     <div class="hidden-xs col-sm-2 list-item">
       <select name="companyType" ng-model="search.companyTypeId"
-              ng-options="companyType.relativeCompanyTypeId as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
+              ng-options="companyType.relativeCompanyTypeId as companyType.relativeCompanyType for companyType in $parent.companyRelationshipTypeList track by companyType.id"
               class="form-control">
         <option selected disabled value="">Filter by...</option>
       </select>
     </div>
     <div class="hidden-xs col-sm-2 list-item">
       <select name="companyName" ng-model="viewModel.relativeCompanyId"
-              ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
+              ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search track by relatedCompany.id"
               class="form-control" required>
+        <option value=""></option>
         <option selected disabled value="">Please select...</option>
       </select>
     </div>
     <div class="hidden-xs col-sm-4 list-item">
       <div class="row">
         <date-picker
-            class="col-xs-12"
-            element-class="col-xs-6"
-            start-date-model="viewModel.startDate"
-            end-date-model="viewModel.endDate"
-            disable-past="true"
-            required="true">
+          class="col-xs-12"
+          element-class="col-xs-6"
+          start-date-model="viewModel.startDate"
+          end-date-model="viewModel.endDate"
+          disable-past="true"
+          required="true">
         </date-picker>
       </div>
     </div>
@@ -203,8 +204,8 @@
     <div class="visible-xs col-xs-3 list-header text-right">Type</div>
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyType" ng-model="search.companyTypeId"
-      ng-options="companyType.relativeCompanyTypeId as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
-      class="form-control">
+              ng-options="companyType.relativeCompanyTypeId as companyType.companyTypeName for companyType in $parent.companyRelationshipTypeList"
+              class="form-control">
         <option selected disabled value="">Filter by...</option>
       </select>
     </div>
@@ -213,8 +214,8 @@
     <div class="visible-xs col-xs-3 list-header text-right">Related Company *</div>
     <div class="visible-xs col-xs-9 list-item">
       <select name="companyName" ng-model="viewModel.relativeCompanyId"
-      ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
-      class="form-control" required>
+              ng-options="relatedCompany.id as relatedCompany.companyName for relatedCompany in $parent.companyList | filter:search"
+              class="form-control" required>
         <option selected disabled value="">Please select...</option>
       </select>
     </div>
@@ -224,12 +225,12 @@
     <div class="visible-xs col-xs-9 list-item">
       <div class="row">
         <date-picker
-        class="col-xs-12"
-        element-class="col-xs-12"
-        start-date-model="viewModel.startDate"
-        end-date-model="viewModel.endDate"
-        disable-past="true"
-        required="true">
+          class="col-xs-12"
+          element-class="col-xs-12"
+          start-date-model="viewModel.startDate"
+          end-date-model="viewModel.endDate"
+          disable-past="true"
+          required="true">
         </date-picker>
       </div>
     </div>

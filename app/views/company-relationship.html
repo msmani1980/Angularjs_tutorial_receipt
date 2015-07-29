@@ -18,6 +18,7 @@
 <div><p>All required fields are marked with a *</p></div>
 <div ng-if="isPending()" class="text-center">
   <p><i class="fa fa-cog fa-spin fa-4x"></i></p>
+
   <p>Loading...</p>
 </div>
 <div ng-if="isFulfilled()">
@@ -56,9 +57,10 @@
       </div>
       <!--$id() tracks items by their identity-->
       <!--https://docs.angularjs.org/api/ng/directive/ngRepeat-->
-      <feature-list-item ng-repeat="companyRelationship in companyRelationshipListData track by $id(companyRelationship)"
-                         view-model="companyRelationship"
-                         type="company-relationship"></feature-list-item>
+      <feature-list-item
+        ng-repeat="companyRelationship in companyRelationshipListData track by $id(companyRelationship)"
+        view-model="companyRelationship"
+        type="company-relationship"></feature-list-item>
     </div>
   </div>
   <div ng-if="companyRelationshipListData.length === 0" class="feature-empty">
