@@ -35,8 +35,7 @@
   					<label>Applied Tax Type *</label>
 
   					<select required name="Applied Tax Type" ng-model="itemTax.itemTaxType" class="form-control">
-  						<option value="Gross">Gross</option>
-  						<option value="Net">Net</option>
+              <option ng-selected="itemTax.itemTaxType === type.name"ng-repeat="type in appliedTaxTypes" value="{{ type.name }}">{{ type.name }}</option>
   					</select>
 
   				</div>
