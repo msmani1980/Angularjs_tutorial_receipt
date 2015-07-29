@@ -135,7 +135,7 @@ angular
         templateUrl: 'views/global-reason-code.html',
         controller: 'GlobalReasonCodeCtrl'
       })
-      .when('/company-reason-code', {
+      .when('/don-code', {
         templateUrl: 'views/company-reason-code.html',
         controller: 'CompanyReasonCodeCtrl'
       })
