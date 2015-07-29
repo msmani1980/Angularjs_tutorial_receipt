@@ -77,7 +77,7 @@ angular.module('ts5App')
 
     // gets an item to $scope.editingItem
     this.getItem = function(id) {
-      this.showLoadingModal('We are getting Item ' + id);
+      this.showLoadingModal('We are getting your Items data!');
       itemsFactory.getItem(id).then(function(data) {
         if ($this.validateItemCompany(data)) {
           $this.updateFormData(data.retailItem);
@@ -277,6 +277,32 @@ angular.module('ts5App')
       return recommendationPayload;
     };
 
+    this.formatImageDates = function(itemData) {
+      for (var imageIndex in itemData.images) {
+        var image = itemData.images[imageIndex];
+        image.startDate = dateUtility.formatDateForApp(image.startDate);
+        image.endDate = dateUtility.formatDateForApp(image.endDate);
+      }
+    };
+
+    this.formatPriceDates = function(itemData) {
+      for (var priceIndex in itemData.prices) {
+        var price = itemData.prices[priceIndex];
+        price.startDate = dateUtility.formatDateForApp(price.startDate);
+        price.endDate = dateUtility.formatDateForApp(price.endDate);
+        this.updatePriceGroup(priceIndex);
+        this.formatStationExceptionDates(price);
+      }
+    };
+
+    this.formatStationExceptionDates = function(price) {
+      for (var stationExceptionIndex in price.stationExceptions) {
+        var stationException = price.stationExceptions[stationExceptionIndex];
+        stationException.startDate = dateUtility.formatDateForApp(stationException.startDate);
+        stationException.endDate = dateUtility.formatDateForApp(stationException.endDate);
+      }
+    };
+
     this.checkIfItemIsActive = function(itemData) {
       var today = new Date();
       var itemStartDate = new Date(itemData.startDate);
@@ -306,39 +332,11 @@ angular.module('ts5App')
       this.deserializeCharacteristics(itemData);
       this.deserializeSubstitutions(itemData);
       this.deserializeRecommendations(itemData);
-
-      // TODO: turn this into a function
-      for (var imageIndex in itemData.images) {
-        var image = itemData.images[imageIndex];
-        image.startDate = dateUtility.formatDateForApp(image.startDate);
-        image.endDate = dateUtility.formatDateForApp(image.endDate);
-      }
-
-      // TODO: turn this into a function
-      for (var priceIndex in itemData.prices) {
-
-        var price = itemData.prices[priceIndex];
-        price.startDate = dateUtility.formatDateForApp(price.startDate);
-        price.endDate = dateUtility.formatDateForApp(price.endDate);
-
-        // TODO: turn this into a function
-        for (var stationExceptionIndex in price.stationExceptions) {
-
-          var stationException = price
-            .stationExceptions[stationExceptionIndex];
-
-          stationException.startDate = dateUtility.formatDateForApp(
-            stationException.startDate);
-          stationException.endDate = dateUtility.formatDateForApp(
-            stationException.endDate);
-
-        }
-
-      }
+      this.formatImageDates(itemData);
+      this.formatPriceDates(itemData);
 
       $scope.formData = itemData;
       this.updateStationsList();
-
     };
 
     this.makeDependencyPromises = function() {
@@ -450,7 +448,7 @@ angular.module('ts5App')
 
     this.init();
 
-    this.formatStationExceptionDates = function(itemData, priceIndex) {
+    this.formatStationExceptionPayloadDates = function(itemData, priceIndex) {
       for (var stationExceptionIndex in itemData.prices[priceIndex].stationExceptions) {
         var station = itemData.prices[priceIndex].stationExceptions[
           stationExceptionIndex];
@@ -464,7 +462,7 @@ angular.module('ts5App')
         var price = itemData.prices[priceIndex];
         price.startDate = dateUtility.formatDateForAPI(price.startDate);
         price.endDate = dateUtility.formatDateForAPI(price.endDate);
-        this.formatStationExceptionDates(itemData, priceIndex);
+        this.formatStationExceptionPayloadDates(itemData, priceIndex);
       }
     };
 

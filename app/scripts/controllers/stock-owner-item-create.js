@@ -70,7 +70,7 @@ angular.module('ts5App')
     };
 
     this.getItem = function(id) {
-      this.showLoadingModal('We are getting Item ' + id);
+      this.showLoadingModal('We are getting your Items data!');
       itemsFactory.getItem(id).then(function(data) {
         if ($this.validateItemCompany(data)) {
           $this.updateFormData(data.retailItem);

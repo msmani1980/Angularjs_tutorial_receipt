@@ -615,8 +615,7 @@ describe('The Stock Owner Item Create Controller', function() {
         describe('formatPayload method', function() {
 
           beforeEach(function() {
-            spyOn(StockOwnerItemCreateCtrl,
-              'formatPayload');
+            spyOn(StockOwnerItemCreateCtrl, 'formatPayload');
             StockOwnerItemCreateCtrl.formatPayload();
             $scope.$digest();
           });
