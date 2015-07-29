@@ -163,10 +163,46 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
 
   describe('Search', function () {
 
+    beforeEach(function () {
+      scope.search = {
+        selectedItem: {itemMasterId: 1},
+        selectedPriceType: {id: 2},
+        selectedRateType: {taxRateType: 'Amount'},
+        startDate: '07/20/2015',
+        endDate: '08/30/2016'
+      };
+    });
+
     it('should have a searchCommissions function', function () {
       expect(scope.searchCommissions).toBeDefined();
     });
 
+    it('should call getEmployeeCommissionList', function(){
+      scope.search = {};
+      scope.searchCommissions();
+      expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalled();
+    });
+
+    it('should format search payload', function () {
+      var expectedPayload = {
+        itemId: 1,
+        priceTypeId: 2,
+        isFixed: true,
+        startDate: '20150720',
+        endDate: '20160830'
+      };
+      scope.searchCommissions();
+      expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);
+    });
+
+    it('should clear search payload with clearForm', function () {
+      scope.clearForm();
+      var clearedSearch = {
+        startDate: '',
+        endDate: ''
+      };
+      expect(scope.search).toEqual(clearedSearch);
+    });
   });
 
   describe('Action buttons', function () {

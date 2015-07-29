@@ -56,7 +56,7 @@ angular.module('ts5App')
       return {};
     }
 
-    function getSelectedPriceTypeObject (commissionObject) {
+    function getSelectedPriceTypeObject(commissionObject) {
       if (!commissionObject.types || commissionObject.types.length === 0) {
         return {};
       }
@@ -64,7 +64,7 @@ angular.module('ts5App')
       return getSelectedObjectFromArrayUsingId($scope.search.priceTypeList, priceId);
     }
 
-    function getSelectedRateTypeObject (commissionObject) {
+    function getSelectedRateTypeObject(commissionObject) {
       if (!commissionObject.fixeds) {
         return {};
       }
@@ -150,19 +150,44 @@ angular.module('ts5App')
     }
 
     function prepareDataForTable(dataFromAPI) {
+
       var formattedData = formatDatesForApp(angular.copy(dataFromAPI));
       return setupTableData(formattedData);
     }
 
     function getCommissionSuccessHandler(dataFromAPI) {
-      $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
       hideLoadingModal();
+      if(dataFromAPI.employeeCommissions) {
+        $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
+      }
+    }
+
+    function createSearchPayload() {
+      var payload = {};
+      if($scope.search.startDate && $scope.search.endDate) {
+        payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
+        payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
+      }
+      if($scope.search.selectedItem) {
+        payload.itemId = $scope.search.selectedItem.itemMasterId;
+      }
+      if($scope.search.selectedPriceType) {
+        payload.priceTypeId = $scope.search.selectedPriceType.id;
+      }
+      if($scope.search.selectedRateType) {
+        payload.isFixed = ($scope.search.selectedRateType.taxRateType === 'Amount');
+      }
+      return payload;
+    }
+
+    function getCommissions (payload) {
+      showLoadingModal('Loading Employee Commission List');
+      employeeCommissionFactory.getCommissionList(payload).then(getCommissionSuccessHandler);
     }
 
     $scope.searchCommissions = function () {
-      showLoadingModal('Loading Employee Commission List');
-      // TODO filtering on FE for now, since BE search is not ready!
-      employeeCommissionFactory.getCommissionList().then(getCommissionSuccessHandler);
+      var payload = createSearchPayload();
+      getCommissions(payload);
     };
 
     $scope.clearForm = function () {
@@ -172,6 +197,7 @@ angular.module('ts5App')
       delete $scope.search.itemList;
       $scope.search.startDate = '';
       $scope.search.endDate = '';
+      employeeCommissionFactory.getCommissionList({}).then(getCommissionSuccessHandler);
     };
 
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
@@ -182,6 +208,6 @@ angular.module('ts5App')
       $scope.search.taxRateTypesList = dataFromAPI;
     });
 
-    $scope.searchCommissions();
+    getCommissions({});
 
   });
