@@ -27,7 +27,7 @@ describe('Service: mainMenuService', function () {
     expect(Object.prototype.toString.call(mainMenuService.getRetailMenu)).toBe('[object Function]');
   });
   it('should return the same array as getRetailMenu when no companyTypeId is passed to getMenu', function(){
-    expect(mainMenuService.getMenu().length).toBe(mainMenuService.getRetailMenu().length);
+    expect(mainMenuService.getMenu(1).length).toBe(mainMenuService.getRetailMenu().length);
   });
   it('should return the same array as getRetailMenu when 2 is passed to getMenu', function(){
     expect(mainMenuService.getMenu(2).length).toBe(mainMenuService.getStockOwnerMenu().length);

@@ -16,7 +16,7 @@ angular.module('ts5App')
       switch (companyTypeId) {
         case 2:
           return $this.getStockOwnerMenu();
-        default:
+        case 1:
           return $this.getRetailMenu();
       }
     };
