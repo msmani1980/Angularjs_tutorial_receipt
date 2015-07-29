@@ -138,7 +138,7 @@ angular.module('ts5App')
               $scope.cashBag = response;
               $scope.displayError = false;
               $scope.formErrors = {};
-              $scope.canDeleteCashBag = canDelete(response);
+              $scope.showDeleteButton = canDelete(response);
 
               if($scope.cashBag.eposCashBagsId === null) {
                 $scope.flightAmount = '0.0000';
