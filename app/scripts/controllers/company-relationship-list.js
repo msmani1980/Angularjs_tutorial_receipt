@@ -173,18 +173,18 @@ angular.module('ts5App')
       });
     }
 
-    function filterCompanyListByTypesScope(companyTypeListFromAPI) {
+    var filterCompanyListByTypesScope = function (companyTypeListFromAPI) {
       var typeIdList = [];
 
-      companyTypeListFromAPI.response.filter(function (type) {
-        typeIdList.push(type.companyTypeId);
+      companyTypeListFromAPI.response.forEach(function (companyType) {
+        typeIdList.push(companyType.relativeCompanyTypeId);
       });
 
       $scope.companyList = $scope.companyList.filter(function (company) {
         company.isEditing = false;
-        return ($.inArray(company.companyTypeId, typeIdList)) ? company : undefined;
+        return typeIdList.indexOf(company.companyTypeId) !== -1;
       });
-    }
+    };
 
     var getCompanyRelationshipListByCompanyPromise = function (companyId) {
       return companyRelationshipFactory.getCompanyRelationshipListByCompany(companyId);
@@ -219,6 +219,7 @@ angular.module('ts5App')
       if (!response) {
         return;
       }
+
       setupCompanyRelationshipScope(response[0]);
       setupCompanyRelationshipTypeScope(response[1]);
       filterCompanyListByTypesScope(response[1]);
