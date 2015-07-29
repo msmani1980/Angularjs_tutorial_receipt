@@ -37,19 +37,19 @@ angular.module('ts5App')
     $scope.editingItem = false;
     $scope.uiSelectTemplateReady = false;
 
+    this.checkIfViewOnly = function() {
+      var path = $location.path();
+      if (path.search('/stock-owner-item-view') !== -1) {
+        $scope.viewOnly = true;
+      }
+    };
+
     this.init = function() {
       this.checkIfViewOnly();
       if ($routeParams.id && !$scope.viewOnly) {
         this.setFormAsEdit();
       }
       this.getDependencies();
-    };
-
-    this.checkIfViewOnly = function() {
-      var path = $location.path();
-      if (path.search('/stock-owner-item-view') !== -1) {
-        $scope.viewOnly = true;
-      }
     };
 
     this.updateViewName = function(item) {
