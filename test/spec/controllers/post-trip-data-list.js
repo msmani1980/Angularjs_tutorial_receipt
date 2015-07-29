@@ -150,7 +150,7 @@ describe('Controller: PostFlightDataListCtrl', function () {
         tailNumbers: [{carrierNumber: 'ABC'}, {carrierNumber: 'DEF'}],
         depStations: [{stationId: 1}, {stationId: 2}],
         arrStations: [{stationId: 1}, {stationId: 2}],
-        employeeIds: [{stationId: 3}, {stationId: 4}]
+        employeeIds: [{id: 3}, {id: 4}]
       };
       var expectedTailNumbersArray = ['ABC', 'DEF'];
       var expectedStationsArray = [1, 2];
