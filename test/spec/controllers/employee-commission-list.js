@@ -202,7 +202,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         endDate: ''
       };
       expect(scope.search).toEqual(clearedSearch);
-    })
+    });
   });
 
   describe('Action buttons', function () {

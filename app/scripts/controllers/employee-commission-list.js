@@ -185,7 +185,7 @@ angular.module('ts5App')
       employeeCommissionFactory.getCommissionList(payload).then(getCommissionSuccessHandler);
     }
 
-    $scope.searchCommissions = function (payload) {
+    $scope.searchCommissions = function () {
       var payload = createSearchPayload();
       getCommissions(payload);
     };
