@@ -1,0 +1,43 @@
+<div id="left-navigation">
+  <div class="container">
+    <ul class="navbar ng-cloak">
+
+      <li ng-repeat="menuItem in menuItems"
+          ng-click="leaveViewNav(menuItem.route)"
+          ng-class="itemClass(menuItem.route)">
+
+        <i class="{{ menuItem.icon }}"></i>
+        <div class="left-nav-option" ng-class="{'lg':menuItem.className}">
+          <i class="{{ menuItem.icon }}"></i>
+          <p>{{ menuItem.name }}</p>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+<div class="modal fade" id="leave-view-modal-nav">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h3 class="modal-title"><span class="fa fa-warning"></span> You have unsaved changes</h3>
+      </div>
+
+      <div class="modal-body">
+        <p>Are you sure you want to leave? If you leave, none of your recent changes will be saved.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="leaveViewClose()">Discard Changes</button>
+        <a type="button" class="btn btn-primary" data-dismiss="modal">Continue Editing</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

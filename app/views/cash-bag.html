@@ -126,7 +126,7 @@
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">{{ saveButtonName }}</span>
         </button>
-        <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="canDelete(cashBag)" ng-disabled="readOnly">Delete</button>
+        <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="showDeleteButton" ng-disabled="readOnly">Delete</button>
       </div>
 
     </div>
@@ -136,5 +136,5 @@
 
   </form>
 </div>
-<left-navigation base-path="cash-bag"></left-navigation>
+<dynamic-left-nav title="Cash Management"></dynamic-left-nav>
 <delete-record-dialog></delete-record-dialog>
