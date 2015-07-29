@@ -680,22 +680,34 @@ angular.module('ts5App')
       $scope.formData.prices.splice(key, 1);
     };
 
-    this.generatePriceCurrenciesList = function(currenciesList) {
+    this.generateCurrency = function(currency) {
+      return  {
+        price: '1.00',
+        companyCurrencyId: currency.id,
+        code: currency.code
+      };
+    };
+
+    this.generatePriceCurrenciesList = function(priceIndex,currenciesList) {
+      if(angular.isUndefined(priceIndex)) {
+        return false;
+      }
       var priceCurrencies = [];
       for (var key in currenciesList) {
-        var currency = currenciesList[key];
-        priceCurrencies.push({
-          price: '1.00',
-          companyCurrencyId: currency.id,
-          code: currency.code
-        });
+        var newCurrency = this.generateCurrency(currenciesList[key]);
+        var priceGroup = $scope.formData.prices[priceIndex];
+        var existingCurrency = priceGroup.priceCurrencies[key];
+        if(existingCurrency) {
+          newCurrency.price = existingCurrency.price;
+        }
+        priceCurrencies.push(newCurrency);
       }
       return priceCurrencies;
     };
 
     this.getPriceCurrenciesList = function(priceIndex,currencyFilters) {
       currencyFactory.getCompanyCurrencies(currencyFilters).then(function(data) {
-        var priceCurrencies = $this.generatePriceCurrenciesList(data.response);
+        var priceCurrencies = $this.generatePriceCurrenciesList(priceIndex,data.response);
         $this.setPriceCurrenciesList(priceIndex,priceCurrencies);
       });
     };
