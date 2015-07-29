@@ -19,11 +19,20 @@ describe('The tax type input directive', function () {
       inject(function (_servedTaxTypes_) {
         scope.taxTypes = _servedTaxTypes_.response;
       });
-      element = angular.element(
-        '<input-tax-type></input-tax-type>');
+      element = angular.element('<input-tax-type></input-tax-type>');
       element = $compile(element)(scope);
       scope.$digest();
     }));
+
+    it('should have an array of applied tax types attached to the scope', function () {
+      expect(scope.appliedTaxTypes.length).toBeGreaterThan(0);
+    });
+
+    it('should have (3) applied tax types to be in the array', function () {
+      expect(scope.appliedTaxTypes[0].name).toEqual('Gross');
+      expect(scope.appliedTaxTypes[1].name).toEqual('Net');
+      expect(scope.appliedTaxTypes[2].name).toEqual('None');
+    });
 
     it('should have a panel element', function () {
       expect(element.find('.panel')[0]).toBeDefined();
@@ -39,14 +48,12 @@ describe('The tax type input directive', function () {
         expect(element.find('.panel-title')[0]).toBeDefined();
       });
 
-      it('should have a panel-title as a child of panel-heading',
-        function () {
-          expect(element.find('.panel-heading .panel-title')[0]).toBeDefined();
-        });
+      it('should have a panel-title as a child of panel-heading', function () {
+        expect(element.find('.panel-heading .panel-title')[0]).toBeDefined();
+      });
 
       it('should have the correct heading label', function () {
-        expect(element.find('.panel-title').text().trim()).toEqual(
-          'Tax Type 1');
+        expect(element.find('.panel-title').text().trim()).toEqual('Tax Type 1');
       });
 
       describe('remove button', function () {
@@ -70,11 +77,9 @@ describe('The tax type input directive', function () {
           expect(removeBtn.find('i.fa-close')[0]).toBeDefined();
         });
 
-        it('should have an click event to remove tax types',
-          function () {
-            expect(removeBtn.attr('ng-click')).toEqual(
-              'removeTaxType($parent.key)');
-          });
+        it('should have an click event to remove tax types', function () {
+          expect(removeBtn.attr('ng-click')).toEqual('removeTaxType($parent.key)');
+        });
 
       });
 
@@ -101,10 +106,8 @@ describe('The tax type input directive', function () {
           label;
 
         beforeEach(function () {
-          column = angular.element(element.find(
-            '.row .col-xs-12')[0]);
-          label = angular.element(column.find(
-            '.form-group label')[0]);
+          column = angular.element(element.find('.row .col-xs-12')[0]);
+          label = angular.element(column.find('.form-group label')[0]);
         });
 
         it('should be present in the DOM', function () {
@@ -128,8 +131,7 @@ describe('The tax type input directive', function () {
           var select;
 
           beforeEach(function () {
-            select = angular.element(column.find(
-              'select')[0]);
+            select = angular.element(column.find('select')[0]);
           });
 
           it('should be present in the DOM', function () {
@@ -141,18 +143,15 @@ describe('The tax type input directive', function () {
           });
 
           it('should have the correct ng-model', function () {
-            expect(select.attr('ng-model')).toEqual(
-              'itemTax.companyTaxId');
+            expect(select.attr('ng-model')).toEqual('itemTax.companyTaxId');
           });
 
           it('should have a name', function () {
-            expect(select.attr('name')).toEqual(
-              'Tax Type');
+            expect(select.attr('name')).toEqual('Tax Type');
           });
 
           it('should contain a list of options', function () {
-            expect(select.find('option').length).toBeGreaterThan(
-              0);
+            expect(select.find('option').length).toBeGreaterThan(0);
           });
 
           describe('option element', function () {
@@ -161,25 +160,17 @@ describe('The tax type input directive', function () {
               optionJSON;
 
             beforeEach(function () {
-              optionElement = angular.element(
-                select.find(
-                  'option')[1]);
+              optionElement = angular.element(select.find('option')[1]);
               optionJSON = scope.taxTypes[0];
             });
 
-            it(
-              'should have a value set as the taxType.id',
-              function () {
-                expect(optionElement.attr('value')).toEqual(
-                  optionJSON.id.toString());
-              });
+            it('should have a value set as the taxType.id', function () {
+              expect(optionElement.attr('value')).toEqual(optionJSON.id.toString());
+            });
 
-            it(
-              'should have a display the taxTypeCode as the value',
-              function () {
-                expect(optionElement.text().trim()).toEqual(
-                  optionJSON.taxTypeCode);
-              });
+            it('should have a display the taxTypeCode as the value', function () {
+              expect(optionElement.text().trim()).toEqual(optionJSON.taxTypeCode);
+            });
 
           });
 
@@ -193,10 +184,8 @@ describe('The tax type input directive', function () {
           label;
 
         beforeEach(function () {
-          column = angular.element(element.find(
-            '.row .col-xs-12')[1]);
-          label = angular.element(column.find(
-            '.form-group label')[0]);
+          column = angular.element(element.find('.row .col-xs-12')[1]);
+          label = angular.element(column.find('.form-group label')[0]);
         });
 
         it('should be present in the DOM', function () {
@@ -212,8 +201,7 @@ describe('The tax type input directive', function () {
         });
 
         it('should have label with the correct text', function () {
-          expect(label.text().trim()).toEqual(
-            'Applied Tax Type *');
+          expect(label.text().trim()).toEqual('Applied Tax Type *');
         });
 
         describe('select', function () {
@@ -221,8 +209,7 @@ describe('The tax type input directive', function () {
           var select;
 
           beforeEach(function () {
-            select = angular.element(column.find(
-              'select')[0]);
+            select = angular.element(column.find('select')[0]);
           });
 
           it('should be present in the DOM', function () {
@@ -244,45 +231,47 @@ describe('The tax type input directive', function () {
           });
 
           it('should contain a list of options', function () {
-            expect(select.find('option').length).toEqual(
-              3);
+            expect(select.find('option').length).toEqual(4);
           });
 
           describe('options', function () {
 
             var grossOption,
-              netOption;
+              netOption,
+              noneOption;
 
             beforeEach(function () {
-              grossOption = angular.element(select.find(
-                'option')[1]);
-              netOption = angular.element(select.find(
-                'option')[2]);
+              grossOption = angular.element(select.find('option')[1]);
+              netOption = angular.element(select.find('option')[2]);
+              noneOption = angular.element(select.find('option')[3]);
             });
 
-            it('should be contain a gross option',
-              function () {
-                expect(grossOption[0]).toBeDefined();
-              });
+            it('should be contain a gross option', function () {
+              expect(grossOption[0]).toBeDefined();
+            });
 
-            it(
-              'should have a gross option with the correct label',
-              function () {
-                expect(grossOption.text().trim()).toEqual(
-                  'Gross');
-              });
+            it('should have a gross option with the correct label', function () {
+              var expectedLabel = scope.appliedTaxTypes[0].name;
+              expect(grossOption.text().trim()).toEqual(expectedLabel);
+            });
 
-            it('should be contain a net option',
-              function () {
-                expect(netOption[0]).toBeDefined();
-              });
+            it('should be contain a net option', function () {
+              expect(netOption[0]).toBeDefined();
+            });
 
-            it(
-              'should have a net option with the correct label',
-              function () {
-                expect(netOption.text().trim()).toEqual(
-                  'Net');
-              });
+            it('should have a net option with the correct label', function () {
+              var expectedLabel = scope.appliedTaxTypes[1].name;
+              expect(netOption.text().trim()).toEqual(expectedLabel);
+            });
+
+            it('should be contain a none option', function () {
+              expect(noneOption[0]).toBeDefined();
+            });
+
+            it('should have a none option with the correct label', function () {
+              var expectedLabel = scope.appliedTaxTypes[2].name;
+              expect(noneOption.text().trim()).toEqual(expectedLabel);
+            });
 
           });
 
