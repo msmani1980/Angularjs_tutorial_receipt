@@ -41,7 +41,12 @@ angular.module('ts5App')
     };
 
     this.getPostTripSuccess = function (response) {
-      $scope.postTrips = response.postTrips;
+      var newPostTripList = $scope.postTrips.concat(response.postTrips);
+      $scope.postTrips = newPostTripList;
+
+      if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
+        postTripFactory.getPostTripDataList(companyId, {offset: response.meta.limit + 1}).then($this.getPostTripSuccess);
+      }
       $this.updateStationCodes();
     };
 
