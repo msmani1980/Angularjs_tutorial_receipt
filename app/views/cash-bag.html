@@ -126,7 +126,7 @@
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">{{ saveButtonName }}</span>
         </button>
-        <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="canDelete(cashBag)" ng-disabled="readOnly">Delete</button>
+        <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="showDeleteButton" ng-disabled="readOnly">Delete</button>
       </div>
 
     </div>
