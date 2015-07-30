@@ -2,9 +2,12 @@
   <div class="modal-dialog">
 
     <div class="modal-content">
-
       <div class="modal-body">
         <h2><span class="fa fa-exclamation-triangle"></span> Are you sure you want to delete this record?</h2>
+
+        <ul>
+          <li ng-repeat="property in displayedItemProperties"><strong>{{ property.key }}</strong> : {{ property.value }}</li>
+        </ul>
       </div>
 
       <div class="modal-footer">
