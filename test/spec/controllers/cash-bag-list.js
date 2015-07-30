@@ -184,6 +184,24 @@ describe('Controller: CashBagListCtrl', function () {
         expect(scope.scheduleMaxDate).toEqual('08/20/2015');
       });
     });
+
+    describe('isCashBagEditable', function () {
+      var testCashBag = {};
+      it('should return true if cash bag has not been submitted', function () {
+        testCashBag.isSubmitted = false;
+        testCashBag.isDelete = 'false';
+        expect(scope.isCashBagEditable(testCashBag)).toEqual(true);
+        testCashBag.isSubmitted = true;
+        expect(scope.isCashBagEditable(testCashBag)).toEqual(false);
+      });
+      it('should return true if cash bag has not been deleted', function () {
+        testCashBag.isSubmitted = false;
+        testCashBag.isDelete = 'false';
+        expect(scope.isCashBagEditable(testCashBag)).toEqual(true);
+        testCashBag.isDelete = 'true';
+        expect(scope.isCashBagEditable(testCashBag)).toEqual(false);
+      })
+    });
   });
 
   describe('helper functions', function () {

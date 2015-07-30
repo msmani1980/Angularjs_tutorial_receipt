@@ -214,6 +214,16 @@ describe('Controller: CashBagCtrl', function () {
         expect(scope.cashBag.id).toBeDefined();
       });
     });
+
+    describe('isCashBagDeleted', function () {
+      it('should return true if cash bag has been deleted', function () {
+        scope.cashBag = {};
+        scope.cashBag.isDelete = 'true';
+        expect(scope.isCashBagDeleted()).toEqual(true);
+        scope.cashBag.isDelete = 'false';
+        expect(scope.isCashBagDeleted()).toEqual(false);
+      });
+    });
   });
 
   // UPDATE
