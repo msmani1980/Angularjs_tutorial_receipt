@@ -4,7 +4,8 @@
 describe('Controller: CompanyRelationshipListCtrl', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/company-list.json',
+  beforeEach(module(
+    'served/company-list.json',
     'served/company-relationship-list.json',
     'served/company-relationship-type-list.json'
   ));
@@ -67,7 +68,7 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
       $setDirty: jasmine.createSpy('$setDirty'),
       $setPristine: jasmine.createSpy('$setPristine')
     };
-    
+
     scope.$digest();
 
   }));
@@ -93,8 +94,14 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
       expect(!!scope.company).toBe(true);
     });
 
-    it('should set companyListScope in scope', function () {
-      expect(scope.companyList.length).toBe(10);
+    describe('companyList', function () {
+      it('should be in scope', function () {
+        expect(scope.companyList).toBeDefined();
+      });
+
+      it('should be an array', function () {
+        expect(angular.isArray(scope.companyList)).toBe(true);
+      });
     });
 
     it('should set companyRelationshipTypeList in scope', function () {

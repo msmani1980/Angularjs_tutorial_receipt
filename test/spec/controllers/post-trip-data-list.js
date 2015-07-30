@@ -150,7 +150,7 @@ describe('Controller: PostFlightDataListCtrl', function () {
         tailNumbers: [{carrierNumber: 'ABC'}, {carrierNumber: 'DEF'}],
         depStations: [{stationId: 1}, {stationId: 2}],
         arrStations: [{stationId: 1}, {stationId: 2}],
-        employeeIds: [{stationId: 3}, {stationId: 4}]
+        employeeIds: [{id: 3}, {id: 4}]
       };
       var expectedTailNumbersArray = ['ABC', 'DEF'];
       var expectedStationsArray = [1, 2];
@@ -187,16 +187,15 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
     describe('delete post trip', function() {
       it('should call delete post trip', function() {
-        scope.postTrips = [{id: 1}];
-        scope.tempDeleteIndex = 0;
-        scope.deletePostTrip();
+        var postTripToDelete = [{id: 1}];
+        scope.removeRecord(postTripToDelete);
         expect(postTripFactory.deletePostTrip).toHaveBeenCalled();
       });
 
       it('should reload post trip data', function() {
         scope.postTrips = [{id: 1}];
         scope.tempDeleteIndex = 0;
-        scope.deletePostTrip();
+        scope.removeRecord();
         expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
       });
     });

@@ -128,7 +128,6 @@
     </div>
   </form>
 </div>
-{{search.selectedItem.itemName}}
 <table class="table table-bordered table-hover">
   <thead>
   <tr>
@@ -142,7 +141,7 @@
   </thead>
   <tbody>
   <tr
-    ng-repeat="commission in commissionList | filter:{priceTypeName: search.selectedPriceType.name, taxRateTypeName:search.selectedRateType.taxRateType, itemName:search.selectedItem.itemName, startDate: search.startDate, endDate: search.endDate} | orderBy:'item[0].itemName'">
+    ng-repeat="commission in commissionList | orderBy:'item[0].itemName'">
     <td>{{ commission.startDate }}</td>
     <td>{{ commission.endDate }}</td>
     <td>{{ commission.itemName }}</td>

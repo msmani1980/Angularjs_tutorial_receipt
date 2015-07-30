@@ -654,19 +654,19 @@ describe('The Item Create Controller', function() {
       describe('setUIReady() method', function() {
 
         beforeEach(function() {
-          spyOn(ItemCreateCtrl,'setUIReady').and.callThrough();
+          spyOn(ItemCreateCtrl, 'setUIReady').and.callThrough();
         });
 
-        it('should expect the UI ready flag to be false',function() {
+        it('should expect the UI ready flag to be false', function() {
           expect($scope.uiSelectTemplateReady).toBeFalsy();
         });
 
-        it('should expect to have been called',function() {
+        it('should expect to have been called', function() {
           $scope.$digest();
           expect(ItemCreateCtrl.setUIReady).toHaveBeenCalled();
         });
 
-        it('should expect the UI ready flag to be true after promises are resovled',function() {
+        it('should expect the UI ready flag to be true after promises are resovled', function() {
           $scope.$digest();
           expect($scope.uiSelectTemplateReady).toBeTruthy();
         });
@@ -875,12 +875,12 @@ describe('The Item Create Controller', function() {
 
     describe('addPriceGroup()', function() {
 
-      it('should be able to add a price group to the prices array',function() {
+      it('should be able to add a price group to the prices array', function() {
         $scope.addPriceGroup();
         expect($scope.formData.prices.length).toBe(2);
       });
 
-      it('should create the correct price group data set',function() {
+      it('should create the correct price group data set', function() {
         $scope.addPriceGroup();
         var priceGroup = $scope.formData.prices[1];
         expect(priceGroup.startDate).toBeDefined();
@@ -895,7 +895,7 @@ describe('The Item Create Controller', function() {
 
     describe('removePriceGroup()', function() {
 
-      it('should remove a price group from the prices array',function() {
+      it('should remove a price group from the prices array', function() {
         $scope.removePriceGroup(0);
         expect($scope.formData.prices.length).toBe(0);
       });
@@ -905,9 +905,9 @@ describe('The Item Create Controller', function() {
     describe('watchPriceGroups()', function() {
 
       var currenciesListJSON,
-      getCurrenciesListDeferred,
-      currencyFactory,
-      priceGroup;
+        getCurrenciesListDeferred,
+        currencyFactory,
+        priceGroup;
 
       function mockDateChange() {
         $scope.$digest();
@@ -917,7 +917,7 @@ describe('The Item Create Controller', function() {
         $scope.$digest();
       }
 
-      beforeEach(inject(function($q,$injector,_servedCurrencies_) {
+      beforeEach(inject(function($q, $injector, _servedCurrencies_) {
         priceGroup = $scope.formData.prices[0];
         currenciesListJSON = _servedCurrencies_;
         currencyFactory = $injector.get('currencyFactory');
@@ -925,24 +925,24 @@ describe('The Item Create Controller', function() {
         getCurrenciesListDeferred.resolve(currenciesListJSON);
         spyOn(ItemCreateCtrl, 'watchPriceGroups').and.callThrough();
         spyOn(ItemCreateCtrl, 'checkPriceGroup').and.callThrough();
-        spyOn(ItemCreateCtrl,'updatePriceGroup').and.callThrough();
+        spyOn(ItemCreateCtrl, 'updatePriceGroup').and.callThrough();
         spyOn(currencyFactory, 'getCompanyCurrencies').and.returnValue(getCurrenciesListDeferred.promise);
         spyOn(ItemCreateCtrl, 'getPriceCurrenciesList').and.callThrough();
         spyOn(ItemCreateCtrl, 'generatePriceCurrenciesList').and.callThrough();
         spyOn(ItemCreateCtrl, 'setPriceCurrenciesList').and.callThrough();
       }));
 
-      it('should be called when the data in the price group changes',function() {
+      it('should be called when the data in the price group changes', function() {
         mockDateChange();
         expect(ItemCreateCtrl.watchPriceGroups).toHaveBeenCalled();
       });
 
-      it('should call checkPriceGroup() ',function() {
+      it('should call checkPriceGroup() ', function() {
         mockDateChange();
         expect(ItemCreateCtrl.checkPriceGroup).toHaveBeenCalled();
       });
 
-      it('should be called when the data in the price group changes',function() {
+      it('should be called when the data in the price group changes', function() {
         mockDateChange();
         expect(ItemCreateCtrl.updatePriceGroup).toHaveBeenCalled();
       });
@@ -953,27 +953,29 @@ describe('The Item Create Controller', function() {
 
       describe('getPriceCurrenciesList()', function() {
 
+        var priceIndex;
         beforeEach(function() {
-          priceGroup = $scope.formData.prices[0];
+          priceIndex = 0;
+          priceGroup = $scope.formData.prices[priceIndex];
         });
 
-        it('should be called',function() {
+        it('should be called', function() {
           mockDateChange();
           expect(ItemCreateCtrl.getPriceCurrenciesList).toHaveBeenCalled();
         });
 
-        it('should call generatePriceCurrenciesList',function() {
+        it('should call generatePriceCurrenciesList', function() {
           mockDateChange();
           expect(ItemCreateCtrl.generatePriceCurrenciesList).toHaveBeenCalled();
         });
 
-        it('should generate a list of currencies for the price group',function() {
+        it('should generate a list of currencies for the price group', function() {
           mockDateChange();
-          var controlPriceList = ItemCreateCtrl.generatePriceCurrenciesList(currenciesListJSON.response);
+          var controlPriceList = ItemCreateCtrl.generatePriceCurrenciesList(priceIndex,currenciesListJSON.response);
           expect(priceGroup.priceCurrencies).toEqual(controlPriceList);
         });
 
-        it('should have called the setPriceCurrenciesList method',function() {
+        it('should have called the setPriceCurrenciesList method', function() {
           mockDateChange();
           expect(ItemCreateCtrl.setPriceCurrenciesList).toHaveBeenCalled();
         });

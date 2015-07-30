@@ -2,7 +2,7 @@
 
   <div class="edit-controls">
     <div class="row">
-      
+
       <div class="col-xs-6">
         <h2 class="view-name"> {{ viewName }} </h2>
       </div>
@@ -10,7 +10,7 @@
       <div class="col-xs-6 text-right">
 
         <fieldset ng-hide="viewOnly">
-        
+
         <!-- TODO: EXPORT BUTTONS ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
 <!--             <button type="button" class="btn btn-info"> -->
 <!--               <span class="glyphicon glyphicon-export" aria-hidden="true"></span> -->
@@ -20,13 +20,13 @@
 <!--               <span class="glyphicon glyphicon-export" aria-hidden="true"></span> -->
 <!--               <span>Export (PDF)</span> -->
 <!--             </button> -->
-          
+
             <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
               <span>Save</span>
             </button>
-            
+
             <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
-            
+
             <button class="btn btn-primary" ng-click="submitForm(formData)">
               <span class="fa fa-check-square-o" aria-hidden="true"></span>
               <span>Submit</span>
@@ -34,11 +34,11 @@
 
         </fieldset>
 
-      </div>        
+      </div>
 
     </div>
   </div>
-  
+
   <ng-form name="form" class="form edit-form delivery-note-form">
 
     <form-error-dialog></form-error-dialog>
@@ -56,15 +56,15 @@
                   {{ station.stationCode }} ({{ station.stationName}})
                 </option>
               </select>
-              
+
 <!-- TODO: IF ONLY ONE LMP STATION IS AVAILABLE, USE READ-ONLY (BELOW) INSTEAD OF SELECT (ABOVE)  -->
 <!--               <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true"> -->
-              
+
             </div>
           </div>
         </div>
       </div>
-      
+
       <div class="panel-body">
 
         <div class="row">
@@ -76,7 +76,7 @@
                      placeholder="1A2B3C4D" required="true" custom-validity custom-pattern="time" ng-readonly="readOnly">
             </div>
           </div>
-          
+
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
               <label for="purchaseOrderNumber">Purchase Order Number*</label>
@@ -84,7 +84,7 @@
                      placeholder="9Z8Y7X6W" required="true" custom-validity custom-pattern="time" ng-readonly="readOnly">
             </div>
           </div>
-                    
+
           <date-picker
             class="col-xs-12 col-sm-2"
             element-class="form-group"
@@ -102,12 +102,12 @@
                      placeholder="Saved" ng-readonly="readOnly" ng-disabled="true">
             </div>
           </div>
-          
+
         </div>
-        
+
         <div class="row">
         <!-- TODO: THIS ROW ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
-          
+
           <div class="col-xs-12 col-sm-2">
             <div class="form-group">
               <label for="deliveryNoteCreatedBy">Created By</label>
@@ -115,7 +115,7 @@
                      placeholder="User 0001" ng-readonly="readOnly">
             </div>
           </div>
-          
+
           <div class="col-xs-12 col-sm-2">
             <div class="form-group">
               <label for="deliveryNoteCreatedDateTime">Created Date/Time</label>
@@ -123,7 +123,7 @@
                      placeholder="2/05 - 12:34pm" ng-readonly="readOnly">
             </div>
           </div>
-          
+
           <div class="col-xs-12 col-sm-2">
             <div class="form-group">
               <label for="deliveryNoteUpdatedBy">Updated By</label>
@@ -139,14 +139,14 @@
                      placeholder="2/07 - 12:34pm" ng-readonly="readOnly">
             </div>
           </div>
-            
+
         </div>
-        
+
         <div class="well">
           <div class="row">
-          
+
             <div class="col-xs-10 col-sm-11">
-          
+
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label for="itemCode">Item Code</label>
@@ -163,7 +163,7 @@
                          placeholder="Coke" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Expected</label>
@@ -171,7 +171,7 @@
                          placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Delivered*</label>
@@ -179,7 +179,7 @@
                          placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Ullage</label>
@@ -187,22 +187,22 @@
                          placeholder="2" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
   <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label>Ullage Reason*</label>
-  
+
                   <ui-select id="ullage-reason" ng-model="ullageReason" theme="bootstrap">
                     <ui-select-match placeholder="Broken">{{ $item.ullageReasonCode }}</ui-select-match>
                     <ui-select-choices repeat="">
                         { item.ullageReasonCode }} ({{ item.ullageReasonName }})
                     </ui-select-choices>
                   </ui-select>
-              
+
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Booked</label>
@@ -212,22 +212,22 @@
               </div>
 
             </div>
-            
+
             <div class="col-xs-2 col-sm-1 text-right">
               <button type="button" class="btn btn-sm btn-danger">
                 <i class="fa fa-close"></i>
               </button>
             </div>
- 
+
           </div>
 
         </div>
-        
+
         <div class="well">
           <div class="row">
-          
+
             <div class="col-xs-10 col-sm-11">
-          
+
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label for="itemCode">Item Code</label>
@@ -244,7 +244,7 @@
                          placeholder="Sprite" ng-readonly="readOnly">
                 </div>
               </div>
-   
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Expected</label>
@@ -252,7 +252,7 @@
                          placeholder="20" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Delivered*</label>
@@ -260,7 +260,7 @@
                          placeholder="20" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Ullage</label>
@@ -268,22 +268,22 @@
                          placeholder="0" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
   <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group" ng-show="none">
                   <label>Ullage Reason*</label>
-  
+
                   <ui-select id="ullage-reason" ng-model="ullageReason" theme="bootstrap">
                     <ui-select-match placeholder="Broken">{{ $item.ullageReasonCode }}</ui-select-match>
                     <ui-select-choices repeat="">
                         { item.ullageReasonCode }} ({{ item.ullageReasonName }})
                     </ui-select-choices>
                   </ui-select>
-              
+
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Booked</label>
@@ -293,22 +293,22 @@
               </div>
 
             </div>
-            
+
             <div class="col-xs-2 col-sm-1 text-right">
               <button type="button" class="btn btn-sm btn-danger">
                 <i class="fa fa-close"></i>
               </button>
             </div>
- 
+
           </div>
 
         </div>
- 
+
         <div class="well">
           <div class="row">
-          
+
             <div class="col-xs-10 col-sm-11">
-          
+
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label for="itemCode">Item Code</label>
@@ -316,7 +316,7 @@
                          placeholder="0003" ng-readonly="readOnly" ng-disabled="true">
                 </div>
               </div>
-    
+
   <!-- TODO: ITEM CODE (ABOVE) WILL BE AFFECTED BY ITEM NAME (BELOW) AND PULL CORRECT DATA -->
               <div class="col-xs-12 col-sm-4">
                 <div class="form-group">
@@ -325,7 +325,7 @@
                          placeholder="Chicken Sandwich" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Expected</label>
@@ -333,7 +333,7 @@
                          placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Delivered*</label>
@@ -341,7 +341,7 @@
                          placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Ullage</label>
@@ -349,22 +349,22 @@
                          placeholder="1" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
   <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label>Ullage Reason*</label>
-  
+
                   <ui-select id="ullage-reason" ng-model="ullageReason" theme="bootstrap">
                     <ui-select-match placeholder="Expired">{{ $item.ullageReasonCode }}</ui-select-match>
                     <ui-select-choices repeat="">
                         { item.ullageReasonCode }} ({{ item.ullageReasonName }})
                     </ui-select-choices>
                   </ui-select>
-              
+
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Booked</label>
@@ -374,22 +374,22 @@
               </div>
 
             </div>
-            
+
             <div class="col-xs-2 col-sm-1 text-right">
               <button type="button" class="btn btn-sm btn-danger">
                 <i class="fa fa-close"></i>
               </button>
             </div>
- 
+
           </div>
 
         </div>
- 
+
 <div class="well">
           <div class="row">
-          
+
             <div class="col-xs-10 col-sm-11">
-          
+
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label for="itemCode">Item Code</label>
@@ -406,7 +406,7 @@
                          placeholder="Coffee" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Expected</label>
@@ -414,7 +414,7 @@
                          placeholder="30" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Delivered*</label>
@@ -422,7 +422,7 @@
                          placeholder="25" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Ullage</label>
@@ -430,22 +430,22 @@
                          placeholder="5" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
   <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label>Ullage Reason*</label>
-  
+
                   <ui-select id="ullage-reason" ng-model="ullageReason" theme="bootstrap">
                     <ui-select-match placeholder="Missing">{{ $item.ullageReasonCode }}</ui-select-match>
                     <ui-select-choices repeat="">
                         { item.ullageReasonCode }} ({{ item.ullageReasonName }})
                     </ui-select-choices>
                   </ui-select>
-              
+
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Booked</label>
@@ -455,22 +455,22 @@
               </div>
 
             </div>
-            
+
             <div class="col-xs-2 col-sm-1 text-right">
               <button type="button" class="btn btn-sm btn-danger">
                 <i class="fa fa-close"></i>
               </button>
             </div>
- 
+
           </div>
 
         </div>
 
         <div class="well">
           <div class="row">
-          
+
             <div class="col-xs-10 col-sm-11">
-          
+
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label for="itemCode">Item Code</label>
@@ -487,7 +487,7 @@
                          placeholder="Cheeseburger" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Expected</label>
@@ -495,7 +495,7 @@
                          placeholder="15" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Delivered*</label>
@@ -503,7 +503,7 @@
                          placeholder="15" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Ullage</label>
@@ -511,22 +511,22 @@
                          placeholder="0" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
   <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group" ng-show="none">
                   <label>Ullage Reason*</label>
-  
+
                   <ui-select id="ullage-reason" ng-model="ullageReason" theme="bootstrap">
                     <ui-select-match placeholder="Broken">{{ $item.ullageReasonCode }}</ui-select-match>
                     <ui-select-choices repeat="">
                         { item.ullageReasonCode }} ({{ item.ullageReasonName }})
                     </ui-select-choices>
                   </ui-select>
-              
+
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Booked</label>
@@ -536,22 +536,22 @@
               </div>
 
             </div>
-            
+
             <div class="col-xs-2 col-sm-1 text-right">
               <button type="button" class="btn btn-sm btn-danger">
                 <i class="fa fa-close"></i>
               </button>
             </div>
- 
+
           </div>
 
         </div>
- 
+
          <div class="well">
           <div class="row">
-          
+
             <div class="col-xs-10 col-sm-11">
-          
+
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label for="itemCode">Item Code</label>
@@ -568,7 +568,7 @@
                          placeholder="Chips" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Expected</label>
@@ -576,7 +576,7 @@
                          placeholder="20" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Delivered*</label>
@@ -584,7 +584,7 @@
                          placeholder="20" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-            
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Ullage</label>
@@ -592,22 +592,22 @@
                          placeholder="2" custom-validity custom-pattern="time" ng-readonly="readOnly">
                 </div>
               </div>
-    
+
   <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label>Ullage Reason*</label>
-  
+
                   <ui-select id="ullage-reason" ng-model="ullageReason" theme="bootstrap">
                     <ui-select-match placeholder="Opened">{{ $item.ullageReasonCode }}</ui-select-match>
                     <ui-select-choices repeat="">
                         { item.ullageReasonCode }} ({{ item.ullageReasonName }})
                     </ui-select-choices>
                   </ui-select>
-              
+
                 </div>
               </div>
-    
+
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
                   <label>Booked</label>
@@ -617,17 +617,17 @@
               </div>
 
             </div>
-            
+
             <div class="col-xs-2 col-sm-1 text-right">
               <button type="button" class="btn btn-sm btn-danger">
                 <i class="fa fa-close"></i>
               </button>
             </div>
- 
+
           </div>
 
         </div>
- 
+
         <div class="row">
           <div class="col-xs-12 col-sm-9"></div>
           <div class="col-xs-12 col-sm-3 text-right">
@@ -639,11 +639,11 @@
             </div>
           </div>
         </div>
-        
+
       </div>
 
     </div>
-          
+
   </ng-form>
 
 </div>
@@ -655,4 +655,4 @@
 
 <leave-view-modal></leave-view-modal>
 
-<left-navigation></left-navigation>
+<dynamic-left-nav></dynamic-left-nav>

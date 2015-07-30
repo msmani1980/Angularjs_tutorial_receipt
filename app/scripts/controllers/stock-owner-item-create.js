@@ -1,6 +1,4 @@
 'use strict';
-/*global moment*/
-// jshint maxcomplexity:9
 
 /**
  * @ngdoc function
@@ -10,9 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockOwnerItemCreateCtrl', function ($scope, $compile, ENV,
+  .controller('StockOwnerItemCreateCtrl', function($scope, $compile, ENV,
     $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, GlobalMenuService) {
+    currencyFactory, $routeParams, GlobalMenuService, $q, dateUtility) {
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
     var companyId = GlobalMenuService.company.get();
@@ -31,20 +29,30 @@ angular.module('ts5App')
       globalTradeNumbers: [],
       costPrices: []
     };
+
     $scope.viewName = 'Create Stock Owner Item';
     $scope.buttonText = 'Create';
     $scope.itemIsActive = false;
     $scope.itemIsInactive = false;
     $scope.editingItem = false;
+    $scope.uiSelectTemplateReady = false;
 
-    this.checkIfViewOnly = function () {
+    this.checkIfViewOnly = function() {
       var path = $location.path();
       if (path.search('/stock-owner-item-view') !== -1) {
         $scope.viewOnly = true;
       }
     };
 
-    this.updateViewName = function (item) {
+    this.init = function() {
+      this.checkIfViewOnly();
+      if ($routeParams.id && !$scope.viewOnly) {
+        this.setFormAsEdit();
+      }
+      this.getDependencies();
+    };
+
+    this.updateViewName = function(item) {
       var prefix = 'Viewing ';
       if ($scope.editingItem) {
         prefix = 'Editing ';
@@ -52,24 +60,18 @@ angular.module('ts5App')
       $scope.viewName = prefix + item.itemName;
     };
 
-    this.setFormAsEdit = function () {
+    this.setFormAsEdit = function() {
       $scope.editingItem = true;
       $scope.buttonText = 'Save';
     };
 
-    this.validateItemCompany = function (data) {
+    this.validateItemCompany = function(data) {
       return data.retailItem.companyId === companyId;
     };
 
-    this.getItem = function (id) {
-
-      var $this = this;
-
-      // TODO: Make this use a loadingModal.show() method
-      angular.element('#loading').modal('show').find('p')
-        .text('We are getting Item ' + id);
-
-      itemsFactory.getItem(id).then(function (data) {
+    this.getItem = function(id) {
+      this.showLoadingModal('We are getting your Items data!');
+      itemsFactory.getItem(id).then(function(data) {
         if ($this.validateItemCompany(data)) {
           $this.updateFormData(data.retailItem);
           $this.updateViewName(data.retailItem);
@@ -77,100 +79,250 @@ angular.module('ts5App')
           $location.path('/');
           return false;
         }
-        angular.element('#loading').modal('hide');
+        $this.setUIReady();
       });
-
     };
 
-    this.checkIfViewOnly();
+    this.showLoadingModal = function(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    };
 
-    if ($routeParams.id && !$scope.viewOnly) {
-      this.setFormAsEdit();
-    }
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
 
-    if ($scope.editingItem || $scope.viewOnly) {
-      this.getItem($routeParams.id);
-    }
+    this.findTagsIndex = function(tagId) {
+      var tagIndex = null;
+      for (var key in $scope.tags) {
+        var tag = $scope.tags[key];
+        if (parseInt(tag.id) === parseInt(tagId)) {
+          tagIndex = key;
+          break;
+        }
+      }
+      return tagIndex;
+    };
 
-    // deserialize tag object from api
-    function deserializeTags(itemData) {
+    this.deserializeTags = function(itemData) {
       for (var tagKey in itemData.tags) {
         var tag = itemData.tags[tagKey];
-        itemData.tags[tagKey] = tag.tagId.toString();
+        var index = $this.findTagsIndex(tag.tagId);
+        itemData.tags[tagKey] = {
+          id: tag.tagId,
+          name: $scope.tags[index].name
+        };
       }
-    }
+    };
 
-    // deserialize characteristics object from api
-    function deserializeCharacteristics(itemData) {
+    this.formatTags = function(itemData) {
+      var tagsPayload = [];
+      for (var tagKey in itemData.tags) {
+        var tag = itemData.tags[tagKey];
+        tagsPayload[tagKey] = {
+          tagId: tag.id,
+          itemId: itemData.id
+        };
+      }
+      return tagsPayload;
+    };
+
+    this.findCharacteristicIndex = function(characteristicId) {
+      var characteristicIndex = null;
+      for (var key in $scope.characteristics) {
+        var characteristic = $scope.characteristics[key];
+        if (parseInt(characteristic.id) === parseInt(characteristicId)) {
+          characteristicIndex = key;
+          break;
+        }
+      }
+      return characteristicIndex;
+    };
+
+    this.deserializeCharacteristics = function(itemData) {
       for (var characteristicKey in itemData.characteristics) {
         var characteristic = itemData.characteristics[characteristicKey];
-        itemData.characteristics[characteristicKey] = characteristic.characteristicId
-          .toString();
+        var index = $this.findCharacteristicIndex(characteristic.characteristicId);
+        itemData.characteristics[characteristicKey] = {
+          id: characteristic.id,
+          characteristicId: characteristic.characteristicId,
+          name: $scope.characteristics[index].name
+        };
       }
+    };
 
-    }
-
-    // deserialize allergens object from api
-    function deserializeAllergens(itemData) {
-      for (var allergenkey in itemData.allergens) {
-        var allergen = itemData.allergens[allergenkey];
-        itemData.allergens[allergenkey] = allergen.allergenId.toString();
+    this.formatCharacteristics = function(itemData) {
+      var characteristicsPayload = [];
+      for (var characteristicKey in itemData.characteristics) {
+        var characteristic = itemData.characteristics[characteristicKey];
+        var newCharacteristic = {
+          id: null,
+          characteristicId: characteristic.id,
+          itemId: itemData.id
+        };
+        if (characteristic.characteristicId) {
+          newCharacteristic.id = characteristic.id;
+          newCharacteristic.characteristicId = characteristic.characteristicId;
+        }
+        characteristicsPayload[characteristicKey] = newCharacteristic;
       }
-    }
+      return characteristicsPayload;
+    };
 
-    // checks to see if the item is active
-    function checkIfItemIsActive(itemData) {
+    this.findAllergenIndex = function(allergenId) {
+      var allergenIndex = null;
+      for (var key in $scope.allergens) {
+        var allergen = $scope.allergens[key];
+        if (parseInt(allergen.allergenId) === parseInt(allergenId)) {
+          allergenIndex = key;
+          break;
+        }
+      }
+      return allergenIndex;
+    };
+
+    this.deserializeAllergens = function(itemData) {
+      for (var allergenKey in itemData.allergens) {
+        var allergen = itemData.allergens[allergenKey];
+        var index = $this.findAllergenIndex(allergen.allergenId);
+        itemData.allergens[allergenKey] = {
+          id: allergen.id,
+          allergenId: allergen.allergenId,
+          name: $scope.allergens[index].name
+        };
+      }
+    };
+
+    this.formatAllergens = function(itemData) {
+      var allergenPayload = [];
+      for (var allergenKey in itemData.allergens) {
+        var allergen = itemData.allergens[allergenKey];
+        allergenPayload[allergenKey] = {
+          id: allergen.id,
+          allergenId: allergen.allergenId,
+          itemId: itemData.id
+        };
+      }
+      return allergenPayload;
+    };
+
+    this.findSubstitutionIndex = function(substitutionId) {
+      var substitutionIndex = null;
+      for (var key in $scope.substitutions) {
+        var substitution = $scope.substitutions[key];
+        if (parseInt(substitution.id) === parseInt(substitutionId)) {
+          substitutionIndex = key;
+          break;
+        }
+      }
+      return substitutionIndex;
+    };
+
+    this.deserializeSubstitutions = function(itemData) {
+      for (var substitutionKey in itemData.substitutions) {
+        var substitutionId = itemData.substitutions[substitutionKey];
+        var index = $this.findSubstitutionIndex(substitutionId);
+        itemData.substitutions[substitutionKey] = {
+          id: substitutionId,
+          itemName: $scope.substitutions[index].itemName
+        };
+      }
+    };
+
+    this.formatSubstitutions = function(itemData) {
+      var substitutionsPayload = [];
+      for (var substitutionKey in itemData.substitutions) {
+        var substitution = itemData.substitutions[substitutionKey];
+        substitutionsPayload[substitutionKey] = substitution.id;
+      }
+      return substitutionsPayload;
+    };
+
+    this.findRecommendationIndex = function(recommendationId) {
+      var recommendationIndex = null;
+      for (var key in $scope.recommendations) {
+        var recommendation = $scope.recommendations[key];
+        if (parseInt(recommendation.id) === parseInt(recommendationId)) {
+          recommendationIndex = key;
+          break;
+        }
+      }
+      return recommendationIndex;
+    };
+
+    this.deserializeRecommendations = function(itemData) {
+      for (var recommendationKey in itemData.recommendations) {
+        var recommendationId = itemData.recommendations[
+          recommendationKey];
+        var index = $this.findRecommendationIndex(recommendationId);
+        itemData.recommendations[recommendationKey] = {
+          id: recommendationId,
+          itemName: $scope.recommendations[index].itemName
+        };
+      }
+    };
+
+    this.formatRecommendations = function(itemData) {
+      var recommendationPayload = [];
+      for (var recommendationKey in itemData.recommendations) {
+        var recommendation = itemData.recommendations[recommendationKey];
+        recommendationPayload[recommendationKey] = recommendation.id;
+      }
+      return recommendationPayload;
+    };
+
+    this.formatImageDates = function(itemData) {
+      for (var imageIndex in itemData.images) {
+        var image = itemData.images[imageIndex];
+        image.startDate = dateUtility.formatDateForApp(image.startDate);
+        image.endDate = dateUtility.formatDateForApp(image.endDate);
+      }
+    };
+
+    this.formatCostDates = function(itemData) {
+      for (var priceIndex in itemData.costPrices) {
+        var price = itemData.costPrices[priceIndex];
+        price.startDate = dateUtility.formatDateForApp(price.startDate);
+        price.endDate = dateUtility.formatDateForApp(price.endDate);
+        this.updatePriceGroup(priceIndex);
+      }
+    };
+
+    this.checkIfItemIsActive = function(itemData) {
       var today = new Date();
       var itemStartDate = new Date(itemData.startDate);
       $scope.itemIsActive = itemStartDate <= today;
-    }
+    };
 
     // checks to see if the item is inactive
-    function checkIfItemIsInactive(itemData) {
+    this.checkIfItemIsInactive = function(itemData) {
       var today = new Date();
       var itemEndDate = new Date(itemData.endDate);
       $scope.itemIsInactive = itemEndDate <= today;
-    }
+    };
 
     // updates the $scope.formData
-    this.updateFormData = function (itemData) {
+    this.updateFormData = function(itemData) {
       if (!itemData) {
         return false;
       }
-      itemData.startDate = formatDate(itemData.startDate, 'YYYYMMDD', 'L');
-      itemData.endDate = formatDate(itemData.endDate, 'YYYYMMDD', 'L');
-      checkIfItemIsInactive(itemData);
+      itemData.startDate = dateUtility.formatDateForApp(itemData.startDate);
+      itemData.endDate = dateUtility.formatDateForApp(itemData.endDate);
+      this.checkIfItemIsInactive(itemData);
       if (!$scope.itemIsInactive) {
-        checkIfItemIsActive(itemData);
+        this.checkIfItemIsActive(itemData);
       }
-      deserializeTags(itemData);
-      deserializeCharacteristics(itemData);
-      deserializeAllergens(itemData);
-
-
-      // TODO: turn this into a function
-      for (var imageIndex in itemData.images) {
-        var image = itemData.images[imageIndex];
-        image.startDate = formatDate(image.startDate, false, 'L');
-        image.endDate = formatDate(image.endDate, false, 'L');
-      }
-
-      // TODO: turn this into a function
-      for (var priceIndex in itemData.costPrices) {
-        var price = itemData.costPrices[priceIndex];
-        price.startDate = formatDate(price.startDate, false, 'L');
-        price.endDate = formatDate(price.endDate, false, 'L');
-        updatePriceGroup(priceIndex);
-
-      }
-
+      this.deserializeTags(itemData);
+      this.deserializeAllergens(itemData);
+      this.deserializeCharacteristics(itemData);
+      this.deserializeSubstitutions(itemData);
+      this.deserializeRecommendations(itemData);
+      this.formatImageDates(itemData);
+      this.formatCostDates(itemData);
       $scope.formData = itemData;
-
     };
 
-    // gets a list of all currencies for the item
-    this.getMasterCurrenciesList = function () {
-      currencyFactory.getCompanyCurrencies(function (data) {
+    this.getMasterCurrenciesList = function() {
+      currencyFactory.getCompanyCurrencies(function(data) {
         var masterCurrenciesList = [];
         for (var key in data.response) {
           var currency = data.response[key];
@@ -180,173 +332,137 @@ angular.module('ts5App')
       });
     };
 
-    // gets a list of price types for price group
-    this.getPriceTypesList = function () {
-
-      itemsFactory.getPriceTypesList(function (data) {
-        $scope.priceTypes = data;
-      });
-
+    this.makeDependencyPromises = function() {
+      return [
+        companiesFactory.getSalesCategoriesList(),
+        companiesFactory.getTagsList(),
+        companiesFactory.getTaxTypesList(),
+        currencyFactory.getCompanyCurrencies(),
+        itemsFactory.getAllergensList(),
+        itemsFactory.getItemTypesList(),
+        itemsFactory.getCharacteristicsList(),
+        itemsFactory.getDimensionList(),
+        itemsFactory.getVolumeList(),
+        itemsFactory.getWeightList(),
+        itemsFactory.getItemsList({}),
+        companiesFactory.getCompany(companyId)
+      ];
     };
 
-    this.getMasterCurrenciesList();
-    this.getPriceTypesList();
+    this.setUIReady = function() {
+      $scope.uiSelectTemplateReady = true;
+      this.hideLoadingModal();
+    };
 
-    itemsFactory.getItemsList({}).then(function (data) {
-      $scope.items = data.retailItems;
-    });
+    this.getDependencies = function() {
+      $this.showLoadingModal('We are loading the Items data!');
+      var dependencyPromises = this.makeDependencyPromises();
+      $q.all(dependencyPromises).then(function(response) {
+        $this.setDependencies(response);
+      });
+    };
 
-    itemsFactory.getAllergensList(function (data) {
-      $scope.allergens = data;
-    });
+    this.setDependencies = function(response) {
+      $this.setSalesCategories(response[0]);
+      $this.setTagsList(response[1]);
+      $this.setTaxTypesList(response[2]);
+      $this.setMasterCurrenciesList(response[3]);
+      $this.setAllergens(response[4]);
+      $this.setItemTypes(response[5]);
+      $this.setCharacteristics(response[6]);
+      $this.setDimensionList(response[7]);
+      $this.setVolumeList(response[8]);
+      $this.setWeightList(response[9]);
+      $this.setItemList(response[10]);
+      $this.setBaseCurrencyId(response[11]);
+      if ($scope.editingItem || $scope.viewOnly) {
+        this.getItem($routeParams.id);
+      } else {
+        $this.setUIReady();
+      }
+    };
 
-    itemsFactory.getItemTypesList(function (data) {
-      $scope.itemTypes = data;
-    });
-
-    itemsFactory.getCharacteristicsList(function (data) {
-      $scope.characteristics = data;
-    });
-
-    itemsFactory.getDimensionList(function (data) {
-      $scope.dimensionUnits = data.units;
-    });
-
-    itemsFactory.getVolumeList(function (data) {
-      $scope.weightUnits = data.units;
-    });
-
-    itemsFactory.getWeightList(function (data) {
-      $scope.volumeUnits = data.units;
-    });
-
-    companiesFactory.getTagsList(function (data) {
-      $scope.tags = data.response;
-    });
-
-    companiesFactory.getSalesCategoriesList(function (data) {
+    this.setSalesCategories = function(data) {
       $scope.salesCategories = data.salesCategories;
-    });
+    };
 
-    companiesFactory.getTaxTypesList(function (data) {
+    this.setAllergens = function(data) {
+      $scope.allergens = data;
+    };
+
+    this.setItemTypes = function(data) {
+      $scope.itemTypes = data;
+    };
+
+    this.setCharacteristics = function(data) {
+      $scope.characteristics = data;
+    };
+
+    this.setDimensionList = function(data) {
+      $scope.dimensionUnits = data.units;
+    };
+
+    this.setVolumeList = function(data) {
+      $scope.volumeUnits = data.units;
+    };
+
+    this.setWeightList = function(data) {
+      $scope.weightUnits = data.units;
+    };
+
+    this.setTagsList = function(data) {
+      $scope.tags = data.response;
+    };
+
+    this.setItemList = function(data) {
+      $scope.items = data.retailItems;
+      $scope.substitutions = data.retailItems;
+      $scope.recommendations = data.retailItems;
+    };
+
+    this.setMasterCurrenciesList = function(data) {
+      var masterCurrenciesList = [];
+      for (var key in data.response) {
+        var currency = data.response[key];
+        masterCurrenciesList[currency.id] = currency.code;
+      }
+      $scope.masterCurrenciesList = masterCurrenciesList;
+    };
+
+    this.setTaxTypesList = function(data) {
       $scope.taxTypes = data.response;
-    });
+    };
 
-    // TODO: Move to global function
-    function formatDate(dateString, formatFrom, formatTo) {
-      return moment(dateString, formatFrom).format(formatTo).toString();
-    }
+    this.init();
 
-    $scope.$watch('formData', function (newData, oldData) {
-      //checkItemDates(newData,oldData);
-      $this.refreshPriceGroups(newData, oldData);
-    }, true);
-
-    $scope.$watch('form.$valid', function (validity) {
+    $scope.$watch('form.$valid', function(validity) {
       if (validity) {
         $scope.displayError = false;
       }
     });
 
-
-    // when a price date is change for a price groupd or station, need to update currencies
-    this.refreshPriceGroups = function (newData, oldData) {
-
-      if (!oldData) {
-        return false;
-      }
-
-      // if the costPrices data has changed
-      if (newData.costPrices !== oldData.costPrices) {
-
-        // loop through all the price groups
-        for (var priceIndex in $scope.formData.costPrices) {
-
-          // the new and old price groups
-          var newPriceGroup = newData.costPrices[priceIndex];
-          var oldPriceGroup = oldData.costPrices[priceIndex];
-
-          // if threre isn't old data yet, exit out of loop
-          if (!oldPriceGroup || oldPriceGroup.startDate === '' ||
-            oldPriceGroup.endDate === '') {
-            return false;
-          }
-
-          // if the startDate or endDate is different
-          if (newPriceGroup.startDate !== oldPriceGroup.startDate ||
-            newPriceGroup.endDate !== oldPriceGroup.endDate) {
-
-            // update the price group
-            updatePriceGroup(priceIndex);
-
-          }
-
-        } // end loop on price groups
-
-      }
-
-    };
-
-    // check date ranges on items, price groups
-    /*  function checkItemDates(newData, oldData) {
-
-        if (newData.startDate !== oldData.startDate || newData.endDate !==
-          oldData.endDate) {
-
-          // TODO: Move this to it's own function
-          if (newData.costPrices.length > 0) {
-
-            // loop through all the price groups
-            for (var priceIndex in $scope.formData.costPrices) {
-
-              var price = $scope.formData.costPrices[priceIndex];
-
-              // if new item end date is before price start date
-              if (moment(newData.endDate).isBefore(price.startDate)) {
-
-                // set price start date as new item end date
-                price.startDate = newData.endDate;
-
-              }
-
-              // if new item start date is after price start date
-              if (moment(newData.startDate).isAfter(price.startDate)) {
-
-                // set price start date as new item start date
-                price.startDate = newData.startDate;
-
-              }
-
-            } // end price for loop
-
-          } // if price length is greater than 0
-
-        } // end if newData.startDate is different
-
-      } // end checkItemDates */
-
-    $scope.removeQRCode = function () {
+    $scope.removeQRCode = function() {
       $scope.formData.qrCodeImgUrl = '';
       $scope.formData.qrCodeValue = '';
     };
 
-    $scope.removeImage = function (key) {
+    $scope.removeImage = function(key) {
       $scope.formData.images.splice(key, 1);
     };
 
-    $scope.addTaxType = function () {
+    $scope.addTaxType = function() {
       $scope.formData.taxes.push({});
     };
 
-    $scope.removeTaxType = function (key) {
+    $scope.removeTaxType = function(key) {
       $scope.formData.taxes.splice(key, 1);
     };
 
-    $scope.addGTIN = function () {
+    $scope.addGTIN = function() {
       $scope.formData.globalTradeNumbers.push({});
     };
 
-    $scope.removeGTIN = function (key) {
+    $scope.removeGTIN = function(key) {
       $scope.formData.globalTradeNumbers.splice(key, 1);
     };
 
@@ -355,179 +471,209 @@ angular.module('ts5App')
      *
      */
 
-    $scope.addPriceGroup = function () {
+    $scope.$watch('formData.costPrices', function(newData, oldData) {
+      $this.watchPriceGroups(newData, oldData);
+    }, true);
 
+    $scope.addPriceGroup = function() {
       $scope.formData.costPrices.push({
         startDate: '',
         endDate: '',
         amount: '1.00'
       });
-
     };
 
-    // Add the first price group
     $scope.addPriceGroup();
 
-    $scope.removePriceGroup = function (key) {
+    $scope.removePriceGroup = function(key) {
       $scope.formData.costPrices.splice(key, 1);
     };
 
-    var getCurrencyFromArrayUsingId = function (currenciesArray,
+    this.getCurrencyFromArrayUsingId = function(currenciesArray,
       baseCurrencyId) {
-      return currenciesArray.filter(function (currencyItem) {
+      return currenciesArray.filter(function(currencyItem) {
         return currencyItem.id === baseCurrencyId;
       })[0];
     };
 
-    // pulls a list of currencies from the API and updates the price group
-    function updatePriceGroup(priceIndex) {
+    this.setBaseCurrencyId = function(response) {
+      this.baseCurrencyId = response.baseCurrencyId;
+    };
 
-      // TODO: Make this call only once and then access locally
-      companiesFactory.getCompany(companyId).then(function (response) {
-
-        var baseCurrencyId = response.baseCurrencyId;
-
-        currencyFactory.getCompanyGlobalCurrencies().then(function (
-          companyBaseCurrencyData) {
-
-          var baseCurrency = getCurrencyFromArrayUsingId(
-            companyBaseCurrencyData.response, baseCurrencyId);
-
-          $scope.formData.costPrices[priceIndex].code = baseCurrency.currencyCode;
-
-        });
-
+    this.getCompanyGlobalCurrencies = function(priceIndex) {
+      currencyFactory.getCompanyGlobalCurrencies().then(function(
+        companyBaseCurrencyData) {
+        $this.setPriceCurrenciesList(priceIndex,
+          companyBaseCurrencyData);
       });
+    };
 
-    }
+    this.setPriceCurrenciesList = function(priceIndex,
+      companyBaseCurrencyData) {
+      var response = companyBaseCurrencyData.response;
+      var baseCurrency = this.getCurrencyFromArrayUsingId(
+        response,
+        this.baseCurrencyId
+      );
+      $scope.formData.costPrices[priceIndex].code = baseCurrency.currencyCode;
+    };
 
-    // Formats the dates when sending the payload to the API
-    function formatPayloadDates(itemData) {
-      itemData.startDate = formatDate(itemData.startDate, 'L', 'YYYYMMDD');
-      itemData.endDate = formatDate(itemData.endDate, 'L', 'YYYYMMDD');
-      // TODO: Turn this into a function
-      for (var imageIndex in itemData.images) {
-        var image = itemData.images[imageIndex];
-        image.startDate = formatDate(image.startDate, 'L', 'YYYYMMDD');
-        image.endDate = formatDate(image.endDate, 'L', 'YYYYMMDD');
+    this.updatePriceGroup = function(priceIndex) {
+      var priceGroup = $scope.formData.costPrices[priceIndex];
+      var startDate = dateUtility.formatDateForAPI(priceGroup.startDate);
+      var endDate = dateUtility.formatDateForAPI(priceGroup.endDate);
+      if (startDate === 'Invalid date' || endDate === 'Invalid date') {
+        return false;
       }
-      // TODO: Turn this into a function
-      for (var priceIndex in itemData.costPrices) {
-        var price = itemData.costPrices[priceIndex];
-        price.startDate = formatDate(price.startDate, 'L', 'YYYYMMDD');
-        price.endDate = formatDate(price.endDate, 'L', 'YYYYMMDD');
-      }
-    }
+      var currencyFilters = {
+        startDate: startDate,
+        endDate: endDate,
+        isOperatedCurrency: true
+      };
+      this.getCompanyGlobalCurrencies(priceIndex, currencyFilters);
+    };
 
-    // cleans up invalid properties of payload before submitting
-    function cleanUpPayload(itemData) {
+    this.watchPriceGroups = function(newPrices, oldPrices) {
+      if (!oldPrices) {
+        return false;
+      }
+      for (var priceIndex in $scope.formData.costPrices) {
+        this.checkPriceGroup(newPrices, oldPrices, priceIndex);
+      }
+    };
+
+    this.checkPriceGroup = function(newPrices, oldPrices, priceIndex) {
+      var newPriceGroup = newPrices[priceIndex];
+      var oldPriceGroup = oldPrices[priceIndex];
+      if (!oldPriceGroup) {
+        return false;
+      }
+      if (newPriceGroup.startDate !== oldPriceGroup.startDate ||
+        newPriceGroup.endDate !== oldPriceGroup.endDate) {
+        $this.updatePriceGroup(priceIndex);
+      }
+    };
+
+    this.cleanUpPayload = function(itemData) {
       for (var priceIndex in itemData.costPrices) {
         var price = itemData.costPrices[priceIndex];
         delete price.code;
       }
-    }
+    };
 
-    // formats the tags for payload
-    function formatTags(itemData) {
-      for (var tagKey in itemData.tags) {
-        var tagId = itemData.tags[tagKey];
-        itemData.tags[tagKey] = {
-          tagId: tagId
-        };
+    this.formatPricePayloadDates = function(itemData) {
+      for (var priceIndex in itemData.costPrices) {
+        var price = itemData.costPrices[priceIndex];
+        price.startDate = dateUtility.formatDateForAPI(price.startDate);
+        price.endDate = dateUtility.formatDateForAPI(price.endDate);
       }
-    }
+    };
 
-    // formats the allergens for payload
-    function formatAllergens(itemData) {
-      for (var allergenKey in itemData.allergens) {
-        var allergenId = itemData.allergens[allergenKey];
-        itemData.allergens[allergenKey] = {
-          allergenId: allergenId
-        };
+    this.formatImagePayloadDates = function(itemData) {
+      for (var imageIndex in itemData.images) {
+        var image = itemData.images[imageIndex];
+        image.startDate = dateUtility.formatDateForAPI(image.startDate);
+        image.endDate = dateUtility.formatDateForAPI(image.endDate);
       }
-    }
+    };
 
-    // formats the characteristics for payload
-    function formatCharacteristics(itemData) {
-      for (var characteristicKey in itemData.characteristics) {
-        var characteristicId = itemData.characteristics[characteristicKey];
-        itemData.characteristics[characteristicKey] = {
-          characteristicId: characteristicId
-        };
-      }
-    }
+    this.formatPayloadDates = function(itemData) {
+      itemData.startDate = dateUtility.formatDateForAPI(itemData.startDate);
+      itemData.endDate = dateUtility.formatDateForAPI(itemData.endDate);
+      this.formatImagePayloadDates(itemData);
+      this.formatPricePayloadDates(itemData);
+    };
 
-    this.updateItem = function (itemData) {
-      var $this = this;
-      angular.element('#loading').modal('show').find('p').text(
-        'We are updating your item');
+    this.updateItem = function(itemData) {
+      $this.showLoadingModal('We are updating your item');
       var updateItemPayload = {
         retailItem: itemData
       };
       itemsFactory.updateItem($routeParams.id, updateItemPayload).then(
-        function (response) {
+        function(response) {
           $this.updateFormData(response.retailItem);
-          angular.element('#loading').modal('hide');
+          $this.hideLoadingModal();
           angular.element('#update-success').modal('show');
         },
-        function (response) {
-          angular.element('#loading').modal('hide');
+        function(response) {
+          $this.hideLoadingModal();
           $scope.displayError = true;
           $scope.formErrors = response.data;
         });
     };
 
-    function createItem(itemData) {
-      angular.element('#loading').modal('show').find('p').text(
-        'We are creating your item');
+    this.createItem = function(itemData) {
+      $this.showLoadingModal('We are creating your item');
       var newItemPayload = {
         retailItem: itemData
       };
-      itemsFactory.createItem(newItemPayload).then(function () {
-        angular.element('#loading').modal('hide');
+      itemsFactory.createItem(newItemPayload).then(function() {
+        this.hideLoadingModal();
         angular.element('#create-success').modal('show');
-      }, function (error) {
-        angular.element('#loading').modal('hide');
+        return true;
+      }, function(error) {
+        this.hideLoadingModal();
         $scope.displayError = true;
         $scope.formErrors = error.data;
-      });
-    }
-
-    $scope.submitForm = function (formData) {
-
-      if (!$scope.form.$valid) {
-        $scope.displayError = true;
         return false;
-      }
-      var itemData = angular.copy(formData);
-      formatTags(itemData);
-      formatCharacteristics(itemData);
-      formatAllergens(itemData);
-      formatPayloadDates(itemData);
-      cleanUpPayload(itemData);
-      if ($scope.editingItem) {
-        $this.updateItem(itemData);
-      } else {
-        createItem(itemData);
-      }
-
+      });
     };
 
-    $scope.isMeasurementRequired = function () {
+    $scope.submitForm = function(formData) {
+      $scope.form.$setSubmitted(true);
+      if (formData && $this.validateForm()) {
+        var itemData = angular.copy(formData);
+        var payload = $this.formatPayload(itemData);
+        var action = $scope.editingItem ? 'updateItem' : 'createItem';
+        $this[action](payload);
+      }
+    };
+
+    this.validateForm = function() {
+      $scope.displayError = false;
+      if (!$scope.form.$valid) {
+        $scope.displayError = true;
+      }
+      return $scope.form.$valid;
+    };
+
+    this.formatPayload = function(itemData) {
+      itemData.tags = $this.formatTags(itemData);
+      itemData.allergens = $this.formatAllergens(itemData);
+      itemData.characteristics = $this.formatCharacteristics(itemData);
+      itemData.substitutions = $this.formatSubstitutions(itemData);
+      itemData.recommendations = $this.formatRecommendations(itemData);
+      this.formatPayloadDates(itemData);
+      this.cleanUpPayload(itemData);
+      return itemData;
+    };
+
+    $scope.isMeasurementRequired = function() {
       return ($scope.formData.width || $scope.formData.length || $scope.formData
         .height);
     };
 
-    $scope.isMeasurementValid = function () {
+    $scope.isMeasurementValid = function() {
       return ($scope.formData.width && $scope.formData.length && $scope.formData
         .height && $scope.formData.dimensionType);
     };
 
+    $scope.isQrCodeSet = function() {
+      return ($scope.formData && $scope.formData.qrCodeImgUrl);
+    };
+
+    $scope.isQrCreateHidden = function() {
+      var isQrCodeSet = $scope.isQrCodeSet();
+      return ($scope.viewOnly || $scope.itemIsActive || isQrCodeSet);
+    };
+
+    $scope.isDisabled = function() {
+      return ($scope.viewOnly || $scope.itemIsActive);
+    };
+
     // TODO: MOVE ME GLOBAL
-    $scope.formScroll = function (id, activeBtn) {
-
+    $scope.formScroll = function(id, activeBtn) {
       $scope.activeBtn = id;
-
       var elm = angular.element('#' + id);
       var body = angular.element('body');
       var navBar = angular.element('.navbar-header').height();
