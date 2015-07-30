@@ -12,7 +12,7 @@ angular.module('ts5App')
     var $this = this;
     var emberURL = '/ember/#/';
 
-    this.getMenu = function(companyTypeId){
+    this.getMenu = function (companyTypeId) {
       switch (companyTypeId) {
         case 2:
           return $this.getStockOwnerMenu();
@@ -20,7 +20,12 @@ angular.module('ts5App')
           return $this.getRetailMenu();
       }
     };
-    this.getStockOwnerMenu = function(){
+
+    this.getAll = function () {
+      return angular.copy($this.getRetailMenu()).concat($this.getStockOwnerMenu());
+    };
+
+    this.getStockOwnerMenu = function () {
       return [{
         'title': 'Stock Owner Item Management',
         menuItems: [{
@@ -41,7 +46,8 @@ angular.module('ts5App')
         }]
       }];
     };
-    this.getRetailMenu = function(){
+
+    this.getRetailMenu = function () {
       return [{
         'title': 'Retail Item Management',
         menuItems: [{
@@ -101,7 +107,7 @@ angular.module('ts5App')
           route: emberURL + 'menus/create',
           icon: 'icon-create-menu',
           className: 'dashboard-createMenu'
-        }, ]
+        }]
       }, {
         title: 'Menu Assignment',
         menuItems: [{
@@ -132,7 +138,7 @@ angular.module('ts5App')
           route: '/#/menu-relationship-create',
           icon: 'icon-create-menu',
           className: 'dashboard-menuAssignments'
-        }, ]
+        }]
       }, {
         title: 'Promotion Management',
         menuItems: [{
@@ -251,7 +257,7 @@ angular.module('ts5App')
           className: 'dashboard-companyReasonCode'
         }]
       }, {
-        title: 'Station Operations',
+        title: 'Station Operations'
 //        menuItems: [{
 //          name: 'Manage LMP Locations',
 //          route: '/#/lmp-locations-list',
@@ -291,4 +297,5 @@ angular.module('ts5App')
         }]
       }];
     };
+
   });

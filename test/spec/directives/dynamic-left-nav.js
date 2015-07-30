@@ -9,22 +9,9 @@ describe('Directive: dynamicLeftNav', function () {
   var element,
     scope,
     controller,
-    location,
-    companiesFactory,
-    companyResponseJSON,
-    getCompanyDeferred;
+    location;
 
-  beforeEach(inject(function (_$rootScope_, _$location_, $q, _companiesFactory_) {
-    inject(function (_servedCompany_) {
-      companyResponseJSON = _servedCompany_;
-    });
-
-    companiesFactory = _companiesFactory_;
-
-    getCompanyDeferred = $q.defer();
-    getCompanyDeferred.resolve(companyResponseJSON);
-    spyOn(companiesFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
-
+  beforeEach(inject(function (_$rootScope_, _$location_) {
     scope = _$rootScope_;
     location = _$location_;
   }));
@@ -47,12 +34,6 @@ describe('Directive: dynamicLeftNav', function () {
       spyOn(isolatedScope, 'leaveViewNav').and.callThrough();
       isolatedScope.leaveViewNav('some-path');
       expect(isolatedScope.leaveViewNav).toHaveBeenCalled();
-    });
-  });
-
-  describe('when the controller is accessed, it', function () {
-    it('should call companiesFactory.getCompany', function(){
-      expect(companiesFactory.getCompany).toHaveBeenCalled();
     });
   });
 
