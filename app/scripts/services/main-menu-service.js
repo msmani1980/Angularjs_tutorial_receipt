@@ -20,6 +20,11 @@ angular.module('ts5App')
           return $this.getRetailMenu();
       }
     };
+
+    this.getAll = function(){
+      return angular.extend([], $this.getRetailMenu(), $this.getStockOwnerMenu());
+    };
+
     this.getStockOwnerMenu = function(){
       return [{
         'title': 'Stock Owner Item Management',
@@ -41,6 +46,7 @@ angular.module('ts5App')
         }]
       }];
     };
+
     this.getRetailMenu = function(){
       return [{
         'title': 'Retail Item Management',

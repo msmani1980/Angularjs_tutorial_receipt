@@ -6,11 +6,11 @@
       <div class="col-xs-6">
         <h2 class="view-name">{{ viewName }}</h2>
       </div>
-      
+
       <div class="col-xs-6 text-right">
 
         <fieldset ng-hide="viewOnly">
-        
+
             <button type="button" class="btn btn-info">
               <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
               <span>Export (Excel)</span>
@@ -42,16 +42,16 @@
                   {{ station.stationCode }} ({{ station.stationName}})
                 </option>
               </select>
-              
+
   <!-- TODO: IF ONLY ONE LMP STATION IS AVAILABLE, USE READ-ONLY (BELOW) INSTEAD OF SELECT (ABOVE)  -->
   <!--               <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true"> -->
-              
+
             </div>
           </div>
         </div>
       </div>
     </div>
-    
+
     <div class="row">
 
       <div class="col-xs-6">
@@ -68,7 +68,7 @@
       </div>
 
     </div>
-    
+
     <div class="panel panel-default collapse no-transition" id="search-collapse">
       <form name="menuSearchForm" ng-submit="searchPostTripData()">
         <div class="panel-body">
@@ -84,7 +84,7 @@
                 </select>
               </div>
             </div>
-            
+
             <date-picker class="col-xs-12 col-sm-4"
               element-class="col-xs-12 col-sm-6"
               start-date-model="dateRange.startDate"
@@ -93,7 +93,7 @@
               label-from="Effective From"
               label-to="Effective To">
             </date-picker>
-            
+
             <div class="col-xs-12 col-sm-2">
               <label>Status</label>
               <select class="form-control" id="delivery-status" ng-model="deliveryStatus" ng-change="deliveryStatusInfo()" ng-disabled="readOnly">
@@ -102,9 +102,9 @@
                 </option>
               </select>
             </div>
-            
+
           </div>
-          
+
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
@@ -112,7 +112,7 @@
         </div>
       </form>
     </div>
-    
+
     <table class="table table-bordered table-hover ng-scope">
       <thead>
         <tr>
@@ -133,7 +133,7 @@
           <td class="ng-binding">2/03 - 12:34pm</td>
           <td class="ng-binding">2/05 - 12:34pm</td>
           <td>
-          
+
           <!-- TODO: WHEN STATUS=SUBMITTED (ABOVE) EDIT & DELETE (BELOW) ARE REMOVED -->
             <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>
@@ -153,7 +153,7 @@
           <td class="ng-binding">2/03 - 12:34pm</td>
           <td class="ng-binding">2/05 - 12:34pm</td>
           <td>
-          
+
           <!-- TODO: WHEN STATUS=SUBMITTED (ABOVE) EDIT & DELETE (BELOW) ARE REMOVED -->
             <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
               <i class="fa fa-file"></i>
@@ -170,7 +170,7 @@
       </tbody>
     </table>
   </div>
-  
+
   <div class="list-footer">
     <div class="row">
       <div class="col-xs-12 col-sm-6">
@@ -187,7 +187,7 @@
       </div>
     </div>
   </div>
-  
+
 
 </div>
 
@@ -199,4 +199,4 @@
 
 <leave-view-modal></leave-view-modal>
 
-<left-navigation></left-navigation>
+<dynamic-left-nav></dynamic-left-nav>
