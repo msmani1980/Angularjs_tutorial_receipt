@@ -34,12 +34,17 @@ angular.module('ts5App')
           startDate: startDate,
           maxDate: $scope.maxDate
         };
-        this.init = function ($element) {
+        var datePickerInput = $element.find('input[type="text"]');
+        this.init = function ($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
-          $element.find('input[type="text"]').datepicker(
-            options);
+          datePickerInput.datepicker(options);
+          $scope.$watchGroup(['ngModel'], function () {
+            if($scope.ngModel) {
+              datePickerInput.datepicker('setDate', $scope.ngModel);
+            }
+          });
         };
-        this.init($element);
+        this.init($scope, $element);
       }
     };
   });
