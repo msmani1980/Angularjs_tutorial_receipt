@@ -200,7 +200,7 @@ describe('Controller: CashBagListCtrl', function () {
         expect(scope.isCashBagEditable(testCashBag)).toEqual(true);
         testCashBag.isDelete = 'true';
         expect(scope.isCashBagEditable(testCashBag)).toEqual(false);
-      })
+      });
     });
   });
 
