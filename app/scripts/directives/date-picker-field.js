@@ -17,7 +17,7 @@ angular.module('ts5App')
         label: '@',
         required: '=',
         form: '=',
-        disabled: '=',
+        disable: '=',
         disablePast: '=',
         minDate: '=',
         maxDate: '='
@@ -34,12 +34,17 @@ angular.module('ts5App')
           startDate: startDate,
           maxDate: $scope.maxDate
         };
-        this.init = function ($element) {
+        this.init = function ($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
-          $element.find('input[type="text"]').datepicker(
-            options);
+          var datePickerInput = $element.find('input[type="text"]');
+          datePickerInput.datepicker(options);
+          $scope.$watch('ngModel', function () {
+            if($scope.ngModel) {
+              datePickerInput.datepicker('setDate', $scope.ngModel);
+            }
+          });
         };
-        this.init($element);
+        this.init($scope, $element);
       }
     };
   });

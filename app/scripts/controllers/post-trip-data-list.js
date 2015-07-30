@@ -1,5 +1,4 @@
 'use strict';
-/* global moment*/
 /**
  * @ngdoc function
  * @name ts5App.controller:PostFlightDataCtrl
@@ -8,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast) {
+  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast, dateUtility) {
     var companyId = '';
     var $this = this;
 
@@ -24,8 +23,8 @@ angular.module('ts5App')
         return '';
       }
       angular.forEach($scope.stationList, function (value) {
-        if (value.id.toString() === stationId.toString()) {
-          stationCode = value.code.toString();
+        if (value.stationId === stationId) {
+          stationCode = value.stationCode;
         }
       });
       return stationCode;
@@ -41,12 +40,25 @@ angular.module('ts5App')
     };
 
     this.getPostTripSuccess = function (response) {
-      $scope.postTrips = response.postTrips;
+      // TODO: move offset to service layer
+      $scope.postTrips =  $scope.postTrips.concat(response.postTrips);
+      if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
+        postTripFactory.getPostTripDataList(companyId, {offset: response.meta.limit + 1}).then($this.getPostTripSuccess);
+      }
       $this.updateStationCodes();
     };
 
+    this.searchPostTripSuccess = function (response) {
+      $scope.postTrips = response.postTrips;
+    };
+
     this.getStationsSuccess = function (response) {
-      $scope.stationList = response.response;
+      // TODO: move offset to service layer
+      $scope.stationList = $scope.stationList.concat(response.response);
+
+      if(response.meta.start === 0 && response.meta.limit < response.meta.count) {
+        postTripFactory.getStationList(companyId, response.meta.limit + 1).then($this.getStationsSuccess);
+      }
       // TODO: fix this hack! currently ui-select doesn't populate correctly when collapsed or when multiple
       angular.element('#search-collapse').addClass('collapse');
       $this.updateStationCodes();
@@ -70,20 +82,6 @@ angular.module('ts5App')
         dismissButton: true,
         content: '<strong>' + type + '</strong>: ' + message
       });
-    };
-
-
-    this.uploadPostTripSuccess = function (response) {
-      if(response.toString() === 'OK_BUT_EMAIL_FAILURE') {
-        $this.showToastMessage('warning', 'Upload Post Trip', 'upload successful, but email notifications have failed');
-      } else {
-        $this.showToastMessage('success', 'Upload Post Trip', 'upload successful!');
-      }
-      postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
-    };
-
-    this.uploadPostTripFailure = function () {
-      $this.showToastMessage('danger', 'Upload Post Trip', 'upload failed');
     };
 
     this.deletePostTripSuccess = function () {
@@ -114,30 +112,26 @@ angular.module('ts5App')
 
     this.init();
 
+    this.addSearchValuesFromMultiSelectArray = function (searchKeyName, multiSelectArray, multiSelectElementKey) {
+      if(multiSelectArray && multiSelectArray.length > 0) {
+        $scope.search[searchKeyName] = [];
+      }
+      angular.forEach(multiSelectArray, function (element) {
+        $scope.search[searchKeyName].push(element[multiSelectElementKey]);
+      });
+    };
 
     this.formatMultiSelectedValuesForSearch = function () {
-      $scope.search.depStationId = [];
-      $scope.search.arrStationId = [];
-      $scope.search.tailNumber = [];
-      $scope.search.employeeId = [];
-      angular.forEach($scope.multiSelectedValues.tailNumbers, function (number) {
-        $scope.search.tailNumber.push(number.carrierNumber);
-      });
-      angular.forEach($scope.multiSelectedValues.depStations, function (station) {
-        $scope.search.depStationId.push(station.id);
-      });
-      angular.forEach($scope.multiSelectedValues.arrStations, function (station) {
-        $scope.search.arrStationId.push(station.id);
-      });
-      angular.forEach($scope.multiSelectedValues.employeeIds, function (employee) {
-        $scope.search.employeeId.push(employee.id);
-      });
+      $this.addSearchValuesFromMultiSelectArray('depStationId', $scope.multiSelectedValues.depStations, 'stationId');
+      $this.addSearchValuesFromMultiSelectArray('arrStationId', $scope.multiSelectedValues.arrStations, 'stationId');
+      $this.addSearchValuesFromMultiSelectArray('tailNumber', $scope.multiSelectedValues.tailNumbers, 'carrierNumber');
+      $this.addSearchValuesFromMultiSelectArray('employeeId', $scope.multiSelectedValues.employeeIds, 'id');
     };
 
     $scope.searchPostTripData = function () {
       $this.formatMultiSelectedValuesForSearch();
       var payload = angular.copy($scope.search);
-      postTripFactory.getPostTripDataList(companyId, payload).then($this.getPostTripSuccess);
+      postTripFactory.getPostTripDataList(companyId, payload).then($this.searchPostTripSuccess);
     };
 
     $scope.clearSearchForm = function () {
@@ -151,35 +145,18 @@ angular.module('ts5App')
       $location.path('post-trip-data/' + state + '/' + id).search();
     };
 
-    $scope.promptDeleteModal = function (index) {
-      $scope.tempDeleteIndex = index;
-      angular.element('#delete-modal').modal('show');
-    };
-
-    $scope.deletePostTrip = function () {
-      if ($scope.postTrips.length <= 0) {
+    $scope.removeRecord = function (postTrip) {
+      if (!postTrip || $scope.postTrips.length <= 0) {
         $this.deletePostTripFailure();
         return;
       }
-      var postTripId = $scope.postTrips[$scope.tempDeleteIndex].id;
-      postTripFactory.deletePostTrip(companyId, postTripId).then(
+      postTripFactory.deletePostTrip(companyId, postTrip.id).then(
         $this.deletePostTripSuccess,
         $this.deletePostTripFailure
       );
     };
 
     $scope.showDeleteButton = function (dateString) {
-      var scheduleDate = moment(dateString, 'YYYY-MM-DD');
-      var today = moment();
-      return !scheduleDate.isBefore(today);
-    };
-
-    $scope.uploadPostTripFileToApi = function (files) {
-      if (files && files.length) {
-        for (var i = 0; i < files.length; i++) {
-          var file = files[i];
-          postTripFactory.uploadPostTrip(companyId, file, $this.uploadPostTripSuccess, $this.uploadPostTripFailure);
-        }
-      }
+      return dateUtility.isAfterToday(dateString);
     };
   });

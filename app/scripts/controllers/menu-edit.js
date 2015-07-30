@@ -1,5 +1,4 @@
 'use strict';
-/*global moment*/
 /**
  * @ngdoc function
  * @name ts5App.controller:MenuEditCtrl
@@ -8,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuFactory, dateUtility) {
+  .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuFactory, dateUtility, $location) {
     $scope.viewName = 'Menu';
     $scope.masterItemsList = [];
     $scope.newItemList = [];
@@ -24,10 +23,6 @@ angular.module('ts5App')
     }
 
 
-    function formatDate(dateString, formatFrom, formatTo) {
-      return moment(dateString, formatFrom).format(formatTo).toString();
-    }
-
     function getMasterItemUsingId(masterItemId) {
       return $scope.masterItemsList.filter(function (masterItem) {
         return masterItem.id === masterItemId;
@@ -41,35 +36,19 @@ angular.module('ts5App')
       });
     }
 
-    function fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, dateForAPIFormat) {
-      var startDate = formatDate(menuFromAPI.startDate, dateFromAPIFormat, dateForAPIFormat);
-      var endDate = formatDate(menuFromAPI.endDate, dateFromAPIFormat, dateForAPIFormat);
-
+    function fetchMasterItemsList(startDate, endDate) {
       menuFactory.getItemsList({
         startDate: startDate,
         endDate: endDate
       }, true).then(attachItemsModelToScope);
     }
 
-    function localizeDates(datesContainer, formatDateFrom, formatDateTo) {
-      return {
-        startDate: formatDate(datesContainer.startDate, formatDateFrom, formatDateTo),
-        endDate: formatDate(datesContainer.endDate, formatDateFrom, formatDateTo)
-      };
-    }
-
-    function attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat) {
-      $scope.menu = angular.copy(menuFromAPI);
-      angular.extend($scope.menu, localizeDates($scope.menu, dateFromAPIFormat, 'L'));
-      $scope.menuEditForm.$setPristine();
-    }
-
     function setupMenuModelAndFetchItems(menuFromAPI) {
-      var dateFromAPIFormat = 'YYYY-MM-DD';
       $scope.menuFromAPI = angular.copy(menuFromAPI);
 
-      fetchMasterItemsList(menuFromAPI, dateFromAPIFormat, 'YYYYMMDD');
-      attachMenuModelAndLocalizeDates(menuFromAPI, dateFromAPIFormat);
+      fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
+      $scope.menu = angular.copy(menuFromAPI);
+      $scope.menuEditForm.$setPristine();
     }
 
     function showToast(className, type, message) {
@@ -79,6 +58,11 @@ angular.module('ts5App')
         dismissButton: true,
         content: '<strong>' + type + '</strong>: ' + message
       });
+    }
+
+    function redirectToListPageAfterSuccess(dataFromAPI) {
+      hideLoadingModal();
+      $location.path('menu-list').search({newMenuName: dataFromAPI.id});
     }
 
     function resetModelAndShowNotification(dataFromAPI) {
@@ -111,11 +95,14 @@ angular.module('ts5App')
       var menuId = $scope.menu.id;
       angular.forEach($scope.newItemList, function (item) {
         if (angular.isDefined(item.masterItem) && angular.isDefined(item.itemQty)) {
-          ItemsArray.push({
+          var itemObject = {
             itemId: item.masterItem.id,
-            itemQty: parseInt(item.itemQty),
-            menuId: menuId
-          });
+            itemQty: parseInt(item.itemQty)
+          };
+          if (menuId) {
+            itemObject.menuId = menuId;
+          }
+          ItemsArray.push(itemObject);
         }
       });
       return ItemsArray;
@@ -124,29 +111,34 @@ angular.module('ts5App')
     $this.clearCurrentItems = function () {
       var itemsArray = [];
       angular.forEach($scope.menu.menuItems, function (item) {
-        itemsArray.push({
+        var itemObject = {
           id: item.id,
           itemId: item.itemId,
           itemQty: item.itemQty,
-          menuId: item.menuId,
           sortOrder: item.sortOrder
-        });
+        };
+        if (item.menuId) {
+          itemObject.menuId = item.menuId;
+        }
+        itemsArray.push(itemObject);
       });
       return itemsArray;
     };
 
     $this.createPayload = function () {
       var payload = {
-        id: $scope.menu.id,
         companyId: $scope.menu.companyId,
         description: $scope.menu.description,
         endDate: $scope.menu.endDate,
         menuCode: $scope.menu.menuCode,
-        menuId: $scope.menu.menuId,
+        menuId: $scope.menu.menuId ? $scope.menu.menuId : null,
         menuItems: $this.clearCurrentItems().concat($this.addNewItems()),
         menuName: $scope.menu.menuName,
         startDate: $scope.menu.startDate
       };
+      if ($scope.menu.id) {
+        payload.id = $scope.menu.id;
+      }
       return payload;
     };
 
@@ -154,15 +146,57 @@ angular.module('ts5App')
       if (!$scope.menuEditForm.$valid) {
         return false;
       }
-
       showLoadingModal('Saving Menu');
-      var formatFrom = 'l';
-      var formatTo = 'YYYYMMDD';
-      var payload = $this.createPayload();
 
-      angular.extend(payload, localizeDates(payload, formatFrom, formatTo));
+      var submitFunctionName = $routeParams.state + 'Menu';
+      if($this[submitFunctionName]) {
+        $this[submitFunctionName]();
+      }
+    };
+
+    $this.editMenu = function () {
+      var payload = $this.createPayload();
       menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
     };
+
+    $this.createMenu = function () {
+      checkForDuplicateRecord();
+    };
+
+    $scope.overwriteMenu = function () {
+      showLoadingModal('Saving Menu');
+      $scope.menu.id = $scope.overwriteMenuId;
+      var payload = $this.createPayload();
+      menuFactory.updateMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+    };
+
+    function checkForDuplicateRecord() {
+      menuFactory.getMenuList({
+        menuCode: $scope.menu.menuCode,
+        menuName: $scope.menu.menuName
+      }).then(checkToOverwriteOrCreate);
+    }
+
+    function checkToOverwriteOrCreate(response) {
+      var duplicateExists = response.menus.length;
+      var dateIsInTheFuture = false;
+      if (duplicateExists) {
+        dateIsInTheFuture = dateUtility.isAfterToday(response.menus[0].startDate);
+      }
+
+      if (duplicateExists && !dateIsInTheFuture) {
+        hideLoadingModal();
+        showToast('danger', 'Create Menu Failure', 'a menu with this name and code already exist and cannot be overwritten');
+      } else if (duplicateExists && dateIsInTheFuture) {
+        hideLoadingModal();
+        $scope.overwriteMenuId = response.menus[0].id;
+        angular.element('#overwrite-modal').modal('show');
+      } else {
+        var payload = $this.createPayload();
+        menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+      }
+    }
+
 
     $scope.deleteItemFromMenu = function () {
       angular.element('.delete-warning-modal').modal('hide');
@@ -180,7 +214,7 @@ angular.module('ts5App')
     };
 
     $scope.isMenuReadOnly = function () {
-      if (angular.isUndefined($scope.menu)) {
+      if ($routeParams.state === 'create' || (angular.isUndefined($scope.menu))) {
         return false;
       }
       if ($routeParams.state === 'view') {
@@ -190,26 +224,52 @@ angular.module('ts5App')
     };
 
     $scope.isMenuEditable = function () {
+      if ($routeParams.state === 'create') {
+        return true;
+      }
       if (angular.isUndefined($scope.menu)) {
         return false;
       }
       return dateUtility.isAfterToday($scope.menu.startDate);
     };
 
-    $scope.canDeleteItems = function() {
+    $scope.canDeleteItems = function () {
       var totalItems = $scope.menu.menuItems.length;
       return $scope.isMenuEditable() && totalItems > 1;
     };
 
     $scope.addItem = function () {
-      $scope.newItemList.push({});
+      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
+        $scope.newItemList.push({});
+      } else {
+        showToast('warning', 'Add Menu Item', 'Please select a date range first!');
+      }
     };
 
     $scope.deleteNewItem = function (itemIndex) {
       $scope.newItemList.splice(itemIndex, 1);
     };
 
-    menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
+    $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
+      if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
+        fetchMasterItemsList($scope.menu.startDate, $scope.menu.endDate);
+      }
+    });
+
+    function initializeMenu() {
+      if ($routeParams.id) {
+        menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
+      } else {
+        var companyId = menuFactory.getCompanyId();
+        $scope.menu = {
+          startDate: '',
+          endDate: '',
+          companyId: companyId
+        };
+      }
+    }
+
+    initializeMenu();
 
   })
 ;

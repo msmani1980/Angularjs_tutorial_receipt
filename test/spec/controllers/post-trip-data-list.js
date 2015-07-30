@@ -18,7 +18,6 @@ describe('Controller: PostFlightDataListCtrl', function () {
     deletedPostTripDeferred,
     employeesDeferred,
     employeesResponseJSON,
-    uploadPostTripDeferred,
     companyId,
     postTripFactory,
     location;
@@ -47,8 +46,6 @@ describe('Controller: PostFlightDataListCtrl', function () {
     carrierNumbersDeferred.resolve(carrierNumbersResponseJSON);
     deletedPostTripDeferred = $q.defer();
     deletedPostTripDeferred.resolve({id: 1});
-    uploadPostTripDeferred = $q.defer();
-    uploadPostTripDeferred.resolve({id: 1});
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesResponseJSON);
 
@@ -57,7 +54,6 @@ describe('Controller: PostFlightDataListCtrl', function () {
     spyOn(postTripFactory, 'getCarrierTypes').and.returnValue(carrierTypesDeferred.promise);
     spyOn(postTripFactory, 'getCarrierNumbers').and.returnValue(carrierNumbersDeferred.promise);
     spyOn(postTripFactory, 'deletePostTrip').and.returnValue(deletedPostTripDeferred.promise);
-    spyOn(postTripFactory, 'uploadPostTrip').and.returnValue(uploadPostTripDeferred.promise);
     spyOn(postTripFactory, 'getEmployees').and.returnValue(employeesDeferred.promise);
 
 
@@ -152,8 +148,8 @@ describe('Controller: PostFlightDataListCtrl', function () {
       scope.search = {};
       scope.multiSelectedValues = {
         tailNumbers: [{carrierNumber: 'ABC'}, {carrierNumber: 'DEF'}],
-        depStations: [{id: 1}, {id: 2}],
-        arrStations: [{id: 1}, {id: 2}],
+        depStations: [{stationId: 1}, {stationId: 2}],
+        arrStations: [{stationId: 1}, {stationId: 2}],
         employeeIds: [{id: 3}, {id: 4}]
       };
       var expectedTailNumbersArray = ['ABC', 'DEF'];
@@ -191,36 +187,16 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
     describe('delete post trip', function() {
       it('should call delete post trip', function() {
-        scope.postTrips = [{id: 1}];
-        scope.tempDeleteIndex = 0;
-        scope.deletePostTrip();
+        var postTripToDelete = [{id: 1}];
+        scope.removeRecord(postTripToDelete);
         expect(postTripFactory.deletePostTrip).toHaveBeenCalled();
       });
 
       it('should reload post trip data', function() {
         scope.postTrips = [{id: 1}];
         scope.tempDeleteIndex = 0;
-        scope.deletePostTrip();
+        scope.removeRecord();
         expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
-      });
-    });
-
-    describe('upload post trip', function() {
-      it('should call upload post trip', function() {
-        scope.postTrips = [{id: 1}];
-        scope.tempDeleteIndex = 0;
-        var mockFiles =
-        [{
-          $$hashKey: 'object:277',
-          lastModified: 1430772953000,
-          lastModifiedDate: 'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
-          name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4636.png',
-          size: 7801,
-          type: 'file/spreadsheet',
-          webkitRelativePath: ''
-        }];
-        scope.uploadPostTripFileToApi(mockFiles);
-        expect(postTripFactory.uploadPostTrip).toHaveBeenCalled();
       });
     });
   });

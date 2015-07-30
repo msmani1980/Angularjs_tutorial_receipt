@@ -1,0 +1,219 @@
+<div class="module-container">
+
+  <div class="edit-controls">
+    <div class="row">
+
+      <div class="col-xs-6">
+        <h2 class="view-name">{{ viewName }}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+
+        <fieldset ng-hide="viewOnly">
+
+            <button type="button" class="btn btn-info">
+              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+              <span>Export (Excel)</span>
+            </button>
+            <button type="button" class="btn btn-info">
+              <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
+              <span>Export (PDF)</span>
+            </button>
+
+        </fieldset>
+
+      </div>
+
+    </div>
+  </div>
+  <!--/TopHeader -->
+
+  <div class="delivery-notes-list">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <!-- form header-->
+        <div class="row" ng-hide="readOnly">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label>LMP Station*</label>
+              <select class="form-control" id="deliveryStation" ng-model="deliveryStationIndex" ng-change="updateDeliveryInfo()" ng-disabled="readOnly">
+                <option ng-repeat="station in stationList" value="{{ $index }}">
+                  {{ station.stationCode }} ({{ station.stationName}})
+                </option>
+              </select>
+
+  <!-- TODO: IF ONLY ONE LMP STATION IS AVAILABLE, USE READ-ONLY (BELOW) INSTEAD OF SELECT (ABOVE)  -->
+  <!--               <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true"> -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-xs-6">
+        <a ng-href="/#/delivery-note" class="btn btn-primary"> + Create Delivery Note </a>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form name="menuSearchForm" ng-submit="searchPostTripData()">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="deliveryNoteNumber">Delivery Note Number</label>
+                <select class="form-control" id="delivery-note-number" ng-model="deliveryNoteNumber" ng-change="deliveryNoteNumberInfo()" ng-disabled="readOnly">
+                  <option ng-repeat="" value="{{ $index }}">
+                    {{ search.deliveryNoteNumberCode }} (){{ search.deliveryNoteNumberName}})
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="purchaseOrderNumber">Purchase Order Number</label>
+                <select class="form-control" id="purchase-order-number" ng-model="purchaseOrderNumber" ng-change="purchaseOrderNumberInfo()" ng-disabled="readOnly">
+                  <option ng-repeat="" value="{{ $index }}">
+                    {{ search.purchaseOrderNumberCode }} ({{ search.purchaseOrderNumberName}})
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <date-picker class="col-xs-12 col-sm-4"
+              element-class="col-xs-12 col-sm-6"
+              start-date-model="dateRange.startDate"
+              end-date-model="dateRange.endDate"
+              is-search-field="true"
+              label-from="Effective From"
+              label-to="Effective To">
+            </date-picker>
+
+<!--           </div> -->
+<!--           <div class="row"> -->
+
+            <div class="col-xs-12 col-sm-2">
+              <label>Status</label>
+              <select class="form-control" id="delivery-status" ng-model="deliveryStatus" ng-change="deliveryStatusInfo()" ng-disabled="readOnly">
+                <option ng-repeat="" value="{{ $index }}">
+                  {{ item.deliveryStatusCode }} ({{ item.deliveryStatusName}})
+                </option>
+              </select>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+
+    <table class="table table-bordered table-hover ng-scope">
+      <thead>
+        <tr>
+          <th>Delivery Note Number</th>
+          <th>Purchase Order Number</th>
+          <th>Delivery Date</th>
+          <th>Status</th>
+          <th>Created By</th>
+          <th>Updated By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
+        <tr class="ng-scope">
+          <td class="ng-binding">1A2B3C4D</td>
+          <td class="ng-binding">2A3B4C5D</td>
+          <td class="ng-binding">2/03</td>
+          <td class="ng-binding">Saved</td>
+          <td class="ng-binding">2/03 - 12:34pm</td>
+          <td class="ng-binding">2/05 - 12:34pm</td>
+          <td>
+
+          <!-- TODO: WHEN STATUS=SUBMITTED (ABOVE) EDIT & DELETE (BELOW) ARE REMOVED -->
+            <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr class="ng-scope">
+          <td class="ng-binding">9Z8Y7X6W</td>
+          <td class="ng-binding">8Z7Y6X5W</td>
+          <td class="ng-binding">2/03</td>
+          <td class="ng-binding">Submitted</td>
+          <td class="ng-binding">2/03 - 12:34pm</td>
+          <td class="ng-binding">2/05 - 12:34pm</td>
+          <td>
+
+          <!-- TODO: WHEN STATUS=SUBMITTED (ABOVE) EDIT & DELETE (BELOW) ARE REMOVED -->
+            <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true" ng-show="false">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true" ng-show="false">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <!-- end ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="list-footer">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        Show
+        <select class="form-control" ng-model="itemsPerPage">
+          <option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
+        </select>
+        Items per Page
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 text-right">
+        <pagination total-items="itemsListCount" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<download-template-modal></download-template-modal>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav></dynamic-left-nav>
