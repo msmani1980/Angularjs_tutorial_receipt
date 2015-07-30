@@ -32,4 +32,8 @@ describe('Service: mainMenuService', function () {
   it('should return the same array as getRetailMenu when 2 is passed to getMenu', function(){
     expect(mainMenuService.getMenu(2).length).toBe(mainMenuService.getStockOwnerMenu().length);
   });
+  it('should return both array when call getAll', function(){
+    var total = mainMenuService.getStockOwnerMenu().length + mainMenuService.getRetailMenu().length;
+    expect(mainMenuService.getAll().length).toBe(total);
+  });
 });
