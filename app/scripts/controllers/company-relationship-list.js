@@ -1,5 +1,4 @@
 'use strict';
-/*global $:false */
 
 /**
  * @ngdoc function
@@ -87,7 +86,7 @@ angular.module('ts5App')
       company.original = angular.copy(company);
       company.isEditing = true;
     };
-    
+
     $scope.cancelCompanyRelationship = function (company) {
       if (company.id) {
         company.isEditing = false;
