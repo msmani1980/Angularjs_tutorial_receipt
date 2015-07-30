@@ -153,4 +153,8 @@ angular.module('ts5App')
       });
     };
 
+    $scope.isCashBagEditable = function (cashBag) {
+      return (cashBag && !cashBag.isSubmitted && cashBag.isDelete === 'false');
+    };
+
   });

@@ -182,7 +182,7 @@
         <button class="btn btn-info btn-xs" ng-click="viewCashBag(cashBag)">
           <i class="fa fa-file"></i>
         </button>
-        <button class="btn btn-primary btn-xs" ng-click="editCashBag(cashBag)" ng-show="!cashBag.isSubmitted">
+        <button class="btn btn-primary btn-xs" ng-click="editCashBag(cashBag)" ng-show="isCashBagEditable(cashBag)">
           <i class="fa fa-pencil"></i>
         </button>
       </td>

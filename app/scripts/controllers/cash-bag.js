@@ -126,6 +126,10 @@ angular.module('ts5App')
         }).length > 0;
     };
 
+    $scope.isCashBagDeleted = function () {
+      return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === 'true');
+    };
+
     // Constructor
     function init(){
       // set global controller properties
