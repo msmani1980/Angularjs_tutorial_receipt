@@ -187,16 +187,15 @@ describe('Controller: PostFlightDataListCtrl', function () {
 
     describe('delete post trip', function() {
       it('should call delete post trip', function() {
-        scope.postTrips = [{id: 1}];
-        scope.tempDeleteIndex = 0;
-        scope.deletePostTrip();
+        var postTripToDelete = [{id: 1}];
+        scope.removeRecord(postTripToDelete);
         expect(postTripFactory.deletePostTrip).toHaveBeenCalled();
       });
 
       it('should reload post trip data', function() {
         scope.postTrips = [{id: 1}];
         scope.tempDeleteIndex = 0;
-        scope.deletePostTrip();
+        scope.removeRecord();
         expect(postTripFactory.getPostTripDataList).toHaveBeenCalled();
       });
     });
