@@ -149,7 +149,7 @@ angular.module('ts5App')
     function setupCompanyRelationshipTypeScope(companyRelationshipTypeListFromAPI) {
       var response = companyRelationshipTypeListFromAPI.response;
       $scope.companyRelationshipTypeList = response.filter(function(relationshipType){
-        if(relationshipType.relativeCompanyTypeId != $scope.company.companyTypeId){
+        if(relationshipType.relativeCompanyTypeId !== $scope.company.companyTypeId){
           return relationshipType;
         }
       });
