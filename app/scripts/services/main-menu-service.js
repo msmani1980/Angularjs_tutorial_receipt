@@ -22,7 +22,7 @@ angular.module('ts5App')
     };
 
     this.getAll = function(){
-      return angular.extend([], $this.getRetailMenu(), $this.getStockOwnerMenu());
+      return $this.getRetailMenu().concat($this.getStockOwnerMenu());
     };
 
     this.getStockOwnerMenu = function(){
