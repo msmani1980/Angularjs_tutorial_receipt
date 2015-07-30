@@ -1,5 +1,4 @@
 'use strict';
-/* global moment*/
 /**
  * @ngdoc function
  * @name ts5App.controller:PostFlightDataCtrl
@@ -8,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast) {
+  .controller('PostFlightDataListCtrl', function ($scope, postTripFactory, $location, ngToast, dateUtility) {
     var companyId = '';
     var $this = this;
 
@@ -146,26 +145,18 @@ angular.module('ts5App')
       $location.path('post-trip-data/' + state + '/' + id).search();
     };
 
-    $scope.promptDeleteModal = function (index) {
-      $scope.tempDeleteIndex = index;
-      angular.element('#delete-modal').modal('show');
-    };
-
-    $scope.deletePostTrip = function () {
-      if ($scope.postTrips.length <= 0) {
+    $scope.removeRecord = function (postTrip) {
+      if (!postTrip || $scope.postTrips.length <= 0) {
         $this.deletePostTripFailure();
         return;
       }
-      var postTripId = $scope.postTrips[$scope.tempDeleteIndex].id;
-      postTripFactory.deletePostTrip(companyId, postTripId).then(
+      postTripFactory.deletePostTrip(companyId, postTrip.id).then(
         $this.deletePostTripSuccess,
         $this.deletePostTripFailure
       );
     };
 
     $scope.showDeleteButton = function (dateString) {
-      var scheduleDate = moment(dateString, 'YYYY-MM-DD');
-      var today = moment();
-      return !scheduleDate.isBefore(today);
+      return dateUtility.isAfterToday(dateString);
     };
   });

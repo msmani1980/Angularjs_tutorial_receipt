@@ -12,12 +12,26 @@ angular.module('ts5App')
     var deleteRecordDialogController = function ($scope) {
 
       var $this = this;
+      $scope.displayedItemProperties = [];
 
       this.modalElement = angular.element('#delete-record');
 
-      $scope.deleteRecordDialog = function (itemId) {
+      $scope.deleteRecordDialog = function (itemId, propertyNamesToDisplayArray) {
         $this.modalElement.modal('show');
         $scope.itemToDelete = itemId;
+        $this.formatDisplayedValues(propertyNamesToDisplayArray);
+      };
+
+      this.formatDisplayedValues = function (propertyNamesToDisplayArray) {
+        if (!propertyNamesToDisplayArray) {
+          return;
+        }
+        angular.forEach(propertyNamesToDisplayArray, function (name) {
+          var value = $scope.itemToDelete[name];
+          if (value) {
+            $scope.displayedItemProperties.push({key: name, value: value});
+          }
+        });
       };
 
       $scope.deleteRecord = function () {
