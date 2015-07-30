@@ -34,9 +34,9 @@ angular.module('ts5App')
           startDate: startDate,
           maxDate: $scope.maxDate
         };
-        var datePickerInput = $element.find('input[type="text"]');
         this.init = function ($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
+          var datePickerInput = $element.find('input[type="text"]');
           datePickerInput.datepicker(options);
           $scope.$watchGroup(['ngModel'], function () {
             if($scope.ngModel) {
