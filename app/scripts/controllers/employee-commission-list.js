@@ -150,7 +150,6 @@ angular.module('ts5App')
     }
 
     function prepareDataForTable(dataFromAPI) {
-
       var formattedData = formatDatesForApp(angular.copy(dataFromAPI));
       return setupTableData(formattedData);
     }
@@ -159,6 +158,8 @@ angular.module('ts5App')
       hideLoadingModal();
       if(dataFromAPI.employeeCommissions) {
         $scope.commissionList = prepareDataForTable(dataFromAPI.employeeCommissions);
+      } else {
+        $scope.commissionList = [];
       }
     }
 
