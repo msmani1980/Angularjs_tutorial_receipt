@@ -91,9 +91,14 @@ describe('The Item Price Type directive', function () {
 
     describe('panel body', function () {
 
-      var panelBody;
+      var panelBody,
+      priceDetailsColumn,
+      priceCurrenciesColumn;
+
       beforeEach(function () {
         panelBody = angular.element(panel.find('.panel-body')[0]);
+        priceDetailsColumn = angular.element(panelBody.find(' > .row > .col-xs-12')[0]);
+        priceCurrenciesColumn = angular.element(panelBody.find(' > .row > .col-xs-12')[1]);
       });
 
       it('should be defined in the DOM', function () {
@@ -110,11 +115,6 @@ describe('The Item Price Type directive', function () {
 
       describe('the price details columm', function () {
 
-        var priceDetailsColumn;
-        beforeEach(function () {
-          priceDetailsColumn = angular.element(panelBody.find(' > .row > .col-xs-12')[0]);
-        });
-
         it('should be defined in the DOM', function () {
           expect(priceDetailsColumn).toBeDefined();
         });
@@ -123,14 +123,99 @@ describe('The Item Price Type directive', function () {
           expect(priceDetailsColumn.hasClass('col-sm-8')).toBeTruthy();
         });
 
+        describe('the date picker row', function () {
+
+          var datePickerRow;
+
+          beforeEach(function () {
+            datePickerRow = angular.element(priceDetailsColumn.find(' > .row')[0]);
+          });
+
+          it('should be defined in the DOM', function () {
+            expect(datePickerRow).toBeDefined();
+          });
+
+          it('should have (2) .col-xs-12 columns', function () {
+            expect(datePickerRow.find('> .col-xs-12.col-sm-6').length).toEqual(2);
+          });
+
+          it('should have (2) date picker field directives', function () {
+            expect(datePickerRow.find('> .col-xs-12 date-picker-field').length).toEqual(2);
+          });
+
+          describe('Effective From date picker', function () {
+
+            var datePicker;
+
+            beforeEach(function () {
+              datePicker = angular.element(datePickerRow.find('> .col-xs-12 date-picker-field')[0]);
+            });
+
+            it('should be defined in the DOM', function () {
+              expect(datePicker).toBeDefined();
+            });
+
+            it('should have the form attribute defined', function () {
+              expect(datePicker.attr('form')).toEqual('form');
+            });
+
+            it('should have the label attribute defined', function () {
+              expect(datePicker.attr('label')).toEqual('Effective From');
+            });
+
+            it('should have the name attribute defined', function () {
+              expect(datePicker.attr('name')).toEqual('PriceEffectiveFrom');
+            });
+
+            it('should have the ng-model attribute defined', function () {
+              expect(datePicker.attr('ng-model')).toEqual('itemPrice.startDate');
+            });
+
+            it('should have the required attribute defined', function () {
+              expect(datePicker.attr('required')).toEqual('required');
+            });
+
+          });
+
+          describe('Effective To date picker', function () {
+
+            var datePicker;
+
+            beforeEach(function () {
+              datePicker = angular.element(datePickerRow.find('> .col-xs-12 date-picker-field')[1]);
+            });
+
+            it('should be defined in the DOM', function () {
+              expect(datePicker).toBeDefined();
+            });
+
+            it('should have the form attribute defined', function () {
+              expect(datePicker.attr('form')).toEqual('form');
+            });
+
+            it('should have the label attribute defined', function () {
+              expect(datePicker.attr('label')).toEqual('Effective To');
+            });
+
+            it('should have the name attribute defined', function () {
+              expect(datePicker.attr('name')).toEqual('PriceEffectiveTo');
+            });
+
+            it('should have the ng-model attribute defined', function () {
+              expect(datePicker.attr('ng-model')).toEqual('itemPrice.endDate');
+            });
+
+            it('should have the required attribute defined', function () {
+              expect(datePicker.attr('required')).toEqual('required');
+            });
+
+          });
+
+        });
+
       });
 
       describe('the price currencies columm', function () {
-
-        var priceCurrenciesColumn;
-        beforeEach(function () {
-          priceCurrenciesColumn = angular.element(panelBody.find(' > .row > .col-xs-12')[1]);
-        });
 
         it('should be defined in the DOM', function () {
           expect(priceCurrenciesColumn).toBeDefined();
