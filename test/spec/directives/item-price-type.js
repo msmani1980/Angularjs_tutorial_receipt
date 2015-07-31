@@ -4,12 +4,16 @@ describe('The Item Price Type directive', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
+  beforeEach(module('served/price-types.json'));
 
   var element,
-    $scope;
+    $scope,
+    priceTypesJSON;
 
-  beforeEach(inject(function ($rootScope) {
+  beforeEach(inject(function ($rootScope,_servedPriceTypes_) {
     $scope = $rootScope.$new();
+    priceTypesJSON = _servedPriceTypes_;
+    $scope.priceTypes = _servedPriceTypes_;
   }));
 
   describe('the panel component', function() {
@@ -194,7 +198,7 @@ describe('The Item Price Type directive', function () {
             });
 
             it('should have the label attribute defined', function () {
-              expect(datePicker.attr('label')).toEqual('Effective To');
+              expect(datePicker.attr('label')).toEqual('Effective To'); 
             });
 
             it('should have the name attribute defined', function () {
@@ -208,6 +212,107 @@ describe('The Item Price Type directive', function () {
             it('should have the required attribute defined', function () {
               expect(datePicker.attr('required')).toEqual('required');
             });
+
+          });
+
+        });
+
+        describe('the price type row', function () {
+
+          var priceTypeRow;
+
+          beforeEach(function () {
+            priceTypeRow = angular.element(priceDetailsColumn.find(' > .row')[1]);
+          });
+
+          it('should be defined in the DOM', function () {
+            expect(priceTypeRow).toBeDefined();
+          });
+
+          it('should have a two columns in the row', function () {
+            expect(priceTypeRow.find(' > .col-xs-12.col-sm-6').length).toEqual(2);
+          });
+
+          describe('the price type column', function () {
+
+            var priceTypeColumm;
+
+            beforeEach(function () {
+              priceTypeColumm = angular.element(priceTypeRow.find(' > .col-xs-12.col-sm-6')[0]);
+            });
+
+            it('should be defined in the DOM', function () {
+              expect(priceTypeColumm).toBeDefined();
+            });
+
+            it('should have a label with the correct text', function () {
+              expect(priceTypeColumm.find('label').text()).toEqual('Price Type *');
+            });
+
+            describe('the price type select', function () {
+
+              var priceTypeSelect;
+
+              beforeEach(function () {
+                priceTypeSelect = angular.element(priceTypeColumm.find('select')[0]);
+              });
+
+              it('should be defined in the DOM', function () {
+                expect(priceTypeSelect).toBeDefined();
+              });
+
+              it('should have the name attribute defined', function () {
+                expect(priceTypeSelect.attr('name')).toEqual('Price Type');
+              });
+
+              it('should have the required attribute defined', function () {
+                expect(priceTypeSelect.attr('required')).toEqual('required');
+              });
+
+              it('should have the ng-model attribute defined', function () {
+                expect(priceTypeSelect.attr('ng-model')).toEqual('itemPrice.typeId');
+              });
+
+              it('should repeat options from the priceTypesJSON', function () {
+                expect(priceTypeSelect.find('option').length-1).toEqual(priceTypesJSON.length);
+              });
+
+              describe('repeat option', function () {
+
+                var option;
+
+                beforeEach(function () {
+                  option = angular.element(priceTypeSelect.find('option')[1]);
+                });
+
+                it('should be defined in the DOM', function () {
+                  expect(option).toBeDefined();
+                });
+
+                it('should have a ng-selected attribute', function () {
+                  expect(option.attr('ng-selected')).toEqual('type.id === itemPrice.typeId');
+                });
+
+                it('should have a ng-repeat attribute', function () {
+                  expect(option.attr('ng-repeat')).toEqual('type in $parent.priceTypes');
+                });
+
+                it('should be defined in the DOM', function () {
+                  expect(option).toBeDefined();
+                });
+
+                it('should set the value from the priceTypesJSON', function () {
+                  expect(option.attr('value')).toEqual(priceTypesJSON[0].id.toString());
+                });
+
+                it('should set the option display from the priceTypesJSON', function () {
+                  expect(option.text()).toEqual(priceTypesJSON[0].name);
+                });
+
+              });
+
+            });
+
 
           });
 
