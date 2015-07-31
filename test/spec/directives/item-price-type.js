@@ -198,7 +198,7 @@ describe('The Item Price Type directive', function () {
             });
 
             it('should have the label attribute defined', function () {
-              expect(datePicker.attr('label')).toEqual('Effective To'); 
+              expect(datePicker.attr('label')).toEqual('Effective To');
             });
 
             it('should have the name attribute defined', function () {
@@ -313,6 +313,107 @@ describe('The Item Price Type directive', function () {
 
             });
 
+          });
+
+          describe('the tax is column', function () {
+
+            var taxIsColumn;
+
+            beforeEach(function () {
+              taxIsColumn = angular.element(priceTypeRow.find(' > .col-xs-12.col-sm-6')[1]);
+            });
+
+            it('should be defined in the DOM', function () {
+              expect(taxIsColumn).toBeDefined();
+            });
+
+            it('should have a label with the correct text', function () {
+              expect(taxIsColumn.find('label').text()).toEqual('Tax Is *');
+            });
+
+            describe('the tax is select', function () {
+
+              var taxIsSelect,
+               includedOption,
+               excludedOption,
+               exemptOption;
+
+              beforeEach(function () {
+                taxIsSelect = angular.element(taxIsColumn.find('select')[0]);
+                includedOption = angular.element(taxIsSelect.find('option')[1]);
+                excludedOption = angular.element(taxIsSelect.find('option')[2]);
+                exemptOption = angular.element(taxIsSelect.find('option')[3]);
+              });
+
+              it('should be defined in the DOM', function () {
+                expect(taxIsSelect).toBeDefined();
+              });
+
+              it('should have the name attribute defined', function () {
+                expect(taxIsSelect.attr('name')).toEqual('Tax Is');
+              });
+
+              it('should have the required attribute defined', function () {
+                expect(taxIsSelect.attr('required')).toEqual('required');
+              });
+
+              it('should have the ng-model attribute defined', function () {
+                expect(taxIsSelect.attr('ng-model')).toEqual('itemPrice.taxIs');
+              });
+
+              it('should have (3) options', function () {
+                expect(taxIsSelect.find('option').length).toEqual(4);
+              });
+
+              describe('included option', function () {
+
+                it('should be defined in the DOM', function () {
+                  expect(includedOption).toBeDefined();
+                });
+
+                it('should the correct value', function () {
+                  expect(includedOption.attr('value')).toEqual('Included');
+                });
+
+                it('should display the correct label', function () {
+                  expect(includedOption.text()).toEqual('Included');
+                });
+
+              });
+
+              describe('excluded option', function () {
+
+                it('should be defined in the DOM', function () {
+                  expect(excludedOption).toBeDefined();
+                });
+
+                it('should the correct value', function () {
+                  expect(excludedOption.attr('value')).toEqual('Excluded');
+                });
+
+                it('should display the correct label', function () {
+                  expect(excludedOption.text()).toEqual('Excluded');
+                });
+
+              });
+
+              describe('exempt option', function () {
+
+                it('should be defined in the DOM', function () {
+                  expect(exemptOption).toBeDefined();
+                });
+
+                it('should the correct value', function () {
+                  expect(exemptOption.attr('value')).toEqual('Exempt');
+                });
+
+                it('should display the correct label', function () {
+                  expect(exemptOption.text()).toEqual('Exempt');
+                });
+
+              });
+
+            });
 
           });
 
