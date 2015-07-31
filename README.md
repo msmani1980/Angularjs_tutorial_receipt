@@ -100,3 +100,6 @@ plugin.
 
 ### Conventions
 It's an Angular convention to have a dollar sign ($) in the front of the names of things that are both injected ($scope, $timeout, $http) and built-in to Angular. If you see $scope being used in the link function of a directive, that is both wrong and confusing since parameters are passed to the link function of directives, not injected.
+
+# IE testing
+Using https://ngrok.com/, you can tunnel your local instance with https://ngrok.com/. To Disable same origin policy Internet Explorer, see this stackoverflow post: http://stackoverflow.com/questions/20947359/disable-same-origin-policy-internet-explorer 

@@ -105,7 +105,7 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     });
 
     it('should set companyRelationshipTypeList in scope', function () {
-      expect(scope.companyRelationshipTypeList.length).toBe(4);
+      expect(scope.companyRelationshipTypeList.length).toBe(3);
     });
 
     it('should add companyRelationship to companyRelationshipListData in scope', function () {
