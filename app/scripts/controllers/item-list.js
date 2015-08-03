@@ -121,7 +121,7 @@ angular.module('ts5App')
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
       for (var filterKey in filters) {
-        $scope.search[filterKey] = '';
+        delete $scope.search[filterKey];
       }
       $this.displayLoadingModal();
       $this.getItemsList();
