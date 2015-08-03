@@ -50,6 +50,7 @@ angular.module('ts5App')
 
     this.searchPostTripSuccess = function (response) {
       $scope.postTrips = response.postTrips;
+      $this.updateStationCodes();
     };
 
     this.getStationsSuccess = function (response) {
@@ -86,6 +87,7 @@ angular.module('ts5App')
 
     this.deletePostTripSuccess = function () {
       $this.showToastMessage('success', 'Post Trip', 'Post Trip successfully deleted');
+      $scope.postTrips = [];
       postTripFactory.getPostTripDataList(companyId, {}).then($this.getPostTripSuccess);
     };
 
