@@ -12,33 +12,14 @@ angular.module('ts5App')
     companiesFactory, dateUtility, $filter) {
 
     var $this = this;
-    $scope.currentPage = 1;
-    $scope.itemsPerPage = 10;
     $scope.itemsList = [];
     $scope.dateRange = {
       startDate: '',
       endDate: ''
     };
 
-    this.updateItemList = function() {
-      $scope.itemsListCount = $scope.itemsList.length;
-      $this.setPaginatedItems($scope.itemsList);
-    };
-
     this.filterItems = function() {
       return $filter('filter')($scope.itemsList, $scope.search);
-    };
-
-    this.parsePaginationToInt = function() {
-      $scope.currentPageInt = parseInt($scope.currentPage);
-      $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
-    };
-
-    this.setPaginatedItems = function (filteredItems) {
-      this.parsePaginationToInt();
-      var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
-      var end = begin + $scope.itemsPerPageInt;
-      $scope.paginatedItems = filteredItems.slice(begin, end);
     };
 
     this.generateItemQuery = function() {
@@ -66,8 +47,7 @@ angular.module('ts5App')
       var $this = this;
       itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
-        $scope.itemsListCount = $scope.itemsList.length;
-        $this.updateItemList();
+        //console.log($filter($scope.itemsList, {}))
         $this.hideLoadingModal();
       });
     };
@@ -102,7 +82,6 @@ angular.module('ts5App')
       itemsFactory.removeItem(itemId).then(function() {
         $this.hideLoadingModal();
         $scope.itemsList.splice(itemIndex, 1);
-        $this.updateItemList();
       });
     };
 
@@ -139,10 +118,6 @@ angular.module('ts5App')
       $this.displayLoadingModal();
       $this.getItemsList();
     };
-
-    $scope.$watch('currentPage + itemsPerPage + search', function() {
-      $this.updateItemList();
-    });
 
     this.getItemsList();
     this.getItemTypesList();

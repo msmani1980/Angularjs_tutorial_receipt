@@ -100,18 +100,19 @@
 			</div>
 	</div>
 
-	<alert ng-hide="!item.length" ng-show="!paginatedItems.length" type="info">
+	<alert ng-hide="!item.length" ng-show="!itemsList.length" type="info">
 		<span class="fa fa-flag"></span> Your search returned no results.
 	</alert>
 
-	<div class="table table-bordered table-responsive table-hover" ng-show="paginatedItems.length">
+	<div class="table table-responsive table-hover" >
 
-		<table class="table table-bordered">
+		<table class="table table-bordered table-striped">
 
 			<thead>
 
 				<tr>
-					<th>
+          <th></th>
+          <th>
 						<abbr title="Stock Owner Reference Number">S.O. Ref. #</abbr>
 					</th>
 					<th>Code</th>
@@ -129,8 +130,8 @@
 
 			<tbody>
 
-				<tr id="item-{{item.id}}" ng-repeat="(key,item) in paginatedItems">
-
+				<tr id="item-{{item.id}}" ng-repeat="item in itemsList">
+          <td><span class="fa fa-plus-square-o"></span><span class="fa fa-minus-square"></span></td>
 					<td>{{ item.stockOwnerCode }}</td>
 					<td>{{ item.itemCode }}</td>
 					<td>{{ item.itemName }}</td>
@@ -158,23 +159,6 @@
 				</tr>
 			</tbody>
 		</table>
-	</div>
-
-	<div class="list-footer">
-		<div class="row">
-			<div class="col-xs-12 col-sm-6">
-				Show
-				<select class="form-control" ng-model="itemsPerPage">
-					<option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
-				</select>
-				Items per Page
-
-			</div>
-
-			<div class="col-xs-12 col-sm-6 text-right">
-				<pagination total-items="itemsListCount" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
-			</div>
-		</div>
 	</div>
 </div>
 
