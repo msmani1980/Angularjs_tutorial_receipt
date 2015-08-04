@@ -863,9 +863,7 @@ angular.module('ts5App')
     };
 
     $scope.isMeasurementRequired = function() {
-      return ($scope.formData.width || $scope.formData.length || $scope
-        .formData
-        .height);
+      return ($scope.formData.width || $scope.formData.length || $scope.formData.height);
     };
 
     $scope.isMeasurementValid = function() {
@@ -883,6 +881,13 @@ angular.module('ts5App')
 
     $scope.isDisabled = function() {
       return ($scope.viewOnly || $scope.itemIsActive);
+    };
+
+    $scope.GTINClass = function(form, key) {
+      if (form['GTIN' + key].$dirty && form['GTIN' + key].$invalid) {
+        return 'has-error';
+      }
+      return 'has-success';
     };
 
     // TODO: MOVE ME GLOBAL

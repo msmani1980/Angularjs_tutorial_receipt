@@ -1,6 +1,6 @@
 <!-- GTINDirective -->
 
-<div class="form-group" ng-class="{ 'has-error' : form[GTIN{{key}}].$dirty && !form[GTIN{{key}}].$valid}">
+<div class="form-group" ng-class="GTINClass(form,key)">
   <div class="row">
 
     <div class="col-xs-6 col-sm-6">
@@ -30,7 +30,7 @@
 
     </div>
 
-    <div class="col-xs-1" ng-hide="viewOnly || itemIsActive">
+    <div class="col-xs-2 col-sm-1" ng-hide="viewOnly || itemIsActive">
       <label class="hidden-sm">Remove</label>
       <span class="btn btn-danger btn-xs" ng-click="removeGTIN($parent.key)">
         <i class="fa fa-close"></i>
