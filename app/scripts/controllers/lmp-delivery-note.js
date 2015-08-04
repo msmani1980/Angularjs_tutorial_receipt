@@ -8,10 +8,13 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('LmpDeliveryNoteCtrl', function ($scope, stockManagementService, $routeParams, $location) {
+  .controller('LmpDeliveryNoteCtrl', function ($scope, stockManagementService, $routeParams, $location, dateUtility) {
 
     // static scope vars
     $scope.viewName = 'Delivery note';
+    $scope.fpo = {
+      ullageReasons: ['jus cause', 'Some reason']
+    };
 
     function getDeliveryNote(){
       displayLoadingModal();
@@ -19,7 +22,8 @@ angular.module('ts5App')
     }
 
     function setDeliveryNote(response){
-      $scope.deliveryNote = response;
+      $scope.deliveryNote = angular.copy(response);
+      $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
       hideLoadingModal();
     }
 
@@ -51,6 +55,7 @@ angular.module('ts5App')
 
       switch($scope.state){
         case 'view':
+          $scope.readOnly = true;
           getDeliveryNote();
           break;
         default:
