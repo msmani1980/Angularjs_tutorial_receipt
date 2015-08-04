@@ -1,0 +1,25 @@
+{
+  "id": 38,
+  "retailCompanyId": 403,
+  "catererStationId": 3,
+  "purchaseOrderNumber": "ABC124345",
+  "deliveryNoteNumber": "ABC124345",
+  "deliveryDate": "2015-08-01",
+  "isAccepted": false,
+  "createdBy": 1,
+  "createdOn": "2015-08-04 13:46:57.402427",
+  "updatedBy": 1,
+  "updatedOn": "2015-08-04 13:46:57.402427",
+  "items": [
+    {
+      "id": 49,
+      "deliveryNoteId": 38,
+      "retailItemId": 369,
+      "expectedQuantity": 10,
+      "deliveredQuantity": 9,
+      "ullageQuantity": 8,
+      "ullageReason": "Some reason",
+      "bookedQuantity": 1
+    }
+  ]
+}
