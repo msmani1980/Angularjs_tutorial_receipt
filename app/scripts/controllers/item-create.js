@@ -831,9 +831,6 @@ angular.module('ts5App')
     };
 
     $scope.submitForm = function(formData) {
-      //if (!$scope.form.$valid) {
-      //  return false;
-      //}
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm()) {
         var itemData = angular.copy(formData);
