@@ -110,6 +110,7 @@
       <thead>
       <tr>
         <th>Schedule Number</th>
+        <th>Schedule Date</th>
         <th>Departure Station</th>
         <th>Departure Time</th>
         <th>Arrival Station</th>
@@ -120,6 +121,7 @@
       <tbody>
       <tr class="ng-scope" ng-repeat="trip in postTrips">
         <td>{{ trip.scheduleNumber }}</td>
+        <td>{{ trip.scheduleDate }}</td>
         <td>{{ trip.depStationCode}}</td>
         <td>{{ trip.depTime }}</td>
         <td>{{ trip.arrStationCode}}</td>

@@ -12,7 +12,8 @@ describe('Service: postTripService', function () {
     headers = {
       companyId: 362,
       'Accept': 'application/json, text/plain, */*',
-      'userId': 1
+      'userId': 1,
+      sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
     };
 
   beforeEach(inject(function (_postTripService_, $injector) {
