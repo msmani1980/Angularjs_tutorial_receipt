@@ -6,8 +6,8 @@ describe('Service: stockManagementService', function () {
   beforeEach(module('ts5App'));
 
   // instantiate service
-  var stockManagementService,
-    httpBackend;
+  var stockManagementService;
+  var httpBackend;
 
   beforeEach(inject(function (_stockManagementService_, $httpBackend) {
     stockManagementService = _stockManagementService_;
