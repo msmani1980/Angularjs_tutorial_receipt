@@ -8,9 +8,14 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('LmpDeliveryNoteCtrl', function ($scope) {
+  .controller('LmpDeliveryNoteCtrl', function ($scope, stockManagementService) {
 
     // Scope vars
     $scope.state = null;
     $scope.id = null;
+
+    function init(){
+      stockManagementService.getDeliveryNote().then(function(){});
+    }
+    init();
   });
