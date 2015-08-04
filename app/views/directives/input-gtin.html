@@ -1,10 +1,9 @@
 <!-- GTINDirective -->
-
 <div class="form-group" ng-class="GTINClass(form,key)">
+
   <div class="row">
 
     <div class="col-xs-6 col-sm-6">
-
       <label>Value *</label>
       <input
         custom-validity
@@ -14,11 +13,9 @@
         name="GTIN{{key}}"
         type="text"
         class="form-control" />
-
     </div>
 
     <div class="col-xs-4 col-sm-5">
-
       <label>Type *</label>
       <select required ng-model="GTIN.type" class="form-control">
         <option value="UPC">UPC</option>
@@ -27,7 +24,6 @@
         <option value="JAN">JAN</option>
         <option value="ISBN">ISBN</option>
       </select>
-
     </div>
 
     <div class="col-xs-2 col-sm-1" ng-hide="viewOnly || itemIsActive">
