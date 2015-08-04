@@ -6,11 +6,11 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/lmp-delivery-note.json'));
 
-  var LmpDeliveryNoteCtrl,
-    scope,
-    stockManagementService,
-    lmpDeliveryNoteResponseJSON,
-    getDeliveryNoteDeffered;
+  var LmpDeliveryNoteCtrl;
+  var scope;
+  var stockManagementService;
+  var lmpDeliveryNoteResponseJSON;
+  var getDeliveryNoteDeffered;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _stockManagementService_, _servedLmpDeliveryNote_) {
