@@ -686,8 +686,7 @@ describe('The Item Create Controller', function() {
       formData = _servedItemCreate_;
       view = renderView(_$templateCache_, _$compile_);
       form = angular.element(view.find('form')[0]);
-      $httpBackend.expectPOST(/\/api\/retail-items/).respond(200,
-        '');
+      $httpBackend.expectPOST(/\/api\/retail-items/).respond(200, '');
     }));
 
     function mockFormSubmission(formData) {
@@ -735,8 +734,7 @@ describe('The Item Create Controller', function() {
           expect($scope.displayError).toBeFalsy();
         });
 
-      it(
-        'should set the displayError to true if the form is invalid',
+      it('should set the displayError to true if the form is invalid',
         function() {
           expect($scope.displayError).toBeFalsy();
           $scope.form.itemTypeId.$setViewValue(null);
@@ -744,6 +742,18 @@ describe('The Item Create Controller', function() {
           mockFormSubmission(formData);
           expect($scope.displayError).toBeTruthy();
         });
+
+      //TODO: move into GTIN directive and test GTIN completely with mock
+      describe('GTINClass method', function() {
+        it('should be defined', function() {
+          expect($scope.GTINClass).toBeDefined();
+        });
+        it('should have been called', function() {
+          spyOn($scope, 'GTINClass');
+          $scope.GTINClass(form, 0);
+          expect($scope.GTINClass).toHaveBeenCalled();
+        });
+      });
 
       describe('Create Item method', function() {
         var itemsFactory;
@@ -791,8 +801,8 @@ describe('The Item Create Controller', function() {
       expect(view).toBeDefined();
     });
 
-    it('should have an ng-form directive', function() {
-      expect(view.find('ng-form').length).toEqual(1);
+    it('should have a form', function() {
+      expect(view.find(' form').length).toEqual(1);
     });
 
     describe('UI for price and tax', function() {
@@ -971,7 +981,8 @@ describe('The Item Create Controller', function() {
 
         it('should generate a list of currencies for the price group', function() {
           mockDateChange();
-          var controlPriceList = ItemCreateCtrl.generatePriceCurrenciesList(priceIndex,currenciesListJSON.response);
+          var controlPriceList = ItemCreateCtrl.generatePriceCurrenciesList(priceIndex,
+            currenciesListJSON.response);
           expect(priceGroup.priceCurrencies).toEqual(controlPriceList);
         });
 
@@ -1424,7 +1435,5 @@ describe('The Item Create Controller', function() {
     });
 
   });
-
-
 
 });

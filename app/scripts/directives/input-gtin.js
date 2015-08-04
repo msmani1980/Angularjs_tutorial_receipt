@@ -13,6 +13,7 @@ angular.module('ts5App')
 
       templateUrl: '/views/directives/input-gtin.html',
       restrict: 'E',
+      key: '=',
       scope: true
 
     };

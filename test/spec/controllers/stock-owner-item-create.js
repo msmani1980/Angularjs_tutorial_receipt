@@ -761,6 +761,18 @@ describe('The Stock Owner Item Create Controller', function() {
           expect($scope.displayError).toBeTruthy();
         });
 
+      //TODO: move into GTIN directive and test GTIN completely with mock
+      describe('GTINClass method', function() {
+        it('should be defined', function() {
+          expect($scope.GTINClass).toBeDefined();
+        });
+        it('should have been called', function() {
+          spyOn($scope, 'GTINClass');
+          $scope.GTINClass(form, 0);
+          expect($scope.GTINClass).toHaveBeenCalled();
+        });
+      });
+
       describe('Create Item method', function() {
         var itemsFactory;
         beforeEach(inject(function($injector) {
@@ -795,7 +807,6 @@ describe('The Stock Owner Item Create Controller', function() {
     });
 
   });
-
 
   describe('view', function() {
 
