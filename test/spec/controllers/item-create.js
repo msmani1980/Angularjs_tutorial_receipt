@@ -743,9 +743,15 @@ describe('The Item Create Controller', function() {
           expect($scope.displayError).toBeTruthy();
         });
 
+      //TODO: move into GTIN directive and test GTIN completely with mock
       describe('GTINClass method', function() {
         it('should be defined', function() {
           expect($scope.GTINClass).toBeDefined();
+        });
+        it('should have been called', function() {
+          spyOn($scope, 'GTINClass');
+          $scope.GTINClass(form, 0);
+          expect($scope.GTINClass).toHaveBeenCalled();
         });
       });
 
