@@ -210,6 +210,9 @@ angular
     $http.defaults.headers.common.userId = user.id;
     $http.defaults.headers.common.companyId = companyId;
 
+    // TODO: move this away when login is there
+    $http.defaults.headers.common.sessionToken = '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
+
     // set regexp object into root scope for use in any template
     $rootScope.regexp = regexp;
 
