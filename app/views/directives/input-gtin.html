@@ -8,11 +8,15 @@
       <input
         custom-validity
         custom-pattern="number"
-        required
+        ng-required
         ng-model="GTIN.value"
         name="GTIN{{key}}"
         type="text"
-        class="form-control" />
+        class="form-control"
+        minlength="1"
+        maxlength="13"
+        ng-min-length="1"
+        ng-max-length="13"/>
     </div>
 
     <div class="col-xs-4 col-sm-5">
