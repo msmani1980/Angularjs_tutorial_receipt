@@ -10,22 +10,22 @@
 angular.module('ts5App')
   .service('stockManagementService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/stock-management/delivery-notes/:id';
+    var requestURL = ENV.apiUrl + '/api/stock-management';
 
     var requestParameters = {
       id: '@id'
     };
 
-    var actions = {
+    var actionsDeliveryNote = {
       getDeliveryNote: {
         method: 'GET'
       }
     };
 
-    var requestResource = $resource(requestURL, requestParameters, actions);
+    var requestResourceDeliveryNote = $resource(requestURL+'/delivery-notes/:id', requestParameters, actionsDeliveryNote);
 
     function getDeliveryNote(deliveryNoteId) {
-      return requestResource.getDeliveryNote({id:deliveryNoteId}).$promise;
+      return requestResourceDeliveryNote.getDeliveryNote({id:deliveryNoteId}).$promise;
     }
 
     return {

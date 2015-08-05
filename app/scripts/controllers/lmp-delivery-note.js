@@ -18,13 +18,24 @@ angular.module('ts5App')
 
     // private vars
     var _initPromises = [];
+    var _companyId = deliveryNoteFactory.getCompanyId();
+
+    function getStationList(){
+      displayLoadingModal();
+      _initPromises.push(deliveryNoteFactory.getStationList(_companyId).then(setStationListFromResponse, showResponseErrors));
+    }
 
     function getDeliveryNote(){
       displayLoadingModal();
-      _initPromises.push(deliveryNoteFactory.getDeliveryNote($routeParams.id).then(setDeliveryNote, showResponseErrors));
+      _initPromises.push(deliveryNoteFactory.getDeliveryNote($routeParams.id).then(setDeliveryNoteFromResponse, showResponseErrors));
     }
 
-    function setDeliveryNote(response){
+    function setStationListFromResponse(response){
+      $scope.stationList = response.response;
+      hideLoadingModal();
+    }
+
+    function setDeliveryNoteFromResponse(response){
       $scope.deliveryNote = angular.copy(response);
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
       hideLoadingModal();
@@ -71,7 +82,7 @@ angular.module('ts5App')
           resolveInitPromises();
           break;
         case 'create':
-
+          getStationList();
           break;
         default:
           $location.path('/');
