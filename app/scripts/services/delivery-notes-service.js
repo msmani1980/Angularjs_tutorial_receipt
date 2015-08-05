@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc service
- * @name ts5App.stockManagementService
+ * @name ts5App.deliveryNoteservice
  * @description
- * # stockManagementService
+ * # deliveryNoteservice
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('stockManagementService', function ($resource, ENV) {
+  .service('deliveryNotesService', function ($resource, ENV) {
 
     var requestURL = ENV.apiUrl + '/api/stock-management/delivery-notes/:id';
 
