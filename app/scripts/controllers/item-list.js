@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('ItemListCtrl', function ($scope, $http, itemsFactory,
-    companiesFactory, dateUtility, $filter) {
+                                        companiesFactory, dateUtility, $filter) {
 
     var $this = this;
     $scope.itemsList = [];
@@ -17,12 +17,13 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
+    $scope.openVersionId = 36;
 
-    this.filterItems = function() {
+    this.filterItems = function () {
       return $filter('filter')($scope.itemsList, $scope.search);
     };
 
-    this.generateItemQuery = function() {
+    this.generateItemQuery = function () {
       var todaysDate = dateUtility.formatDate(dateUtility.now());
       var query = {
         startDate: todaysDate,
@@ -42,23 +43,39 @@ angular.module('ts5App')
       return query;
     };
 
-    this.getItemsList = function() {
+    this.nestVersions = function () {
+      var currentMasterIndex = -1;
+      var currentMasterId = -1;
+      $scope.itemsList = $scope.itemsList.filter(function (item, index) {
+        if (item.itemMasterId === currentMasterId) {
+          $scope.itemsList[currentMasterIndex].versions.push(item);
+        } else {
+          currentMasterIndex = index;
+          currentMasterId = item.itemMasterId;
+          item.versions = [];
+          return item;
+        }
+      });
+    };
+
+
+    this.getItemsList = function () {
       var query = this.generateItemQuery();
       var $this = this;
       itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
-        //console.log($filter($scope.itemsList, {}))
+        $this.nestVersions();
         $this.hideLoadingModal();
       });
     };
 
-    this.getItemTypesList = function() {
+    this.getItemTypesList = function () {
       itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });
     };
 
-    this.getSalesCategoriesList = function() {
+    this.getSalesCategoriesList = function () {
       companiesFactory.getSalesCategoriesList(function (data) {
         $scope.salesCategories = data.salesCategories;
       });
@@ -79,7 +96,7 @@ angular.module('ts5App')
     $scope.removeRecord = function (itemId) {
       var itemIndex = $this.findItemIndex(itemId);
       $this.displayLoadingModal('Removing Retail Item');
-      itemsFactory.removeItem(itemId).then(function() {
+      itemsFactory.removeItem(itemId).then(function () {
         $this.hideLoadingModal();
         $scope.itemsList.splice(itemIndex, 1);
       });
@@ -95,7 +112,7 @@ angular.module('ts5App')
       return parsedDate <= today;
     };
 
-    $scope.clearSearchFilters = function() {
+    $scope.clearSearchFilters = function () {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
@@ -106,15 +123,31 @@ angular.module('ts5App')
       $this.getItemsList();
     };
 
+    $scope.hasSubVersions = function (item) {
+      return (item.versions && item.versions.length > 0);
+    };
+
+    $scope.isOpen = function(item) {
+      return (item.itemMasterId === $scope.openVersionId);
+    };
+
+    $scope.show = function(item) {
+      $scope.openVersionId = item.itemMasterId;
+    };
+
+    $scope.hide = function(item) {
+      $scope.openVersionId = -1;
+    };
+
     this.displayLoadingModal = function (loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
     };
 
-    this.hideLoadingModal = function() {
+    this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
     };
 
-    $scope.searchRecords = function() {
+    $scope.searchRecords = function () {
       $this.displayLoadingModal();
       $this.getItemsList();
     };
