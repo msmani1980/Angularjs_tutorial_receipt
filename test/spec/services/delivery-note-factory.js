@@ -7,17 +7,17 @@ describe('Service: deliveryNoteFactory', function () {
 
   // instantiate service
   var deliveryNoteFactory;
-  var stockManagementService;
+  var deliveryNotesService;
   var stationsService;
   var GlobalMenuService;
 
-  beforeEach(inject(function (_deliveryNoteFactory_, _stockManagementService_, _stationsService_, _GlobalMenuService_) {
+  beforeEach(inject(function (_deliveryNoteFactory_, _deliveryNotesService_, _stationsService_, _GlobalMenuService_) {
     deliveryNoteFactory = _deliveryNoteFactory_;
-    stockManagementService = _stockManagementService_;
+    deliveryNotesService = _deliveryNotesService_;
     stationsService = _stationsService_;
     GlobalMenuService = _GlobalMenuService_;
 
-    spyOn(stockManagementService, 'getDeliveryNote');
+    spyOn(deliveryNotesService, 'getDeliveryNote');
     spyOn(stationsService, 'getStationList');
     spyOn(GlobalMenuService.company, 'get');
 
@@ -27,7 +27,7 @@ describe('Service: deliveryNoteFactory', function () {
     it('should call getDeliveryNote', function(){
       var id = 123;
       deliveryNoteFactory.getDeliveryNote(id);
-      expect(stockManagementService.getDeliveryNote).toHaveBeenCalledWith(id);
+      expect(deliveryNotesService.getDeliveryNote).toHaveBeenCalledWith(id);
     });
   });
 

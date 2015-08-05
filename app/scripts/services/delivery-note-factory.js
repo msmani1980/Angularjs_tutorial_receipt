@@ -8,14 +8,14 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('deliveryNoteFactory', function (stockManagementService, stationsService, GlobalMenuService) {
+  .service('deliveryNoteFactory', function (deliveryNotesService, stationsService, GlobalMenuService) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
     }
 
     function getDeliveryNote(deliveryNoteId) {
-      return stockManagementService.getDeliveryNote(deliveryNoteId);
+      return deliveryNotesService.getDeliveryNote(deliveryNoteId);
     }
 
     function getStationList(companyId){
