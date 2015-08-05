@@ -66,14 +66,14 @@
       <div class="col-xs-12 col-sm-2">
         <div class="form-group">
           <label>Item Code</label>
-          <input ng-model="filterItemCode" type="text" class="form-control" id="filter-item-code"
+          <input ng-model="search.itemCode" type="text" class="form-control" id="filter-item-code"
                  placeholder="1234" ng-readonly="readOnly">
         </div>
       </div>
       <div class="col-xs-12 col-sm-2">
         <div class="form-group">
           <label>Item Name</label>
-          <input ng-model="filterItemName" type="text" class="form-control" id="filter-item-name"
+          <input ng-model="search.itemName" type="text" class="form-control" id="filter-item-name"
                  placeholder="Coke" ng-readonly="readOnly">
         </div>
       </div>
@@ -91,8 +91,8 @@
         </tr>
       </thead>
       <tbody>
-        
-        <tr ng-repeat="stockItem in stockDashboardItemsList">
+
+        <tr ng-repeat="stockItem in stockDashboardItemsList | filter : search">
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
