@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('LmpDeliveryNoteCtrl', function ($scope, $routeParams, $location, $q, deliveryNoteFactory, dateUtility) {
+  .controller('LmpDeliveryNoteCtrl', function ($scope, $routeParams, $location, $q, $filter, deliveryNoteFactory, dateUtility) {
 
     // static scope vars
     $scope.viewName = 'Delivery note';
@@ -53,7 +53,19 @@ angular.module('ts5App')
         }
         return;
       }
-      // TODO - watch here to query item lists based on _companyMenuCatererStations
+      var menuIds = [];
+      var companyMenuCatererStationId = parseInt(newValue);
+      for(var i in _companyMenuCatererStations){
+        if(_companyMenuCatererStations[i].catererStationIds.indexOf(companyMenuCatererStationId) === -1){
+          continue;
+        }
+        if(menuIds.indexOf(_companyMenuCatererStations[i].menuId) !== -1){
+          continue;
+        }
+        menuIds.push(_companyMenuCatererStations[i].menuId);
+      }
+      console.log(menuIds);
+      // TODO - We now have a list of menuIds, to get all the items based on those menuIds
     }
 
     function displayLoadingModal(loadingText) {
