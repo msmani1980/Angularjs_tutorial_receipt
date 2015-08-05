@@ -91,161 +91,25 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="ng-scope">
-          <td class="ng-binding">0001</td>
-          <td class="ng-binding">Coke</td>
-          <td class="ng-binding">
 
-<!-- TODO: STOCK ADJUSTMENT POPOVER IMPLEMENTED HERE -->
+        <tr ng-repeat="stockItem in stockDashboardItemsList">
+          <td>{{stockItem.itemCode}}</td>
+          <td>{{stockItem.itemName}}</td>
+          <td>
+            <!-- TODO: STOCK ADJUSTMENT POPOVER IMPLEMENTED HERE -->
             <input type="text" class="form-control" placeholder="100" ng-disabled="true">
           </td>
-          <td class="ng-binding">
+          <td >
             <input type="text" class="form-control" placeholder="10" ng-disabled="true">
           </td>
-          <td class="ng-binding">
+          <td >
             <input type="text" class="form-control" placeholder="10" ng-disabled="true">
           </td>
-          <td class="ng-binding">
+          <td >
             <input type="text" class="form-control" placeholder="100" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
 
-        <tr class="ng-scope">
-          <td class="ng-binding">0002</td>
-          <td class="ng-binding">Sprite</td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="0" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="40" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
-          </td>
-        </tr>
-
-        <!-- TODO: ROW BACKGROUND SHOWS DISCREPANCY IN ITEM COUNT -->
-        <tr class="ng-scope bg-danger">
-          <td class="ng-binding">0003</td>
-          <td class="ng-binding">Chicken Sandwich</td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="200" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="100" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="100" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="500" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
-          </td>
-        </tr>
-
-        <tr class="ng-scope">
-          <td class="ng-binding">0004</td>
-          <td class="ng-binding">Coffee</td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="100" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="0" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="50" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
-          </td>
-        </tr>
-
-        <tr class="ng-scope">
-          <td class="ng-binding">0005</td>
-          <td class="ng-binding">Cheeseburger</td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="60" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="40" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="90" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
-          </td>
-        </tr>
-
-        <tr class="ng-scope">
-          <td class="ng-binding">0006</td>
-          <td class="ng-binding">Chips</td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="130" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="20" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="100" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
-          </td>
-        </tr>
-
-        <tr class="ng-scope">
-          <td class="ng-binding">0007</td>
-          <td class="ng-binding">Root Beer</td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="200" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="0" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="250" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
-          </td>
-        </tr>
-
-        <tr class="ng-scope">
-          <td class="ng-binding">0008</td>
-          <td class="ng-binding">Fries</td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="75" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="75" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="140" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
-          </td>
-        </tr>
-
-        <tr class="ng-scope">
-          <td class="ng-binding">0009</td>
-          <td class="ng-binding">Orange Soda</td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="225" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="25" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="50" ng-disabled="true">
-          </td>
-          <td class="ng-binding">
-            <input type="text" class="form-control" placeholder="200" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
-          </td>
-        </tr>
       </tbody>
     </table>
 
@@ -253,7 +117,7 @@
 
 </div>
 
-<!-- Content for Stock Adjustment Popover -->
+<!-- Content for Stock Adjustment Popover
 <div id="stockAdjustmentPopover" class="hidden">
   <div class="popover-heading">Adjustment<a href="#" class="close" data-dismiss="alert">&times</a></div>
 
@@ -285,7 +149,7 @@
     </div>
   </div>
 </div>
-
+-->
 <form-success-modal></form-success-modal>
 
 <form-update-modal></form-update-modal>
