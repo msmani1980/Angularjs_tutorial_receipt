@@ -72,6 +72,7 @@ angular.module('ts5App')
     };
     stateActions.createInit = function(){
       $scope.readOnly = false;
+      $scope.viewName = 'Create Delivery Note';
       displayLoadingModal();
       _initPromises.push(getCatererStationList());
       resolveInitPromises();
