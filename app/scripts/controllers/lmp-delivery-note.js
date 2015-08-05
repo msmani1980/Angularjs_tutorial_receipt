@@ -16,7 +16,9 @@ angular.module('ts5App')
 
     // private vars
     var _initPromises = [];
+    var _catererStationIdInitLoaded = false;
     var _companyId = deliveryNoteFactory.getCompanyId();
+    var _companyMenuCatererStations = [];
 
     function getCatererStationList(){
       return deliveryNoteFactory.getCatererStationList(_companyId).then(setCatererStationListFromResponse);
@@ -26,6 +28,10 @@ angular.module('ts5App')
       return deliveryNoteFactory.getDeliveryNote($routeParams.id).then(setDeliveryNoteFromResponse);
     }
 
+    function getCompanyMenuCatererStations(){
+      return deliveryNoteFactory.getCompanyMenuCatererStations().then(setCompanyMenuCatererStations);
+    }
+
     function setCatererStationListFromResponse(response){
       $scope.catererStationList = response.response;
     }
@@ -33,6 +39,21 @@ angular.module('ts5App')
     function setDeliveryNoteFromResponse(response){
       $scope.deliveryNote = angular.copy(response);
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
+    }
+
+    function setCompanyMenuCatererStations(response){
+      _companyMenuCatererStations = response.companyMenuCatererStations;
+      // TODO - use this to get menu items
+    }
+
+    function catererStationIdWatcher(newValue, oldValue){
+      if(!_catererStationIdInitLoaded){
+        if(angular.isDefined(newValue) && oldValue !== newValue) {
+          _catererStationIdInitLoaded = true;
+        }
+        return;
+      }
+      // TODO - watch here to query item lists based on _companyMenuCatererStations
     }
 
     function displayLoadingModal(loadingText) {
@@ -75,6 +96,17 @@ angular.module('ts5App')
       $scope.viewName = 'Create Delivery Note';
       displayLoadingModal();
       _initPromises.push(getCatererStationList());
+      _initPromises.push(getCompanyMenuCatererStations());
+      $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
+      resolveInitPromises();
+    };
+    stateActions.editInit = function(){
+      $scope.readOnly = false;
+      displayLoadingModal();
+      _initPromises.push(getDeliveryNote());
+      _initPromises.push(getCatererStationList());
+      _initPromises.push(getCompanyMenuCatererStations());
+      $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       resolveInitPromises();
     };
 

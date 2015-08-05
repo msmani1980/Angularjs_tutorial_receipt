@@ -59,7 +59,7 @@
               <label>LMP Station*</label>
               <select class="form-control" ng-model="deliveryNote.catererStationId" ng-change="updateDeliveryInfo()"
                       ng-disabled="readOnly || catererStationList.length == 1" ng-show="catererStationList.length">
-                <option ng-repeat="station in catererStationList track by $index" value="station.id"
+                <option ng-repeat="station in catererStationList track by $index" value="{{ station.id }}"
                         ng-selected="catererStationList.length == 1 || station.id == deliveryNote.catererStationId">
                   {{ station.code }} ({{ station.name}})
                 </option>
