@@ -12,9 +12,7 @@ angular.module('ts5App')
 
     // static scope vars
     $scope.viewName = 'Delivery note';
-    $scope.fpo = {
-      ullageReasons: ['jus cause', 'Some reason']
-    };
+    $scope.ullageReasons = ['FPO jus cause', 'Some reason'];
 
     // private vars
     var _initPromises = [];

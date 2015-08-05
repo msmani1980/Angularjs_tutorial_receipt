@@ -216,7 +216,7 @@
 
                   <ui-select id="ullage-reason" ng-model="item" theme="bootstrap" ng-disabled="{{ readOnly || !item.ullageQuantity }}">
                     <ui-select-match>{{ item.ullageReason }}</ui-select-match>
-                    <ui-select-choices repeat="ullageReason in fpo.ullageReasons">
+                    <ui-select-choices repeat="ullageReason in ullageReasons">
                       <div ng-bind-html="ullageReason"></div>
                     </ui-select-choices>
                   </ui-select>
