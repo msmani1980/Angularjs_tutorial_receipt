@@ -84,6 +84,7 @@ angular.module('ts5App')
     }
 
     var stateActions = {};
+
     stateActions.viewInit = function(){
       $scope.readOnly = true;
       displayLoadingModal();
@@ -91,6 +92,7 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       resolveInitPromises();
     };
+
     stateActions.createInit = function(){
       $scope.readOnly = false;
       $scope.viewName = 'Create Delivery Note';
@@ -100,6 +102,7 @@ angular.module('ts5App')
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       resolveInitPromises();
     };
+
     stateActions.editInit = function(){
       $scope.readOnly = false;
       displayLoadingModal();
