@@ -91,22 +91,22 @@
         </tr>
       </thead>
       <tbody>
-
+        
         <tr ng-repeat="stockItem in stockDashboardItemsList">
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
             <!-- TODO: STOCK ADJUSTMENT POPOVER IMPLEMENTED HERE -->
-            <input type="text" class="form-control" placeholder="100" ng-disabled="true">
+            <input type="text" class="form-control" value="{{stockItem.currentCountQuantity}}" ng-disabled="true">
           </td>
           <td >
-            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
+            <input type="text" class="form-control" value="{{stockItem.openingQuantity}}" ng-disabled="true">
           </td>
           <td >
-            <input type="text" class="form-control" placeholder="10" ng-disabled="true">
+            <input type="text" class="form-control" value="{{stockItem.receivedQuantity}}" ng-disabled="true">
           </td>
           <td >
-            <input type="text" class="form-control" placeholder="100" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
+            <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
           </td>
         </tr>
 
