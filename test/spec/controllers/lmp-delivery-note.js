@@ -3,7 +3,7 @@
 describe('Controller: LmpDeliveryNoteCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('ts5App', 'served/lmp-delivery-note.json', 'served/stations.json'));
+  beforeEach(module('ts5App', 'served/lmp-delivery-note.json', 'served/catering-stations.json'));
 
   var LmpDeliveryNoteCtrl;
   var scope;
@@ -12,12 +12,12 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var getDeliveryNoteDeffered;
   var routeParams;
   var location;
-  var stationsReponseJSON;
-  var getStationsDeffered;
+  var cateringStationsReponseJSON;
+  var getCateringStationsDeffered;
   var companyId;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _deliveryNoteFactory_, _servedLmpDeliveryNote_, $location, _servedStations_) {
+  beforeEach(inject(function ($controller, $rootScope, $q, _deliveryNoteFactory_, _servedLmpDeliveryNote_, $location, _servedCateringStations_) {
 
     companyId = 403;
 
@@ -25,15 +25,15 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     location = $location;
     deliveryNoteFactory = _deliveryNoteFactory_;
     lmpDeliveryNoteResponseJSON = _servedLmpDeliveryNote_;
-    stationsReponseJSON = _servedStations_;
+    cateringStationsReponseJSON = _servedCateringStations_;
 
     getDeliveryNoteDeffered = $q.defer();
     getDeliveryNoteDeffered.resolve(lmpDeliveryNoteResponseJSON);
     spyOn(deliveryNoteFactory, 'getDeliveryNote').and.returnValue(getDeliveryNoteDeffered.promise);
 
-    getStationsDeffered = $q.defer();
-    getStationsDeffered.resolve(stationsReponseJSON);
-    spyOn(deliveryNoteFactory, 'getStationList').and.returnValue(getStationsDeffered.promise);
+    getCateringStationsDeffered = $q.defer();
+    getCateringStationsDeffered.resolve(cateringStationsReponseJSON);
+    spyOn(deliveryNoteFactory, 'getCatererStationList').and.returnValue(getCateringStationsDeffered.promise);
 
     spyOn(deliveryNoteFactory, 'getCompanyId').and.returnValue(companyId);
   }));
@@ -97,10 +97,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       expect(scope.state).toBe('create');
     });
     it('should call stock management get delivery note api with id', function(){
-      expect(deliveryNoteFactory.getStationList).toHaveBeenCalledWith(companyId);
+      expect(deliveryNoteFactory.getCatererStationList).toHaveBeenCalled();
     });
-    it('should set deliveryNote scope var', function(){
-      expect(scope.stationList).toBeDefined();
+    it('should set cateringStationList scope var', function(){
+      expect(scope.catererStationList).toBeDefined();
     });
   });
 

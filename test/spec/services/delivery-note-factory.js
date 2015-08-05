@@ -8,22 +8,22 @@ describe('Service: deliveryNoteFactory', function () {
   // instantiate service
   var deliveryNoteFactory;
   var deliveryNotesService;
-  var stationsService;
+  var catererStationService;
   var GlobalMenuService;
 
-  beforeEach(inject(function (_deliveryNoteFactory_, _deliveryNotesService_, _stationsService_, _GlobalMenuService_) {
+  beforeEach(inject(function (_deliveryNoteFactory_, _deliveryNotesService_, _catererStationService_, _GlobalMenuService_) {
     deliveryNoteFactory = _deliveryNoteFactory_;
     deliveryNotesService = _deliveryNotesService_;
-    stationsService = _stationsService_;
+    catererStationService = _catererStationService_;
     GlobalMenuService = _GlobalMenuService_;
 
     spyOn(deliveryNotesService, 'getDeliveryNote');
-    spyOn(stationsService, 'getStationList');
+    spyOn(catererStationService, 'getCatererStationList');
     spyOn(GlobalMenuService.company, 'get');
 
   }));
 
-  describe('stockManagementService calls', function(){
+  describe('deliveryNotesService calls', function(){
     it('should call getDeliveryNote', function(){
       var id = 123;
       deliveryNoteFactory.getDeliveryNote(id);
@@ -31,11 +31,10 @@ describe('Service: deliveryNoteFactory', function () {
     });
   });
 
-  describe('stationsService calls', function(){
-    it('should call getStationList', function(){
-      var cid = 432;
-      deliveryNoteFactory.getStationList(cid);
-      expect(stationsService.getStationList).toHaveBeenCalledWith(cid);
+  describe('catererStationService calls', function(){
+    it('should call getCatererStation', function(){
+      deliveryNoteFactory.getCatererStationList();
+      expect(catererStationService.getCatererStationList).toHaveBeenCalled();
     });
   });
 

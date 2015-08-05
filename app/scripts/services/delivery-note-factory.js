@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('deliveryNoteFactory', function (deliveryNotesService, stationsService, GlobalMenuService) {
+  .service('deliveryNoteFactory', function (deliveryNotesService, catererStationService, GlobalMenuService) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
@@ -18,13 +18,13 @@ angular.module('ts5App')
       return deliveryNotesService.getDeliveryNote(deliveryNoteId);
     }
 
-    function getStationList(companyId){
-      return stationsService.getStationList(companyId);
+    function getCatererStationList(){
+      return catererStationService.getCatererStationList({limit:null});
     }
 
     return {
       getDeliveryNote: getDeliveryNote,
-      getStationList: getStationList,
+      getCatererStationList: getCatererStationList,
       getCompanyId: getCompanyId
     };
 

@@ -20,25 +20,21 @@ angular.module('ts5App')
     var _initPromises = [];
     var _companyId = deliveryNoteFactory.getCompanyId();
 
-    function getStationList(){
-      displayLoadingModal();
-      _initPromises.push(deliveryNoteFactory.getStationList(_companyId).then(setStationListFromResponse, showResponseErrors));
+    function getCatererStationList(){
+      return deliveryNoteFactory.getCatererStationList(_companyId).then(setCatererStationListFromResponse);
     }
 
     function getDeliveryNote(){
-      displayLoadingModal();
-      _initPromises.push(deliveryNoteFactory.getDeliveryNote($routeParams.id).then(setDeliveryNoteFromResponse, showResponseErrors));
+      return deliveryNoteFactory.getDeliveryNote($routeParams.id).then(setDeliveryNoteFromResponse);
     }
 
-    function setStationListFromResponse(response){
-      $scope.stationList = response.response;
-      hideLoadingModal();
+    function setCatererStationListFromResponse(response){
+      $scope.catererStationList = response.response;
     }
 
     function setDeliveryNoteFromResponse(response){
       $scope.deliveryNote = angular.copy(response);
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
-      hideLoadingModal();
     }
 
     function displayLoadingModal(loadingText) {
@@ -59,10 +55,13 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function initPromisesResolved(){
+      // TODO switch on state?
+      hideLoadingModal();
+    }
+
     function resolveInitPromises(){
-      $q.all(_initPromises).then(function(){
-        // TODO switch on state?
-      });
+      $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
     }
 
     // constructor
@@ -78,11 +77,15 @@ angular.module('ts5App')
       switch($scope.state){
         case 'view':
           $scope.readOnly = true;
-          getDeliveryNote();
+          displayLoadingModal();
+          _initPromises.push(getDeliveryNote());
+          _initPromises.push(getCatererStationList());
           resolveInitPromises();
           break;
         case 'create':
-          getStationList();
+          displayLoadingModal();
+          _initPromises.push(getCatererStationList());
+          resolveInitPromises();
           break;
         default:
           $location.path('/');
