@@ -175,6 +175,10 @@ angular
         templateUrl: 'views/delivery-note.html',
         controller: 'DeliveryNoteCtrl'
       })
+      .when('/delivery-note-review', {
+        templateUrl: 'views/delivery-note-review.html',
+        controller: 'DeliveryNoteReviewCtrl'
+      })
       .when('/employee-commission-list', {
         templateUrl: 'views/employee-commission-list.html',
         controller: 'EmployeeCommissionListCtrl'
