@@ -64,32 +64,36 @@ angular.module('ts5App')
       $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
     }
 
+    var stateActions = {};
+    stateActions.viewInit = function(){
+      $scope.readOnly = true;
+      displayLoadingModal();
+      _initPromises.push(getDeliveryNote());
+      _initPromises.push(getCatererStationList());
+      resolveInitPromises();
+    };
+    stateActions.createInit = function(){
+      $scope.readOnly = false;
+      displayLoadingModal();
+      _initPromises.push(getCatererStationList());
+      resolveInitPromises();
+    };
+
     // constructor
     function init(){
       // scope vars
       $scope.state = $routeParams.state;
-      $scope.viewName += ' ' + $scope.state;
       $scope.displayError = false;
       $scope.formErrors = [];
 
       // private vars
       _initPromises = [];
-      switch($scope.state){
-        case 'view':
-          $scope.readOnly = true;
-          displayLoadingModal();
-          _initPromises.push(getDeliveryNote());
-          _initPromises.push(getCatererStationList());
-          resolveInitPromises();
-          break;
-        case 'create':
-          displayLoadingModal();
-          _initPromises.push(getCatererStationList());
-          resolveInitPromises();
-          break;
-        default:
-          $location.path('/');
-          break;
+      var initStateAction = $routeParams.state + 'Init';
+      if(stateActions[initStateAction]){
+        stateActions[initStateAction]();
+      }
+      else{
+        $location.path('/');
       }
     }
     init();
