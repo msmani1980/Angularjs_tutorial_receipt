@@ -19,8 +19,8 @@ angular.module('ts5App')
 		return itemsService.getItem(id);
 	};
 
-	var getItemsList = function (payload) {
-		return itemsService.getItemsList(payload);
+	var getItemsList = function (payload, fetchFromMaster) {
+		return itemsService.getItemsList(payload, fetchFromMaster);
 	};
 
   var createItem = function (payload) {
