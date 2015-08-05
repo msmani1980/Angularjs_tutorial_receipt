@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('LmpDeliveryNoteCtrl', function ($scope, stockManagementService, $routeParams, $location, dateUtility) {
+  .controller('LmpDeliveryNoteCtrl', function ($scope, $routeParams, $location, $q, deliveryNoteFactory, dateUtility) {
 
     // static scope vars
     $scope.viewName = 'Delivery note';
@@ -16,9 +16,12 @@ angular.module('ts5App')
       ullageReasons: ['jus cause', 'Some reason']
     };
 
+    // private vars
+    var _initPromises = [];
+
     function getDeliveryNote(){
       displayLoadingModal();
-      stockManagementService.getDeliveryNote($routeParams.id).then(setDeliveryNote, showResponseErrors);
+      _initPromises.push(deliveryNoteFactory.getDeliveryNote($routeParams.id).then(setDeliveryNote, showResponseErrors));
     }
 
     function setDeliveryNote(response){
@@ -45,6 +48,12 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function resolveInitPromises(){
+      $q.all(_initPromises).then(function(){
+        // TODO switch on state?
+      });
+    }
+
     // constructor
     function init(){
       // scope vars
@@ -53,10 +62,16 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.formErrors = [];
 
+      // private vars
+      _initPromises = [];
       switch($scope.state){
         case 'view':
           $scope.readOnly = true;
           getDeliveryNote();
+          resolveInitPromises();
+          break;
+        case 'create':
+
           break;
         default:
           $location.path('/');

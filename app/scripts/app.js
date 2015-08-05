@@ -167,8 +167,8 @@ angular
         templateUrl: 'views/manage-goods-received.html',
         controller: 'ManageGoodsReceivedCtrl'
       })
-      .when('/lmp-delivery-note/:state/:id', {
-        templateUrl: 'views/delivery-note.html',
+      .when('/lmp-delivery-note/:state/:id?', {
+        templateUrl: 'views/lmp-delivery-note.html',
         controller: 'LmpDeliveryNoteCtrl'
       })
       .when('/delivery-note', {
