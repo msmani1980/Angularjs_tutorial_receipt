@@ -438,11 +438,11 @@ angular.module('ts5App')
           }
         });
       }
-    }
+    };
 
     this.setItemList = function (itemListFromAPI) {
       var itemList = angular.copy(itemListFromAPI);
-      removeCurrentItem(itemList);
+      this.removeCurrentItem(itemList);
       $scope.items = itemList;
       $scope.substitutions = itemList;
       $scope.recommendations = itemList;
