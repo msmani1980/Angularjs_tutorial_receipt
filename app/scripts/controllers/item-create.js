@@ -430,8 +430,7 @@ angular.module('ts5App')
       $scope.priceTypes = data;
     };
 
-    this.setItemList = function (itemListFromAPI) {
-      var itemList = angular.copy(itemListFromAPI);
+    this.removeCurrentItem = function(itemList) {
       if ($routeParams.id) {
         angular.forEach(itemList, function (value, key) {
           if (parseInt(value.id) === $routeParams.id) {
@@ -439,6 +438,11 @@ angular.module('ts5App')
           }
         });
       }
+    }
+
+    this.setItemList = function (itemListFromAPI) {
+      var itemList = angular.copy(itemListFromAPI);
+      removeCurrentItem(itemList);
       $scope.items = itemList;
       $scope.substitutions = itemList;
       $scope.recommendations = itemList;
