@@ -4,26 +4,37 @@ describe('Controller: StockDashboardCtrl', function() {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/stock-management-dashboard.json'));
+  beforeEach(module('served/stock-management-dashboard.json', 'served/catering-stations.json'));
 
   var StockDashboardCtrl,
     stockDashboardService,
+    catererStationService,
     getStockDashboardItemsDeferred,
+    getCatererStationListDeferred,
     stockManagementDashboardJSON,
+    cateringStationsJSON,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
-    inject(function(_servedStockManagementDashboard_) {
-      stockManagementDashboardJSON = _servedStockManagementDashboard_;
-    });
-    getStockDashboardItemsDeferred = $q.defer();
-    getStockDashboardItemsDeferred.resolve({
-      response: 200
-    });
+
     stockDashboardService = $injector.get('stockDashboardService');
+    catererStationService = $injector.get('catererStationService');
+
+    inject(function(_servedStockManagementDashboard_, _servedCateringStations_) {
+      stockManagementDashboardJSON = _servedStockManagementDashboard_;
+      cateringStationsJSON = _servedCateringStations_;
+    });
+
+    getStockDashboardItemsDeferred = $q.defer();
+    getStockDashboardItemsDeferred.resolve(stockManagementDashboardJSON);
+
+    getCatererStationListDeferred = $q.defer();
+    getCatererStationListDeferred.resolve(cateringStationsJSON);
+
     spyOn(stockDashboardService, 'getStockDashboardItems').and.returnValue(getStockDashboardItemsDeferred.promise);
+    spyOn(catererStationService, 'getCatererStationList').and.returnValue(getCatererStationListDeferred.promise);
     StockDashboardCtrl = $controller('StockDashboardCtrl', {
       $scope: scope
         // place here mocked dependencies
@@ -41,11 +52,20 @@ describe('Controller: StockDashboardCtrl', function() {
     });
 
     describe('API Calls', function() {
-      it('should get a list of dashboard items', function() {
+      it('should return a list of dashboard items', function() {
         expect(stockDashboardService.getStockDashboardItems).toHaveBeenCalled();
       });
-      it('should attach the list to the scope', function() {
+
+      it('should attach the stock dashboard list to the scope', function() {
         expect(scope.stockDashboardItemsList).toBeDefined();
+      });
+
+      it('should return a list of Catering Stations', function() {
+        expect(catererStationService.getCatererStationList).toHaveBeenCalled();
+      });
+
+      it('should attach the catering station list to the scope', function() {
+        expect(scope.cateringStationList).toBeDefined();
       });
     });
 

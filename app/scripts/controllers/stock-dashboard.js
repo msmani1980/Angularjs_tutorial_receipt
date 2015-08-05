@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockDashboardCtrl', function($scope, $http, stockDashboardService) {
+  .controller('StockDashboardCtrl', function($scope, $http, stockDashboardService, catererStationService) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
@@ -34,10 +34,16 @@ angular.module('ts5App')
       $scope.stockDashboardItemsList = dataFromAPI.response;
     };
 
-    this.getStockDashboardItems = function() {
-      stockDashboardService.getStockDashboardItems().then(this.getStockDashboardItemsSuccessHandler);
+    this.getCatererStationListSuccessHandler = function(dataFromAPI) {
+      console.log(dataFromAPI);
+      $scope.cateringStationList = dataFromAPI.response;
     };
 
-    this.getStockDashboardItems();
+    this.init = function() {
+      stockDashboardService.getStockDashboardItems().then(this.getStockDashboardItemsSuccessHandler);
+      catererStationService.getCatererStationList().then(this.getCatererStationListSuccessHandler);
+    };
+
+    this.init();
 
   });
