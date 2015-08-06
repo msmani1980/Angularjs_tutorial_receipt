@@ -12,7 +12,6 @@ angular.module('ts5App')
 
     // static scope vars
     $scope.viewName = 'Delivery note';
-    $scope.ullageReasons = ['FPO jus cause', 'Some reason'];
 
     // private vars
     var _initPromises = [];
@@ -83,6 +82,14 @@ angular.module('ts5App')
       getMenuItems();
     }
 
+    function setUllageReasonsFromResponse(response){
+      $scope.ullageReasons = $filter('filter')(response.companyReasonCodes, {reasonTypeName:'Ullage'}, true);
+    }
+
+    function getUllageCompanyReasonCodes(){
+      return deliveryNoteFactory.getCompanyReasonCodes().then(setUllageReasonsFromResponse);
+    }
+
     function getMenuItems(){
       if(!$scope.catererStationMenuIds.length){
         return;
@@ -135,6 +142,7 @@ angular.module('ts5App')
       displayLoadingModal();
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
+      _initPromises.push(getUllageCompanyReasonCodes());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       resolveInitPromises();
     };
@@ -145,6 +153,7 @@ angular.module('ts5App')
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
+      _initPromises.push(getUllageCompanyReasonCodes());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       resolveInitPromises();
     };
