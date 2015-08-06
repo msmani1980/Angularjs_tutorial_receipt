@@ -36,7 +36,6 @@ angular.module('ts5App')
 
     function setDeliveryNoteFromResponse(response){
       $scope.deliveryNote = angular.copy(response);
-      // console.log($scope.deliveryNote);
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
     }
 
