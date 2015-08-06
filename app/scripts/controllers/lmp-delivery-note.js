@@ -52,13 +52,12 @@ angular.module('ts5App')
       // If not first time loaded, it changed, so lets get the items
       if(angular.isDefined(oldValue) && $scope.deliveryNote.catererStationId === newValue){
         var catererStationId = parseInt(newValue);
-        // TODO - On successful switch, will need to to filter out same, and only allow unique items to be appeneded to list
         getMasterRetailItemsByCatererStationId(catererStationId);
       }
     }
 
     function getMasterRetailItemsByCatererStationId(catererStationId){
-      // TODO - Blocker
+      // TODO - Blocker - https://jira.egate-solutions.com/browse/TSVPORTAL-2710
       // api/retail-items/master needs to accept catererStationId argument filter
       // and return id(master), Item Name, Item Code and NO versions
       deliveryNoteFactory.getMasterRetailItems(catererStationId).then(setMasterRetailItemsFromResponse, showResponseErrors);
@@ -67,6 +66,7 @@ angular.module('ts5App')
 
     function setMasterRetailItemsFromResponse(response){
       $scope.masterRetailItems = response.masterItems;
+      // TODO - On successful switch, will need to to filter out same, and only allow unique items to be appeneded to list
     }
 
     function setCatererStationMenuIds(catererStationId){

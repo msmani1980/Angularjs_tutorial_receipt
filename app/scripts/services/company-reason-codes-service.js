@@ -31,4 +31,5 @@ angular.module('ts5App')
     return {
       getAll: getAll
     };
+
   });
