@@ -35,6 +35,7 @@ describe('Controller: StockDashboardCtrl', function() {
 
     spyOn(stockDashboardService, 'getStockDashboardItems').and.returnValue(getStockDashboardItemsDeferred.promise);
     spyOn(catererStationService, 'getCatererStationList').and.returnValue(getCatererStationListDeferred.promise);
+
     StockDashboardCtrl = $controller('StockDashboardCtrl', {
       $scope: scope
         // place here mocked dependencies
@@ -67,8 +68,31 @@ describe('Controller: StockDashboardCtrl', function() {
       it('should attach the catering station list to the scope', function() {
         expect(scope.cateringStationList).toBeDefined();
       });
+
     });
 
+    describe('isCatererStationListReadOnly method', function() {
+      beforeEach(function() {
+        spyOn(scope, 'isCatererStationListReadOnly');
+      });
+
+      it('should be attached to the scope', function() {
+        expect(scope.isCatererStationListReadOnly).toBeDefined();
+      });
+
+      it('should be called', function() {
+        scope.isCatererStationListReadOnly();
+        expect(scope.isCatererStationListReadOnly).toHaveBeenCalled();
+      });
+
+      it('should return true if there is only 1 station', function() {
+        scope.cateringStationList.length = 1;
+        scope.$digest();
+        scope.isCatererStationListReadOnly();
+        expect(scope.isCatererStationListReadOnly).toBeTruthy();
+      });
+
+    });
 
   });
 

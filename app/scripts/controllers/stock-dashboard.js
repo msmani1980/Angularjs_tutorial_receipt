@@ -35,7 +35,6 @@ angular.module('ts5App')
     };
 
     this.getCatererStationListSuccessHandler = function(dataFromAPI) {
-      console.log(dataFromAPI);
       $scope.cateringStationList = dataFromAPI.response;
     };
 
@@ -45,5 +44,11 @@ angular.module('ts5App')
     };
 
     this.init();
+
+    $scope.isCatererStationListReadOnly = function() {
+      if ($scope.cateringStationList) {
+        return ($scope.cateringStationList.length === 1);
+      }
+    };
 
   });
