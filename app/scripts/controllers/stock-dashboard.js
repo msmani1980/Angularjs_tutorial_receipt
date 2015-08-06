@@ -13,23 +13,6 @@ angular.module('ts5App')
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
 
-    angular.element('[data-toggle=popover]').popover({
-      placement: 'top',
-      html: true,
-      title: function() {
-        var title = angular.element(this).attr('data-popover-content');
-        return angular.element(title).children('.popover-heading').html();
-      },
-      content: function() {
-        var content = angular.element(this).attr('data-popover-content');
-        return angular.element(content).children('.popover-body').html();
-      }
-    });
-
-    angular.element('[data-toggle=popover]').on('click', '.popover .close', function() {
-      angular.element(this).popover('hide');
-    });
-
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
       $scope.stockDashboardItemsList = dataFromAPI.response;
     };
@@ -49,11 +32,6 @@ angular.module('ts5App')
       if ($scope.cateringStationList) {
         return ($scope.cateringStationList.length === 1);
       }
-    };
-
-    $scope.openStockAdjustment = function() {
-      var e = angular.element('#stock-adjustment-modal');
-      e.modal('show');
     };
 
   });

@@ -93,103 +93,27 @@
       </thead>
       <tbody>
 
-        <tr ng-repeat="stockItem in stockDashboardItemsList | orderBy:'itemName' | filter : search">
+        <tr stock-adjustment-popover ng-repeat="stockItem in stockDashboardItemsList | orderBy:'itemName' | filter : search ">
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
             <input type="text" class="form-control" value="{{stockItem.currentCountQuantity}}" ng-disabled="true">
           </td>
-          <td >
+          <td>
             <input type="text" class="form-control" value="{{stockItem.openingQuantity}}" ng-disabled="true">
           </td>
           <td >
             <input type="text" class="form-control" value="{{stockItem.receivedQuantity}}" ng-disabled="true">
           </td>
-          <td >
-            <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}" data-toggle="popover" data-popover-content="#stockAdjustmentPopover">
+          <td id="dispatchedQuantity{{stockItem.itemCode}}" rel="popover" data-content="This is the <b>body</b> of Popover" data-original-title="Creativity Tuts">
+            <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}">
           </td>
         </tr>
+
 
       </tbody>
     </table>
 
-  </div>
-
-</div>
-<!--
-<div class="modal fade" id="stock-adjustment-modal">
-
-	<div class="modal-dialog">
-
-		<div class="modal-content">
-
-			<div class="modal-header">
-				<h3 class="modal-title"><span class='fa fa-warning'></span> You have unsaved changes</h3>
-			</div>
-
-			<div class="modal-body">
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label>Reason*</label>
-
-              <ui-select id="stock-adjustment-reason" ng-model="stockAdjustmentReason" theme="bootstrap">
-                <ui-select-match placeholder="Broken">{{ $item.stockAdjustmentReasonCode }}</ui-select-match>
-                <ui-select-choices repeat="">{ item.ullageReasonCode }} ({{ item.stockAdjustmentReasonName }})</ui-select-choices>
-              </ui-select>
-
-            </div>
-
-            <div class="form-group">
-              <label>Comments</label>
-                <textarea rows="2"></textarea>
-            </div>
-          </div>
-        </div>
-
-			</div>
-
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" ng-click="">Save</button>
-				<a type="button" class="btn btn-primary" data-dismiss="modal">Continue Editing</a>
-			</div>
-
-		</div>
-
-	</div>
-
-</div>
--->
-<!-- Content for Stock Adjustment Popover-->
-<div id="stockAdjustmentPopover" class="hidden">
-  <div class="popover-heading">Adjustment<a href="#" class="close" data-dismiss="alert">&times</a></div>
-
-  <div class="popover-body">
-
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="form-group">
-          <label>Reason*</label>
-
-          <ui-select id="stock-adjustment-reason" ng-model="stockAdjustmentReason" theme="bootstrap">
-            <ui-select-match placeholder="Broken">{{ $item.stockAdjustmentReasonCode }}</ui-select-match>
-            <ui-select-choices repeat="">{ item.ullageReasonCode }} ({{ item.stockAdjustmentReasonName }})</ui-select-choices>
-          </ui-select>
-
-        </div>
-
-        <div class="form-group">
-          <label>Comments</label>
-            <textarea rows="2"></textarea>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-12 text-right">
-        <a ng-href="#" class="btn btn-primary">Save</a>
-      </div>
-    </div>
   </div>
 </div>
 
