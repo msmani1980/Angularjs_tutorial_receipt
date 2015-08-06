@@ -27,13 +27,15 @@
         </div>
       </div>
 
-        <div class="col-xs-12 col-sm-8 text-right">
-          <label>02/03/2015</label>
-        </div>
-
+      <!--TODO: figure out why the date is here, if needed, what API is used to pull it in
+      <div class="col-xs-12 col-sm-8 text-right">
+        <label>02/03/2015</label>
       </div>
+      -->
 
     </div>
+
+  </div>
   <!--/TopHeader -->
 
   <div class="container stock-dashboard-container">
@@ -74,8 +76,6 @@
             <option selected="selected" value>Select Catering Station</option>
           </select>
 
-<!-- TODO: IF ONLY ONE LMP STATION IS AVAILABLE, USE READ-ONLY (BELOW) INSTEAD OF SELECT (ABOVE)  -->
-<!--               <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true"> -->
         </div>
       </div>
     </div>
@@ -93,11 +93,10 @@
       </thead>
       <tbody>
 
-        <tr ng-repeat="stockItem in stockDashboardItemsList | filter : search">
+        <tr ng-repeat="stockItem in stockDashboardItemsList | orderBy:'itemName' | filter : search">
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
-            <!-- TODO: STOCK ADJUSTMENT POPOVER IMPLEMENTED HERE -->
             <input type="text" class="form-control" value="{{stockItem.currentCountQuantity}}" ng-disabled="true">
           </td>
           <td >
@@ -117,8 +116,51 @@
   </div>
 
 </div>
+<!--
+<div class="modal fade" id="stock-adjustment-modal">
 
-<!-- Content for Stock Adjustment Popover
+	<div class="modal-dialog">
+
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h3 class="modal-title"><span class='fa fa-warning'></span> You have unsaved changes</h3>
+			</div>
+
+			<div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label>Reason*</label>
+
+              <ui-select id="stock-adjustment-reason" ng-model="stockAdjustmentReason" theme="bootstrap">
+                <ui-select-match placeholder="Broken">{{ $item.stockAdjustmentReasonCode }}</ui-select-match>
+                <ui-select-choices repeat="">{ item.ullageReasonCode }} ({{ item.stockAdjustmentReasonName }})</ui-select-choices>
+              </ui-select>
+
+            </div>
+
+            <div class="form-group">
+              <label>Comments</label>
+                <textarea rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" ng-click="">Save</button>
+				<a type="button" class="btn btn-primary" data-dismiss="modal">Continue Editing</a>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+-->
+<!-- Content for Stock Adjustment Popover-->
 <div id="stockAdjustmentPopover" class="hidden">
   <div class="popover-heading">Adjustment<a href="#" class="close" data-dismiss="alert">&times</a></div>
 
@@ -150,7 +192,7 @@
     </div>
   </div>
 </div>
--->
+
 <form-success-modal></form-success-modal>
 
 <form-update-modal></form-update-modal>

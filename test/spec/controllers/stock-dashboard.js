@@ -96,5 +96,4 @@ describe('Controller: StockDashboardCtrl', function() {
 
   });
 
-
 });

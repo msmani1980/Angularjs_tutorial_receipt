@@ -51,4 +51,9 @@ angular.module('ts5App')
       }
     };
 
+    $scope.openStockAdjustment = function() {
+      var e = angular.element('#stock-adjustment-modal');
+      e.modal('show');
+    };
+
   });
