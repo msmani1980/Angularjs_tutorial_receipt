@@ -59,12 +59,12 @@ angular.module('ts5App')
       // TODO - Blocker - https://jira.egate-solutions.com/browse/TSVPORTAL-2710
       // api/retail-items/master needs to accept catererStationId argument filter
       // and return id(master), Item Name, Item Code and NO versions
-      deliveryNoteFactory.getMasterRetailItems(catererStationId).then(setMasterRetailItemsFromResponse, showResponseErrors);
+      deliveryNoteFactory.getMasterItemsByCatererStationId(catererStationId).then(setMasterItemsByCatererStationId, showResponseErrors);
       setCatererStationMenuIds(catererStationId);
     }
 
-    function setMasterRetailItemsFromResponse(response){
-      $scope.masterRetailItems = response.masterItems;
+    function setMasterItemsByCatererStationId(response){
+      $scope.masterItems = response.masterItems;
       // TODO - On successful switch, will need to to filter out same, and only allow unique items to be appeneded to list
     }
 
@@ -127,6 +127,8 @@ angular.module('ts5App')
     }
 
     var stateActions = {};
+
+    // TODO - get all retail items from startDate now for adding itemName and itemCode to retial item list.
 
     stateActions.viewInit = function(){
       $scope.readOnly = true;

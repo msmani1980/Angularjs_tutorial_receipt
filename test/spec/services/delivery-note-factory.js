@@ -62,17 +62,21 @@ describe('Service: deliveryNoteFactory', function () {
   });
 
   describe('itemsService calls', function(){
-    it('should call getItemsList', function(){
+    it('should call getItemsList with a param', function(){
       var csid = 1;
-      deliveryNoteFactory.getMasterRetailItems(csid);
+      deliveryNoteFactory.getMasterItemsByCatererStationId(csid);
       expect(itemsService.getItemsList).toHaveBeenCalledWith({catererStationId:csid}, true);
+    });
+    it('should call getItemsList to get all master items', function(){
+      deliveryNoteFactory.getAllMasterItems();
+      expect(itemsService.getItemsList).toHaveBeenCalledWith({}, true);
     });
   });
 
   describe('companyReasonCodesService calls', function(){
     it('should call getCompanyReasonCodes', function(){
       deliveryNoteFactory.getCompanyReasonCodes();
-      expect(companyReasonCodesService.getAll).toHaveBeenCalledWith();
+      expect(companyReasonCodesService.getAll).toHaveBeenCalled();
     });
   });
 

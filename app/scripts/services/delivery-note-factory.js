@@ -28,7 +28,7 @@ angular.module('ts5App')
       return menuCatererStationsService.getRelationshipList({limit:null});
     }
 
-    function getMasterRetailItems(_catererStationId){
+    function getMasterItemsByCatererStationId(_catererStationId){
       return itemsService.getItemsList({catererStationId:_catererStationId}, true);
     }
 
@@ -36,13 +36,18 @@ angular.module('ts5App')
       return companyReasonCodesService.getAll();
     }
 
+    function getAllMasterItems(){
+      return itemsService.getItemsList({}, true);
+    }
+
     return {
       getDeliveryNote: getDeliveryNote,
       getCatererStationList: getCatererStationList,
       getCompanyId: getCompanyId,
       getCompanyMenuCatererStations: getCompanyMenuCatererStations,
-      getMasterRetailItems: getMasterRetailItems,
-      getCompanyReasonCodes: getCompanyReasonCodes
+      getMasterItemsByCatererStationId: getMasterItemsByCatererStationId,
+      getCompanyReasonCodes: getCompanyReasonCodes,
+      getAllMasterItems: getAllMasterItems
     };
 
   });

@@ -214,8 +214,8 @@
                 <div class="form-group">
                   <label>Ullage Reason*</label>
 
-                  <ui-select id="ullage-reason" ng-model="item" theme="bootstrap" ng-disabled="{{ readOnly || !item.ullageQuantity }}">
-                    <ui-select-match>{{ item.ullageReason }}</ui-select-match>
+                  <ui-select id="ullage-reason" ng-model="deliveryNote.items[$index].ullageReason" theme="bootstrap" ng-disabled="{{ readOnly || !deliveryNote.items[$index].ullageQuantity }}">
+                    <ui-select-match>{{ $select.selected.companyReasonCodeName }}</ui-select-match>
                     <ui-select-choices repeat="ullageReason in ullageReasons">
                       <div ng-bind-html="ullageReason.companyReasonCodeName"></div>
                     </ui-select-choices>
