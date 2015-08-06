@@ -3,7 +3,9 @@
 describe('Controller: LmpDeliveryNoteCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('ts5App', 'served/lmp-delivery-note.json', 'served/catering-stations.json', 'served/menu-catering-stations.json'));
+  beforeEach(module('ts5App',
+    'served/lmp-delivery-note.json', 'served/catering-stations.json',
+    'served/menu-catering-stations.json', 'served/master-item-list.json'));
 
   var LmpDeliveryNoteCtrl;
   var scope;
@@ -17,11 +19,13 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var companyId;
   var companyMenuCatererStationsResponseJSON;
   var getCompanyMenuCatererStationsDeferred;
+  var getMasterRetailItemsResponseJSON;
+  var getMasterRetailItemsDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _deliveryNoteFactory_,
                               _servedLmpDeliveryNote_, $location, _servedCateringStations_,
-                              _servedMenuCateringStations_) {
+                              _servedMenuCateringStations_, _servedMasterItemList_) {
 
     companyId = 403;
 
@@ -31,6 +35,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     lmpDeliveryNoteResponseJSON = _servedLmpDeliveryNote_;
     cateringStationsReponseJSON = _servedCateringStations_;
     companyMenuCatererStationsResponseJSON = _servedMenuCateringStations_;
+    getMasterRetailItemsResponseJSON = _servedMasterItemList_;
 
     getDeliveryNoteDeferred = $q.defer();
     getDeliveryNoteDeferred.resolve(lmpDeliveryNoteResponseJSON);
@@ -45,6 +50,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getCompanyMenuCatererStationsDeferred = $q.defer();
     getCompanyMenuCatererStationsDeferred.resolve(companyMenuCatererStationsResponseJSON);
     spyOn(deliveryNoteFactory, 'getCompanyMenuCatererStations').and.returnValue(getCompanyMenuCatererStationsDeferred.promise);
+
+    getMasterRetailItemsDeferred = $q.defer();
+    getMasterRetailItemsDeferred.resolve(getMasterRetailItemsResponseJSON);
+    spyOn(deliveryNoteFactory, 'getMasterRetailItems').and.returnValue(getMasterRetailItemsDeferred.promise);
   }));
 
   describe('invalid state passed to route', function(){
@@ -145,6 +154,24 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     });
     it('should call deliveryNoteFactory.getCompanyMenuCatererStations', function(){
       expect(deliveryNoteFactory.getCompanyMenuCatererStations).toHaveBeenCalled();
+    });
+    describe('changing LMP station', function(){
+      it('should call retail item master API', function(){
+        scope.deliveryNote.catererStationId = 3;
+        scope.$digest();
+        expect(deliveryNoteFactory.getMasterRetailItems).toHaveBeenCalled();
+      });
+      it('should set scope retailItems', function(){
+        expect(scope.masterRetailItems).toBeDefined();
+        expect(Object.prototype.toString.call(scope.masterRetailItems)).toBe('[object Array]');
+      });
+      /*
+      it('should have 3 menu IDs set in scope', function(){
+        scope.deliveryNote.catererStationId = 3;
+        scope.$digest();
+        expect(scope.catererStationMenuIds.length).toBe(3);
+      });
+      */
     });
   });
 

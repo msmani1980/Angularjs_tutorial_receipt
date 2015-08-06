@@ -16,7 +16,6 @@ angular.module('ts5App')
 
     // private vars
     var _initPromises = [];
-    var _catererStationIdInitLoaded = false;
     var _companyId = deliveryNoteFactory.getCompanyId();
     var _companyMenuCatererStations = [];
 
@@ -38,34 +37,59 @@ angular.module('ts5App')
 
     function setDeliveryNoteFromResponse(response){
       $scope.deliveryNote = angular.copy(response);
+      // console.log($scope.deliveryNote);
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
     }
 
     function setCompanyMenuCatererStations(response){
       _companyMenuCatererStations = response.companyMenuCatererStations;
-      // TODO - use this to get menu items
     }
 
     function catererStationIdWatcher(newValue, oldValue){
-      if(!_catererStationIdInitLoaded){
-        if(angular.isDefined(newValue) && oldValue !== newValue) {
-          _catererStationIdInitLoaded = true;
-        }
+      if(!angular.isDefined(newValue)){
         return;
       }
-      var menuIds = [];
-      var companyMenuCatererStationId = parseInt(newValue);
-      for(var i in _companyMenuCatererStations){
-        if(_companyMenuCatererStations[i].catererStationIds.indexOf(companyMenuCatererStationId) === -1){
-          continue;
-        }
-        if(menuIds.indexOf(_companyMenuCatererStations[i].menuId) !== -1){
-          continue;
-        }
-        menuIds.push(_companyMenuCatererStations[i].menuId);
+      // If not first time loaded, it changed, so lets get the items
+      if(angular.isDefined(oldValue) && $scope.deliveryNote.catererStationId === newValue){
+        var catererStationId = parseInt(newValue);
+        // TODO - On successful switch, will need to to filter out same, and only allow unique items to be appeneded to list
+        getMasterRetailItemsByCatererStationId(catererStationId);
       }
-      console.log(menuIds);
+    }
+
+    function getMasterRetailItemsByCatererStationId(catererStationId){
+      // TODO - Blocker
+      // api/retail-items/master needs to accept catererStationId argument filter
+      // and return id(master), Item Name, Item Code and NO versions
+      deliveryNoteFactory.getMasterRetailItems(catererStationId).then(setMasterRetailItemsFromResponse, showResponseErrors);
+      setCatererStationMenuIds(catererStationId);
+    }
+
+    function setMasterRetailItemsFromResponse(response){
+      $scope.masterRetailItems = response.masterItems;
+    }
+
+    function setCatererStationMenuIds(catererStationId){
+      $scope.catererStationMenuIds = [];
+      for(var i in _companyMenuCatererStations){
+        if(_companyMenuCatererStations[i].catererStationIds.indexOf(catererStationId) === -1){
+          continue;
+        }
+        if($scope.catererStationMenuIds.indexOf(_companyMenuCatererStations[i].menuId) !== -1){
+          continue;
+        }
+        $scope.catererStationMenuIds.push(_companyMenuCatererStations[i].menuId);
+      }
+      getMenuItems();
+    }
+
+    function getMenuItems(){
+      if(!$scope.catererStationMenuIds.length){
+        return;
+      }
       // TODO - We now have a list of menuIds, to get all the items based on those menuIds
+      // For each menu ID, loop and call API - api/menus/#menu ID#
+      // Returned menu has menuItems array, each item has itemId which is master ID
     }
 
     function displayLoadingModal(loadingText) {

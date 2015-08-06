@@ -11,6 +11,7 @@ describe('Service: deliveryNoteFactory', function () {
   var catererStationService;
   var GlobalMenuService;
   var menuCatererStationsService;
+  var itemsService;
 
   beforeEach(inject(function (_deliveryNoteFactory_, $injector) {
     deliveryNoteFactory = _deliveryNoteFactory_;
@@ -18,11 +19,13 @@ describe('Service: deliveryNoteFactory', function () {
     catererStationService = $injector.get('catererStationService');
     GlobalMenuService = $injector.get('GlobalMenuService');
     menuCatererStationsService = $injector.get('menuCatererStationsService');
+    itemsService = $injector.get('itemsService');
 
     spyOn(deliveryNotesService, 'getDeliveryNote');
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(GlobalMenuService.company, 'get');
     spyOn(menuCatererStationsService, 'getRelationshipList');
+    spyOn(itemsService, 'getItemsList');
 
   }));
 
@@ -52,6 +55,14 @@ describe('Service: deliveryNoteFactory', function () {
     it('should call getRelationshipList', function(){
       deliveryNoteFactory.getCompanyMenuCatererStations();
       expect(menuCatererStationsService.getRelationshipList).toHaveBeenCalled();
+    });
+  });
+
+  describe('itemsService calls', function(){
+    it('should call getItemsList', function(){
+      var csid = 1;
+      deliveryNoteFactory.getMasterRetailItems(csid);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith({catererStationId:csid}, true);
     });
   });
 
