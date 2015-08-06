@@ -191,6 +191,10 @@ angular
         templateUrl: 'views/stock-take.html',
         controller: 'StockTakeCtrl'
       })
+      .when('/stock-take-review', {
+        templateUrl: 'views/stock-take-review.html',
+        controller: 'StockTakeReviewCtrl'
+      })
       .when('/stock-take-report', {
         templateUrl: 'views/stock-take-report.html',
         controller: 'StockTakeReportCtrl'
