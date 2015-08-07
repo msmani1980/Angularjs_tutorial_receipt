@@ -25,13 +25,8 @@
           </div>
 
         </div>
-      </div>
 
-      <!--TODO: figure out why the date is here, if needed, what API is used to pull it in
-      <div class="col-xs-12 col-sm-8 text-right">
-        <label>02/03/2015</label>
       </div>
-      -->
 
     </div>
 
@@ -44,21 +39,22 @@
 
       <div class="col-xs-12 col-sm-2">
         <div class="form-group">
-          <label>Filter by:</label>
+          <label>Todays Date:</label>
+          <p>{{todaysDate}}</p>
         </div>
       </div>
 
       <div class="col-xs-12 col-sm-3">
         <div class="form-group">
           <label>Item Code</label>
-          <input ng-model="search.itemCode" type="text" class="form-control" id="filter-item-code" placeholder="1234" ng-readonly="readOnly">
+          <input ng-model="search.itemCode" type="text" class="form-control" id="filter-item-code" placeholder="Search" ng-readonly="readOnly">
         </div>
       </div>
 
       <div class="col-xs-12 col-sm-3">
         <div class="form-group">
           <label>Item Name</label>
-          <input ng-model="search.itemName" type="text" class="form-control" id="filter-item-name" placeholder="Coke" ng-readonly="readOnly">
+          <input ng-model="search.itemName" type="text" class="form-control" id="filter-item-name" placeholder="Search" ng-readonly="readOnly">
         </div>
       </div>
 
@@ -106,7 +102,7 @@
             <input type="text" class="form-control" value="{{stockItem.receivedQuantity}}" ng-disabled="true">
           </td>
           <td id="dispatchedQuantity-{{$index}}">
-            <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}">
+            <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}" placeholder="0">
           </td>
         </tr>
 

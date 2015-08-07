@@ -94,6 +94,17 @@ describe('Controller: StockDashboardCtrl', function() {
 
     });
 
+    describe('todaysDate', function() {
+      it('variable should be set in scope', function() {
+        expect(scope.todaysDate).toBeDefined();
+      });
+
+      it('variable should be populated with date', function() {
+        expect(scope.todaysDate.length).toEqual(10);
+      });
+
+    });
+
   });
 
 });

@@ -262,7 +262,7 @@
   .retail-name-multiple-select {
     width: 100%;
     margin-right: 10px;
-    
+
     .select2-choices {
       border-color: #ccc;
       border-radius: 2px;
@@ -304,7 +304,7 @@
     font-weight:100;
     font-size:16px
   }
-  
+
   .datepicker-container {
 
     .row {
@@ -320,7 +320,7 @@
 
     .well {
       padding: 10px 19px;
-      
+
       .form-group {
         margin-bottom: 0;
       }
@@ -329,7 +329,7 @@
 }
 
 .delivery-notes-list {
-  
+
   label {
     font-weight:100;
     font-size:16px
@@ -349,7 +349,7 @@
     }
 
   }
-  
+
 }
 
 @media(max-width:$screen-sm-min){
@@ -380,15 +380,15 @@
 }
 
 .stock-dashboard {
-  
+
   label {
     font-weight:100;
     font-size:16px
   }
 }
- 
+
 .stock-dashboard-container {
-  margin-top:24rem;
+  margin-top:16rem;
 }
 
 .stock-take-container {
@@ -396,7 +396,7 @@
 }
 
 .stock-take-report {
-  
+
   label {
     font-weight:100;
     font-size:16px
@@ -405,15 +405,15 @@
 
 .popover {
   min-width: 300px;
-  
+
   .popover-title {
-  
+
     .close {
       position: relative;
       bottom: 3px;
     }
   }
-  
+
   textarea {
     width: 100%;
     border-color: #ccc;
