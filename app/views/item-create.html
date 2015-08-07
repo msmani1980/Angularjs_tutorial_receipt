@@ -375,15 +375,25 @@
 
         </div>
 
-        <div class="form-group">
-          <button ng-hide="isVoucherSelected" id="add-tax-type" type="button" class="btn btn-primary"
+        <div class="form-group" ng-hide="isVoucherSelected">
+          <button id="add-tax-type" type="button" class="btn btn-primary"
                   ng-click="addTaxType()">
             <i class="fa fa-plus"></i> Add Tax Type
           </button>
-          <button ng-show="isVoucherSelected" id="add-add-voucher" type="button" class="btn btn-primary"
-                  ng-click="addVoucher()">
-            <i class="fa fa-plus"></i> Add Voucher
-          </button>
+        </div>
+
+        <div class="voucher-container" ng-show="isVoucherSelected">
+          <div class="form-group">
+            <label>Voucher</label>
+            <ui-select ng-model="formData.voucher" theme="bootstrap">
+              <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $item.name }}
+              </ui-select-match>
+              <ui-select-choices
+                repeat="character in filteredCharacteristics | filter: $select.search | orderBy:'name'">
+                <div ng-bind-html="character.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
         </div>
 
         <div id="tax-type-container">
