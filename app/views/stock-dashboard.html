@@ -93,7 +93,7 @@
       </thead>
       <tbody>
 
-        <tr stock-adjustment-popover ng-repeat="stockItem in stockDashboardItemsList | orderBy:'itemName' | filter : search ">
+        <tr ng-repeat="stockItem in stockDashboardItemsList | orderBy:'itemName' | filter : search as searchResults track by $index">
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
@@ -105,11 +105,10 @@
           <td >
             <input type="text" class="form-control" value="{{stockItem.receivedQuantity}}" ng-disabled="true">
           </td>
-          <td id="dispatchedQuantity{{stockItem.itemCode}}" rel="popover" popover-template="bootstrapPopover.templateUrl">
+          <td id="dispatchedQuantity-{{$index}}">
             <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}">
           </td>
         </tr>
-
 
       </tbody>
     </table>
