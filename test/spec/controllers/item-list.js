@@ -160,7 +160,7 @@ describe('itemListCtrl', function () {
             itemName: 'item2',
             masterItemId: 36
           }
-        ]
+        ];
       });
       it('should add versions sub array to each item', function () {
         ItemListCtrl.nestVersions();
