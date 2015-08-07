@@ -64,8 +64,6 @@ angular.module('ts5App')
       itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
         $this.nestVersions();
-        console.log($scope.itemsList);
-
         $this.hideLoadingModal();
       });
     };
