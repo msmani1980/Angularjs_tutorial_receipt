@@ -11,6 +11,7 @@ angular.module('ts5App')
     return function(scope, element) {
       element.find('td[rel=popover]').popover({
         placement: 'top',
+        replace: 'true',
         html: 'true'
       });
     };

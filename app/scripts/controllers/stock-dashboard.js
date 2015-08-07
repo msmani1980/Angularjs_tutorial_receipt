@@ -34,4 +34,10 @@ angular.module('ts5App')
       }
     };
 
+    $scope.bootstrapPopover = {
+      content: 'Hello, World!',
+      templateUrl: '/views/directives/stock-adjustment-popover.html',
+      title: 'Title'
+    };
+
   });

@@ -105,7 +105,7 @@
           <td >
             <input type="text" class="form-control" value="{{stockItem.receivedQuantity}}" ng-disabled="true">
           </td>
-          <td id="dispatchedQuantity{{stockItem.itemCode}}" rel="popover" data-content="This is the <b>body</b> of Popover" data-original-title="Creativity Tuts">
+          <td id="dispatchedQuantity{{stockItem.itemCode}}" rel="popover" popover-template="bootstrapPopover.templateUrl">
             <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}">
           </td>
         </tr>
