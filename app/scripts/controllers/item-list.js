@@ -58,13 +58,14 @@ angular.module('ts5App')
       });
     };
 
-
     this.getItemsList = function () {
       var query = this.generateItemQuery();
       var $this = this;
       itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
         $this.nestVersions();
+        console.log($scope.itemsList);
+
         $this.hideLoadingModal();
       });
     };
@@ -128,15 +129,21 @@ angular.module('ts5App')
     };
 
     $scope.isOpen = function(item) {
-      return (item.itemMasterId === $scope.openVersionId);
+      //return true;
+      return (item.id === $scope.openVersionId);
     };
 
-    $scope.show = function(item) {
-      $scope.openVersionId = item.itemMasterId;
-    };
-
-    $scope.hide = function(item) {
-      $scope.openVersionId = -1;
+    $scope.toggleVersionVisibility = function(item) {
+      if(item.versions.length <= 0) {
+        return;
+      }
+      angular.element('#item-' + item.id).toggleClass('open-accordion');
+      if($scope.openVersionId === item.id) {
+        $scope.openVersionId = -1;
+      } else {
+        angular.element('#item-' + $scope.openVersionId).removeClass('open-accordion');
+        $scope.openVersionId = item.id;
+      }
     };
 
     this.displayLoadingModal = function (loadingText) {

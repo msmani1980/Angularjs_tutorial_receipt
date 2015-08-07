@@ -138,12 +138,12 @@
       </tr>
       </thead>
 
-      <tbody id="item-{{item.id}}" ng-repeat="item in itemsList" style="background-color:#f4f4f4">
-      <tr>
+      <tbody id="item-{{item.id}}" ng-repeat="item in itemsList">
+      <tr id="master-item-{{item.id}}" class="master-row">
         <td>
-            <span class="fa fa-chevron-down" ng-show="!isOpen(item) && hasSubVersions(item)"
-                  ng-click="show(item)"></span>
-          <span class="fa fa-chevron-up" ng-show="isOpen(item)" ng-click="hide(item)"></span>
+            <span class="fa fa-plus-square-o" ng-show="!isOpen(item) && hasSubVersions(item)"
+                  ng-click="toggleVersionVisibility(item)"></span>
+          <span class="fa fa-minus-square" ng-show="isOpen(item)" ng-click="toggleVersionVisibility(item)"></span>
         </td>
         <td>{{ item.itemCode }}</td>
         <td>{{ item.itemName }}</td>
@@ -171,8 +171,8 @@
         </td>
       </tr>
 
-      <tr ng-repeat="version in item.versions" ng-show="isOpen(item)" style="background-color:#ffffff">
-        <td colspan="4"></td>
+      <tr ng-repeat="version in item.versions" ng-show="isOpen(item)" class="subversion-row">
+        <td colspan="4" class="empty-col"></td>
         <td>{{ item.itemTypeName }}</td>
         <td>{{ item.onBoardName }}</td>
         <td>{{ item.categoryName }}</td>
