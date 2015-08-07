@@ -15,19 +15,13 @@
 
             <fieldset ng-hide="viewOnly">
 
-                <button class="btn btn-primary" ng-click="formReview()" ng-hide="readOnly">
-                  <span>Review</span>
-                </button>
-                
-                <!-- TODO: SAVE BUTTON AVAIALABLE ONLY AFTER REVIEWED (BUTTON ABOVE) -->
-                <button class="btn btn-primary" ng-click="formSave()" ng-hide="true">
+                <button class="btn btn-primary" ng-click="formSave()">
                   <span>Save</span>
                 </button>
 
                 <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
 
-                <!-- TODO: SUBMIT BUTTON AVAIALABLE ONLY AFTER REVIEWED (BUTTON ABOVE) -->
-                <button class="btn btn-primary" ng-click="submitForm(formData)" ng-hide="true">
+                <button class="btn btn-primary" ng-click="submitForm(formData)">
                   <span class="fa fa-check-square-o" aria-hidden="true"></span>
                   <span>Submit</span>
                 </button>
@@ -45,127 +39,17 @@
           <div class="form-group">
             <label>LMP Station</label>
             <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true">
-
-<!-- LMP STATION SELECTOR (BELOW) REPLACED BY READ-ONLY DATA ABOVE -->
-<!--               <select class="form-control" id="deliveryStation" ng-model="deliveryStationIndex" ng-change="updateDeliveryInfo()" ng-disabled="readOnly"> -->
-<!--                 <option ng-repeat="station in stationList" value="{{ $index }}"> -->
-<!--                   {{ station.stationCode }} ({{ station.stationName}}) -->
-<!--                 </option> -->
-<!--               </select> -->
           </div>
         </div>
 
       </div>
-      <div class="row">
-    
-        <div class="col-xs-12">
-          <div class="form-group">
-            <div class="btn-group import-from-file">
-              <div class="btn-group" dropdown>
-                <button type="button" class="btn btn-info"data-toggle="collapse" data-target="#importFromData" >
-                  <span class="fa fa-copy" aria-hidden="true"></span>
-                  Import Stock From File
-                </button>
-                <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle>
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/FileUpload-PostTripManagement.xlsx">Download Excel Template</a></li>
-                  <li><a data-toggle="modal" data-target=".download-template-modal"
-                         ng-click="downloadTemplate()">View Excel Specifications</a></li>
-                </ul>
-              </div>
-    
-              <div id="importFromData" class="collapse width">
-                <input type="file"
-                       ngf-select
-                       ng-model="postTripFile"
-                       accept=".xls,.xlsx">
-                <button type="button" class="btn btn-info" ng-click="uploadPostTripFileToApi(postTripFile)">
-                  Upload
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-                
-      </div>
-
+      
     </div>
 
   </div>
   <!--/TopHeader -->
 
-  <div class="container stock-take-container">
-
-    <div class="row">
-    <!-- TODO: THIS ROW ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
-
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="deliveryNoteCreatedBy">Created By</label>
-          <input ng-model="deliveryNoteCreatedBy" type="text" class="form-control" id="delivery-note-created-by"
-                 placeholder="User 0001" ng-readonly="readOnly">
-        </div>
-      </div>
-
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="deliveryNoteCreatedDateTime">Created Date/Time</label>
-          <input ng-model="deliveryNoteCreatedDateTime" type="text" class="form-control" id="delivery-note-created-date-time"
-                 placeholder="2/05 - 12:34pm" ng-readonly="readOnly">
-        </div>
-      </div>
-
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="deliveryNoteUpdatedBy">Updated By</label>
-          <input ng-model="deliveryNoteUpdatedBy" type="text" class="form-control" id="delivery-note-updated-by"
-                 placeholder="User 0002" ng-readonly="readOnly">
-        </div>
-      </div>
-
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="deliveryNoteUpdatedDateTime">Updated Date/Time</label>
-          <input ng-model="deliveryNoteUpdatedDateTime" type="text" class="form-control" id="delivery-note-updated-date-time"
-                 placeholder="2/07 - 12:34pm" ng-readonly="readOnly">
-        </div>
-      </div>
-
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="stockTakeID">Stock Take ID</label>
-          <input ng-model="stockTakeID" type="text" class="form-control" id="stock-take-id"
-                 placeholder="123456789" ng-readonly="readOnly">
-        </div>
-      </div>
-
-    </div>
-
-<!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
-    <div class="row">
-      <div class="col-xs-12 col-sm-1">
-        <div class="form-group">
-          <label>Filter by:</label>
-        </div>
-      </div>
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label>Item Code</label>
-          <input ng-model="filterItemCode" type="text" class="form-control" id="filter-item-code"
-                 placeholder="1234" ng-readonly="readOnly">
-        </div>
-      </div>
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label>Item Name</label>
-          <input ng-model="filterItemName" type="text" class="form-control" id="filter-item-name"
-                 placeholder="Coke" ng-readonly="readOnly">
-        </div>
-      </div>
-    </div>
-
+  <div class="container stock-take-review-container">
 
     <ng-form name="form" class="form edit-form delivery-note-form">
 
@@ -388,56 +272,33 @@
         </div>
       </div>
       
-<!-- TODO: THIS WELL/ROW WILL BE ADDED WITH "+ADD ITEMS" BUTTON (BELOW) -->
       <div class="well">
         <div class="row">
 
-          <div class="col-xs-10 col-sm-11">
-
-            <div class="col-xs-12 col-sm-4">
-              <div class="form-group">
-                <label for="itemCode">Item Code</label>
-                <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="009" ng-readonly="readOnly" ng-disabled="true">
-              </div>
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="itemCode">Item Code</label>
+              <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="009" ng-readonly="readOnly" ng-disabled="true">
             </div>
-  
-            <div class="col-xs-12 col-sm-5">
-              <div class="form-group">
-                <label>Item Name*</label>
-                 <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Orange Soda" ng-readonly="readOnly">
-              </div>
-            </div>
-  
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label>Quantity</label>
-                <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="30" ng-readonly="readOnly">
-              </div>
-            </div>
-
           </div>
 
-          <div class="col-xs-2 col-sm-1 text-right">
-            <button type="button" class="btn btn-sm btn-danger">
-              <i class="fa fa-close"></i>
-            </button>
+          <div class="col-xs-12 col-sm-5">
+            <div class="form-group">
+              <label>Item Name</label>
+               <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Orange Soda" ng-readonly="readOnly" ng-disabled="true">
+            </div>
           </div>
-          
+
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label>Quantity</label>
+              <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="30" ng-readonly="readOnly">
+            </div>
+          </div>
+
         </div>
       </div>
-
-      <div class="row">
-        <div class="col-xs-12 col-sm-9"></div>
-        <div class="col-xs-12 col-sm-3 text-right">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="1">
-            <span class="input-group-btn">
-              <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add Items</button>
-            </span>
-          </div>
-        </div>
-      </div>
-              
+      
     </ng-form>
 
   </div>
