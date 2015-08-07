@@ -388,33 +388,56 @@
         </div>
       </div>
       
+<!-- TODO: THIS WELL/ROW WILL BE ADDED WITH "+ADD ITEMS" BUTTON (BELOW) -->
       <div class="well">
         <div class="row">
 
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label for="itemCode">Item Code</label>
-              <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="009" ng-readonly="readOnly" ng-disabled="true">
+          <div class="col-xs-10 col-sm-11">
+
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group">
+                <label for="itemCode">Item Code</label>
+                <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="009" ng-readonly="readOnly" ng-disabled="true">
+              </div>
             </div>
+  
+            <div class="col-xs-12 col-sm-5">
+              <div class="form-group">
+                <label>Item Name*</label>
+                 <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Orange Soda" ng-readonly="readOnly">
+              </div>
+            </div>
+  
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Quantity</label>
+                <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="30" ng-readonly="readOnly">
+              </div>
+            </div>
+
           </div>
 
-          <div class="col-xs-12 col-sm-5">
-            <div class="form-group">
-              <label>Item Name</label>
-               <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Orange Soda" ng-readonly="readOnly" ng-disabled="true">
-            </div>
+          <div class="col-xs-2 col-sm-1 text-right">
+            <button type="button" class="btn btn-sm btn-danger">
+              <i class="fa fa-close"></i>
+            </button>
           </div>
-
-          <div class="col-xs-12 col-sm-3">
-            <div class="form-group">
-              <label>Quantity</label>
-              <input ng-model="quantity" type="text" class="form-control" id="quantity" placeholder="30" ng-readonly="readOnly">
-            </div>
-          </div>
-
+          
         </div>
       </div>
-      
+
+      <div class="row">
+        <div class="col-xs-12 col-sm-9"></div>
+        <div class="col-xs-12 col-sm-3 text-right">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="1">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add Items</button>
+            </span>
+          </div>
+        </div>
+      </div>
+              
     </ng-form>
 
   </div>
