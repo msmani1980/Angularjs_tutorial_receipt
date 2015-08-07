@@ -444,10 +444,10 @@ describe('The Stock Owner Item Create Controller', function () {
         });
 
         it('should not delete any item from $scope.substitutions if not in edit mode', function () {
-          var substitutionsLenth = 40;
+          var substitutionsLength = 40;
           $scope.$digest();
           itemsListDeferred.resolve();
-          expect($scope.substitutions.length).toBe(substitutionsLenth);
+          expect($scope.substitutions.length).toBe(substitutionsLength);
           var itemIdFromList = parseInt($scope.substitutions[0].id);
           expect(itemIdFromList).toEqual(idOfItemInEditMode);
         });

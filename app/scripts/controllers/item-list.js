@@ -134,13 +134,21 @@ angular.module('ts5App')
       if(!$scope.hasSubVersions(item)) {
         return;
       }
-      angular.element('#item-' + item.id).toggleClass('open-accordion');
       if($scope.openVersionId === item.id) {
+        $this.closeAccordian();
         $scope.openVersionId = -1;
       } else {
-        angular.element('#item-' + $scope.openVersionId).removeClass('open-accordion');
+        $this.openAccordian(item);
+        $this.closeAccordian();
         $scope.openVersionId = item.id;
       }
+    };
+
+    $this.openAccordian = function (item) {
+      angular.element('#item-' + item.id).addClass('open-accordion');
+    };
+    $this.closeAccordian = function () {
+      angular.element('#item-' + $scope.openVersionId).removeClass('open-accordion');
     };
 
     this.displayLoadingModal = function (loadingText) {
