@@ -223,6 +223,7 @@
               <div class="form-group col-md-8"
                    ng-if="shouldDisplayNotesField">
                 <select class="form-control"
+                        ng-disabled="formData.globalTradeNumbers.length > 0"
                         ng-model="formData.shouldUseDynamicBarcode"
                         ng-options="option.label for option in dynamicStaticBarcodeOptions track by option.value"
                         required>
