@@ -162,12 +162,6 @@ describe('The StockOwnerItemListCtrl controller', function() {
           expect(item.itemCode).toEqual(jasmine.any(String));
         });
 
-      //it('should have an stockOwnerCode property and is a string',
-      //  function() {
-      //    expect(item.stockOwnerCode).toBeDefined();
-      //    expect(item.stockOwnerCode).toEqual(jasmine.any(String));
-      //  });
-
       it('should have an itemName property and is a string',
         function() {
           expect(item.itemName).toBeDefined();

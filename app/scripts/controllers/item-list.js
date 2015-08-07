@@ -131,7 +131,7 @@ angular.module('ts5App')
     };
 
     $scope.toggleVersionVisibility = function(item) {
-      if(item.versions.length <= 0) {
+      if(!$scope.hasSubVersions(item)) {
         return;
       }
       angular.element('#item-' + item.id).toggleClass('open-accordion');
