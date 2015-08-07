@@ -58,12 +58,28 @@ angular.module('ts5App')
       // TODO - Blocker - https://jira.egate-solutions.com/browse/TSVPORTAL-2710
       // api/retail-items/master needs to accept catererStationId argument filter
       // and return id(master), Item Name, Item Code and NO versions
-      deliveryNoteFactory.getMasterItemsByCatererStationId(catererStationId).then(setMasterItemsByCatererStationId, showResponseErrors);
+      displayLoadingModal();
+      deliveryNoteFactory.getMasterItemsByCatererStationId(catererStationId).then(addNewMasterItemsFromCatererStationMasterItemsResponse, showResponseErrors);
     }
 
-    function setMasterItemsByCatererStationId(response){
-      $scope.catererStationMasterItems = response.masterItems;
-      // TODO - On successful switch, will need to to filter out same, and only allow unique items to be appeneded to list
+    function addNewMasterItemsFromCatererStationMasterItemsResponse(response){
+
+      var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
+        return item.masterItemId;
+      });
+
+      var filteredResponseMasterItems = $filter('filter')(response.masterItems, function(item){
+        return devlieryNoteItemIds.indexOf(item.id) === -1;
+      });
+
+      var newMasterItems = filteredResponseMasterItems.map(function(item){
+        // TODO - once new API is done, if API returns itemName and itemCode, add to object below
+          return getMasterItemById(item.id);
+      });
+
+      $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
+      // TODO TODO TODO TODO - now test the above
+      hideLoadingModal();
     }
 
     function setUllageReasonsFromResponse(response){
@@ -100,17 +116,23 @@ angular.module('ts5App')
       return deliveryNoteFactory.getAllMasterItems().then(setAllMasterItemsFromResponse);
     }
 
-    function getMasterItem(masterItemId){
-      return $filter('filter')($scope.masterItems, {id:masterItemId}, true)[0];
+    function getMasterItemById(masterItemId){
+      var masterItem = $filter('filter')($scope.masterItems, {id:masterItemId}, true)[0];
+      return {
+        masterItemId: masterItemId,
+        itemName: masterItem.itemName,
+        itemCode: masterItem.itemCode
+      };
     }
 
     function setItemMetaFromMasterItems(items){
       var masterItem;
       for(var i in items){
-        masterItem = getMasterItem(items[i].masterItemId);
+        masterItem = getMasterItemById(items[i].masterItemId);
         items[i].itemName = masterItem.itemName;
         items[i].itemCode = masterItem.itemCode;
       }
+      return items;
     }
 
     function initPromisesResolved(){

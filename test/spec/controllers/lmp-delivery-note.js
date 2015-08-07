@@ -235,10 +235,12 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(deliveryNoteFactory.getMasterItemsByCatererStationId).toHaveBeenCalledWith(csid);
       });
       // TODO - update this test to check if length of deliveryNote.items length is increased
+      // TODO Need to test this, that new items are added.
+      /*
       it('should set scope catererStationMasterItems', function(){
         expect(scope.catererStationMasterItems).toBeDefined();
         expect(Object.prototype.toString.call(scope.catererStationMasterItems)).toBe('[object Array]');
-      });
+      }); */
     });
     describe('removeItemByIndex scope function', function(){
       it('should have a removeItemByIndex scope function defined', function(){
