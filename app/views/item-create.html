@@ -65,7 +65,7 @@
 
   <div class="create-form-container" ng-show="uiSelectTemplateReady">
 
-  <ng-form name="form" class="form edit-form create-item-form">
+  <form name="form" class="form edit-form create-item-form">
 
     <form-error-dialog></form-error-dialog>
 
@@ -212,7 +212,7 @@
           <div id="gtin-container">
 
             <div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index">
-              <input-gtin></input-gtin>
+              <input-gtin key="key"></input-gtin>
             </div>
 
           </div>
@@ -380,7 +380,7 @@
 
     </fieldset>
 
-  </ng-form>
+  </form>
 
   </div>
 

@@ -1,17 +1,25 @@
 <!-- GTINDirective -->
+<div class="form-group" ng-class="GTINClass(form,key)">
 
-<div class="form-group" ng-class="{ 'has-error' : form[GTIN].$dirty && !form[GTIN].$valid || displayError && !form[GTIN].$valid , 'has-success' : form[GTIN].$dirty && form[GTIN].$valid }">
   <div class="row">
 
     <div class="col-xs-6 col-sm-6">
-
       <label>Value *</label>
-      <input ng-required name="GTIN" ng-model="GTIN.value" type="text" class="form-control" ng-pattern="regexp.alphanumeric" minlength="1" maxlength="13" ng-min-length="1" ng-max-lengh="13" />
-
+      <input
+        custom-validity
+        custom-pattern="number"
+        ng-required
+        ng-model="GTIN.value"
+        name="GTIN{{key}}"
+        type="text"
+        class="form-control"
+        minlength="1"
+        maxlength="13"
+        ng-min-length="1"
+        ng-max-length="13"/>
     </div>
 
     <div class="col-xs-4 col-sm-5">
-
       <label>Type *</label>
       <select required ng-model="GTIN.type" class="form-control">
         <option value="UPC">UPC</option>
@@ -20,10 +28,9 @@
         <option value="JAN">JAN</option>
         <option value="ISBN">ISBN</option>
       </select>
-
     </div>
 
-    <div class="col-xs-1" ng-hide="viewOnly || itemIsActive">
+    <div class="col-xs-2 col-sm-1" ng-hide="viewOnly || itemIsActive">
       <label class="hidden-sm">Remove</label>
       <span class="btn btn-danger btn-xs" ng-click="removeGTIN($parent.key)">
         <i class="fa fa-close"></i>

@@ -1,0 +1,273 @@
+<div class="module-container">
+
+  <div class="edit-controls">
+    <div class="row">
+
+      <div class="col-xs-6">
+        <h2 class="view-name"> {{ viewName }} </h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+
+        <fieldset ng-hide="viewOnly">
+
+        <!-- TODO: EXPORT BUTTONS ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
+<!--             <button type="button" class="btn btn-info"> -->
+<!--               <span class="glyphicon glyphicon-export" aria-hidden="true"></span> -->
+<!--               <span>Export (Excel)</span> -->
+<!--             </button> -->
+<!--             <button type="button" class="btn btn-info"> -->
+<!--               <span class="glyphicon glyphicon-export" aria-hidden="true"></span> -->
+<!--               <span>Export (PDF)</span> -->
+<!--             </button> -->
+
+            <button class="btn btn-primary" ng-click="formReview()" ng-hide="readOnly">
+              <span>Review</span>
+            </button>
+
+            <!-- TODO: SAVE BUTTON AVAIALABLE ONLY AFTER REVIEWED (BUTTON ABOVE) -->
+            <button class="btn btn-primary" ng-click="formSave()" ng-hide="true">
+              <span>Save</span>
+            </button>
+
+            <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
+
+            <!-- TODO: SUBMIT BUTTON AVAIALABLE ONLY AFTER REVIEWED (BUTTON ABOVE) -->
+            <button class="btn btn-primary" ng-click="submitForm(formData)" ng-hide="true">
+              <span class="fa fa-check-square-o" aria-hidden="true"></span>
+              <span>Submit</span>
+            </button>
+
+        </fieldset>
+
+      </div>
+
+    </div>
+  </div>
+
+  <form class="form edit-form delivery-note-form">
+
+    <form-error-dialog></form-error-dialog>
+    <!--/TopHeader -->
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <!-- form header-->
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label>LMP Station*</label>
+              <select class="form-control" ng-model="deliveryNote.catererStationId" ng-change="updateDeliveryInfo()"
+                      ng-disabled="readOnly || catererStationList.length == 1" ng-show="catererStationList.length">
+                <option ng-repeat="station in catererStationList track by $index" value="{{ station.id }}"
+                        ng-selected="catererStationList.length == 1 || station.id == deliveryNote.catererStationId">
+                  {{ station.code }} ({{ station.name}})
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label for="delivery-note-number">Delivery Note Number*</label>
+              <input ng-model="deliveryNote.deliveryNoteNumber" name="deliveryNoteNumber" type="text" class="form-control" id="delivery-note-number"
+                     required custom-validity custom-pattern="time" ng-readonly="readOnly">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label for="purchase-order-number">Purchase Order Number*</label>
+              <input ng-model="deliveryNote.purchaseOrderNumber" name="purchaseOrderNumber" type="text" class="form-control" id="purchase-order-number"
+                     required custom-validity custom-pattern="time" ng-readonly="readOnly">
+            </div>
+          </div>
+
+          <date-picker
+            class="col-xs-12 col-sm-2"
+            element-class="form-group"
+            disable-date-range="true"
+            start-date-model="deliveryNote.deliveryDate"
+            is-search-field="true"
+            disable-start-date="readOnly"
+            label-from="Delivery Date *">
+          </date-picker>
+
+          <!-- TODO: STATUS ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
+          <div class="col-xs-12 col-sm-2" ng-show="{{ state == 'view' || state == 'edit' }}">
+            <div class="form-group">
+              <label>Status</label>
+              <input ng-model="deliveryStatus" type="text" class="form-control" id="delivery-status"
+                     placeholder="Saved" ng-readonly="readOnly" ng-disabled="true">
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row" ng-show="{{ state == 'view' || state == 'edit' }}">
+        <!-- TODO: THIS ROW ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label>Created By</label>
+              <input ng-model="deliveryNote.createdBy" type="text" class="form-control" readonly="readonly">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label>Created Date/Time</label>
+              <input ng-model="deliveryNote.createdOn" type="text" class="form-control" readonly="readonly">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label>Updated By</label>
+              <input ng-model="deliveryNote.updatedBy" type="text" class="form-control" readonly="readonly">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label>Updated Date/Time</label>
+              <input ng-model="deliveryNote.updatedOn" type="text" class="form-control" readonly="readonly">
+            </div>
+          </div>
+
+        </div>
+
+<!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
+        <div class="row" ng-show="deliveryNote.items.length">
+          <div class="col-xs-12 col-sm-1">
+            <div class="form-group">
+              <label>Filter by:</label>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="filter-item-code">Item Code</label>
+              <input ng-model="filter.itemCode" type="text" class="form-control" id="filter-item-code">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="filter-item-name">Item Name</label>
+              <input ng-model="filter.itemName" type="text" class="form-control" id="filter-item-name">
+            </div>
+          </div>
+        </div>
+
+<!-- TODO: THIS WELL/ROW WILL BE ADDED WITH "+ADD ITEMS" BUTTON (BELOW) -->
+        <div class="well" ng-repeat="item in deliveryNote.items track by $index">
+          <div class="row">
+
+            <div class="col-xs-10 col-sm-11">
+
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Item Code</label>
+                  <input ng-model="item.id" type="text" class="form-control" readonly="readonly">
+                </div>
+              </div>
+
+  <!-- TODO: ITEM CODE (ABOVE) WILL BE AFFECTED BY ITEM NAME (BELOW) AND PULL CORRECT DATA -->
+              <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                  <label>Item Name*</label>
+                   <input ng-model="item.id" type="text" class="form-control" readonly="readonly">
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-sm-1">
+                <div class="form-group">
+                  <label for="expected-qty-{{ $index }}">Expected</label>
+                  <input ng-model="item.expectedQuantity" type="text" class="form-control" id="expected-qty-{{ $index }}"
+                         custom-validity custom-pattern="time" ng-readonly="readOnly">
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-sm-1">
+                <div class="form-group">
+                  <label for="delivered-qty-{{ $index }}">Delivered*</label>
+                  <input ng-model="item.deliveredQuantity" type="text" class="form-control" id="delivered-qty-{{ $index }}"
+                         custom-validity custom-pattern="time" ng-readonly="readOnly">
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-sm-1">
+                <div class="form-group">
+                  <label for="ullage-qty-{{ $index }}">Ullage</label>
+                  <input ng-model="item.ullageQuantity" type="text" class="form-control" id="ullage-qty-{{ $index }}"
+                         custom-validity custom-pattern="time" ng-readonly="readOnly">
+                </div>
+              </div>
+
+  <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Ullage Reason*</label>
+
+                  <ui-select id="ullage-reason" ng-model="item" theme="bootstrap" ng-disabled="{{ readOnly || !item.ullageQuantity }}">
+                    <ui-select-match>{{ item.ullageReason }}</ui-select-match>
+                    <ui-select-choices repeat="ullageReason in ullageReasons">
+                      <div ng-bind-html="ullageReason"></div>
+                    </ui-select-choices>
+                  </ui-select>
+
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-sm-1">
+                <div class="form-group">
+                  <label for="booked-qty-{{ $index }}">Booked</label>
+                  <input ng-model="item.bookedQuantity" type="text" class="form-control" id="booked-qty-{{ $index }}"
+                         custom-validity custom-pattern="time" ng-readonly="readOnly" ng-disabled="true">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-xs-2 col-sm-1 text-right" ng-hide="readOnly">
+              <button type="button" class="btn btn-sm btn-danger" ng-click="removeItem(item)">
+                <i class="fa fa-close"></i>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row" ng-hide="readOnly">
+          <div class="col-xs-12 col-sm-9"></div>
+          <div class="col-xs-12 col-sm-3 text-right">
+            <div class="input-group">
+              <input type="text" class="form-control">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add Items</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav></dynamic-left-nav>

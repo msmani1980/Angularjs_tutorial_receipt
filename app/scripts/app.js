@@ -168,13 +168,17 @@ angular
         templateUrl: 'views/manage-goods-received.html',
         controller: 'ManageGoodsReceivedCtrl'
       })
-      .when('/lmp-delivery-note/:state/:id', {
-        templateUrl: 'views/delivery-note.html',
+      .when('/lmp-delivery-note/:state/:id?', {
+        templateUrl: 'views/lmp-delivery-note.html',
         controller: 'LmpDeliveryNoteCtrl'
       })
       .when('/delivery-note', {
         templateUrl: 'views/delivery-note.html',
         controller: 'DeliveryNoteCtrl'
+      })
+      .when('/delivery-note-review', {
+        templateUrl: 'views/delivery-note-review.html',
+        controller: 'DeliveryNoteReviewCtrl'
       })
       .when('/employee-commission-list', {
         templateUrl: 'views/employee-commission-list.html',
@@ -187,6 +191,10 @@ angular
       .when('/stock-take', {
         templateUrl: 'views/stock-take.html',
         controller: 'StockTakeCtrl'
+      })
+      .when('/stock-take-review', {
+        templateUrl: 'views/stock-take-review.html',
+        controller: 'StockTakeReviewCtrl'
       })
       .when('/stock-take-report', {
         templateUrl: 'views/stock-take-report.html',
