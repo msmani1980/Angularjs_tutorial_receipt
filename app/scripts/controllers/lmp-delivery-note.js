@@ -27,7 +27,7 @@ angular.module('ts5App')
     }
 
     function getCompanyMenuCatererStations(){
-      return deliveryNoteFactory.getCompanyMenuCatererStations().then(setCompanyMenuCatererStations);
+      return deliveryNoteFactory.getCompanyMenuCatererStations().then(setCompanyMenuCatererStationsFromResponse);
     }
 
     function setCatererStationListFromResponse(response){
@@ -39,7 +39,7 @@ angular.module('ts5App')
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
     }
 
-    function setCompanyMenuCatererStations(response){
+    function setCompanyMenuCatererStationsFromResponse(response){
       _companyMenuCatererStations = response.companyMenuCatererStations;
     }
 
@@ -63,7 +63,7 @@ angular.module('ts5App')
     }
 
     function setMasterItemsByCatererStationId(response){
-      $scope.masterItems = response.masterItems;
+      $scope.catererStationMasterItems = response.masterItems;
       // TODO - On successful switch, will need to to filter out same, and only allow unique items to be appeneded to list
     }
 
@@ -94,6 +94,7 @@ angular.module('ts5App')
         return;
       }
       // TODO - We now have a list of menuIds, to get all the items based on those menuIds
+      // TODO - This is a blocker, and may require an API - https://jira.egate-solutions.com/browse/TSVPORTAL-2710
       // For each menu ID, loop and call API - api/menus/#menu ID#
       // Returned menu has menuItems array, each item has itemId which is master ID
     }
@@ -116,27 +117,78 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
+    function setAllMasterItemsFromResponse(response){
+      $scope.masterItems = response.masterItems;
+    }
+
+    function getMasterItemsList(){
+      return deliveryNoteFactory.getAllMasterItems().then(setAllMasterItemsFromResponse);
+    }
+
+    function getMasterItem(masterItemId){
+      return $filter('filter')($scope.masterItems, {id:masterItemId}, true)[0];
+    }
+
+    function setItemMetaFromMasterItems(items){
+      var masterItem;
+      for(var i in items){
+        masterItem = getMasterItem(items[i].masterItemId);
+        items[i].itemName = masterItem.itemName;
+        items[i].itemCode = masterItem.itemCode;
+      }
+    }
+
     function initPromisesResolved(){
-      // TODO switch on state?
       hideLoadingModal();
+      var initPromisesResolvedStateAction = $routeParams.state + 'InitPromisesResolved';
+      if(stateActions[initPromisesResolvedStateAction]){
+        stateActions[initPromisesResolvedStateAction]();
+      }
     }
 
     function resolveInitPromises(){
       $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
     }
 
+    $scope.removeItemByIndex = function(index){
+      $scope.deliveryNote.items.splice(index, true);
+    };
+
+    /*
+    $scope.ullageReasonOnSelect = function($select){
+      // TODO - add ability to allow user to enter free text, must create new ullage reason on save
+      // http://stackoverflow.com/questions/29489821/allow-manually-entered-text-in-ui-select
+      console.log($select);
+    };*/
+
+    function setSelectedUllageReasonByItemMasterId(item){
+      $scope.selectedUllageReason[item.masterItemId] = {selected:{companyReasonCodeName: item.ullageReason}};
+    }
+
+    function setSelectedUllageReasons(){
+      $scope.selectedUllageReason = [];
+      for(var i in $scope.deliveryNote.items){
+        setSelectedUllageReasonByItemMasterId($scope.deliveryNote.items[i]);
+      }
+    }
+
     var stateActions = {};
-
-    // TODO - get all retail items from startDate now for adding itemName and itemCode to retial item list.
-
+    // view state actions
     stateActions.viewInit = function(){
       $scope.readOnly = true;
       displayLoadingModal();
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
+      _initPromises.push(getMasterItemsList());
       resolveInitPromises();
     };
+    stateActions.viewInitPromisesResolved = function(){
+      if(angular.isDefined($scope.deliveryNote)) {
+        setItemMetaFromMasterItems($scope.deliveryNote.items);
+      }
+    };
 
+    // create state actions
     stateActions.createInit = function(){
       $scope.readOnly = false;
       $scope.viewName = 'Create Delivery Note';
@@ -144,10 +196,12 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
       _initPromises.push(getUllageCompanyReasonCodes());
+      _initPromises.push(getMasterItemsList());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       resolveInitPromises();
     };
 
+    // edit state actions
     stateActions.editInit = function(){
       $scope.readOnly = false;
       displayLoadingModal();
@@ -155,8 +209,17 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
       _initPromises.push(getUllageCompanyReasonCodes());
+      _initPromises.push(getMasterItemsList());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       resolveInitPromises();
+    };
+    stateActions.editInitPromisesResolved = function(){
+      if(angular.isDefined($scope.deliveryNote)) {
+        setItemMetaFromMasterItems($scope.deliveryNote.items);
+      }
+      if(angular.isDefined($scope.deliveryNote) && angular.isDefined($scope.ullageReasons)){
+        setSelectedUllageReasons();
+      }
     };
 
     // constructor
