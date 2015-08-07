@@ -152,7 +152,8 @@
                           placeholder="http://www.website.com"></input-text>
             </div>
 
-            <input-text ng-if="isVoucherSelected" label="Notes" name="notes" pattern="regexp.word" placeholder="Notes for Voucher"></input-text>
+            <input-text ng-if="isVoucherSelected" label="Notes" name="notes" pattern="regexp.word"
+                        placeholder="Notes for Voucher"></input-text>
 
             <div class="form-group">
               <label>Item Substitutions</label>
@@ -250,35 +251,23 @@
                         max-length="25"></input-text>
 
             <tabset justified="true" ng-hide="isQrCreateHidden()">
-
               <tab heading="QR Create">
-
                 <qr-create></qr-create>
-
               </tab>
 
               <tab heading="QR Upload">
-
                 <qr-upload></qr-upload>
-
               </tab>
-
             </tabset>
 
             <div class="panel panel-default" ng-show="isQrCodeSet()">
-
               <div class="panel-heading">
-
                 <p class="panel-title">
-
                   <i class="fa fa-image"></i> QR Code
-
 						      <span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removeQRCode()">
 						        <i class="fa fa-close"></i>
 						      </span>
-
                 </p>
-
               </div>
 
               <div class="panel-body">
@@ -286,11 +275,8 @@
               </div>
 
             </div>
-
           </fieldset>
-
         </div>
-
       </div>
 
       <fieldset ng-disabled="isDisabled()">
@@ -298,15 +284,10 @@
         <h3 id="measurements">Measurements</h3>
 
         <div class="row">
-
           <div class="col-xs-12 col-sm-6">
-
             <label>Item Weight</label>
-
             <div class="row">
-
               <div class="form-group">
-
                 <div class="col-xs-9">
                   <input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
                 </div>
@@ -318,21 +299,14 @@
                     </option>
                   </select>
                 </div>
-
               </div>
-
             </div>
-
           </div>
 
           <div class="col-xs-12 col-sm-6">
-
             <label>Item Volume</label>
-
             <div class="row">
-
               <div class="form-group">
-
                 <div class="col-xs-9">
                   <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
                 </div>
@@ -344,13 +318,9 @@
                     </option>
                   </select>
                 </div>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
 
         <label>Measurements</label>
@@ -391,11 +361,11 @@
 
         <h3 id="price-and-tax">Price & Tax</h3>
 
-        <p>
+        <div class="form-group">
           <button id="add-price-group" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
             <i class="fa fa-plus"></i> Add Price Type
           </button>
-        </p>
+        </div>
 
         <div id="price-type-container">
 
@@ -405,11 +375,16 @@
 
         </div>
 
-        <p>
-          <button id="add-tax-type" type="button" class="btn btn-primary" ng-click="addTaxType()">
+        <div class="form-group">
+          <button ng-hide="isVoucherSelected" id="add-tax-type" type="button" class="btn btn-primary"
+                  ng-click="addTaxType()">
             <i class="fa fa-plus"></i> Add Tax Type
           </button>
-        </p>
+          <button ng-show="isVoucherSelected" id="add-add-voucher" type="button" class="btn btn-primary"
+                  ng-click="addVoucher()">
+            <i class="fa fa-plus"></i> Add Voucher
+          </button>
+        </div>
 
         <div id="tax-type-container">
 
