@@ -28,7 +28,10 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
     substitutions: [],
     recommendations: [],
     globalTradeNumbers: [],
-    prices: []
+    prices: [],
+    shouldUseDynamicBarcode: {
+      value: false
+    }
   };
 
   $scope.viewName = 'Create Item';
@@ -39,6 +42,16 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
   $scope.editingItem = false;
   $scope.shouldDisplayURLField = false;
   $scope.uiSelectTemplateReady = false;
+  $scope.dynamicStaticBarcodeOptions = [
+    {
+      label: 'Dynamic Barcode',
+      value: true
+    },
+    {
+      label: 'GTIN',
+      value: false
+    }
+  ];
 
   this.checkIfViewOnly = function () {
     var path = $location.path();
@@ -658,8 +671,10 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
    *
    */
 
-  $scope.$watch('formData.prices', function (newData, oldData) {
-    $this.watchPriceGroups(newData, oldData);
+  $scope.$watch('formData.prices', $this.watchPriceGroups, true);
+
+  $scope.$watch('formData.itemTypeId', function (selectedItemType) {
+    $scope.shouldDisplayNotesField = (parseInt(selectedItemType) === 3);
   }, true);
 
   $scope.addPriceGroup = function () {
