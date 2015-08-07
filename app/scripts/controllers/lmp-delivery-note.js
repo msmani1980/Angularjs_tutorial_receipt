@@ -59,26 +59,11 @@ angular.module('ts5App')
       // api/retail-items/master needs to accept catererStationId argument filter
       // and return id(master), Item Name, Item Code and NO versions
       deliveryNoteFactory.getMasterItemsByCatererStationId(catererStationId).then(setMasterItemsByCatererStationId, showResponseErrors);
-      setCatererStationMenuIds(catererStationId);
     }
 
     function setMasterItemsByCatererStationId(response){
       $scope.catererStationMasterItems = response.masterItems;
       // TODO - On successful switch, will need to to filter out same, and only allow unique items to be appeneded to list
-    }
-
-    function setCatererStationMenuIds(catererStationId){
-      $scope.catererStationMenuIds = [];
-      for(var i in _companyMenuCatererStations){
-        if(_companyMenuCatererStations[i].catererStationIds.indexOf(catererStationId) === -1){
-          continue;
-        }
-        if($scope.catererStationMenuIds.indexOf(_companyMenuCatererStations[i].menuId) !== -1){
-          continue;
-        }
-        $scope.catererStationMenuIds.push(_companyMenuCatererStations[i].menuId);
-      }
-      getMenuItems();
     }
 
     function setUllageReasonsFromResponse(response){
@@ -87,16 +72,6 @@ angular.module('ts5App')
 
     function getUllageCompanyReasonCodes(){
       return deliveryNoteFactory.getCompanyReasonCodes().then(setUllageReasonsFromResponse);
-    }
-
-    function getMenuItems(){
-      if(!$scope.catererStationMenuIds.length){
-        return;
-      }
-      // TODO - We now have a list of menuIds, to get all the items based on those menuIds
-      // TODO - This is a blocker, and may require an API - https://jira.egate-solutions.com/browse/TSVPORTAL-2710
-      // For each menu ID, loop and call API - api/menus/#menu ID#
-      // Returned menu has menuItems array, each item has itemId which is master ID
     }
 
     function displayLoadingModal(loadingText) {

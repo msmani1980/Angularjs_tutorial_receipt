@@ -234,6 +234,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         scope.$digest();
         expect(deliveryNoteFactory.getMasterItemsByCatererStationId).toHaveBeenCalledWith(csid);
       });
+      // TODO - update this test to check if length of deliveryNote.items length is increased
       it('should set scope catererStationMasterItems', function(){
         expect(scope.catererStationMasterItems).toBeDefined();
         expect(Object.prototype.toString.call(scope.catererStationMasterItems)).toBe('[object Array]');
