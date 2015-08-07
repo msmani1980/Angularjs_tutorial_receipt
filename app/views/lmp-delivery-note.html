@@ -59,10 +59,9 @@
               <label>LMP Station*</label>
               <select class="form-control" ng-model="deliveryNote.catererStationId" ng-change="updateDeliveryInfo()"
                       ng-disabled="readOnly || catererStationList.length == 1" ng-show="catererStationList.length">
-                <option ng-repeat="station in catererStationList track by $index" value="{{ station.id }}"
+                <option ng-repeat="station in catererStationList track by $index" ng-value="station.id"
                         ng-selected="catererStationList.length == 1 || station.id == deliveryNote.catererStationId">
-                  {{ station.code }} ({{ station.name}})
-                </option>
+                  {{ station.code }} ({{ station.name}})</option>
               </select>
             </div>
           </div>
@@ -153,19 +152,19 @@
           <div class="col-xs-12 col-sm-2">
             <div class="form-group">
               <label for="filter-item-code">Item Code</label>
-              <input ng-model="filter.itemCode" type="text" class="form-control" id="filter-item-code">
+              <input ng-model="filterInput.itemCode" type="text" class="form-control" id="filter-item-code">
             </div>
           </div>
           <div class="col-xs-12 col-sm-2">
             <div class="form-group">
               <label for="filter-item-name">Item Name</label>
-              <input ng-model="filter.itemName" type="text" class="form-control" id="filter-item-name">
+              <input ng-model="filterInput.itemName" type="text" class="form-control" id="filter-item-name">
             </div>
           </div>
         </div>
 
 <!-- TODO: THIS WELL/ROW WILL BE ADDED WITH "+ADD ITEMS" BUTTON (BELOW) -->
-        <div class="well" ng-repeat="item in deliveryNote.items track by $index">
+        <div class="well" ng-repeat="item in deliveryNote.items | filter:filterInput track by item.masterItemId">
           <div class="row">
 
             <div class="col-xs-10 col-sm-11">
@@ -173,7 +172,7 @@
               <div class="col-xs-12 col-sm-2">
                 <div class="form-group">
                   <label>Item Code</label>
-                  <input ng-model="item.id" type="text" class="form-control" readonly="readonly">
+                  <input ng-model="item.itemCode" type="text" class="form-control" readonly="readonly">
                 </div>
               </div>
 
@@ -181,43 +180,49 @@
               <div class="col-xs-12 col-sm-4">
                 <div class="form-group">
                   <label>Item Name*</label>
-                   <input ng-model="item.id" type="text" class="form-control" readonly="readonly">
+                   <input ng-model="item.itemName" type="text" class="form-control" readonly="readonly">
                 </div>
               </div>
 
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
-                  <label for="expected-qty-{{ $index }}">Expected</label>
-                  <input ng-model="item.expectedQuantity" type="text" class="form-control" id="expected-qty-{{ $index }}"
-                         custom-validity custom-pattern="time" ng-readonly="readOnly">
+                  <label for="expected-qty-{{ item.masterItemId }}">Expected</label>
+                  <input ng-model="item.expectedQuantity" type="text" class="form-control"
+                         id="expected-qty-{{ item.masterItemId }}"
+                         custom-validity custom-pattern="number"
+                         ng-readonly="readOnly">
                 </div>
               </div>
 
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
-                  <label for="delivered-qty-{{ $index }}">Delivered*</label>
-                  <input ng-model="item.deliveredQuantity" type="text" class="form-control" id="delivered-qty-{{ $index }}"
-                         custom-validity custom-pattern="time" ng-readonly="readOnly">
+                  <label for="delivered-qty-{{ item.masterItemId }}">Delivered*</label>
+                  <input ng-model="item.deliveredQuantity" type="text" class="form-control"
+                         id="delivered-qty-{{ item.masterItemId }}"
+                         custom-validity custom-pattern="number"
+                         ng-readonly="readOnly" ng-required="true">
                 </div>
               </div>
 
               <div class="col-xs-12 col-sm-1">
-                <div class="form-group">
-                  <label for="ullage-qty-{{ $index }}">Ullage</label>
-                  <input ng-model="item.ullageQuantity" type="text" class="form-control" id="ullage-qty-{{ $index }}"
-                         custom-validity custom-pattern="time" ng-readonly="readOnly">
+                <div class="form-group" ng-hide="readOnly && !item.ullageQuantity">
+                  <label for="ullage-qty-{{ item.masterItemId }}">Ullage</label>
+                  <input ng-model="item.ullageQuantity" type="text" class="form-control"
+                         id="ullage-qty-{{ item.masterItemId }}"
+                         custom-validity custom-pattern="number"
+                         ng-readonly="readOnly">
                 </div>
               </div>
 
   <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
               <div class="col-xs-12 col-sm-2">
-                <div class="form-group">
+                <div class="form-group" ng-show="item.ullageQuantity">
                   <label>Ullage Reason*</label>
-
-                  <ui-select id="ullage-reason" ng-model="item" theme="bootstrap" ng-disabled="{{ readOnly || !item.ullageQuantity }}">
-                    <ui-select-match>{{ item.ullageReason }}</ui-select-match>
+                  <ui-select ng-model="selectedUllageReason[item.masterItemId].selected" theme="bootstrap"
+                             ng-disabled="readOnly || !item.ullageQuantity">
+                    <ui-select-match>{{ $select.selected.companyReasonCodeName }}</ui-select-match>
                     <ui-select-choices repeat="ullageReason in ullageReasons">
-                      <div ng-bind-html="ullageReason"></div>
+                      <div ng-bind-html="ullageReason.companyReasonCodeName"></div>
                     </ui-select-choices>
                   </ui-select>
 
@@ -226,16 +231,18 @@
 
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group">
-                  <label for="booked-qty-{{ $index }}">Booked</label>
-                  <input ng-model="item.bookedQuantity" type="text" class="form-control" id="booked-qty-{{ $index }}"
-                         custom-validity custom-pattern="time" ng-readonly="readOnly" ng-disabled="true">
+                  <label for="booked-qty-{{ item.masterItemId }}">Booked</label>
+                  <input ng-model="item.bookedQuantity" type="text" class="form-control"
+                         id="booked-qty-{{ item.masterItemId }}"
+                         custom-validity custom-pattern="number"
+                         ng-readonly="readOnly" ng-disabled="true">
                 </div>
               </div>
 
             </div>
 
             <div class="col-xs-2 col-sm-1 text-right" ng-hide="readOnly">
-              <button type="button" class="btn btn-sm btn-danger" ng-click="removeItem(item)">
+              <button type="button" class="btn btn-sm btn-danger" ng-click="removeItemByIndex($index)">
                 <i class="fa fa-close"></i>
               </button>
             </div>
