@@ -127,7 +127,6 @@ angular.module('ts5App')
     };
 
     $scope.isOpen = function(item) {
-      //return true;
       return (item.id === $scope.openVersionId);
     };
 
