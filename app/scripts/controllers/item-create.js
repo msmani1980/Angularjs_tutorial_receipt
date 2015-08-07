@@ -674,7 +674,7 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
   $scope.$watch('formData.prices', $this.watchPriceGroups, true);
 
   $scope.$watch('formData.itemTypeId', function (selectedItemType) {
-    $scope.shouldDisplayNotesField = (parseInt(selectedItemType) === 3);
+    $scope.isVoucherSelected = (parseInt(selectedItemType) === 3);
   }, true);
 
   $scope.addPriceGroup = function () {
