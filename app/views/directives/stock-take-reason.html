@@ -5,16 +5,22 @@
 			<div class="modal-body text-center">
 
 				<div class="modal-header">
-					<h3 class="modal-title">Adjustment</h3>
+					<h3 class="modal-title">Adjustment to Count</h3>
 				</div>
 
 				<div class="modal-body">
+
 					<label>Reason*</label>
+					<p>To adjust Current Item Count, you must give a reason below.</p>
 
 					<ui-select id="stock-adjustment-reason" ng-model="stockAdjustmentReason" theme="bootstrap">
 						<ui-select-match placeholder="Broken">{{ $item.stockAdjustmentReasonCode }}</ui-select-match>
 						<ui-select-choices repeat="">{ item.ullageReasonCode }} ({{ item.stockAdjustmentReasonName }})</ui-select-choices>
 					</ui-select>
+				</div>
+
+				<div class="form-group">
+						<textarea class="form-control" placeholder="Ender a comment..."></textarea>
 				</div>
 
 				<div class="modal-footer">
