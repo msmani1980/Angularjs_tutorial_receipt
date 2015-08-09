@@ -89,7 +89,7 @@
       </thead>
       <tbody>
 
-        <tr ng-repeat="stockItem in stockDashboardItemsList | orderBy:'itemName' | filter : search as searchResults track by $index">
+        <tr ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults">
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
@@ -101,8 +101,8 @@
           <td >
             <input type="text" class="form-control" value="{{stockItem.receivedQuantity}}" ng-disabled="true">
           </td>
-          <td id="dispatchedQuantity-{{$index}}" ng-click="stockTakeReasonOpen()">
-            <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}" placeholder="Click to Edit"  ng-disabled="true">
+          <td id="dispatchedQuantity-{{id}}" ng-click="stockTakeReasonOpen(stockItem.index)">
+            <input type="text" class="form-control" ng-model="dispatchedQuantity[stockItem.index]" placeholder="Click to Edit"  ng-disabled="true">
           </td>
         </tr>
 
@@ -120,4 +120,4 @@
 
 <dynamic-left-nav></dynamic-left-nav>
 
-<stock-take-reason></stock-take-reason>
+<stock-take-reason key="index"></stock-take-reason>

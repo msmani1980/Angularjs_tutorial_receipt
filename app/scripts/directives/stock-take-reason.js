@@ -11,7 +11,9 @@ angular.module('ts5App')
     var stockTakeReasonController = function($scope) {
 
       // Show leave view modal
-      $scope.stockTakeReasonOpen = function() {
+      $scope.stockTakeReasonOpen = function(id) {
+
+        $scope.id = id;
 
         var e = angular.element('#stock-take-reason');
 
