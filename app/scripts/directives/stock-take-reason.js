@@ -10,7 +10,6 @@ angular.module('ts5App')
   .directive('stockTakeReason', function() {
     var stockTakeReasonController = function($scope) {
 
-      // Show leave view modal
       $scope.stockTakeReasonOpen = function(id) {
 
         $scope.id = id;
