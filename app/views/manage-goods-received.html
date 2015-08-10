@@ -16,7 +16,6 @@
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
       </div>
-
     </div>
 
   </div>
@@ -70,7 +69,18 @@
     </form>
   </div>
 
-    <table class="table table-responsive table-bordered table-hover ng-scope">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-title">Select an LMP Station to View Delivery Notes*</div>
+    </div>
+    <div class="panel-body">
+      <select class="form-control" ng-model="stationId">
+        <option ng-repeat="station in stationsList" value="station.id">{{ station.code }}</option>
+      </select>
+    </div>
+  </div>
+
+    <table ng-show="stationId" class="table table-responsive table-bordered table-hover ng-scope">
       <thead>
         <tr>
           <th>Delivery Note Number</th>
