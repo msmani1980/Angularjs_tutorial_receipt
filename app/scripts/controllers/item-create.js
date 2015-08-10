@@ -42,6 +42,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.itemIsInactive = false;
     $scope.viewOnly = false;
     $scope.editingItem = false;
+    $scope.duplicatingItem = false;
     $scope.shouldDisplayURLField = false;
     $scope.uiSelectTemplateReady = false;
     $scope.dynamicStaticBarcodeOptions = [
@@ -55,37 +56,36 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     ];
 
-    this.checkIfViewOnly = function () {
-      var path = $location.path();
-      if (path.search('/item-view') !== -1) {
-        $scope.viewOnly = true;
-      }
-    };
-
-    this.init = function () {
-      this.checkIfViewOnly();
-      if ($routeParams.id && !$scope.viewOnly) {
-        this.setFormAsEdit();
-      }
-      this.getDependencies();
-    };
-
-    this.updateViewName = function (item) {
-      var prefix = 'Viewing ';
-      if ($scope.editingItem) {
-        prefix = 'Editing ';
-      }
-      $scope.viewName = prefix + item.itemName;
-    };
-
-    this.setFormAsEdit = function () {
+  this.checkFormState = function() {
+    var path = $location.path();
+    if (path.search('/item-edit') !== -1 && $routeParams.id) {
       $scope.editingItem = true;
       $scope.buttonText = 'Save';
-    };
+    } else if (path.search('/item-copy') !== -1 && $routeParams.id) {
+      $scope.duplicatingItem = true;
+    } else if (path.search('/item-view') !== -1) {
+      $scope.viewOnly = true;
+    }
+  };
 
-    this.validateItemCompany = function (data) {
-      return data.retailItem.companyId === companyId;
-    };
+  this.init = function () {
+    this.checkFormState();
+    this.getDependencies();
+  };
+
+  this.updateViewName = function (item) {
+    var prefix = 'Viewing ';
+    if ($scope.editingItem) {
+      prefix = 'Editing ';
+    } else if($scope.duplicatingItem) {
+      prefix = 'Duplicating ';
+    }
+    $scope.viewName = prefix + item.itemName;
+  };
+
+  this.validateItemCompany = function (data) {
+    return data.retailItem.companyId === companyId;
+  };
 
     // gets an item to $scope.editingItem
     this.getItem = function (id) {
@@ -317,18 +317,18 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     };
 
-    this.checkIfItemIsActive = function (itemData) {
-      var today = new Date();
-      var itemStartDate = new Date(itemData.startDate);
-      $scope.itemIsActive = itemStartDate <= today;
-    };
+  this.checkIfItemIsActive = function (itemData) {
+    var today = new Date();
+    var itemStartDate = new Date(itemData.startDate);
+    $scope.itemIsActive = itemStartDate <= today && !$scope.duplicatingItem;
+  };
 
-    // checks to see if the item is inactive
-    this.checkIfItemIsInactive = function (itemData) {
-      var today = new Date();
-      var itemEndDate = new Date(itemData.endDate);
-      $scope.itemIsInactive = itemEndDate <= today;
-    };
+  // checks to see if the item is inactive
+  this.checkIfItemIsInactive = function (itemData) {
+    var today = new Date();
+    var itemEndDate = new Date(itemData.endDate);
+    $scope.itemIsInactive = itemEndDate <= today && !$scope.duplicatingItem;
+  };
 
     // updates the $scope.formData
     this.updateFormData = function (itemData) {
@@ -383,26 +383,26 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.discountList = dataFromAPI;
     };
 
-    this.setDependencies = function (response) {
-      $this.setSalesCategories(response[0]);
-      $this.setTagsList(response[1]);
-      $this.setTaxTypesList(response[2]);
-      $this.setMasterCurrenciesList(response[3]);
-      $this.setAllergens(response[4]);
-      $this.setItemTypes(response[5]);
-      $this.setCharacteristics(response[6]);
-      $this.setDimensionList(response[7]);
-      $this.setVolumeList(response[8]);
-      $this.setWeightList(response[9]);
-      $this.setItemPriceTypes(response[10]);
-      $this.setItemList(response[11].retailItems);
-      $this.setDiscountList(response[12].companyDiscounts);
-      if ($scope.editingItem || $scope.viewOnly) {
-        this.getItem($routeParams.id);
-      } else {
-        $this.setUIReady();
-      }
-    };
+  this.setDependencies = function (response) {
+    $this.setSalesCategories(response[0]);
+    $this.setTagsList(response[1]);
+    $this.setTaxTypesList(response[2]);
+    $this.setMasterCurrenciesList(response[3]);
+    $this.setAllergens(response[4]);
+    $this.setItemTypes(response[5]);
+    $this.setCharacteristics(response[6]);
+    $this.setDimensionList(response[7]);
+    $this.setVolumeList(response[8]);
+    $this.setWeightList(response[9]);
+    $this.setItemPriceTypes(response[10]);
+    $this.setItemList(response[11].retailItems);
+    $this.setDiscountList(response[12].companyDiscounts);
+    if ($scope.editingItem || $scope.duplicatingItem || $scope.viewOnly) {
+      this.getItem($routeParams.id);
+    } else {
+      $this.setUIReady();
+    }
+  };
 
     this.getDependencies = function () {
       $this.showLoadingModal('We are loading the Items data!');
