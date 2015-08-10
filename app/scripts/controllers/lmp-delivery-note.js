@@ -190,8 +190,11 @@ angular.module('ts5App')
     };
 
     $scope.save = function(submit){
-      // TODO save
-      // Service / factory created
+      if(submit){
+        // TODO use saveDeliveryNote, set isAccepted to true
+        return;
+      }
+      // TODO else createDeliveryNote
     };
 
     /*
