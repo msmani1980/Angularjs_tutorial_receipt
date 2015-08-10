@@ -9,9 +9,9 @@ describe('Service: companyDiscountService', function () {
   // instantiate service
   var companyDiscountService, $httpBackend, companyDiscountResponseJSON;
 
-  beforeEach(inject(function (_companyDiscountService_) {
-    inject(function (_servedCompanyDiscount_) {
-      companyDiscountResponseJSON = _servedCompanyDiscount_;
+  beforeEach(inject(function (_companyDiscountService_, $injector) {
+    inject(function (_servedCompanyDiscounts_) {
+      companyDiscountResponseJSON = _servedCompanyDiscounts_;
     });
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/company-discounts/).respond(companyDiscountResponseJSON);
@@ -28,7 +28,7 @@ describe('Service: companyDiscountService', function () {
 
     describe('getDiscountList', function () {
       beforeEach(function () {
-        menuService.getDiscountList().then(function (dataFromAPI) {
+        companyDiscountService.getDiscountList().then(function (dataFromAPI) {
           discountData = dataFromAPI;
         });
         $httpBackend.flush();

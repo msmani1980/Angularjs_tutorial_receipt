@@ -11,12 +11,14 @@ angular.module('ts5App').service('companyDiscountService', function ($resource, 
 
   function transformResponse(data) {
     data = angular.fromJson(data);
-    if (data && data.startDate) {
-      data.startDate = dateUtility.formatDate(data.startDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
-    }
-    if (data && data.endDate) {
-      data.endDate = dateUtility.formatDate(data.endDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
-    }
+    angular.forEach(data.companyDiscounts, function (discount) {
+      if (discount && discount.startDate) {
+        discount.startDate = dateUtility.formatDate(discount.startDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+      }
+      if (discount && discount.endDate) {
+        discount.endDate = dateUtility.formatDate(discount.endDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+      }
+    });
     return data;
   }
 
@@ -38,7 +40,7 @@ angular.module('ts5App').service('companyDiscountService', function ($resource, 
   var requestResource = $resource(requestURL, requestParameters, actions);
 
   var getDiscountList = function (payload) {
-    return requestResource.getMenuList(payload).$promise;
+    return requestResource.getDiscountList(payload).$promise;
   };
 
   return {

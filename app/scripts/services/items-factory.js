@@ -11,89 +11,95 @@
  * # itemsFactory
  * Factory in the ts5App.
  */
-angular.module('ts5App')
-  .factory('itemsFactory', function ($resource, ENV, itemsService, allergensService,itemTypesService,priceTypesService,characteristicsService,unitsService) {
+angular.module('ts5App').factory('itemsFactory', function ($resource, ENV, itemsService, allergensService,
+                                                           itemTypesService, priceTypesService, characteristicsService,
+                                                           unitsService, companyDiscountService) {
 
-  	// Items
-  var getItem = function (id) {
-		return itemsService.getItem(id);
-	};
+  // Items
+  this.getItem = function (id) {
+    return itemsService.getItem(id);
+  };
 
-	var getItemsList = function (payload, fetchFromMaster) {
-		return itemsService.getItemsList(payload, fetchFromMaster);
-	};
+  this.getItemsList = function (payload, fetchFromMaster) {
+    return itemsService.getItemsList(payload, fetchFromMaster);
+  };
 
-  var createItem = function (payload) {
-		return itemsService.createItem(payload);
-	};
+  this.createItem = function (payload) {
+    return itemsService.createItem(payload);
+  };
 
-  var updateItem = function (id,payload) {
-		return itemsService.updateItem(id,payload);
-	};
+  this.updateItem = function (id, payload) {
+    return itemsService.updateItem(id, payload);
+  };
 
-  var removeItem = function (id) {
-		return itemsService.removeItem(id);
-	};
+  this.removeItem = function (id) {
+    return itemsService.removeItem(id);
+  };
 
-	// Allergens
-	var getAllergensList = function (payload) {
-		return allergensService.getAllergensList(payload);
-	};
+  // Allergens
+  this.getAllergensList = function (payload) {
+    return allergensService.getAllergensList(payload);
+  };
 
-	// Item Types
-	var getItemTypesList = function (payload) {
-		return itemTypesService.getItemTypesList(payload);
-	};
+  // Item Types
+  this.getItemTypesList = function (payload) {
+    return itemTypesService.getItemTypesList(payload);
+  };
 
-	// Price Types
-	var getPriceTypesList = function (payload) {
-		return priceTypesService.getPriceTypesList(payload);
-	};
+  // Price Types
+  this.getPriceTypesList = function (payload) {
+    return priceTypesService.getPriceTypesList(payload);
+  };
 
-	// Characteristics
-	var getCharacteristicsList = function (payload) {
-		return characteristicsService.getCharacteristicsList(payload);
-	};
+  // Characteristics
+  this.getCharacteristicsList = function (payload) {
+    return characteristicsService.getCharacteristicsList(payload);
+  };
 
-	// Units
-	var getDimensionList = function (payload) {
-		return unitsService.getDimensionList(payload);
-	};
-	var getVolumeList = function (payload) {
-		return unitsService.getVolumeList(payload);
-	};
+  // Units
+  this.getDimensionList = function (payload) {
+    return unitsService.getDimensionList(payload);
+  };
+  this.getVolumeList = function (payload) {
+    return unitsService.getVolumeList(payload);
+  };
 
-	var getWeightList = function (payload) {
-		return unitsService.getWeightList(payload);
-	};
+  this.getWeightList = function (payload) {
+    return unitsService.getWeightList(payload);
+  };
 
-	return {
+  this.getDiscountList = function (payload) {
+    return companyDiscountService.getDiscountList(payload);
+  };
 
-		// Items
-		getItem: getItem,
-		getItemsList: getItemsList,
-    createItem:createItem,
-    updateItem: updateItem,
-    removeItem: removeItem,
+  return {
 
-		// Allergens
-		getAllergensList: getAllergensList,
+    // Items
+    getItem: this.getItem,
+    getItemsList: this.getItemsList,
+    createItem: this.createItem,
+    updateItem: this.updateItem,
+    removeItem: this.removeItem,
 
-		// Item Types
-		getItemTypesList: getItemTypesList,
+    // Allergens
+    getAllergensList: this.getAllergensList,
 
-		// Price Types
-		getPriceTypesList: getPriceTypesList,
+    // Item Types
+    getItemTypesList: this.getItemTypesList,
 
-		// Characteristics
-		getCharacteristicsList: getCharacteristicsList,
+    // Price Types
+    getPriceTypesList: this.getPriceTypesList,
 
-		// Units
-		getDimensionList: getDimensionList,
-		getVolumeList:getVolumeList,
-		getWeightList:getWeightList
+    // Characteristics
+    getCharacteristicsList: this.getCharacteristicsList,
 
+    // Units
+    getDimensionList: this.getDimensionList,
+    getVolumeList: this.getVolumeList,
+    getWeightList: this.getWeightList,
 
-	};
+    getDiscountList: this.getDiscountList
+
+  };
 
 });
