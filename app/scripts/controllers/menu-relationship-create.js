@@ -19,8 +19,6 @@ angular.module('ts5App')
     };
     $scope.viewName = 'Create Relationship';
     $scope.buttonText = 'Create';
-    $scope.relationshipIsActive = false;
-    $scope.relationshipIsInactive = false;
     $scope.viewOnly = false;
     $scope.editingRelationship = false;
     $scope.displayError = false;
@@ -152,6 +150,14 @@ angular.module('ts5App')
       return data;
     };
 
+    this.generatePlaceholder = function() {
+      var placeholder = 'Search by Station Code';
+      if($scope.viewOnly || $scope.isRelationshipActive() || $scope.isRelationshipInactive() ) {
+        placeholder = '';
+      }
+      return placeholder;
+    };
+
     this.initSelectUI = function () {
       var data = [];
       if (angular.isArray($scope.formData.catererStationIds)) {
@@ -159,7 +165,7 @@ angular.module('ts5App')
       }
       angular.element('select.multi-select').select2({
         width: '100%',
-        placeholder: 'Search by Station Code',
+        placeholder: $this.generatePlaceholder(),
         allowClear: true,
       }).select2('data', data);
     };

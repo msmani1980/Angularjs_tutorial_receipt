@@ -373,7 +373,7 @@ angular.module('ts5App')
       $this.setDimensionList(response[7]);
       $this.setVolumeList(response[8]);
       $this.setWeightList(response[9]);
-      $this.setItemList(response[10]);
+      $this.setItemList(response[10].retailItems);
       $this.setBaseCurrencyId(response[11]);
       if ($scope.editingItem || $scope.viewOnly) {
         this.getItem($routeParams.id);
@@ -414,10 +414,22 @@ angular.module('ts5App')
       $scope.tags = data.response;
     };
 
-    this.setItemList = function(data) {
-      $scope.items = data.retailItems;
-      $scope.substitutions = data.retailItems;
-      $scope.recommendations = data.retailItems;
+    this.removeCurrentItem = function (itemList) {
+      if ($routeParams.id) {
+        angular.forEach(itemList, function (value, key) {
+          if (parseInt(value.id) === parseInt($routeParams.id)) {
+            itemList.splice(key, 1);
+          }
+        });
+      }
+      return itemList;
+    };
+
+    this.setItemList = function (itemListFromAPI) {
+      var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
+      $scope.items = itemList;
+      $scope.substitutions = itemList;
+      $scope.recommendations = itemList;
     };
 
     this.setMasterCurrenciesList = function(data) {
@@ -669,6 +681,13 @@ angular.module('ts5App')
 
     $scope.isDisabled = function() {
       return ($scope.viewOnly || $scope.itemIsActive);
+    };
+
+    $scope.GTINClass = function(form, key) {
+      if (form['GTIN' + key].$dirty && form['GTIN' + key].$invalid) {
+        return 'has-error';
+      }
+      return 'has-success';
     };
 
     // TODO: MOVE ME GLOBAL

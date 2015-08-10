@@ -22,6 +22,13 @@
 				<div class="panel-body">
 					<div class="row">
 
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="item-name">S.O. Ref. #</label>
+                <input ng-model="search.stockOwnerCode" type="text" class="form-control" id="stock-owner-code">
+              </div>
+            </div>
+
 						<div class="col-xs-12 col-sm-6 col-md-4">
 							<div class="form-group">
 								<label for="item-code">Item Code</label>
@@ -68,6 +75,7 @@
 
 						</div>
 
+
 					</div>
 
 					<date-picker element-class="col-xs-12 col-sm-6 col-md-4"
@@ -83,7 +91,7 @@
 					<div class="panel-footer text-right">
 						<button class="btn btn-default"
 							ng-click="clearSearchFilters()"
-							ng-show="search.itemCode.length || search.itemName.length || search.itemTypeName.length || search.onBoardName.length || search.categoryName.length || dateRange.startDate.length || dateRange.endDate.length">
+							ng-show="search.itemCode.length || search.itemName.length || search.itemTypeName.length || search.onBoardName.length || search.categoryName.length || dateRange.startDate.length || dateRange.endDate.length || search.stockOwnerCode.length">
 							<span>Clear</span>
 						</button>
 						<button ng-click="searchRecords()" class="btn btn-primary">

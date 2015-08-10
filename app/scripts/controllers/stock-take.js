@@ -1,15 +1,15 @@
 'use strict';
 /**
  * @ngdoc function
- * @name ts5App.controller:StockTakeReportCtrl
+ * @name ts5App.controller:StockTakeCtrl
  * @description
- * # StockTakeReportCtrl
+ * # StockTakeCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockTakeReportCtrl', function ($scope) {
-    
-    $scope.viewName = 'Stock Take Report';
+  .controller('StockTakeCtrl', function ($scope) {
+
+    $scope.viewName = 'Stock Take';
     $scope.search = {};
 
   });

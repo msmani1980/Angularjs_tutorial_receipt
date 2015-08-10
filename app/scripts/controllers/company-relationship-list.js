@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyRelationshipListCtrl', function ($q, $scope, $route, $location, $routeParams, ngToast, dateUtility, companyRelationshipFactory) {
+  .controller('CompanyRelationshipListCtrl', function ($q, $scope, $route, $location, $routeParams, $filter, ngToast, dateUtility, companyRelationshipFactory) {
     var $this = this;
     $scope.viewName = 'Company Relationships';
     $scope.isLoading = true;
@@ -147,7 +147,12 @@ angular.module('ts5App')
     };
 
     function setupCompanyRelationshipTypeScope(companyRelationshipTypeListFromAPI) {
-      $scope.companyRelationshipTypeList = companyRelationshipTypeListFromAPI.response;
+      var response = companyRelationshipTypeListFromAPI.response;
+      $scope.companyRelationshipTypeList = response.filter(function(relationshipType){
+        if(relationshipType.relativeCompanyTypeId !== $scope.company.companyTypeId){
+          return relationshipType;
+        }
+      });
     }
 
     function setupCompanyRelationshipScope(companyRelationshipsFromAPI) {
@@ -174,7 +179,6 @@ angular.module('ts5App')
 
     var filterCompanyListByTypesScope = function (companyTypeListFromAPI) {
       var typeIdList = [];
-
       companyTypeListFromAPI.response.forEach(function (companyType) {
         typeIdList.push(companyType.relativeCompanyTypeId);
       });

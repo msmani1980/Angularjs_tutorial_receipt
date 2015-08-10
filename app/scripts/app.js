@@ -167,9 +167,17 @@ angular
         templateUrl: 'views/manage-goods-received.html',
         controller: 'ManageGoodsReceivedCtrl'
       })
+      .when('/lmp-delivery-note/:state/:id?', {
+        templateUrl: 'views/lmp-delivery-note.html',
+        controller: 'LmpDeliveryNoteCtrl'
+      })
       .when('/delivery-note', {
         templateUrl: 'views/delivery-note.html',
         controller: 'DeliveryNoteCtrl'
+      })
+      .when('/delivery-note-review', {
+        templateUrl: 'views/delivery-note-review.html',
+        controller: 'DeliveryNoteReviewCtrl'
       })
       .when('/employee-commission-list', {
         templateUrl: 'views/employee-commission-list.html',
@@ -182,6 +190,10 @@ angular
       .when('/stock-take', {
         templateUrl: 'views/stock-take.html',
         controller: 'StockTakeCtrl'
+      })
+      .when('/stock-take-review', {
+        templateUrl: 'views/stock-take-review.html',
+        controller: 'StockTakeReviewCtrl'
       })
       .when('/stock-take-report', {
         templateUrl: 'views/stock-take-report.html',
@@ -205,6 +217,9 @@ angular
     // TODO: Set up watch so when user and company id change, these are updated
     $http.defaults.headers.common.userId = user.id;
     $http.defaults.headers.common.companyId = companyId;
+
+    // TODO: move this away when login is there
+    $http.defaults.headers.common.sessionToken = '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
 
     // set regexp object into root scope for use in any template
     $rootScope.regexp = regexp;
