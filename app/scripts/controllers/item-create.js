@@ -37,21 +37,41 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
   $scope.itemIsInactive = false;
   $scope.viewOnly = false;
   $scope.editingItem = false;
+  $scope.duplicatingItem = false;
   $scope.shouldDisplayURLField = false;
   $scope.uiSelectTemplateReady = false;
 
-  this.checkIfViewOnly = function () {
+  //this.checkIfViewOnly = function () {
+  //  var path = $location.path();
+  //  if (path.search('/item-view') !== -1) {
+  //    $scope.viewOnly = true;
+  //  }
+  //};
+  //
+  //this.checkIfDuplicating = function () {
+  //  var path = $location.path();
+  //  if (path.search('/item-copy') !== -1) {
+  //    $scope.duplicatingItem = true;
+  //  }
+  //};
+
+  this.checkFormState = function() {
     var path = $location.path();
-    if (path.search('/item-view') !== -1) {
+    if (path.search('/item-edit') !== -1 && $routeParams.id) {
+      $scope.editingItem = true;
+      $scope.buttonText = 'Save';
+    } else if (path.search('/item-copy') !== -1 && $routeParams.id) {
+      $scope.duplicatingItem = true;
+    } else if (path.search('/item-view') !== -1) {
       $scope.viewOnly = true;
     }
   };
 
   this.init = function () {
-    this.checkIfViewOnly();
-    if ($routeParams.id && !$scope.viewOnly) {
-      this.setFormAsEdit();
-    }
+    this.checkFormState();
+    //if ($routeParams.id && !$scope.viewOnly) {
+    //  this.setFormAsEdit();
+    //}
     this.getDependencies();
   };
 
@@ -59,13 +79,10 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
     var prefix = 'Viewing ';
     if ($scope.editingItem) {
       prefix = 'Editing ';
+    } else if($scope.duplicatingItem) {
+      prefix = 'Duplicating';
     }
     $scope.viewName = prefix + item.itemName;
-  };
-
-  this.setFormAsEdit = function () {
-    $scope.editingItem = true;
-    $scope.buttonText = 'Save';
   };
 
   this.validateItemCompany = function (data) {
@@ -305,14 +322,14 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
   this.checkIfItemIsActive = function (itemData) {
     var today = new Date();
     var itemStartDate = new Date(itemData.startDate);
-    $scope.itemIsActive = itemStartDate <= today;
+    $scope.itemIsActive = (itemStartDate <= today || $scope.duplicatingItem);
   };
 
   // checks to see if the item is inactive
   this.checkIfItemIsInactive = function (itemData) {
     var today = new Date();
     var itemEndDate = new Date(itemData.endDate);
-    $scope.itemIsInactive = itemEndDate <= today;
+    $scope.itemIsInactive = (itemEndDate <= today || $scope.duplicatingItem);
   };
 
   // updates the $scope.formData
@@ -381,7 +398,7 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
     $this.setWeightList(response[9]);
     $this.setItemPriceTypes(response[10]);
     $this.setItemList(response[11].retailItems);
-    if ($scope.editingItem || $scope.viewOnly) {
+    if ($scope.editingItem || $scope.duplicatingItem || $scope.viewOnly) {
       this.getItem($routeParams.id);
     } else {
       $this.setUIReady();

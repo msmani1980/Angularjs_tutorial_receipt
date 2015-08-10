@@ -67,6 +67,10 @@ angular
         templateUrl: 'views/item-create.html',
         controller: 'ItemCreateCtrl'
       })
+      .when('/item-copy/:id', {
+        templateUrl: 'views/item-create.html',
+        controller: 'ItemCreateCtrl'
+      })
       .when('/stock-owner-item-list', {
         templateUrl: 'views/stock-owner-item-list.html',
         controller: 'StockOwnerItemListCtrl'
