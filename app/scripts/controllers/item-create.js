@@ -322,14 +322,14 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
   this.checkIfItemIsActive = function (itemData) {
     var today = new Date();
     var itemStartDate = new Date(itemData.startDate);
-    $scope.itemIsActive = (itemStartDate <= today || $scope.duplicatingItem);
+    $scope.itemIsActive = (itemStartDate <= today || !$scope.duplicatingItem);
   };
 
   // checks to see if the item is inactive
   this.checkIfItemIsInactive = function (itemData) {
     var today = new Date();
     var itemEndDate = new Date(itemData.endDate);
-    $scope.itemIsInactive = (itemEndDate <= today || $scope.duplicatingItem);
+    $scope.itemIsInactive = (itemEndDate <= today && !$scope.duplicatingItem);
   };
 
   // updates the $scope.formData
