@@ -43,7 +43,7 @@ angular.module('ts5App')
       return query;
     };
 
-    this.formatNestedItemsList = function () {
+    this.createNestedItemsList = function () {
       var newItemList = [];
       var currentMasterId = -1;
       angular.forEach($scope.itemsList, function (item) {
@@ -64,7 +64,7 @@ angular.module('ts5App')
       var $this = this;
       itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
-        $this.formatNestedItemsList();
+        $this.createNestedItemsList();
         $this.hideLoadingModal();
       });
     };
