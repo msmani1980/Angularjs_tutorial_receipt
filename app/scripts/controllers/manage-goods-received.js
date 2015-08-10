@@ -19,8 +19,11 @@ angular.module('ts5App')
 
     this.init = function() {
       this.getCatererStationList();
-  //    this.getDeliveryNoteTypesList();
-  //    this.getSalesCategoriesList();
+      $scope.$watch('stationId', function(newData) {
+        if(newData) {
+          $this.getDeliveryNotesList();
+        }
+      });
     };
 
     this.displayLoadingModal = function (loadingText) {
@@ -36,11 +39,8 @@ angular.module('ts5App')
     };
 
     this.generateDeliveryNoteQuery = function () {
-      var todaysDate = dateUtility.formatDate(dateUtility.now());
       var query = {
-        startDate: todaysDate,
         sortBy: 'ASC',
-      //  sortOn: 'itemName',
         limit: 100
       };
       angular.extend(query, $scope.search);
@@ -51,9 +51,18 @@ angular.module('ts5App')
       return query;
     };
 
+    this.getDeliveryNotesList = function () {
+      $this.displayLoadingModal('Getting a list of delivery notes');
+      deliveryNoteFactory.getDeliveryNotesList().then(function (data) {
+        $scope.deliveryNotesList = data.response;
+        $this.hideLoadingModal();
+      });
+    };
+
     this.getCatererStationList = function () {
       deliveryNoteFactory.getCatererStationList().then(function (data) {
         $scope.stationsList = data.response;
+
         $this.hideLoadingModal();
       });
     };
