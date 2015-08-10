@@ -45,7 +45,7 @@ angular.module('ts5App')
     }
 
     function catererStationIdWatcher(newValue, oldValue){
-      if(!angular.isDefined(newValue)){
+      if(angular.isUndefined(newValue)){
         return;
       }
       // Don't do anything if it didn't change
