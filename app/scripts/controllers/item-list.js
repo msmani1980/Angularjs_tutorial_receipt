@@ -9,39 +9,21 @@
  */
 angular.module('ts5App')
   .controller('ItemListCtrl', function ($scope, $http, itemsFactory,
-    companiesFactory, dateUtility, $filter) {
+                                        companiesFactory, dateUtility, $filter) {
 
     var $this = this;
-    $scope.currentPage = 1;
-    $scope.itemsPerPage = 10;
     $scope.itemsList = [];
     $scope.dateRange = {
       startDate: '',
       endDate: ''
     };
+    $scope.openVersionId = -1;
 
-    this.updateItemList = function() {
-      $scope.itemsListCount = $scope.itemsList.length;
-      $this.setPaginatedItems($scope.itemsList);
-    };
-
-    this.filterItems = function() {
+    this.filterItems = function () {
       return $filter('filter')($scope.itemsList, $scope.search);
     };
 
-    this.parsePaginationToInt = function() {
-      $scope.currentPageInt = parseInt($scope.currentPage);
-      $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
-    };
-
-    this.setPaginatedItems = function (filteredItems) {
-      this.parsePaginationToInt();
-      var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
-      var end = begin + $scope.itemsPerPageInt;
-      $scope.paginatedItems = filteredItems.slice(begin, end);
-    };
-
-    this.generateItemQuery = function() {
+    this.generateItemQuery = function () {
       var todaysDate = dateUtility.formatDate(dateUtility.now());
       var query = {
         startDate: todaysDate,
@@ -61,24 +43,39 @@ angular.module('ts5App')
       return query;
     };
 
-    this.getItemsList = function() {
+    this.createNestedItemsList = function () {
+      var newItemList = [];
+      var currentMasterId = -1;
+      angular.forEach($scope.itemsList, function (item) {
+        if (item.itemMasterId === currentMasterId) {
+          var lastIndex = newItemList.length - 1;
+          newItemList[lastIndex].versions.push(item);
+        } else {
+          var newItem = {versions: [item], itemMasterId: item.itemMasterId};
+          newItemList.push(newItem);
+          currentMasterId = item.itemMasterId;
+        }
+      });
+      $scope.itemsList = newItemList;
+    };
+
+    this.getItemsList = function () {
       var query = this.generateItemQuery();
       var $this = this;
       itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
-        $scope.itemsListCount = $scope.itemsList.length;
-        $this.updateItemList();
+        $this.createNestedItemsList();
         $this.hideLoadingModal();
       });
     };
 
-    this.getItemTypesList = function() {
+    this.getItemTypesList = function () {
       itemsFactory.getItemTypesList().then(function (itemTypes) {
         $scope.itemTypes = itemTypes;
       });
     };
 
-    this.getSalesCategoriesList = function() {
+    this.getSalesCategoriesList = function () {
       companiesFactory.getSalesCategoriesList(function (data) {
         $scope.salesCategories = data.salesCategories;
       });
@@ -99,10 +96,9 @@ angular.module('ts5App')
     $scope.removeRecord = function (itemId) {
       var itemIndex = $this.findItemIndex(itemId);
       $this.displayLoadingModal('Removing Retail Item');
-      itemsFactory.removeItem(itemId).then(function() {
+      itemsFactory.removeItem(itemId).then(function () {
         $this.hideLoadingModal();
         $scope.itemsList.splice(itemIndex, 1);
-        $this.updateItemList();
       });
     };
 
@@ -116,7 +112,7 @@ angular.module('ts5App')
       return parsedDate <= today;
     };
 
-    $scope.clearSearchFilters = function() {
+    $scope.clearSearchFilters = function () {
       $scope.dateRange.startDate = '';
       $scope.dateRange.endDate = '';
       var filters = $scope.search;
@@ -127,22 +123,47 @@ angular.module('ts5App')
       $this.getItemsList();
     };
 
+    $scope.hasSubVersions = function (item) {
+      return (item.versions.length > 1);
+    };
+
+    $scope.isOpen = function (item) {
+      return (item.itemMasterId === $scope.openVersionId);
+    };
+
+    $scope.toggleVersionVisibility = function (item) {
+      if (!$scope.hasSubVersions(item)) {
+        return;
+      }
+      if ($scope.openVersionId === item.itemMasterId) {
+        $this.closeAccordian();
+        $scope.openVersionId = -1;
+      } else {
+        $this.openAccordian(item);
+        $this.closeAccordian();
+        $scope.openVersionId = item.itemMasterId;
+      }
+    };
+
+    this.openAccordian = function (item) {
+      angular.element('#item-' + item.itemMasterId).addClass('open-accordion');
+    };
+    this.closeAccordian = function () {
+      angular.element('#item-' + $scope.openVersionId).removeClass('open-accordion');
+    };
+
     this.displayLoadingModal = function (loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
     };
 
-    this.hideLoadingModal = function() {
+    this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
     };
 
-    $scope.searchRecords = function() {
+    $scope.searchRecords = function () {
       $this.displayLoadingModal();
       $this.getItemsList();
     };
-
-    $scope.$watch('currentPage + itemsPerPage + search', function() {
-      $this.updateItemList();
-    });
 
     this.getItemsList();
     this.getItemTypesList();

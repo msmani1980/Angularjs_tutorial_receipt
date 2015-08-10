@@ -7,10 +7,7 @@ describe('Service: menuService', function () {
   beforeEach(module('served/menus.json'));
 
   // instantiate service
-  var menuService,
-    $httpBackend,
-    menuResponseJSON,
-    Upload;
+  var menuService, $httpBackend, menuResponseJSON, Upload;
 
   beforeEach(inject(function (_menuService_, $injector) {
     inject(function (_servedMenus_) {
@@ -36,8 +33,7 @@ describe('Service: menuService', function () {
 
     describe('getMenuList', function () {
       beforeEach(function () {
-        menuService.getMenuList().then(function (
-          menuListFromAPI) {
+        menuService.getMenuList().then(function (menuListFromAPI) {
           menuData = menuListFromAPI;
         });
         $httpBackend.flush();
@@ -52,8 +48,7 @@ describe('Service: menuService', function () {
       });
 
       it('should have an array of items', function () {
-        expect(menuData.menus[0].menuItems.length).toBeGreaterThan(
-          0);
+        expect(menuData.menus[0].menuItems.length).toBeGreaterThan(0);
       });
     });
 
@@ -65,8 +60,7 @@ describe('Service: menuService', function () {
         };
         menuService.getMenuList(payload);
         $httpBackend.flush();
-        expect(menuService.getMenuList).toHaveBeenCalledWith(
-          payload);
+        expect(menuService.getMenuList).toHaveBeenCalledWith(payload);
       });
     });
 

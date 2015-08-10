@@ -19,6 +19,12 @@ angular.module('ts5App')
     var actions = {
       getDeliveryNote: {
         method: 'GET'
+      },
+      createDeliveryNote: {
+        method: 'POST'
+      },
+      saveDeliveryNote: {
+        method: 'PUT'
       }
     };
 
@@ -28,8 +34,18 @@ angular.module('ts5App')
       return requestResource.getDeliveryNote({id:deliveryNoteId}).$promise;
     }
 
+    function createDeliveryNote(payload) {
+      return requestResource.createDeliveryNote(payload).$promise;
+    }
+
+    function saveDeliveryNote(payload) {
+      return requestResource.saveDeliveryNote(payload).$promise;
+    }
+
     return {
-      getDeliveryNote: getDeliveryNote
+      getDeliveryNote: getDeliveryNote,
+      createDeliveryNote: createDeliveryNote,
+      saveDeliveryNote: saveDeliveryNote
     };
 
   });
