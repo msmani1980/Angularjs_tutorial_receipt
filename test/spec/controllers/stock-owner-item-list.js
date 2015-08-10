@@ -162,12 +162,6 @@ describe('The StockOwnerItemListCtrl controller', function() {
           expect(item.itemCode).toEqual(jasmine.any(String));
         });
 
-      it('should have an stockOwnerCode property and is a string',
-        function() {
-          expect(item.stockOwnerCode).toBeDefined();
-          expect(item.stockOwnerCode).toEqual(jasmine.any(String));
-        });
-
       it('should have an itemName property and is a string',
         function() {
           expect(item.itemName).toBeDefined();
@@ -246,9 +240,9 @@ describe('The StockOwnerItemListCtrl controller', function() {
       });
 
     it('should remove the item from the itemList', function () {
-      expect($scope.itemsList.length).toEqual(16);
+      var length = $scope.itemsList.length;
       $scope.removeRecord(332);
-      expect($scope.itemsList.length).toEqual(15);
+      expect($scope.itemsList.length).toEqual(length - 1);
     });
 
   });

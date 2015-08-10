@@ -444,7 +444,7 @@ describe('The Item Create Controller', function () {
 
       describe('setItemList method', function () {
 
-        var idOfItemInEditMode = 332;
+        var idOfItemInEditMode = 403;
 
         beforeEach(function () {
           spyOn(ItemCreateCtrl, 'setItemList').and.callThrough();
@@ -486,17 +486,19 @@ describe('The Item Create Controller', function () {
 
         it('should not delete any item from $scope.substitutions if not in edit mode', function () {
           $scope.$digest();
+          var substitutionsLength = $scope.substitutions.length;
           itemsListDeferred.resolve();
-          expect($scope.substitutions.length).toBe(17);
+          expect($scope.substitutions.length).toBe(substitutionsLength);
           var itemIdFromList = parseInt($scope.substitutions[0].id);
           expect(itemIdFromList).toEqual(idOfItemInEditMode);
         });
 
         it('should remove the item from $scope.substitutions with id === 332 from the list', function () {
+          var substitutionsLength = 40;
           $routeParams.id = idOfItemInEditMode;
           $scope.$digest();
           itemsListDeferred.resolve();
-          expect($scope.substitutions.length).toBe(16);
+          expect($scope.substitutions.length).toBe(substitutionsLength - 1);
           var itemIdFromList = parseInt($scope.substitutions[0].id);
           expect(itemIdFromList).not.toEqual(idOfItemInEditMode);
         });

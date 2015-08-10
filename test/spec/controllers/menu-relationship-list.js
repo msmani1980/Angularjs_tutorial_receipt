@@ -941,6 +941,7 @@ describe('Menu Relationship List Controller', function () {
             it(
               'should be shown if the menu is  inactive',
               function () {
+                testObject.endDate = '2050-08-08';
                 var menuIsInactive = $scope.isRelationshipInactive(
                   testObject.endDate);
                 expect(menuIsInactive).toBeFalsy();
