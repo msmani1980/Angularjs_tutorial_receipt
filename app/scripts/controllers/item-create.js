@@ -63,7 +63,7 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
     if ($scope.editingItem) {
       prefix = 'Editing ';
     } else if($scope.duplicatingItem) {
-      prefix = 'Duplicating';
+      prefix = 'Duplicating ';
     }
     $scope.viewName = prefix + item.itemName;
   };
