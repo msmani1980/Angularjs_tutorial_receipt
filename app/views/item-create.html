@@ -389,8 +389,8 @@
               <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $item.name }}
               </ui-select-match>
               <ui-select-choices
-                repeat="character in filteredCharacteristics | filter: $select.search | orderBy:'name'">
-                <div ng-bind-html="character.name | highlight: $select.search"></div>
+                repeat="voucher in discountList | filter: $select.search | orderBy:'name'">
+                <div ng-bind-html="voucher.name | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </div>

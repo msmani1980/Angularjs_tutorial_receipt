@@ -379,12 +379,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.hideLoadingModal();
     };
 
-    this.getDependencies = function () {
-      $this.showLoadingModal('We are loading the Items data!');
-      var dependencyPromises = this.makeDependencyPromises();
-      $q.all(dependencyPromises).then(function (response) {
-        $this.setDependencies(response);
-      });
+    this.setDiscountList = function (dataFromAPI) {
+      $scope.discountList = dataFromAPI;
     };
 
     this.setDependencies = function (response) {
@@ -400,11 +396,20 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setWeightList(response[9]);
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11].retailItems);
+      $this.setDiscountList(response[12].companyDiscounts);
       if ($scope.editingItem || $scope.viewOnly) {
         this.getItem($routeParams.id);
       } else {
         $this.setUIReady();
       }
+    };
+
+    this.getDependencies = function () {
+      $this.showLoadingModal('We are loading the Items data!');
+      var dependencyPromises = this.makeDependencyPromises();
+      $q.all(dependencyPromises).then(function (response) {
+        $this.setDependencies(response);
+      });
     };
 
     this.setSalesCategories = function (data) {
