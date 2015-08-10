@@ -21,7 +21,7 @@
 <!--               <span>Export (PDF)</span> -->
 <!--             </button> -->
 
-            <button class="btn btn-primary" ng-click="formReview()" ng-hide="readOnly">
+            <button class="btn btn-primary" ng-show="canReview" ng-click="toggleReview()">
               <span>Review</span>
             </button>
 
@@ -30,7 +30,7 @@
               <span>Save</span>
             </button>
 
-            <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
+            <button class="btn btn-default" ng-click="cancel()" ng-hide="readOnly && state !='review'">Cancel</button>
 
             <!-- TODO: SUBMIT BUTTON AVAIALABLE ONLY AFTER REVIEWED (BUTTON ABOVE) -->
             <button class="btn btn-primary" ng-click="submitForm(formData)" ng-hide="true">
@@ -70,7 +70,7 @@
 
       <div class="panel-body">
 
-        <div class="row">
+        <div class="row" ng-hide="state == 'review'">
 
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
@@ -109,7 +109,7 @@
 
         </div>
 
-        <div class="row" ng-show="{{ state == 'view' || state == 'edit' }}">
+        <div class="row" ng-show="state == 'view' || state == 'edit'" ng-hide="state == 'review'">
         <!-- TODO: THIS ROW ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
 
           <div class="col-xs-12 col-sm-2">
@@ -143,7 +143,7 @@
         </div>
 
 <!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
-        <div class="row" ng-show="deliveryNote.items.length">
+        <div class="row" ng-show="deliveryNote.items.length && state != 'review'">
           <div class="col-xs-12 col-sm-1">
             <div class="form-group">
               <label>Filter by:</label>
