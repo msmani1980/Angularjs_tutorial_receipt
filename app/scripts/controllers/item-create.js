@@ -41,20 +41,6 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
   $scope.shouldDisplayURLField = false;
   $scope.uiSelectTemplateReady = false;
 
-  //this.checkIfViewOnly = function () {
-  //  var path = $location.path();
-  //  if (path.search('/item-view') !== -1) {
-  //    $scope.viewOnly = true;
-  //  }
-  //};
-  //
-  //this.checkIfDuplicating = function () {
-  //  var path = $location.path();
-  //  if (path.search('/item-copy') !== -1) {
-  //    $scope.duplicatingItem = true;
-  //  }
-  //};
-
   this.checkFormState = function() {
     var path = $location.path();
     if (path.search('/item-edit') !== -1 && $routeParams.id) {
@@ -69,9 +55,6 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
 
   this.init = function () {
     this.checkFormState();
-    //if ($routeParams.id && !$scope.viewOnly) {
-    //  this.setFormAsEdit();
-    //}
     this.getDependencies();
   };
 
@@ -322,14 +305,14 @@ angular.module('ts5App').controller('ItemCreateCtrl', function ($scope, $compile
   this.checkIfItemIsActive = function (itemData) {
     var today = new Date();
     var itemStartDate = new Date(itemData.startDate);
-    $scope.itemIsActive = (itemStartDate <= today || !$scope.duplicatingItem);
+    $scope.itemIsActive = itemStartDate <= today && !$scope.duplicatingItem;
   };
 
   // checks to see if the item is inactive
   this.checkIfItemIsInactive = function (itemData) {
     var today = new Date();
     var itemEndDate = new Date(itemData.endDate);
-    $scope.itemIsInactive = (itemEndDate <= today && !$scope.duplicatingItem);
+    $scope.itemIsInactive = itemEndDate <= today && !$scope.duplicatingItem;
   };
 
   // updates the $scope.formData
