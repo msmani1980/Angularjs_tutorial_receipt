@@ -1,0 +1,35 @@
+.open-row {
+  background-color: #a6e1ec;
+}
+
+.master-row {
+  background-color: #f0f0f0;
+}
+
+.subversion-row {
+  background-color: #fff;
+
+}
+
+.empty-col {
+  border-bottom: 0 solid white;
+}
+
+.open-accordion {
+  border-left: 4px solid black;
+}
+
+.slideUp.ng-hide {
+  opacity: 1;
+}
+
+.slideUp.ng-hide-add.ng-hide-add-active,
+.slideUp.ng-hide-remove.ng-hide-remove-active {
+  -webkit-transition: 1s linear all;
+  transition: 1s linear all;
+}
+
+.slideUp.ng-hide {
+  opacity: 0;
+}
+
