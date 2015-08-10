@@ -122,6 +122,14 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     it('should call getAllMasterItems from factory', function(){
       expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
     });
+    // API call #4
+    it('should call getCompanyReasonCodes in factory', function(){
+      expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
+    });
+    it('should set the ullageReasons scope var', function(){
+      expect(scope.ullageReasons).toBeDefined();
+      expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
+    });
     it('should set masterItems scope var', function(){
       expect(scope.masterItems).toBeDefined();
       expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
@@ -130,6 +138,14 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     describe('global scope functions and vars', function(){
       it('should call getCompanyId', function(){
         expect(deliveryNoteFactory.getCompanyId).toHaveBeenCalled();
+      });
+      it('should have a cancel scope function', function(){
+        expect(scope.cancel).toBeDefined();
+        expect(Object.prototype.toString.call(scope.cancel)).toBe('[object Function]');
+      });
+      it('should have a toggleReview scope function', function(){
+        expect(scope.toggleReview).toBeDefined();
+        expect(Object.prototype.toString.call(scope.toggleReview)).toBe('[object Function]');
       });
     });
   });
@@ -174,6 +190,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     it('should set masterItems scope var', function(){
       expect(scope.masterItems).toBeDefined();
       expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
+    });
+    it('should redirect to / when cancel button is clicked', function(){
+      scope.cancel();
+      expect(location.path()).toBe('/');
     });
   });
 
@@ -229,15 +249,12 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     });
     describe('changing LMP station', function(){
       it('should call retail item master API', function(){
+        expect(scope.deliveryNote.items.length).toEqual(11);
         var csid = 3;
         scope.deliveryNote.catererStationId = csid;
         scope.$digest();
         expect(deliveryNoteFactory.getMasterItemsByCatererStationId).toHaveBeenCalledWith(csid);
-      });
-      // TODO - update this test to check if length of deliveryNote.items length is increased
-      it('should set scope catererStationMasterItems', function(){
-        expect(scope.catererStationMasterItems).toBeDefined();
-        expect(Object.prototype.toString.call(scope.catererStationMasterItems)).toBe('[object Array]');
+        expect(scope.deliveryNote.items.length).toEqual(98);
       });
     });
     describe('removeItemByIndex scope function', function(){
@@ -251,6 +268,14 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         scope.$digest();
         expect(scope.deliveryNote.items.length).toBe((curCount - 1));
       });
+    });
+    it('should switch the state to review when review button is clicked', function(){
+      scope.toggleReview();
+      expect(scope.state).toBe('review');
+    });
+    it('should switch the state back to edit when the cancel button is clicked', function(){
+      scope.cancel();
+      expect(scope.state).toBe('edit');
     });
   });
 

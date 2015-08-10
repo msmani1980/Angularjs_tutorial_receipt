@@ -17,6 +17,7 @@ angular.module('ts5App')
     var _initPromises = [];
     var _companyId = deliveryNoteFactory.getCompanyId();
     var _companyMenuCatererStations = [];
+    var _prevState = null;
 
     function getCatererStationList(){
       return deliveryNoteFactory.getCatererStationList(_companyId).then(setCatererStationListFromResponse);
@@ -44,7 +45,11 @@ angular.module('ts5App')
     }
 
     function catererStationIdWatcher(newValue, oldValue){
-      if(!angular.isDefined(newValue)){
+      if(angular.isUndefined(newValue)){
+        return;
+      }
+      // Don't do anything if it didn't change
+      if(oldValue === newValue){
         return;
       }
       // If not first time loaded, it changed, so lets get the items
@@ -58,12 +63,29 @@ angular.module('ts5App')
       // TODO - Blocker - https://jira.egate-solutions.com/browse/TSVPORTAL-2710
       // api/retail-items/master needs to accept catererStationId argument filter
       // and return id(master), Item Name, Item Code and NO versions
-      deliveryNoteFactory.getMasterItemsByCatererStationId(catererStationId).then(setMasterItemsByCatererStationId, showResponseErrors);
+      displayLoadingModal();
+      deliveryNoteFactory.getMasterItemsByCatererStationId(catererStationId).then(
+        addNewMasterItemsFromCatererStationMasterItemsResponse, showResponseErrors);
     }
 
-    function setMasterItemsByCatererStationId(response){
-      $scope.catererStationMasterItems = response.masterItems;
-      // TODO - On successful switch, will need to to filter out same, and only allow unique items to be appeneded to list
+    function addNewMasterItemsFromCatererStationMasterItemsResponse(response){
+
+      var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
+        return item.masterItemId;
+      });
+
+      var filteredResponseMasterItems = response.masterItems.filter(function(item){
+        return devlieryNoteItemIds.indexOf(item.id) === -1;
+      });
+
+      var newMasterItems = filteredResponseMasterItems.map(function(item){
+        // TODO - once new API is done, if API returns itemName and itemCode, add to object below
+          return getMasterItemById(item.id);
+      });
+
+      $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
+      // TODO TODO TODO TODO - now test the above
+      hideLoadingModal();
     }
 
     function setUllageReasonsFromResponse(response){
@@ -100,25 +122,39 @@ angular.module('ts5App')
       return deliveryNoteFactory.getAllMasterItems().then(setAllMasterItemsFromResponse);
     }
 
-    function getMasterItem(masterItemId){
-      return $filter('filter')($scope.masterItems, {id:masterItemId}, true)[0];
+    function getMasterItemById(masterItemId){
+      var masterItem = $filter('filter')($scope.masterItems, {id:masterItemId}, true)[0];
+      return {
+        masterItemId: masterItemId,
+        itemName: masterItem.itemName,
+        itemCode: masterItem.itemCode
+      };
     }
 
     function setItemMetaFromMasterItems(items){
       var masterItem;
       for(var i in items){
-        masterItem = getMasterItem(items[i].masterItemId);
+        masterItem = getMasterItemById(items[i].masterItemId);
         items[i].itemName = masterItem.itemName;
         items[i].itemCode = masterItem.itemCode;
       }
+      return items;
     }
 
     function initPromisesResolved(){
       hideLoadingModal();
-      var initPromisesResolvedStateAction = $routeParams.state + 'InitPromisesResolved';
+      var initPromisesResolvedStateAction = $scope.state + 'InitPromisesResolved';
       if(stateActions[initPromisesResolvedStateAction]){
         stateActions[initPromisesResolvedStateAction]();
       }
+    }
+
+    function removeNullDeliveredMenuItems(){
+      var deliveryNoteItems = angular.copy($scope.deliveryNote.items);
+      $scope.deliveryNote.items = deliveryNoteItems.filter(function(item){
+        return item.deliveredQuantity || item.expectedQuantity;
+      });
+      deliveryNoteItems = null;
     }
 
     function resolveInitPromises(){
@@ -127,6 +163,38 @@ angular.module('ts5App')
 
     $scope.removeItemByIndex = function(index){
       $scope.deliveryNote.items.splice(index, true);
+    };
+
+    $scope.cancel = function(){
+      if(_prevState) { // there is a test for this, not showing up though
+        $scope.toggleReview();
+        return;
+      }
+      $location.path('/');
+    };
+
+    $scope.toggleReview = function(){
+      if(!_prevState) {
+        _prevState = $scope.state;
+        $scope.state = 'review';
+        $scope.canReview = false;
+        $scope.readOnly = true;
+        removeNullDeliveredMenuItems();
+      }
+      else{
+        $scope.state = _prevState;
+        _prevState = null;
+        $scope.canReview = setCanReview();
+        $scope.readOnly = false;
+      }
+    };
+
+    $scope.save = function(submit){
+      if(submit){
+        // TODO use saveDeliveryNote, set isAccepted to true
+        return;
+      }
+      // TODO else createDeliveryNote
     };
 
     /*
@@ -147,6 +215,16 @@ angular.module('ts5App')
       }
     }
 
+    function setCanReview(){
+      if(angular.isDefined($scope.deliveryNote) && $scope.deliveryNote.isSubmitted){
+        return false;
+      }
+      if($scope.state !== 'edit' && $scope.state !== 'create'){
+        return false;
+      }
+      return true;
+    }
+
     var stateActions = {};
     // view state actions
     stateActions.viewInit = function(){
@@ -154,13 +232,12 @@ angular.module('ts5App')
       displayLoadingModal();
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
+      _initPromises.push(getUllageCompanyReasonCodes());
       _initPromises.push(getMasterItemsList());
       resolveInitPromises();
     };
     stateActions.viewInitPromisesResolved = function(){
-      if(angular.isDefined($scope.deliveryNote)) {
-        setItemMetaFromMasterItems($scope.deliveryNote.items);
-      }
+      this.editInitPromisesResolved();
     };
 
     // create state actions
@@ -174,6 +251,9 @@ angular.module('ts5App')
       _initPromises.push(getMasterItemsList());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       resolveInitPromises();
+    };
+    stateActions.createInitPromisesResolved = function(){
+      $scope.canReview = setCanReview();
     };
 
     // edit state actions
@@ -195,6 +275,7 @@ angular.module('ts5App')
       if(angular.isDefined($scope.deliveryNote) && angular.isDefined($scope.ullageReasons)){
         setSelectedUllageReasons();
       }
+      $scope.canReview = setCanReview();
     };
 
     // constructor
@@ -206,7 +287,7 @@ angular.module('ts5App')
 
       // private vars
       _initPromises = [];
-      var initStateAction = $routeParams.state + 'Init';
+      var initStateAction = $scope.state + 'Init';
       if(stateActions[initStateAction]){
         stateActions[initStateAction]();
       }

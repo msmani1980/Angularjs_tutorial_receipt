@@ -29,6 +29,8 @@ describe('Service: deliveryNoteFactory', function () {
     spyOn(menuCatererStationsService, 'getRelationshipList');
     spyOn(itemsService, 'getItemsList');
     spyOn(companyReasonCodesService, 'getAll');
+    spyOn(deliveryNotesService, 'createDeliveryNote');
+    spyOn(deliveryNotesService, 'saveDeliveryNote');
 
   }));
 
@@ -37,6 +39,17 @@ describe('Service: deliveryNoteFactory', function () {
       var id = 123;
       deliveryNoteFactory.getDeliveryNote(id);
       expect(deliveryNotesService.getDeliveryNote).toHaveBeenCalledWith(id);
+    });
+    it('should call createDeliveryNote', function(){
+      var obj = {id: 123};
+      deliveryNoteFactory.createDeliveryNote(obj);
+      obj.isAccepted = false;
+      expect(deliveryNotesService.createDeliveryNote).toHaveBeenCalledWith(obj);
+    });
+    it('should call saveDeliveryNote', function(){
+      var obj = {id: 123, isAccepted: true};
+      deliveryNoteFactory.saveDeliveryNote(obj);
+      expect(deliveryNotesService.saveDeliveryNote).toHaveBeenCalledWith(obj);
     });
   });
 
