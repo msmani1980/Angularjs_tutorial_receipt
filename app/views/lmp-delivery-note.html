@@ -219,7 +219,7 @@
                   <ui-select ng-model="selectedUllageReason[item.masterItemId].selected" theme="bootstrap"
                              ng-disabled="readOnly || !item.ullageQuantity"
                              tagging tagging-label="false"
-                             on-select="ullageReasonOnSelect($select,$item,$model)">
+                             on-select="ullageReasonOnSelect($select,$item,item.masterItemId)">
                     <ui-select-match>{{ $select.selected.companyReasonCodeName }}</ui-select-match>
                     <ui-select-choices repeat="ullageReason in ullageReasons">
                       <div ng-bind-html="ullageReason.companyReasonCodeName"></div>

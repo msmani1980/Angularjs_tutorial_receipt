@@ -197,13 +197,19 @@ angular.module('ts5App')
       // TODO else createDeliveryNote
     };
 
-    $scope.ullageReasonOnSelect = function($select, $item){
-      // TODO - add ability to allow user to enter free text, must create new ullage reason on save
-      // http://stackoverflow.com/questions/29489821/allow-manually-entered-text-in-ui-select
-      console.log($select.search);
-      console.log($item);
-      $scope.selectedUllageReason[$item] = {selected:{companyReasonCodeName: $item}};
-    };
+    $scope.ullageReasonOnSelect = function($select,$item,masterItemId){
+      if(angular.isString($item)) {
+        var newReasontext = angular.copy($item);
+        var newReason = {selected: {companyReasonCodeName: newReasontext}};
+        var newOne = $filter('filter')($scope.selectedUllageReason, newReason, true);
+        if (!newOne.length) {
+          //Create a new entry since one does not exist
+          $scope.selectedUllageReason[masterItemId] = newReason;
+          $scope.ullageReasons.push({companyReasonCodeName: newReasontext});
+        }
+      }
+      $select = $item;
+    }
 
     function setSelectedUllageReasonByItemMasterId(item){
       $scope.selectedUllageReason[item.masterItemId] = {selected:{companyReasonCodeName: item.ullageReason}};
