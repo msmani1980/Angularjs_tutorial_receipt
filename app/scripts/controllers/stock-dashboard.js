@@ -8,11 +8,17 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockDashboardCtrl', function($scope, $http, stockDashboardService, catererStationService, dateUtility) {
+  .controller('StockDashboardCtrl', function($scope, $http, $filter, GlobalMenuService, itemsService,
+    stockDashboardService, catererStationService,
+    companyReasonCodesService, dateUtility) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
     $scope.todaysDate = dateUtility.nowFormatted();
+
+    this.getCompanyId = function() {
+      return GlobalMenuService.company.get();
+    };
 
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
       $scope.stockDashboardItemsList = dataFromAPI.response;
