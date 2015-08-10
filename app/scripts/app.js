@@ -25,7 +25,8 @@ angular
     'ngFileUpload',
     'ja.qr',
     'ngToast',
-    'ang-drag-drop'
+    'ang-drag-drop',
+    'ngAnimate'
   ])
   .constant('regexp', {
     word: /^[\w\s]+$/,
@@ -190,6 +191,10 @@ angular
       .when('/stock-take', {
         templateUrl: 'views/stock-take.html',
         controller: 'StockTakeCtrl'
+      })
+      .when('/stock-take-review', {
+        templateUrl: 'views/stock-take-review.html',
+        controller: 'StockTakeReviewCtrl'
       })
       .when('/stock-take-report', {
         templateUrl: 'views/stock-take-report.html',

@@ -415,7 +415,7 @@ describe('The Stock Owner Item Create Controller', function () {
 
       describe('setItemList method', function () {
 
-        var idOfItemInEditMode = 333;
+        var idOfItemInEditMode = 403;
 
         beforeEach(function () {
           spyOn(StockOwnerItemCreateCtrl, 'setItemList').and.callThrough();
@@ -444,18 +444,20 @@ describe('The Stock Owner Item Create Controller', function () {
         });
 
         it('should not delete any item from $scope.substitutions if not in edit mode', function () {
+          var substitutionsLength = 40;
           $scope.$digest();
           itemsListDeferred.resolve();
-          expect($scope.substitutions.length).toBe(16);
+          expect($scope.substitutions.length).toBe(substitutionsLength);
           var itemIdFromList = parseInt($scope.substitutions[0].id);
           expect(itemIdFromList).toEqual(idOfItemInEditMode);
         });
 
         it('should remove the item from $scope.substitutions with id === 332 from the list', function () {
+          var substitutionsLenth = 40;
           $routeParams.id = idOfItemInEditMode;
           $scope.$digest();
           itemsListDeferred.resolve();
-          expect($scope.substitutions.length).toBe(15);
+          expect($scope.substitutions.length).toBe(substitutionsLenth - 1);
           var itemIdFromList = parseInt($scope.substitutions[0].id);
           expect(itemIdFromList).not.toEqual(idOfItemInEditMode);
         });
