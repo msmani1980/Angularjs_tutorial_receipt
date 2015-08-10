@@ -189,6 +189,10 @@ angular.module('ts5App')
       }
     };
 
+    $scope.save = function(submit){
+      // TODO save
+    };
+
     /*
     $scope.ullageReasonOnSelect = function($select){
       // TODO - add ability to allow user to enter free text, must create new ullage reason on save

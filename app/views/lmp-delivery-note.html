@@ -25,15 +25,13 @@
               <span>Review</span>
             </button>
 
-            <!-- TODO: SAVE BUTTON AVAIALABLE ONLY AFTER REVIEWED (BUTTON ABOVE) -->
-            <button class="btn btn-primary" ng-click="formSave()" ng-hide="true">
+            <button class="btn btn-primary" ng-click="save(false)" ng-show="state == 'review'">
               <span>Save</span>
             </button>
 
             <button class="btn btn-default" ng-click="cancel()" ng-hide="readOnly && state !='review'">Cancel</button>
 
-            <!-- TODO: SUBMIT BUTTON AVAIALABLE ONLY AFTER REVIEWED (BUTTON ABOVE) -->
-            <button class="btn btn-primary" ng-click="submitForm(formData)" ng-hide="true">
+            <button class="btn btn-primary" ng-click="save(true)" ng-show="state == 'review'">
               <span class="fa fa-check-square-o" aria-hidden="true"></span>
               <span>Submit</span>
             </button>
