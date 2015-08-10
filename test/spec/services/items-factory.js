@@ -62,8 +62,9 @@ describe('Service: itemsFactory', function () {
     });
 
     it('should call itemsService when calling getItemsList', function () {
-      itemsFactory.getItemsList(payload, false);
-      expect(itemsService.getItemsList).toHaveBeenCalledWith(payload, false);
+      var fetchFromMaster = false;
+      itemsFactory.getItemsList(payload, fetchFromMaster);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith(payload, fetchFromMaster);
     });
 
     it('should call itemsService when calling createItem', function () {
@@ -72,8 +73,8 @@ describe('Service: itemsFactory', function () {
     });
 
     it('should call itemsService when calling updateItem', function () {
-      itemsFactory.updateItem(payload, false);
-      expect(itemsService.updateItem).toHaveBeenCalledWith(payload, false);
+      itemsFactory.updateItem({id: 3}, payload);
+      expect(itemsService.updateItem).toHaveBeenCalledWith({id: 3}, payload);
     });
 
     it('should call itemsService when calling removeItem', function () {
