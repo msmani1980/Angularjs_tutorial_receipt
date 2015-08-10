@@ -17,7 +17,7 @@ angular.module('ts5App')
       startDate: '',
       endDate: ''
     };
-    $scope.openVersionId = 36;
+    $scope.openVersionId = -1;
 
     this.filterItems = function () {
       return $filter('filter')($scope.itemsList, $scope.search);
@@ -43,21 +43,20 @@ angular.module('ts5App')
       return query;
     };
 
-    // TODO: sort versions by date (newest is at top)
-    this.nestVersions = function () {
-      var currentMasterIndex = -1;
+    this.formatNestedItemsList = function () {
+      var newItemList = [];
       var currentMasterId = -1;
-      $scope.itemsList = $scope.itemsList.filter(function (item, index) {
+      angular.forEach($scope.itemsList, function (item) {
         if (item.itemMasterId === currentMasterId) {
-          $scope.itemsList[currentMasterIndex].versions.push(item);
-          return false;
+          var lastIndex = newItemList.length - 1;
+          newItemList[lastIndex].versions.push(item);
         } else {
-          currentMasterIndex = index;
+          var newItem = {versions: [item], itemMasterId: item.itemMasterId};
+          newItemList.push(newItem);
           currentMasterId = item.itemMasterId;
-          item.versions = [];
-          return true;
         }
       });
+      $scope.itemsList = newItemList;
     };
 
     this.getItemsList = function () {
@@ -65,7 +64,7 @@ angular.module('ts5App')
       var $this = this;
       itemsFactory.getItemsList(query).then(function (response) {
         $scope.itemsList = response.retailItems;
-        $this.nestVersions();
+        $this.formatNestedItemsList();
         $this.hideLoadingModal();
       });
     };
@@ -125,29 +124,29 @@ angular.module('ts5App')
     };
 
     $scope.hasSubVersions = function (item) {
-      return (item.versions && item.versions.length > 0);
+      return (item.versions.length > 1);
     };
 
-    $scope.isOpen = function(item) {
-      return (item.id === $scope.openVersionId);
+    $scope.isOpen = function (item) {
+      return (item.itemMasterId === $scope.openVersionId);
     };
 
-    $scope.toggleVersionVisibility = function(item) {
-      if(!$scope.hasSubVersions(item)) {
+    $scope.toggleVersionVisibility = function (item) {
+      if (!$scope.hasSubVersions(item)) {
         return;
       }
-      if($scope.openVersionId === item.id) {
+      if ($scope.openVersionId === item.itemMasterId) {
         $this.closeAccordian();
         $scope.openVersionId = -1;
       } else {
         $this.openAccordian(item);
         $this.closeAccordian();
-        $scope.openVersionId = item.id;
+        $scope.openVersionId = item.itemMasterId;
       }
     };
 
     this.openAccordian = function (item) {
-      angular.element('#item-' + item.id).addClass('open-accordion');
+      angular.element('#item-' + item.itemMasterId).addClass('open-accordion');
     };
     this.closeAccordian = function () {
       angular.element('#item-' + $scope.openVersionId).removeClass('open-accordion');

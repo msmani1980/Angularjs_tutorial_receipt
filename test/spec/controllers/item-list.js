@@ -162,26 +162,32 @@ describe('itemListCtrl', function () {
           }
         ];
       });
-      it('should add versions sub array to each item', function () {
-        ItemListCtrl.nestVersions();
+      it('should have a versions sub array for master items', function () {
+        ItemListCtrl.createNestedItemsList();
         expect($scope.itemsList[0].versions).toBeDefined();
+      });
+      it('should add a master item object to each version array', function () {
+        var masterItem = $scope.itemsList[0];
+        ItemListCtrl.createNestedItemsList();
+        expect($scope.itemsList[0].versions.length).toBeGreaterThan(0);
+        expect($scope.itemsList[0].versions[0]).toEqual(masterItem);
       });
       it('should remove subversions from itemsList', function () {
         expect($scope.itemsList.length).toEqual(2);
-        ItemListCtrl.nestVersions();
+        ItemListCtrl.createNestedItemsList();
         expect($scope.itemsList.length).toEqual(1);
       });
       it('should add removed subversions to sub array', function () {
         var subVersion = $scope.itemsList[1];
-        ItemListCtrl.nestVersions();
-        expect($scope.itemsList[0].versions[0]).toEqual(subVersion);
+        ItemListCtrl.createNestedItemsList();
+        expect($scope.itemsList[0].versions[1]).toEqual(subVersion);
       });
     });
 
     describe('contains an item object which', function () {
       var item;
       beforeEach(function () {
-        item = $scope.itemsList[1];
+        item = $scope.itemsList[0].versions[0];
       });
 
       it('should be defined', function () {
@@ -265,8 +271,8 @@ describe('itemListCtrl', function () {
 
   describe('versions accordion', function () {
     var itemWithVersions = {
-      id: 36,
-      versions: [{id: 36}]
+      itemMasterId: 36,
+      versions: [{itemMasterId: 36}, {itemMasterId: 36}]
     };
 
     describe('isOpen', function () {
@@ -295,7 +301,7 @@ describe('itemListCtrl', function () {
       });
 
       it('should not open items with no versions', function () {
-        $scope.toggleVersionVisibility({id: 1, versions:[]});
+        $scope.toggleVersionVisibility({itemMasterId: 1, versions:[]});
         expect($scope.openVersionId).not.toEqual(1);
       });
     });

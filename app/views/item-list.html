@@ -76,8 +76,7 @@
                 <label for="item-sales-category">Sales Category</label>
                 <select ng-model="search.categoryName" class="form-control" id="item-sales-category">
                   <option value="{{salesCategory.name}}"
-                          ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name
-                    }}
+                          ng-repeat="salesCategory in salesCategories | unique: 'salesCategoryId'">{{ salesCategory.name }}
                   </option>
                 </select>
               </div>
@@ -118,19 +117,17 @@
   </alert>
 
   <div class="table table-responsive table-hover">
-
     <table class="table">
-
       <thead>
       <tr>
         <th></th>
         <th>Code</th>
         <th>Name</th>
+        <th>Onboard Name</th>
         <th>
           <abbr title="Stock Owner Reference Number">S.O. Ref. #</abbr>
         </th>
         <th>Type</th>
-        <th>Onboard Name</th>
         <th>Sales Category</th>
         <th>Effective From</th>
         <th>Effective To</th>
@@ -138,63 +135,40 @@
       </tr>
       </thead>
 
-      <tbody id="item-{{item.id}}" ng-repeat="item in itemsList">
-      <tr id="master-item-{{item.id}}" class="master-row">
-        <td>
+      <tbody ng-repeat="item in itemsList" id="item-{{ item.itemMasterId }}">
+      <tr ng-repeat="version in item.versions | orderBy:'-startDate' track by $index"
+          ng-class="($index==0) ? 'master-row' : 'subversion-row'"
+          ng-show="$index==0 || isOpen(item)">
+        <td ng-hide="$index==0" colspan="4"></td>
+        <td ng-show="$index==0">
             <span class="fa fa-plus-square-o" ng-show="!isOpen(item) && hasSubVersions(item)"
                   ng-click="toggleVersionVisibility(item)"></span>
           <span class="fa fa-minus-square" ng-show="isOpen(item)" ng-click="toggleVersionVisibility(item)"></span>
         </td>
-        <td>{{ item.itemCode }}</td>
-        <td>{{ item.itemName }}</td>
-        <td>{{ item.stockOwnerCode }}</td>
-        <td>{{ item.itemTypeName }}</td>
-        <td>{{ item.onBoardName }}</td>
-        <td>{{ item.categoryName }}</td>
-        <td>{{ item.startDate | date: 'MM/dd/yyyy' }}</td>
-        <td>{{ item.endDate | date: 'MM/dd/yyyy' }}</td>
-
+        <td ng-show="$index==0">{{ version.itemCode }}</td>
+        <td ng-show="$index==0">{{ version.itemName }}</td>
+        <td ng-show="$index==0">{{ version.onBoardName }}</td>
+        <td>{{ version.stockOwnerCode }}</td>
+        <td>{{ version.itemTypeName }}</td>
+        <td>{{ version.categoryName }}</td>
+        <td>{{ version.startDate | date: 'MM/dd/yyyy' }}</td>
+        <td>{{ version.endDate | date: 'MM/dd/yyyy' }}</td>
         <td>
-          <a class="btn btn-info btn-xs" ng-href="#/item-view/{{item.id}}">
+          <a class="btn btn-info btn-xs" ng-href="#/item-view/{{version.id}}">
             <i class="fa fa-file"></i>
           </a>
-          <a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{item.id}}" ng-hide="isItemActive(item.endDate)">
+          <a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{version.id}}" ng-hide="isItemActive(item.endDate)">
             <i class="fa fa-pencil"></i>
           </a>
-          <a class="btn btn-warning btn-xs" ng-href="#/item-edit/{{item.id}}" ng-hide="isItemActive(item.endDate)">
+          <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{version.id}}" ng-hide="isItemActive(item.endDate)">
             <i class="fa fa-copy"></i>
           </a>
-          <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id)"
-                  ng-hide="isItemActive(item.startDate) || isItemActive(item.endDate)">
+          <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(version.id)"
+                  ng-hide="isItemActive(version.startDate) || isItemActive(version.endDate)">
             <i class="fa fa-trash"></i>
           </button>
         </td>
       </tr>
-
-      <tr ng-repeat="version in item.versions" ng-show="isOpen(item)" class="subversion-row">
-        <td colspan="4" class="empty-col"></td>
-        <td>{{ item.itemTypeName }}</td>
-        <td>{{ item.onBoardName }}</td>
-        <td>{{ item.categoryName }}</td>
-        <td>{{ item.startDate | date: 'MM/dd/yyyy' }}</td>
-        <td>{{ item.endDate | date: 'MM/dd/yyyy' }}</td>
-        <td>
-          <a class="btn btn-info btn-xs" ng-href="#/item-view/{{item.id}}">
-            <i class="fa fa-file"></i>
-          </a>
-          <a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{item.id}}" ng-hide="isItemActive(item.endDate)">
-            <i class="fa fa-pencil"></i>
-          </a>
-          <a class="btn btn-warning btn-xs" ng-href="#/item-edit/{{item.id}}" ng-hide="isItemActive(item.endDate)">
-            <i class="fa fa-copy"></i>
-          </a>
-          <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.id)"
-                  ng-hide="isItemActive(item.startDate) || isItemActive(item.endDate)">
-            <i class="fa fa-trash"></i>
-          </button>
-        </td>
-      </tr>
-
       </tbody>
     </table>
   </div>
