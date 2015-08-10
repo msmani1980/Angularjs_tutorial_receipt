@@ -25,8 +25,7 @@ angular
     'ngFileUpload',
     'ja.qr',
     'ngToast',
-    'ang-drag-drop',
-    'ngAnimate'
+    'ang-drag-drop'
   ])
   .constant('regexp', {
     word: /^[\w\s]+$/,

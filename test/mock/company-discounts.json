@@ -1,0 +1,105 @@
+{
+  "companyDiscounts": [
+    {
+      "id": 122,
+      "companyId": 403,
+      "discountTypeId": 4,
+      "discountTypeName": "Voucher",
+      "name": "10 % ",
+      "rateTypeId": 1,
+      "rateTypeName": "Percentage",
+      "companyDiscountRestrictions": false,
+      "startDate": "2015-07-22",
+      "endDate": "2015-07-30"
+    },
+    {
+      "id": 124,
+      "companyId": 403,
+      "discountTypeId": 4,
+      "discountTypeName": "Voucher",
+      "name": "15 ",
+      "rateTypeId": 1,
+      "rateTypeName": "Percentage",
+      "companyDiscountRestrictions": false,
+      "startDate": "2015-07-22",
+      "endDate": "2015-07-31"
+    },
+    {
+      "id": 133,
+      "companyId": 403,
+      "discountTypeId": 4,
+      "discountTypeName": "Voucher",
+      "name": "testing discount1",
+      "rateTypeId": 2,
+      "rateTypeName": "Amount",
+      "companyDiscountRestrictions": null,
+      "startDate": "2015-07-22",
+      "endDate": "2015-12-31"
+    },
+    {
+      "id": 140,
+      "companyId": 403,
+      "discountTypeId": 4,
+      "discountTypeName": "Voucher",
+      "name": "New 10 %",
+      "rateTypeId": 2,
+      "rateTypeName": "Amount",
+      "companyDiscountRestrictions": null,
+      "startDate": "2015-07-22",
+      "endDate": "2015-12-31"
+    },
+    {
+      "id": 142,
+      "companyId": 403,
+      "discountTypeId": 4,
+      "discountTypeName": "Voucher",
+      "name": "30% discount",
+      "rateTypeId": 2,
+      "rateTypeName": "Amount",
+      "companyDiscountRestrictions": null,
+      "startDate": "2015-07-24",
+      "endDate": "2015-12-31"
+    },
+    {
+      "id": 145,
+      "companyId": 403,
+      "discountTypeId": 4,
+      "discountTypeName": "Voucher",
+      "name": "30% discount12",
+      "rateTypeId": 2,
+      "rateTypeName": "Amount",
+      "companyDiscountRestrictions": null,
+      "startDate": "2015-07-25",
+      "endDate": "2015-12-31"
+    },
+    {
+      "id": 150,
+      "companyId": 403,
+      "discountTypeId": 4,
+      "discountTypeName": "Voucher",
+      "name": "20",
+      "rateTypeId": 2,
+      "rateTypeName": "Amount",
+      "companyDiscountRestrictions": false,
+      "startDate": "2015-08-01",
+      "endDate": "2015-08-31"
+    },
+    {
+      "id": 156,
+      "companyId": 403,
+      "discountTypeId": 4,
+      "discountTypeName": "Voucher",
+      "name": "5 Dollars Off",
+      "rateTypeId": 2,
+      "rateTypeName": "Amount",
+      "companyDiscountRestrictions": false,
+      "startDate": "2015-08-10",
+      "endDate": "2015-09-01"
+    }
+  ],
+  "meta": {
+    "count": 8,
+    "limit": 8,
+    "start": 0
+  }
+}
