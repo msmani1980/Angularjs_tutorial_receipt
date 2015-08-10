@@ -43,17 +43,19 @@ angular.module('ts5App')
       return query;
     };
 
+    // TODO: sort versions by date (newest is at top)
     this.nestVersions = function () {
       var currentMasterIndex = -1;
       var currentMasterId = -1;
       $scope.itemsList = $scope.itemsList.filter(function (item, index) {
         if (item.itemMasterId === currentMasterId) {
           $scope.itemsList[currentMasterIndex].versions.push(item);
+          return false;
         } else {
           currentMasterIndex = index;
           currentMasterId = item.itemMasterId;
           item.versions = [];
-          return item;
+          return true;
         }
       });
     };
@@ -144,10 +146,10 @@ angular.module('ts5App')
       }
     };
 
-    $this.openAccordian = function (item) {
+    this.openAccordian = function (item) {
       angular.element('#item-' + item.id).addClass('open-accordion');
     };
-    $this.closeAccordian = function () {
+    this.closeAccordian = function () {
       angular.element('#item-' + $scope.openVersionId).removeClass('open-accordion');
     };
 
