@@ -341,7 +341,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       angular.forEach(images, function (image) {
         image.startDate = dateUtility.formatDateForApp(image.startDate);
         image.endDate = dateUtility.formatDateForApp(image.endDate);
-      })
+      });
     };
 
     this.formatPriceDates = function (itemData) {
