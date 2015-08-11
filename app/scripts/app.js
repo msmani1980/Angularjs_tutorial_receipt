@@ -221,6 +221,7 @@ angular
     // TODO: Set up watch so when user and company id change, these are updated
     $http.defaults.headers.common.userId = user.id;
     $http.defaults.headers.common.companyId = companyId;
+    $http.defaults.headers.common['Content-Type'] = 'application/json';
 
     // TODO: move this away when login is there
     $http.defaults.headers.common.sessionToken = '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
