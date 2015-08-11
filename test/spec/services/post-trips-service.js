@@ -42,7 +42,7 @@ describe('Service: postTripService', function () {
 
       var postTripDataList;
       beforeEach(function () {
-        $httpBackend.whenGET(/posttrips/, headers).respond(postTripDataListResponseJSON);
+        $httpBackend.whenGET(/posttrips/).respond(postTripDataListResponseJSON);
         postTripService.getPostTrips().then(function (dataFromAPI) {
           postTripDataList = dataFromAPI;
         });
@@ -57,7 +57,7 @@ describe('Service: postTripService', function () {
         it('should have a company id as payload', function () {
           var companyId = '403';
           var regex = new RegExp('companies/' + companyId + '/posttrips', 'g');
-          $httpBackend.expectGET(regex, headers);
+          $httpBackend.expectGET(regex);
           postTripService.getPostTrips(companyId, {});
           $httpBackend.flush();
         });
@@ -66,14 +66,14 @@ describe('Service: postTripService', function () {
           var scheduleNumber = '123';
           var payload = {scheduleNumber: scheduleNumber};
           var regex = new RegExp('companies/403/posttrips\.\*scheduleNumber=' + scheduleNumber, 'g');
-          $httpBackend.expectGET(regex, headers);
+          $httpBackend.expectGET(regex);
           postTripService.getPostTrips('403', payload);
           $httpBackend.flush();
         });
 
         it('should not need a payload parameter', function () {
           var regex = new RegExp('companies/403/posttrips', 'g');
-          $httpBackend.expectGET(regex, headers);
+          $httpBackend.expectGET(regex);
           postTripService.getPostTrips('403');
           $httpBackend.flush();
         });
