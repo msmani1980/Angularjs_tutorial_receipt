@@ -556,18 +556,19 @@ describe('The Item Create Controller', function () {
               expect(ItemCreateCtrl.formatVoucherData({})).toBeUndefined();
             });
 
-            it('should set isDynamicBarcodes when isVoucherSelected and remove unused shouldUseDynamicBarcode property', function () {
-              $scope.isVoucherSelected = true;
-              var itemData = {
-                shouldUseDynamicBarcode: {
-                  value: true
-                }
-              };
-              ItemCreateCtrl.formatVoucherData(itemData);
-              expect(itemData.isDynamicBarcodes).toBe(true);
-              expect(itemData.shouldUseDynamicBarcode).toBeUndefined();
+            it('should set isDynamicBarcodes when isVoucherSelected and remove unused shouldUseDynamicBarcode property',
+              function () {
+                $scope.isVoucherSelected = true;
+                var itemData = {
+                  shouldUseDynamicBarcode: {
+                    value: true
+                  }
+                };
+                ItemCreateCtrl.formatVoucherData(itemData);
+                expect(itemData.isDynamicBarcodes).toBe(true);
+                expect(itemData.shouldUseDynamicBarcode).toBeUndefined();
 
-            });
+              });
 
             it('should set companyDiscountId from voucherId and remove unused voucher property', function () {
               $scope.isVoucherSelected = true;
@@ -583,6 +584,34 @@ describe('The Item Create Controller', function () {
             });
           });
 
+        });
+
+      });
+
+      describe('set voucher data on scope', function () {
+
+        it('should set the value for use dynamic barcode select box', function () {
+          var itemData = {
+            isDynamicBarcodes: false
+          };
+          ItemCreateCtrl.setVoucherData(itemData);
+          expect($scope.formData.shouldUseDynamicBarcode.value).toBe(itemData.isDynamicBarcodes);
+        });
+
+        it('should attach the voucher object to the scope', function () {
+          var itemData = {
+            companyDiscountId: 1979
+          };
+          $scope.discountList = [
+            {
+              id: 100
+            },
+            {
+              id: 1979
+            }
+          ];
+          ItemCreateCtrl.setVoucherData(itemData);
+          expect($scope.formData.voucher.id).toBe(itemData.companyDiscountId);
         });
 
       });

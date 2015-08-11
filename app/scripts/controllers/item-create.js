@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function ($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, currencyFactory,
-            $routeParams, GlobalMenuService, $q, dateUtility) {
+            $routeParams, GlobalMenuService, $q, dateUtility, $filter) {
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
     var companyId = GlobalMenuService.company.get();
@@ -85,6 +85,16 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.validateItemCompany = function (data) {
       return data.retailItem.companyId === companyId;
+    };
+
+    this.setVoucherData = function (itemData) {
+      $scope.formData.shouldUseDynamicBarcode = {
+        value: !!itemData.isDynamicBarcodes
+      };
+
+      if (itemData.companyDiscountId) {
+        $scope.formData.voucher = $filter('filter')($scope.discountList, {id: itemData.companyDiscountId}, true)[0];
+      }
     };
 
     // gets an item to $scope.editingItem
@@ -348,8 +358,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.deserializeRecommendations(itemData);
       this.formatImageDates(itemData);
       this.formatPriceDates(itemData);
-
       $scope.formData = itemData;
+
+      this.setVoucherData(itemData);
       this.updateStationsList();
     };
 
@@ -380,7 +391,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.setDiscountList = function (dataFromAPI) {
-      $scope.discountList = dataFromAPI;
+      $scope.discountList = angular.copy(dataFromAPI.companyDiscounts);
     };
 
     this.setDependencies = function (response) {
@@ -396,7 +407,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setWeightList(response[9]);
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11].retailItems);
-      $this.setDiscountList(response[12].companyDiscounts);
+      $this.setDiscountList(response[12]);
       if ($scope.editingItem || $scope.duplicatingItem || $scope.viewOnly) {
         this.getItem($routeParams.id);
       } else {
@@ -880,7 +891,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemData.companyDiscountId = itemData.voucher.id;
         delete itemData.voucher;
       }
-
     };
 
     this.formatPayload = function (itemData) {
