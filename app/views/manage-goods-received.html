@@ -74,13 +74,13 @@
       <div class="panel-title">Select an LMP Station to View Delivery Notes*</div>
     </div>
     <div class="panel-body">
-      <select class="form-control" ng-model="stationId">
-        <option ng-repeat="station in stationsList" value="station.id">{{ station.code }}</option>
+      <select class="form-control" ng-model="catererStationId">
+        <option ng-repeat="station in stationsList" value="{{ station.id }}">{{ station.code }}</option>
       </select>
     </div>
   </div>
 
-    <table ng-show="stationId" class="table table-responsive table-bordered table-hover ng-scope">
+    <table ng-show="catererStationId" class="table table-responsive table-bordered table-hover ng-scope">
       <thead>
         <tr>
           <th>Delivery Note Number</th>
@@ -93,24 +93,29 @@
         </tr>
       </thead>
       <tbody>
-        <!-- ngRepeat: menu in menuList | filter:{menuCode: search.menuCode, menuName: search.menuName} -->
-        <tr>
-          <td>1A2B3C4D</td>
-          <td>2A3B4C5D</td>
-          <td>2/03</td>
-          <td>Saved</td>
-          <td>2/03 - 12:34pm</td>
-          <td>2/05 - 12:34pm</td>
+        <tr ng-show="deliveryNotesList.length === 0">
+          <td colspan="7">
+            <p class="alert alert-info">No delivery notes are associated with that station</p>
+          </td>
+        </tr>
+        <tr ng-repeat="deliveryNote in deliveryNotesList">
+          <td>{{ deliveryNote.deliveryNoteNumber }}</td>
+          <td>{{ deliveryNote.purchaseOrderNumber }}</td>
+          <td>{{ deliveryNote.deliveryDate }}</td>
           <td>
-
-          <!-- TODO: WHEN STATUS=SUBMITTED (ABOVE) EDIT & DELETE (BELOW) ARE REMOVED -->
-            <button class="btn btn-info btn-xs" ng-click="viewPostTrip(menu)" tabindex="0">
+            <span ng-show="{{ !deliveryNote.isAccepted }}">Create</span>
+            <span ng-show="{{ deliveryNote.isAccepted }}">Saved</span>
+          </td>
+          <td>{{ deliveryNote.createdOn }}</td>
+          <td>{{ deliveryNote.updatedOn }}</td>
+          <td>
+            <a class="btn btn-info btn-xs" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}" tabindex="0">
               <i class="fa fa-file"></i>
-            </button>
-            <button class="btn btn-primary btn-xs" ng-click="editPostTrip(menu)" ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true">
+            </a>
+            <a class="btn btn-primary btn-xs" ng-hide="{{ deliveryNote.isAccepted }}" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}"  ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true">
               <i class="fa fa-pencil"></i>
-            </button>
-            <button class="btn btn-danger btn-xs" ng-click="deletePostTrip(menu)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true">
+            </a>
+            <button class="btn btn-danger btn-xs" ng-hide="{{ deliveryNote.isAccepted }}" ng-click="deleteRecordDialog(deliveryNote.id)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true">
               <i class="fa fa-trash"></i>
             </button>
           </td>
@@ -142,4 +147,5 @@
 <form-success-modal></form-success-modal>
 <form-update-modal></form-update-modal>
 <leave-view-modal></leave-view-modal>
+<delete-record-dialog></delete-record-dialog>
 <dynamic-left-nav></dynamic-left-nav>

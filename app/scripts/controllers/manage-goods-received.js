@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ManageGoodsReceivedCtrl', function ($scope,$filter, dateUtility,deliveryNoteFactory) {
+  .controller('ManageGoodsReceivedCtrl', function ($scope,$filter, dateUtility,deliveryNoteFactory,ngToast) {
 
     var $this = this;
     $scope.stationsList = [];
@@ -19,7 +19,7 @@ angular.module('ts5App')
 
     this.init = function() {
       this.getCatererStationList();
-      $scope.$watch('stationId', function(newData) {
+      $scope.$watch('catererStationId', function(newData) {
         if(newData) {
           $this.getDeliveryNotesList();
         }
@@ -40,6 +40,7 @@ angular.module('ts5App')
 
     this.generateDeliveryNoteQuery = function () {
       var query = {
+        catererStationId: $scope.catererStationId,
         sortBy: 'ASC',
         limit: 100
       };
@@ -52,8 +53,9 @@ angular.module('ts5App')
     };
 
     this.getDeliveryNotesList = function () {
+      var query = $this.generateDeliveryNoteQuery();
       $this.displayLoadingModal('Getting a list of delivery notes');
-      deliveryNoteFactory.getDeliveryNotesList().then(function (data) {
+      deliveryNoteFactory.getDeliveryNotesList(query).then(function (data) {
         $scope.deliveryNotesList = data.response;
         $this.hideLoadingModal();
       });
@@ -62,8 +64,6 @@ angular.module('ts5App')
     this.getCatererStationList = function () {
       deliveryNoteFactory.getCatererStationList().then(function (data) {
         $scope.stationsList = data.response;
-
-        $this.hideLoadingModal();
       });
     };
 
@@ -83,11 +83,20 @@ angular.module('ts5App')
       return Date.parse(date);
     };
 
+    this.showSuccessMessage = function (message) {
+      ngToast.create({
+        className: 'success',
+        dismissButton: true,
+        content: message
+      });
+    };
+
     $scope.removeRecord = function (deliveryNoteId) {
       var deliveryNoteIndex = $this.findDeliveryNoteIndex(deliveryNoteId);
-      $this.displayLoadingModal('Removing Retail DeliveryNote');
-      deliveryNoteFactory.removeDeliveryNote(deliveryNoteId).then(function () {
+      $this.displayLoadingModal('Removing Delivery Note');
+      deliveryNoteFactory.deleteDeliveryNote(deliveryNoteId).then(function () {
         $this.hideLoadingModal();
+        $this.showSuccessMessage('Delivery Note Removed!');
         $scope.deliveryNotesList.splice(deliveryNoteIndex, 1);
       });
     };
