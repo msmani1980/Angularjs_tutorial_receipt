@@ -189,6 +189,11 @@ angular.module('ts5App')
       }
     };
 
+    $scope.clearFilter = function(){
+      $scope.filterInput.itemCode = '';
+      $scope.filterInput.itemName = '';
+    };
+
     $scope.save = function(submit){
       if(submit){
         // TODO use saveDeliveryNote, set isAccepted to true

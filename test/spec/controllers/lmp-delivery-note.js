@@ -147,6 +147,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(scope.toggleReview).toBeDefined();
         expect(Object.prototype.toString.call(scope.toggleReview)).toBe('[object Function]');
       });
+      it('should have a clearFilter scope function', function(){
+        expect(scope.clearFilter).toBeDefined();
+        expect(Object.prototype.toString.call(scope.clearFilter)).toBe('[object Function]');
+      });
     });
   });
 
@@ -276,6 +280,17 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     it('should switch the state back to edit when the cancel button is clicked', function(){
       scope.cancel();
       expect(scope.state).toBe('edit');
+    });
+    describe('clearFilter scope function', function(){
+      it('should set all filters to empty string when called', function(){
+        scope.filterInput = {};
+        scope.filterInput.itemCode = 's';
+        scope.filterInput.itemName = 's';
+        scope.$digest();
+        scope.clearFilter();
+        expect(scope.filterInput.itemCode).toBe('');
+        expect(scope.filterInput.itemName).toBe('');
+      });
     });
   });
 
