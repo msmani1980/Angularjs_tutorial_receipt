@@ -131,6 +131,10 @@ describe('The Item Create Controller', function () {
       expect(ItemCreateCtrl.init).toBeDefined();
     });
 
+    describe('init copy state', function () {
+
+    });
+
     describe('getDependencies() method', function () {
       var responseArray;
       var companiesFactory;
