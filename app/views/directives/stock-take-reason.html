@@ -11,28 +11,52 @@
 				<div class="modal-body">
 
 					<label>Reason*</label>
-					<p>To adjust Current Item Count, you must give a reason below.</p>
+					<p>To adjust Current Item Count, please provide a reason below.</p>
 
 					<div class="form-group">
 						<div class="row">
 
 							<div class="col-xs-12 col-sm-4">
-								<input type="text" class="form-control" ng-model="dispatchedQuantity[id]" placeholder="0" ng-disabled="!stockAdjustmentReason.length && !stockAdjustmentComment.length">
+								<input
+									custom-validity
+									custom-pattern="number"
+									type="text"
+									class="form-control"
+									ng-model="dispatchedQuantity[id]"
+									placeholder="0"
+									ng-disabled="!stockAdjustmentReason && !stockAdjustmentComment.length"
+								>
 							</div>
-							<!---
+<!--
 							<ui-select id="stock-adjustment-reason" ng-model="stockAdjustmentReason" theme="bootstrap" class="col-xs-8">
-								<ui-select-match placeholder="Broken">{{ $item.stockAdjustmentReasonCode }}</ui-select-match>
-								<ui-select-choices> {{item.ullageReasonCode}} {{item.stockAdjustmentReasonName}}</ui-select-choices>
+								<ui-select-match placeholder="Broken">item.stockAdjustmentReasonCode</ui-select-match>
+								<ui-select-choices ng>item.ullageReasonCode - item.stockAdjustmentReasonName</ui-select-choices>
 							</ui-select>
-							--->
+-->						<div class="col-xs-12 col-sm-8">
+								<select
+			            class="form-control"
+			            id="stock-adjustment-reason"
+			            ng-model="stockAdjustmentReason"
+			            ng-options="reasonCode for companyReasonCode in companyReasonCodeList"
+			            >
+			            <option selected="selected" value>Select Stock Adjustment Reason</option>
+			          </select>
+							</div>
+
 						</div>
+
 					</div>
 
-				</div>
 
 				<div class="form-group">
-						<textarea class="form-control" ng-model="stockAdjustmentComment" placeholder="Ender a comment..."></textarea>
+					<div class="row">
+						<div class="col-xs-12">
+							<textarea class="form-control" ng-model="stockAdjustmentComment" placeholder="Ender a comment..."></textarea>
+						</div>
+					</div>
 				</div>
+
+			</div> <!-- End of Modal Body -->
 
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" ng-click="">Save Changes</button>
