@@ -185,7 +185,7 @@ angular.module('ts5App', [
   'regexp',
   'GlobalMenuService',
   '$http',
-  function ($rootScope, regexp, GlobalMenuService, $http, $httpProvider, $q) {
+  function ($rootScope, regexp, GlobalMenuService, $http) {
 
     $http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
 

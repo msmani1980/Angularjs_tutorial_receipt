@@ -8,13 +8,13 @@ describe('Service: postTripService', function () {
   var postTripService,
     Upload,
     $httpBackend,
-    postTripDataListResponseJSON,
-    headers = {
-      companyId: 362,
-      'Accept': 'application/json, text/plain, */*',
-      'userId': 1,
-      sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
-    };
+    postTripDataListResponseJSON;
+    //headers = {
+    //  companyId: 362,
+    //  'Accept': 'application/json, text/plain, */*',
+    //  'userId': 1,
+    //  sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
+    //};
 
   beforeEach(inject(function (_postTripService_, $injector) {
     inject(function (_servedPostTripDataList_) {
