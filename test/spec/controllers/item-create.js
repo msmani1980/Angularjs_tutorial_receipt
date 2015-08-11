@@ -552,10 +552,6 @@ describe('The Item Create Controller', function () {
 
           describe('formatVoucherData', function () {
 
-            it('should return undefined', function () {
-              expect(ItemCreateCtrl.formatVoucherData({})).toBeUndefined();
-            });
-
             it('should set isDynamicBarcodes when isVoucherSelected and remove unused shouldUseDynamicBarcode property',
               function () {
                 $scope.isVoucherSelected = true;
