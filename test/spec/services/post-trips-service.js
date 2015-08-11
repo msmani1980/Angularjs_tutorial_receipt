@@ -8,13 +8,13 @@ describe('Service: postTripService', function () {
   var postTripService,
     Upload,
     $httpBackend,
-    postTripDataListResponseJSON,
-    headers = {
-      companyId: 362,
-      'Accept': 'application/json, text/plain, */*',
-      'userId': 1,
-      sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
-    };
+    postTripDataListResponseJSON;
+    //headers = {
+    //  companyId: 362,
+    //  'Accept': 'application/json, text/plain, */*',
+    //  'userId': 1,
+    //  sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
+    //};
 
   beforeEach(inject(function (_postTripService_, $injector) {
     inject(function (_servedPostTripDataList_) {
@@ -42,7 +42,7 @@ describe('Service: postTripService', function () {
 
       var postTripDataList;
       beforeEach(function () {
-        $httpBackend.whenGET(/posttrips/, headers).respond(postTripDataListResponseJSON);
+        $httpBackend.whenGET(/posttrips/).respond(postTripDataListResponseJSON);
         postTripService.getPostTrips().then(function (dataFromAPI) {
           postTripDataList = dataFromAPI;
         });
@@ -57,7 +57,7 @@ describe('Service: postTripService', function () {
         it('should have a company id as payload', function () {
           var companyId = '403';
           var regex = new RegExp('companies/' + companyId + '/posttrips', 'g');
-          $httpBackend.expectGET(regex, headers);
+          $httpBackend.expectGET(regex);
           postTripService.getPostTrips(companyId, {});
           $httpBackend.flush();
         });
@@ -66,14 +66,14 @@ describe('Service: postTripService', function () {
           var scheduleNumber = '123';
           var payload = {scheduleNumber: scheduleNumber};
           var regex = new RegExp('companies/403/posttrips\.\*scheduleNumber=' + scheduleNumber, 'g');
-          $httpBackend.expectGET(regex, headers);
+          $httpBackend.expectGET(regex);
           postTripService.getPostTrips('403', payload);
           $httpBackend.flush();
         });
 
         it('should not need a payload parameter', function () {
           var regex = new RegExp('companies/403/posttrips', 'g');
-          $httpBackend.expectGET(regex, headers);
+          $httpBackend.expectGET(regex);
           postTripService.getPostTrips('403');
           $httpBackend.flush();
         });

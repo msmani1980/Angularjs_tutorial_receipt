@@ -40,6 +40,15 @@ angular.module('ts5App')
       return itemsService.getItemsList({}, true);
     }
 
+    function createDeliveryNote(payload){
+      payload.isAccepted = false;
+      return deliveryNotesService.createDeliveryNote(payload);
+    }
+
+    function saveDeliveryNote(payload){
+      return deliveryNotesService.saveDeliveryNote(payload);
+    }
+
     return {
       getDeliveryNote: getDeliveryNote,
       getCatererStationList: getCatererStationList,
@@ -47,7 +56,9 @@ angular.module('ts5App')
       getCompanyMenuCatererStations: getCompanyMenuCatererStations,
       getMasterItemsByCatererStationId: getMasterItemsByCatererStationId,
       getCompanyReasonCodes: getCompanyReasonCodes,
-      getAllMasterItems: getAllMasterItems
+      getAllMasterItems: getAllMasterItems,
+      createDeliveryNote: createDeliveryNote,
+      saveDeliveryNote: saveDeliveryNote
     };
 
   });
