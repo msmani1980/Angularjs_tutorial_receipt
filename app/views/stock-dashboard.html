@@ -93,16 +93,16 @@
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
-            <input type="text" class="form-control" value="{{stockItem.currentCountQuantity}}" ng-disabled="true">
-          </td>
-          <td>
             <input type="text" class="form-control" value="{{stockItem.openingQuantity}}" ng-disabled="true">
           </td>
-          <td >
+          <td>
             <input type="text" class="form-control" value="{{stockItem.receivedQuantity}}" ng-disabled="true">
           </td>
-          <td id="dispatchedQuantity-{{id}}" ng-click="stockTakeReasonOpen(stockItem.index)">
-            <input type="text" class="form-control" ng-model="dispatchedQuantity[stockItem.index]" placeholder="Click to Edit" ng-disabled="true">
+          <td>
+            <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}" ng-disabled="true">
+          </td>
+          <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]" ng-click="stockTakeReasonOpen(stockItem.index, stockItem.currentCountQuantity)">
+            <input type="text" class="form-control" value="{{stockItem.currentCountQuantity}}" ng-disabled="true">
           </td>
         </tr>
 

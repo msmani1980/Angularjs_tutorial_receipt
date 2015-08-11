@@ -19,6 +19,8 @@ angular.module('ts5App')
       return GlobalMenuService.company.get();
     };
 
+    var $this = this;
+
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
       $scope.stockDashboardItemsList = dataFromAPI.response;
     };
@@ -27,14 +29,16 @@ angular.module('ts5App')
       $scope.cateringStationList = dataFromAPI.response;
     };
 
-    this.getCompanyReasonCodeSuccessHandler = function(dataFromAPI) {
-      $scope.companyReasonCodeList = dataFromAPI.response;
+    this.getUllageReasonsFromResponse = function(dataFromAPI) {
+      $scope.ullageReasons = dataFromAPI.companyReasonCodes.filter(function(reasonCode) {
+        return reasonCode.reasonTypeName === 'Ullage';
+      });
     };
 
     this.init = function() {
       stockDashboardService.getStockDashboardItems().then(this.getStockDashboardItemsSuccessHandler);
       catererStationService.getCatererStationList().then(this.getCatererStationListSuccessHandler);
-      companyReasonCodesService.getAll().then(this.getCompanyReasonCodeSuccessHandler);
+      companyReasonCodesService.getAll().then($this.getUllageReasonsFromResponse);
     };
 
     this.init();
