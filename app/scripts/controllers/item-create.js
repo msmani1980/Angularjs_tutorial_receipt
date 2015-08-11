@@ -862,11 +862,18 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.validateForm = function () {
-      $scope.displayError = false;
-      if (!$scope.form.$valid) {
-        $scope.displayError = true;
-      }
+      $scope.displayError = !$scope.form.$valid;
       return $scope.form.$valid;
+    };
+
+    this.formatVoucherData = function (itemData) {
+      if ($scope.isVoucherSelected) {
+        itemData.isDynamicBarcodes = itemData.shouldUseDynamicBarcode.value;
+        itemData.companyDiscountId = itemData.voucher.id;
+
+        delete itemData.shouldUseDynamicBarcode;
+        delete itemData.voucher;
+      }
     };
 
     this.formatPayload = function (itemData) {
@@ -875,6 +882,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       itemData.characteristics = $this.formatCharacteristics(itemData);
       itemData.substitutions = $this.formatSubstitutions(itemData);
       itemData.recommendations = $this.formatRecommendations(itemData);
+      this.formatVoucherData(itemData);
       this.formatPayloadDates(itemData);
       this.cleanUpPayload(itemData);
       return itemData;
