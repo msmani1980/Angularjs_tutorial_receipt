@@ -9,13 +9,13 @@ describe('Service: cashBagService', function () {
   var cashBagService,
     $httpBackend,
     cashBagListResponseJSON,
-    cashBagResponseJSON,
-    headers = {
-      companyId: 362,
-      'Accept': 'application/json, text/plain, */*',
-      'userId': 1,
-      sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
-    };
+    cashBagResponseJSON;
+    //headers = {
+    //  companyId: 362,
+    //  'Accept': 'application/json, text/plain, */*',
+    //  'userId': 1,
+    //  sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
+    //};
 
   beforeEach(inject(function (_cashBagService_, $injector) {
     inject(function (_servedCashBagList_, _servedCashBag_) {
@@ -47,7 +47,7 @@ describe('Service: cashBagService', function () {
 
       var cashBagListData;
       beforeEach(function () {
-        $httpBackend.whenGET(/cash-bags/, headers).respond(cashBagListResponseJSON);
+        $httpBackend.whenGET(/cash-bags/).respond(cashBagListResponseJSON);
 
         cashBagService.getCashBagList().then(function (dataFromAPI) {
           cashBagListData = dataFromAPI;
@@ -76,7 +76,7 @@ describe('Service: cashBagService', function () {
       it('should have a company id as payload', function () {
         var companyId = 413;
         var regex = new RegExp('cash-bags\\?\.\*retailCompanyId=' + companyId, 'g');
-        $httpBackend.expectGET(regex, headers).respond(200, '');
+        $httpBackend.expectGET(regex).respond(200, '');
         cashBagService.getCashBagList(companyId, {});
         $httpBackend.flush();
       });
@@ -85,7 +85,7 @@ describe('Service: cashBagService', function () {
         var cashBagNumber = '123';
         var payload = {cashBagNumber: cashBagNumber};
         var regex = new RegExp('cash-bags\\?\.\*cashBagNumber=' + cashBagNumber, 'g');
-        $httpBackend.expectGET(regex, headers).respond(200, '');
+        $httpBackend.expectGET(regex).respond(200, '');
         cashBagService.getCashBagList('413', payload);
         $httpBackend.flush();
       });
@@ -93,7 +93,7 @@ describe('Service: cashBagService', function () {
       it('should not need a payload parameter', function() {
         var companyId = '413';
         var regex = new RegExp('cash-bags\\?\.\*retailCompanyId=' + companyId, 'g');
-        $httpBackend.expectGET(regex, headers).respond(200, '');
+        $httpBackend.expectGET(regex).respond(200, '');
         cashBagService.getCashBagList(companyId);
         $httpBackend.flush();
       });
