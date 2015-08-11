@@ -38,8 +38,8 @@ angular.module('ts5App')
           var options = angular.extend({}, datePickerOptions);
           var datePickerInput = $element.find('input[type="text"]');
           datePickerInput.datepicker(options);
-          $scope.$watch('ngModel', function () {
-            if($scope.ngModel) {
+          $scope.$watch('ngModel', function (newData,oldData) {
+            if($scope.ngModel && newData !== oldData) {
               datePickerInput.datepicker('setDate', $scope.ngModel);
             }
           });

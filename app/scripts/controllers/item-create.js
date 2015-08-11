@@ -178,7 +178,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var newCharacteristic = {
           characteristicId: characteristic.id
         };
-        if (characteristic.characteristicId && !$scope.duplicatingItem) {
+        if (characteristic.characteristicId && $scope.duplicatingItem) {
+          newCharacteristic.characteristicId = characteristic.characteristicId;
+        } else if(characteristic.characteristicId && !$scope.duplicatingItem) {
           newCharacteristic.id = characteristic.id;
           newCharacteristic.characteristicId = characteristic.characteristicId;
         }
@@ -229,12 +231,41 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return allergenPayload;
     };
 
+    this.formatGlobalTradeNumbers = function (itemData) {
+      for (var numberKey in itemData.globalTradeNumbers) {
+        var number = itemData.globalTradeNumbers[numberKey];
+        if($scope.duplicatingItem) {
+          delete number.itemId;
+          delete number.id;
+        }
+      }
+    };
+
+    this.formatTaxes = function (itemData) {
+      for (var taxKey in itemData.taxes) {
+        var tax = itemData.taxes[taxKey];
+        if($scope.duplicatingItem) {
+          delete tax.itemId;
+          delete tax.id;
+        }
+      }
+    };
+
     this.formatPrices = function (itemData) {
       for (var priceKey in itemData.prices) {
         var price = itemData.prices[priceKey];
         if($scope.duplicatingItem) {
           delete price.itemId;
           delete price.id;
+        }
+      }
+    };
+
+    this.formatImages = function (itemData) {
+      for (var imageKey in itemData.images) {
+        var image = itemData.images[imageKey];
+        if($scope.duplicatingItem) {
+          delete image.id;
         }
       }
     };
@@ -306,12 +337,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return recommendationPayload;
     };
 
-    this.formatImageDates = function (itemData) {
-      for (var imageIndex in itemData.images) {
-        var image = itemData.images[imageIndex];
+    this.formatImageDates = function (images) {
+      angular.forEach(images, function (image) {
         image.startDate = dateUtility.formatDateForApp(image.startDate);
         image.endDate = dateUtility.formatDateForApp(image.endDate);
-      }
+      })
     };
 
     this.formatPriceDates = function (itemData) {
@@ -361,7 +391,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.deserializeCharacteristics(itemData);
       this.deserializeSubstitutions(itemData);
       this.deserializeRecommendations(itemData);
-      this.formatImageDates(itemData);
+      this.formatImageDates(itemData.images);
       this.formatPriceDates(itemData);
 
       $scope.formData = itemData;
@@ -892,6 +922,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       itemData.recommendations = $this.formatRecommendations(itemData);
       this.formatPayloadDates(itemData);
       this.formatPrices(itemData);
+      this.formatImages(itemData);
+      this.formatGlobalTradeNumbers(itemData);
+      this.formatTaxes(itemData);
       this.cleanUpPayload(itemData);
       return itemData;
     };
