@@ -867,19 +867,20 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.formatVoucherData = function (itemData) {
-      if ($scope.isVoucherSelected) {
-
-        if (itemData.shouldUseDynamicBarcode) {
-          itemData.isDynamicBarcodes = itemData.shouldUseDynamicBarcode.value;
-          delete itemData.shouldUseDynamicBarcode;
-        }
-
-        if (itemData.voucher) {
-          itemData.companyDiscountId = itemData.voucher.id;
-          delete itemData.voucher;
-        }
-
+      if (!$scope.isVoucherSelected) {
+        return;
       }
+
+      if (itemData.shouldUseDynamicBarcode) {
+        itemData.isDynamicBarcodes = itemData.shouldUseDynamicBarcode.value;
+        delete itemData.shouldUseDynamicBarcode;
+      }
+
+      if (itemData.voucher) {
+        itemData.companyDiscountId = itemData.voucher.id;
+        delete itemData.voucher;
+      }
+
     };
 
     this.formatPayload = function (itemData) {
