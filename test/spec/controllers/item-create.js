@@ -556,7 +556,7 @@ describe('The Item Create Controller', function () {
               expect(ItemCreateCtrl.formatVoucherData({})).toBeUndefined();
             });
 
-            it('should set isDynamicBarcodes when isVoucherSelected', function () {
+            it('should set isDynamicBarcodes when isVoucherSelected and remove unused shouldUseDynamicBarcode property', function () {
               $scope.isVoucherSelected = true;
               var itemData = {
                 shouldUseDynamicBarcode: {
@@ -565,10 +565,11 @@ describe('The Item Create Controller', function () {
               };
               ItemCreateCtrl.formatVoucherData(itemData);
               expect(itemData.isDynamicBarcodes).toBe(true);
+              expect(itemData.shouldUseDynamicBarcode).toBeUndefined();
 
             });
 
-            it('should set companyDiscountId from voucherId', function () {
+            it('should set companyDiscountId from voucherId and remove unused voucher property', function () {
               $scope.isVoucherSelected = true;
               var itemData = {
                 voucher: {
@@ -577,6 +578,7 @@ describe('The Item Create Controller', function () {
               };
               ItemCreateCtrl.formatVoucherData(itemData);
               expect(itemData.companyDiscountId).toBe(1979);
+              expect(itemData.voucher).toBeUndefined();
 
             });
           });
