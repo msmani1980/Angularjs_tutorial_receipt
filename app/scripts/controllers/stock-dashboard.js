@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockDashboardCtrl', function($scope, $http, GlobalMenuService,
-    stockDashboardService, catererStationService, companyReasonCodesService, dateUtility) {
+  .controller('StockDashboardCtrl', function($scope, $http, GlobalMenuService, stockDashboardService,
+    catererStationService, companyReasonCodesService, dateUtility) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
@@ -17,8 +17,17 @@ angular.module('ts5App')
 
     var $this = this;
 
+    this.displayLoadingModal = function(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
       $scope.stockDashboardItemsList = dataFromAPI.response;
+      $this.hideLoadingModal();
     };
 
     this.getCatererStationListSuccessHandler = function(dataFromAPI) {
@@ -45,6 +54,7 @@ angular.module('ts5App')
     };
 
     $scope.updateStockItems = function(selectedCateringStation) {
+      $this.displayLoadingModal('Loading your records...');
       stockDashboardService.getStockDashboardItems(selectedCateringStation).then($this.getStockDashboardItemsSuccessHandler);
     };
 
