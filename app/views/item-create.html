@@ -382,15 +382,16 @@
           </button>
         </div>
 
-        <div class="voucher-container" ng-show="isVoucherSelected">
+        <div class="voucher-container" ng-if="isVoucherSelected">
           <div class="form-group">
-            <label>Voucher</label>
-            <ui-select ng-model="formData.voucher" theme="bootstrap">
-              <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $item.name }}
+            <label>Voucher *</label>
+            <ui-select required ng-model="formData.voucher" theme="bootstrap" name="Voucher">
+              <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $select.selected.name}}
               </ui-select-match>
               <ui-select-choices
                 repeat="voucher in discountList | filter: $select.search | orderBy:'name'">
                 <div ng-bind-html="voucher.name | highlight: $select.search"></div>
+                <div>{{voucher.startDate}} - {{voucher.endDate}}</div>
               </ui-select-choices>
             </ui-select>
           </div>
