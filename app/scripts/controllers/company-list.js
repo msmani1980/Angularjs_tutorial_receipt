@@ -10,45 +10,21 @@
 angular.module('ts5App')
   .controller('CompanyListCtrl', function ($scope, companyFactory, $location) {
     $scope.viewName = 'Manage Companies';
-    $scope.isLoading = true;
-    $scope.isRejected = false;
 
     $scope.companyList = [];
-    $scope.filteredCompanyList = [];
-    $scope.currentPage = 1;
-    $scope.itemsPerPage = 10;
 
-    var $this = this;
+    function showLoadingModal(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    }
 
-    $scope.pageCount = function () {
-      return Math.ceil($scope.companyList.length / $scope.itemsPerPage);
-    };
-
-    this.updateItemList = function() {
-      $scope.itemsListCount = $scope.companyList.length;
-      $this.setPaginatedItems($scope.companyList);
-    };
-
-    this.setPaginatedItems = function(filteredItems) {
-      this.parsePaginationToInt();
-      var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
-      var end = begin + $scope.itemsPerPageInt;
-      $scope.filteredCompanyList = filteredItems.slice(begin, end);
-    };
-
-    this.parsePaginationToInt = function() {
-      $scope.currentPageInt = parseInt($scope.currentPage);
-      $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
-    };
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
+    }
 
     var attachCompanyListToScope = function (companyListFromAPI) {
       $scope.companyList = companyListFromAPI.companies;
-
-      $scope.isLoading = false;
-
-      $scope.$watchGroup(['currentPage', 'itemsPerPage'], function () {
-        $this.updateItemList();
-      });
+      hideLoadingModal();
     };
 
     $scope.showCompanyRelationshipList = function (company) {
@@ -56,20 +32,15 @@ angular.module('ts5App')
     };
 
     $scope.viewCompany = function (company) {
-      //$location.path('/company-view/' + company.id);
       window.location = 'ember/#/companies/' + company.id + '/view';
     };
 
-    $scope.createCompany = function () {
-      window.location = 'ember/#/companies/create';
-    };
-
     $scope.editCompany = function (company) {
-      //$location.path('/company-edit/' + company.id);
       window.location = 'ember/#/companies/' + company.id + '/edit';
     };
 
     function setupController () {
+      showLoadingModal('Loading Company List');
       companyFactory.getCompanyList().then(attachCompanyListToScope);
     }
 
