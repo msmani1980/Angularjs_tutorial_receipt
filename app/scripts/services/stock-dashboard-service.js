@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('stockDashboardService', function($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/stock-management/dashboard';
+    var requestURL = ENV.apiUrl + '/api/stock-management/dashboard/';
 
     var requestParameters = {};
 
@@ -22,8 +22,10 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getStockDashboardItems() {
-      return requestResource.getStockDashboardItems().$promise;
+    function getStockDashboardItems(catererStationId) {
+      return requestResource.getStockDashboardItems({
+        catererStationId: catererStationId
+      }).$promise;
     }
 
     return {

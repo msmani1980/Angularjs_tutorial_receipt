@@ -27,7 +27,23 @@
         </div>
 
       </div>
-
+      <div class="row">
+        <div class="col-xs-12 col-sm-4" ng-hide="readOnly">
+          <div class="form-group">
+            <label>LMP Station*</label>
+            <select
+              class="form-control"
+              id="deliveryStation"
+              ng-disabled="isCatererStationListReadOnly()"
+              ng-model="selectedCateringStation"
+              ng-change="updateStockItems(selectedCateringStation.id)"
+              ng-options="cateringStation.name for cateringStation in cateringStationList | orderBy:'name' track by cateringStation.id"
+              >
+              <option selected="selected" value>Select Catering Station</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -58,25 +74,13 @@
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-4" ng-hide="readOnly">
-        <div class="form-group">
-          <label>LMP Station*</label>
-          <select
-            class="form-control"
-            id="deliveryStation"
-            ng-disabled="isCatererStationListReadOnly()"
-            ng-model="selectedCateringStation"
-            ng-change="updateDeliveryInfo()"
-            ng-options="cateringStation.name for cateringStation in cateringStationList | orderBy:'name' track by cateringStation.id"
-            >
-            <option selected="selected" value>Select Catering Station</option>
-          </select>
-
-        </div>
-      </div>
     </div>
 
-    <table class="table table-bordered table-hover ng-scope">
+    <alert type="info" ng-hide="searchResults.length">
+      <span class="fa fa-flag"></span> Select a Catering Station for results.
+    </alert>
+
+    <table ng-show="searchResults.length" class="table table-bordered table-hover ng-scope">
       <thead>
         <tr>
           <th>Item Code</th>

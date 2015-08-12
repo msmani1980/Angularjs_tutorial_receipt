@@ -36,7 +36,6 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      stockDashboardService.getStockDashboardItems().then(this.getStockDashboardItemsSuccessHandler);
       catererStationService.getCatererStationList().then(this.getCatererStationListSuccessHandler);
       companyReasonCodesService.getAll().then($this.getUllageReasonsFromResponse);
     };
@@ -47,6 +46,10 @@ angular.module('ts5App')
       if ($scope.cateringStationList) {
         return ($scope.cateringStationList.length === 1);
       }
+    };
+
+    $scope.updateStockItems = function(selectedCateringStation) {
+      stockDashboardService.getStockDashboardItems(selectedCateringStation).then($this.getStockDashboardItemsSuccessHandler);
     };
 
   });
