@@ -126,10 +126,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       for (var tagKey in itemData.tags) {
         var tag = itemData.tags[tagKey];
         var index = $this.findTagsIndex(tag.tagId);
-        itemData.tags[tagKey] = {
-          id: tag.tagId,
-          name: $scope.tags[index].name
-        };
+        if($scope.tags[index]) {
+          itemData.tags[tagKey] = {
+            id: tag.tagId,
+            name: $scope.tags[index].name
+          };
+        }
       }
     };
 

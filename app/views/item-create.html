@@ -75,18 +75,17 @@
 
         <div class="col-xs-12 col-sm-6">
 
-          <fieldset ng-disabled="isDisabled()">
+          <fieldset ng-disabled="itemIsActive || viewOnly">
+            <input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.alphanumeric"
+                        placeholder="Item123" min-length="1" max-length="10"></input-text>
 
-            <fieldset ng-disabled="duplicatingItem">
-              <input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.alphanumeric"
-                          placeholder="Item123" min-length="1" max-length="10"></input-text>
-
-              <input-text label="Retail Item Name" name="itemName" required="true" pattern="regexp.word"
+            <input-text label="Retail Item Name" name="itemName" required="true" pattern="regexp.word"
                         placeholder="Cool New Item" min-length="1" max-length="40"></input-text>
 
-              <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
+            <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
                         placeholder="New Cool Item" min-length="1" max-length="13"></input-text>
-            </fieldset>
+          </fieldset>
+          <fieldset ng-disabled="viewOnly">
             <input-text label="Item Description" name="desc" required="true" pattern="regexp.word"
                         placeholder="A simple description..." max-length="500"></input-text>
 
@@ -103,20 +102,18 @@
 
             </div>
 
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <date-picker-field form="form" name="EffectiveFrom" label="Effective From"
+                                   required="true" ng-model="formData.startDate"></date-picker-field>
+              </div>
+              <div class="col-xs-12 col-sm-6">
+                <date-picker-field disable="viewOnly || itemIsInactive" form="form" name="EffectiveTo"
+                                   label="Effective To" required="true" ng-model="formData.endDate"></date-picker-field>
+              </div>
+            </div>
           </fieldset>
-
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <date-picker-field disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
-                                 required="true" ng-model="formData.startDate"></date-picker-field>
-            </div>
-            <div class="col-xs-12 col-sm-6">
-              <date-picker-field disable="viewOnly || itemIsInactive" form="form" name="EffectiveTo"
-                                 label="Effective To" required="true" ng-model="formData.endDate"></date-picker-field>
-            </div>
-          </div>
-
-          <fieldset ng-disabled="isDisabled()" ng-if="uiSelectTemplateReady">
+          <fieldset ng-disabled="viewOnly" ng-if="uiSelectTemplateReady">
 
             <div class="form-group">
               <label>Sales Category *</label>
@@ -185,7 +182,7 @@
 
         <div class="col-xs-12 col-sm-6">
 
-          <fieldset ng-disabled="isDisabled()" ng-if="uiSelectTemplateReady">
+          <fieldset ng-disabled="viewOnly" ng-if="uiSelectTemplateReady">
 
             <div class="form-group">
               <label>Item Tags</label>
@@ -209,7 +206,7 @@
               </ui-select>
             </div>
 
-            <image-upload ng-hide="isDisabled()"></image-upload>
+            <image-upload ng-hide="viewOnly"></image-upload>
 
             <div id="images-container">
 
@@ -265,7 +262,7 @@
               <div class="panel-heading">
                 <p class="panel-title">
                   <i class="fa fa-image"></i> QR Code
-						      <span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removeQRCode()">
+						      <span class="pull-right btn btn-danger btn-xs" ng-hide="viewOnly" ng-click="removeQRCode()">
 						        <i class="fa fa-close"></i>
 						      </span>
                 </p>
@@ -280,13 +277,14 @@
         </div>
       </div>
 
-      <fieldset ng-disabled="isDisabled()">
+      <fieldset ng-disabled="viewOnly">
 
         <h3 id="measurements">Measurements</h3>
 
         <div class="row">
           <div class="col-xs-12 col-sm-6">
             <label>Item Weight</label>
+
             <div class="row">
               <div class="form-group">
                 <div class="col-xs-9">
@@ -306,6 +304,7 @@
 
           <div class="col-xs-12 col-sm-6">
             <label>Item Volume</label>
+
             <div class="row">
               <div class="form-group">
                 <div class="col-xs-9">
@@ -387,7 +386,7 @@
           <div class="form-group">
             <label>Voucher *</label>
             <ui-select ng-model="formData.voucher" theme="bootstrap">
-              <ui-select-match placeholder="Select Voucher" ui-lock-choice="isDisabled()">{{ $select.selected.name}}
+              <ui-select-match placeholder="Select Voucher" ui-lock-choice="viewOnly">{{ $select.selected.name}}
               </ui-select-match>
               <ui-select-choices
                 repeat="voucher in discountList | filter: $select.search | orderBy:'name'">
