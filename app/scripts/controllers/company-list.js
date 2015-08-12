@@ -9,8 +9,9 @@
  */
 angular.module('ts5App')
   .controller('CompanyListCtrl', function ($scope, companyFactory, $location) {
+    var $this = this;
+    this.offset = 0;
     $scope.viewName = 'Manage Companies';
-
     $scope.companyList = [];
 
     function showLoadingModal(message) {
@@ -22,8 +23,11 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    var attachCompanyListToScope = function (companyListFromAPI) {
-      $scope.companyList = companyListFromAPI.companies;
+    var appendCompaniesToList = function(companyListFromAPI) {
+      var companyList = angular.copy(companyListFromAPI.companies);
+      angular.forEach(companyList, function(company){
+        $scope.companyList.push(company);
+      });
       hideLoadingModal();
     };
 
@@ -39,11 +43,10 @@ angular.module('ts5App')
       window.location = 'ember/#/companies/' + company.id + '/edit';
     };
 
-    function setupController () {
+    $scope.loadCompanies = function(){
       showLoadingModal('Loading Company List');
-      companyFactory.getCompanyList().then(attachCompanyListToScope);
-    }
-
-    setupController();
+      companyFactory.getCompanyList({limit:50, offset:$this.offset}).then(appendCompaniesToList);
+      $this.offset += 50;
+    };
 
   });

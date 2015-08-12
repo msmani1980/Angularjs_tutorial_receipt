@@ -27,6 +27,7 @@ describe('Controller: CompanyListCtrl', function () {
     CompanyListCtrl = $controller('CompanyListCtrl', {
       $scope: scope
     });
+    scope.loadCompanies();
     scope.$digest();
   }));
 
