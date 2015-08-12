@@ -49,10 +49,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getDeliveryNoteDeferred.resolve(lmpDeliveryNoteResponseJSON);
     spyOn(deliveryNoteFactory, 'getDeliveryNote').and.returnValue(getDeliveryNoteDeferred.promise);
 
-    getCateringStationsDeferred = $q.defer();
-    getCateringStationsDeferred.resolve(cateringStationsReponseJSON);
-    spyOn(deliveryNoteFactory, 'getCatererStationList').and.returnValue(getCateringStationsDeferred.promise);
-
     spyOn(deliveryNoteFactory, 'getCompanyId').and.returnValue(companyId);
 
     getCompanyMenuCatererStationsDeferred = $q.defer();
@@ -70,228 +66,270 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getMasterItemDeferred = $q.defer();
     getMasterItemDeferred.resolve(getMasterItemResponseJSON);
     spyOn(deliveryNoteFactory, 'getAllMasterItems').and.returnValue(getMasterItemDeferred.promise);
+
   }));
 
-  describe('invalid state passed to route', function(){
-    beforeEach(inject(function($controller){
-      routeParams = {
-        state: 'invalid'
-      };
+  describe('single caterer station on create', function(){
+    beforeEach(inject(function($q, $controller){
+      getCateringStationsDeferred = $q.defer();
+      getCateringStationsDeferred.resolve({response:[{id:3}]});
+      spyOn(deliveryNoteFactory, 'getCatererStationList').and.returnValue(getCateringStationsDeferred.promise);
       LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
         $scope: scope,
-        $routeParams: routeParams
+        $routeParams: {state: 'create'}
       });
-      scope.$digest();
     }));
-    it('should redirect to /', function(){
-      expect(location.path()).toBe('/');
+    it('should set deliveryNote.catererStationId if only 1 results', function(){
+      scope.$digest();
+      expect(scope.deliveryNote.catererStationId).toBe(3);
     });
   });
 
-  describe('Read / view controller action', function(){
-    beforeEach(inject(function($controller){
-      routeParams = {
-        state: 'view',
-        id: 49
-      };
-      LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
-        $scope: scope,
-        $routeParams: routeParams
-      });
-      scope.$digest();
-    }));
-    it('should have a state scope var set to view', function(){
-      expect(scope.state).toBe('view');
-    });
-    // Apit call #1
-    it('should call stock management get delivery note api with id', function(){
-      expect(deliveryNoteFactory.getDeliveryNote).toHaveBeenCalledWith(routeParams.id);
-    });
-    it('should set deliveryNote scope var', function(){
-      expect(scope.deliveryNote).toBeDefined();
-    });
-    // API call #2
-    it('should call stock management get delivery note api with id', function(){
-      expect(deliveryNoteFactory.getCatererStationList).toHaveBeenCalled();
-    });
-    it('should set cateringStationList scope var', function(){
-      expect(scope.catererStationList).toBeDefined();
-      expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
-    });
-    // API call #3
-    it('should call getAllMasterItems from factory', function(){
-      expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
-    });
-    // API call #4
-    it('should call getCompanyReasonCodes in factory', function(){
-      expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
-    });
-    it('should set the ullageReasons scope var', function(){
-      expect(scope.ullageReasons).toBeDefined();
-      expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
-    });
-    it('should set masterItems scope var', function(){
-      expect(scope.masterItems).toBeDefined();
-      expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
-    });
-    // Scope globals
-    describe('global scope functions and vars', function(){
-      it('should call getCompanyId', function(){
-        expect(deliveryNoteFactory.getCompanyId).toHaveBeenCalled();
-      });
-      it('should have a cancel scope function', function(){
-        expect(scope.cancel).toBeDefined();
-        expect(Object.prototype.toString.call(scope.cancel)).toBe('[object Function]');
-      });
-      it('should have a toggleReview scope function', function(){
-        expect(scope.toggleReview).toBeDefined();
-        expect(Object.prototype.toString.call(scope.toggleReview)).toBe('[object Function]');
-      });
-      it('should have a clearFilter scope function', function(){
-        expect(scope.clearFilter).toBeDefined();
-        expect(Object.prototype.toString.call(scope.clearFilter)).toBe('[object Function]');
-      });
-    });
-  });
+  describe('multiple caterer stations', function(){
+    beforeEach(inject(function($q){
+      getCateringStationsDeferred = $q.defer();
+      getCateringStationsDeferred.resolve(cateringStationsReponseJSON);
+      spyOn(deliveryNoteFactory, 'getCatererStationList').and.returnValue(getCateringStationsDeferred.promise);
 
-  describe('Create controller action', function(){
-    beforeEach(inject(function($controller){
-      routeParams = {
-        state: 'create'
-      };
-      LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
-        $scope: scope,
-        $routeParams: routeParams
-      });
-      scope.$digest();
     }));
-    it('should have a state scope var set to create', function(){
-      expect(scope.state).toBe('create');
-    });
-    // API call #1
-    it('should call stock management get delivery note api with id', function(){
-      expect(deliveryNoteFactory.getCatererStationList).toHaveBeenCalled();
-    });
-    it('should set cateringStationList scope var', function(){
-      expect(scope.catererStationList).toBeDefined();
-    });
-    // API call #2
-    it('should call deliveryNoteFactory.getCompanyMenuCatererStations', function(){
-      expect(deliveryNoteFactory.getCompanyMenuCatererStations).toHaveBeenCalled();
-    });
-    // API call #3
-    it('should call getCompanyReasonCodes in factory', function(){
-      expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
-    });
-    it('should set the ullageReasons scope var', function(){
-      expect(scope.ullageReasons).toBeDefined();
-      expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
-    });
-    // API call #4
-    it('should call getAllMasterItems from factory', function(){
-      expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
-    });
-    it('should set masterItems scope var', function(){
-      expect(scope.masterItems).toBeDefined();
-      expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
-    });
-    it('should redirect to / when cancel button is clicked', function(){
-      scope.cancel();
-      expect(location.path()).toBe('/');
-    });
-  });
-
-  describe('Edit controller action', function(){
-    beforeEach(inject(function($controller){
-      routeParams = {
-        state: 'edit',
-        id: 49
-      };
-      LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
-        $scope: scope,
-        $routeParams: routeParams
-      });
-      scope.$digest();
-    }));
-    it('should have a state scope var set to create', function(){
-      expect(scope.state).toBe('edit');
-    });
-    // API call #1
-    it('should call stock management get delivery note api with id', function(){
-      expect(deliveryNoteFactory.getDeliveryNote).toHaveBeenCalledWith(routeParams.id);
-    });
-    it('should set deliveryNote scope var', function(){
-      expect(scope.deliveryNote).toBeDefined();
-    });
-    // API call #2
-    it('should call stock management get delivery note api with id', function(){
-      expect(deliveryNoteFactory.getCatererStationList).toHaveBeenCalled();
-    });
-    it('should set cateringStationList scope var', function(){
-      expect(scope.catererStationList).toBeDefined();
-      expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
-    });
-    // API call #3
-    it('should call deliveryNoteFactory.getCompanyMenuCatererStations', function(){
-      expect(deliveryNoteFactory.getCompanyMenuCatererStations).toHaveBeenCalled();
-    });
-    // API call #4
-    it('should call getCompanyReasonCodes in factory', function(){
-      expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
-    });
-    it('should set the ullageReasons scope var', function(){
-      expect(scope.ullageReasons).toBeDefined();
-      expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
-    });
-    // API call #5
-    it('should call getAllMasterItems from factory', function(){
-      expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
-    });
-    it('should set masterItems scope var', function(){
-      expect(scope.masterItems).toBeDefined();
-      expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
-    });
-    describe('changing LMP station', function(){
-      it('should call retail item master API', function(){
-        expect(scope.deliveryNote.items.length).toEqual(11);
-        var csid = 3;
-        scope.deliveryNote.catererStationId = csid;
+    describe('invalid state passed to route', function(){
+      beforeEach(inject(function($controller){
+        routeParams = {
+          state: 'invalid'
+        };
+        LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
+          $scope: scope,
+          $routeParams: routeParams
+        });
         scope.$digest();
-        expect(deliveryNoteFactory.getMasterItemsByCatererStationId).toHaveBeenCalledWith(csid);
-        expect(scope.deliveryNote.items.length).toEqual(98);
+      }));
+      it('should redirect to /', function(){
+        expect(location.path()).toBe('/');
       });
     });
-    describe('removeItemByIndex scope function', function(){
-      it('should have a removeItemByIndex scope function defined', function(){
-        expect(scope.removeItemByIndex).toBeDefined();
-        expect(Object.prototype.toString.call(scope.removeItemByIndex)).toBe('[object Function]');
-      });
-      it('should remove 1 item from the deliveryNote.items array', function(){
-        var curCount = scope.deliveryNote.items.length;
-        scope.removeItemByIndex(0);
+
+    describe('Read / view controller action', function(){
+      beforeEach(inject(function($controller){
+        routeParams = {
+          state: 'view',
+          id: 49
+        };
+        LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
+          $scope: scope,
+          $routeParams: routeParams
+        });
         scope.$digest();
-        expect(scope.deliveryNote.items.length).toBe((curCount - 1));
+      }));
+      it('should have a state scope var set to view', function(){
+        expect(scope.state).toBe('view');
+      });
+      // Apit call #1
+      it('should call stock management get delivery note api with id', function(){
+        expect(deliveryNoteFactory.getDeliveryNote).toHaveBeenCalledWith(routeParams.id);
+      });
+      it('should set deliveryNote scope var', function(){
+        expect(scope.deliveryNote).toBeDefined();
+      });
+      // API call #2
+      it('should call stock management get delivery note api with id', function(){
+        expect(deliveryNoteFactory.getCatererStationList).toHaveBeenCalled();
+      });
+      it('should set cateringStationList scope var', function(){
+        expect(scope.catererStationList).toBeDefined();
+        expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
+      });
+      // API call #3
+      it('should call getAllMasterItems from factory', function(){
+        expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
+      });
+      // API call #4
+      it('should call getCompanyReasonCodes in factory', function(){
+        expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
+      });
+      it('should set the ullageReasons scope var', function(){
+        expect(scope.ullageReasons).toBeDefined();
+        expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
+      });
+      it('should set masterItems scope var', function(){
+        expect(scope.masterItems).toBeDefined();
+        expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
+      });
+      // Scope globals
+      describe('global scope functions and vars', function(){
+        it('should call getCompanyId', function(){
+          expect(deliveryNoteFactory.getCompanyId).toHaveBeenCalled();
+        });
+        it('should have a cancel scope function', function(){
+          expect(scope.cancel).toBeDefined();
+          expect(Object.prototype.toString.call(scope.cancel)).toBe('[object Function]');
+        });
+        it('should have a toggleReview scope function', function(){
+          expect(scope.toggleReview).toBeDefined();
+          expect(Object.prototype.toString.call(scope.toggleReview)).toBe('[object Function]');
+        });
+        it('should have a clearFilter scope function', function(){
+          expect(scope.clearFilter).toBeDefined();
+          expect(Object.prototype.toString.call(scope.clearFilter)).toBe('[object Function]');
+        });
+        it('should have a save scope function', function(){
+          expect(scope.save).toBeDefined();
+          expect(Object.prototype.toString.call(scope.save)).toBe('[object Function]');
+        });
       });
     });
-    it('should switch the state to review when review button is clicked', function(){
-      scope.toggleReview();
-      expect(scope.state).toBe('review');
-    });
-    it('should switch the state back to edit when the cancel button is clicked', function(){
-      scope.cancel();
-      expect(scope.state).toBe('edit');
-    });
-    describe('clearFilter scope function', function(){
-      it('should set all filters to empty string when called', function(){
-        scope.filterInput = {};
-        scope.filterInput.itemCode = 's';
-        scope.filterInput.itemName = 's';
+
+    describe('Create controller action', function(){
+      beforeEach(inject(function($controller){
+        routeParams = {
+          state: 'create'
+        };
+        LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
+          $scope: scope,
+          $routeParams: routeParams
+        });
         scope.$digest();
-        scope.clearFilter();
-        expect(scope.filterInput.itemCode).toBe('');
-        expect(scope.filterInput.itemName).toBe('');
+      }));
+      it('should have a state scope var set to create', function(){
+        expect(scope.state).toBe('create');
+      });
+      // API call #1
+      it('should call stock management get delivery note api with id', function(){
+        expect(deliveryNoteFactory.getCatererStationList).toHaveBeenCalled();
+      });
+      it('should set cateringStationList scope var', function(){
+        expect(scope.catererStationList).toBeDefined();
+      });
+      // API call #2
+      it('should call deliveryNoteFactory.getCompanyMenuCatererStations', function(){
+        expect(deliveryNoteFactory.getCompanyMenuCatererStations).toHaveBeenCalled();
+      });
+      // API call #3
+      it('should call getCompanyReasonCodes in factory', function(){
+        expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
+      });
+      it('should set the ullageReasons scope var', function(){
+        expect(scope.ullageReasons).toBeDefined();
+        expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
+      });
+      // API call #4
+      it('should call getAllMasterItems from factory', function(){
+        expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
+      });
+      it('should set masterItems scope var', function(){
+        expect(scope.masterItems).toBeDefined();
+        expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
+      });
+      it('should redirect to / when cancel button is clicked', function(){
+        scope.cancel();
+        expect(location.path()).toBe('/');
+      });
+    });
+
+    describe('Edit controller action', function(){
+      beforeEach(inject(function($controller){
+        routeParams = {
+          state: 'edit',
+          id: 49
+        };
+        LmpDeliveryNoteCtrl = $controller('LmpDeliveryNoteCtrl', {
+          $scope: scope,
+          $routeParams: routeParams
+        });
+        scope.$digest();
+      }));
+      it('should have a state scope var set to create', function(){
+        expect(scope.state).toBe('edit');
+      });
+      // API call #1
+      it('should call stock management get delivery note api with id', function(){
+        expect(deliveryNoteFactory.getDeliveryNote).toHaveBeenCalledWith(routeParams.id);
+      });
+      it('should set deliveryNote scope var', function(){
+        expect(scope.deliveryNote).toBeDefined();
+      });
+      // API call #2
+      it('should call stock management get delivery note api with id', function(){
+        expect(deliveryNoteFactory.getCatererStationList).toHaveBeenCalled();
+      });
+      it('should set cateringStationList scope var', function(){
+        expect(scope.catererStationList).toBeDefined();
+        expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
+      });
+      // API call #3
+      it('should call deliveryNoteFactory.getCompanyMenuCatererStations', function(){
+        expect(deliveryNoteFactory.getCompanyMenuCatererStations).toHaveBeenCalled();
+      });
+      // API call #4
+      it('should call getCompanyReasonCodes in factory', function(){
+        expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
+      });
+      it('should set the ullageReasons scope var', function(){
+        expect(scope.ullageReasons).toBeDefined();
+        expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
+      });
+      // API call #5
+      it('should call getAllMasterItems from factory', function(){
+        expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
+      });
+      it('should set masterItems scope var', function(){
+        expect(scope.masterItems).toBeDefined();
+        expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
+      });
+      describe('changing LMP station', function(){
+        it('should call retail item master API', function(){
+          expect(scope.deliveryNote.items.length).toEqual(11);
+          var csid = 3;
+          scope.deliveryNote.catererStationId = csid;
+          scope.$digest();
+          expect(deliveryNoteFactory.getMasterItemsByCatererStationId).toHaveBeenCalledWith(csid);
+          expect(scope.deliveryNote.items.length).toEqual(98);
+        });
+      });
+      describe('removeItemByIndex scope function', function(){
+        it('should have a removeItemByIndex scope function defined', function(){
+          expect(scope.removeItemByIndex).toBeDefined();
+          expect(Object.prototype.toString.call(scope.removeItemByIndex)).toBe('[object Function]');
+        });
+        it('should remove 1 item from the deliveryNote.items array', function(){
+          var curCount = scope.deliveryNote.items.length;
+          scope.removeItemByIndex(0);
+          scope.$digest();
+          expect(scope.deliveryNote.items.length).toBe((curCount - 1));
+        });
+      });
+      it('should switch the state to review when review button is clicked', function(){
+        scope.toggleReview();
+        expect(scope.state).toBe('review');
+      });
+      it('should switch the state back to edit when the cancel button is clicked', function(){
+        scope.cancel();
+        expect(scope.state).toBe('edit');
+      });
+      describe('clearFilter scope function', function(){
+        it('should set all filters to empty string when called', function(){
+          scope.filterInput = {};
+          scope.filterInput.itemCode = 's';
+          scope.filterInput.itemName = 's';
+          scope.$digest();
+          scope.clearFilter();
+          expect(scope.filterInput.itemCode).toBe('');
+          expect(scope.filterInput.itemName).toBe('');
+        });
+      });
+      describe('ullage reason on select', function(){
+        it('should not add anything to ullageReason list if already exists', function(){
+          var count = scope.ullageReasons.length;
+          scope.ullageReasonOnSelect(null,'Damaged',1);
+          scope.$digest();
+          expect(scope.ullageReasons.length).toEqual(count);
+        });
+        it('should add a new reason to the list', function(){
+          var count = scope.ullageReasons.length;
+          scope.ullageReasonOnSelect(null,'New Damaged asdasdas',1);
+          scope.$digest();
+          expect(scope.ullageReasons.length).toEqual((count+1));
+        });
       });
     });
   });
-
 });

@@ -41,7 +41,6 @@ angular.module('ts5App')
     }
 
     function createDeliveryNote(payload){
-      payload.isAccepted = false;
       return deliveryNotesService.createDeliveryNote(payload);
     }
 

@@ -8,16 +8,25 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('LmpDeliveryNoteCtrl', function ($scope, $routeParams, $location, $q, $filter, deliveryNoteFactory, dateUtility) {
+  .controller('LmpDeliveryNoteCtrl', function ($scope, $routeParams, $location, $q, $filter, deliveryNoteFactory, dateUtility, ngToast) {
 
     // static scope vars
     $scope.viewName = 'Delivery note';
+    $scope.deliveryNote = {
+      deliveryNoteNumber:null,
+      items:[]
+    };
 
     // private vars
     var _initPromises = [];
     var _companyId = deliveryNoteFactory.getCompanyId();
     var _companyMenuCatererStations = [];
     var _prevState = null;
+    var _formSaveSuccessText = null;
+
+    function showMessage(message, messageType) {
+      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Delivery Note</strong>: ' + message });
+    }
 
     function getCatererStationList(){
       return deliveryNoteFactory.getCatererStationList(_companyId).then(setCatererStationListFromResponse);
@@ -32,7 +41,16 @@ angular.module('ts5App')
     }
 
     function setCatererStationListFromResponse(response){
-      $scope.catererStationList = response.response;
+      var catererStationList = response.response;
+      $scope.catererStationList = catererStationList;
+      // Next - if create and only 1 caterer station, lets set it and get the items
+      if($routeParams.state !== 'create'){
+        return;
+      }
+      if(catererStationList.length !== 1){
+        return;
+      }
+      $scope.deliveryNote.catererStationId = catererStationList[0].id;
     }
 
     function setDeliveryNoteFromResponse(response){
@@ -44,19 +62,27 @@ angular.module('ts5App')
       _companyMenuCatererStations = response.companyMenuCatererStations;
     }
 
+    function deliveryNoteFormErrorWatcher(){
+      $scope.canReview = canReview();
+    }
+
     function catererStationIdWatcher(newValue, oldValue){
       if(angular.isUndefined(newValue)){
-        return;
+        return newValue;
       }
       // Don't do anything if it didn't change
       if(oldValue === newValue){
-        return;
+        return newValue;
       }
       // If not first time loaded, it changed, so lets get the items
-      if(angular.isDefined(oldValue) && $scope.deliveryNote.catererStationId === newValue){
-        var catererStationId = parseInt(newValue);
-        getMasterRetailItemsByCatererStationId(catererStationId);
+      if($scope.deliveryNote.catererStationId !== newValue){
+        return newValue;
       }
+      if(angular.isUndefined(oldValue) && $routeParams.state !== 'create'){
+        return newValue;
+      }
+      getMasterRetailItemsByCatererStationId(newValue);
+      return newValue;
     }
 
     function getMasterRetailItemsByCatererStationId(catererStationId){
@@ -89,7 +115,9 @@ angular.module('ts5App')
     }
 
     function setUllageReasonsFromResponse(response){
-      $scope.ullageReasons = $filter('filter')(response.companyReasonCodes, {reasonTypeName:'Ullage'}, true);
+      $scope.ullageReasons = response.companyReasonCodes.filter(function(reasonCode){
+        return reasonCode.reasonTypeName === 'Ullage';
+      });
     }
 
     function getUllageCompanyReasonCodes(){
@@ -143,22 +171,58 @@ angular.module('ts5App')
 
     function initPromisesResolved(){
       hideLoadingModal();
-      var initPromisesResolvedStateAction = $scope.state + 'InitPromisesResolved';
+      var initPromisesResolvedStateAction = $routeParams.state + 'InitPromisesResolved';
       if(stateActions[initPromisesResolvedStateAction]){
         stateActions[initPromisesResolvedStateAction]();
       }
     }
 
-    function removeNullDeliveredMenuItems(){
-      var deliveryNoteItems = angular.copy($scope.deliveryNote.items);
-      $scope.deliveryNote.items = deliveryNoteItems.filter(function(item){
+    function removeNullDeliveredItems(){
+      $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item){
         return item.deliveredQuantity || item.expectedQuantity;
       });
-      deliveryNoteItems = null;
     }
 
     function resolveInitPromises(){
       $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
+    }
+
+    function saveDeliveryNoteResolution(response){
+      hideLoadingModal();
+      showMessage(_formSaveSuccessText, 'success');
+      $scope.toggleReview();
+      var saveStateAction = $routeParams.state; + 'Save';
+      if(stateActions[saveStateAction]){
+        stateActions[saveStateAction](response);
+      }
+    }
+
+    function generateSavePayload(){
+      $scope.clearFilter();
+      removeNullDeliveredItems();
+      var payload = {
+        catererStationId: $scope.deliveryNote.catererStationId,
+        purchaseOrderNumber: $scope.deliveryNote.purchaseOrderNumber,
+        deliveryNoteNumber: $scope.deliveryNote.deliveryNoteNumber,
+        deliveryDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
+        isAccepted: $scope.deliveryNote.isAccepted,
+        items: $scope.deliveryNote.items.map(function(item){
+          return {
+            masterItemId: item.masterItemId,
+            expectedQuantity: item.expectedQuantity,
+            deliveredQuantity: item.deliveredQuantity,
+            ullageQuantity: item.ullageQuantity,
+            ullageReason: item.ullageReason
+          };
+        })
+      };
+      if($scope.deliveryNote.id){
+        payload.id = $scope.deliveryNote.id;
+      }
+      // TODO if ullage quantity is is null or 0, clear ullage reason
+      // TODO if ullage reason is does not exist, create a new one
+      console.log(payload);
+      return payload;
     }
 
     $scope.removeItemByIndex = function(index){
@@ -179,27 +243,42 @@ angular.module('ts5App')
         $scope.state = 'review';
         $scope.canReview = false;
         $scope.readOnly = true;
-        removeNullDeliveredMenuItems();
+        console.log($scope.deliveryNote);
+        removeNullDeliveredItems();
       }
       else{
         $scope.state = _prevState;
         _prevState = null;
-        $scope.canReview = setCanReview();
+        $scope.canReview = canReview();
         $scope.readOnly = false;
       }
     };
 
     $scope.clearFilter = function(){
+      if(angular.isUndefined($scope.filterInput)){
+        return;
+      }
       $scope.filterInput.itemCode = '';
       $scope.filterInput.itemName = '';
     };
 
     $scope.save = function(submit){
-      if(submit){
-        // TODO use saveDeliveryNote, set isAccepted to true
+      var payload = generateSavePayload();
+      displayLoadingModal('Saving');
+      if($routeParams.state === 'create'){
+        _formSaveSuccessText = 'Created';
+        deliveryNoteFactory.createDeliveryNote(payload).then(saveDeliveryNoteResolution, showResponseErrors);
         return;
       }
-      // TODO else createDeliveryNote
+      if($routeParams.state !== 'edit'){
+        return;
+      }
+      _formSaveSuccessText = 'Saved';
+      if(submit){
+        _formSaveSuccessText = 'Submitted';
+        payload.isAccepted = true;
+      }
+      deliveryNoteFactory.saveDeliveryNote(payload).then(saveDeliveryNoteResolution, showResponseErrors);
     };
 
     $scope.ullageReasonOnSelect = function($select,$item,masterItemId){
@@ -214,7 +293,7 @@ angular.module('ts5App')
         }
       }
       $select = $item;
-    }
+    };
 
     function setSelectedUllageReasonByItemMasterId(item){
       $scope.selectedUllageReason[item.masterItemId] = {selected:{companyReasonCodeName: item.ullageReason}};
@@ -227,11 +306,36 @@ angular.module('ts5App')
       }
     }
 
-    function setCanReview(){
-      if(angular.isDefined($scope.deliveryNote) && $scope.deliveryNote.isSubmitted){
+    function canReview(){
+      if($scope.state !== 'create' && $scope.state !== 'edit'){
         return false;
       }
-      if($scope.state !== 'edit' && $scope.state !== 'create'){
+      if(!deliveryNoteHasItems()){
+        return false;
+      }
+      if(angular.isDefined($scope.deliveryNoteForm)) {
+        return $scope.deliveryNoteForm.$valid;
+      }
+      return true;
+    }
+
+    function deliveryNoteHasItems(){
+      if(angular.isUndefined($scope.deliveryNote)){
+        return false;
+      }
+      if($scope.deliveryNote.isAccepted){
+        return false;
+      }
+      if(!$scope.deliveryNote.items){
+        return false;
+      }
+      if(!$scope.deliveryNote.items.length){
+        return false;
+      }
+      var itemsSet = $scope.deliveryNote.items.filter(function(retailItem){
+        return retailItem.expectedQuantity && retailItem.deliveredQuantity;
+      });
+      if(!itemsSet){
         return false;
       }
       return true;
@@ -262,15 +366,15 @@ angular.module('ts5App')
       _initPromises.push(getUllageCompanyReasonCodes());
       _initPromises.push(getMasterItemsList());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
+      $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
       resolveInitPromises();
     };
-    stateActions.createInitPromisesResolved = function(){
-      $scope.canReview = setCanReview();
+    stateActions.createSave = function(response){
+      console.log('stateActions.createSave', response);
     };
 
     // edit state actions
     stateActions.editInit = function(){
-      $scope.readOnly = false;
       displayLoadingModal();
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
@@ -278,6 +382,7 @@ angular.module('ts5App')
       _initPromises.push(getUllageCompanyReasonCodes());
       _initPromises.push(getMasterItemsList());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
+      $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
@@ -287,19 +392,24 @@ angular.module('ts5App')
       if(angular.isDefined($scope.deliveryNote) && angular.isDefined($scope.ullageReasons)){
         setSelectedUllageReasons();
       }
-      $scope.canReview = setCanReview();
+      $scope.canReview = canReview();
+      $scope.readOnly = $scope.deliveryNote.isAccepted;
+    };
+    stateActions.editSave = function(response){
+      console.log('stateActions.editSave', response);
     };
 
     // constructor
     function init(){
       // scope vars
       $scope.state = $routeParams.state;
+      $scope.routeParamState = $routeParams.state;
       $scope.displayError = false;
       $scope.formErrors = [];
 
       // private vars
       _initPromises = [];
-      var initStateAction = $scope.state + 'Init';
+      var initStateAction = $routeParams.state + 'Init';
       if(stateActions[initStateAction]){
         stateActions[initStateAction]();
       }
