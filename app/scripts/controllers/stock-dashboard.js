@@ -15,10 +15,6 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.todaysDate = dateUtility.nowFormatted();
 
-    this.getCompanyId = function() {
-      return GlobalMenuService.company.get();
-    };
-
     var $this = this;
 
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {

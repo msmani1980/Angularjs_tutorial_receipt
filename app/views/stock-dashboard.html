@@ -76,8 +76,12 @@
 
     </div>
 
-    <alert type="info" ng-hide="searchResults.length">
-      <span class="fa fa-flag"></span> Select a Catering Station for results.
+    <alert type="info" ng-show="!selectedCateringStation">
+      <span class="fa fa-flag"></span> Select a Catering Station to return Stock Items.
+    </alert>
+
+    <alert type="info" ng-show="!searchResults.length && selectedCateringStation">
+      <span class="fa fa-flag"></span> No results were returned for this Catering Station.
     </alert>
 
     <table ng-show="searchResults.length" class="table table-bordered table-hover ng-scope">
