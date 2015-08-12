@@ -49,7 +49,16 @@ angular.module('ts5App')
       return deliveryNotesService.saveDeliveryNote(payload);
     }
 
+    function deleteDeliveryNote(deliveryNoteId) {
+      return deliveryNotesService.deleteDeliveryNote(deliveryNoteId);
+    }
+
+    function getDeliveryNotesList(query) {
+      return deliveryNotesService.getDeliveryNotesList(query);
+    }
+
     return {
+      getDeliveryNotesList: getDeliveryNotesList,
       getDeliveryNote: getDeliveryNote,
       getCatererStationList: getCatererStationList,
       getCompanyId: getCompanyId,
@@ -58,7 +67,8 @@ angular.module('ts5App')
       getCompanyReasonCodes: getCompanyReasonCodes,
       getAllMasterItems: getAllMasterItems,
       createDeliveryNote: createDeliveryNote,
-      saveDeliveryNote: saveDeliveryNote
+      saveDeliveryNote: saveDeliveryNote,
+      deleteDeliveryNote: deleteDeliveryNote
     };
 
   });
