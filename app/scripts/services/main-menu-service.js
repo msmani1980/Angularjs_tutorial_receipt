@@ -257,13 +257,13 @@ angular.module('ts5App')
           className: 'dashboard-companyReasonCode'
         }]
       }, {
-        title: 'Station Operations'
-//        menuItems: [{
-//          name: 'Manage LMP Locations',
-//          route: '/#/lmp-locations-list',
-//          icon: 'icon-manage-schedule',
-//          className: 'dashboard-lmpLocationsList'
-//        }]
+        title: 'Station Operations',
+        menuItems: [{
+          name: 'Store Dispatch',
+          route: 'html-mock-store-dispatch.html',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-storeDispatch'
+        }]
       }, {
         title: 'Stock Manager',
         menuItems: [{
