@@ -77,16 +77,14 @@
 
           <fieldset ng-disabled="isDisabled()">
 
-            <fieldset ng-disabled="duplicatingItem">
-              <input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.alphanumeric"
-                          placeholder="Item123" min-length="1" max-length="10"></input-text>
+            <input-text label="Retail Item Code" name="itemCode" required="true" pattern="regexp.alphanumeric"
+                        placeholder="Item123" min-length="1" max-length="10"></input-text>
 
-              <input-text label="Retail Item Name" name="itemName" required="true" pattern="regexp.word"
+            <input-text label="Retail Item Name" name="itemName" required="true" pattern="regexp.word"
                         placeholder="Cool New Item" min-length="1" max-length="40"></input-text>
 
-              <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
+            <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
                         placeholder="New Cool Item" min-length="1" max-length="13"></input-text>
-            </fieldset>
             <input-text label="Item Description" name="desc" required="true" pattern="regexp.word"
                         placeholder="A simple description..." max-length="500"></input-text>
 
@@ -287,6 +285,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-6">
             <label>Item Weight</label>
+
             <div class="row">
               <div class="form-group">
                 <div class="col-xs-9">
@@ -306,6 +305,7 @@
 
           <div class="col-xs-12 col-sm-6">
             <label>Item Volume</label>
+
             <div class="row">
               <div class="form-group">
                 <div class="col-xs-9">
