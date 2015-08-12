@@ -31,6 +31,7 @@ describe('Service: deliveryNoteFactory', function () {
     spyOn(companyReasonCodesService, 'getAll');
     spyOn(deliveryNotesService, 'createDeliveryNote');
     spyOn(deliveryNotesService, 'saveDeliveryNote');
+    spyOn(itemsService, 'getItemsByCateringStationId');
 
   }));
 
@@ -77,8 +78,8 @@ describe('Service: deliveryNoteFactory', function () {
   describe('itemsService calls', function(){
     it('should call getItemsList with a param', function(){
       var csid = 1;
-      deliveryNoteFactory.getMasterItemsByCatererStationId(csid);
-      expect(itemsService.getItemsList).toHaveBeenCalledWith({catererStationId:csid}, true);
+      deliveryNoteFactory.getItemsByCateringStationId(csid);
+      expect(itemsService.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
     });
     it('should call getItemsList to get all master items', function(){
       deliveryNoteFactory.getAllMasterItems();

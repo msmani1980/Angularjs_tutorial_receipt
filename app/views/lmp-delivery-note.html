@@ -103,8 +103,9 @@
           <div class="col-xs-12 col-sm-2" ng-show="{{ state == 'view' || state == 'edit' }}">
             <div class="form-group">
               <label>Status</label>
-              <input ng-model="deliveryStatus" type="text" class="form-control" id="delivery-status"
-                     placeholder="Saved" ng-readonly="readOnly" ng-disabled="true">
+              <input type="text" class="form-control" id="delivery-status"
+                     ng-readonly="true" ng-disabled="true"
+                     ng-value="deliveryNote.isAccepted ? 'Submitted' : 'Saved'">
             </div>
           </div>
 
@@ -182,8 +183,7 @@
               <div class="col-xs-12 col-sm-4">
                 <div class="form-group">
                   <label>Item Name*</label>
-                   <input ng-model="item.itemName" type="text" class="form-control" readonly="readonly"
-                          ng-required="!item.itemName">
+                   <input ng-model="item.itemName" type="text" class="form-control" readonly="readonly">
                 </div>
               </div>
 
@@ -219,8 +219,7 @@
                   <label>Ullage Reason*</label>
                   <ui-select ng-model="selectedUllageReason[item.masterItemId].selected" theme="bootstrap"
                              ng-disabled="readOnly || !item.ullageQuantity"
-                             tagging tagging-label="false"
-                             on-select="ullageReasonOnSelect($select,$item,item.masterItemId)">
+                             ng-required="item.ullageQuantity">
                     <ui-select-match>{{ $select.selected.companyReasonCodeName }}</ui-select-match>
                     <ui-select-choices repeat="ullageReason in ullageReasons">
                       <div ng-bind-html="ullageReason.companyReasonCodeName"></div>

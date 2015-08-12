@@ -28,8 +28,8 @@ angular.module('ts5App')
       return menuCatererStationsService.getRelationshipList({limit:null});
     }
 
-    function getMasterItemsByCatererStationId(_catererStationId){
-      return itemsService.getItemsList({catererStationId:_catererStationId}, true);
+    function getItemsByCateringStationId(_catererStationId){
+      return itemsService.getItemsByCateringStationId(_catererStationId);
     }
 
     function getCompanyReasonCodes(){
@@ -53,7 +53,7 @@ angular.module('ts5App')
       getCatererStationList: getCatererStationList,
       getCompanyId: getCompanyId,
       getCompanyMenuCatererStations: getCompanyMenuCatererStations,
-      getMasterItemsByCatererStationId: getMasterItemsByCatererStationId,
+      getItemsByCateringStationId: getItemsByCateringStationId,
       getCompanyReasonCodes: getCompanyReasonCodes,
       getAllMasterItems: getAllMasterItems,
       createDeliveryNote: createDeliveryNote,

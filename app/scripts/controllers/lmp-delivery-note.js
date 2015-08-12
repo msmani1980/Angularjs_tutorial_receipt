@@ -23,6 +23,10 @@ angular.module('ts5App')
     var _companyMenuCatererStations = [];
     var _prevState = null;
     var _formSaveSuccessText = null;
+    var _path = '/#/lmp-delivery-note/';
+    var _cateringStationItems = [];
+    var _reasonCodeTypeUllage = 'Ullage';
+    var _payload = null;
 
     function showMessage(message, messageType) {
       ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Delivery Note</strong>: ' + message });
@@ -86,37 +90,46 @@ angular.module('ts5App')
     }
 
     function getMasterRetailItemsByCatererStationId(catererStationId){
-      // TODO - Blocker - https://jira.egate-solutions.com/browse/TSVPORTAL-2710
-      // api/retail-items/master needs to accept catererStationId argument filter
-      // and return id(master), Item Name, Item Code and NO versions
       displayLoadingModal();
-      deliveryNoteFactory.getMasterItemsByCatererStationId(catererStationId).then(
+      // used cached results instead of hitting API again
+      if(angular.isDefined(_cateringStationItems[catererStationId])){
+        var response = _cateringStationItems[catererStationId];
+        addNewMasterItemsFromCatererStationMasterItemsResponse(response);
+        return;
+      }
+      deliveryNoteFactory.getItemsByCateringStationId(catererStationId).then(
         addNewMasterItemsFromCatererStationMasterItemsResponse, showResponseErrors);
     }
 
     function addNewMasterItemsFromCatererStationMasterItemsResponse(response){
-
+      hideLoadingModal();
+      // Set cached results instead of hitting API again
+      if(angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])){
+        _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
+      }
+      if(!response.response){
+        return;
+      }
       var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
         return item.masterItemId;
       });
-
-      var filteredResponseMasterItems = response.masterItems.filter(function(item){
-        return devlieryNoteItemIds.indexOf(item.id) === -1;
+      var filteredResponseMasterItems = response.response.filter(function(item){
+        return devlieryNoteItemIds.indexOf(item.itemMasterId) === -1;
       });
 
       var newMasterItems = filteredResponseMasterItems.map(function(item){
-        // TODO - once new API is done, if API returns itemName and itemCode, add to object below
-          return getMasterItemById(item.id);
+        return {
+          masterItemId: item.itemMasterId,
+          itemName: item.itemName,
+          itemCode: item.itemCode
+        };
       });
-
       $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
-      // TODO TODO TODO TODO - now test the above
-      hideLoadingModal();
     }
 
     function setUllageReasonsFromResponse(response){
       $scope.ullageReasons = response.companyReasonCodes.filter(function(reasonCode){
-        return reasonCode.reasonTypeName === 'Ullage';
+        return reasonCode.reasonTypeName === _reasonCodeTypeUllage;
       });
     }
 
@@ -142,33 +155,6 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
-    function setAllMasterItemsFromResponse(response){
-      $scope.masterItems = response.masterItems;
-    }
-
-    function getMasterItemsList(){
-      return deliveryNoteFactory.getAllMasterItems().then(setAllMasterItemsFromResponse);
-    }
-
-    function getMasterItemById(masterItemId){
-      var masterItem = $filter('filter')($scope.masterItems, {id:masterItemId}, true)[0];
-      return {
-        masterItemId: masterItemId,
-        itemName: masterItem.itemName,
-        itemCode: masterItem.itemCode
-      };
-    }
-
-    function setItemMetaFromMasterItems(items){
-      var masterItem;
-      for(var i in items){
-        masterItem = getMasterItemById(items[i].masterItemId);
-        items[i].itemName = masterItem.itemName;
-        items[i].itemCode = masterItem.itemCode;
-      }
-      return items;
-    }
-
     function initPromisesResolved(){
       hideLoadingModal();
       var initPromisesResolvedStateAction = $routeParams.state + 'InitPromisesResolved';
@@ -189,18 +175,40 @@ angular.module('ts5App')
 
     function saveDeliveryNoteResolution(response){
       hideLoadingModal();
-      showMessage(_formSaveSuccessText, 'success');
       $scope.toggleReview();
-      var saveStateAction = $routeParams.state + 'Save';
-      if(stateActions[saveStateAction]){
-        stateActions[saveStateAction](response);
+      showMessage(_formSaveSuccessText, 'success');
+      // TODO - new blocker - API not returning JSON response.
+      /*
+      console.log(response);
+      return;*/
+      if(response.isAccepted){
+        $location.path(_path+'view/'+response.id);
       }
+      else{
+        $location.path(_path+'edit/'+response.id);
+      }
+    }
+
+    function getSelectedUllageReason(masterItemId){
+      if(angular.isUndefined($scope.selectedUllageReason)){
+        return null;
+      }
+      if(!$scope.selectedUllageReason[masterItemId]){
+        return null;
+      }
+      if(angular.isUndefined($scope.selectedUllageReason[masterItemId].selected)){
+        return null;
+      }
+      if(angular.isUndefined($scope.selectedUllageReason[masterItemId].selected.companyReasonCodeName)){
+        return null;
+      }
+      return $scope.selectedUllageReason[masterItemId].selected.companyReasonCodeName;
     }
 
     function generateSavePayload(){
       $scope.clearFilter();
       removeNullDeliveredItems();
-      var payload = {
+      _payload = {
         catererStationId: $scope.deliveryNote.catererStationId,
         purchaseOrderNumber: $scope.deliveryNote.purchaseOrderNumber,
         deliveryNoteNumber: $scope.deliveryNote.deliveryNoteNumber,
@@ -212,17 +220,13 @@ angular.module('ts5App')
             expectedQuantity: item.expectedQuantity,
             deliveredQuantity: item.deliveredQuantity,
             ullageQuantity: item.ullageQuantity,
-            ullageReason: item.ullageReason
+            ullageReason: getSelectedUllageReason(item.masterItemId)
           };
         })
       };
       if($scope.deliveryNote.id){
-        payload.id = $scope.deliveryNote.id;
+        _payload.id = $scope.deliveryNote.id;
       }
-      // TODO if ullage quantity is is null or 0, clear ullage reason
-      // TODO if ullage reason is does not exist, create a new one
-      console.log(payload);
-      return payload;
     }
 
     $scope.removeItemByIndex = function(index){
@@ -262,37 +266,28 @@ angular.module('ts5App')
       $scope.filterInput.itemName = '';
     };
 
-    $scope.save = function(submit){
-      var payload = generateSavePayload();
+    function saveDeliveryNote(){
       displayLoadingModal('Saving');
       if($routeParams.state === 'create'){
         _formSaveSuccessText = 'Created';
-        deliveryNoteFactory.createDeliveryNote(payload).then(saveDeliveryNoteResolution, showResponseErrors);
+        deliveryNoteFactory.createDeliveryNote(_payload).then(saveDeliveryNoteResolution, showResponseErrors);
         return;
       }
       if($routeParams.state !== 'edit'){
         return;
       }
       _formSaveSuccessText = 'Saved';
-      if(submit){
+      if(_payload.isAccepted){
         _formSaveSuccessText = 'Submitted';
-        payload.isAccepted = true;
       }
-      deliveryNoteFactory.saveDeliveryNote(payload).then(saveDeliveryNoteResolution, showResponseErrors);
-    };
+      deliveryNoteFactory.saveDeliveryNote(_payload).then(saveDeliveryNoteResolution, showResponseErrors);
+    }
 
-    $scope.ullageReasonOnSelect = function($select,$item,masterItemId){
-      if(angular.isString($item)) {
-        var newReasontext = angular.copy($item);
-        var newReason = {selected: {companyReasonCodeName: newReasontext}};
-        var newOne = $filter('filter')($scope.selectedUllageReason, newReason, true);
-        if (!newOne.length) {
-          //Create a new entry since one does not exist
-          $scope.selectedUllageReason[masterItemId] = newReason;
-          $scope.ullageReasons.push({companyReasonCodeName: newReasontext});
-        }
-      }
-      $select = $item;
+    $scope.save = function(_isAccepted){
+      $scope.displayError = false;
+      $scope.deliveryNote.isAccepted = _isAccepted;
+      generateSavePayload();
+      saveDeliveryNote();
     };
 
     function setSelectedUllageReasonByItemMasterId(item){
@@ -349,7 +344,6 @@ angular.module('ts5App')
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
-      _initPromises.push(getMasterItemsList());
       resolveInitPromises();
     };
     stateActions.viewInitPromisesResolved = function(){
@@ -364,13 +358,9 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
       _initPromises.push(getUllageCompanyReasonCodes());
-      _initPromises.push(getMasterItemsList());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
       resolveInitPromises();
-    };
-    stateActions.createSave = function(response){
-      console.log('stateActions.createSave', response);
     };
 
     // edit state actions
@@ -380,23 +370,21 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
       _initPromises.push(getUllageCompanyReasonCodes());
-      _initPromises.push(getMasterItemsList());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
+      /*
       if(angular.isDefined($scope.deliveryNote)) {
         setItemMetaFromMasterItems($scope.deliveryNote.items);
       }
+      */
       if(angular.isDefined($scope.deliveryNote) && angular.isDefined($scope.ullageReasons)){
         setSelectedUllageReasons();
       }
       $scope.canReview = canReview();
       $scope.readOnly = $scope.deliveryNote.isAccepted;
-    };
-    stateActions.editSave = function(response){
-      console.log('stateActions.editSave', response);
     };
 
     // constructor

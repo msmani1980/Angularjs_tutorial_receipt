@@ -1,0 +1,183 @@
+{
+  "meta": {
+    "count": 29,
+    "limit": 29,
+    "start": 0
+  },
+  "response": [
+    {
+      "itemMasterId": 1,
+      "catererStationId": 3,
+      "itemCode": "Sk001",
+      "itemName": "Skittles"
+    },
+    {
+      "itemMasterId": 2,
+      "catererStationId": 3,
+      "itemCode": "SD001",
+      "itemName": "Coke"
+    },
+    {
+      "itemMasterId": 3,
+      "catererStationId": 3,
+      "itemCode": "Ip015",
+      "itemName": "Ipad Mini"
+    },
+    {
+      "itemMasterId": 4,
+      "catererStationId": 3,
+      "itemCode": "Ru-002",
+      "itemName": "BabyRuth"
+    },
+    {
+      "itemMasterId": 5,
+      "catererStationId": 3,
+      "itemCode": "Sd005",
+      "itemName": "Pepsi"
+    },
+    {
+      "itemMasterId": 6,
+      "catererStationId": 3,
+      "itemCode": "Sn003",
+      "itemName": "Snickers"
+    },
+    {
+      "itemMasterId": 7,
+      "catererStationId": 3,
+      "itemCode": "Hd001",
+      "itemName": "Spirits"
+    },
+    {
+      "itemMasterId": 8,
+      "catererStationId": 3,
+      "itemCode": "Pe004",
+      "itemName": "Peanuts"
+    },
+    {
+      "itemMasterId": 10,
+      "catererStationId": 3,
+      "itemCode": "BL324",
+      "itemName": "Bud Light"
+    },
+    {
+      "itemMasterId": 12,
+      "catererStationId": 3,
+      "itemCode": "C0101",
+      "itemName": "Coors"
+    },
+    {
+      "itemMasterId": 13,
+      "catererStationId": 3,
+      "itemCode": "M0101",
+      "itemName": "Mellow Yellow"
+    },
+    {
+      "itemMasterId": 14,
+      "catererStationId": 3,
+      "itemCode": "P0101",
+      "itemName": "DR Pepper"
+    },
+    {
+      "itemMasterId": 15,
+      "catererStationId": 3,
+      "itemCode": "W0101",
+      "itemName": "WaterMelon"
+    },
+    {
+      "itemMasterId": 17,
+      "catererStationId": 3,
+      "itemCode": "P0102",
+      "itemName": "Peach"
+    },
+    {
+      "itemMasterId": 18,
+      "catererStationId": 3,
+      "itemCode": "P0304",
+      "itemName": "Pear"
+    },
+    {
+      "itemMasterId": 19,
+      "catererStationId": 3,
+      "itemCode": "IP0909",
+      "itemName": "Ipad"
+    },
+    {
+      "itemMasterId": 20,
+      "catererStationId": 3,
+      "itemCode": "HP0303",
+      "itemName": "Headphones"
+    },
+    {
+      "itemMasterId": 21,
+      "catererStationId": 3,
+      "itemCode": "UCH0909",
+      "itemName": "Universal Charger"
+    },
+    {
+      "itemMasterId": 22,
+      "catererStationId": 3,
+      "itemCode": "CK0303",
+      "itemName": "CK Mens"
+    },
+    {
+      "itemMasterId": 23,
+      "catererStationId": 3,
+      "itemCode": "HB0505",
+      "itemName": "Hugo Boss"
+    },
+    {
+      "itemMasterId": 31,
+      "catererStationId": 3,
+      "itemCode": "Dmd649",
+      "itemName": "Diet Mountain Dew"
+    },
+    {
+      "itemMasterId": 34,
+      "catererStationId": 3,
+      "itemCode": "VW328",
+      "itemName": "Veggie Wrap"
+    },
+    {
+      "itemMasterId": 36,
+      "catererStationId": 3,
+      "itemCode": "7up123",
+      "itemName": "7up"
+    },
+    {
+      "itemMasterId": 37,
+      "catererStationId": 3,
+      "itemCode": "Brisk204",
+      "itemName": "Brisk Iced Tea"
+    },
+    {
+      "itemMasterId": 38,
+      "catererStationId": 3,
+      "itemCode": "Mov230",
+      "itemName": "Movie Ticket"
+    },
+    {
+      "itemMasterId": 41,
+      "catererStationId": 3,
+      "itemCode": "Orange432",
+      "itemName": "Orange"
+    },
+    {
+      "itemMasterId": 42,
+      "catererStationId": 3,
+      "itemCode": "Coke659",
+      "itemName": "Coke Zero"
+    },
+    {
+      "itemMasterId": 65,
+      "catererStationId": 3,
+      "itemCode": "SOItem2",
+      "itemName": "SOItem2"
+    },
+    {
+      "itemMasterId": 79,
+      "catererStationId": 3,
+      "itemCode": "SD002",
+      "itemName": "White Wine ROW 2012 Sauvignon Blanc DP"
+    }
+  ]
+}

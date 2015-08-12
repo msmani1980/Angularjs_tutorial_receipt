@@ -6,7 +6,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   beforeEach(module('ts5App',
     'served/lmp-delivery-note.json', 'served/catering-stations.json',
     'served/menu-catering-stations.json', 'served/master-item-list.json',
-    'served/company-reason-codes.json'));
+    'served/company-reason-codes.json', 'served/items-by-caterer-station-id.json'));
 
   var LmpDeliveryNoteCtrl;
   var scope;
@@ -24,14 +24,12 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var getCatererStationMasterItemsDeferred;
   var getCompanyReasonCodesResponseJSON;
   var getCompanyReasonCodesDeferred;
-  var getMasterItemResponseJSON;
-  var getMasterItemDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _deliveryNoteFactory_,
                               _servedLmpDeliveryNote_, $location, _servedCateringStations_,
                               _servedMenuCateringStations_, _servedMasterItemList_,
-                              _servedCompanyReasonCodes_) {
+                              _servedCompanyReasonCodes_, _servedItemsByCatererStationId_) {
 
     companyId = 403;
 
@@ -41,9 +39,8 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     lmpDeliveryNoteResponseJSON = _servedLmpDeliveryNote_;
     cateringStationsReponseJSON = _servedCateringStations_;
     companyMenuCatererStationsResponseJSON = _servedMenuCateringStations_;
-    getCatererStationMasterItemsResponseJSON = _servedMasterItemList_;
+    getCatererStationMasterItemsResponseJSON = _servedItemsByCatererStationId_;
     getCompanyReasonCodesResponseJSON = _servedCompanyReasonCodes_;
-    getMasterItemResponseJSON = _servedMasterItemList_;
 
     getDeliveryNoteDeferred = $q.defer();
     getDeliveryNoteDeferred.resolve(lmpDeliveryNoteResponseJSON);
@@ -57,15 +54,11 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
 
     getCatererStationMasterItemsDeferred = $q.defer();
     getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
-    spyOn(deliveryNoteFactory, 'getMasterItemsByCatererStationId').and.returnValue(getCatererStationMasterItemsDeferred.promise);
+    spyOn(deliveryNoteFactory, 'getItemsByCateringStationId').and.returnValue(getCatererStationMasterItemsDeferred.promise);
 
     getCompanyReasonCodesDeferred = $q.defer();
     getCompanyReasonCodesDeferred.resolve(getCompanyReasonCodesResponseJSON);
     spyOn(deliveryNoteFactory, 'getCompanyReasonCodes').and.returnValue(getCompanyReasonCodesDeferred.promise);
-
-    getMasterItemDeferred = $q.defer();
-    getMasterItemDeferred.resolve(getMasterItemResponseJSON);
-    spyOn(deliveryNoteFactory, 'getAllMasterItems').and.returnValue(getMasterItemDeferred.promise);
 
   }));
 
@@ -139,20 +132,12 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
       });
       // API call #3
-      it('should call getAllMasterItems from factory', function(){
-        expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
-      });
-      // API call #4
       it('should call getCompanyReasonCodes in factory', function(){
         expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
       });
       it('should set the ullageReasons scope var', function(){
         expect(scope.ullageReasons).toBeDefined();
         expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
-      });
-      it('should set masterItems scope var', function(){
-        expect(scope.masterItems).toBeDefined();
-        expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
       });
       // Scope globals
       describe('global scope functions and vars', function(){
@@ -211,14 +196,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(scope.ullageReasons).toBeDefined();
         expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
       });
-      // API call #4
-      it('should call getAllMasterItems from factory', function(){
-        expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
-      });
-      it('should set masterItems scope var', function(){
-        expect(scope.masterItems).toBeDefined();
-        expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
-      });
       it('should redirect to / when cancel button is clicked', function(){
         scope.cancel();
         expect(location.path()).toBe('/');
@@ -267,22 +244,14 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(scope.ullageReasons).toBeDefined();
         expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
       });
-      // API call #5
-      it('should call getAllMasterItems from factory', function(){
-        expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
-      });
-      it('should set masterItems scope var', function(){
-        expect(scope.masterItems).toBeDefined();
-        expect(Object.prototype.toString.call(scope.masterItems)).toBe('[object Array]');
-      });
       describe('changing LMP station', function(){
         it('should call retail item master API', function(){
           expect(scope.deliveryNote.items.length).toEqual(11);
           var csid = 3;
           scope.deliveryNote.catererStationId = csid;
           scope.$digest();
-          expect(deliveryNoteFactory.getMasterItemsByCatererStationId).toHaveBeenCalledWith(csid);
-          expect(scope.deliveryNote.items.length).toEqual(98);
+          expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
+          expect(scope.deliveryNote.items.length).toEqual(31);
         });
       });
       describe('removeItemByIndex scope function', function(){
@@ -316,19 +285,8 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           expect(scope.filterInput.itemName).toBe('');
         });
       });
-      describe('ullage reason on select', function(){
-        it('should not add anything to ullageReason list if already exists', function(){
-          var count = scope.ullageReasons.length;
-          scope.ullageReasonOnSelect(null,'Damaged',1);
-          scope.$digest();
-          expect(scope.ullageReasons.length).toEqual(count);
-        });
-        it('should add a new reason to the list', function(){
-          var count = scope.ullageReasons.length;
-          scope.ullageReasonOnSelect(null,'New Damaged asdasdas',1);
-          scope.$digest();
-          expect(scope.ullageReasons.length).toEqual((count+1));
-        });
+      describe('save scope function', function(){
+        // it('should')
       });
     });
   });
