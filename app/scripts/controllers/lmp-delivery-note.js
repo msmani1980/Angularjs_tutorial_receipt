@@ -191,7 +191,7 @@ angular.module('ts5App')
       hideLoadingModal();
       showMessage(_formSaveSuccessText, 'success');
       $scope.toggleReview();
-      var saveStateAction = $routeParams.state; + 'Save';
+      var saveStateAction = $routeParams.state + 'Save';
       if(stateActions[saveStateAction]){
         stateActions[saveStateAction](response);
       }
@@ -310,6 +310,9 @@ angular.module('ts5App')
       if($scope.state !== 'create' && $scope.state !== 'edit'){
         return false;
       }
+      if($scope.deliveryNote.isAccepted){
+        return false;
+      }
       if(!deliveryNoteHasItems()){
         return false;
       }
@@ -321,9 +324,6 @@ angular.module('ts5App')
 
     function deliveryNoteHasItems(){
       if(angular.isUndefined($scope.deliveryNote)){
-        return false;
-      }
-      if($scope.deliveryNote.isAccepted){
         return false;
       }
       if(!$scope.deliveryNote.items){
