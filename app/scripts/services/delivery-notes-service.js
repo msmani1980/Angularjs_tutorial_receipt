@@ -17,6 +17,9 @@ angular.module('ts5App')
     };
 
     var actions = {
+      getDeliveryNotesList: {
+        method: 'GET'
+      },
       getDeliveryNote: {
         method: 'GET'
       },
@@ -25,10 +28,17 @@ angular.module('ts5App')
       },
       saveDeliveryNote: {
         method: 'PUT'
+      },
+      deleteDeliveryNote: {
+        method: 'DELETE'
       }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
+
+    function getDeliveryNotesList(query) {
+      return requestResource.getDeliveryNote(query).$promise;
+    }
 
     function getDeliveryNote(deliveryNoteId) {
       return requestResource.getDeliveryNote({id:deliveryNoteId}).$promise;
@@ -42,10 +52,17 @@ angular.module('ts5App')
       return requestResource.saveDeliveryNote(payload).$promise;
     }
 
+    function deleteDeliveryNote(deliveryNoteId) {
+      return requestResource.getDeliveryNote({id:deliveryNoteId}).$promise;
+    }
+
+
     return {
+      getDeliveryNotesList: getDeliveryNotesList,
       getDeliveryNote: getDeliveryNote,
       createDeliveryNote: createDeliveryNote,
-      saveDeliveryNote: saveDeliveryNote
+      saveDeliveryNote: saveDeliveryNote,
+      deleteDeliveryNote: deleteDeliveryNote
     };
 
   });
