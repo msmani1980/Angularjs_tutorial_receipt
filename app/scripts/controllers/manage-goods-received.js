@@ -13,8 +13,8 @@ angular.module('ts5App')
     $scope.stationsList = [];
     $scope.deliveryNotesList = [];
     $scope.dateRange = {
-      startDate: '',
-      endDate: ''
+      deliveryStartDate: '',
+      deliveryEndDate: ''
     };
     $scope.userSelectedStation = false;
 
@@ -42,10 +42,9 @@ angular.module('ts5App')
         limit: 100
       };
       angular.extend(query, $scope.search);
-      console.log($scope.search);
-      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
-        query.startDate = dateUtility.formatDateForAPI($scope.dateRange.startDate);
-        query.endDate = dateUtility.formatDateForAPI($scope.dateRange.endDate);
+      if ($scope.dateRange.deliveryStartDate && $scope.dateRange.deliveryEndDate) {
+        query.deliveryStartDate = dateUtility.formatDateForAPI($scope.dateRange.deliveryStartDate);
+        query.deliveryEndDate = dateUtility.formatDateForAPI($scope.dateRange.deliveryEndDate);
       }
       return query;
     };
@@ -79,10 +78,6 @@ angular.module('ts5App')
       return deliveryNoteIndex;
     };
 
-    this.parseDate = function (date) {
-      return Date.parse(date);
-    };
-
     this.showSuccessMessage = function (message) {
       ngToast.create({
         className: 'success',
@@ -101,15 +96,9 @@ angular.module('ts5App')
       });
     };
 
-    $scope.isDeliveryNoteActive = function (date) {
-      var parsedDate = $this.parseDate(date);
-      var today = dateUtility.now();
-      return parsedDate <= today;
-    };
-
     $scope.clearSearchFilters = function () {
-      $scope.dateRange.startDate = '';
-      $scope.dateRange.endDate = '';
+      $scope.dateRange.deliveryStartDate = '';
+      $scope.dateRange.deliveryEndDate = '';
       var filters = $scope.search;
       for (var filterKey in filters) {
         delete $scope.search[filterKey];
@@ -118,7 +107,7 @@ angular.module('ts5App')
       $this.getDeliveryNotesList();
     };
 
-    $scope.search = function () {
+    $scope.searchRecords = function () {
       $this.displayLoadingModal();
       $this.getDeliveryNotesList();
     };

@@ -36,37 +36,35 @@
       <div class="panel-body">
         <div class="row">
 
-          <div class="col-xs-12 col-sm-3">
+          <div class="col-xs-12 col-sm-6 col-md-4">
             <div class="form-group">
-              <label for="deliveryNoteNumber">Delivery Note Number</label>
-              <select class="form-control" id="delivery-note-number" ng-model="search.deliveryNoteNumber" ng-change="deliveryNoteNumberInfo()" ng-disabled="readOnly">
-                <option ng-repeat="deliveryNote in deliveryNotesList" value="{{ deliveryNote.deliveryNoteNumber }}">{{ deliveryNote.deliveryNoteNumber }}</option>
-              </select>
+              <label>Delivery Note Number</label>
+              <input type="text" class="form-control" ng-model="search.deliveryNoteNumber" />
             </div>
           </div>
 
-          <div class="col-xs-12 col-sm-3">
+          <div class="col-xs-12 col-sm-6 col-md-4">
             <div class="form-group">
-              <label for="purchaseOrderNumber">Purchase Order Number</label>
-              <select class="form-control" id="purchase-order-number" ng-model="search.purchaseOrderNumber" ng-change="purchaseOrderNumberInfo()" ng-disabled="readOnly">
-                <option ng-repeat="deliveryNote in deliveryNotesList" value="{{ deliveryNote.purchaseOrderNumber }}">{{ deliveryNote.purchaseOrderNumber }}</option>
-              </select>
+              <label>Purchase Order Number</label>
+              <input type="text" class="form-control" ng-model="search.purchaseOrderNumber" />
             </div>
           </div>
 
-          <date-picker class="col-xs-12 col-sm-4"
-            element-class="col-xs-12 col-sm-6"
-            start-date-model="dateRange.startDate"
-            end-date-model="dateRange.endDate"
-            is-search-field="true"
-            label-from="Effective From"
-            label-to="Effective To">
-          </date-picker>
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <date-picker-field name="EffectiveFrom" label="Effective From"
+              ng-model="dateRange.deliveryStartDate"></date-picker-field>
+          </div>
 
-          <div class="col-xs-12 col-sm-2">
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <date-picker-field  name="EffectiveTo" label="Effective To"
+              ng-model="dateRange.deliveryEndDate"></date-picker-field>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-4">
             <label>Status</label>
-            <select class="form-control" id="delivery-status" ng-model="search.deliveryStatus" ng-change="deliveryStatusInfo()" ng-disabled="readOnly">
-              <option ng-repeat="deliveryNote in deliveryNotesList" value="{{ deliveryNote.deliveryStatus }}">{{ deliveryNote.deliveryStatus }}</option>
+            <select class="form-control" ng-model="search.isAccepted">
+              <option value="0">Created</option>
+              <option value="1">Submitted</option>
             </select>
           </div>
 
@@ -75,7 +73,7 @@
       </div>
       <div class="panel-footer text-right">
         <button type="button" class="btn btn-default" ng-click="clearSearchFilters()">Clear</button>
-        <button type="submit" class="btn btn-primary" ng-click="search()">Search</button>
+        <button type="submit" class="btn btn-primary" ng-click="searchRecords()">Search</button>
       </div>
     </form>
   </div>
@@ -99,7 +97,7 @@
         <th>Status</th>
         <th>Updated By</th>
         <th>Updated On</th>
-        <th>Actions</th>
+        <th class="hide-from-print">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -109,11 +107,11 @@
         <td>{{ deliveryNote.deliveryDate }}</td>
         <td>
           <span ng-show="{{ !deliveryNote.isAccepted }}">Created</span>
-          <span ng-show="{{ deliveryNote.isAccepted }}">Saved</span>
+          <span ng-show="{{ deliveryNote.isAccepted }}">Submitted</span>
         </td>
         <td>{{ deliveryNote.updatedBy }}</td>
         <td>{{ deliveryNote.updatedOn }}</td>
-        <td>
+        <td class="hide-from-print">
           <a class="btn btn-info btn-xs" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}" tabindex="0">
             <i class="fa fa-file"></i>
           </a>

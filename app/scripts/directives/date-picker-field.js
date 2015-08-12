@@ -7,7 +7,7 @@
  * # datePickerField
  */
 angular.module('ts5App')
-  .directive('datePickerField', function (dateUtility) {
+  .directive('datePickerField', function () {
     return {
       templateUrl: '/views/directives/date-picker-field.html',
       restrict: 'E',
@@ -23,17 +23,14 @@ angular.module('ts5App')
         maxDate: '='
       },
       controller: function ($scope, $element) {
-        var today = dateUtility.nowFormatted();
-        var startDate = ( $scope.minDate ? $scope.minDate : today );
-        if ($scope.disablePast) {
-          startDate = '+1d';
-        }
         var datePickerOptions = {
           orientation: 'auto top',
           autoclose: true,
-          startDate: startDate,
           maxDate: $scope.maxDate
         };
+        if($scope.minDate) {
+          datePickerOptions.startDate = $scope.minDate;
+        }
         this.init = function ($scope, $element) {
           var options = angular.extend({}, datePickerOptions);
           var datePickerInput = $element.find('input[type="text"]');
