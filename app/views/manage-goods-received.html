@@ -22,20 +22,20 @@
 
   <div class="panel panel-default collapse no-transition" id="search-collapse">
     <form name="menuSearchForm" ng-submit="searchPostTripData()">
-      <div class="panel-body">
+      <div class="panel-body"> 
         <div class="row">
-
-          <div class="col-xs-12 col-sm-6 col-md-4">
-            <div class="form-group">
-              <label>Delivery Note Number</label>
-              <input type="text" class="form-control" ng-model="search.deliveryNoteNumber" />
-            </div>
-          </div>
 
           <div class="col-xs-12 col-sm-6 col-md-4">
             <div class="form-group">
               <label>Purchase Order Number</label>
               <input type="text" class="form-control" ng-model="search.purchaseOrderNumber" />
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group">
+              <label>Delivery Note Number</label>
+              <input type="text" class="form-control" ng-model="search.deliveryNoteNumber" />
             </div>
           </div>
 
@@ -91,8 +91,8 @@
   <table ng-show="catererStationId && deliveryNotesList.length > 0" class="table table-responsive table-bordered table-hover ng-scope">
     <thead>
       <tr>
-        <th>Delivery Note Number</th>
         <th>Purchase Order Number</th>
+        <th>Delivery Note Number</th>
         <th>Delivery Date</th>
         <th>Status</th>
         <th>Updated By</th>
@@ -102,8 +102,8 @@
     </thead>
     <tbody>
       <tr ng-repeat="deliveryNote in deliveryNotesList">
-        <td>{{ deliveryNote.deliveryNoteNumber }}</td>
         <td>{{ deliveryNote.purchaseOrderNumber }}</td>
+        <td>{{ deliveryNote.deliveryNoteNumber }}</td>
         <td>{{ deliveryNote.deliveryDate }}</td>
         <td>
           <span ng-show="{{ !deliveryNote.isAccepted }}">Saved</span>
