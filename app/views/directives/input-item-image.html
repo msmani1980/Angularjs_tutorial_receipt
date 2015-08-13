@@ -32,14 +32,14 @@
 
         <div class="col-xs-8 col-md-10">
 
-          <date-picker-field disable="isDisabled()"
+          <date-picker-field disable="$parent.isDisabled()"
                              form="form"
                              name="imageEffectiveFrom"
                              label="Effective From"
                              required="true"
                              ng-model="image.startDate">
           </date-picker-field>
-          <date-picker-field disable="isDisabled()"
+          <date-picker-field disable="viewOnly || itemIsInactive"
                              form="form"
                              name="imageEffectiveTo"
                              label="Effective To"
