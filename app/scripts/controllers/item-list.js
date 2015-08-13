@@ -96,9 +96,11 @@ angular.module('ts5App')
     $scope.removeRecord = function (itemId) {
       var itemIndex = $this.findItemIndex(itemId);
       $this.displayLoadingModal('Removing Retail Item');
+      $this.closeAccordian();
+
       itemsFactory.removeItem(itemId).then(function () {
         $this.hideLoadingModal();
-        $scope.itemsList.splice(itemIndex, 1);
+        $this.getItemsList();
       });
     };
 
@@ -137,7 +139,6 @@ angular.module('ts5App')
       }
       if ($scope.openVersionId === item.itemMasterId) {
         $this.closeAccordian();
-        $scope.openVersionId = -1;
       } else {
         $this.openAccordian(item);
         $this.closeAccordian();
@@ -150,6 +151,8 @@ angular.module('ts5App')
     };
     this.closeAccordian = function () {
       angular.element('#item-' + $scope.openVersionId).removeClass('open-accordion');
+      $scope.openVersionId = -1;
+
     };
 
     this.displayLoadingModal = function (loadingText) {
