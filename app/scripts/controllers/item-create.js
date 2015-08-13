@@ -43,9 +43,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.itemIsInactive = false;
     $scope.viewOnly = false;
     $scope.editingItem = false;
-    $scope.duplicatingItem = false;
+    $scope.cloningItem = false;
     $scope.shouldDisplayURLField = false;
     $scope.uiSelectTemplateReady = false;
+    $scope.displayCloneInfo = false;
     $scope.dynamicStaticBarcodeOptions = [{
       label: 'Dynamic Barcode',
       value: true
@@ -60,7 +61,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $scope.editingItem = true;
         $scope.buttonText = 'Save';
       } else if (path.search('/item-copy') !== -1 && $routeParams.id) {
-        $scope.duplicatingItem = true;
+        $scope.cloningItem = true;
       } else if (path.search('/item-view') !== -1) {
         $scope.viewOnly = true;
       }
@@ -75,8 +76,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       var prefix = 'Viewing ';
       if ($scope.editingItem) {
         prefix = 'Editing ';
-      } else if ($scope.duplicatingItem) {
-        prefix = 'Duplicating ';
+      } else if ($scope.cloningItem) {
+        prefix = 'Cloning ';
       }
       $scope.viewName = prefix + item.itemName;
     };
@@ -136,11 +137,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       for (var tagKey in itemData.tags) {
         var tag = itemData.tags[tagKey];
         var index = $this.findTagsIndex(tag.tagId);
-        // TODO: delete tag if does not exist in master item (index is undefined)
-        itemData.tags[tagKey] = {
-          id: tag.tagId,
-          name: $scope.tags[index].name
-        };
+        if (index) {
+          itemData.tags[tagKey] = {
+            id: tag.tagId,
+            name: $scope.tags[index].name
+          };
+        }
       }
     };
 
@@ -151,7 +153,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         tagsPayload[tagKey] = {
           tagId: tag.id
         };
-        if (!$scope.duplicatingItem) {
+        if (!$scope.cloningItem) {
           tagsPayload[tagKey].itemId = itemData.id;
         }
       }
@@ -189,13 +191,13 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var newCharacteristic = {
           characteristicId: characteristic.id
         };
-        if (characteristic.characteristicId && $scope.duplicatingItem) {
+        if (characteristic.characteristicId && $scope.cloningItem) {
           newCharacteristic.characteristicId = characteristic.characteristicId;
-        } else if (characteristic.characteristicId && !$scope.duplicatingItem) {
+        } else if (characteristic.characteristicId && !$scope.cloningItem) {
           newCharacteristic.id = characteristic.id;
           newCharacteristic.characteristicId = characteristic.characteristicId;
         }
-        if (!$scope.duplicatingItem) {
+        if (!$scope.cloningItem) {
           newCharacteristic.itemId = itemData.id;
         }
         characteristicsPayload[characteristicKey] = newCharacteristic;
@@ -234,7 +236,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         allergenPayload[allergenKey] = {
           allergenId: allergen.allergenId
         };
-        if (!$scope.duplicatingItem) {
+        if (!$scope.cloningItem) {
           allergenPayload[allergenKey].itemId = itemData.id;
           allergenPayload[allergenKey].id = allergen.id;
         }
@@ -245,7 +247,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.formatGlobalTradeNumbers = function(itemData) {
       for (var numberKey in itemData.globalTradeNumbers) {
         var number = itemData.globalTradeNumbers[numberKey];
-        if ($scope.duplicatingItem) {
+        if ($scope.cloningItem) {
           delete number.itemId;
           delete number.id;
         }
@@ -255,7 +257,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.formatTaxes = function(itemData) {
       for (var taxKey in itemData.taxes) {
         var tax = itemData.taxes[taxKey];
-        if ($scope.duplicatingItem) {
+        if ($scope.cloningItem) {
           delete tax.itemId;
           delete tax.id;
         }
@@ -265,7 +267,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.formatPrices = function(itemData) {
       for (var priceKey in itemData.prices) {
         var price = itemData.prices[priceKey];
-        if ($scope.duplicatingItem) {
+        if ($scope.cloningItem) {
           delete price.itemId;
           delete price.id;
         }
@@ -275,7 +277,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.formatImages = function(itemData) {
       for (var imageKey in itemData.images) {
         var image = itemData.images[imageKey];
-        if ($scope.duplicatingItem) {
+        if ($scope.cloningItem) {
           delete image.id;
         }
       }
@@ -376,14 +378,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.checkIfItemIsActive = function(itemData) {
       var today = new Date();
       var itemStartDate = new Date(itemData.startDate);
-      $scope.itemIsActive = itemStartDate <= today && !$scope.duplicatingItem;
+      $scope.itemIsActive = itemStartDate <= today && !$scope.cloningItem;
     };
 
     // checks to see if the item is inactive
     this.checkIfItemIsInactive = function(itemData) {
       var today = new Date();
       var itemEndDate = new Date(itemData.endDate);
-      $scope.itemIsInactive = itemEndDate <= today && !$scope.duplicatingItem;
+      $scope.itemIsInactive = itemEndDate <= today && !$scope.cloningItem;
     };
 
     // updates the $scope.formData
@@ -406,6 +408,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.formatPriceDates(itemData);
       $scope.formData = itemData;
 
+      $scope.originalMasterItemData = {
+        itemCode: $scope.formData.itemCode,
+        itemName: $scope.formData.itemName,
+        onBoardName: $scope.formData.onBoardName
+      };
       this.setVoucherData(itemData);
       this.updateStationsList();
     };
@@ -434,6 +441,27 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.setUIReady = function() {
       $scope.uiSelectTemplateReady = true;
       this.hideLoadingModal();
+      this.watchItemInfoOnClonePage();
+    };
+
+    this.watchItemInfoOnClonePage = function() {
+      $scope.$watchGroup(['formData.itemCode', 'formData.itemName', 'formData.onBoardName'], function() {
+        if ($scope.cloningItem && $this.isMasterItemInfoDirty()) {
+          $scope.displayCloneInfo = true;
+        } else {
+          $scope.displayCloneInfo = false;
+        }
+      });
+    };
+
+    this.isMasterItemInfoDirty = function() {
+      if ($scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
+        $scope.originalMasterItemData.itemName === $scope.formData.itemName &&
+        $scope.originalMasterItemData.onBoardName === $scope.formData.onBoardName) {
+        return false;
+      } else {
+        return true;
+      }
     };
 
     this.setDiscountList = function(dataFromAPI) {
@@ -454,7 +482,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11].retailItems);
       $this.setDiscountList(response[12]);
-      if ($scope.editingItem || $scope.duplicatingItem || $scope.viewOnly) {
+      if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         this.getItem($routeParams.id);
       } else {
         $this.setUIReady();

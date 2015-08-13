@@ -31,11 +31,18 @@
 
 			<span ng-switch-when="004">Duplicate values are not allowed</span>
 
-			<span ng-switch-when="006">Date range overlaps an existing record</span>
+      <span ng-switch-when="005">Date must be within the allowed date range</span>
 
-			<span ng-switch-when="016">From date should be earlier than or equal to To date</span>
+      <span ng-switch-when="006">Date range overlaps an existing record</span>
 
-			<span ng-switch-default> {{ error.value }} </span>
+      <span ng-switch-when="014">From date cannot be earlier than current date</span>
+
+      <span ng-switch-when="016">From date should be earlier than or equal to To date</span>
+
+      <span ng-switch-when="021">To date should be later than or equal to From date</span>
+
+
+      <span ng-switch-default> {{ error.value }} </span>
 
 		</li>
 

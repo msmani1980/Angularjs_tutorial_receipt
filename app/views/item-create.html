@@ -69,6 +69,15 @@
 
       <form-error-dialog></form-error-dialog>
 
+      <div ng-show="displayCloneInfo" class="alert alert-info alert-dismissible fade in ng-hide" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>×</span></button>
+        <h4 id="oh-snap!-you-got-an-error!">
+          <strong>Note</strong>: To create a new version of this record - the Item Code, Item Name AND POS Display Name fields should remain unchanged.
+          Changing these fields would create a new Item record if one that match these fields do not already exist.
+          <a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
+        </h4>
+      </div>
+
       <h3 id="item-information">Item Information</h3>
 
       <div class="row">
