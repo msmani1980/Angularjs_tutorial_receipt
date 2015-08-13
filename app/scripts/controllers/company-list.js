@@ -7,72 +7,55 @@
  * # CompanyListCtrl
  * Controller of the ts5App
  */
-angular.module('ts5App')
-  .controller('CompanyListCtrl', function ($scope, companyFactory, $location) {
-    $scope.viewName = 'Manage Companies';
-    $scope.isLoading = true;
-    $scope.isRejected = false;
+angular.module('ts5App').controller('CompanyListCtrl', function ($scope, companyFactory, $location) {
+  var $this = this;
+  this.meta = {
+    limit: 100,
+    offset: 0
+  };
+  $scope.viewName = 'Manage Companies';
+  $scope.companyList = [];
 
-    $scope.companyList = [];
-    $scope.filteredCompanyList = [];
-    $scope.currentPage = 1;
-    $scope.itemsPerPage = 10;
+  function showLoadingModal() {
+    angular.element('.loading-more').show();
+  }
 
-    var $this = this;
+  function hideLoadingModal() {
+    angular.element('.loading-more').hide();
+    angular.element('.modal-backdrop').remove();
+  }
 
-    $scope.pageCount = function () {
-      return Math.ceil($scope.companyList.length / $scope.itemsPerPage);
-    };
+  $this.appendCompaniesToList = function (companyListFromAPI) {
+    $this.meta.count = $this.meta.count || companyListFromAPI.meta.count;
+    var companyList = angular.copy(companyListFromAPI.companies);
+    angular.forEach(companyList, function (company) {
+      $scope.companyList.push(company);
+    });
+    hideLoadingModal();
+  };
 
-    this.updateItemList = function() {
-      $scope.itemsListCount = $scope.companyList.length;
-      $this.setPaginatedItems($scope.companyList);
-    };
+  $scope.showCompanyRelationshipList = function (company) {
+    $location.path('/company-relationship-list/' + company.id);
+  };
 
-    this.setPaginatedItems = function(filteredItems) {
-      this.parsePaginationToInt();
-      var begin = (($scope.currentPageInt - 1) * $scope.itemsPerPageInt);
-      var end = begin + $scope.itemsPerPageInt;
-      $scope.filteredCompanyList = filteredItems.slice(begin, end);
-    };
+  $scope.viewCompany = function (company) {
+    window.location = 'ember/#/companies/' + company.id + '/view';
+  };
 
-    this.parsePaginationToInt = function() {
-      $scope.currentPageInt = parseInt($scope.currentPage);
-      $scope.itemsPerPageInt = parseInt($scope.itemsPerPage);
-    };
+  $scope.editCompany = function (company) {
+    window.location = 'ember/#/companies/' + company.id + '/edit';
+  };
 
-    var attachCompanyListToScope = function (companyListFromAPI) {
-      $scope.companyList = companyListFromAPI.companies;
-
-      $scope.isLoading = false;
-
-      $scope.$watchGroup(['currentPage', 'itemsPerPage'], function () {
-        $this.updateItemList();
-      });
-    };
-
-    $scope.showCompanyRelationshipList = function (company) {
-      $location.path('/company-relationship-list/' + company.id);
-    };
-
-    $scope.viewCompany = function (company) {
-      //$location.path('/company-view/' + company.id);
-      window.location = 'ember/#/companies/' + company.id + '/view';
-    };
-
-    $scope.createCompany = function () {
-      window.location = 'ember/#/companies/create';
-    };
-
-    $scope.editCompany = function (company) {
-      //$location.path('/company-edit/' + company.id);
-      window.location = 'ember/#/companies/' + company.id + '/edit';
-    };
-
-    function setupController () {
-      companyFactory.getCompanyList().then(attachCompanyListToScope);
+  $scope.loadCompanies = function () {
+    if ($this.meta.offset >= $this.meta.count) {
+      return;
     }
+    showLoadingModal('Loading Company List');
+    companyFactory.getCompanyList({
+      limit: $this.meta.limit,
+      offset: $this.meta.offset
+    }).then($this.appendCompaniesToList);
+    $this.meta.offset += $this.meta.limit;
+  };
 
-    setupController();
-
-  });
+});

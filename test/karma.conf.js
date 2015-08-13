@@ -63,7 +63,7 @@ module.exports = function (config) {
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/ngstorage/ngStorage.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-      'bower_components/angular-filter/dist/angular-filter.min.js',
+      'bower_components/angular-filter/dist/angular-filter.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'bower_components/moment/moment.js',
@@ -76,6 +76,7 @@ module.exports = function (config) {
       'bower_components/angular-ui-select/dist/select.js',
       'bower_components/select2/select2.js',
       'bower_components/angular-dragdrop/draganddrop.js',
+      'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

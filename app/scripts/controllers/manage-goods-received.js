@@ -13,9 +13,10 @@ angular.module('ts5App')
     $scope.stationsList = [];
     $scope.deliveryNotesList = [];
     $scope.dateRange = {
-      startDate: '',
-      endDate: ''
+      deliveryStartDate: '',
+      deliveryEndDate: ''
     };
+    $scope.userSelectedStation = false;
 
     this.init = function() {
       this.getCatererStationList();
@@ -34,10 +35,6 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    this.filterDeliveryNotes = function () {
-      return $filter('filter')($scope.deliveryNotesList, $scope.search);
-    };
-
     this.generateDeliveryNoteQuery = function () {
       var query = {
         catererStationId: $scope.catererStationId,
@@ -45,17 +42,19 @@ angular.module('ts5App')
         limit: 100
       };
       angular.extend(query, $scope.search);
-      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
-        query.startDate = dateUtility.formatDateForAPI($scope.dateRange.startDate);
-        query.endDate = dateUtility.formatDateForAPI($scope.dateRange.endDate);
+      if ($scope.dateRange.deliveryStartDate && $scope.dateRange.deliveryEndDate) {
+        query.deliveryStartDate = dateUtility.formatDateForAPI($scope.dateRange.deliveryStartDate);
+        query.deliveryEndDate = dateUtility.formatDateForAPI($scope.dateRange.deliveryEndDate);
       }
       return query;
     };
 
     this.getDeliveryNotesList = function () {
+      $scope.userSelectedStation = false;
       var query = $this.generateDeliveryNoteQuery();
       $this.displayLoadingModal('Getting a list of delivery notes');
       deliveryNoteFactory.getDeliveryNotesList(query).then(function (data) {
+        $scope.userSelectedStation = true;
         $scope.deliveryNotesList = data.response;
         $this.hideLoadingModal();
       });
@@ -79,10 +78,6 @@ angular.module('ts5App')
       return deliveryNoteIndex;
     };
 
-    this.parseDate = function (date) {
-      return Date.parse(date);
-    };
-
     this.showSuccessMessage = function (message) {
       ngToast.create({
         className: 'success',
@@ -101,15 +96,9 @@ angular.module('ts5App')
       });
     };
 
-    $scope.isDeliveryNoteActive = function (date) {
-      var parsedDate = $this.parseDate(date);
-      var today = dateUtility.now();
-      return parsedDate <= today;
-    };
-
     $scope.clearSearchFilters = function () {
-      $scope.dateRange.startDate = '';
-      $scope.dateRange.endDate = '';
+      $scope.dateRange.deliveryStartDate = '';
+      $scope.dateRange.deliveryEndDate = '';
       var filters = $scope.search;
       for (var filterKey in filters) {
         delete $scope.search[filterKey];
