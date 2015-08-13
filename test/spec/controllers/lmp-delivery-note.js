@@ -25,6 +25,8 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var getCompanyReasonCodesResponseJSON;
   var getCompanyReasonCodesDeferred;
   var saveDeferred;
+  var getAllMasterItemsDeferred;
+  var getAllMasterItemsResponseJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _deliveryNoteFactory_,
@@ -42,6 +44,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     companyMenuCatererStationsResponseJSON = _servedMenuCateringStations_;
     getCatererStationMasterItemsResponseJSON = _servedItemsByCatererStationId_;
     getCompanyReasonCodesResponseJSON = _servedCompanyReasonCodes_;
+    getAllMasterItemsResponseJSON = _servedMasterItemList_;
 
     getDeliveryNoteDeferred = $q.defer();
     getDeliveryNoteDeferred.resolve(lmpDeliveryNoteResponseJSON);
@@ -65,6 +68,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     saveDeferred.resolve({id:3});
     spyOn(deliveryNoteFactory, 'createDeliveryNote').and.returnValue(saveDeferred.promise);
     spyOn(deliveryNoteFactory, 'saveDeliveryNote').and.returnValue(saveDeferred.promise);
+
+    getAllMasterItemsDeferred = $q.defer();
+    getAllMasterItemsDeferred.resolve(getAllMasterItemsResponseJSON);
+    spyOn(deliveryNoteFactory, 'getAllMasterItems').and.returnValue(getAllMasterItemsDeferred.promise);
 
   }));
 

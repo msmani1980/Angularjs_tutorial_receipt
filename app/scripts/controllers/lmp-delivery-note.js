@@ -257,9 +257,9 @@ angular.module('ts5App')
       $scope.filterInput.itemName = '';
     };
 
-    function saveDeliveryNoteFailed(){
+    function saveDeliveryNoteFailed(response){
       $scope.toggleReview();
-      showResponseErrors();
+      showResponseErrors(response);
     }
 
     function saveDeliveryNote(){
@@ -331,6 +331,74 @@ angular.module('ts5App')
       }
       return true;
     }
+
+    function setMasterItemsFromResponse(response){
+      $scope.masterItems = response.masterItems;
+    }
+
+    function getAllMasterItems(){
+      if(!$scope.masterItems){
+        displayLoadingModal('Loading');
+        return deliveryNoteFactory.getAllMasterItems().then(setMasterItemsFromResponse, showResponseErrors);
+      }
+      return false;
+    }
+
+    function setAllowedMasterItems(){
+      var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
+        return item.masterItemId;
+      });
+      $scope.masterItemsAllowedInSelect = $scope.masterItems.filter(function(masterItem){
+        return devlieryNoteItemIds.indexOf(masterItem.id) === -1;
+      });
+    }
+
+    function addRows(){
+      setAllowedMasterItems();
+      var number = $scope.addItemsNumber;
+      if(!number){
+        number = 1;
+      }
+      else{
+        $scope.addItemsNumber = null;
+      }
+
+      do{
+        $scope.deliveryNote.items.push({});
+        number--;
+      }
+      while(number);
+    }
+
+    $scope.addItems = function(){
+      var masterItemsPromise = getAllMasterItems();
+      if(!masterItemsPromise){
+        addRows();
+        return;
+      }
+      $q.all([masterItemsPromise]).then(addRows, showResponseErrors);
+      hideLoadingModal();
+    };
+
+    $scope.addItem = function(selectedMasterItem, $index){
+      if(!selectedMasterItem){
+        return;
+      }
+      var inArray = $scope.deliveryNote.items.filter(function(item){
+        return item.masterItemId === selectedMasterItem.id;
+      });
+      if(inArray.length){
+        return;
+      }
+      if(!$scope.deliveryNote.items[$index]){
+        return;
+      }
+      $scope.deliveryNote.items[$index] = {
+        masterItemId: selectedMasterItem.id,
+        itemCode: selectedMasterItem.itemCode,
+        itemName: selectedMasterItem.itemName
+      };
+    };
 
     var stateActions = {};
     // view state actions
