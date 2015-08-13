@@ -144,6 +144,7 @@ describe('Managed Goods Received', function () {
     describe('The deliveryNotesList array', function () {
 
       beforeEach(function() {
+        spyOn(ManageGoodsReceivedCtrl,'formatDeliveryNotesDates').and.callThrough();
         $scope.catererStationId = 3;
         $scope.$digest();
       });
@@ -184,6 +185,21 @@ describe('Managed Goods Received', function () {
         it('should have an deliveryDate property and is a string', function () {
           expect(deliveryNote.deliveryDate).toBeDefined();
           expect(deliveryNote.deliveryDate).toEqual(jasmine.any(String));
+        });
+
+        describe('formatting the dates of the delivery note', function() {
+
+          it('should have been called when the delivery notes list is received', function () {
+            expect(ManageGoodsReceivedCtrl.formatDeliveryNotesDates).toHaveBeenCalled();
+          });
+
+          it('should remove the decimal from the end of the updatedOn date', function () {
+            var control = '2015-08-11 20:36:42.412513';
+            var formattedControl = '2015-08-11 20:36:42';
+            expect(deliveryNote.updatedOn).not.toEqual(control);
+            expect(deliveryNote.updatedOn).toEqual(formattedControl);
+          });
+
         });
 
       });
