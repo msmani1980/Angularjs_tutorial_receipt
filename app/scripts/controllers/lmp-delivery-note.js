@@ -357,7 +357,6 @@ angular.module('ts5App')
       setAllowedMasterItems();
       var totalDeliveryNoteToAdd = $scope.addItemsNumber || 1;
       $scope.addItemsNumber = null;
-      console.log(totalDeliveryNoteToAdd);
       for (var i = 0; i < totalDeliveryNoteToAdd; i++) {
         $scope.deliveryNote.items.push({});
       }

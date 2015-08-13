@@ -279,7 +279,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           expect(deliveryNoteFactory.createDeliveryNote).toHaveBeenCalledWith(mockedPayload);
         });
       });
-      // TODO add tests for addItems scope function
+
     });
 
     describe('Edit controller action', function(){
@@ -374,6 +374,31 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         });
         it('should call saveDeliveryNote', function(){
           expect(deliveryNoteFactory.saveDeliveryNote).toHaveBeenCalled();
+        });
+      });
+      describe('addItems scope function', function(){
+        it('should be defined as a scope', function(){
+          expect(Object.prototype.toString.call(scope.addItems)).toBe('[object Function]');
+        });
+        it('should make a request to get all master items', function(){
+          scope.addItems();
+          expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
+        });
+      });
+      describe('addItem scope function', function(){
+        it('should be defined as a scope', function(){
+          expect(Object.prototype.toString.call(scope.addItem)).toBe('[object Function]');
+        });
+        it('should add an item to the delivery note items array', function(){
+          scope.addItems();
+          var selectedMasterItem = {};
+          selectedMasterItem.id = '43242';
+          selectedMasterItem.itemCode = 'Item code 43242';
+          selectedMasterItem.itemName = 'Item name 43242';
+          var $index = scope.deliveryNote.items.length - 1;
+          scope.$digest();
+          scope.addItem(selectedMasterItem, $index);
+          expect(scope.deliveryNote.items[$index].itemCode).toBe('Item code 43242');
         });
       });
     });
