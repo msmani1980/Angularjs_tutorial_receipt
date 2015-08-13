@@ -454,9 +454,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.isMasterItemInfoDirty= function () {
-      if($scope.originalMasterItemData.itemCode == $scope.formData.itemCode &&
-        $scope.originalMasterItemData.itemName == $scope.formData.itemName &&
-        $scope.originalMasterItemData.onBoardName == $scope.formData.onBoardName) {
+      if($scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
+        $scope.originalMasterItemData.itemName === $scope.formData.itemName &&
+        $scope.originalMasterItemData.onBoardName === $scope.formData.onBoardName) {
         return false;
       } else {
         return true;
