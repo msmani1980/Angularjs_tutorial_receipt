@@ -279,6 +279,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           expect(deliveryNoteFactory.createDeliveryNote).toHaveBeenCalledWith(mockedPayload);
         });
       });
+      // TODO add tests for addItems scope function
     });
 
     describe('Edit controller action', function(){
