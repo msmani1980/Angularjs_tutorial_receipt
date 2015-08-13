@@ -135,13 +135,22 @@ describe('The Item Create Controller', function () {
       beforeEach(function () {
         $location.path('/item-copy');
         $routeParams.id = 123;
+        $scope.cloningItem = false;
+        $scope.editingItem = false;
+        $scope.viewOnly = false;
       });
 
-      it('should set duplicatingItem flag', function () {
+      it('should set cloningItem flag', function () {
         ItemCreateCtrl.init();
-        expect($scope.duplicatingItem).toEqual(true);
+        expect($scope.cloningItem).toEqual(true);
         expect($scope.editingItem).toEqual(false);
         expect($scope.viewOnly).toEqual(false);
+      });
+
+      it('should set display name to Cloning', function () {
+        ItemCreateCtrl.init();
+        ItemCreateCtrl.updateViewName({itemName: 'TestItem'});
+        expect($scope.viewName.indexOf('Cloning')).toBeGreaterThan(-1);
       });
 
       it('should set formData model', function () {
@@ -149,15 +158,110 @@ describe('The Item Create Controller', function () {
       });
 
       it('should not be set as active', function () {
+        ItemCreateCtrl.init();
         ItemCreateCtrl.checkIfItemIsActive({startDate: '06/10/2010'});
         expect($scope.itemIsActive).toEqual(false);
       });
 
       it('should not be set as inactive', function () {
+        ItemCreateCtrl.init();
         ItemCreateCtrl.checkIfItemIsInactive({endDate: '06/10/2010'});
         expect($scope.itemIsInactive).toEqual(false);
       });
     });
+
+    describe('init edit state', function () {
+      beforeEach(function () {
+        $location.path('/item-edit');
+        $routeParams.id = 123;
+        $scope.cloningItem = false;
+        $scope.editingItem = false;
+        $scope.viewOnly = false;
+      });
+
+      it('should set editingItem flag', function () {
+        ItemCreateCtrl.init();
+        expect($scope.cloningItem).toEqual(false);
+        expect($scope.editingItem).toEqual(true);
+        expect($scope.viewOnly).toEqual(false);
+      });
+
+      it('should set display name to Editing', function () {
+        ItemCreateCtrl.init();
+        ItemCreateCtrl.updateViewName({itemName: 'TestItem'});
+        expect($scope.viewName.indexOf('Editing')).toBeGreaterThan(-1);
+      });
+
+      it('should set formData model', function () {
+        expect($scope.formData).toBeDefined();
+      });
+    });
+
+    describe('init view state', function () {
+      beforeEach(function () {
+        $location.path('/item-view');
+        $routeParams.id = 123;
+        $scope.cloningItem = false;
+        $scope.editingItem = false;
+        $scope.viewOnly = false;
+      });
+
+      it('should set cloningItem flag', function () {
+        ItemCreateCtrl.init();
+        expect($scope.cloningItem).toEqual(false);
+        expect($scope.editingItem).toEqual(false);
+        expect($scope.viewOnly).toEqual(true);
+      });
+
+      it('should set display name to Editing', function () {
+        ItemCreateCtrl.init();
+        ItemCreateCtrl.updateViewName({itemName: 'TestItem'});
+        expect($scope.viewName.indexOf('Viewing')).toBeGreaterThan(-1);
+      });
+
+      it('should set formData model', function () {
+        expect($scope.formData).toBeDefined();
+      });
+    });
+
+    describe('isMasterItemInfoDirty for clone page', function () {
+      beforeEach(function () {
+        $scope.originalMasterItemData = {
+          itemCode: 'testCode',
+          itemName: 'testName',
+          onBoardName: 'testName2'
+        };
+        $scope.formData = angular.copy($scope.originalMasterItemData);
+      });
+
+      it('should be defined', function () {
+        expect(ItemCreateCtrl.isMasterItemInfoDirty).toBeDefined();
+      });
+
+      it('should return false if formData is changed, but values are the same', function () {
+        $scope.formData.itemCode = 'testCode';
+        $scope.formData.itemName = 'testName';
+        $scope.formData.onBoardName = 'testName2';
+        expect(ItemCreateCtrl.isMasterItemInfoDirty()).toEqual(false);
+      });
+
+      it('should return true if itemCode changes', function () {
+        $scope.formData.itemCode = 'newTestCode';
+        expect(ItemCreateCtrl.isMasterItemInfoDirty()).toEqual(true);
+      });
+
+      it('should return true if itemName changes', function () {
+        $scope.formData.itemName = 'newTestName';
+        expect(ItemCreateCtrl.isMasterItemInfoDirty()).toEqual(true);
+      });
+
+      it('should return true if itemCode changes', function () {
+        $scope.formData.onBoardName = 'newTestName2';
+        expect(ItemCreateCtrl.isMasterItemInfoDirty()).toEqual(true);
+      });
+
+    });
+
 
     describe('getDependencies() method', function () {
       var responseArray;

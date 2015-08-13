@@ -56,7 +56,15 @@ angular.module('ts5App')
       deliveryNoteFactory.getDeliveryNotesList(query).then(function (data) {
         $scope.userSelectedStation = true;
         $scope.deliveryNotesList = data.response;
+        $this.formatDeliveryNotesDates();
         $this.hideLoadingModal();
+      });
+    };
+
+    this.formatDeliveryNotesDates = function() {
+      angular.forEach($scope.deliveryNotesList,function(deliveryNote){
+        var pattern = /\.[0-9]+/;
+        deliveryNote.updatedOn = deliveryNote.updatedOn.replace(pattern, '');
       });
     };
 

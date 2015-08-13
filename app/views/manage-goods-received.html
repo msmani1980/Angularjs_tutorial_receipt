@@ -9,9 +9,9 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a ng-href="/#/delivery-note" class="btn btn-primary"> + <span class="hidden-xs">Create Delivery Note</span></a>
-        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
-                aria-controls="search-collapse">
+        <a ng-href="/#/lmp-delivery-note/create" class="btn btn-primary"> + <span class="hidden-xs">Create Delivery Note</span></a>
+        <button ng-show="catererStationId" class="btn btn-default"data-toggle="collapse" data-target="#search-collapse"
+          aria-expanded="false" aria-controls="search-collapse">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
@@ -20,33 +20,23 @@
 
   </div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <div class="panel-title">Select an LMP Station to View Delivery Notes*</div>
-    </div>
-    <div class="panel-body">
-      <select class="form-control" ng-model="catererStationId">
-        <option ng-repeat="station in stationsList" value="{{ station.id }}">{{ station.code }}</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="panel panel-default collapse no-transition" id="search-collapse">
+  <div ng-show="catererStationId" class="panel panel-default collapse no-transition"
+    id="search-collapse">
     <form name="menuSearchForm" ng-submit="searchPostTripData()">
-      <div class="panel-body">
+      <div class="panel-body"> 
         <div class="row">
-
-          <div class="col-xs-12 col-sm-6 col-md-4">
-            <div class="form-group">
-              <label>Delivery Note Number</label>
-              <input type="text" class="form-control" ng-model="search.deliveryNoteNumber" />
-            </div>
-          </div>
 
           <div class="col-xs-12 col-sm-6 col-md-4">
             <div class="form-group">
               <label>Purchase Order Number</label>
               <input type="text" class="form-control" ng-model="search.purchaseOrderNumber" />
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group">
+              <label>Delivery Note Number</label>
+              <input type="text" class="form-control" ng-model="search.deliveryNoteNumber" />
             </div>
           </div>
 
@@ -78,6 +68,17 @@
     </form>
   </div>
 
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-title">Select an LMP Station to View Delivery Notes*</div>
+    </div>
+    <div class="panel-body">
+      <select class="form-control" ng-model="catererStationId">
+        <option ng-repeat="station in stationsList" value="{{ station.id }}">{{ station.code }}</option>
+      </select>
+    </div>
+  </div>
+
   <div ng-show="!deliveryNotesList.length && userSelectedStation" class="panel panel-info">
     <div class="panel-heading">
       <div class="panel-title"><i class="fa fa-exclamation-circle"></i> No Delivery Notes Found</div>
@@ -91,8 +92,8 @@
   <table ng-show="catererStationId && deliveryNotesList.length > 0" class="table table-responsive table-bordered table-hover ng-scope">
     <thead>
       <tr>
-        <th>Delivery Note Number</th>
         <th>Purchase Order Number</th>
+        <th>Delivery Note Number</th>
         <th>Delivery Date</th>
         <th>Status</th>
         <th>Updated By</th>
@@ -102,8 +103,8 @@
     </thead>
     <tbody>
       <tr ng-repeat="deliveryNote in deliveryNotesList">
-        <td>{{ deliveryNote.deliveryNoteNumber }}</td>
         <td>{{ deliveryNote.purchaseOrderNumber }}</td>
+        <td>{{ deliveryNote.deliveryNoteNumber }}</td>
         <td>{{ deliveryNote.deliveryDate }}</td>
         <td>
           <span ng-show="{{ !deliveryNote.isAccepted }}">Saved</span>

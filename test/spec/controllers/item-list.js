@@ -21,18 +21,20 @@ describe('itemListCtrl', function () {
     salesCategoriesJSON,
     location,
     httpBackend,
-    authRequestHandler;
+    authRequestHandler,
+    itemsFactory;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope, _itemsService_,
                               _itemTypesService_, _salesCategoriesService_,
-                              $location, $httpBackend) {
+                              $location, $httpBackend, $injector) {
     inject(function (_servedItemsList_, _servedItemTypes_,
                      _servedSalesCategories_) {
       itemsListJSON = _servedItemsList_;
       itemTypesJSON = _servedItemTypes_;
       salesCategoriesJSON = _servedSalesCategories_;
     });
+    itemsFactory = $injector.get('itemsFactory');
 
     // backend definition common for all tests
     authRequestHandler = $httpBackend.when('GET', '/auth.py').respond({
@@ -80,6 +82,8 @@ describe('itemListCtrl', function () {
     spyOn(ItemListCtrl, 'getSalesCategoriesList');
     spyOn(ItemListCtrl, 'generateItemQuery');
     spyOn(ItemListCtrl, 'displayLoadingModal');
+    spyOn(itemsFactory, 'removeItem').and.returnValue(getItemsListDeferred.promise);
+
 
     ItemListCtrl.getItemsList();
     ItemListCtrl.getItemTypesList();
@@ -261,10 +265,9 @@ describe('itemListCtrl', function () {
         expect($scope.removeRecord).toBeDefined();
       });
 
-    it('should remove the record from the relationshipList', function () {
-      var length = $scope.itemsList.length;
+    it('should call removeItem', function () {
       $scope.removeRecord(332);
-      expect($scope.itemsList.length).toEqual(length - 1);
+      expect(itemsFactory.removeItem).toHaveBeenCalled();
     });
 
   });
