@@ -131,6 +131,34 @@ describe('The Item Create Controller', function () {
       expect(ItemCreateCtrl.init).toBeDefined();
     });
 
+    describe('init copy state', function () {
+      beforeEach(function () {
+        $location.path('/item-copy');
+        $routeParams.id = 123;
+      });
+
+      it('should set duplicatingItem flag', function () {
+        ItemCreateCtrl.init();
+        expect($scope.duplicatingItem).toEqual(true);
+        expect($scope.editingItem).toEqual(false);
+        expect($scope.viewOnly).toEqual(false);
+      });
+
+      it('should set formData model', function () {
+        expect($scope.formData).toBeDefined();
+      });
+
+      it('should not be set as active', function () {
+        ItemCreateCtrl.checkIfItemIsActive({startDate: '06/10/2010'});
+        expect($scope.itemIsActive).toEqual(false);
+      });
+
+      it('should not be set as inactive', function () {
+        ItemCreateCtrl.checkIfItemIsInactive({endDate: '06/10/2010'});
+        expect($scope.itemIsInactive).toEqual(false);
+      });
+    });
+
     describe('getDependencies() method', function () {
       var responseArray;
       var companiesFactory;

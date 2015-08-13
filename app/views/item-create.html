@@ -85,7 +85,6 @@
 
             <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
                         placeholder="New Cool Item" min-length="1" max-length="13"></input-text>
-
             <input-text label="Item Description" name="desc" required="true" pattern="regexp.word"
                         placeholder="A simple description..." max-length="500"></input-text>
 
@@ -107,12 +106,12 @@
           <div class="row">
             <div class="col-xs-12 col-sm-6">
               <date-picker-field disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
-                min-date="'+1d'" required="true" ng-model="formData.startDate"></date-picker-field>
+                                 min-date="'+1d'" required="true" ng-model="formData.startDate"></date-picker-field>
             </div>
             <div class="col-xs-12 col-sm-6">
               <date-picker-field disable="viewOnly || itemIsInactive" form="form" name="EffectiveTo"
-                min-date="( editingItem ? '0d' : '+1d')" label="Effective To" required="true"
-                ng-model="formData.endDate"></date-picker-field>
+                                 min-date="( editingItem ? '0d' : '+1d')" label="Effective To" required="true"
+                                 ng-model="formData.endDate"></date-picker-field>
             </div>
           </div>
 
@@ -153,7 +152,7 @@
                           placeholder="http://www.website.com"></input-text>
             </div>
 
-            <input-text ng-if="isVoucherSelected" label="Notes" name="notes" pattern="regexp.word"
+            <input-text ng-if="isVoucherSelected" label="Notes" name="notes"
                         placeholder="Notes for Voucher"></input-text>
 
             <div class="form-group">
@@ -287,6 +286,7 @@
         <div class="row">
           <div class="col-xs-12 col-sm-6">
             <label>Item Weight</label>
+
             <div class="row">
               <div class="form-group">
                 <div class="col-xs-9">
@@ -306,6 +306,7 @@
 
           <div class="col-xs-12 col-sm-6">
             <label>Item Volume</label>
+
             <div class="row">
               <div class="form-group">
                 <div class="col-xs-9">
