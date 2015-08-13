@@ -9,8 +9,8 @@ describe('Directive: stockTakeReason', function() {
     controller,
     scope;
 
-  beforeEach(inject(function($rootScope) {
-    scope = $rootScope.$new();
+  beforeEach(inject(function(_$rootScope_) {
+    scope = _$rootScope_;
   }));
 
   beforeEach(inject(function($compile) {
@@ -54,9 +54,91 @@ describe('Directive: stockTakeReason', function() {
     });
 
   describe('When the directives controller is accessed, it', function() {
+
     it('should be defined', function() {
       expect(controller).toBeDefined();
     });
+
+    describe('stockTakeReasonOpen', function() {
+      beforeEach(inject(function() {
+        spyOn(scope, 'stockTakeReasonOpen').and.callThrough();
+      }));
+
+      it('should be defined', function() {
+        expect(scope.stockTakeReasonOpen).toBeDefined();
+      });
+
+      it('should set id', function() {
+        scope.stockTakeReasonOpen(1, 900);
+        scope.$digest();
+        expect(scope.id).toEqual(1);
+      });
+
+      it('should set currentCount to equal 900', function() {
+        scope.stockTakeReasonOpen(1, 900);
+        scope.$digest();
+        expect(scope.currentCount).toEqual(900);
+      });
+
+    });
+
+    describe('stockTakeReasonClose', function() {
+      beforeEach(inject(function() {
+        spyOn(scope, 'stockTakeReasonClose').and.callThrough();
+      }));
+
+      it('should be defined', function() {
+        expect(scope.stockTakeReasonClose).toBeDefined();
+      });
+
+      it('should set id to null', function() {
+        scope.stockTakeReasonClose();
+        scope.$digest();
+        expect(scope.id).toEqual(null);
+      });
+
+      it('should set comment to null', function() {
+        scope.stockTakeReasonClose();
+        scope.$digest();
+        expect(scope.comment).toEqual(null);
+      });
+
+      it('should set currentCount to null', function() {
+        scope.stockTakeReasonClose();
+        scope.$digest();
+        expect(scope.currentCount).toEqual(null);
+      });
+
+    });
+
+    describe('stockTakeReasonSave', function() {
+      beforeEach(inject(function() {
+        spyOn(scope, 'stockTakeReasonSave').and.callThrough();
+      }));
+
+      it('should be defined', function() {
+        expect(scope.stockTakeReasonSave).toBeDefined();
+      });
+
+      it('should set id to null', function() {
+        scope.stockTakeReasonSave();
+        scope.$digest();
+        expect(scope.id).toEqual(null);
+      });
+
+      it('should set comment to null', function() {
+        scope.stockTakeReasonSave();
+        scope.$digest();
+        expect(scope.comment).toEqual(null);
+      });
+
+      it('should set currentCount to null', function() {
+        scope.stockTakeReasonSave();
+        scope.$digest();
+        expect(scope.currentCount).toEqual(null);
+      });
+    });
+
   });
 
 });

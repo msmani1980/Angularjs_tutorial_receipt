@@ -48,7 +48,7 @@ angular.module('ts5App')
     this.init();
 
     $scope.isCatererStationListReadOnly = function() {
-      if ($scope.cateringStationList) {
+      if ($scope.cateringStationList !== null) {
         return ($scope.cateringStationList.length === 1);
       }
     };
