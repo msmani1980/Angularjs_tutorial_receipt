@@ -137,9 +137,9 @@ describe('The Item Create Controller', function () {
         $routeParams.id = 123;
       });
 
-      it('should set duplicatingItem flag', function () {
+      it('should set cloningItem flag', function () {
         ItemCreateCtrl.init();
-        expect($scope.duplicatingItem).toEqual(true);
+        expect($scope.cloningItem).toEqual(true);
         expect($scope.editingItem).toEqual(false);
         expect($scope.viewOnly).toEqual(false);
       });
