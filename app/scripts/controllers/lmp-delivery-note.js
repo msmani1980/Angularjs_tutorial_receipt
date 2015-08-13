@@ -355,19 +355,12 @@ angular.module('ts5App')
 
     function addRows(){
       setAllowedMasterItems();
-      var number = $scope.addItemsNumber;
-      if(!number){
-        number = 1;
-      }
-      else{
-        $scope.addItemsNumber = null;
-      }
-
-      do{
+      var totalDeliveryNoteToAdd = $scope.addItemsNumber || 1;
+      $scope.addItemsNumber = null;
+      console.log(totalDeliveryNoteToAdd);
+      for (var i = 0; i < totalDeliveryNoteToAdd; i++) {
         $scope.deliveryNote.items.push({});
-        number--;
       }
-      while(number);
     }
 
     $scope.addItems = function(){
