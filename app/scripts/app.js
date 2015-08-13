@@ -24,7 +24,8 @@ angular.module('ts5App', [
   'ngFileUpload',
   'ja.qr',
   'ngToast',
-  'ang-drag-drop'
+  'ang-drag-drop',
+  'infinite-scroll'
 ]).factory('defaultData', [
   function () {
     var defaultData = {

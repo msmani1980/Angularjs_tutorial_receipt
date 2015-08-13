@@ -6,12 +6,7 @@ describe('Controller: CompanyListCtrl', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/companies.json'));
 
-  var CompanyListCtrl,
-    scope,
-    getCompanyListDeferred,
-    companyService,
-    companyListJSON,
-    location;
+  var CompanyListCtrl, scope, getCompanyListDeferred, companyService, companyListJSON, location;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope, _companyService_, $location) {
@@ -27,6 +22,7 @@ describe('Controller: CompanyListCtrl', function () {
     CompanyListCtrl = $controller('CompanyListCtrl', {
       $scope: scope
     });
+    scope.loadCompanies();
     scope.$digest();
   }));
 
@@ -49,7 +45,7 @@ describe('Controller: CompanyListCtrl', function () {
   });
 
   describe('action button', function () {
-    it('manage company-relationship should change the URL based on the company object', function() {
+    it('manage company-relationship should change the URL based on the company object', function () {
       scope.showCompanyRelationshipList({id: 1});
       scope.$digest();
       expect(location.path()).toBe('/company-relationship-list/1');
