@@ -94,7 +94,6 @@ angular.module('ts5App')
     };
 
     $scope.removeRecord = function (itemId) {
-      var itemIndex = $this.findItemIndex(itemId);
       $this.displayLoadingModal('Removing Retail Item');
       $this.closeAccordian();
 
