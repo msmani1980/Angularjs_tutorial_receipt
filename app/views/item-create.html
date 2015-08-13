@@ -69,6 +69,14 @@
 
       <form-error-dialog></form-error-dialog>
 
+      <div ng-show="displayCloneInfo" class="alert alert-info alert-dismissible fade in ng-hide" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span>×</span></button>
+        <h4 id="oh-snap!-you-got-an-error!">
+          <strong>Note</strong>: To create a new master item - item code, item name, and POS display name must all be changed. Otherwise, all three fields must remain unchanged.
+          <a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
+        </h4>
+      </div>
+
       <h3 id="item-information">Item Information</h3>
 
       <div class="row">

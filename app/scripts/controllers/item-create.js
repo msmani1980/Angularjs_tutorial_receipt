@@ -45,6 +45,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.duplicatingItem = false;
     $scope.shouldDisplayURLField = false;
     $scope.uiSelectTemplateReady = false;
+    $scope.displayCloneInfo = false;
     $scope.dynamicStaticBarcodeOptions = [
       {
         label: 'Dynamic Barcode',
@@ -406,6 +407,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.formatPriceDates(itemData);
       $scope.formData = itemData;
 
+      $scope.originalMasterItemData = {
+        itemCode: $scope.formData.itemCode,
+        itemName: $scope.formData.itemName,
+        onBoardName: $scope.formData.onBoardName
+      };
       this.setVoucherData(itemData);
       this.updateStationsList();
     };
@@ -434,6 +440,27 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.setUIReady = function () {
       $scope.uiSelectTemplateReady = true;
       this.hideLoadingModal();
+      this.watchItemInfoOnClonePage();
+    };
+
+    this.watchItemInfoOnClonePage = function () {
+      $scope.$watchGroup(['formData.itemCode', 'formData.itemName', 'formData.onBoardName'], function () {
+        if($scope.duplicatingItem && $this.isMasterItemInfoDirty()) {
+          $scope.displayCloneInfo = true;
+        } else {
+          $scope.displayCloneInfo = false;
+        }
+      });
+    };
+
+    this.isMasterItemInfoDirty= function () {
+      if($scope.originalMasterItemData.itemCode == $scope.formData.itemCode &&
+        $scope.originalMasterItemData.itemName == $scope.formData.itemName &&
+        $scope.originalMasterItemData.onBoardName == $scope.formData.onBoardName) {
+        return false;
+      } else {
+        return true;
+      }
     };
 
     this.setDiscountList = function (dataFromAPI) {
