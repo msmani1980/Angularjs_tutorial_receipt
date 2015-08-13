@@ -89,7 +89,7 @@ angular.module('ts5App')
     }
 
     function getMasterRetailItemsByCatererStationId(catererStationId){
-      displayLoadingModal();
+      displayLoadingModal('Loading');
       // used cached results instead of hitting API again
       if(angular.isDefined(_cateringStationItems[catererStationId])){
         var response = _cateringStationItems[catererStationId];
@@ -137,12 +137,7 @@ angular.module('ts5App')
     }
 
     function displayLoadingModal(loadingText) {
-      var modal = angular.element('#loading');
-      if(modal.hasClass('in')){
-        modal.find('p').text(loadingText);
-        return;
-      }
-      modal.modal('show').find('p').text(loadingText);
+      angular.element('#loading').modal('show').find('p').text(loadingText);
     }
 
     function hideLoadingModal() {
@@ -262,11 +257,16 @@ angular.module('ts5App')
       $scope.filterInput.itemName = '';
     };
 
+    function saveDeliveryNoteFailed(){
+      $scope.toggleReview();
+      showResponseErrors();
+    }
+
     function saveDeliveryNote(){
       displayLoadingModal('Saving');
       if($routeParams.state === 'create'){
         _formSaveSuccessText = 'Created';
-        deliveryNoteFactory.createDeliveryNote(_payload).then(saveDeliveryNoteResolution, showResponseErrors);
+        deliveryNoteFactory.createDeliveryNote(_payload).then(saveDeliveryNoteResolution, saveDeliveryNoteFailed);
         return;
       }
       if($routeParams.state !== 'edit'){
@@ -276,7 +276,7 @@ angular.module('ts5App')
       if(_payload.isAccepted){
         _formSaveSuccessText = 'Submitted';
       }
-      deliveryNoteFactory.saveDeliveryNote(_payload).then(saveDeliveryNoteResolution, showResponseErrors);
+      deliveryNoteFactory.saveDeliveryNote(_payload).then(saveDeliveryNoteResolution, saveDeliveryNoteFailed);
     }
 
     $scope.save = function(_isAccepted){

@@ -24,6 +24,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var getCatererStationMasterItemsDeferred;
   var getCompanyReasonCodesResponseJSON;
   var getCompanyReasonCodesDeferred;
+  var saveDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _deliveryNoteFactory_,
@@ -60,9 +61,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getCompanyReasonCodesDeferred.resolve(getCompanyReasonCodesResponseJSON);
     spyOn(deliveryNoteFactory, 'getCompanyReasonCodes').and.returnValue(getCompanyReasonCodesDeferred.promise);
 
-    spyOn(deliveryNoteFactory, 'createDeliveryNote').and.returnValue({id:3});
-
-    spyOn(deliveryNoteFactory, 'saveDeliveryNote').and.returnValue({id:3});
+    saveDeferred = $q.defer();
+    saveDeferred.resolve({id:3});
+    spyOn(deliveryNoteFactory, 'createDeliveryNote').and.returnValue(saveDeferred.promise);
+    spyOn(deliveryNoteFactory, 'saveDeliveryNote').and.returnValue(saveDeferred.promise);
 
   }));
 
@@ -213,6 +215,63 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         scope.cancel();
         expect(location.path()).toBe('/');
       });
+      describe('save scope function, only save', function() {
+        beforeEach(function(){
+          scope.deliveryNote = {
+            catererStationId: 3,
+            deliveryDate: '08/06/2015',
+            deliveryNoteNumber: 'askdjhas78day',
+            purchaseOrderNumber: 'ksahd9a8sda8d',
+            items: [
+              {
+                deliveredQuantity: 2,
+                expectedQuantity: 2,
+                itemCode: 'Sk001',
+                itemName: 'Skittles',
+                masterItemId: 1,
+                ullageQuantity: 1
+              },
+              {
+                deliveredQuantity: 1,
+                expectedQuantity: 1,
+                itemCode: 'SD001',
+                itemName: 'Coke',
+                masterItemId: 2
+              }
+            ]
+          };
+          scope.save(false);
+        });
+        it('should set delivery note is accepted to whatever is passed in', function () {
+          expect(scope.deliveryNote.isAccepted).toBe(false);
+        });
+        it('should call createDeliveryNote', function(){
+          var mockedPayload = {
+            catererStationId: 3,
+            deliveryDate: '20150806',
+            deliveryNoteNumber: 'askdjhas78day',
+            isAccepted: false,
+            purchaseOrderNumber: 'ksahd9a8sda8d',
+            items: [
+              {
+                deliveredQuantity: 2,
+                expectedQuantity: 2,
+                masterItemId: 1,
+                ullageQuantity: 1,
+                ullageReason: null
+              },
+              {
+                deliveredQuantity: 1,
+                expectedQuantity: 1,
+                masterItemId: 2,
+                ullageQuantity: undefined,
+                ullageReason: null
+              }
+            ]
+          };
+          expect(deliveryNoteFactory.createDeliveryNote).toHaveBeenCalledWith(mockedPayload);
+        });
+      });
     });
 
     describe('Edit controller action', function(){
@@ -298,16 +357,15 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           expect(scope.filterInput.itemName).toBe('');
         });
       });
-      describe('save scope function', function(){
-        it('should set delivery note is accepted to whatever is passed in', function(){
-          scope.save(false);
-          scope.$digest();
-          expect(scope.deliveryNote.isAccepted).toBe(false);
+      describe('save scope function submit delivery note', function(){
+        beforeEach(function(){
+          scope.save(true);
         });
         it('should set delivery note is accepted to whatever is passed in', function(){
-          scope.save(true);
-          scope.$digest();
           expect(scope.deliveryNote.isAccepted).toBe(true);
+        });
+        it('should call saveDeliveryNote', function(){
+          expect(deliveryNoteFactory.saveDeliveryNote).toHaveBeenCalled();
         });
       });
     });
