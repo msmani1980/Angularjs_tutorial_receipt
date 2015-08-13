@@ -95,7 +95,7 @@
       <h3>Station Exceptions</h3>
 
       <p>
-        <button type="button" class="btn btn-primary" ng-click="addStationException($parent.key)">
+        <button type="button" ng-disabled="$parent.isDisabled()" class="btn btn-primary" ng-click="addStationException($parent.key)">
            <i class="fa fa-plus"></i> Add Station Exception
         </button>
       </p>

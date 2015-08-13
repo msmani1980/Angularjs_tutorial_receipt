@@ -351,7 +351,7 @@ angular.module('ts5App')
 
     this.setUIReady = function() {
       $scope.uiSelectTemplateReady = true;
-      this.hideLoadingModal();
+      $this.hideLoadingModal();
     };
 
     this.getDependencies = function() {
@@ -414,9 +414,9 @@ angular.module('ts5App')
       $scope.tags = data.response;
     };
 
-    this.removeCurrentItem = function (itemList) {
+    this.removeCurrentItem = function(itemList) {
       if ($routeParams.id) {
-        angular.forEach(itemList, function (value, key) {
+        angular.forEach(itemList, function(value, key) {
           if (parseInt(value.id) === parseInt($routeParams.id)) {
             itemList.splice(key, 1);
           }
@@ -425,7 +425,7 @@ angular.module('ts5App')
       return itemList;
     };
 
-    this.setItemList = function (itemListFromAPI) {
+    this.setItemList = function(itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
       $scope.substitutions = itemList;
@@ -620,11 +620,11 @@ angular.module('ts5App')
         retailItem: itemData
       };
       itemsFactory.createItem(newItemPayload).then(function() {
-        this.hideLoadingModal();
+        $this.hideLoadingModal();
         angular.element('#create-success').modal('show');
         return true;
       }, function(error) {
-        this.hideLoadingModal();
+        $this.hideLoadingModal();
         $scope.displayError = true;
         $scope.formErrors = error.data;
         return false;
