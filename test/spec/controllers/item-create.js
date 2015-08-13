@@ -131,6 +131,34 @@ describe('The Item Create Controller', function () {
       expect(ItemCreateCtrl.init).toBeDefined();
     });
 
+    describe('init copy state', function () {
+      beforeEach(function () {
+        $location.path('/item-copy');
+        $routeParams.id = 123;
+      });
+
+      it('should set duplicatingItem flag', function () {
+        ItemCreateCtrl.init();
+        expect($scope.duplicatingItem).toEqual(true);
+        expect($scope.editingItem).toEqual(false);
+        expect($scope.viewOnly).toEqual(false);
+      });
+
+      it('should set formData model', function () {
+        expect($scope.formData).toBeDefined();
+      });
+
+      it('should not be set as active', function () {
+        ItemCreateCtrl.checkIfItemIsActive({startDate: '06/10/2010'});
+        expect($scope.itemIsActive).toEqual(false);
+      });
+
+      it('should not be set as inactive', function () {
+        ItemCreateCtrl.checkIfItemIsInactive({endDate: '06/10/2010'});
+        expect($scope.itemIsInactive).toEqual(false);
+      });
+    });
+
     describe('getDependencies() method', function () {
       var responseArray;
       var companiesFactory;
@@ -550,6 +578,64 @@ describe('The Item Create Controller', function () {
             expect(ItemCreateCtrl.formatPayload).toHaveBeenCalled();
           });
 
+          describe('formatVoucherData', function () {
+
+            it('should set isDynamicBarcodes when isVoucherSelected and remove unused shouldUseDynamicBarcode property',
+              function () {
+                $scope.isVoucherSelected = true;
+                var itemData = {
+                  shouldUseDynamicBarcode: {
+                    value: true
+                  }
+                };
+                ItemCreateCtrl.formatVoucherData(itemData);
+                expect(itemData.isDynamicBarcodes).toBe(true);
+                expect(itemData.shouldUseDynamicBarcode).toBeUndefined();
+
+              });
+
+            it('should set companyDiscountId from voucherId and remove unused voucher property', function () {
+              $scope.isVoucherSelected = true;
+              var itemData = {
+                voucher: {
+                  id: 1979
+                }
+              };
+              ItemCreateCtrl.formatVoucherData(itemData);
+              expect(itemData.companyDiscountId).toBe(1979);
+              expect(itemData.voucher).toBeUndefined();
+
+            });
+          });
+
+        });
+
+      });
+
+      describe('set voucher data on scope', function () {
+
+        it('should set the value for use dynamic barcode select box', function () {
+          var itemData = {
+            isDynamicBarcodes: false
+          };
+          ItemCreateCtrl.setVoucherData(itemData);
+          expect($scope.formData.shouldUseDynamicBarcode.value).toBe(itemData.isDynamicBarcodes);
+        });
+
+        it('should attach the voucher object to the scope', function () {
+          var itemData = {
+            companyDiscountId: 1979
+          };
+          $scope.discountList = [
+            {
+              id: 100
+            },
+            {
+              id: 1979
+            }
+          ];
+          ItemCreateCtrl.setVoucherData(itemData);
+          expect($scope.formData.voucher.id).toBe(itemData.companyDiscountId);
         });
 
       });

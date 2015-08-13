@@ -1,91 +1,96 @@
-<h2 class="view-name">{{viewName}}</h2>
+<div class="fluid-container">
 
-<div ng-show="isLoading && !isRejected" class="text-center">
-  <p><i class="fa fa-cog fa-spin fa-4x"></i></p>
+  <div class="list-controls">
+    <h1>{{viewName}}</h1>
 
-  <p>Loading...</p>
-</div>
-<div ng-show="!isLoading && !isRejected">
-  <div ng-show="companyList.length">
-    <div class="list-controls">
-      <div class="row">
-        <div class="col-xs-6">
-          <button type="button" class="btn btn-primary" ng-click="createCompany()"><span class="fa fa-plus"></span> Add
-            Company
-          </button>
-        </div>
-        <div class="col-xs-6 text-right">
-          <button type="button" class="btn btn-default" type="submit" data-toggle="collapse"
-                  data-target="#search-collapse"
-                  aria-expanded="false" aria-controls="search-collapse">
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-            <span class="hidden-xs">Search</span>
-          </button>
-        </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <a href="/#/menu/create" class="btn btn-primary">+ Create Company</a>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+
       </div>
     </div>
+  </div>
 
-    <div class="panel panel-default collapse" id="search-collapse">
+  <div class="panel panel-default collapse no-transition" id="search-collapse">
+    <form name="menuSearchForm" ng-submit="searchMenus()">
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-md-3 col-sm-6">
             <div class="form-group">
-              <label for="company-type">Company Type</label>
+              <label for="item-type">Company Type</label>
+              <input ng-model="search.companyTypeName" type="text" class="form-control" id="item-type"
+                     placeholder="Retail, Supplier, etc">
+            </div>
+
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="item-code">Company Code</label>
+              <input ng-model="search.companyCode" type="text" class="form-control" id="item-code"
+                     placeholder="iPad Mini">
             </div>
           </div>
-          <div class="col-sm-4">
+
+          <div class="col-md-3 col-sm-6">
             <div class="form-group">
-              <label for="company-name">Company Name</label>
+              <label for="item-name">Company Name</label>
+              <input ng-model="search.companyName" type="text" class="form-control" id="item-name"
+                     placeholder="iPad Mini">
             </div>
           </div>
-          <div class="col-sm-4">
-            <div class="form-group">
-              <label for="company-code">Company Code</label>
-            </div>
-          </div>
+
         </div>
       </div>
       <div class="panel-footer text-right">
-        <button class="btn btn-default" type="button">Clear</button>
-        <button class="btn btn-primary" type="submit">Search</button>
+        <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+        <button type="submit" class="btn btn-primary">Search</button>
       </div>
-    </div>
-    <div class="feature-list">
-      <div class="row list-head">
-        <div class="hidden-xs col-sm-2 list-header border-right">Company Type</div>
-        <div class="hidden-xs col-sm-2 list-header border-right">Company Name</div>
-        <div class="hidden-xs col-sm-2 list-header border-right">Company Code</div>
-        <div class="hidden-xs col-sm-4 list-header border-right">Additional Languages</div>
-        <div class="hidden-xs col-sm-1 list-header border-right">Base Currency</div>
-        <div class="hidden-xs col-sm-1 list-header border-right">Actions</div>
-      </div>
-      <feature-list-item ng-repeat="company in filteredCompanyList" view-model="company" type="company"
-                         class="list-body"></feature-list-item>
-      <div ng-show="companyList.length === 0" class="feature-empty">
-        <p>No Companies Found</p>
-      </div>
-      <div class="list-footer">
-        <div class="row">
-          <div class="col-xs-12 col-sm-3">
-            Show
-            <select class="form-control" ng-model="itemsPerPage"
-                    ng-options="value for value in [10, 25, 50, 100]"></select>
-            Items per Page
-
-          </div>
-
-          <div class="col-xs-12 col-sm-9 text-right">
-            <pagination total-items="itemsListCount" items-per-page="itemsPerPage" max-size="maxSize"
-                        boundary-links="true" ng-model="currentPage"></pagination>
-          </div>
-        </div>
-      </div>
-    </div>
+    </form>
   </div>
-  <!-- //TODO: Add create link -->
-  <div ng-show="companyList.length === 0" class="feature-empty">
-    <button type=button" class="btn btn-primary" ng-click="createCompany()"><span class="fa fa-plus" aria-hidden="true"></span> Create
-      Company
-    </button>
-  </div>
+  <table infinite-scroll="loadCompanies()" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Company Type</th>
+      <th>Company Code</th>
+      <th>Company Name</th>
+      <!--<th>Additional Languages</th>-->
+      <th>Base Currency</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr
+      ng-repeat="company in companyList | filter:{companyTypeName: search.companyTypeName, companyName: search.companyName, companyCode: search.companyCode}">
+      <td>{{ company.companyTypeName }}</td>
+      <td>{{ company.companyCode }}</td>
+      <td>{{ company.companyName }}</td>
+      <!--<td>{{ company.companyLanguages }}</td>-->
+      <td>{{ company.baseCurrencyCode }}</td>
+      <td>
+        <button type="button" class="btn btn-info btn-xs" aria-label="View Company"
+                ng-click="viewCompany(company)">
+          <i class="fa fa-file" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-xs" aria-label="Edit Company"
+                ng-click="editCompany(company)">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-xs" ng-click="showCompanyRelationshipList(company)">
+          <i class="fa fa-object-ungroup"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+<p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
 </div>

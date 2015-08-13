@@ -70,13 +70,15 @@
 
             <div class="col-xs-12 col-sm-6">
               <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-                <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate" disable-past="true" required="true"></date-picker-field>
+                <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
+                min-date="'+1d'" required="true"></date-picker-field>
               </fieldset>
             </div>
 
             <div class="col-xs-12 col-sm-6">
               <fieldset ng-disabled="viewOnly || isRelationshipInactive()">
-                <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate" required="true"></date-picker-field>
+                <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
+                min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
               </fieldset>
             </div>
 
