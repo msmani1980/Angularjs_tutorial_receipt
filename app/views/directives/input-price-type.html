@@ -22,11 +22,11 @@
         <div class="row">
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field form="form" label="Effective From" name="PriceEffectiveFrom" ng-model="itemPrice.startDate" required="true"></date-picker-field>
+            <date-picker-field form="form" label="Effective From" name="PriceEffectiveFrom" ng-model="itemPrice.startDate" min-date="'+1'" required="true"></date-picker-field>
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field form="form" label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" required="true"></date-picker-field>
+            <date-picker-field form="form" label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" min-date="( editingItem ? '0d' : '+1d')" required="true"></date-picker-field>
           </div>
 
         </div>
