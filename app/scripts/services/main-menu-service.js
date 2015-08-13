@@ -283,7 +283,7 @@ angular.module('ts5App')
           className: 'dashboard-manageGoodsReceived'
         }, {
           name: 'Create Delivery Note',
-          route: '/#/delivery-note',
+          route: '/#/lmp-delivery-note/create',
           icon: 'icon-manage-retail-category',
           className: 'dashboard-deliveryNote'
         }]
