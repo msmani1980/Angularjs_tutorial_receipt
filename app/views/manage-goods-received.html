@@ -9,9 +9,9 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a ng-href="/#/delivery-note" class="btn btn-primary"> + <span class="hidden-xs">Create Delivery Note</span></a>
-        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
-                aria-controls="search-collapse">
+        <a ng-href="/#/lmp-delivery-note/create" class="btn btn-primary"> + <span class="hidden-xs">Create Delivery Note</span></a>
+        <button ng-show="catererStationId" class="btn btn-default"data-toggle="collapse" data-target="#search-collapse"
+          aria-expanded="false" aria-controls="search-collapse">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
@@ -20,7 +20,8 @@
 
   </div>
 
-  <div class="panel panel-default collapse no-transition" id="search-collapse">
+  <div ng-show="catererStationId" class="panel panel-default collapse no-transition"
+    id="search-collapse">
     <form name="menuSearchForm" ng-submit="searchPostTripData()">
       <div class="panel-body">
         <div class="row">
