@@ -21,12 +21,11 @@ angular.module('ts5App')
     var _initPromises = [];
     var _companyId = deliveryNoteFactory.getCompanyId();
     var _companyMenuCatererStations = [];
-    var _prevState = null;
     var _formSaveSuccessText = null;
-    var _path = '/#/lmp-delivery-note/';
     var _cateringStationItems = [];
     var _reasonCodeTypeUllage = 'Ullage';
     var _payload = null;
+    var _path = '/lmp-delivery-note/';
 
     function showMessage(message, messageType) {
       ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Delivery Note</strong>: ' + message });
@@ -138,7 +137,12 @@ angular.module('ts5App')
     }
 
     function displayLoadingModal(loadingText) {
-      angular.element('#loading').modal('show').find('p').text(loadingText);
+      var modal = angular.element('#loading');
+      if(modal.hasClass('in')){
+        modal.find('p').text(loadingText);
+        return;
+      }
+      modal.modal('show').find('p').text(loadingText);
     }
 
     function hideLoadingModal() {
@@ -174,19 +178,12 @@ angular.module('ts5App')
     }
 
     function saveDeliveryNoteResolution(response){
-      hideLoadingModal();
-      $scope.toggleReview();
       showMessage(_formSaveSuccessText, 'success');
-      // TODO - new blocker - API not returning JSON response.
-      /*
-      console.log(response);
-      return;*/
-      if(response.isAccepted){
-        $location.path(_path+'view/'+response.id);
-      }
-      else{
+      if($routeParams.state === 'create' && angular.isDefined(response.id)){
         $location.path(_path+'edit/'+response.id);
+        return;
       }
+      init();
     }
 
     function getSelectedUllageReason(masterItemId){
@@ -234,7 +231,7 @@ angular.module('ts5App')
     };
 
     $scope.cancel = function(){
-      if(_prevState) { // there is a test for this, not showing up though
+      if($scope.prevState) { // there is a test for this, not showing up though
         $scope.toggleReview();
         return;
       }
@@ -242,17 +239,16 @@ angular.module('ts5App')
     };
 
     $scope.toggleReview = function(){
-      if(!_prevState) {
-        _prevState = $scope.state;
+      if(!$scope.prevState) {
+        $scope.prevState = $scope.state;
         $scope.state = 'review';
         $scope.canReview = false;
         $scope.readOnly = true;
-        console.log($scope.deliveryNote);
         removeNullDeliveredItems();
       }
       else{
-        $scope.state = _prevState;
-        _prevState = null;
+        $scope.state = $scope.prevState;
+        $scope.prevState = null;
         $scope.canReview = canReview();
         $scope.readOnly = false;
       }
@@ -340,7 +336,7 @@ angular.module('ts5App')
     // view state actions
     stateActions.viewInit = function(){
       $scope.readOnly = true;
-      displayLoadingModal();
+      displayLoadingModal('Loading');
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
@@ -348,13 +344,14 @@ angular.module('ts5App')
     };
     stateActions.viewInitPromisesResolved = function(){
       this.editInitPromisesResolved();
+      $scope.readOnly = true;
     };
 
     // create state actions
     stateActions.createInit = function(){
       $scope.readOnly = false;
       $scope.viewName = 'Create Delivery Note';
-      displayLoadingModal();
+      displayLoadingModal('Loading');
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
       _initPromises.push(getUllageCompanyReasonCodes());
@@ -365,7 +362,7 @@ angular.module('ts5App')
 
     // edit state actions
     stateActions.editInit = function(){
-      displayLoadingModal();
+      displayLoadingModal('Loading');
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
@@ -375,11 +372,6 @@ angular.module('ts5App')
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
-      /*
-      if(angular.isDefined($scope.deliveryNote)) {
-        setItemMetaFromMasterItems($scope.deliveryNote.items);
-      }
-      */
       if(angular.isDefined($scope.deliveryNote) && angular.isDefined($scope.ullageReasons)){
         setSelectedUllageReasons();
       }
@@ -397,6 +389,7 @@ angular.module('ts5App')
 
       // private vars
       _initPromises = [];
+      $scope.prevState = null;
       var initStateAction = $routeParams.state + 'Init';
       if(stateActions[initStateAction]){
         stateActions[initStateAction]();

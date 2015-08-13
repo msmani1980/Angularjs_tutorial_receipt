@@ -60,6 +60,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getCompanyReasonCodesDeferred.resolve(getCompanyReasonCodesResponseJSON);
     spyOn(deliveryNoteFactory, 'getCompanyReasonCodes').and.returnValue(getCompanyReasonCodesDeferred.promise);
 
+    spyOn(deliveryNoteFactory, 'createDeliveryNote').and.returnValue({id:3});
+
+    spyOn(deliveryNoteFactory, 'saveDeliveryNote').and.returnValue({id:3});
+
   }));
 
   describe('single caterer station on create', function(){
@@ -75,6 +79,15 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     it('should set deliveryNote.catererStationId if only 1 results', function(){
       scope.$digest();
       expect(scope.deliveryNote.catererStationId).toBe(3);
+    });
+    it('should set prevState when toggleReview is called', function(){
+      scope.toggleReview();
+      scope.$digest();
+      expect(scope.prevState).toBe('create');
+      expect(scope.state).toBe('review');
+      scope.toggleReview();
+      scope.$digest();
+      expect(scope.state).toBe('create');
     });
   });
 
@@ -286,7 +299,16 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         });
       });
       describe('save scope function', function(){
-        // it('should')
+        it('should set delivery note is accepted to whatever is passed in', function(){
+          scope.save(false);
+          scope.$digest();
+          expect(scope.deliveryNote.isAccepted).toBe(false);
+        });
+        it('should set delivery note is accepted to whatever is passed in', function(){
+          scope.save(true);
+          scope.$digest();
+          expect(scope.deliveryNote.isAccepted).toBe(true);
+        });
       });
     });
   });
