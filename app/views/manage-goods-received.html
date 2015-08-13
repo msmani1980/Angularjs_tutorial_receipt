@@ -20,17 +20,6 @@
 
   </div>
 
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <div class="panel-title">Select an LMP Station to View Delivery Notes*</div>
-    </div>
-    <div class="panel-body">
-      <select class="form-control" ng-model="catererStationId">
-        <option ng-repeat="station in stationsList" value="{{ station.id }}">{{ station.code }}</option>
-      </select>
-    </div>
-  </div>
-
   <div class="panel panel-default collapse no-transition" id="search-collapse">
     <form name="menuSearchForm" ng-submit="searchPostTripData()">
       <div class="panel-body">
@@ -76,6 +65,17 @@
         <button type="submit" class="btn btn-primary" ng-click="searchRecords()">Search</button>
       </div>
     </form>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-title">Select an LMP Station to View Delivery Notes*</div>
+    </div>
+    <div class="panel-body">
+      <select class="form-control" ng-model="catererStationId">
+        <option ng-repeat="station in stationsList" value="{{ station.id }}">{{ station.code }}</option>
+      </select>
+    </div>
   </div>
 
   <div ng-show="!deliveryNotesList.length && userSelectedStation" class="panel panel-info">
