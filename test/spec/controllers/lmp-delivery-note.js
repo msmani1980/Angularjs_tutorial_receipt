@@ -25,6 +25,8 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var getCompanyReasonCodesResponseJSON;
   var getCompanyReasonCodesDeferred;
   var saveDeferred;
+  var getAllMasterItemsDeferred;
+  var getAllMasterItemsResponseJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _deliveryNoteFactory_,
@@ -42,6 +44,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     companyMenuCatererStationsResponseJSON = _servedMenuCateringStations_;
     getCatererStationMasterItemsResponseJSON = _servedItemsByCatererStationId_;
     getCompanyReasonCodesResponseJSON = _servedCompanyReasonCodes_;
+    getAllMasterItemsResponseJSON = _servedMasterItemList_;
 
     getDeliveryNoteDeferred = $q.defer();
     getDeliveryNoteDeferred.resolve(lmpDeliveryNoteResponseJSON);
@@ -65,6 +68,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     saveDeferred.resolve({id:3});
     spyOn(deliveryNoteFactory, 'createDeliveryNote').and.returnValue(saveDeferred.promise);
     spyOn(deliveryNoteFactory, 'saveDeliveryNote').and.returnValue(saveDeferred.promise);
+
+    getAllMasterItemsDeferred = $q.defer();
+    getAllMasterItemsDeferred.resolve(getAllMasterItemsResponseJSON);
+    spyOn(deliveryNoteFactory, 'getAllMasterItems').and.returnValue(getAllMasterItemsDeferred.promise);
 
   }));
 
@@ -272,6 +279,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           expect(deliveryNoteFactory.createDeliveryNote).toHaveBeenCalledWith(mockedPayload);
         });
       });
+
     });
 
     describe('Edit controller action', function(){
@@ -366,6 +374,31 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         });
         it('should call saveDeliveryNote', function(){
           expect(deliveryNoteFactory.saveDeliveryNote).toHaveBeenCalled();
+        });
+      });
+      describe('addItems scope function', function(){
+        it('should be defined as a scope', function(){
+          expect(Object.prototype.toString.call(scope.addItems)).toBe('[object Function]');
+        });
+        it('should make a request to get all master items', function(){
+          scope.addItems();
+          expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
+        });
+      });
+      describe('addItem scope function', function(){
+        it('should be defined as a scope', function(){
+          expect(Object.prototype.toString.call(scope.addItem)).toBe('[object Function]');
+        });
+        it('should add an item to the delivery note items array', function(){
+          scope.addItems();
+          var selectedMasterItem = {};
+          selectedMasterItem.id = '43242';
+          selectedMasterItem.itemCode = 'Item code 43242';
+          selectedMasterItem.itemName = 'Item name 43242';
+          var $index = scope.deliveryNote.items.length - 1;
+          scope.$digest();
+          scope.addItem(selectedMasterItem, $index);
+          expect(scope.deliveryNote.items[$index].itemCode).toBe('Item code 43242');
         });
       });
     });
