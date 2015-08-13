@@ -24,14 +24,13 @@
 									class="form-control"
 									ng-model="$parent.currentCount"
 									ng-disabled="!stockAdjustmentReason[id] && !comment.length"
-								>
+								/>
 							</div>
 
 							<div class="col-xs-12 col-sm-8">
 								<select class="form-control"
 		              ng-model="stockAdjustmentReason[id]"
-		              ng-options="item.companyReasonCodeName for item in ullageReasons track by item.id"
-								>
+		              ng-options="item.companyReasonCodeName for item in ullageReasons track by item.id">
 								<option ng-hide="stockAdjustmentReason !== 'Select Reason'" value="">Select Reason</option>
 								</select>
 							</div>
