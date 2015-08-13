@@ -75,16 +75,8 @@ describe('Managed Goods Received', function () {
       expect(ManageGoodsReceivedCtrl.getDeliveryNotesList).toBeDefined();
     });
 
-    it('should have a parseDate method', function () {
-      expect(ManageGoodsReceivedCtrl.parseDate).toBeDefined();
-    });
-
     it('should have a generateDeliveryNoteQuery method', function () {
       expect(ManageGoodsReceivedCtrl.generateDeliveryNoteQuery).toBeDefined();
-    });
-
-    it('should have a isDeliveryNoteActive method', function () {
-      expect($scope.isDeliveryNoteActive).toBeDefined();
     });
 
   });
@@ -216,6 +208,84 @@ describe('Managed Goods Received', function () {
       var length = $scope.deliveryNotesList.length;
       $scope.removeRecord(50);
       expect($scope.deliveryNotesList.length).toEqual(length - 1);
+    });
+
+  });
+
+  describe('clear filter functionality', function () {
+    beforeEach(function () {
+      $scope.$digest();
+    });
+    it(
+      'should have a clearSearchFilters() method attached to the scope',
+      function () {
+        expect($scope.clearSearchFilters).toBeDefined();
+      });
+
+    it('should clear the search ng-model when called', function () {
+      $scope.search = {
+        deliveryNoteNumber: 'VB001'
+      };
+      $scope.clearSearchFilters();
+      expect($scope.search).toEqual({});
+    });
+
+    it('should clear the dateRange ng-model when called', function () {
+      $scope.dateRange.deliveryStartDate = '07-15-2015';
+      $scope.dateRange.deliveryEndDate = '08-15-2015';
+      $scope.clearSearchFilters();
+      expect($scope.dateRange).toEqual({
+        deliveryStartDate: '',
+        deliveryEndDate: ''
+      });
+    });
+
+  });
+
+  describe('searchRecords', function () {
+
+    beforeEach(function () {
+      spyOn(ManageGoodsReceivedCtrl, 'displayLoadingModal');
+      spyOn(ManageGoodsReceivedCtrl, 'getDeliveryNotesList');
+      $scope.$digest();
+    });
+
+    it('should be defined', function () {
+      expect($scope.searchRecords).toBeDefined();
+    });
+
+    it('should call getDeliveryNotesList', function () {
+      $scope.searchRecords();
+      expect(ManageGoodsReceivedCtrl.getDeliveryNotesList).toHaveBeenCalled();
+    });
+
+    it('should call displayLoadingModal', function () {
+      $scope.searchRecords();
+      expect(ManageGoodsReceivedCtrl.displayLoadingModal).toHaveBeenCalled();
+    });
+
+    describe('setting the date filters', function() {
+
+      beforeEach(function() {
+        $scope.dateRange = {
+          deliveryStartDate: '08/12/2015',
+          deliveryEndDate: '08/13/2015'
+        };
+        $scope.$digest();
+      });
+
+      it('should set the start and end dates in the query', function(){
+        var query = ManageGoodsReceivedCtrl.generateDeliveryNoteQuery();
+        expect(query.deliveryStartDate).toBeDefined();
+        expect(query.deliveryEndDate).toBeDefined();
+      });
+
+      it('should format the start and end dates in the query', function(){
+        var query = ManageGoodsReceivedCtrl.generateDeliveryNoteQuery();
+        expect(query.deliveryStartDate).toEqual('20150812');
+        expect(query.deliveryEndDate).toEqual('20150813');
+      });
+
     });
 
   });

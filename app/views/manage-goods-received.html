@@ -20,55 +20,6 @@
 
   </div>
 
-  <div class="panel panel-default collapse no-transition" id="search-collapse">
-    <form name="menuSearchForm" ng-submit="searchPostTripData()">
-      <div class="panel-body">
-        <div class="row">
-
-          <div class="col-xs-12 col-sm-3">
-            <div class="form-group">
-              <label for="deliveryNoteNumber">Delivery Note Number</label>
-              <select class="form-control" id="delivery-note-number" ng-model="deliveryNoteNumber" ng-change="deliveryNoteNumberInfo()" ng-disabled="readOnly">
-                <option></option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-xs-12 col-sm-3">
-            <div class="form-group">
-              <label for="purchaseOrderNumber">Purchase Order Number</label>
-              <select class="form-control" id="purchase-order-number" ng-model="purchaseOrderNumber" ng-change="purchaseOrderNumberInfo()" ng-disabled="readOnly">
-                <option></option>
-              </select>
-            </div>
-          </div>
-
-          <date-picker class="col-xs-12 col-sm-4"
-            element-class="col-xs-12 col-sm-6"
-            start-date-model="dateRange.startDate"
-            end-date-model="dateRange.endDate"
-            is-search-field="true"
-            label-from="Effective From"
-            label-to="Effective To">
-          </date-picker>
-
-          <div class="col-xs-12 col-sm-2">
-            <label>Status</label>
-            <select class="form-control" id="delivery-status" ng-model="deliveryStatus" ng-change="deliveryStatusInfo()" ng-disabled="readOnly">
-              <option></option>
-            </select>
-          </div>
-
-        </div>
-
-      </div>
-      <div class="panel-footer text-right">
-        <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-        <button type="submit" class="btn btn-primary">Search</button>
-      </div>
-    </form>
-  </div>
-
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="panel-title">Select an LMP Station to View Delivery Notes*</div>
@@ -80,67 +31,102 @@
     </div>
   </div>
 
-    <table ng-show="catererStationId" class="table table-responsive table-bordered table-hover ng-scope">
-      <thead>
-        <tr>
-          <th>Delivery Note Number</th>
-          <th>Purchase Order Number</th>
-          <th>Delivery Date</th>
-          <th>Status</th>
-          <th>Created By</th>
-          <th>Updated By</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-show="deliveryNotesList.length === 0">
-          <td colspan="7">
-            <p class="alert alert-info">No delivery notes are associated with that station</p>
-          </td>
-        </tr>
-        <tr ng-repeat="deliveryNote in deliveryNotesList">
-          <td>{{ deliveryNote.deliveryNoteNumber }}</td>
-          <td>{{ deliveryNote.purchaseOrderNumber }}</td>
-          <td>{{ deliveryNote.deliveryDate }}</td>
-          <td>
-            <span ng-show="{{ !deliveryNote.isAccepted }}">Create</span>
-            <span ng-show="{{ deliveryNote.isAccepted }}">Saved</span>
-          </td>
-          <td>{{ deliveryNote.createdOn }}</td>
-          <td>{{ deliveryNote.updatedOn }}</td>
-          <td>
-            <a class="btn btn-info btn-xs" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}" tabindex="0">
-              <i class="fa fa-file"></i>
-            </a>
-            <a class="btn btn-primary btn-xs" ng-hide="{{ deliveryNote.isAccepted }}" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}"  ng-disabled="isMenuEditable(menu)" tabindex="0" aria-disabled="true">
-              <i class="fa fa-pencil"></i>
-            </a>
-            <button class="btn btn-danger btn-xs" ng-hide="{{ deliveryNote.isAccepted }}" ng-click="deleteRecordDialog(deliveryNote.id)" ng-disabled="isMenuReadOnly(menu)" tabindex="0" aria-disabled="true">
-              <i class="fa fa-trash"></i>
-            </button>
-          </td>
-        </tr>
+  <div class="panel panel-default collapse no-transition" id="search-collapse">
+    <form name="menuSearchForm" ng-submit="searchPostTripData()">
+      <div class="panel-body">
+        <div class="row">
 
-      </tbody>
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group">
+              <label>Delivery Note Number</label>
+              <input type="text" class="form-control" ng-model="search.deliveryNoteNumber" />
+            </div>
+          </div>
 
-    </table>
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group">
+              <label>Purchase Order Number</label>
+              <input type="text" class="form-control" ng-model="search.purchaseOrderNumber" />
+            </div>
+          </div>
 
-    <div class="list-footer">
-      <div class="row">
-        <div class="col-xs-12 col-sm-6">
-          Show
-          <select class="form-control" ng-model="itemsPerPage">
-            <option ng-selected="itemsPerPage===value" ng-repeat="value in [10,25,50,100]" value="{{ value }}">{{ value }}</option>
-          </select>
-          Items per Page
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <date-picker-field name="EffectiveFrom" label="Effective From"
+              ng-model="dateRange.deliveryStartDate"></date-picker-field>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <date-picker-field  name="EffectiveTo" label="Effective To"
+              ng-model="dateRange.deliveryEndDate"></date-picker-field>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <label>Status</label>
+            <select class="form-control" ng-model="search.isAccepted">
+              <option value="0">Created</option>
+              <option value="1">Submitted</option>
+            </select>
+          </div>
 
         </div>
 
-        <div class="col-xs-12 col-sm-6 text-right">
-          <pagination total-items="itemsListCount" items-per-page="itemsPerPage" max-size="maxSize" boundary-links="true" ng-model="currentPage" ng-change="pageChanged()"></pagination>
-        </div>
       </div>
+      <div class="panel-footer text-right">
+        <button type="button" class="btn btn-default" ng-click="clearSearchFilters()">Clear</button>
+        <button type="submit" class="btn btn-primary" ng-click="searchRecords()">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <div ng-show="!deliveryNotesList.length && userSelectedStation" class="panel panel-info">
+    <div class="panel-heading">
+      <div class="panel-title"><i class="fa fa-exclamation-circle"></i> No Delivery Notes Found</div>
     </div>
+    <div class="panel-body">
+      <p>The station and/or the search criteria you selected has no delivery notes.
+        <a ng-href="/#/lmp-delivery-note/create">Create a new delivery note</a> or update your search criteria
+    </div>
+  </div>
+
+  <table ng-show="catererStationId && deliveryNotesList.length > 0" class="table table-responsive table-bordered table-hover ng-scope">
+    <thead>
+      <tr>
+        <th>Delivery Note Number</th>
+        <th>Purchase Order Number</th>
+        <th>Delivery Date</th>
+        <th>Status</th>
+        <th>Updated By</th>
+        <th>Updated On</th>
+        <th class="hide-from-print">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="deliveryNote in deliveryNotesList">
+        <td>{{ deliveryNote.deliveryNoteNumber }}</td>
+        <td>{{ deliveryNote.purchaseOrderNumber }}</td>
+        <td>{{ deliveryNote.deliveryDate }}</td>
+        <td>
+          <span ng-show="{{ !deliveryNote.isAccepted }}">Created</span>
+          <span ng-show="{{ deliveryNote.isAccepted }}">Submitted</span>
+        </td>
+        <td>{{ deliveryNote.updatedBy }}</td>
+        <td>{{ deliveryNote.updatedOn }}</td>
+        <td class="hide-from-print">
+          <a class="btn btn-info btn-xs" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}" tabindex="0">
+            <i class="fa fa-file"></i>
+          </a>
+          <a class="btn btn-primary btn-xs" ng-hide="deliveryNote.isAccepted" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}"  tabindex="0" aria-disabled="true">
+            <i class="fa fa-pencil"></i>
+          </a>
+          <button class="btn btn-danger btn-xs" ng-hide="deliveryNote.isAccepted" ng-click="deleteRecordDialog(deliveryNote.id)" tabindex="0" aria-disabled="true">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
 
 </div>
 
