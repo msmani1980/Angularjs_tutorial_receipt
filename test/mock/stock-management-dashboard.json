@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "count": 5,
+    "limit": 5,
+    "start": 0
+  },
+  "response": [{
+    "retailCompanyId": 403,
+    "catererStationId": null,
+    "stockUpdateDate": "2015-08-02",
+    "masterItemId": 1,
+    "itemName": "Skittles",
+    "itemCode": "Sk001",
+    "currentCountQuantity": 28,
+    "openingQuantity": 0,
+    "receivedQuantity": 19,
+    "dispatchedQuantity": null
+  }, {
+    "retailCompanyId": 403,
+    "catererStationId": null,
+    "stockUpdateDate": "2015-08-02",
+    "masterItemId": 4,
+    "itemName": "BabyRuth",
+    "itemCode": "Ru-002",
+    "currentCountQuantity": 28,
+    "openingQuantity": 0,
+    "receivedQuantity": 9,
+    "dispatchedQuantity": null
+  }, {
+    "retailCompanyId": 403,
+    "catererStationId": null,
+    "stockUpdateDate": "2015-08-04",
+    "masterItemId": 1,
+    "itemName": "Skittles",
+    "itemCode": "Sk001",
+    "currentCountQuantity": 68,
+    "openingQuantity": 28,
+    "receivedQuantity": 0,
+    "dispatchedQuantity": null
+  }, {
+    "retailCompanyId": 403,
+    "catererStationId": null,
+    "stockUpdateDate": "2015-08-04",
+    "masterItemId": 2,
+    "itemName": "Coke",
+    "itemCode": "SD001",
+    "currentCountQuantity": 68,
+    "openingQuantity": 68,
+    "receivedQuantity": 0,
+    "dispatchedQuantity": null
+  }, {
+    "retailCompanyId": 403,
+    "catererStationId": null,
+    "stockUpdateDate": "2015-08-04",
+    "masterItemId": 3,
+    "itemName": "Ipad Mini",
+    "itemCode": "Ip015",
+    "currentCountQuantity": 68,
+    "openingQuantity": 68,
+    "receivedQuantity": 0,
+    "dispatchedQuantity": null
+  }]
+}
