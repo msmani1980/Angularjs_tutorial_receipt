@@ -398,6 +398,7 @@ angular.module('ts5App')
         itemCode: selectedMasterItem.itemCode,
         itemName: selectedMasterItem.itemName
       };
+      setAllowedMasterItems();
     };
 
     var stateActions = {};
