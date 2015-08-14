@@ -96,7 +96,7 @@
                         placeholder="New Cool Item" min-length="1" max-length="30"></input-text>
 
             <input-textarea label="Item Description" name="desc" required="true" pattern="regexp.word"
-                        placeholder="A simple description..." max-length="500"></input-textarea>
+                        placeholder="A simple description..." max-length="255"></input-textarea>
 
             <input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="cool new item"
                         max-length="500"></input-text>
@@ -162,7 +162,7 @@
                           placeholder="http://www.website.com"></input-text>
             </div>
 
-            <input-textarea ng-if="isVoucherSelected" label="Notes" name="notes" placeholder="Notes for Voucher"></input-textarea>
+            <input-textarea ng-if="isVoucherSelected" label="Notes" name="notes" placeholder="Notes for Voucher" max-length="255"></input-textarea>
 
             <div class="form-group">
               <label>Item Substitutions</label>
