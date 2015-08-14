@@ -381,11 +381,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.itemIsActive = itemStartDate <= today && !$scope.cloningItem;
     };
 
-    // checks to see if the item is inactive
+    // checks to see if the item is inactive, and set viewOnly=true if item is inactive
     this.checkIfItemIsInactive = function (itemData) {
       var today = new Date();
       var itemEndDate = new Date(itemData.endDate);
       $scope.itemIsInactive = itemEndDate <= today && !$scope.cloningItem;
+      $scope.viewOnly = $scope.itemIsInactive;
     };
 
     // updates the $scope.formData
