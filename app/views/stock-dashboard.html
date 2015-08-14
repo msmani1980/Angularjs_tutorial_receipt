@@ -38,7 +38,6 @@
               ng-model="selectedCateringStation"
               ng-change="updateStockItems(selectedCateringStation.id)"
               ng-options="cateringStation.name for cateringStation in cateringStationList | orderBy:'name' track by cateringStation.id">
-
               <option selected="selected" value>Select Catering Station</option>
             </select>
           </div>
