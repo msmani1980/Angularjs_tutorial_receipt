@@ -93,9 +93,9 @@
                         placeholder="Cool New Item" min-length="1" max-length="40"></input-text>
 
             <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
-                        placeholder="New Cool Item" min-length="1" max-length="13"></input-text>
-            <input-text label="Item Description" name="desc" required="true" pattern="regexp.word"
-                        placeholder="A simple description..." max-length="500"></input-text>
+                        placeholder="New Cool Item" min-length="1" max-length="30"></input-text>
+            <textarea label="Item Description" name="desc" required="true" pattern="regexp.word"
+                        placeholder="A simple description..." max-length="500"></textarea>
 
             <input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="cool new item"
                         max-length="500"></input-text>
@@ -161,8 +161,8 @@
                           placeholder="http://www.website.com"></input-text>
             </div>
 
-            <input-text ng-if="isVoucherSelected" label="Notes" name="notes"
-                        placeholder="Notes for Voucher"></input-text>
+            <textarea ng-if="isVoucherSelected" label="Notes" name="notes"
+                        placeholder="Notes for Voucher"></textarea>
 
             <div class="form-group">
               <label>Item Substitutions</label>
