@@ -12,15 +12,17 @@ describe('Factory: postTripFactory', function () {
     stationsService,
     carrierService,
     employeesService,
+    schedulesService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _postTripFactory_, _GlobalMenuService_, _stationsService_, _carrierService_, _postTripService_, _employeesService_) {
+  beforeEach(inject(function ($rootScope, _postTripFactory_, _GlobalMenuService_, _stationsService_, _carrierService_, _postTripService_, _employeesService_, _schedulesService_) {
     GlobalMenuService = _GlobalMenuService_;
     stationsService = _stationsService_;
     carrierService = _carrierService_;
     postTripService = _postTripService_;
     employeesService = _employeesService_;
+    schedulesService = _schedulesService_;
 
     spyOn(postTripService, 'getPostTrips');
     spyOn(postTripService, 'createPostTrip');
@@ -33,6 +35,7 @@ describe('Factory: postTripFactory', function () {
     spyOn(carrierService, 'getCarrierTypes');
     spyOn(carrierService, 'getCarrierNumbers');
     spyOn(employeesService, 'getEmployees');
+    spyOn(schedulesService, 'getSchedules');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -106,6 +109,13 @@ describe('Factory: postTripFactory', function () {
     it('should call employeesService on getEmployees', function () {
       postTripFactory.getEmployees(companyId);
       expect(employeesService.getEmployees).toHaveBeenCalledWith(companyId);
+    });
+  });
+
+  describe('schedulesService API', function () {
+    it('should call schedulesService on getSchedules', function () {
+      postTripFactory.getSchedules(companyId);
+      expect(schedulesService.getSchedules).toHaveBeenCalledWith(companyId);
     });
   });
 

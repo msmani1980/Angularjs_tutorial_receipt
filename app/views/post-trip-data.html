@@ -23,8 +23,16 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label>Schedule Number *</label>
-              <input ng-model="postTrip.scheduleNumber" type="text" class="form-control schedule-number"
-                     placeholder="123" required="true" ng-readonly="readOnly">
+              <select class="form-control"
+                      id="scheduleNumber"
+                      ng-model="postTrip.scheduleNumber"
+                      ng-options="schedule.scheduleNumber as schedule.scheduleNumber for schedule in schedules"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Select a Schedule Number</option>
+              </select>
+
+
             </div>
           </div>
 
