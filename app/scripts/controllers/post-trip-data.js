@@ -61,6 +61,10 @@ angular.module('ts5App')
       $scope.employees = response.companyEmployees;
     };
 
+    this.getSchedulesSuccess = function (response) {
+      $scope.schedules = response.distinctSchedules;
+    };
+
     this.getCarrierSuccess = function (response) {
       $scope.carrierNumbers = [];
       angular.forEach(response.response, function (item) {
@@ -156,6 +160,7 @@ angular.module('ts5App')
       postTripFactory.getStationList(companyId).then($this.getStationsSuccess);
       postTripFactory.getCarrierTypes(companyId).then($this.getCarrierSuccess);
       postTripFactory.getEmployees(companyId).then($this.getEmployeesSuccess);
+      postTripFactory.getSchedules(companyId).then($this.getSchedulesSuccess);
 
       if ($routeParams.id) {
         $this.showLoadingModal('Loading Data');
