@@ -217,6 +217,10 @@
               </ui-select>
             </div>
 
+          </fieldset>
+
+          <fieldset>
+
             <image-upload ng-hide="isDisabled()"></image-upload>
 
             <div id="images-container">
@@ -226,6 +230,10 @@
               </div>
 
             </div>
+
+          </fieldset>
+
+          <fieldset ng-disabled="isDisabled()">
 
             <h3>Global Trade In Numbers (GTIN)</h3>
 
@@ -240,7 +248,7 @@
                 </select>
               </div>
               <div class="form-group col-md-4">
-                <button type="button" class="btn btn-primary" ng-click="addGTIN()"
+                <button type="button" ng-disabled="isDisabled()" class="btn btn-primary" ng-click="addGTIN()"
                         ng-hide="formData.shouldUseDynamicBarcode.value">
                   <i class="fa fa-plus"></i> Add GTIN
                 </button>
@@ -284,7 +292,9 @@
               </div>
 
             </div>
+
           </fieldset>
+
         </div>
       </div>
 
@@ -370,28 +380,36 @@
 
         </div>
 
+        </fieldset>
+
         <h3 id="price-and-tax">Price & Tax</h3>
 
         <div class="form-group">
-          <button id="add-price-group" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+          <button id="add-price-group" ng-disabled="isDisabled()" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
             <i class="fa fa-plus"></i> Add Price Type
           </button>
         </div>
 
-        <div id="price-type-container">
+        <fieldset>
 
-          <div ng-repeat="(key,itemPrice) in formData.prices track by $index">
-            <input-price-type></input-price-type>
+          <div id="price-type-container">
+
+            <div ng-repeat="(key,itemPrice) in formData.prices track by $index">
+              <input-price-type></input-price-type>
+            </div>
+
           </div>
 
-        </div>
+          <div class="form-group" ng-hide="isVoucherSelected">
+            <button id="add-tax-type" ng-disabled="isDisabled()" type="button" class="btn btn-primary"
+                    ng-click="addTaxType()">
+              <i class="fa fa-plus"></i> Add Tax Type
+            </button>
+          </div>
 
-        <div class="form-group" ng-hide="isVoucherSelected">
-          <button id="add-tax-type" type="button" class="btn btn-primary"
-                  ng-click="addTaxType()">
-            <i class="fa fa-plus"></i> Add Tax Type
-          </button>
-        </div>
+        </fieldset>
+
+        <fieldset ng-disabled="isDisabled()">
 
         <div class="voucher-container" ng-if="isVoucherSelected">
           <div class="form-group">

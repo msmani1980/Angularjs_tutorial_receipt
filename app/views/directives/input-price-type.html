@@ -22,11 +22,11 @@
         <div class="row">
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field form="form" label="Effective From" name="PriceEffectiveFrom" ng-model="itemPrice.startDate" min-date="'+1'" required="true"></date-picker-field>
+            <date-picker-field disable="$parent.isDisabled()" form="form" label="Effective From" name="PriceEffectiveFrom" ng-model="itemPrice.startDate" min-date="'+1'" required="true"></date-picker-field>
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field form="form" label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" min-date="( editingItem ? '0d' : '+1d')" required="true"></date-picker-field>
+            <date-picker-field disable="viewOnly || itemIsInactive" form="form" label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" min-date="( editingItem ? '0d' : '+1d')" required="true"></date-picker-field>
           </div>
 
         </div>
@@ -39,7 +39,7 @@
 
 							<label>Price Type *</label>
 
-							<select name="Price Type" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate" ng-model="itemPrice.typeId" class="form-control">
+							<select name="Price Type" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isDisabled()" ng-model="itemPrice.typeId" class="form-control">
 								<option ng-selected="type.id === itemPrice.typeId"  ng-repeat="type in $parent.priceTypes" value="{{ type.id }}">{{ type.name }}</option>
 							</select>
 
@@ -53,7 +53,7 @@
 
 							<label>Tax Is *</label>
 
-							<select name="Tax Is" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate" ng-model="itemPrice.taxIs" class="form-control">
+							<select name="Tax Is" required ng-disabled="!itemPrice.startDate && !itemPrice.endDate || $parent.isDisabled()" ng-model="itemPrice.taxIs" class="form-control">
 								<option value="Included">Included</option>
 								<option value="Excluded">Excluded</option>
 								<option value="Exempt">Exempt</option>
@@ -80,7 +80,7 @@
               {{ masterCurrenciesList[currency.companyCurrencyId] }} *
 						</div>
 
-						<input ng-model="currency.price" type="text" class="form-control" maxlength="8"/>
+						<input ng-model="currency.price" ng-disabled="$parent.isDisabled()" type="text" class="form-control" maxlength="8"/>
 
 					</div>
 
@@ -95,7 +95,7 @@
       <h3>Station Exceptions</h3>
 
       <p>
-        <button type="button" class="btn btn-primary" ng-click="addStationException($parent.key)">
+        <button type="button" ng-disabled="$parent.isDisabled()" class="btn btn-primary" ng-click="addStationException($parent.key)">
            <i class="fa fa-plus"></i> Add Station Exception
         </button>
       </p>
@@ -108,7 +108,7 @@
 
       </div>
 
-  </div>
+    </div>
 
 	</div>
 
