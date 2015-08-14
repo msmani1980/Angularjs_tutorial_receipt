@@ -164,6 +164,18 @@ describe('Controller: StockDashboardCtrl', function() {
 
     });
 
+    describe('isClassDanger method', function() {
+
+      it('should return true if current count is more than expected', function() {
+        expect(scope.isClassDanger(1, 2, 0, 5)).toBeTruthy();
+      });
+
+      it('should return false if current count is less than or equal to expected', function() {
+        expect(scope.isClassDanger(1, 2, 0, 2)).toBeFalsy();
+      });
+
+    });
+
   });
 
 });

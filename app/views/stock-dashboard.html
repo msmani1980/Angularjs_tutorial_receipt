@@ -97,7 +97,8 @@
       </thead>
       <tbody>
 
-        <tr ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults">
+        <tr ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults"
+            ng-class="isClassDanger(stockItem.openingQuantity, stockItem.receivedQuantity, stockItem.dispatchedQuantity, stockItem.currentCountQuantity)">
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
