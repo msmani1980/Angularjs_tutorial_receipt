@@ -60,32 +60,34 @@
     
         <div class="col-xs-12">
           <div class="form-group">
-            <div class="btn-group import-from-file">
-              <div class="btn-group" dropdown>
-                <button type="button" class="btn btn-info"data-toggle="collapse" data-target="#importFromData" >
-                  <span class="fa fa-copy" aria-hidden="true"></span>
-                  Import Stock From File
-                </button>
-                <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle>
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/FileUpload-PostTripManagement.xlsx">Download Excel Template</a></li>
-                  <li><a data-toggle="modal" data-target=".download-template-modal"
-                         ng-click="downloadTemplate()">View Excel Specifications</a></li>
-                </ul>
-              </div>
+            <excel-upload type="stockTake"></excel-upload>
+          
+<!--             <div class="btn-group import-from-file"> -->
+<!--               <div class="btn-group" dropdown> -->
+<!--                 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#importFromData" > -->
+<!--                   <span class="fa fa-copy" aria-hidden="true"></span> -->
+<!--                   Import Stock From File -->
+<!--                 </button> -->
+<!--                 <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle> -->
+<!--                   <span class="caret"></span> -->
+<!--                 </button> -->
+<!--                 <ul class="dropdown-menu" role="menu"> -->
+<!--                   <li><a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/FileUpload-PostTripManagement.xlsx">Download Excel Template</a></li> -->
+<!--                   <li><a data-toggle="modal" data-target=".download-template-modal" -->
+<!--                          ng-click="downloadTemplate()">View Excel Specifications</a></li> -->
+<!--                 </ul> -->
+<!--               </div> -->
     
-              <div id="importFromData" class="collapse width">
-                <input type="file"
-                       ngf-select
-                       ng-model="postTripFile"
-                       accept=".xls,.xlsx">
-                <button type="button" class="btn btn-info" ng-click="uploadPostTripFileToApi(postTripFile)">
-                  Upload
-                </button>
-              </div>
-            </div>
+<!--               <div id="importFromData" class="collapse width"> -->
+<!--                 <input type="file" -->
+<!--                        ngf-select -->
+<!--                        ng-model="stockTakeFile" -->
+<!--                        accept=".xls,.xlsx"> -->
+<!--                 <button type="button" class="btn btn-info" ng-click="uploadStockTakeFileToApi(stockTakeFile)"> -->
+<!--                   Upload -->
+<!--                 </button> -->
+<!--               </div> -->
+<!--             </div> -->
           </div>
         </div>
                 
@@ -445,7 +447,7 @@
 </div>
 <!-- /Container -->
 
-<download-template-modal></download-template-modal>
+<!-- <download-template-modal></download-template-modal> -->
 
 <form-success-modal></form-success-modal>
 
