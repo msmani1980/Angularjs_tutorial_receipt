@@ -109,7 +109,8 @@
           <td>
             <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}" ng-disabled="true"/>
           </td>
-          <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]" ng-click="stockTakeReasonOpen(stockItem.index, stockItem.currentCountQuantity)">
+          <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]"
+              ng-click="stockTakeReasonOpen(stockItem.index, stockItem.currentCountQuantity, stockItem.masterItemId, stockItem.catererStationId)">
             <input type="text" class="form-control" value="{{stockItem.currentCountQuantity}}" ng-disabled="true"/>
           </td>
         </tr>
