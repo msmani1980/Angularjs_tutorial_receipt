@@ -21,24 +21,24 @@
         <div class="row">
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field form="form" label="Effective From" name="StationExceptionEffectiveFrom" ng-model="stationException.startDate" required="true"></date-picker-field>
+            <date-picker-field disable="$parent.isDisabled()" form="form" label="Effective From" name="StationExceptionEffectiveFrom" ng-model="stationException.startDate" required="true"></date-picker-field>
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field form="form" label="Effective To" name="StationExceptionPriceEffectiveTo" ng-model="stationException.endDate" required="true"></date-picker-field>
+            <date-picker-field disable="viewOnly || itemIsInactive" form="form" label="Effective To" name="StationExceptionPriceEffectiveTo" ng-model="stationException.endDate" required="true"></date-picker-field>
           </div>
 
         </div>
-        
+
 				<div class="row" ng-show="stationException.startDate && stationException.endDate && stationException.stations.length > 0">
 
 					<div class="col-xs-12 col-sm-6">
 
-						<div class="form-group" ng-class="{ 'has-error' : !stationException.stationId , 'has-success' : stationException.stationId }">
+						<div class="form-group" ng-disabled="$parent.isDisabled()" ng-class="{ 'has-error' : !stationException.stationId , 'has-success' : stationException.stationId }">
 
 							<label>Station *</label>
 
-							<select name="Station" required ng-disabled="!stationException.startDate && !stationException.endDate" ng-model="stationException.stationId" class="form-control">
+							<select name="Station" required ng-disabled="!stationException.startDate && !stationException.endDate || $parent.isDisabled()" ng-model="stationException.stationId" class="form-control">
 								<option ng-selected="stationException.stationId === station.id" ng-repeat="station in stationException.stations" value="{{ station.id }}">{{ station.code }}</option>
 							</select>
 
@@ -48,11 +48,11 @@
 
 					<div class="col-xs-12 col-sm-6">
 
-						<div class="form-group" ng-class="{ 'has-error' : !stationException.taxIs , 'has-success' : stationException.taxIs }">
+						<div class="form-group" ng-disabled="$parent.isDisabled()" ng-class="{ 'has-error' : !stationException.taxIs , 'has-success' : stationException.taxIs }">
 
 							<label>Tax Is *</label>
 
-							<select name="Tax Is" required ng-disabled="!stationException.startDate && !stationException.endDate" ng-model="stationException.taxIs" class="form-control">
+							<select name="Tax Is" required ng-disabled="!stationException.startDate && !stationException.endDate || $parent.isDisabled()" ng-model="stationException.taxIs" class="form-control">
 								<option value="Included">Included</option>
 								<option value="Excluded">Excluded</option>
 								<option value="Exempt">Exempt</option>
@@ -78,7 +78,7 @@
 							{{ masterCurrenciesList[exceptionCurrency.companyCurrencyId] }} *
 						</div>
 
-						<input ng-model="exceptionCurrency.price" type="text" class="form-control"/>
+						<input ng-model="exceptionCurrency.price" ng-disabled="$parent.isDisabled()" type="text" class="form-control"/>
 
 					</div>
 
