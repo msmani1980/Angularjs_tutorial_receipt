@@ -94,8 +94,12 @@
 
             <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
                         placeholder="New Cool Item" min-length="1" max-length="30"></input-text>
-            <textarea label="Item Description" name="desc" required="true" pattern="regexp.word"
-                        placeholder="A simple description..." max-length="500"></textarea>
+
+            <div class="form-group">
+              <label>Item Description *</label>
+              <textarea class="form-control" ng-model="formData.desc" name="desc" ng-required="true" type="text" ng-pattern="regexp.word"
+                          placeholder="A simple description..." max-length="500"></textarea>
+            </div>
 
             <input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="cool new item"
                         max-length="500"></input-text>
@@ -161,8 +165,10 @@
                           placeholder="http://www.website.com"></input-text>
             </div>
 
-            <textarea ng-if="isVoucherSelected" label="Notes" name="notes"
-                        placeholder="Notes for Voucher"></textarea>
+            <div class="form-group">
+              <label>Notes</label>
+              <textarea class="form-control" ng-if="isVoucherSelected" name="notes" ng-model="formData.notes" type="text" ng-pattern="regexp.word" placeholder="Notes for Voucher"></textarea>
+            </div>
 
             <div class="form-group">
               <label>Item Substitutions</label>
