@@ -58,4 +58,11 @@ angular.module('ts5App')
       stockDashboardService.getStockDashboardItems(selectedCateringStation).then($this.getStockDashboardItemsSuccessHandler);
     };
 
+    $scope.isClassDanger = function(stockItem) {
+      var currentCountExpected = (stockItem.openingQuantity + stockItem.receivedQuantity - stockItem.dispatchedQuantity);
+      if (stockItem.currentCountQuantity > currentCountExpected) {
+        return 'bg-danger';
+      }
+    };
+
   });
