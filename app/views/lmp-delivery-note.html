@@ -57,11 +57,12 @@
               <label>LMP Station*</label>
               <select class="form-control"
                       ng-model="deliveryNote.catererStationId"
-                      ng-selected="catererStationList.length == 1 ? catererStationList[0].id : deliveryNote.catererStationId"
-                      ng-options="station.id as station.code + ' (' + station.name + ')'  for station in catererStationList"
                       ng-disabled="readOnly || catererStationList.length == 1"
                       ng-show="catererStationList.length"
                       required>
+                <option ng-selected="station.id==deliveryNote.catererStationId" ng-repeat="station in catererStationList" value="{{ station.id }}">
+                  {{ station.name }} - {{ station.code }}
+                </option>
               </select>
             </div>
           </div>

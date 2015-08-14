@@ -9,7 +9,7 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a ng-href="/#/lmp-delivery-note/create" class="btn btn-primary"> + <span class="hidden-xs">Create Delivery Note</span></a>
+        <a ng-show="catererStationId" ng-href="/#/lmp-delivery-note/create/{{catererStationId}}" class="btn btn-primary"> + <span class="hidden-xs">Create Delivery Note</span></a>
         <button ng-show="catererStationId" class="btn btn-default"data-toggle="collapse" data-target="#search-collapse"
           aria-expanded="false" aria-controls="search-collapse">
           <span class="fa fa-filter" aria-hidden="true"></span>

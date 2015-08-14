@@ -50,10 +50,7 @@ angular.module('ts5App')
       if($routeParams.state !== 'create'){
         return;
       }
-      if(catererStationList.length !== 1){
-        return;
-      }
-      $scope.deliveryNote.catererStationId = catererStationList[0].id;
+      setStationIdOnCreate();
     }
 
     function setDeliveryNoteFromResponse(response){
@@ -67,6 +64,14 @@ angular.module('ts5App')
 
     function deliveryNoteFormErrorWatcher(){
       $scope.canReview = canReview();
+    }
+
+    function setStationIdOnCreate() {
+      if($routeParams.id) {
+        $scope.deliveryNote.catererStationId = $routeParams.id;
+      } else if($scope.catererStationList.length === 1){
+        $scope.deliveryNote.catererStationId = $scope.catererStationList[0].id;
+      }
     }
 
     function catererStationIdWatcher(newValue, oldValue){
