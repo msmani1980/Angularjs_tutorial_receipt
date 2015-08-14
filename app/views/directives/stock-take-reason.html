@@ -10,34 +10,41 @@
 
 				<div class="modal-body">
 
-					<label>Reason*</label>
-					<p>To adjust Current Item Count, please provide a reason below.</p>
+					<p>To Update Item Count, first provide a reason below.</p>
 
 					<div class="form-group">
 						<div class="row">
 
-							<div class="col-xs-12 col-sm-4">
-								<input
-									custom-validity
-									custom-pattern="number"
-									type="text"
-									class="form-control"
-									ng-model="$parent.currentCount"
-									ng-disabled="!stockAdjustmentReason[id] && !comment.length"
-								/>
+							<div class="col-xs-12 col-sm-2">
+                <label>Current</label>
+                {{ currentCount }}
 							</div>
 
-							<div class="col-xs-12 col-sm-8">
-								<select class="form-control"
-		              ng-model="stockAdjustmentReason[id]"
-		              ng-options="item.companyReasonCodeName for item in ullageReasons track by item.id">
-								<option ng-hide="stockAdjustmentReason !== 'Select Reason'" value="">Select Reason</option>
-								</select>
-							</div>
+              <div class="col-xs-12 col-sm-8">
+                <label>Reason*</label>
+                <select class="form-control"
+                        ng-model="stockAdjustmentReason[id]"
+                        ng-options="item.companyReasonCodeName for item in ullageReasons track by item.id">
+                  <option ng-hide="stockAdjustmentReason !== 'Select Reason'" value="">Select Reason</option>
+                </select>
+              </div>
+
+              <div class="col-xs-12 col-sm-2">
+                <label>Updated</label>
+                <input
+                  custom-validity
+                  custom-pattern="number"
+                  type="text"
+                  class="form-control"
+                  ng-model="$parent.newCount"
+                  ng-disabled="!stockAdjustmentReason[id] && !comment.length"
+                  />
+              </div>
 
 						</div>
 					</div>
 
+          <!-- TODO: update comment to match acceptance criteria -->
 					<div class="form-group">
 						<div class="row">
 							<div class="col-xs-12">

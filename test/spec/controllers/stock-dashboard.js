@@ -164,6 +164,30 @@ describe('Controller: StockDashboardCtrl', function() {
 
     });
 
+    describe('isClassDanger method', function() {
+
+      it('should return true if current count is more than expected', function() {
+        var stockItemTrue = {
+          openingQuantity: 5,
+          receivedQuantity: 5,
+          dispatchedQuantity: 0,
+          currentCountQuantity: 11
+        };
+        expect(scope.isClassDanger(stockItemTrue)).toBeTruthy();
+      });
+
+      it('should return false if current count is less than or equal to expected', function() {
+        var stockItemFalse = {
+          openingQuantity: 5,
+          receivedQuantity: 5,
+          dispatchedQuantity: 0,
+          currentCountQuantity: 10
+        };
+        expect(scope.isClassDanger(stockItemFalse)).toBeFalsy();
+      });
+
+    });
+
   });
 
 });

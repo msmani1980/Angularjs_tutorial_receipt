@@ -96,7 +96,7 @@
       </thead>
       <tbody>
 
-        <tr ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults">
+        <tr ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults" ng-class="isClassDanger(stockItem)">
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
@@ -108,7 +108,8 @@
           <td>
             <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}" ng-disabled="true"/>
           </td>
-          <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]" ng-click="stockTakeReasonOpen(stockItem.index, stockItem.currentCountQuantity)">
+          <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]"
+              ng-click="stockTakeReasonOpen(stockItem)">
             <input type="text" class="form-control" value="{{stockItem.currentCountQuantity}}" ng-disabled="true"/>
           </td>
         </tr>
