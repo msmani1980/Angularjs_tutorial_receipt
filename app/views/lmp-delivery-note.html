@@ -58,13 +58,40 @@
               <select class="form-control"
                       ng-model="deliveryNote.catererStationId"
                       ng-selected="catererStationList.length == 1 ? catererStationList[0].id : deliveryNote.catererStationId"
-                      ng-options="station.id as station.code + ' (' + station.name + ')'  for station in catererStationList"
+                      ng-options="station.id as station.name + ' - ' + station.code for station in catererStationList"
                       ng-disabled="readOnly || catererStationList.length == 1"
                       ng-show="catererStationList.length"
                       required>
               </select>
             </div>
           </div>
+
+          <div class="col-xs-8 col-sm-8" ng-show="deliveryNote.items.length && state != 'review'">
+            <div class="row">
+          <div class="col-xs-12 col-sm-1">
+            <div class="form-group">
+              <label>Filter:</label>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="filter-item-code">Item Code</label>
+              <input ng-model="filterInput.itemCode" type="text" class="form-control" id="filter-item-code">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <div class="form-group">
+              <label for="filter-item-name">Item Name</label>
+              <input ng-model="filterInput.itemName" type="text" class="form-control" id="filter-item-name">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2">
+            <label class="not-visible">Clear</label>
+            <button class="btn btn-default" type="button" ng-click="clearFilter()" ng-show="filterInput.itemCode || filterInput.itemName">Clear</button>
+          </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -144,28 +171,6 @@
 
         </div>
 
-<!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
-        <div class="row" ng-show="deliveryNote.items.length && state != 'review'">
-          <div class="col-xs-12 col-sm-1">
-            <div class="form-group">
-              <label>Filter by:</label>
-              <button class="btn btn-default" type="button" ng-click="clearFilter()" ng-show="filterInput.itemCode || filterInput.itemName">Clear</button>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-2">
-            <div class="form-group">
-              <label for="filter-item-code">Item Code</label>
-              <input ng-model="filterInput.itemCode" type="text" class="form-control" id="filter-item-code">
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-2">
-            <div class="form-group">
-              <label for="filter-item-name">Item Name</label>
-              <input ng-model="filterInput.itemName" type="text" class="form-control" id="filter-item-name">
-            </div>
-          </div>
-        </div>
-
 <!-- TODO: THIS WELL/ROW WILL BE ADDED WITH "+ADD ITEMS" BUTTON (BELOW) -->
         <div class="well" ng-repeat="item in deliveryNote.items | filter:filterInput track by $index">
           <div class="row">
@@ -211,18 +216,18 @@
                 </div>
               </div>
 
-              <div class="col-xs-12 col-sm-1" ng-show="item.expectedQuantity">
+              <div class="col-xs-12 col-sm-1">
                 <div class="form-group" ng-hide="readOnly && !item.ullageQuantity">
                   <label for="ullage-qty-{{ item.masterItemId }}">Ullage</label>
                   <input ng-model="item.ullageQuantity" type="number" min="0" step="1" class="form-control"
                          id="ullage-qty-{{ item.masterItemId }}" ng-readonly="readOnly"
-                         ng-show="item.masterItemId">
+                         ng-disabled="item.masterItemId && !item.expectedQuantity">
                 </div>
               </div>
 
   <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
               <div class="col-xs-12 col-sm-2">
-                <div class="form-group" ng-show="item.ullageQuantity && item.masterItemId">
+                <div class="form-group">
                   <label>Ullage Reason*</label>
                   <ui-select ng-model="selectedUllageReason[item.masterItemId].selected" theme="bootstrap"
                              ng-disabled="readOnly || !item.ullageQuantity"
@@ -283,4 +288,4 @@
 
 <leave-view-modal></leave-view-modal>
 
-<dynamic-left-nav title="Stock Manager"></dynamic-left-nav>
+<dynamic-left-nav></dynamic-left-nav>
