@@ -10,12 +10,12 @@ angular.module('ts5App')
   .directive('stockTakeReason', function() {
     var stockTakeReasonController = function($scope, stockAdjustmentsService) {
 
-      $scope.stockTakeReasonOpen = function(id, currentCount, masterItemId, catererStationId) {
-        $scope.id = id;
-        $scope.currentCount = currentCount;
+      $scope.stockTakeReasonOpen = function(stockitem) {
+        $scope.id = stockitem.id;
+        $scope.currentCount = stockitem.currentCount;
         $scope.newCount = null;
-        $scope.masterItemId = masterItemId;
-        $scope.catererStationId = catererStationId;
+        $scope.masterItemId = stockitem.masterItemId;
+        $scope.catererStationId = stockitem.catererStationId;
         $scope.comment = null;
         var e = angular.element('#stock-take-reason');
         e.modal('show');

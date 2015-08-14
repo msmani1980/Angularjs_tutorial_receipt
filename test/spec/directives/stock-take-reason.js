@@ -10,6 +10,7 @@ describe('Directive: stockTakeReason', function() {
   var scope;
   var stockAdjustmentsService;
   var adjustStockDeferred;
+  var mockStockItem;
 
   beforeEach(inject(function($rootScope, $compile, $injector, $q) {
     scope = $rootScope;
@@ -21,6 +22,14 @@ describe('Directive: stockTakeReason', function() {
     adjustStockDeferred = $q.defer();
     adjustStockDeferred.resolve({response:200});
     spyOn(stockAdjustmentsService, 'adjustStock').and.returnValue(adjustStockDeferred.promise);
+    mockStockItem = {
+      id: 1,
+      currentCount: 900,
+      masterItemId: 2,
+      catererStationId: 4
+    };
+    scope.stockTakeReasonOpen(mockStockItem);
+    scope.$digest();
   }));
 
   describe('When the stock take modal directive is compiled, it',function() {
@@ -62,114 +71,107 @@ describe('Directive: stockTakeReason', function() {
     });
 
     describe('stockTakeReasonOpen', function() {
-      beforeEach(inject(function() {
-        scope.stockTakeReasonOpen(1, 900, 2, 4);
-        scope.$digest();
-      }));
-
       it('should be defined', function() {
         expect(scope.stockTakeReasonOpen).toBeDefined();
       });
 
-      it('should set scope.id', function() {
-        expect(scope.id).toEqual(1);
+      it('should set scope.id equal to mockStockItem.id', function() {
+        expect(scope.id).toEqual(mockStockItem.id);
       });
 
-      it('should set scope.currentCount to equal 900', function() {
-        expect(scope.currentCount).toEqual(900);
+      it('should set scope.currentCount equal to mockStockItem.currentCount', function() {
+        expect(scope.currentCount).toEqual(mockStockItem.currentCount);
       });
-      it('should set scope.masterItemId equal to 2', function(){
-        expect(scope.masterItemId).toEqual(2);
+
+      it('should set scope.masterItemId equal to mockStockItem.masterItemId', function(){
+        expect(scope.masterItemId).toEqual(mockStockItem.masterItemId);
       });
-      it('should set scope.catererStationId equal to 4', function(){
-        expect(scope.catererStationId).toEqual(4);
+
+      it('should set scope.catererStationId equal to mockStockItem.catererStationId', function(){
+        expect(scope.catererStationId).toEqual(mockStockItem.catererStationId);
       });
 
     });
 
     describe('stockTakeReasonClose', function() {
-      beforeEach(inject(function() {
-        scope.stockTakeReasonOpen(1, 900, 2, 4);
-        scope.$digest();
-      }));
 
       it('should be defined', function() {
         expect(scope.stockTakeReasonClose).toBeDefined();
       });
 
-      it('should set id to null', function() {
+      it('should call clearScopeVars', function(){
+        spyOn(scope, 'clearScopeVars').and.callThrough();
         scope.stockTakeReasonClose();
-        scope.$digest();
-        expect(scope.id).toEqual(null);
-      });
-
-      it('should set comment to null', function() {
-        scope.stockTakeReasonClose();
-        scope.$digest();
-        expect(scope.comment).toEqual(null);
-      });
-
-      it('should set currentCount to null', function() {
-        scope.stockTakeReasonClose();
-        scope.$digest();
-        expect(scope.currentCount).toEqual(null);
+        expect(scope.clearScopeVars).toHaveBeenCalled();
       });
 
     });
 
     describe('clearScopeVars scope function', function(){
+
       beforeEach(function(){
-        scope.stockTakeReasonOpen(1, 900, 2, 4);
-        scope.$digest();
         scope.clearScopeVars();
       });
+
       it('should set scope.id to null', function(){
         expect(scope.id).toBe(null);
       });
+
       it('should set scope.comment to null', function(){
         expect(scope.comment).toBe(null);
       });
+
       it('should set scope.currentCount to null', function(){
         expect(scope.currentCount).toBe(null);
       });
+
       it('should set scope.newCount to null', function(){
         expect(scope.newCount).toBe(null);
       });
+
       it('should set scope.masterItemId to null', function(){
         expect(scope.masterItemId).toBe(null);
       });
+
       it('should set scope.catererStationId to null', function(){
         expect(scope.catererStationId).toBe(null);
       });
+
     });
 
     describe('stockTakeReasonSave', function() {
+
+      var mockComment = 'My test comment';
+      var mockNewCount = '902';
+      var mockStockAdjustmentReason = {1:{companyReasonTypeId:32, companyReasonCodeName:'Test'}};
+
       it('should be defined', function() {
         expect(scope.stockTakeReasonSave).toBeDefined();
       });
+
       beforeEach(function(){
         spyOn(scope, 'clearScopeVars').and.callThrough();
-        scope.stockTakeReasonOpen(1, 900, 2, 4);
-        scope.$digest();
-        scope.stockAdjustmentReason = [];
-        scope.stockAdjustmentReason[1] = {companyReasonTypeId:32, companyReasonCodeName:'Test'};
-        scope.comment = 'My test comment';
-        scope.newCount = '902';
+        scope.stockAdjustmentReason = mockStockAdjustmentReason;
+        scope.comment = mockComment;
+        scope.newCount = mockNewCount;
         scope.stockTakeReasonSave();
       });
+
       it('should call clearScopeVars', function() {
         expect(scope.clearScopeVars).toHaveBeenCalled();
       });
-      it('should call stockAdjustmentsService.adjustStock API', function(){
+
+      it('should call stockAdjustmentsService.adjustStock API with mocked payload', function(){
         var mockPayload = {
-          catererStationId: 4,
-          masterItemId : 2,
-          quantity: 902,
-          companyReasonCodeId: 32,
-          note: 'My test comment'
+          catererStationId: mockStockItem.catererStationId,
+          masterItemId : mockStockItem.masterItemId,
+          quantity: parseInt(mockNewCount),
+          companyReasonCodeId: mockStockAdjustmentReason[1].companyReasonTypeId,
+          note: mockComment
         };
         expect(stockAdjustmentsService.adjustStock).toHaveBeenCalledWith(mockPayload);
       });
+
     });
 
   });
