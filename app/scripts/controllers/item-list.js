@@ -108,9 +108,7 @@ angular.module('ts5App')
     };
 
     $scope.isItemActive = function (date) {
-      var parsedDate = $this.parseDate(date);
-      var today = dateUtility.now();
-      return parsedDate <= today;
+      return dateUtility.isTodayOrEarlier(date);
     };
 
     $scope.clearSearchFilters = function () {

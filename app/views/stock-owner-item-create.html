@@ -61,7 +61,7 @@
 
 	<div class="create-form-container" ng-show="uiSelectTemplateReady">
 
-	<ng-form name="form" class="form edit-form create-item-form">
+	<form name="form" class="form edit-form create-item-form">
 
 			<form-error-dialog></form-error-dialog>
 
@@ -149,7 +149,7 @@
 
 				<div class="col-xs-12 col-sm-6">
 
-					<fieldset ng-disabled="isDisabled()">
+					<fieldset ng-disabled="isDisabled()" ng-if="uiSelectTemplateReady">
 
 						<div class="form-group">
 							<label>Item Tags</label>
@@ -171,7 +171,11 @@
 	            </ui-select>
 						</div>
 
-						<image-upload ng-hide="viewOnly || itemIsActive"></image-upload>
+					</fieldset>
+
+					<fieldset>
+
+						<image-upload ng-hide="isDisabled()"></image-upload>
 
 						<div id="images-container">
 
@@ -180,6 +184,10 @@
 							</div>
 
 						</div>
+
+					</fieldset>
+
+	        <fieldset ng-disabled="isDisabled()">
 
 						<h3>Global Trade In Numbers (GTIN)</h3>
 						<p>
@@ -237,6 +245,8 @@
 							</div>
 
 						</div>
+
+					</fieldset>
 
 				</div>
 
@@ -330,10 +340,14 @@
 
 	      </div>
 
+			</fieldset>
+
+			<fieldset>
+
 				<h3 id="price-and-tax">Price</h3>
 
 				<p>
-					<button id="add-price-group" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
+					<button id="add-price-group" ng-disabled="isDisabled()" type="button" class="btn btn-primary" ng-click="addPriceGroup()">
 				     <i class="fa fa-plus"></i> Add Cost
 				  </button>
 				</p>
@@ -346,9 +360,9 @@
 
 				</div>
 
-		</fieldset>
+			</fieldset>
 
-	</ng-form>
+		</form>
 
 	</div>
 
