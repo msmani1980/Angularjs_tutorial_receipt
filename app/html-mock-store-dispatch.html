@@ -44,14 +44,7 @@
           </div>
 
           <div class="form-group">
-            <label for="selectSchedule" class="col-sm-4 control-label">Select Schedule Number</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="selectSchedule" placeholder="A320EU">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="selectDate" class="col-sm-4 control-label">Select Date</label>
+            <label for="date" class="col-sm-4 control-label">Date*</label>
             <div class="datepicker fuelux" id="myDatepicker">
               <div class="col-sm-8">
                 <div class="input-group">
@@ -131,16 +124,19 @@
           </div>
 
           <div class="form-group">
-            <label for="selectMenu" class="col-sm-4 control-label">Select Store</label>
+            <label for="scheduleNumber" class="col-sm-4 control-label">Schedule Number*</label>
             <div class="col-sm-8">
-              <select class="form-control" id="selectMenu">
-                <option>123456</option>
-                <option>012345</option>
-                <option>001234</option>
-                <option>000123</option>
-              </select>
+              <input type="text" class="form-control" id="scheduleNumber" placeholder="1234">
             </div>
           </div>
+
+          <div class="form-group">
+            <label for="storeNumber" class="col-sm-4 control-label">Store Number*</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="storeNumber" placeholder="1234">
+            </div>
+          </div>
+
           
           <div class="form-group">
             <label for="selectMenu" class="col-sm-4 control-label">Aircraft Tail Number</label>
@@ -154,202 +150,97 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="assignStoreInstance" class="col-sm-4 control-label">Assign Store Instance</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="assignStoreInstance" placeholder="GJ1246">
-            </div>
-          </div>
-
         </div>
         </ng-form>
       </div>
 
-      <!-- PANE 2 - In Packing --------------------------------------------------------------------- -->
+      <!-- PANE 2 - Packing --------------------------------------------------------------------- -->
       <div class="step-pane sample-pane" data-step="2">
         <ng-form class="form-horizontal" action="">
 
-        <div class="well">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Catering Station</th>
-                <th>Schedule Number</th>
-                <th>Schedule Date</th>
-                <th>Schedule Menu</th>
-                <th>Inventory Reference Number</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="cateringStation" placeholder="LGW" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="scheduleNumber" placeholder="A320EU" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="scheduleDate" placeholder="12/25/2105" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="scheduleMenu" placeholder="Breakfast" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="inventoryReferenceNumber" placeholder="GJ1246" disabled>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="well">
-          <table class="table table-striped table-scrollable">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Expected</th>
-                <th>Actual</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          <div class="well">
+            <h3>Pick List</h3>
+            <table class="table table-striped table-scrollable">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Expected</th>
+                  <th>Actual</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Coke</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+  
+          <div class="well">
+            <h3>Offload List</h3>
+            <table class="table table-striped table-scrollable">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Expected</th>
+                  <th>Actual</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Coke</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
         </ng-form>
       </div>
