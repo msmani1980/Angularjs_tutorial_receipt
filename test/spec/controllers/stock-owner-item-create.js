@@ -665,7 +665,7 @@ describe('The Stock Owner Item Create Controller', function () {
     });
 
     it('should have an ng-form directive', function () {
-      expect(view.find('ng-form').length).toEqual(1);
+      expect(view.find('form').length).toEqual(1);
     });
 
     describe('UI for price', function () {
