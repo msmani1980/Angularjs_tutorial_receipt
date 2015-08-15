@@ -56,6 +56,7 @@ angular.module('ts5App')
 
     function setDeliveryNoteFromResponse(response){
       $scope.deliveryNote = angular.copy(response);
+      $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, 'itemName');
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
     }
 
@@ -129,6 +130,7 @@ angular.module('ts5App')
           itemCode: item.itemCode
         };
       });
+      newMasterItems = $filter('orderBy')(newMasterItems, 'itemName');
       $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
     }
 
@@ -324,7 +326,7 @@ angular.module('ts5App')
     }
 
     function setMasterItemsFromResponse(response){
-      $scope.masterItems = response.masterItems;
+      $scope.masterItems = $filter('orderBy')(response.masterItems, 'itemName');
     }
 
     function getAllMasterItems(){
