@@ -192,6 +192,7 @@ angular.module('ts5App')
     }
 
     function getSelectedUllageReason(masterItemId){
+      console.log($scope.selectedUllageReason);
       if(angular.isUndefined($scope.selectedUllageReason)){
         return null;
       }
@@ -252,6 +253,7 @@ angular.module('ts5App')
         _prevViewName = $scope.viewName;
         $scope.viewName = 'Review Delivery Note';
         removeNullDeliveredItems();
+        setSelectedUllageReasons();
       }
       else{
         $scope.state = $scope.prevState;
@@ -315,7 +317,8 @@ angular.module('ts5App')
       if($scope.state !== 'create' && $scope.state !== 'edit'){
         return false;
       }
-      if($scope.deliveryNote.isAccepted){
+      if(!$scope.displayError && $scope.deliveryNote.isAccepted){
+        console.log('jumped in here');
         return false;
       }
       if(!deliveryNoteHasItems()){
