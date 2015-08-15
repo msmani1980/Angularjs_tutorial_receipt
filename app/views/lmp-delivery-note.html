@@ -244,7 +244,8 @@
               <div class="col-xs-12 col-sm-1">
                 <div class="form-group" ng-show="item.masterItemId">
                   <label for="booked-qty-{{ item.masterItemId }}">Booked</label>
-                  <input ng-model="item.bookedQuantity" type="number" class="form-control"
+                  <input ng-value="item.bookedQuantity ? item.bookedQuantity : item.deliveredQuantity - item.ullageQuantity"
+                         type="number" class="form-control"
                          id="booked-qty-{{ item.masterItemId }}"
                          ng-readonly="readOnly" ng-disabled="true">
                 </div>
