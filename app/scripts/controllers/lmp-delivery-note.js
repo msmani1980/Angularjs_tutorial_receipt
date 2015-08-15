@@ -186,22 +186,6 @@ angular.module('ts5App')
       init();
     }
 
-    function getSelectedUllageReason(masterItemId){
-      if(angular.isUndefined($scope.selectedUllageReason)){
-        return null;
-      }
-      if(!$scope.selectedUllageReason[masterItemId]){
-        return null;
-      }
-      if(angular.isUndefined($scope.selectedUllageReason[masterItemId].selected)){
-        return null;
-      }
-      if(angular.isUndefined($scope.selectedUllageReason[masterItemId].selected.companyReasonCodeName)){
-        return null;
-      }
-      return $scope.selectedUllageReason[masterItemId].selected.companyReasonCodeName;
-    }
-
     function generateSavePayload(){
       $scope.clearFilter();
       removeNullDeliveredItems();
@@ -217,7 +201,7 @@ angular.module('ts5App')
             expectedQuantity: item.expectedQuantity,
             deliveredQuantity: item.deliveredQuantity,
             ullageQuantity: item.ullageQuantity,
-            ullageReason: getSelectedUllageReason(item.masterItemId)
+            ullageReason: parseInt(item.ullageReason)
           };
         })
       };
@@ -263,6 +247,7 @@ angular.module('ts5App')
     };
 
     function saveDeliveryNoteFailed(response){
+      $scope.displayError = true;
       $scope.toggleReview();
       showResponseErrors(response);
     }
@@ -291,29 +276,20 @@ angular.module('ts5App')
       saveDeliveryNote();
     };
 
-    function setSelectedUllageReasonByItemMasterId(item){
-      $scope.selectedUllageReason[item.masterItemId] = {selected:{companyReasonCodeName: item.ullageReason}};
-    }
-
-    function setSelectedUllageReasons(){
-      $scope.selectedUllageReason = [];
-      for(var i in $scope.deliveryNote.items){
-        setSelectedUllageReasonByItemMasterId($scope.deliveryNote.items[i]);
-      }
-    }
-
     function canReview(){
       if($scope.state !== 'create' && $scope.state !== 'edit'){
-        return false;
-      }
-      if($scope.deliveryNote.isAccepted){
         return false;
       }
       if(!deliveryNoteHasItems()){
         return false;
       }
-      if(angular.isDefined($scope.deliveryNoteForm)) {
-        return $scope.deliveryNoteForm.$valid;
+      if(!$scope.displayError) {
+        if ($scope.deliveryNote.isAccepted) {
+          return false;
+        }
+        if (angular.isDefined($scope.deliveryNoteForm)) {
+          return $scope.deliveryNoteForm.$valid;
+        }
       }
       return true;
     }
@@ -438,9 +414,6 @@ angular.module('ts5App')
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
-      if(angular.isDefined($scope.deliveryNote) && angular.isDefined($scope.ullageReasons)){
-        setSelectedUllageReasons();
-      }
       $scope.canReview = canReview();
       $scope.readOnly = $scope.deliveryNote.isAccepted;
     };
