@@ -26,6 +26,7 @@ angular.module('ts5App')
     var _reasonCodeTypeUllage = 'Ullage';
     var _payload = null;
     var _path = '/lmp-delivery-note/';
+    var _prevViewName = null;
 
     function showMessage(message, messageType) {
       ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Delivery Note</strong>: ' + message });
@@ -244,6 +245,8 @@ angular.module('ts5App')
         $scope.state = 'review';
         $scope.canReview = false;
         $scope.readOnly = true;
+        _prevViewName = $scope.viewName;
+        $scope.viewName = 'Review Delivery Note';
         removeNullDeliveredItems();
       }
       else{
@@ -251,6 +254,8 @@ angular.module('ts5App')
         $scope.prevState = null;
         $scope.canReview = canReview();
         $scope.readOnly = false;
+        $scope.viewName = _prevViewName;
+        _prevViewName = null;
       }
     };
 
@@ -402,6 +407,7 @@ angular.module('ts5App')
     // view state actions
     stateActions.viewInit = function(){
       $scope.readOnly = true;
+      $scope.viewName = 'View Delivery Note';
       displayLoadingModal('Loading');
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
@@ -428,6 +434,7 @@ angular.module('ts5App')
 
     // edit state actions
     stateActions.editInit = function(){
+      $scope.viewName = 'Edit Delivery Note';
       displayLoadingModal('Loading');
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
@@ -443,6 +450,9 @@ angular.module('ts5App')
       }
       $scope.canReview = canReview();
       $scope.readOnly = $scope.deliveryNote.isAccepted;
+      if($scope.deliveryNote.isAccepted){
+        $scope.viewName = 'View Delivery Note';
+      }
     };
 
     // constructor
