@@ -180,6 +180,10 @@ angular.module('ts5App')
 
     function saveDeliveryNoteResolution(response){
       showMessage(_formSaveSuccessText, 'success');
+      if($scope.deliveryNote.isAccepted){
+        $location.path('/manage-goods-received');
+        return;
+      }
       if($routeParams.state === 'create' && angular.isDefined(response.id)){
         $location.path(_path+'edit/'+response.id);
         return;
