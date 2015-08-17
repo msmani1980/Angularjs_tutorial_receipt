@@ -5,7 +5,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   // load the controller's module
   beforeEach(module('ts5App',
     'served/lmp-delivery-note.json', 'served/catering-stations.json',
-    'served/menu-catering-stations.json', 'served/master-item-list.json',
+    'served/master-item-list.json',
     'served/company-reason-codes.json', 'served/items-by-caterer-station-id.json'));
 
   var LmpDeliveryNoteCtrl;
@@ -18,8 +18,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var cateringStationsReponseJSON;
   var getCateringStationsDeferred;
   var companyId;
-  var companyMenuCatererStationsResponseJSON;
-  var getCompanyMenuCatererStationsDeferred;
   var getCatererStationMasterItemsResponseJSON;
   var getCatererStationMasterItemsDeferred;
   var getCompanyReasonCodesResponseJSON;
@@ -31,7 +29,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _deliveryNoteFactory_,
                               _servedLmpDeliveryNote_, $location, _servedCateringStations_,
-                              _servedMenuCateringStations_, _servedMasterItemList_,
+                              _servedMasterItemList_,
                               _servedCompanyReasonCodes_, _servedItemsByCatererStationId_) {
 
     companyId = 403;
@@ -41,7 +39,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     deliveryNoteFactory = _deliveryNoteFactory_;
     lmpDeliveryNoteResponseJSON = _servedLmpDeliveryNote_;
     cateringStationsReponseJSON = _servedCateringStations_;
-    companyMenuCatererStationsResponseJSON = _servedMenuCateringStations_;
     getCatererStationMasterItemsResponseJSON = _servedItemsByCatererStationId_;
     getCompanyReasonCodesResponseJSON = _servedCompanyReasonCodes_;
     getAllMasterItemsResponseJSON = _servedMasterItemList_;
@@ -51,10 +48,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     spyOn(deliveryNoteFactory, 'getDeliveryNote').and.returnValue(getDeliveryNoteDeferred.promise);
 
     spyOn(deliveryNoteFactory, 'getCompanyId').and.returnValue(companyId);
-
-    getCompanyMenuCatererStationsDeferred = $q.defer();
-    getCompanyMenuCatererStationsDeferred.resolve(companyMenuCatererStationsResponseJSON);
-    spyOn(deliveryNoteFactory, 'getCompanyMenuCatererStations').and.returnValue(getCompanyMenuCatererStationsDeferred.promise);
 
     getCatererStationMasterItemsDeferred = $q.defer();
     getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
@@ -207,10 +200,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(scope.catererStationList).toBeDefined();
       });
       // API call #2
-      it('should call deliveryNoteFactory.getCompanyMenuCatererStations', function(){
-        expect(deliveryNoteFactory.getCompanyMenuCatererStations).toHaveBeenCalled();
-      });
-      // API call #3
       it('should call getCompanyReasonCodes in factory', function(){
         expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
       });
@@ -313,10 +302,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
       });
       // API call #3
-      it('should call deliveryNoteFactory.getCompanyMenuCatererStations', function(){
-        expect(deliveryNoteFactory.getCompanyMenuCatererStations).toHaveBeenCalled();
-      });
-      // API call #4
       it('should call getCompanyReasonCodes in factory', function(){
         expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
       });
