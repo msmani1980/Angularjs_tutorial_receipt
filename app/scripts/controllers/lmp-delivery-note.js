@@ -13,6 +13,7 @@ angular.module('ts5App')
     // static scope vars
     $scope.viewName = 'Delivery note';
     $scope.deliveryNote = {
+      catererStationId: null,
       deliveryNoteNumber:null,
       items:[]
     };
@@ -47,11 +48,6 @@ angular.module('ts5App')
     function setCatererStationListFromResponse(response){
       var catererStationList = response.response;
       $scope.catererStationList = catererStationList;
-      // Next - if create and only 1 caterer station, lets set it and get the items
-      if($routeParams.state !== 'create'){
-        return;
-      }
-      setStationIdOnCreate();
     }
 
     function setDeliveryNoteFromResponse(response){
@@ -69,6 +65,9 @@ angular.module('ts5App')
     }
 
     function setStationIdOnCreate() {
+      if($routeParams.state !== 'create'){
+        return;
+      }
       if($routeParams.id) {
         $scope.deliveryNote.catererStationId = $routeParams.id;
       } else if($scope.catererStationList.length === 1){
@@ -150,6 +149,7 @@ angular.module('ts5App')
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
     }
 
     function showResponseErrors(response){
@@ -418,6 +418,9 @@ angular.module('ts5App')
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
       resolveInitPromises();
+    };
+    stateActions.createInitPromisesResolved = function() {
+      setStationIdOnCreate();
     };
 
     // edit state actions
