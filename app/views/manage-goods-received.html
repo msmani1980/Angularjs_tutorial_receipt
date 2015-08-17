@@ -120,7 +120,7 @@
           <a class="btn btn-info btn-xs" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}" tabindex="0">
             <i class="fa fa-file"></i>
           </a>
-          <a class="btn btn-primary btn-xs" ng-hide="deliveryNote.isAccepted" ng-href="/#/lmp-delivery-note/view/{{deliveryNote.id}}"  tabindex="0" aria-disabled="true">
+          <a class="btn btn-primary btn-xs" ng-hide="deliveryNote.isAccepted" ng-href="/#/lmp-delivery-note/edit/{{deliveryNote.id}}"  tabindex="0" aria-disabled="true">
             <i class="fa fa-pencil"></i>
           </a>
           <button class="btn btn-danger btn-xs" ng-hide="deliveryNote.isAccepted" ng-click="deleteRecordDialog(deliveryNote.id)" tabindex="0" aria-disabled="true">

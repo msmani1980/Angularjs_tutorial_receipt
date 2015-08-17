@@ -13,6 +13,7 @@ angular.module('ts5App')
     // static scope vars
     $scope.viewName = 'Delivery note';
     $scope.deliveryNote = {
+      catererStationId: null,
       deliveryNoteNumber:null,
       items:[]
     };
@@ -47,11 +48,6 @@ angular.module('ts5App')
     function setCatererStationListFromResponse(response){
       var catererStationList = response.response;
       $scope.catererStationList = catererStationList;
-      // Next - if create and only 1 caterer station, lets set it and get the items
-      if($routeParams.state !== 'create'){
-        return;
-      }
-      setStationIdOnCreate();
     }
 
     function setDeliveryNoteFromResponse(response){
@@ -69,6 +65,9 @@ angular.module('ts5App')
     }
 
     function setStationIdOnCreate() {
+      if($routeParams.state !== 'create'){
+        return;
+      }
       if($routeParams.id) {
         $scope.deliveryNote.catererStationId = $routeParams.id;
       } else if($scope.catererStationList.length === 1){
@@ -150,6 +149,7 @@ angular.module('ts5App')
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
     }
 
     function showResponseErrors(response){
@@ -200,7 +200,7 @@ angular.module('ts5App')
           expectedQuantity: item.expectedQuantity,
           deliveredQuantity: item.deliveredQuantity,
           ullageQuantity: item.ullageQuantity,
-          ullageReason: parseInt(item.ullageReason)
+          ullageReason: item.ullageReason ? parseInt(item.ullageReason) : null
         };
       });
     }
@@ -246,7 +246,6 @@ angular.module('ts5App')
         _prevViewName = $scope.viewName;
         $scope.viewName = 'Review Delivery Note';
         removeNullDeliveredItems();
-        setSelectedUllageReasons();
       }
       else{
         $scope.state = $scope.prevState;
@@ -303,13 +302,11 @@ angular.module('ts5App')
       if(!deliveryNoteHasItems()){
         return false;
       }
-      if(!$scope.displayError) {
-        if ($scope.deliveryNote.isAccepted) {
-          return false;
-        }
-        if (angular.isDefined($scope.deliveryNoteForm)) {
-          return $scope.deliveryNoteForm.$valid;
-        }
+      if (!$scope.displayError && $scope.deliveryNote.isAccepted) {
+        return false;
+      }
+      if (!$scope.displayError && angular.isDefined($scope.deliveryNoteForm)) {
+        return $scope.deliveryNoteForm.$valid;
       }
       return true;
     }
@@ -421,6 +418,9 @@ angular.module('ts5App')
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
       $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
       resolveInitPromises();
+    };
+    stateActions.createInitPromisesResolved = function() {
+      setStationIdOnCreate();
     };
 
     // edit state actions
