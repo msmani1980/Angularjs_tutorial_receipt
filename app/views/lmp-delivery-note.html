@@ -239,7 +239,7 @@
                   <select class="form-control"
                           ng-model="item.ullageReason"
                           ng-selected="item.ullageReason"
-                          ng-options="ullageReason.reasonTypeId + '' as ullageReason.companyReasonCodeName for ullageReason in ullageReasons"
+                          ng-options="ullageReason.id + '' as ullageReason.companyReasonCodeName for ullageReason in ullageReasons"
                           ng-disabled="readOnly || !item.ullageQuantity"
                           ng-required="item.ullageQuantity">
                   </select>
