@@ -53,7 +53,7 @@ angular.module('ts5App')
     }
 
     function deleteDeliveryNote(deliveryNoteId) {
-      return requestResource.getDeliveryNote({id:deliveryNoteId}).$promise;
+      return requestResource.deleteDeliveryNote({id:deliveryNoteId}).$promise;
     }
 
 
