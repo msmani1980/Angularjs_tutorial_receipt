@@ -156,10 +156,82 @@
 
       <!-- PANE 2 - Packing --------------------------------------------------------------------- -->
       <div class="step-pane sample-pane" data-step="2">
-        <ng-form class="form-horizontal" action="">
+        <ng-form action="">
+        
+          <div class="well">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>LMP Station</th>
+                  <th>Date</th>
+                  <th>Schedule Number</th>
+                  <th>Store Number</th>
+                  <th>Aircraft Tail Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="text" class="form-control" id="lmpStation" placeholder="LGW" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="Date" placeholder="12/25/2105" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="scheduleNumber" placeholder="1234" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="aircraftTailNumber" placeholder="AB-CDE" disabled>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        
+<!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
+          <div class="row">
+            <div class="col-xs-12 col-sm-1">
+              <div class="form-group">
+                <label>Filter by:</label>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Item Code</label>
+                <input ng-model="filterItemCode" type="text" class="form-control" id="filter-item-code"
+                       placeholder="1234" ng-readonly="readOnly">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Item Name</label>
+                <input ng-model="filterItemName" type="text" class="form-control" id="filter-item-name"
+                       placeholder="Coke" ng-readonly="readOnly">
+              </div>
+            </div>
+          </div>
 
           <div class="well">
-            <h3>Pick List</h3>
+
+            <div class="row">
+              <div class="col-xs-6">
+                <h3>Pick List</h3>
+              </div>
+            
+              <div class="col-xs-6 text-right">
+                  <label class="checkbox-custom checkbox-inline" id="inboundBrokenSealsCheckbox" data-initialize="checkbox"> 
+                    <input class="sr-only btn btn-default" data-toggle=".inbound-broken-seals" type="checkbox" value="1"> 
+                    <span class="checkbox-label">Inbound Seals Broken</span>
+                  </label>
+                  
+                  <textarea class="form-control inbound-broken-seals" id="inboundBrokenSealsNotes" placeholder="Notes"></textarea>
+              </div>
+            
+            </div>
+            
             <table class="table table-striped pick-list">
               <thead>
                 <tr>
