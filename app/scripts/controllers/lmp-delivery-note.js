@@ -67,18 +67,17 @@ angular.module('ts5App')
     }
 
     function catererStationIdWatcher(newValue, oldValue){
-      if(angular.isUndefined(newValue)){
+      if($routeParams.state === 'view'){
         return newValue;
       }
-      // Don't do anything if it didn't change
-      if(oldValue === newValue){
+      if($routeParams.state === 'edit' && !oldValue){
         return newValue;
       }
       // If not first time loaded, it changed, so lets get the items
       if($scope.deliveryNote.catererStationId !== newValue){
         return newValue;
       }
-      if(angular.isUndefined(oldValue) && $routeParams.state !== 'create'){
+      if($routeParams.state !== 'create' && !oldValue){
         return newValue;
       }
       getMasterRetailItemsByCatererStationId(newValue);
@@ -86,6 +85,9 @@ angular.module('ts5App')
     }
 
     function getMasterRetailItemsByCatererStationId(catererStationId){
+      if(!catererStationId){
+        return;
+      }
       displayLoadingModal();
       // used cached results instead of hitting API again
       if(angular.isDefined(_cateringStationItems[catererStationId])){
@@ -104,6 +106,7 @@ angular.module('ts5App')
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
       if(!response.response){
+        showMessage('No items exist in this LMP Station, try another.', 'warning');
         return;
       }
       var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
@@ -251,8 +254,12 @@ angular.module('ts5App')
       if(angular.isUndefined($scope.filterInput)){
         return;
       }
-      $scope.filterInput.itemCode = '';
-      $scope.filterInput.itemName = '';
+      if(angular.isDefined($scope.filterInput.itemCode)){
+        delete $scope.filterInput.itemCode;
+      }
+      if(angular.isDefined($scope.filterInput.itemName)){
+        delete $scope.filterInput.itemName;
+      }
     };
 
     function saveDeliveryNoteFailed(response){
@@ -346,12 +353,15 @@ angular.module('ts5App')
       var totalDeliveryNoteToAdd = $scope.addItemsNumber || 1;
       $scope.addItemsNumber = null;
       for (var i = 0; i < totalDeliveryNoteToAdd; i++) {
-        $scope.deliveryNote.items.push({});
+        $scope.newItems.push({});
       }
       hideLoadingModal();
     }
 
     $scope.addItems = function(){
+      if(angular.isUndefined($scope.newItems)){
+        $scope.newItems = [];
+      }
       var masterItemsPromise = getAllMasterItems();
       if(!masterItemsPromise){
         addRows();
@@ -370,15 +380,18 @@ angular.module('ts5App')
       if(inArray.length){
         return;
       }
-      if(!$scope.deliveryNote.items[$index]){
-        return;
-      }
-      $scope.deliveryNote.items[$index] = {
+      $scope.clearFilter();
+      $scope.deliveryNote.items.push({
         masterItemId: selectedMasterItem.id,
         itemCode: selectedMasterItem.itemCode,
         itemName: selectedMasterItem.itemName
-      };
+      });
       setAllowedMasterItems();
+      $scope.removeNewItemRow($index);
+    };
+
+    $scope.removeNewItemRow = function($index){
+      $scope.newItems.splice($index, true);
     };
 
     var stateActions = {};
