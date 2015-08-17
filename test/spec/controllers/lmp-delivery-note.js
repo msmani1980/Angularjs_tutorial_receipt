@@ -207,10 +207,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(scope.catererStationList).toBeDefined();
       });
       // API call #2
-      it('should call deliveryNoteFactory.getCompanyMenuCatererStations', function(){
-        expect(deliveryNoteFactory.getCompanyMenuCatererStations).toHaveBeenCalled();
-      });
-      // API call #3
       it('should call getCompanyReasonCodes in factory', function(){
         expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
       });
@@ -313,10 +309,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
       });
       // API call #3
-      it('should call deliveryNoteFactory.getCompanyMenuCatererStations', function(){
-        expect(deliveryNoteFactory.getCompanyMenuCatererStations).toHaveBeenCalled();
-      });
-      // API call #4
       it('should call getCompanyReasonCodes in factory', function(){
         expect(deliveryNoteFactory.getCompanyReasonCodes).toHaveBeenCalled();
       });
