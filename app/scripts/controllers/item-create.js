@@ -386,7 +386,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       var today = new Date();
       var itemEndDate = new Date(itemData.endDate);
       $scope.itemIsInactive = itemEndDate <= today && !$scope.cloningItem;
-      $scope.viewOnly = $scope.itemIsInactive;
+      $scope.viewOnly = $scope.viewOnly || $scope.itemIsInactive;
     };
 
     // updates the $scope.formData
