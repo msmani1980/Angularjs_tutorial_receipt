@@ -179,9 +179,15 @@
             <div class="col-xs-10 col-sm-11">
 
               <div class="col-xs-12 col-sm-2">
-                <div class="form-group" ng-show="item.masterItemId">
+                <div class="form-group">
                   <label>Item Code</label>
-                  <input ng-model="item.itemCode" type="text" class="form-control" readonly="readonly">
+                  <input ng-model="item.itemCode" type="text" class="form-control" readonly="readonly" ng-show="item.masterItemId">
+
+                  <select class="form-control" ng-change="addItem(masterItemSelected[masterItem.id], $index)"
+                          ng-model="masterItemSelected[masterItem.id]"
+                          ng-options="masterItem as masterItem.itemCode for masterItem in masterItemsAllowedInSelect"
+                          ng-show="!item.masterItemId"
+                          ng-required="!item.masterItemId"></select>
                 </div>
               </div>
 
