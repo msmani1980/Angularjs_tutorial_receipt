@@ -214,7 +214,7 @@
                   <label for="ullage-qty-{{ item.masterItemId }}">Ullage</label>
                   <input ng-model="item.ullageQuantity" type="number" min="0" step="1" class="form-control"
                          id="ullage-qty-{{ item.masterItemId }}" ng-readonly="readOnly"
-                         ng-disabled="item.masterItemId && !item.expectedQuantity">
+                         ng-disabled="!item.deliveredQuantity">
                 </div>
               </div>
 
