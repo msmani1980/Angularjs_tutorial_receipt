@@ -135,7 +135,7 @@ angular.module('ts5App')
     }
 
     function displayLoadingModal(loadingText) {
-      angular.element('#loading').modal('show').find('p').text(loadingText ? loadingText : 'Loading');
+      angular.element('#loading').modal('show').find('p').text(loadingText || 'Loading');
     }
 
     function hideLoadingModal() {
