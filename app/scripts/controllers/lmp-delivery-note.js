@@ -200,7 +200,7 @@ angular.module('ts5App')
           expectedQuantity: item.expectedQuantity,
           deliveredQuantity: item.deliveredQuantity,
           ullageQuantity: item.ullageQuantity,
-          ullageReason: parseInt(item.ullageReason)
+          ullageReason: item.ullageReason ? parseInt(item.ullageReason) : null
         };
       });
     }
@@ -246,7 +246,6 @@ angular.module('ts5App')
         _prevViewName = $scope.viewName;
         $scope.viewName = 'Review Delivery Note';
         removeNullDeliveredItems();
-        setSelectedUllageReasons();
       }
       else{
         $scope.state = $scope.prevState;
@@ -303,13 +302,11 @@ angular.module('ts5App')
       if(!deliveryNoteHasItems()){
         return false;
       }
-      if(!$scope.displayError) {
-        if ($scope.deliveryNote.isAccepted) {
-          return false;
-        }
-        if (angular.isDefined($scope.deliveryNoteForm)) {
-          return $scope.deliveryNoteForm.$valid;
-        }
+      if (!$scope.displayError && $scope.deliveryNote.isAccepted) {
+        return false;
+      }
+      if (!$scope.displayError && angular.isDefined($scope.deliveryNoteForm)) {
+        return $scope.deliveryNoteForm.$valid;
       }
       return true;
     }

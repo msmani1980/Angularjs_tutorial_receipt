@@ -255,10 +255,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         it('should call createDeliveryNote', function(){
           var mockedPayload = {
             catererStationId: 3,
-            deliveryDate: '20150806',
-            deliveryNoteNumber: 'askdjhas78day',
-            isAccepted: false,
             purchaseOrderNumber: 'ksahd9a8sda8d',
+            deliveryNoteNumber: 'askdjhas78day',
+            deliveryDate: '20150806',
+            isAccepted: false,
             items: [
               {
                 deliveredQuantity: 2,
