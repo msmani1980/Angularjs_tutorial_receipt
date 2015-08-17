@@ -193,28 +193,36 @@ angular.module('ts5App')
       init();
     }
 
-    function generateSavePayload(){
-      $scope.clearFilter();
-      removeNullDeliveredItems();
+    function createPayloadItems(){
+      return $scope.deliveryNote.items.map(function(item){
+        return {
+          masterItemId: item.masterItemId,
+          expectedQuantity: item.expectedQuantity,
+          deliveredQuantity: item.deliveredQuantity,
+          ullageQuantity: item.ullageQuantity,
+          ullageReason: parseInt(item.ullageReason)
+        };
+      });
+    }
+
+    function createPayload(){
       _payload = {
         catererStationId: $scope.deliveryNote.catererStationId,
         purchaseOrderNumber: $scope.deliveryNote.purchaseOrderNumber,
         deliveryNoteNumber: $scope.deliveryNote.deliveryNoteNumber,
         deliveryDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
         isAccepted: $scope.deliveryNote.isAccepted,
-        items: $scope.deliveryNote.items.map(function(item){
-          return {
-            masterItemId: item.masterItemId,
-            expectedQuantity: item.expectedQuantity,
-            deliveredQuantity: item.deliveredQuantity,
-            ullageQuantity: item.ullageQuantity,
-            ullageReason: parseInt(item.ullageReason)
-          };
-        })
+        items: createPayloadItems()
       };
       if($scope.deliveryNote.id){
         _payload.id = $scope.deliveryNote.id;
       }
+    }
+
+    function generateSavePayload(){
+      $scope.clearFilter();
+      removeNullDeliveredItems();
+      createPayload();
     }
 
     $scope.removeItemByIndex = function(index){
