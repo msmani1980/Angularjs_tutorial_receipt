@@ -67,9 +67,6 @@ angular.module('ts5App')
     }
 
     function catererStationIdWatcher(newValue, oldValue){
-      if(!newValue){
-        return null;
-      }
       if($routeParams.state === 'view'){
         return newValue;
       }
@@ -80,8 +77,7 @@ angular.module('ts5App')
       if($scope.deliveryNote.catererStationId !== newValue){
         return newValue;
       }
-      if(angular.isUndefined(oldValue) && $routeParams.state !== 'create'){
-        console.log('here 4');
+      if($routeParams.state !== 'create' && !oldValue){
         return newValue;
       }
       getMasterRetailItemsByCatererStationId(newValue);
@@ -89,6 +85,9 @@ angular.module('ts5App')
     }
 
     function getMasterRetailItemsByCatererStationId(catererStationId){
+      if(!catererStationId){
+        return;
+      }
       displayLoadingModal();
       // used cached results instead of hitting API again
       if(angular.isDefined(_cateringStationItems[catererStationId])){
