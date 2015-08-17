@@ -10,7 +10,6 @@ describe('Service: deliveryNoteFactory', function () {
   var deliveryNotesService;
   var catererStationService;
   var GlobalMenuService;
-  var menuCatererStationsService;
   var itemsService;
   var companyReasonCodesService;
 
@@ -19,14 +18,12 @@ describe('Service: deliveryNoteFactory', function () {
     deliveryNotesService = $injector.get('deliveryNotesService');
     catererStationService = $injector.get('catererStationService');
     GlobalMenuService = $injector.get('GlobalMenuService');
-    menuCatererStationsService = $injector.get('menuCatererStationsService');
     itemsService = $injector.get('itemsService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
 
     spyOn(deliveryNotesService, 'getDeliveryNote');
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(GlobalMenuService.company, 'get');
-    spyOn(menuCatererStationsService, 'getRelationshipList');
     spyOn(itemsService, 'getItemsList');
     spyOn(companyReasonCodesService, 'getAll');
     spyOn(deliveryNotesService, 'createDeliveryNote');
@@ -65,13 +62,6 @@ describe('Service: deliveryNoteFactory', function () {
     it('should call company.get', function(){
       deliveryNoteFactory.getCompanyId();
       expect(GlobalMenuService.company.get).toHaveBeenCalled();
-    });
-  });
-
-  describe('menuCatererStationsService calls', function(){
-    it('should call getRelationshipList', function(){
-      deliveryNoteFactory.getCompanyMenuCatererStations();
-      expect(menuCatererStationsService.getRelationshipList).toHaveBeenCalled();
     });
   });
 

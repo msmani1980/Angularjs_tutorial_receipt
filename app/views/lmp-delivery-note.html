@@ -224,7 +224,7 @@
               </div>
 
               <div class="col-xs-12 col-sm-1">
-                <div class="form-group" ng-hide="readOnly && !item.ullageQuantity">
+                <div class="form-group" ng-show="item.masterItemId">
                   <label for="ullage-qty-{{ item.masterItemId }}">Ullage</label>
                   <input ng-model="item.ullageQuantity" type="number" min="0" step="1" class="form-control"
                          id="ullage-qty-{{ item.masterItemId }}" ng-readonly="readOnly"
@@ -234,12 +234,12 @@
 
   <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
               <div class="col-xs-12 col-sm-2">
-                <div class="form-group">
+                <div class="form-group" ng-show="item.masterItemId">
                   <label>Ullage Reason*</label>
                   <select class="form-control"
                           ng-model="item.ullageReason"
                           ng-selected="item.ullageReason"
-                          ng-options="ullageReason.reasonTypeId + '' as ullageReason.companyReasonCodeName for ullageReason in ullageReasons"
+                          ng-options="ullageReason.id + '' as ullageReason.companyReasonCodeName for ullageReason in ullageReasons"
                           ng-disabled="readOnly || !item.ullageQuantity"
                           ng-required="item.ullageQuantity">
                   </select>
