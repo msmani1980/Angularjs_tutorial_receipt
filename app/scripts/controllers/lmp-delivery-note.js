@@ -95,7 +95,7 @@ angular.module('ts5App')
     }
 
     function getMasterRetailItemsByCatererStationId(catererStationId){
-      displayLoadingModal('Loading');
+      displayLoadingModal();
       // used cached results instead of hitting API again
       if(angular.isDefined(_cateringStationItems[catererStationId])){
         var response = _cateringStationItems[catererStationId];
@@ -144,12 +144,11 @@ angular.module('ts5App')
     }
 
     function displayLoadingModal(loadingText) {
-      angular.element('#loading').modal('show').find('p').text(loadingText);
+      angular.element('#loading').modal('show').find('p').text(loadingText ? loadingText : 'Loading');
     }
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
-      angular.element('.modal-backdrop').remove();
     }
 
     function showResponseErrors(response){
@@ -336,7 +335,7 @@ angular.module('ts5App')
 
     function getAllMasterItems(){
       if(!$scope.masterItems){
-        displayLoadingModal('Loading');
+        displayLoadingModal();
         return deliveryNoteFactory.getAllMasterItems().then(setMasterItemsFromResponse, showResponseErrors);
       }
       return false;
@@ -358,6 +357,7 @@ angular.module('ts5App')
       for (var i = 0; i < totalDeliveryNoteToAdd; i++) {
         $scope.deliveryNote.items.push({});
       }
+      hideLoadingModal();
     }
 
     $scope.addItems = function(){
@@ -367,7 +367,6 @@ angular.module('ts5App')
         return;
       }
       $q.all([masterItemsPromise]).then(addRows, showResponseErrors);
-      hideLoadingModal();
     };
 
     $scope.addItem = function(selectedMasterItem, $index){
@@ -396,7 +395,7 @@ angular.module('ts5App')
     stateActions.viewInit = function(){
       $scope.readOnly = true;
       $scope.viewName = 'View Delivery Note';
-      displayLoadingModal('Loading');
+      displayLoadingModal();
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
@@ -411,7 +410,7 @@ angular.module('ts5App')
     stateActions.createInit = function(){
       $scope.readOnly = false;
       $scope.viewName = 'Create Delivery Note';
-      displayLoadingModal('Loading');
+      displayLoadingModal();
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
       _initPromises.push(getUllageCompanyReasonCodes());
@@ -426,7 +425,7 @@ angular.module('ts5App')
     // edit state actions
     stateActions.editInit = function(){
       $scope.viewName = 'Edit Delivery Note';
-      displayLoadingModal('Loading');
+      displayLoadingModal();
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
       _initPromises.push(getCompanyMenuCatererStations());
