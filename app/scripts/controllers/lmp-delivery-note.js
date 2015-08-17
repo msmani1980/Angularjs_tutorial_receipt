@@ -207,7 +207,6 @@ angular.module('ts5App')
       if($scope.deliveryNote.id){
         _payload.id = $scope.deliveryNote.id;
       }
-      console.log(_payload);
     }
 
     function generateSavePayload(){
