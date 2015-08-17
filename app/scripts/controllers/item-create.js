@@ -271,6 +271,20 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           delete price.itemId;
           delete price.id;
         }
+        $this.formatStationExceptions(price);
+      }
+    };
+
+    this.formatStationExceptions = function(priceData) {
+      for (var exceptionKey in priceData.stationExceptions) {
+        var exception = priceData.stationExceptions[exceptionKey];
+        if ($scope.cloningItem) {
+          delete exception.id;
+          for (var currencyKey in exception.stationExceptionCurrencies) {
+            var currency = exception.stationExceptionCurrencies[currencyKey];
+            delete currency.id;
+          }
+        }
       }
     };
 
@@ -386,7 +400,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       var today = new Date();
       var itemEndDate = new Date(itemData.endDate);
       $scope.itemIsInactive = itemEndDate <= today && !$scope.cloningItem;
-      $scope.viewOnly = $scope.itemIsInactive;
+      $scope.viewOnly = $scope.viewOnly || $scope.itemIsInactive;
     };
 
     // updates the $scope.formData
@@ -978,6 +992,9 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.formatGlobalTradeNumbers(itemData);
       this.formatTaxes(itemData);
       this.cleanUpPayload(itemData);
+      if($scope.cloningItem) {
+        delete itemData.id;
+      }
       return itemData;
     };
 
