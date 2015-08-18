@@ -78,4 +78,44 @@ describe('Service: stockTakeService', function () {
 
   });
 
+  describe('getStockTake', function () {
+    it('should be accessible in the service', function () {
+      expect(stockTakeService.getStockTake).toBeDefined();
+    });
+    beforeEach(function () {
+      $httpBackend.whenGET(/stock-management\/stock-takes/).respond({done: true});
+    });
+    it('should make GET request to API', function () {
+      stockTakeService.getStockTake(38);
+      $httpBackend.expectGET(/stock-management\/stock-takes/);
+      $httpBackend.flush();
+    });
+  });
+  describe('createStockTake', function(){
+    it('should be accessible in the service', function(){
+      expect(stockTakeService.createStockTake).toBeDefined();
+    });
+    beforeEach(function () {
+      $httpBackend.whenPOST(/stock-management\/stock-takes/).respond({done: true});
+    });
+    it('should make POST request to API', function () {
+      stockTakeService.createStockTake({});
+      $httpBackend.expectPOST(/stock-management\/stock-takes/);
+      $httpBackend.flush();
+    });
+  });
+  describe('updateStockTake', function(){
+    it('should be accessible in the service', function(){
+      expect(stockTakeService.updateStockTake).toBeDefined();
+    });
+    beforeEach(function () {
+      $httpBackend.whenPUT(/stock-management\/stock-takes/).respond({done: true});
+    });
+    it('should make PUT request to API', function () {
+      stockTakeService.updateStockTake({});
+      $httpBackend.expectPUT(/stock-management\/stock-takes/);
+      $httpBackend.flush();
+    });
+  });
+
 });
