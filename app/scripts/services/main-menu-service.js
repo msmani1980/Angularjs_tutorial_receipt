@@ -104,7 +104,7 @@ angular.module('ts5App')
           className: 'dashboard-manageMenus'
         }, {
           name: 'Create Menu',
-          route: '/#/menus/create',
+          route: '/#/menu/create',
           icon: 'icon-create-menu',
           className: 'dashboard-createMenu'
         }]
