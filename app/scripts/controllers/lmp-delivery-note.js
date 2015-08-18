@@ -20,7 +20,6 @@ angular.module('ts5App')
 
     // private vars
     var _initPromises = [];
-    var _companyId = deliveryNoteFactory.getCompanyId();
     var _formSaveSuccessText = null;
     var _cateringStationItems = [];
     var _reasonCodeTypeUllage = 'Ullage';
@@ -33,7 +32,7 @@ angular.module('ts5App')
     }
 
     function getCatererStationList(){
-      return deliveryNoteFactory.getCatererStationList(_companyId).then(setCatererStationListFromResponse);
+      return deliveryNoteFactory.getCatererStationList().then(setCatererStationListFromResponse);
     }
 
     function getDeliveryNote(){

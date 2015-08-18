@@ -8,14 +8,14 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('stockTakeFactory', function (catererStationService, itemsService, stockTakeService) {
+  .service('stockTakeFactory', function (catererStationService, stockDashboardService, stockTakeService) {
 
     function getCatererStationList(){
       return catererStationService.getCatererStationList({limit:null});
     }
 
     function getItemsByCateringStationId(_catererStationId){
-      return itemsService.getItemsByCateringStationId(_catererStationId);
+      return stockDashboardService.getStockDashboardItems(_catererStationId);
     }
 
     function getStockTake(_id){
