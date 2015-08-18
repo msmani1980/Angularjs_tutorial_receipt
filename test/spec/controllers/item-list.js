@@ -309,6 +309,33 @@ describe('itemListCtrl', function () {
       });
     });
 
+    describe('doesActiveOrFutureVersionExist', function () {
+      it('should return true for items that contain a future version', function () {
+        var testItem = {versions: [
+          {startDate: '08/20/2000', endDate: '08/20/2000'},
+          {startDate: '08/20/2050', endDate: '10/10/2050'},
+          {startDate: '08/20/2000', endDate: '01/01/1991'}
+        ]};
+        expect($scope.doesActiveOrFutureVersionExist(testItem)).toEqual(true);
+      });
+      it('should return true for items that contain an active version', function () {
+        var testItem = {versions: [
+          {startDate: '08/20/2010', endDate: '08/20/2030'},
+          {startDate: '08/20/2005', endDate: '08/10/2010'},
+          {startDate: '08/20/1980', endDate: '01/01/1991'}
+        ]};
+        expect($scope.doesActiveOrFutureVersionExist(testItem)).toEqual(true);
+      });
+      it('should return false for items that contain only past items', function () {
+        var testItem = {versions: [
+          {startDate: '08/20/2000', endDate: '08/30/2000'},
+          {startDate: '08/10/2000', endDate: '08/20/2014'},
+          {startDate: '01/01/1991', endDate: '08/20/2000'}
+        ]};
+        expect($scope.doesActiveOrFutureVersionExist(testItem)).toEqual(false);
+      });
+    });
+
   });
 
 });
