@@ -24,9 +24,7 @@ angular.module('ts5App')
     };
 
     this.generateItemQuery = function () {
-      var todaysDate = dateUtility.formatDate(dateUtility.now());
       var query = {
-        startDate: todaysDate,
         sortBy: 'ASC',
         sortOn: 'itemName',
         limit: 100
@@ -109,6 +107,16 @@ angular.module('ts5App')
 
     $scope.isItemActive = function (date) {
       return dateUtility.isTodayOrEarlier(date);
+    };
+
+    $scope.doesActiveOrFutureVersionExist = function (item) {
+      var validVersionExists = false;
+      angular.forEach(item.versions, function (version) {
+        if(!dateUtility.isYesterdayOrEarlier(version.endDate)) {
+          validVersionExists = true;
+        }
+      });
+      return validVersionExists;
     };
 
     $scope.clearSearchFilters = function () {
