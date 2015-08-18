@@ -37,12 +37,12 @@
 
           <div class="col-xs-12 col-sm-6 col-md-4">
             <date-picker-field name="EffectiveFrom" label="Effective From"
-              ng-model="dateRange.deliveryStartDate"></date-picker-field>
+              ng-model="dateRange.startDate"></date-picker-field>
           </div>
 
           <div class="col-xs-12 col-sm-6 col-md-4">
             <date-picker-field  name="EffectiveTo" label="Effective To"
-              ng-model="dateRange.deliveryEndDate"></date-picker-field>
+              ng-model="dateRange.endDate"></date-picker-field>
           </div>
 
           <div class="col-xs-12 col-sm-6 col-md-4">
@@ -116,7 +116,7 @@
           <a class="btn btn-primary btn-xs" ng-hide="stockTake.isSubmitted" ng-href="/#/stock-take/edit/{{stockTake.id}}"  tabindex="0" aria-disabled="true">
             <i class="fa fa-pencil"></i>
           </a>
-          <button class="btn btn-danger btn-xs" ng-hide="stockTake.isSubmitted" ng-click="deleteRecordDialog(stockTake.id)" tabindex="0" aria-disabled="true">
+          <button class="btn btn-danger btn-xs" ng-hide="stockTake.isSubmitted" ng-click="deleteRecordDialog(stockTake)" tabindex="0" aria-disabled="true">
             <i class="fa fa-trash"></i>
           </button>
         </td>

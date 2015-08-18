@@ -38,12 +38,13 @@ angular.module('ts5App')
     this.generateStockTakeQuery = function () {
       var query = {
         catererStationId: $scope.catererStationId,
-        sortBy: 'ASC',
         limit: 100
       };
       angular.extend(query, $scope.search);
-      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
+      if ($scope.dateRange.startDate) {
         query.startDate = dateUtility.formatDateForAPI($scope.dateRange.startDate);
+      }
+      if($scope.dateRange.endDate) {
         query.endDate = dateUtility.formatDateForAPI($scope.dateRange.endDate);
       }
       return query;
@@ -64,9 +65,10 @@ angular.module('ts5App')
     };
 
     this.formatStockTakeDates = function() {
-      angular.forEach($scope.stockTakeList,function(stockTake){
-        var pattern = /\.[0-9]+/;
-        stockTake.updatedOn = stockTake.updatedOn.replace(pattern, '');
+      if(!Array.isArray($scope.stockTakeList)) { return; }
+      $scope.stockTakeList.map(function(stockTake){
+        stockTake.updatedOn = stockTake.updatedOn.replace(/\.[0-9]+/, '');
+        return stockTake;
       });
     };
 
@@ -74,18 +76,6 @@ angular.module('ts5App')
       stockTakeFactory.getCatererStationList().then(function (data) {
         $scope.stationsList = data.response;
       });
-    };
-
-    this.findStockTakeIndex = function (stockTakeId) {
-      var stockTakeIndex = 0;
-      for (var key in $scope.stockTakeList) {
-        var stockTake = $scope.stockTakeList[key];
-        if (stockTake.id === stockTakeId) {
-          stockTakeIndex = key;
-          break;
-        }
-      }
-      return stockTakeIndex;
     };
 
     this.showSuccessMessage = function (message) {
@@ -96,10 +86,10 @@ angular.module('ts5App')
       });
     };
 
-    $scope.removeRecord = function (stockTakeId) {
-      var stockTakeIndex = $this.findStockTakeIndex(stockTakeId);
+    $scope.removeRecord = function (stockTake) {
+      var stockTakeIndex = $scope.stockTakeList.indexOf(stockTake);
       $this.displayLoadingModal('Removing Stock Take');
-      stockTakeFactory.deleteStockTake(stockTakeId).then(function () {
+      stockTakeFactory.deleteStockTake(stockTake.id).then(function () {
         $this.hideLoadingModal();
         $this.showSuccessMessage('Stock Take Removed!');
         $scope.stockTakeList.splice(stockTakeIndex, 1);
