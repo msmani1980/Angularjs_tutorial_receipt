@@ -9,12 +9,8 @@
  */
 angular.module('ts5App')
   .service('deliveryNoteFactory', function (deliveryNotesService, catererStationService,
-                                            GlobalMenuService, itemsService,
-                                            companyReasonCodesService) {
-
-    function getCompanyId() {
-      return GlobalMenuService.company.get();
-    }
+                                            stockDashboardService, companyReasonCodesService,
+                                            itemsService) {
 
     function getDeliveryNote(deliveryNoteId) {
       return deliveryNotesService.getDeliveryNote(deliveryNoteId);
@@ -25,7 +21,7 @@ angular.module('ts5App')
     }
 
     function getItemsByCateringStationId(_catererStationId){
-      return itemsService.getItemsByCateringStationId(_catererStationId);
+      return stockDashboardService.getStockDashboardItems(_catererStationId);
     }
 
     function getCompanyReasonCodes(){
@@ -56,7 +52,6 @@ angular.module('ts5App')
       getDeliveryNotesList: getDeliveryNotesList,
       getDeliveryNote: getDeliveryNote,
       getCatererStationList: getCatererStationList,
-      getCompanyId: getCompanyId,
       getItemsByCateringStationId: getItemsByCateringStationId,
       getCompanyReasonCodes: getCompanyReasonCodes,
       getAllMasterItems: getAllMasterItems,
