@@ -30,12 +30,22 @@ angular.module('ts5App')
       return stockTakeService.updateStockTake(id, payload);
     }
 
+    function deleteStockTake(id) {
+      return stockTakeService.deleteStockTake(id);
+    }
+
+    function getStockTakeList(query) {
+      return stockTakeService.getStockTakeList(query);
+    }
+
     return {
       getCatererStationList: getCatererStationList,
       getItemsByCateringStationId: getItemsByCateringStationId,
       getStockTake: getStockTake,
       createStockTake: createStockTake,
-      updateStockTake: updateStockTake
+      updateStockTake: updateStockTake,
+      deleteStockTake: deleteStockTake,
+      getStockTakeList: getStockTakeList
     };
 
   });
