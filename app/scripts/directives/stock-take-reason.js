@@ -9,7 +9,7 @@
 angular.module('ts5App').directive('stockTakeReason', function () {
   var stockTakeReasonController = function ($scope, stockAdjustmentsService) {
 
-    function showStockReasonModal() {
+    function displayStockReasonModal() {
       angular.element('#stock-take-reason').modal('show');
     }
 
@@ -32,7 +32,7 @@ angular.module('ts5App').directive('stockTakeReason', function () {
       $scope.masterItemId = stockitem.masterItemId;
       $scope.catererStationId = stockitem.catererStationId;
       $scope.comment = null;
-      showStockReasonModal();
+      displayStockReasonModal();
     };
 
     $scope.clearScopeVars = function () {
