@@ -28,15 +28,15 @@ angular.module('ts5App')
       updateStockTake: {
         method: 'PUT'
       },
-      removeStockTake: {
+      deleteStockTake: {
         method: 'DELETE'
       }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getStockTakeList = function () {
-      return requestResource.getStockTakeList().$promise;
+    var getStockTakeList = function (query) {
+      return requestResource.getStockTakeList(query).$promise;
     };
 
     var getStockTake = function (id) {
@@ -51,8 +51,8 @@ angular.module('ts5App')
       return requestResource.updateStockTake({id: id}, payload).$promise;
     };
 
-    var removeStockTake = function (id) {
-      return requestResource.removeStockTake({id: id}).$promise;
+    var deleteStockTake = function (id) {
+      return requestResource.deleteStockTake({id: id}).$promise;
     };
 
     return {
@@ -60,7 +60,7 @@ angular.module('ts5App')
       getStockTake: getStockTake,
       createStockTake: createStockTake,
       updateStockTake: updateStockTake,
-      removeStockTake: removeStockTake
+      deleteStockTake: deleteStockTake
     };
 
 
