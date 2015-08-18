@@ -7,7 +7,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StockTakeReportCtrl', function ($scope,$filter, dateUtility,stockTakeService,ngToast,deliveryNoteFactory) {
+    .controller('StockTakeReportCtrl', function ($scope,$filter, dateUtility,stockTakeFactory,ngToast) {
 
     var $this = this;
     $scope.stationsList = [];
@@ -52,8 +52,8 @@ angular.module('ts5App')
     this.getStockTakeList = function () {
       $scope.userSelectedStation = false;
       var query = $this.generateStockTakeQuery();
-      $this.displayLoadingModal('Getting a list of delivery notes');
-      stockTakeService.getStockTakeList(query).then($this.getStockTakeListSuccessHandler);
+      $this.displayLoadingModal('Getting a list of stock takes');
+      stockTakeFactory.getStockTakeList(query).then($this.getStockTakeListSuccessHandler);
     };
 
     this.getStockTakeListSuccessHandler = function(data) {
@@ -71,7 +71,7 @@ angular.module('ts5App')
     };
 
     this.getCatererStationList = function () {
-      deliveryNoteFactory.getCatererStationList().then(function (data) {
+      stockTakeFactory.getCatererStationList().then(function (data) {
         $scope.stationsList = data.response;
       });
     };
@@ -99,7 +99,7 @@ angular.module('ts5App')
     $scope.removeRecord = function (stockTakeId) {
       var stockTakeIndex = $this.findStockTakeIndex(stockTakeId);
       $this.displayLoadingModal('Removing Stock Take');
-      stockTakeService.deleteStockTake(stockTakeId).then(function () {
+      stockTakeFactory.deleteStockTake(stockTakeId).then(function () {
         $this.hideLoadingModal();
         $this.showSuccessMessage('Stock Take Removed!');
         $scope.stockTakeList.splice(stockTakeIndex, 1);
