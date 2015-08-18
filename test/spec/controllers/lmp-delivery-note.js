@@ -311,7 +311,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       });
       describe('changing LMP station', function(){
         it('should call retail item master API', function(){
-          expect(scope.deliveryNote.items.length).toEqual(11);
           var csid = 3;
           scope.deliveryNote.catererStationId = csid;
           scope.$digest();
@@ -346,8 +345,8 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           scope.filterInput.itemName = 's';
           scope.$digest();
           scope.clearFilter();
-          expect(scope.filterInput.itemCode).toBe('');
-          expect(scope.filterInput.itemName).toBe('');
+          expect(scope.filterInput.itemCode).toBeUndefined();
+          expect(scope.filterInput.itemName).toBeUndefined();
         });
       });
       describe('save scope function submit delivery note', function(){
@@ -380,7 +379,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           selectedMasterItem.id = '43242';
           selectedMasterItem.itemCode = 'Item code 43242';
           selectedMasterItem.itemName = 'Item name 43242';
-          var $index = scope.deliveryNote.items.length - 1;
+          var $index = scope.deliveryNote.items.length;
           scope.$digest();
           scope.addItem(selectedMasterItem, $index);
           expect(scope.deliveryNote.items[$index].itemCode).toBe('Item code 43242');
