@@ -9,26 +9,25 @@ describe('Service: deliveryNoteFactory', function () {
   var deliveryNoteFactory;
   var deliveryNotesService;
   var catererStationService;
-  var GlobalMenuService;
   var itemsService;
   var companyReasonCodesService;
+  var stockDashboardService;
 
   beforeEach(inject(function (_deliveryNoteFactory_, $injector) {
     deliveryNoteFactory = _deliveryNoteFactory_;
     deliveryNotesService = $injector.get('deliveryNotesService');
     catererStationService = $injector.get('catererStationService');
-    GlobalMenuService = $injector.get('GlobalMenuService');
     itemsService = $injector.get('itemsService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
+    stockDashboardService = $injector.get('stockDashboardService');
 
     spyOn(deliveryNotesService, 'getDeliveryNote');
     spyOn(catererStationService, 'getCatererStationList');
-    spyOn(GlobalMenuService.company, 'get');
     spyOn(itemsService, 'getItemsList');
     spyOn(companyReasonCodesService, 'getAll');
     spyOn(deliveryNotesService, 'createDeliveryNote');
     spyOn(deliveryNotesService, 'saveDeliveryNote');
-    spyOn(itemsService, 'getItemsByCateringStationId');
+    spyOn(stockDashboardService, 'getStockDashboardItems');
 
   }));
 
@@ -58,24 +57,21 @@ describe('Service: deliveryNoteFactory', function () {
     });
   });
 
-  describe('GlobalMenuService calls', function(){
-    it('should call company.get', function(){
-      deliveryNoteFactory.getCompanyId();
-      expect(GlobalMenuService.company.get).toHaveBeenCalled();
-    });
-  });
-
   describe('itemsService calls', function(){
-    it('should call getItemsList with a param', function(){
-      var csid = 1;
-      deliveryNoteFactory.getItemsByCateringStationId(csid);
-      expect(itemsService.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
-    });
     it('should call getItemsList to get all master items', function(){
       deliveryNoteFactory.getAllMasterItems();
       expect(itemsService.getItemsList).toHaveBeenCalledWith({}, true);
     });
   });
+
+  describe('stockDashboardService calls', function(){
+    it('should call getItemsByCateringStationId with a param', function(){
+      var csid = 1;
+      deliveryNoteFactory.getItemsByCateringStationId(csid);
+      expect(stockDashboardService.getStockDashboardItems).toHaveBeenCalledWith(csid);
+    });
+  });
+
 
   describe('companyReasonCodesService calls', function(){
     it('should call getCompanyReasonCodes', function(){

@@ -8,17 +8,17 @@ describe('Service: stockTakeFactory', function () {
   // instantiate service
   var stockTakeFactory;
   var catererStationService;
-  var itemsService;
+  var stockDashboardService;
   var stockTakeService;
 
   beforeEach(inject(function (_stockTakeFactory_, $injector) {
     stockTakeFactory = _stockTakeFactory_;
     catererStationService = $injector.get('catererStationService');
-    itemsService = $injector.get('itemsService');
+    stockDashboardService = $injector.get('stockDashboardService');
     stockTakeService = $injector.get('stockTakeService');
 
     spyOn(catererStationService, 'getCatererStationList');
-    spyOn(itemsService, 'getItemsByCateringStationId');
+    spyOn(stockDashboardService, 'getStockDashboardItems');
     spyOn(stockTakeService, 'getStockTake');
     spyOn(stockTakeService, 'createStockTake');
     spyOn(stockTakeService, 'updateStockTake');
@@ -32,11 +32,11 @@ describe('Service: stockTakeFactory', function () {
     });
   });
 
-  describe('itemsService calls', function(){
+  describe('stockDashboardService calls', function(){
     it('should call getItemsList with a param', function(){
       var csid = 1;
       stockTakeFactory.getItemsByCateringStationId(csid);
-      expect(itemsService.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
+      expect(stockDashboardService.getStockDashboardItems).toHaveBeenCalledWith(csid);
     });
   });
 
