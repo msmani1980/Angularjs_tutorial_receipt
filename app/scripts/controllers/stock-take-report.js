@@ -53,12 +53,14 @@ angular.module('ts5App')
       $scope.userSelectedStation = false;
       var query = $this.generateStockTakeQuery();
       $this.displayLoadingModal('Getting a list of delivery notes');
-      stockTakeService.getStockTakeList(query).then(function (data) {
-        $scope.userSelectedStation = true;
-        $scope.stockTakeList = data.response;
-        $this.formatStockTakeDates();
-        $this.hideLoadingModal();
-      });
+      stockTakeService.getStockTakeList(query).then($this.getStockTakeListSuccessHandler);
+    };
+
+    this.getStockTakeListSuccessHandler = function(data) {
+      $scope.userSelectedStation = true;
+      $scope.stockTakeList = data.response;
+      $this.formatStockTakeDates();
+      $this.hideLoadingModal();
     };
 
     this.formatStockTakeDates = function() {

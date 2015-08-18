@@ -70,6 +70,10 @@ describe('Stock Take Report', function () {
       expect(StockTakeReportCtrl.getStockTakeList).toBeDefined();
     });
 
+    it('should have a getStockTakeListSuccessHandler method', function () {
+      expect(StockTakeReportCtrl.getStockTakeListSuccessHandler).toBeDefined();
+    });
+
     it('should have a generateStockTakeQuery method', function () {
       expect(StockTakeReportCtrl.generateStockTakeQuery).toBeDefined();
     });
@@ -139,10 +143,16 @@ describe('Stock Take Report', function () {
     describe('The stockTakeList array', function () {
 
       beforeEach(function() {
+        spyOn(StockTakeReportCtrl, 'getStockTakeListSuccessHandler').and.callThrough();
         spyOn(StockTakeReportCtrl,'formatStockTakeDates').and.callThrough();
         $scope.catererStationId = 3;
         $scope.$digest();
       });
+
+      it('should call the getStockTakeListSuccessHandler method', function () {
+        expect(StockTakeReportCtrl.getStockTakeListSuccessHandler).toHaveBeenCalled();
+      });
+
 
       it('should have (1) or more stations in the stockTakeList', function () {
         expect($scope.stockTakeList.length).toBeGreaterThan(0);
