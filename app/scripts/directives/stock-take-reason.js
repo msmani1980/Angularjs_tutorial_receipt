@@ -10,6 +10,22 @@ angular.module('ts5App')
   .directive('stockTakeReason', function() {
     var stockTakeReasonController = function($scope, stockAdjustmentsService) {
 
+      function showStockReasonModal() {
+        angular.element('#stock-take-reason').modal('show');
+      }
+
+      function hideStockReasonModal() {
+        angular.element('#stock-take-reason').modal('hide');
+      }
+
+      function displayLoadingModal(loadingText) {
+        angular.element('#loading').modal('show').find('p').text(loadingText);
+      }
+
+      function hideLoadingModal() {
+        angular.element('#loading').modal('hide');
+      }
+
       $scope.stockTakeReasonOpen = function(stockitem) {
         $scope.id = stockitem.id;
         $scope.currentCount = stockitem.currentCount;
@@ -17,8 +33,7 @@ angular.module('ts5App')
         $scope.masterItemId = stockitem.masterItemId;
         $scope.catererStationId = stockitem.catererStationId;
         $scope.comment = null;
-        var e = angular.element('#stock-take-reason');
-        e.modal('show');
+        showStockReasonModal();
       };
 
       $scope.clearScopeVars = function(){
@@ -33,8 +48,7 @@ angular.module('ts5App')
       $scope.stockTakeReasonClose = function() {
         $scope.clearScopeVars();
 
-        var e = angular.element('#stock-take-reason');
-        e.modal('hide');
+        hideStockReasonModal();
       };
 
       function adjustStockResponse(response){
@@ -48,6 +62,7 @@ angular.module('ts5App')
         // TODO - In controller - Refresh list view by re-querying the current caterer station
       }
 
+
       $scope.stockTakeReasonSave = function() {
         // TODO - Tests for everything after this comment
         // TODO - Validate comment field against acceptance criteria
@@ -59,21 +74,11 @@ angular.module('ts5App')
           note: $scope.comment
         };
         $scope.clearScopeVars();
-        var e = angular.element('#stock-take-reason');
-        e.modal('hide');
+        hideStockReasonModal();
         displayLoadingModal('Saving');
         // TODO - handle error
         stockAdjustmentsService.adjustStock(payload).then(adjustStockResponse);
       };
-
-
-      function displayLoadingModal(loadingText) {
-        angular.element('#loading').modal('show').find('p').text(loadingText);
-      }
-
-      function hideLoadingModal() {
-        angular.element('#loading').modal('hide');
-      }
 
     };
 
