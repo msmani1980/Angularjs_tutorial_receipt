@@ -1,0 +1,46 @@
+<div class="modal fade info-import-model" id="download-template-modal">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <div class="row">
+
+          <div class="col-xs-12">
+            <h4 class="modal-title">Understanding the Excel Template</h4>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-body">
+        <p>
+          The file is an Excel (.xls, .xlsx) file and has only one sheet.<br> The first line should be the header with the column names.
+        </p>
+
+        <p>
+          <b>The column order and name should match the following:</b>
+        </p>
+
+        <ul>
+          <li><b>Catering Station</b> – Required. This should match the 'LMP Station' field.</li>
+          <li><b>Item Code</b> – Required. This is the Retail Item Code of the item and should match with the item name.</li>
+          <li><b>Item Name</b> – Required. This is the Retail Item Name of the item and should match with the item code.</li>
+          <li><b>Quantity</b> – Required with 0 being a valid count. This should be numeric value without decimals.</li>
+        </ul>
+
+      </div>
+
+      <div class="modal-footer">
+        <a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/StockTake-ImportFile.xlsx" class="btn btn-info"> <i class="fa fa-download"></i> Download Template</a>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModalImportInfo()">Close</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
