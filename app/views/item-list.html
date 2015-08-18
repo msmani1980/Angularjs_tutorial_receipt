@@ -135,7 +135,7 @@
       </tr>
       </thead>
 
-      <tbody ng-repeat="item in itemsList" id="item-{{ item.itemMasterId }}">
+      <tbody ng-repeat="item in itemsList" id="item-{{ item.itemMasterId }}" ng-show="doesActiveOrFutureVersionExist(item)">
       <tr ng-repeat="version in item.versions | orderBy:'-startDate' track by $index"
           ng-class="($index==0) ? 'master-row' : 'subversion-row'"
           ng-show="$index==0 || isOpen(item)">
