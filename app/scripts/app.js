@@ -156,12 +156,6 @@ angular.module('ts5App', [
   }).when('/lmp-delivery-note/:state/:id?', {
     templateUrl: 'views/lmp-delivery-note.html',
     controller: 'LmpDeliveryNoteCtrl'
-  }).when('/delivery-note', {
-    templateUrl: 'views/delivery-note.html',
-    controller: 'DeliveryNoteCtrl'
-  }).when('/delivery-note-review', {
-    templateUrl: 'views/delivery-note-review.html',
-    controller: 'DeliveryNoteReviewCtrl'
   }).when('/employee-commission-list', {
     templateUrl: 'views/employee-commission-list.html',
     controller: 'EmployeeCommissionListCtrl'
