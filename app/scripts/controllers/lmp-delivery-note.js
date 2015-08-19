@@ -57,6 +57,10 @@ angular.module('ts5App')
       $scope.canReview = canReview();
     }
 
+    $scope.elementChanged = function(){
+      deliveryNoteFormErrorWatcher();
+    };
+
     function setStationIdOnCreate() {
       if($routeParams.state !== 'create'){
         return;
