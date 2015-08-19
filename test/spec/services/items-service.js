@@ -111,15 +111,4 @@ describe('Items Service |', function () {
     });
   });
 
-  describe('getItemsByCateringStationId method', function(){
-    beforeEach(function(){
-      $httpBackend.whenGET(/retail-items\/caterer-station/).respond(masterItemListJSON);
-    });
-    it('should make get request when calling getItemsByCateringStationId', function () {
-      itemsService.getItemsByCateringStationId(3);
-      $httpBackend.expectGET(/retail-items\/caterer-station/);
-      $httpBackend.flush();
-    });
-  });
-
 }); // describe item service

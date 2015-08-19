@@ -68,21 +68,12 @@ angular.module('ts5App')
       return requestResource.removeItem({id: id}).$promise;
     };
 
-    var getItemsByCateringStationId = function(_id) {
-      var payload = {
-        fetchFromMaster: 'caterer-station',
-        id: _id
-      };
-      return requestResource.getItemsByCateringStationId(payload).$promise;
-    };
-
     return {
       getItemsList: getItemsList,
       getItem: getItem,
       createItem: createItem,
       updateItem: updateItem,
-      removeItem: removeItem,
-      getItemsByCateringStationId: getItemsByCateringStationId
+      removeItem: removeItem
     };
 
   });
