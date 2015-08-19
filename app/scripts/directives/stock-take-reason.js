@@ -50,11 +50,8 @@ angular.module('ts5App').directive('stockTakeReason', function () {
     };
 
     function adjustStockResponse(response) {
-      if (!response) { // TODO - anything with response?
-        return;
-      }
-
       hideLoadingModal();
+      $scope.updateStockItems();
       // TODO - Possible to call controller logic from this directive?
       // TODO - Show success, with list of updated items
       // TODO - In controller - Refresh list view by re-querying the current caterer station

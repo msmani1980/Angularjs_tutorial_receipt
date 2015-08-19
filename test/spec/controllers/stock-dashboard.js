@@ -69,12 +69,19 @@ describe('Controller: StockDashboardCtrl', function() {
       });
 
       it('should return a list of dashboard items', function() {
-        scope.updateStockItems(1);
+        scope.selectedCateringStation = {
+          id: 1,
+          name:'fakeCateringStation'
+        };
+        scope.$digest();
         expect(stockDashboardService.getStockDashboardItems).toHaveBeenCalled();
       });
 
       it('should attach the stock dashboard list to the scope', function() {
-        scope.updateStockItems(1);
+        scope.selectedCateringStation = {
+          id: 1,
+          name:'fakeCateringStation'
+        };
         scope.$digest();
         expect(scope.stockDashboardItemsList).toBeDefined();
       });
