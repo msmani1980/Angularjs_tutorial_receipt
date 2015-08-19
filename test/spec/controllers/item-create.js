@@ -1382,7 +1382,7 @@ describe('The Item Create Controller', function() {
 
       it('should contain a stationExceptionCurrency object with a currency code', function() {
         expect(stationExceptionCurrency.price).toBeDefined();
-        expect(stationExceptionCurrency.price).toEqual('1.00');
+        expect(stationExceptionCurrency.price).toEqual(null);
       });
 
       it('should contain a stationExceptionCurrency object with a companyCurrencyId', function() {
