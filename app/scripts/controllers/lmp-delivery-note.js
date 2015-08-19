@@ -109,6 +109,11 @@ angular.module('ts5App')
       }
 
       if(!response.response){
+        if(angular.isUndefined($scope.disabledStations)){
+          $scope.disabledStations = [];
+        }
+        $scope.disabledStations[$scope.deliveryNote.catererStationId] = true;
+        $scope.deliveryNote.catererStationId = null;
         showMessage('No items exist in this LMP Station, try another.', 'warning');
         return;
       }
