@@ -63,8 +63,7 @@ angular.module('ts5App')
 
     this.formatDeliveryNotesDates = function() {
       angular.forEach($scope.deliveryNotesList,function(deliveryNote){
-        var pattern = /\.[0-9]+/;
-        deliveryNote.updatedOn = deliveryNote.updatedOn.replace(pattern, '');
+        deliveryNote.updatedOn = dateUtility.removeMilliseconds(deliveryNote.updatedOn);
       });
     };
 
