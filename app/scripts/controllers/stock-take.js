@@ -127,16 +127,16 @@ angular.module('ts5App')
       return true;
     }
 
-    function resolveInitPromises(){
-      $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
-    }
-
     function initPromisesResolved(){
       hideLoadingModal();
       var initPromisesResolvedStateAction = $routeParams.state + 'InitPromisesResolved';
       if(stateActions[initPromisesResolvedStateAction]){
         stateActions[initPromisesResolvedStateAction]();
       }
+    }
+
+    function resolveInitPromises(){
+      $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
     }
 
     function generateSavePayload(){
@@ -147,13 +147,12 @@ angular.module('ts5App')
     function generatePayloadItems(){
       var items = [];
       for(var masterItemId in $scope.itemQuantities){
-        if(!$scope.itemQuantities[masterItemId]){
-          continue;
+        if($scope.itemQuantities[masterItemId]){
+          items.push({
+            masterItemId: masterItemId,
+            quantity: $scope.itemQuantities[masterItemId]
+          });
         }
-        items.push({
-          masterItemId: masterItemId,
-          quantity: $scope.itemQuantities[masterItemId]
-        });
       }
       return items;
     }
@@ -162,6 +161,19 @@ angular.module('ts5App')
       $scope.displayError = true;
       $scope.toggleReview();
       showResponseErrors(response);
+    }
+
+    function saveStockTakeResolution(response){
+      showMessage(_formSaveSuccessText, 'success');
+      if($scope.stockTake.isSubmitted){
+        $location.path('/stock-take-report');
+        return;
+      }
+      if($routeParams.state === 'create' && angular.isDefined(response.id)){
+        $location.path(_path+'edit/'+response.id);
+        return;
+      }
+      init();
     }
 
     function saveStockTake(){
@@ -181,19 +193,6 @@ angular.module('ts5App')
       }
       stockTakeFactory.updateStockTake($scope.stockTake.id, _payload).then(
         saveStockTakeResolution, saveStockTakeFailed);
-    }
-
-    function saveStockTakeResolution(response){
-      showMessage(_formSaveSuccessText, 'success');
-      if($scope.stockTake.isSubmitted){
-        $location.path('/stock-take-report');
-        return;
-      }
-      if($routeParams.state === 'create' && angular.isDefined(response.id)){
-        $location.path(_path+'edit/'+response.id);
-        return;
-      }
-      init();
     }
 
     function setStockTakeFromResponse(response){
