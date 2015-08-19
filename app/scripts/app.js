@@ -168,7 +168,7 @@ angular.module('ts5App', [
   }).when('/stock-dashboard', {
     templateUrl: 'views/stock-dashboard.html',
     controller: 'StockDashboardCtrl'
-  }).when('/stock-take', {
+  }).when('/stock-take/:state/:id?', {
     templateUrl: 'views/stock-take.html',
     controller: 'StockTakeCtrl'
   }).when('/stock-take-review', {
