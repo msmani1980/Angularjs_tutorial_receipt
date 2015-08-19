@@ -12,6 +12,7 @@ angular.module('ts5App')
 
     // static scope vars
     $scope.viewName = 'Delivery note';
+    $scope.addItemsNumber = 1;
     $scope.deliveryNote = {
       catererStationId: null,
       deliveryNoteNumber:null,
