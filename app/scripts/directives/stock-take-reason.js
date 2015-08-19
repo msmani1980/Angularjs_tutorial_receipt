@@ -7,7 +7,16 @@
  * # stockTakeReason
  */
 angular.module('ts5App').directive('stockTakeReason', function () {
-  var stockTakeReasonController = function ($scope, stockAdjustmentsService) {
+  var stockTakeReasonController = function ($scope, stockAdjustmentsService, ngToast) {
+
+    function showToastMessage(className, type, message) {
+      hideLoadingModal();
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    }
 
     function displayStockReasonModal() {
       angular.element('#stock-take-reason').modal('show');
@@ -49,12 +58,10 @@ angular.module('ts5App').directive('stockTakeReason', function () {
       hideStockReasonModal();
     };
 
-    function adjustStockResponse(response) {
+    function adjustStockResponse() {
       hideLoadingModal();
+      showToastMessage('success', 'Stock Adjustment', 'successfully updated!');
       $scope.updateStockItems();
-      // TODO - Possible to call controller logic from this directive?
-      // TODO - Show success, with list of updated items
-      // TODO - In controller - Refresh list view by re-querying the current caterer station
     }
 
 
@@ -69,13 +76,10 @@ angular.module('ts5App').directive('stockTakeReason', function () {
     }
 
     $scope.stockTakeReasonSave = function () {
-      // TODO - Tests for everything after this comment
-      // TODO - Validate comment field against acceptance criteria
       var payload = createPayload();
       $scope.clearScopeVars();
       hideStockReasonModal();
-      displayLoadingModal('Saving');
-      // TODO - handle error
+      displayLoadingModal('Updating item count');
       stockAdjustmentsService.adjustStock(payload).then(adjustStockResponse);
     };
 
