@@ -61,8 +61,7 @@
                       ng-show="catererStationList.length"
                       required>
                 <option ng-selected="station.id==deliveryNote.catererStationId"
-                        ng-repeat="station in catererStationList" value="{{ station.id }}"
-                        ng-disabled="disabledStations[station.id]">
+                        ng-repeat="station in catererStationList" value="{{ station.id }}">
                   {{ station.name }} - {{ station.code }}
                 </option>
               </select>

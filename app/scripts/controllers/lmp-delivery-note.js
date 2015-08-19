@@ -113,12 +113,7 @@ angular.module('ts5App')
       }
 
       if(!response.response){
-        if(angular.isUndefined($scope.disabledStations)){
-          $scope.disabledStations = [];
-        }
-        $scope.disabledStations[$scope.deliveryNote.catererStationId] = true;
-        $scope.deliveryNote.catererStationId = null;
-        showMessage('No items exist in this LMP Station, try another.', 'warning');
+        showMessage('No items exist in this LMP Station, you must add them manually with the "+Add Items" button below.', 'warning');
         return;
       }
       var items = $filter('unique')(response.response, 'masterItemId');
