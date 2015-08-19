@@ -104,14 +104,16 @@ angular.module('ts5App')
       if(angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])){
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
+
       if(!response.response){
         showMessage('No items exist in this LMP Station, try another.', 'warning');
         return;
       }
+      var items = $filter('unique')(response.response, 'masterItemId');
       var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
         return item.masterItemId;
       });
-      var filteredResponseMasterItems = response.response.filter(function(item){
+      var filteredResponseMasterItems = items.filter(function(item){
         return devlieryNoteItemIds.indexOf(item.itemMasterId) === -1;
       });
 
