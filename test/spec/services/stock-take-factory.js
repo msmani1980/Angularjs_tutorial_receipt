@@ -22,6 +22,8 @@ describe('Service: stockTakeFactory', function () {
     spyOn(stockTakeService, 'getStockTake');
     spyOn(stockTakeService, 'createStockTake');
     spyOn(stockTakeService, 'updateStockTake');
+    spyOn(stockTakeService, 'importFromExcel');
+
 
   }));
 
@@ -56,6 +58,11 @@ describe('Service: stockTakeFactory', function () {
       var id = 123;
       stockTakeFactory.updateStockTake(id, payload);
       expect(stockTakeService.updateStockTake).toHaveBeenCalledWith(id, payload);
+    });
+    it('should call importFromExcel', function () {
+      var id = 123;
+      stockTakeService.importFromExcel(id, null);
+      expect(stockTakeService.importFromExcel).toHaveBeenCalled();
     });
   });
 
