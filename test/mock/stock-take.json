@@ -1,0 +1,20 @@
+{
+  "id": 60,
+  "retailCompanyId": 403,
+  "catererStationId": 3,
+  "isSubmitted": false,
+  "createdBy": 1,
+  "createdOn": "2015-08-18 23:20:37.894709",
+  "updatedBy": 1,
+  "updatedOn": "2015-08-18 23:26:15.155989",
+  "stockTakeDate": "2015-08-18",
+  "stockTakeCode": "60",
+  "items": [
+    {
+      "id": 32,
+      "stockTakeId": 60,
+      "masterItemId": 12,
+      "quantity": 11
+    }
+  ]
+}
