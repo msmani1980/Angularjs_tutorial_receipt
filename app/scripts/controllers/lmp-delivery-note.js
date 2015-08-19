@@ -285,6 +285,9 @@ angular.module('ts5App')
     }
 
     $scope.save = function(_isAccepted){
+      if($scope.deliveryNote.isAccepted){
+        return;
+      }
       $scope.displayError = false;
       $scope.deliveryNote.isAccepted = _isAccepted;
       generateSavePayload();
@@ -436,10 +439,8 @@ angular.module('ts5App')
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
-      $scope.canReview = canReview();
-      $scope.readOnly = $scope.deliveryNote.isAccepted;
       if($scope.deliveryNote.isAccepted){
-        $scope.viewName = 'View Delivery Note';
+        $location.path(_path+'view/'+$scope.deliveryNote.id);
       }
     };
 

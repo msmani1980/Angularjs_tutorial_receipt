@@ -15,19 +15,17 @@
 
             <fieldset ng-hide="viewOnly">
 
-                <button class="btn btn-primary" ng-click="formReview()" ng-hide="readOnly">
+                <button class="btn btn-primary" ng-show="canReview" ng-click="toggleReview()">
                   <span>Review</span>
                 </button>
 
-                <!-- TODO: SAVE BUTTON AVAIALABLE ONLY AFTER REVIEWED (BUTTON ABOVE) -->
-                <button class="btn btn-primary" ng-click="formSave()" ng-hide="true">
+                <button type="button" class="btn btn-primary" ng-click="save(false)" ng-show="state == 'review'">
                   <span>Save</span>
                 </button>
 
-                <button class="btn btn-default" ng-click="" ng-hide="readOnly">Cancel</button>
+                <button type="button" class="btn btn-default" ng-click="cancel()" ng-hide="readOnly && state !='review'">Cancel</button>
 
-                <!-- TODO: SUBMIT BUTTON AVAIALABLE ONLY AFTER REVIEWED (BUTTON ABOVE) -->
-                <button class="btn btn-primary" ng-click="submitForm(formData)" ng-hide="true">
+                <button class="btn btn-primary" ng-click="save(true)" ng-show="state == 'review'">
                   <span class="fa fa-check-square-o" aria-hidden="true"></span>
                   <span>Submit</span>
                 </button>
@@ -40,19 +38,44 @@
 
       </div>
 
-      <div class="row" ng-hide="readOnly">
+      <div class="row">
         <div class="col-xs-12 col-sm-4">
           <div class="form-group">
-            <label>LMP Station</label>
+            <label>LMP Station*</label>
                 <select class="form-control"
                        ng-model="stockTake.catererStationId"
-                       ng-disabled="readOnly || catererStationList.length == 1"
+                       ng-disabled="readOnly || catererStationList.length == 1 || state != 'create'"
                        ng-show="catererStationList.length"
                        required>
-                  <option ng-selected="station.id==deliveryNote.catererStationId" ng-repeat="station in catererStationList" value="{{ station.id }}">
+                  <option ng-disabled="disabledCatererStationIds[station.id]" ng-selected="station.id==stockTake.catererStationId" ng-repeat="station in catererStationList" value="{{ station.id }}">
                     {{ station.name }} - {{ station.code }}
                   </option>
                 </select>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-8" ng-show="cateringStationItems.length && state !== 'review'">
+          <div class="row">
+            <div class="col-xs-12 col-sm-1">
+              <div class="form-group">
+                <label>Filter:</label>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="filter-item-code">Item Code</label>
+                <input ng-model="filterInput.itemCode" type="text" class="form-control" id="filter-item-code">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="filter-item-name">Item Name</label>
+                <input ng-model="filterInput.itemName" type="text" class="form-control" id="filter-item-name">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <label class="invisible">Clear filter</label>
+              <button class="btn btn-default" type="button" ng-click="clearFilter()" ng-show="filterInput.itemCode || filterInput.itemName">Clear</button>
+            </div>
           </div>
         </div>
 
@@ -101,83 +124,52 @@
 
   <div class="container stock-take-container">
 
-    <excel-upload type="stockTake"></excel-upload><br>
-
+    <excel-upload type="stockTake" ng-show="state == 'create'"></excel-upload><br>
 
     <div class="row" ng-hide="state == 'review' || state == 'create'">
-    <!-- TODO: THIS ROW ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
 
       <div class="col-xs-12 col-sm-2">
         <div class="form-group">
-          <label for="deliveryNoteCreatedBy">Created By</label>
-          <input ng-model="deliveryNoteCreatedBy" type="text" class="form-control" id="delivery-note-created-by"
-                 placeholder="User 0001" ng-readonly="readOnly">
+          <label>Created By</label>
+          <input ng-model="stockTake.createdBy" type="text" class="form-control" readonly>
         </div>
       </div>
 
       <div class="col-xs-12 col-sm-2">
         <div class="form-group">
-          <label for="deliveryNoteCreatedDateTime">Created Date/Time</label>
-          <input ng-model="deliveryNoteCreatedDateTime" type="text" class="form-control" id="delivery-note-created-date-time"
-                 placeholder="2/05 - 12:34pm" ng-readonly="readOnly">
+          <label>Created Date/Time</label>
+          <input ng-model="stockTake.createdOn" type="text" class="form-control" readonly>
         </div>
       </div>
 
       <div class="col-xs-12 col-sm-2">
         <div class="form-group">
-          <label for="deliveryNoteUpdatedBy">Updated By</label>
-          <input ng-model="deliveryNoteUpdatedBy" type="text" class="form-control" id="delivery-note-updated-by"
-                 placeholder="User 0002" ng-readonly="readOnly">
+          <label>Updated By</label>
+          <input ng-model="stockTake.updatedBy" type="text" class="form-control" readonly>
         </div>
       </div>
 
       <div class="col-xs-12 col-sm-2">
         <div class="form-group">
-          <label for="deliveryNoteUpdatedDateTime">Updated Date/Time</label>
-          <input ng-model="deliveryNoteUpdatedDateTime" type="text" class="form-control" id="delivery-note-updated-date-time"
-                 placeholder="2/07 - 12:34pm" ng-readonly="readOnly">
+          <label>Updated Date/Time</label>
+          <input ng-model="stockTake.updatedOn" type="text" class="form-control" readonly>
         </div>
       </div>
 
       <div class="col-xs-12 col-sm-2">
         <div class="form-group">
-          <label for="stockTakeID">Stock Take ID</label>
-          <input ng-model="stockTakeID" type="text" class="form-control" id="stock-take-id"
-                 placeholder="123456789" ng-readonly="readOnly">
+          <label>Stock Take ID</label>
+          <input ng-model="stockTake.id" type="text" class="form-control" readonly>
         </div>
       </div>
 
     </div>
-
-<!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
-    <div class="row" ng-show="cateringStationItems.length">
-      <div class="col-xs-12 col-sm-1">
-        <div class="form-group">
-          <label>Filter by:</label>
-          <button class="btn btn-default" type="button" ng-click="clearFilter()" ng-show="filterInput.itemCode || filterInput.itemName">Clear</button>
-        </div>
-      </div>
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="filter-item-code">Item Code</label>
-          <input ng-model="filterInput.itemCode" type="text" class="form-control" id="filter-item-code">
-        </div>
-      </div>
-      <div class="col-xs-12 col-sm-2">
-        <div class="form-group">
-          <label for="filter-item-name">Item Name</label>
-          <input ng-model="filterInput.itemName" type="text" class="form-control" id="filter-item-name">
-        </div>
-      </div>
-    </div>
-
 
     <ng-form name="form" class="form edit-form delivery-note-form">
 
       <form-error-dialog></form-error-dialog>
 
-
-      <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by $index">
+      <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by $index" ng-hide="!itemQuantities[item.masterItemId] && ( state == 'review' || state == 'view' )">
         <div class="row">
 
           <div class="col-xs-12 col-sm-4">
@@ -197,7 +189,7 @@
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
               <label for="item-quantity-{{ $index }}">Quantity</label>
-              <input ng-model="quantity" type="text" class="form-control" id="item-quantity-{{ $index }}" ng-readonly="readOnly">
+              <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" id="item-quantity-{{ $index }}" ng-readonly="readOnly">
             </div>
           </div>
 
