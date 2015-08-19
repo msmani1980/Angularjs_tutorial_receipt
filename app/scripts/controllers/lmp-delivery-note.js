@@ -271,6 +271,10 @@ angular.module('ts5App')
       }
     };
 
+    $scope.calculateBooked = function(item){
+      return item.deliveredQuantity - item.ullageQuantity;
+    };
+
     function saveDeliveryNoteFailed(response){
       $scope.displayError = true;
       $scope.toggleReview();
