@@ -62,9 +62,11 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     $scope.isCurrentCountMismatched = function (stockItem) {
       var currentCountExpected = (stockItem.openingQuantity + stockItem.receivedQuantity - stockItem.dispatchedQuantity);
-      if (stockItem.currentCountQuantity > currentCountExpected) {
-        return 'bg-danger';
-      }
+      return (stockItem.currentCountQuantity > currentCountExpected);
     };
+
+    $scope.isRecordUpdatedToday = function(stockItem) {
+      console.log(stockItem);
+    }
 
   });

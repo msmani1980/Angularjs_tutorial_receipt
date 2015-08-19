@@ -54,6 +54,7 @@
       <div class="col-xs-12 col-sm-2">
         <div class="form-group">
           <label>Todays Date:</label>
+
           <p>{{todaysDate}}</p>
         </div>
       </div>
@@ -61,14 +62,16 @@
       <div class="col-xs-12 col-sm-3">
         <div class="form-group">
           <label>Item Code</label>
-          <input ng-model="search.itemCode" type="text" class="form-control" id="filter-item-code" placeholder="Search" ng-readonly="readOnly"/>
+          <input ng-model="search.itemCode" type="text" class="form-control" id="filter-item-code" placeholder="Search"
+                 ng-readonly="readOnly"/>
         </div>
       </div>
 
       <div class="col-xs-12 col-sm-3">
         <div class="form-group">
           <label>Item Name</label>
-          <input ng-model="search.itemName" type="text" class="form-control" id="filter-item-name" placeholder="Search" ng-readonly="readOnly"/>
+          <input ng-model="search.itemName" type="text" class="form-control" id="filter-item-name" placeholder="Search"
+                 ng-readonly="readOnly"/>
         </div>
       </div>
 
@@ -84,34 +87,38 @@
 
     <table ng-show="searchResults.length" class="table table-bordered table-hover ng-scope">
       <thead>
-        <tr>
-          <th>Item Code</th>
-          <th>Item Name</th>
-          <th>Opening Count</th>
-          <th>Goods Received</th>
-          <th>Dispatched Count</th>
-          <th>Current Count</th>
-        </tr>
+      <tr>
+        <th>Item Code</th>
+        <th>Item Name</th>
+        <th>Opening Count</th>
+        <th>Goods Received</th>
+        <th>Dispatched Count</th>
+        <th>Current Count</th>
+      </tr>
       </thead>
       <tbody>
 
-        <tr ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults" ng-class="isCurrentCountMismatched(stockItem)">
-          <td>{{stockItem.itemCode}}</td>
-          <td>{{stockItem.itemName}}</td>
-          <td>
-            <input type="text" class="form-control text-right" value="{{stockItem.openingQuantity}}" ng-disabled="true"/>
-          </td>
-          <td>
-            <input type="text" class="form-control text-right" value="{{stockItem.receivedQuantity}}" ng-disabled="true"/>
-          </td>
-          <td>
-            <input type="text" class="form-control text-right" value="{{stockItem.dispatchedQuantity}}" ng-disabled="true"/>
-          </td>
-          <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]"
-              ng-click="stockTakeReasonOpen(stockItem)">
-            <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentCountQuantity}}" ng-readonly="true"/>
-          </td>
-        </tr>
+      <tr
+        ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults"
+        ng-class="{'bg-danger':isCurrentCountMismatched(stockItem), 'bg-info':isRecordUpdatedToday(stockItem)}">
+        <td>{{stockItem.itemCode}}</td>
+        <td>{{stockItem.itemName}}</td>
+        <td>
+          <input type="text" class="form-control text-right" value="{{stockItem.openingQuantity}}" ng-disabled="true"/>
+        </td>
+        <td>
+          <input type="text" class="form-control text-right" value="{{stockItem.receivedQuantity}}" ng-disabled="true"/>
+        </td>
+        <td>
+          <input type="text" class="form-control text-right" value="{{stockItem.dispatchedQuantity}}"
+                 ng-disabled="true"/>
+        </td>
+        <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]"
+            ng-click="stockTakeReasonOpen(stockItem)">
+          <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentCountQuantity}}"
+                 ng-readonly="true"/>
+        </td>
+      </tr>
 
       </tbody>
     </table>
