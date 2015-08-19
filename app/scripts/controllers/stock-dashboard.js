@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('StockDashboardCtrl', function($scope, $http, GlobalMenuService, stockDashboardService,
-    catererStationService, companyReasonCodesService, dateUtility) {
+    catererStationService, companyReasonCodesService, dateUtility, $filter) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
@@ -35,9 +35,7 @@ angular.module('ts5App')
     };
 
     this.getUllageReasonsFromResponse = function(dataFromAPI) {
-      $scope.ullageReasons = dataFromAPI.companyReasonCodes.filter(function(reasonCode) {
-        return reasonCode.reasonTypeName === 'Ullage';
-      });
+      $scope.ullageReasons = $filter('filter')(dataFromAPI.companyReasonCodes, {reasonTypeName:'Ullage'}, true);
     };
 
     this.init = function() {
