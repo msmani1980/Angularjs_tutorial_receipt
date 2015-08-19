@@ -39,7 +39,7 @@
                              required="true"
                              ng-model="image.startDate">
           </date-picker-field>
-          <date-picker-field disable="viewOnly || itemIsInactive"
+          <date-picker-field disable="viewOnly || $parent.isDisabled()"
                              form="form"
                              name="imageEffectiveTo"
                              label="Effective To"

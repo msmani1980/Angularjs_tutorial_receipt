@@ -48,6 +48,8 @@ angular.module('ts5App')
       $scope.deliveryNote = angular.copy(response);
       $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, 'itemName');
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
+      $scope.deliveryNote.createdOn = dateUtility.removeMilliseconds($scope.deliveryNote.createdOn);
+      $scope.deliveryNote.updatedOn = dateUtility.removeMilliseconds($scope.deliveryNote.updatedOn);
     }
 
     function deliveryNoteFormErrorWatcher(){
@@ -114,12 +116,12 @@ angular.module('ts5App')
         return item.masterItemId;
       });
       var filteredResponseMasterItems = items.filter(function(item){
-        return devlieryNoteItemIds.indexOf(item.itemMasterId) === -1;
+        return devlieryNoteItemIds.indexOf(item.masterItemId) === -1;
       });
 
       var newMasterItems = filteredResponseMasterItems.map(function(item){
         return {
-          masterItemId: item.itemMasterId,
+          masterItemId: item.masterItemId,
           itemName: item.itemName,
           itemCode: item.itemCode
         };
@@ -166,7 +168,7 @@ angular.module('ts5App')
 
     function removeNullDeliveredItems(){
       $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item){
-        return item.deliveredQuantity || item.expectedQuantity;
+        return item.deliveredQuantity;
       });
     }
 
@@ -175,6 +177,7 @@ angular.module('ts5App')
     }
 
     function saveDeliveryNoteResolution(response){
+      hideLoadingModal();
       showMessage(_formSaveSuccessText, 'success');
       if($scope.deliveryNote.isAccepted){
         $location.path('/manage-goods-received');
