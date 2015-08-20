@@ -36,7 +36,7 @@ angular.module('ts5App').directive('stockTakeReason', function () {
 
     $scope.stockTakeReasonOpen = function (stockitem) {
       $scope.id = stockitem.id;
-      $scope.currentCount = stockitem.currentCount;
+      $scope.currentCountQuantity = stockitem.currentCountQuantity;
       $scope.newCount = null;
       $scope.masterItemId = stockitem.masterItemId;
       $scope.catererStationId = stockitem.catererStationId;
