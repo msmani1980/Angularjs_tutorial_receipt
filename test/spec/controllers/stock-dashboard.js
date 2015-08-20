@@ -176,7 +176,7 @@ describe('Controller: StockDashboardCtrl', function() {
 
     describe('isCurrentCountMismatched method', function() {
 
-      it('should return true if current count is more than expected', function() {
+      it('should return true if current count is different from expected', function() {
         var stockItemTrue = {
           openingQuantity: 5,
           receivedQuantity: 5,
@@ -186,7 +186,7 @@ describe('Controller: StockDashboardCtrl', function() {
         expect(scope.isCurrentCountMismatched(stockItemTrue)).toBeTruthy();
       });
 
-      it('should return false if current count is less than or equal to expected', function() {
+      it('should return false if current count is same as expected', function() {
         var stockItemFalse = {
           openingQuantity: 5,
           receivedQuantity: 5,
@@ -194,6 +194,24 @@ describe('Controller: StockDashboardCtrl', function() {
           currentCountQuantity: 10
         };
         expect(scope.isCurrentCountMismatched(stockItemFalse)).toBeFalsy();
+      });
+
+    });
+
+    describe('isRecordUpdatedToday method', function() {
+      it('should return true if date is today', function() {
+
+        var stockItemTrue = {
+          lastUpdatedOn: moment().format('YYYY/MM/DD')
+        };
+        expect(scope.isRecordUpdatedToday(stockItemTrue)).toBe(true);
+      });
+
+      it('should return false if current count is same as expected', function() {
+        var stockItemFalse = {
+          lastUpdatedOn: '2011-09-23 14:39:06.134748'
+        };
+        expect(scope.isRecordUpdatedToday(stockItemFalse)).toBe(false);
       });
 
     });

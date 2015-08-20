@@ -40,7 +40,7 @@
               ng-disabled="isCatererStationListReadOnly()"
               ng-model="selectedCateringStation"
               ng-options="cateringStation.name + ' - ' + cateringStation.code for cateringStation in cateringStationList | orderBy:'name' track by cateringStation.id">
-              <option selected="selected" value>Select Catering Station</option>
+              <option selected="selected" value disabled>Select Catering Station</option>
             </select>
           </div>
         </div>
@@ -103,7 +103,7 @@
 
       <tr
         ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults"
-        ng-class="{'bg-danger':isCurrentCountMismatched(stockItem), 'bg-info':isRecordUpdatedToday(stockItem)}">
+        ng-class="{'bg-success':isRecordUpdatedToday(stockItem), 'bg-danger':isCurrentCountMismatched(stockItem) && !isRecordUpdatedToday(stockItem)}">
         <td>{{stockItem.itemCode}}</td>
         <td>{{stockItem.itemName}}</td>
         <td>
