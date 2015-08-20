@@ -165,6 +165,7 @@ angular.module('ts5App')
 
     function saveStockTakeResolution(response){
       showMessage(_formSaveSuccessText, 'success');
+      hideLoadingModal();
       if($scope.stockTake.isSubmitted){
         $location.path('/stock-take-report');
         return;
