@@ -67,7 +67,7 @@ angular.module('ts5App')
     this.formatStockTakeDates = function() {
       if(!Array.isArray($scope.stockTakeList)) { return; }
       $scope.stockTakeList.map(function(stockTake){
-        stockTake.updatedOn = stockTake.updatedOn.replace(/\.[0-9]+/, '');
+        stockTake.updatedOn = dateUtility.removeMilliseconds(stockTake.updatedOn);
         return stockTake;
       });
     };

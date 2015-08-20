@@ -9,7 +9,8 @@ describe('Service: stockTakeService', function () {
     $httpBackend,
     testObject,
     dataFromAPI,
-    stockTakeListJSON;
+    stockTakeListJSON,
+    Upload;
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -115,6 +116,37 @@ describe('Service: stockTakeService', function () {
       stockTakeService.updateStockTake({});
       $httpBackend.expectPUT(/stock-management\/stock-takes/);
       $httpBackend.flush();
+    });
+  });
+
+
+  describe('importFromExcel', function () {
+    var mockFile;
+    var mockFn;
+    it('should be accessible in service', function () {
+      expect(!!stockTakeService.importFromExcel).toBe(true);
+    });
+
+    beforeEach(inject(function (_Upload_) {
+      Upload = _Upload_;
+      mockFn = {};
+      spyOn(Upload, 'upload').and.returnValue(mockFn);
+
+      mockFile =
+      {
+        $$hashKey: 'object:277',
+        lastModified: 1430772953000,
+        lastModifiedDate: 'Mon May 04 2015 16:55:53 GMT-0400 (EDT)',
+        name: 'item-c8b71477-c9eb-4f7c-ac20-a29f91bb4636.png',
+        size: 7801,
+        type: 'file/spreadsheet',
+        webkitRelativePath: ''
+      };
+    }));
+
+    it('should call the upload function', function () {
+      stockTakeService.importFromExcel('403', mockFile);
+      expect(Upload.upload).toHaveBeenCalled();
     });
   });
 

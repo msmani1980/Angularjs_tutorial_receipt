@@ -72,12 +72,19 @@ describe('Controller: StockDashboardCtrl', function() {
       });
 
       it('should return a list of dashboard items', function() {
-        scope.updateStockItems(1);
+        scope.selectedCateringStation = {
+          id: 1,
+          name:'fakeCateringStation'
+        };
+        scope.$digest();
         expect(stockDashboardService.getStockDashboardItems).toHaveBeenCalled();
       });
 
       it('should attach the stock dashboard list to the scope', function() {
-        scope.updateStockItems(1);
+        scope.selectedCateringStation = {
+          id: 1,
+          name:'fakeCateringStation'
+        };
         scope.$digest();
         expect(scope.stockDashboardItemsList).toBeDefined();
       });
@@ -167,7 +174,7 @@ describe('Controller: StockDashboardCtrl', function() {
 
     });
 
-    describe('isClassDanger method', function() {
+    describe('isCurrentCountMismatched method', function() {
 
       it('should return true if current count is more than expected', function() {
         var stockItemTrue = {
@@ -176,7 +183,7 @@ describe('Controller: StockDashboardCtrl', function() {
           dispatchedQuantity: 0,
           currentCountQuantity: 11
         };
-        expect(scope.isClassDanger(stockItemTrue)).toBeTruthy();
+        expect(scope.isCurrentCountMismatched(stockItemTrue)).toBeTruthy();
       });
 
       it('should return false if current count is less than or equal to expected', function() {
@@ -186,7 +193,7 @@ describe('Controller: StockDashboardCtrl', function() {
           dispatchedQuantity: 0,
           currentCountQuantity: 10
         };
-        expect(scope.isClassDanger(stockItemFalse)).toBeFalsy();
+        expect(scope.isCurrentCountMismatched(stockItemFalse)).toBeFalsy();
       });
 
     });

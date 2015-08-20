@@ -26,7 +26,7 @@
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <date-picker-field disable="viewOnly || itemIsInactive" form="form" label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" min-date="( editingItem ? '0d' : '+1d')" required="true"></date-picker-field>
+            <date-picker-field disable="viewOnly || $parent.isDisabled() " form="form" label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" min-date="( editingItem ? '0d' : '+1d')" required="true"></date-picker-field>
           </div>
 
         </div>
