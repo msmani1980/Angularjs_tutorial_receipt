@@ -1,4 +1,5 @@
 'use strict';
+/*global moment*/
 
 describe('Date Utility service', function () {
 
