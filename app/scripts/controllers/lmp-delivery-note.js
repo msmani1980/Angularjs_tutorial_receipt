@@ -277,7 +277,15 @@ angular.module('ts5App')
     };
 
     $scope.calculateBooked = function(item){
-      return item.deliveredQuantity - item.ullageQuantity;
+      var deliveredQuantity = 0;
+      if(item.deliveredQuantity){
+        deliveredQuantity = item.deliveredQuantity;
+      }
+      var ullageQuantity = 0;
+      if(item.ullageQuantity){
+        ullageQuantity = item.ullageQuantity;
+      }
+      return deliveredQuantity - ullageQuantity;
     };
 
     function saveDeliveryNoteFailed(response){
