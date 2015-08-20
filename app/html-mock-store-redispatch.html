@@ -21,6 +21,7 @@
       <li data-step="1" data-name="createStoreInstance" class="active"><span class="badge">1</span>Create Store Instance<span class="chevron"></span></li>
       <li data-step="2" data-name="packing"><span class="badge">2</span>Packing<span class="chevron"></span></li>
       <li data-step="3" data-name="assignSeals"><span class="badge">3</span>Assign Seals<span class="chevron"></span></li>
+      <li data-step="4" data-name="dispatch"><span class="badge">4</span>Review &amp; Dispatch<span class="chevron"></span></li>
     </ul>
 
     <div class="step-content">
@@ -40,11 +41,17 @@
             </div>
 <!-- TODO: IF ONLY ONE LMP STATION IS AVAILABLE, USE READ-ONLY (BELOW) INSTEAD OF SELECT (ABOVE)  -->
 <!--               <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true"> -->
-
           </div>
 
           <div class="form-group">
-            <label for="date" class="col-sm-4 control-label">Date*</label>
+            <label for="storeNumber" class="col-sm-4 control-label">Store Number</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled="disabled">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="scheduleDate" class="col-sm-4 control-label">Schedule Date*</label>
             <div class="datepicker fuelux" id="myDatepicker">
               <div class="col-sm-8">
                 <div class="input-group">
@@ -129,14 +136,6 @@
               <input type="text" class="form-control" id="scheduleNumber" placeholder="1234">
             </div>
           </div>
-
-          <div class="form-group">
-            <label for="storeNumber" class="col-sm-4 control-label">Store Number</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled="disabled">
-            </div>
-          </div>
-
           
           <div class="form-group">
             <label for="selectMenu" class="col-sm-4 control-label">Aircraft Tail Number</label>
@@ -150,6 +149,13 @@
             </div>
           </div>
 
+          <div class="form-group">
+            <label for="storeInstanceNumber" class="col-sm-4 control-label">Store Instance Number</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="storeInstanceNumber" placeholder="123456" disabled="disabled">
+            </div>
+          </div>
+
         </div>
         </ng-form>
       </div>
@@ -158,33 +164,38 @@
       <div class="step-pane sample-pane" data-step="2">
         <ng-form action="">
         
+          <!-- INFORMATION BAR -->
           <div class="well">
             <table class="table">
               <thead>
                 <tr>
                   <th>LMP Station</th>
-                  <th>Date</th>
-                  <th>Schedule Number</th>
                   <th>Store Number</th>
+                  <th>Schedule Date</th>
+                  <th>Schedule Number</th>
                   <th>Aircraft Tail Number</th>
+                  <th>Store Instance Number</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>
-                    <input type="text" class="form-control" id="lmpStation" placeholder="LGW" disabled>
+                    <input type="text" class="form-control" id="lmpStation" placeholder="LGW" disabled="disabled">
                   </td>
                   <td>
-                    <input type="text" class="form-control" id="Date" placeholder="12/25/2105" disabled>
+                    <input type="text" class="form-control" id="Date" placeholder="12/25/2105" disabled="disabled">
                   </td>
                   <td>
-                    <input type="text" class="form-control" id="scheduleNumber" placeholder="1234" disabled>
+                    <input type="text" class="form-control" id="scheduleNumber" placeholder="1234" disabled="disabled">
                   </td>
                   <td>
-                    <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled>
+                    <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled="disabled">
                   </td>
                   <td>
-                    <input type="text" class="form-control" id="aircraftTailNumber" placeholder="AB-CDE" disabled>
+                    <input type="text" class="form-control" id="aircraftTailNumber" placeholder="AB-CDE" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="storeInstanceNumber" placeholder="123456" disabled="disabled">
                   </td>
                 </tr>
               </tbody>
@@ -241,81 +252,9 @@
                   <th>Required Quantity</th>
                   <th>Picked Quantity</th>
                   <th>Ullage</th>
-                  <th>Reason Code</th>
+                  <th>Ullage Reason</th>
                 </tr>
               </thead>
-              
-              
-<!--               <div class="well"> -->
-<!--           <div class="row"> -->
-
-<!--             <div class="col-xs-12 col-sm-2"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label for="itemCode">Item Code</label> -->
-<!--                 <input ng-model="itemCode" type="text" class="form-control" id="item-code" -->
-<!--                        placeholder="0001" ng-readonly="readOnly" ng-disabled="true"> -->
-<!--               </div> -->
-<!--             </div> -->
-  
-<!-- <!-- TODO: ITEM CODE (ABOVE) WILL BE AFFECTED BY ITEM NAME (BELOW) AND PULL CORRECT DATA -->
-<!--             <div class="col-xs-12 col-sm-4"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Item Name</label> -->
-<!--                  <input ng-model="itemName" type="text" class="form-control" id="item-name" -->
-<!--                        placeholder="Coke" ng-readonly="readOnly" ng-disabled="true"> -->
-<!--               </div> -->
-<!--             </div> -->
-
-<!--             <div class="col-xs-12 col-sm-1"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Expected</label> -->
-<!--                 <input ng-model="expectedQty" type="text" class="form-control" id="expected-qty" -->
-<!--                        placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly"> -->
-<!--               </div> -->
-<!--             </div> -->
-
-<!--             <div class="col-xs-12 col-sm-1"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Delivered*</label> -->
-<!--                 <input ng-model="deliveredQty" type="text" class="form-control" id="delivered-qty" -->
-<!--                        placeholder="10" custom-validity custom-pattern="time" ng-readonly="readOnly"> -->
-<!--               </div> -->
-<!--             </div> -->
-
-<!--             <div class="col-xs-12 col-sm-1"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Ullage</label> -->
-<!--                 <input ng-model="ullageQty" type="text" class="form-control" id="ullage-qty" -->
-<!--                        placeholder="2" custom-validity custom-pattern="time" ng-readonly="readOnly"> -->
-<!--               </div> -->
-<!--             </div> -->
-
-<!-- <!-- TODO: ULLAGE REASON (BELOW) WILL BE DISABLED UNLESS ULLAGE (ABOVE) IS SET TO AN AMOUNT -->
-<!--             <div class="col-xs-12 col-sm-2"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Ullage Reason*</label> -->
-
-<!--                 <ui-select id="ullage-reason" ng-model="ullageReason" theme="bootstrap"> -->
-<!--                   <ui-select-match placeholder="Broken">{{ $item.ullageReasonCode }}</ui-select-match> -->
-<!--                   <ui-select-choices repeat=""> -->
-<!--                       { item.ullageReasonCode }} ({{ item.ullageReasonName }}) -->
-<!--                   </ui-select-choices> -->
-<!--                 </ui-select> -->
-
-<!--               </div> -->
-<!--             </div> -->
-
-<!--             <div class="col-xs-12 col-sm-1"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Booked</label> -->
-<!--                 <input ng-model="bookedQty" type="text" class="form-control" id="booked-qty" -->
-<!--                        placeholder="8" custom-validity custom-pattern="time" ng-readonly="readOnly" ng-disabled="true"> -->
-<!--               </div> -->
-<!--             </div> -->
-
-<!--           </div> -->
-
-<!--         </div> -->
               
               <tbody>
                 <tr>
@@ -338,21 +277,26 @@
                     <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="0">
                   </td>
                   <td>
-                    <input ng-model="reasonCode" type="text" class="form-control" id="reason-code" placeholder="" ng-show="hidden">
+                    <select class="form-control" id="ullage-reason">
+                      <option>Broken</option>
+                      <option>Lost</option>
+                      <option>Not Present</option>
+                      <option>Dropped</option>
+                    </select>
                   </td>
                 </tr>
                 <tr class="has-discrepancy">
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0002">
+                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0002" disabled="disabled">
                   </td>
                   <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Sprite">
+                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Sprite" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="18">
                   </td>
                   <td>
-                    <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2">
+                    <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="packedQuantity" type="text" class="form-control" id="packed-quantity" placeholder="0">
@@ -361,21 +305,26 @@
                     <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="2">
                   </td>
                   <td>
-                    <input ng-model="reasonCode" type="text" class="form-control" id="reason-code" placeholder="Broken">
+                    <select class="form-control" id="ullage-reason">
+                      <option>Broken</option>
+                      <option>Lost</option>
+                      <option>Not Present</option>
+                      <option>Dropped</option>
+                    </select>
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0001">
+                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0003" disabled="disabled">
                   </td>
                   <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Coke">
+                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Chicken Sandwich" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20">
                   </td>
                   <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20">
+                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="packedQuantity" type="text" class="form-control" id="packed-quantity" placeholder="20">
@@ -384,99 +333,12 @@
                     <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20">
                   </td>
                   <td>
-                    <input ng-model="reasonCode" type="text" class="form-control" id="reason-code" placeholder="Broken">
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0001">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Coke">
-                  </td>
-                  <td>
-                    <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="packedQuantity" type="text" class="form-control" id="packed-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="reasonCode" type="text" class="form-control" id="reason-code" placeholder="Broken">
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0001">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Coke">
-                  </td>
-                  <td>
-                    <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="packedQuantity" type="text" class="form-control" id="packed-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="reasonCode" type="text" class="form-control" id="reason-code" placeholder="Broken">
-                  </td>
-                </tr>                             
-                <tr>
-                  <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0001">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Coke">
-                  </td>
-                  <td>
-                    <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="packedQuantity" type="text" class="form-control" id="packed-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="reasonCode" type="text" class="form-control" id="reason-code" placeholder="Broken">
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0001">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Coke">
-                  </td>
-                  <td>
-                    <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="packedQuantity" type="text" class="form-control" id="packed-quantity" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20">
-                  </td>
-                  <td>
-                    <input ng-model="reasonCode" type="text" class="form-control" id="reason-code" placeholder="Broken">
+                    <select class="form-control" id="ullage-reason">
+                      <option>Broken</option>
+                      <option>Lost</option>
+                      <option>Not Present</option>
+                      <option>Dropped</option>
+                    </select>
                   </td>
                 </tr>
               </tbody>
@@ -492,7 +354,7 @@
                   <th>Retail Item Name</th>
                   <th>Inbound Quantity</th>
                   <th>Ullage</th>
-                  <th>Reason Code</th>
+                  <th>Ullage Reason</th>
                 </tr>
               </thead>
               <tbody>
@@ -510,7 +372,12 @@
                     <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20">
                   </td>
                   <td>
-                    <input ng-model="reasonCode" type="text" class="form-control" id="reason-code" placeholder="Broken">
+                    <select class="form-control" id="ullage-reason">
+                      <option>Broken</option>
+                      <option>Lost</option>
+                      <option>Not Present</option>
+                      <option>Dropped</option>
+                    </select>
                   </td>
                 </tr>
               </tbody>
@@ -524,701 +391,719 @@
       <div class="step-pane sample-pane" data-step="3">
         <ng-form class="form-horizontal" action="">
 
-        <div class="well">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Catering Station</th>
-                <th>Schedule Number</th>
-                <th>Schedule Date</th>
-                <th>Schedule Menu</th>
-                <th>Inventory Reference Number</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="cateringStation" placeholder="LGW" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="A320EU" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="12/25/2105" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="2001" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="GJ1246" disabled>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- PANE 3 - Assign Seals - Outbound --------------------------------------------------------------------- -->
-        <div class="well">
-          <div class="row">
-
-            <div class="col-xs-10">
-              <h3>Outbound</h3>
-            </div>
-
-            <div class="col-xs-2 text-right">
-              <select class="form-control" style="background-color: #66CCFF" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
-                <option style="background-color: #66CCFF">Blue</option>
-                <option style="background-color: #FFCC00">Yellow</option>
-                <option style="background-color: #33CC33">Green</option>
-                <option>White</option>
-              </select>
-            </div>
-
+          <!-- INFORMATION BAR -->
+          <div class="well">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>LMP Station</th>
+                  <th>Store Number</th>
+                  <th>Schedule Date</th>
+                  <th>Schedule Number</th>
+                  <th>Aircraft Tail Number</th>
+                  <th>Store Instance Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="text" class="form-control" id="lmpStation" placeholder="LGW" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="Date" placeholder="12/25/2105" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="scheduleNumber" placeholder="1234" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="aircraftTailNumber" placeholder="AB-CDE" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="storeInstanceNumber" placeholder="123456" disabled="disabled">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
-          <table class="table">
-
-            <thead>
-              <tr>
-                <th width="15%">Seal Number</th>
-                <th width="15%">Number of Seals</th>
-                <th width="15%">From</th>
-                <th width="15%">To</th>
-                <th width="40%">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                </td>
-
-                <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-                <td>
-                  <input type="text" class="form-control sequential-seals-outbound" id="numberOfSeals" placeholder="10">
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-outbound" id="numberOfSealsFrom" placeholder="12465" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-outbound" id="numberOfSealsTo" placeholder="12475" disabled>
-                </td>
-                <td>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                    <input class="sr-only btn btn-default" data-toggle=".sequential-seals-outbound" type="checkbox" value="1"> 
-                    <span class="checkbox-label">Sequential</span>
-                  </label> 
+          
+          <!-- PANE 3 - Assign Seals - Outbound --------------------------------------------------------------------- -->
+          <div class="well seal-color-blue">
+            <div class="row">
+  
+<!--               <div class="col-xs-10"> -->
+<!--                 <h3 class="btn seal-color-blue">Outbound</h3> -->
+<!--               </div> -->
+  
+<!--                 ORIGINAL SELECT FUNCTION TO CHANGE COLORS -->
+<!--               <div class="col-xs-2 text-right">
                 
-                  <!-- TODO: 'ADD SEAL' FUNCTIONALITY --> 
-                  <span id="assignSealsActionButtons">
-                    <button type="button" class="btn btn-primary">
-                      <i class="fa fa-plus"></i> Add Seal
-                    </button>
-                  </span>
-                </td>
-              </tr>
-
-              <!-- TODO: REMOVE ROW. THIS ROW ADDED ONLY TO SHOW 'ADD SEAL' FUNCTIONALITY -->
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12111">
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="20">
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="12111" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="12131" disabled>
-                </td>
-                <td>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
-                    <input class="sr-only btn btn-default" data-toggle=".sequential-seals-outbound-01" type="checkbox" value="1"> 
-                    <span class="checkbox-label">Sequential</span>
-                  </label> 
+<!--                 <select class="form-control" style="background-color: #66CCFF" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;"> -->
+<!--                   <option style="background-color: #66CCFF">Blue</option> -->
+<!--                   <option style="background-color: #FFCC00">Yellow</option> -->
+<!--                   <option style="background-color: #33CC33">Green</option> -->
+<!--                   <option>White</option> -->
+<!--                 </select> -->
+<!--               </div> -->
+  
+            </div>
+  
+            <table class="table">
+  
+              <thead>
+                <tr>
+                  <th width="10%"></th>
+                  <th width="15%">Seal Number</th>
+                  <th width="15%">Number of Seals</th>
+                  <th width="15%">From</th>
+                  <th width="15%">To</th>
+                  <th width="10%"></th>
+                </tr>
+              </thead>
+  
+              <tbody>
+  
+                <tr>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-outbound" type="checkbox" value="1"> 
+                      <span class="checkbox-label">Sequential</span>
+                    </label> 
+                  </td>
                   
-                  <span id="assignSealsActionButtons">
-                    <button type="button" class="btn btn-primary">
-                      <i class="fa fa-plus"></i> Add Seal
-                    </button>
-                    <button type="button" class="btn btn-danger">
-                      <i class="fa fa-close"></i> Remove Seal
-                    </button>
-                  </span>
-                </td>
-              </tr>
-
-            </tbody>
-          </table>
-        </div>
-
-        <!-- PANE 3 - Assign Seals - Hand Over --------------------------------------------------------------------- -->
-        <div class="well">
-          <div class="row">
-
-            <div class="col-xs-6">
-              <h3>Hand Over</h3>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                  </td>
+  
+                  <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
+                  <td>
+                    <input type="text" class="form-control sequential-seals-outbound" id="numberOfSeals" placeholder="10">
+                  </td>
+                  
+                  <td>
+                    <input type="text" class="form-control sequential-seals-outbound" id="numberOfSealsFrom" placeholder="12465" disabled="disabled">
+                  </td>
+                  
+                  <td>
+                    <input type="text" class="form-control sequential-seals-outbound" id="numberOfSealsTo" placeholder="12474" disabled="disabled">
+                  </td>
+                  
+                  <td>
+                    <!-- TODO: 'ADD SEAL' FUNCTIONALITY --> 
+                    <span id="assignSealsActionButtons">
+                      <button type="button" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Add Seal
+                      </button>
+                    </span>
+                  </td>
+                  
+                </tr>
+  
+                <!-- TODO: REMOVE ROW. THIS ROW ADDED ONLY TO SHOW 'ADD SEAL' FUNCTIONALITY -->
+<!--                 <tr> -->
+<!--                   <td> -->
+<!--                     <input type="text" class="form-control" id="sealNumber" placeholder="12111"> -->
+<!--                   </td> -->
+<!--                   <td> -->
+<!--                     <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="20"> -->
+<!--                   </td> -->
+<!--                   <td> -->
+<!--                     <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="12111" disabled> -->
+<!--                   </td> -->
+<!--                   <td> -->
+<!--                     <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="12131" disabled> -->
+<!--                   </td> -->
+<!--                   <td> -->
+<!--                     <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> -->
+<!--                       <input class="sr-only btn btn-default" data-toggle=".sequential-seals-outbound-01" type="checkbox" value="1">  -->
+<!--                       <span class="checkbox-label">Sequential</span> -->
+<!--                     </label>  -->
+                    
+<!--                     <span id="assignSealsActionButtons"> -->
+<!--                       <button type="button" class="btn btn-primary"> -->
+<!--                         <i class="fa fa-plus"></i> Add Seal -->
+<!--                       </button> -->
+<!--                       <button type="button" class="btn btn-danger"> -->
+<!--                         <i class="fa fa-close"></i> Remove Seal -->
+<!--                       </button> -->
+<!--                     </span> -->
+<!--                   </td> -->
+<!--                 </tr> -->
+  
+              </tbody>
+            </table>
+          </div>
+  
+          <!-- PANE 3 - Assign Seals - Hand Over --------------------------------------------------------------------- -->
+          <div class="well seal-color-green">
+            <div class="row">
+  
+<!--               <div class="col-xs-6"> -->
+<!--                 <h3 class="btn sealColor-green" disabled="disabled">Hand Over</h3> -->
+<!--               </div> -->
+  
+              <!-- TODO: 'ADD HAND OVER' FUNCTIONALITY -->
+<!--               <div class="col-xs-4"> -->
+<!--                 <button type="button" class="btn btn-primary pull-right"> -->
+<!--                   <i class="fa fa-plus"></i> Add Hand Over -->
+<!--                 </button> -->
+<!--               </div> -->
+  
             </div>
-
-            <!-- TODO: 'ADD HAND OVER' FUNCTIONALITY -->
-            <div class="col-xs-4">
-              <button type="button" class="btn btn-primary pull-right">
-                <i class="fa fa-plus"></i> Add Hand Over
-              </button>
-            </div>
-
-            <div class="col-xs-2">
-              <select class="form-control" style="background-color: #33CC33" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
-                <option style="background-color: #33CC33">Green</option>
-                <option style="background-color: #66CCFF">Blue</option>
-                <option style="background-color: #FFCC00">Yellow</option>
-                <option>White</option>
-              </select>
-            </div>
+  
+            <table class="table">
+  
+              <thead>
+                <tr>
+                  <th width="10%"></th>
+                  <th width="15%">Seal Number</th>
+                  <th width="15%">Number of Seals</th>
+                  <th width="15%">From</th>
+                  <th width="15%">To</th>
+                  <th width="10%"></th>
+                </tr>
+              </thead>
+  
+              <tbody>
+  
+                <tr>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-handover" type="checkbox" value="1"> 
+                      <span class="checkbox-label">Sequential</span>
+                    </label> 
+                  </td>
+                  
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                  </td>
+  
+                  <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
+                  <td>
+                    <input type="text" class="form-control sequential-seals-handover" id="numberOfSeals" placeholder="10">
+                  </td>
+                  
+                  <td>
+                    <input type="text" class="form-control sequential-seals-handover" id="numberOfSealsFrom" placeholder="12465" disabled="disabled">
+                  </td>
+                  
+                  <td>
+                    <input type="text" class="form-control sequential-seals-handover" id="numberOfSealsTo" placeholder="12474" disabled="disabled">
+                  </td>
+                  
+                  <td>
+                    <!-- TODO: 'ADD SEAL' FUNCTIONALITY --> 
+                    <span id="assignSealsActionButtons">
+                      <button type="button" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Add Seal
+                      </button>
+                    </span>
+                  </td>
+                  
+                </tr>
+  
+              </tbody>
+            </table>
 
           </div>
-
-          <table class="table">
-
-            <thead>
-              <tr>
-                <th width="15%">Seal Number</th>
-                <th width="15%">Number of Seals</th>
-                <th width="15%">From</th>
-                <th width="15%">To</th>
-                <th width="40%">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                </td>
-
-                <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-                <td>
-                  <input type="text" class="form-control sequential-seals-handover" id="numberOfSeals" placeholder="10"></td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-handover" id="numberOfSealsFrom" placeholder="12465" disabled></td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-handover" id="numberOfSealsTo" placeholder="12475" disabled></td>
-                <td>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
-                    <input class="sr-only btn btn-default" data-toggle=".sequential-seals-handover" type="checkbox" value="1">
-                    <span class="checkbox-label">Sequential</span>
-                  </label> 
+  
+          <!-- PANE 3 - Assign Seals - Hand Over COPY --------------------------------------------------------------------- -->
+          <!-- TODO: REMOVE ROW. THIS WELL ADDED ONLY TO SHOW 'ADD HAND OVER' FUNCTIONALITY -->
+<!--           <div class="well"> -->
+<!--             <div class="row"> -->
+  
+<!--               <div class="col-xs-6"> -->
+<!--                 <h3>Hand Over 2</h3> -->
+<!--               </div> -->
+  
+<!--               <div class="col-xs-4 text-right"> -->
+<!--                 <button type="button" class="btn btn-primary"> -->
+<!--                   <i class="fa fa-plus"></i> Add Hand Over -->
+<!--                 </button> -->
+<!--                 <button type="button" class="btn btn-danger"> -->
+<!--                   <i class="fa fa-close"></i> Remove Hand Over -->
+<!--                 </button> -->
+<!--               </div> -->
+  
+<!--               <div class="col-xs-2"> -->
+<!--                 <select class="form-control" style="background-color: #33CC33" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;"> -->
+<!--                   <option style="background-color: #33CC33">Green</option> -->
+<!--                   <option style="background-color: #66CCFF">Blue</option> -->
+<!--                   <option style="background-color: #FFCC00">Yellow</option> -->
+<!--                   <option>White</option> -->
+<!--                 </select> -->
+<!--               </div> -->
+  
+<!--             </div> -->
+  
+<!--             <table class="table"> -->
+  
+<!--               <thead> -->
+<!--                 <tr> -->
+<!--                   <th width="15%">Seal Number</th> -->
+<!--                   <th width="15%">Number of Seals</th> -->
+<!--                   <th width="15%">From</th> -->
+<!--                   <th width="15%">To</th> -->
+<!--                   <th width="40%">Actions</th> -->
+<!--                 </tr> -->
+<!--               </thead> -->
+  
+<!--               <tbody> -->
+  
+<!--                 <tr> -->
+<!--                   <td> -->
+<!--                     <input type="text" class="form-control" id="sealNumber" placeholder="12465"> -->
+<!--                   </td> -->
+  
+<!--                   TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
+<!--                   <td> -->
+<!--                     <input type="text" class="form-control sequential-seals-handover-01" id="numberOfSeals" placeholder="10"> -->
+<!--                   </td> -->
+<!--                   <td> -->
+<!--                     <input type="text" class="form-control sequential-seals-handover-01" id="numberOfSealsFrom" placeholder="12465" disabled> -->
+<!--                   </td> -->
+<!--                   <td> -->
+<!--                     <input type="text" class="form-control sequential-seals-handover-01" id="numberOfSealsTo" placeholder="12475" disabled> -->
+<!--                   </td> -->
+<!--                   <td> -->
+<!--                     <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> -->
+<!--                       <input class="sr-only btn btn-default" data-toggle=".sequential-seals-handover-01" type="checkbox" value="1"> -->
+<!--                       <span class="checkbox-label">Sequential</span> -->
+<!--                     </label> -->
+                    
+<!--                     TODO: 'ADD SEAL' FUNCTIONALITY -->
+<!--                     <span id="assignSealsActionButtons"> -->
+<!--                       <button type="button" class="btn btn-primary"> -->
+<!--                         <i class="fa fa-plus"></i> Add Seal -->
+<!--                       </button> -->
+<!--                     </span> -->
+<!--                   </td> -->
+<!--                 </tr> -->
+  
+<!--               </tbody> -->
+<!--             </table> -->
+<!--           </div> -->
+  
+          <!-- PANE 3 - Assign Seals - Inbound --------------------------------------------------------------------- -->
+          <div class="well seal-color-yellow">
+            <div class="row">
+  
+<!--               <div class="col-xs-10"> -->
+<!--                 <h3 class="btn seal-color-yellow">Inbound</h3> -->
+<!--               </div> -->
+  
+            </div>
+  
+            <table class="table">
+  
+              <thead>
+                <tr>
+                  <th width="10%"></th>
+                  <th width="15%">Seal Number</th>
+                  <th width="15%">Number of Seals</th>
+                  <th width="15%">From</th>
+                  <th width="15%">To</th>
+                  <th width="10%"></th>
+                </tr>
+              </thead>
+  
+              <tbody>
+                <tr>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-inbound" type="checkbox" value="1"> 
+                      <span class="checkbox-label">Sequential</span>
+                    </label> 
+                  </td>
                   
-                  <!-- TODO: 'ADD SEAL' FUNCTIONALITY -->
-                  <span id="assignSealsActionButtons">
-                    <button type="button" class="btn btn-primary">
-                      <i class="fa fa-plus"></i> Add Seal
-                    </button>
-                  </span>
-                </td>
-              </tr>
-
-            </tbody>
-          </table>
-        </div>
-
-        <!-- PANE 3 - Assign Seals - Hand Over COPY --------------------------------------------------------------------- --> <!-- TODO: REMOVE ROW. THIS WELL ADDED ONLY TO SHOW 'ADD HAND OVER' FUNCTIONALITY -->
-        <div class="well">
-          <div class="row">
-
-            <div class="col-xs-6">
-              <h3>Hand Over 2</h3>
-            </div>
-
-            <div class="col-xs-4 text-right">
-              <button type="button" class="btn btn-primary">
-                <i class="fa fa-plus"></i> Add Hand Over
-              </button>
-              <button type="button" class="btn btn-danger">
-                <i class="fa fa-close"></i> Remove Hand Over
-              </button>
-            </div>
-
-            <div class="col-xs-2">
-              <select class="form-control" style="background-color: #33CC33" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
-                <option style="background-color: #33CC33">Green</option>
-                <option style="background-color: #66CCFF">Blue</option>
-                <option style="background-color: #FFCC00">Yellow</option>
-                <option>White</option>
-              </select>
-            </div>
-
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                  </td>
+  
+                  <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
+                  <td>
+                    <input type="text" class="form-control sequential-seals-inbound" id="numberOfSeals" placeholder="10">
+                  </td>
+                  
+                  <td>
+                    <input type="text" class="form-control sequential-seals-inbound" id="numberOfSealsFrom" placeholder="12465" disabled="disabled">
+                  </td>
+                  
+                  <td>
+                    <input type="text" class="form-control sequential-seals-inbound" id="numberOfSealsTo" placeholder="12474" disabled="disabled">
+                  </td>
+                  
+                  <td>
+                    <!-- TODO: 'ADD SEAL' FUNCTIONALITY --> 
+                    <span id="assignSealsActionButtons">
+                      <button type="button" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Add Seal
+                      </button>
+                    </span>
+                  </td>
+                  
+                </tr>
+  
+              </tbody>
+            </table>
+            
           </div>
-
-          <table class="table">
-
-            <thead>
-              <tr>
-                <th width="15%">Seal Number</th>
-                <th width="15%">Number of Seals</th>
-                <th width="15%">From</th>
-                <th width="15%">To</th>
-                <th width="40%">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                </td>
-
-                <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-                <td>
-                  <input type="text" class="form-control sequential-seals-handover-01" id="numberOfSeals" placeholder="10">
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-handover-01" id="numberOfSealsFrom" placeholder="12465" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-handover-01" id="numberOfSealsTo" placeholder="12475" disabled>
-                </td>
-                <td>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
-                    <input class="sr-only btn btn-default" data-toggle=".sequential-seals-handover-01" type="checkbox" value="1">
-                    <span class="checkbox-label">Sequential</span>
-                  </label>
+  
+          <!-- PANE 3 - Assign Seals - High Security --------------------------------------------------------------------- -->
+          <div class="well seal-color-white">
+            <div class="row">
+  
+<!--               <div class="col-xs-10"> -->
+<!--                 <h3 class="btn seal-color-white">High Security</h3> -->
+<!--               </div> -->
+  
+            </div>
+  
+             <table class="table">
+  
+              <thead>
+                <tr>
+                  <th width="10%"></th>
+                  <th width="15%">Seal Number</th>
+                  <th width="15%">Number of Seals</th>
+                  <th width="15%">From</th>
+                  <th width="15%">To</th>
+                  <th width="10%"></th>
+                </tr>
+              </thead>
+  
+              <tbody>
+                <tr>
+                  <td>
+                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-high-security" type="checkbox" value="1"> 
+                      <span class="checkbox-label">Sequential</span>
+                    </label> 
+                  </td>
                   
-                  <!-- TODO: 'ADD SEAL' FUNCTIONALITY -->
-                  <span id="assignSealsActionButtons">
-                    <button type="button" class="btn btn-primary">
-                      <i class="fa fa-plus"></i> Add Seal
-                    </button>
-                  </span>
-                </td>
-              </tr>
-
-            </tbody>
-          </table>
-        </div>
-
-        <!-- PANE 3 - Assign Seals - Inbound --------------------------------------------------------------------- -->
-        <div class="well">
-          <div class="row">
-
-            <div class="col-xs-10">
-              <h3>Inbound</h3>
-            </div>
-
-            <div class="col-xs-2">
-              <select class="form-control" style="background-color: #FFCC00" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
-                <option style="background-color: #FFCC00">Yellow</option>
-                <option style="background-color: #66CCFF">Blue</option>
-                <option style="background-color: #33CC33">Green</option>
-                <option>White</option>
-              </select>
-            </div>
-
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
+                  </td>
+  
+                  <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
+                  <td>
+                    <input type="text" class="form-control sequential-seals-high-security" id="numberOfSeals" placeholder="10">
+                  </td>
+                  
+                  <td>
+                    <input type="text" class="form-control sequential-seals-high-security" id="numberOfSealsFrom" placeholder="12465" disabled="disabled">
+                  </td>
+                  
+                  <td>
+                    <input type="text" class="form-control sequential-seals-high-security" id="numberOfSealsTo" placeholder="12474" disabled="disabled">
+                  </td>
+                  
+                  <td>
+                    <!-- TODO: 'ADD SEAL' FUNCTIONALITY --> 
+                    <span id="assignSealsActionButtons">
+                      <button type="button" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> Add Seal
+                      </button>
+                    </span>
+                  </td>
+                  
+                </tr>
+  
+              </tbody>
+            </table>
+            
           </div>
-
-          <table class="table">
-
-            <thead>
-              <tr>
-                <th width="15%">Seal Number</th>
-                <th width="15%">Number of Seals</th>
-                <th width="15%">From</th>
-                <th width="15%">To</th>
-                <th width="40%">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                </td>
-
-                <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-                <td>
-                  <input type="text" class="form-control sequential-seals-inbound" id="numberOfSeals" placeholder="10">
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-inbound" id="numberOfSealsFrom" placeholder="12465" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-inbound" id="numberOfSealsTo" placeholder="12475" disabled>
-                </td>
-                <td>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
-                    <input class="sr-only btn btn-default" data-toggle=".sequential-seals-inbound" type="checkbox" value="1">
-                    <span class="checkbox-label">Sequential</span>
-                  </label>
-                  
-                  <!-- TODO: 'ADD SEAL' FUNCTIONALITY -->
-                  <span id="assignSealsActionButtons">
-                    <button type="button" class="btn btn-primary">
-                      <i class="fa fa-plus"></i> Add Seal
-                    </button>
-                  </span>
-                </td>
-              </tr>
-
-            </tbody>
-          </table>
-        </div>
-
-        <!-- PANE 3 - Assign Seals - High Security --------------------------------------------------------------------- -->
-        <div class="well">
-          <div class="row">
-
-            <div class="col-xs-10">
-              <h3>High Security</h3>
-            </div>
-
-            <div class="col-xs-2">
-              <select class="form-control" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;">
-                <option>White</option>
-                <option style="background-color: #66CCFF">Blue</option>
-                <option style="background-color: #FFCC00">Yellow</option>
-                <option style="background-color: #33CC33">Green</option>
-              </select>
-            </div>
-
-          </div>
-
-          <table class="table">
-
-            <thead>
-              <tr>
-                <th width="15%">Seal Number</th>
-                <th width="15%">Number of Seals</th>
-                <th width="15%">From</th>
-                <th width="15%">To</th>
-                <th width="40%">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                </td>
-
-                <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-                <td>
-                  <input type="text" class="form-control sequential-seals-high-security" id="numberOfSeals" placeholder="10">
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-high-security" id="numberOfSealsFrom" placeholder="12465" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control sequential-seals-high-security" id="numberOfSealsTo" placeholder="12475" disabled>
-                </td>
-                <td>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
-                    <input class="sr-only btn btn-default" data-toggle=".sequential-seals-high-security" type="checkbox" value="1">
-                    <span class="checkbox-label">Sequential</span>
-                  </label>
-                  
-                  <!-- TODO: 'ADD SEAL' FUNCTIONALITY -->
-                  <span id="assignSealsActionButtons">
-                    <button type="button" class="btn btn-primary">
-                      <i class="fa fa-plus"></i> Add Seal
-                    </button>
-                  </span>
-                </td>
-              </tr>
-
-            </tbody>
-          </table>
-        </div>
 
         </ng-form>
       </div>
-
+      
       <!-- PANE 4 - Dispatch --------------------------------------------------------------------- -->
       <div class="step-pane sample-pane" data-step="4">
         <ng-form class="form-horizontal" action="">
 
-        <div class="well">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Catering Station</th>
-                <th>Schedule Number</th>
-                <th>Schedule Date</th>
-                <th>Schedule Menu</th>
-                <th>Inventory Reference Number</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="cateringStation" placeholder="LGW" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="A320EU" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="12/25/2105" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="2001" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="GJ1246" disabled>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          <!-- INFORMATION BAR -->
+          <div class="well">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>LMP Station</th>
+                  <th>Store Number</th>
+                  <th>Schedule Date</th>
+                  <th>Schedule Number</th>
+                  <th>Aircraft Tail Number</th>
+                  <th>Store Instance Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="text" class="form-control" id="lmpStation" placeholder="LGW" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="Date" placeholder="12/25/2105" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="scheduleNumber" placeholder="1234" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="aircraftTailNumber" placeholder="AB-CDE" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="storeInstanceNumber" placeholder="123456" disabled="disabled">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-        <div class="well">
-          <table class="table table-striped table-scrollable">
-            <div class="row">
-              <div class="col-xs-10">
-                <h3>Inventory</h3>
+          <div class="well">
+            <table class="table table-striped table-scrollable">
+              <div class="row">
+                <div class="col-xs-10">
+                  <h3>Inventory</h3>
+                </div>
+                <div class="col-xs-2">
+                  <button type="button" class="btn btn-info pull-right" id="goToInPacking">Edit</button>
+                </div>
               </div>
-              <div class="col-xs-2">
-                <button type="button" class="btn btn-info pull-right" id="goToInPacking">Edit</button>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Expected</th>
+                  <th>Actual</th>
+                </tr>
+              </thead>
+              <tbody>
+                   <tr>
+                  <td>Coke</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Coke</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+                <tr class="has-discrepancy">
+                  <td>Pepsi</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Chicken Sandwich</td>
+                  <td>
+                    <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="actualQuantity" placeholder="20">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+  
+          <div class="well">
+            <table class="table">
+              <div class="row">
+                <div class="col-xs-10">
+                  <h3>Seal Number Assignment</h3>
+                </div>
+                <div class="col-xs-2">
+                  <button type="button" class="btn btn-info pull-right" id="goToAssignSeals">Edit</button>
+                </div>
               </div>
-            </div>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Expected</th>
-                <th>Actual</th>
-              </tr>
-            </thead>
-            <tbody>
-                 <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr>
-                <td>Coke</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>Pepsi</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control has-error" id="actualQuantity" placeholder="16">
-                </td>
-              </tr>
-              <tr>
-                <td>Chicken Sandwich</td>
-                <td>
-                  <input type="text" class="form-control" id="expectedQuantity" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="actualQuantity" placeholder="20">
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="well">
-          <table class="table">
-            <div class="row">
-              <div class="col-xs-10">
-                <h3>Seal Number Assignment</h3>
-              </div>
-              <div class="col-xs-2">
-                <button type="button" class="btn btn-info pull-right" id="goToAssignSeals">Edit</button>
-              </div>
-            </div>
-            
-            <thead>
-              <tr>
-                <th>Seal Type</th>
-                <th>Seal Color</th>
-                <th>Seal Number</th>
-                <th>Number of Seals</th>
-                <th>From</th>
-                <th>To</th>
-              </tr>
-            </thead>
-            
-            <tbody>
-              <tr>
-                <td>Outbound</td>
-                <td>
-                  <input type="text" class="form-control" id="sealColor" placeholder="Blue" style="background-color: #66CCFF" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12465" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="numberOfSeals" placeholder="10" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="numberOfSealsFrom" placeholder="12465" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="numberOfSealsTo" placeholder="12475" disabled>
-                </td>
-              <tr>
-                <td>Hand Over</td>
-                <td>
-                  <input type="text" class="form-control" id="sealColor" placeholder="Green" style="background-color: #33CC33" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12444" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="1" disabled>
-                </td>
-              </tr>
-              <tr>
-                <td>Inbound</td>
-                <td>
-                  <input type="text" class="form-control" id="sealColor" placeholder="Yellow" style="background-color: #FFCC00" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12340" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="numberOfSeals" placeholder="20" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="numberOfSealsFrom" placeholder="12340" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="numberOfSealsTo" placeholder="12460" disabled>
-                </td>
-              <tr>
-              <tr>
-                <td>High Security</td>
-                <td>
-                  <input type="text" class="form-control" id="sealColor" placeholder="White" style="background-color: #FFFFFF" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="12399" disabled>
-                </td>
-                <td>
-                  <input type="text" class="form-control" id="sealNumber" placeholder="1" disabled>
-                </td>
-              <tr>
-            </tbody>
-            
-          </table>
-        </div>
+              
+              <thead>
+                <tr>
+                  <th>Seal Type</th>
+                  <th>Seal Color</th>
+                  <th>Seal Number</th>
+                  <th>Number of Seals</th>
+                  <th>From</th>
+                  <th>To</th>
+                </tr>
+              </thead>
+              
+              <tbody>
+                <tr>
+                  <td>Outbound</td>
+                  <td>
+                    <input type="text" class="form-control" id="sealColor" placeholder="Blue" style="background-color: #66CCFF" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12465" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="numberOfSeals" placeholder="10" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="numberOfSealsFrom" placeholder="12465" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="numberOfSealsTo" placeholder="12474" disabled="disabled">
+                  </td>
+                <tr>
+                  <td>Hand Over</td>
+                  <td>
+                    <input type="text" class="form-control" id="sealColor" placeholder="Green" style="background-color: #33CC33" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12444" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="1" disabled="disabled">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Inbound</td>
+                  <td>
+                    <input type="text" class="form-control" id="sealColor" placeholder="Yellow" style="background-color: #FFCC00" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12340" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="numberOfSeals" placeholder="20" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="numberOfSealsFrom" placeholder="12340" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="numberOfSealsTo" placeholder="12459" disabled="disabled">
+                  </td>
+                <tr>
+                <tr>
+                  <td>High Security</td>
+                  <td>
+                    <input type="text" class="form-control" id="sealColor" placeholder="White" style="background-color: #FFFFFF" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="12399" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="sealNumber" placeholder="1" disabled="disabled">
+                  </td>
+                <tr>
+              </tbody>
+              
+            </table>
+          </div>
 
         </ng-form>
       </div>
