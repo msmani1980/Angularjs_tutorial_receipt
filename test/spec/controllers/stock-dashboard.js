@@ -173,7 +173,7 @@ describe('Controller: StockDashboardCtrl', function() {
 
     describe('isCurrentCountMismatched method', function() {
 
-      it('should return true if current count is more than expected', function() {
+      it('should return true if current count is different from expected', function() {
         var stockItemTrue = {
           openingQuantity: 5,
           receivedQuantity: 5,
@@ -183,7 +183,7 @@ describe('Controller: StockDashboardCtrl', function() {
         expect(scope.isCurrentCountMismatched(stockItemTrue)).toBeTruthy();
       });
 
-      it('should return false if current count is less than or equal to expected', function() {
+      it('should return false if current count is same as expected', function() {
         var stockItemFalse = {
           openingQuantity: 5,
           receivedQuantity: 5,
