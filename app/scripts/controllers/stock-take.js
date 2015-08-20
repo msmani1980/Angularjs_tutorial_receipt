@@ -111,7 +111,7 @@ angular.module('ts5App')
         }
         $scope.disabledCatererStationIds[$scope.stockTake.catererStationId] = true;
         $scope.stockTake.catererStationId = null;
-        showMessage('No items exist for that LMP Station, please try another.', 'warning');
+        showMessage('No items exist for that LMP Station, please try another.', 'info');
         return;
       }
       $scope.cateringStationItems = items;
@@ -235,7 +235,7 @@ angular.module('ts5App')
         $scope.toggleReview();
         return;
       }
-      $location.path('/');
+      $location.path('/stock-take-report');
     };
 
     $scope.toggleReview = function(){
