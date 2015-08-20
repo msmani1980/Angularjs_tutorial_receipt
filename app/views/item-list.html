@@ -155,14 +155,14 @@
           <a class="btn btn-info btn-xs" ng-href="#/item-view/{{item.versions[0].id}}">
             <i class="fa fa-file"></i>
           </a>
-          <a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{item.versions[0].id}}" ng-hide="isItemActive(item.versions[0].endDate)">
+          <a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{item.versions[0].id}}" ng-hide="isDateActive(item.versions[0].endDate)">
             <i class="fa fa-pencil"></i>
           </a>
           <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}">
             <i class="fa fa-copy"></i>
           </a>
           <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)"
-                  ng-hide="isItemActive(item.versions[0].startDate) || isItemActive(item.versions[0].endDate)">
+                  ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)">
             <i class="fa fa-trash"></i>
           </button>
         </td>
@@ -180,14 +180,14 @@
           <a class="btn btn-info btn-xs" ng-href="#/item-view/{{version.id}}">
             <i class="fa fa-file"></i>
           </a>
-          <a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{version.id}}" ng-hide="isItemActive(version.endDate)">
+          <a class="btn btn-primary btn-xs" ng-href="#/item-edit/{{version.id}}" ng-hide="isDateActive(version.endDate)">
             <i class="fa fa-pencil"></i>
           </a>
           <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{version.id}}">
             <i class="fa fa-copy"></i>
           </a>
           <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(version.id)"
-                  ng-hide="isItemActive(version.startDate) || isItemActive(version.endDate)">
+                  ng-hide="isDateActive(version.startDate) || isDateActive(version.endDate)">
             <i class="fa fa-trash"></i>
           </button>
         </td>

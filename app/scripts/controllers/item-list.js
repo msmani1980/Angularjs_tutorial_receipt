@@ -1,4 +1,5 @@
 'use strict';
+/* global moment */
 
 /**
  * @author Max Felker <max@bigroomstudios.com>
