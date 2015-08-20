@@ -24,7 +24,7 @@ describe('Directive: stockTakeReason', function() {
     spyOn(stockAdjustmentsService, 'adjustStock').and.returnValue(adjustStockDeferred.promise);
     mockStockItem = {
       id: 1,
-      currentCount: 900,
+      currentCountQuantity: 900,
       masterItemId: 2,
       catererStationId: 4
     };
@@ -79,8 +79,8 @@ describe('Directive: stockTakeReason', function() {
         expect(scope.id).toEqual(mockStockItem.id);
       });
 
-      it('should set scope.currentCount equal to mockStockItem.currentCount', function() {
-        expect(scope.currentCount).toEqual(mockStockItem.currentCount);
+      it('should set scope.currentCountQuantity equal to mockStockItem.currentCountQuantity', function() {
+        expect(scope.currentCountQuantityQuantity).toEqual(mockStockItem.currentCountQuantityQuantity);
       });
 
       it('should set scope.masterItemId equal to mockStockItem.masterItemId', function(){
@@ -121,8 +121,8 @@ describe('Directive: stockTakeReason', function() {
         expect(scope.comment).toBe(null);
       });
 
-      it('should set scope.currentCount to null', function(){
-        expect(scope.currentCount).toBe(null);
+      it('should set scope.currentCountQuantity to null', function(){
+        expect(scope.currentCountQuantity).toBe(null);
       });
 
       it('should set scope.newCount to null', function(){

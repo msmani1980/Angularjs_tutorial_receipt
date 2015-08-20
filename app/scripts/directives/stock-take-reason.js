@@ -47,7 +47,7 @@ angular.module('ts5App').directive('stockTakeReason', function () {
     $scope.clearScopeVars = function () {
       $scope.id = null;
       $scope.comment = null;
-      $scope.currentCount = null;
+      $scope.currentCountQuantity = null;
       $scope.newCount = null;
       $scope.masterItemId = null;
       $scope.catererStationId = null;
