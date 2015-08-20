@@ -7,28 +7,35 @@
       <div class="edit-controls">
         <div class="row">
 
-          <div class="col-xs-6">
+          <div class="col-xs-12 col-sm-4">
             <h2 class="view-name"> {{ viewName }} </h2>
           </div>
 
-          <div class="col-xs-6 text-right">
+          <div class="col-xs-12 col-sm-8 text-right">
 
             <fieldset ng-hide="viewOnly">
 
-                <button class="btn btn-primary" ng-show="canReview" ng-click="toggleReview()">
-                  <span>Review</span>
-                </button>
+              <excel-upload type="stockTake" ng-show="state == 'create'"></excel-upload>
 
-                <button type="button" class="btn btn-primary" ng-click="save(false)" ng-show="state == 'review'">
-                  <span>Save</span>
-                </button>
+              <button class="btn btn-warning" ng-show="canReview" ng-click="toggleReview()">
+                <span class="fa fa-file-text-o" aria-hidden="true"></span>
+                <span>Review</span>
+              </button>
 
-                <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+              <button type="button" class="btn btn-primary" ng-click="save(false)" ng-show="state == 'review'">
+                <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                <span>Save</span>
+              </button>
 
-                <button class="btn btn-primary" ng-click="save(true)" ng-show="state == 'review'">
-                  <span class="fa fa-check-square-o" aria-hidden="true"></span>
-                  <span>Submit</span>
-                </button>
+              <button class="btn btn-success" ng-click="save(true)" ng-show="state == 'review'">
+                <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                <span>Submit</span>
+              </button>
+
+              <button type="button" class="btn btn-default" ng-click="cancel()">
+                <span class="fa fa-remove" aria-hidden="true"></span>
+                Cancel
+              </button>
 
             </fieldset>
 
@@ -47,7 +54,7 @@
                        ng-disabled="readOnly || catererStationList.length == 1 || state != 'create'"
                        ng-show="catererStationList.length"
                        required>
-                  <option ng-disabled="disabledCatererStationIds[station.id]" ng-selected="station.id==stockTake.catererStationId" ng-repeat="station in catererStationList" value="{{ station.id }}">
+                  <option ng-disabled="disabledCatererStationIds[station.id]" ng-selected="station.id==stockTake.catererStationId" ng-repeat="station in catererStationList | orderBy:'name' track by station.id" value="{{ station.id }}">
                     {{ station.name }} - {{ station.code }}
                   </option>
                 </select>
@@ -55,67 +62,32 @@
         </div>
         <div class="col-xs-12 col-sm-8" ng-show="cateringStationItems.length && state !== 'review'">
           <div class="row">
-            <div class="col-xs-1 col-sm-2 col-md-1">
-              <div class="form-group">
-                <label>Filter:</label>
-              </div>
-            </div>
-            <div class="col-xs-3">
+            <div class="col-xs-12 col-sm-4">
               <div class="form-group">
                 <label for="filter-item-code">Item Code</label>
                 <input ng-model="filterInput.itemCode" type="text" class="form-control" id="filter-item-code">
               </div>
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-12 col-sm-4">
               <div class="form-group">
                 <label for="filter-item-name">Item Name</label>
                 <input ng-model="filterInput.itemName" type="text" class="form-control" id="filter-item-name">
               </div>
             </div>
-            <div class="col-xs-3">
-              <label class="invisible">Clear filter</label>
-              <button class="btn btn-default" type="button" ng-click="clearFilter()" ng-show="filterInput.itemCode || filterInput.itemName">Clear</button>
+
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group" ng-show="filterInput.itemCode || filterInput.itemName">
+                <label for="filter-item-name">Search Filters</label>
+                <button class="btn btn-default btn-block" type="button" ng-click="clearFilter()">
+                  <span class="fa fa-remove" aria-hidden="true"></span>
+                  Clear Filters
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
       </div>
-<!--       <div class="row"> -->
-
-<!--         <div class="col-xs-12"> -->
-<!--           <div class="form-group"> -->
-<!--             <excel-upload type="stockTake"></excel-upload> -->
-
-<!--             <div class="btn-group import-from-file"> -->
-<!--               <div class="btn-group" dropdown> -->
-<!--                 <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#importFromData" > -->
-<!--                   <span class="fa fa-copy" aria-hidden="true"></span> -->
-<!--                   Import Stock From File -->
-<!--                 </button> -->
-<!--                 <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle> -->
-<!--                   <span class="caret"></span> -->
-<!--                 </button> -->
-<!--                 <ul class="dropdown-menu" role="menu"> -->
-<!--                   <li><a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/StockTake-ImportFile.xlsx">Download Excel Template</a></li> -->
-<!--                   <li><a data-toggle="modal" data-target=".download-template-modal" -->
-<!--                          ng-click="downloadTemplate()">View Excel Specifications</a></li> -->
-<!--                 </ul> -->
-<!--               </div> -->
-
-<!--               <div id="importFromData" class="collapse width"> -->
-<!--                 <input type="file" -->
-<!--                        ngf-select -->
-<!--                        ng-model="stockTakeFile" -->
-<!--                        accept=".xls,.xlsx"> -->
-<!--                 <button type="button" class="btn btn-info" ng-click="uploadStockTakeFileToApi(stockTakeFile)"> -->
-<!--                   Upload -->
-<!--                 </button> -->
-<!--               </div> -->
-<!--             </div> -->
-<!--           </div> -->
-<!--         </div> -->
-
-<!--       </div> -->
 
     </div>
 
@@ -123,8 +95,6 @@
   <!--/TopHeader -->
 
   <div class="container stock-take-container">
-
-    <excel-upload type="stockTake" ng-show="state == 'create'"></excel-upload><br>
 
     <div class="row" ng-hide="state == 'review' || state == 'create'">
 
