@@ -53,9 +53,14 @@ angular.module('ts5App')
       $scope.deliveryNote.updatedOn = dateUtility.removeMilliseconds($scope.deliveryNote.updatedOn);
     }
 
+
     function deliveryNoteFormErrorWatcher(){
       $scope.canReview = canReview();
     }
+
+    $scope.hideItemCode = function(item){
+      return item.canEdit && $scope.state !== 'review';
+    };
 
     $scope.elementChanged = function(){
       deliveryNoteFormErrorWatcher();
