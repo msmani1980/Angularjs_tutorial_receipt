@@ -11,6 +11,8 @@ angular.module('ts5App')
     $scope.viewName = 'Menu';
     $scope.masterItemsList = [];
     $scope.newItemList = [];
+    $scope.selectedCategories = [];
+    $scope.filteredItemsCollection = [];
     var $this = this;
 
     function showLoadingModal(message) {
@@ -34,13 +36,29 @@ angular.module('ts5App')
       angular.forEach($scope.menu.menuItems, function (menuItem) {
         menuItem.itemName = getMasterItemUsingId(menuItem.itemId).itemName;
       });
+
+      angular.forEach($scope.filteredItemsCollection, function(itemArray, index) {
+        if(angular.equals({}, $scope.selectedCategories[index])) {
+          $scope.filteredItemsCollection[index] = angular.copy($scope.masterItemsList);
+        } else {
+          $scope.filterItems(index);
+        }
+      });
     }
 
     function fetchMasterItemsList(startDate, endDate) {
-      menuFactory.getItemsList({
+      fetchFilteredItemsList(startDate, endDate, '', attachItemsModelToScope);
+    }
+
+    function fetchFilteredItemsList(startDate, endDate, category, successHandler) {
+      var searchQuery = {
         startDate: startDate,
         endDate: endDate
-      }, true).then(attachItemsModelToScope);
+      };
+      if(category) {
+        searchQuery.categoryId = category;
+      }
+      menuFactory.getItemsList(searchQuery, true).then(successHandler);
     }
 
     function setupMenuModelAndFetchItems(menuFromAPI) {
@@ -241,9 +259,17 @@ angular.module('ts5App')
     $scope.addItem = function () {
       if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
         $scope.newItemList.push({});
+        $scope.selectedCategories.push({});
+        $scope.filteredItemsCollection.push(angular.copy($scope.masterItemsList));
       } else {
         showToast('warning', 'Add Menu Item', 'Please select a date range first!');
       }
+    };
+
+    $scope.filterItems = function(index) {
+      fetchFilteredItemsList($scope.menu.startDate, $scope.menu.endDate, $scope.selectedCategories[index].id, function(response) {
+        $scope.filteredItemsCollection[index] = response.masterItems;
+      });
     };
 
     $scope.deleteNewItem = function (itemIndex) {
@@ -267,6 +293,9 @@ angular.module('ts5App')
           companyId: companyId
         };
       }
+      menuFactory.getSalesCategoriesList({}).then(function (response) {
+        $scope.categories = response.salesCategories;
+      });
     }
 
     initializeMenu();

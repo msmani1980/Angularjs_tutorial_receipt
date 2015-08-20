@@ -9,19 +9,22 @@ describe('Service: menuFactory', function () {
   var menuFactory,
     menuService,
     itemsService,
-    GlobalMenuService;
+    GlobalMenuService,
+    salesCategoriesService;
 
   beforeEach(inject(function (_menuFactory_, $injector) {
 
     menuService = $injector.get('menuService');
     itemsService = $injector.get('itemsService');
     GlobalMenuService = $injector.get('GlobalMenuService');
+    salesCategoriesService = $injector.get('salesCategoriesService');
 
     spyOn(menuService, 'getMenu').and.stub();
     spyOn(menuService, 'updateMenu').and.stub();
     spyOn(menuService, 'createMenu').and.stub();
     spyOn(itemsService, 'getItemsList').and.stub();
     spyOn(GlobalMenuService.company, 'get').and.stub();
+    spyOn(salesCategoriesService, 'getSalesCategoriesList').and.stub();
 
     menuFactory = _menuFactory_;
   }));
@@ -77,6 +80,14 @@ describe('Service: menuFactory', function () {
     it('should call GlobalMenuService.company.get with a payload and a flag to get items from master list', function () {
       menuFactory.getCompanyId();
       expect(GlobalMenuService.company.get).toHaveBeenCalled();
+    });
+
+    it('should call salesCategoriesService.getSalesCategoriesList with a payload to get a categories list', function () {
+      var payload = {
+        fake: 'data'
+      };
+      menuFactory.getSalesCategoriesList(payload);
+      expect(salesCategoriesService.getSalesCategoriesList).toHaveBeenCalledWith(payload);
     });
 
   });
