@@ -62,7 +62,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     $scope.isCurrentCountMismatched = function (stockItem) {
       var currentCountExpected = (stockItem.openingQuantity + stockItem.receivedQuantity - stockItem.dispatchedQuantity);
-      return (stockItem.currentCountQuantity > currentCountExpected);
+      return (stockItem.currentCountQuantity !== currentCountExpected);
     };
 
     $scope.isRecordUpdatedToday = function(stockItem) {
