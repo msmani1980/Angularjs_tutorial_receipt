@@ -53,9 +53,14 @@ angular.module('ts5App')
       $scope.deliveryNote.updatedOn = dateUtility.removeMilliseconds($scope.deliveryNote.updatedOn);
     }
 
+
     function deliveryNoteFormErrorWatcher(){
       $scope.canReview = canReview();
     }
+
+    $scope.hideItemCode = function(item){
+      return item.canEdit && $scope.state !== 'review';
+    };
 
     $scope.elementChanged = function(){
       deliveryNoteFormErrorWatcher();
@@ -272,7 +277,15 @@ angular.module('ts5App')
     };
 
     $scope.calculateBooked = function(item){
-      return item.deliveredQuantity - item.ullageQuantity;
+      var deliveredQuantity = 0;
+      if(item.deliveredQuantity){
+        deliveredQuantity = item.deliveredQuantity;
+      }
+      var ullageQuantity = 0;
+      if(item.ullageQuantity){
+        ullageQuantity = item.ullageQuantity;
+      }
+      return deliveredQuantity - ullageQuantity;
     };
 
     function saveDeliveryNoteFailed(response){
@@ -364,10 +377,25 @@ angular.module('ts5App')
       });
     }
 
+    function setChangedItem(newItem, $index){
+      var oldItem = angular.copy($scope.deliveryNote.items[$index]);
+      newItem.expectedQuantity = oldItem.expectedQuantity;
+      newItem.deliveredQuantity = oldItem.deliveredQuantity;
+      newItem.ullageQuantity = oldItem.ullageQuantity;
+      newItem.ullageReason = oldItem.ullageReason;
+      newItem.bookedQuantity = oldItem.bookedQuantity;
+      newItem.canEdit = true;
+      $scope.deliveryNote.items[$index] = newItem;
+    }
+
+    $scope.changeItem = function(selectedMasterItem, $index){
+      setChangedItem(selectedMasterItem, $index);
+      setAllowedMasterItems();
+    };
+
     function addRows(){
       setAllowedMasterItems();
       var totalDeliveryNoteToAdd = $scope.addItemsNumber || 1;
-      $scope.addItemsNumber = null;
       for (var i = 0; i < totalDeliveryNoteToAdd; i++) {
         $scope.newItems.push({});
       }
@@ -398,6 +426,7 @@ angular.module('ts5App')
       }
       $scope.clearFilter();
       $scope.deliveryNote.items.push({
+        canEdit: true,
         masterItemId: selectedMasterItem.id,
         itemCode: selectedMasterItem.itemCode,
         itemName: selectedMasterItem.itemName
