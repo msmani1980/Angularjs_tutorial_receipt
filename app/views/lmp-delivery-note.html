@@ -216,7 +216,7 @@
 
             <div class="col-xs-6 col-sm-3 col-md-1">
               <div class="form-group">
-                <label for="delivered-qty-{{ item.masterItemId }}">Delivered*</label>
+                <label for="delivered-qty-{{ item.masterItemId }}">Delivered</label>
                 <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
                        id="delivered-qty-{{ item.masterItemId }}"
                        ng-readonly="readOnly" ng-required="item.expectedQuantity"
@@ -235,7 +235,7 @@
 
             <div class="col-xs-12 col-sm-6 col-md-3">
               <div class="form-group">
-                <label>Ullage Reason*</label>
+                <label>Ullage Reason<span ng-show="item.ullageQuantity">*</span></label>
                 <select class="form-control"
                         ng-model="item.ullageReason"
                         ng-selected="item.ullageReason"

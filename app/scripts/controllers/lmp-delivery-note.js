@@ -203,10 +203,10 @@ angular.module('ts5App')
     function createPayloadItems(){
       return $scope.deliveryNote.items.map(function(item){
         return {
-          masterItemId: item.masterItemId,
-          expectedQuantity: item.expectedQuantity,
-          deliveredQuantity: item.deliveredQuantity,
-          ullageQuantity: item.ullageQuantity,
+          masterItemId: parseInt(item.masterItemId),
+          expectedQuantity: item.expectedQuantity ? parseInt(item.expectedQuantity) : null,
+          deliveredQuantity: item.deliveredQuantity ? parseInt(item.deliveredQuantity) : null,
+          ullageQuantity: item.ullageQuantity ? parseInt(item.ullageQuantity) : null,
           ullageReason: item.ullageReason ? parseInt(item.ullageReason) : null
         };
       });
