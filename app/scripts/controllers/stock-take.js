@@ -198,6 +198,8 @@ angular.module('ts5App')
 
     function setStockTakeFromResponse(response){
       $scope.stockTake = response;
+      $scope.stockTake.createdOn = dateUtility.removeMilliseconds($scope.stockTake.createdOn);
+      $scope.stockTake.updatedOn = dateUtility.removeMilliseconds($scope.stockTake.updatedOn);
     }
 
     function getStockTake(){
