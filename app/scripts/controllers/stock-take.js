@@ -24,7 +24,7 @@ angular.module('ts5App')
     var _path = '/stock-take/';
 
     function showMessage(message, messageType) {
-      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Delivery Note</strong>: ' + message });
+      ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Stock Take</strong>: ' + message });
     }
 
     function displayLoadingModal(loadingText) {
@@ -165,6 +165,7 @@ angular.module('ts5App')
 
     function saveStockTakeResolution(response){
       showMessage(_formSaveSuccessText, 'success');
+      hideLoadingModal();
       if($scope.stockTake.isSubmitted){
         $location.path('/stock-take-report');
         return;
@@ -197,6 +198,8 @@ angular.module('ts5App')
 
     function setStockTakeFromResponse(response){
       $scope.stockTake = response;
+      $scope.stockTake.createdOn = dateUtility.removeMilliseconds($scope.stockTake.createdOn);
+      $scope.stockTake.updatedOn = dateUtility.removeMilliseconds($scope.stockTake.updatedOn);
     }
 
     function getStockTake(){
@@ -297,7 +300,7 @@ angular.module('ts5App')
     // view state actions
     stateActions.viewInit = function(){
       $scope.readOnly = true;
-      $scope.viewName = 'View Delivery Note';
+      $scope.viewName = 'View Stock Take';
       displayLoadingModal();
       _initPromises.push(getCatererStationList());
       _initPromises.push(getStockTake());
