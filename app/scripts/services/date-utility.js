@@ -66,6 +66,9 @@ angular.module('ts5App')
       return yesterday;
     };
 
+    this.isToday = function (date) {
+      return Date.parse(moment().format('MM/DD/YYYY')) === Date.parse(date);
+    };
     this.isTodayOrEarlier = function (date) {
       return this.now() >= Date.parse(date);
     };

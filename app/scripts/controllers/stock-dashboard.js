@@ -36,7 +36,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     };
 
     this.getUllageReasonsFromResponse = function (dataFromAPI) {
-      $scope.ullageReasons = $filter('filter')(dataFromAPI.companyReasonCodes, {reasonTypeName: 'Ullage'}, true);
+      $scope.ullageReasons = $filter('filter')(dataFromAPI.companyReasonCodes, {reasonTypeName: 'LMP Stock Adjustment'}, true);
     };
 
     $scope.updateStockItems = function () {
@@ -74,7 +74,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     };
 
     $scope.isRecordUpdatedToday = function(stockItem) {
-      console.log(stockItem);
+      return dateUtility.isToday(dateUtility.formatDateForApp(stockItem.lastUpdatedOn));
     };
 
     $scope.$watch('selectedCateringStation', $this.setExportURL);

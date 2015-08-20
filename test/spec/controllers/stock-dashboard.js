@@ -198,6 +198,35 @@ describe('Controller: StockDashboardCtrl', function() {
 
     });
 
+    describe('isRecordUpdatedToday method', function() {
+
+        beforeEach(function() {
+          jasmine.clock().install();
+          var baseDate = new Date(2013, 9, 23);
+          jasmine.clock().mockDate(baseDate);
+        });
+
+        afterEach(function() {
+          jasmine.clock().uninstall();
+        });
+
+      it('should return true if date is today', function() {
+
+        var stockItemTrue = {
+          lastUpdatedOn: moment().format('YYYY/MM/DD')
+        };
+        expect(scope.isRecordUpdatedToday(stockItemTrue)).toBe(true);
+      });
+
+      it('should return false if current count is same as expected', function() {
+        var stockItemFalse = {
+          lastUpdatedOn: '2011-09-23 14:39:06.134748'
+        };
+        expect(scope.isRecordUpdatedToday(stockItemFalse)).toBe(false);
+      });
+
+    });
+
     describe('setting the exportURL', function() {
 
       var urlControl;

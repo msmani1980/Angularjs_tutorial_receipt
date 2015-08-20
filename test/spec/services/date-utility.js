@@ -87,6 +87,16 @@ describe('Date Utility service', function () {
   });
 
   describe('date comparison', function () {
+    it('should return true is date is today', function () {
+      var currentTimestamp = moment().format('YYYY/MM/DD');
+      expect(dateUtility.isToday(currentTimestamp)).toBe(true);
+    });
+
+    it('should return false is date is not today', function () {
+      var currentTimestamp = '1979/05/10';
+      expect(dateUtility.isToday(currentTimestamp)).toBe(false);
+    });
+
     it('should return true is date is after today', function () {
       expect(dateUtility.isAfterToday('05/10/2080')).toBe(true);
     });
