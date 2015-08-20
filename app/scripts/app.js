@@ -42,6 +42,7 @@ angular.module('ts5App', [
   }
 ]).constant('regexp', {
   word: /^[\w\s]+$/,
+  sentence: /[\w\s\"\'\?\.\-_ %@&#$!,;:()]+$/,
   bit: /^(0|1)$/,
   number: /^-?([0-9]*)$/,
   alpha: /^[a-zA-z]+$/,
