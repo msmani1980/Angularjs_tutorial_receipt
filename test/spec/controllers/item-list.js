@@ -143,8 +143,8 @@ describe('itemListCtrl', function () {
       expect($scope.itemsList.length).toBeGreaterThan(1);
     });
 
-    it('should have a isItemActive method', function () {
-      expect($scope.isItemActive).toBeDefined();
+    it('should have a isDateActive method', function () {
+      expect($scope.isDateActive).toBeDefined();
     });
 
     it('should format items with a versions array', function () {
@@ -155,36 +155,85 @@ describe('itemListCtrl', function () {
       beforeEach(function () {
         $scope.itemsList = [
           {
-            itemCode: 'item1',
-            itemName: 'item1',
-            masterItemId: 36
+            itemMasterId: 36,
+            startDate:'1800-09-10',
+            endDate:'1820-12-10'
+          }, {
+            itemMasterId: 36,
+            startDate:'2010-08-20',
+            endDate:'2030-08-25'
+          }, {
+            itemMasterId: 36,
+            startDate:'2040-09-10',
+            endDate:'2045-12-10'
           },
           {
-            itemCode: 'item1',
-            itemName: 'item2',
-            masterItemId: 36
+            itemMasterId: 36,
+            startDate:'2035-07-10',
+            endDate:'2036-07-20'
+          }, {
+            itemMasterId: 36,
+            startDate:'1980-07-10',
+            endDate:'1995-07-20'
+          },
+          {
+            itemMasterId: 10,
+            startDate:'1980-07-10',
+            endDate:'2050-07-20'
           }
         ];
       });
       it('should have a versions sub array for master items', function () {
         ItemListCtrl.createNestedItemsList();
         expect($scope.itemsList[0].versions).toBeDefined();
+        expect($scope.itemsList[1].versions).toBeDefined();
       });
       it('should add a master item object to each version array', function () {
-        var masterItem = $scope.itemsList[0];
         ItemListCtrl.createNestedItemsList();
         expect($scope.itemsList[0].versions.length).toBeGreaterThan(0);
-        expect($scope.itemsList[0].versions[0]).toEqual(masterItem);
+        expect($scope.itemsList[1].versions.length).toBeGreaterThan(0);
       });
       it('should remove subversions from itemsList', function () {
-        expect($scope.itemsList.length).toEqual(2);
+        expect($scope.itemsList.length).toEqual(6);
         ItemListCtrl.createNestedItemsList();
-        expect($scope.itemsList.length).toEqual(1);
+        expect($scope.itemsList.length).toEqual(2);
       });
       it('should add removed subversions to sub array', function () {
-        var subVersion = $scope.itemsList[1];
+        var subVersion = $scope.itemsList[0];
         ItemListCtrl.createNestedItemsList();
-        expect($scope.itemsList[0].versions[1]).toEqual(subVersion);
+        expect($scope.itemsList[0].versions.indexOf(subVersion)).toBeGreaterThan(-1);
+      });
+
+      describe('nested versions sorting', function () {
+        it('should always sort the active item at the top', function () {
+          var activeItem = $scope.itemsList[1];
+          ItemListCtrl.createNestedItemsList();
+          expect($scope.itemsList[0].versions[0]).toEqual(activeItem);
+        });
+        it('should sort future items before past items', function () {
+          var futureItem = $scope.itemsList[2];
+          var pastItem = $scope.itemsList[0];
+          ItemListCtrl.createNestedItemsList();
+          var futureIndex = $scope.itemsList[0].versions.indexOf(futureItem);
+          var pastIndex =  $scope.itemsList[0].versions.indexOf(pastItem);
+          expect(futureIndex < pastIndex).toEqual(true);
+        });
+        it('should sort future items closest to today first', function () {
+          var futureItemMostActive = $scope.itemsList[3];
+          var futureItemLeastActive = $scope.itemsList[2];
+          ItemListCtrl.createNestedItemsList();
+          var moreActiveIndex = $scope.itemsList[0].versions.indexOf(futureItemMostActive);
+          var lessActiveIndex =  $scope.itemsList[0].versions.indexOf(futureItemLeastActive);
+          expect(moreActiveIndex < lessActiveIndex).toEqual(true);
+        });
+        it('should sort past items closest to today first', function () {
+          var pastItemMostActive = $scope.itemsList[4];
+          var pastItemLeastActive = $scope.itemsList[0];
+          ItemListCtrl.createNestedItemsList();
+          var moreActiveIndex = $scope.itemsList[0].versions.indexOf(pastItemMostActive);
+          var lessActiveIndex =  $scope.itemsList[0].versions.indexOf(pastItemLeastActive);
+          expect(moreActiveIndex < lessActiveIndex).toEqual(true);
+        });
       });
     });
 
