@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('stockTakeService', function ($resource,ENV) {
+  .service('stockTakeService', function ($resource, ENV, Upload) {
 
     var requestURL = ENV.apiUrl + '/api/stock-management/stock-takes/:id';
     var requestParameters = {
@@ -28,15 +28,15 @@ angular.module('ts5App')
       updateStockTake: {
         method: 'PUT'
       },
-      removeStockTake: {
+      deleteStockTake: {
         method: 'DELETE'
       }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    var getStockTakeList = function () {
-      return requestResource.getStockTakeList().$promise;
+    var getStockTakeList = function (query) {
+      return requestResource.getStockTakeList(query).$promise;
     };
 
     var getStockTake = function (id) {
@@ -51,16 +51,25 @@ angular.module('ts5App')
       return requestResource.updateStockTake({id: id}, payload).$promise;
     };
 
-    var removeStockTake = function (id) {
-      return requestResource.removeStockTake({id: id}).$promise;
+    var deleteStockTake = function (id) {
+      return requestResource.deleteStockTake({id: id}).$promise;
     };
+
+    function importFromExcel(companyId, file) {
+      var uploadRequestURL = ENV.apiUrl + '/services/companies/' + companyId + '/file/stocktake';
+      return Upload.upload({
+        url: uploadRequestURL,
+        file: file
+      });
+    }
 
     return {
       getStockTakeList: getStockTakeList,
       getStockTake: getStockTake,
       createStockTake: createStockTake,
       updateStockTake: updateStockTake,
-      removeStockTake: removeStockTake
+      deleteStockTake: deleteStockTake,
+      importFromExcel: importFromExcel
     };
 
 

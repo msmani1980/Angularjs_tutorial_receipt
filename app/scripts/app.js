@@ -156,19 +156,13 @@ angular.module('ts5App', [
   }).when('/lmp-delivery-note/:state/:id?', {
     templateUrl: 'views/lmp-delivery-note.html',
     controller: 'LmpDeliveryNoteCtrl'
-  }).when('/delivery-note', {
-    templateUrl: 'views/delivery-note.html',
-    controller: 'DeliveryNoteCtrl'
-  }).when('/delivery-note-review', {
-    templateUrl: 'views/delivery-note-review.html',
-    controller: 'DeliveryNoteReviewCtrl'
   }).when('/employee-commission-list', {
     templateUrl: 'views/employee-commission-list.html',
     controller: 'EmployeeCommissionListCtrl'
   }).when('/stock-dashboard', {
     templateUrl: 'views/stock-dashboard.html',
     controller: 'StockDashboardCtrl'
-  }).when('/stock-take', {
+  }).when('/stock-take/:state/:id?', {
     templateUrl: 'views/stock-take.html',
     controller: 'StockTakeCtrl'
   }).when('/stock-take-review', {

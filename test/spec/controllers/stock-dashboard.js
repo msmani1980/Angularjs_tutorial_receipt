@@ -3,7 +3,7 @@
 describe('Controller: StockDashboardCtrl', function() {
 
   // load the controller's module
-  beforeEach(module('ts5App'));
+  beforeEach(module('ts5App','config'));
   beforeEach(module('served/stock-management-dashboard.json', 'served/catering-stations.json',
     'served/company-reason-codes.json'));
 
@@ -17,12 +17,15 @@ describe('Controller: StockDashboardCtrl', function() {
     stockManagementDashboardJSON,
     cateringStationsJSON,
     companyReasonCodesJSON,
-    scope;
+    scope,
+    http,
+    ENV;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
-
+    http = $injector.get('$http');
+    ENV = $injector.get('ENV');
     stockDashboardService = $injector.get('stockDashboardService');
     catererStationService = $injector.get('catererStationService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
@@ -69,12 +72,19 @@ describe('Controller: StockDashboardCtrl', function() {
       });
 
       it('should return a list of dashboard items', function() {
-        scope.updateStockItems(1);
+        scope.selectedCateringStation = {
+          id: 1,
+          name:'fakeCateringStation'
+        };
+        scope.$digest();
         expect(stockDashboardService.getStockDashboardItems).toHaveBeenCalled();
       });
 
       it('should attach the stock dashboard list to the scope', function() {
-        scope.updateStockItems(1);
+        scope.selectedCateringStation = {
+          id: 1,
+          name:'fakeCateringStation'
+        };
         scope.$digest();
         expect(scope.stockDashboardItemsList).toBeDefined();
       });
@@ -164,7 +174,7 @@ describe('Controller: StockDashboardCtrl', function() {
 
     });
 
-    describe('isClassDanger method', function() {
+    describe('isCurrentCountMismatched method', function() {
 
       it('should return true if current count is more than expected', function() {
         var stockItemTrue = {
@@ -173,7 +183,7 @@ describe('Controller: StockDashboardCtrl', function() {
           dispatchedQuantity: 0,
           currentCountQuantity: 11
         };
-        expect(scope.isClassDanger(stockItemTrue)).toBeTruthy();
+        expect(scope.isCurrentCountMismatched(stockItemTrue)).toBeTruthy();
       });
 
       it('should return false if current count is less than or equal to expected', function() {
@@ -183,7 +193,38 @@ describe('Controller: StockDashboardCtrl', function() {
           dispatchedQuantity: 0,
           currentCountQuantity: 10
         };
-        expect(scope.isClassDanger(stockItemFalse)).toBeFalsy();
+        expect(scope.isCurrentCountMismatched(stockItemFalse)).toBeFalsy();
+      });
+
+    });
+
+    describe('setting the exportURL', function() {
+
+      var urlControl;
+      beforeEach(function() {
+        scope.selectedCateringStation = cateringStationsJSON.response[0];
+        urlControl = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
+        urlControl += '/file/export?sessionToken=' + http.defaults.headers.common.sessionToken;
+      });
+
+      it('set the exportURL when the catering station is selected', function() {
+        expect(scope.exportURL).toBeUndefined();
+        scope.$digest();
+        expect(scope.exportURL).toBeDefined();
+      });
+
+      it('set the correct export URL when the station is selected', function() {
+        scope.$digest();
+        expect(scope.exportURL).toEqual(urlControl);
+      });
+
+      it('set change the URL is the station is changed', function() {
+        scope.selectedCateringStation = cateringStationsJSON.response[1];
+        scope.$digest();
+        expect(scope.exportURL).not.toEqual(urlControl);
+        var newURL = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
+        newURL += '/file/export?sessionToken=' + http.defaults.headers.common.sessionToken;
+        expect(scope.exportURL).toEqual(newURL);
       });
 
     });
