@@ -149,8 +149,8 @@ angular.module('ts5App')
       for(var masterItemId in $scope.itemQuantities){
         if($scope.itemQuantities[masterItemId]){
           items.push({
-            masterItemId: masterItemId,
-            quantity: $scope.itemQuantities[masterItemId]
+            masterItemId: parseInt(masterItemId),
+            quantity: parseInt($scope.itemQuantities[masterItemId])
           });
         }
       }
