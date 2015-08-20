@@ -16,10 +16,10 @@
 
               <a ng-href="/#/stock-take" class="btn btn-primary">Start Stock Take</a>
 
-              <button type="button" class="btn btn-info disabled">
+              <a target="_blank" ng-href="{{exportURL}}" class="btn btn-info" ng-show="selectedCateringStation.id && searchResults.length">
                 <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
                 <span>Export (CSV)</span>
-              </button>
+              </a>
 
             </fieldset>
           </div>

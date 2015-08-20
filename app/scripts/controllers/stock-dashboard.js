@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('StockDashboardCtrl', function($scope, $http, GlobalMenuService, stockDashboardService,
-    catererStationService, companyReasonCodesService, dateUtility) {
+    catererStationService, companyReasonCodesService, dateUtility,ENV) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
@@ -45,6 +45,13 @@ angular.module('ts5App')
       companyReasonCodesService.getAll().then($this.getUllageReasonsFromResponse);
     };
 
+    this.setExportURL = function(newValue) {
+      if(newValue){
+        $scope.exportURL = ENV.apiUrl + '/api/stock-management/dashboard/' + newValue.id;
+        $scope.exportURL += '/file/export?sessionToken=' + $http.defaults.headers.common.sessionToken;
+      }
+    };
+
     this.init();
 
     $scope.isCatererStationListReadOnly = function() {
@@ -64,5 +71,7 @@ angular.module('ts5App')
         return 'bg-danger';
       }
     };
+
+    $scope.$watch('selectedCateringStation', $this.setExportURL);
 
   });
