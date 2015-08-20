@@ -47,8 +47,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     getDeliveryNoteDeferred.resolve(lmpDeliveryNoteResponseJSON);
     spyOn(deliveryNoteFactory, 'getDeliveryNote').and.returnValue(getDeliveryNoteDeferred.promise);
 
-    spyOn(deliveryNoteFactory, 'getCompanyId').and.returnValue(companyId);
-
     getCatererStationMasterItemsDeferred = $q.defer();
     getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
     spyOn(deliveryNoteFactory, 'getItemsByCateringStationId').and.returnValue(getCatererStationMasterItemsDeferred.promise);
@@ -156,9 +154,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       });
       // Scope globals
       describe('global scope functions and vars', function(){
-        it('should call getCompanyId', function(){
-          expect(deliveryNoteFactory.getCompanyId).toHaveBeenCalled();
-        });
         it('should have a cancel scope function', function(){
           expect(scope.cancel).toBeDefined();
           expect(Object.prototype.toString.call(scope.cancel)).toBe('[object Function]');
@@ -315,7 +310,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           scope.deliveryNote.catererStationId = csid;
           scope.$digest();
           expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
-          expect(scope.deliveryNote.items.length).toEqual(31);
+          expect(scope.deliveryNote.items.length).toEqual(40);
         });
       });
       describe('removeItemByIndex scope function', function(){

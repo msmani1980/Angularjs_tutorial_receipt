@@ -211,4 +211,12 @@ describe('Date Utility service', function () {
 
   });
 
+  describe('removeMilliseconds method', function(){
+    it('should remove a decimal and all numbers after', function(){
+      var expected = '2015-08-07 13:35:59';
+      var result = dateUtility.removeMilliseconds('2015-08-07 13:35:59.924555');
+      expect(result).toEqual(expected);
+    });
+  });
+
 });

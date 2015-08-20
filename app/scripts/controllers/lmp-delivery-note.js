@@ -12,6 +12,7 @@ angular.module('ts5App')
 
     // static scope vars
     $scope.viewName = 'Delivery note';
+    $scope.addItemsNumber = 1;
     $scope.deliveryNote = {
       catererStationId: null,
       deliveryNoteNumber:null,
@@ -20,7 +21,6 @@ angular.module('ts5App')
 
     // private vars
     var _initPromises = [];
-    var _companyId = deliveryNoteFactory.getCompanyId();
     var _formSaveSuccessText = null;
     var _cateringStationItems = [];
     var _reasonCodeTypeUllage = 'Ullage';
@@ -33,7 +33,7 @@ angular.module('ts5App')
     }
 
     function getCatererStationList(){
-      return deliveryNoteFactory.getCatererStationList(_companyId).then(setCatererStationListFromResponse);
+      return deliveryNoteFactory.getCatererStationList().then(setCatererStationListFromResponse);
     }
 
     function getDeliveryNote(){
@@ -49,11 +49,17 @@ angular.module('ts5App')
       $scope.deliveryNote = angular.copy(response);
       $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, 'itemName');
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
+      $scope.deliveryNote.createdOn = dateUtility.removeMilliseconds($scope.deliveryNote.createdOn);
+      $scope.deliveryNote.updatedOn = dateUtility.removeMilliseconds($scope.deliveryNote.updatedOn);
     }
 
     function deliveryNoteFormErrorWatcher(){
       $scope.canReview = canReview();
     }
+
+    $scope.elementChanged = function(){
+      deliveryNoteFormErrorWatcher();
+    };
 
     function setStationIdOnCreate() {
       if($routeParams.state !== 'create'){
@@ -105,20 +111,22 @@ angular.module('ts5App')
       if(angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])){
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
+
       if(!response.response){
-        showMessage('No items exist in this LMP Station, try another.', 'warning');
+        showMessage('No items exist in this LMP Station, you must add them manually with the "+Add Items" button below.', 'warning');
         return;
       }
+      var items = $filter('unique')(response.response, 'masterItemId');
       var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
         return item.masterItemId;
       });
-      var filteredResponseMasterItems = response.response.filter(function(item){
-        return devlieryNoteItemIds.indexOf(item.itemMasterId) === -1;
+      var filteredResponseMasterItems = items.filter(function(item){
+        return devlieryNoteItemIds.indexOf(item.masterItemId) === -1;
       });
 
       var newMasterItems = filteredResponseMasterItems.map(function(item){
         return {
-          masterItemId: item.itemMasterId,
+          masterItemId: item.masterItemId,
           itemName: item.itemName,
           itemCode: item.itemCode
         };
@@ -165,7 +173,7 @@ angular.module('ts5App')
 
     function removeNullDeliveredItems(){
       $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item){
-        return item.deliveredQuantity || item.expectedQuantity;
+        return item.deliveredQuantity;
       });
     }
 
@@ -174,6 +182,7 @@ angular.module('ts5App')
     }
 
     function saveDeliveryNoteResolution(response){
+      hideLoadingModal();
       showMessage(_formSaveSuccessText, 'success');
       if($scope.deliveryNote.isAccepted){
         $location.path('/manage-goods-received');
@@ -262,6 +271,10 @@ angular.module('ts5App')
       }
     };
 
+    $scope.calculateBooked = function(item){
+      return item.deliveredQuantity - item.ullageQuantity;
+    };
+
     function saveDeliveryNoteFailed(response){
       $scope.displayError = true;
       $scope.toggleReview();
@@ -286,6 +299,9 @@ angular.module('ts5App')
     }
 
     $scope.save = function(_isAccepted){
+      if($scope.deliveryNote.isAccepted){
+        return;
+      }
       $scope.displayError = false;
       $scope.deliveryNote.isAccepted = _isAccepted;
       generateSavePayload();
@@ -437,10 +453,8 @@ angular.module('ts5App')
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
-      $scope.canReview = canReview();
-      $scope.readOnly = $scope.deliveryNote.isAccepted;
       if($scope.deliveryNote.isAccepted){
-        $scope.viewName = 'View Delivery Note';
+        $location.path(_path+'view/'+$scope.deliveryNote.id);
       }
     };
 

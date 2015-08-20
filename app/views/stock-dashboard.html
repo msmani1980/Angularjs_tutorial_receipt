@@ -14,7 +14,7 @@
           <div class="col-xs-6 text-right">
             <fieldset ng-hide="viewOnly">
 
-              <a ng-href="/#/stock-take" class="btn btn-primary">Start Stock Take</a>
+              <a ng-href="/#/stock-take/create" class="btn btn-primary">Start Stock Take</a>
 
               <button type="button" class="btn btn-info disabled">
                 <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
@@ -36,7 +36,6 @@
               id="deliveryStation"
               ng-disabled="isCatererStationListReadOnly()"
               ng-model="selectedCateringStation"
-              ng-change="updateStockItems(selectedCateringStation.id)"
               ng-options="cateringStation.name + ' - ' + cateringStation.code for cateringStation in cateringStationList | orderBy:'name' track by cateringStation.id">
               <option selected="selected" value>Select Catering Station</option>
             </select>
@@ -96,21 +95,21 @@
       </thead>
       <tbody>
 
-        <tr ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults" ng-class="isClassDanger(stockItem)">
+        <tr ng-repeat="stockItem in stockDashboardItemsList | index | orderBy:'itemName' | filter: search as searchResults" ng-class="isCurrentCountMismatched(stockItem)">
           <td>{{stockItem.itemCode}}</td>
           <td>{{stockItem.itemName}}</td>
           <td>
-            <input type="text" class="form-control" value="{{stockItem.openingQuantity}}" ng-disabled="true"/>
+            <input type="text" class="form-control text-right" value="{{stockItem.openingQuantity}}" ng-disabled="true"/>
           </td>
           <td>
-            <input type="text" class="form-control" value="{{stockItem.receivedQuantity}}" ng-disabled="true"/>
+            <input type="text" class="form-control text-right" value="{{stockItem.receivedQuantity}}" ng-disabled="true"/>
           </td>
           <td>
-            <input type="text" class="form-control" value="{{stockItem.dispatchedQuantity}}" ng-disabled="true"/>
+            <input type="text" class="form-control text-right" value="{{stockItem.dispatchedQuantity}}" ng-disabled="true"/>
           </td>
           <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]"
               ng-click="stockTakeReasonOpen(stockItem)">
-            <input type="text" class="form-control" value="{{stockItem.currentCountQuantity}}" ng-disabled="true"/>
+            <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentCountQuantity}}" ng-readonly="true"/>
           </td>
         </tr>
 

@@ -732,7 +732,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       for (var key in currenciesList) {
         var currency = currenciesList[key];
         listToReturn.push({
-          price: '1.00',
+          price: null,
           companyCurrencyId: parseInt(currency.id)
         });
       }

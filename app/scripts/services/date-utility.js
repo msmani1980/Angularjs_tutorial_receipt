@@ -79,4 +79,8 @@ angular.module('ts5App')
       return parsedDate > this.now();
     };
 
+    this.removeMilliseconds = function(date){
+      return date.replace(/\.[0-9]+/, '');
+    };
+
   });
