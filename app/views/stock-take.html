@@ -55,24 +55,24 @@
         </div>
         <div class="col-xs-12 col-sm-8" ng-show="cateringStationItems.length && state !== 'review'">
           <div class="row">
-            <div class="col-xs-12 col-sm-1">
+            <div class="col-xs-1 col-sm-2 col-md-1">
               <div class="form-group">
                 <label>Filter:</label>
               </div>
             </div>
-            <div class="col-xs-12 col-sm-3">
+            <div class="col-xs-3">
               <div class="form-group">
                 <label for="filter-item-code">Item Code</label>
                 <input ng-model="filterInput.itemCode" type="text" class="form-control" id="filter-item-code">
               </div>
             </div>
-            <div class="col-xs-12 col-sm-3">
+            <div class="col-xs-3">
               <div class="form-group">
                 <label for="filter-item-name">Item Name</label>
                 <input ng-model="filterInput.itemName" type="text" class="form-control" id="filter-item-name">
               </div>
             </div>
-            <div class="col-xs-12 col-sm-3">
+            <div class="col-xs-3">
               <label class="invisible">Clear filter</label>
               <button class="btn btn-default" type="button" ng-click="clearFilter()" ng-show="filterInput.itemCode || filterInput.itemName">Clear</button>
             </div>
