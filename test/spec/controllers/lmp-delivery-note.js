@@ -202,9 +202,9 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(scope.ullageReasons).toBeDefined();
         expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
       });
-      it('should redirect to / when cancel button is clicked', function(){
+      it('should redirect to /stock-take-report when cancel button is clicked', function(){
         scope.cancel();
-        expect(location.path()).toBe('/');
+        expect(location.path()).toBe('/stock-take-report');
       });
       describe('save scope function, only save', function() {
         beforeEach(function(){
