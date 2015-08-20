@@ -7,9 +7,10 @@
  * # StockDashboardCtrl
  * Controller of the ts5App
  */
+
 angular.module('ts5App').controller('StockDashboardCtrl',
   function ($scope, $http, GlobalMenuService, stockDashboardService, catererStationService, companyReasonCodesService,
-            dateUtility, $filter) {
+            dateUtility, $filter,ENV) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
@@ -52,6 +53,13 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       $scope.$watch('selectedCateringStation', $scope.updateStockItems);
     };
 
+    this.setExportURL = function(newValue) {
+      if(newValue){
+        $scope.exportURL = ENV.apiUrl + '/api/stock-management/dashboard/' + newValue.id;
+        $scope.exportURL += '/file/export?sessionToken=' + $http.defaults.headers.common.sessionToken;
+      }
+    };
+
     this.init();
 
     $scope.isCatererStationListReadOnly = function () {
@@ -62,9 +70,13 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     $scope.isCurrentCountMismatched = function (stockItem) {
       var currentCountExpected = (stockItem.openingQuantity + stockItem.receivedQuantity - stockItem.dispatchedQuantity);
-      if (stockItem.currentCountQuantity > currentCountExpected) {
-        return 'bg-danger';
-      }
+      return (stockItem.currentCountQuantity > currentCountExpected);
     };
+
+    $scope.isRecordUpdatedToday = function(stockItem) {
+      console.log(stockItem);
+    };
+
+    $scope.$watch('selectedCateringStation', $this.setExportURL);
 
   });
