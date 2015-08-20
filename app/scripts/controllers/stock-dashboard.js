@@ -67,6 +67,6 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     $scope.isRecordUpdatedToday = function(stockItem) {
       console.log(stockItem);
-    }
+    };
 
   });
