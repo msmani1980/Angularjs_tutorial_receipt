@@ -134,9 +134,9 @@ describe('Controller: StockTakeCtrl', function () {
     it('should call stockTakeFactory.getCatererStationList', function(){
       expect(stockTakeFactory.getCatererStationList).toHaveBeenCalled();
     });
-    it('should redirect to / when cancel button is clicked', function(){
+    it('should redirect to /stock-take-report when cancel button is clicked', function(){
       scope.cancel();
-      expect(location.path()).toBe('/');
+      expect(location.path()).toBe('/stock-take-report');
     });
     describe('change LMP station', function(){
       it('should call stockTakeFactory.getItemsByCateringStationId', function(){
