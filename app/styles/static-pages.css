@@ -34,6 +34,78 @@
   margin-top: 0;
 }
 
+.fuelux .wizard .well.seal-color-blue:after {
+    background-color: #66ccff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #fff;
+    content: "Outbound";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .well.seal-color-blue {
+    position: relative;
+}
+
+.fuelux .wizard .well.seal-color-green:after {
+    background-color: #33cc33;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #fff;
+    content: "Hand Over";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .well.seal-color-green {
+    position: relative;
+}
+
+.fuelux .wizard .well.seal-color-yellow:after {
+    background-color: #ffcc00;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #fff;
+    content: "Inbound";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .well.seal-color-yellow {
+    position: relative;
+}
+
+.fuelux .wizard .well.seal-color-white:after {
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #3a87ad;
+    content: "High Security";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .well.seal-color-white {
+    position: relative;
+}
+
 .fuelux .wizard .table-scrollable {
   width: 100%;
 }
@@ -86,7 +158,6 @@
 .fuelux .wizard .checkbox-inline {
   margin-right: 10px;
 }
-
 
 @media (max-width: 768px) {
   .fuelux .wizard .steps li {
