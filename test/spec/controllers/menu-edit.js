@@ -100,15 +100,17 @@ describe('Controller: MenuEditCtrl', function () {
     });
 
     describe('filterItems', function () {
-      it('should be defined', function () {
-        expect(menuFactory.getItemsList).toBeDefined();
-      });
-      it('should call getItems with categoryId', function () {
+      beforeEach(function() {
         scope.menu = {
           startDate: '08/20/2001',
           endDate: '09/25/2002'
         };
         scope.selectedCategories = [{id: 1}];
+      });
+      it('should be defined', function () {
+        expect(menuFactory.getItemsList).toBeDefined();
+      });
+      it('should call getItems with categoryId', function () {
         var expectedPayload = {
           startDate: scope.menu.startDate,
           endDate: scope.menu.endDate,
@@ -116,6 +118,12 @@ describe('Controller: MenuEditCtrl', function () {
         };
         scope.filterItems(0);
         expect(menuFactory.getItemsList).toHaveBeenCalledWith(expectedPayload, true);
+      });
+
+      it('should attach new response to itemsCollection', function () {
+        scope.itesmsCollection = [{}];
+        scope.filterItems(0);
+        expect(scope.filteredItemsCollection[0]).not.toEqual({});
       });
     });
 
