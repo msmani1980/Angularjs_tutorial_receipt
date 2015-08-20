@@ -199,17 +199,6 @@ describe('Controller: StockDashboardCtrl', function() {
     });
 
     describe('isRecordUpdatedToday method', function() {
-
-        beforeEach(function() {
-          jasmine.clock().install();
-          var baseDate = new Date(2013, 9, 23);
-          jasmine.clock().mockDate(baseDate);
-        });
-
-        afterEach(function() {
-          jasmine.clock().uninstall();
-        });
-
       it('should return true if date is today', function() {
 
         var stockItemTrue = {
