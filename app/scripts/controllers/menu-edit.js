@@ -33,7 +33,6 @@ angular.module('ts5App')
 
     function attachItemsModelToScope(masterItemsFromAPI) {
       $scope.masterItemsList = masterItemsFromAPI.masterItems;
-      console.log($scope.menu.menuItems);
       angular.forEach($scope.menu.menuItems, function (menuItem) {
         menuItem.itemName = getMasterItemUsingId(menuItem.itemId).itemName;
       });
@@ -45,7 +44,6 @@ angular.module('ts5App')
           $scope.filterItems(index);
         }
       });
-
     }
 
     function fetchMasterItemsList(startDate, endDate) {
@@ -295,9 +293,9 @@ angular.module('ts5App')
           companyId: companyId
         };
       }
-      menuFactory.getSalesCategoryList({}).then(function (response) {
+      menuFactory.getSalesCategoriesList({}).then(function (response) {
         $scope.categories = response.salesCategories;
-      })
+      });
     }
 
     initializeMenu();

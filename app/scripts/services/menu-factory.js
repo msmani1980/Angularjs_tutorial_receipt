@@ -43,7 +43,7 @@ angular.module('ts5App')
       return GlobalMenuService.company.get();
     };
 
-    var getSalesCategoryList = function (payload) {
+    var getSalesCategoriesList = function (payload) {
       return salesCategoriesService.getSalesCategoriesList(payload);
     };
 
@@ -55,6 +55,6 @@ angular.module('ts5App')
       getItemsList: getItemsList,
       importFromExcel: importFromExcel,
       getCompanyId: getCompanyId,
-      getSalesCategoryList: getSalesCategoryList
+      getSalesCategoriesList: getSalesCategoriesList
     };
   });

@@ -5,7 +5,7 @@
 describe('Controller: MenuEditCtrl', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/menu.json', 'served/master-item-list.json'));
+  beforeEach(module('served/menu.json', 'served/master-item-list.json', 'served/sales-categories.json'));
 
   var MenuEditCtrl,
     scope,
@@ -13,13 +13,16 @@ describe('Controller: MenuEditCtrl', function () {
     masterItemsResponseJSON,
     menuFactory,
     getMenuDeferred,
-    getItemsListDeferred;
+    getItemsListDeferred,
+    salesCategoriesResponseJSON,
+    salesCategoriesDeferred;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
-    inject(function (_servedMenu_, _servedMasterItemList_) {
+    inject(function (_servedMenu_, _servedMasterItemList_, _servedSalesCategories_) {
       menuResponseJSON = _servedMenu_;
       masterItemsResponseJSON = _servedMasterItemList_;
+      salesCategoriesResponseJSON = _servedSalesCategories_;
     });
 
     menuFactory = $injector.get('menuFactory');
@@ -30,10 +33,14 @@ describe('Controller: MenuEditCtrl', function () {
     getItemsListDeferred = $q.defer();
     getItemsListDeferred.resolve(masterItemsResponseJSON);
 
+    salesCategoriesDeferred = $q.defer();
+    salesCategoriesDeferred.resolve(salesCategoriesResponseJSON);
+
     spyOn(menuFactory, 'getMenu').and.returnValue(getMenuDeferred.promise);
     spyOn(menuFactory, 'updateMenu').and.returnValue(getMenuDeferred.promise);
     spyOn(menuFactory, 'createMenu').and.returnValue(getMenuDeferred.promise);
     spyOn(menuFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
+    spyOn(menuFactory, 'getSalesCategoriesList').and.returnValue(salesCategoriesDeferred.promise);
     spyOn(menuFactory, 'getCompanyId');
 
 
@@ -83,6 +90,32 @@ describe('Controller: MenuEditCtrl', function () {
     describe('masterItemsList', function () {
       it('should have copied item name to menu.menuItems', function () {
         expect(scope.menu.menuItems[0].itemName).toBeDefined();
+      });
+    });
+
+    describe('getSalesCategoriesList API', function () {
+      it('should call getSalesCategories during init', function () {
+        expect(menuFactory.getSalesCategoriesList).toHaveBeenCalled();
+      });
+    });
+
+    describe('filterItems', function () {
+      it('should be defined', function () {
+        expect(menuFactory.getItemsList).toBeDefined();
+      });
+      it('should call getItems with categoryId', function () {
+        scope.menu = {
+          startDate: '08/20/2001',
+          endDate: '09/25/2002'
+        };
+        scope.selectedCategories = [{id: 1}];
+        var expectedPayload = {
+          startDate: scope.menu.startDate,
+          endDate: scope.menu.endDate,
+          categoryId: scope.selectedCategories[0].id
+        };
+        scope.filterItems(0);
+        expect(menuFactory.getItemsList).toHaveBeenCalledWith(expectedPayload, true);
       });
     });
 
@@ -164,6 +197,12 @@ describe('Controller: MenuEditCtrl', function () {
         var previousLength = scope.newItemList.length;
         scope.addItem();
         expect(scope.newItemList.length).toBe(previousLength + 1);
+      });
+
+      it('should push a new items array for each item', function () {
+        var previousLength = scope.filteredItemsCollection.length;
+        scope.addItem();
+        expect(scope.filteredItemsCollection.length).toBe(previousLength+1);
       });
 
       it('should have a newItemList attached to scope', function () {
