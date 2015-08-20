@@ -166,11 +166,11 @@ describe('Controller: StockTakeCtrl', function () {
           isSubmitted: false,
           items: [
             {
-              masterItemId: '1',
+              masterItemId: 1,
               quantity: 10
             },
             {
-              masterItemId: '4',
+              masterItemId: 4,
               quantity: 11
             }
           ]

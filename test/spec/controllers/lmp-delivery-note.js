@@ -255,7 +255,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
                 deliveredQuantity: 1,
                 expectedQuantity: 1,
                 masterItemId: 2,
-                ullageQuantity: undefined,
+                ullageQuantity: null,
                 ullageReason: null
               }
             ]
