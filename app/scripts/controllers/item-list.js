@@ -1,4 +1,5 @@
 'use strict';
+/* global moment */
 
 /**
  * @author Max Felker <max@bigroomstudios.com>
@@ -41,22 +42,6 @@ angular.module('ts5App')
       return query;
     };
 
-    this.createNestedItemsList = function () {
-      var newItemList = [];
-      var currentMasterId = -1;
-      angular.forEach($scope.itemsList, function (item) {
-        if (item.itemMasterId === currentMasterId) {
-          var lastIndex = newItemList.length - 1;
-          newItemList[lastIndex].versions.push(item);
-        } else {
-          var newItem = {versions: [item], itemMasterId: item.itemMasterId};
-          newItemList.push(newItem);
-          currentMasterId = item.itemMasterId;
-        }
-      });
-      $scope.itemsList = newItemList;
-    };
-
     this.getItemsList = function () {
       var query = this.generateItemQuery();
       var $this = this;
@@ -91,6 +76,57 @@ angular.module('ts5App')
       return itemIndex;
     };
 
+    this.createNestedItemsList = function () {
+      var newItemList = [];
+      var currentMasterId = -1;
+      angular.forEach($scope.itemsList, function (item) {
+        if (item.itemMasterId === currentMasterId) {
+          var lastIndex = newItemList.length - 1;
+          newItemList[lastIndex].versions.push(item);
+        } else {
+          var newItem = {versions: [item], itemMasterId: item.itemMasterId};
+          newItemList.push(newItem);
+          currentMasterId = item.itemMasterId;
+        }
+      });
+      $scope.itemsList = newItemList;
+      angular.forEach($scope.itemsList, function (item) {
+        item.versions.sort($this.sortItemVersions);
+      });
+    };
+
+    this.sortItemVersions = function (itemA, itemB) {
+      if (itemA.startDate === itemB.startDate && itemA.endDate === itemB.endDate) {
+        return 0;
+      }
+      if ($this.isItemActive(itemA)) {
+        return -1;
+      } else if ($this.isItemActive(itemB)) {
+        return 1;
+      }
+      return $this.compareInactiveDates(itemA, itemB);
+    };
+
+    this.compareInactiveDates = function (itemA, itemB) {
+      if ((dateUtility.isAfterToday(itemA.startDate) && dateUtility.isAfterToday(itemB.startDate)) ||
+        (dateUtility.isYesterdayOrEarlier(itemA.endDate) && dateUtility.isYesterdayOrEarlier(itemB.endDate))) {
+        return $this.sortByDateCloserToToday(itemA.startDate, itemB.startDate);
+      } else {
+        return $this.sortByDateFarthestInFuture(itemA.startDate, itemB.startDate);
+      }
+    };
+
+    this.sortByDateCloserToToday = function (dateA, dateB) {
+      var today = moment();
+      var diffA = moment(dateA, 'YYYY-MM-DD').diff(today, 'days');
+      var diffB = moment(dateB, 'YYYY-MM-DD').diff(today, 'days');
+      return (Math.abs(diffA) < Math.abs(diffB)) ? -1 : 1;
+    };
+
+    this.sortByDateFarthestInFuture = function (dateA, dateB) {
+      return moment(dateB, 'YYYY-MM-DD').diff(moment(dateA, 'YYYY-MM-DD'), 'days');
+    };
+
     $scope.removeRecord = function (itemId) {
       $this.displayLoadingModal('Removing Retail Item');
       $this.closeAccordian();
@@ -105,7 +141,11 @@ angular.module('ts5App')
       return Date.parse(date);
     };
 
-    $scope.isItemActive = function (date) {
+    this.isItemActive = function (item) {
+      return (dateUtility.isTodayOrEarlier(item.startDate) && dateUtility.isAfterToday(item.endDate));
+    };
+
+    $scope.isDateActive = function (date) {
       return dateUtility.isTodayOrEarlier(date);
     };
 
