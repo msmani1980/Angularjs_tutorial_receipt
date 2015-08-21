@@ -74,9 +74,10 @@
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-xs-12 col-md-6">
+        <div class="col-xs-12 col-sm-4">
         <select class="form-control" ng-model="catererStationId">
-          <option ng-repeat="station in stationsList" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
+          <option selected="selected" value disabled>Select Catering Station</option>
+          <option ng-repeat="station in stationsList | orderBy:'name'" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
         </select>
         </div>
       </div>

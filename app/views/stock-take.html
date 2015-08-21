@@ -54,6 +54,7 @@
                        ng-disabled="readOnly || catererStationList.length == 1 || state != 'create'"
                        ng-show="catererStationList.length"
                        required>
+                  <option selected="selected" value disabled>Select Catering Station</option>
                   <option ng-disabled="disabledCatererStationIds[station.id]" ng-selected="station.id==stockTake.catererStationId" ng-repeat="station in catererStationList | orderBy:'name' track by station.id" value="{{ station.id }}">
                     {{ station.name }} - {{ station.code }}
                   </option>
@@ -159,7 +160,7 @@
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
               <label for="item-quantity-{{ $index }}">Quantity</label>
-              <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" id="item-quantity-{{ $index }}" ng-readonly="readOnly">
+              <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" id="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
             </div>
           </div>
 

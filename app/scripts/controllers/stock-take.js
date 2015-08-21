@@ -218,6 +218,16 @@ angular.module('ts5App')
     }
 
     // Scope functions
+    $scope.quantityDisabled =function(){
+      if($scope.state !== 'create' && $scope.state !== 'edit'){
+        return true;
+      }
+      if($scope.stockTake.isSubmitted){
+        return true;
+      }
+      return false;
+    };
+
     $scope.clearFilter = function(){
       if(angular.isUndefined($scope.filterInput)){
         return;
