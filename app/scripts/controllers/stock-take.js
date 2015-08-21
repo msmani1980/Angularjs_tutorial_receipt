@@ -178,7 +178,11 @@ angular.module('ts5App')
     }
 
     function saveStockTake(){
-      displayLoadingModal('Saving');
+      var loadingModalText = 'Saving';
+      if(_payload.isSubmitted){
+        loadingModalText = 'Submitting';
+      }
+      displayLoadingModal(loadingModalText);
       if($routeParams.state === 'create'){
         _formSaveSuccessText = 'Created';
         stockTakeFactory.createStockTake(_payload).then(
