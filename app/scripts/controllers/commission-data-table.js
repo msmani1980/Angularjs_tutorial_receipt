@@ -73,7 +73,6 @@ angular.module('ts5App')
 
     this.getDataList = function (query) {
       // TODO: call commissionFactory.getCommissionDataList($scope.search) and set response to $scope.commissionData
-      console.log(query);
     };
 
     $this.getDataList({});

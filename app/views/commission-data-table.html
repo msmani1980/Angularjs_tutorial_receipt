@@ -65,7 +65,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr class="ng-scope" ng-repeat="data in commissionData trackBy $index">
+      <tr class="ng-scope" ng-repeat="data in commissionData">
         <td>{{ data.crewBase }}</td>
         <td ng-class="(data.product) ? '' : 'active'">{{ (data.product) ? 'Y' : 'N' }}</td>
         <td ng-class="(data.eposSales) ? '' : 'active'">{{ (data.eposSales) ? 'Y' : 'N' }}</td>
