@@ -1,6 +1,3 @@
-// TODO:
-// Add CRUD Test cases
-
 'use strict';
 
 describe('CatererStation Service |', function () {
@@ -93,6 +90,63 @@ describe('CatererStation Service |', function () {
       expect(testObject.code).toBeDefined();
     });
 
+  });
+
+  describe('getAllMenuItems', function () {
+    it('should be accessible in the service', function () {
+      expect(catererStationService.getAllMenuItems).toBeDefined();
+    });
+    beforeEach(function () {
+      $httpBackend.whenGET(/caterer-stations/).respond({done: true});
+    });
+    it('should make GET request to API', function () {
+      catererStationService.getAllMenuItems(38);
+      $httpBackend.expectGET(/caterer-stations/);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('getCatererStationList', function () {
+    it('should be accessible in the service', function () {
+      expect(catererStationService.getCatererStationList).toBeDefined();
+    });
+    beforeEach(function () {
+      $httpBackend.whenGET(/caterer-stations/).respond({done: true});
+    });
+    it('should make GET request to API', function () {
+      catererStationService.getCatererStationList(38);
+      $httpBackend.expectGET(/caterer-stations/);
+      $httpBackend.flush();
+    });
+  });
+
+  describe('createCatererStation', function () {
+    it('should be accessible in the service', function () {
+      expect(catererStationService.createCatererStation).toBeDefined();
+    });
+    beforeEach(function () {
+      $httpBackend.whenPOST(/caterer-stations/).respond({done: true});
+    });
+    it('should make POST request to API', function () {
+      catererStationService.createCatererStation({});
+      $httpBackend.expectPOST(/caterer-stations/);
+      $httpBackend.flush();
+    });
+  });
+
+
+  describe('deleteCatererStation', function () {
+    it('should be accessible in the service', function () {
+      expect(catererStationService.deleteCatererStation).toBeDefined();
+    });
+    beforeEach(function () {
+      $httpBackend.whenDELETE(/caterer-stations/).respond({done: true});
+    });
+    it('should make DELETE request to API', function () {
+      catererStationService.deleteCatererStation(123);
+      $httpBackend.expectDELETE(/caterer-stations/);
+      $httpBackend.flush();
+    });
   });
 
 });

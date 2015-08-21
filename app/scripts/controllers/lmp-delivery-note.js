@@ -121,17 +121,17 @@ angular.module('ts5App')
         showMessage('No items exist in this LMP Station, you must add them manually with the "+Add Items" button below.', 'warning');
         return;
       }
-      var items = $filter('unique')(response.response, 'masterItemId');
+      var items = $filter('unique')(response.response, 'itemId');
       var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
         return item.masterItemId;
       });
       var filteredResponseMasterItems = items.filter(function(item){
-        return devlieryNoteItemIds.indexOf(item.masterItemId) === -1;
+        return devlieryNoteItemIds.indexOf(item.itemId) === -1;
       });
 
       var newMasterItems = filteredResponseMasterItems.map(function(item){
         return {
-          masterItemId: item.masterItemId,
+          masterItemId: item.itemId,
           itemName: item.itemName,
           itemCode: item.itemCode
         };
@@ -233,6 +233,7 @@ angular.module('ts5App')
     }
 
     $scope.removeItemByIndex = function(index){
+      $scope.canReview = canReview();
       $scope.deliveryNote.items.splice(index, true);
     };
 
@@ -295,7 +296,11 @@ angular.module('ts5App')
     }
 
     function saveDeliveryNote(){
-      displayLoadingModal('Saving');
+      var saveModalText = 'Saving';
+      if(_payload.isAccepted){
+        saveModalText = 'Submitting';
+      }
+      displayLoadingModal(saveModalText);
       if($routeParams.state === 'create'){
         _formSaveSuccessText = 'Created';
         deliveryNoteFactory.createDeliveryNote(_payload).then(saveDeliveryNoteResolution, saveDeliveryNoteFailed);
@@ -348,9 +353,9 @@ angular.module('ts5App')
         return false;
       }
       var itemsSet = $scope.deliveryNote.items.filter(function(retailItem){
-        return retailItem.expectedQuantity && retailItem.deliveredQuantity;
+        return retailItem.deliveredQuantity;
       });
-      if(!itemsSet){
+      if(!itemsSet.length){
         return false;
       }
       return true;
@@ -389,6 +394,7 @@ angular.module('ts5App')
     }
 
     $scope.changeItem = function(selectedMasterItem, $index){
+      $scope.canReview = canReview();
       setChangedItem(selectedMasterItem, $index);
       setAllowedMasterItems();
     };
@@ -472,6 +478,7 @@ angular.module('ts5App')
 
     // edit state actions
     stateActions.editInit = function(){
+      $scope.readOnly = false;
       $scope.viewName = 'Edit Delivery Note';
       displayLoadingModal();
       _initPromises.push(getDeliveryNote());
@@ -482,6 +489,7 @@ angular.module('ts5App')
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
+      $scope.readOnly = true;
       if($scope.deliveryNote.isAccepted){
         $location.path(_path+'view/'+$scope.deliveryNote.id);
       }

@@ -11,7 +11,6 @@ describe('Service: deliveryNoteFactory', function () {
   var catererStationService;
   var itemsService;
   var companyReasonCodesService;
-  var stockDashboardService;
 
   beforeEach(inject(function (_deliveryNoteFactory_, $injector) {
     deliveryNoteFactory = _deliveryNoteFactory_;
@@ -19,7 +18,6 @@ describe('Service: deliveryNoteFactory', function () {
     catererStationService = $injector.get('catererStationService');
     itemsService = $injector.get('itemsService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
-    stockDashboardService = $injector.get('stockDashboardService');
 
     spyOn(deliveryNotesService, 'getDeliveryNote');
     spyOn(catererStationService, 'getCatererStationList');
@@ -27,7 +25,7 @@ describe('Service: deliveryNoteFactory', function () {
     spyOn(companyReasonCodesService, 'getAll');
     spyOn(deliveryNotesService, 'createDeliveryNote');
     spyOn(deliveryNotesService, 'saveDeliveryNote');
-    spyOn(stockDashboardService, 'getStockDashboardItems');
+    spyOn(catererStationService, 'getAllMenuItems');
 
   }));
 
@@ -55,6 +53,11 @@ describe('Service: deliveryNoteFactory', function () {
       deliveryNoteFactory.getCatererStationList();
       expect(catererStationService.getCatererStationList).toHaveBeenCalled();
     });
+    it('should call getMenuItems', function(){
+      var csid = 1;
+      deliveryNoteFactory.getItemsByCateringStationId(csid);
+      expect(catererStationService.getAllMenuItems).toHaveBeenCalledWith(csid, null);
+    });
   });
 
   describe('itemsService calls', function(){
@@ -63,15 +66,6 @@ describe('Service: deliveryNoteFactory', function () {
       expect(itemsService.getItemsList).toHaveBeenCalledWith({}, true);
     });
   });
-
-  describe('stockDashboardService calls', function(){
-    it('should call getItemsByCateringStationId with a param', function(){
-      var csid = 1;
-      deliveryNoteFactory.getItemsByCateringStationId(csid);
-      expect(stockDashboardService.getStockDashboardItems).toHaveBeenCalledWith(csid);
-    });
-  });
-
 
   describe('companyReasonCodesService calls', function(){
     it('should call getCompanyReasonCodes', function(){

@@ -21,20 +21,25 @@
 <!--               <span>Export (PDF)</span> -->
 <!--             </button> -->
 
-            <button type="button" class="btn btn-primary" ng-show="canReview" ng-click="toggleReview()">
-              <span>Review</span>
-            </button>
+          <button class="btn btn-warning" ng-show="canReview" ng-click="toggleReview()">
+            <span class="fa fa-file-text-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Review</span>
+          </button>
 
-            <button type="button" class="btn btn-primary" ng-click="save(false)" ng-show="state == 'review'">
-              <span>Save</span>
-            </button>
+          <button class="btn btn-primary" ng-click="save(false)" ng-show="state == 'review'">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Save</span>
+          </button>
 
-            <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+          <button type="button" class="btn btn-default" ng-click="cancel()">
+            <span class="fa fa-remove" aria-hidden="true"></span>
+            <span class="hidden-xs">Cancel</span>
+          </button>
 
-            <button class="btn btn-primary" ng-click="save(true)" ng-show="state == 'review'">
-              <span class="fa fa-check-square-o" aria-hidden="true"></span>
-              <span>Submit</span>
-            </button>
+          <button class="btn btn-success" ng-click="save(true)" ng-show="state == 'review'">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Submit</span>
+          </button>
 
         </fieldset>
 
@@ -181,7 +186,7 @@
             <div class="col-xs-12 col-sm-6 col-md-2">
               <div class="form-group">
                 <label>Item Code</label>
-                <input ng-model="item.itemCode" type="text" class="form-control" ng-hide="hideItemCode(item)" readonly>
+                <input ng-model="item.itemCode" type="text" class="form-control" ng-hide="hideItemCode(item)" maxlength="20" readonly>
                 <select class="form-control" ng-change="changeItem(masterItemSelected[masterItem.id], $index)"
                         ng-model="masterItemSelected[masterItem.id]"
                         placeholder="item.itemCode"
@@ -195,7 +200,7 @@
             <div class="col-xs-12 col-sm-6 col-md-2">
               <div class="form-group">
                 <label>Item Name*</label>
-                <input ng-model="item.itemName" type="text" class="form-control" ng-hide="item.canEdit && state != 'review'" readonly>
+                <input ng-model="item.itemName" type="text" class="form-control" ng-hide="item.canEdit && state != 'review'" maxlength="20" readonly>
                 <select class="form-control" ng-change="changeItem(masterItemSelected[masterItem.id], $index)"
                         ng-model="masterItemSelected[masterItem.id]"
                         placeholder="item.itemName"
