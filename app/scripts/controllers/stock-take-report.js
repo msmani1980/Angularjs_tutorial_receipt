@@ -112,6 +112,21 @@ angular.module('ts5App')
       $this.getStockTakeList();
     };
 
+    $scope.canCreateStockTake = function() {
+      if(!$scope.catererStationId) {
+        return false;
+      }
+      var canCreate = true;
+      for( var key in $scope.stockTakeList) {
+        var stockTake = $scope.stockTakeList[key];
+        if(!stockTake.isSubmitted){
+          canCreate = false;
+          break;
+        }
+      }
+      return canCreate;
+    };
+
     this.init();
 
   });
