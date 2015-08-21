@@ -15,7 +15,7 @@ angular.module('ts5App')
 
     var actions = {
       adjustStock: {
-        method: 'POST'
+        method: 'PUT'
       }
     };
 
