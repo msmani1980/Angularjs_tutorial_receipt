@@ -2,7 +2,8 @@
   <button type="button" class="btn btn-default btn-info" ngf-select="" ng-model="files" class="btn" ngf-multiple="false"
           ngf-accept="'*.xls,*.xlsx,*.csv'" ng-click="$event.preventDefault();"
           ng-model-rejected="rejFiles" tabindex="0" ngf-stop-propagation="true">
-    <i class="fa fa-upload"></i> Import From File
+    <i class="fa fa-upload"></i>
+    <span class="hidden-xs">Import From File</span>
   </button>
   <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
@@ -24,4 +25,3 @@
   <button type="button" class="btn btn-info" ng-if="files" ng-click="upload(files)">Upload</button>
 </div>
 <div ng-include="modalHtml()"></div>
-

@@ -245,6 +245,9 @@ angular.module('ts5App')
       if ($routeParams.state === 'create') {
         return true;
       }
+      if ($routeParams.state === 'view') {
+        return false;
+      }
       if (angular.isUndefined($scope.menu)) {
         return false;
       }
