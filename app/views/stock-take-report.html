@@ -9,7 +9,7 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a ng-show="catererStationId" ng-href="/#/stock-take/create/{{catererStationId}}" class="btn btn-primary">
+        <a ng-show="canCreateStockTake()" ng-href="/#/stock-take/create/{{catererStationId}}" class="btn btn-primary">
           + <span class="hidden-xs hidden-sm">Create Stock Take</span>
         </a>
         <button ng-show="catererStationId" class="btn btn-default"data-toggle="collapse" data-target="#search-collapse"
