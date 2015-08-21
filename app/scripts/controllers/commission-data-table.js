@@ -1,7 +1,4 @@
 'use strict';
-/*global moment*/
-/*global $*/
-
 
 /**
  * @ngdoc function
@@ -12,8 +9,9 @@
  */
 angular.module('ts5App')
   .controller('CommissionDataTableCtrl', function ($scope) {
+    var $this = this;
     $scope.viewName = 'Commission Data Table';
-
+    $scope.search = {};
     $scope.commissionData = [{
       crewBase: 'CREW',
       startDate: '08/20/2015',
@@ -56,12 +54,28 @@ angular.module('ts5App')
     }];
 
     $scope.searchCommissionData = function () {
-
+      $this.getDataList($scope.search);
     };
 
-    $scope.canDelete = function (data) {
+    $scope.clearSearch = function () {
+      $scope.search = {};
+      $this.getDataList({});
+    };
+
+    $scope.canDelete = function () {
+      // TODO: fill in business logic for delete
       return true;
     };
 
+    $scope.delete = function () {
+      // TODO: call commissionFactory.deleteCommissionData();
+    };
+
+    this.getDataList = function (query) {
+      // TODO: call commissionFactory.getCommissionDataList($scope.search) and set response to $scope.commissionData
+      console.log(query);
+    };
+
+    $this.getDataList({});
 
   });

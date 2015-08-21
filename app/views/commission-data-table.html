@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div class="panel panel-default no-transition" id="search-collapse">
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
       <form name="commissionDataSearchForm" ng-submit="searchCommissionData()">
         <div class="panel-body">
           <div class="row">
@@ -65,7 +65,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr class="ng-scope" ng-repeat="data in commissionData">
+      <tr class="ng-scope" ng-repeat="data in commissionData trackBy $index">
         <td>{{ data.crewBase }}</td>
         <td ng-class="(data.product) ? '' : 'active'">{{ (data.product) ? 'Y' : 'N' }}</td>
         <td ng-class="(data.eposSales) ? '' : 'active'">{{ (data.eposSales) ? 'Y' : 'N' }}</td>
@@ -84,7 +84,7 @@
             <i class="fa fa-pencil"></i>
           </button>
           <button class="btn btn-danger btn-xs"
-                  ng-click="deleteRecordDialog(postTrips[$index], ['scheduleNumber', 'deStationCode', 'depTime', 'arrStationCode', 'arrTime'])"
+                  ng-click="deleteRecordDialog(commissionDataList[$index], ['crewBase', 'startDate', 'endDate'])"
                   tabindex="0"
                   ng-show="canDelete(data)">
             <i class="fa fa-trash"></i>
