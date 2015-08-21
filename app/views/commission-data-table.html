@@ -1,49 +1,30 @@
-<div class="module-container">
-  <div class="edit-controls">
-    <div class="row">
-      <div class="col-xs-12">
+<div class="fluid-container module-container">
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
         <h2 class="view-name">{{ viewName }}</h2>
       </div>
-    </div>
-  </div>
 
-  <div class="post-trip-data-list">
-    <div class="row">
-      <div class="col-xs-12 text-left">
-        <a href="#/post-trip-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Post Trip</span></a>
-        <excel-upload type="postTrip"></excel-upload>
-
-        <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
-                aria-expanded="false"
+      <div class="col-xs-8 text-right">
+        <a href="#" class="btn btn-primary">+ <span class="hidden-xs">Create Commission Data</span></a>
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
                 aria-controls="search-collapse">
           <span class="fa fa-search" aria-hidden="true"></span>
-          <span class="hidden-xs">Search</span>
+          <span class="hidden-sm hidden-xs">Search</span>
         </button>
       </div>
     </div>
 
     <div class="panel panel-default no-transition" id="search-collapse">
-      <form name="menuSearchForm" ng-submit="searchPostTripData()">
+      <form name="commissionDataSearchForm" ng-submit="searchCommissionData()">
         <div class="panel-body">
           <div class="row">
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="schedule-number">Schedule Number</label>
-                <input ng-model="search.scheduleNumber" type="text" class="form-control" id="schedule-number"
+                <label for="schedule-number">Crew Base</label>
+                <input ng-model="search.crewBase" type="text" class="form-control" id="schedule-number"
                        placeholder="T1">
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="tail-number">Tail Number</label>
-                <ui-select id="tail-number" multiple ng-model="multiSelectedValues.tailNumbers" theme="bootstrap">
-                  <ui-select-match placeholder="Select Tail Number..">{{ $item.carrierNumber }}</ui-select-match>
-                  <ui-select-choices repeat="number in carrierNumbers | filter: $select.search">
-                    {{ number.carrierNumber }}
-                  </ui-select-choices>
-                </ui-select>
               </div>
             </div>
 
@@ -51,52 +32,13 @@
               <date-picker
                 class="form-group"
                 element-class="col-xs-6"
-                start-date-model="search.scheduleStartDate"
-                end-date-model="search.scheduleEndDate"
-                label-from="Schedule Date From"
-                label-to="Schedule Date To"
+                start-date-model="search.startDate"
+                end-date-model="search.endDate"
+                label-from="Effective From"
+                label-to="Effective To"
                 is-search-field="true">
               </date-picker>
             </div>
-          </div>
-
-          <div class="row">
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="departure-station">Departure Station</label>
-                <ui-select id="departure-station" multiple ng-model="multiSelectedValues.depStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
-                  <ui-select-choices repeat="station in stationList | filter: $select.search">
-                    {{ station.stationCode }} ({{ station.stationName }})
-                  </ui-select-choices>
-                </ui-select>
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="arrival-station">Arrival Station</label>
-                <ui-select id="arrival-station" multiple ng-model="multiSelectedValues.arrStations" theme="bootstrap">
-                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
-                  <ui-select-choices repeat="station in stationList | filter: $select.search">
-                    {{ station.stationCode }} ({{ station.stationName }})
-                  </ui-select-choices>
-                </ui-select>
-              </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-3">
-              <div class="form-group">
-                <label for="employee-id">Employee Id</label>
-                <ui-select id="employee-id" multiple ng-model="multiSelectedValues.employeeIds" theme="bootstrap">
-                  <ui-select-match placeholder="Select EmployeeIds..">{{ $item.employeeIdentifier }}</ui-select-match>
-                  <ui-select-choices repeat="employee in employees | filter: $select.search">
-                    {{ employee.employeeIdentifier }} ({{employee.lastName}}, {{ employee.firstName }})
-                  </ui-select-choices>
-                </ui-select>
-              </div>
-            </div>
-
           </div>
         </div>
         <div class="panel-footer text-right">
@@ -109,34 +51,42 @@
     <table class="table table-bordered table-hover ng-scope">
       <thead>
       <tr>
-        <th>Schedule Number</th>
-        <th>Schedule Date</th>
-        <th>Departure Station</th>
-        <th>Departure Time</th>
-        <th>Arrival Station</th>
-        <th>Arrival Time</th>
+        <th>Crew Base</th>
+        <th>Product</th>
+        <th>EPOS Sales</th>
+        <th>EPOS Percent</th>
+        <th>Cash Banked</th>
+        <th>Cash Banked Percent</th>
+        <th>Manual Bars</th>
+        <th>Cash</th>
+        <th>Stock </th>
+        <th>Incentive Increment</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
-      <tr class="ng-scope" ng-repeat="trip in postTrips">
-        <td>{{ trip.scheduleNumber }}</td>
-        <td>{{ trip.scheduleDate }}</td>
-        <td>{{ trip.depStationCode}}</td>
-        <td>{{ trip.depTime }}</td>
-        <td>{{ trip.arrStationCode}}</td>
-        <td>{{ trip.arrTime }}</td>
+      <tr class="ng-scope" ng-repeat="data in commissionData">
+        <td>{{ data.crewBase }}</td>
+        <td ng-class="(data.product) ? '' : 'active'">{{ (data.product) ? 'Y' : 'N' }}</td>
+        <td ng-class="(data.eposSales) ? '' : 'active'">{{ (data.eposSales) ? 'Y' : 'N' }}</td>
+        <td ng-class="(data.eposSales) ? '' : 'active'">{{ data.eposPercent | number: 2 }} %</td>
+        <td ng-class="(data.cashBanked) ? '' : 'active'">{{ (data.cashBanked) ? 'Y' : 'N' }}</td>
+        <td ng-class="(data.cashBanked) ? '' : 'active'">{{ data.cashBankedPercent | number: 2 }} %</td>
+        <td>{{ data.manualBars | number: 2 }} %</td>
+        <td>{{ data.cash | number: 2}} %</td>
+        <td>{{ data.stock | number: 2 }} %</td>
+        <td>{{ data.incentiveIncrement | number: 2 }} %</td>
         <td>
-          <button class="btn btn-info btn-xs" ng-click="redirectToPostTrip(trip.id, 'view')" tabindex="0">
+          <button class="btn btn-info btn-xs" ng-click="redirectToDetailPage(data.id, 'view')" tabindex="0">
             <i class="fa fa-file"></i>
           </button>
-          <button class="btn btn-primary btn-xs" ng-click="redirectToPostTrip(trip.id, 'edit')" tabindex="0">
+          <button class="btn btn-primary btn-xs" ng-click="redirectToDetailPage(data.id, 'edit')" tabindex="0">
             <i class="fa fa-pencil"></i>
           </button>
           <button class="btn btn-danger btn-xs"
                   ng-click="deleteRecordDialog(postTrips[$index], ['scheduleNumber', 'deStationCode', 'depTime', 'arrStationCode', 'arrTime'])"
                   tabindex="0"
-                  ng-show="showDeleteButton(trip.scheduleDate)">
+                  ng-show="canDelete(data)">
             <i class="fa fa-trash"></i>
           </button>
         </td>
