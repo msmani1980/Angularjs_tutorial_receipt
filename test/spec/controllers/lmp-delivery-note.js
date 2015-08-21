@@ -310,7 +310,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           scope.deliveryNote.catererStationId = csid;
           scope.$digest();
           expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
-          expect(scope.deliveryNote.items.length).toEqual(40);
+          expect(scope.deliveryNote.items.length).toEqual(31);
         });
       });
       describe('removeItemByIndex scope function', function(){
