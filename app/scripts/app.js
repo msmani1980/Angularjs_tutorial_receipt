@@ -172,6 +172,9 @@ angular.module('ts5App', [
   }).when('/stock-take-report', {
     templateUrl: 'views/stock-take-report.html',
     controller: 'StockTakeReportCtrl'
+  }).when('/commission-data-table', {
+    templateUrl: 'views/commission-data-table.html',
+    controller: 'CommissionDataTableCtrl'
   }).otherwise({
     redirectTo: '/'
   });
