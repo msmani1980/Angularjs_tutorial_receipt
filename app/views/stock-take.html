@@ -15,8 +15,6 @@
 
             <fieldset ng-hide="viewOnly">
 
-              <excel-upload type="stockTake" ng-show="state == 'create' || state == 'edit'"></excel-upload>
-
               <button class="btn btn-warning" ng-show="canReview" ng-click="toggleReview()">
                 <span class="fa fa-file-text-o" aria-hidden="true"></span>
                 <span class="hidden-xs">Review</span>
