@@ -233,6 +233,7 @@ angular.module('ts5App')
     }
 
     $scope.removeItemByIndex = function(index){
+      $scope.canReview = canReview();
       $scope.deliveryNote.items.splice(index, true);
     };
 
@@ -393,6 +394,7 @@ angular.module('ts5App')
     }
 
     $scope.changeItem = function(selectedMasterItem, $index){
+      $scope.canReview = canReview();
       setChangedItem(selectedMasterItem, $index);
       setAllowedMasterItems();
     };
