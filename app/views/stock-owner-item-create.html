@@ -77,7 +77,7 @@
 
 						<input-text label="Stock Owner Item Name" name="itemName" required="true"  pattern="regexp.word" placeholder="Cool New Item" min-length="1" max-length="40"></input-text>
 
-						<input-textarea label="Item Description" name="desc" required="true" pattern="regexp.word" placeholder="A simple description..." min-length="1" max-length="255"></input-textarea>
+						<input-textarea label="Item Description" name="desc" required="true" pattern="regexp.sentence" placeholder="A simple description..." min-length="1" max-length="255"></input-textarea>
 
 						<input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="cool new item" max-length="500"></input-text>
 
@@ -371,7 +371,7 @@
 
 <form-success-modal list-path="stock-owner-item-list" create-path="stock-owner-item-create"></form-success-modal>
 
-<form-update-modal></form-update-modal>
+<form-update-modal list-path="stock-owner-item-list"></form-update-modal>
 
 <leave-view-modal></leave-view-modal>
 

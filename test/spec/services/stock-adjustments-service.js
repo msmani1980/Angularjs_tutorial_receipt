@@ -29,11 +29,11 @@ describe('Service: stockAdjustmentsService', function () {
       });
 
       beforeEach(function () {
-        $httpBackend.whenPOST(/stock-management\/stock-adjustments/).respond({done: true});
+        $httpBackend.whenPUT(/stock-management\/stock-adjustments/).respond({done: true});
       });
       it('should POST data to item import API', function () {
         stockAdjustmentsService.adjustStock({});
-        $httpBackend.expectPOST(/stock-management\/stock-adjustments/);
+        $httpBackend.expectPUT(/stock-management\/stock-adjustments/);
         $httpBackend.flush();
       });
     });

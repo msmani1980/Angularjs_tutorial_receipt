@@ -95,7 +95,7 @@
             <input-text label="POS Display Name" name="onBoardName" required="true" pattern="regexp.word"
                         placeholder="New Cool Item" min-length="1" max-length="30"></input-text>
 
-            <input-textarea label="Item Description" name="desc" required="true" pattern="regexp.word"
+            <input-textarea label="Item Description" name="desc" required="true" pattern="regexp.sentence"
                         placeholder="A simple description..." max-length="255"></input-textarea>
 
             <input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="cool new item"
@@ -445,7 +445,7 @@
 
 <form-success-modal list-path="item-list" create-path="item-create"></form-success-modal>
 
-<form-update-modal></form-update-modal>
+<form-update-modal list-path="item-list"></form-update-modal>
 
 <leave-view-modal></leave-view-modal>
 

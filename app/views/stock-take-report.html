@@ -9,7 +9,8 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <a ng-show="catererStationId" ng-href="/#/stock-take/create/{{catererStationId}}" class="btn btn-primary">
+        <excel-upload type="stockTake" ng-show="canCreateStockTake()" class="excel-upload"></excel-upload>
+        <a ng-show="canCreateStockTake()" ng-href="/#/stock-take/create/{{catererStationId}}" class="btn btn-primary">
           + <span class="hidden-xs hidden-sm">Create Stock Take</span>
         </a>
         <button ng-show="catererStationId" class="btn btn-default"data-toggle="collapse" data-target="#search-collapse"
@@ -68,7 +69,7 @@
     </div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-xs-12 col-md-6">
+        <div class="col-xs-12 col-sm-6 col-md-4">
         <select class="form-control" ng-model="catererStationId">
           <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
           <option ng-repeat="station in stationsList | orderBy:'name' track by station.id" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
