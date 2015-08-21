@@ -50,6 +50,7 @@
 
 .fuelux .wizard .well.seal-color-blue {
     position: relative;
+    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-green:after {
@@ -68,6 +69,7 @@
 
 .fuelux .wizard .well.seal-color-green {
     position: relative;
+    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-yellow:after {
@@ -86,6 +88,7 @@
 
 .fuelux .wizard .well.seal-color-yellow {
     position: relative;
+    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-white:after {
@@ -104,6 +107,7 @@
 
 .fuelux .wizard .well.seal-color-white {
     position: relative;
+    padding-top: 50px;
 }
 
 .fuelux .wizard .table-scrollable {

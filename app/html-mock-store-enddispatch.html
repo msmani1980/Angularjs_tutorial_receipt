@@ -33,7 +33,7 @@
   
             <div class="form-group">
               <label for="selectMenu" class="col-sm-4 control-label">LMP Station*</label>
-              <div class="col-sm-8">
+              <div class="col-sm-5">
                 <select class="form-control" id="deliveryStation" ng-model="deliveryStationIndex" ng-change="updateDeliveryInfo()" ng-disabled="readOnly">
                   <option ng-repeat="station in stationList" value="{{ $index }}">
                     {{ station.stationCode }} ({{ station.stationName}})
@@ -46,7 +46,7 @@
   
             <div class="form-group">
               <label for="storeNumber" class="col-sm-4 control-label">Store Number</label>
-              <div class="col-sm-8">
+              <div class="col-sm-5">
                 <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled="disabled">
               </div>
             </div>
@@ -54,7 +54,7 @@
             <div class="form-group">
               <label for="scheduleDate" class="col-sm-4 control-label">Schedule Date*</label>
               <div class="datepicker fuelux" id="myDatepicker">
-                <div class="col-sm-8">
+                <div class="col-sm-5">
                   <div class="input-group">
                     <input class="form-control" id="myDatepickerInput" type="text" />
                     <div class="input-group-btn">
@@ -133,14 +133,14 @@
   
             <div class="form-group">
               <label for="scheduleNumber" class="col-sm-4 control-label">Schedule Number*</label>
-              <div class="col-sm-8">
+              <div class="col-sm-5">
                 <input type="text" class="form-control" id="scheduleNumber" placeholder="1234">
               </div>
             </div>
   
             <div class="form-group">
-              <label for="selectMenu" class="col-sm-4 control-label">Select Menu</label>
-              <div class="col-sm-8">
+              <label for="selectMenu" class="col-sm-4 control-label">Select Menu*</label>
+              <div class="col-sm-5">
   <!-- TODO: THIS WILL USE ANGULAR MULTIPLE SELECT -->
   <!--               <ui-select multiple ng-model="formData.tags" theme="bootstrap"> -->
   <!--                 <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }} -->
@@ -160,20 +160,13 @@
             
             <div class="form-group">
               <label for="selectMenu" class="col-sm-4 control-label">Aircraft Tail Number</label>
-              <div class="col-sm-8">
+              <div class="col-sm-5">
                 <select class="form-control" id="selectMenu">
                   <option>AB-CDE</option>
                   <option>CD-ABC</option>
                   <option>1X-345</option>
                   <option>34-ABC</option>
                 </select>
-              </div>
-            </div>
-  
-            <div class="form-group">
-              <label for="storeInstanceNumber" class="col-sm-4 control-label">Store Instance Number</label>
-              <div class="col-sm-8">
-                <input type="text" class="form-control" id="storeInstanceNumber" placeholder="123456" disabled="disabled">
               </div>
             </div>
   
