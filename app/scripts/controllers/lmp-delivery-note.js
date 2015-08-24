@@ -186,6 +186,11 @@ angular.module('ts5App')
       $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
     }
 
+    function showFormErrors(){
+      $scope.displayError = true;
+      console.log($scope.deliveryNoteForm.$error);
+    }
+
     function saveDeliveryNoteResolution(response){
       hideLoadingModal();
       showMessage(_formSaveSuccessText, 'success');
@@ -212,13 +217,13 @@ angular.module('ts5App')
       });
     }
 
-    function createPayload(){
+    function createPayload(_isAccepted){
       _payload = {
         catererStationId: $scope.deliveryNote.catererStationId,
         purchaseOrderNumber: $scope.deliveryNote.purchaseOrderNumber,
         deliveryNoteNumber: $scope.deliveryNote.deliveryNoteNumber,
         deliveryDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
-        isAccepted: $scope.deliveryNote.isAccepted,
+        isAccepted: _isAccepted,
         items: createPayloadItems()
       };
       if($scope.deliveryNote.id){
@@ -226,10 +231,10 @@ angular.module('ts5App')
       }
     }
 
-    function generateSavePayload(){
+    function generateSavePayload(_isAccepted){
       $scope.clearFilter();
       removeNullDeliveredItems();
-      createPayload();
+      createPayload(_isAccepted);
     }
 
     $scope.removeItemByIndex = function(index){
@@ -246,6 +251,10 @@ angular.module('ts5App')
     };
 
     $scope.toggleReview = function(){
+      if(!$scope.canReview){
+        showFormErrors();
+        return;
+      }
       if(!$scope.prevState) {
         $scope.prevState = $scope.state;
         $scope.state = 'review';
@@ -296,6 +305,8 @@ angular.module('ts5App')
     }
 
     function saveDeliveryNote(){
+      console.log('saveDeliveryNote');
+      $scope.displayError = false;
       var saveModalText = 'Saving';
       if(_payload.isAccepted){
         saveModalText = 'Submitting';
@@ -303,6 +314,7 @@ angular.module('ts5App')
       displayLoadingModal(saveModalText);
       if($routeParams.state === 'create'){
         _formSaveSuccessText = 'Created';
+        console.log('here 1');
         deliveryNoteFactory.createDeliveryNote(_payload).then(saveDeliveryNoteResolution, saveDeliveryNoteFailed);
         return;
       }
@@ -313,6 +325,7 @@ angular.module('ts5App')
       if(_payload.isAccepted){
         _formSaveSuccessText = 'Submitted';
       }
+      console.log('here 2');
       deliveryNoteFactory.saveDeliveryNote(_payload).then(saveDeliveryNoteResolution, saveDeliveryNoteFailed);
     }
 
@@ -320,9 +333,7 @@ angular.module('ts5App')
       if($scope.deliveryNote.isAccepted){
         return;
       }
-      $scope.displayError = false;
-      $scope.deliveryNote.isAccepted = _isAccepted;
-      generateSavePayload();
+      generateSavePayload(_isAccepted);
       saveDeliveryNote();
     };
 
