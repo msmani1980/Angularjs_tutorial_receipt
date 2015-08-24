@@ -70,7 +70,7 @@ angular.module('ts5App').directive('stockTakeReason', function () {
         catererStationId: $scope.catererStationId,
         masterItemId: $scope.masterItemId,
         quantity: parseInt($scope.newCount),
-        companyReasonCodeId: $scope.stockAdjustmentReason[$scope.id].companyReasonTypeId,
+        companyReasonCodeId: $scope.stockAdjustmentReason.id,
         note: $scope.comment
       };
     }

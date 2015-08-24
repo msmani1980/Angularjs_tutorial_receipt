@@ -445,11 +445,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getVolumeList(),
         itemsFactory.getWeightList(),
         itemsFactory.getPriceTypesList(),
-        itemsFactory.getItemsList({}),
-        itemsFactory.getDiscountList({
-          discountTypeId: 4,
-          isActive: true
-        })
+        itemsFactory.getItemsList({})
       ];
     };
 
@@ -468,6 +464,16 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         }
       });
     };
+
+    $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function() {
+      if ($scope.formData.startDate && $scope.formData.endDate) {
+        itemsFactory.getDiscountList({
+          discountTypeId: 4,
+          startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
+          endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
+        }).then($this.setDiscountList);
+      }
+    });
 
     this.isMasterItemInfoDirty = function() {
       if ($scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
@@ -496,7 +502,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setWeightList(response[9]);
       $this.setItemPriceTypes(response[10]);
       $this.setItemList(response[11].retailItems);
-      $this.setDiscountList(response[12]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         this.getItem($routeParams.id);
       } else {
