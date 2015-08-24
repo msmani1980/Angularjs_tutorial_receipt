@@ -58,7 +58,7 @@
         <!-- form header-->
         <div class="row">
           <div class="col-xs-12 col-sm-6 col-md-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="formErrorClass('lmp-station')">
               <label for="lmp-station">LMP Station*</label>
               <select class="form-control"
                       ng-model="deliveryNote.catererStationId"
@@ -84,7 +84,7 @@
         <div class="row" ng-hide="state == 'review'">
 
           <div class="col-xs-12 col-sm-3">
-            <div class="form-group" ng-class="form[purchaseOrderNumber]">
+            <div class="form-group" ng-class="formErrorClass('purchase-order-number')">
               <label for="purchase-order-number">Purchase Order Number*</label>
               <input ng-model="deliveryNote.purchaseOrderNumber" type="text"
                      class="form-control" id="purchase-order-number"
@@ -95,7 +95,7 @@
           </div>
 
           <div class="col-xs-12 col-sm-3">
-            <div class="form-group">
+            <div class="form-group" ng-class="formErrorClass('delivery-note-number')">
               <label for="delivery-note-number">Delivery Note Number*</label>
               <input ng-model="deliveryNote.deliveryNoteNumber" type="text"
                      class="form-control" id="delivery-note-number"
@@ -105,17 +105,19 @@
             </div>
           </div>
 
-          <date-picker
-            class="col-xs-12 col-sm-6 col-md-3"
-            element-class="form-group"
-            disable-date-range="true"
-            start-date-model="deliveryNote.deliveryDate"
-            is-search-field="true"
-            disable-start-date="readOnly"
-            required="required"
-            label-from="Delivery Date*"
-            name-from="Delivery Date">
-          </date-picker>
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group" ng-class="formErrorClass('Delivery Date', true)">
+              <date-picker
+                disable-date-range="true"
+                start-date-model="deliveryNote.deliveryDate"
+                is-search-field="true"
+                disable-start-date="readOnly"
+                required="required"
+                label-from="Delivery Date*"
+                name-from="Delivery Date">
+              </date-picker>
+            </div>
+          </div>
 
           <div class="col-xs-12 col-sm-2" ng-show="{{ state == 'view' || state == 'edit' }}">
             <div class="form-group">
@@ -228,19 +230,17 @@
                 <label for="expected-qty-{{ item.masterItemId }}">Expected</label>
                 <input ng-model="item.expectedQuantity" type="number" min="0" step="1" class="form-control"
                        id="expected-qty-{{ item.masterItemId }}"
-                       ng-readonly="readOnly"
-                       ng-change="elementChanged()">
+                       ng-readonly="readOnly">
               </div>
             </div>
 
             <div class="col-xs-6 col-sm-3 col-md-1">
-              <div class="form-group">
+              <div class="form-group" ng-class="formErrorClass('delivered-qty-' + item.masterItemId)">
                 <label for="delivered-qty-{{ item.masterItemId }}">Delivered<span ng-show="item.expectedQuantity">*</span></label>
                 <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
                        id="delivered-qty-{{ item.masterItemId }}"
                        ng-readonly="readOnly" ng-required="item.expectedQuantity"
-                       name="Delivered ( {{ item.itemCode }} - {{ item.itemName }} )"
-                       ng-change="elementChanged()">
+                       name="Delivered ( {{ item.itemCode }} - {{ item.itemName }} )">
               </div>
             </div>
 
@@ -255,11 +255,12 @@
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-3">
-              <div class="form-group">
+              <div class="form-group" ng-class="formErrorClass('ullage-reason-' + item.masterItemId)">>
                 <label>Ullage Reason<span ng-show="item.ullageQuantity">*</span></label>
                 <select class="form-control"
                         ng-model="item.ullageReason"
                         name="Ullage Reason ( {{ item.itemCode }} - {{ item.itemName }} )"
+                        id="ullage-reason-{{ item.masterItemId }}"
                         ng-selected="item.ullageReason"
                         ng-options="ullageReason.id + '' as ullageReason.companyReasonCodeName for ullageReason in ullageReasons"
                         ng-disabled="readOnly || !item.ullageQuantity"

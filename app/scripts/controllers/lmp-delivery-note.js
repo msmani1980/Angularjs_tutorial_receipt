@@ -188,7 +188,15 @@ angular.module('ts5App')
 
     function showFormErrors(){
       $scope.displayError = true;
-      console.log($scope.form.$error);
+      if($scope.form.$valid && !deliveryNoteHasItems()){
+        var error = { data:[
+          {
+            field: 'Items',
+            value: 'At least one item must have a "Delivered" amount.'
+          }
+        ]};
+        showResponseErrors(error);
+      }
     }
 
     function saveDeliveryNoteResolution(response){
@@ -254,6 +262,23 @@ angular.module('ts5App')
       return item.canEdit && !$scope.readOnly;
     };
 
+    $scope.formErrorClass = function(elementId,isName){
+      var fieldName = angular.element('#'+elementId).attr('name');
+      if(isName){
+        fieldName = elementId;
+      }
+      if(!$scope.form[fieldName]){
+        return '';
+      }
+      if($scope.form[fieldName].$dirty && !$scope.form[fieldName].$valid ){
+        return 'has-error';
+      }
+      if($scope.displayError && !$scope.form[fieldName].$valid){
+        return 'has-error';
+      }
+      return '';
+    };
+
     $scope.toggleReview = function(){
       if(!$scope.canReview){
         showFormErrors();
@@ -312,7 +337,6 @@ angular.module('ts5App')
     }
 
     function saveDeliveryNote(){
-      console.log('saveDeliveryNote');
       $scope.displayError = false;
       var saveModalText = 'Saving';
       if(_payload.isAccepted){
@@ -321,7 +345,6 @@ angular.module('ts5App')
       displayLoadingModal(saveModalText);
       if($routeParams.state === 'create'){
         _formSaveSuccessText = 'Created';
-        console.log('here 1');
         deliveryNoteFactory.createDeliveryNote(_payload).then(saveDeliveryNoteResolution, saveDeliveryNoteFailed);
         return;
       }
@@ -332,7 +355,6 @@ angular.module('ts5App')
       if(_payload.isAccepted){
         _formSaveSuccessText = 'Submitted';
       }
-      console.log('here 2');
       deliveryNoteFactory.saveDeliveryNote(_payload).then(saveDeliveryNoteResolution, saveDeliveryNoteFailed);
     }
 
