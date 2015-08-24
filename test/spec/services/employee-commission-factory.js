@@ -6,6 +6,7 @@ describe('Service: employeeCommissionFactory', function () {
 
   var employeeCommissionFactory,
     itemsService,
+    salesCategoriesService,
     priceTypesService,
     taxRateTypesService,
     currenciesService,
@@ -13,6 +14,7 @@ describe('Service: employeeCommissionFactory', function () {
 
   beforeEach(inject(function (_employeeCommissionFactory_, $injector) {
     itemsService = $injector.get('itemsService');
+    salesCategoriesService = $injector.get('salesCategoriesService');
     priceTypesService = $injector.get('priceTypesService');
     taxRateTypesService = $injector.get('taxRateTypesService');
     currenciesService = $injector.get('currenciesService');
@@ -27,6 +29,7 @@ describe('Service: employeeCommissionFactory', function () {
     spyOn(employeeCommissionService, 'createCommission');
     spyOn(employeeCommissionService, 'updateCommission');
     spyOn(employeeCommissionService, 'deleteCommission');
+    spyOn(salesCategoriesService, 'getSalesCategoriesList');
 
     employeeCommissionFactory = _employeeCommissionFactory_;
   }));
@@ -40,6 +43,11 @@ describe('Service: employeeCommissionFactory', function () {
     it('should fetch items from itemsService', function () {
       employeeCommissionFactory.getItemsList();
       expect(itemsService.getItemsList).toHaveBeenCalled();
+    });
+
+    it('should call salesCategoriesService.getSalesCategoriesList with a payload to get a categories list', function () {
+      employeeCommissionFactory.getItemsCategoriesList(payload);
+      expect(salesCategoriesService.getSalesCategoriesList).toHaveBeenCalled();
     });
 
     it('should fetch price types from priceTypesService', function () {
