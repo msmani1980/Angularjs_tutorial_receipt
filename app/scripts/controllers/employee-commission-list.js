@@ -169,24 +169,40 @@ angular.module('ts5App')
       }
     }
 
-    function createSearchPayload() {
-      var payload = {};
+    function addDatesToPayload(payload) {
       if($scope.search.startDate && $scope.search.endDate) {
         payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
         payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
       }
+    }
+
+    function addItemOrCategoryToPayload(payload) {
       if($scope.search.selectedItem) {
         payload.itemId = $scope.search.selectedItem.itemMasterId;
+      } else if(!$scope.search.selectedItem && $scope.search.selectedCategory) {
+        // currently FE needs to send list of all itemIds in a category due to complications with sending only a categoryName to BE
+        // TODO: fix if BE API is simplified
+        payload.itemId = [];
+        angular.forEach($scope.search.itemList, function (item) {
+          payload.itemId.push(item.itemMasterId);
+        });
       }
+    }
+
+    function addPriceAndRateTypeToPayload(payload) {
       if($scope.search.selectedPriceType) {
         payload.priceTypeId = $scope.search.selectedPriceType.id;
       }
       if($scope.search.selectedRateType) {
         payload.isFixed = ($scope.search.selectedRateType.taxRateType === 'Amount');
       }
-      if($scope.search.selectedCategory) {
-        payload.itemCategoryId = $scope.search.selectedCategory.id;
-      }
+    }
+
+    function createSearchPayload() {
+      var payload = {};
+      addDatesToPayload(payload);
+      addItemOrCategoryToPayload(payload);
+      addPriceAndRateTypeToPayload(payload);
       return payload;
     }
 
