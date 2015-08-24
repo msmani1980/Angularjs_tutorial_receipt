@@ -5,8 +5,12 @@ describe('Controller: StockDashboardCtrl', function() {
 
   // load the controller's module
   beforeEach(module('ts5App','config'));
-  beforeEach(module('served/stock-management-dashboard.json', 'served/catering-stations.json',
-    'served/company-reason-codes.json'));
+  beforeEach(module(
+    'served/stock-management-dashboard.json',
+    'served/catering-stations.json',
+    'served/company-reason-codes.json',
+    'served/stock-take-list.json'
+  ));
 
   var StockDashboardCtrl,
     stockDashboardService,
@@ -18,6 +22,9 @@ describe('Controller: StockDashboardCtrl', function() {
     stockManagementDashboardJSON,
     cateringStationsJSON,
     companyReasonCodesJSON,
+    stockTakeService,
+    stockTakeListJOSN,
+    getStockTakeListDeferred,
     scope,
     http,
     ENV;
@@ -30,12 +37,20 @@ describe('Controller: StockDashboardCtrl', function() {
     stockDashboardService = $injector.get('stockDashboardService');
     catererStationService = $injector.get('catererStationService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
+    stockTakeService = $injector.get('stockTakeService');
 
-    inject(function(_servedStockManagementDashboard_, _servedCateringStations_, _servedCompanyReasonCodes_) {
+    inject(function(_servedStockManagementDashboard_, _servedCateringStations_,
+      _servedStockTakeList_, _servedCompanyReasonCodes_) {
       stockManagementDashboardJSON = _servedStockManagementDashboard_;
       cateringStationsJSON = _servedCateringStations_;
       companyReasonCodesJSON = _servedCompanyReasonCodes_;
+      stockTakeListJOSN = _servedStockTakeList_;
     });
+
+    getStockTakeListDeferred = $q.defer();
+    getStockTakeListDeferred.resolve(stockTakeListJOSN);
+    spyOn(stockTakeService, 'getStockTakeList').and.returnValue(
+      getStockTakeListDeferred.promise);
 
     getStockDashboardItemsDeferred = $q.defer();
     getStockDashboardItemsDeferred.resolve(stockManagementDashboardJSON);
@@ -246,6 +261,63 @@ describe('Controller: StockDashboardCtrl', function() {
         expect(scope.exportURL).toEqual(newURL);
       });
 
+    });
+
+    describe('when a user selects a station', function() {
+
+      it('should have an empty stock take list before the scope is digested', function () {
+        expect(scope.stockTakeList).toEqual([]);
+      });
+
+      describe('The stockTakeList array', function () {
+
+        beforeEach(function() {
+          spyOn(StockDashboardCtrl, 'getStockTakeList').and.callThrough();
+          spyOn(StockDashboardCtrl, 'getStockTakeListSuccessHandler').and.callThrough();
+          scope.selectedCateringStation = cateringStationsJSON.response[0];
+          scope.$digest();
+        });
+
+        it('should call the getStockTakeList method', function () {
+          expect(StockDashboardCtrl.getStockTakeList).toHaveBeenCalled();
+        });
+
+        it('should call the getStockTakeListSuccessHandler method', function () {
+          expect(StockDashboardCtrl.getStockTakeListSuccessHandler).toHaveBeenCalled();
+        });
+
+        it('should have (1) or more stations in the stockTakeList', function () {
+          expect(scope.stockTakeList.length).toBeGreaterThan(0);
+        });
+
+        it('should be match the stock take list from the delivertNotes API Respone',function () {
+          expect(scope.stockTakeList).toEqual(stockTakeListJOSN.response);
+        });
+
+      });
+
+    });
+
+  });
+
+  describe('canCreateStockTake functionality', function () {
+
+    it('should return false by default', function(){
+      expect(scope.canCreateStockTake()).toBeFalsy();
+    });
+
+    it('should return false even if the catering station is selected but there is an open stock take', function(){
+      scope.selectedCateringStation = cateringStationsJSON.response[0];
+      scope.$digest();
+      expect(scope.canCreateStockTake()).toBeFalsy();
+    });
+
+    it('should return true if the catering station is selected and there is not open stock take', function(){
+      scope.selectedCateringStation = cateringStationsJSON.response[0];
+      scope.$digest();
+      scope.stockTakeList[0].isSubmitted = true;
+      scope.$digest();
+      expect(scope.canCreateStockTake()).toBeTruthy();
     });
 
   });
