@@ -188,7 +188,7 @@ angular.module('ts5App')
 
     function showFormErrors(){
       $scope.displayError = true;
-      if($scope.form.$valid && !deliveryNoteHasItems()){
+      if($scope.form && $scope.form.$valid && !deliveryNoteHasItems()){
         var error = { data:[
           {
             field: 'Items',
@@ -280,30 +280,33 @@ angular.module('ts5App')
     };
 
     $scope.toggleReview = function(){
+      $scope.canReview = canReview();
+      $scope.hideReview = false;
+      if($scope.prevState) {
+        $scope.state = $scope.prevState;
+        $scope.prevState = null;
+        $scope.readOnly = false;
+        $scope.viewName = _prevViewName;
+        _prevViewName = null;
+        return;
+      }
       if(!$scope.canReview){
         showFormErrors();
         return;
       }
-      if(!$scope.prevState && $scope.form.$error) {
+      if($scope.form && !$scope.form.$valid) {
+        showFormErrors();
         return;
       }
-      if(!$scope.prevState) {
-        $scope.prevState = $scope.state;
-        $scope.state = 'review';
-        $scope.canReview = false;
-        $scope.readOnly = true;
-        _prevViewName = $scope.viewName;
-        $scope.viewName = 'Review Delivery Note';
-        removeNullDeliveredItems();
-      }
-      else{
-        $scope.state = $scope.prevState;
-        $scope.prevState = null;
-        $scope.canReview = canReview();
-        $scope.readOnly = false;
-        $scope.viewName = _prevViewName;
-        _prevViewName = null;
-      }
+      $scope.displayError = false;
+      $scope.prevState = $scope.state;
+      $scope.state = 'review';
+      $scope.canReview = false;
+      $scope.readOnly = true;
+      $scope.hideReview = true;
+      _prevViewName = $scope.viewName;
+      $scope.viewName = 'Review Delivery Note';
+      removeNullDeliveredItems();
     };
 
     $scope.clearFilter = function(){
@@ -540,7 +543,6 @@ angular.module('ts5App')
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
-      $scope.readOnly = true;
       if($scope.deliveryNote.isAccepted){
         $location.path(_path+'view/'+$scope.deliveryNote.id);
       }

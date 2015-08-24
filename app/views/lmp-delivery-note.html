@@ -21,7 +21,7 @@
 <!--               <span>Export (PDF)</span> -->
 <!--             </button> -->
 
-          <button class="btn btn-warning" ng-click="toggleReview()">
+          <button class="btn btn-warning" ng-click="toggleReview()" ng-hide="hideReview">
             <span class="fa fa-file-text-o" aria-hidden="true"></span>
             <span class="hidden-xs">Review</span>
           </button>
@@ -255,7 +255,7 @@
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-3">
-              <div class="form-group" ng-class="formErrorClass('ullage-reason-' + item.masterItemId)">>
+              <div class="form-group" ng-class="formErrorClass('ullage-reason-' + item.masterItemId)">
                 <label>Ullage Reason<span ng-show="item.ullageQuantity">*</span></label>
                 <select class="form-control"
                         ng-model="item.ullageReason"
