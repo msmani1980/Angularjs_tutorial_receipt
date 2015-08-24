@@ -46,7 +46,7 @@ describe('Service: employeeCommissionFactory', function () {
     });
 
     it('should call salesCategoriesService.getSalesCategoriesList with a payload to get a categories list', function () {
-      employeeCommissionFactory.getItemsCategoriesList(payload);
+      employeeCommissionFactory.getItemsCategoriesList();
       expect(salesCategoriesService.getSalesCategoriesList).toHaveBeenCalled();
     });
 
