@@ -196,8 +196,8 @@ describe('Stock Take Report', function () {
           });
 
           it('should remove the decimal from the end of the updatedOn date', function () {
-            var control = '2015-08-13 15:58:55.357607';
-            var formattedControl = '2015-08-13 15:58:55';
+            var control = '2015-08-24 19:41:01.026802';
+            var formattedControl = '2015-08-24 19:41:01';
             expect(stockTake.updatedOn).not.toEqual(control);
             expect(stockTake.updatedOn).toEqual(formattedControl);
           });

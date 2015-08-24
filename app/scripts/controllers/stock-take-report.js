@@ -127,15 +127,7 @@ angular.module('ts5App')
       if(!$scope.catererStationId) {
         return false;
       }
-      var canCreate = true;
-      for( var key in $scope.stockTakeList) {
-        var stockTake = $scope.stockTakeList[key];
-        if(!stockTake.isSubmitted){
-          canCreate = false;
-          break;
-        }
-      }
-      return canCreate;
+      return $filter('filter')($scope.stockTakeList, {isSubmitted:false}, true).length === 0;
     };
 
     $scope.searchIsPossible = function() {
