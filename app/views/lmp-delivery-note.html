@@ -26,7 +26,7 @@
             <span class="hidden-xs">Review</span>
           </button>
 
-          <button class="btn btn-primary" ng-click="save(false)" ng-show="state == 'review'">
+          <button class="btn btn-primary" ng-click="save(false)" ng-show="showSaveButton()">
             <span class="fa fa-check-square-o" aria-hidden="true"></span>
             <span class="hidden-xs">Save</span>
           </button>
@@ -36,7 +36,7 @@
             <span class="hidden-xs">Cancel</span>
           </button>
 
-          <button class="btn btn-success" ng-click="save(true)" ng-show="state == 'review'">
+          <button class="btn btn-success" ng-click="save(true)" ng-show="showSaveButton()">
             <span class="fa fa-check-square-o" aria-hidden="true"></span>
             <span class="hidden-xs">Submit</span>
           </button>
@@ -62,7 +62,7 @@
               <label for="lmp-station">LMP Station*</label>
               <select class="form-control"
                       ng-model="deliveryNote.catererStationId"
-                      ng-disabled="readOnly || catererStationList.length == 1"
+                      ng-disabled="lmpStationDisabled()"
                       ng-show="catererStationList.length"
                       id="lmp-station"
                       name="LMP Station"
@@ -119,18 +119,18 @@
             </div>
           </div>
 
-          <div class="col-xs-12 col-sm-2" ng-show="{{ state == 'view' || state == 'edit' }}">
+          <div class="col-xs-12 col-sm-2" ng-hide="hideCreatedByMeta()">
             <div class="form-group">
               <label>Status</label>
               <input type="text" class="form-control" id="delivery-status"
-                     ng-readonly="true" ng-disabled="true"
-                     ng-value="deliveryNote.isAccepted ? 'Submitted' : 'Saved'">
+                ng-value="deliveryNote.isAccepted ? 'Submitted' : 'Saved'"
+                disabled readonly>
             </div>
           </div>
 
         </div>
 
-        <div class="row" ng-hide="state == 'review' || state == 'create'">
+        <div class="row" ng-hide="hideCreatedByMeta()">
 
           <div class="col-xs-12 col-sm-2">
             <div class="form-group">
@@ -162,7 +162,7 @@
 
         </div>
 
-        <div class="row" ng-show="deliveryNote.items.length && state != 'review'">
+        <div class="row" ng-show="showFilterByForm()">
           <div class="col-xs-12 col-sm-1 col-md-1">
             <label>Filter by:</label>
           </div>
@@ -180,7 +180,7 @@
           </div>
           <div class="col-xs-1">
             <label class="invisible hidden-xs">Clear</label>
-            <button class="btn btn-default" type="button" ng-click="clearFilter()" ng-show="filterInput.itemCode || filterInput.itemName">Clear</button>
+            <button class="btn btn-default" type="button" ng-click="clearFilter()" ng-show="showFilterByForm()">Clear</button>
           </div>
         </div>
 
@@ -193,13 +193,13 @@
                 <input ng-model="item.itemCode"
                        type="text"
                        class="form-control"
-                       ng-hide="hideItemCode(item)"
+                       ng-hide="canEditItem(item)"
                        name="itemCode[{{item.masterItemId}}]"
                        readonly>
                 <select class="form-control" ng-change="changeItem(masterItemSelected[masterItem.id], $index)"
                         ng-model="masterItemSelected[masterItem.id]"
                         placeholder="item.itemCode"
-                        ng-show="item.canEdit && state != 'review'"
+                        ng-show="canEditItem(item)"
                         ng-options="masterItem as masterItem.itemCode for masterItem in masterItemsAllowedInSelect">
                   <option value=''>{{item.itemCode}}</option>
                 </select>
@@ -212,13 +212,13 @@
                 <input ng-model="item.itemName"
                        type="text"
                        class="form-control"
-                       ng-hide="item.canEdit && state != 'review'"
+                       ng-hide="canEditItem(item)"
                        name="itemName[{{item.masterItemId}}]"
                        readonly>
                 <select class="form-control" ng-change="changeItem(masterItemSelected[masterItem.id], $index)"
                         ng-model="masterItemSelected[masterItem.id]"
                         placeholder="item.itemName"
-                        ng-show="item.canEdit && state != 'review'"
+                        ng-show="canEditItem(item)"
                         ng-options="masterItem as masterItem.itemName for masterItem in masterItemsAllowedInSelect">
                   <option value=''>{{item.itemName}}</option>
                 </select>
@@ -263,7 +263,7 @@
                         id="ullage-reason-{{ item.masterItemId }}"
                         ng-selected="item.ullageReason"
                         ng-options="ullageReason.id + '' as ullageReason.companyReasonCodeName for ullageReason in ullageReasons"
-                        ng-disabled="readOnly || !item.ullageQuantity"
+                        ng-disabled="ullageReasonDisabled(item)"
                         ng-required="item.ullageQuantity">
                 </select>
 

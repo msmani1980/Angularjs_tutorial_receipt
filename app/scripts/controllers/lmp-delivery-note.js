@@ -58,10 +58,6 @@ angular.module('ts5App')
       $scope.canReview = canReview();
     }
 
-    $scope.hideItemCode = function(item){
-      return item.canEdit && $scope.state !== 'review';
-    };
-
     $scope.elementChanged = function(){
       formErrorWatcher();
     };
@@ -499,11 +495,43 @@ angular.module('ts5App')
       item.ullageReason = null;
     };
 
+    $scope.showSaveButton = function(){
+      return $scope.state === 'review';
+    };
+
+    $scope.hideCreatedByMeta = function(){
+      return $scope.state === 'review' || $scope.state === 'create';
+    };
+
+    $scope.showFilterByForm = function(){
+      return $scope.deliveryNote.items.length && $scope.state !== 'review';
+    };
+
+    $scope.canEditItem = function(item){
+      return item.canEdit && $scope.state !== 'review';
+    };
+
+    $scope.showFilterByForm = function(){
+      if(angular.isUndefined($scope.filterInput)){
+        return false;
+      }
+      return $scope.filterInput.itemCode || $scope.filterInput.itemName;
+    };
+
+    $scope.ullageReasonDisabled = function(item){
+      return $scope.readOnly || !item.ullageQuantity;
+    };
+
+    $scope.lmpStationDisabled = function(){
+      return $scope.readOnly || $scope.catererStationList.length === 1;
+    };
+
     var stateActions = {};
     // view state actions
     stateActions.viewInit = function(){
       $scope.readOnly = true;
       $scope.viewName = 'View Delivery Note';
+      $scope.hideReview = true;
       displayLoadingModal();
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
