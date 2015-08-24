@@ -445,6 +445,13 @@ angular.module('ts5App')
       $scope.newItems.splice($index, true);
     };
 
+    $scope.ullageQuantityChanged = function(item){
+      if(item.ullageQuantity){
+        return;
+      }
+      item.ullageReason = null;
+    };
+
     var stateActions = {};
     // view state actions
     stateActions.viewInit = function(){
