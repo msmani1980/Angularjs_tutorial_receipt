@@ -504,7 +504,19 @@ angular.module('ts5App')
     };
 
     $scope.showFilterByForm = function(){
-      return $scope.deliveryNote.items.length && $scope.state !== 'review';
+      if($scope.state === 'review'){
+        return false;
+      }
+      if(angular.isUndefined($scope.deliveryNote)){
+        return false;
+      }
+      if(!$scope.deliveryNote.items){
+        return false;
+      }
+      if(!$scope.deliveryNote.items.length){
+        return false;
+      }
+      return true;
     };
 
     $scope.canEditItem = function(item){
@@ -523,7 +535,16 @@ angular.module('ts5App')
     };
 
     $scope.lmpStationDisabled = function(){
-      return $scope.readOnly || $scope.catererStationList.length === 1;
+      if($scope.readOnly){
+        return false;
+      }
+      if(angular.isUndefined($scope.catererStationList)){
+        return false;
+      }
+      if($scope.catererStationList.length === 1){
+        return false;
+      }
+      return true;
     };
 
     var stateActions = {};
