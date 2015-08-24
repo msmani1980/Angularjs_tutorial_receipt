@@ -23,9 +23,9 @@
               <div class="col-xs-12 col-sm-8">
                 <label>Reason*</label>
                 <select class="form-control"
-                        ng-model="stockAdjustmentReason[id]"
+                        ng-model="stockAdjustmentReason"
                         ng-options="item.companyReasonCodeName for item in ullageReasons track by item.id">
-                  <option ng-hide="stockAdjustmentReason !== 'Select Reason'" value="">Select Reason</option>
+                  <option value disabled>Select Reason</option>
                 </select>
               </div>
 
@@ -37,7 +37,7 @@
                   type="text"
                   class="form-control"
                   ng-model="$parent.newCount"
-                  ng-disabled="!stockAdjustmentReason[id]"
+                  ng-disabled="!stockAdjustmentReason"
                   />
               </div>
 
@@ -61,7 +61,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-default" ng-click="stockTakeReasonSave()"
-                  ng-disabled="!stockAdjustmentReason[id]">Save Changes
+                  ng-disabled="!stockAdjustmentReason">Save Changes
           </button>
           <a type="button" class="btn btn-primary" ng-click="stockTakeReasonClose()">Cancel</a>
         </div>

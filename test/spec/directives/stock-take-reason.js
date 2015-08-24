@@ -166,7 +166,7 @@ describe('Directive: stockTakeReason', function() {
           catererStationId: mockStockItem.catererStationId,
           masterItemId : mockStockItem.masterItemId,
           quantity: parseInt(mockNewCount),
-          companyReasonCodeId: mockStockAdjustmentReason[1].companyReasonTypeId,
+          companyReasonCodeId: mockStockAdjustmentReason.id,
           note: mockComment
         };
         expect(stockAdjustmentsService.adjustStock).toHaveBeenCalledWith(mockPayload);
