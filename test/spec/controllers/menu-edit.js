@@ -105,6 +105,7 @@ describe('Controller: MenuEditCtrl', function () {
           startDate: '08/20/2001',
           endDate: '09/25/2002'
         };
+        scope.newItemList = [{masterItem: 'test'}, {masterItem: 'test2'}];
         scope.selectedCategories = [{id: 1}];
       });
       it('should be defined', function () {
@@ -116,13 +117,20 @@ describe('Controller: MenuEditCtrl', function () {
           endDate: scope.menu.endDate,
           categoryId: scope.selectedCategories[0].id
         };
-        scope.filterItems(0);
+        scope.updateItemsList(0);
         expect(menuFactory.getItemsList).toHaveBeenCalledWith(expectedPayload, true);
+      });
+
+      it('should clear selected Items', function () {
+        var oldSelectedValue = scope.newItemList[0].masterItem;
+        scope.updateItemsList(0);
+        expect(scope.newItemList[0].masterItem).not.toEqual(oldSelectedValue);
+        expect(scope.newItemList[0].masterItem).toEqual(null);
       });
 
       it('should attach new response to itemsCollection', function () {
         scope.itesmsCollection = [{}];
-        scope.filterItems(0);
+        scope.updateItemsList(0);
         expect(scope.filteredItemsCollection[0]).not.toEqual({});
       });
     });

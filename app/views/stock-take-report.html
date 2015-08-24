@@ -9,15 +9,24 @@
       </div>
 
       <div class="col-xs-6 text-right">
-        <excel-upload type="stockTake" ng-show="canCreateStockTake()" class="excel-upload"></excel-upload>
+
+        <excel-upload type="stockTake" ng-show="importIsPossible() && canCreateStockTake()" class="excel-upload"></excel-upload>
+
         <a ng-show="canCreateStockTake()" ng-href="/#/stock-take/create/{{catererStationId}}" class="btn btn-primary">
           + <span class="hidden-xs hidden-sm">Create Stock Take</span>
         </a>
-        <button ng-show="catererStationId" class="btn btn-default"data-toggle="collapse" data-target="#search-collapse"
+
+        <button ng-show="searchIsPossible()" class="btn btn-default"data-toggle="collapse" data-target="#search-collapse"
           aria-expanded="false" aria-controls="search-collapse">
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
+
+        <a ng-href="/#/" class="btn btn-default">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <span class="hidden-xs">Close</span>
+        </a>
+
       </div>
     </div>
 
@@ -89,7 +98,7 @@
     </div>
   </div>
 
-  <table ng-show="catererStationId && stockTakeList.length > 0" class="table table-responsive table-bordered table-hover ng-scope">
+  <table ng-show="searchIsPossible()" class="table table-responsive table-bordered table-hover ng-scope">
     <thead>
       <tr>
         <th>Stock Take Report Number</th>

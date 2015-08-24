@@ -134,7 +134,7 @@
     </div>
 
     <h3>Menu Items
-      <button class="btn btn-primary btn-xs pull-right" ng-click="addItem()" ng-show="isMenuEditable()">
+      <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="addItem()" ng-show="isMenuEditable()">
         <i class="fa fa-plus"></i> Add Item
       </button>
     </h3>
@@ -154,10 +154,11 @@
           <ui-select
             required="true"
             ng-model="selectedCategories[$index]"
-            on-select="filterItems($index)"
+            on-select="updateItemsList($index)"
             theme="bootstrap"
             placeholder="Select a category to filter the items list...">
             <ui-select-match
+              allow-clear="true"
               placeholder="Select a category to filter the items list...">{{ $select.selected.name}}
             </ui-select-match>
             <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
@@ -170,7 +171,8 @@
             required="true"
             ng-model="newItemList[$index].masterItem"
             theme="bootstrap"
-            placeholder="Select or search an item from the list...">
+            placeholder="Select or search an item from the list..."
+            ng-disabled="shouldDisableItem($index)">
             <ui-select-match
               placeholder="Select or search an item from the list...">{{ $select.selected.itemName}}
             </ui-select-match>

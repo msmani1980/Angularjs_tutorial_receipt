@@ -14,7 +14,7 @@
           <div class="col-xs-6 text-right">
             <fieldset ng-hide="viewOnly">
 
-              <a ng-show="selectedCateringStation.id" ng-href="/#/stock-take/create/{{selectedCateringStation.id}}" class="btn btn-primary">
+              <a ng-show="canCreateStockTake()" ng-href="/#/stock-take/create/{{selectedCateringStation.id}}" class="btn btn-primary">
                 <span class="fa fa-plus" aria-hidden="true"></span>
                 <span class="hidden-xs">Start Stock Take</span>
               </a>
@@ -24,12 +24,18 @@
                 <span class="hidden-xs">Export (CSV)</span>
               </a>
 
+              <a ng-href="/#/" class="btn btn-default">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                <span class="hidden-xs">Close</span>
+              </a>
+
             </fieldset>
           </div>
 
         </div>
 
       </div>
+
       <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-4" ng-hide="readOnly">
           <div class="form-group">

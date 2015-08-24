@@ -42,6 +42,10 @@ angular.module('ts5App')
       return stockTakeService.importFromExcel(companyId, file);
     }
 
+    function getStockDashboardItems(catererStationId) {
+      return stockDashboardService.getStockDashboardItems(catererStationId);
+    }
+
     return {
       getCatererStationList: getCatererStationList,
       getItemsByCateringStationId: getItemsByCateringStationId,
@@ -50,7 +54,8 @@ angular.module('ts5App')
       updateStockTake: updateStockTake,
       deleteStockTake: deleteStockTake,
       getStockTakeList: getStockTakeList,
-      importFromExcel: importFromExcel
+      importFromExcel: importFromExcel,
+      getStockDashboardItems: getStockDashboardItems
     };
 
   });
