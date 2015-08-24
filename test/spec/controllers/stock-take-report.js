@@ -301,4 +301,26 @@ describe('Stock Take Report', function () {
 
   });
 
+  describe('searchIsPossible functionality', function () {
+
+    it('should return false by default', function(){
+      expect($scope.searchIsPossible()).toBeFalsy();
+    });
+
+    it('should return false even if the catering station is selected but the station list is empty', function(){
+      $scope.catererStationId = 3;
+      $scope.$digest();
+      $scope.stockTakeList = [];
+      $scope.$digest();
+      expect($scope.searchIsPossible()).toBeFalsy();
+    });
+
+    it('should return false even if the catering station is selected but the station list is empty', function(){
+      $scope.catererStationId = 3;
+      $scope.$digest();
+      expect($scope.searchIsPossible()).toBeTruthy();
+    });
+
+  });
+
 });

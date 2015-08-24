@@ -127,6 +127,13 @@ angular.module('ts5App')
       return canCreate;
     };
 
+    $scope.searchIsPossible = function() {
+      if($scope.stockTakeList.length > 0 && $scope.catererStationId) {
+        return true;
+      }
+      return false;
+    };
+
     this.init();
 
   });
