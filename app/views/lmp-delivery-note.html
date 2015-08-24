@@ -279,8 +279,8 @@
               </div>
             </div>
 
-            <div class="col-xs-12 col-sm-2 col-md-1 text-right" ng-hide="readOnly">
-              <button type="button" class="btn btn-sm btn-danger" ng-click="removeItemByIndex($index)">
+            <div class="col-xs-12 col-sm-2 col-md-1 text-right" ng-show="canRemoveItem(item)">
+              <button type="button" class="btn btn-sm btn-danger" ng-click="removeItemByIndex($index, item)">
                 <i class="fa fa-close"></i>
               </button>
             </div>
@@ -308,8 +308,8 @@
               </div>
             </div>
 
-            <div class="col-xs-12 col-sm-6 col-md-8 text-right">
-              <button type="button" class="btn btn-sm btn-danger" ng-click="removeNewItemRow($index)">
+            <div class="col-xs-12 col-sm-6 col-md-8 text-right" ng-show="canRemoveItem(newItem)">
+              <button type="button" class="btn btn-sm btn-danger" ng-click="removeNewItemRow($index, newItem)">
                 <i class="fa fa-close"></i>
               </button>
             </div>

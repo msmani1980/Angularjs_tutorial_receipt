@@ -250,6 +250,10 @@ angular.module('ts5App')
       $location.path('/');
     };
 
+    $scope.canRemoveItem = function(item){
+      return item.canEdit && !$scope.readOnly;
+    };
+
     $scope.toggleReview = function(){
       if(!$scope.canReview){
         showFormErrors();
@@ -445,17 +449,21 @@ angular.module('ts5App')
         return;
       }
       $scope.clearFilter();
-      $scope.deliveryNote.items.push({
+      var newItem = {
         canEdit: true,
         masterItemId: selectedMasterItem.id,
         itemCode: selectedMasterItem.itemCode,
         itemName: selectedMasterItem.itemName
-      });
+      };
+      $scope.deliveryNote.items.push(newItem);
       setAllowedMasterItems();
-      $scope.removeNewItemRow($index);
+      $scope.removeNewItemRow($index, newItem);
     };
 
-    $scope.removeNewItemRow = function($index){
+    $scope.removeNewItemRow = function($index, item){
+      if(!item.canEdit){
+        return;
+      }
       $scope.newItems.splice($index, true);
     };
 
