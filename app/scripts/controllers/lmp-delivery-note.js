@@ -54,16 +54,12 @@ angular.module('ts5App')
     }
 
 
-    function deliveryNoteFormErrorWatcher(){
+    function formErrorWatcher(){
       $scope.canReview = canReview();
     }
 
-    $scope.hideItemCode = function(item){
-      return item.canEdit && $scope.state !== 'review';
-    };
-
     $scope.elementChanged = function(){
-      deliveryNoteFormErrorWatcher();
+      formErrorWatcher();
     };
 
     function setStationIdOnCreate() {
@@ -186,6 +182,19 @@ angular.module('ts5App')
       $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
     }
 
+    function showFormErrors(){
+      $scope.displayError = true;
+      if($scope.form && $scope.form.$valid && !deliveryNoteHasItems()){
+        var error = { data:[
+          {
+            field: 'Items',
+            value: 'At least one item must have a "Delivered" amount.'
+          }
+        ]};
+        showResponseErrors(error);
+      }
+    }
+
     function saveDeliveryNoteResolution(response){
       hideLoadingModal();
       showMessage(_formSaveSuccessText, 'success');
@@ -212,13 +221,13 @@ angular.module('ts5App')
       });
     }
 
-    function createPayload(){
+    function createPayload(_isAccepted){
       _payload = {
         catererStationId: $scope.deliveryNote.catererStationId,
         purchaseOrderNumber: $scope.deliveryNote.purchaseOrderNumber,
         deliveryNoteNumber: $scope.deliveryNote.deliveryNoteNumber,
         deliveryDate: dateUtility.formatDateForAPI($scope.deliveryNote.deliveryDate),
-        isAccepted: $scope.deliveryNote.isAccepted,
+        isAccepted: _isAccepted,
         items: createPayloadItems()
       };
       if($scope.deliveryNote.id){
@@ -226,10 +235,10 @@ angular.module('ts5App')
       }
     }
 
-    function generateSavePayload(){
+    function generateSavePayload(_isAccepted){
       $scope.clearFilter();
       removeNullDeliveredItems();
-      createPayload();
+      createPayload(_isAccepted);
     }
 
     $scope.removeItemByIndex = function(index){
@@ -245,24 +254,55 @@ angular.module('ts5App')
       $location.path('/');
     };
 
-    $scope.toggleReview = function(){
-      if(!$scope.prevState) {
-        $scope.prevState = $scope.state;
-        $scope.state = 'review';
-        $scope.canReview = false;
-        $scope.readOnly = true;
-        _prevViewName = $scope.viewName;
-        $scope.viewName = 'Review Delivery Note';
-        removeNullDeliveredItems();
+    $scope.canRemoveItem = function(item){
+      return item.canEdit && !$scope.readOnly;
+    };
+
+    $scope.formErrorClass = function(elementId,isName){
+      var fieldName = angular.element('#'+elementId).attr('name');
+      if(isName){
+        fieldName = elementId;
       }
-      else{
+      if(!$scope.form[fieldName]){
+        return '';
+      }
+      if($scope.form[fieldName].$dirty && !$scope.form[fieldName].$valid ){
+        return 'has-error';
+      }
+      if($scope.displayError && !$scope.form[fieldName].$valid){
+        return 'has-error';
+      }
+      return '';
+    };
+
+    $scope.toggleReview = function(){
+      $scope.canReview = canReview();
+      $scope.hideReview = false;
+      if($scope.prevState) {
         $scope.state = $scope.prevState;
         $scope.prevState = null;
-        $scope.canReview = canReview();
         $scope.readOnly = false;
         $scope.viewName = _prevViewName;
         _prevViewName = null;
+        return;
       }
+      if(!$scope.canReview){
+        showFormErrors();
+        return;
+      }
+      if($scope.form && !$scope.form.$valid) {
+        showFormErrors();
+        return;
+      }
+      $scope.displayError = false;
+      $scope.prevState = $scope.state;
+      $scope.state = 'review';
+      $scope.canReview = false;
+      $scope.readOnly = true;
+      $scope.hideReview = true;
+      _prevViewName = $scope.viewName;
+      $scope.viewName = 'Review Delivery Note';
+      removeNullDeliveredItems();
     };
 
     $scope.clearFilter = function(){
@@ -296,6 +336,7 @@ angular.module('ts5App')
     }
 
     function saveDeliveryNote(){
+      $scope.displayError = false;
       var saveModalText = 'Saving';
       if(_payload.isAccepted){
         saveModalText = 'Submitting';
@@ -320,9 +361,7 @@ angular.module('ts5App')
       if($scope.deliveryNote.isAccepted){
         return;
       }
-      $scope.displayError = false;
-      $scope.deliveryNote.isAccepted = _isAccepted;
-      generateSavePayload();
+      generateSavePayload(_isAccepted);
       saveDeliveryNote();
     };
 
@@ -336,8 +375,8 @@ angular.module('ts5App')
       if (!$scope.displayError && $scope.deliveryNote.isAccepted) {
         return false;
       }
-      if (!$scope.displayError && angular.isDefined($scope.deliveryNoteForm)) {
-        return $scope.deliveryNoteForm.$valid;
+      if (!$scope.displayError && angular.isDefined($scope.form)) {
+        return $scope.form.$valid;
       }
       return true;
     }
@@ -431,17 +470,21 @@ angular.module('ts5App')
         return;
       }
       $scope.clearFilter();
-      $scope.deliveryNote.items.push({
+      var newItem = {
         canEdit: true,
         masterItemId: selectedMasterItem.id,
         itemCode: selectedMasterItem.itemCode,
         itemName: selectedMasterItem.itemName
-      });
+      };
+      $scope.deliveryNote.items.push(newItem);
       setAllowedMasterItems();
-      $scope.removeNewItemRow($index);
+      $scope.removeNewItemRow($index, newItem);
     };
 
-    $scope.removeNewItemRow = function($index){
+    $scope.removeNewItemRow = function($index, item){
+      if(!item.canEdit){
+        return;
+      }
       $scope.newItems.splice($index, true);
     };
 
@@ -452,11 +495,64 @@ angular.module('ts5App')
       item.ullageReason = null;
     };
 
+    $scope.showSaveButton = function(){
+      return $scope.state === 'review';
+    };
+
+    $scope.hideCreatedByMeta = function(){
+      return $scope.state === 'review' || $scope.state === 'create';
+    };
+
+    $scope.showFilterByForm = function(){
+      if($scope.state === 'review'){
+        return false;
+      }
+      if(angular.isUndefined($scope.deliveryNote)){
+        return false;
+      }
+      if(!$scope.deliveryNote.items){
+        return false;
+      }
+      if(!$scope.deliveryNote.items.length){
+        return false;
+      }
+      return true;
+    };
+
+    $scope.canEditItem = function(item){
+      return item.canEdit && $scope.state !== 'review';
+    };
+
+    $scope.showFilterByForm = function(){
+      if(angular.isUndefined($scope.filterInput)){
+        return false;
+      }
+      return $scope.filterInput.itemCode || $scope.filterInput.itemName;
+    };
+
+    $scope.ullageReasonDisabled = function(item){
+      return $scope.readOnly || !item.ullageQuantity;
+    };
+
+    $scope.lmpStationDisabled = function(){
+      if($scope.readOnly){
+        return false;
+      }
+      if(angular.isUndefined($scope.catererStationList)){
+        return false;
+      }
+      if($scope.catererStationList.length === 1){
+        return false;
+      }
+      return true;
+    };
+
     var stateActions = {};
     // view state actions
     stateActions.viewInit = function(){
       $scope.readOnly = true;
       $scope.viewName = 'View Delivery Note';
+      $scope.hideReview = true;
       displayLoadingModal();
       _initPromises.push(getDeliveryNote());
       _initPromises.push(getCatererStationList());
@@ -476,7 +572,7 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
-      $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
+      $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
     };
     stateActions.createInitPromisesResolved = function() {
@@ -492,11 +588,10 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
-      $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
+      $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
-      $scope.readOnly = true;
       if($scope.deliveryNote.isAccepted){
         $location.path(_path+'view/'+$scope.deliveryNote.id);
       }
