@@ -6,8 +6,8 @@
  * @description
  * # stockTakeReason
  */
-angular.module('ts5App').directive('stockTakeReason', function () {
-  var stockTakeReasonController = function ($scope, stockAdjustmentsService, ngToast) {
+angular.module('ts5App').directive('stockTakeReason', function() {
+  var stockTakeReasonController = function($scope, stockAdjustmentsService, ngToast) {
 
     function showToastMessage(className, type, message) {
       hideLoadingModal();
@@ -34,7 +34,7 @@ angular.module('ts5App').directive('stockTakeReason', function () {
       angular.element('#loading').modal('hide');
     }
 
-    $scope.stockTakeReasonOpen = function (stockitem) {
+    $scope.stockTakeReasonOpen = function(stockitem) {
       $scope.id = stockitem.id;
       $scope.currentCountQuantity = stockitem.currentCountQuantity;
       $scope.newCount = null;
@@ -44,16 +44,17 @@ angular.module('ts5App').directive('stockTakeReason', function () {
       displayStockReasonModal();
     };
 
-    $scope.clearScopeVars = function () {
+    $scope.clearScopeVars = function() {
       $scope.id = null;
       $scope.comment = null;
       $scope.currentCountQuantity = null;
       $scope.newCount = null;
       $scope.masterItemId = null;
       $scope.catererStationId = null;
+      $scope.stockAdjustmentReason = null;
     };
 
-    $scope.stockTakeReasonClose = function () {
+    $scope.stockTakeReasonClose = function() {
       $scope.clearScopeVars();
       hideStockReasonModal();
     };
@@ -63,7 +64,6 @@ angular.module('ts5App').directive('stockTakeReason', function () {
       showToastMessage('success', 'Stock Adjustment', 'successfully updated!');
       $scope.updateStockItems();
     }
-
 
     function createPayload() {
       return {
@@ -75,7 +75,7 @@ angular.module('ts5App').directive('stockTakeReason', function () {
       };
     }
 
-    $scope.stockTakeReasonSave = function () {
+    $scope.stockTakeReasonSave = function() {
       var payload = createPayload();
       $scope.clearScopeVars();
       hideStockReasonModal();
