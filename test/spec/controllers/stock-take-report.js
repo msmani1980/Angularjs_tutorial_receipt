@@ -353,10 +353,32 @@ describe('Stock Take Report', function () {
       expect($scope.searchIsPossible()).toBeFalsy();
     });
 
-    it('should return false even if the catering station is selected but the station list is empty', function(){
+    it('should return true if the catering station is selected and the station list is not empty', function(){
       $scope.catererStationId = 3;
       $scope.$digest();
       expect($scope.searchIsPossible()).toBeTruthy();
+    });
+
+  });
+
+  describe('importIsPossible functionality', function () {
+
+    it('should return false by default', function(){
+      expect($scope.importIsPossible()).toBeFalsy();
+    });
+
+    it('should return false even if the catering station is selected but the station items list is empty', function(){
+      $scope.catererStationId = 3;
+      $scope.$digest();
+      $scope.stationItems = [];
+      $scope.$digest();
+      expect($scope.importIsPossible()).toBeFalsy();
+    });
+
+    it('should return true if the catering station and the items lists is not empty', function(){
+      $scope.catererStationId = 3;
+      $scope.$digest();
+      expect($scope.importIsPossible()).toBeTruthy();
     });
 
   });
