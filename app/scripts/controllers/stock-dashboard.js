@@ -103,13 +103,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       if(angular.isUndefined($scope.selectedCateringStation) || !$scope.selectedCateringStation.id) {
         return false;
       }
-      var found = $filter('filter')($scope.stockTakeList, {isSubmitted:false}, true).length;
-      if(found>0) {
-        return false;
-      }
-      if(found>=0) {
-        return true;
-      }
+      return $filter('filter')($scope.stockTakeList, {isSubmitted:false}, true).length === 0;
     };
 
   });
