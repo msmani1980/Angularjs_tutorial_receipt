@@ -270,9 +270,18 @@ angular.module('ts5App')
     };
 
     $scope.filterItems = function(index) {
-      fetchFilteredItemsList($scope.menu.startDate, $scope.menu.endDate, $scope.selectedCategories[index].id, function(response) {
-        $scope.filteredItemsCollection[index] = response.masterItems;
-      });
+      if($scope.selectedCategories[index]) {
+        $scope.newItemList[index].masterItem = {};
+        fetchFilteredItemsList($scope.menu.startDate, $scope.menu.endDate, $scope.selectedCategories[index].id, function(response) {
+          $scope.filteredItemsCollection[index] = response.masterItems;
+        });
+      } else {
+        $scope.filteredItemsCollection[index] = $scope.masterItemsList;
+      }
+    };
+
+    $scope.shouldDisableItem = function(index) {
+      return $scope.filteredItemsCollection[index] === null;
     };
 
     $scope.deleteNewItem = function (itemIndex) {
