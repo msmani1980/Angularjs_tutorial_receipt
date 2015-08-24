@@ -13,6 +13,12 @@
   border-left: none;
 }
 
+.fuelux .wizard .top-actions {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+}
+
 .fuelux .wizard .datepicker-calendar-wrapper {
   z-index: 9999;
 }

@@ -274,7 +274,7 @@
           <!-- PANE 2 - Inbound Seals - High Security --------------------------------------------------------------------- -->
           <div class="well seal-color-white">
           
-            <div class="well" ng-repeat="newItem in newItems track by $index">
+            <div class="well well-sm" ng-repeat="newItem in newItems track by $index">
              <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-2">
                   <div class="form-group">
@@ -291,7 +291,7 @@
               </div>
             </div>
 
-            <div class="well" ng-repeat="newItem in newItems track by $index">
+            <div class="well well-sm" ng-repeat="newItem in newItems track by $index">
              <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-2">
                   <div class="form-group">
@@ -308,7 +308,7 @@
               </div>
             </div>
 
-            <div class="well" ng-repeat="newItem in newItems track by $index">
+            <div class="well well-sm" ng-repeat="newItem in newItems track by $index">
              <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-2">
                   <div class="form-group">
@@ -401,20 +401,28 @@
                 <label>Filter by:</label>
               </div>
             </div>
-            <div class="col-xs-12 col-sm-2">
+            <div class="col-xs-12 col-sm-4">
               <div class="form-group">
-                <label>Item Code</label>
-                <input ng-model="filterItemCode" type="text" class="form-control" id="filter-item-code"
-                       placeholder="1234" ng-readonly="readOnly">
-              </div>
-            </div>
-            <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label>Item Name</label>
-                <input ng-model="filterItemName" type="text" class="form-control" id="filter-item-name"
+                <label>Item Details</label>
+                <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details"
                        placeholder="Coke" ng-readonly="readOnly">
               </div>
             </div>
+<!-- ORIGINAL FILTER "CODE" & "NAME" -->
+<!--             <div class="col-xs-12 col-sm-2"> -->
+<!--               <div class="form-group"> -->
+<!--                 <label>Item Code</label> -->
+<!--                 <input ng-model="filterItemCode" type="text" class="form-control" id="filter-item-code" -->
+<!--                        placeholder="1234" ng-readonly="readOnly"> -->
+<!--               </div> -->
+<!--             </div> -->
+<!--             <div class="col-xs-12 col-sm-2"> -->
+<!--               <div class="form-group"> -->
+<!--                 <label>Item Name</label> -->
+<!--                 <input ng-model="filterItemName" type="text" class="form-control" id="filter-item-name" -->
+<!--                        placeholder="Coke" ng-readonly="readOnly"> -->
+<!--               </div> -->
+<!--             </div> -->
           </div>
 
           <div class="well">
@@ -429,12 +437,11 @@
             <table class="table table-striped pick-list">
               <thead>
                 <tr>
-                  <th>Retail Item Code</th>
-                  <th>Retail Item Name</th>
-                  <th>Inbound Quantity</th>
-                  <th>Required Quantity</th>
-                  <th>Picked Quantity</th>
-                  <th>Ullage</th>
+                  <th>Retail Item Details</th>
+                  <th width="10%">Inbound Quantity</th>
+                  <th width="10%">Required Quantity</th>
+                  <th width="10%">Picked Quantity</th>
+                  <th width="10%">Ullage</th>
                   <th>Ullage Reason</th>
                 </tr>
               </thead>
@@ -442,10 +449,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0001" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Coke" disabled="disabled">
+                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="10">
@@ -470,10 +474,7 @@
                 </tr>
                 <tr class="has-discrepancy">
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0002" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Sprite" disabled="disabled">
+                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0002 - Sprite" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="18">
@@ -498,10 +499,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0003" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Chicken Sandwich" disabled="disabled">
+                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0003 - Chicken Sandwich" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20">
@@ -526,10 +524,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0004" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="7-Up" disabled="disabled">
+                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0004 - 7-Up" disabled="disabled">
                   </td>
                   <td>
 <!-- TODO: ANGULAR HIDE WHEN NOT NEEDED -->
@@ -555,24 +550,21 @@
 <!--                     </select> -->
                   </td>
                 </tr>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>
-                    <!-- TODO: 'ADD ITEM' FUNCTIONALITY --> 
-                    <span id="pickListActionButtons">
-                      <button type="button" class="btn btn-primary pull-right">
-                        <i class="fa fa-plus"></i> Add Item
-                      </button>
-                    </span>
-                  </td>
-                </tr>
               </tbody>
             </table>
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-4 col-md-9"></div>
+              <div class="col-xs-4 col-md-3 text-right">
+                <div class="input-group">
+<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Items</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+
           </div>
   
           <div class="well">
@@ -580,20 +572,16 @@
             <table class="table table-striped offload-list">
               <thead>
                 <tr>
-                  <th>Retail Item Code</th>
-                  <th>Retail Item Name</th>
-                  <th>Inbound Quantity</th>
-                  <th>Ullage</th>
+                  <th>Retail Item Details</th>
+                  <th width="10%">Inbound Quantity</th>
+                  <th width="10%">Ullage</th>
                   <th>Ullage Reason</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0006" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Bacardi" disabled="disabled">
+                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0006 - Bacardi" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20">
@@ -661,389 +649,102 @@
           
           <!-- PANE 4 - Assign Seals - Outbound --------------------------------------------------------------------- -->
           <div class="well seal-color-blue">
-            <div class="row">
-  
-<!--               <div class="col-xs-10"> -->
-<!--                 <h3 class="btn seal-color-blue">Outbound</h3> -->
-<!--               </div> -->
-  
-<!--                 ORIGINAL SELECT FUNCTION TO CHANGE COLORS -->
-<!--               <div class="col-xs-2 text-right">
-                
-<!--                 <select class="form-control" style="background-color: #66CCFF" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;"> -->
-<!--                   <option style="background-color: #66CCFF">Blue</option> -->
-<!--                   <option style="background-color: #FFCC00">Yellow</option> -->
-<!--                   <option style="background-color: #33CC33">Green</option> -->
-<!--                   <option>White</option> -->
-<!--                 </select> -->
-<!--               </div> -->
-  
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-4 col-md-7"></div>
+              <div class="col-xs-4 col-md-3 text-right">
+                <div class="input-group">
+<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
+                  </span>
+                </div>
+              </div>
+<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
+              <div class="col-xs-4 col-md-2">
+                <div>
+                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
+                    <span class="checkbox-label">Sequential</span>
+                  </label>
+                </div>
+              </div>
             </div>
-  
-            <table class="table">
-  
-              <thead>
-                <tr>
-                  <th width="10%"></th>
-                  <th width="15%">Seal Number</th>
-                  <th width="15%">Number of Seals</th>
-                  <th width="15%">From</th>
-                  <th width="15%">To</th>
-                  <th width="10%"></th>
-                </tr>
-              </thead>
-  
-              <tbody>
-  
-                <tr>
-                  <td>
-                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-outbound" type="checkbox" value="1"> 
-                      <span class="checkbox-label">Sequential</span>
-                    </label> 
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                  </td>
-  
-                  <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-                  <td>
-                    <input type="text" class="form-control sequential-seals-outbound" id="numberOfSeals" placeholder="10">
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control sequential-seals-outbound" id="numberOfSealsFrom" placeholder="12465" disabled="disabled">
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control sequential-seals-outbound" id="numberOfSealsTo" placeholder="12474" disabled="disabled">
-                  </td>
-                  
-                  <td>
-                    <!-- TODO: 'ADD SEAL' FUNCTIONALITY --> 
-                    <span id="assignSealsActionButtons">
-                      <button type="button" class="btn btn-primary">
-                        <i class="fa fa-plus"></i> Add Seal
-                      </button>
-                    </span>
-                  </td>
-                  
-                </tr>
-  
-                <!-- TODO: REMOVE ROW. THIS ROW ADDED ONLY TO SHOW 'ADD SEAL' FUNCTIONALITY -->
-<!--                 <tr> -->
-<!--                   <td> -->
-<!--                     <input type="text" class="form-control" id="sealNumber" placeholder="12111"> -->
-<!--                   </td> -->
-<!--                   <td> -->
-<!--                     <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="20"> -->
-<!--                   </td> -->
-<!--                   <td> -->
-<!--                     <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="12111" disabled="disabled> -->
-<!--                   </td> -->
-<!--                   <td> -->
-<!--                     <input type="text" class="form-control sequential-seals-outbound-01" id="sealNumber" placeholder="12131" disabled="disabled> -->
-<!--                   </td> -->
-<!--                   <td> -->
-<!--                     <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> -->
-<!--                       <input class="sr-only btn btn-default" data-toggle=".sequential-seals-outbound-01" type="checkbox" value="1">  -->
-<!--                       <span class="checkbox-label">Sequential</span> -->
-<!--                     </label>  -->
-                    
-<!--                     <span id="assignSealsActionButtons"> -->
-<!--                       <button type="button" class="btn btn-primary"> -->
-<!--                         <i class="fa fa-plus"></i> Add Seal -->
-<!--                       </button> -->
-<!--                       <button type="button" class="btn btn-danger"> -->
-<!--                         <i class="fa fa-close"></i> Remove Seal -->
-<!--                       </button> -->
-<!--                     </span> -->
-<!--                   </td> -->
-<!--                 </tr> -->
-  
-              </tbody>
-            </table>
           </div>
   
           <!-- PANE 4 - Assign Seals - Hand Over --------------------------------------------------------------------- -->
           <div class="well seal-color-green">
-            <div class="row">
-  
-<!--               <div class="col-xs-6"> -->
-<!--                 <h3 class="btn sealColor-green" disabled="disabled">Hand Over</h3> -->
-<!--               </div> -->
-  
-              <!-- TODO: 'ADD HAND OVER' FUNCTIONALITY -->
-<!--               <div class="col-xs-4"> -->
-<!--                 <button type="button" class="btn btn-primary pull-right"> -->
-<!--                   <i class="fa fa-plus"></i> Add Hand Over -->
-<!--                 </button> -->
-<!--               </div> -->
- 
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-4 col-md-7"></div>
+              <div class="col-xs-4 col-md-3 text-right">
+                <div class="input-group">
+<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
+                  </span>
+                </div>
+              </div>
+<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
+              <div class="col-xs-4 col-md-2">
+                <div>
+                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
+                    <span class="checkbox-label">Sequential</span>
+                  </label>
+                </div>
+              </div>
             </div>
-  
-            <table class="table">
-  
-              <thead>
-                <tr>
-                  <th width="10%"></th>
-                  <th width="15%">Seal Number</th>
-                  <th width="15%">Number of Seals</th>
-                  <th width="15%">From</th>
-                  <th width="15%">To</th>
-                  <th width="10%"></th>
-                </tr>
-              </thead>
-  
-              <tbody>
-  
-                <tr>
-                  <td>
-                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-handover" type="checkbox" value="1"> 
-                      <span class="checkbox-label">Sequential</span>
-                    </label> 
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                  </td>
-  
-                  <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-                  <td>
-                    <input type="text" class="form-control sequential-seals-handover" id="numberOfSeals" placeholder="10">
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control sequential-seals-handover" id="numberOfSealsFrom" placeholder="12465" disabled="disabled">
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control sequential-seals-handover" id="numberOfSealsTo" placeholder="12474" disabled="disabled">
-                  </td>
-                  
-                  <td>
-                    <!-- TODO: 'ADD SEAL' FUNCTIONALITY --> 
-                    <span id="assignSealsActionButtons">
-                      <button type="button" class="btn btn-primary">
-                        <i class="fa fa-plus"></i> Add Seal
-                      </button>
-                    </span>
-                  </td>
-                  
-                </tr>
-  
-              </tbody>
-            </table>
-
           </div>
-  
-          <!-- PANE 4 - Assign Seals - Hand Over COPY --------------------------------------------------------------------- -->
-          <!-- TODO: REMOVE ROW. THIS WELL ADDED ONLY TO SHOW 'ADD HAND OVER' FUNCTIONALITY -->
-<!--           <div class="well"> -->
-<!--             <div class="row"> -->
-  
-<!--               <div class="col-xs-6"> -->
-<!--                 <h3>Hand Over 2</h3> -->
-<!--               </div> -->
-  
-<!--               <div class="col-xs-4 text-right"> -->
-<!--                 <button type="button" class="btn btn-primary"> -->
-<!--                   <i class="fa fa-plus"></i> Add Hand Over -->
-<!--                 </button> -->
-<!--                 <button type="button" class="btn btn-danger"> -->
-<!--                   <i class="fa fa-close"></i> Remove Hand Over -->
-<!--                 </button> -->
-<!--               </div> -->
-  
-<!--               <div class="col-xs-2"> -->
-<!--                 <select class="form-control" style="background-color: #33CC33" id="sealColor" onchange="this.style.backgroundColor = this.options[this.selectedIndex].style.backgroundColor;"> -->
-<!--                   <option style="background-color: #33CC33">Green</option> -->
-<!--                   <option style="background-color: #66CCFF">Blue</option> -->
-<!--                   <option style="background-color: #FFCC00">Yellow</option> -->
-<!--                   <option>White</option> -->
-<!--                 </select> -->
-<!--               </div> -->
-  
-<!--             </div> -->
-  
-<!--             <table class="table"> -->
-  
-<!--               <thead> -->
-<!--                 <tr> -->
-<!--                   <th width="15%">Seal Number</th> -->
-<!--                   <th width="15%">Number of Seals</th> -->
-<!--                   <th width="15%">From</th> -->
-<!--                   <th width="15%">To</th> -->
-<!--                   <th width="40%">Actions</th> -->
-<!--                 </tr> -->
-<!--               </thead> -->
-  
-<!--               <tbody> -->
-  
-<!--                 <tr> -->
-<!--                   <td> -->
-<!--                     <input type="text" class="form-control" id="sealNumber" placeholder="12465"> -->
-<!--                   </td> -->
-  
-<!--                   TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-<!--                   <td> -->
-<!--                     <input type="text" class="form-control sequential-seals-handover-01" id="numberOfSeals" placeholder="10"> -->
-<!--                   </td> -->
-<!--                   <td> -->
-<!--                     <input type="text" class="form-control sequential-seals-handover-01" id="numberOfSealsFrom" placeholder="12465" disabled="disabled> -->
-<!--                   </td> -->
-<!--                   <td> -->
-<!--                     <input type="text" class="form-control sequential-seals-handover-01" id="numberOfSealsTo" placeholder="12475" disabled="disabled> -->
-<!--                   </td> -->
-<!--                   <td> -->
-<!--                     <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> -->
-<!--                       <input class="sr-only btn btn-default" data-toggle=".sequential-seals-handover-01" type="checkbox" value="1"> -->
-<!--                       <span class="checkbox-label">Sequential</span> -->
-<!--                     </label> -->
-                    
-<!--                     TODO: 'ADD SEAL' FUNCTIONALITY -->
-<!--                     <span id="assignSealsActionButtons"> -->
-<!--                       <button type="button" class="btn btn-primary"> -->
-<!--                         <i class="fa fa-plus"></i> Add Seal -->
-<!--                       </button> -->
-<!--                     </span> -->
-<!--                   </td> -->
-<!--                 </tr> -->
-  
-<!--               </tbody> -->
-<!--             </table> -->
-<!--           </div> -->
   
           <!-- PANE 4 - Assign Seals - Inbound --------------------------------------------------------------------- -->
           <div class="well seal-color-yellow">
-            <div class="row">
-  
-<!--               <div class="col-xs-10"> -->
-<!--                 <h3 class="btn seal-color-yellow">Inbound</h3> -->
-<!--               </div> -->
-  
-            </div>
-  
-            <table class="table">
-  
-              <thead>
-                <tr>
-                  <th width="10%"></th>
-                  <th width="15%">Seal Number</th>
-                  <th width="15%">Number of Seals</th>
-                  <th width="15%">From</th>
-                  <th width="15%">To</th>
-                  <th width="10%"></th>
-                </tr>
-              </thead>
-  
-              <tbody>
-                <tr>
-                  <td>
-                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-inbound" type="checkbox" value="1"> 
-                      <span class="checkbox-label">Sequential</span>
-                    </label> 
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                  </td>
-  
-                  <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-                  <td>
-                    <input type="text" class="form-control sequential-seals-inbound" id="numberOfSeals" placeholder="10">
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control sequential-seals-inbound" id="numberOfSealsFrom" placeholder="12465" disabled="disabled">
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control sequential-seals-inbound" id="numberOfSealsTo" placeholder="12474" disabled="disabled">
-                  </td>
-                  
-                  <td>
-                    <!-- TODO: 'ADD SEAL' FUNCTIONALITY --> 
-                    <span id="assignSealsActionButtons">
-                      <button type="button" class="btn btn-primary">
-                        <i class="fa fa-plus"></i> Add Seal
-                      </button>
-                    </span>
-                  </td>
-                  
-                </tr>
-  
-              </tbody>
-            </table>
-            
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-4 col-md-7"></div>
+              <div class="col-xs-4 col-md-3 text-right">
+                <div class="input-group">
+<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
+                  </span>
+                </div>
+              </div>
+<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
+              <div class="col-xs-4 col-md-2">
+                <div>
+                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
+                    <span class="checkbox-label">Sequential</span>
+                  </label>
+                </div>
+              </div>
+            </div>            
           </div>
   
           <!-- PANE 4 - Assign Seals - High Security --------------------------------------------------------------------- -->
           <div class="well seal-color-white">
-            <div class="row">
-  
-<!--               <div class="col-xs-10"> -->
-<!--                 <h3 class="btn seal-color-white">High Security</h3> -->
-<!--               </div> -->
-  
-            </div>
-  
-             <table class="table">
-  
-              <thead>
-                <tr>
-                  <th width="10%"></th>
-                  <th width="15%">Seal Number</th>
-                  <th width="15%">Number of Seals</th>
-                  <th width="15%">From</th>
-                  <th width="15%">To</th>
-                  <th width="10%"></th>
-                </tr>
-              </thead>
-  
-              <tbody>
-                <tr>
-                  <td>
-                    <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                      <input class="sr-only btn btn-default" data-toggle=".sequential-seals-high-security" type="checkbox" value="1"> 
-                      <span class="checkbox-label">Sequential</span>
-                    </label> 
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                  </td>
-  
-                  <!-- TODO: NUMBER OF SEALS IS EDITABLE, AND WILL AFFECT FROM & TO NUMBERS -->
-                  <td>
-                    <input type="text" class="form-control sequential-seals-high-security" id="numberOfSeals" placeholder="10">
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control sequential-seals-high-security" id="numberOfSealsFrom" placeholder="12465" disabled="disabled">
-                  </td>
-                  
-                  <td>
-                    <input type="text" class="form-control sequential-seals-high-security" id="numberOfSealsTo" placeholder="12474" disabled="disabled">
-                  </td>
-                  
-                  <td>
-                    <!-- TODO: 'ADD SEAL' FUNCTIONALITY --> 
-                    <span id="assignSealsActionButtons">
-                      <button type="button" class="btn btn-primary">
-                        <i class="fa fa-plus"></i> Add Seal
-                      </button>
-                    </span>
-                  </td>
-                  
-                </tr>
-  
-              </tbody>
-            </table>
-            
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-4 col-md-7"></div>
+              <div class="col-xs-4 col-md-3 text-right">
+                <div class="input-group">
+<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
+                  </span>
+                </div>
+              </div>
+<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
+              <div class="col-xs-4 col-md-2">
+                <div>
+                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
+                    <span class="checkbox-label">Sequential</span>
+                  </label>
+                </div>
+              </div>
+            </div>            
           </div>
 
         </ng-form>
@@ -1098,20 +799,28 @@
                 <label>Filter by:</label>
               </div>
             </div>
-            <div class="col-xs-12 col-sm-2">
+            <div class="col-xs-12 col-sm-4">
               <div class="form-group">
-                <label>Item Code</label>
-                <input ng-model="filterItemCode" type="text" class="form-control" id="filter-item-code"
-                       placeholder="1234" ng-readonly="readOnly">
-              </div>
-            </div>
-            <div class="col-xs-12 col-sm-2">
-              <div class="form-group">
-                <label>Item Name</label>
-                <input ng-model="filterItemName" type="text" class="form-control" id="filter-item-name"
+                <label>Item Details</label>
+                <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details"
                        placeholder="Coke" ng-readonly="readOnly">
               </div>
             </div>
+<!-- ORIGINAL FILTER "CODE" & "NAME" -->
+<!--             <div class="col-xs-12 col-sm-2"> -->
+<!--               <div class="form-group"> -->
+<!--                 <label>Item Code</label> -->
+<!--                 <input ng-model="filterItemCode" type="text" class="form-control" id="filter-item-code" -->
+<!--                        placeholder="1234" ng-readonly="readOnly"> -->
+<!--               </div> -->
+<!--             </div> -->
+<!--             <div class="col-xs-12 col-sm-2"> -->
+<!--               <div class="form-group"> -->
+<!--                 <label>Item Name</label> -->
+<!--                 <input ng-model="filterItemName" type="text" class="form-control" id="filter-item-name" -->
+<!--                        placeholder="Coke" ng-readonly="readOnly"> -->
+<!--               </div> -->
+<!--             </div> -->
           </div>
           
           <div class="well">
@@ -1166,12 +875,11 @@
             <table class="table table-striped pick-list">
               <thead>
                 <tr>
-                  <th>Retail Item Code</th>
-                  <th>Retail Item Name</th>
-                  <th>Inbound Quantity</th>
-                  <th>Required Quantity</th>
-                  <th>Picked Quantity</th>
-                  <th>Ullage</th>
+                  <th>Retail Item Details</th>
+                  <th width="10%">Inbound Quantity</th>
+                  <th width="10%">Required Quantity</th>
+                  <th width="10%">Picked Quantity</th>
+                  <th width="10%">Ullage</th>
                   <th>Ullage Reason</th>
                 </tr>
               </thead>
@@ -1179,10 +887,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0001" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Coke" disabled="disabled">
+                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="10" disabled="disabled">
@@ -1207,10 +912,7 @@
                 </tr>
                 <tr class="has-discrepancy">
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0002" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Sprite" disabled="disabled">
+                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0002- Sprite" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="18" disabled="disabled">
@@ -1235,10 +937,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0003" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Chicken Sandwich" disabled="disabled">
+                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0003 - Chicken Sandwich" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20" disabled="disabled">
@@ -1263,10 +962,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0004" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="7-Up" disabled="disabled">
+                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0004 - 7-Up" disabled="disabled">
                   </td>
                   <td>
 <!-- TODO: ANGULAR HIDE WHEN NOT NEEDED -->
@@ -1309,20 +1005,16 @@
             <table class="table table-striped offload-list">
               <thead>
                 <tr>
-                  <th>Retail Item Code</th>
-                  <th>Retail Item Name</th>
-                  <th>Inbound Quantity</th>
-                  <th>Ullage</th>
+                  <th>Retail Item Details</th>
+                  <th width="10%">Inbound Quantity</th>
+                  <th width="10%">Ullage</th>
                   <th>Ullage Reason</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0006" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="itemName" type="text" class="form-control" id="item-name" placeholder="Bacardi" disabled="disabled">
+                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0006 - Bacardi" disabled="disabled">
                   </td>
                   <td>
                     <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20" disabled="disabled">
@@ -1404,11 +1096,15 @@
       <button type="button" class="btn btn-default btn-prev">
         <span class="glyphicon glyphicon-arrow-left"></span>Prev
       </button>
-      <button type="button" class="btn btn-default btn-primary btn-next" data-last="Complete">
+      <button type="button" class="btn btn-default btn-primary btn-next" data-last="Dispatch">
         Next<span class="glyphicon glyphicon-arrow-right"></span>
       </button>
     </div>
-
+    
+    <div class="top-actions">
+      <button type="button" class="btn btn-primary btn-prev">Save</button>
+    </div>
+    
   </div>
 
   <!-- jQuery -->
