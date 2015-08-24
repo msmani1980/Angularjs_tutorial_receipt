@@ -48,7 +48,7 @@
     </div>
   </div>
 
-  <form class="form edit-form delivery-note-form" name="deliveryNoteForm">
+  <form class="form edit-form delivery-note-form" name="form">
 
     <form-error-dialog></form-error-dialog>
     <!--/TopHeader -->
@@ -65,7 +65,7 @@
                       ng-disabled="readOnly || catererStationList.length == 1"
                       ng-show="catererStationList.length"
                       id="lmp-station"
-                      name="lmp-station"
+                      name="LMP Station"
                       required>
                 <option selected="selected" value disabled>Select Catering Station</option>
                 <option ng-selected="station.id==deliveryNote.catererStationId"
@@ -84,11 +84,11 @@
         <div class="row" ng-hide="state == 'review'">
 
           <div class="col-xs-12 col-sm-3">
-            <div class="form-group">
+            <div class="form-group" ng-class="form[purchaseOrderNumber]">
               <label for="purchase-order-number">Purchase Order Number*</label>
               <input ng-model="deliveryNote.purchaseOrderNumber" type="text"
                      class="form-control" id="purchase-order-number"
-                     name="purchase-order-number"
+                     name="Purchase Order Number"
                      required custom-validity custom-pattern="alphanumeric"
                      ng-readonly="readOnly">
             </div>
@@ -99,7 +99,7 @@
               <label for="delivery-note-number">Delivery Note Number*</label>
               <input ng-model="deliveryNote.deliveryNoteNumber" type="text"
                      class="form-control" id="delivery-note-number"
-                     name="delivery-note-number"
+                     name="Delivery Note Number"
                      required custom-validity custom-pattern="alphanumeric"
                      ng-readonly="readOnly">
             </div>
@@ -114,7 +114,7 @@
             disable-start-date="readOnly"
             required="required"
             label-from="Delivery Date*"
-            name-from="delivery-date">
+            name-from="Delivery Date">
           </date-picker>
 
           <div class="col-xs-12 col-sm-2" ng-show="{{ state == 'view' || state == 'edit' }}">
@@ -239,7 +239,7 @@
                 <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
                        id="delivered-qty-{{ item.masterItemId }}"
                        ng-readonly="readOnly" ng-required="item.expectedQuantity"
-                       name="deliveredQuantity[{{item.masterItemId}}]"
+                       name="Delivered ( {{ item.itemCode }} - {{ item.itemName }} )"
                        ng-change="elementChanged()">
               </div>
             </div>
@@ -259,7 +259,7 @@
                 <label>Ullage Reason<span ng-show="item.ullageQuantity">*</span></label>
                 <select class="form-control"
                         ng-model="item.ullageReason"
-                        name="ullageReason[{{item.masterItemId}}]"
+                        name="Ullage Reason ( {{ item.itemCode }} - {{ item.itemName }} )"
                         ng-selected="item.ullageReason"
                         ng-options="ullageReason.id + '' as ullageReason.companyReasonCodeName for ullageReason in ullageReasons"
                         ng-disabled="readOnly || !item.ullageQuantity"

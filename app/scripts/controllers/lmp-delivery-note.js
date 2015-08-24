@@ -54,7 +54,7 @@ angular.module('ts5App')
     }
 
 
-    function deliveryNoteFormErrorWatcher(){
+    function formErrorWatcher(){
       $scope.canReview = canReview();
     }
 
@@ -63,7 +63,7 @@ angular.module('ts5App')
     };
 
     $scope.elementChanged = function(){
-      deliveryNoteFormErrorWatcher();
+      formErrorWatcher();
     };
 
     function setStationIdOnCreate() {
@@ -188,7 +188,7 @@ angular.module('ts5App')
 
     function showFormErrors(){
       $scope.displayError = true;
-      console.log($scope.deliveryNoteForm.$error);
+      console.log($scope.form.$error);
     }
 
     function saveDeliveryNoteResolution(response){
@@ -253,6 +253,9 @@ angular.module('ts5App')
     $scope.toggleReview = function(){
       if(!$scope.canReview){
         showFormErrors();
+        return;
+      }
+      if(!$scope.prevState && $scope.form.$error) {
         return;
       }
       if(!$scope.prevState) {
@@ -347,8 +350,8 @@ angular.module('ts5App')
       if (!$scope.displayError && $scope.deliveryNote.isAccepted) {
         return false;
       }
-      if (!$scope.displayError && angular.isDefined($scope.deliveryNoteForm)) {
-        return $scope.deliveryNoteForm.$valid;
+      if (!$scope.displayError && angular.isDefined($scope.form)) {
+        return $scope.form.$valid;
       }
       return true;
     }
@@ -487,7 +490,7 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
-      $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
+      $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
     };
     stateActions.createInitPromisesResolved = function() {
@@ -503,7 +506,7 @@ angular.module('ts5App')
       _initPromises.push(getCatererStationList());
       _initPromises.push(getUllageCompanyReasonCodes());
       $scope.$watch('deliveryNote.catererStationId', catererStationIdWatcher);
-      $scope.$watch('deliveryNoteForm.$error', deliveryNoteFormErrorWatcher, true);
+      $scope.$watch('form.$error', formErrorWatcher, true);
       resolveInitPromises();
     };
     stateActions.editInitPromisesResolved = function(){
