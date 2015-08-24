@@ -86,14 +86,18 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return data.retailItem.companyId === companyId;
     };
 
-    this.setVoucherData = function(itemData) {
+    this.setVoucherData = function() {
       $scope.formData.shouldUseDynamicBarcode = {
-        value: !!itemData.isDynamicBarcodes
+        value: !!$scope.formData.isDynamicBarcodes
       };
 
-      if (itemData.companyDiscountId) {
+      if (!$scope.discountList) {
+        return;
+      }
+
+      if ($scope.formData.companyDiscountId) {
         $scope.formData.voucher = $filter('filter')($scope.discountList, {
-          id: itemData.companyDiscountId
+          id: $scope.formData.companyDiscountId
         }, true)[0];
       }
     };
@@ -421,14 +425,15 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.deserializeRecommendations(itemData);
       this.formatImageDates(itemData.images);
       this.formatPriceDates(itemData);
-      $scope.formData = itemData;
+      $scope.formData = angular.copy(itemData);
 
       $scope.originalMasterItemData = {
         itemCode: $scope.formData.itemCode,
         itemName: $scope.formData.itemName,
         onBoardName: $scope.formData.onBoardName
       };
-      this.setVoucherData(itemData);
+      delete $scope.formData.voucher;
+      this.setVoucherData();
       this.updateStationsList();
     };
 
@@ -487,6 +492,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setDiscountList = function(dataFromAPI) {
       $scope.discountList = angular.copy(dataFromAPI.companyDiscounts);
+      $this.setVoucherData();
     };
 
     this.setDependencies = function(response) {

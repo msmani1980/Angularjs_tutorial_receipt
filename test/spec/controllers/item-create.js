@@ -758,9 +758,7 @@ describe('The Item Create Controller', function () {
         });
 
         it('should attach the voucher object to the scope', function () {
-          var itemData = {
-            companyDiscountId: 1979
-          };
+          $scope.formData.companyDiscountId = 1979;
           $scope.discountList = [
             {
               id: 100
@@ -769,8 +767,8 @@ describe('The Item Create Controller', function () {
               id: 1979
             }
           ];
-          ItemCreateCtrl.setVoucherData(itemData);
-          expect($scope.formData.voucher.id).toBe(itemData.companyDiscountId);
+          ItemCreateCtrl.setVoucherData();
+          expect($scope.formData.voucher.id).toBe($scope.formData.companyDiscountId);
         });
 
       });
