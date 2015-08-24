@@ -84,6 +84,19 @@
 
         <div class="col-sm-3">
           <div class="form-group">
+            <label class="control-label" for="itemName">Item Category</label>
+            <select
+              class="form-control"
+              id="itemCategory"
+              ng-options="category.name for category in itemCategories | orderBy:'name' track by category.id"
+              ng-model="search.selectedCategory">
+              <option selected="selected" disabled value>Select Category</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="form-group">
             <label class="control-label" for="itemName">Item Name</label>
             <select
               class="form-control"

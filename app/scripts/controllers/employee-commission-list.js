@@ -15,10 +15,12 @@ angular.module('ts5App')
       endDate: '',
       itemList: [],
       priceTypeList: [],
-      taxRateTypesList: []
+      taxRateTypesList: [],
+      selectedCategory: {}
     };
+    $scope.itemListSearchQuery = {};
 
-    $scope.$watchGroup(['search.startDate', 'search.endDate'], function () {
+    $scope.$watchGroup(['search.startDate', 'search.endDate', 'search.selectedCategory'], function () {
       var payload = {};
 
       if (angular.isDefined($scope.search.startDate) && dateUtility.isDateValidForApp($scope.search.startDate)) {
@@ -27,6 +29,10 @@ angular.module('ts5App')
 
       if (angular.isDefined($scope.search.endDate) && dateUtility.isDateValidForApp($scope.search.endDate)) {
         payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
+      }
+
+      if (angular.isDefined($scope.search.selectedCategory)) {
+        payload.categoryName = $scope.search.selectedCategory.name;
       }
 
       if (payload.startDate && payload.endDate) {
@@ -178,12 +184,21 @@ angular.module('ts5App')
       if($scope.search.selectedRateType) {
         payload.isFixed = ($scope.search.selectedRateType.taxRateType === 'Amount');
       }
+      if($scope.search.selectedCategory) {
+        payload.itemCategoryId = $scope.search.selectedCategory.id;
+      }
       return payload;
     }
 
     function getCommissions (payload) {
       showLoadingModal('Loading Employee Commission List');
       employeeCommissionFactory.getCommissionList(payload).then(getCommissionSuccessHandler);
+    }
+
+    function getItemCategories() {
+      employeeCommissionFactory.getItemsCategoriesList({}).then(function (response) {
+        $scope.itemCategories = response.salesCategories;
+      });
     }
 
     $scope.searchCommissions = function () {
@@ -196,6 +211,7 @@ angular.module('ts5App')
       delete $scope.search.selectedRateType;
       delete $scope.search.selectedItem;
       delete $scope.search.itemList;
+      delete $scope.search.selectedCategory;
       $scope.search.startDate = '';
       $scope.search.endDate = '';
       employeeCommissionFactory.getCommissionList({}).then(getCommissionSuccessHandler);
@@ -209,6 +225,11 @@ angular.module('ts5App')
       $scope.search.taxRateTypesList = dataFromAPI;
     });
 
-    getCommissions({});
+    function init () {
+      getCommissions({});
+      getItemCategories();
+    }
+
+    init();
 
   });
