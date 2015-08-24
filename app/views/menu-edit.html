@@ -154,7 +154,7 @@
           <ui-select
             required="true"
             ng-model="selectedCategories[$index]"
-            on-select="filterItems($index)"
+            on-select="updateItemsList($index)"
             theme="bootstrap"
             placeholder="Select a category to filter the items list...">
             <ui-select-match

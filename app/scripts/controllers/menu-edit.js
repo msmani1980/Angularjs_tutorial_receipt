@@ -41,7 +41,7 @@ angular.module('ts5App')
         if(angular.equals({}, $scope.selectedCategories[index])) {
           $scope.filteredItemsCollection[index] = angular.copy($scope.masterItemsList);
         } else {
-          $scope.filterItems(index);
+          $this.filterItems(index);
         }
       });
     }
@@ -269,9 +269,13 @@ angular.module('ts5App')
       }
     };
 
-    $scope.filterItems = function(index) {
+    $scope.updateItemsList = function(index) {
+      $scope.newItemList[index].masterItem = null;
+      $this.filterItems(index);
+    };
+
+    this.filterItems = function(index) {
       if($scope.selectedCategories[index]) {
-        $scope.newItemList[index].masterItem = {};
         fetchFilteredItemsList($scope.menu.startDate, $scope.menu.endDate, $scope.selectedCategories[index].id, function(response) {
           $scope.filteredItemsCollection[index] = response.masterItems;
         });
