@@ -4,7 +4,11 @@ describe('Stock Take Report', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/catering-stations.json','served/stock-take-list.json'));
+  beforeEach(module(
+    'served/catering-stations.json',
+    'served/stock-take-list.json',
+    'served/stock-management-dashboard.json'
+  ));
 
   var StockTakeReportCtrl,
     $scope,
@@ -13,13 +17,18 @@ describe('Stock Take Report', function () {
     stockTakeListJOSN,
     getStockTakeListDeferred,
     getCatererStationListDeferred,
+    getStockDashboardItemsDeferred,
+    stockManagementDashboardJSON,
+    stockDashboardService,
     stationsListJSON,
     location,
     httpBackend;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope,$injector, _servedStockTakeList_, _servedCateringStations_) {
+  beforeEach(inject(function ($q, $controller, $rootScope,$injector,
+    _servedStockTakeList_, _servedCateringStations_,_servedStockManagementDashboard_) {
 
+    stockManagementDashboardJSON = _servedStockManagementDashboard_;
     stockTakeListJOSN = _servedStockTakeList_;
     stationsListJSON = _servedCateringStations_;
 
@@ -28,11 +37,16 @@ describe('Stock Take Report', function () {
     $scope = $rootScope.$new();
     stockTakeService = $injector.get('stockTakeService');
     catererStationService = $injector.get('catererStationService');
+    stockDashboardService = $injector.get('stockDashboardService');
 
     getStockTakeListDeferred = $q.defer();
     getStockTakeListDeferred.resolve(stockTakeListJOSN);
     spyOn(stockTakeService, 'getStockTakeList').and.returnValue(
       getStockTakeListDeferred.promise);
+
+    getStockDashboardItemsDeferred = $q.defer();
+    getStockDashboardItemsDeferred.resolve(stockManagementDashboardJSON);
+    spyOn(stockDashboardService, 'getStockDashboardItems').and.returnValue(getStockDashboardItemsDeferred.promise);
 
     getCatererStationListDeferred = $q.defer();
     getCatererStationListDeferred.resolve(stationsListJSON);
@@ -82,10 +96,6 @@ describe('Stock Take Report', function () {
 
   describe('when the controller loads', function() {
 
-    it('should have a stationsList attached to the scope', function () {
-      expect($scope.stationsList).toBeDefined();
-    });
-
     it('should have an empty stations list before the scope is digested', function () {
       expect($scope.stationsList).toEqual([]);
     });
@@ -130,11 +140,8 @@ describe('Stock Take Report', function () {
 
   });
 
-  describe('when a user selects a station', function() {
 
-    it('should have a stockTakeList attached to the scope', function () {
-      expect($scope.stockTakeList).toBeDefined();
-    });
+  describe('when a user selects a station', function() {
 
     it('should have an empty deliveryt notes list before the scope is digested', function () {
       expect($scope.stockTakeList).toEqual([]);
@@ -197,6 +204,37 @@ describe('Stock Take Report', function () {
 
         });
 
+      });
+
+    });
+
+    it('should have an empty station items list before the scope is digested', function () {
+      expect($scope.stationItems).toEqual([]);
+    });
+
+    describe('The stations items API call', function () {
+
+      beforeEach(function() {
+        spyOn(StockTakeReportCtrl, 'getStockDashboardItems').and.callThrough();
+        spyOn(StockTakeReportCtrl, 'getStockDashboardItemsSuccessHandler').and.callThrough();
+        $scope.catererStationId = 3;
+        $scope.$digest();
+      });
+
+      it('should call the getStockDashboardItems', function () {
+        expect(StockTakeReportCtrl.getStockDashboardItems).toHaveBeenCalled();
+      });
+
+      it('should call the getStockDashboardItemsSuccessHandler method', function () {
+        expect(StockTakeReportCtrl.getStockDashboardItemsSuccessHandler).toHaveBeenCalled();
+      });
+
+      it('should have (1) or more items in the stationItems', function () {
+        expect($scope.stationItems.length).toBeGreaterThan(0);
+      });
+
+      it('should set the stationItems as the stationItems API respone',function () {
+        expect($scope.stationItems).toEqual(stockManagementDashboardJSON.response);
       });
 
     });

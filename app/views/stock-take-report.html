@@ -10,7 +10,7 @@
 
       <div class="col-xs-6 text-right">
 
-        <excel-upload type="stockTake" ng-show="canCreateStockTake()" class="excel-upload"></excel-upload>
+        <excel-upload type="stockTake" ng-show="importIsPossible() && canCreateStockTake()" class="excel-upload"></excel-upload>
 
         <a ng-show="canCreateStockTake()" ng-href="/#/stock-take/create/{{catererStationId}}" class="btn btn-primary">
           + <span class="hidden-xs hidden-sm">Create Stock Take</span>
