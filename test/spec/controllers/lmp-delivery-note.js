@@ -81,6 +81,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       expect(scope.deliveryNote.catererStationId).toBe(3);
     });
     it('should set prevState when toggleReview is called', function(){
+      scope.deliveryNote.items = [{deliveredQuantity:4}];
       scope.toggleReview();
       scope.$digest();
       expect(scope.prevState).toBe('create');
@@ -233,9 +234,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           };
           scope.save(false);
         });
-        it('should set delivery note is accepted to whatever is passed in', function () {
-          expect(scope.deliveryNote.isAccepted).toBe(false);
-        });
         it('should call createDeliveryNote', function(){
           var mockedPayload = {
             catererStationId: 3,
@@ -320,7 +318,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         });
         it('should remove 1 item from the deliveryNote.items array', function(){
           var curCount = scope.deliveryNote.items.length;
-          scope.removeItemByIndex(0);
+          var mockItem = {
+            canEdit: true
+          };
+          scope.removeItemByIndex(0, mockItem);
           scope.$digest();
           expect(scope.deliveryNote.items.length).toBe((curCount - 1));
         });
@@ -347,9 +348,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       describe('save scope function submit delivery note', function(){
         beforeEach(function(){
           scope.save(true);
-        });
-        it('should set delivery note is accepted to whatever is passed in', function(){
-          expect(scope.deliveryNote.isAccepted).toBe(true);
         });
         it('should call saveDeliveryNote', function(){
           expect(deliveryNoteFactory.saveDeliveryNote).toHaveBeenCalled();
