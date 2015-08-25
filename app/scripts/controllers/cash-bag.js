@@ -50,7 +50,7 @@ angular.module('ts5App')
             break;
           }
           var saveCashBag = angular.copy(formCashBag);
-          saveCashBag.totalCashBags = parseInt(saveCashBag.totalCashBags);
+          saveCashBag.totalCashBags = parseInt(saveCashBag.totalCashBags, 10);
           saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
           $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
           var payload = {
@@ -62,7 +62,7 @@ angular.module('ts5App')
           );
           break;
         case 'create':
-          formCashBag.totalCashBags = parseInt(formCashBag.totalCashBags);
+          formCashBag.totalCashBags = parseInt(formCashBag.totalCashBags, 10);
           cashBagFactory.createCashBag({cashBag: formCashBag}).then(function (newCashBag) {
             $location.search('newId', newCashBag.id)
               .search('scheduleDate', null)
