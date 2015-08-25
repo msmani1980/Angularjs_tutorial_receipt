@@ -534,6 +534,14 @@ angular.module('ts5App')
       return $scope.readOnly || !item.ullageQuantity;
     };
 
+    $scope.isLMPStationIsDisabled = function(){
+      if($scope.readOnly ||
+        Array.isArray($scope.catererStationList) && $scope.catererStationList.length === 1) {
+        return true;
+      }
+      return false;
+    };
+
     var stateActions = {};
     // view state actions
     stateActions.viewInit = function(){
