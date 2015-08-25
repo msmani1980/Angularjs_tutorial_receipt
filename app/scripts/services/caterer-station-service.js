@@ -9,9 +9,10 @@
  */
 angular.module('ts5App')
   .service('catererStationService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/caterer-stations/:id';
+    var requestURL = ENV.apiUrl + '/api/caterer-stations/:id/:menuitems';
     var requestParameters = {
       id: '@id',
+      menuitems:'@menuitems',
       limit: 50
     };
 
@@ -30,6 +31,9 @@ angular.module('ts5App')
       },
       deleteCatererStation: {
         method: 'DELETE'
+      },
+      getAllMenuItems: {
+        method: 'GET'
       }
     };
 
@@ -59,11 +63,21 @@ angular.module('ts5App')
       return requestResource.createCatererStation(payload).$promise;
     };
 
+    var getAllMenuItems = function(cateringStationId, limit) {
+      var payload = {
+        id: cateringStationId,
+        menuitems: 'menu-items',
+        limit: limit
+      };
+      return requestResource.getAllMenuItems(payload).$promise;
+    };
+
     return {
       getCatererStationList: getCatererStationList,
       deleteCatererStation: deleteCatererStation,
       getCatererStation: getCatererStation,
       updateCatererStation: updateCatererStation,
-      createCatererStation: createCatererStation
+      createCatererStation: createCatererStation,
+      getAllMenuItems: getAllMenuItems
     };
   });

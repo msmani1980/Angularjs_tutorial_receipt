@@ -15,6 +15,10 @@
           <span class="fa fa-filter" aria-hidden="true"></span>
           <span class="hidden-sm hidden-xs">Filter</span>
         </button>
+        <a ng-href="/#/" class="btn btn-default">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <span class="hidden-xs">Close</span>
+        </a>
       </div>
     </div>
 
@@ -90,7 +94,7 @@
     </div>
     <div class="panel-body">
       <p>The station and/or the search criteria you selected has no delivery notes.
-        <a ng-href="/#/lmp-delivery-note/create">Create a new delivery note</a> or update your search criteria
+        <a ng-href="/#/lmp-delivery-note/create/{{ catererStationId }}">Create a new delivery note</a> or update your search criteria
     </div>
   </div>
 

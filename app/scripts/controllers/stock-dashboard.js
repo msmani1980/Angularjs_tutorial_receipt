@@ -10,11 +10,12 @@
 
 angular.module('ts5App').controller('StockDashboardCtrl',
   function ($scope, $http, GlobalMenuService, stockDashboardService, catererStationService, companyReasonCodesService,
-            dateUtility, $filter,ENV) {
+            dateUtility, $filter,ENV, stockTakeFactory) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
     $scope.todaysDate = dateUtility.nowFormatted();
+    $scope.stockTakeList = [];
 
     var $this = this;
 
@@ -50,14 +51,35 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     this.init = function () {
       catererStationService.getCatererStationList().then(this.getCatererStationListSuccessHandler);
       companyReasonCodesService.getAll().then($this.getUllageReasonsFromResponse);
-      $scope.$watch('selectedCateringStation', $scope.updateStockItems);
+      $scope.$watch('selectedCateringStation', function(newData) {
+        if(newData) {
+          $scope.updateStockItems();
+          $this.setExportURL(newData);
+          $this.getStockTakeList(newData);
+        }
+      });
     };
 
-    this.setExportURL = function(newValue) {
-      if(newValue){
-        $scope.exportURL = ENV.apiUrl + '/api/stock-management/dashboard/' + newValue.id;
-        $scope.exportURL += '/file/export?sessionToken=' + $http.defaults.headers.common.sessionToken;
-      }
+    this.setExportURL = function(cateringStation) {
+      $scope.exportURL = ENV.apiUrl + '/api/stock-management/dashboard/' + cateringStation.id;
+      $scope.exportURL += '/file/export?sessionToken=' + $http.defaults.headers.common.sessionToken;
+    };
+
+    this.generateStockTakeQuery = function () {
+      var query = {
+        catererStationId: $scope.selectedCateringStation.id,
+        limit: 100
+      };
+      return query;
+    };
+
+    this.getStockTakeList = function () {
+      var query = $this.generateStockTakeQuery();
+      stockTakeFactory.getStockTakeList(query).then($this.getStockTakeListSuccessHandler);
+    };
+
+    this.getStockTakeListSuccessHandler = function(data) {
+      $scope.stockTakeList = data.response;
     };
 
     this.init();
@@ -77,6 +99,11 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       return dateUtility.isToday(dateUtility.formatDateForApp(stockItem.lastUpdatedOn));
     };
 
-    $scope.$watch('selectedCateringStation', $this.setExportURL);
+    $scope.canCreateStockTake = function() {
+      if(angular.isUndefined($scope.selectedCateringStation) || !$scope.selectedCateringStation.id) {
+        return false;
+      }
+      return $filter('filter')($scope.stockTakeList, {isSubmitted:false}, true).length === 0;
+    };
 
   });

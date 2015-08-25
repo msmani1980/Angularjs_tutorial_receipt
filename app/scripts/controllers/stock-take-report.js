@@ -12,6 +12,7 @@ angular.module('ts5App')
     var $this = this;
     $scope.stationsList = [];
     $scope.stockTakeList = [];
+    $scope.stationItems = [];
     $scope.dateRange = {
       startDate: '',
       endDate: ''
@@ -23,6 +24,7 @@ angular.module('ts5App')
       $scope.$watch('catererStationId', function(newData) {
         if(newData) {
           $this.getStockTakeList();
+          $this.getStockDashboardItems();
         }
       });
     };
@@ -64,6 +66,14 @@ angular.module('ts5App')
       $this.hideLoadingModal();
     };
 
+    this.getStockDashboardItems = function() {
+      stockTakeFactory.getStockDashboardItems($scope.catererStationId).then($this.getStockDashboardItemsSuccessHandler);
+    };
+
+    this.getStockDashboardItemsSuccessHandler = function (dataFromAPI) {
+      $scope.stationItems = dataFromAPI.response;
+    };
+
     this.formatStockTakeDates = function() {
       if(!Array.isArray($scope.stockTakeList)) { return; }
       $scope.stockTakeList.map(function(stockTake){
@@ -85,6 +95,7 @@ angular.module('ts5App')
         content: message
       });
     };
+
 
     $scope.removeRecord = function (stockTake) {
       var stockTakeIndex = $scope.stockTakeList.indexOf(stockTake);
@@ -116,15 +127,21 @@ angular.module('ts5App')
       if(!$scope.catererStationId) {
         return false;
       }
-      var canCreate = true;
-      for( var key in $scope.stockTakeList) {
-        var stockTake = $scope.stockTakeList[key];
-        if(!stockTake.isSubmitted){
-          canCreate = false;
-          break;
-        }
+      return $filter('filter')($scope.stockTakeList, {isSubmitted:false}, true).length === 0;
+    };
+
+    $scope.searchIsPossible = function() {
+      if(Array.isArray($scope.stockTakeList) && $scope.stockTakeList.length > 0 && $scope.catererStationId) {
+        return true;
       }
-      return canCreate;
+      return false;
+    };
+
+    $scope.importIsPossible = function() {
+      if(Array.isArray($scope.stationItems) && $scope.stationItems.length > 0 && $scope.catererStationId) {
+        return true;
+      }
+      return false;
     };
 
     this.init();

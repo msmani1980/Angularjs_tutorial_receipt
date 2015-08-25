@@ -20,7 +20,9 @@ describe('Directive: stockTakeReason', function() {
     scope.$digest();
     controller = element.controller('stockTakeReason');
     adjustStockDeferred = $q.defer();
-    adjustStockDeferred.resolve({response:200});
+    adjustStockDeferred.resolve({
+      response: 200
+    });
     spyOn(stockAdjustmentsService, 'adjustStock').and.returnValue(adjustStockDeferred.promise);
     mockStockItem = {
       id: 1,
@@ -32,37 +34,37 @@ describe('Directive: stockTakeReason', function() {
     scope.$digest();
   }));
 
-  describe('When the stock take modal directive is compiled, it',function() {
+  describe('When the stock take modal directive is compiled, it', function() {
 
-      it('should inject the directive', function() {
-        expect(element).toBeDefined();
-      });
-
-      it('should contain an element with a modal class', function() {
-        expect(element.find('.modal')).toBeDefined();
-      });
-
-      it('should contain an element with a fade class', function() {
-        expect(element.find('.fade')).toBeDefined();
-      });
-
-      it('should have a modal-content element', function() {
-        expect(element.find('.modal-content')).toBeDefined();
-      });
-
-      it('should have a modal-body element', function() {
-        expect(element.find('.modal-body')).toBeDefined();
-      });
-
-      it('should have a modal-footer element', function() {
-        expect(element.find('.modal-footer')).toBeDefined();
-      });
-
-      it('should have a leave button', function() {
-        expect(element.find('.btn-default')).toBeDefined();
-      });
-
+    it('should inject the directive', function() {
+      expect(element).toBeDefined();
     });
+
+    it('should contain an element with a modal class', function() {
+      expect(element.find('.modal')).toBeDefined();
+    });
+
+    it('should contain an element with a fade class', function() {
+      expect(element.find('.fade')).toBeDefined();
+    });
+
+    it('should have a modal-content element', function() {
+      expect(element.find('.modal-content')).toBeDefined();
+    });
+
+    it('should have a modal-body element', function() {
+      expect(element.find('.modal-body')).toBeDefined();
+    });
+
+    it('should have a modal-footer element', function() {
+      expect(element.find('.modal-footer')).toBeDefined();
+    });
+
+    it('should have a leave button', function() {
+      expect(element.find('.btn-default')).toBeDefined();
+    });
+
+  });
 
   describe('When the directives controller is accessed, it', function() {
 
@@ -83,11 +85,11 @@ describe('Directive: stockTakeReason', function() {
         expect(scope.currentCountQuantityQuantity).toEqual(mockStockItem.currentCountQuantityQuantity);
       });
 
-      it('should set scope.masterItemId equal to mockStockItem.masterItemId', function(){
+      it('should set scope.masterItemId equal to mockStockItem.masterItemId', function() {
         expect(scope.masterItemId).toEqual(mockStockItem.masterItemId);
       });
 
-      it('should set scope.catererStationId equal to mockStockItem.catererStationId', function(){
+      it('should set scope.catererStationId equal to mockStockItem.catererStationId', function() {
         expect(scope.catererStationId).toEqual(mockStockItem.catererStationId);
       });
 
@@ -99,7 +101,7 @@ describe('Directive: stockTakeReason', function() {
         expect(scope.stockTakeReasonClose).toBeDefined();
       });
 
-      it('should call clearScopeVars', function(){
+      it('should call clearScopeVars', function() {
         spyOn(scope, 'clearScopeVars').and.callThrough();
         scope.stockTakeReasonClose();
         expect(scope.clearScopeVars).toHaveBeenCalled();
@@ -107,34 +109,38 @@ describe('Directive: stockTakeReason', function() {
 
     });
 
-    describe('clearScopeVars scope function', function(){
+    describe('clearScopeVars scope function', function() {
 
-      beforeEach(function(){
+      beforeEach(function() {
         scope.clearScopeVars();
       });
 
-      it('should set scope.id to null', function(){
+      it('should set scope.id to null', function() {
         expect(scope.id).toBe(null);
       });
 
-      it('should set scope.comment to null', function(){
+      it('should set scope.comment to null', function() {
         expect(scope.comment).toBe(null);
       });
 
-      it('should set scope.currentCountQuantity to null', function(){
+      it('should set scope.currentCountQuantity to null', function() {
         expect(scope.currentCountQuantity).toBe(null);
       });
 
-      it('should set scope.newCount to null', function(){
+      it('should set scope.newCount to null', function() {
         expect(scope.newCount).toBe(null);
       });
 
-      it('should set scope.masterItemId to null', function(){
+      it('should set scope.masterItemId to null', function() {
         expect(scope.masterItemId).toBe(null);
       });
 
-      it('should set scope.catererStationId to null', function(){
+      it('should set scope.catererStationId to null', function() {
         expect(scope.catererStationId).toBe(null);
+      });
+
+      it('should set scope.stockAdjustmentReason to null', function() {
+        expect(scope.stockAdjustmentReason).toBe(null);
       });
 
     });
@@ -143,13 +149,18 @@ describe('Directive: stockTakeReason', function() {
 
       var mockComment = 'My test comment';
       var mockNewCount = '902';
-      var mockStockAdjustmentReason = {1:{companyReasonTypeId:32, companyReasonCodeName:'Test'}};
+      var mockStockAdjustmentReason = {
+        1: {
+          companyReasonTypeId: 32,
+          companyReasonCodeName: 'Test'
+        }
+      };
 
       it('should be defined', function() {
         expect(scope.stockTakeReasonSave).toBeDefined();
       });
 
-      beforeEach(function(){
+      beforeEach(function() {
         spyOn(scope, 'clearScopeVars').and.callThrough();
         scope.stockAdjustmentReason = mockStockAdjustmentReason;
         scope.comment = mockComment;
@@ -161,12 +172,12 @@ describe('Directive: stockTakeReason', function() {
         expect(scope.clearScopeVars).toHaveBeenCalled();
       });
 
-      it('should call stockAdjustmentsService.adjustStock API with mocked payload', function(){
+      it('should call stockAdjustmentsService.adjustStock API with mocked payload', function() {
         var mockPayload = {
           catererStationId: mockStockItem.catererStationId,
-          masterItemId : mockStockItem.masterItemId,
+          masterItemId: mockStockItem.masterItemId,
           quantity: parseInt(mockNewCount),
-          companyReasonCodeId: mockStockAdjustmentReason[1].companyReasonTypeId,
+          companyReasonCodeId: mockStockAdjustmentReason.id,
           note: mockComment
         };
         expect(stockAdjustmentsService.adjustStock).toHaveBeenCalledWith(mockPayload);
