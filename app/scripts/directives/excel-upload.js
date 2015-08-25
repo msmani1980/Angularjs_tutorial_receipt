@@ -37,7 +37,11 @@ angular.module('ts5App')
     };
 
     $scope.upload = function (files) {
-      $this.service.importFromExcel(GlobalMenuService.company.get(), files).then(successHandler, errorHandler);
+      if($scope.uploadParam) {
+        $this.service.importFromExcel(GlobalMenuService.company.get(), files, $scope.uploadParam).then(successHandler, errorHandler);
+      } else {
+        $this.service.importFromExcel(GlobalMenuService.company.get(), files).then(successHandler, errorHandler);
+      }
     };
 
     function successHandler(response) {
@@ -98,7 +102,8 @@ angular.module('ts5App')
   .directive('excelUpload', function () {
     return {
       scope: {
-        type: '@'
+        type: '@',
+        uploadParam: '@'
       },
       restrict: 'E',
       controller: 'ExcelUploadCtrl',
