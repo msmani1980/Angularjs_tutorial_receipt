@@ -92,7 +92,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     });
 
 
-    it('should fetch items with endDate from factory', function () {
+    it('should fetch items with startDate, endDate, and category from factory', function () {
       scope.search.startDate = '05/10/1979';
       scope.search.endDate = '05/10/1979';
       scope.search.selectedCategory = {name: 'testCategory'};
@@ -192,6 +192,18 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         isFixed: true,
         startDate: '20150720',
         endDate: '20160830'
+      };
+      scope.searchCommissions();
+      expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);
+    });
+
+    it('should format category payload', function () {
+      scope.search = {
+        selectedCategory: {id: 1},
+        itemList: [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}]
+      };
+      var expectedPayload = {
+        itemId: [1,2,3]
       };
       scope.searchCommissions();
       expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);

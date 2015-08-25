@@ -115,7 +115,6 @@ angular.module('ts5App')
       }
       $scope.displayError = true;
       showToastMessage('warning', 'Employee Commission', 'error deleting commission!');
-
     }
 
     function successDeleteHandler() {
