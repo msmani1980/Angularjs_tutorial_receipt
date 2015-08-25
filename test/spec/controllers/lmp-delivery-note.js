@@ -308,7 +308,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           scope.deliveryNote.catererStationId = csid;
           scope.$digest();
           expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
-          expect(scope.deliveryNote.items.length).toEqual(31);
+          expect(scope.deliveryNote.items.length).toEqual(getCatererStationMasterItemsResponseJSON.response.length);
         });
       });
       describe('removeItemByIndex scope function', function(){
@@ -327,6 +327,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         });
       });
       it('should switch the state to review when review button is clicked', function(){
+        scope.deliveryNote.items = [{deliveredQuantity:5}];
         scope.toggleReview();
         expect(scope.state).toBe('review');
       });
