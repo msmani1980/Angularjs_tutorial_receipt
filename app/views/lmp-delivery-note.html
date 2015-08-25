@@ -62,7 +62,7 @@
               <label for="lmp-station">LMP Station*</label>
               <select class="form-control"
                       ng-model="deliveryNote.catererStationId"
-                      ng-disabled="lmpStationDisabled()"
+                      ng-disabled="readOnly || catererStationList.length === 1"
                       ng-show="catererStationList.length"
                       id="lmp-station"
                       name="LMP Station"
