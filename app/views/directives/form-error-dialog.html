@@ -15,7 +15,7 @@
 
 		</li>
 
-		<li ng-repeat="error in form.$error.pattern">
+		<li ng-if="form.$error.required | unique: error.$name" ng-repeat="error in form.$error.pattern">
 
 			<strong>{{ error.$name }}</strong> is invalid, recheck your input.
 
