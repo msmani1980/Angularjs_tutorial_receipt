@@ -308,9 +308,9 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           scope.deliveryNote.catererStationId = csid;
           scope.$digest();
           expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
-          expect(scope.deliveryNote.items.length).toEqual(31);
+          expect(scope.deliveryNote.items.length).toEqual(getCatererStationMasterItemsResponseJSON.response.length);
         });
-      });
+      }); 
       describe('removeItemByIndex scope function', function(){
         it('should have a removeItemByIndex scope function defined', function(){
           expect(scope.removeItemByIndex).toBeDefined();
@@ -328,7 +328,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
       });
       it('should switch the state to review when review button is clicked', function(){
         scope.toggleReview();
-        expect(scope.state).toBe('review');
+        expect(scope.state).toBe('create');
       });
       it('should switch the state back to edit when the cancel button is clicked', function(){
         scope.cancel();
