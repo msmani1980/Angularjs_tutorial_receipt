@@ -55,8 +55,8 @@ angular.module('ts5App')
       return requestResource.deleteStockTake({id: id}).$promise;
     };
 
-    function importFromExcel(companyId, file) {
-      var uploadRequestURL = ENV.apiUrl + '/services/companies/' + companyId + '/file/stocktake';
+    function importFromExcel(companyId, file, cateringStationId) {
+      var uploadRequestURL = ENV.apiUrl + '/services/companies/' + companyId + '/file/stocktake?cateringStationId=' + cateringStationId;
       return Upload.upload({
         url: uploadRequestURL,
         file: file
