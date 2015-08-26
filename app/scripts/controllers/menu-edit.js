@@ -107,6 +107,7 @@ angular.module('ts5App')
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
       }
+      $scope.menuItemList = [];
       setupMenuModelAndFetchItems($scope.menuFromAPI);
     }
 
@@ -122,7 +123,7 @@ angular.module('ts5App')
         var itemObject = {};
         if(menuId && item.itemQty) {
             itemObject.menuId = menuId;
-            itemObject.itemQty = parseInt(item.itemQty)
+            itemObject.itemQty = parseInt(item.itemQty);
         }
         if (item.itemId && item.itemQty) {
           itemObject.id = item.id;
@@ -285,7 +286,7 @@ angular.module('ts5App')
 
     function initializeMenu() {
       if ($routeParams.id) {
-        showLoadingModal("Loading Data");
+        showLoadingModal('Loading Data');
         menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
       } else {
         var companyId = menuFactory.getCompanyId();
