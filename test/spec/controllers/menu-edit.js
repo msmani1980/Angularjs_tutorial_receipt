@@ -246,12 +246,11 @@ describe('Controller: MenuEditCtrl', function () {
         });
 
         it('should set newItems to be empty initially', function () {
-          expect(scope.menuItemList[1]).toEqual({});
+          expect(scope.menuItemList.length).toEqual(2);
         });
 
         it('should newItems in payload not to have id or itemId', function () {
-          expect(scope.menuItemList[1].id).not.toBeDefined();
-          expect(scope.menuItemList[1].itemId).not.toBeDefined();
+          expect(scope.menuItemList[1]).toEqual(null);
         });
       });
 

@@ -75,7 +75,6 @@ angular.module('ts5App')
       angular.forEach(menuItems, function(item) {
         item.itemQty = item.itemQty.toString();
         $scope.menuItemList.push(item);
-        $scope.selectedCategories.push({});
         $scope.filteredItemsCollection.push(angular.copy($scope.masterItemsList));
       });
     }
@@ -123,14 +122,15 @@ angular.module('ts5App')
         var itemObject = {};
         if(menuId && item.itemQty) {
             itemObject.menuId = menuId;
-            itemObject.itemQty = parseInt(item.itemQty);
         }
         if (item.itemId && item.itemQty) {
           itemObject.id = item.id;
           itemObject.itemId = item.itemId;
+          itemObject.itemQty = parseInt(item.itemQty);
           ItemsArray.push(itemObject);
         } else if(item.id && item.itemQty) {
           itemObject.itemId = item.id;
+          itemObject.itemQty = parseInt(item.itemQty);
           ItemsArray.push(itemObject);
         }
       });
@@ -243,8 +243,7 @@ angular.module('ts5App')
 
     $scope.addItem = function () {
       if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
-        $scope.menuItemList.push({});
-        $scope.selectedCategories.push({});
+        $scope.menuItemList.push(null);
         $scope.filteredItemsCollection.push(angular.copy($scope.masterItemsList));
       } else {
         showToast('warning', 'Add Menu Item', 'Please select a date range first!');

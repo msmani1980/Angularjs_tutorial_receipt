@@ -130,7 +130,6 @@
       <tr ng-repeat="blankItem in menuItemList track by $index">
         <td ng-show="isMenuEditable()">
           <ui-select
-            required="true"
             ng-model="selectedCategories[$index]"
             on-select="updateItemsList($index)"
             theme="bootstrap"
