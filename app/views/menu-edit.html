@@ -120,7 +120,7 @@
     <table class="table table-responsive table-bordered table-hover">
       <thead>
       <tr>
-        <th class="col-xs-4">Product Category</th>
+        <th class="col-xs-4" ng-show="isMenuEditable()">Product Category</th>
         <th class="col-xs-6">Item Name</th>
         <th class="col-xs-1">Quantity</th>
         <th ng-hide="isMenuReadOnly()" class="col-xs-1">Actions</th>
@@ -128,7 +128,7 @@
       </thead>
       <tbody>
       <tr ng-repeat="blankItem in menuItemList track by $index">
-        <td>
+        <td ng-show="isMenuEditable()">
           <ui-select
             required="true"
             ng-model="selectedCategories[$index]"
@@ -167,9 +167,10 @@
                  maxlength="5"
                  class="form-control"
                  ng-model="menuItemList[$index].itemQty"
-                 placeholder="{{$index}}"/>
+                 placeholder="{{$index}}"
+                 ng-disabled="!isMenuEditable()"/>
         </td>
-        <td>
+        <td ng-show="isMenuEditable()">
           <button class="btn btn-danger btn-xs" ng-click="deleteNewItem($index)">
             <i class="fa fa-trash"></i>
           </button>

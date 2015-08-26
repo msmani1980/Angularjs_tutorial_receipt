@@ -72,6 +72,7 @@ angular.module('ts5App')
 
     function deserializeMenuItems(menuItems) {
       angular.forEach(menuItems, function(item) {
+        item.itemQty = item.itemQty.toString();
         $scope.menuItemList.push(item);
         $scope.selectedCategories.push({});
         $scope.filteredItemsCollection.push(angular.copy($scope.masterItemsList));
@@ -112,11 +113,6 @@ angular.module('ts5App')
       showToast('warning', 'Menu', 'API unavailable');
     }
 
-    $scope.showDeleteConfirmation = function (itemToDelete) {
-      $scope.itemToDelete = itemToDelete;
-      angular.element('.delete-warning-modal').modal('show');
-    };
-
     $this.formatMenuItemsForAPI = function () {
       var ItemsArray = [];
       var menuId = $scope.menu.id;
@@ -127,7 +123,7 @@ angular.module('ts5App')
           itemObject = {
             id: item.id,
             itemId: item.itemId,
-            itemQty: item.itemQty
+            itemQty: parseInt(item.itemQty)
           }
         } else if(item.itemQty && item.id) {
           itemObject = {
@@ -174,7 +170,6 @@ angular.module('ts5App')
 
     $this.editMenu = function () {
       var payload = $this.createPayload();
-      console.log(payload);
       menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
     };
 
@@ -215,18 +210,6 @@ angular.module('ts5App')
         menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
       }
     }
-
-
-    $scope.deleteItemFromMenu = function () {
-      angular.element('.delete-warning-modal').modal('hide');
-
-      $scope.menu.menuItems = $scope.menu.menuItems.filter(function (item) {
-        return item.itemId !== $scope.itemToDelete.itemId;
-      });
-
-      //$scope.menuEditForm.$setDirty();
-      $scope.submitForm();
-    };
 
     $scope.isViewOnly = function () {
       return ($routeParams.state === 'view');
@@ -271,7 +254,7 @@ angular.module('ts5App')
     };
 
     $scope.updateItemsList = function(index) {
-      $scope.menuItemList[index].masterItem = null;
+      $scope.menuItemList[index] = null;
       $this.filterItems(index);
     };
 
@@ -286,11 +269,15 @@ angular.module('ts5App')
     };
 
     $scope.shouldDisableItem = function(index) {
+      if(!$scope.isMenuEditable()) {
+        return true;
+      }
       return $scope.filteredItemsCollection[index] === null;
     };
 
     $scope.deleteNewItem = function (itemIndex) {
       $scope.menuItemList.splice(itemIndex, 1);
+      $scope.menuEditForm.$setDirty();
     };
 
     $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
