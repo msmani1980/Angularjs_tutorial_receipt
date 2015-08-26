@@ -38,8 +38,8 @@ angular.module('ts5App')
       return stockTakeService.getStockTakeList(query);
     }
 
-    function importFromExcel(companyId, file) {
-      return stockTakeService.importFromExcel(companyId, file);
+    function importFromExcel(companyId, file, catererStationId) {
+      return stockTakeService.importFromExcel(companyId, file, catererStationId);
     }
 
     function getStockDashboardItems(catererStationId) {
