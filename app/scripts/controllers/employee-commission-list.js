@@ -15,10 +15,12 @@ angular.module('ts5App')
       endDate: '',
       itemList: [],
       priceTypeList: [],
-      taxRateTypesList: []
+      taxRateTypesList: [],
+      selectedCategory: {}
     };
+    $scope.itemListSearchQuery = {};
 
-    $scope.$watchGroup(['search.startDate', 'search.endDate'], function () {
+    $scope.$watchGroup(['search.startDate', 'search.endDate', 'search.selectedCategory'], function () {
       var payload = {};
 
       if (angular.isDefined($scope.search.startDate) && dateUtility.isDateValidForApp($scope.search.startDate)) {
@@ -27,6 +29,10 @@ angular.module('ts5App')
 
       if (angular.isDefined($scope.search.endDate) && dateUtility.isDateValidForApp($scope.search.endDate)) {
         payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
+      }
+
+      if (angular.isDefined($scope.search.selectedCategory)) {
+        payload.categoryName = $scope.search.selectedCategory.name;
       }
 
       if (payload.startDate && payload.endDate) {
@@ -109,7 +115,6 @@ angular.module('ts5App')
       }
       $scope.displayError = true;
       showToastMessage('warning', 'Employee Commission', 'error deleting commission!');
-
     }
 
     function successDeleteHandler() {
@@ -163,27 +168,52 @@ angular.module('ts5App')
       }
     }
 
-    function createSearchPayload() {
-      var payload = {};
+    function addDatesToPayload(payload) {
       if($scope.search.startDate && $scope.search.endDate) {
         payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
         payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
       }
+    }
+
+    function addItemOrCategoryToPayload(payload) {
       if($scope.search.selectedItem) {
         payload.itemId = $scope.search.selectedItem.itemMasterId;
+      } else if(!$scope.search.selectedItem && $scope.search.selectedCategory) {
+        // currently FE needs to send list of all itemIds in a category due to complications with sending only a categoryName to BE
+        // TODO: fix if BE API is simplified
+        payload.itemId = [];
+        angular.forEach($scope.search.itemList, function (item) {
+          payload.itemId.push(item.itemMasterId);
+        });
       }
+    }
+
+    function addPriceAndRateTypeToPayload(payload) {
       if($scope.search.selectedPriceType) {
         payload.priceTypeId = $scope.search.selectedPriceType.id;
       }
       if($scope.search.selectedRateType) {
         payload.isFixed = ($scope.search.selectedRateType.taxRateType === 'Amount');
       }
+    }
+
+    function createSearchPayload() {
+      var payload = {};
+      addDatesToPayload(payload);
+      addItemOrCategoryToPayload(payload);
+      addPriceAndRateTypeToPayload(payload);
       return payload;
     }
 
     function getCommissions (payload) {
       showLoadingModal('Loading Employee Commission List');
       employeeCommissionFactory.getCommissionList(payload).then(getCommissionSuccessHandler);
+    }
+
+    function getItemCategories() {
+      employeeCommissionFactory.getItemsCategoriesList({}).then(function (response) {
+        $scope.itemCategories = response.salesCategories;
+      });
     }
 
     $scope.searchCommissions = function () {
@@ -196,6 +226,7 @@ angular.module('ts5App')
       delete $scope.search.selectedRateType;
       delete $scope.search.selectedItem;
       delete $scope.search.itemList;
+      delete $scope.search.selectedCategory;
       $scope.search.startDate = '';
       $scope.search.endDate = '';
       employeeCommissionFactory.getCommissionList({}).then(getCommissionSuccessHandler);
@@ -209,6 +240,11 @@ angular.module('ts5App')
       $scope.search.taxRateTypesList = dataFromAPI;
     });
 
-    getCommissions({});
+    function init () {
+      getCommissions({});
+      getItemCategories();
+    }
+
+    init();
 
   });
