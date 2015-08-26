@@ -68,6 +68,7 @@ angular.module('ts5App')
       $scope.menu = angular.copy(menuFromAPI);
       deserializeMenuItems($scope.menu.menuItems);
       $scope.menuEditForm.$setPristine();
+      hideLoadingModal();
     }
 
     function deserializeMenuItems(menuItems) {
@@ -118,23 +119,19 @@ angular.module('ts5App')
       var menuId = $scope.menu.id;
 
       angular.forEach($scope.menuItemList, function (item) {
-        var itemObject;
-        if (item.itemId) {
-          itemObject = {
-            id: item.id,
-            itemId: item.itemId,
-            itemQty: parseInt(item.itemQty)
-          }
-        } else if(item.itemQty && item.id) {
-          itemObject = {
-            itemId: item.id,
-            itemQty: parseInt(item.itemQty)
-          };
+        var itemObject = {};
+        if(menuId && item.itemQty) {
+            itemObject.menuId = menuId;
+            itemObject.itemQty = parseInt(item.itemQty)
         }
-        if (menuId) {
-          itemObject.menuId = menuId;
+        if (item.itemId && item.itemQty) {
+          itemObject.id = item.id;
+          itemObject.itemId = item.itemId;
+          ItemsArray.push(itemObject);
+        } else if(item.id && item.itemQty) {
+          itemObject.itemId = item.id;
+          ItemsArray.push(itemObject);
         }
-        ItemsArray.push(itemObject);
       });
       return ItemsArray;
     };
@@ -288,6 +285,7 @@ angular.module('ts5App')
 
     function initializeMenu() {
       if ($routeParams.id) {
+        showLoadingModal("Loading Data");
         menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
       } else {
         var companyId = menuFactory.getCompanyId();
