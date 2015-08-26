@@ -272,7 +272,6 @@ describe('Controller: MenuEditCtrl', function () {
         it('should not add items that have not been set', function () {
           scope.menuItemList[2] = {itemQty: 2};
           var currentLength = scope.menuItemList.length;
-          console.log(MenuEditCtrl.createPayload());
           expect(MenuEditCtrl.createPayload().menuItems.length).toEqual(currentLength - 1);
         });
 
