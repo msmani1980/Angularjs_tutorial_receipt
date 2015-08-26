@@ -10,7 +10,7 @@ angular.module('ts5App')
   .controller('MenuEditCtrl', function ($scope, $routeParams, ngToast, menuFactory, dateUtility, $location) {
     $scope.viewName = 'Menu';
     $scope.masterItemsList = [];
-    $scope.newItemList = [];
+    $scope.menuItemList = [];
     $scope.selectedCategories = [];
     $scope.filteredItemsCollection = [];
     var $this = this;
@@ -66,7 +66,16 @@ angular.module('ts5App')
 
       fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
       $scope.menu = angular.copy(menuFromAPI);
+      deserializeMenuItems($scope.menu.menuItems);
       $scope.menuEditForm.$setPristine();
+    }
+
+    function deserializeMenuItems(menuItems) {
+      angular.forEach(menuItems, function(item) {
+        $scope.menuItemList.push(item);
+        $scope.selectedCategories.push({});
+        $scope.filteredItemsCollection.push(angular.copy($scope.masterItemsList));
+      });
     }
 
     function showToast(className, type, message) {
@@ -84,7 +93,7 @@ angular.module('ts5App')
     }
 
     function resetModelAndShowNotification(dataFromAPI) {
-      $scope.newItemList = [];
+      $scope.menuItemList = [];
       setupMenuModelAndFetchItems(dataFromAPI);
       showToast('success', 'Menu', 'successfully updated!');
     }
@@ -108,39 +117,30 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('show');
     };
 
-    $this.addNewItems = function () {
+    $this.formatMenuItemsForAPI = function () {
       var ItemsArray = [];
       var menuId = $scope.menu.id;
-      angular.forEach($scope.newItemList, function (item) {
-        if (angular.isDefined(item.masterItem) && angular.isDefined(item.itemQty)) {
-          var itemObject = {
-            itemId: item.masterItem.id,
+
+      angular.forEach($scope.menuItemList, function (item) {
+        var itemObject;
+        if (item.itemId) {
+          itemObject = {
+            id: item.id,
+            itemId: item.itemId,
+            itemQty: item.itemQty
+          }
+        } else if(item.itemQty && item.id) {
+          itemObject = {
+            itemId: item.id,
             itemQty: parseInt(item.itemQty)
           };
-          if (menuId) {
-            itemObject.menuId = menuId;
-          }
-          ItemsArray.push(itemObject);
         }
+        if (menuId) {
+          itemObject.menuId = menuId;
+        }
+        ItemsArray.push(itemObject);
       });
       return ItemsArray;
-    };
-
-    $this.clearCurrentItems = function () {
-      var itemsArray = [];
-      angular.forEach($scope.menu.menuItems, function (item) {
-        var itemObject = {
-          id: item.id,
-          itemId: item.itemId,
-          itemQty: item.itemQty,
-          sortOrder: item.sortOrder
-        };
-        if (item.menuId) {
-          itemObject.menuId = item.menuId;
-        }
-        itemsArray.push(itemObject);
-      });
-      return itemsArray;
     };
 
     $this.createPayload = function () {
@@ -150,7 +150,7 @@ angular.module('ts5App')
         endDate: $scope.menu.endDate,
         menuCode: $scope.menu.menuCode,
         menuId: $scope.menu.menuId ? $scope.menu.menuId : null,
-        menuItems: $this.clearCurrentItems().concat($this.addNewItems()),
+        menuItems: $this.formatMenuItemsForAPI(),
         menuName: $scope.menu.menuName,
         startDate: $scope.menu.startDate
       };
@@ -174,6 +174,7 @@ angular.module('ts5App')
 
     $this.editMenu = function () {
       var payload = $this.createPayload();
+      console.log(payload);
       menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
     };
 
@@ -261,7 +262,7 @@ angular.module('ts5App')
 
     $scope.addItem = function () {
       if ($scope.menu && $scope.menu.startDate && $scope.menu.endDate) {
-        $scope.newItemList.push({});
+        $scope.menuItemList.push({});
         $scope.selectedCategories.push({});
         $scope.filteredItemsCollection.push(angular.copy($scope.masterItemsList));
       } else {
@@ -270,7 +271,7 @@ angular.module('ts5App')
     };
 
     $scope.updateItemsList = function(index) {
-      $scope.newItemList[index].masterItem = null;
+      $scope.menuItemList[index].masterItem = null;
       $this.filterItems(index);
     };
 
@@ -289,7 +290,7 @@ angular.module('ts5App')
     };
 
     $scope.deleteNewItem = function (itemIndex) {
-      $scope.newItemList.splice(itemIndex, 1);
+      $scope.menuItemList.splice(itemIndex, 1);
     };
 
     $scope.$watchGroup(['menu.startDate', 'menu.endDate'], function () {
