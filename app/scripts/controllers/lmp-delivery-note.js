@@ -237,7 +237,10 @@ angular.module('ts5App')
       createPayload(_isAccepted);
     }
 
-    $scope.removeItemByIndex = function(index){
+    $scope.removeItemByIndex = function(index, item){
+      if(!$scope.canRemoveItem(item)){
+        return;
+      }
       $scope.canReview = canReview();
       $scope.deliveryNote.items.splice(index, true);
     };
@@ -477,10 +480,7 @@ angular.module('ts5App')
       $scope.removeNewItemRow($index, newItem);
     };
 
-    $scope.removeNewItemRow = function($index, item){
-      if(!item.canEdit){
-        return;
-      }
+    $scope.removeNewItemRow = function($index){
       $scope.newItems.splice($index, true);
     };
 
