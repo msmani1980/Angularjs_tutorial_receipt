@@ -170,6 +170,8 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         it('should have a save scope function', function(){
           expect(scope.save).toBeDefined();
           expect(Object.prototype.toString.call(scope.save)).toBe('[object Function]');
+          scope.deliveryNote = {isAccepted:true};
+          expect(scope.save()).toBeUndefined();
         });
       });
     });
@@ -362,6 +364,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           scope.addItems();
           expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
         });
+        it('should return undefined because the API was already called', function(){
+          scope.addItems();
+          expect(scope.addItems()).toBeUndefined();
+        });
       });
       describe('addItem scope function', function(){
         it('should be defined as a scope', function(){
@@ -377,6 +383,190 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           scope.$digest();
           scope.addItem(selectedMasterItem, $index);
           expect(scope.deliveryNote.items[$index].itemCode).toBe('Item code 43242');
+        });
+        it('should return undefined if no select master item is passed', function(){
+          expect(scope.addItem(0)).toBeUndefined();
+        });
+        it('should return undefined if in the currecnt delivery note items array', function(){
+          scope.deliveryNote = {
+            items: [{masterItemId:123}]
+          };
+          expect(scope.addItem({id:123})).toBeUndefined();
+        });
+      });
+      describe('canRemoveItem scope function', function(){
+        it('should return false if item.canEdit is false', function(){
+          expect(scope.canRemoveItem({canEdit:false})).toBe(false);
+        });
+        it('should return false if readOnly', function(){
+          scope.readOnly = true;
+          expect(scope.canRemoveItem({canEdit:true})).toBe(false);
+        });
+      });
+      describe('formErrorClass scope function', function(){
+        beforeEach(function(){
+          scope.form = [];
+          scope.form['Mock Field'] = {$dirty:true, $valid:false};
+          scope.form['Mock Field 2'] = {$dirty:false, $valid:false};
+          scope.form['Mock Field 3'] = {$dirty:true, $valid:true};
+          scope.displayError = true;
+          scope.$digest();
+        });
+        it('should return empty string if the form does not contain that field', function(){
+          expect(scope.formErrorClass('foobars', true)).toBe('');
+        });
+        it('should return has-error field is dirty and not valid', function(){
+          expect(scope.formErrorClass('Mock Field', true)).toBe('has-error');
+        });
+        it('should return has-error field is not dirty and not valid but show form errors', function(){
+          expect(scope.formErrorClass('Mock Field 2', true)).toBe('has-error');
+        });
+        it('should return empty string field is dirty and valid', function(){
+          expect(scope.formErrorClass('Mock Field 3', true)).toBe('');
+        });
+      });
+      describe('calculateBooked scope function', function(){
+        it('should return 7', function(){
+          expect(scope.calculateBooked({deliveredQuantity:10,ullageQuantity:3})).toBe(7);
+        });
+      });
+      describe('removeNewItemRow scope functions', function(){
+        it('should return undefined if item.canEdit is false', function(){
+          expect(scope.removeNewItemRow({canEdit:false},0)).toBeUndefined();
+        });
+        it('should remove 1 item from netItems array', function(){
+          var ar = [1,2,3,4];
+          scope.newItems = ar;
+          scope.removeNewItemRow(0,{canEdit:true});
+          expect(scope.newItems.length).toBe(3);
+        });
+      });
+      describe('ullageQuantityChanged scope function', function(){
+        it('should return undefined if there is a ullageQuantity set', function(){
+          expect(scope.ullageQuantityChanged({ullageQuantity:2})).toBeUndefined();
+        });
+        it('should set ullageReason to null if no ullageQuantity', function(){
+          var item = {ullageQuantity:null, ullageReason:3};
+          scope.ullageQuantityChanged(item);
+          expect(item.ullageReason).toBeNull();
+        });
+      });
+      describe('showSaveButton scope function', function(){
+        it('should return true if state is review', function(){
+          scope.state = 'review';
+          expect(scope.showSaveButton()).toBe(true);
+        });
+        it('should return false if state is not review', function(){
+          scope.state = 'create';
+          expect(scope.showSaveButton()).toBe(false);
+        });
+      });
+      describe('hideCreatedByMeta scope function', function(){
+        it('should return true if state is review', function(){
+          scope.state = 'review';
+          expect(scope.hideCreatedByMeta()).toBe(true);
+        });
+        it('should return true if state is create', function(){
+          scope.state = 'create';
+          expect(scope.hideCreatedByMeta()).toBe(true);
+        });
+        it('should return false if state is not review or create', function(){
+          scope.state = 'edit';
+          expect(scope.hideCreatedByMeta()).toBe(false);
+        });
+      });
+      describe('canEditItem scope function', function(){
+        it('should return true if canEdit and state is not review', function(){
+          scope.state = 'create';
+          expect(scope.canEditItem({canEdit:true})).toBe(true);
+        });
+        it('should return false if canEdit is false', function(){
+          scope.state = 'create';
+          expect(scope.canEditItem({canEdit:false})).toBe(false);
+        });
+        it('should return false if state is review', function(){
+          scope.state = 'review';
+          expect(scope.canEditItem({canEdit:true})).toBe(false);
+        });
+      });
+      describe('showFilterByForm scope function', function() {
+        it('should return false if state is review', function () {
+          scope.state = 'review';
+          expect(scope.showFilterByForm()).toBe(false);
+        });
+        it('should return false if deliveryNote is undefined', function(){
+          scope.state = 'create';
+          scope.deliveryNote = undefined;
+          expect(scope.showFilterByForm()).toBe(false);
+        });
+        it('should return false if no deliveryNote items', function(){
+          scope.state = 'create';
+          scope.deliveryNote = {};
+          expect(scope.showFilterByForm()).toBe(false);
+        });
+        it('should return false if no deliveryNote items array items', function(){
+          scope.state = 'create';
+          scope.deliveryNote = {items:[]};
+          expect(scope.showFilterByForm()).toBe(false);
+        });
+        it('should return true if deliveryNote has items', function(){
+          scope.state = 'create';
+          scope.deliveryNote = {items:[{id:1}]};
+          expect(scope.showFilterByForm()).toBe(true);
+        });
+      });
+      describe('ullageReasonDisabled scope function', function(){
+        it('should return true is readOnly', function(){
+          scope.readOnly = true;
+          expect(scope.ullageReasonDisabled({})).toBe(true);
+        });
+        it('should return true if no ullageQuantity', function(){
+          scope.readOnly = false;
+          expect(scope.ullageReasonDisabled({})).toBe(true);
+        });
+        it('should return false if not readyonly and ullageQuantity set', function(){
+          scope.readOnly = false;
+          expect(scope.ullageReasonDisabled({ullageQuantity:5})).toBe(false);
+        });
+      });
+      describe('cancel scope function if has prevState', function(){
+        it('should return', function(){
+          scope.prevState = 'edit';
+          expect(scope.cancel()).toBeUndefined();
+        });
+      });
+      describe('canReview scope function extras', function(){
+        it('should return if !canReview and prevState', function(){
+          scope.state = 'review';
+          expect(scope.toggleReview()).toBeUndefined();
+        })
+        it('should return if form is not valid', function(){
+          scope.state = 'edit';
+          scope.displayError = false;
+          scope.form = {$valid:false};
+          scope.deliveryNote = {items:[{deliveredQuantity:1}]};
+          expect(scope.toggleReview()).toBeUndefined();
+        });
+        it('should return if deliveryNote is undefined', function(){
+          scope.state = 'edit';
+          scope.displayError = false;
+          scope.form = {$valid:true};
+          scope.deliveryNote = undefined;
+          expect(scope.toggleReview()).toBeUndefined();
+        });
+        it('should return if deliveryNote is already accepted', function(){
+          scope.state = 'edit';
+          scope.displayError = false;
+          scope.form = {$valid:true};
+          scope.deliveryNote = {isAccepted:true};
+          expect(scope.toggleReview()).toBeUndefined();
+        });
+        it('should return if deliveryNote has not items', function(){
+          scope.state = 'edit';
+          scope.displayError = false;
+          scope.form = {$valid:true};
+          scope.deliveryNote = {};
+          expect(scope.toggleReview()).toBeUndefined();
         });
       });
     });
