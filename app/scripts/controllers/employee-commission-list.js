@@ -232,6 +232,14 @@ angular.module('ts5App')
       employeeCommissionFactory.getCommissionList({}).then(getCommissionSuccessHandler);
     };
 
+    $scope.checkItemListAndNotifyIfEmpty = function () {
+      if($scope.search.endDate === '' || $scope.search.startDate === '') {
+        showToastMessage('warning', 'Employee Commission', 'Effective To & Effective From Dates must be completed before an Item Name can be selected');
+      } else if($scope.search.selectedCategory && $scope.search.itemList.length <= 0) {
+        showToastMessage('warning', 'Employee Commission', 'There are no items in the Item Category you selected');
+      }
+    };
+
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
       $scope.search.priceTypeList = dataFromAPI;
     });
