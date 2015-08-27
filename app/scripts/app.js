@@ -175,6 +175,9 @@ angular.module('ts5App', [
   }).when('/commission-data-table', {
     templateUrl: 'views/commission-data-table.html',
     controller: 'CommissionDataTableCtrl'
+  }).when('/commission-data/:state/:id?', {
+    templateUrl: 'views/commission-data-edit.html',
+    controller: 'CommissionDataCtrl'
   }).when('/store-instance-step-1', {
     templateUrl: 'views/store-instance-step-1.html',
     controller: 'StoreInstanceStep1Ctrl'

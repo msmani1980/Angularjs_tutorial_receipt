@@ -1,13 +1,11 @@
 'use strict';
 
 describe('Controller: CommissionDataTableCtrl', function () {
-  // load the controller's module
   beforeEach(module('ts5App', 'template-module'));
   var CommissionDataTableCtrl,
     location,
     scope;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope, $location) {
     location = $location;
     scope = $rootScope.$new();
@@ -30,9 +28,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
   describe('scope functions', function () {
     describe('canDelete', function () {
-      it('should return true for x business rules', function () {
-
-      });
+      // test business rules here
     });
 
     describe('searchCommissionData', function () {
@@ -55,7 +51,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
         expect(scope.search).toEqual({});
       });
       it('should call getCommissionData with empty search query', function () {
-        //expect(commissionFactory.getCommissionDataList).toHaveBeenCalledWith(scope.search);
+        //expect(commissionFactory.getCommissionDataList).toHaveBeenCalledWith({});
       });
     });
 
