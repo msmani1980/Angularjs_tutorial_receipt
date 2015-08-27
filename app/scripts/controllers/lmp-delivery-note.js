@@ -242,7 +242,7 @@ angular.module('ts5App')
     };
 
     $scope.cancel = function(){
-      if($scope.prevState) { // there is a test for this, not showing up though
+      if($scope.prevState) {
         $scope.toggleReview();
         return;
       }

@@ -365,6 +365,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
           expect(deliveryNoteFactory.getAllMasterItems).toHaveBeenCalled();
         });
         it('should return undefined because the API was already called', function(){
+          scope.addItems();
           expect(scope.addItems()).toBeUndefined();
         });
       });
@@ -526,6 +527,46 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         it('should return false if not readyonly and ullageQuantity set', function(){
           scope.readOnly = false;
           expect(scope.ullageReasonDisabled({ullageQuantity:5})).toBe(false);
+        });
+      });
+      describe('cancel scope function if has prevState', function(){
+        it('should return', function(){
+          scope.prevState = 'edit';
+          expect(scope.cancel()).toBeUndefined();
+        });
+      });
+      describe('canReview scope function extras', function(){
+        it('should return if !canReview and prevState', function(){
+          scope.state = 'review';
+          expect(scope.toggleReview()).toBeUndefined();
+        })
+        it('should return if form is not valid', function(){
+          scope.state = 'edit';
+          scope.displayError = false;
+          scope.form = {$valid:false};
+          scope.deliveryNote = {items:[{deliveredQuantity:1}]};
+          expect(scope.toggleReview()).toBeUndefined();
+        });
+        it('should return if deliveryNote is undefined', function(){
+          scope.state = 'edit';
+          scope.displayError = false;
+          scope.form = {$valid:true};
+          scope.deliveryNote = undefined;
+          expect(scope.toggleReview()).toBeUndefined();
+        });
+        it('should return if deliveryNote is already accepted', function(){
+          scope.state = 'edit';
+          scope.displayError = false;
+          scope.form = {$valid:true};
+          scope.deliveryNote = {isAccepted:true};
+          expect(scope.toggleReview()).toBeUndefined();
+        });
+        it('should return if deliveryNote has not items', function(){
+          scope.state = 'edit';
+          scope.displayError = false;
+          scope.form = {$valid:true};
+          scope.deliveryNote = {};
+          expect(scope.toggleReview()).toBeUndefined();
         });
       });
     });
