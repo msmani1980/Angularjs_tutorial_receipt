@@ -108,7 +108,6 @@ angular.module('ts5App')
       if(angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])){
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
-      $scope.deliveryNote.items = [];
       if(!response.response){
         showMessage('No items exist in this LMP Station, you must add them manually with the "+Add Items" button below.', 'warning');
         return;
@@ -128,7 +127,9 @@ angular.module('ts5App')
           itemCode: item.itemCode
         };
       });
-      $scope.deliveryNote.items = $filter('orderBy')(newMasterItems, 'itemName');
+      newMasterItems = $filter('orderBy')(newMasterItems, 'itemName');
+      removeNullDeliveredItems();
+      $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
     }
 
     function setUllageReasonsFromResponse(response){
