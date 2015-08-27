@@ -431,13 +431,10 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         });
       });
       describe('removeNewItemRow scope functions', function(){
-        it('should return undefined if item.canEdit is false', function(){
-          expect(scope.removeNewItemRow({canEdit:false},0)).toBeUndefined();
-        });
         it('should remove 1 item from netItems array', function(){
           var ar = [1,2,3,4];
           scope.newItems = ar;
-          scope.removeNewItemRow(0,{canEdit:true});
+          scope.removeNewItemRow(0);
           expect(scope.newItems.length).toBe(3);
         });
       });
