@@ -539,7 +539,7 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         it('should return if !canReview and prevState', function(){
           scope.state = 'review';
           expect(scope.toggleReview()).toBeUndefined();
-        })
+        });
         it('should return if form is not valid', function(){
           scope.state = 'edit';
           scope.displayError = false;
