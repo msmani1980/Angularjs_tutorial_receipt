@@ -127,7 +127,9 @@ angular.module('ts5App')
       if(!$scope.catererStationId) {
         return false;
       }
-      return $filter('filter')($scope.stockTakeList, {isSubmitted:false}, true).length === 0;
+      if(Array.isArray($scope.stockTakeList)) {
+        return $filter('filter')($scope.stockTakeList, {isSubmitted:false}, true).length === 0;
+      }
     };
 
     $scope.searchIsPossible = function() {

@@ -1,0 +1,37 @@
+
+<div class="container">
+
+  <p class="alert alert-info">Setup Wizard Directive Goes Here</p>
+
+  <form name="createStoreInstance">
+
+    <div class="form-group">
+      <label>LMP Station *</label>
+      <select class="form-control">
+        <option>ORD - Chicago</option>
+      </select>
+    </div>
+
+    <date-picker-field form="createStoreInstance" name="storeInstanceDate" label="Instance Date"
+      min-date="'+1d'" required="true" ng-model="storeInstanceDate"></date-picker-field>
+
+    <div class="form-group">
+      <label>Schedule Number *</label>
+      <input class="form-control" type="text" placeholder="Schedule12456" custom-validity custom-pattern="alphanumeric" />
+    </div>
+
+    <div class="form-group">
+      <label>Store Number *</label>
+      <input class="form-control" type="text" placeholder="Store12456" custom-validity custom-pattern="alphanumeric" />
+    </div>
+
+    <div class="form-group">
+      <label>Aircraft Tail Number *</label>
+      <select class="form-control">
+        <option>COL964</option>
+      </select>
+    </div>
+
+  </form>
+
+</div>
