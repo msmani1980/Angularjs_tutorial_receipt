@@ -305,7 +305,7 @@ describe('Controller: StockDashboardCtrl', function() {
     it('should return false by default', function(){
       expect(scope.canCreateStockTake()).toBeFalsy();
     });
- 
+
     it('should return false even if the catering station is selected but there is an open stock take', function(){
       scope.selectedCateringStation = cateringStationsJSON.response[0];
       scope.$digest();
@@ -316,6 +316,14 @@ describe('Controller: StockDashboardCtrl', function() {
       scope.selectedCateringStation = cateringStationsJSON.response[0];
       scope.$digest();
       scope.stockTakeList[0].isSubmitted = true;
+      scope.$digest();
+      expect(scope.canCreateStockTake()).toBeTruthy();
+    });
+
+    it('should return true if no stock takes were returned', function(){
+      scope.selectedCateringStation = cateringStationsJSON.response[0];
+      scope.$digest();
+      scope.stockTakeList = [];
       scope.$digest();
       expect(scope.canCreateStockTake()).toBeTruthy();
     });

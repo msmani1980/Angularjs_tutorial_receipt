@@ -97,7 +97,7 @@
               <label for="cashBag-bankRef">Bank Ref #</label>
               <select class="form-control" ng-model="search.bankReferenceNumber" id="cashBag-bankRef">
                 <option value=""></option>
-                <option value="{{ bankRef }}" ng-repeat="bankRef in bankRefList">{{ bankRef }}</option>
+                <option value="{{ bankRef }}" ng-repeat="bankRef in bankRefList | orderBy:bankRef">{{ bankRef }}</option>
               </select>
             </div>
           </div>
