@@ -14,10 +14,10 @@ describe('Controller: StoreInstanceStep1Ctrl', function () {
     StoreInstanceStep1Ctrl = $controller('StoreInstanceStep1Ctrl', {
       $scope: scope
       // place here mocked dependencies
-    });
+    }); 
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
     expect(StoreInstanceStep1Ctrl.awesomeThings.length).toBe(3);
-  }); 
+  });
 });
