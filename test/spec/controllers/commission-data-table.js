@@ -28,7 +28,12 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
   describe('scope functions', function () {
     describe('canDelete', function () {
-      // test business rules here
+      it('should return true if start date is in the future', function () {
+        expect(scope.canDelete({startDate: '08/20/2050'})).toEqual(true);
+      });
+      it('should return false if start date is not in the future', function () {
+        expect(scope.canDelete({startDate: '08/20/1990', endDate: '08/20/2050'})).toEqual(false);
+      });
     });
 
     describe('searchCommissionData', function () {

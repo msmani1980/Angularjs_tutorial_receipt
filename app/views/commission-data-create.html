@@ -1,0 +1,221 @@
+<div class="module-container">
+  <div class="row">
+    <div class="col-xs-6">
+      <h2 class="view-name">{{viewName}}</h2>
+    </div>
+
+    <div class="col-xs-6 text-right">
+      <a class="btn btn-default" ng-href="#/post-trip-data-list" class="btn" ng-show="readOnly">Back</a>
+    </div>
+  </div>
+
+  <br>
+
+  <form name="commissionDataForm" class="edit-form">
+
+    <form-error-dialog></form-error-dialog>
+    <!--/TopHeader -->
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <!-- form header-->
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label>Crew Base *</label>
+              <select class="form-control"
+                      id="crewBase"
+                      ng-model="commissionData.crewBase"
+                      ng-options="crewBase.crewName as crewBase.crewName for crewBase in crewBaseList"
+                      ng-disabled="readOnly"
+                      required="true">
+                <option selected="selected" value>Select a Schedule Number</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-8">
+            <div class="form-group">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="commissionData.startDate"
+                end-date-model="commissionData.endDate"
+                label-from="Effective From"
+                label-to="Effective To"
+                is-search-field="true">
+              </date-picker>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+
+        <h3>Commission Data</h3>
+
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Commission Payable On *</label>
+              <select class="form-control"
+                      required="true"
+                      ng-model="commissionData.commissionPayable"
+                      ng-change="updateCommissionPercent()">
+                <option selected="selected" value>Select a Departure Station</option>
+                <option>Retail Item</option>
+                <option>ePOS Sales</option>
+                <option>Cash Banked</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6">
+            <label>Commission Percent</label>
+            <input custom-validity
+                   ng-model="commissionData.commissionPercent"
+                   type="text"
+                   class="form-control"
+                   placeholder="57.5"
+                   maxlength="5"
+                   ng-disabled="commissionPercentDisabled">
+          </div>
+        </div>
+
+        <h3>Manual Bars</h3>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Manual Bars Commission Type</label>
+              <select class="form-control"
+                      required="true"
+                      ng-model="commissionData.manualBarsType"
+                      ng-change="updateManualBars()">
+                <option selected="selected" value>Select a Departure Station</option>
+                <option>Percentage</option>
+                <option>Amount</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-10 col-sm-5">
+            <div class="form-group">
+              <label>Manual Bars Commisssion Value</label>
+              <!-- TODO: fix ng-maxlength -->
+              <input custom-validity
+                     ng-model="commissionData.manualBarsValue"
+                     type="text"
+                     class="form-control"
+                     placeholder="57.5"
+                     ng-readonly="readOnly"
+                     ng-maxlength="manualBarsCharLimit">
+            </div>
+          </div>
+          <div class="col-xs-2 col-sm-1">
+            <div class="form-group">
+              <label>Unit</label>
+              <input ng-model="manualBarsUnit"
+                     type="text"
+                     class="form-control"
+                     disabled>
+            </div>
+          </div>
+        </div>
+
+        <h3>Discrepancy Deductions</h3>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Cash Percent</label>
+              <input custom-validity
+                     ng-model="commissionData.cashPercent"
+                     type="text"
+                     class="form-control"
+                     placeholder="57.5"
+                     maxlength="6"
+                     ng-readonly="readOnly">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Stock Percent</label>
+              <input custom-validity
+                     ng-model="commissionData.stockPercent"
+                     type="text"
+                     class="form-control"
+                     placeholder="57.5"
+                     maxlength="6"
+                     ng-readonly="readOnly">
+            </div>
+          </div>
+        </div>
+
+        <h3>Incentive Increment</h3>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Commission Type</label>
+              <select class="form-control"
+                      required="true"
+                      ng-model="commissionData.commissionType"
+                      ng-change="updateIncentiveIncrement()">
+                <option selected="selected" value>Select a Departure Station</option>
+                <option>Percentage</option>
+                <option>Amount</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-10 col-sm-5">
+            <div class="form-group">
+              <label>Commisssion Value</label>
+              <input custom-validity
+                     ng-model="commissionData.commissionValue"
+                     type="text"
+                     class="form-control departure-time"
+                     placeholder="57.5"
+                     ng-maxlength="incentiveIncrementCharLimit"
+                     ng-readonly="readOnly">
+            </div>
+          </div>
+
+          <div class="col-xs-2 col-sm-1">
+            <div class="form-group">
+              <label>Unit</label>
+              <input ng-model="incentiveIncrementUnit"
+                     type="text"
+                     class="form-control departure-time"
+                     ng-readonly="readOnly"
+                     disabled>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="panel-footer text-right">
+        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+          <span class="fa fa-check-square-o" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
+        <a href="#/post-trip-data-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+
+      </div>
+    </div>
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Post Trip Data"></dynamic-left-nav>

@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataTableCtrl', function ($scope) {
+  .controller('CommissionDataTableCtrl', function ($scope, dateUtility) {
     var $this = this;
     $scope.viewName = 'Commission Data Table';
     $scope.search = {};
@@ -27,8 +27,8 @@ angular.module('ts5App')
       incentiveIncrement: 12.00
     }, {
       crewBase: 'CREW',
-      startDate: '08/20/2015',
-      endDate: '09/20/2015',
+      startDate: '08/20/2055',
+      endDate: '09/20/2055',
       product: true,
       eposSales: false,
       eposPercent: 0.00,
@@ -62,9 +62,8 @@ angular.module('ts5App')
       $this.getDataList({});
     };
 
-    $scope.canDelete = function () {
-      // TODO: fill in business logic for delete
-      return true;
+    $scope.canDelete = function (data) {
+      return dateUtility.isAfterToday(data.startDate);
     };
 
     $scope.delete = function () {
