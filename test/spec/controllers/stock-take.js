@@ -249,6 +249,49 @@ describe('Controller: StockTakeCtrl', function () {
         expect(stockTakeFactory.updateStockTake).toHaveBeenCalled();
       });
     });
+    describe('quantityDisabled scope function', function(){
+      it('should return true if state is not create and edit', function(){
+        scope.state = 'review';
+        expect(scope.quantityDisabled()).toBe(true);
+      });
+      it('should return true if stock take is sbumitted', function(){
+        scope.state = 'edit';
+        scope.stockTake.isSubmitted = true;
+        expect(scope.quantityDisabled()).toBe(true);
+      });
+      it('should return false otherwise...', function(){
+        scope.state = 'edit';
+        scope.stockTake.isSubmitted = false;
+        expect(scope.quantityDisabled()).toBe(false);
+      });
+    });
+    describe('toggleReview first click', function(){
+      it('should set prev state to edit', function(){
+        scope.state = 'edit';
+        scope.toggleReview();
+        expect(scope.state).toBe('review');
+        expect(scope.prevState).toBe('edit');
+      });
+      it('should flip them back if toggled again', function(){
+        scope.state = 'review';
+        scope.prevState = 'edit';
+        scope.toggleReview();
+        expect(scope.state).toBe('edit');
+        expect(scope.prevState).toBeNull();
+      });
+    });
+    describe('cancel in review state', function(){
+      it('should return if prevState is set', function(){
+        scope.prevState = 'edit';
+        expect(scope.cancel()).toBeUndefined();
+      });
+    });
+    describe('save scope function if stockTake is submitted', function(){
+      it('should return', function(){
+        scope.stockTake = {isSubmitted:true};
+        expect(scope.save()).toBeUndefined();
+      });
+    });
   });
 
 });

@@ -58,10 +58,6 @@ angular.module('ts5App')
       $scope.canReview = canReview();
     }
 
-    $scope.elementChanged = function(){
-      formErrorWatcher();
-    };
-
     function setStationIdOnCreate() {
       if($routeParams.state !== 'create'){
         return;
@@ -246,7 +242,7 @@ angular.module('ts5App')
     };
 
     $scope.cancel = function(){
-      if($scope.prevState) { // there is a test for this, not showing up though
+      if($scope.prevState) {
         $scope.toggleReview();
         return;
       }
@@ -520,13 +516,6 @@ angular.module('ts5App')
 
     $scope.canEditItem = function(item){
       return item.canEdit && $scope.state !== 'review';
-    };
-
-    $scope.showFilterByForm = function(){
-      if(angular.isUndefined($scope.filterInput)){
-        return false;
-      }
-      return $scope.filterInput.itemCode || $scope.filterInput.itemName;
     };
 
     $scope.ullageReasonDisabled = function(item){
