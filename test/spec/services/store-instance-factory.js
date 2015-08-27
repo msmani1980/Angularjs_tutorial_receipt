@@ -7,12 +7,20 @@ describe('Service: storeInstanceFactory', function () {
 
   // instantiate service
   var storeInstanceFactory;
-  beforeEach(inject(function (_storeInstanceFactory_) {
+  var catererStationService;
+  beforeEach(inject(function (_storeInstanceFactory_, $injector) {
     storeInstanceFactory = _storeInstanceFactory_;
+
+    catererStationService = $injector.get('catererStationService');
+
+    spyOn(catererStationService, 'getCatererStationList');
   }));
 
-  it('should do something', function () {
-    expect(!!storeInstanceFactory).toBe(true);
+  describe('catererStationService calls', function(){
+    it('should call getCatererStation', function(){
+      deliveryNoteFactory.getCatererStationList();
+      expect(catererStationService.getCatererStationList).toHaveBeenCalled();
+    });
   });
 
 });

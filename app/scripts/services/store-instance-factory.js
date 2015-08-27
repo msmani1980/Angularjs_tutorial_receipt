@@ -8,6 +8,15 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('storeInstanceFactory', function () {
-    // AngularJS will instantiate a singleton by calling "new" on this function
+  .service('storeInstanceFactory', function (storeInstanceService, catererStationService,
+                                             schedulesService, carrierService) {
+
+    function getCatererStationList(){
+      return catererStationService.getCatererStationList({limit:null});
+    }
+
+    return {
+      getCatererStationList: getCatererStationList
+    };
+
   });
