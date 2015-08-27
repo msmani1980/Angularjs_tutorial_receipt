@@ -109,7 +109,7 @@ angular.module('ts5App')
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
       if(!response.response){
-        showMessage('No items exist in this LMP Station, you must add them manually with the "+Add Items" button below.', 'warning');
+        showMessage('No items can be auto-loaded for this LMP Station because none exist. You must add them manually with the "+Add Items" button below.', 'warning');
         return;
       }
       var items = $filter('unique')(response.response, 'itemId');
