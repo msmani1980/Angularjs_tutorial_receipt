@@ -518,13 +518,6 @@ angular.module('ts5App')
       return item.canEdit && $scope.state !== 'review';
     };
 
-    $scope.showFilterByForm = function(){
-      if(angular.isUndefined($scope.filterInput)){
-        return false;
-      }
-      return $scope.filterInput.itemCode || $scope.filterInput.itemName;
-    };
-
     $scope.ullageReasonDisabled = function(item){
       return $scope.readOnly || !item.ullageQuantity;
     };
