@@ -16,5 +16,33 @@ describe('Controller: CommissionDataCtrl', function () {
     scope.$digest();
   }));
 
+  describe('scope variables and functions', function () {
+
+  });
+
+  describe('init', function () {
+    it('should set readOnly to true only if viewing', function () {
+
+    });
+    describe('API Calls', function () {
+      it('should get crew base', function () {
+
+      });
+      it('should attach crew base to scope', function () {
+
+      });
+      it('should get crew base list', function () {
+
+      });
+
+      it('should call getCommissionData if id is defined', function () {
+
+      });
+
+      it('should attache commission data to scope', function () {
+
+      });
+    });
+  });
 
 });

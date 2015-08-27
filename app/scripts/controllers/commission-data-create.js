@@ -10,12 +10,12 @@
 angular.module('ts5App')
   .controller('CommissionDataCtrl', function ($scope, $routeParams) {
     var $this = this;
-    var state = $routeParams.state;
-    var recordId = $routeParams.id;
+    //var state = $routeParams.state;
+    //var recordId = $routeParams.id;
     $scope.viewName = 'Create Commission Data';
     $scope.commissionData = {};
     $scope.baseCurrency = 'GBP'; // TODO: get from API
-
+    $scope.readOnly = true;
 
     $scope.updateCommissionPercent = function () {
       if($scope.commissionData.commissionPayable === 'Retail Item') {
@@ -56,6 +56,21 @@ angular.module('ts5App')
       }
     };
 
+    $scope.createCommissionData = function () {
+      // commissionFactory.createCommissionData($scope.commissionData).then(saveSuccess, showErrors);
+    };
+
+    $scope.editCommissionData = function () {
+      // commissionFactory.editCommissionData($scope.commissionData).then(saveSuccess, showErrors);
+    };
+
+    $scope.submitForm = function () {
+      var initFunctionName = ($routeParams.state + 'CommissionData');
+      if ($this[initFunctionName]) {
+        $this[initFunctionName]();
+      }
+    };
+
     this.setCommissionData = function(data) {
       $scope.commissionData = data;
       $scope.updateManualBars();
@@ -66,7 +81,14 @@ angular.module('ts5App')
     };
 
     this.init = function () {
-      $this.setCommissionData({
+      $this.setCrewBase([{crewName:'CREW'}, {crewName:'CREW2'}]);
+      // TODO: API calls to make:
+      // commissionFactory.getBaseCurrency();
+      // commissionFactory.getCrewBaseList().then(setCrewBase, showError);
+
+      $scope.readOnly = $routeParams.state === 'view';
+      if($routeParams.id) {
+        $this.setCommissionData({
           crewBase: 'CREW',
           startDate: '08/20/2020',
           endDate: '09/20/2020',
@@ -79,9 +101,8 @@ angular.module('ts5App')
           commissionType: 'Percentage',
           commissionValue: 100
         });
-      $this.setCrewBase([{crewName:'CREW'}, {crewName:'CREW2'}]);
-      // commissionFactory.getCrewBaseList().then(setCrewBase, showError);
-      // commissionFactory.getCommissionData(recordId).then(setCommissionData, showError);
+        // commissionFactory.getCommissionData(recordId).then(setCommissionData, showError);
+      }
     };
     this.init();
 
