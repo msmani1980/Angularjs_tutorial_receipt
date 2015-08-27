@@ -105,7 +105,7 @@ describe('Controller: MenuEditCtrl', function () {
           startDate: '08/20/2001',
           endDate: '09/25/2002'
         };
-        scope.newItemList = [{masterItem: 'test'}, {masterItem: 'test2'}];
+        scope.newItemList = [{itemName: 'test'}, {itemName: 'test2'}];
         scope.selectedCategories = [{id: 1}];
       });
       it('should be defined', function () {
@@ -122,10 +122,10 @@ describe('Controller: MenuEditCtrl', function () {
       });
 
       it('should clear selected Items', function () {
-        var oldSelectedValue = scope.newItemList[0].masterItem;
+        var oldSelectedValue = scope.menuItemList[0];
         scope.updateItemsList(0);
-        expect(scope.newItemList[0].masterItem).not.toEqual(oldSelectedValue);
-        expect(scope.newItemList[0].masterItem).toEqual(null);
+        expect(scope.menuItemList[0]).not.toEqual(oldSelectedValue);
+        expect(scope.menuItemList[0]).toEqual(null);
       });
 
       it('should attach new response to itemsCollection', function () {
@@ -198,21 +198,14 @@ describe('Controller: MenuEditCtrl', function () {
     });
 
     describe('Delete items from Menu', function () {
-      it('should have a confirmDelete function', function () {
-        expect(!!scope.showDeleteConfirmation).toBe(true);
-      });
 
-      it('should attach itemToDelete to scope', function () {
-        scope.showDeleteConfirmation({itemName: 'itemToDelete'});
-        expect(scope.itemToDelete.itemName).toBe('itemToDelete');
-      });
     });
 
     describe('Adding items to Menu', function () {
       it('should push objects to newItemList on addItem()', function () {
-        var previousLength = scope.newItemList.length;
+        var previousLength = scope.menuItemList.length;
         scope.addItem();
-        expect(scope.newItemList.length).toBe(previousLength + 1);
+        expect(scope.menuItemList.length).toBe(previousLength + 1);
       });
 
       it('should push a new items array for each item', function () {
@@ -222,7 +215,7 @@ describe('Controller: MenuEditCtrl', function () {
       });
 
       it('should have a newItemList attached to scope', function () {
-        expect(!!scope.newItemList).toBe(true);
+        expect(!!scope.menuItemList).toBe(true);
       });
 
       it('should have a deleteNewItem attached to scope', function () {
@@ -244,33 +237,70 @@ describe('Controller: MenuEditCtrl', function () {
       });
 
       describe('new Items', function () {
-
         beforeEach(function () {
           scope.addItem();
-          scope.newItemList[0] = {
+          scope.menuItemList[0] = {
             'itemQty': 1979,
-            'masterItem': {
-              'id': 1005
-            }
+            'id': 1005
           };
         });
 
-        it('should add newItems to payload on createPayload', function () {
-          expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
+        it('should set newItems to be empty initially', function () {
+          expect(scope.menuItemList.length).toEqual(2);
         });
 
-        it('should newItems in payload not to have id', function () {
-          expect(MenuEditCtrl.createPayload().menuItems[1].id).not.toBeDefined();
-        });
-
-        it('should not add new item to payload if new Item not valid', function () {
-          scope.addItem();
-          scope.newItemList[scope.newItemList.length - 1] = {
-            fakeMenu: 'notValidData'
-          };
-          expect(MenuEditCtrl.createPayload().menuItems.length).toBe(2);
+        it('should newItems in payload not to have id or itemId', function () {
+          expect(scope.menuItemList[1]).toEqual(null);
         });
       });
+
+      describe('create menuItems payload', function () {
+
+        beforeEach(function () {
+          scope.menu.id = 2;
+          scope.menuItemList = [{
+            'itemQty': 1979,
+            'id': 1005,
+            'itemId': 123
+          }, {
+            'itemQty': 1979,
+            'id': 1005
+          }, {}];
+        });
+
+        it('should not add items that have not been set', function () {
+          scope.menuItemList[2] = {itemQty: 2};
+          var currentLength = scope.menuItemList.length;
+          expect(MenuEditCtrl.createPayload().menuItems.length).toEqual(currentLength - 1);
+        });
+
+        it('should not add items that have no quantity', function () {
+          scope.menuItemList[2] = {id: 2};
+          var currentLength = scope.menuItemList.length;
+          expect(MenuEditCtrl.createPayload().menuItems.length).toEqual(currentLength - 1);
+        });
+
+        it('should set menuId if menuId exists', function () {
+          expect(MenuEditCtrl.createPayload().menuItems[0].menuId).toBeDefined();
+          expect(MenuEditCtrl.createPayload().menuItems[1].menuId).toBeDefined();
+        });
+
+        it('should not change itemId and id if itemId has already been set', function () {
+          var expectedItem = scope.menuItemList[0];
+          expectedItem.menuId = scope.menu.id;
+          expect(MenuEditCtrl.createPayload().menuItems[0]).toEqual(expectedItem);
+        });
+
+        it('should set itemId for items with no id', function () {
+          var expectedItem = {
+            itemQty: scope.menuItemList[1].itemQty,
+            itemId: scope.menuItemList[1].id,
+            menuId: scope.menu.id
+          };
+          expect(MenuEditCtrl.createPayload().menuItems[1]).toEqual(expectedItem);
+        });
+      });
+
 
     });
   });

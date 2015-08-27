@@ -138,7 +138,7 @@
 
             <div class="form-group">
               <label>Item Type *</label>
-              <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control">
+              <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
                 <option ng-selected="formData.itemTypeId === type.id" ng-repeat="type in itemTypes"
                         value="{{ type.id }}">{{ type.name }}
                 </option>
@@ -255,7 +255,7 @@
               </div>
             </div>
 
-            <div id="gtin-container row">
+            <div id="gtin-container">
               <div ng-repeat="(key,GTIN) in formData.globalTradeNumbers track by $index">
                 <input-gtin key="key"></input-gtin>
               </div>
@@ -308,11 +308,11 @@
 
             <div class="row">
               <div class="form-group">
-                <div class="col-xs-9">
+                <div class="col-xs-7">
                   <input ng-model="formData.weight" type="text" class="form-control" placeholder="10.00">
                 </div>
 
-                <div class="col-xs-3">
+                <div class="col-xs-5">
                   <select ng-model="formData.weightType" class="form-control col-xs-2">
                     <option ng-selected="formData.weightType === weight.id" ng-repeat="weight in weightUnits"
                             value="{{ weight.id }}">{{ weight.unitCode }}
@@ -328,11 +328,11 @@
 
             <div class="row">
               <div class="form-group">
-                <div class="col-xs-9">
+                <div class="col-xs-7">
                   <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00">
                 </div>
 
-                <div class="col-xs-3">
+                <div class="col-xs-5">
                   <select ng-model="formData.volumeType" class="form-control">
                     <option ng-selected="formData.volumeType === volume.id" ng-repeat="volume in volumeUnits"
                             value="{{ volume.id }}">{{ volume.unitCode }}

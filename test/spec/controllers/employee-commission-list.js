@@ -4,7 +4,7 @@
 describe('Controller: EmployeeCommissionListCtrl', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/employee-commission-list.json'));
+  beforeEach(module('served/items-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/employee-commission-list.json', 'served/sales-categories.json'));
 
 
   var EmployeeCommissionListCtrl,
@@ -14,6 +14,8 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     getPriceTypesListDeferred,
     getTaxRateTypesDeferred,
     getCommissionListDeferred,
+    salesCategoriesDeferred,
+    salesCategoriesJSON,
     itemListJSON,
     priceTypeListJSON,
     taxRateTypesJSON,
@@ -23,11 +25,12 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
 
   beforeEach(inject(function ($controller, $rootScope, $q, $injector, $location) {
     location = $location;
-    inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedEmployeeCommissionList_) {
+    inject(function (_servedItemsList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedEmployeeCommissionList_, _servedSalesCategories_) {
       itemListJSON = _servedItemsList_;
       priceTypeListJSON = _servedPriceTypes_;
       taxRateTypesJSON = _servedTaxRateTypes_;
       employeeCommissionListJSON = _servedEmployeeCommissionList_;
+      salesCategoriesJSON = _servedSalesCategories_;
     });
 
     getItemsListDeferred = $q.defer();
@@ -42,6 +45,9 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     getCommissionListDeferred = $q.defer();
     getCommissionListDeferred.resolve(employeeCommissionListJSON);
 
+    salesCategoriesDeferred = $q.defer();
+    salesCategoriesDeferred.resolve(salesCategoriesJSON);
+
     dateUtility = $injector.get('dateUtility');
     employeeCommissionFactory = $injector.get('employeeCommissionFactory');
     spyOn(employeeCommissionFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
@@ -49,6 +55,8 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
     spyOn(employeeCommissionFactory, 'getTaxRateTypes').and.returnValue(getTaxRateTypesDeferred.promise);
     spyOn(employeeCommissionFactory, 'getCommissionList').and.returnValue(getCommissionListDeferred.promise);
     spyOn(employeeCommissionFactory, 'deleteCommission').and.returnValue(getCommissionListDeferred.promise);
+    spyOn(employeeCommissionFactory, 'getItemsCategoriesList').and.returnValue(salesCategoriesDeferred.promise);
+
 
     scope = $rootScope.$new();
     EmployeeCommissionListCtrl = $controller('EmployeeCommissionListCtrl', {
@@ -68,7 +76,7 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
 
     it('should have required properties', function () {
       expect(Object.keys(scope.search)).toEqual(['startDate', 'endDate', 'itemList', 'priceTypeList',
-        'taxRateTypesList']);
+        'taxRateTypesList', 'selectedCategory']);
     });
 
   });
@@ -83,22 +91,16 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
       expect(employeeCommissionFactory.getTaxRateTypes).toHaveBeenCalled();
     });
 
-    it('should fetch items with startDate and endDate from factory', function () {
-      var expectedDate = moment().add(1, 'days').format('YYYYMMDD').toString();
-      scope.search.startDate = moment().add(1, 'days').format('L').toString();
-      scope.search.endDate = scope.search.startDate;
-      scope.$digest();
-      expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({startDate: expectedDate, endDate: expectedDate});
-    });
 
-
-    it('should fetch items with endDate from factory', function () {
+    it('should fetch items with startDate, endDate, and category from factory', function () {
       scope.search.startDate = '05/10/1979';
       scope.search.endDate = '05/10/1979';
+      scope.search.selectedCategory = {name: 'testCategory'};
       scope.$digest();
       expect(employeeCommissionFactory.getItemsList).toHaveBeenCalledWith({
         startDate: '19790510',
-        endDate: '19790510'
+        endDate: '19790510',
+        categoryName: 'testCategory'
       });
     });
 
@@ -190,6 +192,18 @@ describe('Controller: EmployeeCommissionListCtrl', function () {
         isFixed: true,
         startDate: '20150720',
         endDate: '20160830'
+      };
+      scope.searchCommissions();
+      expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);
+    });
+
+    it('should format category payload', function () {
+      scope.search = {
+        selectedCategory: {id: 1},
+        itemList: [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}]
+      };
+      var expectedPayload = {
+        itemId: [1,2,3]
       };
       scope.searchCommissions();
       expect(employeeCommissionFactory.getCommissionList).toHaveBeenCalledWith(expectedPayload);

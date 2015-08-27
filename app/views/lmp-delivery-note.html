@@ -11,16 +11,6 @@
 
         <fieldset ng-hide="viewOnly">
 
-        <!-- TODO: EXPORT BUTTONS ONLY AVAILABLE ON VIEW/EDIT NOT CREATE -->
-<!--             <button type="button" class="btn btn-info"> -->
-<!--               <span class="glyphicon glyphicon-export" aria-hidden="true"></span> -->
-<!--               <span>Export (Excel)</span> -->
-<!--             </button> -->
-<!--             <button type="button" class="btn btn-info"> -->
-<!--               <span class="glyphicon glyphicon-export" aria-hidden="true"></span> -->
-<!--               <span>Export (PDF)</span> -->
-<!--             </button> -->
-
           <button class="btn btn-warning" ng-click="toggleReview()" ng-hide="hideReview">
             <span class="fa fa-file-text-o" aria-hidden="true"></span>
             <span class="hidden-xs">Review</span>
@@ -51,18 +41,15 @@
   <form class="form edit-form delivery-note-form" name="form">
 
     <form-error-dialog></form-error-dialog>
-    <!--/TopHeader -->
-
     <div class="panel panel-default">
       <div class="panel-heading">
-        <!-- form header-->
         <div class="row">
           <div class="col-xs-12 col-sm-6 col-md-4">
             <div class="form-group" ng-class="formErrorClass('lmp-station')">
               <label for="lmp-station">LMP Station*</label>
               <select class="form-control"
                       ng-model="deliveryNote.catererStationId"
-                      ng-disabled="lmpStationDisabled()"
+                      ng-disabled="isLMPStationIsDisabled()"
                       ng-show="catererStationList.length"
                       id="lmp-station"
                       name="LMP Station"
