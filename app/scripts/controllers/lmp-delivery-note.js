@@ -110,12 +110,13 @@ angular.module('ts5App')
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
       if(!response.response){
-        if($scope.routeParamState !== 'edit' && !_firstTime) {
-          showMessage('No items can be auto-loaded for this LMP Station because none exist. You must add them manually with the "+Add Items" button below.', 'warning');
+        if($scope.routeParamState === 'edit' && _firstTime) {
+          _firstTime = false;
+          return;
         }
+        showMessage('No items can be auto-loaded for this LMP Station because none exist. You must add them manually with the "+Add Items" button below.', 'warning');
         return;
       }
-      _firstTime = false;
       var items = $filter('unique')(response.response, 'itemId');
       var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
         return item.masterItemId;
