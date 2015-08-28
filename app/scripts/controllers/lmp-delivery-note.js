@@ -113,9 +113,9 @@ angular.module('ts5App')
         if($scope.routeParamState !== 'edit' && !_firstTime) {
           showMessage('No items can be auto-loaded for this LMP Station because none exist. You must add them manually with the "+Add Items" button below.', 'warning');
         }
-        _firstTime = false;
         return;
       }
+      _firstTime = false;
       var items = $filter('unique')(response.response, 'itemId');
       var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item){
         return item.masterItemId;
