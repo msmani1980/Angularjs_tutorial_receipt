@@ -1,18 +1,8 @@
 <div class="steps-container">
 
-  <div class="step active">
-    <span class="badge badge-info">1</span>
-    <span class="hidden-xs">Campaign</span>
-    <span class="chevron"></span>
-  </div>
-  <div class="step">
-    <span class="badge badge-info">2</span>
-    <span class="hidden-xs">Packing</span>
-    <span class="chevron"></span>
-  </div>
-  <div class="step">
-    <span class="badge badge-info">3</span>
-    <span class="hidden-xs">Seals</span>
+  <div ng-class="{'active': $index===0}" class="step" ng-repeat="step in steps">
+    <span class="badge badge-info">{{$index+1}}</span>
+    <span class="step-label hidden-xs">{{step.label}}</span>
     <span class="chevron"></span>
   </div>
 
@@ -26,6 +16,5 @@
       <span class="fa fa-arrow-right"></span>
     </button>
   </div>
-
 
 </div>

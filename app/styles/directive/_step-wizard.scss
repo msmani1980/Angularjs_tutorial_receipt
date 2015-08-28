@@ -2,14 +2,14 @@ step-wizard {
 
   .steps-container {
     width:100%;
-    padding:0 0 0 4px;
+    padding:0;
     border:1px solid #d4d4d4;
     background:#FAFAFA;
     margin-bottom:2rem;
 
     .step {
       display: inline-block;
-      margin: 0 0 0 -4px;
+      margin:0;
       padding: 0 20px 0 30px;
       height: 46px;
       line-height: 46px;
@@ -48,8 +48,26 @@ step-wizard {
       color: #3a87ad;
       cursor: default;
 
+      .badge {
+        background: #3a87ad;
+      }
+
       .chevron:before {
         border-left: 14px solid #eef7fb;
+      }
+
+    }
+
+    .step.complete {
+      background: #f5f5f5;
+      color: #468847;
+
+      .badge {
+        background: #468847;
+      }
+
+      .chevron:before {
+        border-left: 14px solid #f5f5f5;
       }
 
     }
