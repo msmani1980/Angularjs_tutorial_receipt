@@ -223,7 +223,7 @@
 
             <div class="col-xs-6 col-sm-3 col-md-1">
               <div class="form-group" ng-class="formErrorClass('delivered-qty-' + item.masterItemId)">
-                <label for="delivered-qty-{{ item.masterItemId }}">Delivered<span ng-show="item.expectedQuantity">*</span></label>
+                <label for="delivered-qty-{{ item.masterItemId }}">Delivered*</label>
                 <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
                        id="delivered-qty-{{ item.masterItemId }}"
                        ng-readonly="readOnly" ng-required="item.expectedQuantity"
@@ -305,7 +305,7 @@
 
             <div class="col-xs-6 col-sm-3 col-md-1">
               <div class="form-group">
-                <label>Delivered</label>
+                <label>Delivered*</label>
                 <input type="number" class="form-control" disabled>
               </div>
             </div>
@@ -333,8 +333,8 @@
               </div>
             </div>
 
-            <div class="col-xs-12 col-sm-6 col-md-1 text-right" ng-show="canRemoveItem(newItem)">
-              <button type="button" class="btn btn-sm btn-danger" ng-click="removeNewItemRow($index, newItem)">
+            <div class="col-xs-12 col-sm-6 col-md-1 text-right">
+              <button type="button" class="btn btn-sm btn-danger" ng-click="removeNewItemRow($index)">
                 <i class="fa fa-close"></i>
               </button>
             </div>

@@ -129,6 +129,8 @@ angular.module('ts5App')
       }
       if(Array.isArray($scope.stockTakeList)) {
         return $filter('filter')($scope.stockTakeList, {isSubmitted:false}, true).length === 0;
+      } else {
+        return true;
       }
     };
 

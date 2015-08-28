@@ -20,11 +20,12 @@ describe('Menu Relationship List Controller', function () {
     menuCatererStationsService,
     location,
     httpBackend,
-    authRequestHandler;
+    authRequestHandler,
+    dateUtility;
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
     $location, $httpBackend, _catererStationService_,
-    _menuCatererStationsService_) {
+    _menuCatererStationsService_,$injector) {
     inject(function (_servedMenus_, _servedCateringStations_,
       _servedMenuCateringStations_) {
       menuListJSON = _servedMenus_;
@@ -42,6 +43,7 @@ describe('Menu Relationship List Controller', function () {
     httpBackend = $httpBackend;
     location = $location;
     $scope = $rootScope.$new();
+    dateUtility = $injector.get('dateUtility');
 
     getMenuListDeffered = $q.defer();
     getMenuListDeffered.resolve(menuListJSON);
@@ -340,14 +342,15 @@ describe('Menu Relationship List Controller', function () {
   });
 
   describe('clear filter functionality', function () {
+
     beforeEach(function () {
+      spyOn(MenuRelationshipListCtrl,'searchRelationshipList').and.callThrough();
       $scope.$digest();
     });
-    it(
-      'should have a clearSearchFilters() method attached to the scope',
-      function () {
-        expect($scope.clearSearchFilters).toBeDefined();
-      });
+
+    it('should have a clearSearchFilters() method attached to the scope',  function () {
+      expect($scope.clearSearchFilters).toBeDefined();
+    });
 
     it('should clear the search ng-model when called', function () {
       $scope.search = {
@@ -362,6 +365,98 @@ describe('Menu Relationship List Controller', function () {
       $scope.dateRange.endDate = '08-15-2015';
       $scope.clearSearchFilters();
       expect($scope.dateRange).toEqual({});
+    });
+
+    it('should call searchRelationshipList when the user clears the filters',  function () {
+      $scope.clearSearchFilters();
+      expect(MenuRelationshipListCtrl.searchRelationshipList).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('generating the query filter', function () {
+    var todaysDate;
+    beforeEach(function () {
+      todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
+      spyOn(MenuRelationshipListCtrl,'generateRelationshipQuery').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should call generateRelationshipQuery when the user searches',  function () {
+      MenuRelationshipListCtrl.searchRelationshipList();
+      expect(MenuRelationshipListCtrl.generateRelationshipQuery).toHaveBeenCalled();
+    });
+
+    it('create a default query filter ', function () {
+      var query = MenuRelationshipListCtrl.generateRelationshipQuery();
+      var controlQuery = {
+        startDate: todaysDate,
+        sortBy: 'ASC',
+        limit: 100
+      };
+      expect(query).toEqual(controlQuery);
+    });
+
+    it('create a query filter that contains a menu id but maintains start date as today', function () {
+      $scope.search = {
+        menuId: 4
+      };
+      var query = MenuRelationshipListCtrl.generateRelationshipQuery();
+      var controlQuery = {
+        menuId: 4,
+        startDate: todaysDate,
+        sortBy: 'ASC',
+        limit: 100
+      };
+      expect(query).toEqual(controlQuery);
+    });
+
+    it('create a query filter that contains a menu id and the supplied start date', function () {
+      $scope.search = {
+        menuId: 4
+      };
+      $scope.dateRange.startDate = '07-15-2015';
+      var query = MenuRelationshipListCtrl.generateRelationshipQuery();
+      var controlQuery = {
+        menuId: 4,
+        startDate: dateUtility.formatDateForAPI('07-15-2015'),
+        sortBy: 'ASC',
+        limit: 100
+      };
+      expect(query).toEqual(controlQuery);
+    });
+
+    it('create a query filter that contains a menu id and the supplied end date but maintains start date as today', function () {
+      $scope.search = {
+        menuId: 6
+      };
+      $scope.dateRange.endDate = '07-15-2015';
+      var query = MenuRelationshipListCtrl.generateRelationshipQuery();
+      var controlQuery = {
+        menuId: 6,
+        startDate: todaysDate,
+        endDate: dateUtility.formatDateForAPI('07-15-2015'),
+        sortBy: 'ASC',
+        limit: 100
+      };
+      expect(query).toEqual(controlQuery);
+    });
+
+    it('create a query filter that contains a menu id and the supplied end / start date', function () {
+      $scope.search = {
+        menuId: 6
+      };
+      $scope.dateRange.startDate = '07-14-2015';
+      $scope.dateRange.endDate = '07-15-2015';
+      var query = MenuRelationshipListCtrl.generateRelationshipQuery();
+      var controlQuery = {
+        menuId: 6,
+        startDate: dateUtility.formatDateForAPI('07-14-2015'),
+        endDate: dateUtility.formatDateForAPI('07-15-2015'),
+        sortBy: 'ASC',
+        limit: 100
+      };
+      expect(query).toEqual(controlQuery);
     });
 
   });

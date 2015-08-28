@@ -108,9 +108,8 @@ angular.module('ts5App')
       if(angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])){
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
-      $scope.deliveryNote.items = [];
       if(!response.response){
-        showMessage('No items exist in this LMP Station, you must add them manually with the "+Add Items" button below.', 'warning');
+        showMessage('No items can be auto-loaded for this LMP Station because none exist. You must add them manually with the "+Add Items" button below.', 'warning');
         return;
       }
       var items = $filter('unique')(response.response, 'itemId');
@@ -128,7 +127,9 @@ angular.module('ts5App')
           itemCode: item.itemCode
         };
       });
-      $scope.deliveryNote.items = $filter('orderBy')(newMasterItems, 'itemName');
+      newMasterItems = $filter('orderBy')(newMasterItems, 'itemName');
+      removeNullDeliveredItems();
+      $scope.deliveryNote.items = angular.copy($scope.deliveryNote.items).concat(newMasterItems);
     }
 
     function setUllageReasonsFromResponse(response){
@@ -236,7 +237,10 @@ angular.module('ts5App')
       createPayload(_isAccepted);
     }
 
-    $scope.removeItemByIndex = function(index){
+    $scope.removeItemByIndex = function(index, item){
+      if(!$scope.canRemoveItem(item)){
+        return;
+      }
       $scope.canReview = canReview();
       $scope.deliveryNote.items.splice(index, true);
     };
@@ -476,10 +480,7 @@ angular.module('ts5App')
       $scope.removeNewItemRow($index, newItem);
     };
 
-    $scope.removeNewItemRow = function($index, item){
-      if(!item.canEdit){
-        return;
-      }
+    $scope.removeNewItemRow = function($index){
       $scope.newItems.splice($index, true);
     };
 
