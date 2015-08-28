@@ -27,6 +27,7 @@ angular.module('ts5App')
     var _payload = null;
     var _path = '/lmp-delivery-note/';
     var _prevViewName = null;
+    var _firstTime = true;
 
     function showMessage(message, messageType) {
       ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Delivery Note</strong>: ' + message });
@@ -109,6 +110,10 @@ angular.module('ts5App')
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
       if(!response.response){
+        if($scope.routeParamState === 'edit' && _firstTime) {
+          _firstTime = false;
+          return;
+        }
         showMessage('No items can be auto-loaded for this LMP Station because none exist. You must add them manually with the "+Add Items" button below.', 'warning');
         return;
       }
