@@ -6,9 +6,9 @@
 
     <div class="form-group">
       <label>LMP Station *</label>
-      <select class="form-control">
-        <option>ORD - Chicago</option>
-        <option>JFK - New York JFK</option>
+      <select class="form-control" ng-model="catererStationId">
+        <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
+        <option ng-repeat="station in cateringStationList | orderBy:'name' track by station.id" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
       </select>
     </div>
 
@@ -17,12 +17,13 @@
 
     <div class="form-group">
       <label>Schedule Number *</label>
-      <input class="form-control" type="text" placeholder="Schedule12456" custom-validity custom-pattern="alphanumeric" />
+      <input class="form-control" type="text" ng-model="scheduleNumber" placeholder="Schedule12456" custom-validity custom-pattern="alphanumeric" />
     </div>
 
     <div class="form-group">
       <label>Store Number *</label>
-      <select class="form-control">
+      <!-- TODO: Loop the store numbers from API-->
+      <select class="form-control" ng-model="storeNumber">
         <option>Store 1</option>
         <option>Store 2</option>
       </select>
@@ -30,15 +31,19 @@
 
     <div class="form-group">
       <label>Select Menus *</label>
-      <select multiple class="form-control">
-        <option>Menu 1</option>
-        <option>Menu 2</option>
-      </select>
+      <ui-select multiple ng-model="menuIds" theme="bootstrap" id="menuIds">
+        <ui-select-match placeholder="Select one or more Menus" ui-lock-choice="isDisabled()">{{ $item.menuCode }}
+        </ui-select-match>
+        <ui-select-choices  repeat="menu in menuList | filter: $select.search | orderBy:'menuCode'">
+          <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
     </div>
 
     <div class="form-group">
       <label>Aircraft Tail Number *</label>
-      <select class="form-control">
+      <select class="form-control" ng-model="tailNumber">
+        <!-- TODO: Loop the aircraft tail number from API-->
         <option>COL964</option>
         <option>MNA124</option>
       </select>
