@@ -14,7 +14,7 @@ describe('Stock Take Report', function () {
     $scope,
     catererStationService,
     stockTakeService,
-    stockTakeListJOSN,
+    stockTakeListJSON,
     getStockTakeListDeferred,
     getCatererStationListDeferred,
     getStockDashboardItemsDeferred,
@@ -29,7 +29,7 @@ describe('Stock Take Report', function () {
     _servedStockTakeList_, _servedCateringStations_,_servedStockManagementDashboard_) {
 
     stockManagementDashboardJSON = _servedStockManagementDashboard_;
-    stockTakeListJOSN = _servedStockTakeList_;
+    stockTakeListJSON = _servedStockTakeList_;
     stationsListJSON = _servedCateringStations_;
 
     httpBackend = $injector.get('$httpBackend');
@@ -40,7 +40,7 @@ describe('Stock Take Report', function () {
     stockDashboardService = $injector.get('stockDashboardService');
 
     getStockTakeListDeferred = $q.defer();
-    getStockTakeListDeferred.resolve(stockTakeListJOSN);
+    getStockTakeListDeferred.resolve(stockTakeListJSON);
     spyOn(stockTakeService, 'getStockTakeList').and.returnValue(
       getStockTakeListDeferred.promise);
 
@@ -166,7 +166,7 @@ describe('Stock Take Report', function () {
       });
 
       it('should be match the stock take list from the delivertNotes API Respone',function () {
-        expect($scope.stockTakeList).toEqual(stockTakeListJOSN.response);
+        expect($scope.stockTakeList).toEqual(stockTakeListJSON.response);
       });
 
       describe('contains an stock take object which', function () {
@@ -379,6 +379,38 @@ describe('Stock Take Report', function () {
       $scope.catererStationId = 3;
       $scope.$digest();
       expect($scope.importIsPossible()).toBeTruthy();
+    });
+
+  });
+
+  describe('canCreateStockTake functionality', function () {
+
+    it('should return false if no station id is set', function(){
+      expect($scope.canCreateStockTake()).toBeFalsy();
+    });
+
+    it('should return false even if the catering station is selected but there is an open stock take', function(){
+      $scope.catererStationId = 3;
+      $scope.$digest();
+      $scope.stockTakeList[0].isSubmitted = false;
+      $scope.$digest();
+      expect($scope.canCreateStockTake()).toBeFalsy();
+    });
+
+    it('should return true if the catering station is selected and there is not open stock take', function(){
+      $scope.catererStationId = 3;
+      $scope.$digest();
+      $scope.stockTakeList[0].isSubmitted = true;
+      $scope.$digest();
+      expect($scope.canCreateStockTake()).toBeTruthy();
+    });
+
+    it('should return true if no stock takes were returned', function(){
+      $scope.catererStationId = 3;
+      $scope.$digest();
+      $scope.stockTakeList = [];
+      $scope.$digest();
+      expect($scope.canCreateStockTake()).toBeTruthy();
     });
 
   });

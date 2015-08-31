@@ -51,20 +51,6 @@ angular.module('ts5App')
     };
 
     this.generateRelationshipQuery = function () {
-      var query = {
-        limit: 100
-      };
-      angular.extend(query, $scope.search);
-      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
-        query.startDate = dateUtility.formatDateForAPI($scope.dateRange
-          .startDate);
-        query.endDate = dateUtility.formatDateForAPI($scope.dateRange
-          .endDate);
-      }
-      return query;
-    };
-
-    this.generateItemQuery = function () {
       var todaysDate = dateUtility.formatDateForAPI(dateUtility.now(), 'x');
       var query = {
         startDate: todaysDate,
@@ -72,17 +58,17 @@ angular.module('ts5App')
         limit: 100
       };
       angular.extend(query, $scope.search);
-      if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
-        query.startDate = dateUtility.formatDateForAPI($scope.dateRange
-          .startDate);
-        query.endDate = dateUtility.formatDateForAPI($scope.dateRange
-          .endDate);
+      if ($scope.dateRange.startDate) {
+        query.startDate = dateUtility.formatDateForAPI($scope.dateRange.startDate);
+      }
+      if($scope.dateRange.endDate) {
+        query.endDate = dateUtility.formatDateForAPI($scope.dateRange.endDate);
       }
       return query;
     };
 
     this.makePromises = function () {
-      var query = this.generateItemQuery();
+      var query = this.generateRelationshipQuery();
       return [
         catererStationService.getCatererStationList(query),
         menuService.getMenuList(query),
