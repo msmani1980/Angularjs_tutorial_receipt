@@ -12,6 +12,7 @@ describe('Service: storeInstanceFactory', function () {
   var companyId = 403;
   var schedulesService;
   var carrierService;
+  var storeInstanceService;
 
   beforeEach(inject(function (_storeInstanceFactory_, $injector) {
     storeInstanceFactory = _storeInstanceFactory_;
@@ -20,12 +21,43 @@ describe('Service: storeInstanceFactory', function () {
     GlobalMenuService = $injector.get('GlobalMenuService');
     schedulesService = $injector.get('schedulesService');
     carrierService = $injector.get('carrierService');
+    storeInstanceService = $injector.get('storeInstanceService');
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(GlobalMenuService.company, 'get').and.returnValue(companyId);
     spyOn(schedulesService, 'getSchedules');
     spyOn(carrierService, 'getCarrierNumbers');
+    spyOn(storeInstanceService, 'getStoreInstancesList');
+    spyOn(storeInstanceService, 'getStoreInstance');
+    spyOn(storeInstanceService, 'createStoreInstance');
+    spyOn(storeInstanceService, 'updateStoreInstance');
+    spyOn(storeInstanceService, 'deleteStoreInstance');
   }));
+
+  describe('storeInstanceService calls', function(){
+    var id = 123;
+    var mockPL = {foo:'bars'};
+    it('should call getStoreInstancesList', function(){
+      storeInstanceFactory.getStoreInstancesList(mockPL);
+      expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(mockPL);
+    });
+    it('should call getStoreInstance', function(){
+      storeInstanceFactory.getStoreInstance(id);
+      expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(id);
+    });
+    it('should call createStoreInstance', function(){
+      storeInstanceFactory.createStoreInstance(mockPL);
+      expect(storeInstanceService.createStoreInstance).toHaveBeenCalledWith(mockPL);
+    });
+    it('should call updateStoreInstance', function(){
+      storeInstanceFactory.updateStoreInstance(id, mockPL);
+      expect(storeInstanceService.updateStoreInstance).toHaveBeenCalledWith(id, mockPL);
+    });
+    it('should call deleteStoreInstance', function(){
+      storeInstanceFactory.deleteStoreInstance(id);
+      expect(storeInstanceService.deleteStoreInstance).toHaveBeenCalledWith(id);
+    });
+  });
 
   describe('GlobalMenuService calls', function() {
     it('should get company', function () {

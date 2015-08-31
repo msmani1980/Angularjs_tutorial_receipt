@@ -28,11 +28,36 @@ angular.module('ts5App')
       return carrierService.getCarrierNumbers(companyId);
     }
 
+    function getStoreInstancesList(query){
+      return storeInstanceService.getStoreInstancesList(query);
+    }
+
+    function getStoreInstance(id){
+      return storeInstanceService.getStoreInstance(id);
+    }
+
+    function createStoreInstance(payload){
+      return storeInstanceService.createStoreInstance(payload);
+    }
+
+    function updateStoreInstance(id, payload){
+      return storeInstanceService.updateStoreInstance(id, payload);
+    }
+
+    function deleteStoreInstance(id){
+      return storeInstanceService.deleteStoreInstance(id);
+    }
+
     return {
       getCompanyId: getCompanyId,
       getCatererStationList: getCatererStationList,
       getSchedules: getSchedules,
-      getCarrierNumbers: getCarrierNumbers
+      getCarrierNumbers: getCarrierNumbers,
+      getStoreInstancesList: getStoreInstancesList,
+      getStoreInstance: getStoreInstance,
+      createStoreInstance: createStoreInstance,
+      updateStoreInstance: updateStoreInstance,
+      deleteStoreInstance: deleteStoreInstance
     };
 
   });
