@@ -9,14 +9,30 @@
  */
 angular.module('ts5App')
   .service('storeInstanceFactory', function (storeInstanceService, catererStationService,
-                                             schedulesService, carrierService) {
+                                             schedulesService, carrierService,
+                                             GlobalMenuService) {
+
+    function getCompanyId(){
+      return GlobalMenuService.company.get();
+    }
 
     function getCatererStationList(){
       return catererStationService.getCatererStationList({limit:null});
     }
 
+    function getSchedules(companyId){
+      return schedulesService.getSchedules(companyId);
+    }
+
+    function getCarrierNumbers(companyId){
+      return carrierService.getCarrierNumbers(companyId);
+    }
+
     return {
-      getCatererStationList: getCatererStationList
+      getCompanyId: getCompanyId,
+      getCatererStationList: getCatererStationList,
+      getSchedules: getSchedules,
+      getCarrierNumbers: getCarrierNumbers
     };
 
   });
