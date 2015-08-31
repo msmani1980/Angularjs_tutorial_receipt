@@ -40,6 +40,53 @@
   margin-top: 0;
 }
 
+.fuelux .wizard .info-bar-status-packing:after {
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #999;
+    content: "Ready For Packing";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .info-bar-status-seals:after {
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #999;
+    content: "Ready For Seal Assignment";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .info-bar-status-dispatch:after {
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #999;
+    content: "Ready For Dispatch";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .info-bar-status {
+    position: relative;
+    padding-top: 50px;
+}
+
 .fuelux .wizard .well.seal-color-blue:after {
     background-color: #66ccff;
     border: 1px solid #e3e3e3;
@@ -52,11 +99,6 @@
     padding: 5px 15px;
     position: absolute;
     top: -1px;
-}
-
-.fuelux .wizard .well.seal-color-blue {
-    position: relative;
-    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-green:after {
@@ -73,11 +115,6 @@
     top: -1px;
 }
 
-.fuelux .wizard .well.seal-color-green {
-    position: relative;
-    padding-top: 50px;
-}
-
 .fuelux .wizard .well.seal-color-yellow:after {
     background-color: #ffcc00;
     border: 1px solid #e3e3e3;
@@ -90,11 +127,6 @@
     padding: 5px 15px;
     position: absolute;
     top: -1px;
-}
-
-.fuelux .wizard .well.seal-color-yellow {
-    position: relative;
-    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-white:after {
@@ -111,7 +143,7 @@
     top: -1px;
 }
 
-.fuelux .wizard .well.seal-color-white {
+.fuelux .wizard .well.seal-color {
     position: relative;
     padding-top: 50px;
 }

@@ -180,7 +180,7 @@
         <ng-form action="">
 
           <!-- INFORMATION BAR -->
-          <div class="well">
+          <div class="well info-bar-status info-bar-status-seals">
             <table class="table">
               <thead>
                 <tr>
@@ -227,7 +227,7 @@
           </div>
           
           <!-- PANE 2 - Inbound Seals - Inbound --------------------------------------------------------------------- -->
-          <div class="well seal-color-yellow">
+          <div class="well seal-color seal-color-yellow">
 
 <!-- TODO: HIDDEN ROW, DEFAULT TO NO SEALS -->            
 <!--             <div class="well" ng-repeat="newItem in newItems track by $index"> -->
@@ -272,7 +272,7 @@
           </div>
   
           <!-- PANE 2 - Inbound Seals - High Security --------------------------------------------------------------------- -->
-          <div class="well seal-color-white">
+          <div class="well seal-color seal-color-white">
           
             <div class="well well-sm" ng-repeat="newItem in newItems track by $index">
              <div class="row">
@@ -357,7 +357,7 @@
         <ng-form action="">
         
           <!-- INFORMATION BAR -->
-          <div class="well">
+          <div class="well info-bar-status info-bar-status-packing">
             <table class="table">
               <thead>
                 <tr>
@@ -601,6 +601,19 @@
                 </tr>
               </tbody>
             </table>
+            <br>
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-4 col-md-9"></div>
+              <div class="col-xs-4 col-md-3 text-right">
+                <div class="input-group">
+<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Items</button>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
         </ng-form>
@@ -611,7 +624,7 @@
         <ng-form action="">
 
           <!-- INFORMATION BAR -->
-          <div class="well">
+          <div class="well info-bar-status info-bar-status-seals">
             <table class="table">
               <thead>
                 <tr>
@@ -649,7 +662,7 @@
           </div>
           
           <!-- PANE 4 - Assign Seals - Outbound --------------------------------------------------------------------- -->
-          <div class="well seal-color-blue">
+          <div class="well seal-color seal-color-blue">
             <div class="row" ng-hide="readOnly">
               <div class="col-xs-4 col-md-7"></div>
               <div class="col-xs-4 col-md-3 text-right">
@@ -674,7 +687,7 @@
           </div>
   
           <!-- PANE 4 - Assign Seals - Hand Over --------------------------------------------------------------------- -->
-          <div class="well seal-color-green">
+          <div class="well seal-color seal-color-green">
             <div class="row" ng-hide="readOnly">
               <div class="col-xs-4 col-md-7"></div>
               <div class="col-xs-4 col-md-3 text-right">
@@ -699,7 +712,7 @@
           </div>
   
           <!-- PANE 4 - Assign Seals - Inbound --------------------------------------------------------------------- -->
-          <div class="well seal-color-yellow">
+          <div class="well seal-color seal-color-yellow">
             <div class="row" ng-hide="readOnly">
               <div class="col-xs-4 col-md-7"></div>
               <div class="col-xs-4 col-md-3 text-right">
@@ -724,7 +737,7 @@
           </div>
   
           <!-- PANE 4 - Assign Seals - High Security --------------------------------------------------------------------- -->
-          <div class="well seal-color-white">
+          <div class="well seal-color seal-color-white">
             <div class="row" ng-hide="readOnly">
               <div class="col-xs-4 col-md-7"></div>
               <div class="col-xs-4 col-md-3 text-right">
@@ -756,7 +769,7 @@
         <ng-form action="">
 
           <!-- INFORMATION BAR -->
-          <div class="well">
+          <div class="well info-bar-status info-bar-status-dispatch">
             <table class="table">
               <thead>
                 <tr>
