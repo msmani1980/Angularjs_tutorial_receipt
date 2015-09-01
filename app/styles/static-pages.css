@@ -13,6 +13,12 @@
   border-left: none;
 }
 
+.fuelux .wizard .top-actions {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+}
+
 .fuelux .wizard .datepicker-calendar-wrapper {
   z-index: 9999;
 }
@@ -50,6 +56,7 @@
 
 .fuelux .wizard .well.seal-color-blue {
     position: relative;
+    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-green:after {
@@ -68,6 +75,7 @@
 
 .fuelux .wizard .well.seal-color-green {
     position: relative;
+    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-yellow:after {
@@ -86,6 +94,7 @@
 
 .fuelux .wizard .well.seal-color-yellow {
     position: relative;
+    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-white:after {
@@ -104,6 +113,7 @@
 
 .fuelux .wizard .well.seal-color-white {
     position: relative;
+    padding-top: 50px;
 }
 
 .fuelux .wizard .table-scrollable {

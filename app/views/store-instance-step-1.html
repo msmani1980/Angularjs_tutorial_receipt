@@ -1,36 +1,90 @@
-
 <div class="container">
 
-  <p class="alert alert-info">Setup Wizard Directive Goes Here</p>
+  <step-wizard></step-wizard>
 
-  <form name="createStoreInstance">
+  <form name="createStoreInstance" class="well" ng-submit="submitForm()">
 
-    <div class="form-group">
-      <label>LMP Station *</label>
-      <select class="form-control">
-        <option>ORD - Chicago</option>
-      </select>
+    <div class="row">
+
+      <div class="col-xs-12 col-sm-6 col-md-4">
+
+        <div class="form-group">
+          <label>LMP Station *</label>
+          <select required class="form-control" ng-model="formData.cateringStationId">
+            <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
+            <option ng-repeat="station in cateringStationList | orderBy:'name' track by station.id" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-4">
+
+        <div class="form-group">
+          <label>Store Number</label>
+          <!-- TODO: Loop the store numbers from API-->
+          <select class="form-control" ng-model="formData.storeNumber">
+            <option>Store 1</option>
+            <option>Store 2</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-4">
+
+        <div class="form-group">
+          <date-picker-field form="createStoreInstance" name="scheduleDate" label="Schedule Date"
+            min-date="'+1d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
+        </div>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-4">
+
+        <div class="form-group">
+          <label>Schedule Number *</label>
+          <input required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
+        </div>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-4">
+
+        <div class="form-group">
+          <label>Select Menus *</label>
+          <ui-select required multiple ng-model="formData.menus" theme="bootstrap" id="menuIds">
+            <ui-select-match placeholder="Select one or more Menus" ui-lock-choice="isDisabled()">{{ $item.menuCode }}
+            </ui-select-match>
+            <ui-select-choices  repeat="menu in menuList | filter: $select.search | orderBy:'menuCode'">
+              <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-4">
+
+        <div class="form-group">
+          <label>Aircraft Tail Number</label>
+          <select class="form-control" ng-model="tailNumber">
+            <!-- TODO: Loop the aircraft tail number from API-->
+            <option>COL964</option>
+            <option>MNA124</option>
+          </select>
+        </div>
+
+      </div>
+
     </div>
 
-    <date-picker-field form="createStoreInstance" name="storeInstanceDate" label="Instance Date"
-      min-date="'+1d'" required="true" ng-model="storeInstanceDate"></date-picker-field>
-
-    <div class="form-group">
-      <label>Schedule Number *</label>
-      <input class="form-control" type="text" placeholder="Schedule12456" custom-validity custom-pattern="alphanumeric" />
-    </div>
-
-    <div class="form-group">
-      <label>Store Number *</label>
-      <input class="form-control" type="text" placeholder="Store12456" custom-validity custom-pattern="alphanumeric" />
-    </div>
-
-    <div class="form-group">
-      <label>Aircraft Tail Number *</label>
-      <select class="form-control">
-        <option>COL964</option>
-      </select>
-    </div>
+    <footer class="text-right">
+      <button ng-onclick="submitForm()" type="submit" class="btn btn-success">
+        <i class="fa fa-check-square-o"></i>
+        <span class="btn-label">Create Store Instance</span>
+      </button>
+    </footer>
 
   </form>
 
