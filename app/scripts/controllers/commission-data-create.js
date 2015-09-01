@@ -18,7 +18,7 @@ angular.module('ts5App')
     $scope.updateCommissionPercent = function () {
       if($scope.commissionData.commissionPayable === 'Retail Item') {
         $scope.commissionPercentDisabled = true;
-        $scope.commissionData.commissionPercent = '0';
+        $scope.commissionData.commissionPercent = 0;
       } else {
         $scope.commissionPercentDisabled = false;
       }
@@ -63,6 +63,10 @@ angular.module('ts5App')
       $scope.commissionData = data;
       $scope.updateManualBars();
       $scope.updateIncentiveIncrement();
+    };
+
+    this.setCrewBase = function(data) {
+      $scope.crewBaseList = data;
     };
 
     this.init = function () {
