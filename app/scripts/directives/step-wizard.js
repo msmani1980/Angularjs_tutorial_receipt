@@ -12,7 +12,11 @@ angular.module('ts5App')
     templateUrl: '/views/directives/step-wizard.html',
     restrict: 'E',
     scope: {
-      steps: '='
+      steps: '=',
+      nextTrigger: '&',
+      nextTriggerParams: '=',
+      prevTrigger: '&',
+      prevTriggerParams: '='
     },
     controller: function($scope, $location) {
 
@@ -55,12 +59,38 @@ angular.module('ts5App')
       }
       init();
 
-      $scope.goToStepURI = function($index, uri){
+      $scope.goToStepURI = function($index){
         // Only allow previous steps to be clicked
         if($index >= currentStepIndex){
           return false;
         }
-        $location.url(uri);
+        // We call prevTrigger here, since the user wants to go back
+        if(angular.isDefined($scope.prevTrigger)){
+          $scope.prevTrigger($scope.prevTriggerParams);
+        }
+        $location.url($scope.steps[$index].uri);
+      };
+
+      $scope.wizardPrev = function(){
+        if(!currentStepIndex--){
+          return false;
+        }
+        $scope.goToStepURI(currentStepIndex--);
+      };
+
+      $scope.wizardNext = function(){
+        if(angular.isDefined($scope.prevTrigger)){
+          $scope.prevTrigger($scope.prevTriggerParams);
+        }
+        // No more steps, dont do anything
+        if(currentStepIndex+1 > $scope.steps.length){
+          return false;
+        }
+        if(angular.isDefined($scope.nextTrigger)){
+          $scope.nextTrigger($scope.nextTriggerParams);
+        }
+        // navigating the user to the next page should
+        // be handled by the controller nextTrigger scope function
       };
     }
   };

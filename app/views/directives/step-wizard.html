@@ -2,7 +2,7 @@
 
   <div ng-class="step.class" class="step" ng-repeat="step in steps">
     <span class="badge badge-info">{{step.badge || $index+1}}</span>
-    <span class="step-label hidden-xs" ng-click="goToStepURI($index, step.uri)">{{step.label}}</span>
+    <span class="step-label hidden-xs" ng-click="goToStepURI($index)">{{step.label}}</span>
     <span class="chevron"></span>
   </div>
 

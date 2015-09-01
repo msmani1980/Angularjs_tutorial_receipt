@@ -9,6 +9,12 @@
 
 	<ul>
 
+		<li ng-if="response500">
+
+			<strong>A server side error (500) has occured</strong> - please contact your system's adminstrator
+
+		</li>
+
 		<li ng-repeat="error in form.$error.required">
 
 			<strong>{{ error.$name }}</strong> is a required field.
