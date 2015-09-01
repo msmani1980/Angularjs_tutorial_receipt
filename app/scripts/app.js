@@ -172,7 +172,7 @@ angular.module('ts5App', [
   }).when('/stock-take-report', {
     templateUrl: 'views/stock-take-report.html',
     controller: 'StockTakeReportCtrl'
-  }).when('/store-instance-step-1', {
+  }).when('/store-instance-step-1/:action/:id?', {
     templateUrl: 'views/store-instance-step-1.html',
     controller: 'StoreInstanceStep1Ctrl'
   }).otherwise({

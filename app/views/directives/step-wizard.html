@@ -1,8 +1,8 @@
 <div class="steps-container">
 
-  <div ng-class="{'active': $index===0}" class="step" ng-repeat="step in steps">
+  <div ng-class="stepClass(step)" class="step" ng-repeat="step in steps">
     <span class="badge badge-info">{{$index+1}}</span>
-    <span class="step-label hidden-xs">{{step.label}}</span>
+    <span class="step-label hidden-xs" ng-click="goToStep(step, $index)">{{step.label}}</span>
     <span class="chevron"></span>
   </div>
 

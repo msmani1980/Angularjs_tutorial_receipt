@@ -11,26 +11,18 @@ angular.module('ts5App')
   return {
     templateUrl: '/views/directives/step-wizard.html',
     restrict: 'E',
-    scope: false,
-    controller: function ($scope) {
+    scope: {
+      steps: '='
+    },
+    controller: function($scope, $location) {
+      console.log($scope.steps);
+      $scope.stepClass = function(step){
 
-      $scope.steps = [
-        {
-          label: 'Create Store Instance'
-        },
-        {
-          label: 'Packing'
-        },
-        {
-          label: 'Assign Seals'
-        },
-        {
-          label: 'Review & Dispatch'
-        }
-      ];
-
+      };
+      $scope.goToStep = function(step, $index){
+        console.log(step);
+      };
     }
-
   };
 
 });
