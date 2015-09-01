@@ -24,10 +24,9 @@
 
         <div class="form-group">
           <label>Store Number</label>
-          <!-- TODO: Loop the store numbers from API -->
           <select class="form-control" ng-model="formData.storeId">
-            <option value="23">Test Store 1</option>
-            <option value="21"> Test Store 2</option>
+            <option ng-disabled="true" selected="selected" value>Select Store</option>
+            <option ng-repeat="store in storeList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
         </div>
 

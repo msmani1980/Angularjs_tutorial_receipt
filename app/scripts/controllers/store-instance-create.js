@@ -26,6 +26,7 @@ angular.module('ts5App')
       this.getCatererStationList();
       this.getMenuMasterList();
       this.getCarrierNumbers();
+      this.getStoresList();
     };
 
     this.getCatererStationList = function() {
@@ -45,12 +46,20 @@ angular.module('ts5App')
     };
 
     this.getCarrierNumbers = function() {
-      // TODO: Figure out how to pass carrierType to the service 
+      // TODO: Figure out how to pass carrierType to the service
       storeInstanceFactory.getCarrierNumbers(companyId,'20').then(this.setCarrierNumbers);
     };
 
     this.setCarrierNumbers = function(dataFromAPI) {
       $scope.carrierNumbers = dataFromAPI.response;
+    };
+
+    this.getStoresList = function() {
+      storeInstanceFactory.getStoresList().then(this.setStoresList);
+    };
+
+    this.setStoresList = function(dataFromAPI) {
+      $scope.storeList = dataFromAPI.response;
     };
 
     this.createStoreInstance = function() {
