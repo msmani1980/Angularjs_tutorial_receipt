@@ -8,20 +8,24 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast, dateUtility) {
+  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast, dateUtility,GlobalMenuService) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
+    $scope.carrierNumbers = [];
     $scope.formData = {
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
    };
 
+   // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+   var companyId = GlobalMenuService.company.get();
    var $this = this;
 
     this.init = function() {
       this.getCatererStationList();
       this.getMenuMasterList();
+      this.getCarrierNumbers();
     };
 
     this.getCatererStationList = function() {
@@ -38,6 +42,15 @@ angular.module('ts5App')
 
     this.setMenuMasterList = function(dataFromAPI) {
       $scope.menuMasterList = dataFromAPI.companyMenuMasters;
+    };
+
+    this.getCarrierNumbers = function() {
+      // TODO: Figure out how to pass carrierType to the service 
+      storeInstanceFactory.getCarrierNumbers(companyId,'20').then(this.setCarrierNumbers);
+    };
+
+    this.setCarrierNumbers = function(dataFromAPI) {
+      $scope.carrierNumbers = dataFromAPI.response;
     };
 
     this.createStoreInstance = function() {
