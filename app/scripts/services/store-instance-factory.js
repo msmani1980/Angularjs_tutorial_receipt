@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('storeInstanceFactory', function (storeInstanceService, catererStationService,
                                              schedulesService, carrierService,
-                                             GlobalMenuService) {
+                                             GlobalMenuService, menuMasterService) {
 
     function getCompanyId(){
       return GlobalMenuService.company.get();
@@ -48,6 +48,10 @@ angular.module('ts5App')
       return storeInstanceService.deleteStoreInstance(id);
     }
 
+    function getMenuMasterList(){
+      return menuMasterService.getMenuMasterList();
+    }
+
     return {
       getCompanyId: getCompanyId,
       getCatererStationList: getCatererStationList,
@@ -57,7 +61,8 @@ angular.module('ts5App')
       getStoreInstance: getStoreInstance,
       createStoreInstance: createStoreInstance,
       updateStoreInstance: updateStoreInstance,
-      deleteStoreInstance: deleteStoreInstance
+      deleteStoreInstance: deleteStoreInstance,
+      getMenuMasterList: getMenuMasterList
     };
 
   });
