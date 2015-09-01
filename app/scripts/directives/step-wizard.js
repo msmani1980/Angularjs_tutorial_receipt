@@ -50,7 +50,7 @@ angular.module('ts5App')
         return step;
       }
       function trailingSlashes(){
-        $scope.steps.map(trailingSlashOnStepURI)
+        $scope.steps.map(trailingSlashOnStepURI);
       }
       function init(){
         trailingSlashes();
@@ -64,33 +64,46 @@ angular.module('ts5App')
         if($index >= currentStepIndex){
           return false;
         }
+        var stepBackwards = true;
         // We call prevTrigger here, since the user wants to go back
+        // if controller's prevTrigger returns false, wizard will NOT step backwards
         if(angular.isDefined($scope.prevTrigger)){
-          $scope.prevTrigger($scope.prevTriggerParams);
+          var triggerReturn = $scope.prevTrigger($scope.prevTriggerParams);
+          if(typeof triggerReturn === 'boolean'){
+            stepBackwards = triggerReturn;
+          }
         }
-        $location.url($scope.steps[$index].uri);
+        if(stepBackwards) {
+          $location.url($scope.steps[$index].uri);
+        }
       };
 
       $scope.wizardPrev = function(){
-        if(!currentStepIndex--){
+        var prevIndex = currentStepIndex--;
+        if(prevIndex < 0){
           return false;
         }
-        $scope.goToStepURI(currentStepIndex--);
+        $scope.goToStepURI(prevIndex);
       };
 
       $scope.wizardNext = function(){
-        if(angular.isDefined($scope.prevTrigger)){
-          $scope.prevTrigger($scope.prevTriggerParams);
-        }
+        var nextIndex = parseInt(currentStepIndex, 10) + 1;
         // No more steps, dont do anything
-        if(currentStepIndex+1 > $scope.steps.length){
+        if(nextIndex > $scope.steps.length){
           return false;
         }
+        var stepForward = true;
         if(angular.isDefined($scope.nextTrigger)){
-          $scope.nextTrigger($scope.nextTriggerParams);
+          // if controller's nextTrigger returns false, wizard will NOT step forward
+          var triggerReturn = $scope.nextTrigger($scope.nextTriggerParams);
+          if(typeof triggerReturn === 'boolean'){
+            stepForward = triggerReturn;
+          }
         }
-        // navigating the user to the next page should
-        // be handled by the controller nextTrigger scope function
+        if(stepForward){
+          var uri = $scope.steps[nextIndex].uri;
+          $location.url(uri);
+        }
       };
     }
   };
