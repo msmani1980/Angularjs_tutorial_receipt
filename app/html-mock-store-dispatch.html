@@ -13,7 +13,11 @@
 
   <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
   <link rel="stylesheet" href="bower_components/select2/select2.css" />
-
+  
+  <!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+  <link rel="stylesheet" href="bower_components/selectize/dist/css/selectize.css" />
+  <script src="bower_components/selectize/examples/js/jquery.js"></script>
+  <script src="bower_components/selectize/dist/js/standalone/selectize.js"></script>
 
 <link rel="stylesheet" href="styles/static-pages.css">
 </head>
@@ -409,10 +413,29 @@
             </table>
           </div>
 
+          <!-- PANE 3 - Assign Seals - Outbound --------------------------------------------------------------------- -->
           <div class="well seal-color seal-color-blue">
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7"></div>
-              <div class="col-xs-4 col-md-3 text-right">
+            <div class="row">
+
+              <div class="col-xs-12">
+                <label for="seal-numbers-outbound">Seal Numbers:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-outbound" value="">
+                <script>
+                  $('#seal-numbers-outbound').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
+              </div>
+              
+            </div>
+            <br>
+            
+            <div class="row">
+
+              <div class="col-xs-8 col-sm-3 col-sm-offset-7 text-right">
                 <div class="input-group">
 <!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
                   <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
@@ -430,21 +453,33 @@
                   </label>
                 </div>
               </div>
+              
             </div>
           </div>
   
-          <!-- PANE 4 - Assign Seals - Hand Over --------------------------------------------------------------------- -->
+          <!-- PANE 3 - Assign Seals - Hand Over --------------------------------------------------------------------- -->
           <div class="well seal-color seal-color-green">
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7">
-                <ui-select multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly">
-                  <ui-select-match placeholder="Select Employee IDs from list">{{ $item.employeeIdentifier }}</ui-select-match>
-                  <ui-select-choices repeat="employee in employees | filter: $select.search">
-                    {{employee.employeeIdentifier}} ({{ employee.lastName }}, {{ employee.firstName }})
-                  </ui-select-choices>
-                </ui-select>
+            <div class="row">
+            
+              <div class="col-xs-12">
+                <label for="seal-numbers-hand-over">Seal Numbers:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-hand-over" value="12345,54321,22322">
+                <script>
+                  $('#seal-numbers-hand-over').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
               </div>
-              <div class="col-xs-4 col-md-3 text-right">
+              
+            </div>
+            <br>
+            
+            <div class="row">
+
+              <div class="col-xs-8 col-sm-3 col-sm-offset-7 text-right">
                 <div class="input-group">
 <!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
                   <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
@@ -462,14 +497,33 @@
                   </label>
                 </div>
               </div>
+              
             </div>
           </div>
   
-          <!-- PANE 4 - Assign Seals - Inbound --------------------------------------------------------------------- -->
+          <!-- PANE 3 - Assign Seals - Inbound --------------------------------------------------------------------- -->
           <div class="well seal-color seal-color-yellow">
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7"></div>
-              <div class="col-xs-4 col-md-3 text-right">
+            <div class="row">
+            
+              <div class="col-xs-12">
+                <label for="seal-numbers-inbound">Seal Numbers:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-inbound" value="">
+                <script>
+                  $('#seal-numbers-inbound').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
+              </div>
+              
+            </div>
+            <br>
+            
+            <div class="row">
+            
+              <div class="col-xs-8 col-sm-3 col-sm-offset-7 text-right">
                 <div class="input-group">
 <!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
                   <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
@@ -487,14 +541,33 @@
                   </label>
                 </div>
               </div>
+              
             </div>            
           </div>
   
-          <!-- PANE 4 - Assign Seals - High Security --------------------------------------------------------------------- -->
+          <!-- PANE 3 - Assign Seals - High Security --------------------------------------------------------------------- -->
           <div class="well seal-color seal-color-white">
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7"></div>
-              <div class="col-xs-4 col-md-3 text-right">
+            <div class="row">
+            
+              <div class="col-xs-12">
+                <label for="seal-numbers-high-security">Seal Numbers:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-high-security" value="">
+                <script>
+                  $('#seal-numbers-high-security').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
+              </div>
+              
+            </div>
+            <br>
+            
+            <div class="row">
+
+              <div class="col-xs-8 col-sm-3 col-sm-offset-7 text-right">
                 <div class="input-group">
 <!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
                   <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
@@ -861,7 +934,6 @@
 <script src="scripts/directives/step-wizard.js"></script>
 <script src="scripts/services/store-instance-service.js"></script>
 <script src="scripts/services/store-instance-factory.js"></script>
-
 
 
   <script src="//www.fuelcdn.com/fuelux/3.6.3/js/fuelux.min.js" type="text/javascript"></script>

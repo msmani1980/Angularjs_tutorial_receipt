@@ -52,11 +52,11 @@
             </div>
             
             <div class="form-group">
-              <label for="scheduleDate" class="col-sm-4 control-label">Schedule Date*</label>
+              <label for="scheduleDate" class="col-sm-4 control-label">Schedule Date</label>
               <div class="datepicker fuelux" id="myDatepicker">
                 <div class="col-sm-5">
                   <div class="input-group">
-                    <input class="form-control" id="myDatepickerInput" type="text" />
+                    <input class="form-control" id="myDatepickerInput" type="text" disabled="disabled" />
                     <div class="input-group-btn">
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         <span class="glyphicon glyphicon-calendar"></span> <span class="sr-only">Toggle Calendar</span>
@@ -132,14 +132,14 @@
             </div>
   
             <div class="form-group">
-              <label for="scheduleNumber" class="col-sm-4 control-label">Schedule Number*</label>
+              <label for="scheduleNumber" class="col-sm-4 control-label">Schedule Number</label>
               <div class="col-sm-5">
-                <input type="text" class="form-control" id="scheduleNumber" placeholder="1234">
+                <input type="text" class="form-control" id="scheduleNumber" placeholder="1234" disabled="disabled">
               </div>
             </div>
   
             <div class="form-group">
-              <label for="selectMenu" class="col-sm-4 control-label">Select Menu*</label>
+              <label for="selectMenu" class="col-sm-4 control-label">Select Menu</label>
               <div class="col-sm-5">
   <!-- TODO: THIS WILL USE ANGULAR MULTIPLE SELECT -->
   <!--               <ui-select multiple ng-model="formData.tags" theme="bootstrap"> -->
@@ -149,7 +149,7 @@
   <!--                   <div ng-bind-html="tag.name | highlight: $select.search"></div> -->
   <!--                 </ui-select-choices> -->
   <!--               </ui-select> -->
-                <select class="form-control" id="selectMenu">
+                <select class="form-control" id="selectMenu" disabled="disabled">
                   <option>Breakfast</option>
                   <option>Lunch</option>
                   <option>Dinner</option>
@@ -161,7 +161,7 @@
             <div class="form-group">
               <label for="selectMenu" class="col-sm-4 control-label">Aircraft Tail Number</label>
               <div class="col-sm-5">
-                <select class="form-control" id="selectMenu">
+                <select class="form-control" id="selectMenu" disabled="disabled">
                   <option>AB-CDE</option>
                   <option>CD-ABC</option>
                   <option>1X-345</option>
