@@ -44,7 +44,9 @@
                 end-date-model="commissionData.endDate"
                 label-from="Effective From"
                 label-to="Effective To"
-                is-search-field="true">
+                is-search-field="true"
+                disable-start-date="readOnly"
+                disable-end-date="readOnly">
               </date-picker>
             </div>
           </div>
@@ -63,7 +65,8 @@
               <select class="form-control"
                       required="true"
                       ng-model="commissionData.commissionPayable"
-                      ng-change="updateCommissionPercent()">
+                      ng-change="updateCommissionPercent()"
+                      ng-disabled="readOnly">
                 <option selected="selected" value>Select a Departure Station</option>
                 <option>Retail Item</option>
                 <option>ePOS Sales</option>
@@ -80,7 +83,7 @@
                    class="form-control"
                    placeholder="57.5"
                    maxlength="6"
-                   ng-disabled="commissionPercentDisabled">
+                   ng-disabled="commissionPercentDisabled || readOnly">
           </div>
         </div>
 
@@ -93,8 +96,9 @@
               <select class="form-control"
                       required="true"
                       ng-model="commissionData.manualBarsType"
-                      ng-change="updateManualBars()">
-                <option selected="selected" value>Select a Departure Station</option>
+                      ng-change="updateManualBars()"
+                      ng-disabled="readOnly">
+                <option selected value="">Select a Commission Type</option>
                 <option>Percentage</option>
                 <option>Amount</option>
               </select>
@@ -164,8 +168,9 @@
               <select class="form-control"
                       required="true"
                       ng-model="commissionData.commissionType"
-                      ng-change="updateIncentiveIncrement()">
-                <option selected="selected" value>Select a Departure Station</option>
+                      ng-change="updateIncentiveIncrement()"
+                      ng-disabled="readOnly">
+                <option selected value="">Select a Commission Type</option>
                 <option>Percentage</option>
                 <option>Amount</option>
               </select>
