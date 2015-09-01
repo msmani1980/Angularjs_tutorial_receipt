@@ -79,7 +79,7 @@ angular.module('ts5App')
       };
 
       $scope.wizardPrev = function(){
-        var prevIndex = currentStepIndex--;
+        var prevIndex = parseInt(currentStepIndex, 10) - 1;
         if(prevIndex < 0){
           return false;
         }
