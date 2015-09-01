@@ -2,63 +2,78 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:StoreInstanceStep1Ctrl
+ * @name ts5App.controller:StoreInstanceCreateCtrl
  * @description
- * # StoreInstanceStep1Ctrl
+ * # StoreInstanceCreateCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceStep1Ctrl', function ($scope,catererStationService,
-    menuService,storeInstanceService,ngToast, dateUtility) {
+  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast, dateUtility) {
 
     $scope.cateringStationList = [];
-    $scope.menuList = [];
+    $scope.menuMasterList = [];
     $scope.formData = {
      scheduleDate: dateUtility.nowFormatted(),
-     menus: [
-       {id:1}
-     ]
+     menus: []
    };
 
    var $this = this;
 
     this.init = function() {
       this.getCatererStationList();
-      this.getMenuList();
+      this.getMenuMasterList();
     };
 
     this.getCatererStationList = function() {
-      // TODO: Use store instance factory
-      catererStationService.getCatererStationList().then(this.setCatererStationList);
+      storeInstanceFactory.getCatererStationList().then(this.setCatererStationList);
     };
 
     this.setCatererStationList = function(dataFromAPI) {
       $scope.cateringStationList = dataFromAPI.response;
     };
 
-    this.getMenuList = function() {
-      // TODO: Use store instance factory
-      menuService.getMenuList().then(this.setMenuList);
+    this.getMenuMasterList = function() {
+      storeInstanceFactory.getMenuMasterList().then(this.setMenuMasterList);
     };
 
-    this.setMenuList = function(dataFromAPI) {
-      $scope.menuList = dataFromAPI.menus;
+    this.setMenuMasterList = function(dataFromAPI) {
+      $scope.menuMasterList = dataFromAPI.companyMenuMasters;
     };
 
     this.createStoreInstance = function() {
+      this.resetErrors();
       this.displayLoadingModal('Creating a store instance');
       var payload = this.formatPayload();
-      storeInstanceService.createStoreInstance(payload).then(this.createStoreInstanceSuccessHandler);
+      storeInstanceFactory.createStoreInstance(payload).then(
+        this.createStoreInstanceSuccessHandler,
+        this.createStoreInstanceErrorHandler
+      );
     };
 
     this.createStoreInstanceSuccessHandler = function(response){
       $this.hideLoadingModal();
       if(response.id){
-        $this.showSuccessMessage('Store Instance created id: ' + response.id);
+        $this.showMessage('success','Store Instance created id: ' + response.id);
         //TODO: Move user to packing step
-      } else {
-        $scope.displayError = true;
       }
+    };
+
+    this.createStoreInstanceErrorHandler = function(response){
+      $this.hideLoadingModal();
+      $this.showMessage('failure','We couldn\'t create your Store Instance' );
+      $scope.displayError = true;
+      if(response.data) {
+        $scope.formErrors = response.data;
+        return false;
+      }
+      $scope.response500 = true;
+      return false;
+    };
+
+    this.resetErrors = function() {
+      $scope.displayError = false;
+      $scope.formErrors = [];
+      $scope.response500 = false;
     };
 
     this.formatPayload = function(){
@@ -86,9 +101,9 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    this.showSuccessMessage = function (message) {
+    this.showMessage = function (type, message) {
       ngToast.create({
-        className: 'success',
+        className: type,
         dismissButton: true,
         content: message
       });

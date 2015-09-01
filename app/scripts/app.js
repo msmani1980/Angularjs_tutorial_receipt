@@ -172,9 +172,9 @@ angular.module('ts5App', [
   }).when('/stock-take-report', {
     templateUrl: 'views/stock-take-report.html',
     controller: 'StockTakeReportCtrl'
-  }).when('/store-instance-step-1', {
-    templateUrl: 'views/store-instance-step-1.html',
-    controller: 'StoreInstanceStep1Ctrl'
+  }).when('/store-instance-create', {
+    templateUrl: 'views/store-instance-create.html',
+    controller: 'StoreInstanceCreateCtrl'
   }).otherwise({
     redirectTo: '/'
   });

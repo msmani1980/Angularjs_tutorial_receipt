@@ -2,6 +2,8 @@
 
   <step-wizard></step-wizard>
 
+  <form-error-dialog></form-error-dialog>
+
   <form name="createStoreInstance" class="well" ng-submit="submitForm()">
 
     <div class="row">
@@ -22,10 +24,10 @@
 
         <div class="form-group">
           <label>Store Number</label>
-          <!-- TODO: Loop the store numbers from API-->
-          <select class="form-control" ng-model="formData.storeNumber">
-            <option>Store 1</option>
-            <option>Store 2</option>
+          <!-- TODO: Loop the store numbers from API -->
+          <select class="form-control" ng-model="formData.storeId">
+            <option value="1">Store 1</option>
+            <option value="2">Store 2</option>
           </select>
         </div>
 
@@ -44,7 +46,7 @@
 
         <div class="form-group">
           <label>Schedule Number *</label>
-          <input required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
+          <input maxlength="10" required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
         </div>
 
       </div>
@@ -56,7 +58,7 @@
           <ui-select required multiple ng-model="formData.menus" theme="bootstrap" id="menuIds">
             <ui-select-match placeholder="Select one or more Menus" ui-lock-choice="isDisabled()">{{ $item.menuCode }}
             </ui-select-match>
-            <ui-select-choices  repeat="menu in menuList | filter: $select.search | orderBy:'menuCode'">
+            <ui-select-choices  repeat="menu in menuMasterList | filter: $select.search | orderBy:'menuCode'">
               <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -68,10 +70,10 @@
 
         <div class="form-group">
           <label>Aircraft Tail Number</label>
-          <select class="form-control" ng-model="tailNumber">
+          <select class="form-control" ng-model="formData.carrierId">
             <!-- TODO: Loop the aircraft tail number from API-->
-            <option>COL964</option>
-            <option>MNA124</option>
+            <option value="1">COL964</option>
+            <option value="2">MNA124</option>
           </select>
         </div>
 
