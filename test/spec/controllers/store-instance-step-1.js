@@ -6,7 +6,7 @@ describe('Controller: StoreInstanceStep1Ctrl', function () {
   beforeEach(module('ts5App'));
   beforeEach(module(
     'served/catering-stations.json',
-    'served/menus.json'
+    'served/menu-master-list.json'
   ));
 
   var StoreInstanceStep1Ctrl,
@@ -14,29 +14,29 @@ describe('Controller: StoreInstanceStep1Ctrl', function () {
     catererStationService,
     cateringStationsJSON,
     getCatererStationListDeferred,
-    menuService,
-    menusJSON,
-    getMenuListDeferred,
+    menuMasterService,
+    menuMasterListJSON,
+    getMenuMasterListDeferred,
     location,
     httpBackend;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope,$injector, _servedCateringStations_,_servedMenus_) {
+  beforeEach(inject(function ($q, $controller, $rootScope,$injector, _servedCateringStations_,_servedMenuMasterList_) {
 
     cateringStationsJSON = _servedCateringStations_;
-    menusJSON = _servedMenus_;
+    menuMasterListJSON = _servedMenuMasterList_;
 
     httpBackend = $injector.get('$httpBackend');
     location = $injector.get('$location');
     $scope = $rootScope.$new();
 
-    menuService = $injector.get('menuService');
+    menuMasterService = $injector.get('menuMasterService');
     catererStationService = $injector.get('catererStationService');
 
-    getMenuListDeferred = $q.defer();
-    getMenuListDeferred.resolve(menusJSON);
-    spyOn(menuService, 'getMenuList').and.returnValue(
-      getMenuListDeferred.promise);
+    getMenuMasterListDeferred = $q.defer();
+    getMenuMasterListDeferred.resolve(menuMasterListJSON);
+    spyOn(menuMasterService, 'getMenuMasterList').and.returnValue(
+      getMenuMasterListDeferred.promise);
 
     getCatererStationListDeferred = $q.defer();
     getCatererStationListDeferred.resolve(cateringStationsJSON);
@@ -68,12 +68,12 @@ describe('Controller: StoreInstanceStep1Ctrl', function () {
       expect(StoreInstanceStep1Ctrl.setCatererStationList).toBeDefined();
     });
 
-    it('should have a getMenuList method', function () {
-      expect(StoreInstanceStep1Ctrl.getMenuList).toBeDefined();
+    it('should have a getMenuMasterList method', function () {
+      expect(StoreInstanceStep1Ctrl.getMenuMasterList).toBeDefined();
     });
 
     it('should have a setMenuList method', function () {
-      expect(StoreInstanceStep1Ctrl.setMenuList).toBeDefined();
+      expect(StoreInstanceStep1Ctrl.setMenuMasterList).toBeDefined();
     });
 
 
@@ -102,21 +102,21 @@ describe('Controller: StoreInstanceStep1Ctrl', function () {
     });
 
     it('should have an empty menu list before the scope is digested', function () {
-      expect($scope.menuList).toEqual([]);
+      expect($scope.menuMasterList).toEqual([]);
     });
 
-    describe('The menuList array', function () {
+    describe('The menuMasterList array', function () {
 
       beforeEach(function() {
         $scope.$digest();
       });
 
-      it('should have (1) or more menus in the menuList', function () {
-        expect($scope.menuList.length).toBeGreaterThan(0);
+      it('should have (1) or more menus in the menuMasterList', function () {
+        expect($scope.menuMasterList.length).toBeGreaterThan(0);
       });
 
       it('should be match the stations list from the stations API Respone',function () {
-        expect($scope.menuList).toEqual(menusJSON.menus);
+        expect($scope.menuMasterList).toEqual(menuMasterListJSON.companyMenuMasters);
       });
 
     });
