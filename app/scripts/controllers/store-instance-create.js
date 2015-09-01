@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:StoreInstanceStep1Ctrl
+ * @name ts5App.controller:StoreInstanceCreateCtrl
  * @description
- * # StoreInstanceStep1Ctrl
+ * # StoreInstanceCreateCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceStep1Ctrl', function ($scope, storeInstanceFactory, ngToast, dateUtility) {
+  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast, dateUtility) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -25,7 +25,6 @@ angular.module('ts5App')
     };
 
     this.getCatererStationList = function() {
-      // TODO: Use store instance factory
       storeInstanceFactory.getCatererStationList().then(this.setCatererStationList);
     };
 
@@ -34,7 +33,6 @@ angular.module('ts5App')
     };
 
     this.getMenuMasterList = function() {
-      // TODO: Use store instance factory
       storeInstanceFactory.getMenuMasterList().then(this.setMenuMasterList);
     };
 

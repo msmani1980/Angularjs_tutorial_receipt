@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceStep1Ctrl', function () {
+describe('Controller: StoreInstanceCreateCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -9,7 +9,7 @@ describe('Controller: StoreInstanceStep1Ctrl', function () {
     'served/menu-master-list.json'
   ));
 
-  var StoreInstanceStep1Ctrl,
+  var StoreInstanceCreateCtrl,
     $scope,
     catererStationService,
     cateringStationsJSON,
@@ -43,7 +43,7 @@ describe('Controller: StoreInstanceStep1Ctrl', function () {
     spyOn(catererStationService, 'getCatererStationList').and.returnValue(
       getCatererStationListDeferred.promise);
 
-    StoreInstanceStep1Ctrl = $controller('StoreInstanceStep1Ctrl', {
+    StoreInstanceCreateCtrl = $controller('StoreInstanceCreateCtrl', {
       $scope: $scope
     });
 
@@ -57,23 +57,23 @@ describe('Controller: StoreInstanceStep1Ctrl', function () {
   describe('the controller methods', function() {
 
     it('should have a init method', function () {
-      expect(StoreInstanceStep1Ctrl.init).toBeDefined();
+      expect(StoreInstanceCreateCtrl.init).toBeDefined();
     });
 
     it('should have a getCatererStationList method', function () {
-      expect(StoreInstanceStep1Ctrl.getCatererStationList).toBeDefined();
+      expect(StoreInstanceCreateCtrl.getCatererStationList).toBeDefined();
     });
 
     it('should have a setCatererStationList method', function () {
-      expect(StoreInstanceStep1Ctrl.setCatererStationList).toBeDefined();
+      expect(StoreInstanceCreateCtrl.setCatererStationList).toBeDefined();
     });
 
     it('should have a getMenuMasterList method', function () {
-      expect(StoreInstanceStep1Ctrl.getMenuMasterList).toBeDefined();
+      expect(StoreInstanceCreateCtrl.getMenuMasterList).toBeDefined();
     });
 
     it('should have a setMenuList method', function () {
-      expect(StoreInstanceStep1Ctrl.setMenuMasterList).toBeDefined();
+      expect(StoreInstanceCreateCtrl.setMenuMasterList).toBeDefined();
     });
 
 
