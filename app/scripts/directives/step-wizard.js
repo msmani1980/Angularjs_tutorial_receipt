@@ -59,21 +59,29 @@ angular.module('ts5App')
       }
       init();
 
+      function callTrigger(trigger){
+        if(!angular.isDefined($scope[trigger])) {
+          return true;
+        }
+        var triggerReturn = $scope[trigger]();
+        if(typeof triggerReturn !== 'boolean') {
+          return true;
+        }
+        return triggerReturn;
+      }
+
       $scope.goToStepURI = function($index){
+        if($index < 0){
+          return false;
+        }
         // Only allow previous steps to be clicked
         if($index >= currentStepIndex){
           return false;
         }
-        var stepBackwards = true;
+        var stepBackwards = callTrigger('prevTrigger');
         // We call prevTrigger here, since the user wants to go back
         // if controller's prevTrigger returns false, wizard will
         // trigger controller function but NOT step backwards
-        if(angular.isDefined($scope.prevTrigger)){
-          var triggerReturn = $scope.prevTrigger();
-          if(typeof triggerReturn === 'boolean'){
-            stepBackwards = triggerReturn;
-          }
-        }
         if(stepBackwards) {
           $location.url($scope.steps[$index].uri);
         }
@@ -94,14 +102,7 @@ angular.module('ts5App')
         if(nextIndex > $scope.steps.length){
           return false;
         }
-        var stepForward = true;
-        if(angular.isDefined($scope.nextTrigger)){
-          // if controller's nextTrigger returns false, wizard will NOT step forward
-          var triggerReturn = $scope.nextTrigger();
-          if(typeof triggerReturn === 'boolean'){
-            stepForward = triggerReturn;
-          }
-        }
+        var stepForward = callTrigger('nextTrigger');
         if(stepForward){
           var uri = $scope.steps[nextIndex].uri;
           $location.url(uri);
