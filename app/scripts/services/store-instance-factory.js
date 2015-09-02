@@ -57,8 +57,8 @@ angular.module('ts5App')
       return menuMasterService.getMenuMasterList();
     }
 
-    function getStoresList(){
-      return storesService.getStoresList();
+    function getStoresList(query){
+      return storesService.getStoresList(query);
     }
 
     return {

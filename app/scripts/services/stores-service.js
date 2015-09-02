@@ -21,8 +21,8 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getStoresList() {
-      return requestResource.getStoresList().$promise;
+    function getStoresList(query) {
+      return requestResource.getStoresList(query).$promise;
     }
 
     return {
