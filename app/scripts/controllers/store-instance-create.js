@@ -47,8 +47,7 @@ angular.module('ts5App')
     };
 
     this.getCarrierNumbers = function() {
-      // TODO: Figure out how to pass carrierType to the service
-      storeInstanceFactory.getAllCarrierNumbers(companyId,'20').then(this.setCarrierNumbers);
+      storeInstanceFactory.getAllCarrierNumbers(companyId).then(this.setCarrierNumbers);
     };
 
     this.setCarrierNumbers = function(dataFromAPI) {
@@ -67,6 +66,9 @@ angular.module('ts5App')
       this.resetErrors();
       this.displayLoadingModal('Creating a store instance');
       var payload = this.formatPayload();
+      if(angular.isUndefined(payload)) {
+        return false;
+      }
       storeInstanceFactory.createStoreInstance(payload).then(
         this.createStoreInstanceSuccessHandler,
         this.createStoreInstanceErrorHandler
