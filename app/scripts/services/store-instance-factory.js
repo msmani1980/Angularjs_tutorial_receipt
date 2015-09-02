@@ -29,6 +29,10 @@ angular.module('ts5App')
       return carrierService.getCarrierNumbers(companyId,carrierTypeId);
     }
 
+    function getAllCarrierNumbers(companyId){
+      return getCarrierNumbers(companyId,0);
+    }
+
     function getStoreInstancesList(query){
       return storeInstanceService.getStoreInstancesList(query);
     }
@@ -62,6 +66,7 @@ angular.module('ts5App')
       getCatererStationList: getCatererStationList,
       getSchedules: getSchedules,
       getCarrierNumbers: getCarrierNumbers,
+      getAllCarrierNumbers: getAllCarrierNumbers,
       getStoreInstancesList: getStoreInstancesList,
       getStoreInstance: getStoreInstance,
       createStoreInstance: createStoreInstance,

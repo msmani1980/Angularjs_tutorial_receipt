@@ -26,7 +26,7 @@
           <label>Store Number</label>
           <select class="form-control" ng-model="formData.storeId">
             <option ng-disabled="true" selected="selected" value>Select Store</option>
-            <option ng-repeat="store in storeList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
+            <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
         </div>
 

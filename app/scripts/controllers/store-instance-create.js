@@ -13,6 +13,7 @@ angular.module('ts5App')
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
     $scope.carrierNumbers = [];
+    $scope.storesList = [];
     $scope.formData = {
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
@@ -47,7 +48,7 @@ angular.module('ts5App')
 
     this.getCarrierNumbers = function() {
       // TODO: Figure out how to pass carrierType to the service
-      storeInstanceFactory.getCarrierNumbers(companyId,'20').then(this.setCarrierNumbers);
+      storeInstanceFactory.getAllCarrierNumbers(companyId,'20').then(this.setCarrierNumbers);
     };
 
     this.setCarrierNumbers = function(dataFromAPI) {
@@ -59,7 +60,7 @@ angular.module('ts5App')
     };
 
     this.setStoresList = function(dataFromAPI) {
-      $scope.storeList = dataFromAPI.response;
+      $scope.storesList = dataFromAPI.response;
     };
 
     this.createStoreInstance = function() {
