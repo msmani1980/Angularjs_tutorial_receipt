@@ -1,14 +1,29 @@
 'use strict';
 
 describe('Controller: CommissionDataTableCtrl', function () {
-  beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('ts5App', 'template-module', 'served/commission-payable-list.json'));
   var CommissionDataTableCtrl,
+    commissionPayableListDeferred,
+    commissionPayableListResponseJSON,
+    commissionFactory,
     location,
     scope;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $location) {
+  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
+
+    inject(function (_servedCommissionPayableList_) {
+      commissionPayableListResponseJSON = _servedCommissionPayableList_;
+    });
+
     location = $location;
     scope = $rootScope.$new();
+    commissionFactory = $injector.get('commissionFactory');
+
+
+    commissionPayableListDeferred = $q.defer();
+    commissionPayableListDeferred.resolve(commissionPayableListResponseJSON);
+
+    spyOn(commissionFactory, 'getCommissionPayableList').and.returnValue(commissionPayableListDeferred.promise);
 
     CommissionDataTableCtrl = $controller('CommissionDataTableCtrl', {
       $scope: scope
@@ -56,7 +71,8 @@ describe('Controller: CommissionDataTableCtrl', function () {
         expect(scope.search).toEqual({});
       });
       it('should call getCommissionData with empty search query', function () {
-        //expect(commissionFactory.getCommissionDataList).toHaveBeenCalledWith({});
+        scope.clearSearch();
+        expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith({});
       });
     });
 
@@ -70,7 +86,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
   describe('get commission data', function () {
     it('should call commissionData factory', function () {
-      //expect(commissionFactory.getCommissionDataList).toHaveBeenCalled();
+      expect(commissionFactory.getCommissionPayableList).toHaveBeenCalled();
     });
     it('should populate scope variable', function () {
       //expect(scope.commissionData).toEqual(mock);

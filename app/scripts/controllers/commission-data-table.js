@@ -32,11 +32,37 @@ angular.module('ts5App')
     };
 
     this.getDataList = function (query) {
-      //commissionFactory.getCommissionPayableList().then(function (response) {
-      //  $scope.commissionData = response.response;
-      //})
+      commissionFactory.getCommissionPayableList(query).then(function (response) {
+        $scope.commissionData = response.response;
+      })
     };
 
-    $this.getDataList({});
+    this.getCrewBaseTypes = function () {
+      commissionFactory.getCrewBaseTypes().then(function (response) {
+        $scope.crewBaseTypes = response;
+      });
+    };
+
+    this.getCommissionPayableTypes = function () {
+      commissionFactory.getCommissionPayableTypes().then(function (response) {
+        $scope.commissionTypes = response;
+      });
+    };
+
+    this.getDiscountTypes = function () {
+      commissionFactory.getDiscountTypes().then(function (response) {
+        $scope.discountTypes = response;
+      });
+    };
+
+    this.init = function () {
+      //$this.getCrewBaseTypes();
+      //$this.getCommissionPayableTypes();
+      //$this.getDiscountTypes();
+      $this.getDataList({});
+    };
+
+    this.init();
+
 
   });

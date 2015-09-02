@@ -6,17 +6,23 @@ describe('Factory: commissionFactory', function () {
 
   var commissionFactory,
     commissionDataService,
+    recordsService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _commissionFactory_, _commissionDataService_) {
+  beforeEach(inject(function ($rootScope, _commissionFactory_, _commissionDataService_, _recordsService_) {
     commissionDataService = _commissionDataService_;
+    recordsService = _recordsService_;
 
     spyOn(commissionDataService, 'getCommissionPayableData');
     spyOn(commissionDataService, 'getCommissionPayableList');
     spyOn(commissionDataService, 'createCommissionData');
     spyOn(commissionDataService, 'updateCommissionData');
     spyOn(commissionDataService, 'deleteCommissionData');
+    spyOn(recordsService, 'getCrewBaseTypes');
+    spyOn(recordsService, 'getCommissionPayableTypes');
+    spyOn(recordsService, 'getDiscountTypes');
+
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -47,6 +53,21 @@ describe('Factory: commissionFactory', function () {
     it('should call commissionDataService on deleteCommissionData', function () {
       commissionFactory.deleteCommissionData(123);
       expect(commissionDataService.deleteCommissionData).toHaveBeenCalledWith(123);
+    });
+  });
+
+  describe('recordsService API', function () {
+    it('should call recordsService on getCrewBaseTypes', function () {
+      commissionFactory.getCrewBaseTypes();
+      expect(recordsService.getCrewBaseTypes).toHaveBeenCalled();
+    });
+    it('should call recordsService on getCommissionPayableTypes', function () {
+      commissionFactory.getCommissionPayableTypes();
+      expect(recordsService.getCommissionPayableTypes).toHaveBeenCalled();
+    });
+    it('should call recordsService on getDiscountTypes', function () {
+      commissionFactory.getDiscountTypes();
+      expect(recordsService.getDiscountTypes).toHaveBeenCalled();
     });
   });
 
