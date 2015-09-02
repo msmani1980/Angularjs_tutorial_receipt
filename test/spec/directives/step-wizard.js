@@ -108,6 +108,18 @@ describe('The Step Wizard directive', function () {
       expect(location.url).toHaveBeenCalledWith('/test-uri-3');
     });
 
+    it('should return false if index is less than 0', function(){
+      expect(directiveScope.goToStepURI(-1)).toBe(false);
+    });
+
+    it('should return false if index is equal to currentStepIndex', function(){
+      expect(directiveScope.goToStepURI(1)).toBe(false);
+    });
+
+    it('should return false if index is greater than currentStepIndex', function(){
+      expect(directiveScope.goToStepURI(5)).toBe(false);
+    });
+
   });
 
   describe('wizardPrev directive scope function', function(){
@@ -159,13 +171,14 @@ describe('The Step Wizard directive', function () {
 
       compileDirective();
     }));
+
+    it('should not go anymore forward since it is on the last step', function(){
+      expect(directiveScope.wizardNext()).toBe(false);
+    });
     it('should only trigger the prevTrigger function, and not step the user back', function(){
       expect(directiveScope.wizardPrev()).toBe(false);
       expect(directiveScope.goToStepURI).toHaveBeenCalledWith(1);
       expect(scope.myMockPrevTrigger2).toHaveBeenCalledWith(scope.param5);
-    });
-    it('should not go anymore forward since it is on the last step', function(){
-      expect(directiveScope.wizardNext()).toBe(false);
     });
   });
 
