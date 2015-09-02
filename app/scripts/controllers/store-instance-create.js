@@ -8,7 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast, dateUtility,GlobalMenuService) {
+  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast,
+                                                   dateUtility,GlobalMenuService,
+                                                   storeInstanceDispatchWizardConfig) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -28,6 +30,10 @@ angular.module('ts5App')
       this.getMenuMasterList();
       this.getCarrierNumbers();
       this.getStoresList();
+
+      $scope.wizardSteps = storeInstanceDispatchWizardConfig.get();
+      $scope.param1 = 'hi this is it';
+      $scope.mockTrigger = function(param){ console.log('boom', param); return false; };
     };
 
     this.getCatererStationList = function() {
