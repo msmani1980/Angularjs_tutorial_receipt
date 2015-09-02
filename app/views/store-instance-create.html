@@ -24,10 +24,9 @@
 
         <div class="form-group">
           <label>Store Number</label>
-          <!-- TODO: Loop the store numbers from API -->
           <select class="form-control" ng-model="formData.storeId">
-            <option value="1">Store 1</option>
-            <option value="2">Store 2</option>
+            <option ng-disabled="true" selected="selected" value>Select Store</option>
+            <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
         </div>
 
@@ -71,9 +70,8 @@
         <div class="form-group">
           <label>Aircraft Tail Number</label>
           <select class="form-control" ng-model="formData.carrierId">
-            <!-- TODO: Loop the aircraft tail number from API-->
-            <option value="1">COL964</option>
-            <option value="2">MNA124</option>
+            <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
+            <option ng-repeat="tailNumber in carrierNumbers | orderBy:'carrierNumber' track by tailNumber.id" value="{{ tailNumber.id }}">{{ tailNumber.carrierNumber }}</option>
           </select>
         </div>
 
