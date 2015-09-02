@@ -260,7 +260,7 @@ angular.module('ts5App')
         title: 'Station Operations',
         menuItems: [{
           name: 'Store Dispatch',
-          route: 'html-mock-store-dispatch.html',
+          route: '/#/store-instance-create',
           icon: 'icon-manage-schedule',
           className: 'dashboard-storeDispatch'
         }]
