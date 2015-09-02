@@ -72,10 +72,10 @@
         <td ng-class="(data.eposSales) ? '' : 'active'">{{ data.eposPercent | number: 2 }} %</td>
         <td ng-class="(data.cashBanked) ? '' : 'active'">{{ (data.cashBanked) ? 'Y' : 'N' }}</td>
         <td ng-class="(data.cashBanked) ? '' : 'active'">{{ data.cashBankedPercent | number: 2 }} %</td>
-        <td>{{ data.manualBars | number: 2 }} %</td>
-        <td>{{ data.cash | number: 2}} %</td>
-        <td>{{ data.stock | number: 2 }} %</td>
-        <td>{{ data.incentiveIncrement | number: 2 }} %</td>
+        <td>{{ data.manualBarsCommissionValue | number: 2 }} %</td>
+        <td>{{ data.discrepancyDeductionsCashPercentage | number: 2}} %</td>
+        <td>{{ data.discrepancyDeductionsStockPercentage | number: 2 }} %</td>
+        <td>{{ data.commissionValue | number: 2 }}</td>
         <td>
           <button class="btn btn-info btn-xs" ng-click="redirectToDetailPage(data.id, 'view')" tabindex="0">
             <i class="fa fa-file"></i>
