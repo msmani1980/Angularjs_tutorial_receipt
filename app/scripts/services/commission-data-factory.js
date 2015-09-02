@@ -8,7 +8,8 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('commissionFactory', function (GlobalMenuService, commissionDataService) {
+  .factory('commissionFactory', function (commissionDataService) {
+
     var getCommissionPayableList = function (payload) {
       if(arguments.length > 0) {
         return commissionDataService.getCommissionPayableList(payload);
@@ -16,33 +17,23 @@ angular.module('ts5App')
         return commissionDataService.getCommissionPayableList();
       }
     };
-    //
-    //var getPostTrip = function(id, tripId) {
-    //  return postTripService.getPostTrip(id, tripId);
-    //};
-    //
-    //var createPostTrip = function (id, payload) {
-    //  return postTripService.createPostTrip(id, payload);
-    //};
-    //
-    //var updatePostTrip = function (id, payload) {
-    //  return postTripService.updatePostTrip(id, payload);
-    //};
-    //
-    //var deletePostTrip = function (id, tripId) {
-    //  return postTripService.deletePostTrip(id, tripId);
-    //};
-    //
-    //var uploadPostTrip = function (id, file) {
-    //  return postTripService.importFromExcel(id, file);
-    //};
-    //
-    //var getStationList = function (id, offset) {
-    //  if(offset) {
-    //    return stationsService.getStationList(id, offset);
-    //  }
-    //  return stationsService.getStationList(id);
-    //};
+
+    var getCommissionPayableData = function(id) {
+      return commissionDataService.getCommissionPayableData(id);
+    };
+
+    var createCommissionData = function (payload) {
+      return commissionDataService.createCommissionData(payload);
+    };
+
+    var updateCommissionData = function (id, payload) {
+      return commissionDataService.updateCommissionData(id, payload);
+    };
+
+    var deleteCommissionData = function (id) {
+      return commissionDataService.deleteCommissionData(id);
+    };
+
     //
     //var getCarrierNumbers = function(id, carrierType) {
     //  return carrierService.getCarrierNumbers(id, carrierType);
@@ -61,6 +52,10 @@ angular.module('ts5App')
     //};
 
     return {
-      getCommissionPayableList: getCommissionPayableList
+      getCommissionPayableList: getCommissionPayableList,
+      getCommissionPayableData: getCommissionPayableData,
+      createCommissionData: createCommissionData,
+      updateCommissionData: updateCommissionData,
+      deleteCommissionData: deleteCommissionData
     };
   });
