@@ -63,7 +63,10 @@ angular.module('ts5App')
     };
 
     this.getStoresList = function() {
-      storeInstanceFactory.getStoresList().then(this.setStoresList);
+      var query = {
+        readyToUse: true
+      };
+      storeInstanceFactory.getStoresList(query).then(this.setStoresList);
     };
 
     this.setStoresList = function(dataFromAPI) {
