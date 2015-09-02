@@ -80,7 +80,7 @@ describe('The Step Wizard directive', function () {
     });
 
     it('should set the 1st step\'s class equal to active', function () {
-      expect(directiveScope.steps[0].class).toBe('active');
+      expect(directiveScope.steps[0].class).toBe('completed');
     });
 
     it('should set the 2nd steps\'s class equal to active', function () {
@@ -88,7 +88,7 @@ describe('The Step Wizard directive', function () {
     });
 
     it('should not set the 3rd steps\'s class', function () {
-      expect(directiveScope.steps[2].class).toBeUndefined();
+      expect(directiveScope.steps[2].class).toBe('future');
     });
 
     it('should strip the trailing slash from Test label 2\'s URI', function () {
@@ -209,6 +209,40 @@ describe('The Step Wizard directive', function () {
     });
     it('should not go back since it is at the first step', function(){
       expect(directiveScope.wizardPrev()).toBe(false);
+    });
+  });
+
+  describe('wizard disabled', function() {
+    beforeEach(inject(function(){
+      scope.wizardSteps = [
+        {
+          label: 'Test label 1',
+          uri: '/test-uri-1'
+        },
+        {
+          label: 'Test label 2',
+          uri: '/test-uri-2'
+        },
+        {
+          label: 'Test label 3',
+          uri: '/test-uri-3'
+        }
+      ];
+      scope.mockDisabled = true;
+
+      template = '<step-wizard steps="wizardSteps" disable="mockDisabled"></step-wizard>';
+
+      spyOn(location, 'path').and.returnValue('/test-uri-2');
+      compileDirective();
+    }));
+    it('should not step forward', function(){
+      expect(directiveScope.wizardNext()).toBe(false);
+    });
+    it('should not step backwards', function(){
+      expect(directiveScope.wizardPrev()).toBe(false);
+    });
+    it('should not step anywhere', function(){
+      expect(directiveScope.goToStepURI()).toBe(false);
     });
   });
 });

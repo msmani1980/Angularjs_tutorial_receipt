@@ -13,10 +13,9 @@ angular.module('ts5App')
     restrict: 'E',
     scope: {
       steps: '=',
+      disable: '=',
       nextTrigger: '&',
-      nextTriggerParams: '=',
-      prevTrigger: '&',
-      prevTriggerParams: '='
+      prevTrigger: '&'
     },
     controller: function($scope, $location) {
 
@@ -24,8 +23,14 @@ angular.module('ts5App')
 
       function setStepClasses(){
         for(var i in $scope.steps){
-          if(i < currentStepIndex || i === currentStepIndex) {
+          if(i < currentStepIndex){
+            $scope.steps[i].class = 'completed';
+          }
+          if(i === currentStepIndex) {
             $scope.steps[i].class = 'active';
+          }
+          if(i > currentStepIndex) {
+            $scope.steps[i].class = 'future';
           }
         }
       }
@@ -72,6 +77,9 @@ angular.module('ts5App')
       }
 
       $scope.goToStepURI = function($index){
+        if($scope.disable){
+          return false;
+        }
         if($index < 0){
           return false;
         }
@@ -89,6 +97,9 @@ angular.module('ts5App')
       };
 
       $scope.wizardPrev = function(){
+        if($scope.disable){
+          return false;
+        }
         var prevIndex = parseInt(currentStepIndex, 10) - 1;
         if(prevIndex < 0){
           return false;
@@ -97,6 +108,9 @@ angular.module('ts5App')
       };
 
       $scope.wizardNext = function(){
+        if($scope.disable){
+          return false;
+        }
         var nextIndex = parseInt(currentStepIndex, 10) + 1;
         // No more steps, dont do anything
         if(nextIndex > $scope.steps.length){
