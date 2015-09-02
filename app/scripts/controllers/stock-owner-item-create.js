@@ -7,10 +7,9 @@
  * # StockOwnerItemCreateCtrl
  * Controller of the ts5App
  */
-angular.module('ts5App')
-  .controller('StockOwnerItemCreateCtrl', function($scope, $compile, ENV,
-    $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, GlobalMenuService, $q, dateUtility) {
+angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
+  function ($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, currencyFactory,
+            $routeParams, GlobalMenuService, $q, dateUtility) {
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
     var companyId = GlobalMenuService.company.get();
@@ -37,14 +36,14 @@ angular.module('ts5App')
     $scope.editingItem = false;
     $scope.uiSelectTemplateReady = false;
 
-    this.checkIfViewOnly = function() {
+    this.checkIfViewOnly = function () {
       var path = $location.path();
       if (path.search('/stock-owner-item-view') !== -1) {
         $scope.viewOnly = true;
       }
     };
 
-    this.init = function() {
+    this.init = function () {
       this.checkIfViewOnly();
       if ($routeParams.id && !$scope.viewOnly) {
         this.setFormAsEdit();
@@ -52,7 +51,7 @@ angular.module('ts5App')
       this.getDependencies();
     };
 
-    this.updateViewName = function(item) {
+    this.updateViewName = function (item) {
       var prefix = 'Viewing ';
       if ($scope.editingItem) {
         prefix = 'Editing ';
@@ -60,18 +59,18 @@ angular.module('ts5App')
       $scope.viewName = prefix + item.itemName;
     };
 
-    this.setFormAsEdit = function() {
+    this.setFormAsEdit = function () {
       $scope.editingItem = true;
       $scope.buttonText = 'Save';
     };
 
-    this.validateItemCompany = function(data) {
+    this.validateItemCompany = function (data) {
       return data.retailItem.companyId === companyId;
     };
 
-    this.getItem = function(id) {
+    this.getItem = function (id) {
       this.showLoadingModal('We are getting your Items data!');
-      itemsFactory.getItem(id).then(function(data) {
+      itemsFactory.getItem(id).then(function (data) {
         if ($this.validateItemCompany(data)) {
           $this.updateFormData(data.retailItem);
           $this.updateViewName(data.retailItem);
@@ -83,15 +82,15 @@ angular.module('ts5App')
       });
     };
 
-    this.showLoadingModal = function(text) {
+    this.showLoadingModal = function (text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
 
-    this.hideLoadingModal = function() {
+    this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
     };
 
-    this.findTagsIndex = function(tagId) {
+    this.findTagsIndex = function (tagId) {
       var tagIndex = null;
       for (var key in $scope.tags) {
         var tag = $scope.tags[key];
@@ -103,7 +102,7 @@ angular.module('ts5App')
       return tagIndex;
     };
 
-    this.deserializeTags = function(itemData) {
+    this.deserializeTags = function (itemData) {
       for (var tagKey in itemData.tags) {
         var tag = itemData.tags[tagKey];
         var index = $this.findTagsIndex(tag.tagId);
@@ -114,7 +113,7 @@ angular.module('ts5App')
       }
     };
 
-    this.formatTags = function(itemData) {
+    this.formatTags = function (itemData) {
       var tagsPayload = [];
       for (var tagKey in itemData.tags) {
         var tag = itemData.tags[tagKey];
@@ -126,7 +125,7 @@ angular.module('ts5App')
       return tagsPayload;
     };
 
-    this.findCharacteristicIndex = function(characteristicId) {
+    this.findCharacteristicIndex = function (characteristicId) {
       var characteristicIndex = null;
       for (var key in $scope.characteristics) {
         var characteristic = $scope.characteristics[key];
@@ -138,7 +137,7 @@ angular.module('ts5App')
       return characteristicIndex;
     };
 
-    this.deserializeCharacteristics = function(itemData) {
+    this.deserializeCharacteristics = function (itemData) {
       for (var characteristicKey in itemData.characteristics) {
         var characteristic = itemData.characteristics[characteristicKey];
         var index = $this.findCharacteristicIndex(characteristic.characteristicId);
@@ -150,7 +149,7 @@ angular.module('ts5App')
       }
     };
 
-    this.formatCharacteristics = function(itemData) {
+    this.formatCharacteristics = function (itemData) {
       var characteristicsPayload = [];
       for (var characteristicKey in itemData.characteristics) {
         var characteristic = itemData.characteristics[characteristicKey];
@@ -168,7 +167,7 @@ angular.module('ts5App')
       return characteristicsPayload;
     };
 
-    this.findAllergenIndex = function(allergenId) {
+    this.findAllergenIndex = function (allergenId) {
       var allergenIndex = null;
       for (var key in $scope.allergens) {
         var allergen = $scope.allergens[key];
@@ -180,7 +179,7 @@ angular.module('ts5App')
       return allergenIndex;
     };
 
-    this.deserializeAllergens = function(itemData) {
+    this.deserializeAllergens = function (itemData) {
       for (var allergenKey in itemData.allergens) {
         var allergen = itemData.allergens[allergenKey];
         var index = $this.findAllergenIndex(allergen.allergenId);
@@ -192,7 +191,7 @@ angular.module('ts5App')
       }
     };
 
-    this.formatAllergens = function(itemData) {
+    this.formatAllergens = function (itemData) {
       var allergenPayload = [];
       for (var allergenKey in itemData.allergens) {
         var allergen = itemData.allergens[allergenKey];
@@ -205,7 +204,7 @@ angular.module('ts5App')
       return allergenPayload;
     };
 
-    this.findSubstitutionIndex = function(substitutionId) {
+    this.findSubstitutionIndex = function (substitutionId) {
       var substitutionIndex = null;
       for (var key in $scope.substitutions) {
         var substitution = $scope.substitutions[key];
@@ -217,7 +216,7 @@ angular.module('ts5App')
       return substitutionIndex;
     };
 
-    this.deserializeSubstitutions = function(itemData) {
+    this.deserializeSubstitutions = function (itemData) {
       for (var substitutionKey in itemData.substitutions) {
         var substitutionId = itemData.substitutions[substitutionKey];
         var index = $this.findSubstitutionIndex(substitutionId);
@@ -228,7 +227,7 @@ angular.module('ts5App')
       }
     };
 
-    this.formatSubstitutions = function(itemData) {
+    this.formatSubstitutions = function (itemData) {
       var substitutionsPayload = [];
       for (var substitutionKey in itemData.substitutions) {
         var substitution = itemData.substitutions[substitutionKey];
@@ -237,7 +236,7 @@ angular.module('ts5App')
       return substitutionsPayload;
     };
 
-    this.findRecommendationIndex = function(recommendationId) {
+    this.findRecommendationIndex = function (recommendationId) {
       var recommendationIndex = null;
       for (var key in $scope.recommendations) {
         var recommendation = $scope.recommendations[key];
@@ -249,10 +248,9 @@ angular.module('ts5App')
       return recommendationIndex;
     };
 
-    this.deserializeRecommendations = function(itemData) {
+    this.deserializeRecommendations = function (itemData) {
       for (var recommendationKey in itemData.recommendations) {
-        var recommendationId = itemData.recommendations[
-          recommendationKey];
+        var recommendationId = itemData.recommendations[recommendationKey];
         var index = $this.findRecommendationIndex(recommendationId);
         itemData.recommendations[recommendationKey] = {
           id: recommendationId,
@@ -261,7 +259,7 @@ angular.module('ts5App')
       }
     };
 
-    this.formatRecommendations = function(itemData) {
+    this.formatRecommendations = function (itemData) {
       var recommendationPayload = [];
       for (var recommendationKey in itemData.recommendations) {
         var recommendation = itemData.recommendations[recommendationKey];
@@ -270,7 +268,7 @@ angular.module('ts5App')
       return recommendationPayload;
     };
 
-    this.formatImageDates = function(itemData) {
+    this.formatImageDates = function (itemData) {
       for (var imageIndex in itemData.images) {
         var image = itemData.images[imageIndex];
         image.startDate = dateUtility.formatDateForApp(image.startDate);
@@ -278,7 +276,7 @@ angular.module('ts5App')
       }
     };
 
-    this.formatCostDates = function(itemData) {
+    this.formatCostDates = function (itemData) {
       for (var priceIndex in itemData.costPrices) {
         var price = itemData.costPrices[priceIndex];
         price.startDate = dateUtility.formatDateForApp(price.startDate);
@@ -287,21 +285,21 @@ angular.module('ts5App')
       }
     };
 
-    this.checkIfItemIsActive = function(itemData) {
+    this.checkIfItemIsActive = function (itemData) {
       var today = new Date();
       var itemStartDate = new Date(itemData.startDate);
       $scope.itemIsActive = itemStartDate <= today;
     };
 
     // checks to see if the item is inactive
-    this.checkIfItemIsInactive = function(itemData) {
+    this.checkIfItemIsInactive = function (itemData) {
       var today = new Date();
       var itemEndDate = new Date(itemData.endDate);
       $scope.itemIsInactive = itemEndDate <= today;
     };
 
     // updates the $scope.formData
-    this.updateFormData = function(itemData) {
+    this.updateFormData = function (itemData) {
       if (!itemData) {
         return false;
       }
@@ -321,8 +319,8 @@ angular.module('ts5App')
       $scope.formData = itemData;
     };
 
-    this.getMasterCurrenciesList = function() {
-      currencyFactory.getCompanyCurrencies(function(data) {
+    this.getMasterCurrenciesList = function () {
+      currencyFactory.getCompanyCurrencies(function (data) {
         var masterCurrenciesList = [];
         for (var key in data.response) {
           var currency = data.response[key];
@@ -332,7 +330,7 @@ angular.module('ts5App')
       });
     };
 
-    this.makeDependencyPromises = function() {
+    this.makeDependencyPromises = function () {
       return [
         companiesFactory.getSalesCategoriesList(),
         companiesFactory.getTagsList(),
@@ -349,20 +347,20 @@ angular.module('ts5App')
       ];
     };
 
-    this.setUIReady = function() {
+    this.setUIReady = function () {
       $scope.uiSelectTemplateReady = true;
       $this.hideLoadingModal();
     };
 
-    this.getDependencies = function() {
+    this.getDependencies = function () {
       $this.showLoadingModal('We are loading the Items data!');
       var dependencyPromises = this.makeDependencyPromises();
-      $q.all(dependencyPromises).then(function(response) {
+      $q.all(dependencyPromises).then(function (response) {
         $this.setDependencies(response);
       });
     };
 
-    this.setDependencies = function(response) {
+    this.setDependencies = function (response) {
       $this.setSalesCategories(response[0]);
       $this.setTagsList(response[1]);
       $this.setTaxTypesList(response[2]);
@@ -382,41 +380,41 @@ angular.module('ts5App')
       }
     };
 
-    this.setSalesCategories = function(data) {
+    this.setSalesCategories = function (data) {
       $scope.salesCategories = data.salesCategories;
     };
 
-    this.setAllergens = function(data) {
+    this.setAllergens = function (data) {
       $scope.allergens = data;
     };
 
-    this.setItemTypes = function(data) {
+    this.setItemTypes = function (data) {
       $scope.itemTypes = data;
     };
 
-    this.setCharacteristics = function(data) {
+    this.setCharacteristics = function (data) {
       $scope.characteristics = data;
     };
 
-    this.setDimensionList = function(data) {
+    this.setDimensionList = function (data) {
       $scope.dimensionUnits = data.units;
     };
 
-    this.setVolumeList = function(data) {
+    this.setVolumeList = function (data) {
       $scope.volumeUnits = data.units;
     };
 
-    this.setWeightList = function(data) {
+    this.setWeightList = function (data) {
       $scope.weightUnits = data.units;
     };
 
-    this.setTagsList = function(data) {
+    this.setTagsList = function (data) {
       $scope.tags = data.response;
     };
 
-    this.removeCurrentItem = function(itemList) {
+    this.removeCurrentItem = function (itemList) {
       if ($routeParams.id) {
-        angular.forEach(itemList, function(value, key) {
+        angular.forEach(itemList, function (value, key) {
           if (parseInt(value.id) === parseInt($routeParams.id)) {
             itemList.splice(key, 1);
           }
@@ -425,14 +423,14 @@ angular.module('ts5App')
       return itemList;
     };
 
-    this.setItemList = function(itemListFromAPI) {
+    this.setItemList = function (itemListFromAPI) {
       var itemList = this.removeCurrentItem(angular.copy(itemListFromAPI));
       $scope.items = itemList;
       $scope.substitutions = itemList;
       $scope.recommendations = itemList;
     };
 
-    this.setMasterCurrenciesList = function(data) {
+    this.setMasterCurrenciesList = function (data) {
       var masterCurrenciesList = [];
       for (var key in data.response) {
         var currency = data.response[key];
@@ -441,40 +439,40 @@ angular.module('ts5App')
       $scope.masterCurrenciesList = masterCurrenciesList;
     };
 
-    this.setTaxTypesList = function(data) {
+    this.setTaxTypesList = function (data) {
       $scope.taxTypes = data.response;
     };
 
     this.init();
 
-    $scope.$watch('form.$valid', function(validity) {
+    $scope.$watch('form.$valid', function (validity) {
       if (validity) {
         $scope.displayError = false;
       }
     });
 
-    $scope.removeQRCode = function() {
+    $scope.removeQRCode = function () {
       $scope.formData.qrCodeImgUrl = '';
       $scope.formData.qrCodeValue = '';
     };
 
-    $scope.removeImage = function(key) {
+    $scope.removeImage = function (key) {
       $scope.formData.images.splice(key, 1);
     };
 
-    $scope.addTaxType = function() {
+    $scope.addTaxType = function () {
       $scope.formData.taxes.push({});
     };
 
-    $scope.removeTaxType = function(key) {
+    $scope.removeTaxType = function (key) {
       $scope.formData.taxes.splice(key, 1);
     };
 
-    $scope.addGTIN = function() {
+    $scope.addGTIN = function () {
       $scope.formData.globalTradeNumbers.push({});
     };
 
-    $scope.removeGTIN = function(key) {
+    $scope.removeGTIN = function (key) {
       $scope.formData.globalTradeNumbers.splice(key, 1);
     };
 
@@ -483,11 +481,11 @@ angular.module('ts5App')
      *
      */
 
-    $scope.$watch('formData.costPrices', function(newData, oldData) {
+    $scope.$watch('formData.costPrices', function (newData, oldData) {
       $this.watchPriceGroups(newData, oldData);
     }, true);
 
-    $scope.addPriceGroup = function() {
+    $scope.addPriceGroup = function () {
       $scope.formData.costPrices.push({
         startDate: '',
         endDate: '',
@@ -497,40 +495,33 @@ angular.module('ts5App')
 
     $scope.addPriceGroup();
 
-    $scope.removePriceGroup = function(key) {
+    $scope.removePriceGroup = function (key) {
       $scope.formData.costPrices.splice(key, 1);
     };
 
-    this.getCurrencyFromArrayUsingId = function(currenciesArray,
-      baseCurrencyId) {
-      return currenciesArray.filter(function(currencyItem) {
+    this.getCurrencyFromArrayUsingId = function (currenciesArray, baseCurrencyId) {
+      return currenciesArray.filter(function (currencyItem) {
         return currencyItem.id === baseCurrencyId;
       })[0];
     };
 
-    this.setBaseCurrencyId = function(response) {
+    this.setBaseCurrencyId = function (response) {
       this.baseCurrencyId = response.baseCurrencyId;
     };
 
-    this.getCompanyGlobalCurrencies = function(priceIndex) {
-      currencyFactory.getCompanyGlobalCurrencies().then(function(
-        companyBaseCurrencyData) {
-        $this.setPriceCurrenciesList(priceIndex,
-          companyBaseCurrencyData);
+    this.getCompanyGlobalCurrencies = function (priceIndex) {
+      currencyFactory.getCompanyGlobalCurrencies().then(function (companyBaseCurrencyData) {
+        $this.setPriceCurrenciesList(priceIndex, companyBaseCurrencyData);
       });
     };
 
-    this.setPriceCurrenciesList = function(priceIndex,
-      companyBaseCurrencyData) {
+    this.setPriceCurrenciesList = function (priceIndex, companyBaseCurrencyData) {
       var response = companyBaseCurrencyData.response;
-      var baseCurrency = this.getCurrencyFromArrayUsingId(
-        response,
-        this.baseCurrencyId
-      );
-      $scope.formData.costPrices[priceIndex].code = baseCurrency.currencyCode;
+      $scope.baseCurrency = this.getCurrencyFromArrayUsingId(response, this.baseCurrencyId);
+      $scope.formData.costPrices[priceIndex].code = $scope.baseCurrency.currencyCode;
     };
 
-    this.updatePriceGroup = function(priceIndex) {
+    this.updatePriceGroup = function (priceIndex) {
       var priceGroup = $scope.formData.costPrices[priceIndex];
       var startDate = dateUtility.formatDateForAPI(priceGroup.startDate);
       var endDate = dateUtility.formatDateForAPI(priceGroup.endDate);
@@ -545,7 +536,7 @@ angular.module('ts5App')
       this.getCompanyGlobalCurrencies(priceIndex, currencyFilters);
     };
 
-    this.watchPriceGroups = function(newPrices, oldPrices) {
+    this.watchPriceGroups = function (newPrices, oldPrices) {
       if (!oldPrices) {
         return false;
       }
@@ -554,34 +545,34 @@ angular.module('ts5App')
       }
     };
 
-    this.checkPriceGroup = function(newPrices, oldPrices, priceIndex) {
+    this.checkPriceGroup = function (newPrices, oldPrices, priceIndex) {
       var newPriceGroup = newPrices[priceIndex];
       var oldPriceGroup = oldPrices[priceIndex];
       if (!oldPriceGroup) {
         return false;
       }
-      if (newPriceGroup.startDate !== oldPriceGroup.startDate ||
-        newPriceGroup.endDate !== oldPriceGroup.endDate) {
+      if (newPriceGroup.startDate !== oldPriceGroup.startDate || newPriceGroup.endDate !== oldPriceGroup.endDate) {
         $this.updatePriceGroup(priceIndex);
       }
     };
 
-    this.cleanUpPayload = function(itemData) {
+    this.cleanUpPayload = function (itemData) {
       for (var priceIndex in itemData.costPrices) {
         var price = itemData.costPrices[priceIndex];
         delete price.code;
       }
     };
 
-    this.formatPricePayloadDates = function(itemData) {
+    this.formatPricePayloadDates = function (itemData) {
       for (var priceIndex in itemData.costPrices) {
         var price = itemData.costPrices[priceIndex];
         price.startDate = dateUtility.formatDateForAPI(price.startDate);
         price.endDate = dateUtility.formatDateForAPI(price.endDate);
+        price.currencyCode = $scope.baseCurrency.currencyCode;
       }
     };
 
-    this.formatImagePayloadDates = function(itemData) {
+    this.formatImagePayloadDates = function (itemData) {
       for (var imageIndex in itemData.images) {
         var image = itemData.images[imageIndex];
         image.startDate = dateUtility.formatDateForAPI(image.startDate);
@@ -589,41 +580,39 @@ angular.module('ts5App')
       }
     };
 
-    this.formatPayloadDates = function(itemData) {
+    this.formatPayloadDates = function (itemData) {
       itemData.startDate = dateUtility.formatDateForAPI(itemData.startDate);
       itemData.endDate = dateUtility.formatDateForAPI(itemData.endDate);
       this.formatImagePayloadDates(itemData);
       this.formatPricePayloadDates(itemData);
     };
 
-    this.updateItem = function(itemData) {
+    this.updateItem = function (itemData) {
       $this.showLoadingModal('We are updating your item');
       var updateItemPayload = {
         retailItem: itemData
       };
-      itemsFactory.updateItem($routeParams.id, updateItemPayload).then(
-        function(response) {
-          $this.updateFormData(response.retailItem);
-          $this.hideLoadingModal();
-          angular.element('#update-success').modal('show');
-        },
-        function(response) {
-          $this.hideLoadingModal();
-          $scope.displayError = true;
-          $scope.formErrors = response.data;
-        });
+      itemsFactory.updateItem($routeParams.id, updateItemPayload).then(function (response) {
+        $this.updateFormData(response.retailItem);
+        $this.hideLoadingModal();
+        angular.element('#update-success').modal('show');
+      }, function (response) {
+        $this.hideLoadingModal();
+        $scope.displayError = true;
+        $scope.formErrors = response.data;
+      });
     };
 
-    this.createItem = function(itemData) {
+    this.createItem = function (itemData) {
       $this.showLoadingModal('We are creating your item');
       var newItemPayload = {
         retailItem: itemData
       };
-      itemsFactory.createItem(newItemPayload).then(function() {
+      itemsFactory.createItem(newItemPayload).then(function () {
         $this.hideLoadingModal();
         angular.element('#create-success').modal('show');
         return true;
-      }, function(error) {
+      }, function (error) {
         $this.hideLoadingModal();
         $scope.displayError = true;
         $scope.formErrors = error.data;
@@ -631,7 +620,7 @@ angular.module('ts5App')
       });
     };
 
-    $scope.submitForm = function(formData) {
+    $scope.submitForm = function (formData) {
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm()) {
         var itemData = angular.copy(formData);
@@ -641,7 +630,7 @@ angular.module('ts5App')
       }
     };
 
-    this.validateForm = function() {
+    this.validateForm = function () {
       $scope.displayError = false;
       if (!$scope.form.$valid) {
         $scope.displayError = true;
@@ -649,7 +638,7 @@ angular.module('ts5App')
       return $scope.form.$valid;
     };
 
-    this.formatPayload = function(itemData) {
+    this.formatPayload = function (itemData) {
       itemData.tags = $this.formatTags(itemData);
       itemData.allergens = $this.formatAllergens(itemData);
       itemData.characteristics = $this.formatCharacteristics(itemData);
@@ -660,30 +649,28 @@ angular.module('ts5App')
       return itemData;
     };
 
-    $scope.isMeasurementRequired = function() {
-      return ($scope.formData.width || $scope.formData.length || $scope.formData
-        .height);
+    $scope.isMeasurementRequired = function () {
+      return ($scope.formData.width || $scope.formData.length || $scope.formData.height);
     };
 
-    $scope.isMeasurementValid = function() {
-      return ($scope.formData.width && $scope.formData.length && $scope.formData
-        .height && $scope.formData.dimensionType);
+    $scope.isMeasurementValid = function () {
+      return ($scope.formData.width && $scope.formData.length && $scope.formData.height && $scope.formData.dimensionType);
     };
 
-    $scope.isQrCodeSet = function() {
+    $scope.isQrCodeSet = function () {
       return ($scope.formData && $scope.formData.qrCodeImgUrl);
     };
 
-    $scope.isQrCreateHidden = function() {
+    $scope.isQrCreateHidden = function () {
       var isQrCodeSet = $scope.isQrCodeSet();
       return ($scope.viewOnly || $scope.itemIsActive || isQrCodeSet);
     };
 
-    $scope.isDisabled = function() {
+    $scope.isDisabled = function () {
       return ($scope.viewOnly || $scope.itemIsActive);
     };
 
-    $scope.GTINClass = function(form, key) {
+    $scope.GTINClass = function (form, key) {
       if (form['GTIN' + key].$dirty && form['GTIN' + key].$invalid) {
         return 'has-error';
       }
@@ -691,7 +678,7 @@ angular.module('ts5App')
     };
 
     // TODO: MOVE ME GLOBAL
-    $scope.formScroll = function(id, activeBtn) {
+    $scope.formScroll = function (id, activeBtn) {
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);
       var body = angular.element('body');

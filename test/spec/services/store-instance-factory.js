@@ -102,9 +102,16 @@ describe('Service: storeInstanceFactory', function () {
 
   describe('carrierService calls', function(){
     it('should call getCarrierNumbers', function(){
-      storeInstanceFactory.getCarrierNumbers(companyId);
-      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId);
+      var carrierTypeId = 1;
+      storeInstanceFactory.getCarrierNumbers(companyId,1);
+      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId,carrierTypeId);
     });
+    it('should call getAllCarrierNumbers', function(){
+      var carrierTypeId = 0;
+      storeInstanceFactory.getAllCarrierNumbers(companyId);
+      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId,carrierTypeId);
+    });
+
   });
 
 });

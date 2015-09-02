@@ -8,23 +8,26 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast, dateUtility, storeInstanceDispatchWizardConfig) {
+  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast, dateUtility,GlobalMenuService) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
+    $scope.carrierNumbers = [];
+    $scope.storesList = [];
     $scope.formData = {
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
    };
 
+   // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+   var companyId = GlobalMenuService.company.get();
    var $this = this;
 
     this.init = function() {
       this.getCatererStationList();
       this.getMenuMasterList();
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.get();
-      $scope.param1 = 'hi this is it';
-      $scope.mockTrigger = function(param){ console.log('boom', param); return false; };
+      this.getCarrierNumbers();
+      this.getStoresList();
     };
 
     this.getCatererStationList = function() {
@@ -43,10 +46,29 @@ angular.module('ts5App')
       $scope.menuMasterList = dataFromAPI.companyMenuMasters;
     };
 
+    this.getCarrierNumbers = function() {
+      storeInstanceFactory.getAllCarrierNumbers(companyId).then(this.setCarrierNumbers);
+    };
+
+    this.setCarrierNumbers = function(dataFromAPI) {
+      $scope.carrierNumbers = dataFromAPI.response;
+    };
+
+    this.getStoresList = function() {
+      storeInstanceFactory.getStoresList().then(this.setStoresList);
+    };
+
+    this.setStoresList = function(dataFromAPI) {
+      $scope.storesList = dataFromAPI.response;
+    };
+
     this.createStoreInstance = function() {
       this.resetErrors();
       this.displayLoadingModal('Creating a store instance');
       var payload = this.formatPayload();
+      if(angular.isUndefined(payload)) {
+        return false;
+      }
       storeInstanceFactory.createStoreInstance(payload).then(
         this.createStoreInstanceSuccessHandler,
         this.createStoreInstanceErrorHandler

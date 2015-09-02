@@ -4,7 +4,11 @@ describe('The Stock Owner Item Create Controller', function () {
 
   // load the controller's module
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/item.json', 'served/item-create.json', 'served/items-list.json', 'served/item-types.json', 'served/sales-categories.json', 'served/stations-date-filtered.json', 'served/station-exception-currencies.json', 'served/price-types.json', 'served/tags.json', 'served/tax-types.json', 'served/currencies.json', 'served/allergens.json', 'served/item-types.json', 'served/characteristics.json', 'served/units-dimension.json', 'served/units-volume.json', 'served/units-weight.json', 'served/company.json'));
+  beforeEach(module('served/item.json', 'served/item-create.json', 'served/items-list.json', 'served/item-types.json',
+    'served/sales-categories.json', 'served/stations-date-filtered.json', 'served/station-exception-currencies.json',
+    'served/price-types.json', 'served/tags.json', 'served/tax-types.json', 'served/currencies.json',
+    'served/allergens.json', 'served/item-types.json', 'served/characteristics.json', 'served/units-dimension.json',
+    'served/units-volume.json', 'served/units-weight.json', 'served/company.json'));
 
   var $rootScope, $scope, $controller, $location, StockOwnerItemCreateCtrl, $httpBackend, $routeParams, dateUtility;
 
@@ -124,7 +128,10 @@ describe('The Stock Owner Item Create Controller', function () {
     describe('getDependencies() method', function () {
       var responseArray, companiesFactory, currencyFactory, itemsFactory, salesCategoriesDeferred, tagsListDeferred, taxTypeDeferred, masterCurrenciesListDeferred, allergenListDeferred, itemTypesDeferred, characteristicsDeferred, dimensionListDeferred, volumeListDeferred, weightListDeferred, companyDeferred, itemsListDeferred;
 
-      beforeEach(inject(function ($injector, $q, $rootScope, _servedSalesCategories_, _servedTags_, _servedTaxTypes_, _servedCurrencies_, _servedAllergens_, _servedItemTypes_, _servedCharacteristics_, _servedUnitsDimension_, _servedUnitsVolume_, _servedUnitsWeight_, _servedCompany_, _servedItemsList_) {
+      beforeEach(inject(function ($injector, $q, $rootScope, _servedSalesCategories_, _servedTags_, _servedTaxTypes_,
+                                  _servedCurrencies_, _servedAllergens_, _servedItemTypes_, _servedCharacteristics_,
+                                  _servedUnitsDimension_, _servedUnitsVolume_, _servedUnitsWeight_, _servedCompany_,
+                                  _servedItemsList_) {
         responseArray = [
           _servedSalesCategories_,
           _servedTags_,
