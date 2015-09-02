@@ -20,6 +20,12 @@ angular.module('ts5App')
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
    };
+    $scope.wizardSteps = storeInstanceDispatchWizardConfig.get();
+    $scope.nextTrigger = function(message){
+      console.log(message);
+      // return false; // uncomment out if you prefer the wizard not step forward
+    };
+    $scope.nextTriggerMessage = 'trigger something before going to the next step';
 
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
    var companyId = GlobalMenuService.company.get();
@@ -30,10 +36,6 @@ angular.module('ts5App')
       this.getMenuMasterList();
       this.getCarrierNumbers();
       this.getStoresList();
-
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.get();
-      $scope.param1 = 'hi this is it';
-      $scope.mockTrigger = function(param){ console.log('boom', param); return false; };
     };
 
     this.getCatererStationList = function() {
