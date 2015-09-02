@@ -61,7 +61,7 @@ angular.module('ts5App')
       init();
 
       function callTrigger(trigger){
-        if(!angular.isDefined($scope[trigger])) {
+        if(angular.isUndefined($scope[trigger])) {
           return true;
         }
         var triggerReturn = $scope[trigger]();
