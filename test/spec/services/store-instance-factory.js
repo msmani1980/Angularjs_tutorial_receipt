@@ -14,6 +14,7 @@ describe('Service: storeInstanceFactory', function () {
   var carrierService;
   var storeInstanceService;
   var menuMasterService;
+  var storesService;
 
   beforeEach(inject(function (_storeInstanceFactory_, $injector) {
     storeInstanceFactory = _storeInstanceFactory_;
@@ -24,6 +25,7 @@ describe('Service: storeInstanceFactory', function () {
     carrierService = $injector.get('carrierService');
     storeInstanceService = $injector.get('storeInstanceService');
     menuMasterService = $injector.get('menuMasterService');
+    storesService = $injector.get('storesService');
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(GlobalMenuService.company, 'get').and.returnValue(companyId);
@@ -35,7 +37,15 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(storeInstanceService, 'updateStoreInstance');
     spyOn(storeInstanceService, 'deleteStoreInstance');
     spyOn(menuMasterService, 'getMenuMasterList');
+    spyOn(storesService, 'getStoresList');
   }));
+
+  describe('storesService calls', function(){
+    it('should call getStoresList', function(){
+      storeInstanceFactory.getStoresList();
+      expect(storesService.getStoresList).toHaveBeenCalled();
+    });
+  });
 
   describe('menuMasterService calls', function(){
     it('should call getMenuMasterList', function(){
