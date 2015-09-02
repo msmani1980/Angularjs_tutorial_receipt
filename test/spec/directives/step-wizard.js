@@ -242,7 +242,7 @@ describe('The Step Wizard directive', function () {
       expect(directiveScope.wizardPrev()).toBe(false);
     });
     it('should not step anywhere', function(){
-      expect(directiveScope.goToStepURI()).toBe(false);
+      expect(directiveScope.goToStepURI(2)).toBe(false);
     });
   });
 });
