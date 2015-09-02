@@ -23,6 +23,8 @@ angular.module('ts5App')
       this.getCatererStationList();
       this.getMenuMasterList();
       $scope.wizardSteps = storeInstanceDispatchWizardConfig.get();
+      $scope.param1 = 'hi this is it';
+      $scope.mockTrigger = function(param){ console.log('boom', param); return false; };
     };
 
     this.getCatererStationList = function() {

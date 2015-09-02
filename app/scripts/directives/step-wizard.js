@@ -66,9 +66,10 @@ angular.module('ts5App')
         }
         var stepBackwards = true;
         // We call prevTrigger here, since the user wants to go back
-        // if controller's prevTrigger returns false, wizard will NOT step backwards
+        // if controller's prevTrigger returns false, wizard will
+        // trigger controller function but NOT step backwards
         if(angular.isDefined($scope.prevTrigger)){
-          var triggerReturn = $scope.prevTrigger($scope.prevTriggerParams);
+          var triggerReturn = $scope.prevTrigger();
           if(typeof triggerReturn === 'boolean'){
             stepBackwards = triggerReturn;
           }
@@ -76,6 +77,7 @@ angular.module('ts5App')
         if(stepBackwards) {
           $location.url($scope.steps[$index].uri);
         }
+        return stepBackwards;
       };
 
       $scope.wizardPrev = function(){
@@ -83,7 +85,7 @@ angular.module('ts5App')
         if(prevIndex < 0){
           return false;
         }
-        $scope.goToStepURI(prevIndex);
+        return $scope.goToStepURI(prevIndex);
       };
 
       $scope.wizardNext = function(){
@@ -95,7 +97,7 @@ angular.module('ts5App')
         var stepForward = true;
         if(angular.isDefined($scope.nextTrigger)){
           // if controller's nextTrigger returns false, wizard will NOT step forward
-          var triggerReturn = $scope.nextTrigger($scope.nextTriggerParams);
+          var triggerReturn = $scope.nextTrigger();
           if(typeof triggerReturn === 'boolean'){
             stepForward = triggerReturn;
           }
@@ -104,6 +106,7 @@ angular.module('ts5App')
           var uri = $scope.steps[nextIndex].uri;
           $location.url(uri);
         }
+        return stepForward;
       };
     }
   };
