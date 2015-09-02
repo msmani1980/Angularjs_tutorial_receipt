@@ -38,6 +38,7 @@ angular.module('ts5App')
         }
       }
 
+      // Maliformed uri cleanup
       function trailingSlashOnStepURI(step){
         // Add trailing slash to step URI if one exists in address bar
         if ($location.path().match(/\/$/) && !step.uri.match(/\/$/)) {
@@ -78,10 +79,9 @@ angular.module('ts5App')
         if($index >= currentStepIndex){
           return false;
         }
+        // if controller's prev-trigger scope function returns false
+        // the wizard will NOT step backwards
         var stepBackwards = callTrigger('prevTrigger');
-        // We call prevTrigger here, since the user wants to go back
-        // if controller's prevTrigger returns false, wizard will
-        // trigger controller function but NOT step backwards
         if(stepBackwards) {
           $location.url($scope.steps[$index].uri);
         }
@@ -102,6 +102,8 @@ angular.module('ts5App')
         if(nextIndex > $scope.steps.length){
           return false;
         }
+        // If the controller's next-trigger scope function returns false
+        // the wizard will NOT step forward
         var stepForward = callTrigger('nextTrigger');
         if(stepForward){
           var uri = $scope.steps[nextIndex].uri;
