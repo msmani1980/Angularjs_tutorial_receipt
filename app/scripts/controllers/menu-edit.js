@@ -46,10 +46,6 @@ angular.module('ts5App')
       });
     }
 
-    function fetchMasterItemsList(startDate, endDate) {
-      fetchFilteredItemsList(startDate, endDate, '', attachItemsModelToScope);
-    }
-
     function fetchFilteredItemsList(startDate, endDate, category, successHandler) {
       var searchQuery = {
         startDate: startDate,
@@ -61,14 +57,8 @@ angular.module('ts5App')
       menuFactory.getItemsList(searchQuery, true).then(successHandler);
     }
 
-    function setupMenuModelAndFetchItems(menuFromAPI) {
-      $scope.menuFromAPI = angular.copy(menuFromAPI);
-
-      fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
-      $scope.menu = angular.copy(menuFromAPI);
-      deserializeMenuItems($scope.menu.menuItems);
-      $scope.menuEditForm.$setPristine();
-      hideLoadingModal();
+    function fetchMasterItemsList(startDate, endDate) {
+      fetchFilteredItemsList(startDate, endDate, '', attachItemsModelToScope);
     }
 
     function deserializeMenuItems(menuItems) {
@@ -77,6 +67,16 @@ angular.module('ts5App')
         $scope.menuItemList.push(item);
         $scope.filteredItemsCollection.push(angular.copy($scope.masterItemsList));
       });
+    }
+
+    function setupMenuModelAndFetchItems(menuFromAPI) {
+      $scope.menuFromAPI = angular.copy(menuFromAPI);
+
+      fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
+      $scope.menu = angular.copy(menuFromAPI);
+      deserializeMenuItems($scope.menu.menuItems);
+      $scope.menuEditForm.$setPristine();
+      hideLoadingModal();
     }
 
     function showToast(className, type, message) {
@@ -171,24 +171,6 @@ angular.module('ts5App')
       menuFactory.updateMenu(payload).then(resetModelAndShowNotification, showErrors);
     };
 
-    $this.createMenu = function () {
-      checkForDuplicateRecord();
-    };
-
-    $scope.overwriteMenu = function () {
-      showLoadingModal('Saving Menu');
-      $scope.menu.id = $scope.overwriteMenuId;
-      var payload = $this.createPayload();
-      menuFactory.updateMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
-    };
-
-    function checkForDuplicateRecord() {
-      menuFactory.getMenuList({
-        menuCode: $scope.menu.menuCode,
-        menuName: $scope.menu.menuName
-      }).then(checkToOverwriteOrCreate);
-    }
-
     function checkToOverwriteOrCreate(response) {
       var duplicateExists = response.menus.length;
       var dateIsInTheFuture = false;
@@ -208,6 +190,24 @@ angular.module('ts5App')
         menuFactory.createMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
       }
     }
+
+    function checkForDuplicateRecord() {
+      menuFactory.getMenuList({
+        menuCode: $scope.menu.menuCode,
+        menuName: $scope.menu.menuName
+      }).then(checkToOverwriteOrCreate);
+    }
+
+    $this.createMenu = function () {
+      checkForDuplicateRecord();
+    };
+
+    $scope.overwriteMenu = function () {
+      showLoadingModal('Saving Menu');
+      $scope.menu.id = $scope.overwriteMenuId;
+      var payload = $this.createPayload();
+      menuFactory.updateMenu(payload).then(redirectToListPageAfterSuccess, showErrors);
+    };
 
     $scope.isViewOnly = function () {
       return ($routeParams.state === 'view');

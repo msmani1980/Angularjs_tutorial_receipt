@@ -18,51 +18,16 @@ angular.module('ts5App')
         endDate: null
       };
 
-    // private controller functions
-    function getStoreNumbers(response){
-      hideLoadingModal();
-      if(!response.meta.count){
-        return;
-      }
-      angular.forEach(response.response, function(store){
-        this.push(formatForForm(store));
-      }, $scope.storeNumbersList);
+    function showMessage(className, type, message) {
+      ngToast.create({className: className, dismissButton: true, content: '<strong>'+type+'</strong>: '+message});
     }
 
-    function getCurrentStoreNumber(_id){
-      // Lets not hit the API again if it exists in our current list
-      var store = $filter('filter')($scope.storeNumbersList, {id: _id}, true);
-      if(store.length){
-        setCurrentStore(store[0]);
-        return;
-      }
-      companyStoresService.getStore(_id).then(getStoreResolution,showApiErrors);
+    function displayLoadingModal(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
     }
 
-    function formatForForm(store){
-      store.startDate = dateUtility.formatDateForApp(store.startDate);
-      store.endDate = dateUtility.formatDateForApp(store.endDate);
-      return store;
-    }
-
-    function getStoreResolution(response){
-      var store = formatForForm(response);
-      setCurrentStore(store);
-    }
-
-    function setCurrentStore(store){
-      $scope.viewName = 'Edit Store Number';
-      $scope.submitText = 'Save';
-      $scope.editing = store.id;
-      $scope.formData = store;
-      hideLoadingModal();
-      $anchorScroll(0);
-    }
-
-    function submitFormSuccess(){
-      init();
-      hideLoadingModal();
-      showMessage('success', 'Store Number', 'saved!');
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
     }
 
     function showApiErrors(response){
@@ -74,16 +39,45 @@ angular.module('ts5App')
       }
     }
 
-    function showMessage(className, type, message) {
-      ngToast.create({className: className, dismissButton: true, content: '<strong>'+type+'</strong>: '+message});
+    function formatForForm(store){
+      store.startDate = dateUtility.formatDateForApp(store.startDate);
+      store.endDate = dateUtility.formatDateForApp(store.endDate);
+      return store;
     }
 
-    function displayLoadingModal(loadingText) {
-      angular.element('#loading').modal('show').find('p').text(loadingText);
+    // private controller functions
+    function getStoreNumbers(response){
+      hideLoadingModal();
+      if(!response.meta.count){
+        return;
+      }
+      angular.forEach(response.response, function(store){
+        this.push(formatForForm(store));
+      }, $scope.storeNumbersList);
     }
 
-    function hideLoadingModal() {
-      angular.element('#loading').modal('hide');
+    function setCurrentStore(store){
+      $scope.viewName = 'Edit Store Number';
+      $scope.submitText = 'Save';
+      $scope.editing = store.id;
+      $scope.formData = store;
+      hideLoadingModal();
+      $anchorScroll(0);
+    }
+
+    function getStoreResolution(response){
+      var store = formatForForm(response);
+      setCurrentStore(store);
+    }
+
+    function getCurrentStoreNumber(_id){
+      // Lets not hit the API again if it exists in our current list
+      var store = $filter('filter')($scope.storeNumbersList, {id: _id}, true);
+      if(store.length){
+        setCurrentStore(store[0]);
+        return;
+      }
+      companyStoresService.getStore(_id).then(getStoreResolution,showApiErrors);
     }
 
     function init(){
@@ -97,6 +91,13 @@ angular.module('ts5App')
       displayLoadingModal();
       companyStoresService.getStores(_companyId).then(getStoreNumbers,showApiErrors);
     }
+
+    function submitFormSuccess(){
+      init();
+      hideLoadingModal();
+      showMessage('success', 'Store Number', 'saved!');
+    }
+
     init();
 
     // scope functions

@@ -15,6 +15,10 @@ angular.module('ts5App')
       id: '@id'
     };
 
+    var normalizeLanguages = function (languages) {
+      return (languages.split(',')[0] !== '') ? languages.split(',').join(', ') : 'N/A';
+    };
+
     var actions = {
       getCompanyList: {
         method: 'GET',
@@ -39,10 +43,6 @@ angular.module('ts5App')
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
-
-    var normalizeLanguages = function (languages) {
-      return (languages.split(',')[0] !== '') ? languages.split(',').join(', ') : 'N/A';
-    };
 
     var getCompanyList = function (payload) {
       return requestResource.getCompanyList(payload).$promise;

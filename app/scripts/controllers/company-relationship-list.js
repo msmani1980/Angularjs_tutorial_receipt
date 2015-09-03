@@ -42,6 +42,29 @@ angular.module('ts5App')
       return Date.parse(date);
     };
 
+    function removeCompanyFromLocalList(company) {
+      var index = $scope.companyRelationshipListData.indexOf(company);
+
+      if (index > -1) {
+        $scope.companyRelationshipListData.splice(index, 1);
+      }
+    }
+
+    function successCompanyRelationship(response, companyRelationship, messageAction) {
+      if (!companyRelationship.id) {
+        $route.reload();
+      }
+      companyRelationship.isEditing = false;
+
+      showToast('success', 'Company Relationship', 'Successfully ' + messageAction);
+    }
+
+    function failCompanyRelationship(error/*, companyRelationship*/) {
+      showToast('warning', 'Company Relationship', 'Error submitting ' + error.companyName + '!');
+      $scope.displayError = true;
+      $scope.formErrors = error.data;
+    }
+
     $scope.isActive = function (date) {
       var parsedDate = $this.parseDate(date);
       return parsedDate <= dateUtility.now();
@@ -99,29 +122,6 @@ angular.module('ts5App')
       removeCompanyFromLocalList(company);
     };
 
-    function removeCompanyFromLocalList(company) {
-      var index = $scope.companyRelationshipListData.indexOf(company);
-
-      if (index > -1) {
-        $scope.companyRelationshipListData.splice(index, 1);
-      }
-    }
-
-    function successCompanyRelationship(response, companyRelationship, messageAction) {
-      if (!companyRelationship.id) {
-        $route.reload();
-      }
-      companyRelationship.isEditing = false;
-
-      showToast('success', 'Company Relationship', 'Successfully ' + messageAction);
-    }
-
-    function failCompanyRelationship(error/*, companyRelationship*/) {
-      showToast('warning', 'Company Relationship', 'Error submitting ' + error.companyName + '!');
-      $scope.displayError = true;
-      $scope.formErrors = error.data;
-    }
-
     $scope.submit = function (isValid, companyRelationship) {
       if (!isValid) {
         return;
@@ -177,6 +177,7 @@ angular.module('ts5App')
       });
     }
 
+
     var filterCompanyListByTypesScope = function (companyTypeListFromAPI) {
       var typeIdList = [];
       companyTypeListFromAPI.response.forEach(function (companyType) {
@@ -197,6 +198,10 @@ angular.module('ts5App')
       return companyRelationshipFactory.getCompanyList();
     };
 
+    var getCompanyRelationshipTypeListPromise = function (companyTypeId) {
+      return companyRelationshipFactory.getCompanyRelationshipTypeList(companyTypeId);
+    };
+
     var generateCompanyRelationshipPromises = function () {
       return [getCompanyRelationshipListByCompanyPromise($routeParams.id), getCompanyRelationshipTypeListPromise($scope.company.companyTypeId)];
     };
@@ -212,10 +217,6 @@ angular.module('ts5App')
       $scope.isRejected = true;
       showToast('warning', $scope.viewName, 'API unavailable');
       return;
-    };
-
-    var getCompanyRelationshipTypeListPromise = function (companyTypeId) {
-      return companyRelationshipFactory.getCompanyRelationshipTypeList(companyTypeId);
     };
 
     var getCompanyRelationshipListByCompanyAndTypeSuccessHandler = function (response) {
