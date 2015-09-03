@@ -66,6 +66,36 @@ angular.module('ts5App')
       return ($routeParams.state && $routeParams.id) && !$scope.commission.selectedItem;
     }
 
+    function getSelectedObjectFromArrayUsingId(fromArray, id) {
+      var filteredObject = $filter('filter')(fromArray, {id: id}, function (expected, actual) {
+        return angular.equals(parseInt(expected), parseInt(actual));
+      });
+
+      if (filteredObject && filteredObject.length > 0) {
+        return filteredObject[0];
+      }
+      return {};
+    }
+
+    function getSelectedItemObject() {
+      var itemId = $scope.commission.itemMasterId;
+      return getSelectedObjectFromArrayUsingId($scope.itemList, itemId);
+    }
+
+    function getSelectedPriceTypeObject() {
+      if ($scope.commission.types.length === 0) {
+        return {};
+      }
+
+      var priceId = $scope.commission.types[0].priceTypeId;
+      return getSelectedObjectFromArrayUsingId($scope.priceTypeList, priceId);
+    }
+
+    function getSelectedRateTypeObject() {
+      var rateTypeId = $scope.commission.fixeds.length > 0 ? 1 : 2;
+      return getSelectedObjectFromArrayUsingId($scope.taxRateTypes, rateTypeId);
+    }
+
     function populateValuesFromAPI() {
       hideLoadingModal();
       $scope.commission.currenciesFields = {};
@@ -119,36 +149,6 @@ angular.module('ts5App')
       }
 
     });
-
-    function getSelectedObjectFromArrayUsingId(fromArray, id) {
-      var filteredObject = $filter('filter')(fromArray, {id: id}, function (expected, actual) {
-        return angular.equals(parseInt(expected), parseInt(actual));
-      });
-
-      if (filteredObject && filteredObject.length > 0) {
-        return filteredObject[0];
-      }
-      return {};
-    }
-
-    function getSelectedItemObject() {
-      var itemId = $scope.commission.itemMasterId;
-      return getSelectedObjectFromArrayUsingId($scope.itemList, itemId);
-    }
-
-    function getSelectedPriceTypeObject() {
-      if ($scope.commission.types.length === 0) {
-        return {};
-      }
-
-      var priceId = $scope.commission.types[0].priceTypeId;
-      return getSelectedObjectFromArrayUsingId($scope.priceTypeList, priceId);
-    }
-
-    function getSelectedRateTypeObject() {
-      var rateTypeId = $scope.commission.fixeds.length > 0 ? 1 : 2;
-      return getSelectedObjectFromArrayUsingId($scope.taxRateTypes, rateTypeId);
-    }
 
     employeeCommissionFactory.getPriceTypesList().then(function (dataFromAPI) {
       $scope.priceTypeList = angular.copy(dataFromAPI);
