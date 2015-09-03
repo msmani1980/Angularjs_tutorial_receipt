@@ -9,7 +9,6 @@
  */
 angular.module('ts5App')
   .service('storeInstanceDispatchWizardConfig', function () {
-    // AngularJS will instantiate a singleton by calling "new" on this function
     function getSteps(id){
       return [
         {

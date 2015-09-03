@@ -20,7 +20,7 @@ angular.module('ts5App')
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
    };
-    $scope.wizardSteps = storeInstanceDispatchWizardConfig.get();
+    $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
     $scope.nextTrigger = function(message){
       console.log(message);
       // return false; // uncomment out if you prefer the wizard not step forward

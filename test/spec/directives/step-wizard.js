@@ -48,12 +48,12 @@ describe('The Step Wizard directive', function () {
       scope.param1 = '123';
       scope.param2 = '1234';
       scope.param3 = '12345';
-      scope.myMockNextTrigger1 = function(p1){
+      scope.mockNextTrigger1 = function(p1){
         if(p1 === 980345){
           return;
         }
       };
-      scope.myMockPrevTrigger1 = function(p2, p3){
+      scope.mockPrevTrigger1 = function(p2, p3){
         if(p2 === 980345){
           return;
         }
@@ -63,15 +63,15 @@ describe('The Step Wizard directive', function () {
       };
 
       template = '<step-wizard steps="wizardSteps" ' +
-        'prev-trigger="myMockPrevTrigger1(param1)" ' +
-        'next-trigger="myMockNextTrigger1(param2, param3)" ' +
+        'prev-trigger="mockPrevTrigger1(param1)" ' +
+        'next-trigger="mockNextTrigger1(param2, param3)" ' +
         '></step-wizard>';
 
       spyOn(location, 'url').and.callThrough();
       spyOn(location, 'path').and.returnValue('/test-uri-2');
 
-      spyOn(scope,'myMockNextTrigger1').and.callThrough();
-      spyOn(scope,'myMockPrevTrigger1').and.callThrough();
+      spyOn(scope,'mockNextTrigger1').and.callThrough();
+      spyOn(scope,'mockPrevTrigger1').and.callThrough();
 
       compileDirective();
     }));
@@ -98,13 +98,13 @@ describe('The Step Wizard directive', function () {
     it('should step back to /test-uri-1 when wizardPrev is triggered', function(){
       expect(directiveScope.wizardPrev()).toBe(true);
       expect(directiveScope.goToStepURI).toHaveBeenCalledWith(0);
-      expect(scope.myMockPrevTrigger1).toHaveBeenCalledWith(scope.param1);
+      expect(scope.mockPrevTrigger1).toHaveBeenCalledWith(scope.param1);
       expect(location.url).toHaveBeenCalledWith('/test-uri-1');
     });
 
     it('should step forward to /test-uri-3 when wizardNext is triggered', function(){
       expect(directiveScope.wizardNext()).toBe(true);
-      expect(scope.myMockNextTrigger1).toHaveBeenCalledWith(scope.param2, scope.param3);
+      expect(scope.mockNextTrigger1).toHaveBeenCalledWith(scope.param2, scope.param3);
       expect(location.url).toHaveBeenCalledWith('/test-uri-3');
     });
 
@@ -142,13 +142,13 @@ describe('The Step Wizard directive', function () {
       scope.param5 = 5;
       scope.param6 = 6;
       scope.param7 = 7;
-      scope.myMockPrevTrigger2 = function(p5){
+      scope.mockPrevTrigger2 = function(p5){
         if(p5 === 9034853){
           return true;
         }
         return false;
       };
-      scope.myMockNextTrigger2 = function(p6, p7){
+      scope.mockNextTrigger2 = function(p6, p7){
         if(p6 === 9090345){
           return true;
         }
@@ -159,15 +159,15 @@ describe('The Step Wizard directive', function () {
       };
 
       template = '<step-wizard steps="wizardSteps" ' +
-        'prev-trigger="myMockPrevTrigger2(param5)" ' +
-        'next-trigger="myMockNextTrigger2(param6, param7)" ' +
+        'prev-trigger="mockPrevTrigger2(param5)" ' +
+        'next-trigger="mockNextTrigger2(param6, param7)" ' +
         '></step-wizard>';
 
       spyOn(location, 'url').and.callThrough();
       spyOn(location, 'path').and.returnValue('/test-uri-3');
 
-      spyOn(scope,'myMockNextTrigger2').and.callThrough();
-      spyOn(scope,'myMockPrevTrigger2').and.callThrough();
+      spyOn(scope,'mockNextTrigger2').and.callThrough();
+      spyOn(scope,'mockPrevTrigger2').and.callThrough();
 
       compileDirective();
     }));
@@ -178,7 +178,7 @@ describe('The Step Wizard directive', function () {
     it('should only trigger the prevTrigger function, and not step the user back', function(){
       expect(directiveScope.wizardPrev()).toBe(false);
       expect(directiveScope.goToStepURI).toHaveBeenCalledWith(1);
-      expect(scope.myMockPrevTrigger2).toHaveBeenCalledWith(scope.param5);
+      expect(scope.mockPrevTrigger2).toHaveBeenCalledWith(scope.param5);
     });
   });
 
