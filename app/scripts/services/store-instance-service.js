@@ -39,6 +39,9 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     updateStoreInstanceItem: {
       method: 'PUT'
     },
+    createStoreInstanceItem: {
+      method: 'POST'
+    },
     getStoreInstancesMenuItems: {
       method: 'GET'
     }
@@ -89,6 +92,13 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     }, payload).$promise;
   }
 
+  function createStoreInstanceItem(storeId, payload) {
+    return requestResource.createStoreInstanceItem({
+      id: storeId,
+      api: 'items'
+    }, payload).$promise;
+  }
+
   function getStoreInstanceMenuItems(id) {
     return requestResource.getStoreInstanceMenuItems({
       id: id,
@@ -105,6 +115,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     getStoreInstanceItemList: getStoreInstanceItemList,
     getStoreInstanceItem: getStoreInstanceItem,
     getStoreInstanceMenuItems: getStoreInstanceMenuItems,
-    updateStoreInstanceItem: updateStoreInstanceItem
+    updateStoreInstanceItem: updateStoreInstanceItem,
+    createStoreInstanceItem: createStoreInstanceItem
   };
 });

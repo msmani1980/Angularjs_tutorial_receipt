@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: storeInstanceService', function () {
+describe('Service: storeInstanceService', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -134,4 +134,25 @@ fdescribe('Service: storeInstanceService', function () {
       httpBackend.flush();
     });
   });
+
+  describe('createStoreInstanceItem', function () {
+    it('should make POST request to API', function () {
+      var expectedURL = /dispatch\/store-instances\/\d+\/items$/;
+      var fakeStoreId = 38;
+      var payload = {
+        fakeKey: 'fakeValue'
+      };
+      var mockResponse = angular.extend({}, {
+        id: fakeStoreId
+      }, payload);
+
+      httpBackend.expectPOST(expectedURL).respond(200, mockResponse);
+      storeInstanceService.createStoreInstanceItem(fakeStoreId, payload).then(function (response) {
+        expect(response.id).toBe(fakeStoreId);
+        expect(response.fakeKey).toBe(payload.fakeKey);
+      });
+      httpBackend.flush();
+    });
+  });
+
 });
