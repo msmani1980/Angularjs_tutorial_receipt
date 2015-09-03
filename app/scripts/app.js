@@ -175,6 +175,9 @@ angular.module('ts5App', [
   }).when('/store-instance-create', {
     templateUrl: 'views/store-instance-create.html',
     controller: 'StoreInstanceCreateCtrl'
+  }).when('/store-instance-packing', {
+    templateUrl: 'views/store-instance-packing.html',
+    controller: 'StoreInstancePackingCtrl'
   }).otherwise({
     redirectTo: '/'
   });
