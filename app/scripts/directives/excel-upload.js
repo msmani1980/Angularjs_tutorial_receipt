@@ -17,7 +17,7 @@ angular.module('ts5App')
         content: '<strong>' + type + '</strong>: ' + message
       });
     }
-    
+
     function successHandler(response) {
       if (response.toString() === 'OK_BUT_EMAIL_FAILURE') {
         showToast('warning', 'Import from file', 'upload successful, but email notifications have failed');
