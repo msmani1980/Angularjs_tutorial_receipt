@@ -21,10 +21,6 @@ angular.module('ts5App')
      menus: []
    };
     $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
-    $scope.nextTrigger = function(message){
-      console.log(message);
-      // return false; // uncomment out if you prefer the wizard not step forward
-    };
     $scope.nextTriggerMessage = 'trigger something before going to the next step';
 
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
@@ -151,4 +147,7 @@ angular.module('ts5App')
       $this.createStoreInstance();
     };
 
+    $scope.nextTrigger = function(message){
+      $this.createStoreInstance();
+    };
   });
