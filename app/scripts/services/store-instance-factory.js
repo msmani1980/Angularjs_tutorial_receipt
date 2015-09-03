@@ -53,12 +53,12 @@ angular.module('ts5App')
       return storeInstanceService.deleteStoreInstance(id);
     }
 
-    function getStoreInstanceMenuItems(id){
-      return storeInstanceService.getStoreInstanceMenuItems(id);
+    function getStoreInstanceMenuItems(id, payload){
+      return storeInstanceService.getStoreInstanceMenuItems(id, payload);
     }
 
-    function getStoreInstanceItemList(id){
-      return storeInstanceService.getStoreInstanceItemList(id);
+    function getStoreInstanceItemList(id, payload){
+      return storeInstanceService.getStoreInstanceItemList(id, payload);
     }
 
     function getStoreInstanceItem(id, itemId){

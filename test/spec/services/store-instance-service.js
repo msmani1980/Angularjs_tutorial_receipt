@@ -83,13 +83,39 @@ describe('Service: storeInstanceService', function () {
     });
   });
 
+  describe('getStoreInstanceMenuItems', function () {
+    it('should make GET request to API', function () {
+      var expectedURL = /dispatch\/store-instances\/\d+\/menu-items$/;
+      var fakeId = 12;
+      var payload = {
+        fakeKey: 'fakeValue'
+      };
+      var mockResponse = angular.extend({}, {
+        id: fakeId
+      }, payload);
+      httpBackend.expectGET(expectedURL).respond(200, mockResponse);
+      storeInstanceService.getStoreInstanceMenuItems(fakeId, payload).then(function (response) {
+        expect(response.id).toBe(fakeId);
+        expect(response.fakeKey).toBe('fakeValue');
+      });
+      httpBackend.flush();
+    });
+  });
+
   describe('getStoreInstanceItemList', function () {
     it('should make GET request to API', function () {
       var expectedURL = /dispatch\/store-instances\/\d+\/items$/;
       var fakeId = 12;
-      httpBackend.expectGET(expectedURL).respond(200, {id: fakeId});
-      storeInstanceService.getStoreInstanceItemList(fakeId).then(function (response) {
+      var payload = {
+        fakeKey: 'fakeValue'
+      };
+      var mockResponse = angular.extend({}, {
+        id: fakeId
+      }, payload);
+      httpBackend.expectGET(expectedURL).respond(200, mockResponse);
+      storeInstanceService.getStoreInstanceItemList(fakeId, payload).then(function (response) {
         expect(response.id).toBe(fakeId);
+        expect(response.fakeKey).toBe('fakeValue');
       });
       httpBackend.flush();
     });

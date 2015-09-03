@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: storeInstanceFactory', function () {
+describe('Service: storeInstanceFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -85,12 +85,12 @@ fdescribe('Service: storeInstanceFactory', function () {
       expect(storeInstanceService.deleteStoreInstance).toHaveBeenCalledWith(id);
     });
     it('should call getStoreInstanceMenuItems', function(){
-      storeInstanceFactory.getStoreInstanceMenuItems(id);
-      expect(storeInstanceService.getStoreInstanceMenuItems).toHaveBeenCalledWith(id);
+      storeInstanceFactory.getStoreInstanceMenuItems(id, mockPayload);
+      expect(storeInstanceService.getStoreInstanceMenuItems).toHaveBeenCalledWith(id, mockPayload);
     });
     it('should call getStoreInstanceItemList', function(){
-      storeInstanceFactory.getStoreInstanceItemList(id);
-      expect(storeInstanceService.getStoreInstanceItemList).toHaveBeenCalledWith(id);
+      storeInstanceFactory.getStoreInstanceItemList(id, mockPayload);
+      expect(storeInstanceService.getStoreInstanceItemList).toHaveBeenCalledWith(id, mockPayload);
     });
     it('should call getStoreInstanceItem', function(){
       storeInstanceFactory.getStoreInstanceItem(id, itemId);
