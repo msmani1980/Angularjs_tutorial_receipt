@@ -135,6 +135,25 @@ describe('Service: storeInstanceService', function () {
     });
   });
 
+  describe('deleteStoreInstanceItem', function () {
+    it('should make DELETE request to API', function () {
+      var expectedURL = /dispatch\/store-instances\/\d+\/items\/\d+$/;
+      var fakeStoreId = 38;
+      var fakeItemId = 1;
+      var mockResponse = {
+        id: fakeStoreId,
+        itemId: fakeItemId
+      };
+
+      httpBackend.expectDELETE(expectedURL).respond(200, mockResponse);
+      storeInstanceService.deleteStoreInstanceItem(fakeStoreId, fakeItemId).then(function (response) {
+        expect(response.id).toBe(fakeStoreId);
+        expect(response.itemId).toBe(fakeItemId);
+      });
+      httpBackend.flush();
+    });
+  });
+
   describe('createStoreInstanceItem', function () {
     it('should make POST request to API', function () {
       var expectedURL = /dispatch\/store-instances\/\d+\/items$/;
