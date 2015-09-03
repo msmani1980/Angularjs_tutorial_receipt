@@ -30,6 +30,19 @@ angular.module('ts5App')
       return true;
     }
 
+    function addToImportedRetailItemList(retailItem){
+      if (!$scope.selectedImportCompany){
+        return;
+      }
+      if(!$scope.selectedImportCompany.id){
+        return;
+      }
+      if($scope.selectedImportCompany.id !== retailItem.companyId){
+        return;
+      }
+      $scope.importedRetailItemList.push(retailItem);
+    }
+
     function removeRetailItemFromCompanyRetailItems(retailItem){
       $scope.companyRetailItemList.splice($scope.companyRetailItemList.indexOf(retailItem), 1);
       _companyRetailItems.splice(_companyRetailItems.indexOf(retailItem), 1);
@@ -57,19 +70,6 @@ angular.module('ts5App')
 
     function showMessage(message, messageType) {
       ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Item import</strong>: ' + message });
-    }
-
-    function addToImportedRetailItemList(retailItem){
-      if (!$scope.selectedImportCompany){
-        return;
-      }
-      if(!$scope.selectedImportCompany.id){
-        return;
-      }
-      if($scope.selectedImportCompany.id !== retailItem.companyId){
-        return;
-      }
-      $scope.importedRetailItemList.push(retailItem);
     }
 
     function displayLoadingModal(loadingText) {
