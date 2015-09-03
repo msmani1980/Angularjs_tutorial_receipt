@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: storeInstanceService', function () {
+fdescribe('Service: storeInstanceService', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -107,6 +107,29 @@ describe('Service: storeInstanceService', function () {
       storeInstanceService.getStoreInstanceItem(fakeStoreId, fakeItemId).then(function (response) {
         expect(response.id).toBe(fakeStoreId);
         expect(response.itemId).toBe(fakeItemId);
+      });
+      httpBackend.flush();
+    });
+  });
+
+  describe('updateStoreInstanceItem', function () {
+    it('should make PUT request to API', function () {
+      var expectedURL = /dispatch\/store-instances\/\d+\/items\/\d+$/;
+      var fakeStoreId = 38;
+      var fakeItemId = 1;
+      var payload = {
+        fakeKey: 'fakeValue'
+      };
+      var mockResponse = angular.extend({}, {
+        id: fakeStoreId,
+        itemId: fakeItemId
+      }, payload);
+
+      httpBackend.expectPUT(expectedURL).respond(200, mockResponse);
+      storeInstanceService.updateStoreInstanceItem(fakeStoreId, fakeItemId, payload).then(function (response) {
+        expect(response.id).toBe(fakeStoreId);
+        expect(response.itemId).toBe(fakeItemId);
+        expect(response.fakeKey).toBe(payload.fakeKey);
       });
       httpBackend.flush();
     });
