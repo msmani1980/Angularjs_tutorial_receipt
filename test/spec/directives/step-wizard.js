@@ -45,19 +45,19 @@ describe('The Step Wizard directive', function () {
           uri: '/test-uri-3'
         }
       ];
-      scope.param1 = '123';
-      scope.param2 = '1234';
-      scope.param3 = '12345';
-      scope.mockNextTrigger1 = function(p1){
-        if(p1 === 980345){
+      scope.param1 = 1;
+      scope.param2 = 2;
+      scope.param3 = 3;
+      scope.mockNextTrigger1 = function(param1){
+        if(param1 === 2){
           return;
         }
       };
-      scope.mockPrevTrigger1 = function(p2, p3){
-        if(p2 === 980345){
+      scope.mockPrevTrigger1 = function(param2, param3){
+        if(param2 === 3){
           return;
         }
-        if(p3 === 984566){
+        if(param3 === 4){
           return;
         }
       };
@@ -142,17 +142,17 @@ describe('The Step Wizard directive', function () {
       scope.param5 = 5;
       scope.param6 = 6;
       scope.param7 = 7;
-      scope.mockPrevTrigger2 = function(p5){
-        if(p5 === 9034853){
+      scope.mockPrevTrigger2 = function(param5){
+        if(param5 === 6){
           return true;
         }
         return false;
       };
-      scope.mockNextTrigger2 = function(p6, p7){
-        if(p6 === 9090345){
+      scope.mockNextTrigger2 = function(param6, param7){
+        if(param6 === 7){
           return true;
         }
-        if(p7 === 908345345){
+        if(param7 === 8){
           return true;
         }
         return false;
