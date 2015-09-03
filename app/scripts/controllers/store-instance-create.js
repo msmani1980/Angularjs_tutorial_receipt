@@ -10,7 +10,8 @@
 angular.module('ts5App')
   .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast,
                                                    dateUtility,GlobalMenuService,
-                                                   storeInstanceDispatchWizardConfig) {
+                                                   storeInstanceDispatchWizardConfig,
+                                                    $location) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -72,7 +73,7 @@ angular.module('ts5App')
       this.resetErrors();
       this.displayLoadingModal('Creating a store instance');
       var payload = this.formatPayload();
-      if(angular.isUndefined(payload)) {
+      if(!payload) {
         return false;
       }
       storeInstanceFactory.createStoreInstance(payload).then(
@@ -85,7 +86,11 @@ angular.module('ts5App')
       $this.hideLoadingModal();
       if(response.id){
         $this.showMessage('success','Store Instance created id: ' + response.id);
-        //TODO: Move user to packing step
+        if($scope.wizardStepToIndex) {
+          $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(response.id);
+          var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
+          $location.urt(uri);
+        }
       }
     };
 
@@ -148,5 +153,6 @@ angular.module('ts5App')
 
     $scope.nextTrigger = function(){
       $this.createStoreInstance();
+      return false;
     };
   });

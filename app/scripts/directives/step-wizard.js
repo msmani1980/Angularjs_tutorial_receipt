@@ -14,6 +14,7 @@ angular.module('ts5App')
     scope: {
       steps: '=',
       disable: '=',
+      uri:'=',
       nextTrigger: '&',
       prevTrigger: '&'
     },
@@ -65,7 +66,8 @@ angular.module('ts5App')
       }
       init();
 
-      function callTrigger(trigger){
+      function callTrigger(trigger, toIndex){
+        $scope.$parent.wizardStepToIndex = toIndex;
         if(angular.isUndefined($scope[trigger])) {
           return true;
         }
@@ -74,6 +76,14 @@ angular.module('ts5App')
           return true;
         }
         return triggerReturn;
+      }
+
+      function resolveTrigger(autoStep, toIndex){
+        if(!autoStep) {
+          return false;
+        }
+        $location.url($scope.steps[toIndex].uri);
+        return true;
       }
 
       $scope.goToStepURI = function($index){
@@ -89,11 +99,8 @@ angular.module('ts5App')
         }
         // if controller's prev-trigger scope function returns false
         // the wizard will NOT step backwards
-        var stepBackwards = callTrigger('prevTrigger');
-        if(stepBackwards) {
-          $location.url($scope.steps[$index].uri);
-        }
-        return stepBackwards;
+        var autoStepBackwards = callTrigger('prevTrigger', $index);
+        return resolveTrigger(autoStepBackwards, $index);
       };
 
       $scope.wizardPrev = function(){
@@ -118,12 +125,8 @@ angular.module('ts5App')
         }
         // If the controller's next-trigger scope function returns false
         // the wizard will NOT step forward
-        var stepForward = callTrigger('nextTrigger');
-        if(stepForward){
-          var uri = $scope.steps[nextIndex].uri;
-          $location.url(uri);
-        }
-        return stepForward;
+        var stepForward = callTrigger('nextTrigger', nextIndex);
+        return resolveTrigger(stepForward, nextIndex);
       };
     }
   };

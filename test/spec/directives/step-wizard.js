@@ -105,6 +105,7 @@ describe('The Step Wizard directive', function () {
     it('should step forward to /test-uri-3 when wizardNext is triggered', function(){
       expect(directiveScope.wizardNext()).toBe(true);
       expect(scope.mockNextTrigger1).toHaveBeenCalledWith(scope.param2, scope.param3);
+      expect(scope.wizardStepToIndex).toBe(2);
       expect(location.url).toHaveBeenCalledWith('/test-uri-3');
     });
 
@@ -178,6 +179,7 @@ describe('The Step Wizard directive', function () {
     it('should only trigger the prevTrigger function, and not step the user back', function(){
       expect(directiveScope.wizardPrev()).toBe(false);
       expect(directiveScope.goToStepURI).toHaveBeenCalledWith(1);
+      expect(scope.wizardStepToIndex).toBe(1);
       expect(scope.mockPrevTrigger2).toHaveBeenCalledWith(scope.param5);
     });
   });
