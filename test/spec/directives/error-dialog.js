@@ -1,20 +1,30 @@
 'use strict';
 
-describe('Directive: errorDialog', function () {
+describe('Directive: errorDialog', function() {
 
   // load the directive's module
   beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
 
-  var element,
-    scope;
+  var element;
+  var scope;
 
-  beforeEach(inject(function ($rootScope) {
+  beforeEach(inject(function($rootScope) {
     scope = $rootScope.$new();
   }));
 
-  it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<error-dialog></error-dialog>');
-    element = $compile(element)(scope);
-    expect(element.text()).toBe('this is the errorDialog directive');
-  }));
+  describe('When the error-dialog directive is compiled, it', function() {
+
+    beforeEach(inject(function($compile) {
+      element = angular.element('<error-dialog></error-dialog>');
+      element = $compile(element)(scope);
+      scope.$digest();
+    }));
+
+    it('should be defined', function() {
+      expect(element).toBeDefined();
+    });
+
+  });
+
 });

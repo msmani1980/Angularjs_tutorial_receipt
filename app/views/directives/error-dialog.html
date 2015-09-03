@@ -27,19 +27,31 @@
 
 			<span ng-switch-when="001">Data format is invalid</span>
 
+			<span ng-switch-when="002">Minimum length not reached</span>
+
 			<span ng-switch-when="003">Allowable maximum length exceeded</span>
 
 			<span ng-switch-when="004">Duplicate values are not allowed</span>
 
-	    <span ng-switch-when="005">Date must be within the allowed date range</span>
+			<span ng-switch-when="005">Date must be within the allowed date range</span>
 
-	    <span ng-switch-when="006">Date range overlaps an existing record</span>
+			<span ng-switch-when="006">Date range overlaps an existing record</span>
 
-	    <span ng-switch-when="014">From date cannot be earlier than current date</span>
+			<span ng-switch-when="007">Predefined value expected</span>
 
-	    <span ng-switch-when="016">From date should be earlier than or equal to To date</span>
+			<span ng-switch-when="008">Allowable file size exceeded</span>
 
-	    <span ng-switch-when="021">To date should be later than or equal to From date</span>
+			<span ng-switch-when="009">Allowable list size exceeded</span>
+
+			<span ng-switch-when="010">Data format is invalid</span>
+
+			<span ng-switch-when="014">From date cannot be earlier than current date</span>
+
+			<span ng-switch-when="015">Duplicate values are not allowed</span>
+
+			<span ng-switch-when="016">From date should be earlier than or equal to To date</span>
+
+			<span ng-switch-when="021">To date should be later than or equal to From date</span>
 
 	    <span ng-switch-default> {{ error.value }} </span>
 
