@@ -59,21 +59,6 @@ angular.module('ts5App')
       ngToast.create({ className: messageType, dismissButton: true, content: '<strong>Item import</strong>: ' + message });
     }
 
-    function setImportedRetailItemList(response){
-      _importedRetailList = response.retailItems;
-      $scope.importedRetailItemList = [];
-      angular.forEach(_importedRetailList, function (retailItem) {
-        if(canBeAddedToCompanyRetailList(retailItem)) {
-          retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
-          retailItem.companyName = $scope.selectedImportCompany.companyName;
-          addToImportedRetailItemList(retailItem);
-        }
-      });
-      $scope.showLeftDropZoneMessage = ($scope.importedRetailItemList.length);
-      $scope.showRightDropZoneMessage = (!$scope.importedRetailItemList.length);
-      hideLoadingModal();
-    }
-
     function addToImportedRetailItemList(retailItem){
       if (!$scope.selectedImportCompany){
         return;
@@ -85,6 +70,14 @@ angular.module('ts5App')
         return;
       }
       $scope.importedRetailItemList.push(retailItem);
+    }
+
+    function displayLoadingModal(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
     }
 
     function showFormErrors(response){
@@ -112,26 +105,6 @@ angular.module('ts5App')
         _companyRetailItems = response.retailItems;
       }));
     }
-
-    function resolveInitPromises(){
-      $q.all(_initPromises).then(function() {
-        angular.forEach($scope.importCompanyList, function (company) {
-          company.hexColor = randomHexColorClass.get(company.id);
-        });
-        $scope.companiesLoaded = true;
-        $scope.retailItemsLoaded = true;
-        hideLoadingModal();
-      }, showFormErrors);
-    }
-
-    function displayLoadingModal(loadingText) {
-      angular.element('#loading').modal('show').find('p').text(loadingText);
-    }
-
-    function hideLoadingModal() {
-      angular.element('#loading').modal('hide');
-    }
-
 
     // private controller classes
     var randomHexColorClass = {
@@ -174,6 +147,33 @@ angular.module('ts5App')
         return colorString;
       }
     };
+
+
+    function setImportedRetailItemList(response){
+      _importedRetailList = response.retailItems;
+      $scope.importedRetailItemList = [];
+      angular.forEach(_importedRetailList, function (retailItem) {
+        if(canBeAddedToCompanyRetailList(retailItem)) {
+          retailItem.hexColor = randomHexColorClass.get(retailItem.companyId);
+          retailItem.companyName = $scope.selectedImportCompany.companyName;
+          addToImportedRetailItemList(retailItem);
+        }
+      });
+      $scope.showLeftDropZoneMessage = ($scope.importedRetailItemList.length);
+      $scope.showRightDropZoneMessage = (!$scope.importedRetailItemList.length);
+      hideLoadingModal();
+    }
+
+    function resolveInitPromises(){
+      $q.all(_initPromises).then(function() {
+        angular.forEach($scope.importCompanyList, function (company) {
+          company.hexColor = randomHexColorClass.get(company.id);
+        });
+        $scope.companiesLoaded = true;
+        $scope.retailItemsLoaded = true;
+        hideLoadingModal();
+      }, showFormErrors);
+    }
 
     // Controller constructor
     function init(){
