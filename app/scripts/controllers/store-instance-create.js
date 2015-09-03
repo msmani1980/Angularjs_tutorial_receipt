@@ -8,7 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast, dateUtility,GlobalMenuService) {
+  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast,
+                                                   dateUtility,GlobalMenuService,
+                                                   storeInstanceDispatchWizardConfig,
+                                                    $location) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -18,6 +21,7 @@ angular.module('ts5App')
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
    };
+    $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
 
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
    var companyId = GlobalMenuService.company.get();
@@ -69,7 +73,7 @@ angular.module('ts5App')
       this.resetErrors();
       this.displayLoadingModal('Creating a store instance');
       var payload = this.formatPayload();
-      if(angular.isUndefined(payload)) {
+      if(!payload) {
         return false;
       }
       storeInstanceFactory.createStoreInstance(payload).then(
@@ -82,7 +86,11 @@ angular.module('ts5App')
       $this.hideLoadingModal();
       if(response.id){
         $this.showMessage('success','Store Instance created id: ' + response.id);
-        //TODO: Move user to packing step
+        if($scope.wizardStepToIndex) {
+          $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(response.id);
+          var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
+          $location.urt(uri);
+        }
       }
     };
 
@@ -143,4 +151,8 @@ angular.module('ts5App')
       $this.createStoreInstance();
     };
 
+    $scope.nextTrigger = function(){
+      $this.createStoreInstance();
+      return false;
+    };
   });

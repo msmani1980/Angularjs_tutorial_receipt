@@ -1,6 +1,6 @@
 <div class="container">
 
-  <step-wizard></step-wizard>
+  <step-wizard steps="wizardSteps" next-trigger="nextTrigger(fooBars)" uri="uri"></step-wizard>
 
   <form-error-dialog></form-error-dialog>
 
@@ -24,7 +24,7 @@
 
         <div class="form-group">
           <label>Store Number</label>
-          <select class="form-control" ng-model="formData.storeId">
+          <select class="form-control" ng-model="formData.storeId" required>
             <option ng-disabled="true" selected="selected" value>Select Store</option>
             <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
