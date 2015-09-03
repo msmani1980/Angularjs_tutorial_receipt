@@ -251,7 +251,6 @@ angular.module('ts5App')
         $location.path('/');
       }
     }
-    init();
 
     function saveDeliveryNoteResolution(response){
       hideLoadingModal();
@@ -606,5 +605,7 @@ angular.module('ts5App')
         $location.path(_path+'view/'+$scope.deliveryNote.id);
       }
     };
+
+    init();
 
   });
