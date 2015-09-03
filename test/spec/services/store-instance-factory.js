@@ -14,6 +14,7 @@ describe('Service: storeInstanceFactory', function () {
   var carrierService;
   var storeInstanceService;
   var menuMasterService;
+  var storesService;
 
   beforeEach(inject(function (_storeInstanceFactory_, $injector) {
     storeInstanceFactory = _storeInstanceFactory_;
@@ -24,6 +25,7 @@ describe('Service: storeInstanceFactory', function () {
     carrierService = $injector.get('carrierService');
     storeInstanceService = $injector.get('storeInstanceService');
     menuMasterService = $injector.get('menuMasterService');
+    storesService = $injector.get('storesService');
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(GlobalMenuService.company, 'get').and.returnValue(companyId);
@@ -35,7 +37,15 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(storeInstanceService, 'updateStoreInstance');
     spyOn(storeInstanceService, 'deleteStoreInstance');
     spyOn(menuMasterService, 'getMenuMasterList');
+    spyOn(storesService, 'getStoresList');
   }));
+
+  describe('storesService calls', function(){
+    it('should call getStoresList', function(){
+      storeInstanceFactory.getStoresList();
+      expect(storesService.getStoresList).toHaveBeenCalled();
+    });
+  });
 
   describe('menuMasterService calls', function(){
     it('should call getMenuMasterList', function(){
@@ -92,9 +102,16 @@ describe('Service: storeInstanceFactory', function () {
 
   describe('carrierService calls', function(){
     it('should call getCarrierNumbers', function(){
-      storeInstanceFactory.getCarrierNumbers(companyId);
-      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId);
+      var carrierTypeId = 1;
+      storeInstanceFactory.getCarrierNumbers(companyId,1);
+      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId,carrierTypeId);
     });
+    it('should call getAllCarrierNumbers', function(){
+      var carrierTypeId = 0;
+      storeInstanceFactory.getAllCarrierNumbers(companyId);
+      expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId,carrierTypeId);
+    });
+
   });
 
 });
