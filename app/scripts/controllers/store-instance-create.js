@@ -21,7 +21,6 @@ angular.module('ts5App')
      menus: []
    };
     $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
-    $scope.nextTriggerMessage = 'trigger something before going to the next step';
 
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
    var companyId = GlobalMenuService.company.get();
@@ -147,7 +146,7 @@ angular.module('ts5App')
       $this.createStoreInstance();
     };
 
-    $scope.nextTrigger = function(message){
+    $scope.nextTrigger = function(){
       $this.createStoreInstance();
     };
   });
