@@ -52,30 +52,24 @@
       <thead>
       <tr>
         <th>Crew Base</th>
-        <th>Product</th>
-        <th>EPOS Sales</th>
-        <th>EPOS Percent</th>
-        <th>Cash Banked</th>
-        <th>Cash Banked Percent</th>
+        <th>Commission Payable Type</th>
+        <th>Commission Percent</th>
         <th>Manual Bars</th>
-        <th>Cash</th>
-        <th>Stock </th>
+        <th>Cash Percent</th>
+        <th>Stock Percent</th>
         <th>Incentive Increment</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
       <tr class="ng-scope" ng-repeat="data in commissionData">
-        <td>{{ data.crewBase }}</td>
-        <td ng-class="(data.product) ? '' : 'active'">{{ (data.product) ? 'Y' : 'N' }}</td>
-        <td ng-class="(data.eposSales) ? '' : 'active'">{{ (data.eposSales) ? 'Y' : 'N' }}</td>
-        <td ng-class="(data.eposSales) ? '' : 'active'">{{ data.eposPercent | number: 2 }} %</td>
-        <td ng-class="(data.cashBanked) ? '' : 'active'">{{ (data.cashBanked) ? 'Y' : 'N' }}</td>
-        <td ng-class="(data.cashBanked) ? '' : 'active'">{{ data.cashBankedPercent | number: 2 }} %</td>
-        <td>{{ data.manualBarsCommissionValue | number: 2 }} %</td>
+        <td>{{ getCrewBaseName(data.crewBaseTypeId) }}</td>
+        <td>{{ getCommissionTypeName(data.commissionPayableTypeId) }}</td>
+        <td>{{ data.commissionPercentage }} %</td>
+        <td>{{ data.manualBarsCommissionValue | number: 2 }} {{ getUnitById(data.manualBarsCommissionValueTypeId) }}</td>
         <td>{{ data.discrepancyDeductionsCashPercentage | number: 2}} %</td>
         <td>{{ data.discrepancyDeductionsStockPercentage | number: 2 }} %</td>
-        <td>{{ data.commissionValue | number: 2 }}</td>
+        <td>{{ data.commissionValue | number: 2 }} {{ getUnitById(data.manualBarsCommissionValueTypeId) }}</td>
         <td>
           <button class="btn btn-info btn-xs" ng-click="redirectToDetailPage(data.id, 'view')" tabindex="0">
             <i class="fa fa-file"></i>

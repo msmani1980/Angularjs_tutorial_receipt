@@ -31,6 +31,22 @@ angular.module('ts5App')
       // TODO: call commissionFactory.deleteCommissionData();
     };
 
+    $scope.getCrewBaseName = function (id) {
+      return $this.getNameForId(id, $scope.crewBaseTypes);
+    };
+
+    $scope.getCommissionTypeName = function (id) {
+      return $this.getNameForId(id, $scope.commissionTypes);
+    };
+
+    $scope.getUnitById = function(id) {
+      var type = $this.getNameForId(id, $scope.discountTypes);
+      if(type === 'Percentage') {
+        return '%';
+      }
+      return 'GBP'; // TODO: get base currency
+    };
+
     this.getDataList = function (query) {
       commissionFactory.getCommissionPayableList(query).then(function (response) {
         $scope.commissionData = response.response;
@@ -55,14 +71,22 @@ angular.module('ts5App')
       });
     };
 
+    this.getNameForId = function (id, array) {
+      var name = '';
+      angular.forEach(array, function (item) {
+        if(item.id === id) {
+          name = item.name;
+        }
+      });
+      return name;
+    };
+
     this.init = function () {
-      //$this.getCrewBaseTypes();
-      //$this.getCommissionPayableTypes();
-      //$this.getDiscountTypes();
+      $this.getCrewBaseTypes();
+      $this.getCommissionPayableTypes();
+      $this.getDiscountTypes();
       $this.getDataList({});
     };
 
     this.init();
-
-
   });
