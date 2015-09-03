@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: storeInstanceFactory', function () {
+fdescribe('Service: storeInstanceFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -36,6 +36,12 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(storeInstanceService, 'createStoreInstance');
     spyOn(storeInstanceService, 'updateStoreInstance');
     spyOn(storeInstanceService, 'deleteStoreInstance');
+    spyOn(storeInstanceService, 'getStoreInstanceMenuItems');
+    spyOn(storeInstanceService, 'getStoreInstanceItemList');
+    spyOn(storeInstanceService, 'getStoreInstanceItem');
+    spyOn(storeInstanceService, 'createStoreInstanceItem');
+    spyOn(storeInstanceService, 'updateStoreInstanceItem');
+    spyOn(storeInstanceService, 'deleteStoreInstanceItem');
     spyOn(menuMasterService, 'getMenuMasterList');
     spyOn(storesService, 'getStoresList');
   }));
@@ -56,26 +62,51 @@ describe('Service: storeInstanceFactory', function () {
 
   describe('storeInstanceService calls', function(){
     var id = 123;
-    var mockPL = {foo:'bars'};
+    var itemId = 345;
+    var mockPayload = {foo:'bars'};
     it('should call getStoreInstancesList', function(){
-      storeInstanceFactory.getStoreInstancesList(mockPL);
-      expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(mockPL);
+      storeInstanceFactory.getStoreInstancesList(mockPayload);
+      expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(mockPayload);
     });
     it('should call getStoreInstance', function(){
       storeInstanceFactory.getStoreInstance(id);
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(id);
     });
     it('should call createStoreInstance', function(){
-      storeInstanceFactory.createStoreInstance(mockPL);
-      expect(storeInstanceService.createStoreInstance).toHaveBeenCalledWith(mockPL);
+      storeInstanceFactory.createStoreInstance(mockPayload);
+      expect(storeInstanceService.createStoreInstance).toHaveBeenCalledWith(mockPayload);
     });
     it('should call updateStoreInstance', function(){
-      storeInstanceFactory.updateStoreInstance(id, mockPL);
-      expect(storeInstanceService.updateStoreInstance).toHaveBeenCalledWith(id, mockPL);
+      storeInstanceFactory.updateStoreInstance(id, mockPayload);
+      expect(storeInstanceService.updateStoreInstance).toHaveBeenCalledWith(id, mockPayload);
     });
     it('should call deleteStoreInstance', function(){
       storeInstanceFactory.deleteStoreInstance(id);
       expect(storeInstanceService.deleteStoreInstance).toHaveBeenCalledWith(id);
+    });
+    it('should call getStoreInstanceMenuItems', function(){
+      storeInstanceFactory.getStoreInstanceMenuItems(id);
+      expect(storeInstanceService.getStoreInstanceMenuItems).toHaveBeenCalledWith(id);
+    });
+    it('should call getStoreInstanceItemList', function(){
+      storeInstanceFactory.getStoreInstanceItemList(id);
+      expect(storeInstanceService.getStoreInstanceItemList).toHaveBeenCalledWith(id);
+    });
+    it('should call getStoreInstanceItem', function(){
+      storeInstanceFactory.getStoreInstanceItem(id, itemId);
+      expect(storeInstanceService.getStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
+    });
+    it('should call createStoreInstanceItem', function(){
+      storeInstanceFactory.createStoreInstanceItem(id, mockPayload);
+      expect(storeInstanceService.createStoreInstanceItem).toHaveBeenCalledWith(id, mockPayload);
+    });
+    it('should call updateStoreInstanceItem', function(){
+      storeInstanceFactory.updateStoreInstanceItem(id, itemId, mockPayload);
+      expect(storeInstanceService.updateStoreInstanceItem).toHaveBeenCalledWith(id, itemId, mockPayload);
+    });
+    it('should call deleteStoreInstanceItem', function(){
+      storeInstanceFactory.deleteStoreInstanceItem(id, itemId);
+      expect(storeInstanceService.deleteStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
     });
   });
 

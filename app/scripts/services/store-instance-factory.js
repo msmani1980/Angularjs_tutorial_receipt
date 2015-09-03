@@ -53,6 +53,30 @@ angular.module('ts5App')
       return storeInstanceService.deleteStoreInstance(id);
     }
 
+    function getStoreInstanceMenuItems(id){
+      return storeInstanceService.getStoreInstanceMenuItems(id);
+    }
+
+    function getStoreInstanceItemList(id){
+      return storeInstanceService.getStoreInstanceItemList(id);
+    }
+
+    function getStoreInstanceItem(id, itemId){
+      return storeInstanceService.getStoreInstanceItem(id, itemId);
+    }
+
+    function createStoreInstanceItem(id, payload){
+      return storeInstanceService.createStoreInstanceItem(id, payload);
+    }
+
+    function updateStoreInstanceItem(id, itemId,payload){
+      return storeInstanceService.updateStoreInstanceItem(id, itemId, payload);
+    }
+
+    function deleteStoreInstanceItem(id, itemId){
+      return storeInstanceService.deleteStoreInstanceItem(id, itemId);
+    }
+
     function getMenuMasterList(){
       return menuMasterService.getMenuMasterList();
     }
@@ -72,6 +96,12 @@ angular.module('ts5App')
       createStoreInstance: createStoreInstance,
       updateStoreInstance: updateStoreInstance,
       deleteStoreInstance: deleteStoreInstance,
+      getStoreInstanceMenuItems: getStoreInstanceMenuItems,
+      getStoreInstanceItemList: getStoreInstanceItemList,
+      getStoreInstanceItem: getStoreInstanceItem,
+      createStoreInstanceItem: createStoreInstanceItem,
+      updateStoreInstanceItem: updateStoreInstanceItem,
+      deleteStoreInstanceItem: deleteStoreInstanceItem,
       getMenuMasterList: getMenuMasterList,
       getStoresList: getStoresList
     };
