@@ -9,15 +9,6 @@
 angular.module('ts5App').directive('stockTakeReason', function() {
   var stockTakeReasonController = function($scope, stockAdjustmentsService, ngToast) {
 
-    function showToastMessage(className, type, message) {
-      hideLoadingModal();
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
-    }
-
     function displayStockReasonModal() {
       angular.element('#stock-take-reason').modal('show');
     }
@@ -32,6 +23,15 @@ angular.module('ts5App').directive('stockTakeReason', function() {
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+    }
+
+    function showToastMessage(className, type, message) {
+      hideLoadingModal();
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
     }
 
     $scope.stockTakeReasonOpen = function(stockitem) {

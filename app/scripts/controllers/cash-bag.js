@@ -73,22 +73,6 @@ angular.module('ts5App')
       }
     };
 
-    function canDelete(cashBag){
-      if($scope.state !== 'edit'){
-        return false;
-      }
-      if($scope.readOnly){
-        return false;
-      }
-      if(cashBag.isSubmitted === 'true') {
-        return false;
-      }
-      if(cashBag.isDelete === 'true') {
-        return false;
-      }
-      return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
-    }
-
     function cashBagCurrenciesIsSet(cashBagCurrencies){
       var isSet = true;
       angular.forEach(cashBagCurrencies, function (currency) {
@@ -105,6 +89,22 @@ angular.module('ts5App')
         }
       });
       return isSet;
+    }
+
+    function canDelete(cashBag){
+      if($scope.state !== 'edit'){
+        return false;
+      }
+      if($scope.readOnly){
+        return false;
+      }
+      if(cashBag.isSubmitted === 'true') {
+        return false;
+      }
+      if(cashBag.isDelete === 'true') {
+        return false;
+      }
+      return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
     }
 
     $scope.removeRecord = function (cashBag) {
@@ -130,6 +130,64 @@ angular.module('ts5App')
     $scope.isCashBagDeleted = function () {
       return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === 'true');
     };
+
+    // CRUD - Create
+    function create() {
+      var _promises = _factoryHelper.callServices(['getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
+
+      $scope.readOnly = false;
+      $scope.cashBag = {
+        isSubmitted: 'false',
+        retailCompanyId: _companyId,
+        scheduleDate: $routeParams.scheduleDate,
+        scheduleNumber: $routeParams.scheduleNumber,
+        cashBagCurrencies: []
+      };
+      $scope.displayedScheduleDate = moment($routeParams.scheduleDate, 'YYYYMMDD').format('YYYY-MM-DD').toString();
+      $scope.displayedCashierDate = moment().format('YYYY-MM-DD');
+      $scope.saveButtonName = 'Create';
+
+      $q.all(_promises).then(function () {
+        if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
+          $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
+        } else {
+          showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
+        }
+        angular.forEach($scope.dailyExchangeRates[0].dailyExchangeRateCurrencies, function (currency) {
+          $scope.cashBag.cashBagCurrencies.push(
+            {
+              currencyId: currency.retailCompanyCurrencyId,
+              bankAmount: currency.bankExchangeRate,
+              paperAmountManual: '0.0000',
+              coinAmountManual: '0.0000',
+              paperAmountEpos: currency.paperExchangeRate,
+              coinAmountEpos: currency.coinExchangeRate
+            }
+          );
+        });
+
+      });
+    }
+
+    // CRUD - Read
+    function read() {
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
+      $q.all(_promises).then(function () {
+        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
+        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
+      });
+    }
+
+    // CRUD - Update
+    function update() {
+      $scope.readOnly = false;
+      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
+      $q.all(_promises).then(function () {
+        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
+        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
+        $scope.saveButtonName = 'Save';
+      });
+    }
 
     // Constructor
     function init(){
@@ -211,63 +269,5 @@ angular.module('ts5App')
       }
     }
     init();
-
-    // CRUD - Create
-    function create() {
-      var _promises = _factoryHelper.callServices(['getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
-
-      $scope.readOnly = false;
-      $scope.cashBag = {
-        isSubmitted: 'false',
-        retailCompanyId: _companyId,
-        scheduleDate: $routeParams.scheduleDate,
-        scheduleNumber: $routeParams.scheduleNumber,
-        cashBagCurrencies: []
-      };
-      $scope.displayedScheduleDate = moment($routeParams.scheduleDate, 'YYYYMMDD').format('YYYY-MM-DD').toString();
-      $scope.displayedCashierDate = moment().format('YYYY-MM-DD');
-      $scope.saveButtonName = 'Create';
-
-      $q.all(_promises).then(function () {
-        if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
-          $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
-        } else {
-            showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
-        }
-        angular.forEach($scope.dailyExchangeRates[0].dailyExchangeRateCurrencies, function (currency) {
-          $scope.cashBag.cashBagCurrencies.push(
-            {
-              currencyId: currency.retailCompanyCurrencyId,
-              bankAmount: currency.bankExchangeRate,
-              paperAmountManual: '0.0000',
-              coinAmountManual: '0.0000',
-              paperAmountEpos: currency.paperExchangeRate,
-              coinAmountEpos: currency.coinExchangeRate
-            }
-          );
-        });
-
-      });
-    }
-
-    // CRUD - Read
-    function read() {
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
-      $q.all(_promises).then(function () {
-        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
-        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
-      });
-    }
-
-    // CRUD - Update
-    function update() {
-      $scope.readOnly = false;
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
-      $q.all(_promises).then(function () {
-        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
-        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
-        $scope.saveButtonName = 'Save';
-      });
-    }
 
   });

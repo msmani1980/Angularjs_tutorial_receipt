@@ -18,6 +18,18 @@ angular.module('ts5App')
       });
     }
 
+    function successHandler(response) {
+      if (response.toString() === 'OK_BUT_EMAIL_FAILURE') {
+        showToast('warning', 'Import from file', 'upload successful, but email notifications have failed');
+      } else {
+        showToast('success', 'Import from file', response.config.file[0].name + ' was successful. Please wait for an email to see the status of the file processing, and then return to this screen to see your data');
+      }
+    }
+
+    function errorHandler(response) {
+      showToast('danger', 'Import from file', response.config.file[0].name + ' was rejected');
+    }
+
     $scope.$watchCollection('rejFiles', function (oldObj/*, newObj*/) {
       oldObj = oldObj || [];
       if (oldObj.length >= 1) {
@@ -43,18 +55,6 @@ angular.module('ts5App')
         $this.service.importFromExcel(GlobalMenuService.company.get(), files).then(successHandler, errorHandler);
       }
     };
-
-    function successHandler(response) {
-      if (response.toString() === 'OK_BUT_EMAIL_FAILURE') {
-        showToast('warning', 'Import from file', 'upload successful, but email notifications have failed');
-      } else {
-        showToast('success', 'Import from file', response.config.file[0].name + ' was successful. Please wait for an email to see the status of the file processing, and then return to this screen to see your data');
-      }
-    }
-
-    function errorHandler(response) {
-      showToast('danger', 'Import from file', response.config.file[0].name + ' was rejected');
-    }
 
     $scope.clearFile = function (filesIndex) {
       $scope.files.splice(filesIndex, 1);
