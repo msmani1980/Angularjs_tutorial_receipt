@@ -8,10 +8,11 @@
  * Service in the ts5App.
  */
 angular.module('ts5App').service('storeInstanceService', function ($resource, ENV) {
-  var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/:api';
+  var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/:api/:itemId';
   var requestParameters = {
     id: '@id',
-    api: '@api'
+    api: '@api',
+    itemId: '@itemId'
   };
   var actions = {
     getStoreInstancesList: {
@@ -29,7 +30,10 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     deleteStoreInstance: {
       method: 'DELETE'
     },
-    getStoreInstanceItems: {
+    getStoreInstanceItemList: {
+      method: 'GET'
+    },
+    getStoreInstanceItem: {
       method: 'GET'
     },
     getStoreInstancesMenuItems: {
@@ -59,10 +63,18 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.deleteStoreInstance({id: id}).$promise;
   }
 
-  function getStoreInstanceItems(id) {
-    return requestResource.getStoreInstanceItems({
+  function getStoreInstanceItemList(id) {
+    return requestResource.getStoreInstanceItemList({
       id: id,
       api: 'items'
+    }).$promise;
+  }
+
+  function getStoreInstanceItem(storeId, itemId) {
+    return requestResource.getStoreInstanceItem({
+      id: storeId,
+      api: 'items',
+      itemId: itemId
     }).$promise;
   }
 
@@ -79,7 +91,8 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     createStoreInstance: createStoreInstance,
     updateStoreInstance: updateStoreInstance,
     deleteStoreInstance: deleteStoreInstance,
-    getStoreInstanceItems: getStoreInstanceItems,
+    getStoreInstanceItemList: getStoreInstanceItemList,
+    getStoreInstanceItem: getStoreInstanceItem,
     getStoreInstanceMenuItems: getStoreInstanceMenuItems
   };
 });

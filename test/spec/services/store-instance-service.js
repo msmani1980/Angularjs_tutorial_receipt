@@ -83,13 +83,30 @@ describe('Service: storeInstanceService', function () {
     });
   });
 
-  describe('getStoreInstanceItems', function () {
+  describe('getStoreInstanceItemList', function () {
     it('should make GET request to API', function () {
       var expectedURL = /dispatch\/store-instances\/\d+\/items$/;
       var fakeId = 12;
       httpBackend.expectGET(expectedURL).respond(200, {id: fakeId});
-      storeInstanceService.getStoreInstanceItems(fakeId).then(function (response) {
+      storeInstanceService.getStoreInstanceItemList(fakeId).then(function (response) {
         expect(response.id).toBe(fakeId);
+      });
+      httpBackend.flush();
+    });
+  });
+
+  describe('getStoreInstanceItem', function () {
+    it('should make GET request to API', function () {
+      var expectedURL = /dispatch\/store-instances\/\d+\/items\/\d+$/;
+      var fakeStoreId = 38;
+      var fakeItemId = 1;
+      httpBackend.expectGET(expectedURL).respond(200, {
+        id: fakeStoreId,
+        itemId: fakeItemId
+      });
+      storeInstanceService.getStoreInstanceItem(fakeStoreId, fakeItemId).then(function (response) {
+        expect(response.id).toBe(fakeStoreId);
+        expect(response.itemId).toBe(fakeItemId);
       });
       httpBackend.flush();
     });
