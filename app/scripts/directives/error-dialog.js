@@ -42,6 +42,13 @@ angular.module('ts5App')
         $scope.checkForErrors();
       });
 
+      $scope.$watchCollection('form.$error', function() {
+        var error = $scope.form.$error;
+        if (!error.pattern && !error.required) {
+          $scope.displayError = false;
+        }
+      });
+
     };
     return {
       templateUrl: '/views/directives/error-dialog.html',
