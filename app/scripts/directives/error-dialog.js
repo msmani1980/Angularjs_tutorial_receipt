@@ -38,16 +38,21 @@ angular.module('ts5App')
         $scope.validatePatternFields(error);
       };
 
-      $scope.$watchCollection('form.$error.pattern + form.$error.required', function() {
-        $scope.checkForErrors();
-      });
-
-      $scope.$watchCollection('form.$error', function() {
-        var error = $scope.form.$error;
-        if (!error.pattern && !error.required) {
-          $scope.displayError = false;
+      $scope.watchForm = function() {
+        if ($scope.form && $scope.form.$error) {
+          $scope.$watch('form.$error.pattern + form.$error.required', function() {
+            $scope.checkForErrors();
+          });
+          $scope.$watchCollection('form.$error', function() {
+            var error = $scope.form.$error;
+            if (!error.pattern && !error.required) {
+              $scope.displayError = false;
+            }
+          });
         }
-      });
+      };
+
+      $scope.watchForm();
 
     };
     return {

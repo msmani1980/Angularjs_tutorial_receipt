@@ -8,21 +8,39 @@ describe('Directive: errorDialog', function() {
 
   var element;
   var scope;
+  var directiveScope;
+  var compile;
+  var controller;
 
-  beforeEach(inject(function($rootScope) {
+  beforeEach(inject(function($rootScope, $compile) {
     scope = $rootScope.$new();
+    compile = $compile;
   }));
+
+  function compileDirective() {
+    element = angular.element('<error-dialog></error-dialog>');
+    element = compile(element)(scope);
+    scope.$digest();
+    directiveScope = element.isolateScope();
+    controller = element.controller('errorDialogController');
+  }
 
   describe('When the error-dialog directive is compiled, it', function() {
 
-    beforeEach(inject(function($compile) {
-      element = angular.element('<error-dialog></error-dialog>');
-      element = $compile(element)(scope);
-      scope.$digest();
+    beforeEach(inject(function() {
+      compileDirective();
     }));
 
     it('should be defined', function() {
       expect(element).toBeDefined();
+    });
+
+    it('should contain an alert element', function() {
+      expect(element.find('.alert')).toBeDefined();
+    });
+
+    it('should contain a ul', function() {
+      expect(element.find('ul')).toBeDefined();
     });
 
   });
