@@ -23,20 +23,21 @@
       <div class="col-xs-12 col-sm-6 col-md-4">
 
         <div class="form-group">
-          <label>Store Number</label>
-          <select class="form-control" ng-model="formData.storeId" required>
-            <option ng-disabled="true" selected="selected" value>Select Store</option>
-            <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
-          </select>
+          <date-picker-field form="createStoreInstance" name="scheduleDate" label="Schedule Date"
+            min-date="'+1d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
         </div>
 
       </div>
 
+
       <div class="col-xs-12 col-sm-6 col-md-4">
 
         <div class="form-group">
-          <date-picker-field form="createStoreInstance" name="scheduleDate" label="Schedule Date"
-            min-date="'+1d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
+          <label>Store Number *</label>
+          <select class="form-control" ng-model="formData.storeId" required>
+            <option ng-disabled="true" selected="selected" value>Select Store</option>
+            <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
+          </select>
         </div>
 
       </div>
