@@ -29,6 +29,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       return carrierService.getCarrierNumbers(companyId, carrierTypeId);
     }
 
+    function getCarrierNumber(companyId, carrierNumberId) {
+      return carrierService.getCarrierNumber(companyId, carrierNumberId);
+    }
+
     function getAllCarrierNumbers(companyId) {
       return getCarrierNumbers(companyId, 0);
     }
@@ -85,8 +89,16 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storesService.getStoresList(query);
     }
 
+    function getStore(storeId) {
+      return storesService.getStore(storeId);
+    }
+
     function getStoreDetails(storeId) {
-      storeDetailPromiseArray.push(getStoreInstance(storeId));
+      getStoreInstance(storeId).then(function (dataFromAPI) {
+        var responseData = angular.copy(dataFromAPI);
+        storeDetailPromiseArray.push(getStore(responseData.storeId));
+        storeDetailPromiseArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
+      });
     }
 
     return {
@@ -94,6 +106,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       getCatererStationList: getCatererStationList,
       getSchedules: getSchedules,
       getCarrierNumbers: getCarrierNumbers,
+      getCarrierNumber: getCarrierNumber,
       getAllCarrierNumbers: getAllCarrierNumbers,
       getStoreInstancesList: getStoreInstancesList,
       getStoreInstance: getStoreInstance,
@@ -108,6 +121,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       deleteStoreInstanceItem: deleteStoreInstanceItem,
       getMenuMasterList: getMenuMasterList,
       getStoresList: getStoresList,
+      getStore: getStore,
       getStoreDetails: getStoreDetails
     };
 

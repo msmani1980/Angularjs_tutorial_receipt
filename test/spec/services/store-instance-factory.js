@@ -4,6 +4,7 @@ describe('Service: storeInstanceFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
+  beforeEach(module('served/store-instance.json'));
 
   // instantiate service
   var storeInstanceFactory;
@@ -15,9 +16,20 @@ describe('Service: storeInstanceFactory', function () {
   var storeInstanceService;
   var menuMasterService;
   var storesService;
+  var getStoreInstanceDeferred;
+  var servedStoreInstanceJSON;
+  var scope;
 
-  beforeEach(inject(function (_storeInstanceFactory_, $injector) {
+  beforeEach(inject(function (_servedStoreInstance_, _storeInstanceFactory_, $injector, $q, $rootScope) {
+
+    inject(function (_servedStoreInstance_) {
+      servedStoreInstanceJSON = _servedStoreInstance_;
+    });
+    scope = $rootScope.$new();
     storeInstanceFactory = _storeInstanceFactory_;
+
+    getStoreInstanceDeferred = $q.defer();
+    getStoreInstanceDeferred.resolve(servedStoreInstanceJSON);
 
     catererStationService = $injector.get('catererStationService');
     GlobalMenuService = $injector.get('GlobalMenuService');
@@ -31,8 +43,9 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(GlobalMenuService.company, 'get').and.returnValue(companyId);
     spyOn(schedulesService, 'getSchedules');
     spyOn(carrierService, 'getCarrierNumbers');
+    spyOn(carrierService, 'getCarrierNumber');
     spyOn(storeInstanceService, 'getStoreInstancesList');
-    spyOn(storeInstanceService, 'getStoreInstance');
+    spyOn(storeInstanceService, 'getStoreInstance').and.returnValue(getStoreInstanceDeferred.promise);
     spyOn(storeInstanceService, 'createStoreInstance');
     spyOn(storeInstanceService, 'updateStoreInstance');
     spyOn(storeInstanceService, 'deleteStoreInstance');
@@ -44,6 +57,7 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(storeInstanceService, 'deleteStoreInstanceItem');
     spyOn(menuMasterService, 'getMenuMasterList');
     spyOn(storesService, 'getStoresList');
+    spyOn(storesService, 'getStore');
   }));
 
   describe('storesService calls', function () {
@@ -145,16 +159,23 @@ describe('Service: storeInstanceFactory', function () {
   });
 
   fdescribe('getStoreDetails', function () {
-    it('should GET store instance', function () {
-      var storeId = 1;
+    var storeId;
+    beforeEach(function () {
+      storeId = 1;
       storeInstanceFactory.getStoreDetails(storeId);
+      scope.$digest();
+    });
+
+    it('should GET store details from storesService', function () {
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(storeId);
     });
-    it('should GET store details from storesService', function () {
 
+    it('should GET store instance number from storesService', function () {
+      expect(storesService.getStore).toHaveBeenCalled();
     });
-    it('should GET tail number from carrierService', function () {
 
+    it('should GET tail number from carrierService', function () {
+      expect(carrierService.getCarrierNumber).toHaveBeenCalled();
     });
 
   });
