@@ -80,6 +80,18 @@ describe('The Step Wizard directive', function () {
       expect(directiveScope.steps[1].disabled).toBeUndefined();
     });
 
+    it('should not disable the 1st step button', function(){
+      expect(directiveScope.disableStep(1)).toBe(true);
+    });
+
+    it('should disable the 2nd step button', function(){
+      expect(directiveScope.disableStep(1)).toBe(true);
+    });
+
+    it('should disable the 3rd step button', function(){
+      expect(directiveScope.disableStep(2)).toBe(true);
+    });
+
     it('should disable step 3 since on step 2', function(){
       expect(directiveScope.steps[2].disabled).toBe(true);
     });
@@ -287,6 +299,18 @@ describe('The Step Wizard directive', function () {
 
     it('should disable the prev button', function(){
       expect(directiveScope.disablePrev()).toBe(true);
+    });
+
+    it('should disable the 1st step button', function(){
+      expect(directiveScope.disableStep(0)).toBe(true);
+    });
+
+    it('should disable the 2nd step button', function(){
+      expect(directiveScope.disableStep(1)).toBe(true);
+    });
+
+    it('should disable the 3rd step button', function(){
+      expect(directiveScope.disableStep(2)).toBe(true);
     });
 
   });
