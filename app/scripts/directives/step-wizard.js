@@ -13,36 +13,13 @@ angular.module('ts5App')
     restrict: 'E',
     scope: {
       steps: '=',
-      disable: '=',
-      uri:'=',
+      disabled: '=',
       nextTrigger: '&',
       prevTrigger: '&'
     },
     controller: function($scope, $location) {
 
-      var currentStepIndex = 0;
-
-      function setStepClasses(){
-        for(var i in $scope.steps){
-          if(i < currentStepIndex){
-            $scope.steps[i].class = 'completed';
-          }
-          if(i === currentStepIndex) {
-            $scope.steps[i].class = 'active';
-          }
-          if(i > currentStepIndex) {
-            $scope.steps[i].class = 'future';
-          }
-        }
-      }
-
-      function setCurrentStepIndex(){
-        for(var i in $scope.steps){
-          if($location.path() === $scope.steps[i].uri){
-            currentStepIndex = i;
-          }
-        }
-      }
+      var currentStepIndex = null;
 
       // Maliformed uri cleanup
       function trailingSlashOnStepURI(step){
@@ -61,8 +38,6 @@ angular.module('ts5App')
       }
       function init(){
         trailingSlashes();
-        setCurrentStepIndex();
-        setStepClasses();
       }
       init();
 
@@ -87,7 +62,7 @@ angular.module('ts5App')
       }
 
       $scope.goToStepURI = function($index){
-        if($scope.disable){
+        if($scope.disabled){
           return false;
         }
         if($index < 0){
@@ -104,10 +79,10 @@ angular.module('ts5App')
       };
 
       $scope.wizardPrev = function(){
-        if($scope.disable){
+        if($scope.disabled){
           return false;
         }
-        var prevIndex = parseInt(currentStepIndex, 10) - 1;
+        var prevIndex = currentStepIndex - 1;
         if(prevIndex < 0){
           return false;
         }
@@ -115,10 +90,10 @@ angular.module('ts5App')
       };
 
       $scope.wizardNext = function(){
-        if($scope.disable){
+        if($scope.disabled){
           return false;
         }
-        var nextIndex = parseInt(currentStepIndex, 10) + 1;
+        var nextIndex = currentStepIndex + 1;
         // No more steps, dont do anything
         if(nextIndex > $scope.steps.length){
           return false;
@@ -127,6 +102,42 @@ angular.module('ts5App')
         // the wizard will NOT step forward
         var stepForward = callTrigger('nextTrigger', nextIndex);
         return resolveTrigger(stepForward, nextIndex);
+      };
+
+      $scope.disablePrev = function(){
+        if($scope.disabled){
+          return true;
+        }
+        return !currentStepIndex;
+      };
+
+      $scope.disableNext = function(){
+        if($scope.disabled){
+          return true;
+        }
+        return (currentStepIndex === ($scope.steps.length - 1));
+      };
+
+      $scope.disableStep = function($index){
+        return $scope.disabled || ($scope.steps[$index].disabled);
+      };
+
+      $scope.stepInit = function($index){
+        if($location.path() === $scope.steps[$index].uri){
+          currentStepIndex = $index;
+        }
+        if(null === currentStepIndex){
+          $scope.steps[$index].class = 'completed';
+          return;
+        }
+        $scope.steps[$index].disabled = true;
+        if($index === currentStepIndex) {
+          $scope.steps[$index].class = 'active';
+          return;
+        }
+        if($index > currentStepIndex) {
+          $scope.steps[$index].class = 'future';
+        }
       };
     }
   };
