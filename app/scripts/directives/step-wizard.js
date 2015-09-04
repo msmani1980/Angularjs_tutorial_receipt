@@ -118,6 +118,10 @@ angular.module('ts5App')
         return (currentStepIndex === ($scope.steps.length - 1));
       };
 
+      $scope.disableStep = function($index){
+        return $scope.disabled || $scope.steps[$index].disabled;
+      };
+
       $scope.stepInit = function($index){
         if($location.path() === $scope.steps[$index].uri){
           currentStepIndex = $index;
