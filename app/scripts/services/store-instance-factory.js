@@ -11,8 +11,6 @@ angular.module('ts5App').service('storeInstanceFactory',
   function (storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
             menuMasterService, storesService, $q) {
 
-    var storeDetailPromiseArray = [];
-
     function getCompanyId() {
       return GlobalMenuService.company.get();
     }
@@ -93,12 +91,25 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storesService.getStore(storeId);
     }
 
+    function getDependenciesForStoreInstance(dataFromAPI) {
+      var responseData = angular.copy(dataFromAPI);
+      var dependenciesArray = [];
+
+      dependenciesArray.push(getStore(responseData.storeId));
+      dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
+
+      return dependenciesArray;
+    }
+
     function getStoreDetails(storeId) {
+      var getStoreDetailsDeferred = $q.defer();
+
       getStoreInstance(storeId).then(function (dataFromAPI) {
-        var responseData = angular.copy(dataFromAPI);
-        storeDetailPromiseArray.push(getStore(responseData.storeId));
-        storeDetailPromiseArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
+        var storeDetailPromiseArray = getDependenciesForStoreInstance(dataFromAPI);
+        getStoreDetailsDeferred.resolve($q.all(storeDetailPromiseArray));
       });
+
+      return getStoreDetailsDeferred.promise;
     }
 
     return {
