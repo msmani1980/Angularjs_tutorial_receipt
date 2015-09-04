@@ -7,82 +7,86 @@
  * # storeInstanceFactory
  * Service in the ts5App.
  */
-angular.module('ts5App')
-  .service('storeInstanceFactory', function (storeInstanceService, catererStationService,
-                                             schedulesService, carrierService,
-                                             GlobalMenuService, menuMasterService,
-                                             storesService) {
+angular.module('ts5App').service('storeInstanceFactory',
+  function (storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
+            menuMasterService, storesService, $q) {
 
-    function getCompanyId(){
+    var storeDetailPromiseArray = [];
+
+    function getCompanyId() {
       return GlobalMenuService.company.get();
     }
 
-    function getCatererStationList(){
-      return catererStationService.getCatererStationList({limit:null});
+    function getCatererStationList() {
+      return catererStationService.getCatererStationList({limit: null});
     }
 
-    function getSchedules(companyId){
+    function getSchedules(companyId) {
       return schedulesService.getSchedules(companyId);
     }
 
-    function getCarrierNumbers(companyId,carrierTypeId){
-      return carrierService.getCarrierNumbers(companyId,carrierTypeId);
+    function getCarrierNumbers(companyId, carrierTypeId) {
+      return carrierService.getCarrierNumbers(companyId, carrierTypeId);
     }
 
-    function getAllCarrierNumbers(companyId){
-      return getCarrierNumbers(companyId,0);
+    function getAllCarrierNumbers(companyId) {
+      return getCarrierNumbers(companyId, 0);
     }
 
-    function getStoreInstancesList(query){
+    function getStoreInstancesList(query) {
       return storeInstanceService.getStoreInstancesList(query);
     }
 
-    function getStoreInstance(id){
+    function getStoreInstance(id) {
       return storeInstanceService.getStoreInstance(id);
     }
 
-    function createStoreInstance(payload){
+    function createStoreInstance(payload) {
       return storeInstanceService.createStoreInstance(payload);
     }
 
-    function updateStoreInstance(id, payload){
+    function updateStoreInstance(id, payload) {
       return storeInstanceService.updateStoreInstance(id, payload);
     }
 
-    function deleteStoreInstance(id){
+    function deleteStoreInstance(id) {
       return storeInstanceService.deleteStoreInstance(id);
     }
 
-    function getStoreInstanceMenuItems(id, payload){
+    function getStoreInstanceMenuItems(id, payload) {
       return storeInstanceService.getStoreInstanceMenuItems(id, payload);
     }
 
-    function getStoreInstanceItemList(id, payload){
+    function getStoreInstanceItemList(id, payload) {
       return storeInstanceService.getStoreInstanceItemList(id, payload);
     }
 
-    function getStoreInstanceItem(id, itemId){
+    function getStoreInstanceItem(id, itemId) {
       return storeInstanceService.getStoreInstanceItem(id, itemId);
     }
 
-    function createStoreInstanceItem(id, payload){
+    function createStoreInstanceItem(id, payload) {
       return storeInstanceService.createStoreInstanceItem(id, payload);
     }
 
-    function updateStoreInstanceItem(id, itemId,payload){
+    function updateStoreInstanceItem(id, itemId, payload) {
       return storeInstanceService.updateStoreInstanceItem(id, itemId, payload);
     }
 
-    function deleteStoreInstanceItem(id, itemId){
+    function deleteStoreInstanceItem(id, itemId) {
       return storeInstanceService.deleteStoreInstanceItem(id, itemId);
     }
 
-    function getMenuMasterList(){
+    function getMenuMasterList() {
       return menuMasterService.getMenuMasterList();
     }
 
-    function getStoresList(query){
+    function getStoresList(query) {
       return storesService.getStoresList(query);
+    }
+
+    function getStoreDetails(storeId) {
+      storeDetailPromiseArray.push(getStoreInstance(storeId));
     }
 
     return {
@@ -103,7 +107,8 @@ angular.module('ts5App')
       updateStoreInstanceItem: updateStoreInstanceItem,
       deleteStoreInstanceItem: deleteStoreInstanceItem,
       getMenuMasterList: getMenuMasterList,
-      getStoresList: getStoresList
+      getStoresList: getStoresList,
+      getStoreDetails: getStoreDetails
     };
 
   });
