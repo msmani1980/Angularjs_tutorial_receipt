@@ -1,6 +1,8 @@
 <div class="container">
 
-  <step-wizard></step-wizard>
+  <step-wizard steps="wizardSteps" next-trigger="nextTrigger(fooBars)" uri="uri"></step-wizard>
+
+  <form-error-dialog></form-error-dialog>
 
   <form name="createStoreInstance" class="well" ng-submit="submitForm()">
 
@@ -21,11 +23,20 @@
       <div class="col-xs-12 col-sm-6 col-md-4">
 
         <div class="form-group">
-          <label>Store Number</label>
-          <!-- TODO: Loop the store numbers from API-->
-          <select class="form-control" ng-model="formData.storeNumber">
-            <option>Store 1</option>
-            <option>Store 2</option>
+          <date-picker-field form="createStoreInstance" name="scheduleDate" label="Schedule Date"
+            min-date="'+1d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
+        </div>
+
+      </div>
+
+
+      <div class="col-xs-12 col-sm-6 col-md-4">
+
+        <div class="form-group">
+          <label>Store Number *</label>
+          <select class="form-control" ng-model="formData.storeId" required>
+            <option ng-disabled="true" selected="selected" value>Select Store</option>
+            <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
         </div>
 
@@ -34,17 +45,8 @@
       <div class="col-xs-12 col-sm-6 col-md-4">
 
         <div class="form-group">
-          <date-picker-field form="createStoreInstance" name="scheduleDate" label="Schedule Date"
-            min-date="'+1d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
-        </div>
-
-      </div>
-
-      <div class="col-xs-12 col-sm-6 col-md-4">
-
-        <div class="form-group">
           <label>Schedule Number *</label>
-          <input required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
+          <input maxlength="10" required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
         </div>
 
       </div>
@@ -56,7 +58,7 @@
           <ui-select required multiple ng-model="formData.menus" theme="bootstrap" id="menuIds">
             <ui-select-match placeholder="Select one or more Menus" ui-lock-choice="isDisabled()">{{ $item.menuCode }}
             </ui-select-match>
-            <ui-select-choices  repeat="menu in menuList | filter: $select.search | orderBy:'menuCode'">
+            <ui-select-choices  repeat="menu in menuMasterList | filter: $select.search | orderBy:'menuCode'">
               <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -68,10 +70,9 @@
 
         <div class="form-group">
           <label>Aircraft Tail Number</label>
-          <select class="form-control" ng-model="tailNumber">
-            <!-- TODO: Loop the aircraft tail number from API-->
-            <option>COL964</option>
-            <option>MNA124</option>
+          <select class="form-control" ng-model="formData.carrierId">
+            <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
+            <option ng-repeat="tailNumber in carrierNumbers | orderBy:'carrierNumber' track by tailNumber.id" value="{{ tailNumber.id }}">{{ tailNumber.carrierNumber }}</option>
           </select>
         </div>
 

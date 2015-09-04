@@ -9,6 +9,12 @@
 
 	<ul>
 
+		<li ng-if="response500">
+
+			<strong>A server side error (500) has occured</strong> - please contact your system's adminstrator
+
+		</li>
+
 		<li ng-repeat="error in form.$error.required">
 
 			<strong>{{ error.$name }}</strong> is a required field.
@@ -40,6 +46,8 @@
       <span ng-switch-when="016">From date should be earlier than or equal to To date</span>
 
       <span ng-switch-when="021">To date should be later than or equal to From date</span>
+
+			<span ng-switch-when="023">Object is locked and can not be updated/deleted</span> 
 
       <span ng-switch-default> {{ error.value }} </span>
 

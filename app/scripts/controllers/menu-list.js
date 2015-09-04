@@ -44,6 +44,10 @@ angular.module('ts5App')
       $location.path('menu/edit/' + menu.id);
     };
 
+    var attachMenuListToScope = function (menuListFromAPI) {
+      $scope.menuList = formatDates(menuListFromAPI.menus);
+    };
+
     $scope.searchMenus = function () {
       menuService.getMenuList(serializeDates($scope.search)).then(attachMenuListToScope);
     };
@@ -99,10 +103,6 @@ angular.module('ts5App')
         return false;
       }
       return !dateUtility.isAfterToday(menu.startDate);
-    };
-
-    var attachMenuListToScope = function (menuListFromAPI) {
-      $scope.menuList = formatDates(menuListFromAPI.menus);
     };
 
     $scope.clearForm = function () {
