@@ -16,6 +16,7 @@ describe('Service: storeInstanceFactory', function () {
   var storeInstanceService;
   var menuMasterService;
   var storesService;
+  var stationsService;
   var getStoreInstanceDeferred;
   var servedStoreInstanceJSON;
   var scope;
@@ -32,6 +33,7 @@ describe('Service: storeInstanceFactory', function () {
     getStoreInstanceDeferred.resolve(servedStoreInstanceJSON);
 
     catererStationService = $injector.get('catererStationService');
+    stationsService = $injector.get('stationsService');
     GlobalMenuService = $injector.get('GlobalMenuService');
     schedulesService = $injector.get('schedulesService');
     carrierService = $injector.get('carrierService');
@@ -40,6 +42,7 @@ describe('Service: storeInstanceFactory', function () {
     storesService = $injector.get('storesService');
 
     spyOn(catererStationService, 'getCatererStationList');
+    spyOn(stationsService, 'getStation');
     spyOn(GlobalMenuService.company, 'get').and.returnValue(companyId);
     spyOn(schedulesService, 'getSchedules');
     spyOn(carrierService, 'getCarrierNumbers');
@@ -132,7 +135,7 @@ describe('Service: storeInstanceFactory', function () {
   });
 
   describe('catererStationService calls', function () {
-    it('should call getCatererStation', function () {
+    it('should call getStation', function () {
       storeInstanceFactory.getCatererStationList();
       expect(catererStationService.getCatererStationList).toHaveBeenCalled();
     });
@@ -158,7 +161,7 @@ describe('Service: storeInstanceFactory', function () {
     });
   });
 
-  fdescribe('getStoreDetails', function () {
+  describe('getStoreDetails', function () {
     var storeId;
     beforeEach(function () {
       storeId = 1;
@@ -176,6 +179,10 @@ describe('Service: storeInstanceFactory', function () {
 
     it('should GET tail number from carrierService', function () {
       expect(carrierService.getCarrierNumber).toHaveBeenCalled();
+    });
+
+    it('should GET CatererStation from stationsService', function () {
+      expect(stationsService.getStation).toHaveBeenCalled();
     });
 
   });

@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').service('storeInstanceFactory',
   function (storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
-            menuMasterService, storesService, $q) {
+            menuMasterService, storesService, stationsService, $q) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
@@ -17,6 +17,10 @@ angular.module('ts5App').service('storeInstanceFactory',
 
     function getCatererStationList() {
       return catererStationService.getCatererStationList({limit: null});
+    }
+
+    function getStation(catererStationId) {
+      return stationsService.getStation(catererStationId);
     }
 
     function getSchedules(companyId) {
@@ -96,6 +100,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       var dependenciesArray = [];
 
       dependenciesArray.push(getStore(responseData.storeId));
+      dependenciesArray.push(getStation(responseData.cateringStationId));
 
       if (responseData.carrierId) {
         dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
@@ -118,6 +123,7 @@ angular.module('ts5App').service('storeInstanceFactory',
     return {
       getCompanyId: getCompanyId,
       getCatererStationList: getCatererStationList,
+      getStation: getStation,
       getSchedules: getSchedules,
       getCarrierNumbers: getCarrierNumbers,
       getCarrierNumber: getCarrierNumber,
