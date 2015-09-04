@@ -23,8 +23,7 @@ angular.module('ts5App')
       var currentStepIndex = 0;
 
       function setStepClasses(){
-        for(var i in $scope.steps){
-          i = parseInt(i, 10);
+        for(var i in $scope.steps.length){
           if(i < currentStepIndex){
             $scope.steps[i].class = 'completed';
           }
@@ -38,8 +37,7 @@ angular.module('ts5App')
       }
 
       function setCurrentStepIndex(){
-        for(var i in $scope.steps){
-          i = parseInt(i, 10);
+        for(var i in $scope.steps.length){
           if($location.path() === $scope.steps[i].uri){
             currentStepIndex = i;
           }
@@ -135,30 +133,21 @@ angular.module('ts5App')
         if($scope.disable){
           return true;
         }
-        if($index >= $scope.steps.length){
-          return true;
-        }
-        return false;
+        return ($index >= $scope.steps.length);
       };
 
       $scope.disablePrev = function(){
         if($scope.disable){
           return true;
         }
-        if(currentStepIndex === 0){
-          return true;
-        }
-        return false;
+        return (0 === currentStepIndex);
       };
 
       $scope.disableNext = function(){
         if($scope.disable){
           return true;
         }
-        if(currentStepIndex === ($scope.steps.length-1)){
-          return true;
-        }
-        return false;
+        return (currentStepIndex === ($scope.steps.length - 1));
       };
     }
   };
