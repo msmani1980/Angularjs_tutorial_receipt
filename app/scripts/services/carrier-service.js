@@ -9,46 +9,53 @@
  */
 angular.module('ts5App').service('carrierService', function ($resource, ENV) {
 
-    var carrierRequestURL = ENV.apiUrl + '/api/companies/:id/carrier-types';
+  var carrierRequestURL = ENV.apiUrl + '/api/companies/:id/carrier-types';
+  var carrierNumberRequestURL = carrierRequestURL + '/:type/carrier-numbers/:carrierNumberId';
 
-    var carrierActions = {
-      getCarrierTypes: {
-        method: 'GET'
-      },
-      getCarrierNumbers: {
-        method: 'GET'
-      }
+  var carrierActions = {
+    getCarrierTypes: {
+      method: 'GET'
+    },
+    getCarrierNumbers: {
+      method: 'GET'
+    }
+  };
+
+  var requestParameters = {
+    id: '@id',
+    type: '@type',
+    carrierNumberId: '@carrierNumberId'
+  };
+
+  var carrierTypeRequestResource = $resource(carrierRequestURL, requestParameters, carrierActions);
+  var carrierNumberRequestResource = $resource(carrierNumberRequestURL, requestParameters, carrierActions);
+
+  var getCarrierTypes = function (companyId) {
+    var payload = {id: companyId};
+    return carrierTypeRequestResource.getCarrierTypes(payload).$promise;
+  };
+
+  var getCarrierNumbers = function (companyId, carrierType) {
+    var payload = {
+      id: companyId,
+      type: carrierType
     };
-    var carrierTypeRequestResource = $resource(carrierRequestURL, null, carrierActions);
-    var carrierNumberRequestResource = $resource(carrierRequestURL + '/:type/carrier-numbers/:carrierNumberId', null,
-      carrierActions);
+    return carrierNumberRequestResource.getCarrierNumbers(payload).$promise;
+  };
 
-    var getCarrierTypes = function (companyId) {
-      var payload = {id: companyId};
-      return carrierTypeRequestResource.getCarrierTypes(payload).$promise;
+  var getCarrierNumber = function (companyId, carrierNumberId) {
+    var payload = {
+      id: companyId,
+      type: 0,
+      carrierNumberId: carrierNumberId
     };
+    return carrierNumberRequestResource.getCarrierNumbers(payload).$promise;
+  };
 
-    var getCarrierNumbers = function (companyId, carrierType) {
-      var payload = {
-        id: companyId,
-        type: carrierType
-      };
-      return carrierNumberRequestResource.getCarrierNumbers(payload).$promise;
-    };
+  return {
+    getCarrierTypes: getCarrierTypes,
+    getCarrierNumbers: getCarrierNumbers,
+    getCarrierNumber: getCarrierNumber
+  };
 
-    var getCarrierNumber = function (companyId, carrierNumberId) {
-      var payload = {
-        id: companyId,
-        type: 0,
-        carrierNumberId: carrierNumberId
-      };
-      return carrierNumberRequestResource.getCarrierNumbers(payload).$promise;
-    };
-
-    return {
-      getCarrierTypes: getCarrierTypes,
-      getCarrierNumbers: getCarrierNumbers,
-      getCarrierNumber: getCarrierNumber
-    };
-
-  });
+});

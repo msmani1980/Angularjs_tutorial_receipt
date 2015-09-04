@@ -96,7 +96,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       var dependenciesArray = [];
 
       dependenciesArray.push(getStore(responseData.storeId));
-      dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
+
+      if (responseData.carrierId) {
+        dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
+      }
 
       return dependenciesArray;
     }
