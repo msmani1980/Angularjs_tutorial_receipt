@@ -77,11 +77,11 @@ describe('The Step Wizard directive', function () {
     }));
 
     it('should not disable step 2 since on step 3', function(){
-      expect(directiveScope.disableStep(1)).toBe(false);
+      expect(directiveScope.steps[1].disabled).toBeUndefined();
     });
 
     it('should disable step 3 since on step 2', function(){
-      expect(directiveScope.disableStep(3)).toBe(true);
+      expect(directiveScope.steps[2].disabled).toBe(true);
     });
 
     it('should have a steps var in the elements scopes that matches wizardSteps', function () {
@@ -263,7 +263,7 @@ describe('The Step Wizard directive', function () {
       ];
       scope.mockDisabled = true;
 
-      template = '<step-wizard steps="wizardSteps" disable="mockDisabled"></step-wizard>';
+      template = '<step-wizard steps="wizardSteps" disabled="mockDisabled"></step-wizard>';
 
       spyOn(location, 'path').and.returnValue('/test-uri-2');
       compileDirective();
@@ -279,18 +279,6 @@ describe('The Step Wizard directive', function () {
 
     it('should not step anywhere', function(){
       expect(directiveScope.goToStepURI(2)).toBe(false);
-    });
-
-    it('should disable step 1', function(){
-      expect(directiveScope.disableStep(0)).toBe(true);
-    });
-
-    it('should disable step 2', function(){
-      expect(directiveScope.disableStep(1)).toBe(true);
-    });
-
-    it('should disable step 3', function(){
-      expect(directiveScope.disableStep(2)).toBe(true);
     });
 
     it('should disable the next button', function(){

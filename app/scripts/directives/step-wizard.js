@@ -13,36 +13,14 @@ angular.module('ts5App')
     restrict: 'E',
     scope: {
       steps: '=',
-      disable: '=',
+      disabled: '=',
       uri:'=',
       nextTrigger: '&',
       prevTrigger: '&'
     },
     controller: function($scope, $location) {
 
-      var currentStepIndex = 0;
-
-      function setStepClasses(){
-        for(var i in $scope.steps.length){
-          if(i < currentStepIndex){
-            $scope.steps[i].class = 'completed';
-          }
-          if(i === currentStepIndex) {
-            $scope.steps[i].class = 'active';
-          }
-          if(i > currentStepIndex) {
-            $scope.steps[i].class = 'future';
-          }
-        }
-      }
-
-      function setCurrentStepIndex(){
-        for(var i in $scope.steps.length){
-          if($location.path() === $scope.steps[i].uri){
-            currentStepIndex = i;
-          }
-        }
-      }
+      var currentStepIndex = null;
 
       // Maliformed uri cleanup
       function trailingSlashOnStepURI(step){
@@ -61,8 +39,6 @@ angular.module('ts5App')
       }
       function init(){
         trailingSlashes();
-        setCurrentStepIndex();
-        setStepClasses();
       }
       init();
 
@@ -87,7 +63,7 @@ angular.module('ts5App')
       }
 
       $scope.goToStepURI = function($index){
-        if($scope.disable){
+        if($scope.disabled){
           return false;
         }
         if($index < 0){
@@ -104,7 +80,7 @@ angular.module('ts5App')
       };
 
       $scope.wizardPrev = function(){
-        if($scope.disable){
+        if($scope.disabled){
           return false;
         }
         var prevIndex = currentStepIndex - 1;
@@ -115,7 +91,7 @@ angular.module('ts5App')
       };
 
       $scope.wizardNext = function(){
-        if($scope.disable){
+        if($scope.disabled){
           return false;
         }
         var nextIndex = currentStepIndex + 1;
@@ -129,25 +105,36 @@ angular.module('ts5App')
         return resolveTrigger(stepForward, nextIndex);
       };
 
-      $scope.disableStep = function($index){
-        if($scope.disable){
-          return true;
-        }
-        return ($index >= $scope.steps.length);
-      };
-
       $scope.disablePrev = function(){
-        if($scope.disable){
+        if($scope.disabled){
           return true;
         }
-        return (0 === currentStepIndex);
+        return !currentStepIndex;
       };
 
       $scope.disableNext = function(){
-        if($scope.disable){
+        if($scope.disabled){
           return true;
         }
         return (currentStepIndex === ($scope.steps.length - 1));
+      };
+
+      $scope.stepInit = function($index){
+        if($location.path() === $scope.steps[$index].uri){
+          currentStepIndex = $index;
+        }
+        if(null === currentStepIndex){
+          $scope.steps[$index].class = 'completed';
+          return;
+        }
+        if($index === currentStepIndex) {
+          $scope.steps[$index].class = 'active';
+          return;
+        }
+        if($index > currentStepIndex) {
+          $scope.steps[$index].class = 'future';
+          $scope.steps[$index].disabled = true;
+        }
       };
     }
   };
