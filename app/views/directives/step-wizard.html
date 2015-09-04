@@ -1,17 +1,19 @@
 <div class="steps-container">
 
-  <div ng-class="step.class" class="step" ng-repeat="step in steps">
+  <button type="button" class="step" ng-class="step.class"
+          ng-repeat="step in steps" ng-click="goToStepURI($index)"
+          ng-disabled="disableStep($index)" ng-init="stepInit($index)">
     <span class="badge badge-info">{{step.badge || $index+1}}</span>
-    <span class="step-label hidden-xs" ng-click="goToStepURI($index)" ng-disabled="disable">{{step.label}}</span>
+    <span class="step-label hidden-xs">{{step.label}}</span>
     <span class="chevron"></span>
-  </div>
+  </button>
 
   <div class="actions pull-right">
-    <button type="button" class="btn btn-default btn-prev">
+    <button type="button" class="btn btn-default btn-prev" ng-click="wizardPrev()" ng-disabled="disablePrev()">
       <span class="fa fa-arrow-left"></span>
-      <span class="hidden-xs" ng-click="wizardPrev()" ng-disabled="disable">Prev</span>
+      <span class="hidden-xs">Prev</span>
     </button>
-    <button type="button" class="btn btn-default btn-next" ng-click="wizardNext()" ng-disabled="disable">
+    <button type="button" class="btn btn-default btn-next" ng-click="wizardNext()" ng-disabled="disableNext()">
       <span class="hidden-xs">Next</span>
       <span class="fa fa-arrow-right"></span>
     </button>

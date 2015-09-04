@@ -3,9 +3,7 @@
 describe('The Step Wizard directive', function () {
 
   // load the directive's module
-  beforeEach(module('ts5App'));
-
-  beforeEach(module('template-module'));
+  beforeEach(module('ts5App', 'template-module'));
 
   var element;
   var scope;
@@ -75,6 +73,27 @@ describe('The Step Wizard directive', function () {
 
       compileDirective();
     }));
+
+    it('should not disable step 2 since on step 3', function(){
+      expect(directiveScope.steps[1].disabled).toBe(true);
+    });
+
+    it('should not disable the 1st step button', function(){
+      expect(directiveScope.disableStep(0)).toBeFalsy();
+    });
+
+    it('should disable the 2nd step button', function(){
+      expect(directiveScope.disableStep(1)).toBe(true);
+    });
+
+    it('should disable the 3rd step button', function(){
+      expect(directiveScope.disableStep(2)).toBe(true);
+    });
+
+    it('should disable step 3 since on step 2', function(){
+      expect(directiveScope.steps[2].disabled).toBe(true);
+    });
+
     it('should have a steps var in the elements scopes that matches wizardSteps', function () {
       expect(directiveScope.steps).toEqual(scope.wizardSteps);
     });
@@ -124,8 +143,8 @@ describe('The Step Wizard directive', function () {
   });
 
   describe('wizardPrev directive scope function', function(){
-    beforeEach(inject(function(){
 
+    beforeEach(inject(function(){
       scope.wizardSteps = [
         {
           label: 'Test label 1',
@@ -173,18 +192,29 @@ describe('The Step Wizard directive', function () {
       compileDirective();
     }));
 
+    it('should disable next button since on the last step', function(){
+      expect(directiveScope.disableNext()).toBe(true);
+    });
+
+    it('should not disable prev button since on the last step', function(){
+      expect(directiveScope.disablePrev()).toBe(false);
+    });
+
     it('should not go anymore forward since it is on the last step', function(){
       expect(directiveScope.wizardNext()).toBe(false);
     });
+
     it('should only trigger the prevTrigger function, and not step the user back', function(){
       expect(directiveScope.wizardPrev()).toBe(false);
       expect(directiveScope.goToStepURI).toHaveBeenCalledWith(1);
       expect(scope.wizardStepToIndex).toBe(1);
       expect(scope.mockPrevTrigger2).toHaveBeenCalledWith(scope.param5);
     });
+
   });
 
   describe('location with trailing slash', function() {
+
     beforeEach(inject(function(){
       scope.wizardSteps = [
         {
@@ -206,12 +236,23 @@ describe('The Step Wizard directive', function () {
       spyOn(location, 'path').and.returnValue('/test-uri-1/');
       compileDirective();
     }));
+
+    it('should disable the prev button since on first step', function(){
+      expect(directiveScope.disablePrev()).toBe(true);
+    });
+
+    it('should not disable the next button since on first step', function(){
+      expect(directiveScope.disableNext()).toBe(false);
+    });
+
     it('should append a trailing slash to Test label 1\' URI', function () {
       expect(directiveScope.steps[0].uri).toBe('/test-uri-1/');
     });
+
     it('should not go back since it is at the first step', function(){
       expect(directiveScope.wizardPrev()).toBe(false);
     });
+
   });
 
   describe('wizard disabled', function() {
@@ -232,19 +273,43 @@ describe('The Step Wizard directive', function () {
       ];
       scope.mockDisabled = true;
 
-      template = '<step-wizard steps="wizardSteps" disable="mockDisabled"></step-wizard>';
+      template = '<step-wizard steps="wizardSteps" disabled="mockDisabled"></step-wizard>';
 
       spyOn(location, 'path').and.returnValue('/test-uri-2');
       compileDirective();
     }));
+
     it('should not step forward', function(){
       expect(directiveScope.wizardNext()).toBe(false);
     });
+
     it('should not step backwards', function(){
       expect(directiveScope.wizardPrev()).toBe(false);
     });
+
     it('should not step anywhere', function(){
       expect(directiveScope.goToStepURI(2)).toBe(false);
     });
+
+    it('should disable the next button', function(){
+      expect(directiveScope.disableNext()).toBe(true);
+    });
+
+    it('should disable the prev button', function(){
+      expect(directiveScope.disablePrev()).toBe(true);
+    });
+
+    it('should disable the 1st step button', function(){
+      expect(directiveScope.disableStep(0)).toBe(true);
+    });
+
+    it('should disable the 2nd step button', function(){
+      expect(directiveScope.disableStep(1)).toBe(true);
+    });
+
+    it('should disable the 3rd step button', function(){
+      expect(directiveScope.disableStep(2)).toBe(true);
+    });
+
   });
 });
