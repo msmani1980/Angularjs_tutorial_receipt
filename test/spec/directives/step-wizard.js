@@ -41,7 +41,7 @@ describe('The Step Wizard directive', function () {
           uri: '/test-uri-2/'
         },
         {
-          label: 'Test label 3kmeath@',
+          label: 'Test label 3',
           uri: '/test-uri-3'
         }
       ];
