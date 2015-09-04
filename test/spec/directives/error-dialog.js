@@ -45,4 +45,38 @@ describe('Directive: errorDialog', function() {
 
   });
 
+  describe('When errorRequired has errors', function() {
+
+    beforeEach(inject(function() {
+      scope.errorRequired = ['Delivery Note Number'];
+      compileDirective();
+    }));
+
+    it('should contain a list item', function() {
+      expect(element.find('li.ng-scope')).toBeDefined();
+    });
+
+    it('should contain 1 list item', function() {
+      expect(element.find('li').length).toBe(1);
+    });
+
+  });
+
+  describe('When errorPattern has errors', function() {
+
+    beforeEach(inject(function() {
+      scope.errorPattern = ['Delivery Note Number'];
+      compileDirective();
+    }));
+
+    it('should contain a list item', function() {
+      expect(element.find('li.ng-scope')).toBeDefined();
+    });
+
+    it('should contain 1 list item', function() {
+      expect(element.find('li').length).toBe(1);
+    });
+
+  });
+
 });
