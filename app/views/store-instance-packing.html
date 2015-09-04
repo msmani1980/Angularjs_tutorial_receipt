@@ -66,49 +66,22 @@
         <thead>
         <tr>
           <th>Retail Item Details</th>
-          <th width="15%">Required Quantity</th>
-          <th width="15%">Picked Quantity</th>
+          <th width="15%">Template Quantity</th>
+          <th width="15%">Packed Quantity</th>
         </tr>
         </thead>
 
         <tbody>
-        <tr>
+        <tr ng-repeat="item in menuItems">
           <td>
-            <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke"
+            <input type="text" class="form-control" id="item-code" ng-model="item.itemDescription"
                    disabled />
           </td>
           <td>
-            <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="20"
-                   disabled />
+            <input type="text" class="form-control" id="required-quantity" ng-model="item.menuQuantity" />
           </td>
           <td>
-            <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0002 - Sprite"
-                   disabled />
-          </td>
-          <td>
-            <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="20"
-                   disabled />
-          </td>
-          <td>
-            <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <input ng-model="itemDetails" type="text" class="form-control" id="item-code"
-                   placeholder="0003 - Chicken Sandwich" disabled />
-          </td>
-          <td>
-            <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="20"
-                   disabled />
-          </td>
-          <td>
-            <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20">
+            <input type="text" class="form-control" id="picked-quantity" placeholder="0">
           </td>
         </tr>
         <!--                 <tr> -->

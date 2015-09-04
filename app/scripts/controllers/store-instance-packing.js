@@ -13,4 +13,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl', function ($scope
         $scope[key] = value;
       });
     });
+
+    // TODO: getStoreInstanceItems to populate quantity
+    storeInstanceFactory.getStoreInstanceMenuItems(13, {itemTypeId: 1, scheduleDate: $scope.scheduleDate}).then(function(dataFromAPI) {
+      $scope.menuItems = angular.copy(dataFromAPI.response);
+      angular.forEach($scope.menuItems, function (item) {
+        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+      });
+    });
+
   });
