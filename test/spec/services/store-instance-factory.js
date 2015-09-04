@@ -150,6 +150,12 @@ describe('Service: storeInstanceFactory', function () {
       storeInstanceFactory.getStoreDetails(storeId);
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(storeId);
     });
+    it('should GET store details from storesService', function () {
+
+    });
+    it('should GET tail number from carrierService', function () {
+
+    });
 
   });
 
