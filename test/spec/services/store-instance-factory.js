@@ -4,7 +4,7 @@ describe('Service: storeInstanceFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/store-instance.json'));
+  beforeEach(module('served/store-instance.json', 'served/store.json', 'served/carrier-number.json', 'served/station.json'));
 
   // instantiate service
   var storeInstanceFactory;
@@ -17,20 +17,42 @@ describe('Service: storeInstanceFactory', function () {
   var menuMasterService;
   var storesService;
   var stationsService;
+
+  var getStationDeferred;
+  var getCarrierNumberDeferred;
+  var getStoreDeferred;
   var getStoreInstanceDeferred;
+
   var servedStoreInstanceJSON;
+  var servedStoreJSON;
+  var servedCarrierNumberJSON;
+  var servedStationJSON;
+
   var scope;
 
   beforeEach(inject(function (_servedStoreInstance_, _storeInstanceFactory_, $injector, $q, $rootScope) {
 
-    inject(function (_servedStoreInstance_) {
+    inject(function (_servedStoreInstance_, _servedStore_, _servedCarrierNumber_, _servedStation_) {
       servedStoreInstanceJSON = _servedStoreInstance_;
+      servedStoreJSON = _servedStore_;
+      servedCarrierNumberJSON = _servedCarrierNumber_;
+      servedStationJSON = _servedStation_;
     });
     scope = $rootScope.$new();
     storeInstanceFactory = _storeInstanceFactory_;
 
+    getStationDeferred = $q.defer();
+    getStationDeferred.resolve(servedStationJSON);
+
+    getCarrierNumberDeferred = $q.defer();
+    getCarrierNumberDeferred.resolve(servedCarrierNumberJSON);
+
+    getStoreDeferred = $q.defer();
+    getStoreDeferred.resolve(servedStoreJSON);
+
     getStoreInstanceDeferred = $q.defer();
     getStoreInstanceDeferred.resolve(servedStoreInstanceJSON);
+
 
     catererStationService = $injector.get('catererStationService');
     stationsService = $injector.get('stationsService');
@@ -42,11 +64,11 @@ describe('Service: storeInstanceFactory', function () {
     storesService = $injector.get('storesService');
 
     spyOn(catererStationService, 'getCatererStationList');
-    spyOn(stationsService, 'getStation');
     spyOn(GlobalMenuService.company, 'get').and.returnValue(companyId);
     spyOn(schedulesService, 'getSchedules');
+    spyOn(stationsService, 'getStation').and.returnValue(getStationDeferred.promise);
     spyOn(carrierService, 'getCarrierNumbers');
-    spyOn(carrierService, 'getCarrierNumber');
+    spyOn(carrierService, 'getCarrierNumber').and.returnValue(getCarrierNumberDeferred.promise);
     spyOn(storeInstanceService, 'getStoreInstancesList');
     spyOn(storeInstanceService, 'getStoreInstance').and.returnValue(getStoreInstanceDeferred.promise);
     spyOn(storeInstanceService, 'createStoreInstance');
@@ -60,7 +82,7 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(storeInstanceService, 'deleteStoreInstanceItem');
     spyOn(menuMasterService, 'getMenuMasterList');
     spyOn(storesService, 'getStoresList');
-    spyOn(storesService, 'getStore');
+    spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
   }));
 
   describe('storesService calls', function () {
@@ -161,11 +183,14 @@ describe('Service: storeInstanceFactory', function () {
     });
   });
 
-  describe('getStoreDetails', function () {
+  fdescribe('getStoreDetails', function () {
     var storeId;
+    var storeDetails;
     beforeEach(function () {
       storeId = 1;
-      storeInstanceFactory.getStoreDetails(storeId);
+      storeInstanceFactory.getStoreDetails(storeId).then(function(dataFromAPI){
+        storeDetails = dataFromAPI;
+      });
       scope.$digest();
     });
 
@@ -183,6 +208,32 @@ describe('Service: storeInstanceFactory', function () {
 
     it('should GET CatererStation from stationsService', function () {
       expect(stationsService.getStation).toHaveBeenCalled();
+    });
+
+    describe('formatResponseCollection', function () {
+      it('should return JSON object', function () {
+        expect(typeof storeDetails).toBe('object');
+      });
+
+      it('should contain LMP station name', function () {
+        expect(storeDetails.LMPStation).toBeDefined();
+      });
+
+      it('should contain scheduleDate', function () {
+        expect(storeDetails.scheduleDate).toBeDefined();
+      });
+
+      it('should contain scheduleNumber', function () {
+        expect(storeDetails.scheduleNumber).toBeDefined();
+      });
+
+      it('should contain tail number if id is defined', function () {
+        expect(storeDetails.carrierNumber).toBeDefined();
+      });
+
+      it('should contain store number', function () {
+        expect(storeDetails.storeNumber).toBeDefined();
+      });
     });
 
   });

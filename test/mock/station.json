@@ -1,0 +1,16 @@
+{
+  "code": "ORD",
+  "name": "Chicago O-hare",
+  "id": 1,
+  "countryName": "United States",
+  "countryId": 240,
+  "regionName": "Illinois",
+  "regionId": 4,
+  "cityName": "Chicago",
+  "cityId": 5,
+  "timezone": "America/Chicago",
+  "timezoneId": 459,
+  "utcDstOffset": "-05:00",
+  "utcOffset": "-06:00",
+  "description": null
+}

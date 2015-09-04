@@ -109,12 +109,27 @@ angular.module('ts5App').service('storeInstanceFactory',
       return dependenciesArray;
     }
 
+    function formatResponseCollection(responseCollection, dataFromAPI) {
+      var storeDetails = {};
+      storeDetails.LMPStation = responseCollection[1].code;
+      storeDetails.storeNumber = responseCollection[0].storeNumber;
+      storeDetails.scheduleDate = dataFromAPI.scheduleDate;
+      storeDetails.scheduleNumber = dataFromAPI.scheduleNumber;
+      storeDetails.storeInstanceNumber = dataFromAPI.id;
+      if(responseCollection.length > 2) {
+        storeDetails.carrierNumber = responseCollection[2].carrierNumber;
+      }
+      return storeDetails;
+    }
+
     function getStoreDetails(storeId) {
       var getStoreDetailsDeferred = $q.defer();
 
       getStoreInstance(storeId).then(function (dataFromAPI) {
         var storeDetailPromiseArray = getDependenciesForStoreInstance(dataFromAPI);
-        getStoreDetailsDeferred.resolve($q.all(storeDetailPromiseArray));
+        $q.all(storeDetailPromiseArray).then(function (responseCollection) {
+          getStoreDetailsDeferred.resolve(formatResponseCollection(responseCollection, dataFromAPI));
+        });
       });
 
       return getStoreDetailsDeferred.promise;
