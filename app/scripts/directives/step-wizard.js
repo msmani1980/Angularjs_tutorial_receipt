@@ -119,7 +119,7 @@ angular.module('ts5App')
       };
 
       $scope.disableStep = function($index){
-        return $scope.disabled || $scope.steps[$index].disabled;
+        return $scope.disabled || ($scope.steps[$index].disabled);
       };
 
       $scope.stepInit = function($index){
@@ -130,13 +130,13 @@ angular.module('ts5App')
           $scope.steps[$index].class = 'completed';
           return;
         }
+        $scope.steps[$index].disabled = true;
         if($index === currentStepIndex) {
           $scope.steps[$index].class = 'active';
           return;
         }
         if($index > currentStepIndex) {
           $scope.steps[$index].class = 'future';
-          $scope.steps[$index].disabled = true;
         }
       };
     }

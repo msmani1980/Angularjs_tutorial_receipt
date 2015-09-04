@@ -1,11 +1,9 @@
 'use strict';
 
-describe('The Step Wizard directive', function () {
+fdescribe('The Step Wizard directive', function () {
 
   // load the directive's module
-  beforeEach(module('ts5App'));
-
-  beforeEach(module('template-module'));
+  beforeEach(module('ts5App', 'template-module'));
 
   var element;
   var scope;
@@ -81,7 +79,7 @@ describe('The Step Wizard directive', function () {
     });
 
     it('should not disable the 1st step button', function(){
-      expect(directiveScope.disableStep(1)).toBe(true);
+      expect(directiveScope.disableStep(0)).toBeFalsy();
     });
 
     it('should disable the 2nd step button', function(){
