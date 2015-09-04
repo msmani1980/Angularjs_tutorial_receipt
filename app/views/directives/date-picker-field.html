@@ -1,6 +1,6 @@
 <fieldset ng-disabled="disable">
-  <div class="form-group" ng-class="{ 'has-error' : form[name].$touched && !form[name].$viewValue.length || displayError && !form[name].$valid , 'has-success' : form[name].$touched && form[name].$viewValue.length }">
-    <label>{{label}} <span class="required" ng-show="required">*</span></label>
+  <div class="form-group form-group-alt" ng-class="{ 'has-error' : form[name].$touched && !form[name].$viewValue.length || displayError && !form[name].$valid , 'has-success' : form[name].$touched && form[name].$viewValue.length }">
+    <label ng-show="label">{{label}} <span class="required" ng-show="required">*</span></label>
     <p class="input-group">
       <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
