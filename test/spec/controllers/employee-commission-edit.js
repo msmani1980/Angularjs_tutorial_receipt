@@ -4,26 +4,15 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
-  beforeEach(module('served/master-item-list.json', 'served/price-types.json', 'served/tax-rate-types.json', 'served/company-currency-globals.json', 'served/employee-commission.json'));
+  beforeEach(module('served/master-item-list.json', 'served/price-types.json', 'served/tax-rate-types.json',
+    'served/company-currency-globals.json', 'served/employee-commission.json'));
 
 
-  var EmployeeCommissionEditCtrl,
-    employeeCommissionFactory,
-    getItemsListDeferred,
-    getPriceTypesListDeferred,
-    getTaxRateTypesDeferred,
-    getCompanyCurrenciesDeferred,
-    getCommissionDeferred,
-    masterItemsListJSON,
-    priceTypeListJSON,
-    taxRateTypesJSON,
-    companyCurrencyJSON,
-    employeeCommissionJSON,
-    routeParams,
-    scope;
+  var EmployeeCommissionEditCtrl, employeeCommissionFactory, getItemsListDeferred, getPriceTypesListDeferred, getTaxRateTypesDeferred, getCompanyCurrenciesDeferred, getCommissionDeferred, masterItemsListJSON, priceTypeListJSON, taxRateTypesJSON, companyCurrencyJSON, employeeCommissionJSON, routeParams, scope;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
-    inject(function (_servedMasterItemList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedCompanyCurrencyGlobals_, _servedEmployeeCommission_) {
+    inject(function (_servedMasterItemList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedCompanyCurrencyGlobals_,
+                     _servedEmployeeCommission_) {
       masterItemsListJSON = _servedMasterItemList_;
       priceTypeListJSON = _servedPriceTypes_;
       taxRateTypesJSON = _servedTaxRateTypes_;

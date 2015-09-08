@@ -1,0 +1,121 @@
+<div class="fluid-container">
+<!--<step-wizard></step-wizard>-->
+
+<form-error-dialog></form-error-dialog>
+
+  <form name="createStoreInstance" class="well" ng-submit="submitForm()">
+
+    <!-- INFORMATION BAR -->
+    <div class="well">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>LMP Station</th>
+          <th>Store Number</th>
+          <th>Schedule Date</th>
+          <th>Schedule Number</th>
+          <th>Aircraft Tail Number</th>
+          <th>Store Instance Number</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <input type="text" class="form-control" ng-model="storeDetails.LMPStation" disabled />
+          </td>
+          <td>
+            <input type="text" class="form-control" ng-model="storeDetails.storeNumber" disabled />
+          </td>
+          <td>
+            <input type="text" class="form-control" ng-model="storeDetails.scheduleDate" disabled />
+          </td>
+          <td>
+            <input type="text" class="form-control" ng-model="storeDetails.scheduleNumber" disabled />
+          </td>
+          <td>
+            <input type="text" class="form-control" ng-model="storeDetails.carrierNumber" disabled />
+          </td>
+          <td>
+            <input type="text" class="form-control" ng-model="storeDetails.storeInstanceNumber" disabled />
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-1">
+        <div class="form-group">
+          <label>Filter by:</label>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <div class="form-group">
+          <label>Item Details</label>
+          <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details"
+                 placeholder="Coke" ng-readonly="readOnly">
+        </div>
+      </div>
+    </div>
+
+    <div class="well">
+      <h3>Pick List</h3>
+
+      <table class="table table-striped pick-list">
+        <thead>
+        <tr>
+          <th>Retail Item Details</th>
+          <th width="15%">Template Quantity</th>
+          <th width="15%">Packed Quantity</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="item in menuItems">
+          <td>
+            <input type="text" class="form-control" id="item-code" ng-model="item.itemDescription"
+                   disabled />
+          </td>
+          <td>
+            <input type="text" class="form-control" id="required-quantity" ng-model="item.menuQuantity" />
+          </td>
+          <td>
+            <input type="text" class="form-control" id="picked-quantity" placeholder="0">
+          </td>
+        </tr>
+        <!--                 <tr> -->
+        <!--                   <td></td> -->
+        <!--                   <td></td> -->
+        <!--                   <td> -->
+        <!--                     TODO: 'ADD ITEM' FUNCTIONALITY  -->
+        <!--                     <span id="pickListActionButtons"> -->
+        <!--                       <button type="button" class="btn btn-primary pull-right"> -->
+        <!--                         <i class="fa fa-plus"></i> Add Item -->
+        <!--                       </button> -->
+        <!--                     </span> -->
+        <!--                   </td> -->
+        <!--                 </tr> -->
+        </tbody>
+      </table>
+      <br>
+
+      <div class="row" ng-hide="readOnly">
+        <div class="col-xs-4 col-md-9"></div>
+        <div class="col-xs-4 col-md-3 text-right">
+          <div class="input-group">
+            <!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
+            <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add
+                      Items
+                    </button>
+                  </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </form>
+</div>

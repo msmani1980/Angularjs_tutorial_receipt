@@ -9,11 +9,10 @@
  */
 angular.module('ts5App')
   .service('catererStationService', function ($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/caterer-stations/:id/:menuitems';
+    var requestURL = ENV.apiUrl + '/api/caterer-stations/:id/:menuItems';
     var requestParameters = {
       id: '@id',
-      menuitems:'@menuitems',
-      limit: 50
+      menuItems:'@menuItems'
     };
 
     var actions = {
@@ -66,7 +65,7 @@ angular.module('ts5App')
     var getAllMenuItems = function(cateringStationId, limit) {
       var payload = {
         id: cateringStationId,
-        menuitems: 'menu-items',
+        menuItems: 'menu-items',
         limit: limit
       };
       return requestResource.getAllMenuItems(payload).$promise;

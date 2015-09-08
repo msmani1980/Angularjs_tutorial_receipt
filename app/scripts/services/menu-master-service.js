@@ -9,7 +9,6 @@
  */
 angular.module('ts5App')
   .service('menuMasterService', function ($resource, ENV) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
     var requestURL = ENV.apiUrl + '/api/menus/menu-masters';
 
     var requestParameters = {};
