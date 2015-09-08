@@ -115,5 +115,19 @@ describe('Carrier Service', function () {
         expect(carrierNumbersData.response[0].carrierNumber).not.toBe(null);
       });
     });
+
+    describe('getCarrierNumber', function () {
+      it('should make a GET request when calling getStore', function () {
+        var fakeId = 1;
+        var regex = new RegExp('/carrier-types/0/carrier-numbers/' + fakeId, 'g');
+
+        $httpBackend.expectGET(regex).respond({done: true, id: fakeId});
+        carrierService.getCarrierNumber(403, fakeId).then(function (response) {
+          expect(response.id).toBe(fakeId);
+        });
+        $httpBackend.flush();
+      });
+    });
+
   });
 });
