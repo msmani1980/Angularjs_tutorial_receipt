@@ -72,13 +72,13 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in menuItems">
+        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
           <td>
             <input type="text" class="form-control" id="item-code" ng-model="item.itemDescription"
                    disabled />
           </td>
           <td>
-            <input type="text" class="form-control" id="required-quantity" ng-model="item.menuQuantity" />
+            <input type="text" class="form-control" id="required-quantity" ng-model="item.menuQuantity" placeholder="0" disabled />
           </td>
           <td>
             <input type="text" class="form-control" id="picked-quantity" ng-model="item.quantity" placeholder="0">
