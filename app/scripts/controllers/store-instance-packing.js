@@ -86,6 +86,19 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       getMasterItemsList();
     }
 
+    function formatMenuPayload() {
+
+    }
+
+
+    $scope.savePackingData = function () {
+      formatMenuPayload();
+      //function updateStoreInstanceItem(id, itemId, payload) {
+
+        storeInstanceFactory.updateStoreInstanceItem
+    };
+
+
     function init() {
       showLoadingModal('Loading Store Detail for Packing...');
       $scope.storeId = $routeParams.storeId;

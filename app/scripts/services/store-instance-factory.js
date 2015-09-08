@@ -83,6 +83,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storeInstanceService.updateStoreInstanceItem(id, itemId, payload);
     }
 
+    function updateStoreInstanceItemsBulk(id, payload) {
+      return storeInstanceService.updateStoreInstanceItemsBulk(id, payload);
+    }
+
     function deleteStoreInstanceItem(id, itemId) {
       return storeInstanceService.deleteStoreInstanceItem(id, itemId);
     }
@@ -158,6 +162,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreInstanceItem: getStoreInstanceItem,
       createStoreInstanceItem: createStoreInstanceItem,
       updateStoreInstanceItem: updateStoreInstanceItem,
+      updateStoreInstanceItemsBulk: updateStoreInstanceItemsBulk,
       deleteStoreInstanceItem: deleteStoreInstanceItem,
       getMenuMasterList: getMenuMasterList,
       getStoresList: getStoresList,

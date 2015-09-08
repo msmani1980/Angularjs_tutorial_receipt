@@ -8,11 +8,11 @@
  * Service in the ts5App.
  */
 angular.module('ts5App').service('storeInstanceService', function ($resource, ENV) {
-  var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/:api/:itemId';
+  var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/:api/:itemIdOrBulk';
   var requestParameters = {
     id: '@id',
     api: '@api',
-    itemId: '@itemId'
+    itemIdOrBulk: '@itemIdOrBulk'
   };
   var actions = {
     getStoreInstancesList: {
@@ -37,6 +37,9 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
       method: 'GET'
     },
     updateStoreInstanceItem: {
+      method: 'PUT'
+    },
+    updateStoreInstanceItemsBulk: {
       method: 'PUT'
     },
     createStoreInstanceItem: {
@@ -83,7 +86,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.getStoreInstanceItem({
       id: storeId,
       api: 'items',
-      itemId: itemId
+      itemIdOrBulk: itemId
     }).$promise;
   }
 
@@ -91,7 +94,15 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.updateStoreInstanceItem({
       id: storeId,
       api: 'items',
-      itemId: itemId
+      itemIdOrBulk: itemId
+    }, payload).$promise;
+  }
+
+  function updateStoreInstanceItemsBulk(storeId, payload) {
+    return requestResource.updateStoreInstanceItemsBulk({
+      id: storeId,
+      api: 'items',
+      itemIdOrBulk: 'bulk'
     }, payload).$promise;
   }
 
@@ -106,7 +117,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.deleteStoreInstanceItem({
       id: storeId,
       api: 'items',
-      itemId: itemId
+      itemIdOrBulk: itemId
     }, payload).$promise;
   }
 
@@ -127,6 +138,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     getStoreInstanceItem: getStoreInstanceItem,
     getStoreInstanceMenuItems: getStoreInstanceMenuItems,
     updateStoreInstanceItem: updateStoreInstanceItem,
+    updateStoreInstanceItemsBulk: updateStoreInstanceItemsBulk,
     createStoreInstanceItem: createStoreInstanceItem,
     deleteStoreInstanceItem: deleteStoreInstanceItem
   };

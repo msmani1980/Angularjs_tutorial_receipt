@@ -143,6 +143,22 @@ describe('Service: storeInstanceService', function () {
     });
   });
 
+  describe('updateStoreInstanceItemBulk', function () {
+    it('should make PUT request to API', function () {
+      var expectedURL = /dispatch\/store-instances\/\d+\/items\/bulk$/;
+      var fakeStoreId = 38;
+      var payload = {
+        fakeKey: 'fakeValue'
+      };
+
+      httpBackend.expectPUT(expectedURL).respond(200, {});
+      storeInstanceService.updateStoreInstanceItemsBulk(fakeStoreId, payload).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+  });
+
   describe('deleteStoreInstanceItem', function () {
     it('should make DELETE request to API', function () {
       var expectedURL = /dispatch\/store-instances\/\d+\/items\/\d+$/;
