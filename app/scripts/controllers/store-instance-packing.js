@@ -16,21 +16,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return;
       }
 
-      var hash = new lodash.map();
-      $scope.menuItems.concat(menuItemsFromAPI).forEach(function (obj) {
-        hash.set(obj.itemMasterId, Object.assign(hash.get(obj.itemMasterId) || {}, obj))
+      angular.forEach(menuItemsFromAPI, function (item) {
+        var itemMatch = lodash.findWhere($scope.menuItems, { itemMasterId: item.itemMasterId });
+        if(itemMatch) {
+          lodash.extend(itemMatch, item);
+        } else {
+          $scope.menuItems.push(item);
+        }
       });
-
-      //$scope.menuItems = lodash.map($scope.menuItems, function(item){
-      //  return lodash.extend(item, lodash.findWhere(menuItemsFromAPI, { itemMasterId: item.itemMasterId }));
-      //});
-
-      //var hash = new Map();
-      //$scope.menuItems.concat(menuItemsFromAPI).forEach(function (obj) {
-      //  hash.set(obj.itemMasterId, Object.assign(hash.get(obj.itemMasterId) || {}, obj))
-      //});
-      //
-      //$scope.menuItems = Array.from(hash.values());
     }
 
     function getStoreInstanceItems() {
