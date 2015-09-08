@@ -10,6 +10,158 @@
     <!-- INFORMATION BAR -->
     <store-instance-header></store-instance-header>
 
+    <!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-1">
+        <div class="form-group">
+          <label>Filter by:</label>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <div class="form-group">
+          <label>Item Details</label>
+          <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details"
+                 placeholder="Coke" ng-readonly="readOnly">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading accordion-panel-heading">
+                  <span class="clickable panel-collapsed">
+                    <h3>Pick List</h3><i class="fa fa-chevron-down"></i>
+                  </span>
+          </div>
+          <div class="panel-body">
+
+            <div class="col-xs-12 text-right">
+              <button type="button" class="btn btn-info" id="goToPacking">Edit</button>
+            </div>
+
+            <table class="table table-striped pick-list">
+              <thead>
+              <tr>
+                <th>Retail Item Details</th>
+                <th width="15%">Required Quantity</th>
+                <th width="15%">Picked Quantity</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr>
+                <td>
+                  <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
+                </td>
+                <td>
+                  <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="10" disabled="disabled">
+                </td>
+                <td>
+                  <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="10" disabled="disabled">
+                </td>
+              </tr>
+              <tr class="has-discrepancy">
+                <td>
+                  <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0002- Sprite" disabled="disabled">
+                </td>
+                <td>
+                  <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
+                </td>
+                <td>
+                  <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0" disabled="disabled">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0003 - Chicken Sandwich" disabled="disabled">
+                </td>
+                <td>
+                  <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
+                </td>
+                <td>
+                  <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20" disabled="disabled">
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading accordion-panel-heading">
+                  <span class="clickable panel-collapsed">
+                    <h3>Seal Number Assignment</h3><i class="fa fa-chevron-down"></i>
+                  </span>
+          </div>
+          <div class="panel-body">
+
+            <div class="col-xs-12 text-right">
+              <button type="button" class="btn btn-info" id="goToAssignSeals">Edit</button>
+            </div>
+
+            <table class="table">
+              <thead>
+              <tr>
+                <th>Seal Type</th>
+                <th>Seal Numbers</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr>
+                <td width="15%">
+                  <input type="text" class="form-control" id="sealColor" placeholder="Outbound" style="background-color: #66CCFF" disabled="disabled">
+                </td>
+                <td>12465, 12466, 12467, 12468, 12469, 12470, 12471, 12472, 12473, 12474, 12475, 12476, 12477, 12478</td>
+              <tr>
+                <td>
+                  <input type="text" class="form-control" id="sealColor" placeholder="Hand Over" style="background-color: #33CC33" disabled="disabled">
+                </td>
+                <td>13465, 13466, 13467</td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" class="form-control" id="sealColor" placeholder="Inbound" style="background-color: #FFCC00" disabled="disabled">
+                </td>
+                <td>12420, 12421, 12422, 12423, 12424</td>
+              <tr>
+              <tr>
+                <td>
+                  <input type="text" class="form-control" id="sealColor" placeholder="High Security" style="background-color: #FFFFFF" disabled="disabled">
+                </td>
+                <td>11465, 11466</td>
+              <tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="text-right">
+      <button type="button" class="btn btn-default btn-primary btn-next">Dispatch</button>
+    </footer>
+
   </form>
 
 </div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#myDatepicker').datepicker();
+
+    $('#goToInPacking').on('click', function(e, data) {
+      $('[data-step=2]').trigger("click");
+    });
+
+    $('#goToAssignSeals').on('click', function(e, data) {
+      $('[data-step=3]').trigger("click");
+    });
+
+  });
+</script>
