@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstancePackingCtrl', function () {
+fdescribe('Controller: StoreInstancePackingCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));

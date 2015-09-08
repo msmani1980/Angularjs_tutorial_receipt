@@ -72,7 +72,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in menuItems">
+        <tr ng-repeat="item in menuItems JOIN APIItems | where: menuItems.itemMasterId === APIItems.itemMasterId">
           <td>
             <input type="text" class="form-control" id="item-code" ng-model="item.itemDescription"
                    disabled />
@@ -81,7 +81,7 @@
             <input type="text" class="form-control" id="required-quantity" ng-model="item.menuQuantity" />
           </td>
           <td>
-            <input type="text" class="form-control" id="picked-quantity" placeholder="0">
+            <input type="text" class="form-control" id="picked-quantity" ng-model="item.quantity" placeholder="0">
           </td>
         </tr>
         <!--                 <tr> -->
