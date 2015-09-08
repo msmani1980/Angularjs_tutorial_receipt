@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "count": 6,
+    "limit": 6,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 1,
+      "companyId": 403,
+      "storeInstanceId": 13,
+      "itemMasterId": 3,
+      "itemCode": "Ip015",
+      "itemName": "Ipad Mini",
+      "quantity": 88,
+      "createdBy": null,
+      "createdOn": "2015-08-17 19:04:35.0437",
+      "updatedBy": null,
+      "updatedOn": "2015-08-19 15:13:02.863531"
+    },
+    {
+      "id": 3,
+      "companyId": 403,
+      "storeInstanceId": 13,
+      "itemMasterId": 5,
+      "itemCode": "Sd005",
+      "itemName": "Pepsi",
+      "quantity": 55,
+      "createdBy": null,
+      "createdOn": "2015-08-17 19:31:27.867813",
+      "updatedBy": null,
+      "updatedOn": "2015-08-19 15:13:08.002925"
+    },
+    {
+      "id": 13,
+      "companyId": 403,
+      "storeInstanceId": 13,
+      "itemMasterId": 4,
+      "itemCode": "Ru-002",
+      "itemName": "BabyRuth",
+      "quantity": 777,
+      "createdBy": 1,
+      "createdOn": "2015-08-17 19:08:07.817813",
+      "updatedBy": 1,
+      "updatedOn": "2015-08-31 18:44:54.609744"
+    },
+    {
+      "id": 14,
+      "companyId": 403,
+      "storeInstanceId": 13,
+      "itemMasterId": 4,
+      "itemCode": "Ru-002",
+      "itemName": "BabyRuth",
+      "quantity": 77,
+      "createdBy": 1,
+      "createdOn": "2015-08-17 19:08:07.817813",
+      "updatedBy": 1,
+      "updatedOn": "2015-08-19 15:13:05.317675"
+    },
+    {
+      "id": 15,
+      "companyId": 403,
+      "storeInstanceId": 13,
+      "itemMasterId": 4,
+      "itemCode": "Ru-002",
+      "itemName": "BabyRuth",
+      "quantity": 77,
+      "createdBy": 1,
+      "createdOn": "2015-08-17 19:08:07.817813",
+      "updatedBy": 1,
+      "updatedOn": "2015-08-19 15:13:05.317675"
+    },
+    {
+      "id": 16,
+      "companyId": 2,
+      "storeInstanceId": 13,
+      "itemMasterId": 63,
+      "itemCode": "DUP 878",
+      "itemName": "DUP 878",
+      "quantity": 22,
+      "createdBy": 1,
+      "createdOn": "2015-09-01 16:41:37.693056",
+      "updatedBy": null,
+      "updatedOn": null
+    }
+  ]
+}

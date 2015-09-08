@@ -178,6 +178,9 @@ angular.module('ts5App', [
   }).when('/store-instance-review/:id', {
     templateUrl: 'views/store-instance-review.html',
     controller: 'StoreInstanceReviewCtrl'
+  }).when('/store-instance-packing/:storeId', {
+    templateUrl: 'views/store-instance-packing.html',
+    controller: 'StoreInstancePackingCtrl'
   }).otherwise({
     redirectTo: '/'
   });
