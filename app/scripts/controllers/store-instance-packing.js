@@ -22,7 +22,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     $scope.addItems = function () {
-      for (var i = 0; i < $scope.addItemsNumber; i ++) {
+      for (var i = 0; i < $scope.addItemsNumber; i++) {
         $scope.emptyMenuItems.push({
           menuQuantity: 0
         });
@@ -34,6 +34,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     }
 
+    // TODO: fix merging id - need to keep id from store instance items if there is overlap.
+    // TODO: what to do for id if only a menu item exists and a matching store instance item does not? can same menu item id be used?
     this.mergeMenuItems = function (menuItemsFromAPI) {
       if ($scope.menuItems.length <= 0) {
         $scope.menuItems = menuItemsFromAPI;
@@ -95,16 +97,36 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       getMasterItemsList();
     }
 
-    function formatMenuPayload() {
+    // TODO: cleanup
+    this.formatStoreInstanceItemsPayload = function () {
+      var newPayload = [];
+      angular.forEach($scope.menuItems, function (item) {
+        var itemPayload = {
+          id: item.id,
+          itemMasterId: item.itemMasterId,
+          quantity: parseInt(item.quantity)
+        };
+        newPayload.push(itemPayload);
+      });
 
-    }
+      angular.forEach($scope.emptyMenuItems, function (item) {
+        var itemPayload = {
+          itemMasterId: item.masterItem.id,
+          quantity: parseInt(item.quantity)
+        };
+        newPayload.push(itemPayload);
+      });
+      return newPayload;
+    };
 
 
     $scope.savePackingData = function () {
-      formatMenuPayload();
-      //function updateStoreInstanceItem(id, itemId, payload) {
-
-        storeInstanceFactory.updateStoreInstanceItem
+      var payload = $this.formatStoreInstanceItemsPayload();
+      console.log(payload);
+      // TODO: make bulk API call and check for no duplicate items
+      //storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (response) {
+      //  // success handler
+      //});
     };
 
 

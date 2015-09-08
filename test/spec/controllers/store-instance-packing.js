@@ -141,12 +141,49 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     });
   });
 
-  describe('add new items to store instance', function(){
-    it('should add X number if items based on addItemsNumber variable', function(){
+  describe('add new items to store instance', function () {
+    it('should add X number if items based on addItemsNumber variable', function () {
       scope.emptyMenuItems = [];
       scope.addItemsNumber = 10;
       scope.addItems();
       expect(scope.emptyMenuItems.length).toBe(10);
+    });
+  });
+
+  describe('formatStoreInstanceItemsPayload', function () {
+    beforeEach(function () {
+      scope.menuItems = [{
+        id: 1,
+        itemMasterId: 2,
+        quantity: 3,
+        fakeKey: 4
+      },
+        {
+          id: 2,
+          itemMasterId: 4,
+          quantity: 5,
+          fooKey: 44
+        }];
+      scope.emptyMenuItems = [{
+        quantity: 9,
+        nonsenseKey: 4,
+        masterItem: {id: 5}
+      }]
+    });
+    it('should merge menuItems and emptyMenuItems', function () {
+      var expectedLength = scope.menuItems.length + scope.emptyMenuItems.length;
+      var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
+      expect(result.length).toEqual(expectedLength);
+    });
+    it('should only keep id, itemMasterId, and quantity for menuItems', function () {
+      var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
+      var expectdItem = {id: 1, itemMasterId: 2, quantity: 3};
+      expect(result[0]).toEqual(expectdItem);
+    });
+    it('should only keep itemMasterId and quantity for emptyMenuItems', function () {
+      var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
+      var expectdItem = {itemMasterId: 5, quantity: 9};
+      expect(result[2]).toEqual(expectdItem);
     });
   });
 
