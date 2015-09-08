@@ -119,10 +119,17 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           StoreInstancePackingCtrl.mergeMenuItems(newItems);
           expect(scope.menuItems[1]).toEqual(expectedObject);
         });
-
-
       });
 
+    });
+  });
+
+  fdescribe('add new items to store instance', function(){
+    it('should add X number if items based on addItemsNumber variable', function(){
+      scope.emptyMenuItems = [];
+      scope.addItemsNumber = 10;
+      scope.addItems();
+      expect(scope.emptyMenuItems.length).toBe(10);
     });
   });
 

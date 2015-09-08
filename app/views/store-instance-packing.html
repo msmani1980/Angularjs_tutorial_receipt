@@ -1,7 +1,7 @@
 <div class="fluid-container">
-<!--<step-wizard></step-wizard>-->
+  <!--<step-wizard></step-wizard>-->
 
-<form-error-dialog></form-error-dialog>
+  <form-error-dialog></form-error-dialog>
 
   <form name="createStoreInstance" class="well" ng-submit="submitForm()">
 
@@ -40,27 +40,31 @@
         <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
           <td>
             <input type="text" class="form-control" id="item-code" ng-model="item.itemDescription"
-                   disabled />
+                   disabled/>
           </td>
           <td>
-            <input type="text" class="form-control" id="required-quantity" ng-model="item.menuQuantity" placeholder="0" disabled />
+            <input type="text" class="form-control" id="required-quantity" ng-model="item.menuQuantity" placeholder="0"
+                   disabled/>
           </td>
           <td>
             <input type="text" class="form-control" id="picked-quantity" ng-model="item.quantity" placeholder="0">
           </td>
         </tr>
-        <!--                 <tr> -->
-        <!--                   <td></td> -->
-        <!--                   <td></td> -->
-        <!--                   <td> -->
-        <!--                     TODO: 'ADD ITEM' FUNCTIONALITY  -->
-        <!--                     <span id="pickListActionButtons"> -->
-        <!--                       <button type="button" class="btn btn-primary pull-right"> -->
-        <!--                         <i class="fa fa-plus"></i> Add Item -->
-        <!--                       </button> -->
-        <!--                     </span> -->
-        <!--                   </td> -->
-        <!--                 </tr> -->
+
+        <tr ng-repeat="item in emptyMenuItems track by $index"
+        ">
+        <td>
+          <input type="text" class="form-control" ng-model="itemDescription"
+                 disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="item.quantity" placeholder="{{$index}}">
+        </td>
+        </tr>
+
         </tbody>
       </table>
       <br>
@@ -70,7 +74,7 @@
         <div class="col-xs-4 col-md-3 text-right">
           <div class="input-group">
             <!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
-            <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+            <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" placeholder="1"/>
                   <span class="input-group-btn">
                     <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add
                       Items

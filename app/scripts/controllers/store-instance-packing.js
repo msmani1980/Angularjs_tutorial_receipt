@@ -10,20 +10,40 @@
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function ($scope, storeInstanceFactory, $routeParams, lodash) {
     var $this = this;
-    this.mergeMenuItems = function(menuItemsFromAPI) {
+    $scope.emptyMenuItems = [];
+    $scope.addItemsNumber = 1;
+
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    $scope.addItems = function () {
+      for (var i = 0; i < $scope.addItemsNumber; i ++) {
+        $scope.emptyMenuItems.push({
+          menuQuantity: 0
+        });
+      }
+    };
+
+    this.mergeMenuItems = function (menuItemsFromAPI) {
       if ($scope.menuItems.length <= 0) {
         $scope.menuItems = menuItemsFromAPI;
         return;
       }
 
       angular.forEach(menuItemsFromAPI, function (item) {
-        var itemMatch = lodash.findWhere($scope.menuItems, { itemMasterId: item.itemMasterId });
-        if(itemMatch) {
+        var itemMatch = lodash.findWhere($scope.menuItems, {itemMasterId: item.itemMasterId});
+        if (itemMatch) {
           lodash.extend(itemMatch, item);
         } else {
           $scope.menuItems.push(item);
         }
       });
+      hideLoadingModal();
     };
 
     function getItemsSuccessHandler(dataFromAPI) {
@@ -53,6 +73,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     function init() {
+      showLoadingModal('Loading Store Detail for Packing...');
       $scope.storeId = $routeParams.storeId;
       $scope.APIItems = [];
       $scope.menuItems = [];
