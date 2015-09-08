@@ -61,10 +61,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should attach all properties of JSON to scope', function () {
-        // TODO: refactor
-        angular.forEach(storeDetailsJSON, function (value, key) {
-          expect(scope[key]).toBe(storeDetailsJSON[key]);
-        });
+          expect(scope.storeDetails).toEqual(storeDetailsJSON);
       });
 
       it('should call getStoreInstanceMenuItems', function () {

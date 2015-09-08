@@ -20,16 +20,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl', function ($scope
 // TODO: getStoreInstanceItems to populate quantity
     var payload = {
       itemTypeId: 1,
-      scheduleDate: $scope.scheduleDate
+      scheduleDate: $scope.storeDetails.scheduleDate
     };
     storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId,
       payload).then(getStoreInstanceMenuItemsSuccessHandler);
   }
 
   function getStoreDetailsSuccessHandler(storeDetailsJSON) {
-    angular.forEach(storeDetailsJSON, function (value, key) {
-      $scope[key] = value;
-    });
+    $scope.storeDetails = storeDetailsJSON;
     getStoreInstanceMenuItems();
   }
 
