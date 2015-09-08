@@ -36,7 +36,6 @@ describe('Store Instance Create Controller', function () {
     createStoreInstanceDeferred,
     templateCache,
     compile,
-    createStoreInstanceDeferred,
     storeInstanceDispatchWizardConfig;
 
   // Initialize the controller and a mock scope
