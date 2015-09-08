@@ -17,7 +17,7 @@ fdescribe('Controller: StoreInstancePackingCtrl', function () {
   var servedStoreInstanceMenuItemsJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q, $routeParams) {
+  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     inject(function (_servedStoreInstanceMenuItems_) {
       servedStoreInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
     });
