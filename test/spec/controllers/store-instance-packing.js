@@ -6,6 +6,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance-menu-items.json'));
   beforeEach(module('served/store-instance-item-list.json'));
+  beforeEach(module('served/master-item-list.json'));
 
 
   var StoreInstancePackingCtrl;
@@ -18,12 +19,15 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var servedStoreInstanceMenuItemsJSON;
   var getStoreInstanceItemsDeferred;
   var servedStoreInstanceItemsJSON;
+  var getMasterItemsDeferred;
+  var servedMasterItemsJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_) {
+    inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedMasterItemList_) {
       servedStoreInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
       servedStoreInstanceItemsJSON = _servedStoreInstanceItemList_;
+      servedMasterItemsJSON = _servedMasterItemList_;
     });
     scope = $rootScope.$new();
     routeParams = {
@@ -39,9 +43,13 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     getStoreInstanceItemsDeferred = $q.defer();
     getStoreInstanceItemsDeferred.resolve(servedStoreInstanceItemsJSON);
 
+    getMasterItemsDeferred = $q.defer();
+    getMasterItemsDeferred.resolve(servedMasterItemsJSON);
+
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
+    spyOn(storeInstanceFactory, 'getItemsMasterList').and.returnValue(getMasterItemsDeferred.promise);
 
     StoreInstancePackingCtrl = $controller('StoreInstancePackingCtrl', {
       $scope: scope,
@@ -84,6 +92,15 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(scope.storeId);
       });
 
+      it('should call getItemsMasterList', function () {
+        var expectedPayload = {
+          itemTypeId: 1,
+          startDate: storeDetailsJSON.scheduleDate,
+          endDate: storeDetailsJSON.scheduleDate
+        };
+        expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
+      });
+
       describe('mergeMenuItems', function () {
         var newItems;
         beforeEach(function () {
@@ -124,7 +141,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     });
   });
 
-  fdescribe('add new items to store instance', function(){
+  describe('add new items to store instance', function(){
     it('should add X number if items based on addItemsNumber variable', function(){
       scope.emptyMenuItems = [];
       scope.addItemsNumber = 10;

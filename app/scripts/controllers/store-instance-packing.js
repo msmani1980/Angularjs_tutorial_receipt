@@ -66,10 +66,24 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler);
     }
 
+    function getMasterItemsListSuccess(itemsListJSON) {
+      $scope.masterItemsList = angular.copy(itemsListJSON.masterItems);
+    }
+
+    function getMasterItemsList() {
+      var filterPayload = {
+        itemTypeId: 1,
+        startDate: $scope.storeDetails.scheduleDate,
+        endDate: $scope.storeDetails.scheduleDate
+      };
+      storeInstanceFactory.getItemsMasterList(filterPayload).then(getMasterItemsListSuccess);
+    }
+
     function getStoreDetailsSuccessHandler(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
       getStoreInstanceItems();
       getStoreInstanceMenuItems();
+      getMasterItemsList();
     }
 
     function init() {

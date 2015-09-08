@@ -9,10 +9,14 @@
  */
 angular.module('ts5App').service('storeInstanceFactory',
   function (storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
-            menuMasterService, storesService, stationsService, $q) {
+            menuMasterService, storesService, stationsService, itemsService, $q) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
+    }
+
+    function getItemsMasterList(payload) {
+      return itemsService.getItemsList(payload, true);
     }
 
     function getCatererStationList() {
@@ -137,6 +141,7 @@ angular.module('ts5App').service('storeInstanceFactory',
 
     return {
       getCompanyId: getCompanyId,
+      getItemsMasterList: getItemsMasterList,
       getCatererStationList: getCatererStationList,
       getStation: getStation,
       getSchedules: getSchedules,

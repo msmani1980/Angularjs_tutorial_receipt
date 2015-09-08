@@ -51,11 +51,9 @@
           </td>
         </tr>
 
-        <tr ng-repeat="item in emptyMenuItems track by $index"
-        ">
+        <tr ng-repeat="item in emptyMenuItems track by $index">
         <td>
-          <input type="text" class="form-control" ng-model="itemDescription"
-                 disabled/>
+          <input type="text" class="form-control" ng-model="itemDescription"/>
         </td>
         <td>
           <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>

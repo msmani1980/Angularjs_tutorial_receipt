@@ -17,6 +17,7 @@ describe('Service: storeInstanceFactory', function () {
   var menuMasterService;
   var storesService;
   var stationsService;
+  var itemsService;
 
   var getStationDeferred;
   var getCarrierNumberDeferred;
@@ -53,7 +54,7 @@ describe('Service: storeInstanceFactory', function () {
     getStoreInstanceDeferred = $q.defer();
     getStoreInstanceDeferred.resolve(servedStoreInstanceJSON);
 
-
+    itemsService = $injector.get('itemsService');
     catererStationService = $injector.get('catererStationService');
     stationsService = $injector.get('stationsService');
     GlobalMenuService = $injector.get('GlobalMenuService');
@@ -64,6 +65,7 @@ describe('Service: storeInstanceFactory', function () {
     storesService = $injector.get('storesService');
 
     spyOn(catererStationService, 'getCatererStationList');
+    spyOn(itemsService, 'getItemsList');
     spyOn(GlobalMenuService.company, 'get').and.returnValue(companyId);
     spyOn(schedulesService, 'getSchedules');
     spyOn(stationsService, 'getStation').and.returnValue(getStationDeferred.promise);
@@ -96,6 +98,14 @@ describe('Service: storeInstanceFactory', function () {
     it('should call getMenuMasterList', function () {
       storeInstanceFactory.getMenuMasterList();
       expect(menuMasterService.getMenuMasterList).toHaveBeenCalled();
+    });
+  });
+
+  describe('itemsService calls', function () {
+    it('should call getItemsList with fetchMasterFlag set to true', function () {
+      var mockPayload = {foo: 'bars'};
+      storeInstanceFactory.getItemsMasterList(mockPayload);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith(mockPayload, true);
     });
   });
 
