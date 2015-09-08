@@ -96,7 +96,6 @@ angular.module('ts5App')
 
     this.createStoreInstanceErrorHandler = function(response){
       $this.hideLoadingModal();
-      $this.showMessage('failure','We couldn\'t create your Store Instance' );
       $scope.displayError = true;
       if(response.data) {
         $scope.formErrors = response.data;
