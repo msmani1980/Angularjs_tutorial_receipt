@@ -6,42 +6,7 @@
   <form name="createStoreInstance" class="well" ng-submit="submitForm()">
 
     <!-- INFORMATION BAR -->
-    <div class="well">
-      <table class="table">
-        <thead>
-        <tr>
-          <th>LMP Station</th>
-          <th>Store Number</th>
-          <th>Schedule Date</th>
-          <th>Schedule Number</th>
-          <th>Aircraft Tail Number</th>
-          <th>Store Instance Number</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>
-            <input type="text" class="form-control" ng-model="storeDetails.LMPStation" disabled />
-          </td>
-          <td>
-            <input type="text" class="form-control" ng-model="storeDetails.storeNumber" disabled />
-          </td>
-          <td>
-            <input type="text" class="form-control" ng-model="storeDetails.scheduleDate" disabled />
-          </td>
-          <td>
-            <input type="text" class="form-control" ng-model="storeDetails.scheduleNumber" disabled />
-          </td>
-          <td>
-            <input type="text" class="form-control" ng-model="storeDetails.carrierNumber" disabled />
-          </td>
-          <td>
-            <input type="text" class="form-control" ng-model="storeDetails.storeInstanceNumber" disabled />
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+    <store-instance-header></store-instance-header>
 
     <!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
     <div class="row">
