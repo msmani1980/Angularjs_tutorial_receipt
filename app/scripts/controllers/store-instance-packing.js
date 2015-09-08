@@ -1,5 +1,5 @@
 'use strict';
-/* global Map*/
+
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstancePackingCtrl
@@ -26,16 +26,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     }
 
-    function getStoreInstanceItems() {
-      storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler);
-    }
-
     function getItemsSuccessHandler(dataFromAPI) {
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
       });
       mergeMenuItems(menuItems);
+    }
+
+    function getStoreInstanceItems() {
+      storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler);
     }
 
     function getStoreInstanceMenuItems() {
