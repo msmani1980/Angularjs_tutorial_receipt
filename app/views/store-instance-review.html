@@ -151,17 +151,3 @@
   </form>
 
 </div>
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('#myDatepicker').datepicker();
-
-    $('#goToInPacking').on('click', function(e, data) {
-      $('[data-step=2]').trigger("click");
-    });
-
-    $('#goToAssignSeals').on('click', function(e, data) {
-      $('[data-step=3]').trigger("click");
-    });
-
-  });
-</script>
