@@ -2,9 +2,9 @@
 
 describe('Store Instance Create Controller', function () {
 
-  // load the controller's module
-  beforeEach(module('ts5App'));
   beforeEach(module(
+    'ts5App',
+    'template-module',
     'served/catering-stations.json',
     'served/menu-master-list.json',
     'served/carrier-numbers.json',
@@ -33,8 +33,11 @@ describe('Store Instance Create Controller', function () {
     postPayloadControl,
     dateUtility,
     storeInstanceCreatedJSON,
-    createStoreInstanceDeferred;
-  var storeInstanceDispatchWizardConfig;
+    createStoreInstanceDeferred,
+    createStoreInstanceDeferred,
+    templateCache,
+    compile,
+    storeInstanceDispatchWizardConfig;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope,$injector,
@@ -59,6 +62,8 @@ describe('Store Instance Create Controller', function () {
     carrierService = $injector.get('carrierService');
     storesService = $injector.get('storesService');
     storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
+    templateCache = $injector.get('$templateCache');
+    compile = $injector.get('$compile');
 
     getMenuMasterListDeferred = $q.defer();
     getMenuMasterListDeferred.resolve(menuMasterListJSON);
@@ -116,6 +121,20 @@ describe('Store Instance Create Controller', function () {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
   });
+
+  function renderView() {
+    var html = templateCache.get('/views/store-instance-create.html');
+    var compiled = compile(angular.element(html))($scope);
+    var view = angular.element(compiled[0]);
+    $scope.$digest();
+    return view;
+  }
+
+  function mockFormSubmission(form) {
+    form.triggerHandler('submit');
+    $scope.submitForm();
+    $scope.$digest();
+  }
 
   describe('when the controller loads', function() {
 
@@ -345,25 +364,128 @@ describe('Store Instance Create Controller', function () {
         expect(StoreInstanceCreateCtrl.createStoreInstanceErrorHandler).toHaveBeenCalledWith(errorResponse);
       });
 
-      it('should display a failure message', function() {
-        var message = 'We couldn\'t create your Store Instance';
-        expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('failure',message);
-      });
-
     });
 
   });
 
   describe('The submit form method', function () {
 
+    var view;
+    var form;
+
     beforeEach(function() {
+      spyOn(StoreInstanceCreateCtrl,'validateForm').and.callThrough();
       spyOn(StoreInstanceCreateCtrl,'createStoreInstance');
+      $scope.$digest();
+      view = renderView();
+      form = angular.element(view.find('form')[0]);
+    });
+
+    it('should call the validateForm method', function () {
+      mockFormSubmission(form);
+      expect(StoreInstanceCreateCtrl.validateForm).toHaveBeenCalled();
+    });
+
+    describe('the form validation method', function() {
+
+      it('should return false if the form is not valid', function () {
+        $scope.formData = {
+          menus:[]
+        };
+        $scope.$digest();
+        var formIsValid = StoreInstanceCreateCtrl.validateForm();
+        expect(formIsValid).toBeFalsy();
+      });
+
+      it('should return false no menus are passed', function () {
+        $scope.formData.menus = [];
+        $scope.$digest();
+        var formIsValid = StoreInstanceCreateCtrl.validateForm();
+        expect(formIsValid).toBeFalsy();
+      });
+
+      it('should return true if all the correct data is passed', function () {
+        $scope.$digest();
+        var formIsValid = StoreInstanceCreateCtrl.validateForm();
+        expect(formIsValid).toBeTruthy();
+      });
+
+    });
+
+
+
+    it('should call createStoreInstance if the form does validate', function () {
+      $scope.$digest();
+      mockFormSubmission(form);
+      expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('setting the validation classes on the input', function () {
+
+    var view;
+    var form;
+
+    beforeEach(function() {
+      view = renderView();
+      form = angular.element(view.find('form')[0]);
+    });
+
+    it('should return nothing if the field is pristine', function () {
+      var className = $scope.validateInput('ScheduleNumber');
+      expect(className).toEqual('');
+    });
+
+    it('should return .has-error if the field is invalid', function () {
+      $scope.createStoreInstance.ScheduleNumber.$setViewValue('');
+      mockFormSubmission(form);
+      var className = $scope.validateInput('ScheduleNumber');
+      expect(className).toEqual('has-error');
+    });
+
+    it('should return .has-success if the field is not invalid', function () {
+      $scope.createStoreInstance.ScheduleNumber.$setViewValue('SCHED12345');
+      mockFormSubmission(form);
+      var className = $scope.validateInput('ScheduleNumber');
+      expect(className).toEqual('has-success');
+    });
+
+  });
+
+  describe('setting the validation classes on the menus', function () {
+
+    var view;
+    var form;
+    var menuSelect;
+
+    beforeEach(function() {
+      view = renderView();
+      form = angular.element(view.find('form')[0]);
+      menuSelect = angular.element(form.find('ui-select')[0]);
       $scope.$digest();
     });
 
-    it('should call the createStoreInstance method', function () {
-      $scope.submitForm();
-      expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalled();
+    it('should return nothing if the form has not been submitted', function () {
+      var className = $scope.validateMenus();
+      expect(className).toEqual('');
+    });
+
+    it('should return .has-error if there are no menus', function () {
+      $scope.formData.menus = [];
+      $scope.$digest();
+      $scope.createStoreInstance.Menus.$setViewValue([]);
+      mockFormSubmission(form);
+      var className = $scope.validateMenus();
+      expect(className).toEqual('has-error');
+    });
+
+    it('should return .has-success if there are menus', function () {
+      $scope.$digest();
+      $scope.createStoreInstance.Menus.$setViewValue($scope.formData.menus);
+      mockFormSubmission(form);
+      var className = $scope.validateMenus();
+      expect(className).toEqual('has-success');
     });
 
   });

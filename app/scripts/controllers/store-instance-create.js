@@ -96,7 +96,6 @@ angular.module('ts5App')
 
     this.createStoreInstanceErrorHandler = function(response){
       $this.hideLoadingModal();
-      $this.showMessage('failure','We couldn\'t create your Store Instance' );
       $scope.displayError = true;
       if(response.data) {
         $scope.formErrors = response.data;
@@ -145,14 +144,49 @@ angular.module('ts5App')
       });
     };
 
+    this.validateForm = function() {
+      if($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
+        return true;
+      }
+      return false;
+    };
+
     this.init();
 
     $scope.submitForm = function() {
-      $this.createStoreInstance();
+      if($this.validateForm()) {
+        $this.createStoreInstance();
+      }
+      return false;
     };
 
     $scope.nextTrigger = function(){
       $this.createStoreInstance();
       return false;
     };
+
+    $scope.validateInput = function(fieldName) {
+      if($scope.createStoreInstance[fieldName].$pristine) {
+        return '';
+      }
+      if($scope.createStoreInstance[fieldName].$invalid) {
+        return 'has-error';
+      }
+      return 'has-success';
+    };
+
+    $scope.validateMenus = function() {
+      if(angular.isUndefined($scope.createStoreInstance.Menus) ||
+        $scope.createStoreInstance.Menus.$pristine) {
+        return '';
+      }
+      if($scope.formData.menus.length < 1) {
+        return 'has-error';
+      }
+      if($scope.formData.menus.length > 0) {
+        return 'has-success';
+      }
+
+    };
+
   });
