@@ -9,8 +9,8 @@
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function ($scope, storeInstanceFactory, $routeParams, lodash) {
-
-    function mergeMenuItems(menuItemsFromAPI) {
+    var $this = this;
+    this.mergeMenuItems = function(menuItemsFromAPI) {
       if ($scope.menuItems.length <= 0) {
         $scope.menuItems = menuItemsFromAPI;
         return;
@@ -24,14 +24,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $scope.menuItems.push(item);
         }
       });
-    }
+    };
 
     function getItemsSuccessHandler(dataFromAPI) {
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
       });
-      mergeMenuItems(menuItems);
+      $this.mergeMenuItems(menuItems);
     }
 
     function getStoreInstanceItems() {
@@ -39,7 +39,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     function getStoreInstanceMenuItems() {
-// TODO: getStoreInstanceItems to populate quantity
       var payload = {
         itemTypeId: 1,
         scheduleDate: $scope.storeDetails.scheduleDate

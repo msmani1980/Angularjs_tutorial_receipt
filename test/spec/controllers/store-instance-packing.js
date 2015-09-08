@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: StoreInstancePackingCtrl', function () {
+describe('Controller: StoreInstancePackingCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -69,7 +69,7 @@ fdescribe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should attach all properties of JSON to scope', function () {
-          expect(scope.storeDetails).toEqual(storeDetailsJSON);
+        expect(scope.storeDetails).toEqual(storeDetailsJSON);
       });
 
       it('should call getStoreInstanceMenuItems', function () {
@@ -84,6 +84,44 @@ fdescribe('Controller: StoreInstancePackingCtrl', function () {
         expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(scope.storeId);
       });
 
+      describe('mergeMenuItems', function () {
+        var newItems;
+        beforeEach(function () {
+          scope.menuItems = [
+            {
+              itemMasterId: 1,
+              fakeKey: 1
+            },
+            {
+              itemMasterId: 2,
+              fakeKey: 2
+            }
+          ];
+          newItems = [
+            {
+              itemMasterId: 2,
+              newKey: 3
+            }
+          ];
+        });
+
+        it('should merge duplicate items', function () {
+          StoreInstancePackingCtrl.mergeMenuItems(newItems);
+          expect(scope.menuItems.length).toBe(2);
+        });
+
+        it('should keep properties on duplicate items', function () {
+          var expectedObject = {
+            itemMasterId: 2,
+            fakeKey: 2,
+            newKey: 3
+          };
+          StoreInstancePackingCtrl.mergeMenuItems(newItems);
+          expect(scope.menuItems[1]).toEqual(expectedObject);
+        });
+
+
+      });
 
     });
   });
