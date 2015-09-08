@@ -5,6 +5,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance-menu-items.json'));
+  beforeEach(module('served/store-instance-item-list.json'));
 
 
   var StoreInstancePackingCtrl;
@@ -15,11 +16,14 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var getStoreDetailsDeferred;
   var getStoreInstanceMenuItemsDeferred;
   var servedStoreInstanceMenuItemsJSON;
+  var getStoreInstanceItemsDeferred;
+  var servedStoreInstanceItemsJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedStoreInstanceMenuItems_) {
+    inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_) {
       servedStoreInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
+      servedStoreInstanceItemsJSON = _servedStoreInstanceItemList_;
     });
     scope = $rootScope.$new();
     routeParams = {
@@ -32,8 +36,12 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     getStoreInstanceMenuItemsDeferred = $q.defer();
     getStoreInstanceMenuItemsDeferred.resolve(servedStoreInstanceMenuItemsJSON);
 
+    getStoreInstanceItemsDeferred = $q.defer();
+    getStoreInstanceItemsDeferred.resolve(servedStoreInstanceItemsJSON);
+
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
+    spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
 
     StoreInstancePackingCtrl = $controller('StoreInstancePackingCtrl', {
       $scope: scope,
@@ -72,9 +80,11 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeId, expectedPayload);
       });
 
-      it('should attach the menuItems to scope', function () {
-        expect(scope.menuItems).toBeDefined();
+      it('should call getStoreInstanceItems', function () {
+        expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(scope.storeId);
       });
+
+
     });
   });
 
