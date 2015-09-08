@@ -29,6 +29,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    function errorHandler(error) {
+      debugger;
+      hideLoadingModal();
+    }
+
     this.mergeMenuItems = function (menuItemsFromAPI) {
       if ($scope.menuItems.length <= 0) {
         $scope.menuItems = menuItemsFromAPI;
@@ -47,6 +52,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     function getItemsSuccessHandler(dataFromAPI) {
+      if (!dataFromAPI.response) {
+        hideLoadingModal();
+        return;
+      }
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
@@ -91,7 +100,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.storeId = $routeParams.storeId;
       $scope.APIItems = [];
       $scope.menuItems = [];
-      storeInstanceFactory.getStoreDetails($scope.storeId).then(getStoreDetailsSuccessHandler);
+      storeInstanceFactory.getStoreDetails($scope.storeId).then(getStoreDetailsSuccessHandler, errorHandler);
     }
 
     init();

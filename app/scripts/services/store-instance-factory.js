@@ -134,7 +134,7 @@ angular.module('ts5App').service('storeInstanceFactory',
         $q.all(storeDetailPromiseArray).then(function (responseCollection) {
           getStoreDetailsDeferred.resolve(formatResponseCollection(responseCollection, dataFromAPI));
         });
-      });
+      }, getStoreDetailsDeferred.reject);
 
       return getStoreDetailsDeferred.promise;
     }
