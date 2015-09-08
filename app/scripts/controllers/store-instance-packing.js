@@ -7,19 +7,37 @@
  * # StoreInstancePackingCtrl
  * Controller of the ts5App
  */
-angular.module('ts5App').controller('StoreInstancePackingCtrl', function ($scope, storeInstanceFactory) {
-    storeInstanceFactory.getStoreDetails(5).then(function (storeDetailsJSON) {
-      angular.forEach(storeDetailsJSON, function(value, key){
-        $scope[key] = value;
-      });
-    });
+angular.module('ts5App').controller('StoreInstancePackingCtrl', function ($scope, storeInstanceFactory, $routeParams) {
 
-    // TODO: getStoreInstanceItems to populate quantity
-    storeInstanceFactory.getStoreInstanceMenuItems(13, {itemTypeId: 1, scheduleDate: $scope.scheduleDate}).then(function(dataFromAPI) {
-      $scope.menuItems = angular.copy(dataFromAPI.response);
-      angular.forEach($scope.menuItems, function (item) {
-        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
-      });
+  function getStoreInstanceMenuItemsSuccessHandler(dataFromAPI) {
+    $scope.menuItems = angular.copy(dataFromAPI.response);
+    angular.forEach($scope.menuItems, function (item) {
+      item.itemDescription = item.itemCode + ' -  ' + item.itemName;
     });
+  }
 
-  });
+  function getStoreInstanceMenuItems() {
+// TODO: getStoreInstanceItems to populate quantity
+    var payload = {
+      itemTypeId: 1,
+      scheduleDate: $scope.scheduleDate
+    };
+    storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId,
+      payload).then(getStoreInstanceMenuItemsSuccessHandler);
+  }
+
+  function getStoreDetailsSuccessHandler(storeDetailsJSON) {
+    angular.forEach(storeDetailsJSON, function (value, key) {
+      $scope[key] = value;
+    });
+    getStoreInstanceMenuItems();
+  }
+
+  function init() {
+    $scope.storeId = $routeParams.storeId;
+    storeInstanceFactory.getStoreDetails().then(getStoreDetailsSuccessHandler);
+  }
+
+  init();
+
+});

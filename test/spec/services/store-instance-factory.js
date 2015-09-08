@@ -183,7 +183,7 @@ describe('Service: storeInstanceFactory', function () {
     });
   });
 
-  fdescribe('getStoreDetails', function () {
+  describe('getStoreDetails', function () {
     var storeId;
     var storeDetails;
     beforeEach(function () {
