@@ -16,9 +16,9 @@ describe('Service: storeInstanceService', function () {
   describe('getStoreInstancesList', function () {
     it('should make GET request to API', function () {
       var expectedURL = /dispatch\/store-instances$/;
-      httpBackend.expectGET(expectedURL).respond(200, {success: true});
+      httpBackend.expectGET(expectedURL).respond(200, {});
       storeInstanceService.getStoreInstancesList().then(function (response) {
-        expect(response.success).toBe(true);
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
@@ -28,9 +28,9 @@ describe('Service: storeInstanceService', function () {
     it('should make GET request to API', function () {
       var expectedURL = /dispatch\/store-instances\/\d+$/;
       var fakeId = 38;
-      httpBackend.expectGET(expectedURL).respond(200, {id: fakeId});
+      httpBackend.expectGET(expectedURL).respond(200, {});
       storeInstanceService.getStoreInstance(fakeId).then(function (response) {
-        expect(response.id).toBe(fakeId);
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
@@ -42,11 +42,10 @@ describe('Service: storeInstanceService', function () {
       var fakePayload = {
         key: 'value'
       };
-      httpBackend.expectPOST(expectedURL).respond(200, angular.extend({}, fakePayload, {id: 'newFakeId'}));
+      httpBackend.expectPOST(expectedURL).respond(200, {});
 
       storeInstanceService.createStoreInstance(fakePayload).then(function (response) {
-        expect(response.id).toBe('newFakeId');
-        expect(response.key).toBe(fakePayload.key);
+        expect(response).toBeDefined();
       });
 
       httpBackend.flush();
@@ -61,11 +60,10 @@ describe('Service: storeInstanceService', function () {
         id: fakeId,
         key: 'value'
       };
-      httpBackend.expectPUT(expectedURL).respond(200, fakePayload);
+      httpBackend.expectPUT(expectedURL).respond(200, {});
 
       storeInstanceService.updateStoreInstance(fakeId, fakePayload).then(function (response) {
-        expect(response.id).toBe(fakePayload.id);
-        expect(response.key).toBe(fakePayload.key);
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
@@ -75,9 +73,9 @@ describe('Service: storeInstanceService', function () {
     it('should make DELETE request to API', function () {
       var expectedURL = /dispatch\/store-instances\/\d+$/;
       var fakeId = 12;
-      httpBackend.expectDELETE(expectedURL).respond(200, {id: fakeId});
+      httpBackend.expectDELETE(expectedURL).respond(200, {});
       storeInstanceService.deleteStoreInstance(fakeId).then(function (response) {
-        expect(response.id).toBe(fakeId);
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
@@ -90,13 +88,10 @@ describe('Service: storeInstanceService', function () {
       var payload = {
         fakeKey: 'fakeValue'
       };
-      var mockResponse = angular.extend({}, {
-        id: fakeId
-      }, payload);
-      httpBackend.expectGET(expectedURL).respond(200, mockResponse);
+
+      httpBackend.expectGET(expectedURL).respond(200, {});
       storeInstanceService.getStoreInstanceMenuItems(fakeId, payload).then(function (response) {
-        expect(response.id).toBe(fakeId);
-        expect(response.fakeKey).toBe('fakeValue');
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
@@ -109,13 +104,10 @@ describe('Service: storeInstanceService', function () {
       var payload = {
         fakeKey: 'fakeValue'
       };
-      var mockResponse = angular.extend({}, {
-        id: fakeId
-      }, payload);
-      httpBackend.expectGET(expectedURL).respond(200, mockResponse);
+
+      httpBackend.expectGET(expectedURL).respond(200, {});
       storeInstanceService.getStoreInstanceItemList(fakeId, payload).then(function (response) {
-        expect(response.id).toBe(fakeId);
-        expect(response.fakeKey).toBe('fakeValue');
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
@@ -126,13 +118,9 @@ describe('Service: storeInstanceService', function () {
       var expectedURL = /dispatch\/store-instances\/\d+\/items\/\d+$/;
       var fakeStoreId = 38;
       var fakeItemId = 1;
-      httpBackend.expectGET(expectedURL).respond(200, {
-        id: fakeStoreId,
-        itemId: fakeItemId
-      });
+      httpBackend.expectGET(expectedURL).respond(200, {});
       storeInstanceService.getStoreInstanceItem(fakeStoreId, fakeItemId).then(function (response) {
-        expect(response.id).toBe(fakeStoreId);
-        expect(response.itemId).toBe(fakeItemId);
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
@@ -146,16 +134,10 @@ describe('Service: storeInstanceService', function () {
       var payload = {
         fakeKey: 'fakeValue'
       };
-      var mockResponse = angular.extend({}, {
-        id: fakeStoreId,
-        itemId: fakeItemId
-      }, payload);
 
-      httpBackend.expectPUT(expectedURL).respond(200, mockResponse);
+      httpBackend.expectPUT(expectedURL).respond(200, {});
       storeInstanceService.updateStoreInstanceItem(fakeStoreId, fakeItemId, payload).then(function (response) {
-        expect(response.id).toBe(fakeStoreId);
-        expect(response.itemId).toBe(fakeItemId);
-        expect(response.fakeKey).toBe(payload.fakeKey);
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
@@ -166,15 +148,10 @@ describe('Service: storeInstanceService', function () {
       var expectedURL = /dispatch\/store-instances\/\d+\/items\/\d+$/;
       var fakeStoreId = 38;
       var fakeItemId = 1;
-      var mockResponse = {
-        id: fakeStoreId,
-        itemId: fakeItemId
-      };
 
-      httpBackend.expectDELETE(expectedURL).respond(200, mockResponse);
+      httpBackend.expectDELETE(expectedURL).respond(200, {});
       storeInstanceService.deleteStoreInstanceItem(fakeStoreId, fakeItemId).then(function (response) {
-        expect(response.id).toBe(fakeStoreId);
-        expect(response.itemId).toBe(fakeItemId);
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
@@ -187,14 +164,9 @@ describe('Service: storeInstanceService', function () {
       var payload = {
         fakeKey: 'fakeValue'
       };
-      var mockResponse = angular.extend({}, {
-        id: fakeStoreId
-      }, payload);
-
-      httpBackend.expectPOST(expectedURL).respond(200, mockResponse);
+      httpBackend.expectPOST(expectedURL).respond(200, {});
       storeInstanceService.createStoreInstanceItem(fakeStoreId, payload).then(function (response) {
-        expect(response.id).toBe(fakeStoreId);
-        expect(response.fakeKey).toBe(payload.fakeKey);
+        expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
