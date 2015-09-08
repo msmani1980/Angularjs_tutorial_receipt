@@ -30,10 +30,10 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       beforeEach(function () {
         storeDetailsJSON = {
-          LMPStation: "ORD",
-          storeNumber: "180485",
-          scheduleDate: "2015-08-13",
-          scheduleNumber: "SCHED123",
+          LMPStation: 'ORD',
+          storeNumber: '180485',
+          scheduleDate: '2015-08-13',
+          scheduleNumber: 'SCHED123',
           storeInstanceNumber: 5
         };
         getStoreDetailsDeferred.resolve(storeDetailsJSON);
