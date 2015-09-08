@@ -7,7 +7,8 @@
  * # StoreInstancePackingCtrl
  * Controller of the ts5App
  */
-angular.module('ts5App').controller('StoreInstancePackingCtrl', function ($scope, storeInstanceFactory, $routeParams) {
+angular.module('ts5App').controller('StoreInstancePackingCtrl',
+  function ($scope, storeInstanceFactory, $routeParams, lodash) {
 
     function mergeMenuItems(menuItemsFromAPI) {
       if ($scope.menuItems.length <= 0) {
@@ -15,10 +16,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl', function ($scope
         return;
       }
 
-      if ($scope.APIItems.length <= 0) {
-        $scope.APIItems = menuItemsFromAPI;
-        return;
-      }
+      var hash = new lodash.map();
+      $scope.menuItems.concat(menuItemsFromAPI).forEach(function (obj) {
+        hash.set(obj.itemMasterId, Object.assign(hash.get(obj.itemMasterId) || {}, obj))
+      });
+
+      //$scope.menuItems = lodash.map($scope.menuItems, function(item){
+      //  return lodash.extend(item, lodash.findWhere(menuItemsFromAPI, { itemMasterId: item.itemMasterId }));
+      //});
 
       //var hash = new Map();
       //$scope.menuItems.concat(menuItemsFromAPI).forEach(function (obj) {

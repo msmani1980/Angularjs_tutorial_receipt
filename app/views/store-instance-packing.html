@@ -72,7 +72,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in menuItems JOIN APIItems | where: menuItems.itemMasterId === APIItems.itemMasterId">
+        <tr ng-repeat="item in menuItems">
           <td>
             <input type="text" class="form-control" id="item-code" ng-model="item.itemDescription"
                    disabled />

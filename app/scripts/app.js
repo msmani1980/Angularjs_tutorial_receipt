@@ -25,7 +25,8 @@ angular.module('ts5App', [
   'ja.qr',
   'ngToast',
   'ang-drag-drop',
-  'infinite-scroll'
+  'infinite-scroll',
+  'ngLodash'
 ]).factory('defaultData', [
   function () {
     var defaultData = {
