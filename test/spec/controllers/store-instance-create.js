@@ -35,7 +35,7 @@ describe('Store Instance Create Controller', function () {
     storeInstanceCreatedJSON,
     createStoreInstanceDeferred,
     templateCache,
-    compile;
+    compile,
     createStoreInstanceDeferred,
     storeInstanceDispatchWizardConfig;
 
