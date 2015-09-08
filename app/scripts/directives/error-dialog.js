@@ -28,7 +28,6 @@ angular.module('ts5App')
           if (field.$invalid && field.$viewValue) {
             var fieldName = field.$name;
             $scope.errorPattern.push(fieldName);
-            console.log($scope.errorPattern);
           }
         });
       };

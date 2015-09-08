@@ -8,9 +8,10 @@ describe('Directive: errorDialog', function() {
 
   var element;
   var scope;
-  var directiveScope;
   var compile;
-  var controller;
+  var form;
+  var input;
+  var testForm;
 
   beforeEach(inject(function($rootScope, $compile) {
     scope = $rootScope.$new();
@@ -18,11 +19,15 @@ describe('Directive: errorDialog', function() {
   }));
 
   function compileDirective() {
-    element = angular.element('<error-dialog></error-dialog>');
-    element = compile(element)(scope);
+    form = angular.element('<form name="form">' +
+      '<input type="text" ng-model="model.deliveryNote" name="deliveryNote" required="true" pattern="regexp.number"/>' +
+      '<error-dialog></error-dialog>' +
+      '</form>');
+    form = compile(form)(scope);
     scope.$digest();
-    directiveScope = element.isolateScope();
-    controller = element.controller('errorDialogController');
+    element = angular.element(form.find('error-dialog')[0]);
+    input = angular.element(form.find('input')[0]);
+    testForm = scope.form;
   }
 
   describe('When the error-dialog directive is compiled, it', function() {
@@ -48,16 +53,24 @@ describe('Directive: errorDialog', function() {
   describe('When errorRequired has errors', function() {
 
     beforeEach(inject(function() {
-      scope.errorRequired = ['Delivery Note Number'];
       compileDirective();
+      testForm.deliveryNote.$setViewValue('');
     }));
 
-    it('should contain a list item', function() {
-      expect(element.find('li.ng-scope')).toBeDefined();
+    it('should contain 1 list item', function() {
+      expect(element.find('li').length).toBe(1);
+    });
+
+    it('should contain 1 item in errorRequired', function() {
+      expect(scope.errorRequired).toEqual(['deliveryNote']);
     });
 
     it('should contain 1 list item', function() {
       expect(element.find('li').length).toBe(1);
+    });
+
+    it('should contain 1 item in errorRequired', function() {
+      expect(scope.errorRequired).toEqual(['deliveryNote']);
     });
 
   });
@@ -65,18 +78,54 @@ describe('Directive: errorDialog', function() {
   describe('When errorPattern has errors', function() {
 
     beforeEach(inject(function() {
-      scope.errorPattern = ['Delivery Note Number'];
       compileDirective();
+      testForm.deliveryNote.$setViewValue('@@@');
     }));
 
-    it('should contain a list item', function() {
-      expect(element.find('li.ng-scope')).toBeDefined();
+    it('should contain 1 list item', function() {
+      expect(element.find('li').length).toBe(1);
+    });
+
+    it('should contain 1 item in errorPattern', function() {
+      expect(scope.errorPattern).toEqual(['deliveryNote']);
     });
 
     it('should contain 1 list item', function() {
       expect(element.find('li').length).toBe(1);
     });
 
+    it('should contain 1 item in errorPattern', function() {
+      expect(scope.errorPattern).toEqual(['deliveryNote']);
+    });
+
+  });
+
+  describe('When inputs are valid', function() {
+
+    beforeEach(inject(function() {
+      compileDirective();
+      testForm.deliveryNote.$setViewValue('000456');
+    }));
+
+    it('should contain no items in errorRequired', function() {
+      expect(scope.errorRequired).toEqual([]);
+    });
+
+    it('should contain no items in errorPattern', function() {
+      expect(scope.errorRequired).toEqual([]);
+    });
+
+    describe('displayError', function() {
+
+      it('should be defined', function() {
+        expect(scope.displayError).toBeDefined();
+      });
+
+      it('should be false', function() {
+        expect(scope.displayError).toBeFalsy();
+      });
+
+    });
   });
 
 });
