@@ -35,7 +35,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl', function ($scope
 
   function init() {
     $scope.storeId = $routeParams.storeId;
-    storeInstanceFactory.getStoreDetails().then(getStoreDetailsSuccessHandler);
+    storeInstanceFactory.getStoreDetails($scope.storeId).then(getStoreDetailsSuccessHandler);
   }
 
   init();

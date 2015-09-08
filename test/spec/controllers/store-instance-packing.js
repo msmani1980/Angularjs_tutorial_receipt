@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: StoreInstancePackingCtrl', function () {
+describe('Controller: StoreInstancePackingCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -57,7 +57,7 @@ fdescribe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should get the store details', function () {
-        expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalled();
+        expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(scope.storeId);
       });
 
       it('should attach all properties of JSON to scope', function () {
