@@ -5,7 +5,7 @@
 
   <form-error-dialog></form-error-dialog>
 
-  <form name="createStoreInstance" class="well" ng-submit="submitForm()">
+  < name="createStoreInstance" class="well" ng-submit="submitForm()">
 
     <!-- INFORMATION BAR -->
     <store-instance-header></store-instance-header>
@@ -26,124 +26,111 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="panel panel-default">
-          <div class="panel-heading accordion-panel-heading">
-                  <span class="clickable panel-collapsed">
-                    <h3>Pick List</h3><i class="fa fa-chevron-down"></i>
-                  </span>
-          </div>
-          <div class="panel-body">
+    <accordion class="store-instance-review-accordion">
+      <accordion-group>
+        <accordion-heading class="accordion-heading">
+          Pick List <i class="fa fa-chevron-down"></i>
+        </accordion-heading>
 
-            <div class="col-xs-12 text-right">
-              <button type="button" class="btn btn-info" id="goToPacking">Edit</button>
-            </div>
-
-            <table class="table table-striped pick-list">
-              <thead>
-              <tr>
-                <th>Retail Item Details</th>
-                <th width="15%">Required Quantity</th>
-                <th width="15%">Picked Quantity</th>
-              </tr>
-              </thead>
-
-              <tbody>
-              <tr>
-                <td>
-                  <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
-                </td>
-                <td>
-                  <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="10" disabled="disabled">
-                </td>
-                <td>
-                  <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="10" disabled="disabled">
-                </td>
-              </tr>
-              <tr class="has-discrepancy">
-                <td>
-                  <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0002- Sprite" disabled="disabled">
-                </td>
-                <td>
-                  <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
-                </td>
-                <td>
-                  <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0" disabled="disabled">
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0003 - Chicken Sandwich" disabled="disabled">
-                </td>
-                <td>
-                  <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
-                </td>
-                <td>
-                  <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20" disabled="disabled">
-                </td>
-              </tr>
-              </tbody>
-            </table>
-
-          </div>
+        <div class="col-xs-12 text-right">
+          <button type="button" class="btn btn-info" id="goToPacking">Edit</button>
         </div>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="panel panel-default">
-          <div class="panel-heading accordion-panel-heading">
-                  <span class="clickable panel-collapsed">
-                    <h3>Seal Number Assignment</h3><i class="fa fa-chevron-down"></i>
-                  </span>
-          </div>
-          <div class="panel-body">
+        <table class="table table-striped pick-list">
+          <thead>
+          <tr>
+            <th>Retail Item Details</th>
+            <th width="15%">Required Quantity</th>
+            <th width="15%">Picked Quantity</th>
+          </tr>
+          </thead>
 
-            <div class="col-xs-12 text-right">
-              <button type="button" class="btn btn-info" id="goToAssignSeals">Edit</button>
-            </div>
+          <tbody>
+          <tr>
+            <td>
+              <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
+            </td>
+            <td>
+              <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="10" disabled="disabled">
+            </td>
+            <td>
+              <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="10" disabled="disabled">
+            </td>
+          </tr>
+          <tr class="has-discrepancy">
+            <td>
+              <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0002- Sprite" disabled="disabled">
+            </td>
+            <td>
+              <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
+            </td>
+            <td>
+              <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0" disabled="disabled">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0003 - Chicken Sandwich" disabled="disabled">
+            </td>
+            <td>
+              <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
+            </td>
+            <td>
+              <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20" disabled="disabled">
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </accordion-group>
+    </accordion>
 
-            <table class="table">
-              <thead>
-              <tr>
-                <th>Seal Type</th>
-                <th>Seal Numbers</th>
-              </tr>
-              </thead>
+    <accordion class="store-instance-review-accordion">
+      <accordion-group>
+        <accordion-heading class="accordion-heading">
+          Seal Number Assignment <i class="fa fa-chevron-down"></i>
+        </accordion-heading>
 
-              <tbody>
-              <tr>
-                <td width="15%">
-                  <input type="text" class="form-control" id="sealColor" placeholder="Outbound" style="background-color: #66CCFF" disabled="disabled">
-                </td>
-                <td>12465, 12466, 12467, 12468, 12469, 12470, 12471, 12472, 12473, 12474, 12475, 12476, 12477, 12478</td>
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="sealColor" placeholder="Hand Over" style="background-color: #33CC33" disabled="disabled">
-                </td>
-                <td>13465, 13466, 13467</td>
-              </tr>
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="sealColor" placeholder="Inbound" style="background-color: #FFCC00" disabled="disabled">
-                </td>
-                <td>12420, 12421, 12422, 12423, 12424</td>
-              <tr>
-              <tr>
-                <td>
-                  <input type="text" class="form-control" id="sealColor" placeholder="High Security" style="background-color: #FFFFFF" disabled="disabled">
-                </td>
-                <td>11465, 11466</td>
-              <tr>
-              </tbody>
-            </table>
-
-          </div>
+        <div class="col-xs-12 text-right">
+          <button type="button" class="btn btn-info" id="goToAssignSeals">Edit</button>
         </div>
-      </div>
-    </div>
+
+        <table class="table">
+          <thead>
+          <tr>
+            <th>Seal Type</th>
+            <th>Seal Numbers</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr>
+            <td width="15%">
+              <input type="text" class="form-control" id="sealColor" placeholder="Outbound" style="background-color: #66CCFF" disabled="disabled">
+            </td>
+            <td>12465, 12466, 12467, 12468, 12469, 12470, 12471, 12472, 12473, 12474, 12475, 12476, 12477, 12478</td>
+          <tr>
+            <td>
+              <input type="text" class="form-control" id="sealColor" placeholder="Hand Over" style="background-color: #33CC33" disabled="disabled">
+            </td>
+            <td>13465, 13466, 13467</td>
+          </tr>
+          <tr>
+            <td>
+              <input type="text" class="form-control" id="sealColor" placeholder="Inbound" style="background-color: #FFCC00" disabled="disabled">
+            </td>
+            <td>12420, 12421, 12422, 12423, 12424</td>
+          <tr>
+          <tr>
+            <td>
+              <input type="text" class="form-control" id="sealColor" placeholder="High Security" style="background-color: #FFFFFF" disabled="disabled">
+            </td>
+            <td>11465, 11466</td>
+          <tr>
+          </tbody>
+        </table>
+      </accordion-group>
+    </accordion>
+
     <footer class="text-right">
       <button type="button" class="btn btn-default btn-primary btn-next">Dispatch</button>
     </footer>
