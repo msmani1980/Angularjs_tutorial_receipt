@@ -11,11 +11,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl', function ($scope
 
 
   function mergeMenuItems(newMenuItems) {
-
-  }
-
-  function getStoreInstanceItems() {
-    storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler);
+    // temporary
+    angular.extend($scope.menuItems, newMenuItems);
   }
 
   function getItemsSuccessHandler(dataFromAPI) {
@@ -26,8 +23,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl', function ($scope
     mergeMenuItems(menuItems);
   }
 
+  function getStoreInstanceItems() {
+    storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler);
+  }
+
   function getStoreInstanceMenuItems() {
-// TODO: getStoreInstanceItems to populate quantity
     var payload = {
       itemTypeId: 1,
       scheduleDate: $scope.storeDetails.scheduleDate
