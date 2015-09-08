@@ -34,9 +34,9 @@ describe('Store Instance Create Controller', function () {
     dateUtility,
     storeInstanceCreatedJSON,
     createStoreInstanceDeferred,
-    createStoreInstanceDeferred,
     templateCache,
-    compile,
+    compile;
+    createStoreInstanceDeferred,
     storeInstanceDispatchWizardConfig;
 
   // Initialize the controller and a mock scope
@@ -61,9 +61,9 @@ describe('Store Instance Create Controller', function () {
     catererStationService = $injector.get('catererStationService');
     carrierService = $injector.get('carrierService');
     storesService = $injector.get('storesService');
-    storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
     templateCache = $injector.get('$templateCache');
     compile = $injector.get('$compile');
+    storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
 
     getMenuMasterListDeferred = $q.defer();
     getMenuMasterListDeferred.resolve(menuMasterListJSON);
