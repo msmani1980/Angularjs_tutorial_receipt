@@ -30,8 +30,7 @@
       <li data-step="1" data-name="createStoreInstance" class="active"><span class="badge">1</span>Create Store Instance<span class="chevron"></span></li>
       <li data-step="2" data-name="inboundSeals"><span class="badge">2</span>Inbound Seals<span class="chevron"></span></li>
       <li data-step="3" data-name="packing"><span class="badge">3</span>Packing<span class="chevron"></span></li>
-      <li data-step="4" data-name="assignSeals"><span class="badge">4</span>Assign Seals<span class="chevron"></span></li>
-      <li data-step="5" data-name="dispatch"><span class="badge">5</span>Review &amp; Dispatch<span class="chevron"></span></li>
+      <li data-step="4" data-name="dispatch"><span class="badge">4</span>Review &amp; Dispatch<span class="chevron"></span></li>
     </ul>
 
     <div class="step-content">
@@ -229,12 +228,12 @@
           </div>
           
           <div class="well well-sm">
-            <label class="checkbox-custom checkbox-inline" id="inboundBrokenSealsCheckbox" data-initialize="checkbox"> 
-              <input class="sr-only btn btn-default" data-toggle=".inbound-broken-seals" type="checkbox" value="1"> 
-              <span class="checkbox-label">Inbound Seals Broken</span>
+            <label class="checkbox-custom checkbox-inline" id="inboundSealsTamperedCheckbox" data-initialize="checkbox"> 
+              <input class="sr-only btn btn-default" data-toggle=".inbound-seals-tampered" type="checkbox" value="1"> 
+              <span class="checkbox-label">Inbound Seals Tampered</span>
             </label>
             
-            <textarea class="form-control inbound-broken-seals" id="inboundBrokenSealsNotes" placeholder="Notes"></textarea>
+            <textarea class="form-control inbound-seals-tampered" id="inboundSealsTamperedNotes" placeholder="Notes"></textarea>
           </div>
           
           <!-- PANE 2 - Inbound Seals - Inbound --------------------------------------------------------------------- -->
@@ -427,232 +426,8 @@
         </ng-form>
       </div>
 
-      <!-- PANE 4 - Assign Seals --------------------------------------------------------------------- -->
+      <!-- PANE 4 - Dispatch --------------------------------------------------------------------- -->
       <div class="step-pane sample-pane" data-step="4">
-        <ng-form action="">
-
-          <!-- INFORMATION BAR -->
-          <div class="well info-bar-status info-bar-status-seals">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>LMP Station</th>
-                  <th>Store Number</th>
-                  <th>Schedule Date</th>
-                  <th>Schedule Number</th>
-                  <th>Aircraft Tail Number</th>
-                  <th>Store Instance Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <input type="text" class="form-control" id="lmpStation" placeholder="LGW" disabled="disabled">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled="disabled">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control" id="scheduleDate" placeholder="12/25/2015" disabled="disabled">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control" id="scheduleNumber" placeholder="1234" disabled="disabled">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control" id="aircraftTailNumber" placeholder="AB-CDE" disabled="disabled">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control" id="storeInstanceNumber" placeholder="012345" disabled="disabled">
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- PANE 4 - Assign Seals - Outbound --------------------------------------------------------------------- -->
-          <div class="well seal-color seal-color-blue">
-            <div class="row">
-
-              <div class="col-xs-12">
-                <label for="seal-numbers-outbound">Seal Numbers*:</label>
-<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
-                <input type="text" id="seal-numbers-outbound" value="" placeholder="Add Seals Here, Enter After Each Seal">
-                <script>
-                  $('#seal-numbers-outbound').selectize({
-                    persist: false,
-                    createOnBlur: true,
-                    create: true
-                  });
-                </script>
-              </div>
-              
-            </div>
-            <br>
-            
-            <div class="row">
-
-<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-3 col-sm-2 col-md-1">
-                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-outbound"> 
-                  <span class="checkbox-label">Sequential</span>
-                </label>
-              </div>
-              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-outbound">
-                <div class="input-group">
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
-                  </span>
-                </div>
-              </div>
-          
-            </div>
-          </div>
-  
-          <!-- PANE 4 - Assign Seals - Hand Over --------------------------------------------------------------------- -->
-          <div class="well seal-color seal-color-green seal-color-with-copy-buttons">
-
-            <div class="text-right">
-<!-- TODO: THIS WILL COPY EXISTING SEAL NUMBERS FROM OUTBOUND INTO HAND OVER SEALS -->
-              <button class="btn btn-primary" type="button">Copy From Outbound</button>
-            </div>
-
-            <div class="row">
-            
-              <div class="col-xs-12">
-                <label for="seal-numbers-hand-over">Seal Numbers:</label>
-<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
-                <input type="text" id="seal-numbers-hand-over" value="" placeholder="Add Seals Here, Enter After Each Seal">
-                <script>
-                  $('#seal-numbers-hand-over').selectize({
-                    persist: false,
-                    createOnBlur: true,
-                    create: true
-                  });
-                </script>
-              </div>
-              
-            </div>
-            <br>
-            
-            <div class="row">
-            
-<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-3 col-sm-2 col-md-1">
-                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-hand-over">
-                  <span class="checkbox-label">Sequential</span>
-                </label>
-              </div>
-              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-hand-over">
-                <div class="input-group">
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
-                  </span>
-                </div>
-              </div>
-              
-            </div>
-          </div>
-  
-          <!-- PANE 4 - Assign Seals - Inbound --------------------------------------------------------------------- -->
-          <div class="well seal-color seal-color-yellow seal-color-with-copy-buttons">
-
-            <div class="text-right">
-<!-- TODO: THIS WILL COPY EXISTING SEAL NUMBERS FROM HAND OVER INTO INBOUND SEALS -->
-              <button class="btn btn-primary" type="button">Copy From Hand Over</button>
-<!-- TODO: THIS WILL COPY EXISTING SEAL NUMBERS FROM OUTBOUND INTO INBOUND SEALS -->
-              <button class="btn btn-primary" type="button">Copy From Outbound</button>
-            </div>
-
-            <div class="row">
-            
-              <div class="col-xs-12">
-                <label for="seal-numbers-inbound">Seal Numbers*:</label>
-<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
-                <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal">
-                <script>
-                  $('#seal-numbers-inbound').selectize({
-                    persist: false,
-                    createOnBlur: true,
-                    create: true
-                  });
-                </script>
-              </div>
-              
-            </div>
-            <br>
-            
-            <div class="row">
-            
-<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-3 col-sm-2 col-md-1">
-                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-inbound">
-                  <span class="checkbox-label">Sequential</span>
-                </label>
-              </div>
-              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-inbound">
-                <div class="input-group">
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
-                  </span>
-                </div>
-              </div>
-              
-            </div>            
-          </div>
-  
-          <!-- PANE 4 - Assign Seals - High Security --------------------------------------------------------------------- -->
-          <div class="well seal-color seal-color-white">
-              
-            <div class="row">
-            
-              <div class="col-xs-12">
-                <label for="seal-numbers-high-security">Seal Numbers:</label>
-<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
-                <input type="text" id="seal-numbers-high-security" value="" placeholder="Add Seals Here, Enter After Each Seal">
-                <script>
-                  $('#seal-numbers-high-security').selectize({
-                    persist: false,
-                    createOnBlur: true,
-                    create: true
-                  });
-                </script>
-              </div>
-              
-            </div>
-            <br>
-            
-            <div class="row">
-
-<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-3 col-sm-2 col-md-1">
-                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-high-security">
-                  <span class="checkbox-label">Sequential</span>
-                </label>
-              </div>
-              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-high-security">
-                <div class="input-group">
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
-                  </span>
-                </div>
-              </div>
-              
-            </div>            
-          </div>
-
-        </ng-form>
-      </div>
-
-      <!-- PANE 5 - Dispatch --------------------------------------------------------------------- -->
-      <div class="step-pane sample-pane" data-step="5">
         <ng-form action="">
 
           <!-- INFORMATION BAR -->
@@ -796,61 +571,6 @@
                         </td>
                       </tr>
                     </tbody>
-                  </table>
-                  
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="row">
-            <div class="col-xs-12">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <span class="clickable panel-collapsed">
-                    <h3>Seal Number Assignment</h3><i class="fa fa-chevron-down"></i>
-                  </span>
-                </div>
-                <div class="panel-body" style="display:none;">
-                
-                  <div class="col-xs-12">
-                    <button type="button" class="btn btn-info pull-right" id="goToPacking">Edit</button>
-                  </div>
-              
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Seal Type</th>
-                        <th>Seal Numbers</th>
-                      </tr>
-                    </thead>
-                    
-                    <tbody>
-                      <tr>
-                        <td width="15%">
-                          <input type="text" class="form-control" id="sealColor" placeholder="Outbound" style="background-color: #66CCFF" disabled="disabled">
-                        </td>
-                        <td>12465, 12466, 12467, 12468, 12469, 12470, 12471, 12472, 12473, 12474, 12475, 12476, 12477, 12478</td>
-                      <tr>
-                        <td>
-                          <input type="text" class="form-control" id="sealColor" placeholder="Hand Over" style="background-color: #33CC33" disabled="disabled">
-                        </td>
-                        <td>13465, 13466, 13467</td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input type="text" class="form-control" id="sealColor" placeholder="Inbound" style="background-color: #FFCC00" disabled="disabled">
-                        </td>
-                        <td>12420, 12421, 12422, 12423, 12424</td>
-                      <tr>
-                      <tr>
-                        <td>
-                          <input type="text" class="form-control" id="sealColor" placeholder="High Security" style="background-color: #FFFFFF" disabled="disabled">
-                        </td>
-                        <td>11465, 11466</td>
-                      <tr>
-                    </tbody>
-                    
                   </table>
                   
                 </div>
