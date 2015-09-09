@@ -9,7 +9,12 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
-                                                   storeInstanceFactory) {
+                                                   storeInstanceFactory, $location) {
+
+    $scope.goToWizardStep = function($index){
+      $scope.wizardStepToIndex = $index;
+      $scope.stepWizardPrevTrigger();
+    };
 
     $scope.stepWizardPrevTrigger = function(){
       $scope.showLooseDataAlert = true;
@@ -17,11 +22,8 @@ angular.module('ts5App')
     };
 
     $scope.looseDataAlertConfirmTrigger = function(){
-      console.log('confirm triggered in controller');
-    };
-
-    $scope.looseDataAlertCancelTrigger = function(){
-      console.log('cancel triggered in controller');
+      var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
+      $location.url(uri);
     };
 
     function getItemsSuccessHandler(dataFromAPI) {

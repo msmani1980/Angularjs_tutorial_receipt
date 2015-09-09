@@ -1,5 +1,5 @@
-<div class="alert alert-danger alert-dismissible" role="alert" ng-show="showAlert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+<div id="loose-data-alert" class="alert alert-danger alert-dismissible" role="alert" ng-show="showAlertDialog">
+  <button type="button" class="close" aria-label="Close" ng-click="hideAlert()"><span aria-hidden="true">×</span></button>
   <h4>{{ title }}</h4>
   <p>{{ message }}</p>
   <p>

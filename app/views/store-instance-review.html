@@ -2,7 +2,7 @@
   <!--<step-wizard></step-wizard>-->
 
   <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()"></step-wizard>
-  <loose-data-alert show-alert="showLooseDataAlert" confirm-trigger="looseDataAlertConfirmTrigger()" cancel-trigger="looseDataAlertCancelTrigger()"></loose-data-alert>
+  <loose-data-alert show-alert="showLooseDataAlert" confirm-trigger="looseDataAlertConfirmTrigger()"></loose-data-alert>
 
   <form-error-dialog></form-error-dialog>
 
@@ -35,7 +35,7 @@
         </accordion-heading>
         <div class="row">
           <div class="col-xs-12 text-right">
-            <button type="button" class="btn btn-info" id="goToPacking">Edit</button>
+            <button type="button" class="btn btn-info" ng-click="goToWizardStep(1)">Edit</button>
           </div>
         </div>
         <store-instance-pack-list></store-instance-pack-list>
@@ -49,7 +49,7 @@
         </accordion-heading>
 
         <div class="col-xs-12 text-right">
-          <button type="button" class="btn btn-info" id="goToAssignSeals">Edit</button>
+          <button type="button" class="btn btn-info" ng-click="goToWizardStep(2)">Edit</button>
         </div>
 
         <table class="table">
