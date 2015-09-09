@@ -493,7 +493,7 @@ describe('Store Instance Create Controller', function () {
       $scope.formData.scheduleDate = '10/01/2015';
       $scope.$digest();
     });
- 
+
     it('should call getMenuMasterList', function () {
       expect(StoreInstanceCreateCtrl.getMenuMasterList).toHaveBeenCalled();
     });
@@ -508,6 +508,34 @@ describe('Store Instance Create Controller', function () {
 
     it('should call setStoresList', function () {
       expect(StoreInstanceCreateCtrl.setStoresList).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('generating the query', function () {
+
+    beforeEach(function() {
+      spyOn(StoreInstanceCreateCtrl,'generateQuery').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should call the generateQuery function when getMenuMasterList is called', function () {
+      StoreInstanceCreateCtrl.getMenuMasterList();
+      expect(StoreInstanceCreateCtrl.generateQuery).toHaveBeenCalled();
+    });
+
+    it('should call the generateQuery function when getStoresList is called', function () {
+      StoreInstanceCreateCtrl.getStoresList();
+      expect(StoreInstanceCreateCtrl.generateQuery).toHaveBeenCalled();
+    });
+
+    it('should call return a query object', function () {
+      $scope.formData.scheduleDate = '10/01/2015';
+      $scope.$digest();
+      var queryControl = {
+        startDate: '20151001'
+      };
+      expect(StoreInstanceCreateCtrl.generateQuery()).toEqual(queryControl);
     });
 
   });
