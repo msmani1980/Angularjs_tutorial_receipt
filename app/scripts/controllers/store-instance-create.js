@@ -8,7 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast, dateUtility,GlobalMenuService) {
+  .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast,
+                                                   dateUtility,GlobalMenuService,
+                                                   storeInstanceDispatchWizardConfig,
+                                                    $location) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -18,6 +21,7 @@ angular.module('ts5App')
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
    };
+    $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
 
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
    var companyId = GlobalMenuService.company.get();
@@ -69,7 +73,7 @@ angular.module('ts5App')
       this.resetErrors();
       this.displayLoadingModal('Creating a store instance');
       var payload = this.formatPayload();
-      if(angular.isUndefined(payload)) {
+      if(!payload) {
         return false;
       }
       storeInstanceFactory.createStoreInstance(payload).then(
@@ -82,13 +86,16 @@ angular.module('ts5App')
       $this.hideLoadingModal();
       if(response.id){
         $this.showMessage('success','Store Instance created id: ' + response.id);
-        //TODO: Move user to packing step
+        if($scope.wizardStepToIndex) {
+          $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(response.id);
+          var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
+          $location.urt(uri);
+        }
       }
     };
 
     this.createStoreInstanceErrorHandler = function(response){
       $this.hideLoadingModal();
-      $this.showMessage('failure','We couldn\'t create your Store Instance' );
       $scope.displayError = true;
       if(response.data) {
         $scope.formErrors = response.data;
@@ -137,10 +144,49 @@ angular.module('ts5App')
       });
     };
 
+    this.validateForm = function() {
+      if($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
+        return true;
+      }
+      return false;
+    };
+
     this.init();
 
     $scope.submitForm = function() {
+      if($this.validateForm()) {
+        $this.createStoreInstance();
+      }
+      return false;
+    };
+
+    $scope.nextTrigger = function(){
       $this.createStoreInstance();
+      return false;
+    };
+
+    $scope.validateInput = function(fieldName) {
+      if($scope.createStoreInstance[fieldName].$pristine) {
+        return '';
+      }
+      if($scope.createStoreInstance[fieldName].$invalid) {
+        return 'has-error';
+      }
+      return 'has-success';
+    };
+
+    $scope.validateMenus = function() {
+      if(angular.isUndefined($scope.createStoreInstance.Menus) ||
+        $scope.createStoreInstance.Menus.$pristine) {
+        return '';
+      }
+      if($scope.formData.menus.length < 1) {
+        return 'has-error';
+      }
+      if($scope.formData.menus.length > 0) {
+        return 'has-success';
+      }
+
     };
 
   });

@@ -10,6 +10,15 @@
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="//www.fuelcdn.com/fuelux/3.6.3/css/fuelux.min.css" rel="stylesheet">
 <link rel="stylesheet" href="styles/main.css">
+
+  <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
+  <link rel="stylesheet" href="bower_components/select2/select2.css" />
+  
+  <!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+  <link rel="stylesheet" href="bower_components/selectize/dist/css/selectize.css" />
+  <script src="bower_components/selectize/examples/js/jquery.js"></script>
+  <script src="bower_components/selectize/dist/js/standalone/selectize.js"></script>
+  
 <link rel="stylesheet" href="styles/static-pages.css">
 </head>
 
@@ -132,42 +141,45 @@
               </div>
             </div>
   
-            <div class="form-group">
-              <label for="scheduleNumber" class="col-sm-4 control-label">Schedule Number*</label>
+            <div class="form-group">        
+              <label for="scheduleNumber" class="col-sm-4 control-label">Schedule Number*</label>              
               <div class="col-sm-5">
-                <input type="text" class="form-control" id="scheduleNumber" placeholder="1234">
+<!-- TODO: RESTRICT TO 1 SELECTION ONLY, CUSTOMIZE FOR SCHEDULE NUMBER -->
+                <ui-select multiple ng-model="formData.tags" theme="bootstrap">
+                  <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
+                    <div ng-bind-html="tag.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
-  
+              
             <div class="form-group">
               <label for="selectMenu" class="col-sm-4 control-label">Select Menu*</label>
               <div class="col-sm-5">
-  <!-- TODO: THIS WILL USE ANGULAR MULTIPLE SELECT -->
-  <!--               <ui-select multiple ng-model="formData.tags" theme="bootstrap"> -->
-  <!--                 <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }} -->
-  <!--                 </ui-select-match> -->
-  <!--                 <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'"> -->
-  <!--                   <div ng-bind-html="tag.name | highlight: $select.search"></div> -->
-  <!--                 </ui-select-choices> -->
-  <!--               </ui-select> -->
-                <select class="form-control" id="selectMenu">
-                  <option>Breakfast</option>
-                  <option>Lunch</option>
-                  <option>Dinner</option>
-                  <option>Snack</option>
-                </select>
+  <!-- TODO: THIS WILL USE ANGULAR MULTIPLE SELECT, CUSTOMIZE FOR MENU & DROPDOWN IF POSSIBILE-->
+                <ui-select multiple ng-model="formData.tags" theme="bootstrap">
+                  <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
+                    <div ng-bind-html="tag.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
             
             <div class="form-group">
               <label for="selectMenu" class="col-sm-4 control-label">Aircraft Tail Number</label>
               <div class="col-sm-5">
-                <select class="form-control" id="selectMenu">
-                  <option>AB-CDE</option>
-                  <option>CD-ABC</option>
-                  <option>1X-345</option>
-                  <option>34-ABC</option>
-                </select>
+<!-- TODO: RESTRICT TO 1 SELECTION ONLY, CUSTOMIZE FOR AIRCRAFT TAIL NUMBER -->
+                <ui-select multiple ng-model="formData.tags" theme="bootstrap">
+                  <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
+                    <div ng-bind-html="tag.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
   
@@ -180,7 +192,7 @@
         <ng-form action="">
 
           <!-- INFORMATION BAR -->
-          <div class="well">
+          <div class="well info-bar-status info-bar-status-inbound-seals">
             <table class="table">
               <thead>
                 <tr>
@@ -227,44 +239,38 @@
           </div>
           
           <!-- PANE 2 - Inbound Seals - Inbound --------------------------------------------------------------------- -->
-          <div class="well seal-color-yellow">
-
-<!-- TODO: HIDDEN ROW, DEFAULT TO NO SEALS -->            
-<!--             <div class="well" ng-repeat="newItem in newItems track by $index"> -->
-<!--               <div class="row"> -->
-<!--                 <div class="col-xs-12 col-sm-6 col-md-2"> -->
-<!--                   <div class="form-group"> -->
-<!--                     <label>Seal Number</label> -->
-<!--                     <input type="text" class="form-control" id="sealNumber" placeholder="12465"> -->
-<!--                   </div> -->
-<!--                 </div> -->
-    
-<!--                 <div class="col-xs-12 col-sm-6 col-md-8 text-right"> -->
-<!--                   <button type="button" class="btn btn-sm btn-danger" ng-click="removeNewItemRow($index)"> -->
-<!--                     <i class="fa fa-close"></i> -->
-<!--                   </button> -->
-<!--                 </div> -->
-<!--               </div> -->
-<!--             </div> -->
-    
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7"></div>
-              <div class="col-xs-4 col-md-3 text-right">
-                <div class="input-group">
-<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
-                  </span>
-                </div>
+          <div class="well seal-color seal-color-yellow">
+          
+            <div class="row">
+              <div class="col-xs-12">
+                <label for="seal-numbers-inbound-inbound">Seal Numbers*:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-inbound-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal">
+                <script>
+                  $('#seal-numbers-inbound-inbound').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
               </div>
+            </div>
+            <br>
+            
+            <div class="row">
 <!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-4 col-md-2">
-                <div>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
-                    <span class="checkbox-label">Sequential</span>
-                  </label>
+              <div class="col-xs-3 col-sm-2 col-md-1">
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-inbound">
+                  <span class="checkbox-label">Sequential</span>
+                </label>
+              </div>
+              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-inbound">
+                <div class="input-group">
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
+                  </span>
                 </div>
               </div>
             </div>
@@ -272,80 +278,41 @@
           </div>
   
           <!-- PANE 2 - Inbound Seals - High Security --------------------------------------------------------------------- -->
-          <div class="well seal-color-white">
+          <div class="well seal-color seal-color-white">
           
-            <div class="well well-sm" ng-repeat="newItem in newItems track by $index">
              <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-2">
-                  <div class="form-group">
-                    <label>Seal Number</label>
-                    <input type="text" class="form-control" id="sealNumber" placeholder="12465">
-                  </div>
-                </div>
-    
-                <div class="col-xs-12 col-sm-6 col-md-8 text-right">
-                  <button type="button" class="btn btn-sm btn-danger" ng-click="removeNewItemRow($index)">
-                    <i class="fa fa-close"></i>
-                  </button>
-                </div>
+              <div class="col-xs-12">
+                <label for="seal-numbers-inbound-high-security">Seal Numbers:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-inbound-high-security" value="" placeholder="Add Seals Here, Enter After Each Seal">
+                <script>
+                  $('#seal-numbers-inbound-high-security').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
               </div>
             </div>
-
-            <div class="well well-sm" ng-repeat="newItem in newItems track by $index">
-             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-2">
-                  <div class="form-group">
-                    <label>Seal Number</label>
-                    <input type="text" class="form-control" id="sealNumber" placeholder="12466">
-                  </div>
-                </div>
-    
-                <div class="col-xs-12 col-sm-6 col-md-8 text-right">
-                  <button type="button" class="btn btn-sm btn-danger" ng-click="removeNewItemRow($index)">
-                    <i class="fa fa-close"></i>
-                  </button>
-                </div>
+            <br>
+            
+            <div class="row">
+<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
+              <div class="col-xs-3 col-sm-2 col-md-1">
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-high-security">
+                  <span class="checkbox-label">Sequential</span>
+                </label>
               </div>
-            </div>
-
-            <div class="well well-sm" ng-repeat="newItem in newItems track by $index">
-             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-2">
-                  <div class="form-group">
-                    <label>Seal Number</label>
-                    <input type="text" class="form-control" id="sealNumber" placeholder="12467">
-                  </div>
-                </div>
-    
-                <div class="col-xs-12 col-sm-6 col-md-8 text-right">
-                  <button type="button" class="btn btn-sm btn-danger" ng-click="removeNewItemRow($index)">
-                    <i class="fa fa-close"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-    
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7"></div>
-              <div class="col-xs-4 col-md-3 text-right">
+              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-high-security">
                 <div class="input-group">
-<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
                   <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
+                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
                   </span>
                 </div>
               </div>
-<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-4 col-md-2">
-                <div>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
-                    <span class="checkbox-label">Sequential</span>
-                  </label>
-                </div>
-              </div>
-            </div>
+            </div> 
             
           </div>
 
@@ -357,7 +324,7 @@
         <ng-form action="">
         
           <!-- INFORMATION BAR -->
-          <div class="well">
+          <div class="well info-bar-status info-bar-status-packing">
             <table class="table">
               <thead>
                 <tr>
@@ -408,21 +375,6 @@
                        placeholder="Coke" ng-readonly="readOnly">
               </div>
             </div>
-<!-- ORIGINAL FILTER "CODE" & "NAME" -->
-<!--             <div class="col-xs-12 col-sm-2"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Item Code</label> -->
-<!--                 <input ng-model="filterItemCode" type="text" class="form-control" id="filter-item-code" -->
-<!--                        placeholder="1234" ng-readonly="readOnly"> -->
-<!--               </div> -->
-<!--             </div> -->
-<!--             <div class="col-xs-12 col-sm-2"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Item Name</label> -->
-<!--                 <input ng-model="filterItemName" type="text" class="form-control" id="filter-item-name" -->
-<!--                        placeholder="Coke" ng-readonly="readOnly"> -->
-<!--               </div> -->
-<!--             </div> -->
           </div>
 
           <div class="well">
@@ -431,7 +383,6 @@
               <div class="col-xs-6">
                 <h3>Pick List</h3>
               </div>
-            
             </div>
             
             <table class="table table-striped pick-list">
@@ -601,6 +552,19 @@
                 </tr>
               </tbody>
             </table>
+            <br>
+            <div class="row" ng-hide="readOnly">
+              <div class="col-xs-4 col-md-9"></div>
+              <div class="col-xs-4 col-md-3 text-right">
+                <div class="input-group">
+<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Items</button>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
         </ng-form>
@@ -611,7 +575,7 @@
         <ng-form action="">
 
           <!-- INFORMATION BAR -->
-          <div class="well">
+          <div class="well info-bar-status info-bar-status-seals">
             <table class="table">
               <thead>
                 <tr>
@@ -629,122 +593,201 @@
                     <input type="text" class="form-control" id="lmpStation" placeholder="LGW" disabled="disabled">
                   </td>
                   <td>
-                    <input type="text" class="form-control" id="Date" placeholder="12/25/2105" disabled="disabled">
+                    <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled="disabled">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" id="scheduleDate" placeholder="12/25/2015" disabled="disabled">
                   </td>
                   <td>
                     <input type="text" class="form-control" id="scheduleNumber" placeholder="1234" disabled="disabled">
                   </td>
                   <td>
-                    <input type="text" class="form-control" id="storeNumber" placeholder="123456" disabled="disabled">
-                  </td>
-                  <td>
                     <input type="text" class="form-control" id="aircraftTailNumber" placeholder="AB-CDE" disabled="disabled">
                   </td>
                   <td>
-                    <input type="text" class="form-control" id="storeInstanceNumber" placeholder="123456" disabled="disabled">
+                    <input type="text" class="form-control" id="storeInstanceNumber" placeholder="012345" disabled="disabled">
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          
+
           <!-- PANE 4 - Assign Seals - Outbound --------------------------------------------------------------------- -->
-          <div class="well seal-color-blue">
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7"></div>
-              <div class="col-xs-4 col-md-3 text-right">
+          <div class="well seal-color seal-color-blue">
+            <div class="row">
+
+              <div class="col-xs-12">
+                <label for="seal-numbers-outbound">Seal Numbers*:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-outbound" value="" placeholder="Add Seals Here, Enter After Each Seal">
+                <script>
+                  $('#seal-numbers-outbound').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
+              </div>
+              
+            </div>
+            <br>
+            
+            <div class="row">
+
+<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
+              <div class="col-xs-3 col-sm-2 col-md-1">
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-outbound"> 
+                  <span class="checkbox-label">Sequential</span>
+                </label>
+              </div>
+              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-outbound">
                 <div class="input-group">
-<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
                   <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
+                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
                   </span>
                 </div>
               </div>
-<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-4 col-md-2">
-                <div>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
-                    <span class="checkbox-label">Sequential</span>
-                  </label>
-                </div>
-              </div>
+          
             </div>
           </div>
   
           <!-- PANE 4 - Assign Seals - Hand Over --------------------------------------------------------------------- -->
-          <div class="well seal-color-green">
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7"></div>
-              <div class="col-xs-4 col-md-3 text-right">
+          <div class="well seal-color seal-color-green seal-color-with-copy-buttons">
+
+            <div class="text-right">
+<!-- TODO: THIS WILL COPY EXISTING SEAL NUMBERS FROM OUTBOUND INTO HAND OVER SEALS -->
+              <button class="btn btn-primary" type="button">Copy From Outbound</button>
+            </div>
+
+            <div class="row">
+            
+              <div class="col-xs-12">
+                <label for="seal-numbers-hand-over">Seal Numbers:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-hand-over" value="" placeholder="Add Seals Here, Enter After Each Seal">
+                <script>
+                  $('#seal-numbers-hand-over').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
+              </div>
+              
+            </div>
+            <br>
+            
+            <div class="row">
+            
+<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
+              <div class="col-xs-3 col-sm-2 col-md-1">
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-hand-over">
+                  <span class="checkbox-label">Sequential</span>
+                </label>
+              </div>
+              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-hand-over">
                 <div class="input-group">
-<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
                   <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
+                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
                   </span>
                 </div>
               </div>
-<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-4 col-md-2">
-                <div>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
-                    <span class="checkbox-label">Sequential</span>
-                  </label>
-                </div>
-              </div>
+              
             </div>
           </div>
   
           <!-- PANE 4 - Assign Seals - Inbound --------------------------------------------------------------------- -->
-          <div class="well seal-color-yellow">
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7"></div>
-              <div class="col-xs-4 col-md-3 text-right">
+          <div class="well seal-color seal-color-yellow seal-color-with-copy-buttons">
+
+            <div class="text-right">
+<!-- TODO: THIS WILL COPY EXISTING SEAL NUMBERS FROM HAND OVER INTO INBOUND SEALS -->
+              <button class="btn btn-primary" type="button">Copy From Hand Over</button>
+<!-- TODO: THIS WILL COPY EXISTING SEAL NUMBERS FROM OUTBOUND INTO INBOUND SEALS -->
+              <button class="btn btn-primary" type="button">Copy From Outbound</button>
+            </div>
+
+            <div class="row">
+            
+              <div class="col-xs-12">
+                <label for="seal-numbers-inbound">Seal Numbers*:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal">
+                <script>
+                  $('#seal-numbers-inbound').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
+              </div>
+              
+            </div>
+            <br>
+            
+            <div class="row">
+            
+<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
+              <div class="col-xs-3 col-sm-2 col-md-1">
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-inbound">
+                  <span class="checkbox-label">Sequential</span>
+                </label>
+              </div>
+              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-inbound">
                 <div class="input-group">
-<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
                   <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
+                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
                   </span>
                 </div>
               </div>
-<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-4 col-md-2">
-                <div>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
-                    <span class="checkbox-label">Sequential</span>
-                  </label>
-                </div>
-              </div>
+              
             </div>            
           </div>
   
           <!-- PANE 4 - Assign Seals - High Security --------------------------------------------------------------------- -->
-          <div class="well seal-color-white">
-            <div class="row" ng-hide="readOnly">
-              <div class="col-xs-4 col-md-7"></div>
-              <div class="col-xs-4 col-md-3 text-right">
+          <div class="well seal-color seal-color-white">
+              
+            <div class="row">
+            
+              <div class="col-xs-12">
+                <label for="seal-numbers-high-security">Seal Numbers:</label>
+<!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
+                <input type="text" id="seal-numbers-high-security" value="" placeholder="Add Seals Here, Enter After Each Seal">
+                <script>
+                  $('#seal-numbers-high-security').selectize({
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                  });
+                </script>
+              </div>
+              
+            </div>
+            <br>
+            
+            <div class="row">
+
+<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
+              <div class="col-xs-3 col-sm-2 col-md-1">
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-high-security">
+                  <span class="checkbox-label">Sequential</span>
+                </label>
+              </div>
+              <div class="col-xs-6 col-sm-3 col-md-2 add-sequential-seals-high-security">
                 <div class="input-group">
-<!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
-                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+                  <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
                   <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Seals</button>
+                    <button class="btn btn-primary" type="button"><i class="fa fa-plus"></i> Add</button>
                   </span>
                 </div>
               </div>
-<!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
-              <div class="col-xs-4 col-md-2">
-                <div>
-                  <label class="checkbox-custom checkbox-inline" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                    <input class="sr-only btn btn-default" type="checkbox" value="1"> 
-                    <span class="checkbox-label">Sequential</span>
-                  </label>
-                </div>
-              </div>
+              
             </div>            
           </div>
 
@@ -756,7 +799,7 @@
         <ng-form action="">
 
           <!-- INFORMATION BAR -->
-          <div class="well">
+          <div class="well info-bar-status info-bar-status-dispatch">
             <table class="table">
               <thead>
                 <tr>
@@ -807,285 +850,286 @@
                        placeholder="Coke" ng-readonly="readOnly">
               </div>
             </div>
-<!-- ORIGINAL FILTER "CODE" & "NAME" -->
-<!--             <div class="col-xs-12 col-sm-2"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Item Code</label> -->
-<!--                 <input ng-model="filterItemCode" type="text" class="form-control" id="filter-item-code" -->
-<!--                        placeholder="1234" ng-readonly="readOnly"> -->
-<!--               </div> -->
-<!--             </div> -->
-<!--             <div class="col-xs-12 col-sm-2"> -->
-<!--               <div class="form-group"> -->
-<!--                 <label>Item Name</label> -->
-<!--                 <input ng-model="filterItemName" type="text" class="form-control" id="filter-item-name" -->
-<!--                        placeholder="Coke" ng-readonly="readOnly"> -->
-<!--               </div> -->
-<!--             </div> -->
-          </div>
-          
-          <div class="well">
-            <table class="table">
-              <div class="row">
-                <div class="col-xs-10">
-                  <h3>Inbound Seals</h3>
-                </div>
-                <div class="col-xs-2">
-                  <button type="button" class="btn btn-info pull-right" id="goToInboundSeals">Edit</button>
-                </div>
-              </div>
-              
-              <thead>
-                <tr>
-                  <th>Seal Type</th>
-                  <th>Seal Color</th>
-                  <th>Seal Numbers</th>
-                </tr>
-              </thead>
-              
-              <tbody>
-                <tr>
-                  <td width="15%">Inbound</td>
-                  <td width="15%">
-                    <input type="text" class="form-control" id="sealColor" placeholder="Yellow" style="background-color: #FFCC00" disabled="disabled">
-                  </td>
-                  <td>12420, 12421, 12422, 12423, 12424</td>
-                <tr>
-                <tr>
-                  <td>High Security</td>
-                  <td>
-                    <input type="text" class="form-control" id="sealColor" placeholder="White" style="background-color: #FFFFFF" disabled="disabled">
-                  </td>
-                  <td>11465, 11466</td>
-                <tr>
-              </tbody>
-              
-            </table>
-          </div>
-          
-          <div class="well">
-            <div class="row">
-              <div class="col-xs-10">
-                <h3>Pick List</h3>
-              </div>
-              <div class="col-xs-2">
-                <button type="button" class="btn btn-info pull-right" id="goToPacking">Edit</button>
-              </div>
-            </div>
-            
-            <table class="table table-striped pick-list">
-              <thead>
-                <tr>
-                  <th>Retail Item Details</th>
-                  <th width="10%">Inbound Quantity</th>
-                  <th width="10%">Required Quantity</th>
-                  <th width="10%">Picked Quantity</th>
-                  <th width="10%">Ullage</th>
-                  <th>Ullage Reason</th>
-                </tr>
-              </thead>
-              
-              <tbody>
-                <tr>
-                  <td>
-                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="10" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="10" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="10" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="0" disabled="disabled">
-                  </td>
-                  <td>
-                    <select class="form-control" id="ullage-reason" disabled="disabled">
-                      <option>Broken</option>
-                      <option>Lost</option>
-                      <option>Not Present</option>
-                      <option>Dropped</option>
-                    </select>
-                  </td>
-                </tr>
-                <tr class="has-discrepancy">
-                  <td>
-                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0002- Sprite" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="18" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="2" disabled="disabled">
-                  </td>
-                  <td>
-                    <select class="form-control" id="ullage-reason" disabled="disabled">
-                      <option>Broken</option>
-                      <option>Lost</option>
-                      <option>Not Present</option>
-                      <option>Dropped</option>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0003 - Chicken Sandwich" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20" disabled="disabled">
-                  </td>
-                  <td>
-                    <select class="form-control" id="ullage-reason" disabled="disabled">
-                      <option>Broken</option>
-                      <option>Lost</option>
-                      <option>Not Present</option>
-                      <option>Dropped</option>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0004 - 7-Up" disabled="disabled">
-                  </td>
-                  <td>
-<!-- TODO: ANGULAR HIDE WHEN NOT NEEDED -->
-<!--                     <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20"> -->
-                  </td>
-                  <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="10" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0" disabled="disabled">
-                  </td>
-                  <td>
-<!-- TODO: ANGULAR HIDE WHEN NOT NEEDED -->
-<!--                     <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20"> -->
-                  </td>
-                  <td>
-<!-- TODO: ANGULAR HIDE WHEN NOT NEEDED -->
-<!--                     <select class="form-control" id="ullage-reason"> -->
-<!--                       <option>Broken</option> -->
-<!--                       <option>Lost</option> -->
-<!--                       <option>Not Present</option> -->
-<!--                       <option>Dropped</option> -->
-<!--                     </select> -->
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div>
 
-          <div class="well">
-            <div class="row">
-              <div class="col-xs-10">
-                <h3>Offload List</h3>
-              </div>
-              <div class="col-xs-2">
-                <button type="button" class="btn btn-info pull-right" id="goToPacking">Edit</button>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <span class="clickable panel-collapsed">
+                    <h3>Inbound Seals</h3><i class="fa fa-chevron-down"></i>
+                  </span>
+                </div>
+                <div class="panel-body" style="display:none;">
+                
+                  <div class="col-xs-12">
+                    <button type="button" class="btn btn-info pull-right" id="goToPacking">Edit</button>
+                  </div>
+              
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Seal Type</th>
+                        <th>Seal Numbers</th>
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                      <tr>
+                        <td width="15%">
+                          <input type="text" class="form-control" id="sealColor" placeholder="Inbound" style="background-color: #FFCC00" disabled="disabled">
+                        </td>
+                        <td>12420, 12421, 12422, 12423, 12424</td>
+                      <tr>
+                      <tr>
+                        <td>
+                          <input type="text" class="form-control" id="sealColor" placeholder="High Security" style="background-color: #FFFFFF" disabled="disabled">
+                        </td>
+                        <td>11465, 11466</td>
+                      <tr>
+                    </tbody>
+                  </table>
+                  
+                </div>
               </div>
             </div>
-            
-            <table class="table table-striped offload-list">
-              <thead>
-                <tr>
-                  <th>Retail Item Details</th>
-                  <th width="10%">Inbound Quantity</th>
-                  <th width="10%">Ullage</th>
-                  <th>Ullage Reason</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0006 - Bacardi" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20" disabled="disabled">
-                  </td>
-                  <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20" disabled="disabled">
-                  </td>
-                  <td>
-                    <select class="form-control" id="ullage-reason" disabled="disabled">
-                      <option>Broken</option>
-                      <option>Lost</option>
-                      <option>Not Present</option>
-                      <option>Dropped</option>
-                    </select>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div>
-          
-          <div class="well">
-            <table class="table">
-              <div class="row">
-                <div class="col-xs-10">
-                  <h3>Seal Number Assignment</h3>
+
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <span class="clickable panel-collapsed">
+                    <h3>Packing</h3><i class="fa fa-chevron-down"></i>
+                  </span>
                 </div>
-                <div class="col-xs-2">
-                  <button type="button" class="btn btn-info pull-right" id="goToAssignSeals">Edit</button>
+                <div class="panel-body" style="display:none;">
+                
+                  <div class="row">            
+                    <div class="col-xs-10">
+                      <h3>Pick List</h3>
+                    </div>
+                    
+                    <div class="col-xs-2">
+                      <button type="button" class="btn btn-info pull-right" id="goToPacking">Edit</button>
+                    </div>
+                  </div>
+                   
+                  <table class="table table-striped pick-list">
+                    <thead>
+                      <tr>
+                        <th>Retail Item Details</th>
+                        <th width="10%">Inbound Quantity</th>
+                        <th width="10%">Required Quantity</th>
+                        <th width="10%">Picked Quantity</th>
+                        <th width="10%">Ullage</th>
+                        <th>Ullage Reason</th>
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                      <tr>
+                        <td>
+                          <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="10" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="10" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="10" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="0" disabled="disabled">
+                        </td>
+                        <td>
+                          <select class="form-control" id="ullage-reason" disabled="disabled">
+                            <option>Broken</option>
+                            <option>Lost</option>
+                            <option>Not Present</option>
+                            <option>Dropped</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr class="has-discrepancy">
+                        <td>
+                          <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0002- Sprite" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="18" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="2" disabled="disabled">
+                        </td>
+                        <td>
+                          <select class="form-control" id="ullage-reason" disabled="disabled">
+                            <option>Broken</option>
+                            <option>Lost</option>
+                            <option>Not Present</option>
+                            <option>Dropped</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0003 - Chicken Sandwich" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20" disabled="disabled">
+                        </td>
+                        <td>
+                          <select class="form-control" id="ullage-reason" disabled="disabled">
+                            <option>Broken</option>
+                            <option>Lost</option>
+                            <option>Not Present</option>
+                            <option>Dropped</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0004 - 7-Up" disabled="disabled">
+                        </td>
+                        <td>
+      <!-- TODO: ANGULAR HIDE WHEN NOT NEEDED -->
+      <!--                     <input ng-model="templateQuantity" type="text" class="form-control" id="template-quantity" placeholder="20"> -->
+                        </td>
+                        <td>
+                          <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="10" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0" disabled="disabled">
+                        </td>
+                        <td>
+      <!-- TODO: ANGULAR HIDE WHEN NOT NEEDED -->
+      <!--                     <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20"> -->
+                        </td>
+                        <td>
+      <!-- TODO: ANGULAR HIDE WHEN NOT NEEDED -->
+      <!--                     <select class="form-control" id="ullage-reason"> -->
+      <!--                       <option>Broken</option> -->
+      <!--                       <option>Lost</option> -->
+      <!--                       <option>Not Present</option> -->
+      <!--                       <option>Dropped</option> -->
+      <!--                     </select> -->
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <h3>Offload List</h3>
+                    </div>
+                  </div>
+                  
+                  <table class="table table-striped offload-list">
+                    <thead>
+                      <tr>
+                        <th>Retail Item Details</th>
+                        <th width="10%">Inbound Quantity</th>
+                        <th width="10%">Ullage</th>
+                        <th>Ullage Reason</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <input ng-model="itemCode" type="text" class="form-control" id="item-code" placeholder="0006 - Bacardi" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20" disabled="disabled">
+                        </td>
+                        <td>
+                          <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20" disabled="disabled">
+                        </td>
+                        <td>
+                          <select class="form-control" id="ullage-reason" disabled="disabled">
+                            <option>Broken</option>
+                            <option>Lost</option>
+                            <option>Not Present</option>
+                            <option>Dropped</option>
+                          </select>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
                 </div>
               </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <span class="clickable panel-collapsed">
+                    <h3>Seal Number Assignment</h3><i class="fa fa-chevron-down"></i>
+                  </span>
+                </div>
+                <div class="panel-body" style="display:none;">
+                
+                  <div class="col-xs-12">
+                    <button type="button" class="btn btn-info pull-right" id="goToPacking">Edit</button>
+                  </div>
               
-              <thead>
-                <tr>
-                  <th>Seal Type</th>
-                  <th>Seal Color</th>
-                  <th>Seal Numbers</th>
-                </tr>
-              </thead>
-              
-              <tbody>
-                <tr>
-                  <td width="15%">Outbound</td>
-                  <td width="15%">
-                    <input type="text" class="form-control" id="sealColor" placeholder="Blue" style="background-color: #66CCFF" disabled="disabled">
-                  </td>
-                  <td>12465, 12466, 12467, 12468, 12469, 12470, 12471, 12472, 12473, 12474, 12475, 12476, 12477, 12478</td>
-                <tr>
-                  <td>Hand Over</td>
-                  <td>
-                    <input type="text" class="form-control" id="sealColor" placeholder="Green" style="background-color: #33CC33" disabled="disabled">
-                  </td>
-                  <td>13465, 13466, 13467</td>
-                </tr>
-                <tr>
-                  <td>Inbound</td>
-                  <td>
-                    <input type="text" class="form-control" id="sealColor" placeholder="Yellow" style="background-color: #FFCC00" disabled="disabled">
-                  </td>
-                  <td>12420, 12421, 12422, 12423, 12424</td>
-                <tr>
-                <tr>
-                  <td>High Security</td>
-                  <td>
-                    <input type="text" class="form-control" id="sealColor" placeholder="White" style="background-color: #FFFFFF" disabled="disabled">
-                  </td>
-                  <td>11465, 11466</td>
-                <tr>
-              </tbody>
-              
-            </table>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Seal Type</th>
+                        <th>Seal Numbers</th>
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                      <tr>
+                        <td width="15%">
+                          <input type="text" class="form-control" id="sealColor" placeholder="Outbound" style="background-color: #66CCFF" disabled="disabled">
+                        </td>
+                        <td>12465, 12466, 12467, 12468, 12469, 12470, 12471, 12472, 12473, 12474, 12475, 12476, 12477, 12478</td>
+                      <tr>
+                        <td>
+                          <input type="text" class="form-control" id="sealColor" placeholder="Hand Over" style="background-color: #33CC33" disabled="disabled">
+                        </td>
+                        <td>13465, 13466, 13467</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="text" class="form-control" id="sealColor" placeholder="Inbound" style="background-color: #FFCC00" disabled="disabled">
+                        </td>
+                        <td>12420, 12421, 12422, 12423, 12424</td>
+                      <tr>
+                      <tr>
+                        <td>
+                          <input type="text" class="form-control" id="sealColor" placeholder="High Security" style="background-color: #FFFFFF" disabled="disabled">
+                        </td>
+                        <td>11465, 11466</td>
+                      <tr>
+                    </tbody>
+                    
+                  </table>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
         </ng-form>
@@ -1114,6 +1158,157 @@
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
   <!-- endbuild -->
 
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-messages/angular-messages.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/ngstorage/ngStorage.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/angular-filter/dist/angular-filter.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
+<script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
+<script src="bower_components/qrcode/lib/qrcode.js"></script>
+<script src="bower_components/angular-qr/src/angular-qr.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/ngtoast/dist/ngToast.js"></script>
+<script src="bower_components/angular-ui-select/dist/select.js"></script>
+<script src="bower_components/select2/select2.js"></script>
+<script src="bower_components/angular-dragdrop/draganddrop.js"></script>
+<script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+
+<script src="scripts/app.js"></script>
+<script src="scripts/config.js"></script>
+<script src="scripts/controllers/main.js"></script>
+<script src="scripts/controllers/company-list.js"></script>
+<script src="scripts/controllers/item-list.js"></script>
+<script src="scripts/controllers/company-relationship-list.js"></script>
+<script src="scripts/services/company-factory.js"></script>
+<script src="scripts/services/company-relationship-factory.js"></script>
+<script src="scripts/services/company-relationship-service.js"></script>
+<script src="scripts/services/companies-factory.js"></script>
+<script src="scripts/services/items-factory.js"></script>
+<script src="scripts/controllers/item-create.js"></script>
+<script src="scripts/directives/input-text.js"></script>
+<script src="scripts/services/globalmenuservice.js"></script>
+<script src="scripts/directives/menu-dropdown.js"></script>
+<script src="scripts/controllers/headermenu.js"></script>
+<script src="scripts/controllers/exchange-rates.js"></script>
+<script src="scripts/services/currency-factory.js"></script>
+<script src="scripts/services/company-preferences-service.js"></script>
+<script src="scripts/services/dailyExchangeRatesService.js"></script>
+<script src="scripts/services/items-service.js"></script>
+<script src="scripts/directives/input-select.js"></script>
+<script src="scripts/services/company-service.js"></script>
+<script src="scripts/controllers/menu-list.js"></script>
+<script src="scripts/controllers/menu-edit.js"></script>
+<script src="scripts/directives/date-picker.js"></script>
+<script src="scripts/directives/item-price-type.js"></script>
+<script src="scripts/directives/excel-upload.js"></script>
+<script src="scripts/directives/image-upload.js"></script>
+<script src="scripts/services/allergens-service.js"></script>
+<script src="scripts/services/item-types.js"></script>
+<script src="scripts/services/price-types-service.js"></script>
+<script src="scripts/services/characteristics-service.js"></script>
+<script src="scripts/services/units-service.js"></script>
+<script src="scripts/services/tags-service.js"></script>
+<script src="scripts/services/companies-factory.js"></script>
+<script src="scripts/services/sales-categories-service.js"></script>
+<script src="scripts/services/tax-types-service.js"></script>
+<script src="scripts/services/stations-service.js"></script>
+<script src="scripts/directives/qr-upload.js"></script>
+<script src="scripts/directives/feature-list-item.js"></script>
+<script src="scripts/directives/qr-create.js"></script>
+<script src="scripts/directives/form-error-dialog.js"></script>
+<script src="scripts/directives/form-success-modal.js"></script>
+<script src="scripts/directives/input-gtin.js"></script>
+<script src="scripts/directives/input-tax-type.js"></script>
+<script src="scripts/directives/leave-view-modal.js"></script>
+<script src="scripts/directives/input-station-exception.js"></script>
+<script src="scripts/services/menu-service.js"></script>
+<script src="scripts/services/currencies-service.js"></script>
+<script src="scripts/directives/loading-modal.js"></script>
+<script src="scripts/directives/input-item-image.js"></script>
+<script src="scripts/directives/form-update-modal.js"></script>
+<script src="scripts/directives/custom-validity.js"></script>
+<script src="scripts/controllers/stock-owner-item-list.js"></script>
+<script src="scripts/controllers/stock-owner-item-create.js"></script>
+<script src="scripts/directives/input-price-type-stock-owner.js"></script>
+<script src="scripts/services/version-service.js"></script>
+<script src="scripts/directives/dev-footer.js"></script>
+<script src="scripts/controllers/post-trip-data-list.js"></script>
+<script src="scripts/controllers/post-trip-data.js"></script>
+<script src="scripts/controllers/employee-commission-edit.js"></script>
+<script src="scripts/controllers/global-reason-code.js"></script>
+<script src="scripts/controllers/company-reason-code.js"></script>
+<script src="scripts/filters/date-range.js"></script>
+<script src="scripts/services/version-service.js"></script>
+<script src="scripts/controllers/cash-bag.js"></script>
+<script src="scripts/services/cash-bag-service.js"></script>
+<script src="scripts/services/schedules-service.js"></script>
+<script src="scripts/services/stations-service.js"></script>
+<script src="scripts/controllers/cash-bag-list.js"></script>
+<script src="scripts/services/cash-bag-factory.js"></script>
+<script src="scripts/directives/menu-slide.js"></script>
+<script src="scripts/services/factory-helper.js"></script>
+<script src="scripts/controllers/menu-relationship-list.js"></script>
+<script src="scripts/controllers/menu-relationship-create.js"></script>
+<script src="scripts/controllers/item-import.js"></script>
+<script src="scripts/directives/download-template-modal.js"></script>
+<script src="scripts/directives/delete-record-dialog.js"></script>
+<script src="scripts/services/date-utility.js"></script>
+<script src="scripts/services/caterer-station-service.js"></script>
+<script src="scripts/services/item-import-service.js"></script>
+<script src="scripts/services/item-import-factory.js"></script>
+<script src="scripts/services/employee-commission-factory.js"></script>
+<script src="scripts/services/tax-rate-types-service.js"></script>
+<script src="scripts/services/post-trips-service.js"></script>
+<script src="scripts/services/post-trip-factory.js"></script>
+<script src="scripts/services/carrier-service.js"></script>
+<script src="scripts/services/employees-service.js"></script>
+<script src="scripts/services/menu-caterer-stations-service.js"></script>
+<script src="scripts/services/transaction-service.js"></script>
+<script src="scripts/services/company-cc-types-service.js"></script>
+<script src="scripts/controllers/lmp-locations-list.js"></script>
+<script src="scripts/controllers/manage-goods-received.js"></script>
+<script src="scripts/services/menu-factory.js"></script>
+<script src="scripts/controllers/store-number-create.js"></script>
+<script src="scripts/services/company-stores-service.js"></script>
+<script src="scripts/controllers/employee-commission-list.js"></script>
+<script src="scripts/controllers/stock-dashboard.js"></script>
+<script src="scripts/controllers/stock-take.js"></script>
+<script src="scripts/controllers/stock-take-review.js"></script>
+<script src="scripts/controllers/stock-take-report.js"></script>
+<script src="scripts/directives/date-picker-field.js"></script>
+<script src="scripts/services/employee-commission-service.js"></script>
+<script src="scripts/directives/dynamic-left-nav.js"></script>
+<script src="scripts/services/main-menu-service.js"></script>
+<script src="scripts/controllers/lmp-delivery-note.js"></script>
+<script src="scripts/services/stock-dashboard-service.js"></script>
+<script src="scripts/directives/stock-take-reason.js"></script>
+<script src="scripts/filters/index.js"></script>
+<script src="scripts/services/delivery-notes-service.js"></script>
+<script src="scripts/services/delivery-note-factory.js"></script>
+<script src="scripts/services/company-discount-service.js"></script>
+<script src="scripts/services/company-reason-codes-service.js"></script>
+<script src="scripts/services/company-reason-type-service.js"></script>
+<script src="scripts/directives/input-textarea.js"></script>
+<script src="scripts/services/stock-adjustments-service.js"></script>
+<script src="scripts/services/stock-take-service.js"></script>
+<script src="scripts/services/stock-take-factory.js"></script>
+<script src="scripts/controllers/store-instance-step-1.js"></script>
+<script src="scripts/directives/step-wizard.js"></script>
+<script src="scripts/services/store-instance-service.js"></script>
+<script src="scripts/services/store-instance-factory.js"></script>
+
   <script src="//www.fuelcdn.com/fuelux/3.6.3/js/fuelux.min.js" type="text/javascript"></script>
 
   <script type="text/javascript">
@@ -1133,6 +1328,25 @@
 			});
 
 		});
+  </script>
+  
+  <script type="text/javascript">
+      jQuery(function ($) {
+          $('.panel-heading span.clickable').on("click", function (e) {
+              if ($(this).hasClass('panel-collapsed')) {
+                  // expand the panel
+                  $(this).parents('.panel').find('.panel-body').slideDown();
+                  $(this).removeClass('panel-collapsed');
+                  $(this).find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+              }
+              else {
+                  // collapse the panel
+                  $(this).parents('.panel').find('.panel-body').slideUp();
+                  $(this).addClass('panel-collapsed');
+                  $(this).find('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+              }
+          });
+      });
   </script>
 
 </body>

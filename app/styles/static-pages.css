@@ -40,6 +40,67 @@
   margin-top: 0;
 }
 
+.fuelux .wizard .info-bar-status-packing:after {
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #999;
+    content: "Ready For Packing";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .info-bar-status-inbound-seals:after {
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #999;
+    content: "Ready For Inbound Seals";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .info-bar-status-seals:after {
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #999;
+    content: "Ready For Seals";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .info-bar-status-dispatch:after {
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px 0 4px 0;
+    color: #999;
+    content: "Ready For Dispatch";
+    font-size: 1.5em;
+    font-weight: 700;
+    left: -1px;
+    padding: 5px 15px;
+    position: absolute;
+    top: -1px;
+}
+
+.fuelux .wizard .info-bar-status {
+    position: relative;
+    padding-top: 50px;
+}
+
 .fuelux .wizard .well.seal-color-blue:after {
     background-color: #66ccff;
     border: 1px solid #e3e3e3;
@@ -52,11 +113,6 @@
     padding: 5px 15px;
     position: absolute;
     top: -1px;
-}
-
-.fuelux .wizard .well.seal-color-blue {
-    position: relative;
-    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-green:after {
@@ -73,11 +129,6 @@
     top: -1px;
 }
 
-.fuelux .wizard .well.seal-color-green {
-    position: relative;
-    padding-top: 50px;
-}
-
 .fuelux .wizard .well.seal-color-yellow:after {
     background-color: #ffcc00;
     border: 1px solid #e3e3e3;
@@ -90,11 +141,6 @@
     padding: 5px 15px;
     position: absolute;
     top: -1px;
-}
-
-.fuelux .wizard .well.seal-color-yellow {
-    position: relative;
-    padding-top: 50px;
 }
 
 .fuelux .wizard .well.seal-color-white:after {
@@ -111,38 +157,44 @@
     top: -1px;
 }
 
-.fuelux .wizard .well.seal-color-white {
+.fuelux .wizard .well.seal-color {
     position: relative;
     padding-top: 50px;
 }
 
-.fuelux .wizard .table-scrollable {
-  width: 100%;
+.fuelux .wizard .well.seal-color-with-copy-buttons {
+    position: relative;
+    padding-top: 19px;
 }
 
-.fuelux .wizard .table-scrollable thead, .fuelux .wizard .table-scrollable tbody, .fuelux .wizard .table-scrollable tr, .fuelux .wizard .table-scrollable td, .fuelux .wizard .table-scrollable th {
-  display: block;
+.fuelux .wizard .panel .clickable {
+    cursor: pointer;
 }
 
-.fuelux .wizard .table-scrollable tr:after {
-  content: ' ';
-  display: block;
-  visibility: hidden;
-  clear: both;
+.fuelux .wizard .panel-body {
+  background-color: #f5f5f5;
 }
 
-.fuelux .wizard .table-scrollable thead th {
-  height: 36px;
+.fuelux .wizard .panel-body .pull-right.btn {
+  font-size: 14px;
 }
 
-.fuelux .wizard .table-scrollable tbody {
-  height: 380px;
-  overflow-y: auto;
+.fuelux .wizard .panel h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #3a87ad;
+  margin-top: 0;
+  margin-right: 10px;
+  display: inline;
 }
 
-.fuelux .wizard .table-scrollable tbody td, .fuelux .wizard .table-scrollable thead th {
-  width: 33%;
-  float: left;
+.fuelux .wizard .panel-heading span {
+  font-size: 15px;
+  color: #3a87ad;
+}
+
+.fuelux .wizard .panel-heading span i {
+  vertical-align: text-top;
 }
 
 .fuelux .wizard input[type="text"]::-webkit-input-placeholder {

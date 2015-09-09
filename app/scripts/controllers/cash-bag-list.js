@@ -22,6 +22,25 @@ angular.module('ts5App')
     $scope.createCashBagError = 'temp error message';
     $scope.search = {};
 
+    function showSuccessMessage(error) {
+      ngToast.create({
+        className: 'success',
+        dismissButton: true,
+        content: '<strong>Cash bag</strong>:' + error
+      });
+      $scope.formErrors = {};
+    }
+
+    function getSortedBankRefList(cashBagList) {
+      var bankRefList = [];
+      cashBagList.forEach(function (element) {
+        if (element.bankReferenceNumber !== null && bankRefList.indexOf(element.bankReferenceNumber) < 0) {
+          bankRefList.push(element.bankReferenceNumber);
+        }
+      });
+      return bankRefList;
+    }
+
     // Constructor
     (function constructor() {
       // set global controller properties
@@ -67,28 +86,9 @@ angular.module('ts5App')
     })();
 
     // helpers
-    function showSuccessMessage(error) {
-      ngToast.create({
-        className: 'success',
-        dismissButton: true,
-        content: '<strong>Cash bag</strong>:' + error
-      });
-      $scope.formErrors = {};
-    }
-
     function showModalErrors(errorMessage) {
       $scope.displayModalError = true;
       $scope.createCashBagError = errorMessage;
-    }
-
-    function getSortedBankRefList(cashBagList) {
-      var bankRefList = [];
-      cashBagList.forEach(function (element) {
-        if (element.bankReferenceNumber !== null && bankRefList.indexOf(element.bankReferenceNumber) < 0) {
-          bankRefList.push(element.bankReferenceNumber);
-        }
-      });
-      return bankRefList;
     }
 
     // scope methods

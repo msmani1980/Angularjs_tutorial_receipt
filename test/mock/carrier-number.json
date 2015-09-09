@@ -1,0 +1,23 @@
+{
+  "startDate": "2015-05-05",
+  "endDate": "2050-01-01",
+  "createdBy": null,
+  "createdOn": null,
+  "updatedBy": null,
+  "updatedOn": null,
+  "id": 47,
+  "companyId": 403,
+  "carrierNumber": "G-EZAA",
+  "shipNumber": null,
+  "companyCarrierTypeCode": "A-319",
+  "companyCarrierTypeId": 20,
+  "carrierTypeCode": "A-319",
+  "carrierTypeId": 8,
+  "seatConfigs": [
+    {
+      "id": 37,
+      "companyCarrierId": 47,
+      "seatConfigId": 25
+    }
+  ]
+}

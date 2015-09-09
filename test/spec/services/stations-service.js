@@ -93,5 +93,18 @@ describe('Stations Service |', function () {
       });
 
     });
+
+    describe('getStation', function () {
+      it('should GET station by Id', function () {
+        var fakeId = 123;
+        var expectedURL = /stations\/\d+$/;
+        $httpBackend.expectGET(expectedURL).respond({id: fakeId});
+
+        stationsService.getStation(fakeId).then(function (response) {
+          expect(response.id).toBe(fakeId);
+        });
+        $httpBackend.flush();
+      });
+    });
   });
 });

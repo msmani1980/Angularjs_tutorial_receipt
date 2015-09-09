@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "companyId": 403,
+  "storeId": 64,
+  "cateringStationId": 1,
+  "scheduleDate": "2015-09-30",
+  "scheduleNumber": "SCHED123",
+  "carrierId": 33,
+  "statusId": 1,
+  "isEcb": false,
+  "createdBy": null,
+  "createdOn": "2015-07-28 16:41:00.027412",
+  "updatedBy": null,
+  "updatedOn": "2015-09-01 15:57:31.444228",
+  "menus": null
+}
