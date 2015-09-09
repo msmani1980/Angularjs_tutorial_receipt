@@ -33,7 +33,7 @@
 
 		</li>
 
-		<li ng-show="$parent.formErrors" ng-repeat="error in $parent.formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> -
+		<li ng-repeat="error in $parent.formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> -
 
 			<span ng-switch-when="000">Field can't be empty.</span>
 
