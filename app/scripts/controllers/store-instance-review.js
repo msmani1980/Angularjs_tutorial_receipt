@@ -11,8 +11,26 @@ angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
                                                    storeInstanceFactory) {
 
-    function resolveGetStoreDetails(response) {
-      $scope.storeDetails = response;
+    function getItemsSuccessHandler(dataFromAPI) {
+      $scope.menuItems = dataFromAPI.response;
+      $scope.menuItems.map(function(item){
+        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+        item.disabled = true;
+      });
+    }
+
+    function getStoreInstanceMenuItems() {
+      var payload = {
+        itemTypeId: 1,
+        scheduleDate: $scope.storeDetails.scheduleDate
+      };
+      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId,
+        payload).then(getItemsSuccessHandler);
+    }
+
+    function resolveGetStoreDetails(dataFromAPI) {
+      $scope.storeDetails = dataFromAPI;
+      getStoreInstanceMenuItems();
     }
 
     function init() {

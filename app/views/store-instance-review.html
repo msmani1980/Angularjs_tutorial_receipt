@@ -8,9 +8,10 @@
   <form name="createStoreInstance" class="well" ng-submit="submitForm()">
 
     <!-- INFORMATION BAR -->
-    <store-instance-header></store-instance-header>
+    <div class="well">
+      <store-instance-header></store-instance-header>
+    </div>
 
-    <!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
     <div class="row">
       <div class="col-xs-12 col-sm-1">
         <div class="form-group">
@@ -31,56 +32,12 @@
         <accordion-heading class="accordion-heading">
           Pick List <i class="fa fa-chevron-down"></i>
         </accordion-heading>
-
-        <div class="col-xs-12 text-right">
-          <button type="button" class="btn btn-info" id="goToPacking">Edit</button>
+        <div class="row">
+          <div class="col-xs-12 text-right">
+            <button type="button" class="btn btn-info" id="goToPacking">Edit</button>
+          </div>
         </div>
-
-        <table class="table table-striped pick-list">
-          <thead>
-          <tr>
-            <th>Retail Item Details</th>
-            <th width="15%">Required Quantity</th>
-            <th width="15%">Picked Quantity</th>
-          </tr>
-          </thead>
-
-          <tbody>
-          <tr>
-            <td>
-              <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
-            </td>
-            <td>
-              <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="10" disabled="disabled">
-            </td>
-            <td>
-              <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="10" disabled="disabled">
-            </td>
-          </tr>
-          <tr class="has-discrepancy">
-            <td>
-              <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0002- Sprite" disabled="disabled">
-            </td>
-            <td>
-              <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
-            </td>
-            <td>
-              <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0" disabled="disabled">
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0003 - Chicken Sandwich" disabled="disabled">
-            </td>
-            <td>
-              <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="2" disabled="disabled">
-            </td>
-            <td>
-              <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20" disabled="disabled">
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        <store-instance-pack-list></store-instance-pack-list>
       </accordion-group>
     </accordion>
 

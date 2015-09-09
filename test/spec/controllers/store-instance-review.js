@@ -1,9 +1,10 @@
 'use strict';
 
-describe('Controller: StoreInstanceReviewCtrl', function () {
+fdescribe('Controller: StoreInstanceReviewCtrl', function () {
 
 // load the controller's module
   beforeEach(module('ts5App'));
+  beforeEach(module('served/store-instance-menu-items.json'));
 
 
   var StoreInstanceReviewCtrl;
@@ -13,11 +14,12 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
   var routeParams;
   var getStoreDetailsDeferred;
   var storeInstanceDispatchWizardConfig;
+  var getStoreInstanceMenuItemsDeferred;
+  var servedStoreInstanceMenuItemsJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function () {
-    });
+  beforeEach(inject(function ($controller, $rootScope, $injector, $q, _servedStoreInstanceMenuItems_) {
+    servedStoreInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
     scope = $rootScope.$new();
     routeParams = {
       storeId: 5
@@ -28,6 +30,9 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
 
     getStoreDetailsDeferred = $q.defer();
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
+    getStoreInstanceMenuItemsDeferred = $q.defer();
+    getStoreInstanceMenuItemsDeferred.resolve(servedStoreInstanceMenuItemsJSON);
+    spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
 
     StoreInstanceReviewCtrl = $controller('StoreInstanceReviewCtrl', {
       $scope: scope,
@@ -55,6 +60,14 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
 
       it('should attach all properties of JSON to scope', function () {
         expect(scope.storeDetails).toEqual(storeDetailsJSON);
+      });
+
+      it('should call getStoreInstanceMenuItems', function () {
+        var expectedPayload = {
+          itemTypeId: 1, // this is 1 because we are requesting regular items.
+          scheduleDate: storeDetailsJSON.scheduleDate
+        };
+        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeId, expectedPayload);
       });
 
       it('should set wizardSteps', function(){
