@@ -150,15 +150,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     });
   });
 
-  describe('add new items to store instance', function () {
-    it('should add X number if items based on addItemsNumber variable', function () {
-      scope.emptyMenuItems = [];
-      scope.addItemsNumber = 10;
-      scope.addItems();
-      expect(scope.emptyMenuItems.length).toBe(10);
-    });
-  });
-
   describe('formatStoreInstanceItemsPayload', function () {
     beforeEach(function () {
       scope.menuItems = [{
@@ -211,6 +202,29 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       scope.$apply();
       expect(scope.filteredMasterItemList.length).toBe(1);
     });
+
+    describe('add new items to store instance', function () {
+      beforeEach(function(){
+        scope.emptyMenuItems = [];
+        scope.menuItems = [{itemMasterId: 1}, {itemMasterId: 2}];
+        scope.masterItemsList = [{id: 1}, {id: 2}, {id: 3}];
+        scope.$apply();
+      });
+
+      it('should add X number if items based on addItemsNumber variable', function () {
+        scope.addItemsNumber = 10;
+        scope.addItems();
+        expect(scope.emptyMenuItems.length).toBe(10);
+      });
+      it('should not let the user add items if there is no available items', function () {
+        scope.masterItemsList = [{id: 1}, {id: 2}];
+        scope.addItemsNumber = 10;
+        scope.$apply();
+        scope.addItems();
+        expect(scope.emptyMenuItems.length).toBe(0);
+      });
+    });
+
   });
 
 });

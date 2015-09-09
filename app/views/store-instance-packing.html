@@ -33,6 +33,7 @@
           <th>Retail Item Details</th>
           <th width="15%">Template Quantity</th>
           <th width="15%">Packed Quantity</th>
+          <th width="5%"></th>
         </tr>
         </thead>
 
@@ -48,6 +49,11 @@
           </td>
           <td>
             <input type="text" class="form-control" id="picked-quantity" ng-model="item.quantity" placeholder="0">
+          </td>
+          <td>
+            <button ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="deleteNewItem($index)">
+              <i class="fa fa-close"></i>
+            </button>
           </td>
         </tr>
 

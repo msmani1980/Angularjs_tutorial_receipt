@@ -14,13 +14,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.filteredMasterItemList = [];
     $scope.addItemsNumber = 1;
 
-    $scope.showToast = function (className, type, message) {
+    function showToast(className, type, message) {
       ngToast.create({
         className: className,
         dismissButton: true,
         content: '<strong>' + type + '</strong>: ' + message
       });
-    };
+    }
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -31,6 +31,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     $scope.addItems = function () {
+      if ($scope.filteredMasterItemList.length === 0) {
+        showToast('warning', 'Add Item', 'There are no items available');
+        return;
+      }
+
       for (var i = 0; i < $scope.addItemsNumber; i++) {
         $scope.emptyMenuItems.push({
           menuQuantity: 0
@@ -66,7 +71,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
-        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+        item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
       $this.mergeMenuItems(menuItems);
     }
@@ -75,7 +80,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
         delete item.id;
-        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+        item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
       $this.mergeMenuItems(menuItems);
     }
