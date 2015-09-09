@@ -7,12 +7,12 @@
   <form name="createStoreInstance" class="well" ng-submit="submitForm()">
 
     <div class="row">
-      <div class="col-sm-4 text-xs-left text-sm-right">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>LMP Station *</label>
       </div>
-      <div class="col-sm-8">
-        <div class="form-group">
-          <select required class="form-control" ng-model="formData.cateringStationId">
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group" ng-class="validateInput('CateringStation')">
+          <select required class="form-control" ng-model="formData.cateringStationId" name="CateringStation">
             <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
             <option ng-repeat="station in cateringStationList | orderBy:'name' track by station.id" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
           </select>
@@ -21,22 +21,22 @@
     </div>
 
     <div class="row">
-      <div class="col-sm-4 text-xs-left text-sm-right">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Schedule Date *</label>
       </div>
-      <div class="col-sm-8">
+      <div class="col-xs-12 col-sm-8">
           <date-picker-field form="createStoreInstance" name="scheduleDate"
-            min-date="'+1d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
+            min-date="'+1d'" ng-required ng-model="formData.scheduleDate"></date-picker-field>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-sm-4 text-xs-left text-sm-right">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Store Number *</label>
       </div>
-      <div class="col-sm-8">
-        <div class="form-group">
-          <select class="form-control" ng-model="formData.storeId" required>
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group" ng-class="validateInput('StoreNumber')">
+          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber">
             <option ng-disabled="true" selected="selected" value>Select Store</option>
             <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
@@ -45,23 +45,23 @@
     </div>
 
     <div class="row">
-      <div class="col-sm-4 text-xs-left text-sm-right">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Schedule Number *</label>
       </div>
-      <div class="col-sm-8">
-        <div class="form-group">
-          <input maxlength="10" required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group" ng-class="validateInput('ScheduleNumber')">
+          <input name="ScheduleNumber" maxlength="10" required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
         </div>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-sm-4 text-xs-left text-sm-right">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Select Menus *</label>
       </div>
-      <div class="col-sm-8">
-        <div class="form-group">
-          <ui-select required multiple ng-model="formData.menus" theme="bootstrap" id="menuIds">
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group" ng-class="validateMenus()">
+          <ui-select name="Menus" required="true" multiple ng-model="formData.menus" theme="bootstrap" id="menuIds">
             <ui-select-match placeholder="Select one or more Menus" ui-lock-choice="isDisabled()">{{ $item.menuCode }}
             </ui-select-match>
             <ui-select-choices  repeat="menu in menuMasterList | filter: $select.search | orderBy:'menuCode'">
@@ -73,13 +73,13 @@
     </div>
 
     <div class="row">
-      <div class="col-sm-4 text-xs-left text-sm-right">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Aircraft Tail Number</label>
       </div>
-      <div class="col-sm-8">
+      <div class="col-xs-12 col-sm-8">
         <div class="form-group">
           <select class="form-control" ng-model="formData.carrierId">
-            <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
+            <option ng-disabled="true" selected="selected" value>Select a Tail Number</option>
             <option ng-repeat="tailNumber in carrierNumbers | orderBy:'carrierNumber' track by tailNumber.id" value="{{ tailNumber.id }}">{{ tailNumber.carrierNumber }}</option>
           </select>
         </div>

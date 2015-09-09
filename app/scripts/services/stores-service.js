@@ -9,9 +9,11 @@
  */
 angular.module('ts5App')
   .service('storesService', function($resource, ENV) {
-    var requestURL = ENV.apiUrl + '/api/companies/stores';
+    var requestURL = ENV.apiUrl + '/api/companies/stores/:id';
 
-    var requestParameters = {};
+    var requestParameters = {
+      id: '@id'
+    };
 
     var actions = {
       getStoresList: {
@@ -25,8 +27,13 @@ angular.module('ts5App')
       return requestResource.getStoresList(query).$promise;
     }
 
+    function getStore(id) {
+      return requestResource.getStoresList({id: id}).$promise;
+    }
+
     return {
-      getStoresList: getStoresList
+      getStoresList: getStoresList,
+      getStore: getStore
     };
 
   });

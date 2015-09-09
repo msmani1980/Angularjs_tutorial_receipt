@@ -179,6 +179,9 @@ angular.module('ts5App', [
     templateUrl: 'views/store-instance-dashboard.html',
     controller: 'StoreInstanceDashboardCtrl',
     controllerAs: 'storeInstanceDashboard'
+  }).when('/store-instance-packing/:storeId', {
+    templateUrl: 'views/store-instance-packing.html',
+    controller: 'StoreInstancePackingCtrl'
   }).otherwise({
     redirectTo: '/'
   });
