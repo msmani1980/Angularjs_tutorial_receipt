@@ -10,11 +10,13 @@ angular.module('ts5App')
   .directive('errorDialog', function() {
     var errorDialogController = function($scope) {
 
+      $scope.errorPattern = [];
+      $scope.errorRequired = [];
       $scope.displayError = false;
 
-      $scope.validateRequiredFields = function(error) {
+      $scope.validateRequiredFields = function() {
         $scope.errorRequired = [];
-        angular.forEach(error.required, function(field) {
+        angular.forEach($scope.form.$error.required, function(field) {
           if (field.$invalid) {
             var fieldName = field.$name;
             $scope.errorRequired.push(fieldName);
@@ -22,9 +24,9 @@ angular.module('ts5App')
         });
       };
 
-      $scope.validatePatternFields = function(error) {
+      $scope.validatePatternFields = function() {
         $scope.errorPattern = [];
-        angular.forEach(error.pattern, function(field) {
+        angular.forEach($scope.form.$error.pattern, function(field) {
           if (field.$invalid && field.$viewValue) {
             var fieldName = field.$name;
             $scope.errorPattern.push(fieldName);
@@ -33,9 +35,8 @@ angular.module('ts5App')
       };
 
       $scope.checkForErrors = function() {
-        var error = $scope.form.$error;
-        $scope.validateRequiredFields(error);
-        $scope.validatePatternFields(error);
+        $scope.validateRequiredFields();
+        $scope.validatePatternFields();
       };
 
       $scope.watchForm = function() {
