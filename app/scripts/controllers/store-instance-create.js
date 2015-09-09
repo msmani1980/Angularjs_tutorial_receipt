@@ -20,7 +20,7 @@ angular.module('ts5App')
     $scope.formData = {
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
-   };
+    };
     $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
 
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
@@ -177,7 +177,7 @@ angular.module('ts5App')
 
     $scope.validateMenus = function() {
       if(angular.isUndefined($scope.createStoreInstance.Menus) ||
-        $scope.createStoreInstance.Menus.$pristine) {
+        $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
       if($scope.formData.menus.length < 1) {
