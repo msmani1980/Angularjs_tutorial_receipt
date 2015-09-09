@@ -83,7 +83,7 @@ describe('Service: storeInstanceService', function () {
 
   describe('getStoreInstanceMenuItems', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+\/menu-items$/;
+      var expectedURL = /dispatch\/store-instances\/\d+\/menu-items/;
       var fakeId = 12;
       var payload = {
         fakeKey: 'fakeValue'
@@ -99,7 +99,7 @@ describe('Service: storeInstanceService', function () {
 
   describe('getStoreInstanceItemList', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+\/items$/;
+      var expectedURL = /dispatch\/store-instances\/\d+\/items/;
       var fakeId = 12;
       var payload = {
         fakeKey: 'fakeValue'
@@ -151,7 +151,7 @@ describe('Service: storeInstanceService', function () {
         fakeKey: 'fakeValue'
       };
 
-      httpBackend.expectPUT(expectedURL).respond(200, {});
+      httpBackend.expectPOST(expectedURL).respond(200, {});
       storeInstanceService.updateStoreInstanceItemsBulk(fakeStoreId, payload).then(function (response) {
         expect(response).toBeDefined();
       });

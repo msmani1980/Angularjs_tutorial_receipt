@@ -30,7 +30,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     function errorHandler(error) {
-      debugger;
       hideLoadingModal();
     }
 
@@ -79,7 +78,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getStoreInstanceMenuItems = function () {
       var payload = {
         itemTypeId: 1,
-        scheduleDate: $scope.storeDetails.scheduleDate
+        date: $scope.storeDetails.scheduleDate
       };
       storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getMenuItemsSuccessHandler);
     };
@@ -105,7 +104,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     this.formatStoreInstanceItemsPayload = function () {
-      var newPayload = [];
+      var newPayload = {response: []};
       var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
 
       angular.forEach(mergedItems, function (item) {
@@ -116,7 +115,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (item.id) {
           itemPayload.id = item.id
         }
-        newPayload.push(itemPayload);
+        newPayload.response.push(itemPayload);
       });
 
       return newPayload;
@@ -126,9 +125,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.savePackingData = function () {
       var payload = $this.formatStoreInstanceItemsPayload();
       // TODO: make bulk API call and check for no duplicate items
-      //storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (response) {
-      //  // success handler
-      //});
+      storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (response) {
+        console.log(response);
+      });
     };
 
 

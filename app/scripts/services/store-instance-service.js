@@ -40,7 +40,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
       method: 'PUT'
     },
     updateStoreInstanceItemsBulk: {
-      method: 'PUT'
+      method: 'POST'
     },
     createStoreInstanceItem: {
       method: 'POST'
@@ -68,7 +68,8 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
   }
 
   function updateStoreInstance(id, payload) {
-    return requestResource.updateStoreInstance({id: id}, payload).$promise;
+    var requestPayload = angular.extend({}, {id: id}, payload);
+    return requestResource.updateStoreInstance(requestPayload).$promise;
   }
 
   function deleteStoreInstance(id) {
@@ -76,56 +77,63 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
   }
 
   function getStoreInstanceItemList(id, payload) {
-    return requestResource.getStoreInstanceItemList({
+    var requestPayload = angular.extend({}, {
       id: id,
       api: 'items'
-    }, payload).$promise;
+    }, payload);
+    return requestResource.getStoreInstanceItemList(requestPayload).$promise;
   }
 
   function getStoreInstanceItem(storeId, itemId) {
-    return requestResource.getStoreInstanceItem({
+    var requestPayload = angular.extend({}, {
       id: storeId,
       api: 'items',
       itemIdOrBulk: itemId
-    }).$promise;
+    });
+    return requestResource.getStoreInstanceItem(requestPayload).$promise;
   }
 
   function updateStoreInstanceItem(storeId, itemId, payload) {
-    return requestResource.updateStoreInstanceItem({
+    var requestPayload = angular.extend({}, {
       id: storeId,
       api: 'items',
       itemIdOrBulk: itemId
-    }, payload).$promise;
+    }, payload);
+    return requestResource.updateStoreInstanceItem(requestPayload).$promise;
   }
 
   function updateStoreInstanceItemsBulk(storeId, payload) {
-    return requestResource.updateStoreInstanceItemsBulk({
+    var requestPayload = angular.extend({}, {
       id: storeId,
       api: 'items',
       itemIdOrBulk: 'bulk'
-    }, payload).$promise;
+    }, payload);
+    return requestResource.updateStoreInstanceItemsBulk(requestPayload).$promise;
   }
 
   function createStoreInstanceItem(storeId, payload) {
-    return requestResource.createStoreInstanceItem({
+    var requestPayload = angular.extend({}, {
       id: storeId,
       api: 'items'
-    }, payload).$promise;
+    }, payload);
+    return requestResource.createStoreInstanceItem(requestPayload).$promise;
   }
 
   function deleteStoreInstanceItem(storeId, itemId, payload) {
-    return requestResource.deleteStoreInstanceItem({
+    var requestPayload = angular.extend({}, {
       id: storeId,
       api: 'items',
       itemIdOrBulk: itemId
-    }, payload).$promise;
+    }, payload);
+    return requestResource.deleteStoreInstanceItem(requestPayload).$promise;
   }
 
   function getStoreInstanceMenuItems(id, payload) {
-    return requestResource.getStoreInstanceMenuItems({
+    var requestPayload = angular.extend({}, {
       id: id,
       api: 'menu-items'
-    }, payload).$promise;
+    }, payload);
+    return requestResource.getStoreInstanceMenuItems(requestPayload).$promise;
   }
 
   return {
