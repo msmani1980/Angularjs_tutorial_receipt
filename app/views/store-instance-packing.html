@@ -56,7 +56,7 @@
           <ui-select ng-model="item.masterItem" theme="bootstrap">
             <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{ $select.selected.itemName }}
             </ui-select-match>
-            <ui-select-choices repeat="masterItem in masterItemsList | filter: {itemName:$select.search} | orderBy:'itemName'">
+            <ui-select-choices repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
               <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>

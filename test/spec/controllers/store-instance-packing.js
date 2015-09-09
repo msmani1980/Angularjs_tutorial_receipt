@@ -83,7 +83,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       it('should call getStoreInstanceMenuItems', function () {
         var expectedPayload = {
           itemTypeId: 1, // this is 1 because we are requesting regular items.
-          scheduleDate: storeDetailsJSON.scheduleDate
+          date: storeDetailsJSON.scheduleDate
         };
         expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeId, expectedPayload);
       });
@@ -92,14 +92,14 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(scope.storeId);
       });
 
-      it('should remove the id of the instance items', function(){
+      it('should remove the id of the instance items', function () {
         scope.menuItems = [];
         StoreInstancePackingCtrl.getStoreInstanceMenuItems();
         scope.$digest();
         expect(scope.menuItems[0].id).toBeUndefined();
       });
 
-      it('should not remove the id of the items', function(){
+      it('should not remove the id of the items', function () {
         scope.menuItems = [];
         StoreInstancePackingCtrl.getStoreInstanceItems();
         scope.$digest();
@@ -118,22 +118,17 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       describe('mergeMenuItems', function () {
         var newItems;
         beforeEach(function () {
-          scope.menuItems = [
-            {
-              itemMasterId: 1,
-              fakeKey: 1
-            },
-            {
-              itemMasterId: 2,
-              fakeKey: 2
-            }
-          ];
-          newItems = [
-            {
-              itemMasterId: 2,
-              newKey: 3
-            }
-          ];
+          scope.menuItems = [{
+            itemMasterId: 1,
+            fakeKey: 1
+          }, {
+            itemMasterId: 2,
+            fakeKey: 2
+          }];
+          newItems = [{
+            itemMasterId: 2,
+            newKey: 3
+          }];
         });
 
         it('should merge duplicate items', function () {
@@ -171,33 +166,50 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         itemMasterId: 2,
         quantity: 3,
         fakeKey: 4
-      },
-        {
-          id: 2,
-          itemMasterId: 4,
-          quantity: 5,
-          fooKey: 44
-        }];
+      }, {
+        id: 2,
+        itemMasterId: 4,
+        quantity: 5,
+        fooKey: 44
+      }];
       scope.emptyMenuItems = [{
         quantity: 9,
         nonsenseKey: 4,
         masterItem: {id: 5}
       }]
     });
+
     it('should merge menuItems and emptyMenuItems', function () {
       var expectedLength = scope.menuItems.length + scope.emptyMenuItems.length;
       var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
-      expect(result.length).toEqual(expectedLength);
+      expect(result.response.length).toEqual(expectedLength);
     });
+
     it('should only keep id, itemMasterId, and quantity for menuItems', function () {
       var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
-      var expectdItem = {id: 1, itemMasterId: 2, quantity: 3};
-      expect(result[0]).toEqual(expectdItem);
+      var expectdItem = {
+        id: 1,
+        itemMasterId: 2,
+        quantity: 3
+      };
+      expect(result.response[0]).toEqual(expectdItem);
     });
     it('should only keep itemMasterId and quantity for emptyMenuItems', function () {
       var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
-      var expectdItem = {itemMasterId: 5, quantity: 9};
-      expect(result[2]).toEqual(expectdItem);
+      var expectdItem = {
+        itemMasterId: 5,
+        quantity: 9
+      };
+      expect(result.response[2]).toEqual(expectdItem);
+    });
+  });
+
+  describe('filtered master menu items', function () {
+    it('should not allow to add items that are already in the store items', function () {
+      scope.menuItems = [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}];
+      scope.masterItemsList = [{id: 1}, {id: 2}, {id: 5}];
+      scope.$apply();
+      expect(scope.filteredMasterItemList.length).toBe(1);
     });
   });
 

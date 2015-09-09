@@ -8,10 +8,19 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstanceFactory, $routeParams, lodash) {
+  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast) {
     var $this = this;
     $scope.emptyMenuItems = [];
+    $scope.filteredMasterItemList = [];
     $scope.addItemsNumber = 1;
+
+    $scope.showToast = function (className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    };
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -82,6 +91,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       };
       storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getMenuItemsSuccessHandler);
     };
+
+    $scope.$watchGroup(['masterItemsList', 'menuList'], function () {
+      $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
+        return !(lodash.findWhere($scope.menuItems, {itemMasterId: item.id}));
+      });
+    });
 
     function getMasterItemsListSuccess(itemsListJSON) {
       $scope.masterItemsList = angular.copy(itemsListJSON.masterItems);
