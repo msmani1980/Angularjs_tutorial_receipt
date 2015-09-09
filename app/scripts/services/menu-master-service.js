@@ -21,8 +21,8 @@ angular.module('ts5App')
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getMenuMasterList() {
-      return requestResource.getMenuMasterList().$promise;
+    function getMenuMasterList(query) {
+      return requestResource.getMenuMasterList(query).$promise;
     }
 
     return {
