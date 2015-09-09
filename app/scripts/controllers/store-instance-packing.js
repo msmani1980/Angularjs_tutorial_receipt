@@ -30,6 +30,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       angular.element('#loading').modal('hide');
     }
 
+    $scope.deleteNewItem = function (itemIndex) {
+      $scope.emptyMenuItems.splice(itemIndex, 1);
+    };
+
     $scope.addItems = function () {
       if ($scope.filteredMasterItemList.length === 0) {
         showToast('warning', 'Add Item', 'There are no items available');
@@ -141,14 +145,19 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return newPayload;
     };
 
-
     function init() {
       showLoadingModal('Loading Store Detail for Packing...');
       $scope.storeId = $routeParams.storeId;
       $scope.APIItems = [];
       $scope.menuItems = [];
+      $scope.emptyMenuItems = [];
       storeInstanceFactory.getStoreDetails($scope.storeId).then(getStoreDetailsSuccessHandler, errorHandler);
     }
+
+
+    $scope.deleteInstanceItem = function (item) {
+      storeInstanceFactory.deleteStoreInstanceItem($scope.storeId, item.id).then(init);
+    };
 
 
     $scope.savePackingData = function () {
@@ -158,6 +167,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(init);
     };
 
-    init();
 
+    init();
   });
