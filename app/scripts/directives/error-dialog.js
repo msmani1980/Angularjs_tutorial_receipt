@@ -46,7 +46,7 @@ angular.module('ts5App')
           var watchGroup = formName + '.$error.pattern + ' + formName + '.$error.required';
           $scope.$parent.$watch(watchGroup, function() {
             $scope.checkForErrors();
-          }, true);
+          });
           $scope.$parent.$watchCollection(formName + '.$error', function() {
             var error = form.$error;
             if (!error.pattern && !error.required) {

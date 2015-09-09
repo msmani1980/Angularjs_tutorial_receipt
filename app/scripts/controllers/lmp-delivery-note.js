@@ -31,7 +31,6 @@ angular.module('ts5App')
     var _firstTime = true;
     var stateActions = {};
 
-
     function showMessage(message, messageType) {
       ngToast.create({
         className: messageType,
@@ -52,7 +51,7 @@ angular.module('ts5App')
       if ('data' in response) {
         angular.forEach(response.data, function(error) {
           this.push(error);
-        }, $scope.formErrors);
+        }, $scope.errorCustom);
       }
       $scope.displayError = true;
       hideLoadingModal();
@@ -228,6 +227,7 @@ angular.module('ts5App')
 
     function showFormErrors() {
       $scope.displayError = true;
+      $scope.errorCustom = [];
       if ($scope.form && $scope.form.$valid && !deliveryNoteHasItems()) {
         var error = {
           data: [{
@@ -245,7 +245,7 @@ angular.module('ts5App')
       $scope.state = $routeParams.state;
       $scope.routeParamState = $routeParams.state;
       $scope.displayError = false;
-      $scope.formErrors = [];
+      $scope.errorCustom = [];
 
       // private vars
       _initPromises = [];

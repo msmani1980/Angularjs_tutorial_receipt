@@ -17,13 +17,19 @@
 
 		<li ng-repeat="error in errorRequired">
 
-			<strong>{{ error }}</strong> is a required field.
+			<strong>{{ error }}</strong> - is a required field.
 
 		</li>
 
 		<li ng-repeat="error in errorPattern">
 
-			<strong>{{ error }}</strong> is invalid, recheck your input.
+			<strong>{{ error }}</strong> - is invalid, recheck your input.
+
+		</li>
+
+		<li ng-repeat="error in $parent.errorCustom">
+
+			<strong>{{ error.field}}</strong> - {{ error.value }}
 
 		</li>
 
