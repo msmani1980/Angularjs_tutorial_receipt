@@ -8,6 +8,28 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('storeInstanceSealService', function (ENV) {
-    //var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/seals';
+  .service('storeInstanceSealService', function ($resource, ENV) {
+
+    var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/seals';
+    // TODO this BE API is not done yet, unsure what the actual URL will be.
+
+    var requestParameters = {
+      id: '@id'
+    };
+
+    var actions = {
+      getStoreInstanceSeals: {
+        method: 'GET'
+      }
+    };
+
+    var requestResource = $resource(requestURL, requestParameters, actions);
+
+    function getStoreInstanceSeals(id) {
+      return requestResource.getStoreInstanceSeals(id).$promise;
+    }
+
+    return {
+      getStoreInstanceSeals: getStoreInstanceSeals
+    };
   });

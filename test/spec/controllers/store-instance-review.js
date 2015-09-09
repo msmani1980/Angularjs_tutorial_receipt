@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: StoreInstanceReviewCtrl', function () {
+describe('Controller: StoreInstanceReviewCtrl', function () {
 
 // load the controller's module
   beforeEach(module('ts5App'));

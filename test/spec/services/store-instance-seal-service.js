@@ -10,7 +10,7 @@ describe('Service: storeInstanceSealService', function () {
   beforeEach(inject(function (_storeInstanceSealService_) {
     storeInstanceSealService = _storeInstanceSealService_;
   }));
-
+  // TODO - these test, waiting on BE API to be completed for this.
   it('should do something', function () {
     expect(!!storeInstanceSealService).toBe(true);
   });
