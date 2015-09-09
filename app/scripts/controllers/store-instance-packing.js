@@ -29,7 +29,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    function errorHandler(error) {
+    function errorHandler() {
       hideLoadingModal();
     }
 
@@ -113,21 +113,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           quantity: parseInt(item.quantity) || 0
         };
         if (item.id) {
-          itemPayload.id = item.id
+          itemPayload.id = item.id;
         }
         newPayload.response.push(itemPayload);
       });
 
       return newPayload;
-    };
-
-
-    $scope.savePackingData = function () {
-      var payload = $this.formatStoreInstanceItemsPayload();
-      // TODO: make bulk API call and check for no duplicate items
-      storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (response) {
-        console.log(response);
-      });
     };
 
 
@@ -138,6 +129,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.menuItems = [];
       storeInstanceFactory.getStoreDetails($scope.storeId).then(getStoreDetailsSuccessHandler, errorHandler);
     }
+
+
+    $scope.savePackingData = function () {
+      var payload = $this.formatStoreInstanceItemsPayload();
+      showLoadingModal('Saving...');
+      // TODO: make bulk API call and check for no duplicate items
+      storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(init);
+    };
 
     init();
 

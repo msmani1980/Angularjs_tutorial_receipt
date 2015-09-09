@@ -98,8 +98,8 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
       id: storeId,
       api: 'items',
       itemIdOrBulk: itemId
-    }, payload);
-    return requestResource.updateStoreInstanceItem(requestPayload).$promise;
+    });
+    return requestResource.updateStoreInstanceItem(requestPayload, payload).$promise;
   }
 
   function updateStoreInstanceItemsBulk(storeId, payload) {
@@ -107,16 +107,16 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
       id: storeId,
       api: 'items',
       itemIdOrBulk: 'bulk'
-    }, payload);
-    return requestResource.updateStoreInstanceItemsBulk(requestPayload).$promise;
+    });
+    return requestResource.updateStoreInstanceItemsBulk(requestPayload, payload).$promise;
   }
 
   function createStoreInstanceItem(storeId, payload) {
     var requestPayload = angular.extend({}, {
       id: storeId,
       api: 'items'
-    }, payload);
-    return requestResource.createStoreInstanceItem(requestPayload).$promise;
+    });
+    return requestResource.createStoreInstanceItem(requestPayload, payload).$promise;
   }
 
   function deleteStoreInstanceItem(storeId, itemId, payload) {
