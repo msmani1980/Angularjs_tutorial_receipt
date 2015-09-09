@@ -1,7 +1,8 @@
 <div class="fluid-container">
   <!--<step-wizard></step-wizard>-->
 
-  <step-wizard steps="wizardSteps"></step-wizard>
+  <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()"></step-wizard>
+  <loose-data-alert show-alert="showLooseDataAlert" confirm-trigger="looseDataAlertConfirmTrigger()" cancel-trigger="looseDataAlertCancelTrigger()"></loose-data-alert>
 
   <form-error-dialog></form-error-dialog>
 

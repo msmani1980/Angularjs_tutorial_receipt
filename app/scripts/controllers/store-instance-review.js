@@ -11,6 +11,19 @@ angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
                                                    storeInstanceFactory) {
 
+    $scope.stepWizardPrevTrigger = function(){
+      $scope.showLooseDataAlert = true;
+      return false;
+    };
+
+    $scope.looseDataAlertConfirmTrigger = function(){
+      console.log('confirm triggered in controller');
+    };
+
+    $scope.looseDataAlertCancelTrigger = function(){
+      console.log('cancel triggered in controller');
+    };
+
     function getItemsSuccessHandler(dataFromAPI) {
       $scope.menuItems = dataFromAPI.response;
       $scope.menuItems.map(function(item){
