@@ -92,6 +92,20 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(scope.storeId);
       });
 
+      it('should remove the id of the instance items', function(){
+        scope.menuItems = [];
+        StoreInstancePackingCtrl.getStoreInstanceMenuItems();
+        scope.$digest();
+        expect(scope.menuItems[0].id).toBeUndefined();
+      });
+
+      it('should not remove the id of the items', function(){
+        scope.menuItems = [];
+        StoreInstancePackingCtrl.getStoreInstanceItems();
+        scope.$digest();
+        expect(scope.menuItems[0].id).toBeDefined();
+      });
+
       it('should call getItemsMasterList', function () {
         var expectedPayload = {
           itemTypeId: 1,

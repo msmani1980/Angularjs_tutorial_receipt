@@ -34,8 +34,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     }
 
-    // TODO: fix merging id - need to keep id from store instance items if there is overlap.
-    // TODO: what to do for id if only a menu item exists and a matching store instance item does not? can same menu item id be used?
     this.mergeMenuItems = function (menuItemsFromAPI) {
       if ($scope.menuItems.length <= 0) {
         $scope.menuItems = menuItemsFromAPI;
@@ -65,17 +63,26 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.mergeMenuItems(menuItems);
     }
 
-    function getStoreInstanceItems() {
-      storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler);
+    function getMenuItemsSuccessHandler(dataFromAPI) {
+      var menuItems = angular.copy(dataFromAPI.response);
+      angular.forEach(menuItems, function (item) {
+        delete item.id;
+        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+      });
+      $this.mergeMenuItems(menuItems);
     }
 
-    function getStoreInstanceMenuItems() {
+    this.getStoreInstanceItems = function () {
+      storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler);
+    };
+
+    this.getStoreInstanceMenuItems = function () {
       var payload = {
         itemTypeId: 1,
         scheduleDate: $scope.storeDetails.scheduleDate
       };
-      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler);
-    }
+      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getMenuItemsSuccessHandler);
+    };
 
     function getMasterItemsListSuccess(itemsListJSON) {
       $scope.masterItemsList = angular.copy(itemsListJSON.masterItems);
@@ -92,37 +99,32 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     function getStoreDetailsSuccessHandler(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
-      getStoreInstanceItems();
-      getStoreInstanceMenuItems();
+      $this.getStoreInstanceItems();
+      $this.getStoreInstanceMenuItems();
       getMasterItemsList();
     }
 
-    // TODO: cleanup
     this.formatStoreInstanceItemsPayload = function () {
       var newPayload = [];
-      angular.forEach($scope.menuItems, function (item) {
+      var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
+
+      angular.forEach(mergedItems, function (item) {
         var itemPayload = {
-          id: item.id,
-          itemMasterId: item.itemMasterId,
-          quantity: parseInt(item.quantity)
+          itemMasterId: item.itemMasterId || item.masterItem.id,
+          quantity: parseInt(item.quantity) || 0
         };
+        if (item.id) {
+          itemPayload.id = item.id
+        }
         newPayload.push(itemPayload);
       });
 
-      angular.forEach($scope.emptyMenuItems, function (item) {
-        var itemPayload = {
-          itemMasterId: item.masterItem.id,
-          quantity: parseInt(item.quantity)
-        };
-        newPayload.push(itemPayload);
-      });
       return newPayload;
     };
 
 
     $scope.savePackingData = function () {
       var payload = $this.formatStoreInstanceItemsPayload();
-      console.log(payload);
       // TODO: make bulk API call and check for no duplicate items
       //storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (response) {
       //  // success handler
