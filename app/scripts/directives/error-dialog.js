@@ -10,13 +10,14 @@ angular.module('ts5App')
   .directive('errorDialog', function() {
     var errorDialogController = function($scope) {
 
+      var form = $scope.$parent[$scope.formObject.$name];
       $scope.errorPattern = [];
       $scope.errorRequired = [];
-      $scope.displayError = false;
+      $scope.$parent.displayError = false;
 
       $scope.validateRequiredFields = function() {
         $scope.errorRequired = [];
-        angular.forEach($scope.form.$error.required, function(field) {
+        angular.forEach(form.$error.required, function(field) {
           if (field.$invalid) {
             var fieldName = field.$name;
             $scope.errorRequired.push(fieldName);
@@ -26,7 +27,7 @@ angular.module('ts5App')
 
       $scope.validatePatternFields = function() {
         $scope.errorPattern = [];
-        angular.forEach($scope.form.$error.pattern, function(field) {
+        angular.forEach(form.$error.pattern, function(field) {
           if (field.$invalid && field.$viewValue) {
             var fieldName = field.$name;
             $scope.errorPattern.push(fieldName);
@@ -40,14 +41,16 @@ angular.module('ts5App')
       };
 
       $scope.watchForm = function() {
-        if ($scope.form && $scope.form.$error) {
-          $scope.$watch('form.$error.pattern + form.$error.required', function() {
+        if (form && form.$error) {
+          var formName = $scope.formObject.$name;
+          var watchGroup = formName + '.$error.pattern + ' + formName + '.$error.required';
+          $scope.$parent.$watch(watchGroup, function() {
             $scope.checkForErrors();
-          });
-          $scope.$watchCollection('form.$error', function() {
-            var error = $scope.form.$error;
+          }, true);
+          $scope.$parent.$watchCollection(formName + '.$error', function() {
+            var error = form.$error;
             if (!error.pattern && !error.required) {
-              $scope.displayError = false;
+              $scope.$parent.displayError = false;
             }
           });
         }
@@ -59,6 +62,9 @@ angular.module('ts5App')
     return {
       templateUrl: '/views/directives/error-dialog.html',
       restrict: 'E',
-      controller: errorDialogController
+      controller: errorDialogController,
+      scope: {
+        formObject: '='
+      }
     };
   });

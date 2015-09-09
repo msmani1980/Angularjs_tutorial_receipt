@@ -1,4 +1,4 @@
-<div ng-show="displayError" class="alert alert-danger alert-dismissible ng-hide" role="alert">
+<div ng-show="$parent.displayError" class="alert alert-danger alert-dismissible ng-hide" role="alert">
 
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
 
@@ -27,7 +27,7 @@
 
 		</li>
 
-		<li ng-show="formErrors" ng-repeat="error in formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> -
+		<li ng-show="$parent.formErrors" ng-repeat="error in $parent.formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> -
 
 			<span ng-switch-when="000">Field can't be empty</span>
 
