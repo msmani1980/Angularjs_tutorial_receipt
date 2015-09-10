@@ -1,11 +1,11 @@
 [
   {
-    "id": 10,
+    "id": 1,
     "statusName": "Ready for Packing",
     "name": "1"
   },
   {
-    "id": 20,
+    "id": 2,
     "statusName": "Ready for Seals",
     "name": "2"
   },
@@ -15,23 +15,23 @@
     "name": "3"
   },
   {
-    "id": 17,
+    "id": 7,
     "statusName": "Dispatched",
     "name": "4"
   },
   {
-    "id": 38,
+    "id": 8,
     "statusName": "Un-dispatched",
-    "name": "5"
-  },
-  {
-    "id": 29,
-    "statusName": "Inbounded",
     "name": "7"
   },
   {
-    "id": 11,
-    "statusName": "On Floor",
+    "id": 9,
+    "statusName": "Inbounded",
     "name": "6"
+  },
+  {
+    "id": 10,
+    "statusName": "On Floor",
+    "name": "5"
   }
 ]

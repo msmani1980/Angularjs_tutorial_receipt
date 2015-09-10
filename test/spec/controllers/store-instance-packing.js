@@ -5,16 +5,20 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance-menu-items.json'));
+  beforeEach(module('served/store-instance-details.json'));
   beforeEach(module('served/store-instance-item-list.json'));
   beforeEach(module('served/master-item-list.json'));
+  beforeEach(module('served/store-status-response.json'));
 
 
   var StoreInstancePackingCtrl;
   var scope;
   var storeInstanceFactory;
-  var storeDetailsJSON;
   var routeParams;
+  var getUpdatedStoreStatusDeferred;
+  var servedStoreStatusJSON;
   var getStoreDetailsDeferred;
+  var servedStoreInstanceDetailsJSON;
   var getStoreInstanceMenuItemsDeferred;
   var servedStoreInstanceMenuItemsJSON;
   var getStoreInstanceItemsDeferred;
@@ -24,10 +28,12 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedMasterItemList_) {
+    inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedMasterItemList_, _servedStoreInstanceDetails_, _servedStoreStatusResponse_) {
       servedStoreInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
       servedStoreInstanceItemsJSON = _servedStoreInstanceItemList_;
       servedMasterItemsJSON = _servedMasterItemList_;
+      servedStoreInstanceDetailsJSON = _servedStoreInstanceDetails_;
+      servedStoreStatusJSON = _servedStoreStatusResponse_;
     });
     scope = $rootScope.$new();
     routeParams = {
@@ -36,7 +42,11 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     storeInstanceFactory = $injector.get('storeInstanceFactory');
 
+    getUpdatedStoreStatusDeferred = $q.defer();
+    getUpdatedStoreStatusDeferred.resolve(servedStoreStatusJSON);
+
     getStoreDetailsDeferred = $q.defer();
+
     getStoreInstanceMenuItemsDeferred = $q.defer();
     getStoreInstanceMenuItemsDeferred.resolve(servedStoreInstanceMenuItemsJSON);
 
@@ -50,6 +60,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
     spyOn(storeInstanceFactory, 'getItemsMasterList').and.returnValue(getMasterItemsDeferred.promise);
+    spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(getUpdatedStoreStatusDeferred.promise);
+
 
     StoreInstancePackingCtrl = $controller('StoreInstancePackingCtrl', {
       $scope: scope,
@@ -61,14 +73,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     describe('API calls', function () {
 
       beforeEach(function () {
-        storeDetailsJSON = {
-          LMPStation: 'ORD',
-          storeNumber: '180485',
-          scheduleDate: '2015-08-13',
-          scheduleNumber: 'SCHED123',
-          storeInstanceNumber: scope.storeId
-        };
-        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+        getStoreDetailsDeferred.resolve(servedStoreInstanceDetailsJSON);
         scope.$digest();
       });
 
@@ -77,13 +82,13 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should attach all properties of JSON to scope', function () {
-        expect(scope.storeDetails).toEqual(storeDetailsJSON);
+        expect(scope.storeDetails).toEqual(servedStoreInstanceDetailsJSON);
       });
 
       it('should call getStoreInstanceMenuItems', function () {
         var expectedPayload = {
           itemTypeId: 1, // this is 1 because we are requesting regular items.
-          date: storeDetailsJSON.scheduleDate
+          date: servedStoreInstanceDetailsJSON.scheduleDate
         };
         expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeId, expectedPayload);
       });
@@ -109,10 +114,20 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       it('should call getItemsMasterList', function () {
         var expectedPayload = {
           itemTypeId: 1,
-          startDate: storeDetailsJSON.scheduleDate,
-          endDate: storeDetailsJSON.scheduleDate
+          startDate: servedStoreInstanceDetailsJSON.scheduleDate,
+          endDate: servedStoreInstanceDetailsJSON.scheduleDate
         };
         expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+      it('should update store status to 1', function () {
+        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(servedStoreInstanceDetailsJSON.storeId, 1);
+      });
+
+      it('should update store details status objects', function () {
+        scope.$digest();
+        var expectedCurrentId = servedStoreStatusJSON.statusId;
+        expect(scope.storeDetails.currentStatus.id).toEqual(expectedCurrentId);
       });
 
       describe('mergeMenuItems', function () {

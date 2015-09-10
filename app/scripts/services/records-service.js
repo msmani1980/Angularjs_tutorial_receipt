@@ -28,7 +28,7 @@ angular.module('ts5App')
         method: 'GET',
         isArray: true
       },
-      getStoreStatus: {
+      getStoreStatusList: {
         method: 'GET',
         isArray: true
       }
@@ -50,15 +50,15 @@ angular.module('ts5App')
       return requestResource.getDiscountTypes().$promise;
     }
 
-    function getStoreStatus() {
+    function getStoreStatusList() {
       requestParameters.api = 'store-status';
-      return requestResource.getStoreStatus().$promise;
+      return requestResource.getStoreStatusList().$promise;
     }
 
     return {
       getCrewBaseTypes: getCrewBaseTypes,
       getCommissionPayableTypes: getCommissionPayableTypes,
       getDiscountTypes: getDiscountTypes,
-      getStoreStatus: getStoreStatus
+      getStoreStatusList: getStoreStatusList
     };
   });

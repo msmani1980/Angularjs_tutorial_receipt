@@ -103,8 +103,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storesService.getStore(storeId);
     }
 
-    function getStoreStatus() {
-      return recordsService.getStoreStatus();
+    function getStoreStatusList() {
+      return recordsService.getStoreStatusList();
     }
 
     function getDependenciesForStoreInstance(dataFromAPI) {
@@ -113,24 +113,13 @@ angular.module('ts5App').service('storeInstanceFactory',
 
       dependenciesArray.push(getStore(responseData.storeId));
       dependenciesArray.push(getStation(responseData.cateringStationId));
-      dependenciesArray.push(getStoreStatus());
+      dependenciesArray.push(getStoreStatusList());
 
       if (responseData.carrierId) {
         dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
       }
 
       return dependenciesArray;
-    }
-
-    function getStoreInstanceStatusDetails(responseCollection, dataFromAPI) {
-      var storeStatusObject = lodash.findWhere(responseCollection[2], {name: dataFromAPI.statusId.toString()});
-      var currentStatusId = (parseInt(storeStatusObject.name) + 1).toString();
-      var nextStatusObject = lodash.findWhere(responseCollection[2], {name: currentStatusId});
-
-      return {
-        statusName: storeStatusObject.statusName,
-        nextStatusId: parseInt(nextStatusObject.name)
-      };
     }
 
     function formatResponseCollection(responseCollection, dataFromAPI) {
@@ -140,8 +129,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.scheduleDate = dataFromAPI.scheduleDate;
       storeDetails.scheduleNumber = dataFromAPI.scheduleNumber;
       storeDetails.storeInstanceNumber = dataFromAPI.id;
-
-      angular.extend(storeDetails, getStoreInstanceStatusDetails(responseCollection, dataFromAPI, storeDetails));
+      storeDetails.statusList = responseCollection[2];
+      storeDetails.currentStatus = lodash.findWhere(storeDetails.statusList, {id: dataFromAPI.statusId});
 
       if (responseCollection.length > 3) {
         storeDetails.carrierNumber = responseCollection[3].carrierNumber;
@@ -160,6 +149,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       }, getStoreDetailsDeferred.reject);
 
       return getStoreDetailsDeferred.promise;
+    }
+
+    function updateStoreInstanceStatus(storeId, statusId) {
+     return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
     }
 
     return {
@@ -187,7 +180,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoresList: getStoresList,
       getStore: getStore,
       getStoreDetails: getStoreDetails,
-      getStoreStatus: getStoreStatus
+      getStoreStatusList: getStoreStatusList,
+      updateStoreInstanceStatus: updateStoreInstanceStatus
     };
 
   });

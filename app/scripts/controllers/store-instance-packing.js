@@ -98,7 +98,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler);
     };
 
-    $scope.$watchGroup(['masterItemsList', 'menuList'], function () {
+    $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
       $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
         return !(lodash.findWhere($scope.menuItems, {itemMasterId: item.id}));
       });
@@ -117,10 +117,29 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.getItemsMasterList(filterPayload).then(getMasterItemsListSuccess);
     }
 
+    function updateStoreDetails(response) {
+      $scope.storeDetails.currentStatus = lodash.findWhere($scope.storeDetails.statusList, {id: response.statusId});
+    }
+
+    function updateStatusToStep(stepName) {
+      var statusObject = lodash.findWhere($scope.storeDetails.statusList, {name: stepName.toString()});
+      if (!statusObject) {
+        return;
+      }
+      var statusId = statusObject.id;
+      storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.storeId, statusId).then(updateStoreDetails);
+    }
+
     function getStoreDetailsSuccessHandler(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
+
       $this.getStoreInstanceItems();
       $this.getStoreInstanceMenuItems();
+
+      if($scope.storeDetails.statusId !== 1) {
+        updateStatusToStep(1);
+      }
+
       getMasterItemsList();
     }
 
@@ -180,14 +199,24 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    function savePackingDataSuccessHandler(dataFromAPI) {
+      $scope.emptyMenuItems = [];
+      angular.forEach(dataFromAPI.response, function(item) {
+        var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId})
+        item.itemCode = masterItem.itemCode;
+        item.itemName = masterItem.itemName;
+      });
+      getItemsSuccessHandler(dataFromAPI);
+      updateStatusToStep(2);
+      hideLoadingModal();
+    }
 
     $scope.savePackingData = function () {
       var payload = $this.formatStoreInstanceItemsPayload();
       showLoadingModal('Saving...');
       // TODO: make bulk API call and check for no duplicate items
-      storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(init);
+      storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(savePackingDataSuccessHandler);
     };
-
 
     init();
   });

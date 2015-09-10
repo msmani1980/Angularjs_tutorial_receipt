@@ -69,13 +69,13 @@ describe('Service: commissionDataService', function () {
 
     describe('getStoreStatus', function () {
       it('should be accessible in the service', function () {
-        expect(!!recordsService.getStoreStatus).toBe(true);
+        expect(!!recordsService.getStoreStatusList).toBe(true);
       });
 
       it('should make GET request to API', function () {
         var expectedURL = /records\/store-status$/;
         httpBackend.expectGET(expectedURL).respond(200, []);
-        recordsService.getStoreStatus().then(function (response) {
+        recordsService.getStoreStatusList().then(function (response) {
           expect(response).toBeDefined();
         });
         httpBackend.flush();

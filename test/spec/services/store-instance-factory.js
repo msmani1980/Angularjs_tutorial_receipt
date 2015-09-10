@@ -92,10 +92,11 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(storeInstanceService, 'updateStoreInstanceItem');
     spyOn(storeInstanceService, 'updateStoreInstanceItemsBulk');
     spyOn(storeInstanceService, 'deleteStoreInstanceItem');
+    spyOn(storeInstanceService, 'updateStoreInstanceStatus');
     spyOn(menuMasterService, 'getMenuMasterList');
     spyOn(storesService, 'getStoresList');
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
-    spyOn(recordsService, 'getStoreStatus').and.returnValue(getStoreStatusDeferred.promise);
+    spyOn(recordsService, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise);
 
   }));
 
@@ -175,6 +176,12 @@ describe('Service: storeInstanceFactory', function () {
     it('should call deleteStoreInstanceItem', function () {
       storeInstanceFactory.deleteStoreInstanceItem(id, itemId);
       expect(storeInstanceService.deleteStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
+    });
+
+    it('should call updateStoreInstanceStatus', function () {
+      var statusId = 1;
+      storeInstanceFactory.updateStoreInstanceStatus(id, statusId);
+      expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalledWith(id, statusId);
     });
   });
 
@@ -264,12 +271,8 @@ describe('Service: storeInstanceFactory', function () {
         expect(storeDetails.storeNumber).toBeDefined();
       });
 
-      it('should contain status Name', function () {
-        expect(storeDetails.statusName).toBeDefined();
-      });
-
-      it('should contain nextStatusId', function () {
-        expect(storeDetails.nextStatusId).toBeDefined();
+      it('should contain current status object', function () {
+        expect(storeDetails.currentStatus).toBeDefined();
       });
     });
 
@@ -277,8 +280,8 @@ describe('Service: storeInstanceFactory', function () {
 
   describe('recordsService calls', function () {
     it('should call getStoreStatus', function () {
-      recordsService.getStoreStatus();
-      expect(recordsService.getStoreStatus).toHaveBeenCalled();
+      storeInstanceFactory.getStoreStatusList();
+      expect(recordsService.getStoreStatusList).toHaveBeenCalled();
     });
   });
 
