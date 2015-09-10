@@ -12,11 +12,16 @@ describe('Service: commissionDataService', function () {
     recordsService = _recordsService_;
   }));
 
+  afterEach(function () {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });
+
   it('should exist', function () {
     expect(!!recordsService).toBe(true);
   });
 
-  fdescribe('API calls', function () {
+  describe('API calls', function () {
     describe('getCrewBaseTypes', function () {
       it('should be accessible in the service', function () {
         expect(!!recordsService.getCrewBaseTypes).toBe(true);

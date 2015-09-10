@@ -18,6 +18,7 @@ describe('Service: storeInstanceFactory', function () {
   var storesService;
   var stationsService;
   var itemsService;
+  var recordsService;
 
   var getStationDeferred;
   var getCarrierNumberDeferred;
@@ -63,6 +64,8 @@ describe('Service: storeInstanceFactory', function () {
     storeInstanceService = $injector.get('storeInstanceService');
     menuMasterService = $injector.get('menuMasterService');
     storesService = $injector.get('storesService');
+    recordsService = $injector.get('recordsService');
+
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(itemsService, 'getItemsList');
@@ -86,6 +89,8 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(menuMasterService, 'getMenuMasterList');
     spyOn(storesService, 'getStoresList');
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
+    spyOn(recordsService, 'getStoreStatus');
+
   }));
 
   describe('storesService calls', function () {
@@ -97,7 +102,7 @@ describe('Service: storeInstanceFactory', function () {
 
   describe('menuMasterService calls', function () {
     it('should call getMenuMasterList', function () {
-      var query = { 
+      var query = {
         startDate: '09102015'
       };
       storeInstanceFactory.getMenuMasterList(query);
@@ -254,6 +259,13 @@ describe('Service: storeInstanceFactory', function () {
       });
     });
 
+  });
+
+  describe('recordsService calls', function () {
+    it('should call getStoreStatus', function () {
+      recordsService.getStoreStatus();
+      expect(recordsService.getStoreStatus).toHaveBeenCalled();
+    });
   });
 
 });

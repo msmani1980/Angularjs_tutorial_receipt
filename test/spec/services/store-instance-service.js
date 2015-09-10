@@ -13,6 +13,11 @@ describe('Service: storeInstanceService', function () {
     httpBackend = $httpBackend;
   }));
 
+  afterEach(function () {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });
+
   describe('getStoreInstancesList', function () {
     it('should make GET request to API', function () {
       var expectedURL = /dispatch\/store-instances$/;

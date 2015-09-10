@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').service('storeInstanceFactory',
   function (storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
-            menuMasterService, storesService, stationsService, itemsService, $q) {
+            menuMasterService, storesService, stationsService, itemsService, recordsService, $q) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
@@ -103,6 +103,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storesService.getStore(storeId);
     }
 
+    function getStoreStatus() {
+      return recordsService.getStoreStatus();
+    }
+
     function getDependenciesForStoreInstance(dataFromAPI) {
       var responseData = angular.copy(dataFromAPI);
       var dependenciesArray = [];
@@ -167,7 +171,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       getMenuMasterList: getMenuMasterList,
       getStoresList: getStoresList,
       getStore: getStore,
-      getStoreDetails: getStoreDetails
+      getStoreDetails: getStoreDetails,
+      getStoreStatus: getStoreStatus
     };
 
   });

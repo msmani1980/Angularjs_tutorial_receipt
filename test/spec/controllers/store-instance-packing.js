@@ -167,7 +167,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         quantity: 9,
         nonsenseKey: 4,
         masterItem: {id: 5}
-      }]
+      }];
     });
 
     it('should merge menuItems and emptyMenuItems', function () {
