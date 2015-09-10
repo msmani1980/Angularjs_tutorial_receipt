@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').service('storeInstanceFactory',
   function (storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
-            menuMasterService, storesService, stationsService, itemsService, recordsService, $q) {
+            menuMasterService, storesService, stationsService, itemsService, recordsService, $q, lodash) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
@@ -113,12 +113,24 @@ angular.module('ts5App').service('storeInstanceFactory',
 
       dependenciesArray.push(getStore(responseData.storeId));
       dependenciesArray.push(getStation(responseData.cateringStationId));
+      dependenciesArray.push(getStoreStatus());
 
       if (responseData.carrierId) {
         dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
       }
 
       return dependenciesArray;
+    }
+
+    function getStoreInstanceStatusDetails(responseCollection, dataFromAPI) {
+      var storeStatusObject = lodash.findWhere(responseCollection[2], {name: dataFromAPI.statusId.toString()});
+      var currentStatusId = (parseInt(storeStatusObject.name) + 1).toString();
+      var nextStatusObject = lodash.findWhere(responseCollection[2], {name: currentStatusId});
+
+      return {
+        statusName: storeStatusObject.statusName,
+        nextStatusId: parseInt(nextStatusObject.name)
+      };
     }
 
     function formatResponseCollection(responseCollection, dataFromAPI) {
@@ -128,8 +140,11 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.scheduleDate = dataFromAPI.scheduleDate;
       storeDetails.scheduleNumber = dataFromAPI.scheduleNumber;
       storeDetails.storeInstanceNumber = dataFromAPI.id;
-      if(responseCollection.length > 2) {
-        storeDetails.carrierNumber = responseCollection[2].carrierNumber;
+
+      angular.extend(storeDetails, getStoreInstanceStatusDetails(responseCollection, dataFromAPI, storeDetails));
+
+      if (responseCollection.length > 3) {
+        storeDetails.carrierNumber = responseCollection[3].carrierNumber;
       }
       return storeDetails;
     }

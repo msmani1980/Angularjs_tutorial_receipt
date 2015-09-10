@@ -4,7 +4,7 @@ describe('Service: storeInstanceFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/store-instance.json', 'served/store.json', 'served/carrier-number.json', 'served/station.json'));
+  beforeEach(module('served/store-instance.json', 'served/store.json', 'served/carrier-number.json', 'served/station.json', 'served/store-status.json'));
 
   // instantiate service
   var storeInstanceFactory;
@@ -24,21 +24,24 @@ describe('Service: storeInstanceFactory', function () {
   var getCarrierNumberDeferred;
   var getStoreDeferred;
   var getStoreInstanceDeferred;
+  var getStoreStatusDeferred;
 
   var servedStoreInstanceJSON;
   var servedStoreJSON;
   var servedCarrierNumberJSON;
   var servedStationJSON;
+  var servedStoreStatusJSON;
 
   var scope;
 
   beforeEach(inject(function (_servedStoreInstance_, _storeInstanceFactory_, $injector, $q, $rootScope) {
 
-    inject(function (_servedStoreInstance_, _servedStore_, _servedCarrierNumber_, _servedStation_) {
+    inject(function (_servedStoreInstance_, _servedStore_, _servedCarrierNumber_, _servedStation_, _servedStoreStatus_) {
       servedStoreInstanceJSON = _servedStoreInstance_;
       servedStoreJSON = _servedStore_;
       servedCarrierNumberJSON = _servedCarrierNumber_;
       servedStationJSON = _servedStation_;
+      servedStoreStatusJSON = _servedStoreStatus_;
     });
     scope = $rootScope.$new();
     storeInstanceFactory = _storeInstanceFactory_;
@@ -54,6 +57,9 @@ describe('Service: storeInstanceFactory', function () {
 
     getStoreInstanceDeferred = $q.defer();
     getStoreInstanceDeferred.resolve(servedStoreInstanceJSON);
+
+    getStoreStatusDeferred = $q.defer();
+    getStoreStatusDeferred.resolve(servedStoreStatusJSON);
 
     itemsService = $injector.get('itemsService');
     catererStationService = $injector.get('catererStationService');
@@ -89,7 +95,7 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(menuMasterService, 'getMenuMasterList');
     spyOn(storesService, 'getStoresList');
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
-    spyOn(recordsService, 'getStoreStatus');
+    spyOn(recordsService, 'getStoreStatus').and.returnValue(getStoreStatusDeferred.promise);
 
   }));
 
@@ -256,6 +262,14 @@ describe('Service: storeInstanceFactory', function () {
 
       it('should contain store number', function () {
         expect(storeDetails.storeNumber).toBeDefined();
+      });
+
+      it('should contain status Name', function () {
+        expect(storeDetails.statusName).toBeDefined();
+      });
+
+      it('should contain nextStatusId', function () {
+        expect(storeDetails.nextStatusId).toBeDefined();
       });
     });
 
