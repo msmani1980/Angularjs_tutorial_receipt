@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Directive: looseDataAlert', function () {
+describe('Directive: looseDataAlert', function () {
 
   // load the directive's module
   beforeEach(module('ts5App'));
