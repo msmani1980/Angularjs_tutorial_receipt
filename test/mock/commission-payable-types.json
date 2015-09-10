@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Retail item"
+  },
+  {
+    "id": 2,
+    "name": "Epos sales"
+  },
+  {
+    "id": 3,
+    "name": "Cash banked"
+  }
+]

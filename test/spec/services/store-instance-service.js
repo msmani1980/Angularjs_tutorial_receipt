@@ -188,4 +188,17 @@ describe('Service: storeInstanceService', function () {
     });
   });
 
+  describe('updateStoreInstanceStatus', function () {
+    it('should make PUT request to API', function () {
+      var expectedURL = /dispatch\/store-instances\/\d+\/status\/\d+$/;
+      var fakeStoreId = 10;
+      var fakeStatusId = 20;
+      httpBackend.expectPUT(expectedURL).respond(200, {});
+      storeInstanceService.updateStoreInstanceStatus(fakeStoreId, fakeStatusId).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+  });
+
 });

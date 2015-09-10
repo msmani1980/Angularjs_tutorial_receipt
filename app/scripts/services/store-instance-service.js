@@ -50,6 +50,9 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     },
     getStoreInstanceMenuItems: {
       method: 'GET'
+    },
+    updateStoreInstanceStatus: {
+      method: 'PUT'
     }
   };
 
@@ -110,7 +113,6 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     });
     return requestResource.updateStoreInstanceItemsBulk(requestPayload, payload).$promise;
   }
-
   function createStoreInstanceItem(storeId, payload) {
     var requestPayload = angular.extend({}, {
       id: storeId,
@@ -136,6 +138,15 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.getStoreInstanceMenuItems(requestPayload).$promise;
   }
 
+  function updateStoreInstanceStatus(storeId, statusId) {
+    var requestPayload = angular.extend({}, {
+      id: storeId,
+      api: 'status',
+      itemIdOrBulk: statusId
+    });
+    return requestResource.updateStoreInstanceStatus(requestPayload).$promise;
+  }
+
   return {
     getStoreInstancesList: getStoreInstancesList,
     getStoreInstance: getStoreInstance,
@@ -147,6 +158,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     getStoreInstanceMenuItems: getStoreInstanceMenuItems,
     updateStoreInstanceItem: updateStoreInstanceItem,
     updateStoreInstanceItemsBulk: updateStoreInstanceItemsBulk,
+    updateStoreInstanceStatus: updateStoreInstanceStatus,
     createStoreInstanceItem: createStoreInstanceItem,
     deleteStoreInstanceItem: deleteStoreInstanceItem
   };
