@@ -1,15 +1,15 @@
 'use strict';
 
-describe('Service: storeInstanceSealService', function () {
+describe('Service: sealColorsService', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
 
   // instantiate service
-  var storeInstanceSealService;
+  var sealColorsService;
   var httpBackend;
-  beforeEach(inject(function (_storeInstanceSealService_, $httpBackend) {
-    storeInstanceSealService = _storeInstanceSealService_;
+  beforeEach(inject(function (_sealColorsService_, $httpBackend) {
+    sealColorsService = _sealColorsService_;
     httpBackend = $httpBackend;
   }));
 
@@ -18,15 +18,15 @@ describe('Service: storeInstanceSealService', function () {
     httpBackend.verifyNoOutstandingRequest();
   });
 
-  describe('getStoreInstanceSeals', function () {
+  describe('getSealColors', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+\/seals$/;
-      var fakeId = 4;
+      var expectedURL = /seal\/colors$/;
       httpBackend.expectGET(expectedURL).respond(200, {});
-      storeInstanceSealService.getStoreInstanceSeals(fakeId).then(function (response) {
+      sealColorsService.getSealColors().then(function (response) {
         expect(response).toBeDefined();
       });
       httpBackend.flush();
     });
   });
+
 });
