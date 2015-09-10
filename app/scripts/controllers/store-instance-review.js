@@ -16,6 +16,7 @@ angular.module('ts5App')
     var _sealTypes = [];
     var _sealColors = [];
     var _storeInstanceSeals = [];
+    $scope.filteredMasterItemList = [];
 
     function showMessage(message, messageType) {
       ngToast.create({className: messageType, dismissButton: true, content: '<strong>Store Instance Review</strong>: ' + message});

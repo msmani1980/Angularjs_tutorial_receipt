@@ -38,7 +38,28 @@
             <button type="button" class="btn btn-info" ng-click="goToWizardStep(1)">Edit</button>
           </div>
         </div>
-        <store-instance-pack-list></store-instance-pack-list>
+        <table class="table table-striped pick-list">
+          <thead>
+          <tr>
+            <th>Retail Item Details</th>
+            <th width="15%">Template Quantity</th>
+            <th width="15%">Packed Quantity</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
+            <td>
+              <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
+            </td>
+            <td>
+              <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
+            </td>
+            <td>
+              <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </accordion-group>
     </accordion>
 
