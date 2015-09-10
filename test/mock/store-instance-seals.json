@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "count": 3,
+    "limit": 3,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 24,
+      "companyId": 403,
+      "storeInstanceId": 17,
+      "type": 1,
+      "color": "#000000",
+      "sealNumbers": [
+        "4567"
+      ],
+      "createdBy": 1,
+      "createdOn": "2015-08-31 20:50:21.009188",
+      "updatedBy": null,
+      "updatedOn": null,
+      "tampered": false
+    },
+    {
+      "id": 26,
+      "companyId": 403,
+      "storeInstanceId": 17,
+      "type": 2,
+      "color": "#000001",
+      "sealNumbers": [
+        "123"
+      ],
+      "createdBy": 1,
+      "createdOn": "2015-08-31 20:50:42.101833",
+      "updatedBy": null,
+      "updatedOn": null,
+      "tampered": false
+    },
+    {
+      "id": 27,
+      "companyId": 403,
+      "storeInstanceId": 17,
+      "type": 1,
+      "color": "#000000",
+      "sealNumbers": [
+        "1"
+      ],
+      "createdBy": 1,
+      "createdOn": "2015-09-02 18:42:21.014353",
+      "updatedBy": null,
+      "updatedOn": null,
+      "tampered": false
+    }
+  ]
+}
