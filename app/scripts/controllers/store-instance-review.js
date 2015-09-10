@@ -10,9 +10,12 @@
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
                                                    storeInstanceFactory, $location, storeInstanceReviewFactory,
-                                                   $q, ngToast) {
+                                                   $q, ngToast, $filter) {
 
-    var storeInstancePromises = [];
+    var _initPromises = [];
+    var _sealTypes = [];
+    var _sealColors = [];
+    var _storeInstanceSeals = [];
 
     function showMessage(message, messageType) {
       ngToast.create({className: messageType, dismissButton: true, content: '<strong>Store Instance Review</strong>: ' + message});
@@ -53,10 +56,6 @@ angular.module('ts5App')
 
     function getItemsSuccessHandler(dataFromAPI) {
       $scope.menuItems = dataFromAPI.response;
-      $scope.menuItems.map(function(item){
-        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
-        item.disabled = true;
-      });
     }
 
     function getStoreInstanceMenuItems() {
@@ -64,43 +63,63 @@ angular.module('ts5App')
         itemTypeId: 1,
         scheduleDate: $scope.storeDetails.scheduleDate
       };
-      storeInstancePromises.push(
+      _initPromises.push(
         storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload)
           .then(getItemsSuccessHandler)
       );
     }
 
     function setStoreInstanceSeals(dataFromAPI){
-      $scope.storeInstanceSeals = dataFromAPI;
-      // TODO parse this: console.log(dataFromAPI);
+      _storeInstanceSeals = dataFromAPI.response;
     }
 
     function setSealColors(dataFromAPI){
-      $scope.sealColors = dataFromAPI;
-      // TODO parse this: console.log(dataFromAPI);
+      _sealColors = dataFromAPI.response;
     }
 
     function setSealTypes(dataFromAPI){
-      $scope.sealTypes = dataFromAPI;
-      // TODO parse this: console.log(dataFromAPI);
+      _sealTypes = dataFromAPI;
     }
 
-    function allStoreInstancePromisesResolved(){
-      // TODO console.log('all store instance promises resolved');
-      showMessage('Loaded', 'info'); // TODO FPO
+    function getSealNumbersByTypeId(sealTypeId){
+      var seals = $filter('filter')(_storeInstanceSeals, {type: sealTypeId}, true);
+      var sealNumbers = [];
+      for(var i in seals){
+        for(var j in seals[i].sealNumbers){
+          sealNumbers.push(seals[i].sealNumbers[j]);
+        }
+      }
+      return sealNumbers;
+    }
+
+    function initPromisesResolved(){
+      $scope.menuItems.map(function(item){
+        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+        item.disabled = true;
+      });
+      $scope.seals = [];
+      _sealTypes.map(function(sealType){
+        $scope.seals.push({
+          name: sealType.name,
+          bgColor: $filter('filter')(_sealColors, {type: sealType.id}, true)[0].color,
+          sealNumbers: getSealNumbersByTypeId(sealType.id)
+        });
+        return _sealTypes;
+      });
       hideLoadingModal();
+      showMessage('Data loaded', 'info');
     }
 
     function getStoreInstanceSeals() {
-      storeInstancePromises.push(
+      _initPromises.push(
         storeInstanceReviewFactory.getStoreInstanceSeals($scope.storeId)
           .then(setStoreInstanceSeals)
       );
-      storeInstancePromises.push(
+      _initPromises.push(
         storeInstanceReviewFactory.getSealColors()
           .then(setSealColors)
       );
-      storeInstancePromises.push(
+      _initPromises.push(
         storeInstanceReviewFactory.getSealTypes()
           .then(setSealTypes)
       );
@@ -110,11 +129,14 @@ angular.module('ts5App')
       $scope.storeDetails = dataFromAPI;
       getStoreInstanceMenuItems();
       getStoreInstanceSeals();
-      $q.all(storeInstancePromises).then(allStoreInstancePromisesResolved, showResponseErrors);
+      $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
     }
 
     function init() {
-      storeInstancePromises = [];
+      _initPromises = [];
+      _sealTypes = [];
+      _sealColors = [];
+      _storeInstanceSeals = [];
 
       $scope.displayError = false;
       $scope.formErrors = [];
