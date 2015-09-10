@@ -12,20 +12,33 @@ describe('the Store Instance Seals controller', function () {
   var $scope;
   var templateCache;
   var compile;
+  var storeDetailsJSON;
+  var storeInstanceFactory;
   var storeInstanceDispatchWizardConfig;
   var routeParams;
+  var getStoreDetailsDeferred;
   var storeId;
 
-  beforeEach(inject(function($injector,$rootScope,$controller) {
-    storeId = 123;
+
+  beforeEach(inject(function($injector, $rootScope, $controller, $q) {
+
+    storeId = 5;
+
     $scope = $rootScope.$new();
+
     templateCache = $injector.get('$templateCache');
-    compile = $injector.get('$compile');
-    storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
     routeParams = $injector.get('$routeParams');
+    compile = $injector.get('$compile');
+
+    storeInstanceFactory = $injector.get('storeInstanceFactory');
+    storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
+
+    getStoreDetailsDeferred = $q.defer();
+    spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
+
     StoreInstanceSealsCtrl = $controller('StoreInstanceSealsCtrl', {
       $scope: $scope,
-      $routeParams: { id: storeId }
+      $routeParams: {storeId: storeId}
     });
 
   }));
@@ -38,7 +51,7 @@ describe('the Store Instance Seals controller', function () {
     return view;
   }
 
-  fdescribe('when controller executes', function() {
+  describe('when controller executes', function() {
 
     beforeEach(function() {
       $scope.$digest();
@@ -51,6 +64,35 @@ describe('the Store Instance Seals controller', function () {
 
     it('should set the storeId scope variable', function(){
       expect($scope.storeId).toEqual(storeId);
+    });
+
+    describe('the get store details API call', function () {
+
+      beforeEach(function () {
+        storeDetailsJSON = {
+          LMPStation: 'ORD',
+          storeNumber: '180485',
+          scheduleDate: '2015-08-13',
+          scheduleNumber: 'SCHED123',
+          storeInstanceNumber: $scope.storeId
+        };
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+        $scope.$digest();
+      });
+
+      it('should get the store details', function () {
+        expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith($scope.storeId);
+      });
+
+      it('should attach all properties of JSON to scope', function () {
+        expect($scope.storeDetails).toEqual(storeDetailsJSON);
+      });
+
+      it('should set wizardSteps', function(){
+        var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.storeId);
+        expect($scope.wizardSteps).toEqual(wizardSteps);
+      });
+
     });
 
   });
@@ -76,6 +118,5 @@ describe('the Store Instance Seals controller', function () {
     });
 
   });
-
 
 });
