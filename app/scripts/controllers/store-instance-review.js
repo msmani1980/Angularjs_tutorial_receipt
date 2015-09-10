@@ -37,7 +37,7 @@ angular.module('ts5App')
     }
 
     $scope.stepWizardPrevTrigger = function(){
-      $scope.showLooseDataAlert = true;
+      $scope.showLoseDataAlert = true;
       return false;
     };
 
@@ -46,7 +46,7 @@ angular.module('ts5App')
       $scope.stepWizardPrevTrigger();
     };
 
-    $scope.looseDataAlertConfirmTrigger = function(){
+    $scope.loseDataAlertConfirmTrigger = function(){
       var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
       $location.url(uri);
     };
