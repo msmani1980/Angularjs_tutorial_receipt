@@ -202,7 +202,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     function savePackingDataSuccessHandler(dataFromAPI) {
       $scope.emptyMenuItems = [];
       angular.forEach(dataFromAPI.response, function(item) {
-        var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId})
+        var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId});
         item.itemCode = masterItem.itemCode;
         item.itemName = masterItem.itemName;
       });
