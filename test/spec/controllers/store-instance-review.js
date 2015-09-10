@@ -77,7 +77,7 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
   describe('Init', function () {
 
     it('should get the store details', function () {
-      expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(scope.storeId);
+      expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(routeParams.storeId);
     });
 
     it('should attach all properties of JSON to scope', function () {
@@ -89,7 +89,7 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
         itemTypeId: 1, // this is 1 because we are requesting regular items.
         scheduleDate: storeDetailsJSON.scheduleDate
       };
-      expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeId, expectedPayload);
+      expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(routeParams.storeId, expectedPayload);
     });
 
     it('should set wizardSteps', function(){
@@ -106,7 +106,7 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
     });
 
     it('should call get store instance seals API', function(){
-      expect(storeInstanceReviewFactory.getStoreInstanceSeals).toHaveBeenCalledWith(scope.storeId);
+      expect(storeInstanceReviewFactory.getStoreInstanceSeals).toHaveBeenCalledWith(routeParams.storeId);
     });
 
     it('should create a scope seals object from the 3 seal API calls', function(){
