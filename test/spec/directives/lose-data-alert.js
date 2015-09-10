@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: looseDataAlert', function () {
+fdescribe('Directive: looseDataAlert', function () {
 
   // load the directive's module
   beforeEach(module('ts5App'));
@@ -26,19 +26,19 @@ describe('Directive: looseDataAlert', function () {
     directiveScope = element.isolateScope();
   }
 
-  describe('loose data alert with both triggers and default text', function(){
+  describe('lose data alert with both triggers and default text', function(){
     beforeEach(inject(function(){
-      scope.showLooseDataAlert = false;
+      scope.showLoseDataAlert = false;
       scope.mockConfirmTrigger = function(){
         return true;
       };
       scope.mockCancelTrigger = function(){
         return true;
       };
-      template = '<loose-data-alert showAlert="showLooseDataAlert" ' +
+      template = '<lose-data-alert showAlert="showLoseDataAlert" ' +
         'confirm-trigger="mockConfirmTrigger()" ' +
         'cancel-trigger="mockCancelTrigger()" ' +
-        '></loose-data-alert>';
+        '></lose-data-alert>';
       compileDirective();
       spyOn(scope, 'mockConfirmTrigger').and.callThrough();
       spyOn(scope, 'mockCancelTrigger').and.callThrough();
@@ -48,7 +48,7 @@ describe('Directive: looseDataAlert', function () {
     });
     it('should load with all the default text values set', function(){
       expect(directiveScope.title).toBe('Hold on!');
-      expect(directiveScope.message).toBe('By taking this action, you might loose saved data, are you sure?');
+      expect(directiveScope.message).toBe('By taking this action, you might lose saved data, are you sure?');
       expect(directiveScope.confirmButtonText).toBe('Confirm');
       expect(directiveScope.cancelButtonText).toBe('Cancel');
     });
@@ -71,19 +71,19 @@ describe('Directive: looseDataAlert', function () {
     });
   });
 
-  describe('loose data alert with no triggers and text defined', function(){
+  describe('lose data alert with no triggers and text defined', function(){
     beforeEach(inject(function(){
       scope.showLooseDataAlert = false;
       scope.mockAlertTitle = 'Foo title';
       scope.mockAlertMessage = 'Foo message';
       scope.mockAlertConfirmText = 'Foo confirm';
       scope.mockAlertCancelText = 'Foo cancel';
-      template = '<loose-data-alert showAlert="showLooseDataAlert" ' +
+      template = '<lose-data-alert showAlert="showLooseDataAlert" ' +
         'title="mockAlertTitle" ' +
         'message="mockAlertMessage" ' +
         'confirm-button-text="mockAlertConfirmText" ' +
         'cancel-button-text="mockAlertCancelText" ' +
-        '></loose-data-alert>';
+        '></lose-data-alert>';
       compileDirective();
     }));
     it('should load with all the defined text values set', function(){
