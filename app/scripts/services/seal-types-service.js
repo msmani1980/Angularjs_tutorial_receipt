@@ -14,7 +14,8 @@ angular.module('ts5App')
 
     var actions = {
       getSealTypes: {
-        method: 'GET'
+        method: 'GET',
+        isArray: true
       }
     };
 
