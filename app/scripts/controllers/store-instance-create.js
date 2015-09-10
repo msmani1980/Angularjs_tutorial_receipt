@@ -34,6 +34,12 @@ angular.module('ts5App')
       this.getStoresList();
     };
 
+    this.generateQuery = function() {
+      return {
+        startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate)
+      };
+    };
+
     this.getCatererStationList = function() {
       storeInstanceFactory.getCatererStationList().then(this.setCatererStationList);
     };
@@ -41,7 +47,7 @@ angular.module('ts5App')
     this.setCatererStationList = function(dataFromAPI) {
       $scope.cateringStationList = dataFromAPI.response;
     };
-    
+
     this.getMenuMasterList = function() {
       var query = this.generateQuery();
       storeInstanceFactory.getMenuMasterList(query).then(this.setMenuMasterList);
@@ -67,12 +73,6 @@ angular.module('ts5App')
 
     this.setStoresList = function(dataFromAPI) {
       $scope.storesList = dataFromAPI.response;
-    };
-
-    this.generateQuery = function() {
-      return {
-        startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate)
-      };
     };
 
     this.createStoreInstance = function() {
@@ -186,7 +186,7 @@ angular.module('ts5App')
         $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
-      if($scope.formData.menus.length < 1) {
+      if($scope.formData.menus.length === 0) {
         return 'has-error';
       }
       if($scope.formData.menus.length > 0) {
