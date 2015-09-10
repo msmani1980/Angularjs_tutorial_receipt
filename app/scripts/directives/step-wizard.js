@@ -127,7 +127,7 @@ angular.module('ts5App')
           currentStepIndex = $index;
         }
         if(null === currentStepIndex){
-          $scope.steps[$index].class = 'completed';
+          $scope.steps[$index].class = 'complete';
           return;
         }
         $scope.steps[$index].disabled = true;

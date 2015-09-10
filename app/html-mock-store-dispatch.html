@@ -13,7 +13,7 @@
 
   <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
   <link rel="stylesheet" href="bower_components/select2/select2.css" />
-  
+
   <!-- TODO: ADJUST SELECTIZE FOR USE IN ANGULAR -->
   <link rel="stylesheet" href="bower_components/selectize/dist/css/selectize.css" />
   <script src="bower_components/selectize/examples/js/jquery.js"></script>
@@ -38,7 +38,7 @@
       <div class="step-pane active sample-pane" data-step="1">
         <ng-form class="form-horizontal" id="form-in-wizard" action="">
           <div class="well">
-  
+
             <div class="form-group">
               <label for="deliveryStation" class="col-sm-4 control-label">LMP Station*</label>
               <div class="col-sm-5">
@@ -51,7 +51,7 @@
   <!-- TODO: IF ONLY ONE LMP STATION IS AVAILABLE, USE READ-ONLY (BELOW) INSTEAD OF SELECT (ABOVE)  -->
   <!--               <input ng-model=deliveryStation type="text" class="form-control" id="delivery-station" placeholder="LGW" ng-readonly="readOnly" ng-disabled="true"> -->
             </div>
-            
+
             <div class="form-group">
               <label for="scheduleDate" class="col-sm-4 control-label">Schedule Date*</label>
               <div class="datepicker fuelux" id="myDatepicker">
@@ -131,9 +131,9 @@
                 </div>
               </div>
             </div>
-  
-            <div class="form-group">        
-              <label for="scheduleNumber" class="col-sm-4 control-label">Schedule Number*</label>              
+
+            <div class="form-group">
+              <label for="scheduleNumber" class="col-sm-4 control-label">Schedule Number*</label>
               <div class="col-sm-5">
 <!-- TODO: RESTRICT TO 1 SELECTION ONLY, CUSTOMIZE FOR SCHEDULE NUMBER -->
                 <ui-select multiple ng-model="formData.tags" theme="bootstrap">
@@ -145,7 +145,7 @@
                 </ui-select>
               </div>
             </div>
-  
+
             <div class="form-group">
               <label for="storeNumber" class="col-sm-4 control-label">Store Number*</label>
               <div class="col-sm-5">
@@ -156,7 +156,7 @@
                 </select>
               </div>
             </div>
-              
+
             <div class="form-group">
               <label for="selectMenu" class="col-sm-4 control-label">Select Menu*</label>
               <div class="col-sm-5">
@@ -170,7 +170,7 @@
                 </ui-select>
               </div>
             </div>
-            
+
             <div class="form-group">
               <label for="selectMenu" class="col-sm-4 control-label">Aircraft Tail Number</label>
               <div class="col-sm-5">
@@ -184,7 +184,7 @@
                 </ui-select>
               </div>
             </div>
-  
+
            </div>
         </ng-form>
       </div>
@@ -230,7 +230,7 @@
               </tbody>
             </table>
           </div>
-        
+
 <!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
           <div class="row">
             <div class="col-xs-12 col-sm-1">
@@ -246,10 +246,10 @@
               </div>
             </div>
           </div>
-          
+
           <div class="well">
             <h3>Pick List</h3>
-            
+
             <table class="table table-striped pick-list">
               <thead>
                 <tr>
@@ -258,7 +258,7 @@
                   <th width="15%">Picked Quantity</th>
                 </tr>
               </thead>
-              
+
               <tbody>
                 <tr>
                   <td>
@@ -296,7 +296,7 @@
               </tbody>
             </table>
             <br>
-            
+
             <div class="row" ng-hide="readOnly">
               <div class="col-xs-4 col-md-9"></div>
               <div class="col-xs-4 col-md-3 text-right">
@@ -309,7 +309,7 @@
                 </div>
               </div>
             </div>
-            
+
           </div>
 
         </ng-form>
@@ -375,12 +375,12 @@
               </div>
             </div>
             <br>
-            
+
             <div class="row">
 <!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
               <div class="col-xs-3 col-sm-2 col-md-1">
-                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
-                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-outbound"> 
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
+                  <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-outbound">
                   <span class="checkbox-label">Sequential</span>
                 </label>
               </div>
@@ -393,9 +393,9 @@
                 </div>
               </div>
             </div>
-            
+
           </div>
-  
+
           <!-- PANE 3 - Assign Seals - Hand Over --------------------------------------------------------------------- -->
           <div class="well seal-color seal-color-green seal-color-with-copy-buttons">
 
@@ -419,11 +419,11 @@
               </div>
             </div>
             <br>
-            
+
             <div class="row">
 <!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
               <div class="col-xs-3 col-sm-2 col-md-1">
-                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
                   <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-hand-over">
                   <span class="checkbox-label">Sequential</span>
                 </label>
@@ -437,9 +437,9 @@
                 </div>
               </div>
             </div>
-            
+
           </div>
-  
+
           <!-- PANE 3 - Assign Seals - Inbound --------------------------------------------------------------------- -->
           <div class="well seal-color seal-color-yellow seal-color-with-copy-buttons">
 
@@ -465,11 +465,11 @@
               </div>
             </div>
             <br>
-            
+
             <div class="row">
 <!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
               <div class="col-xs-3 col-sm-2 col-md-1">
-                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
                   <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-inbound">
                   <span class="checkbox-label">Sequential</span>
                 </label>
@@ -482,13 +482,13 @@
                   </span>
                 </div>
               </div>
-            </div>   
-                     
+            </div>
+
           </div>
-  
+
           <!-- PANE 3 - Assign Seals - High Security --------------------------------------------------------------------- -->
           <div class="well seal-color seal-color-white">
-              
+
             <div class="row">
               <div class="col-xs-12">
                 <label for="seal-numbers-high-security">Seal Numbers:</label>
@@ -504,11 +504,11 @@
               </div>
             </div>
             <br>
-            
+
             <div class="row">
 <!-- TODO: WHEN CHECKED - ADD SEALS, WITH SEQUENTIAL SEAL NUMBERS  -->
               <div class="col-xs-3 col-sm-2 col-md-1">
-                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox"> 
+                <label class="checkbox-custom checkbox-inline pull-left" id="assignSealsSequentialCheckbox" data-initialize="checkbox">
                   <input class="sr-only btn btn-default" type="checkbox" value="1" data-toggle=".add-sequential-seals-high-security">
                   <span class="checkbox-label">Sequential</span>
                 </label>
@@ -521,8 +521,8 @@
                   </span>
                 </div>
               </div>
-            </div> 
-                       
+            </div>
+
           </div>
 
         </ng-form>
@@ -595,11 +595,11 @@
                   </span>
                 </div>
                 <div class="panel-body" style="display:none;">
-                
+
                   <div class="col-xs-12">
                     <button type="button" class="btn btn-info pull-right" id="goToPacking">Edit</button>
                   </div>
-              
+
                   <table class="table table-striped pick-list">
                     <thead>
                       <tr>
@@ -608,7 +608,7 @@
                         <th width="15%">Picked Quantity</th>
                       </tr>
                     </thead>
-                    
+
                     <tbody>
                       <tr>
                         <td>
@@ -645,7 +645,7 @@
                       </tr>
                     </tbody>
                   </table>
-                  
+
                 </div>
               </div>
             </div>
@@ -660,11 +660,11 @@
                   </span>
                 </div>
                 <div class="panel-body" style="display:none;">
-                
+
                   <div class="col-xs-12">
                     <button type="button" class="btn btn-info pull-right" id="goToAssignSeals">Edit</button>
                   </div>
-                  
+
                   <table class="table">
                     <thead>
                       <tr>
@@ -672,7 +672,7 @@
                         <th>Seal Numbers</th>
                       </tr>
                     </thead>
-                    
+
                     <tbody>
                       <tr>
                         <td width="15%">
@@ -704,7 +704,7 @@
               </div>
             </div>
           </div>
-          
+
         </ng-form>
       </div>
 
@@ -718,7 +718,7 @@
         Next<span class="glyphicon glyphicon-arrow-right"></span>
       </button>
     </div>
-    
+
     <div class="top-actions">
       <button type="button" class="btn btn-primary btn-prev">Save &amp; Exit</button>
     </div>

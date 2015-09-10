@@ -97,8 +97,11 @@ describe('Service: storeInstanceFactory', function () {
 
   describe('menuMasterService calls', function () {
     it('should call getMenuMasterList', function () {
-      storeInstanceFactory.getMenuMasterList();
-      expect(menuMasterService.getMenuMasterList).toHaveBeenCalled();
+      var query = { 
+        startDate: '09102015'
+      };
+      storeInstanceFactory.getMenuMasterList(query);
+      expect(menuMasterService.getMenuMasterList).toHaveBeenCalledWith(query);
     });
   });
 
