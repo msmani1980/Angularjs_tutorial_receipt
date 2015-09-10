@@ -20,7 +20,7 @@ describe('Service: storeInstanceSealService', function () {
 
   describe('getStoreInstanceSeals', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+\/seals$/;
+      var expectedURL = /store-instances\/\d+\/seals$/;
       var fakeId = 4;
       httpBackend.expectGET(expectedURL).respond(200, {});
       storeInstanceSealService.getStoreInstanceSeals(fakeId).then(function (response) {

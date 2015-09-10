@@ -9,16 +9,41 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
-                                                   storeInstanceFactory, $location) {
+                                                   storeInstanceFactory, $location, storeInstanceReviewFactory,
+                                                   $q, ngToast) {
 
-    $scope.goToWizardStep = function($index){
-      $scope.wizardStepToIndex = $index;
-      $scope.stepWizardPrevTrigger();
-    };
+    var storeInstancePromises = [];
+
+    function showMessage(message, messageType) {
+      ngToast.create({className: messageType, dismissButton: true, content: '<strong>Store Instance Review</strong>: ' + message});
+    }
+
+    function displayLoadingModal(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText || 'Loading');
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    function showResponseErrors(response) {
+      if ('data' in response) {
+        angular.forEach(response.data, function (error) {
+          this.push(error);
+        }, $scope.formErrors);
+      }
+      $scope.displayError = true;
+      hideLoadingModal();
+    }
 
     $scope.stepWizardPrevTrigger = function(){
       $scope.showLooseDataAlert = true;
       return false;
+    };
+
+    $scope.goToWizardStep = function($index){
+      $scope.wizardStepToIndex = $index;
+      $scope.stepWizardPrevTrigger();
     };
 
     $scope.looseDataAlertConfirmTrigger = function(){
@@ -39,19 +64,65 @@ angular.module('ts5App')
         itemTypeId: 1,
         scheduleDate: $scope.storeDetails.scheduleDate
       };
-      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId,
-        payload).then(getItemsSuccessHandler);
+      storeInstancePromises.push(
+        storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload)
+          .then(getItemsSuccessHandler)
+      );
+    }
+
+    function setStoreInstanceSeals(dataFromAPI){
+      $scope.storeInstanceSeals = dataFromAPI;
+      // TODO parse this: console.log(dataFromAPI);
+    }
+
+    function setSealColors(dataFromAPI){
+      $scope.sealColors = dataFromAPI;
+      // TODO parse this: console.log(dataFromAPI);
+    }
+
+    function setSealTypes(dataFromAPI){
+      $scope.sealTypes = dataFromAPI;
+      // TODO parse this: console.log(dataFromAPI);
+    }
+
+    function allStoreInstancePromisesResolved(){
+      // TODO console.log('all store instance promises resolved');
+      showMessage('Loaded', 'info'); // TODO FPO
+      hideLoadingModal();
+    }
+
+    function getStoreInstanceSeals() {
+      storeInstancePromises.push(
+        storeInstanceReviewFactory.getStoreInstanceSeals($scope.storeId)
+          .then(setStoreInstanceSeals)
+      );
+      storeInstancePromises.push(
+        storeInstanceReviewFactory.getSealColors()
+          .then(setSealColors)
+      );
+      storeInstancePromises.push(
+        storeInstanceReviewFactory.getSealTypes()
+          .then(setSealTypes)
+      );
     }
 
     function resolveGetStoreDetails(dataFromAPI) {
       $scope.storeDetails = dataFromAPI;
       getStoreInstanceMenuItems();
+      getStoreInstanceSeals();
+      $q.all(storeInstancePromises).then(allStoreInstancePromisesResolved, showResponseErrors);
     }
 
     function init() {
+      storeInstancePromises = [];
+
+      $scope.displayError = false;
+      $scope.formErrors = [];
       $scope.storeId = $routeParams.storeId;
       $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($scope.storeId);
-      storeInstanceFactory.getStoreDetails($scope.storeId).then(resolveGetStoreDetails);
+
+      displayLoadingModal();
+      storeInstanceFactory.getStoreDetails($scope.storeId).then(resolveGetStoreDetails, showResponseErrors);
     }
     init();
 

@@ -21,7 +21,7 @@ describe('Service: sealTypesService', function () {
   describe('getSealTypes', function () {
     it('should make GET request to API', function () {
       var expectedURL = /records\/seal-types$/;
-      httpBackend.expectGET(expectedURL).respond(200, {});
+      httpBackend.expectGET(expectedURL).respond(200, []);
       sealTypesService.getSealTypes().then(function (response) {
         expect(response).toBeDefined();
       });
