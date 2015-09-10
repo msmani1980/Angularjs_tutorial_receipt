@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc directive
- * @name ts5App.directive:looseDataAlert
+ * @name ts5App.directive:loseDataAlert
  * @description
- * # looseDataAlert
+ * # loseDataAlert
  */
 angular.module('ts5App')
-  .directive('looseDataAlert', function () {
+  .directive('loseDataAlert', function () {
     return {
-      templateUrl: '/views/directives/loose-data-alert.html',
+      templateUrl: '/views/directives/lose-data-alert.html',
       restrict: 'E',
       scope: {
         title: '=',
@@ -31,7 +31,7 @@ angular.module('ts5App')
           if(newValue) {
             $scope.showAlert = false;
             $scope.showAlertDialog = true;
-            $location.hash('loose-data-alert');
+            $location.hash('lose-data-alert');
             $anchorScroll();
           }
           $location.hash('');
@@ -44,7 +44,7 @@ angular.module('ts5App')
             $scope.title = 'Hold on!';
           }
           if (!$scope.message) {
-            $scope.message = 'By taking this action, you might loose saved data, are you sure?';
+            $scope.message = 'By taking this action, you might lose saved data, are you sure?';
           }
           if (!$scope.confirmButtonText) {
             $scope.confirmButtonText = 'Confirm';
