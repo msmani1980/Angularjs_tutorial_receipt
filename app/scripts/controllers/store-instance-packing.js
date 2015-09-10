@@ -42,7 +42,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       for (var i = 0; i < $scope.addItemsNumber; i++) {
         $scope.emptyMenuItems.push({
-          menuQuantity: 0
+          menuQuantity: 0,
+          isNewItem: true
         });
       }
     };
@@ -73,19 +74,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         hideLoadingModal();
         return;
       }
-      var menuItems = angular.copy(dataFromAPI.response);
-      angular.forEach(menuItems, function (item) {
-        item.itemDescription = item.itemCode + ' - ' + item.itemName;
-      });
-      $this.mergeMenuItems(menuItems);
-    }
 
-    function getMenuItemsSuccessHandler(dataFromAPI) {
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
-        delete item.id;
+        if (item.menuQuantity) {
+          delete item.id;
+        }
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
+
       $this.mergeMenuItems(menuItems);
     }
 
@@ -98,7 +95,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemTypeId: 1,
         date: $scope.storeDetails.scheduleDate
       };
-      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getMenuItemsSuccessHandler);
+      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler);
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuList'], function () {
@@ -155,8 +152,32 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
 
-    $scope.deleteInstanceItem = function (item) {
-      storeInstanceFactory.deleteStoreInstanceItem($scope.storeId, item.id).then(init);
+    $scope.showDeleteWarning = function (item) {
+      if (item.quantity > 0) {
+        $scope.deleteRecordDialog(item, ['itemDescription']);
+
+      } else {
+        $scope.removeRecord(item);
+      }
+    };
+
+    function getIndexOfNewItem(itemToDelete) {
+      return lodash.findIndex($scope.emptyMenuItems, function (item) {
+        return item === itemToDelete;
+      });
+    }
+
+    function removeNewItem(itemToDelete) {
+      var index = getIndexOfNewItem(itemToDelete);
+      $scope.emptyMenuItems.splice(index, 1);
+    }
+
+    $scope.removeRecord = function (itemToDelete) {
+      if (itemToDelete.isNewItem) {
+        removeNewItem(itemToDelete);
+      } else {
+        storeInstanceFactory.deleteStoreInstanceItem($scope.storeId, itemToDelete.id).then(init);
+      }
     };
 
 

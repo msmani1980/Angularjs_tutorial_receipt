@@ -51,7 +51,7 @@
             <input type="text" class="form-control" id="picked-quantity" ng-model="item.quantity" placeholder="0">
           </td>
           <td>
-            <button ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="deleteInstanceItem(item)">
+            <button ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
               <i class="fa fa-close"></i>
             </button>
           </td>
@@ -74,8 +74,8 @@
         <td>
           <input type="text" class="form-control" ng-model="item.quantity" placeholder="{{$index}}">
         </td>
-          <td>
-            <button class="btn btn-sm btn-danger" ng-click="deleteNewItem($index)">
+          <td ng-init="item.index = $index">
+            <button class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
               <i class="fa fa-close"></i>
             </button>
           </td>
@@ -112,3 +112,5 @@
 
   </form>
 </div>
+
+<delete-record-dialog></delete-record-dialog>
