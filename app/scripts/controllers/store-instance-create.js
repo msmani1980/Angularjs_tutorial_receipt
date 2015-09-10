@@ -34,6 +34,12 @@ angular.module('ts5App')
       this.getStoresList();
     };
 
+    this.generateQuery = function() {
+      return {
+        startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate)
+      };
+    };
+
     this.getCatererStationList = function() {
       storeInstanceFactory.getCatererStationList().then(this.setCatererStationList);
     };
@@ -43,7 +49,8 @@ angular.module('ts5App')
     };
 
     this.getMenuMasterList = function() {
-      storeInstanceFactory.getMenuMasterList().then(this.setMenuMasterList);
+      var query = this.generateQuery();
+      storeInstanceFactory.getMenuMasterList(query).then(this.setMenuMasterList);
     };
 
     this.setMenuMasterList = function(dataFromAPI) {
@@ -59,9 +66,8 @@ angular.module('ts5App')
     };
 
     this.getStoresList = function() {
-      var query = {
-        readyToUse: true
-      };
+      var query = this.generateQuery();
+      query.readyToUse = true;
       storeInstanceFactory.getStoresList(query).then(this.setStoresList);
     };
 
@@ -180,7 +186,7 @@ angular.module('ts5App')
         $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
-      if($scope.formData.menus.length < 1) {
+      if($scope.formData.menus.length === 0) {
         return 'has-error';
       }
       if($scope.formData.menus.length > 0) {
@@ -188,5 +194,12 @@ angular.module('ts5App')
       }
 
     };
+
+    $scope.$watch('formData.scheduleDate', function(newDate,oldDate) {
+      if(newDate && newDate !== oldDate){
+        $this.getMenuMasterList();
+        $this.getStoresList();
+      }
+    });
 
   });

@@ -83,8 +83,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storeInstanceService.deleteStoreInstanceItem(id, itemId);
     }
 
-    function getMenuMasterList() {
-      return menuMasterService.getMenuMasterList();
+    function getMenuMasterList(query) {
+      return menuMasterService.getMenuMasterList(query);
     }
 
     function getStoresList(query) {

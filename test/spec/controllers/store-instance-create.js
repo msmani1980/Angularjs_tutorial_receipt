@@ -482,4 +482,62 @@ describe('Store Instance Create Controller', function () {
 
   });
 
+  describe('when a user changes the scheduleDate', function () {
+
+    beforeEach(function() {
+      spyOn(StoreInstanceCreateCtrl,'getMenuMasterList').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl,'setMenuMasterList').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl,'getStoresList').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl,'setStoresList').and.callThrough();
+      $scope.$digest();
+      $scope.formData.scheduleDate = '10/01/2015';
+      $scope.$digest();
+    });
+
+    it('should call getMenuMasterList', function () {
+      expect(StoreInstanceCreateCtrl.getMenuMasterList).toHaveBeenCalled();
+    });
+
+    it('should call setMenuMasterList', function () {
+      expect(StoreInstanceCreateCtrl.setMenuMasterList).toHaveBeenCalled();
+    });
+
+    it('should call getStoresList', function () {
+      expect(StoreInstanceCreateCtrl.getStoresList).toHaveBeenCalled();
+    });
+
+    it('should call setStoresList', function () {
+      expect(StoreInstanceCreateCtrl.setStoresList).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('generating the query', function () {
+
+    beforeEach(function() {
+      spyOn(StoreInstanceCreateCtrl,'generateQuery').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should call the generateQuery function when getMenuMasterList is called', function () {
+      StoreInstanceCreateCtrl.getMenuMasterList();
+      expect(StoreInstanceCreateCtrl.generateQuery).toHaveBeenCalled();
+    });
+
+    it('should call the generateQuery function when getStoresList is called', function () {
+      StoreInstanceCreateCtrl.getStoresList();
+      expect(StoreInstanceCreateCtrl.generateQuery).toHaveBeenCalled();
+    });
+
+    it('should call return a query object', function () {
+      $scope.formData.scheduleDate = '10/01/2015';
+      $scope.$digest();
+      var queryControl = {
+        startDate: '20151001'
+      };
+      expect(StoreInstanceCreateCtrl.generateQuery()).toEqual(queryControl);
+    });
+
+  });
+
 });
