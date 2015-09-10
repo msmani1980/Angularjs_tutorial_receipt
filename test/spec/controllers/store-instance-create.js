@@ -35,7 +35,8 @@ describe('Store Instance Create Controller', function () {
     storeInstanceCreatedJSON,
     createStoreInstanceDeferred,
     templateCache,
-    compile;
+    compile,
+    storeInstanceDispatchWizardConfig;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope,$injector,
@@ -61,6 +62,7 @@ describe('Store Instance Create Controller', function () {
     storesService = $injector.get('storesService');
     templateCache = $injector.get('$templateCache');
     compile = $injector.get('$compile');
+    storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
 
     getMenuMasterListDeferred = $q.defer();
     getMenuMasterListDeferred.resolve(menuMasterListJSON);
@@ -137,6 +139,11 @@ describe('Store Instance Create Controller', function () {
 
     it('should have an empty stations list before the scope is digested', function () {
       expect($scope.cateringStationList).toEqual([]);
+    });
+
+    it('should set wizardSteps', function(){
+      var wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
+      expect($scope.wizardSteps).toEqual(wizardSteps);
     });
 
     describe('The cateringStationList array', function () {

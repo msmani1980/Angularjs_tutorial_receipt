@@ -95,7 +95,7 @@ angular.module('ts5App')
         if($scope.wizardStepToIndex) {
           $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(response.id);
           var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
-          $location.urt(uri);
+          $location.url(uri);
         }
       }
     };
