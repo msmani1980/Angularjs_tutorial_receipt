@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('storeInstanceSealService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/seals';
+    var requestURL = ENV.apiUrl + '/api/store-instances/:id/seals';
 
     var requestParameters = {
       id: '@id'
