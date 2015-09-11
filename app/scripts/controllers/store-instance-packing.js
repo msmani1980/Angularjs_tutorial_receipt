@@ -180,14 +180,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    function getIndexOfNewItem(itemToDelete) {
-      return lodash.findIndex($scope.emptyMenuItems, function (item) {
-        return item === itemToDelete;
-      });
-    }
-
     function removeNewItem(itemToDelete) {
-      var index = getIndexOfNewItem(itemToDelete);
+      var index = $scope.emptyMenuItems.indexOf(itemToDelete);
       $scope.emptyMenuItems.splice(index, 1);
     }
 
