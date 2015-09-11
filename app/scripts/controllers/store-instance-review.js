@@ -16,7 +16,6 @@ angular.module('ts5App')
     var _sealTypes = [];
     var _sealColors = [];
     var _storeInstanceSeals = [];
-    var _storeStatusList = [];
     var _nextStatusId = null;
     var STATUS_READY_FOR_DISPATCH = 'Ready for Dispatch';
     var STATUS_DISPATCHED = 'Dispatched';
@@ -151,20 +150,8 @@ angular.module('ts5App')
       );
     }
 
-    function setStoreStatusList(dataFromAPI){
-      _storeStatusList = dataFromAPI;
-    }
-
-    function getStoreStatusList(){
-       _initPromises.push(
-         storeInstanceFactory.getStoreStatusList()
-          .then(setStoreStatusList)
-       );
-    }
-
-
     function resolveSetStoreInstanceStatus(response){
-      $scope.storeDetails.currentStatus = $filter('filter')(_storeStatusList, {id: response.statusId}, true)[0];
+      $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {id: response.statusId}, true)[0];
       showUserCurrentStatus('updated');
     }
 
@@ -189,7 +176,6 @@ angular.module('ts5App')
       $scope.storeDetails = dataFromAPI;
       getStoreInstanceMenuItems();
       getStoreInstanceSeals();
-      getStoreStatusList();
       $q.all(_initPromises).then(setStoreInstanceStatus, showResponseErrors);
     }
 
@@ -199,7 +185,7 @@ angular.module('ts5App')
     }
 
     function getStatusNameIntByName(name){
-      var status = $filter('filter')(_storeStatusList, {statusName: name}, true);
+      var status = $filter('filter')($scope.storeDetails.statusList, {statusName: name}, true);
       if(!status || !status.length){
         return false;
       }
@@ -211,7 +197,6 @@ angular.module('ts5App')
       _sealTypes = [];
       _sealColors = [];
       _storeInstanceSeals = [];
-      _storeStatusList = [];
       _nextStatusId = null;
 
       $scope.displayError = false;

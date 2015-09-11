@@ -24,13 +24,12 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
   var getSealTypesDeferred;
   var getStoreInstanceSealsDeferred;
   var location;
-  var getStoreStatusDeferred;
   var setStoreStatusDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
-                              _servedSealColors_, _servedSealTypes_, $location, _servedStoreStatus_) {
+                              _servedSealColors_, _servedSealTypes_, $location) {
     scope = $rootScope.$new();
     routeParams = {
       storeId: 17
@@ -46,9 +45,10 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
     getStoreInstanceMenuItemsDeferred = $q.defer();
     getStoreInstanceMenuItemsDeferred.resolve(_servedStoreInstanceMenuItems_);
     spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
+    /*
     getStoreStatusDeferred = $q.defer();
     getStoreStatusDeferred.resolve(_servedStoreStatus_);
-    spyOn(storeInstanceFactory, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise);
+    spyOn(storeInstanceFactory, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise); */
     setStoreStatusDeferred = $q.defer();
     setStoreStatusDeferred.resolve({response:200});
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(setStoreStatusDeferred.promise);
@@ -76,7 +76,8 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
       scheduleDate: '2015-08-13',
       scheduleNumber: 'SCHED123',
       storeInstanceNumber: scope.storeId,
-      currentStatus: {name: '2', statusName: 'Foo'}
+      currentStatus: {name: '2', statusName: 'Foo'},
+      statusList: [{'id':1,'statusName':'Ready for Packing','name':'1'},{'id':2,'statusName':'Ready for Seals','name':'2'},{'id':3,'statusName':'Ready for Dispatch','name':'3'},{'id':7,'statusName':'Dispatched','name':'4'},{'id':8,'statusName':'Un-dispatched','name':'7'},{'id':9,'statusName':'Inbounded','name':'6'},{'id':10,'statusName':'On Floor','name':'5'}]
     };
     getStoreDetailsDeferred.resolve(storeDetailsJSON);
     scope.$digest();
@@ -113,10 +114,6 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
 
     it('should call seal types API', function(){
       expect(storeInstanceReviewFactory.getSealTypes).toHaveBeenCalled();
-    });
-
-    it('should call get store instance seals API', function(){
-      expect(storeInstanceFactory.getStoreStatusList).toHaveBeenCalled();
     });
 
     it('should call get store status API', function(){
