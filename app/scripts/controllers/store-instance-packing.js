@@ -105,7 +105,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     });
 
     function getMasterItemsListSuccess(itemsListJSON) {
-      $scope.masterItemsList = angular.copy(itemsListJSON.masterItems);
+      $scope.masterItemsList = itemsListJSON.masterItems;
     }
 
     function getMasterItemsList() {
@@ -127,7 +127,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return;
       }
       var statusId = statusObject.id;
-      storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.storeId, statusId).then(updateStoreDetails);
+      storeInstanceFactory.updateStoreInstanceStatus($scope.storeId, statusId).then(updateStoreDetails);
     }
 
     function getStoreDetailsSuccessHandler(storeDetailsJSON) {
@@ -136,7 +136,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.getStoreInstanceItems();
       $this.getStoreInstanceMenuItems();
 
-      if($scope.storeDetails.statusId !== 1) {
+      if($scope.storeDetails.currentStatus.name !== '1') {
         updateStatusToStep(1);
       }
 

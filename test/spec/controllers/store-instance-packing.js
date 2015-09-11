@@ -121,7 +121,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should update store status to 1', function () {
-        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(servedStoreInstanceDetailsJSON.storeId, 1);
+        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(scope.storeId, 1);
       });
 
       it('should update store details status objects', function () {
