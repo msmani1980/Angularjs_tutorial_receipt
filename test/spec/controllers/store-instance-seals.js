@@ -117,6 +117,10 @@ describe('the Store Instance Seals controller', function () {
       expect(view.find('error-dialog')[0]).toBeDefined();
     });
 
+    it('should have at least one seal-type directive in the view', function(){
+      expect(view.find('seal-type').length).toBeGreaterThan(0);
+    });
+
   });
 
 });
