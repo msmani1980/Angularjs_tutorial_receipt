@@ -75,7 +75,8 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
       storeNumber: '180485',
       scheduleDate: '2015-08-13',
       scheduleNumber: 'SCHED123',
-      storeInstanceNumber: scope.storeId
+      storeInstanceNumber: scope.storeId,
+      currentStatus: {name: '2', statusName: 'Foo'}
     };
     getStoreDetailsDeferred.resolve(storeDetailsJSON);
     scope.$digest();
@@ -123,7 +124,7 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
     });
 
     it('should call set store status API and set to name value "Ready for Dispatch"', function(){
-      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, 3);
+      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '3');
     });
 
     it('should create a scope seals object from the 3 seal API calls', function(){
@@ -184,9 +185,9 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
   });
 
   describe('submit scope function', function(){
-    it('should set the store instance status to the id value of "Dispatched" which is 7 with current mock data', function(){
+    it('should set the store instance status to the name value of "Dispatched" which is 4 with current mock data', function(){
       scope.submit();
-      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, 7);
+      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '4');
     });
   });
 

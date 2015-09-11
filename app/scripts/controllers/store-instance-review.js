@@ -18,6 +18,8 @@ angular.module('ts5App')
     var _storeInstanceSeals = [];
     var _storeStatusList = [];
     var _nextStatusId = null;
+    var STATUS_READY_FOR_DISPATCH = 'Ready for Dispatch';
+    var STATUS_DISPATCHED = 'Dispatched';
 
     function showMessage(message, messageType) {
       ngToast.create({className: messageType, dismissButton: true, content: '<strong>Store Instance Review</strong>: ' + message});
@@ -102,12 +104,36 @@ angular.module('ts5App')
       });
     }
 
-    function initPromisesResolved(){
-      var promise = getSetStoreStatusByNamePromise('Ready for Dispatch');
+    function showUserCurrentStatus(messageAction) {
+      hideLoadingModal();
+      if (!messageAction) {
+        messageAction = 'is set';
+      }
+      showMessage('Status ' + messageAction + ' to "' + $scope.storeDetails.currentStatus.statusName + '"', 'info');
+    }
+
+    function setStoreInstanceStatus(){
+      initLoadComplete();
+
+      // If status is already Dispatched, do nothing, show user what status is
+      var dispatchNameInt = getStatusNameIntByName(STATUS_DISPATCHED);
+      if($scope.storeDetails.currentStatus.name === dispatchNameInt){
+        showUserCurrentStatus();
+        return;
+      }
+       // If status is already Ready for dispatch, do nothing, show user what status is
+      var readyForDispatchNameInt = getStatusNameIntByName(STATUS_READY_FOR_DISPATCH);
+      if($scope.storeDetails.currentStatus.name === readyForDispatchNameInt){
+        showUserCurrentStatus();
+        return;
+      }
+      // else, set status to ready for dispatch
+      var promise = getSetStoreStatusByNamePromise(STATUS_READY_FOR_DISPATCH);
       if(!promise){
         return;
       }
-      promise.then(initLoadComplete, showResponseErrors);
+      // if there are response errors, show them
+      promise.then(null, showResponseErrors);
     }
 
     function getStoreInstanceSeals() {
@@ -136,10 +162,16 @@ angular.module('ts5App')
        );
     }
 
+
+    function resolveSetStoreInstanceStatus(response){
+      $scope.storeDetails.currentStatus = $filter('filter')(_storeStatusList, {id: response.statusId}, true)[0];
+      showUserCurrentStatus('updated');
+    }
+
     function getSetStoreStatusByNamePromise(name){
       $scope.formErrors = [];
-      var statusId = getStatusIdByName(name);
-      if(!statusId){
+      var statusNameInt = getStatusNameIntByName(name);
+      if(!statusNameInt){
         var error = {
           data: [{
             field: 'statusId',
@@ -149,7 +181,8 @@ angular.module('ts5App')
         showResponseErrors(error);
         return false;
       }
-      return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusId);
+      displayLoadingModal();
+      return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(resolveSetStoreInstanceStatus);
     }
 
     function resolveGetStoreDetails(dataFromAPI) {
@@ -157,20 +190,20 @@ angular.module('ts5App')
       getStoreInstanceMenuItems();
       getStoreInstanceSeals();
       getStoreStatusList();
-      $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
+      $q.all(_initPromises).then(setStoreInstanceStatus, showResponseErrors);
     }
 
-    function resolveUpdateStoreInstanceStatus(){
-      showMessage('Dispatched!', 'info');
+    function updatedStoreStatusSubmitted(){
+      showMessage('Now what? Redirect user where?', 'info');
       // TODO redirect user somewhere?
     }
 
-    function getStatusIdByName(name){
+    function getStatusNameIntByName(name){
       var status = $filter('filter')(_storeStatusList, {statusName: name}, true);
       if(!status || !status.length){
         return false;
       }
-      return status[0].id;
+      return status[0].name;
     }
 
     function init() {
@@ -206,11 +239,11 @@ angular.module('ts5App')
     };
 
     $scope.submit = function(){
-      var promise = getSetStoreStatusByNamePromise('Dispatched');
+      var promise = getSetStoreStatusByNamePromise(STATUS_DISPATCHED);
       if(!promise){
         return;
       }
-      $q.all([promise]).then(resolveUpdateStoreInstanceStatus, showResponseErrors);
+      $q.all([promise]).then(updatedStoreStatusSubmitted, showResponseErrors);
     };
 
   });
