@@ -1,8 +1,10 @@
+<div class="row">
 <div class="steps-container">
 
-  <button type="button" class="step" ng-class="step.class"
-          ng-repeat="step in steps" ng-click="goToStepURI($index)"
-          ng-disabled="disableStep($index)" ng-init="stepInit($index)">
+  <button type="button" class="step" title="{{ step.label }}"
+          ng-repeat="step in steps" ng-init="stepInit($index)"
+          ng-class="step.class" ng-click="goToStepURI($index)"
+          ng-disabled="disableStep($index)">
     <span class="badge badge-info">{{step.badge || $index+1}}</span>
     <span class="step-label hidden-xs">{{step.label}}</span>
     <span class="chevron"></span>
@@ -19,4 +21,5 @@
     </button>
   </div>
 
+</div>
 </div>
