@@ -13,6 +13,11 @@ describe('Service: storeInstanceService', function () {
     httpBackend = $httpBackend;
   }));
 
+  afterEach(function () {
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
+  });
+
   describe('getStoreInstancesList', function () {
     it('should make GET request to API', function () {
       var expectedURL = /dispatch\/store-instances$/;
@@ -83,7 +88,7 @@ describe('Service: storeInstanceService', function () {
 
   describe('getStoreInstanceMenuItems', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+\/menu-items$/;
+      var expectedURL = /dispatch\/store-instances\/\d+\/menu-items/;
       var fakeId = 12;
       var payload = {
         fakeKey: 'fakeValue'
@@ -99,7 +104,7 @@ describe('Service: storeInstanceService', function () {
 
   describe('getStoreInstanceItemList', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+\/items$/;
+      var expectedURL = /dispatch\/store-instances\/\d+\/items/;
       var fakeId = 12;
       var payload = {
         fakeKey: 'fakeValue'
@@ -143,6 +148,22 @@ describe('Service: storeInstanceService', function () {
     });
   });
 
+  describe('updateStoreInstanceItemBulk', function () {
+    it('should make PUT request to API', function () {
+      var expectedURL = /dispatch\/store-instances\/\d+\/items\/bulk$/;
+      var fakeStoreId = 38;
+      var payload = {
+        fakeKey: 'fakeValue'
+      };
+
+      httpBackend.expectPOST(expectedURL).respond(200, {});
+      storeInstanceService.updateStoreInstanceItemsBulk(fakeStoreId, payload).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+  });
+
   describe('deleteStoreInstanceItem', function () {
     it('should make DELETE request to API', function () {
       var expectedURL = /dispatch\/store-instances\/\d+\/items\/\d+$/;
@@ -166,6 +187,19 @@ describe('Service: storeInstanceService', function () {
       };
       httpBackend.expectPOST(expectedURL).respond(200, {});
       storeInstanceService.createStoreInstanceItem(fakeStoreId, payload).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+  });
+
+  describe('updateStoreInstanceStatus', function () {
+    it('should make PUT request to API', function () {
+      var expectedURL = /dispatch\/store-instances\/\d+\/status\/\d+$/;
+      var fakeStoreId = 10;
+      var fakeStatusId = 20;
+      httpBackend.expectPUT(expectedURL).respond(200, {});
+      storeInstanceService.updateStoreInstanceStatus(fakeStoreId, fakeStatusId).then(function (response) {
         expect(response).toBeDefined();
       });
       httpBackend.flush();

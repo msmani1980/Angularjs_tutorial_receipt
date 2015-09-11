@@ -1,7 +1,7 @@
 <div class="fluid-container">
-<!--<step-wizard></step-wizard>-->
+  <!--<step-wizard></step-wizard>-->
 
-<form-error-dialog></form-error-dialog>
+  <form-error-dialog></form-error-dialog>
 
   <form name="createStoreInstance" class="well" ng-submit="submitForm()">
 
@@ -33,34 +33,54 @@
           <th>Retail Item Details</th>
           <th width="15%">Template Quantity</th>
           <th width="15%">Packed Quantity</th>
+          <th width="5%"></th>
         </tr>
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in menuItems">
+        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
           <td>
-            <input type="text" class="form-control" id="item-code" ng-model="item.itemDescription"
-                   disabled />
+            <input type="text" class="form-control" ng-model="item.itemDescription"
+                   disabled/>
           </td>
           <td>
-            <input type="text" class="form-control" id="required-quantity" ng-model="item.menuQuantity" />
+            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"
+                   disabled/>
           </td>
           <td>
-            <input type="text" class="form-control" id="picked-quantity" placeholder="0">
+            <input type="text" class="form-control" ng-model="item.quantity" placeholder="0">
+          </td>
+          <td>
+            <button ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
+              <i class="fa fa-close"></i>
+            </button>
           </td>
         </tr>
-        <!--                 <tr> -->
-        <!--                   <td></td> -->
-        <!--                   <td></td> -->
-        <!--                   <td> -->
-        <!--                     TODO: 'ADD ITEM' FUNCTIONALITY  -->
-        <!--                     <span id="pickListActionButtons"> -->
-        <!--                       <button type="button" class="btn btn-primary pull-right"> -->
-        <!--                         <i class="fa fa-plus"></i> Add Item -->
-        <!--                       </button> -->
-        <!--                     </span> -->
-        <!--                   </td> -->
-        <!--                 </tr> -->
+
+        <tr ng-repeat="item in emptyMenuItems track by $index">
+        <td>
+          <ui-select ng-model="item.masterItem" theme="bootstrap">
+            <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{ $select.selected.itemName }}
+            </ui-select-match>
+            <ui-select-choices repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
+              <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="item.quantity" placeholder="{{$index}}">
+        </td>
+          <td ng-init="item.index = $index">
+            <button class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
+              <i class="fa fa-close"></i>
+            </button>
+          </td>
+        </tr>
+
         </tbody>
       </table>
       <br>
@@ -70,7 +90,7 @@
         <div class="col-xs-4 col-md-3 text-right">
           <div class="input-group">
             <!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
-            <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+            <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" placeholder="1"/>
                   <span class="input-group-btn">
                     <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add
                       Items
@@ -82,5 +102,15 @@
 
     </div>
 
+    <div class="row">
+      <div class="col-xs-12 col-sm-1">
+          <button class="btn btn-success" type="button" ng-click="savePackingData()">Complete Packing & Exit
+          </button>
+      </div>
+    </div>
+
+
   </form>
 </div>
+
+<delete-record-dialog></delete-record-dialog>
