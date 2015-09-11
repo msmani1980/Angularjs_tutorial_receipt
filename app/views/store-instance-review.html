@@ -38,7 +38,28 @@
             <button type="button" class="btn btn-info" ng-click="goToWizardStep(1)">Edit</button>
           </div>
         </div>
-        <store-instance-pack-list></store-instance-pack-list>
+        <table class="table table-striped pick-list">
+          <thead>
+          <tr>
+            <th>Retail Item Details</th>
+            <th width="15%">Template Quantity</th>
+            <th width="15%">Packed Quantity</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
+            <td>
+              <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
+            </td>
+            <td>
+              <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
+            </td>
+            <td>
+              <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </accordion-group>
     </accordion>
 
@@ -53,45 +74,28 @@
           </div>
         </div>
 
-        <table class="table">
+        <table class="table store-instance-review-seals-table">
           <thead>
           <tr>
             <th>Seal Type</th>
             <th>Seal Numbers</th>
           </tr>
           </thead>
-
           <tbody>
-          <tr>
+          <tr ng-repeat="sealObj in seals">
             <td width="15%">
-              <input type="text" class="form-control" id="sealColor" placeholder="Outbound" style="background-color: #66CCFF" disabled="disabled">
+              <input type="text" class="form-control" value="{{ sealObj.name }}"
+                     ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
             </td>
-            <td>12465, 12466, 12467, 12468, 12469, 12470, 12471, 12472, 12473, 12474, 12475, 12476, 12477, 12478</td>
-          <tr>
-            <td>
-              <input type="text" class="form-control" id="sealColor" placeholder="Hand Over" style="background-color: #33CC33" disabled="disabled">
-            </td>
-            <td>13465, 13466, 13467</td>
+            <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
           </tr>
-          <tr>
-            <td>
-              <input type="text" class="form-control" id="sealColor" placeholder="Inbound" style="background-color: #FFCC00" disabled="disabled">
-            </td>
-            <td>12420, 12421, 12422, 12423, 12424</td>
-          <tr>
-          <tr>
-            <td>
-              <input type="text" class="form-control" id="sealColor" placeholder="High Security" style="background-color: #FFFFFF" disabled="disabled">
-            </td>
-            <td>11465, 11466</td>
-          <tr>
           </tbody>
         </table>
       </accordion-group>
     </accordion>
 
     <footer class="text-right">
-      <button type="button" class="btn btn-default btn-primary btn-next">Dispatch</button>
+      <button type="button" class="btn btn-default btn-primary btn-next" ng-click="submit()">Dispatch</button>
     </footer>
 
   </form>
