@@ -119,12 +119,6 @@
     <br>
     
     <div class="row">
-      <div class="col-xs-4 col-sm-3 col-md-2">
-        <label class="checkbox-custom checkbox-inline pull-left" id="selectAllInstances" data-initialize="checkbox"> 
-          <input class="btn btn-default" type="checkbox" value="1" data-toggle=".select-all-instances">
-          <span class="checkbox-label">Select All</span>
-        </label>
-      </div>
       <div class="col-xs-6 col-sm-4 col-md-3 select-all-instances">
         <div class="input-group">
           <button class="btn btn-info" tabindex="0">Generate Docs</button>
@@ -136,7 +130,10 @@
       <thead>
       <tr>
         <th></th>
-        <th></th>
+        <th>
+         <!-- TODO: SELECT ALL CHECKBOX, TO SELECT ALL WITH STATUS "DISPATCHED"  -->
+          <input class="btn btn-default" type="checkbox" value="1">
+        </th>
         <th>Dispatch LMP Station</th>
         <th>Inbound LMP Station</th>
         <th>Store Number</th>
@@ -154,9 +151,7 @@
       <tbody>
       <tr>
         <td></td>
-        <td>
-          <input type="checkbox">
-        </td>
+        <td></td>
         <td>LGW</td>
         <td>LTN</td>
         <td>7321</td>
@@ -172,9 +167,7 @@
       </tr>
       <tr>
         <td></td>
-        <td>
-          <input type="checkbox">
-        </td>
+        <td></td>
         <td>LTN</td>
         <td>LGW</td>
         <td>7321</td>
@@ -192,9 +185,7 @@
       </tr>
       <tr>
         <td></td>
-        <td>
-          <input type="checkbox">
-        </td>
+        <td></td>
         <td>STN</td>
         <td>ORD</td>
         <td>7453</td>
@@ -215,9 +206,7 @@
           <span class="fa fa-plus-square-o" ng-show="!isOpen(item) && hasSubVersions(item)" ng-click="toggleVersionVisibility(item)"></span>
           <span class="fa fa-minus-square" ng-show="isOpen(item)" ng-click="toggleVersionVisibility(item)"></span>
         </td>
-        <td>
-          <input type="checkbox">
-        </td>
+        <td></td>
         <td>BSL</td>
         <td></td>
         <td>7455</td>
@@ -267,29 +256,43 @@
         <td>
           <input type="checkbox">
         </td>
-        <td colspan="3">Replenish 1 STN</td>
-        <td colspan="8">08/08/15</td>
+        <td>STN</td>
+        <td></td>
+        <td></td>
+        <td>08/07/15</td>
+        <td>STN</td>
+        <td>12:00</td>
+        <td>LHR</td>
+        <td>14:00</td>
+        <td></td>
+        <td></td>
+        <td>Dispatched</td>
         <td>
           <button class="btn btn-info btn-xs" tabindex="0">Generate Doc</button>
         </td>
       </tr>
       <tr class="master-row">
         <td></td>
+        <td></td>
+        <td>LGW</td>
+        <td></td>
+        <td></td>
+        <td>08/07/15</td>
+        <td>LGW</td>
+        <td>11:00</td>
+        <td>ORD</td>
+        <td>13:00</td>
+        <td></td>
+        <td></td>
+        <td>Ready for Packing</td>
         <td>
-          <input type="checkbox">
-        </td>
-        <td colspan="3">Replenish 2 LGW</td>
-        <td colspan="8">08/08/15</td>
-        <td>
-          <button class="btn btn-info btn-xs" tabindex="0">Generate Doc</button>
+          <button class="btn btn-primary btn-xs" tabindex="0">Start Packing</button>
         </td>
       </tr>
       
       <tr>
         <td></td>
-        <td>
-          <input type="checkbox">
-        </td>
+        <td></td>
         <td>LPL</td>
         <td>LPL</td>
         <td>7278</td>
