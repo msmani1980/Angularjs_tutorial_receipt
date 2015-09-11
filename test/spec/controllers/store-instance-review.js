@@ -8,6 +8,7 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
   beforeEach(module('served/store-instance-seals.json'));
   beforeEach(module('served/seal-colors.json'));
   beforeEach(module('served/seal-types.json'));
+  beforeEach(module('served/store-status.json'));
 
 
   var StoreInstanceReviewCtrl;
@@ -23,11 +24,13 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
   var getSealTypesDeferred;
   var getStoreInstanceSealsDeferred;
   var location;
+  var getStoreStatusDeferred;
+  var setStoreStatusDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
-                              _servedSealColors_, _servedSealTypes_, $location) {
+                              _servedSealColors_, _servedSealTypes_, $location, _servedStoreStatus_) {
     scope = $rootScope.$new();
     routeParams = {
       storeId: 17
@@ -43,6 +46,12 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
     getStoreInstanceMenuItemsDeferred = $q.defer();
     getStoreInstanceMenuItemsDeferred.resolve(_servedStoreInstanceMenuItems_);
     spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
+    getStoreStatusDeferred = $q.defer();
+    getStoreStatusDeferred.resolve(_servedStoreStatus_);
+    spyOn(storeInstanceFactory, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise);
+    setStoreStatusDeferred = $q.defer();
+    setStoreStatusDeferred.resolve({response:200});
+    spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(setStoreStatusDeferred.promise);
 
     // storeInstanceReviewFactory
     storeInstanceReviewFactory = $injector.get('storeInstanceReviewFactory');
@@ -106,7 +115,15 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
     });
 
     it('should call get store instance seals API', function(){
-      expect(storeInstanceReviewFactory.getStoreInstanceSeals).toHaveBeenCalledWith(routeParams.storeId);
+      expect(storeInstanceFactory.getStoreStatusList).toHaveBeenCalled();
+    });
+
+    it('should call get store status API', function(){
+      expect(storeInstanceReviewFactory.getStoreInstanceSeals).toHaveBeenCalled();
+    });
+
+    it('should call set store status API and set to name value "Ready for Dispatch"', function(){
+      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, 3);
     });
 
     it('should create a scope seals object from the 3 seal API calls', function(){
@@ -163,6 +180,13 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
       var mockUri = wizardSteps[mockIndex].uri;
       scope.loseDataAlertConfirmTrigger();
       expect(location.url).toHaveBeenCalledWith(mockUri);
+    });
+  });
+
+  describe('submit scope function', function(){
+    it('should set the store instance status to the id value of "Dispatched" which is 7 with current mock data', function(){
+      scope.submit();
+      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, 7);
     });
   });
 

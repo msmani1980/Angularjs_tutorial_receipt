@@ -81,7 +81,10 @@ angular.module('ts5App')
       return sealNumbers;
     }
 
-    function initPromisesResolved(){
+    function initLoadComplete(){
+
+
+      hideLoadingModal();
 
       $scope.menuItems.map(function(item){
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
@@ -97,10 +100,14 @@ angular.module('ts5App')
         });
         return _sealTypes;
       });
+    }
 
-
-
-      hideLoadingModal();
+    function initPromisesResolved(){
+      var promise = getSetStoreStatusByNamePromise('Ready for Dispatch');
+      if(!promise){
+        return;
+      }
+      promise.then(initLoadComplete, showResponseErrors);
     }
 
     function getStoreInstanceSeals() {
@@ -119,55 +126,30 @@ angular.module('ts5App')
     }
 
     function setStoreStatusList(dataFromAPI){
-      _storeStatusList = dataFromAPI.response;
+      _storeStatusList = dataFromAPI;
     }
 
     function getStoreStatusList(){
-      /*
        _initPromises.push(
-        recordsService.getStoreStatusList
-          .then(setStoreStatusList);
+         storeInstanceFactory.getStoreStatusList()
+          .then(setStoreStatusList)
        );
-       */
-      // TODO Hookup API here recordsService.getStoreStatusList
-      var mockResponse = {response: [
-        {
-          id: 1,
-          statusName: 'Ready for Packing',
-          name: '1'
-        },
-        {
-          id: 2,
-          statusName: 'Ready for Seals',
-          name: '2'
-        },
-        {
-          id: 3,
-          statusName: 'Ready for Dispatch',
-          name: '3'
-        },
-        {
-          id: 7,
-          statusName: 'Dispatched',
-          name: '4'
-        },
-        {
-          id: 8,
-          statusName: 'Un-dispatched',
-          name: '7'
-        },
-        {
-          id: 9,
-          statusName: 'Inbounded',
-          name: '6'
-        },
-        {
-          id: 10,
-          statusName: 'On Floor',
-          name: '5'
-        }
-      ]};
-      setStoreStatusList(mockResponse);
+    }
+
+    function getSetStoreStatusByNamePromise(name){
+      $scope.formErrors = [];
+      var statusId = getStatusIdByName(name);
+      if(!statusId){
+        var error = {
+          data: [{
+            field: 'statusId',
+            value: 'Fatal Error. Unable to find statusId of statusName "'+name+'"'
+          }]
+        };
+        showResponseErrors(error);
+        return false;
+      }
+      return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusId);
     }
 
     function resolveGetStoreDetails(dataFromAPI) {
@@ -179,7 +161,7 @@ angular.module('ts5App')
     }
 
     function resolveUpdateStoreInstanceStatus(){
-      showMessage('Success, <a href="http://www.youtube.com/watch?v=OWmaoQWX6Ws&t=1m25s" target="_blank">QUICK CLICK HERE!</a>', 'info');
+      showMessage('Dispatched!', 'info');
       // TODO redirect user somewhere?
     }
 
@@ -224,26 +206,11 @@ angular.module('ts5App')
     };
 
     $scope.submit = function(){
-      $scope.formErrors = [];
-      var statusId = getStatusIdByName('Dispatched');
-      if(!statusId){
-        var error = {
-          data: [{
-            field: 'statusId',
-            value: 'Fatal Error. Unable to find statusId of statusName "Dispatched"'
-          }]
-        };
-        showResponseErrors(error);
-        return false;
+      var promise = getSetStoreStatusByNamePromise('Dispatched');
+      if(!promise){
+        return;
       }
-      // TODO begin remove
-      resolveUpdateStoreInstanceStatus();
-      return;
-      // TODO end remove
-      /*
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusId)
-        .then(resolveUpdateStoreInstanceStatus, showResponseErrors);
-        */
+      $q.all([promise]).then(resolveUpdateStoreInstanceStatus, showResponseErrors);
     };
 
   });
