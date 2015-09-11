@@ -172,7 +172,7 @@
             </div>
             
             <div class="form-group">
-              <label for="selectMenu" class="col-sm-4 control-label">Aircraft Tail Number</label>
+              <label for="aircraftTailNumber" class="col-sm-4 control-label">Aircraft Tail Number</label>
               <div class="col-sm-5">
 <!-- TODO: RESTRICT TO 1 SELECTION ONLY, CUSTOMIZE FOR AIRCRAFT TAIL NUMBER -->
                 <ui-select multiple ng-model="formData.tags" theme="bootstrap">
@@ -714,15 +714,18 @@
     </div>
 
     <div class="actions">
+    <!-- TODO: HIDE 'PREV' BUTTON ON FIRST STEP -->
       <button type="button" class="btn btn-default btn-prev">
         <span class="glyphicon glyphicon-arrow-left"></span>Prev
       </button>
+    <!-- TODO: HIDE 'NEXT' BUTTON ON LAST STEP -->
       <button type="button" class="btn btn-default btn-primary btn-next" data-last="Dispatch">
         Next<span class="glyphicon glyphicon-arrow-right"></span>
       </button>
     </div>
     
     <div class="top-actions">
+    <!-- TODO: HIDE 'SAVE & EXIT' BUTTON ON FIRST STEP -->
       <button type="button" class="btn btn-primary btn-prev">Save &amp; Exit</button>
     </div>
 
