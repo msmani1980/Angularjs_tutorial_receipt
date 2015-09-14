@@ -26,7 +26,6 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
   var location;
   var setStoreStatusDeferred;
 
-  // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
                               _servedSealColors_, _servedSealTypes_, $location) {
@@ -45,15 +44,10 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
     getStoreInstanceMenuItemsDeferred = $q.defer();
     getStoreInstanceMenuItemsDeferred.resolve(_servedStoreInstanceMenuItems_);
     spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
-    /*
-    getStoreStatusDeferred = $q.defer();
-    getStoreStatusDeferred.resolve(_servedStoreStatus_);
-    spyOn(storeInstanceFactory, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise); */
     setStoreStatusDeferred = $q.defer();
     setStoreStatusDeferred.resolve({response:200});
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(setStoreStatusDeferred.promise);
 
-    // storeInstanceReviewFactory
     storeInstanceReviewFactory = $injector.get('storeInstanceReviewFactory');
     getSealColorsDeferred  = $q.defer();
     getSealColorsDeferred.resolve(_servedSealColors_);
