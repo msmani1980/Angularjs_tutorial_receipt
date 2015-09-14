@@ -3,7 +3,7 @@
 // Generated on 2015-04-14 using
 // generator-karma 0.9.0
 
-module.exports = function (config) {
+module.exports = function(config) {
   'use strict';
 
   config.set({
@@ -30,8 +30,7 @@ module.exports = function (config) {
         {
           type: 'html',
           subdir: 'report-html'
-        },
-        {
+        }, {
           type: 'cobertura',
           subdir: '.'
         }
@@ -67,6 +66,9 @@ module.exports = function (config) {
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
+      'bower_components/ngstorage/ngStorage.js',
+      'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+      'bower_components/angular-filter/dist/angular-filter.min.js',
       'bower_components/angular-ui-select/dist/select.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
