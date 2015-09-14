@@ -7,9 +7,13 @@
   <error-dialog form-object="assignSealsForm"></error-dialog>
 
   <form name="assignSealsForm" ng-submit="submitForm()">
-  <div ng-repeat="(sealTypeKey, sealType) in sealTypesList" ng-if="sealTypesList">
-    <seal-type seal-type-object="sealType"></seal-type>
-  </div>
+
+    <div ng-repeat="(sealTypeKey, sealType) in sealTypesList" ng-if="sealTypesList">
+
+      <seal-type seal-type-object="sealType"></seal-type>
+
+    </div>
+
   </form>
 
 </div>

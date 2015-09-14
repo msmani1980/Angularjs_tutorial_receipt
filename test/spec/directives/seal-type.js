@@ -3,8 +3,7 @@
 describe('Directive: sealType', function() {
 
   // load the directive's module
-  beforeEach(module('ts5App'));
-  beforeEach(module('template-module'));
+  beforeEach(module('ts5App', 'template-module'));
 
   var element;
   var scope;
@@ -22,7 +21,6 @@ describe('Directive: sealType', function() {
     scope.$digest();
     isolatedScope = element.isolateScope();
   }
-
   describe('When the seal-type directive is compiled, it', function() {
 
     beforeEach(inject(function() {

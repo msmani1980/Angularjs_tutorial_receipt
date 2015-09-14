@@ -15,7 +15,6 @@ angular.module('ts5App')
 
     this.setSealColors = function(sealColorsJSON) {
       $scope.sealColorsList = sealColorsJSON;
-      console.log(sealColorsJSON);
     };
 
     this.setStoreDetails = function(storeDetailsJSON) {
@@ -24,9 +23,7 @@ angular.module('ts5App')
 
     this.setSealTypes = function(sealTypesJSON) {
       $scope.sealTypesList = sealTypesJSON;
-      console.log(sealTypesJSON);
     };
-
 
     this.getSealColors = function() {
       sealColorsService.getSealColors().then($this.setSealColors);
@@ -45,9 +42,9 @@ angular.module('ts5App')
       $scope.storeId = $routeParams.storeId;
       if ($scope.storeId) {
         this.getStoreDetails();
+        this.getSealColors();
+        this.getSealTypes();
       }
-      this.getSealColors();
-      this.getSealTypes();
     };
 
     this.init();
