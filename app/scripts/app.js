@@ -173,6 +173,15 @@ angular.module('ts5App', [
   }).when('/stock-take-report', {
     templateUrl: 'views/stock-take-report.html',
     controller: 'StockTakeReportCtrl'
+  }).when('/commission-data-table', {
+    templateUrl: 'views/commission-data-table.html',
+    controller: 'CommissionDataTableCtrl'
+  }).when('/commission-data/:state/:id?', {
+    templateUrl: 'views/commission-data-create.html',
+    controller: 'CommissionDataCtrl'
+  }).when('/store-instance-step-1', {
+    templateUrl: 'views/store-instance-step-1.html',
+    controller: 'StoreInstanceStep1Ctrl'
   }).when('/store-instance-create', {
     templateUrl: 'views/store-instance-create.html',
     controller: 'StoreInstanceCreateCtrl'
