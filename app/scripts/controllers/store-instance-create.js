@@ -20,7 +20,7 @@ angular.module('ts5App')
     $scope.formData = {
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
-   };
+    };
     $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
 
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
@@ -34,6 +34,12 @@ angular.module('ts5App')
       this.getStoresList();
     };
 
+    this.generateQuery = function() {
+      return {
+        startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate)
+      };
+    };
+
     this.getCatererStationList = function() {
       storeInstanceFactory.getCatererStationList().then(this.setCatererStationList);
     };
@@ -43,7 +49,8 @@ angular.module('ts5App')
     };
 
     this.getMenuMasterList = function() {
-      storeInstanceFactory.getMenuMasterList().then(this.setMenuMasterList);
+      var query = this.generateQuery();
+      storeInstanceFactory.getMenuMasterList(query).then(this.setMenuMasterList);
     };
 
     this.setMenuMasterList = function(dataFromAPI) {
@@ -59,9 +66,8 @@ angular.module('ts5App')
     };
 
     this.getStoresList = function() {
-      var query = {
-        readyToUse: true
-      };
+      var query = this.generateQuery();
+      query.readyToUse = true;
       storeInstanceFactory.getStoresList(query).then(this.setStoresList);
     };
 
@@ -89,7 +95,7 @@ angular.module('ts5App')
         if($scope.wizardStepToIndex) {
           $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(response.id);
           var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
-          $location.urt(uri);
+          $location.url(uri);
         }
       }
     };
@@ -177,10 +183,10 @@ angular.module('ts5App')
 
     $scope.validateMenus = function() {
       if(angular.isUndefined($scope.createStoreInstance.Menus) ||
-        $scope.createStoreInstance.Menus.$pristine) {
+        $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
-      if($scope.formData.menus.length < 1) {
+      if($scope.formData.menus.length === 0) {
         return 'has-error';
       }
       if($scope.formData.menus.length > 0) {
@@ -188,5 +194,12 @@ angular.module('ts5App')
       }
 
     };
+
+    $scope.$watch('formData.scheduleDate', function(newDate,oldDate) {
+      if(newDate && newDate !== oldDate){
+        $this.getMenuMasterList();
+        $this.getStoresList();
+      }
+    });
 
   });

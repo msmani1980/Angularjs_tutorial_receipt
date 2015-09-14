@@ -9,10 +9,14 @@
  */
 angular.module('ts5App').service('storeInstanceFactory',
   function (storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
-            menuMasterService, storesService, stationsService, $q) {
+            menuMasterService, storesService, stationsService, itemsService, recordsService, $q, lodash) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
+    }
+
+    function getItemsMasterList(payload) {
+      return itemsService.getItemsList(payload, true);
     }
 
     function getCatererStationList() {
@@ -79,12 +83,16 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storeInstanceService.updateStoreInstanceItem(id, itemId, payload);
     }
 
+    function updateStoreInstanceItemsBulk(id, payload) {
+      return storeInstanceService.updateStoreInstanceItemsBulk(id, payload);
+    }
+
     function deleteStoreInstanceItem(id, itemId) {
       return storeInstanceService.deleteStoreInstanceItem(id, itemId);
     }
 
-    function getMenuMasterList() {
-      return menuMasterService.getMenuMasterList();
+    function getMenuMasterList(query) {
+      return menuMasterService.getMenuMasterList(query);
     }
 
     function getStoresList(query) {
@@ -95,12 +103,17 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storesService.getStore(storeId);
     }
 
+    function getStoreStatusList() {
+      return recordsService.getStoreStatusList();
+    }
+
     function getDependenciesForStoreInstance(dataFromAPI) {
       var responseData = angular.copy(dataFromAPI);
       var dependenciesArray = [];
 
       dependenciesArray.push(getStore(responseData.storeId));
       dependenciesArray.push(getStation(responseData.cateringStationId));
+      dependenciesArray.push(getStoreStatusList());
 
       if (responseData.carrierId) {
         dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
@@ -116,8 +129,11 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.scheduleDate = dataFromAPI.scheduleDate;
       storeDetails.scheduleNumber = dataFromAPI.scheduleNumber;
       storeDetails.storeInstanceNumber = dataFromAPI.id;
-      if(responseCollection.length > 2) {
-        storeDetails.carrierNumber = responseCollection[2].carrierNumber;
+      storeDetails.statusList = responseCollection[2];
+      storeDetails.currentStatus = lodash.findWhere(storeDetails.statusList, {id: dataFromAPI.statusId});
+
+      if (responseCollection.length > 3) {
+        storeDetails.carrierNumber = responseCollection[3].carrierNumber;
       }
       return storeDetails;
     }
@@ -130,13 +146,18 @@ angular.module('ts5App').service('storeInstanceFactory',
         $q.all(storeDetailPromiseArray).then(function (responseCollection) {
           getStoreDetailsDeferred.resolve(formatResponseCollection(responseCollection, dataFromAPI));
         });
-      });
+      }, getStoreDetailsDeferred.reject);
 
       return getStoreDetailsDeferred.promise;
     }
 
+    function updateStoreInstanceStatus(storeId, statusId) {
+     return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
+    }
+
     return {
       getCompanyId: getCompanyId,
+      getItemsMasterList: getItemsMasterList,
       getCatererStationList: getCatererStationList,
       getStation: getStation,
       getSchedules: getSchedules,
@@ -153,11 +174,14 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreInstanceItem: getStoreInstanceItem,
       createStoreInstanceItem: createStoreInstanceItem,
       updateStoreInstanceItem: updateStoreInstanceItem,
+      updateStoreInstanceItemsBulk: updateStoreInstanceItemsBulk,
       deleteStoreInstanceItem: deleteStoreInstanceItem,
       getMenuMasterList: getMenuMasterList,
       getStoresList: getStoresList,
       getStore: getStore,
-      getStoreDetails: getStoreDetails
+      getStoreDetails: getStoreDetails,
+      getStoreStatusList: getStoreStatusList,
+      updateStoreInstanceStatus: updateStoreInstanceStatus
     };
 
   });

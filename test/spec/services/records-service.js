@@ -3,28 +3,18 @@
 describe('Service: commissionDataService', function () {
 
   beforeEach(module('ts5App'));
-  beforeEach(module('served/commission-payable-types.json', 'served/crew-base-types.json', 'served/discount-types.json'));
 
   var recordsService,
-    $httpBackend,
-    commissionDataTypesResponseJSON,
-    crewBaseTypesResponseJSON,
-    discountTypesResponseJSON;
+    httpBackend;
 
-  beforeEach(inject(function (_recordsService_, $injector) {
-    inject(function (_servedCommissionPayableTypes_, _servedCrewBaseTypes_, _servedDiscountTypes_) {
-      commissionDataTypesResponseJSON = _servedCommissionPayableTypes_;
-      crewBaseTypesResponseJSON = _servedCrewBaseTypes_;
-      discountTypesResponseJSON = _servedDiscountTypes_;
-    });
-
-    $httpBackend = $injector.get('$httpBackend');
+  beforeEach(inject(function (_recordsService_, $httpBackend) {
+    httpBackend = $httpBackend;
     recordsService = _recordsService_;
   }));
 
   afterEach(function () {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should exist', function () {
@@ -37,17 +27,13 @@ describe('Service: commissionDataService', function () {
         expect(!!recordsService.getCrewBaseTypes).toBe(true);
       });
 
-      var crewBaseTypes;
-      beforeEach(function () {
-        $httpBackend.whenGET(/crew-base-types/).respond(crewBaseTypesResponseJSON);
-        recordsService.getCrewBaseTypes().then(function (dataFromAPI) {
-          crewBaseTypes = dataFromAPI;
+      it('should make GET request to API', function () {
+        var expectedURL = /records\/crew-base-types$/;
+        httpBackend.expectGET(expectedURL).respond(200, []);
+        recordsService.getCrewBaseTypes().then(function (response) {
+          expect(response).toBeDefined();
         });
-        $httpBackend.flush();
-      });
-
-      it('should be an array', function () {
-        expect(Object.prototype.toString.call(crewBaseTypes)).toBe('[object Array]');
+        httpBackend.flush();
       });
     });
 
@@ -56,36 +42,43 @@ describe('Service: commissionDataService', function () {
         expect(!!recordsService.getCommissionPayableTypes).toBe(true);
       });
 
-      var commissionTypes;
-      beforeEach(function () {
-        $httpBackend.whenGET(/commission-payable-types/).respond(commissionDataTypesResponseJSON);
-        recordsService.getCommissionPayableTypes().then(function (dataFromAPI) {
-          commissionTypes = dataFromAPI;
+      it('should make GET request to API', function () {
+        var expectedURL = /records\/commission-payable-types$/;
+        httpBackend.expectGET(expectedURL).respond(200, []);
+        recordsService.getCommissionPayableTypes().then(function (response) {
+          expect(response).toBeDefined();
         });
-        $httpBackend.flush();
-      });
-
-      it('should be an array', function () {
-        expect(Object.prototype.toString.call(commissionTypes)).toBe('[object Array]');
+        httpBackend.flush();
       });
     });
 
-    describe('getCommissionPayableTypes', function () {
+    describe('getDiscountTypes', function () {
       it('should be accessible in the service', function () {
         expect(!!recordsService.getDiscountTypes).toBe(true);
       });
 
-      var discountTypes;
-      beforeEach(function () {
-        $httpBackend.whenGET(/discount-types/).respond(discountTypesResponseJSON);
-        recordsService.getDiscountTypes().then(function (dataFromAPI) {
-          discountTypes = dataFromAPI;
+      it('should make GET request to API', function () {
+        var expectedURL = /records\/discount-types$/;
+        httpBackend.expectGET(expectedURL).respond(200, []);
+        recordsService.getDiscountTypes().then(function (response) {
+          expect(response).toBeDefined();
         });
-        $httpBackend.flush();
+        httpBackend.flush();
+      });
+    });
+
+    describe('getStoreStatus', function () {
+      it('should be accessible in the service', function () {
+        expect(!!recordsService.getStoreStatusList).toBe(true);
       });
 
-      it('should be an array', function () {
-        expect(Object.prototype.toString.call(discountTypes)).toBe('[object Array]');
+      it('should make GET request to API', function () {
+        var expectedURL = /records\/store-status$/;
+        httpBackend.expectGET(expectedURL).respond(200, []);
+        recordsService.getStoreStatusList().then(function (response) {
+          expect(response).toBeDefined();
+        });
+        httpBackend.flush();
       });
     });
 

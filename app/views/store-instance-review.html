@@ -1,0 +1,103 @@
+<div class="fluid-container">
+  <!--<step-wizard></step-wizard>-->
+
+  <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()"></step-wizard>
+  <loose-data-alert show-alert="showLoseDataAlert" confirm-trigger="loseDataAlertConfirmTrigger()"></loose-data-alert>
+
+  <form-error-dialog></form-error-dialog>
+
+  <form name="createStoreInstance" class="well" ng-submit="submitForm()">
+
+    <!-- INFORMATION BAR -->
+    <div class="well">
+      <store-instance-header></store-instance-header>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-1">
+        <div class="form-group">
+          <label>Filter by:</label>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-4">
+        <div class="form-group">
+          <label>Item Details</label>
+          <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details"
+                 placeholder="Coke" ng-readonly="readOnly">
+        </div>
+      </div>
+    </div>
+
+    <accordion class="store-instance-review-accordion">
+      <accordion-group>
+        <accordion-heading class="accordion-heading">
+          Pick List <i class="fa fa-chevron-down"></i>
+        </accordion-heading>
+        <div class="row">
+          <div class="col-xs-12 text-right">
+            <button type="button" class="btn btn-info" ng-click="goToWizardStep(1)">Edit</button>
+          </div>
+        </div>
+        <table class="table table-striped pick-list">
+          <thead>
+          <tr>
+            <th>Retail Item Details</th>
+            <th width="15%">Template Quantity</th>
+            <th width="15%">Packed Quantity</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
+            <td>
+              <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
+            </td>
+            <td>
+              <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
+            </td>
+            <td>
+              <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </accordion-group>
+    </accordion>
+
+    <accordion class="store-instance-review-accordion">
+      <accordion-group>
+        <accordion-heading class="accordion-heading">
+          Seal Number Assignment <i class="fa fa-chevron-down"></i>
+        </accordion-heading>
+        <div class="row">
+          <div class="col-xs-12 text-right">
+            <button type="button" class="btn btn-info" ng-click="goToWizardStep(2)">Edit</button>
+          </div>
+        </div>
+
+        <table class="table store-instance-review-seals-table">
+          <thead>
+          <tr>
+            <th>Seal Type</th>
+            <th>Seal Numbers</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="sealObj in seals">
+            <td width="15%">
+              <input type="text" class="form-control" value="{{ sealObj.name }}"
+                     ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
+            </td>
+            <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
+          </tr>
+          </tbody>
+        </table>
+      </accordion-group>
+    </accordion>
+
+    <footer class="text-right">
+      <button type="button" class="btn btn-default btn-primary btn-next" ng-click="submit()">Dispatch</button>
+    </footer>
+
+  </form>
+
+</div>

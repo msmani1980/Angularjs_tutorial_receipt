@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "count": 4,
+    "limit": 4,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 1,
+      "companyId": 403,
+      "color": "#00B200",
+      "type": 1
+    },
+    {
+      "id": 2,
+      "companyId": 403,
+      "color": "#0000FF",
+      "type": 2
+    },
+    {
+      "id": 3,
+      "companyId": 403,
+      "color": "#E5E500",
+      "type": 3
+    },
+    {
+      "id": 4,
+      "companyId": 403,
+      "color": "#B70024",
+      "type": 4
+    }
+  ]
+}

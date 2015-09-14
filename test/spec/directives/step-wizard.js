@@ -99,7 +99,7 @@ describe('The Step Wizard directive', function () {
     });
 
     it('should set the 1st step\'s class equal to active', function () {
-      expect(directiveScope.steps[0].class).toBe('completed');
+      expect(directiveScope.steps[0].class).toBe('complete');
     });
 
     it('should set the 2nd steps\'s class equal to active', function () {

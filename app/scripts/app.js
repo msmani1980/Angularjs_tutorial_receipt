@@ -25,7 +25,8 @@ angular.module('ts5App', [
   'ja.qr',
   'ngToast',
   'ang-drag-drop',
-  'infinite-scroll'
+  'infinite-scroll',
+  'ngLodash'
 ]).factory('defaultData', [
   function () {
     var defaultData = {
@@ -184,9 +185,15 @@ angular.module('ts5App', [
   }).when('/store-instance-create', {
     templateUrl: 'views/store-instance-create.html',
     controller: 'StoreInstanceCreateCtrl'
+  }).when('/store-instance-review/:storeId', {
+    templateUrl: 'views/store-instance-review.html',
+    controller: 'StoreInstanceReviewCtrl'
   }).when('/store-instance-packing/:storeId', {
     templateUrl: 'views/store-instance-packing.html',
     controller: 'StoreInstancePackingCtrl'
+  }).when('/store-instance-seals/:storeId', {
+    templateUrl: 'views/store-instance-seals.html',
+    controller: 'StoreInstanceSealsCtrl'
   }).otherwise({
     redirectTo: '/'
   });
