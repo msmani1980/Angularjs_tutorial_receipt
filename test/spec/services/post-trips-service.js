@@ -88,7 +88,7 @@ describe('Service: postTripService', function () {
       it('should append postTrip id to request URL', function () {
         var postTripId = '123';
         var regex = new RegExp('posttrips/' + postTripId, 'g');
-        $httpBackend.expectGET(regex).respond('202');
+        $httpBackend.expectGET(regex).respond(postTripDataListResponseJSON);
         postTripService.getPostTrip('403', postTripId);
         $httpBackend.flush();
       });
