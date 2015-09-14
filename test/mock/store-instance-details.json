@@ -1,0 +1,40 @@
+{
+  "LMPStation": "ORD",
+  "currentStatus": {
+    "id": 9,
+    "statusName": "Inbounded",
+    "name": "6"
+  },
+  "nextStatus": {
+    "id": 10,
+    "statusName": "On Floor",
+    "name": "5"
+  },
+  "storeId": 13,
+  "scheduleDate": "2015-08-13",
+  "scheduleNumber": "SCHED123",
+  "statusList": [
+    {
+      "id": 9,
+      "statusName": "Inbounded",
+      "name": "6"
+    },
+    {
+      "id": 10,
+      "statusName": "On Floor",
+      "name": "7"
+    },
+    {
+      "id": 1,
+      "statusName": "Packing",
+      "name": "1"
+    },
+    {
+      "id": 2,
+      "statusName": "Packing",
+      "name": "2"
+    }
+  ],
+  "storeInstanceNumber": 19,
+  "storeNumber": "894523"
+}
