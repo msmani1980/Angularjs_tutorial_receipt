@@ -44,12 +44,13 @@ angular.module('ts5App')
 
       function callTrigger(trigger, toIndex){
         $scope.$parent.wizardStepToIndex = toIndex;
+        // If controller does not return true, do not step the user
         if(angular.isUndefined($scope[trigger])) {
-          return true;
+          return false;
         }
         var triggerReturn = $scope[trigger]();
         if(typeof triggerReturn !== 'boolean') {
-          return true;
+          return false;
         }
         return triggerReturn;
       }
