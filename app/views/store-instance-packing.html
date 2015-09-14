@@ -1,5 +1,5 @@
 <div class="fluid-container">
-  <!--<step-wizard></step-wizard>-->
+  <step-wizard steps="wizardSteps" next-trigger="savePackingDataAndUpdateStatus(true)"></step-wizard>
 
   <form-error-dialog></form-error-dialog>
 
@@ -104,7 +104,7 @@
 
     <div class="row">
       <div class="col-xs-12 col-sm-1">
-          <button class="btn btn-success" type="button" ng-click="savePackingData()">Complete Packing & Exit
+          <button class="btn btn-success" type="button" ng-click="savePackingDataAndUpdateStatus(false)">Complete Packing & Exit
           </button>
       </div>
     </div>
