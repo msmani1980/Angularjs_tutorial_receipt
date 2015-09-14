@@ -3,7 +3,7 @@
 // Generated on 2015-04-14 using
 // generator-karma 0.9.0
 
-module.exports = function(config) {
+module.exports = function (config) {
   'use strict';
 
   config.set({
@@ -30,7 +30,8 @@ module.exports = function(config) {
         {
           type: 'html',
           subdir: 'report-html'
-        }, {
+        },
+        {
           type: 'cobertura',
           subdir: '.'
         }
@@ -66,9 +67,6 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
-      'bower_components/ngstorage/ngStorage.js',
-      'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-      'bower_components/angular-filter/dist/angular-filter.min.js',
       'bower_components/angular-ui-select/dist/select.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -104,12 +102,12 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: [
-      'Chrome'
+      'PhantomJS'
     ],
 
     // Which plugins to enable
     plugins: [
-      'karma-chrome-launcher',
+      'karma-phantomjs-launcher',
       'karma-jasmine',
       'karma-ng-html2js-preprocessor',
       'karma-ng-json2js-preprocessor',
@@ -118,13 +116,13 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false,
+    singleRun: true,
 
     colors: true,
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_ERROR
 
     // Uncomment the following lines if you are using grunt's server to run the tests
     // proxies: {
