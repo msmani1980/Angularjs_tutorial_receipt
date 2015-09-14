@@ -16,8 +16,9 @@ angular.module('ts5App')
     var _sealTypes = [];
     var _sealColors = [];
     var _storeInstanceSeals = [];
-    var _storeStatusList = [];
     var _nextStatusId = null;
+    var STATUS_READY_FOR_DISPATCH = 'Ready for Dispatch';
+    var STATUS_DISPATCHED = 'Dispatched';
 
     function showMessage(message, messageType) {
       ngToast.create({className: messageType, dismissButton: true, content: '<strong>Store Instance Review</strong>: ' + message});
@@ -81,12 +82,17 @@ angular.module('ts5App')
       return sealNumbers;
     }
 
-    function initPromisesResolved(){
+    function initLoadComplete(){
 
-      $scope.menuItems.map(function(item){
-        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
-        item.disabled = true;
-      });
+
+      hideLoadingModal();
+
+      if($scope.menuItems) {
+        $scope.menuItems.map(function (item) {
+          item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+          item.disabled = true;
+        });
+      }
 
       $scope.seals = [];
       _sealTypes.map(function(sealType){
@@ -97,10 +103,31 @@ angular.module('ts5App')
         });
         return _sealTypes;
       });
+    }
 
-
-
+    function showUserCurrentStatus(messageAction) {
       hideLoadingModal();
+      if (!messageAction) {
+        messageAction = 'is set';
+      }
+      showMessage('Status ' + messageAction + ' to "' + $scope.storeDetails.currentStatus.statusName + '"', 'info');
+    }
+
+    function setStoreInstanceStatus(){
+
+      initLoadComplete();
+
+      if(-1 < [STATUS_DISPATCHED, STATUS_READY_FOR_DISPATCH].indexOf($scope.storeDetails.currentStatus.statusName)){
+        showUserCurrentStatus();
+        return;
+      }
+
+      var promise = getSetStoreStatusByNamePromise(STATUS_READY_FOR_DISPATCH);
+      if(!promise){
+        return;
+      }
+      // if there are response errors, show them
+      promise.then(null, showResponseErrors);
     }
 
     function getStoreInstanceSeals() {
@@ -118,77 +145,46 @@ angular.module('ts5App')
       );
     }
 
-    function setStoreStatusList(dataFromAPI){
-      _storeStatusList = dataFromAPI.response;
+    function resolveSetStoreInstanceStatus(response){
+      $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {id: response.statusId}, true)[0];
+      showUserCurrentStatus('updated');
     }
 
-    function getStoreStatusList(){
-      /*
-       _initPromises.push(
-        recordsService.getStoreStatusList
-          .then(setStoreStatusList);
-       );
-       */
-      // TODO Hookup API here recordsService.getStoreStatusList
-      var mockResponse = {response: [
-        {
-          id: 1,
-          statusName: 'Ready for Packing',
-          name: '1'
-        },
-        {
-          id: 2,
-          statusName: 'Ready for Seals',
-          name: '2'
-        },
-        {
-          id: 3,
-          statusName: 'Ready for Dispatch',
-          name: '3'
-        },
-        {
-          id: 7,
-          statusName: 'Dispatched',
-          name: '4'
-        },
-        {
-          id: 8,
-          statusName: 'Un-dispatched',
-          name: '7'
-        },
-        {
-          id: 9,
-          statusName: 'Inbounded',
-          name: '6'
-        },
-        {
-          id: 10,
-          statusName: 'On Floor',
-          name: '5'
-        }
-      ]};
-      setStoreStatusList(mockResponse);
+    function getSetStoreStatusByNamePromise(name){
+      $scope.formErrors = [];
+      var statusNameInt = getStatusNameIntByName(name);
+      if(!statusNameInt){
+        var error = {
+          data: [{
+            field: 'statusId',
+            value: 'Fatal Error. Unable to find statusId of statusName "'+name+'"'
+          }]
+        };
+        showResponseErrors(error);
+        return false;
+      }
+      displayLoadingModal();
+      return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(resolveSetStoreInstanceStatus);
     }
 
     function resolveGetStoreDetails(dataFromAPI) {
       $scope.storeDetails = dataFromAPI;
       getStoreInstanceMenuItems();
       getStoreInstanceSeals();
-      getStoreStatusList();
-      $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
+      $q.all(_initPromises).then(setStoreInstanceStatus, showResponseErrors);
     }
 
-    function resolveUpdateStoreInstanceStatus(){
-      showMessage('Success, <a href="http://www.youtube.com/watch?v=OWmaoQWX6Ws&t=1m25s" target="_blank">QUICK CLICK HERE!</a>', 'info');
+    function updatedStoreStatusSubmitted(){
+      showMessage('Now what? Redirect user where?', 'info');
       // TODO redirect user somewhere?
     }
 
-    function getStatusIdByName(name){
-      var status = $filter('filter')(_storeStatusList, {statusName: name}, true);
+    function getStatusNameIntByName(name){
+      var status = $filter('filter')($scope.storeDetails.statusList, {statusName: name}, true);
       if(!status || !status.length){
         return false;
       }
-      return status[0].id;
+      return status[0].name;
     }
 
     function init() {
@@ -196,7 +192,6 @@ angular.module('ts5App')
       _sealTypes = [];
       _sealColors = [];
       _storeInstanceSeals = [];
-      _storeStatusList = [];
       _nextStatusId = null;
 
       $scope.displayError = false;
@@ -224,26 +219,11 @@ angular.module('ts5App')
     };
 
     $scope.submit = function(){
-      $scope.formErrors = [];
-      var statusId = getStatusIdByName('Dispatched');
-      if(!statusId){
-        var error = {
-          data: [{
-            field: 'statusId',
-            value: 'Fatal Error. Unable to find statusId of statusName "Dispatched"'
-          }]
-        };
-        showResponseErrors(error);
-        return false;
+      var promise = getSetStoreStatusByNamePromise(STATUS_DISPATCHED);
+      if(!promise){
+        return;
       }
-      // TODO begin remove
-      resolveUpdateStoreInstanceStatus();
-      return;
-      // TODO end remove
-      /*
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusId)
-        .then(resolveUpdateStoreInstanceStatus, showResponseErrors);
-        */
+      $q.all([promise]).then(updatedStoreStatusSubmitted, showResponseErrors);
     };
 
   });
