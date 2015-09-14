@@ -29,4 +29,18 @@ describe('Service: storeInstanceSealService', function () {
       httpBackend.flush();
     });
   });
+
+  describe('updateStoreInstanceSeal', function(){
+    it('should make PUT request to API', function() {
+      var expectedURL = /store-instances\/\d+\/seals\/\d+$/;
+      var mockSealId = 17;
+      var mockStoreInstanceId = 4;
+      var mockPayload = {foo: 'barts'};
+      httpBackend.expectPUT(expectedURL).respond(200, {});
+      storeInstanceSealService.updateStoreInstanceSeal(mockSealId, mockStoreInstanceId, mockPayload).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+  });
 });

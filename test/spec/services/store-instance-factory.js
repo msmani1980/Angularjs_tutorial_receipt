@@ -4,7 +4,7 @@ describe('Service: storeInstanceFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/store-instance.json', 'served/store.json', 'served/carrier-number.json', 'served/station.json'));
+  beforeEach(module('served/store-instance.json', 'served/store.json', 'served/carrier-number.json', 'served/station.json', 'served/store-status.json'));
 
   // instantiate service
   var storeInstanceFactory;
@@ -17,26 +17,31 @@ describe('Service: storeInstanceFactory', function () {
   var menuMasterService;
   var storesService;
   var stationsService;
+  var itemsService;
+  var recordsService;
 
   var getStationDeferred;
   var getCarrierNumberDeferred;
   var getStoreDeferred;
   var getStoreInstanceDeferred;
+  var getStoreStatusDeferred;
 
   var servedStoreInstanceJSON;
   var servedStoreJSON;
   var servedCarrierNumberJSON;
   var servedStationJSON;
+  var servedStoreStatusJSON;
 
   var scope;
 
   beforeEach(inject(function (_servedStoreInstance_, _storeInstanceFactory_, $injector, $q, $rootScope) {
 
-    inject(function (_servedStoreInstance_, _servedStore_, _servedCarrierNumber_, _servedStation_) {
+    inject(function (_servedStoreInstance_, _servedStore_, _servedCarrierNumber_, _servedStation_, _servedStoreStatus_) {
       servedStoreInstanceJSON = _servedStoreInstance_;
       servedStoreJSON = _servedStore_;
       servedCarrierNumberJSON = _servedCarrierNumber_;
       servedStationJSON = _servedStation_;
+      servedStoreStatusJSON = _servedStoreStatus_;
     });
     scope = $rootScope.$new();
     storeInstanceFactory = _storeInstanceFactory_;
@@ -53,7 +58,10 @@ describe('Service: storeInstanceFactory', function () {
     getStoreInstanceDeferred = $q.defer();
     getStoreInstanceDeferred.resolve(servedStoreInstanceJSON);
 
+    getStoreStatusDeferred = $q.defer();
+    getStoreStatusDeferred.resolve(servedStoreStatusJSON);
 
+    itemsService = $injector.get('itemsService');
     catererStationService = $injector.get('catererStationService');
     stationsService = $injector.get('stationsService');
     GlobalMenuService = $injector.get('GlobalMenuService');
@@ -62,8 +70,11 @@ describe('Service: storeInstanceFactory', function () {
     storeInstanceService = $injector.get('storeInstanceService');
     menuMasterService = $injector.get('menuMasterService');
     storesService = $injector.get('storesService');
+    recordsService = $injector.get('recordsService');
+
 
     spyOn(catererStationService, 'getCatererStationList');
+    spyOn(itemsService, 'getItemsList');
     spyOn(GlobalMenuService.company, 'get').and.returnValue(companyId);
     spyOn(schedulesService, 'getSchedules');
     spyOn(stationsService, 'getStation').and.returnValue(getStationDeferred.promise);
@@ -79,10 +90,14 @@ describe('Service: storeInstanceFactory', function () {
     spyOn(storeInstanceService, 'getStoreInstanceItem');
     spyOn(storeInstanceService, 'createStoreInstanceItem');
     spyOn(storeInstanceService, 'updateStoreInstanceItem');
+    spyOn(storeInstanceService, 'updateStoreInstanceItemsBulk');
     spyOn(storeInstanceService, 'deleteStoreInstanceItem');
+    spyOn(storeInstanceService, 'updateStoreInstanceStatus');
     spyOn(menuMasterService, 'getMenuMasterList');
     spyOn(storesService, 'getStoresList');
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
+    spyOn(recordsService, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise);
+
   }));
 
   describe('storesService calls', function () {
@@ -94,11 +109,19 @@ describe('Service: storeInstanceFactory', function () {
 
   describe('menuMasterService calls', function () {
     it('should call getMenuMasterList', function () {
-      var query = { 
+      var query = {
         startDate: '09102015'
       };
       storeInstanceFactory.getMenuMasterList(query);
       expect(menuMasterService.getMenuMasterList).toHaveBeenCalledWith(query);
+    });
+  });
+
+  describe('itemsService calls', function () {
+    it('should call getItemsList with fetchMasterFlag set to true', function () {
+      var mockPayload = {foo: 'bars'};
+      storeInstanceFactory.getItemsMasterList(mockPayload);
+      expect(itemsService.getItemsList).toHaveBeenCalledWith(mockPayload, true);
     });
   });
 
@@ -146,9 +169,19 @@ describe('Service: storeInstanceFactory', function () {
       storeInstanceFactory.updateStoreInstanceItem(id, itemId, mockPayload);
       expect(storeInstanceService.updateStoreInstanceItem).toHaveBeenCalledWith(id, itemId, mockPayload);
     });
+    it('should call updateStoreInstanceItemsBulk', function () {
+      storeInstanceFactory.updateStoreInstanceItemsBulk(id, mockPayload);
+      expect(storeInstanceService.updateStoreInstanceItemsBulk).toHaveBeenCalledWith(id, mockPayload);
+    });
     it('should call deleteStoreInstanceItem', function () {
       storeInstanceFactory.deleteStoreInstanceItem(id, itemId);
       expect(storeInstanceService.deleteStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
+    });
+
+    it('should call updateStoreInstanceStatus', function () {
+      var statusId = 1;
+      storeInstanceFactory.updateStoreInstanceStatus(id, statusId);
+      expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalledWith(id, statusId);
     });
   });
 
@@ -237,8 +270,19 @@ describe('Service: storeInstanceFactory', function () {
       it('should contain store number', function () {
         expect(storeDetails.storeNumber).toBeDefined();
       });
+
+      it('should contain current status object', function () {
+        expect(storeDetails.currentStatus).toBeDefined();
+      });
     });
 
+  });
+
+  describe('recordsService calls', function () {
+    it('should call getStoreStatus', function () {
+      storeInstanceFactory.getStoreStatusList();
+      expect(recordsService.getStoreStatusList).toHaveBeenCalled();
+    });
   });
 
 });

@@ -3,7 +3,7 @@
 // Generated on 2015-04-14 using
 // generator-karma 0.9.0
 
-module.exports = function (config) {
+module.exports = function(config) {
   'use strict';
 
   config.set({
@@ -30,8 +30,7 @@ module.exports = function (config) {
         {
           type: 'html',
           subdir: 'report-html'
-        },
-        {
+        }, {
           type: 'cobertura',
           subdir: '.'
         }
@@ -53,10 +52,16 @@ module.exports = function (config) {
       // bower:js
       'bower_components/jquery/dist/jquery.js',
       'bower_components/angular/angular.js',
-      'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js',
       'bower_components/angular-aria/angular-aria.js',
+      'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-cookies/angular-cookies.js',
+      'bower_components/angular-dragdrop/draganddrop.js',
+      'bower_components/angular-filter/dist/angular-filter.js',
       'bower_components/angular-messages/angular-messages.js',
+      'bower_components/moment/moment.js',
+      'bower_components/angular-moment/angular-moment.js',
+      'bower_components/qrcode/lib/qrcode.js',
+      'bower_components/angular-qr/src/angular-qr.js',
       'bower_components/angular-resource/angular-resource.js',
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
@@ -64,19 +69,17 @@ module.exports = function (config) {
       'bower_components/ngstorage/ngStorage.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-filter/dist/angular-filter.min.js',
+      'bower_components/angular-ui-select/dist/select.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
-      'bower_components/moment/moment.js',
-      'bower_components/angular-moment/angular-moment.js',
+      'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js',
       'bower_components/ng-file-upload/ng-file-upload.js',
-      'bower_components/qrcode/lib/qrcode.js',
-      'bower_components/angular-qr/src/angular-qr.js',
+      'bower_components/ng-lodash/build/ng-lodash.js',
+      'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
+      'bower_components/ngstorage/ngStorage.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/ngtoast/dist/ngToast.js',
-      'bower_components/angular-ui-select/dist/select.js',
       'bower_components/select2/select2.js',
-      'bower_components/angular-dragdrop/draganddrop.js',
-      'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
