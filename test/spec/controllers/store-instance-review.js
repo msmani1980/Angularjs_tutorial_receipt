@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceReviewCtrl', function () {
+fdescribe('Controller: StoreInstanceReviewCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -70,7 +70,7 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
       scheduleDate: '2015-08-13',
       scheduleNumber: 'SCHED123',
       storeInstanceNumber: scope.storeId,
-      currentStatus: {name: '2', statusName: 'Foo'},
+      currentStatus: {name: '2', statusName: 'Ready for Dispatch'},
       statusList: [{'id':1,'statusName':'Ready for Packing','name':'1'},{'id':2,'statusName':'Ready for Seals','name':'2'},{'id':3,'statusName':'Ready for Dispatch','name':'3'},{'id':7,'statusName':'Dispatched','name':'4'},{'id':8,'statusName':'Un-dispatched','name':'7'},{'id':9,'statusName':'Inbounded','name':'6'},{'id':10,'statusName':'On Floor','name':'5'}]
     };
     getStoreDetailsDeferred.resolve(storeDetailsJSON);
@@ -112,10 +112,6 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
 
     it('should call get store status API', function(){
       expect(storeInstanceReviewFactory.getStoreInstanceSeals).toHaveBeenCalled();
-    });
-
-    it('should call set store status API and set to name value "Ready for Dispatch"', function(){
-      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '3');
     });
 
     it('should create a scope seals object from the 3 seal API calls', function(){
