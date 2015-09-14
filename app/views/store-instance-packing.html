@@ -48,18 +48,18 @@
                    disabled/>
           </td>
           <td>
-            <input type="text" class="form-control" ng-model="item.quantity" placeholder="0">
+            <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" ng-disabled="readOnly">
           </td>
           <td>
-            <button ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
+            <button ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
             </button>
           </td>
         </tr>
 
-        <tr ng-repeat="item in emptyMenuItems track by $index">
+        <tr ng-repeat="item in emptyMenuItems track by $index" ng-hide="readOnly">
         <td>
-          <ui-select ng-model="item.masterItem" theme="bootstrap">
+          <ui-select required ng-model="item.masterItem" theme="bootstrap">
             <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{ $select.selected.itemName }}
             </ui-select-match>
             <ui-select-choices repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
@@ -89,7 +89,6 @@
         <div class="col-xs-4 col-md-9"></div>
         <div class="col-xs-4 col-md-3 text-right">
           <div class="input-group">
-            <!-- TODO: ADD SEALS, MATCH ADD ITEMS -->
             <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" placeholder="1"/>
                   <span class="input-group-btn">
                     <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add
@@ -104,7 +103,7 @@
 
     <div class="row">
       <div class="col-xs-12 col-sm-1">
-          <button class="btn btn-success" type="button" ng-click="savePackingDataAndUpdateStatus(false)">Complete Packing & Exit
+          <button class="btn btn-success" type="button" ng-click="savePackingDataAndUpdateStatus(false)" ng-hide="readOnly">Complete Packing & Exit
           </button>
       </div>
     </div>

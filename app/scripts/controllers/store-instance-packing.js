@@ -14,6 +14,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.filteredMasterItemList = [];
     $scope.addItemsNumber = 1;
     $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(19);
+    $scope.readOnly = true;
 
     function showToast(className, type, message) {
       ngToast.create({
@@ -133,33 +134,48 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     function getStoreDetailsSuccessHandler(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
+      if($scope.storeDetails.currentStatus.name !== '1') {
+        showToast('warning', 'Store Instance Status', 'This store instance is not ready for packing');
+      } else {
+        $scope.readOnly = false;
+      }
 
       $this.getStoreInstanceItems();
       $this.getStoreInstanceMenuItems();
 
-      if($scope.storeDetails.currentStatus.name !== '1') {
-        updateStatusToStep(1);
-      }
-
       getMasterItemsList();
     }
 
+    this.addItemToPayload = function (item, payload) {
+      var itemPayload = {
+        itemMasterId: item.itemMasterId || item.masterItem.id,
+        quantity: parseInt(item.quantity) || 0
+      };
+      if (item.id) {
+        itemPayload.id = item.id;
+      }
+      payload.push(itemPayload);
+    };
+
     this.formatStoreInstanceItemsPayload = function () {
+      var isPayloadValid = true;
       var newPayload = {response: []};
       var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
 
       angular.forEach(mergedItems, function (item) {
-        var itemPayload = {
-          itemMasterId: item.itemMasterId || item.masterItem.id,
-          quantity: parseInt(item.quantity) || 0
-        };
-        if (item.id) {
-          itemPayload.id = item.id;
+        if(!item.itemMasterId && !item.masterItem) {
+          isPayloadValid = false;
+          return;
         }
-        newPayload.response.push(itemPayload);
+        $this.addItemToPayload(item, newPayload.response);
       });
 
+      if(!isPayloadValid) {
+        showToast('danger', 'Save Items', 'An item must be selected for all rows');
+        return false;
+      }
       return newPayload;
+
     };
 
     function initialize() {
@@ -202,20 +218,21 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         item.itemName = masterItem.itemName;
       });
       getItemsSuccessHandler(dataFromAPI);
-      //if (updateStatus) {
-      //  updateStatusToStep(2);
-      //}
+      if (updateStatus) {
+        updateStatusToStep(2);
+      }
       hideLoadingModal();
     }
 
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
-      //console.log('savePackingDataAndUpdateStatus');
-      //var payload = $this.formatStoreInstanceItemsPayload();
-      //showLoadingModal('Saving...');
-      //// TODO: make bulk API call and check for no duplicate items
-      //storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (responseData) {
-      //  savePackingDataSuccessHandler(responseData, shouldUpdateStatus)
-      //});
+      var payload = $this.formatStoreInstanceItemsPayload();
+      if(!payload) {
+        return;
+      }
+      showLoadingModal('Saving...');
+      storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (responseData) {
+        savePackingDataSuccessHandler(responseData, shouldUpdateStatus)
+      });
     };
 
     initialize();
