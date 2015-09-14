@@ -71,14 +71,21 @@ angular.module('ts5App')
       $scope.crewBaseList = data;
     };
 
+    this.setViewName = function() {
+      var nameObject = {
+        view: 'Viewing Commission Data',
+        edit: 'Editing Commission Data'
+      };
+      if (nameObject[$routeParams.state]) {
+        $scope.viewName = nameObject[$routeParams.state];
+      }
+    };
+
+
     this.init = function () {
       $scope.readOnly = $routeParams.state === 'view';
+      $this.setViewName();
       $this.setCrewBase([{crewName:'CREW'}, {crewName:'CREW2'}]);
-      if($routeParams.state === 'view') {
-        $scope.viewName = 'Viewing Commission Data';
-      } else if($routeParams.state === 'edit') {
-        $scope.viewName = 'Editing Commission Data';
-      }
 
       // TODO: API calls to make:
       // commissionFactory.getBaseCurrency();

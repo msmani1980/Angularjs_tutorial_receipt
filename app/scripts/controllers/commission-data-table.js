@@ -55,10 +55,12 @@ angular.module('ts5App')
       $location.path('commission-data/' + state + '/' + id).search();
     };
 
+    this.setDataList = function (dataFromAPI) {
+      $scope.commissionData = dataFromAPI.response;
+    };
+
     this.getDataList = function (query) {
-      commissionFactory.getCommissionPayableList(query).then(function (response) {
-        $scope.commissionData = response.response;
-      });
+      commissionFactory.getCommissionPayableList(query).then($this.setDataList);
     };
 
     this.getCrewBaseTypes = function () {

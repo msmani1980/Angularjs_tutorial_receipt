@@ -46,23 +46,6 @@ angular.module('ts5App')
       return recordsService.getDiscountTypes();
     };
 
-    //
-    //var getCarrierNumbers = function(id, carrierType) {
-    //  return carrierService.getCarrierNumbers(id, carrierType);
-    //};
-    //
-    //var getCarrierTypes = function(id){
-    //  return carrierService.getCarrierTypes(id);
-    //};
-    //
-    //var getEmployees = function(id){
-    //  return employeesService.getEmployees(id);
-    //};
-    //
-    //var getSchedules = function (id) {
-    //  return schedulesService.getSchedules(id);
-    //};
-
     return {
       getCommissionPayableList: getCommissionPayableList,
       getCommissionPayableData: getCommissionPayableData,
