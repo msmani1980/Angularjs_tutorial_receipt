@@ -1,15 +1,15 @@
 <div class="container">
 
-  <step-wizard steps="wizardSteps" next-trigger="nextTrigger()"></step-wizard>
+  <step-wizard steps="wizardSteps" next-trigger="nextTrigger()" prev-trigger="prevTrigger()"></step-wizard>
 
   <store-instance-header></store-instance-header>
 
   <error-dialog form-object="assignSealsForm"></error-dialog>
 
   <form name="assignSealsForm" ng-submit="submitForm()">
-
-    <seal-type></seal-type>
-
+  <div ng-repeat="(sealTypeKey, sealType) in sealTypesList" ng-if="sealTypesList">
+    <seal-type seal-type-object="sealType"></seal-type>
+  </div>
   </form>
 
 </div>

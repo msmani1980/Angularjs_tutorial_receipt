@@ -8,24 +8,46 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceSealsCtrl', function ($scope, storeInstanceDispatchWizardConfig, $routeParams, storeInstanceFactory) {
+  .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, storeInstanceDispatchWizardConfig,
+    storeInstanceFactory, sealTypesService, sealColorsService) {
 
     var $this = this;
 
-    this.setStoreDetails = function(storeDetailsJSON){
+    this.setSealColors = function(sealColorsJSON) {
+      $scope.sealColorsList = sealColorsJSON;
+      console.log(sealColorsJSON);
+    };
+
+    this.setStoreDetails = function(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
     };
 
-    this.getStoreDetails = function(){
+    this.setSealTypes = function(sealTypesJSON) {
+      $scope.sealTypesList = sealTypesJSON;
+      console.log(sealTypesJSON);
+    };
+
+
+    this.getSealColors = function() {
+      sealColorsService.getSealColors().then($this.setSealColors);
+    };
+
+    this.getStoreDetails = function() {
       storeInstanceFactory.getStoreDetails($scope.storeId).then($this.setStoreDetails);
+    };
+
+    this.getSealTypes = function() {
+      sealTypesService.getSealTypes().then($this.setSealTypes);
     };
 
     this.init = function() {
       $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
       $scope.storeId = $routeParams.storeId;
-      if($scope.storeId){
+      if ($scope.storeId) {
         this.getStoreDetails();
       }
+      this.getSealColors();
+      this.getSealTypes();
     };
 
     this.init();
