@@ -58,7 +58,7 @@ angular.module('ts5App')
     this.getDataList = function (query) {
       commissionFactory.getCommissionPayableList(query).then(function (response) {
         $scope.commissionData = response.response;
-      })
+      });
     };
 
     this.getCrewBaseTypes = function () {
