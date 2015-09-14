@@ -87,10 +87,12 @@ angular.module('ts5App')
 
       hideLoadingModal();
 
-      $scope.menuItems.map(function(item){
-        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
-        item.disabled = true;
-      });
+      if($scope.menuItems) {
+        $scope.menuItems.map(function (item) {
+          item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+          item.disabled = true;
+        });
+      }
 
       $scope.seals = [];
       _sealTypes.map(function(sealType){
@@ -112,21 +114,14 @@ angular.module('ts5App')
     }
 
     function setStoreInstanceStatus(){
+
       initLoadComplete();
 
-      // If status is already Dispatched, do nothing, show user what status is
-      var dispatchNameInt = getStatusNameIntByName(STATUS_DISPATCHED);
-      if($scope.storeDetails.currentStatus.name === dispatchNameInt){
+      if(-1 < [STATUS_DISPATCHED, STATUS_READY_FOR_DISPATCH].indexOf($scope.storeDetails.currentStatus.statusName)){
         showUserCurrentStatus();
         return;
       }
-       // If status is already Ready for dispatch, do nothing, show user what status is
-      var readyForDispatchNameInt = getStatusNameIntByName(STATUS_READY_FOR_DISPATCH);
-      if($scope.storeDetails.currentStatus.name === readyForDispatchNameInt){
-        showUserCurrentStatus();
-        return;
-      }
-      // else, set status to ready for dispatch
+
       var promise = getSetStoreStatusByNamePromise(STATUS_READY_FOR_DISPATCH);
       if(!promise){
         return;
