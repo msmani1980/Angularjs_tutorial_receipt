@@ -9,7 +9,7 @@
     <store-instance-header></store-instance-header>
 
     <!-- TODO: FILTER ADJUSTS TABLE DATA BELOW -->
-    <div class="row">
+    <div class="row" ng-hide="readOnly">
       <div class="col-xs-12 col-sm-1">
         <div class="form-group">
           <label>Filter by:</label>
@@ -19,7 +19,7 @@
         <div class="form-group">
           <label>Item Details</label>
           <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details"
-                 placeholder="Coke" ng-readonly="readOnly">
+                 placeholder="Coke">
         </div>
       </div>
     </div>
@@ -106,7 +106,7 @@
           <button class="btn btn-success"
                   type="button"
                   ng-click="saveAndExit()"
-                  ng-hide="readOnly">Complete Packing & Exit
+                  ng-hide="readOnly">Save & Exit
           </button>
       </div>
       <div class="col-xs-12 col-sm-6">

@@ -27,6 +27,14 @@ angular.module('ts5App')
    var companyId = GlobalMenuService.company.get();
    var $this = this;
 
+
+    this.init = function() {
+      this.getCatererStationList();
+      this.getMenuMasterList();
+      this.getCarrierNumbers();
+      this.getStoresList();
+    };
+
     this.generateQuery = function() {
       return {
         startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate)
@@ -62,13 +70,6 @@ angular.module('ts5App')
       var query = this.generateQuery();
       query.readyToUse = true;
       storeInstanceFactory.getStoresList(query).then(this.setStoresList);
-    };
-
-    this.init = function() {
-      this.getCatererStationList();
-      this.getMenuMasterList();
-      this.getCarrierNumbers();
-      this.getStoresList();
     };
 
     this.setStoresList = function(dataFromAPI) {
