@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataTableCtrl', function ($scope, dateUtility, commissionFactory) {
+  .controller('CommissionDataTableCtrl', function ($scope, dateUtility, commissionFactory, $location) {
     var $this = this;
     $scope.viewName = 'Commission Data Table';
     $scope.search = {};
@@ -18,9 +18,13 @@ angular.module('ts5App')
       $this.getDataList($scope.search);
     };
 
-    $scope.clearSearch = function () {
+    $scope.clearSearchForm = function () {
       $scope.search = {};
       $this.getDataList({});
+    };
+
+    $scope.search = function () {
+      // TODO: call commissionFactory.getCommissionData($scope.search);
     };
 
     $scope.canDelete = function (data) {
@@ -45,6 +49,10 @@ angular.module('ts5App')
         return '%';
       }
       return 'GBP'; // TODO: get base currency
+    };
+
+    $scope.redirectToDetailPage = function (id, state) {
+      $location.path('commission-data/' + state + '/' + id).search();
     };
 
     this.getDataList = function (query) {

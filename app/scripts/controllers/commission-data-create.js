@@ -78,7 +78,6 @@ angular.module('ts5App')
         $scope.viewName = 'Editing Commission Data';
       }
 
-
       // TODO: API calls to make:
       // commissionFactory.getBaseCurrency();
       // commissionFactory.getCrewBaseList().then(setCrewBase, showError);
