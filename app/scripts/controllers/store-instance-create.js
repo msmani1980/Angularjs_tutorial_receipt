@@ -26,8 +26,7 @@ angular.module('ts5App')
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
    var companyId = GlobalMenuService.company.get();
    var $this = this;
-
-
+    
     this.init = function() {
       this.getCatererStationList();
       this.getMenuMasterList();
