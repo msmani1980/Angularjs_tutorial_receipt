@@ -8,13 +8,22 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceDispatchWizardConfig) {
+  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceDispatchWizardConfig, $location) {
     var $this = this;
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
     $scope.addItemsNumber = 1;
-    $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(19);
+    $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
     $scope.readOnly = true;
+
+    var nextStep = {
+      stepName: '2',
+      URL: 'store-instance-seals/' + $routeParams.storeId
+    };
+    var prevStep = {
+      stepName: '1',
+      URL: 'store-instance-create/'
+    };
 
     function showToast(className, type, message) {
       ngToast.create({
@@ -119,17 +128,21 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.getItemsMasterList(filterPayload).then(getMasterItemsListSuccess);
     }
 
-    function updateStoreDetails(response) {
+    function updateStoreDetails(response, stepObject) {
       $scope.storeDetails.currentStatus = lodash.findWhere($scope.storeDetails.statusList, {id: response.statusId});
+      console.log(stepObject.URL);
+      $location.path(stepObject.URL);
     }
 
-    function updateStatusToStep(stepName) {
-      var statusObject = lodash.findWhere($scope.storeDetails.statusList, {name: stepName.toString()});
+    function updateStatusToStep(stepObject) {
+      var statusObject = lodash.findWhere($scope.storeDetails.statusList, {name: stepObject.stepName});
       if (!statusObject) {
         return;
       }
       var statusId = statusObject.id;
-      storeInstanceFactory.updateStoreInstanceStatus($scope.storeId, statusId).then(updateStoreDetails);
+      storeInstanceFactory.updateStoreInstanceStatus($scope.storeId, statusId).then(function(response){
+        updateStoreDetails(response, stepObject);
+      });
     }
 
     function getStoreDetailsSuccessHandler(storeDetailsJSON) {
@@ -218,9 +231,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         item.itemName = masterItem.itemName;
       });
       getItemsSuccessHandler(dataFromAPI);
+
       if (updateStatus) {
-        updateStatusToStep(2);
+        updateStatusToStep(nextStep);
+      } else {
+        showToast('success', 'Save Packing Data', 'Data successfully updated!');
+        $location.path('#');
       }
+
       hideLoadingModal();
     }
 
@@ -231,8 +249,22 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
       showLoadingModal('Saving...');
       storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (responseData) {
-        savePackingDataSuccessHandler(responseData, shouldUpdateStatus)
+        savePackingDataSuccessHandler(responseData, shouldUpdateStatus);
       });
+    };
+
+    $scope.saveAndExit = function () {
+      $scope.savePackingDataAndUpdateStatus(false);
+    };
+
+    $scope.goToPreviousStep = function () {
+      updateStatusToStep(prevStep);
+      // TODO: show warning modal before leaving
+      // TODO: update URL with storeId
+    };
+
+    $scope.goToNextStep = function () {
+      $scope.savePackingDataAndUpdateStatus(true);
     };
 
     initialize();
