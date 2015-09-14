@@ -40,12 +40,16 @@ angular.module('ts5App')
       };
     };
 
+    this.setCatererStationList = function(dataFromAPI) {
+      $scope.cateringStationList = dataFromAPI.response;
+    };
+
     this.getCatererStationList = function() {
       storeInstanceFactory.getCatererStationList().then(this.setCatererStationList);
     };
 
-    this.setCatererStationList = function(dataFromAPI) {
-      $scope.cateringStationList = dataFromAPI.response;
+    this.setMenuMasterList = function(dataFromAPI) {
+      $scope.menuMasterList = dataFromAPI.companyMenuMasters;
     };
 
     this.getMenuMasterList = function() {
@@ -53,16 +57,16 @@ angular.module('ts5App')
       storeInstanceFactory.getMenuMasterList(query).then(this.setMenuMasterList);
     };
 
-    this.setMenuMasterList = function(dataFromAPI) {
-      $scope.menuMasterList = dataFromAPI.companyMenuMasters;
+    this.setCarrierNumbers = function(dataFromAPI) {
+      $scope.carrierNumbers = dataFromAPI.response;
     };
 
     this.getCarrierNumbers = function() {
       storeInstanceFactory.getAllCarrierNumbers(companyId).then(this.setCarrierNumbers);
     };
 
-    this.setCarrierNumbers = function(dataFromAPI) {
-      $scope.carrierNumbers = dataFromAPI.response;
+    this.setStoresList = function(dataFromAPI) {
+      $scope.storesList = dataFromAPI.response;
     };
 
     this.getStoresList = function() {
@@ -71,21 +75,11 @@ angular.module('ts5App')
       storeInstanceFactory.getStoresList(query).then(this.setStoresList);
     };
 
-    this.setStoresList = function(dataFromAPI) {
-      $scope.storesList = dataFromAPI.response;
-    };
-
-    this.createStoreInstance = function() {
-      this.resetErrors();
-      this.displayLoadingModal('Creating a store instance');
-      var payload = this.formatPayload();
-      if(!payload) {
-        return false;
-      }
-      storeInstanceFactory.createStoreInstance(payload).then(
-        this.createStoreInstanceSuccessHandler,
-        this.createStoreInstanceErrorHandler
-      );
+    this.saveThenExit = function(response){
+      $this.hideLoadingModal();
+      $this.showMessage('success','Store Instance created id: ' + response.id);
+      // TODO: Set this to actual URL when dashboard becomes available
+      $location.url('/store-instance-list');
     };
 
     this.createStoreInstanceSuccessHandler = function(response){
@@ -112,8 +106,9 @@ angular.module('ts5App')
     };
 
     this.resetErrors = function() {
-      $scope.displayError = false;
       $scope.formErrors = [];
+      $scope.errorCustom = [];
+      $scope.displayError = false;
       $scope.response500 = false;
     };
 
@@ -151,17 +146,32 @@ angular.module('ts5App')
     };
 
     this.validateForm = function() {
+      this.resetErrors();
       if($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
         return true;
       }
+      $scope.displayError = true;
       return false;
+    };
+
+    this.createStoreInstance = function(exitOnSave) {
+      this.displayLoadingModal('Creating a store instance');
+      var payload = this.formatPayload();
+      if(!payload) {
+        return false;
+      }
+      storeInstanceFactory.createStoreInstance(payload).then(
+        ( exitOnSave ? this.saveThenExit : this.createStoreInstanceSuccessHandler ),
+        this.createStoreInstanceErrorHandler
+      );
     };
 
     this.init();
 
-    $scope.submitForm = function() {
+    $scope.submitForm = function(exitOnSave) {
+      $scope.createStoreInstance.$setSubmitted(true);
       if($this.validateForm()) {
-        $this.createStoreInstance();
+        $this.createStoreInstance(exitOnSave);
       }
       return false;
     };
@@ -175,7 +185,8 @@ angular.module('ts5App')
       if($scope.createStoreInstance[fieldName].$pristine) {
         return '';
       }
-      if($scope.createStoreInstance[fieldName].$invalid) {
+      if($scope.createStoreInstance[fieldName].$invalid ||
+        angular.isDefined($scope.createStoreInstance[fieldName].$error.required) ) {
         return 'has-error';
       }
       return 'has-success';
@@ -183,16 +194,15 @@ angular.module('ts5App')
 
     $scope.validateMenus = function() {
       if(angular.isUndefined($scope.createStoreInstance.Menus) ||
-        $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {
+      $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
       if($scope.formData.menus.length === 0) {
+        $scope.createStoreInstance.Menus.$setValidity('required', false);
         return 'has-error';
       }
-      if($scope.formData.menus.length > 0) {
-        return 'has-success';
-      }
-
+      $scope.createStoreInstance.Menus.$setValidity('required', true);
+      return 'has-success';
     };
 
     $scope.$watch('formData.scheduleDate', function(newDate,oldDate) {
@@ -201,5 +211,9 @@ angular.module('ts5App')
         $this.getStoresList();
       }
     });
+
+    $scope.saveAndExit = function() {
+      return $scope.submitForm(true);
+    };
 
   });

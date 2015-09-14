@@ -289,7 +289,6 @@ describe('Store Instance Create Controller', function () {
     }
 
     beforeEach(function() {
-      spyOn(StoreInstanceCreateCtrl,'resetErrors');
       spyOn(StoreInstanceCreateCtrl,'displayLoadingModal');
       spyOn(StoreInstanceCreateCtrl,'formatPayload').and.callThrough();
       spyOn(storeInstanceFactory,'createStoreInstance').and.callThrough();
@@ -298,10 +297,6 @@ describe('Store Instance Create Controller', function () {
       spyOn(StoreInstanceCreateCtrl,'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl,'showMessage');
       mockSubmission();
-    });
-
-    it('should reset all the form errors', function () {
-      expect(StoreInstanceCreateCtrl.resetErrors).toHaveBeenCalled();
     });
 
     it('should display the loading modal', function () {
@@ -374,6 +369,7 @@ describe('Store Instance Create Controller', function () {
 
     beforeEach(function() {
       spyOn(StoreInstanceCreateCtrl,'validateForm').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl,'resetErrors');
       spyOn(StoreInstanceCreateCtrl,'createStoreInstance');
       $scope.$digest();
       view = renderView();
@@ -383,6 +379,11 @@ describe('Store Instance Create Controller', function () {
     it('should call the validateForm method', function () {
       mockFormSubmission(form);
       expect(StoreInstanceCreateCtrl.validateForm).toHaveBeenCalled();
+    });
+
+    it('should reset all the form errors', function () {
+      mockFormSubmission(form);
+      expect(StoreInstanceCreateCtrl.resetErrors).toHaveBeenCalled();
     });
 
     describe('the form validation method', function() {
