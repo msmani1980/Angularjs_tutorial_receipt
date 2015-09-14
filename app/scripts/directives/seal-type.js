@@ -12,6 +12,7 @@ angular.module('ts5App')
 
       $scope.seals = {};
       $scope.seals.numbers = [];
+      $scope.seals.color = $scope.sealColor;
 
       $scope.isSequentialPossible = function() {
         if ($scope.seals.numbers.length === 1) {
@@ -20,13 +21,19 @@ angular.module('ts5App')
         return false;
       };
 
+      $scope.addSealsSequentially = function() {
+        var sealNumber = $scope.seals.numbers[0];
+        var numberOfSeals = $scope.numberOfSeals;
+        console.log(sealNumber, numberOfSeals);
+      };
+
     };
     return {
       templateUrl: '/views/directives/seal-type.html',
       controller: sealTypeController,
       scope: {
         sealTypeObject: '=',
-        sealColor: '='
+        sealColor: '@'
       }
     };
   });
