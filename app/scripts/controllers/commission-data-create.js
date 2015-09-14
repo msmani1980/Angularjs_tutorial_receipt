@@ -14,6 +14,8 @@ angular.module('ts5App')
     $scope.commissionData = {};
     $scope.baseCurrency = 'GBP'; // TODO: get from API
     $scope.readOnly = true;
+    var percentTypeName = 'Percentage';
+    var percentTypeUnit = '%';
 
     $scope.updateCommissionPercent = function () {
       if($scope.commissionData.commissionPayable === 'Retail Item') {
@@ -25,8 +27,8 @@ angular.module('ts5App')
     };
 
     $scope.updateManualBars = function () {
-      if($scope.commissionData.manualBarsType === 'Percentage') {
-        $scope.manualBarsUnit = '%';
+      if($scope.commissionData.manualBarsType === percentTypeName) {
+        $scope.manualBarsUnit = percentTypeUnit;
         $scope.manualBarsCharLimit = 5;
       } else {
         $scope.manualBarsUnit = $scope.baseCurrency;
@@ -35,8 +37,8 @@ angular.module('ts5App')
     };
 
     $scope.updateIncentiveIncrement = function () {
-      if($scope.commissionData.commissionType === 'Percentage') {
-        $scope.incentiveIncrementUnit = '%';
+      if($scope.commissionData.commissionType === percentTypeName) {
+        $scope.incentiveIncrementUnit = percentTypeUnit;
         $scope.incentiveIncrementCharLimit = 5;
       } else {
         $scope.incentiveIncrementUnit = $scope.baseCurrency;
