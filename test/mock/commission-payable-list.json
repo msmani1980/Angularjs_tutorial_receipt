@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "count": 2,
+    "limit": 2,
+    "start": 0
+  },
+  "response": [
+    {
+      "id": 1,
+      "crewBaseTypeId": 1,
+      "commissionPayableTypeId": 1,
+      "commissionPercentage": null,
+      "manualBarsCommissionValueTypeId": 1,
+      "manualBarsCommissionValue": "100.000",
+      "discrepancyDeductionsCashPercentage": "1.12",
+      "discrepancyDeductionsStockPercentage": "2.00",
+      "commissionValueTypeId": 2,
+      "commissionValue": "1234567.123",
+      "startDate": "2015-01-01",
+      "endDate": "2016-01-01"
+    },
+    {
+      "id": 3,
+      "crewBaseTypeId": 2,
+      "commissionPayableTypeId": 2,
+      "commissionPercentage": null,
+      "manualBarsCommissionValueTypeId": 1,
+      "manualBarsCommissionValue": "100.000",
+      "discrepancyDeductionsCashPercentage": "1.12",
+      "discrepancyDeductionsStockPercentage": "2.00",
+      "commissionValueTypeId": 2,
+      "commissionValue": "1234567.123",
+      "startDate": "2015-01-01",
+      "endDate": "2016-01-01"
+    }
+  ]
+}

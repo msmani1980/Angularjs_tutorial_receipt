@@ -1,0 +1,102 @@
+<div class="fluid-container module-container">
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
+        <h2 class="view-name">{{ viewName }}</h2>
+      </div>
+
+      <div class="col-xs-8 text-right">
+        <a href="#/commission-data/create" class="btn btn-primary">+ <span class="hidden-xs">Create Commission Data</span></a>
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Search</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form name="commissionDataSearchForm" ng-submit="searchCommissionData()">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="schedule-number">Crew Base</label>
+                <input ng-model="search.crewBase" type="text" class="form-control" id="schedule-number"
+                       placeholder="T1">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.startDate"
+                end-date-model="search.endDate"
+                label-from="Effective From"
+                label-to="Effective To"
+                is-search-field="true">
+              </date-picker>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary" ng-click="search()">Search</button>
+        </div>
+      </form>
+    </div>
+    <br>
+    <table class="table table-bordered table-hover ng-scope">
+      <thead>
+      <tr>
+        <th>Crew Base</th>
+        <th>Commission Payable Type</th>
+        <th>Commission Percent</th>
+        <th>Manual Bars</th>
+        <th>Cash Percent</th>
+        <th>Stock Percent</th>
+        <th>Incentive Increment</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="ng-scope" ng-repeat="data in commissionData">
+        <td>{{ getCrewBaseName(data.crewBaseTypeId) }}</td>
+        <td>{{ getCommissionTypeName(data.commissionPayableTypeId) }}</td>
+        <td>{{ data.commissionPercentage }} %</td>
+        <td>{{ data.manualBarsCommissionValue | number: 2 }} {{ getUnitById(data.manualBarsCommissionValueTypeId) }}</td>
+        <td>{{ data.discrepancyDeductionsCashPercentage | number: 2}} %</td>
+        <td>{{ data.discrepancyDeductionsStockPercentage | number: 2 }} %</td>
+        <td>{{ data.commissionValue | number: 2 }} {{ getUnitById(data.manualBarsCommissionValueTypeId) }}</td>
+        <td>
+          <button class="btn btn-info btn-xs" ng-click="redirectToDetailPage(data.id, 'view')" tabindex="0">
+            <i class="fa fa-file"></i>
+          </button>
+          <button class="btn btn-primary btn-xs" ng-click="redirectToDetailPage(data.id, 'edit')" tabindex="0">
+            <i class="fa fa-pencil"></i>
+          </button>
+          <button class="btn btn-danger btn-xs"
+                  ng-click="deleteRecordDialog(commissionDataList[$index], ['crewBase', 'startDate', 'endDate'])"
+                  tabindex="0"
+                  ng-show="canDelete(data)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>
