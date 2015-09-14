@@ -113,23 +113,6 @@ angular.module('ts5App')
       showMessage('Status ' + messageAction + ' to "' + $scope.storeDetails.currentStatus.statusName + '"', 'info');
     }
 
-    function setStoreInstanceStatus(){
-
-      initLoadComplete();
-
-      if(-1 < [STATUS_DISPATCHED, STATUS_READY_FOR_DISPATCH].indexOf($scope.storeDetails.currentStatus.statusName)){
-        showUserCurrentStatus();
-        return;
-      }
-
-      var promise = getSetStoreStatusByNamePromise(STATUS_READY_FOR_DISPATCH);
-      if(!promise){
-        return;
-      }
-      // if there are response errors, show them
-      promise.then(null, showResponseErrors);
-    }
-
     function getStoreInstanceSeals() {
       _initPromises.push(
         storeInstanceReviewFactory.getStoreInstanceSeals($routeParams.storeId)
@@ -169,9 +152,20 @@ angular.module('ts5App')
 
     function resolveGetStoreDetails(dataFromAPI) {
       $scope.storeDetails = dataFromAPI;
+      if($scope.storeDetails.currentStatus.statusName !== STATUS_READY_FOR_DISPATCH){
+        var error = {
+          data: [{
+            field: 'statusId',
+            value: 'Action not allowed because current status it: "'+$scope.storeDetails.currentStatus.statusName+'"'
+          }]
+        };
+        showResponseErrors(error);
+        $scope.actionNotAllowed = true;
+        return;
+      }
       getStoreInstanceMenuItems();
       getStoreInstanceSeals();
-      $q.all(_initPromises).then(setStoreInstanceStatus, showResponseErrors);
+      $q.all(_initPromises).then(initLoadComplete, showResponseErrors);
     }
 
     function updatedStoreStatusSubmitted(){

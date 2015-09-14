@@ -50,6 +50,7 @@ describe('The Step Wizard directive', function () {
         if(param1 === 2){
           return;
         }
+        return true;
       };
       scope.mockPrevTrigger1 = function(param2, param3){
         if(param2 === 3){
@@ -58,6 +59,7 @@ describe('The Step Wizard directive', function () {
         if(param3 === 4){
           return;
         }
+        return true;
       };
 
       template = '<step-wizard steps="wizardSteps" ' +
@@ -122,10 +124,9 @@ describe('The Step Wizard directive', function () {
     });
 
     it('should step forward to /test-uri-3 when wizardNext is triggered', function(){
-      expect(directiveScope.wizardNext()).toBe(true);
+      expect(directiveScope.wizardNext()).toBe(false);
       expect(scope.mockNextTrigger1).toHaveBeenCalledWith(scope.param2, scope.param3);
       expect(scope.wizardStepToIndex).toBe(2);
-      expect(location.url).toHaveBeenCalledWith('/test-uri-3');
     });
 
     it('should return false if index is less than 0', function(){

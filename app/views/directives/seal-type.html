@@ -1,0 +1,41 @@
+<div class="well seal-type">
+
+  <div class="row">
+
+    <div class="seal-label">{{ sealTypeObject.name }}</div>
+
+    <div class="col-xs-12">
+      <label for="seal-numbers-outbound">Seal Numbers*:</label>
+      <ui-select multiple tagging tagging-label="(Add 'New' Seal)" ng-model="seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Add Seals...">
+        <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
+          <ui-select-choices repeat="number in seals.numbers | filter:$select.search">
+            <small>
+              Seal: <span ng-bind-html="''+number | highlight: $select.search"></span>
+            </small>
+          </ui-select-choices>
+      </ui-select>
+    </div>
+
+  </div>
+
+  <div class="row" ng-show="isSequentialPossible()">
+
+    <div class="col-xs-3 col-sm-2 col-md-1">
+      <label class="checkbox-custom checkbox-inline pull-left">
+        <input type="checkbox" ng-model="showSequential" value="1">
+        <span class="checkbox-label">Sequential</span>
+      </label>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 col-md-2" ng-show="showSequential">
+      <div class="input-group">
+        <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
+        <span class="input-group-btn">
+          <button class="btn btn-primary" type="button"><span class="fa fa-plus"></span> Add</button>
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
