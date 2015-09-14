@@ -34,7 +34,7 @@ describe('Service: storeInstanceAssignSealsFactory', function () {
       var mockPayload = {foo: 'barts'};
       storeInstanceAssignSealsFactory.updateStoreInstanceSeal(mockSealId, mockStoreInstanceId, mockPayload);
       expect(storeInstanceSealService.updateStoreInstanceSeal).toHaveBeenCalledWith(mockSealId, mockStoreInstanceId, mockPayload);
-    })
+    });
   });
 
   describe('sealColorsService API calls', function(){
