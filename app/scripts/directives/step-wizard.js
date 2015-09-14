@@ -14,6 +14,7 @@ angular.module('ts5App')
     scope: {
       steps: '=',
       disabled: '=',
+      showNextPrevButton: '=',
       nextTrigger: '&',
       prevTrigger: '&'
     },
