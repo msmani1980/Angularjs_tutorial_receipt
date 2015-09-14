@@ -38,7 +38,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
+      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
       $scope.storeId = $routeParams.storeId;
       if ($scope.storeId) {
         this.getStoreDetails();
