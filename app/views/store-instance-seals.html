@@ -6,6 +6,8 @@
 
   <error-dialog form-object="assignSealsForm"></error-dialog>
 
+  {{sealsColorList | json}}
+
   <form name="assignSealsForm" ng-submit="submitForm()">
 
     <div ng-repeat="(sealTypeKey, sealType) in sealTypesList" ng-if="sealTypesList">

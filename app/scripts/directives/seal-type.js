@@ -26,7 +26,7 @@ angular.module('ts5App')
       controller: sealTypeController,
       scope: {
         sealTypeObject: '=',
-        sealColors: '='
+        sealColor: '='
       }
     };
   });

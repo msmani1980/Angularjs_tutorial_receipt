@@ -25,6 +25,10 @@ angular.module('ts5App')
       $scope.sealTypesList = sealTypesJSON;
     };
 
+    this.setWizardSteps = function(storeId) {
+      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(storeId);
+    };
+
     this.getSealColors = function() {
       sealColorsService.getSealColors().then($this.setSealColors);
     };
@@ -38,12 +42,12 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
       $scope.storeId = $routeParams.storeId;
       if ($scope.storeId) {
         this.getStoreDetails();
         this.getSealColors();
         this.getSealTypes();
+        this.setWizardSteps($scope.storeId);
       }
     };
 
