@@ -63,8 +63,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       for (var i = 0; i < $scope.addItemsNumber; i++) {
         $scope.emptyMenuItems.push({
           menuQuantity: 0,
-          isNewItem: true,
-          isDuplicate: false
+          isNewItem: true
         });
       }
     };
