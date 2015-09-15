@@ -3,12 +3,13 @@
   <div class="row">
 
     <div class="col-xs-12 col-sm-4">
-      <div class="seal-label" ng-style="{'background-color' : '{{sealColor}}'}">{{ sealTypeObject.name }}</div>
+      <div class="seal-label" ng-style="{'background-color' : '{{sealTypeObject.color}}'}">{{ sealTypeObject.name }}</div>
     </div>
 
     <div class="col-xs-12 col-sm-8">
-      <button ng-if="showCopyFromOutbound(sealTypeObject.name)" ng-click="copyFromOutbound(sealTypeObject.name)" class="btn btn-primary copy-button pull-right" type="button">Copy From Outbound</button>
-      <button ng-if="showCopyFromHandover(sealTypeObject.name)" ng-click="copyFromHandover(sealTypeObject.name)" class="btn btn-primary copy-button pull-right" type="button">Copy From Handover</button>
+      <button ng-repeat="action in sealTypeObject.actions track by $index" ng-click="action.trigger()" class="btn btn-primary copy-button pull-right" type="button">
+        {{ action.label }}
+      </button>
     </div>
 
   </div>
@@ -17,9 +18,9 @@
 
     <div class="col-xs-12">
       <label for="seal-numbers-outbound">Seal Numbers*:</label>
-      <ui-select multiple tagging tagging-label="(Add 'New' Seal)" ng-model="seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" title="Add Seals...">
+      <ui-select multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" title="Add Seals...">
         <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
-          <ui-select-choices repeat="number in seals.numbers | filter:$select.search">
+          <ui-select-choices repeat="number in sealTypeObject.seals.numbers | filter:$select.search">
             <small>
               Seal: <span ng-bind-html="''+number | highlight: $select.search"></span>
             </small>
