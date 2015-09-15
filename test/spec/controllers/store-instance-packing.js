@@ -120,10 +120,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
       });
 
-      it('should update store status to 1', function () {
-        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(scope.storeId, 1);
-      });
-
       it('should update store details status objects', function () {
         scope.$digest();
         var expectedCurrentId = servedStoreStatusJSON.statusId;

@@ -8,11 +8,22 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast) {
+  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceDispatchWizardConfig, $location) {
     var $this = this;
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
     $scope.addItemsNumber = 1;
+    $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
+    $scope.readOnly = true;
+
+    var nextStep = {
+      stepName: '2',
+      URL: 'store-instance-seals/' + $routeParams.storeId
+    };
+    var prevStep = {
+      stepName: '1',
+      URL: 'store-instance-create/'
+    };
 
     function showToast(className, type, message) {
       ngToast.create({
@@ -117,51 +128,70 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.getItemsMasterList(filterPayload).then(getMasterItemsListSuccess);
     }
 
-    function updateStoreDetails(response) {
+    function updateStoreDetails(response, stepObject) {
       $scope.storeDetails.currentStatus = lodash.findWhere($scope.storeDetails.statusList, {id: response.statusId});
+      console.log(stepObject.URL);
+      $location.path(stepObject.URL);
     }
 
-    function updateStatusToStep(stepName) {
-      var statusObject = lodash.findWhere($scope.storeDetails.statusList, {name: stepName.toString()});
+    function updateStatusToStep(stepObject) {
+      var statusObject = lodash.findWhere($scope.storeDetails.statusList, {name: stepObject.stepName});
       if (!statusObject) {
         return;
       }
       var statusId = statusObject.id;
-      storeInstanceFactory.updateStoreInstanceStatus($scope.storeId, statusId).then(updateStoreDetails);
+      storeInstanceFactory.updateStoreInstanceStatus($scope.storeId, statusId).then(function(response){
+        updateStoreDetails(response, stepObject);
+      });
     }
 
     function getStoreDetailsSuccessHandler(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
+      if($scope.storeDetails.currentStatus.name !== '1') {
+        showToast('warning', 'Store Instance Status', 'This store instance is not ready for packing');
+      } else {
+        $scope.readOnly = false;
+      }
 
       $this.getStoreInstanceItems();
       $this.getStoreInstanceMenuItems();
 
-      if($scope.storeDetails.currentStatus.name !== '1') {
-        updateStatusToStep(1);
-      }
-
       getMasterItemsList();
     }
 
+    this.addItemToPayload = function (item, payload) {
+      var itemPayload = {
+        itemMasterId: item.itemMasterId || item.masterItem.id,
+        quantity: parseInt(item.quantity) || 0
+      };
+      if (item.id) {
+        itemPayload.id = item.id;
+      }
+      payload.push(itemPayload);
+    };
+
     this.formatStoreInstanceItemsPayload = function () {
+      var isPayloadValid = true;
       var newPayload = {response: []};
       var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
 
       angular.forEach(mergedItems, function (item) {
-        var itemPayload = {
-          itemMasterId: item.itemMasterId || item.masterItem.id,
-          quantity: parseInt(item.quantity) || 0
-        };
-        if (item.id) {
-          itemPayload.id = item.id;
+        if(!item.itemMasterId && !item.masterItem) {
+          isPayloadValid = false;
+          return;
         }
-        newPayload.response.push(itemPayload);
+        $this.addItemToPayload(item, newPayload.response);
       });
 
+      if(!isPayloadValid) {
+        showToast('danger', 'Save Items', 'An item must be selected for all rows');
+        return false;
+      }
       return newPayload;
+
     };
 
-    function init() {
+    function initialize() {
       showLoadingModal('Loading Store Detail for Packing...');
       $scope.storeId = $routeParams.storeId;
       $scope.APIItems = [];
@@ -189,28 +219,53 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if (itemToDelete.isNewItem) {
         removeNewItem(itemToDelete);
       } else {
-        storeInstanceFactory.deleteStoreInstanceItem($scope.storeId, itemToDelete.id).then(init);
+        storeInstanceFactory.deleteStoreInstanceItem($scope.storeId, itemToDelete.id).then(initialize);
       }
     };
 
-    function savePackingDataSuccessHandler(dataFromAPI) {
+    function savePackingDataSuccessHandler(dataFromAPI, updateStatus) {
       $scope.emptyMenuItems = [];
-      angular.forEach(dataFromAPI.response, function(item) {
+      angular.forEach(dataFromAPI.response, function (item) {
         var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId});
         item.itemCode = masterItem.itemCode;
         item.itemName = masterItem.itemName;
       });
       getItemsSuccessHandler(dataFromAPI);
-      updateStatusToStep(2);
+
+      if (updateStatus) {
+        updateStatusToStep(nextStep);
+      } else {
+        showToast('success', 'Save Packing Data', 'Data successfully updated!');
+        $location.path('#');
+      }
+
       hideLoadingModal();
     }
 
-    $scope.savePackingData = function () {
+    $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
       var payload = $this.formatStoreInstanceItemsPayload();
+      if(!payload) {
+        return;
+      }
       showLoadingModal('Saving...');
-      // TODO: make bulk API call and check for no duplicate items
-      storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(savePackingDataSuccessHandler);
+      storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (responseData) {
+        savePackingDataSuccessHandler(responseData, shouldUpdateStatus);
+      });
     };
 
-    init();
+    $scope.saveAndExit = function () {
+      $scope.savePackingDataAndUpdateStatus(false);
+    };
+
+    $scope.goToPreviousStep = function () {
+      updateStatusToStep(prevStep);
+      // TODO: show warning modal before leaving
+      // TODO: update URL with storeId
+    };
+
+    $scope.goToNextStep = function () {
+      $scope.savePackingDataAndUpdateStatus(true);
+    };
+
+    initialize();
   });
