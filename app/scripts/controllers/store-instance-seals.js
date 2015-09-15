@@ -11,6 +11,15 @@ angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, storeInstanceDispatchWizardConfig,
     storeInstanceFactory, sealTypesService, sealColorsService) {
 
+    // TODO: Generate a formatted list of seal types
+    // Set routeParams instead of scope.storeId
+    // Validate the Seals and make sure that the required seals have atleast one seal
+    // Allow a user to submit the form and save the seal
+    // On submission mark status as Ready to Be Dispatched
+    // Allow a user to Save & Exit
+    // Allow a user to press Next, which submits the form
+    // Allow a user to press Prev, which sends them back to step 2
+
     var $this = this;
 
     this.setSealColors = function(sealColorsJSON) {
