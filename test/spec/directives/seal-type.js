@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Directive: sealType', function() {
+describe('Directive: sealType', function() {
 
   // load the directive's module
   beforeEach(module('ts5App', 'template-module'));
