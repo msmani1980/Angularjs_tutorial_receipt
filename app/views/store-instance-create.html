@@ -32,6 +32,17 @@
 
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
+        <label>Schedule Number *</label>
+      </div>
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group" ng-class="validateInput('ScheduleNumber')">
+          <input name="ScheduleNumber" maxlength="10" required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Store Number *</label>
       </div>
       <div class="col-xs-12 col-sm-8">
@@ -43,18 +54,7 @@
         </div>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Schedule Number *</label>
-      </div>
-      <div class="col-xs-12 col-sm-8">
-        <div class="form-group" ng-class="validateInput('ScheduleNumber')">
-          <input name="ScheduleNumber" maxlength="10" required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
-        </div>
-      </div>
-    </div>
-
+    
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Select Menus *</label>
