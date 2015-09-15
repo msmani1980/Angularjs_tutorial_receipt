@@ -54,7 +54,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       for (var i = 0; i < $scope.addItemsNumber; i++) {
         $scope.emptyMenuItems.push({
           menuQuantity: 0,
-          isNewItem: true
+          isNewItem: true,
+          isDuplicate: false
         });
       }
     };
@@ -159,36 +160,66 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       getMasterItemsList();
     }
 
-    this.addItemToPayload = function (item, payload) {
-      var itemPayload = {
-        itemMasterId: item.itemMasterId || item.masterItem.id,
-        quantity: parseInt(item.quantity) || 0
-      };
-      if (item.id) {
-        itemPayload.id = item.id;
+    this.checkForDuplicate = function (item) {
+      var duplicates = lodash.filter($scope.emptyMenuItems, function (filteredItem) {
+        return (item.masterItem && filteredItem.masterItem && filteredItem.masterItem.id === item.masterItem.id);
+      });
+      return duplicates.length > 1;
+    };
+
+    $scope.warnForDuplicateSelection = function (selectedItem) {
+      var duplicatesExist = $this.checkForDuplicate(selectedItem);
+      if(duplicatesExist) {
+        showToast('warning', 'Add Item', 'The item ' + selectedItem.masterItem.itemName + ' has already been added');
       }
-      payload.push(itemPayload);
+    };
+
+    this.checkForDuplicatesInPayload = function () {
+      var duplicatesExist = false;
+      angular.forEach($scope.emptyMenuItems, function (item) {
+        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item);
+      });
+      return duplicatesExist;
+    };
+
+    this.checkForEmptyItemsInPayload = function () {
+      var emptyItemsExist = false;
+      angular.forEach($scope.emptyMenuItems, function (item) {
+        emptyItemsExist = emptyItemsExist || (!item.itemMasterId && !item.masterItem);
+      });
+      return emptyItemsExist;
+    };
+
+    this.createPayload = function () {
+      var newPayload = {response: []};
+      var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
+      angular.forEach(mergedItems, function (item) {
+        var itemPayload = {
+          itemMasterId: item.itemMasterId || item.masterItem.id,
+          quantity: parseInt(item.quantity) || 0
+        };
+        if (item.id) {
+          itemPayload.id = item.id;
+        }
+        newPayload.response.push(itemPayload);
+      });
+      console.log(newPayload);
+      return newPayload;
     };
 
     this.formatStoreInstanceItemsPayload = function () {
-      var isPayloadValid = true;
-      var newPayload = {response: []};
-      var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
-
-      angular.forEach(mergedItems, function (item) {
-        if(!item.itemMasterId && !item.masterItem) {
-          isPayloadValid = false;
-          return;
-        }
-        $this.addItemToPayload(item, newPayload.response);
-      });
-
-      if(!isPayloadValid) {
+      var duplicatesExist = $this.checkForDuplicatesInPayload();
+      if (duplicatesExist) {
+        showToast('danger', 'Save Items', 'Duplicate Entries Exist!');
+        return false;
+      }
+      var emptyItemsExist = $this.checkForEmptyItemsInPayload();
+      if (emptyItemsExist) {
         showToast('danger', 'Save Items', 'An item must be selected for all rows');
         return false;
       }
-      return newPayload;
 
+      return $this.createPayload();
     };
 
     function initialize() {
@@ -199,7 +230,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.emptyMenuItems = [];
       storeInstanceFactory.getStoreDetails($scope.storeId).then(getStoreDetailsSuccessHandler, errorHandler);
     }
-
 
     $scope.showDeleteWarning = function (item) {
       if (item.quantity > 0) {
@@ -254,7 +284,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.saveAndExit = function () {
-      $scope.savePackingDataAndUpdateStatus(false);
+      if($scope.readOnly) {
+        $location.path('#');
+      } else {
+        $scope.savePackingDataAndUpdateStatus(false);
+      }
     };
 
     $scope.goToPreviousStep = function () {
