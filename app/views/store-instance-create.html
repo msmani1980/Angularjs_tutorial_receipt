@@ -35,8 +35,14 @@
         <label>Schedule Number *</label>
       </div>
       <div class="col-xs-12 col-sm-8">
-        <div class="form-group" ng-class="validateInput('ScheduleNumber')">
-          <input name="ScheduleNumber" maxlength="10" required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
+        <div class="form-group">
+          <ui-select name="scheduleNumber" required ng-model="formData.scheduleNumber" theme="bootstrap" id="scheduleNumber">
+            <ui-select-match placeholder="Select a schedule" ui-lock-choice="isDisabled()">{{ $select.selected.scheduleNumber }}
+            </ui-select-match>
+            <ui-select-choices  repeat="schedule in scheduleNumbers | filter: {scheduleNumber:$select.search} | orderBy:'scheduleNumber'">
+              <div ng-bind-html="schedule.scheduleNumber | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
         </div>
       </div>
     </div>
@@ -54,7 +60,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Select Menus *</label>

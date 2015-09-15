@@ -9,45 +9,50 @@ describe('Store Instance Create Controller', function () {
     'served/menu-master-list.json',
     'served/carrier-numbers.json',
     'served/stores-list.json',
-    'served/store-instance-created.json'
+    'served/store-instance-created.json',
+    'served/schedules-date-range.json'
   ));
 
-  var StoreInstanceCreateCtrl,
-    $scope,
-    storeInstanceFactory,
-    storeInstanceService,
-    catererStationService,
-    cateringStationsJSON,
-    getCatererStationListDeferred,
-    menuMasterService,
-    menuMasterListJSON,
-    getMenuMasterListDeferred,
-    carrierService,
-    carrierNumbersJSON,
-    getCarrierNumbersDeferred,
-    storesService,
-    storesListJSON,
-    getStoresListDeferred,
-    location,
-    httpBackend,
-    postPayloadControl,
-    dateUtility,
-    storeInstanceCreatedJSON,
-    createStoreInstanceDeferred,
-    templateCache,
-    compile,
-    storeInstanceDispatchWizardConfig;
+  var StoreInstanceCreateCtrl;
+  var $scope;
+  var storeInstanceFactory;
+  var storeInstanceService;
+  var catererStationService;
+  var cateringStationsJSON;
+  var getCatererStationListDeferred;
+  var menuMasterService;
+  var menuMasterListJSON;
+  var getMenuMasterListDeferred;
+  var carrierService;
+  var carrierNumbersJSON;
+  var getCarrierNumbersDeferred;
+  var storesService;
+  var storesListJSON;
+  var getStoresListDeferred;
+  var location;
+  var httpBackend;
+  var postPayloadControl;
+  var dateUtility;
+  var storeInstanceCreatedJSON;
+  var createStoreInstanceDeferred;
+  var templateCache;
+  var compile;
+  var storeInstanceDispatchWizardConfig;
+  var schedulesService;
+  var getSchedulesInDateRangeDeferred;
+  var schedulesDateRangeJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $controller, $rootScope,$injector,
      _servedCateringStations_,_servedMenuMasterList_,_servedCarrierNumbers_,
-     _servedStoresList_,_servedStoreInstanceCreated_) {
+     _servedStoresList_,_servedStoreInstanceCreated_, _servedSchedulesDateRange_) {
 
     cateringStationsJSON = _servedCateringStations_;
     menuMasterListJSON = _servedMenuMasterList_;
     carrierNumbersJSON = _servedCarrierNumbers_;
     storesListJSON = _servedStoresList_;
     storeInstanceCreatedJSON = _servedStoreInstanceCreated_;
+    schedulesDateRangeJSON = _servedSchedulesDateRange_;
 
     httpBackend = $injector.get('$httpBackend');
     location = $injector.get('$location');
@@ -63,6 +68,7 @@ describe('Store Instance Create Controller', function () {
     templateCache = $injector.get('$templateCache');
     compile = $injector.get('$compile');
     storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
+    schedulesService = $injector.get('schedulesService');
 
     getMenuMasterListDeferred = $q.defer();
     getMenuMasterListDeferred.resolve(menuMasterListJSON);
@@ -88,6 +94,10 @@ describe('Store Instance Create Controller', function () {
     spyOn(storeInstanceService, 'createStoreInstance').and.returnValue(
       createStoreInstanceDeferred.promise);
 
+    getSchedulesInDateRangeDeferred = $q.defer();
+    getSchedulesInDateRangeDeferred.resolve(schedulesDateRangeJSON);
+    spyOn(schedulesService, 'getSchedulesInDateRange').and.returnValue(getSchedulesInDateRangeDeferred.promise);
+
     StoreInstanceCreateCtrl = $controller('StoreInstanceCreateCtrl', {
       $scope: $scope
     });
@@ -110,7 +120,7 @@ describe('Store Instance Create Controller', function () {
        {id:6,name:'MNDA412'}
      ],
      cateringStationId:13,
-     scheduleNumber:'SCH1241411',
+     scheduleNumber:{scheduleNumber:'SCH1241411'},
      storeId:13
    };
 
@@ -223,6 +233,20 @@ describe('Store Instance Create Controller', function () {
 
       it('should be match the storesList list from the stores numbers API Respone',function () {
         expect($scope.storesList).toEqual(storesListJSON.response);
+      });
+
+    });
+
+    it('should have an empty scheduleNumbers array before the scope is digested', function(){
+      expect($scope.scheduleNumbers).toEqual([]);
+    });
+
+    describe('the scheduleNumbers array', function(){
+      beforeEach(function() {
+        $scope.$digest();
+      });
+      it('should be set to same lenght as API response', function(){
+        expect($scope.scheduleNumbers.length).toBe(schedulesDateRangeJSON.meta.count);
       });
 
     });
@@ -479,21 +503,21 @@ describe('Store Instance Create Controller', function () {
     });
 
     it('should return nothing if the field is pristine', function () {
-      var className = $scope.validateInput('ScheduleNumber');
+      var className = $scope.validateInput('scheduleNumber');
       expect(className).toEqual('');
     });
 
     it('should return .has-error if the field is invalid', function () {
-      $scope.createStoreInstance.ScheduleNumber.$setViewValue('');
+      $scope.createStoreInstance.scheduleNumber.$setViewValue('');
       mockFormSubmission(form);
-      var className = $scope.validateInput('ScheduleNumber');
+      var className = $scope.validateInput('scheduleNumber');
       expect(className).toEqual('has-error');
     });
 
     it('should return .has-success if the field is not invalid', function () {
-      $scope.createStoreInstance.ScheduleNumber.$setViewValue('SCHED12345');
+      $scope.createStoreInstance.scheduleNumber.$setViewValue('SCHED12345');
       mockFormSubmission(form);
-      var className = $scope.validateInput('ScheduleNumber');
+      var className = $scope.validateInput('scheduleNumber');
       expect(className).toEqual('has-success');
     });
 
