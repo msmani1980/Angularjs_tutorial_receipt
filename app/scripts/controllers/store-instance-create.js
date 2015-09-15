@@ -24,7 +24,7 @@ angular.module('ts5App')
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
    var companyId = GlobalMenuService.company.get();
    var $this = this;
-    
+
     this.init = function() {
       this.getCatererStationList();
       this.getMenuMasterList();
@@ -34,7 +34,8 @@ angular.module('ts5App')
 
     this.generateQuery = function() {
       return {
-        startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate)
+        startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate),
+        endDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate)
       };
     };
 
@@ -84,7 +85,7 @@ angular.module('ts5App')
       $this.hideLoadingModal();
       if(response.id){
         $this.showMessage('success','Store Instance created id: ' + response.id);
-        $location.url('/store-instance-packing/'+response.id);      
+        $location.url('/store-instance-packing/'+response.id);
       }
     };
 
