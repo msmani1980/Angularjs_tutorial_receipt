@@ -12,7 +12,6 @@ angular.module('ts5App')
     storeInstanceFactory, sealTypesService, sealColorsService) {
 
     // TODO: Generate a formatted list of seal types
-    // Set routeParams instead of scope.storeId
     // Validate the Seals and make sure that the required seals have atleast one seal
     // Allow a user to submit the form and save the seal
     // On submission mark status as Ready to Be Dispatched
@@ -34,8 +33,8 @@ angular.module('ts5App')
       $scope.sealTypes = sealTypesJSON;
     };
 
-    this.setWizardSteps = function(storeId) {
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(storeId);
+    this.setWizardSteps = function() {
+      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
     };
 
     this.getSealColors = function() {
@@ -43,7 +42,7 @@ angular.module('ts5App')
     };
 
     this.getStoreDetails = function() {
-      storeInstanceFactory.getStoreDetails($scope.storeId).then($this.setStoreDetails);
+      storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
     };
 
     this.getSealTypes = function() {
@@ -51,13 +50,12 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      $scope.storeId = $routeParams.storeId;
-      if ($scope.storeId) {
+      if ($routeParams.storeId) {
         // TODO: Make a $q
         this.getStoreDetails();
         this.getSealColors();
         this.getSealTypes();
-        this.setWizardSteps($scope.storeId);
+        this.setWizardSteps();
       }
     };
 

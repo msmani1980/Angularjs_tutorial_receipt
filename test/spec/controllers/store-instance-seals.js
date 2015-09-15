@@ -80,10 +80,6 @@ describe('the Store Instance Seals controller', function() {
       expect($scope.wizardSteps).toEqual(wizardSteps);
     });
 
-    it('should set the storeId scope variable', function() {
-      expect($scope.storeId).toEqual(storeId);
-    });
-
     describe('the get store details API call', function() {
 
       beforeEach(function() {
@@ -99,7 +95,7 @@ describe('the Store Instance Seals controller', function() {
       });
 
       it('should get the store details', function() {
-        expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith($scope.storeId);
+        expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(storeId);
       });
 
       it('should attach all properties of JSON to scope', function() {
