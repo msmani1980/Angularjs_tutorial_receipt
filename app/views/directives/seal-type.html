@@ -7,8 +7,8 @@
     </div>
 
     <div class="col-xs-12 col-sm-8">
-      <!--TODO: repeat over action methods, show copy from function-->
-      <button ng-if="sealTypeObject.name !== 'HO'" class="btn btn-primary pull-right" type="button">Copy From Hand Over</button>
+      <button ng-if="sealTypeObject.name === 'HO' || sealTypeObject.name === 'IB'" class="btn btn-primary copy-button pull-right" type="button">Copy From Outbound</button>
+      <button ng-if="sealTypeObject.name === 'IB'"  class="btn btn-primary copy-button pull-right" type="button">Copy From Handover</button>
     </div>
 
   </div>
