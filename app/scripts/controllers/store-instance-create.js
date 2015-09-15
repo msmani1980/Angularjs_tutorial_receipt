@@ -26,33 +26,6 @@ angular.module('ts5App')
    var companyId = GlobalMenuService.company.get();
    var $this = this;
 
-    this.init = function() {
-      this.getCatererStationList();
-      this.getMenuMasterList();
-      this.getCarrierNumbers();
-      this.getStoresList();
-      this.getScheduleNumbers();
-    };
-
-    this.setScheduleNumbers = function(apiData){
-      if(!apiData || !apiData.meta.count){
-        return;
-      }
-      $scope.scheduleNumbers = apiData.schedules.map(function(schedule){
-        return {scheduleNumber: schedule.scheduleNumber};
-      });
-    };
-
-    this.getScheduleNumbers = function() {
-      $scope.scheduleNumbers = [];
-      if(!$scope.formData.scheduleDate){
-        this.setScheduleNumbers();
-        return;
-      }
-      var datesForApi = this.generateQuery();
-      schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate).then(this.setScheduleNumbers);
-    };
-
     this.generateQuery = function() {
       return {
         startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate),
@@ -183,8 +156,6 @@ angular.module('ts5App')
       );
     };
 
-    this.init();
-
     $scope.submitForm = function(saveAndExit) {
       $scope.createStoreInstance.$setSubmitted(true);
       if($this.validateForm()) {
@@ -229,5 +200,34 @@ angular.module('ts5App')
     $scope.saveAndExit = function() {
       return $scope.submitForm(true);
     };
+
+
+    this.setScheduleNumbers = function(apiData){
+      if(!apiData || !apiData.meta.count){
+        return;
+      }
+      $scope.scheduleNumbers = apiData.schedules.map(function(schedule){
+        return {scheduleNumber: schedule.scheduleNumber};
+      });
+    };
+
+    this.getScheduleNumbers = function() {
+      $scope.scheduleNumbers = [];
+      if(!$scope.formData.scheduleDate){
+        this.setScheduleNumbers();
+        return;
+      }
+      var datesForApi = this.generateQuery();
+      schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate).then(this.setScheduleNumbers);
+    };
+
+    this.init = function() {
+      this.getCatererStationList();
+      this.getMenuMasterList();
+      this.getCarrierNumbers();
+      this.getStoresList();
+      this.getScheduleNumbers();
+    };
+    this.init();
 
   });
