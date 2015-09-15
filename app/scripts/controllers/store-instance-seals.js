@@ -15,7 +15,6 @@ angular.module('ts5App')
 
     this.setSealColors = function(sealColorsJSON) {
       $scope.sealColorsList = sealColorsJSON;
-      console.log($scope.sealColorsList);
     };
 
     this.setStoreDetails = function(storeDetailsJSON) {
