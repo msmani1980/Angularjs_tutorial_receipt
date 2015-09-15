@@ -10,9 +10,9 @@ angular.module('ts5App')
   .directive('sealType', function() {
     var sealTypeController = function($scope) {
 
-      $scope.seals = {};
-      $scope.seals.numbers = [];
-      $scope.seals.color = $scope.sealColor;
+      $scope.seals = {
+        numbers: []
+      };
 
       $scope.isSequentialPossible = function() {
         return ($scope.seals.numbers.length === 1);
