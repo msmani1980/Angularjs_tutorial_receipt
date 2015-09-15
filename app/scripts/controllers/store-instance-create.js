@@ -189,14 +189,6 @@ angular.module('ts5App')
       return 'has-success';
     };
 
-    $scope.$watch('formData.scheduleDate', function(newDate,oldDate) {
-      if(newDate && newDate !== oldDate){
-        $this.getMenuMasterList();
-        $this.getStoresList();
-        $this.getScheduleNumbers();
-      }
-    });
-
     $scope.saveAndExit = function() {
       return $scope.submitForm(true);
     };
@@ -220,6 +212,14 @@ angular.module('ts5App')
       var datesForApi = this.generateQuery();
       schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate).then(this.setScheduleNumbers);
     };
+
+    $scope.$watch('formData.scheduleDate', function(newDate,oldDate) {
+      if(newDate && newDate !== oldDate){
+        $this.getMenuMasterList();
+        $this.getStoresList();
+        $this.getScheduleNumbers();
+      }
+    });
 
     this.init = function() {
       this.getCatererStationList();
