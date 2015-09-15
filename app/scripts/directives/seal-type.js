@@ -35,6 +35,22 @@ angular.module('ts5App')
         $scope.seals.numbers = [];
       };
 
+      $scope.showCopyFromOutbound = function(sealType) {
+        return (sealType === 'HO' || sealType === 'IB');
+      };
+
+      $scope.showCopyFromHandover = function(sealType) {
+        return (sealType === 'IB');
+      }
+
+      $scope.copyFromOutbound = function(sealType) {
+        console.log('copyFromOutbound', sealType);
+      };
+
+      $scope.copyFromHandover = function(sealType) {
+        console.log('copyFromHandover', sealType);
+      }
+
     };
     return {
       templateUrl: '/views/directives/seal-type.html',
