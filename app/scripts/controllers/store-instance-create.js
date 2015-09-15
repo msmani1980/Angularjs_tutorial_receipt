@@ -75,7 +75,7 @@ angular.module('ts5App')
       storeInstanceFactory.getStoresList(query).then(this.setStoresList);
     };
 
-    this.saveThenExit = function(response){
+    this.exitOnSave = function(response){
       $this.hideLoadingModal();
       $this.showMessage('success','Store Instance created id: ' + response.id);
       // TODO: Set this to actual URL when dashboard becomes available
@@ -154,24 +154,24 @@ angular.module('ts5App')
       return false;
     };
 
-    this.createStoreInstance = function(exitOnSave) {
+    this.createStoreInstance = function(saveAndExit) {
       this.displayLoadingModal('Creating a store instance');
       var payload = this.formatPayload();
       if(!payload) {
         return false;
       }
       storeInstanceFactory.createStoreInstance(payload).then(
-        ( exitOnSave ? this.saveThenExit : this.createStoreInstanceSuccessHandler ),
+        ( saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler ),
         this.createStoreInstanceErrorHandler
       );
     };
 
     this.init();
 
-    $scope.submitForm = function(exitOnSave) {
+    $scope.submitForm = function(saveAndExit) {
       $scope.createStoreInstance.$setSubmitted(true);
       if($this.validateForm()) {
-        $this.createStoreInstance(exitOnSave);
+        $this.createStoreInstance(saveAndExit);
       }
       return false;
     };
@@ -192,6 +192,7 @@ angular.module('ts5App')
       return 'has-success';
     };
 
+    // TODO: Check tests for this
     $scope.validateMenus = function() {
       if(angular.isUndefined($scope.createStoreInstance.Menus) ||
       $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {

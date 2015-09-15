@@ -129,10 +129,15 @@ describe('Store Instance Create Controller', function () {
     return view;
   }
 
-  function mockFormSubmission(form) {
+  function mockFormSubmission(form,saveAndExit) {
     form.triggerHandler('submit');
-    $scope.submitForm();
+    $scope.submitForm( (saveAndExit ? saveAndExit : false) );
     $scope.$digest();
+  }
+
+  function mockStoreInstanceCreate() {
+    $scope.$digest();
+    StoreInstanceCreateCtrl.createStoreInstance();
   }
 
   describe('when the controller loads', function() {
@@ -282,12 +287,6 @@ describe('Store Instance Create Controller', function () {
 
   describe('The createStoreInstance functionality', function () {
 
-    function mockSubmission() {
-      $scope.$digest();
-      StoreInstanceCreateCtrl.createStoreInstance();
-
-    }
-
     beforeEach(function() {
       spyOn(StoreInstanceCreateCtrl,'displayLoadingModal');
       spyOn(StoreInstanceCreateCtrl,'formatPayload').and.callThrough();
@@ -296,7 +295,7 @@ describe('Store Instance Create Controller', function () {
       spyOn(StoreInstanceCreateCtrl,'createStoreInstanceSuccessHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl,'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl,'showMessage');
-      mockSubmission();
+      mockStoreInstanceCreate();
     });
 
     it('should display the loading modal', function () {
@@ -314,7 +313,7 @@ describe('Store Instance Create Controller', function () {
     describe('success handler', function(){
 
       beforeEach(function() {
-        mockSubmission();
+        mockStoreInstanceCreate();
         createStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
         $scope.$digest();
       });
@@ -412,12 +411,54 @@ describe('Store Instance Create Controller', function () {
 
     });
 
-
-
     it('should call createStoreInstance if the form does validate', function () {
       $scope.$digest();
       mockFormSubmission(form);
       expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('The save and exit functionality', function () {
+
+    var view;
+    var form;
+
+    beforeEach(function() {
+      spyOn($scope,'submitForm').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl,'createStoreInstance').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl,'exitOnSave').and.callThrough();
+      $scope.$digest();
+      view = renderView();
+      form = angular.element(view.find('form')[0]);
+    });
+
+    it('should call the submitForm method with the saveAndExit flag set as true', function () {
+      $scope.saveAndExit();
+      expect($scope.submitForm).toHaveBeenCalledWith(true);
+    });
+
+    it('should call the createStoreInstance method and pass the saveAndExit flag ', function () {
+      $scope.saveAndExit();
+      expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalledWith(true);
+    });
+
+    describe('exitOnSave success handler', function(){
+
+      beforeEach(function() {
+        $scope.saveAndExit();
+        createStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
+        $scope.$digest();
+      });
+
+      it('should call exitOnSave', function () {
+        expect(StoreInstanceCreateCtrl.exitOnSave).toHaveBeenCalledWith(storeInstanceCreatedJSON);
+      });
+
+      it('should call change the location of the browser', function () {
+        expect(location.path()).toEqual('/store-instance-list');
+      });
+
     });
 
   });
