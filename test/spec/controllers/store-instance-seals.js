@@ -138,7 +138,7 @@ describe('the Store Instance Seals controller', function() {
       });
 
       it('should attach all properties of JSON to scope', function() {
-        expect($scope.sealColorsList).toEqual(sealColorsJSON);
+        expect($scope.sealColorsList).toEqual(sealColorsJSON.response);
       });
 
     });
