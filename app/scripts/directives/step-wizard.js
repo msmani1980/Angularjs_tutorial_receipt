@@ -16,7 +16,8 @@ angular.module('ts5App')
       disabled: '=',
       showNextPrevButton: '=',
       nextTrigger: '&',
-      prevTrigger: '&'
+      prevTrigger: '&',
+      saveTrigger: '&'
     },
     controller: function($scope, $location) {
 
@@ -80,6 +81,13 @@ angular.module('ts5App')
         return resolveTrigger(autoStepBackwards, $index);
       };
 
+      $scope.wizardSave = function(){
+        if($scope.disabled){
+          return false;
+        }
+        callTrigger('saveTrigger', currentStepIndex);
+      };
+
       $scope.wizardPrev = function(){
         if($scope.disabled){
           return false;
@@ -93,6 +101,9 @@ angular.module('ts5App')
 
       $scope.wizardNext = function(){
         if($scope.disabled){
+          return false;
+        }
+        if(!$scope.showNextPrevButton){
           return false;
         }
         var nextIndex = currentStepIndex + 1;
