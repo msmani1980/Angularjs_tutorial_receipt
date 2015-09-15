@@ -22,9 +22,12 @@ angular.module('ts5App')
       };
 
       $scope.addSealsSequentially = function() {
-        var sealNumber = $scope.seals.numbers[0];
-        var numberOfSeals = $scope.numberOfSeals;
-        console.log(sealNumber, numberOfSeals);
+        var sealNumber = parseInt($scope.seals.numbers[0]);
+        var count = parseInt($scope.numberOfSeals + 1);
+        for (var i = 1; i < count; i++) {
+          var newSeal = Math.ceil(sealNumber + i);
+          $scope.seals.numbers.push(newSeal);
+        }
       };
 
     };

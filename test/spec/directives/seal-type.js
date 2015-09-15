@@ -21,6 +21,7 @@ describe('Directive: sealType', function() {
     scope.$digest();
     isolatedScope = element.isolateScope();
   }
+
   describe('When the seal-type directive is compiled, it', function() {
 
     beforeEach(inject(function() {
@@ -47,12 +48,6 @@ describe('Directive: sealType', function() {
       expect(isolatedScope.seals).toBeDefined();
     });
 
-    it('should have seals as object', function() {
-      expect(isolatedScope.seals).toEqual({
-        numbers: []
-      });
-    });
-
     it('should have seals.numbers defined', function() {
       expect(isolatedScope.seals.numbers).toBeDefined();
     });
@@ -75,6 +70,25 @@ describe('Directive: sealType', function() {
         isolatedScope.seals.numbers = ['123'];
         isolatedScope.isSequentialPossible();
         expect(isolatedScope.isSequentialPossible).toBeTruthy();
+      });
+
+    });
+
+    describe('The addSealsSequentially method,', function() {
+
+      beforeEach(inject(function() {
+        spyOn(isolatedScope, 'addSealsSequentially').and.callThrough();
+      }));
+
+      it('should define method', function() {
+        expect(isolatedScope.addSealsSequentially).toBeDefined();
+      });
+
+      it('should add seals sequentially', function() {
+        isolatedScope.seals.numbers = [10];
+        isolatedScope.numberOfSeals = 10;
+        isolatedScope.addSealsSequentially();
+        expect(isolatedScope.seals.numbers).toEqual([10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
       });
 
     });

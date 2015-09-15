@@ -6,7 +6,7 @@
 
     <div class="col-xs-12">
       <label for="seal-numbers-outbound">Seal Numbers*:</label>
-      <ui-select multiple tagging tagging-label="(Add 'New' Seal)" ng-model="seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Add Seals...">
+      <ui-select multiple tagging tagging-label="(Add 'New' Seal)" ng-model="seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" title="Add Seals...">
         <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
           <ui-select-choices repeat="number in seals.numbers | filter:$select.search">
             <small>
