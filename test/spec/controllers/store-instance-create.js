@@ -587,6 +587,7 @@ describe('Store Instance Create Controller', function () {
       $scope.formData.scheduleDate = '10/01/2015';
       $scope.$digest();
       var queryControl = {
+        endDate: '20151001',
         startDate: '20151001'
       };
       expect(StoreInstanceCreateCtrl.generateQuery()).toEqual(queryControl);
