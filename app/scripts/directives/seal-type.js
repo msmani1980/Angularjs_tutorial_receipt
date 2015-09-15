@@ -41,7 +41,7 @@ angular.module('ts5App')
 
       $scope.showCopyFromHandover = function(sealType) {
         return (sealType === 'IB');
-      }
+      };
 
       $scope.copyFromOutbound = function(sealType) {
         console.log('copyFromOutbound', sealType);
@@ -49,7 +49,7 @@ angular.module('ts5App')
 
       $scope.copyFromHandover = function(sealType) {
         console.log('copyFromHandover', sealType);
-      }
+      };
 
     };
     return {
