@@ -76,7 +76,7 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should set wizardSteps', function() {
-      var wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
+      var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(storeId);
       expect($scope.wizardSteps).toEqual(wizardSteps);
     });
 
@@ -107,7 +107,7 @@ describe('the Store Instance Seals controller', function() {
       });
 
       it('should set wizardSteps', function() {
-        var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.storeId);
+        var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(storeId);
         expect($scope.wizardSteps).toEqual(wizardSteps);
       });
 

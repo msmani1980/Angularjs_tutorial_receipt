@@ -10,14 +10,29 @@ angular.module('ts5App')
   .directive('sealType', function() {
     var sealTypeController = function($scope) {
 
-      $scope.seals = {};
-      $scope.seals.numbers = [];
+      $scope.seals = {
+        numbers: []
+      };
 
       $scope.isSequentialPossible = function() {
-        if ($scope.seals.numbers.length === 1) {
-          return true;
+        return ($scope.seals.numbers.length === 1);
+      };
+
+      $scope.addSealsSequentially = function() {
+        var sealNumber = parseInt($scope.seals.numbers[0]);
+        var count = parseInt($scope.numberOfSeals + 1);
+        for (var i = 1; i < count; i++) {
+          var newSeal = Math.ceil(sealNumber + i);
+          $scope.seals.numbers.push(newSeal);
         }
-        return false;
+      };
+
+      $scope.showClearButton = function() {
+        return ($scope.seals.numbers.length > 1);
+      };
+
+      $scope.clearSeals = function() {
+        $scope.seals.numbers = [];
       };
 
     };
@@ -26,7 +41,7 @@ angular.module('ts5App')
       controller: sealTypeController,
       scope: {
         sealTypeObject: '=',
-        sealColors: '='
+        sealColor: '@'
       }
     };
   });

@@ -310,13 +310,13 @@ describe('Store Instance Create Controller', function () {
       expect(storeInstanceFactory.createStoreInstance).toHaveBeenCalled();
     });
 
-    fdescribe('success handler', function(){
+    describe('success handler', function(){
 
       beforeEach(function() {
         mockStoreInstanceCreate();
         createStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
         $scope.$digest();
-      }); 
+      });
 
       it('should hide the loading modal', function () {
         expect(StoreInstanceCreateCtrl.hideLoadingModal).toHaveBeenCalled();

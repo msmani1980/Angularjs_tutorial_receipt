@@ -2,11 +2,22 @@
 
   <div class="row">
 
-    <div class="seal-label">{{ sealTypeObject.name }}</div>
+    <div class="col-xs-12 col-sm-4">
+      <div class="seal-label" ng-style="{'background-color' : '{{sealColor}}'}">{{ sealTypeObject.name }}</div>
+    </div>
+
+    <div class="col-xs-12 col-sm-8">
+      <!--TODO: repeat over action methods, show copy from function-->
+      <button ng-if="sealTypeObject.name !== 'HO'" class="btn btn-primary pull-right" type="button">Copy From Hand Over</button>
+    </div>
+
+  </div>
+
+  <div class="row">
 
     <div class="col-xs-12">
       <label for="seal-numbers-outbound">Seal Numbers*:</label>
-      <ui-select multiple tagging tagging-label="(Add 'New' Seal)" ng-model="seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Add Seals...">
+      <ui-select multiple tagging tagging-label="(Add 'New' Seal)" ng-model="seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" title="Add Seals...">
         <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
           <ui-select-choices repeat="number in seals.numbers | filter:$select.search">
             <small>
@@ -17,6 +28,10 @@
     </div>
 
   </div>
+
+  </br>
+
+  <button class="btn btn-primary" type="button" ng-show="showClearButton()" ng-click="clearSeals()">Clear</button>
 
   <div class="row" ng-show="isSequentialPossible()">
 
@@ -29,9 +44,9 @@
 
     <div class="col-xs-6 col-sm-3 col-md-2" ng-show="showSequential">
       <div class="input-group">
-        <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber" width="20">
+        <input type="number" min="1" max="100" class="form-control" ng-model="numberOfSeals" width="20">
         <span class="input-group-btn">
-          <button class="btn btn-primary" type="button"><span class="fa fa-plus"></span> Add</button>
+          <button class="btn btn-primary" type="button" ng-click="addSealsSequentially()"><span class="fa fa-plus"></span> Add</button>
         </span>
       </div>
     </div>
