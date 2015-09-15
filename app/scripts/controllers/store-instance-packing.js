@@ -33,6 +33,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     }
 
+    function showErrors(dataFromAPI) {
+      showToast('warning', 'Store Instance Packing', 'error saving items!');
+
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+    }
+
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     }
@@ -99,7 +108,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     this.getStoreInstanceItems = function () {
-      storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler);
+      storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler, showErrors);
     };
 
     this.getStoreInstanceMenuItems = function () {
@@ -107,7 +116,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemTypeId: 1,
         date: $scope.storeDetails.scheduleDate
       };
-      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler);
+      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler, showErrors);
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
@@ -126,7 +135,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         startDate: $scope.storeDetails.scheduleDate,
         endDate: $scope.storeDetails.scheduleDate
       };
-      storeInstanceFactory.getItemsMasterList(filterPayload).then(getMasterItemsListSuccess);
+      storeInstanceFactory.getItemsMasterList(filterPayload).then(getMasterItemsListSuccess, showErrors);
     }
 
     function updateStoreDetails(response, stepObject) {
@@ -143,7 +152,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var statusId = statusObject.id;
       storeInstanceFactory.updateStoreInstanceStatus($scope.storeId, statusId).then(function(response){
         updateStoreDetails(response, stepObject);
-      });
+      }, showErrors);
     }
 
     function getStoreDetailsSuccessHandler(storeDetailsJSON) {
@@ -249,7 +258,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if (itemToDelete.isNewItem) {
         removeNewItem(itemToDelete);
       } else {
-        storeInstanceFactory.deleteStoreInstanceItem($scope.storeId, itemToDelete.id).then(initialize);
+        storeInstanceFactory.deleteStoreInstanceItem($scope.storeId, itemToDelete.id).then(initialize, showErrors);
       }
     };
 
@@ -284,7 +293,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       showLoadingModal('Saving...');
       storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (responseData) {
         savePackingDataSuccessHandler(responseData, shouldUpdateStatus);
-      });
+      }, showErrors);
     };
 
     $scope.saveAndExit = function () {
