@@ -133,6 +133,14 @@ angular.module('ts5App')
       showUserCurrentStatus('updated');
     }
 
+    function getStatusNameIntByName(name){
+      var status = $filter('filter')($scope.storeDetails.statusList, {statusName: name}, true);
+      if(!status || !status.length){
+        return false;
+      }
+      return status[0].name;
+    }
+
     function getSetStoreStatusByNamePromise(name){
       $scope.formErrors = [];
       var statusNameInt = getStatusNameIntByName(name);
@@ -171,14 +179,6 @@ angular.module('ts5App')
     function updatedStoreStatusSubmitted(){
       showMessage('Now what? Redirect user where?', 'info');
       // TODO redirect user somewhere?
-    }
-
-    function getStatusNameIntByName(name){
-      var status = $filter('filter')($scope.storeDetails.statusList, {statusName: name}, true);
-      if(!status || !status.length){
-        return false;
-      }
-      return status[0].name;
     }
 
     function init() {
