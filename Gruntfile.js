@@ -42,7 +42,7 @@ module.exports = function (grunt) {
       },
       jsTest: {
         files: ['test/spec/{,*/}*.js'],
-        tasks: ['newer:jshint:test', 'karma']
+        tasks: ['newer:jshint:test', 'karma:unit']
       },
       sass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
@@ -448,6 +448,10 @@ module.exports = function (grunt) {
       unit: {
         configFile: 'test/karma.conf.js',
         singleRun: true
+      },
+      jenkins: {
+        configFile: 'test/jenkins.karma.conf.js',
+        singleRun: true
       }
     }
   });
@@ -481,7 +485,17 @@ module.exports = function (grunt) {
     'concurrent:test',
     'postcss',
     'connect:test',
-    'karma'
+    'karma:unit'
+  ]);
+
+  grunt.registerTask('testJenkins', [
+    'clean:server',
+    'ngconstant:development',
+    'wiredep',
+    'concurrent:test',
+    'postcss',
+    'connect:test',
+    'karma:jenkins'
   ]);
 
   grunt.registerTask('build', [

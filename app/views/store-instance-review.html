@@ -1,7 +1,7 @@
 <div class="fluid-container">
   <!--<step-wizard></step-wizard>-->
 
-  <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()"></step-wizard>
+  <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()" disabled="actionNotAllowed"></step-wizard>
   <loose-data-alert show-alert="showLoseDataAlert" confirm-trigger="loseDataAlertConfirmTrigger()"></loose-data-alert>
 
   <form-error-dialog></form-error-dialog>
@@ -94,7 +94,7 @@
       </accordion-group>
     </accordion>
 
-    <footer class="text-right">
+    <footer class="text-right" ng-hide="actionNotAllowed">
       <button type="button" class="btn btn-default btn-primary btn-next" ng-click="submit()">Dispatch</button>
     </footer>
 
