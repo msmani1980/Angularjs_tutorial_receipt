@@ -125,7 +125,7 @@ describe('the Store Instance Seals controller', function() {
       });
 
       it('should attach all properties of JSON to scope', function() {
-        expect($scope.sealTypesList).toEqual(sealTypesJSON);
+        expect($scope.sealTypes).toEqual(sealTypesJSON);
       });
 
     });
@@ -170,9 +170,34 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should have at least one seal-type directive in the view', function() {
-      $scope.sealTypesList = sealTypesJSON;
+      $scope.sealTypesList = [
+        {
+          name:'Outbound',
+          code: 'OB',
+          color:'#00B200',
+          seals: {
+              numbers:[]
+          }
+        },
+        {
+          name:'Handover',
+          code: 'HO',
+          color:'#E5E500',
+          seals: {
+              numbers:[]
+          },
+          actions: [
+            {
+              label: 'Copy From Outbound',
+              trigger: function() {
+                return $scope.copySeals('Outbound','Handover');
+              }
+            }
+          ]
+        }
+      ];
       $scope.$digest();
-      expect(view.find('seal-type').length).toBeGreaterThan(0);
+      expect(view.find('seal-type').length).toEqual(2);
     });
 
   });
