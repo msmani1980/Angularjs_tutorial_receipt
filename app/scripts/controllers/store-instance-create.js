@@ -35,10 +35,7 @@ angular.module('ts5App')
     };
 
     this.setScheduleNumbers = function(apiData){
-      if(!apiData){
-        return;
-      }
-      if(!apiData.meta.count){
+      if(!apiData || !apiData.meta.count){
         return;
       }
       $scope.scheduleNumbers = apiData.schedules.map(function(schedule){
