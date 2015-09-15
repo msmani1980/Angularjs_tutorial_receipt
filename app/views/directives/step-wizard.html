@@ -10,6 +10,11 @@
     <span class="chevron"></span>
   </button>
 
+  <div class="actions pull-right">
+    <button type="button" class="btn btn-default btn-primary" ng-click="wizardSave()">
+      <span class="hidden-xs">Save & Exit</span>
+    </button>
+  </div>
   <div class="actions pull-right" ng-show="showNextPrevButton">
     <button type="button" class="btn btn-default btn-prev" ng-click="wizardPrev()" ng-disabled="disablePrev()">
       <span class="fa fa-arrow-left"></span>
