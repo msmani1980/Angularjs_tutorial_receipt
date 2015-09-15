@@ -22,6 +22,7 @@ angular.module('ts5App')
     };
     var distinctSchedulesRequestResource = $resource(schedulesRequestURL + '/distinct', null, schedulesActions);
     var dailySchedulesRequestResource = $resource(schedulesRequestURL + '/daily', null, schedulesActions);
+    var schedulesRequestResource = $resource(schedulesRequestURL, null, schedulesActions);
 
     var getSchedules = function (companyId) {
       var payload = {id:companyId};
@@ -36,9 +37,19 @@ angular.module('ts5App')
       return dailySchedulesRequestResource.getSchedules(payload).$promise;
     };
 
+    var getSchedulesInDateRange = function(companyId, startDate, endDate){
+      var payload = {
+        id:companyId,
+        startDate:startDate,
+        endDate:endDate
+      };
+      return schedulesRequestResource.getSchedules(payload).$promise;
+    };
+
     return {
       getSchedules: getSchedules,
-      getDailySchedules: getDailySchedules
+      getDailySchedules: getDailySchedules,
+      getSchedulesInDateRange: getSchedulesInDateRange
     };
 
   });
