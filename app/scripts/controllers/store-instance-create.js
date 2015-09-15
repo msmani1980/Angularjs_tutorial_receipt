@@ -9,9 +9,7 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast,
-                                                   dateUtility,GlobalMenuService,
-                                                   storeInstanceDispatchWizardConfig,
-                                                    $location) {
+    dateUtility, GlobalMenuService, storeInstanceDispatchWizardConfig, $location) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -86,11 +84,7 @@ angular.module('ts5App')
       $this.hideLoadingModal();
       if(response.id){
         $this.showMessage('success','Store Instance created id: ' + response.id);
-        if($scope.wizardStepToIndex) {
-          $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(response.id);
-          var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
-          $location.url(uri);
-        }
+        $location.url('/store-instance-packing/'+response.id);      
       }
     };
 
@@ -177,12 +171,13 @@ angular.module('ts5App')
     };
 
     $scope.nextTrigger = function(){
-      $this.createStoreInstance();
-      return false;
+      $scope.submitForm();
+      return true;
     };
 
     $scope.validateInput = function(fieldName) {
-      if($scope.createStoreInstance[fieldName].$pristine) {
+      if($scope.createStoreInstance[fieldName].$pristine &&
+        !$scope.createStoreInstance.$submitted) {
         return '';
       }
       if($scope.createStoreInstance[fieldName].$invalid ||
@@ -192,7 +187,6 @@ angular.module('ts5App')
       return 'has-success';
     };
 
-    // TODO: Check tests for this
     $scope.validateMenus = function() {
       if(angular.isUndefined($scope.createStoreInstance.Menus) ||
       $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {

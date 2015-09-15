@@ -310,13 +310,13 @@ describe('Store Instance Create Controller', function () {
       expect(storeInstanceFactory.createStoreInstance).toHaveBeenCalled();
     });
 
-    describe('success handler', function(){
+    fdescribe('success handler', function(){
 
       beforeEach(function() {
         mockStoreInstanceCreate();
         createStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
         $scope.$digest();
-      });
+      }); 
 
       it('should hide the loading modal', function () {
         expect(StoreInstanceCreateCtrl.hideLoadingModal).toHaveBeenCalled();
@@ -329,6 +329,11 @@ describe('Store Instance Create Controller', function () {
       it('should display a success message if the response contains an id', function() {
         var message = 'Store Instance created id: ' + storeInstanceCreatedJSON.id;
         expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success',message);
+      });
+
+      it('should redirect the user to the packing page with the new store instance id', function() {
+        var url = '/store-instance-packing/' + storeInstanceCreatedJSON.id;
+        expect(location.path()).toEqual(url);
       });
 
     });

@@ -1,13 +1,6 @@
 <div class="container">
 
-  <div class="text-right">
-    <button ng-click="saveAndExit()" type="button" class="btn btn-primary">
-      <i class="fa fa-check-square-o"></i>
-      <span class="btn-label">Save & Exit</span>
-    </button>
-  </div>
-
-  <step-wizard steps="wizardSteps" next-trigger="nextTrigger()"></step-wizard>
+  <step-wizard steps="wizardSteps" save-trigger="saveAndExit()"></step-wizard>
 
   <error-dialog form-object="createStoreInstance"></error-dialog>
 
@@ -95,7 +88,7 @@
 
     <footer class="text-right">
       <button type="submit" class="btn btn-success">
-        <span class="btn-label hidden-xs">Next</span>
+        <span class="btn-label">Next</span>
         <i class="fa fa-arrow-right"></i>
       </button>
     </footer>
