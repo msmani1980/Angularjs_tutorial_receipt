@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: sealType', function() {
+fdescribe('Directive: sealType', function() {
 
   // load the directive's module
   beforeEach(module('ts5App', 'template-module'));
@@ -89,6 +89,41 @@ describe('Directive: sealType', function() {
         isolatedScope.numberOfSeals = 10;
         isolatedScope.addSealsSequentially();
         expect(isolatedScope.seals.numbers).toEqual([10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+      });
+
+    });
+
+    describe('The showClearButton method,', function() {
+
+      beforeEach(inject(function() {
+        spyOn(isolatedScope, 'showClearButton').and.callThrough();
+      }));
+
+      it('should define method', function() {
+        expect(isolatedScope.showClearButton).toBeDefined();
+      });
+
+      it('should return true and show button', function() {
+        isolatedScope.seals.numbers = [5, 3, 4, 1];
+        expect(isolatedScope.showClearButton).toBeTruthy();
+      });
+
+    });
+
+    describe('The clearSeals method,', function() {
+
+      beforeEach(inject(function() {
+        spyOn(isolatedScope, 'clearSeals').and.callThrough();
+      }));
+
+      it('should define method', function() {
+        expect(isolatedScope.clearSeals).toBeDefined();
+      });
+
+      it('should clearSeals model', function() {
+        isolatedScope.seals.numbers = [5, 3, 4, 1];
+        isolatedScope.clearSeals();
+        expect(isolatedScope.seals.numbers).toEqual([]);
       });
 
     });

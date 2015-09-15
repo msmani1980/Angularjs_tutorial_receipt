@@ -15,10 +15,7 @@ angular.module('ts5App')
       $scope.seals.color = $scope.sealColor;
 
       $scope.isSequentialPossible = function() {
-        if ($scope.seals.numbers.length === 1) {
-          return true;
-        }
-        return false;
+        return ($scope.seals.numbers.length === 1);
       };
 
       $scope.addSealsSequentially = function() {
@@ -28,6 +25,14 @@ angular.module('ts5App')
           var newSeal = Math.ceil(sealNumber + i);
           $scope.seals.numbers.push(newSeal);
         }
+      };
+
+      $scope.showClearButton = function() {
+        return ($scope.seals.numbers.length > 1);
+      };
+
+      $scope.clearSeals = function() {
+        $scope.seals.numbers = [];
       };
 
     };
