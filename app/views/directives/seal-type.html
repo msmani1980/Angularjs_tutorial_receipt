@@ -1,8 +1,19 @@
 <div class="well seal-type">
 
   <div class="row">
-    <!--TODO: pass each seal a sealColor-->
-    <div class="seal-label" ng-style="{'background-color' : '{{sealColor}}'}">{{ sealTypeObject.name }}</div>
+
+    <div class="col-xs-12 col-sm-4">
+      <div class="seal-label" ng-style="{'background-color' : '{{sealColor}}'}">{{ sealTypeObject.name }}</div>
+    </div>
+
+    <div class="col-xs-12 col-sm-8">
+      <!--TODO: repeat over action methods, show copy from function-->
+      <button ng-if="sealTypeObject.name !== 'HO'" class="btn btn-primary pull-right" type="button">Copy From Hand Over</button>
+    </div>
+
+  </div>
+
+  <div class="row">
 
     <div class="col-xs-12">
       <label for="seal-numbers-outbound">Seal Numbers*:</label>
