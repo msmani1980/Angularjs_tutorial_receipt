@@ -273,6 +273,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
+      if (!$scope.storeInstancePackingForm.$valid) {
+        showToast('danger', 'Save Items', 'All template quantities must be a number');
+        return false;
+      }
       var payload = $this.formatStoreInstanceItemsPayload();
       if(!payload) {
         return;

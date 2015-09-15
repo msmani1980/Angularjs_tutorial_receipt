@@ -3,7 +3,7 @@
 
   <form-error-dialog></form-error-dialog>
 
-  <form name="createStoreInstance" class="well" ng-submit="submitForm()">
+  <form name="storeInstancePackingForm" class="well">
 
     <!-- INFORMATION BAR -->
     <store-instance-header></store-instance-header>
@@ -48,10 +48,10 @@
                    disabled/>
           </td>
           <td>
-            <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" ng-disabled="readOnly">
+            <input type="text" id="templateQuantity-{{$index}}" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" placeholder="0" ng-disabled="readOnly" maxlength="5">
           </td>
           <td>
-            <button ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
+            <button type="button" ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
             </button>
           </td>
@@ -75,7 +75,7 @@
           <input type="text" class="form-control" ng-model="item.quantity" placeholder="{{$index}}">
         </td>
           <td ng-init="item.index = $index">
-            <button class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
+            <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
               <i class="fa fa-close"></i>
             </button>
           </td>
