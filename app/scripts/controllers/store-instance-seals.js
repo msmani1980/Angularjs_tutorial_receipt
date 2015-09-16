@@ -9,11 +9,9 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q,storeInstanceDispatchWizardConfig,
-    storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location) {
+    storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory) {
 
     // TODO:
-    // Create storeInstance Seals factory and extend seals service
-    // For each seal type, the app must make an API call and resolve each seal type in a $q
     // On submission mark status as Ready to Be Dispatched
     // Allow a user to Save & Exit
     // Allow a user to press Next, which submits the form
@@ -61,47 +59,44 @@ angular.module('ts5App')
     };
 
     this.createHandoverActions = function() {
-      // TODO: Naming conventions need to be set on BE to make this work correctly
       return [
         {
           label: 'Copy From Outbound',
           trigger: function() {
-            return $scope.copySeals('OB','HO');
+            return $scope.copySeals('Outbound','Hand Over');
           }
         }
       ];
     };
 
     this.createInboundActions = function() {
-      // TODO: Naming conventions need to be set on BE to make this work correctly
       return [
         {
           label: 'Copy From Handover',
           trigger: function() {
-            return $scope.copySeals('HO','IB');
+            return $scope.copySeals('Hand Over','Inbound');
           }
         },
         {
           label: 'Copy From Outbound',
           trigger: function() {
-            return $scope.copySeals('OB','IB');
+            return $scope.copySeals('Outbound','Inbound');
           }
         }
       ];
     };
 
     this.addSealTypeActions = function(sealTypeObject) {
-      // TODO: Naming conventions need to be set on BE to make this work correctly
-      if(sealTypeObject.name === 'HO') {
+      if(sealTypeObject.name === 'Hand Over') {
         return $this.createHandoverActions();
       }
-      if(sealTypeObject.name === 'IB') {
+      if(sealTypeObject.name === 'Inbound') {
         return this.createInboundActions();
       }
     };
 
     this.isSealTypeRequired = function(sealTypeObject) {
-      if(sealTypeObject.name === 'OB' || sealTypeObject.name === 'IB') {
+      if(sealTypeObject.name === 'Outbound' || sealTypeObject.name === 'Inbound') {
         return true;
       }
       return false;
@@ -112,9 +107,8 @@ angular.module('ts5App')
     };
 
     this.generateSealTypeObject = function(sealType,sealColor){
-      console.log(sealColor);
       return {
-        type: sealType.id,
+        id: sealType.id,
         name: sealType.name,
         color: sealColor.color,
         seals: {
@@ -181,18 +175,34 @@ angular.module('ts5App')
       $location.url('/store-instance-list');
     };
 
+    this.formatPayload = function(sealTypeObject){
+      return {
+        type: sealTypeObject.id,
+        color: sealTypeObject.color,
+        sealNumbers: sealTypeObject.seals.numbers
+      };
+    };
+
+    this.makeAssignSealsPromises = function() {
+      var promises = [];
+      angular.forEach($scope.sealTypesList, function(sealTypeObject){
+        var payload = $this.formatPayload(sealTypeObject);
+        var promise = storeInstanceAssignSealsFactory.createStoreInstanceSeal(
+          $routeParams.storeId,
+          payload
+        );
+        promises.push( promise );
+      });
+      return promises;
+    };
+
     this.assignSeals = function() {
       this.displayLoadingModal('Assigning seals to Store Instance');
-      var payload = this.formatPayload();
-      if(!payload) {
-        return false;
-      }
-      this.assignSealsSuccessHandler();
-      // TODO: Add correct factory API calls
-      /*storeInstanceFactory.createStoreInstance(payload).then(
-        ( saveAndExit ? this.exitOnSave : this.assignSealsSuccessHandler ),
-        this.assignSealsErrorHandler
-      );*/
+      var promises = this.makeAssignSealsPromises();
+      $q.all(promises).then(function() {
+        // TODO: Update status
+        $this.assignSealsSuccessHandler();
+      });
     };
 
     this.assignSealsSuccessHandler = function(){
@@ -210,12 +220,6 @@ angular.module('ts5App')
       }
       $scope.response500 = true;
       return false;
-    };
-
-    this.formatPayload = function(){
-      // TODO: Loop through each seal type and make payload
-      var payload = angular.copy($scope.formData);
-      return payload;
     };
 
     this.init = function() {

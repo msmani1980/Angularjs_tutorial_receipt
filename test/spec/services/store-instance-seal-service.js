@@ -20,10 +20,11 @@ describe('Service: storeInstanceSealService', function () {
 
   describe('getStoreInstanceSeals', function () {
     it('should make GET request to API', function () {
-      var expectedURL = /store-instances\/\d+\/seals$/;
-      var fakeId = 4;
+      var sealTypeId = 4;
+      var storeInstanceId = 66;
+      var expectedURL = /store-instances\/\d+\/seals\/\d+$/;
       httpBackend.expectGET(expectedURL).respond(200, {});
-      storeInstanceSealService.getStoreInstanceSeals(fakeId).then(function (response) {
+      storeInstanceSealService.getStoreInstanceSeals(storeInstanceId,sealTypeId).then(function (response) {
         expect(response).toBeDefined();
       });
       httpBackend.flush();
@@ -38,6 +39,20 @@ describe('Service: storeInstanceSealService', function () {
       var mockPayload = {foo: 'barts'};
       httpBackend.expectPUT(expectedURL).respond(200, {});
       storeInstanceSealService.updateStoreInstanceSeal(mockSealId, mockStoreInstanceId, mockPayload).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+  });
+
+  describe('createStoreInstanceSeal', function(){
+    it('should make POST request to API', function() {
+      var expectedURL = /store-instances\/\d+\/seals\/\d+$/;
+      var sealTypeId = 4;
+      var storeInstanceId = 66; 
+      var mockPayload = {foo: 'barts'};
+      httpBackend.expectPUT(expectedURL).respond(200, {});
+      storeInstanceSealService.updateStoreInstanceSeal(sealTypeId, storeInstanceId, mockPayload).then(function (response) {
         expect(response).toBeDefined();
       });
       httpBackend.flush();
