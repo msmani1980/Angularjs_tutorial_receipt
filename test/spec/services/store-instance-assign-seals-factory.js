@@ -20,6 +20,7 @@ describe('Service: storeInstanceAssignSealsFactory', function () {
     spyOn(sealColorsService, 'getSealColors');
     spyOn(sealTypesService, 'getSealTypes');
     spyOn(storeInstanceSealService, 'updateStoreInstanceSeal');
+    spyOn(storeInstanceSealService, 'createStoreInstanceSeal');
   }));
 
   describe('storeInstanceSealService API calls', function(){
@@ -34,6 +35,15 @@ describe('Service: storeInstanceAssignSealsFactory', function () {
       var mockPayload = {foo: 'barts'};
       storeInstanceAssignSealsFactory.updateStoreInstanceSeal(mockSealId, mockStoreInstanceId, mockPayload);
       expect(storeInstanceSealService.updateStoreInstanceSeal).toHaveBeenCalledWith(mockSealId, mockStoreInstanceId, mockPayload);
+    });
+    it('should call createStoreInstanceSeal', function(){
+      var mockStoreInstanceId = 66;
+      var mockPayload = {
+        type: 4,
+        sealNumbers: ['123']
+      };
+      storeInstanceAssignSealsFactory.createStoreInstanceSeal(mockStoreInstanceId, mockPayload);
+      expect(storeInstanceSealService.createStoreInstanceSeal).toHaveBeenCalledWith(mockStoreInstanceId, mockPayload);
     });
   });
 

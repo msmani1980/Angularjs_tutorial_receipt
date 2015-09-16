@@ -9,8 +9,8 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
-                                                   storeInstanceReplenishWizardConfig, storeInstanceFactory,
-                                                   $location, storeInstanceReviewFactory, $q, ngToast, $filter) {
+                                                   storeInstanceFactory, $location, storeInstanceReviewFactory,
+                                                   $q, ngToast, $filter) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -164,6 +164,11 @@ angular.module('ts5App')
       }
       displayLoadingModal();
       return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(resolveSetStoreInstanceStatus);
+    }
+
+    function storeInstanceStatusDispatched(){
+      showMessage('Now what? Redirect user where?', 'info');
+      // TODO redirect user somewhere?
     }
 
     function isReadyForDispatch(){
