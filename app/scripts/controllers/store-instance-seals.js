@@ -9,12 +9,11 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q,storeInstanceDispatchWizardConfig,
-    storeInstanceFactory, sealTypesService, sealColorsService) {
+    storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location) {
 
     // TODO:
-    // Validate the Seals and make sure that the required seals have atleast one seal
-    // Allow a user to submit the form and save the Seals
-    // For each seal type, the app must make a call and resolve each seal type in a $q
+    // Create storeInstance Seals factory and extend seals service
+    // For each seal type, the app must make an API call and resolve each seal type in a $q
     // On submission mark status as Ready to Be Dispatched
     // Allow a user to Save & Exit
     // Allow a user to press Next, which submits the form
@@ -22,6 +21,8 @@ angular.module('ts5App')
     // Allow a user to edit existing seals in each seal type
 
     var $this = this;
+
+    $scope.formData = [];
 
     this.setSealColors = function(dataFromAPI) {
       $scope.sealColorsList = dataFromAPI.response;
@@ -59,46 +60,31 @@ angular.module('ts5App')
       ];
     };
 
-    this.getSealTypesDependencies = function(){
-      var promises = this.makePromises();
-      $q.all(promises).then($this.generateSealTypesList);
-    };
-
-    this.generateSealTypeObject = function(sealType,sealColor){
-      return {
-        type: sealType.id,
-        name: sealType.name,
-        color: sealColor,
-        seals: {
-            numbers:[]
-        },
-        actions: $this.addSealTypeActions(sealType)
-      };
-    };
-
     this.createHandoverActions = function() {
+      // TODO: Naming conventions need to be set on BE to make this work correctly
       return [
         {
           label: 'Copy From Outbound',
           trigger: function() {
-            return $scope.copySeals('Outbound','Handover');
+            return $scope.copySeals('OB','HO');
           }
         }
       ];
     };
 
     this.createInboundActions = function() {
+      // TODO: Naming conventions need to be set on BE to make this work correctly
       return [
         {
           label: 'Copy From Handover',
           trigger: function() {
-            return $scope.copySeals('Handover','Inbound');
+            return $scope.copySeals('HO','IB');
           }
         },
         {
           label: 'Copy From Outbound',
           trigger: function() {
-            return $scope.copySeals('Outbound','Inbound');
+            return $scope.copySeals('OB','IB');
           }
         }
       ];
@@ -106,16 +92,45 @@ angular.module('ts5App')
 
     this.addSealTypeActions = function(sealTypeObject) {
       // TODO: Naming conventions need to be set on BE to make this work correctly
-      if(sealTypeObject.name === 'Handover') {
+      if(sealTypeObject.name === 'HO') {
         return $this.createHandoverActions();
       }
-      if(sealTypeObject.name === 'Inbound') {
+      if(sealTypeObject.name === 'IB') {
         return this.createInboundActions();
       }
     };
 
+    this.isSealTypeRequired = function(sealTypeObject) {
+      if(sealTypeObject.name === 'OB' || sealTypeObject.name === 'IB') {
+        return true;
+      }
+      return false;
+    };
+
     this.getSealColor = function(typeId) {
       return $scope.sealColorsList.filter(function(sealColor) { return sealColor.type === typeId; })[0];
+    };
+
+    this.generateSealTypeObject = function(sealType,sealColor){
+      console.log(sealColor);
+      return {
+        type: sealType.id,
+        name: sealType.name,
+        color: sealColor.color,
+        seals: {
+            numbers:[]
+        },
+        actions: $this.addSealTypeActions(sealType),
+        required: $this.isSealTypeRequired(sealType)
+      };
+    };
+
+    this.displayLoadingModal = function (loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
     };
 
     this.generateSealTypesList = function() {
@@ -125,6 +140,82 @@ angular.module('ts5App')
         var sealTypeObject = $this.generateSealTypeObject(sealType,sealColor);
         $scope.sealTypesList.push(sealTypeObject);
       });
+      $this.hideLoadingModal();
+    };
+
+    this.getSealTypesDependencies = function(){
+      this.displayLoadingModal('Loading the Store Instance');
+      var promises = this.makePromises();
+      $q.all(promises).then($this.generateSealTypesList);
+    };
+
+    this.showMessage = function (type, message) {
+      ngToast.create({
+        className: type,
+        dismissButton: true,
+        content: message
+      });
+    };
+
+    this.resetErrors = function() {
+      $scope.formErrors = [];
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+      $scope.response500 = false;
+    };
+
+    this.validateForm = function() {
+      this.resetErrors();
+      for(var key in $scope.sealTypesList) {
+        var sealTypeObject = $scope.sealTypesList[key];
+        $scope.validateSeals(sealTypeObject);
+      }
+      $scope.displayError = $scope.assignSealsForm.$invalid;
+      return $scope.assignSealsForm.$valid;
+    };
+
+    this.exitOnSave = function(){
+      $this.hideLoadingModal();
+      $this.showMessage('success','Seals Assigned');
+      // TODO: Set this to actual URL when dashboard becomes available
+      $location.url('/store-instance-list');
+    };
+
+    this.assignSeals = function() {
+      this.displayLoadingModal('Assigning seals to Store Instance');
+      var payload = this.formatPayload();
+      if(!payload) {
+        return false;
+      }
+      this.assignSealsSuccessHandler();
+      // TODO: Add correct factory API calls
+      /*storeInstanceFactory.createStoreInstance(payload).then(
+        ( saveAndExit ? this.exitOnSave : this.assignSealsSuccessHandler ),
+        this.assignSealsErrorHandler
+      );*/
+    };
+
+    this.assignSealsSuccessHandler = function(){
+      $this.hideLoadingModal();
+      $this.showMessage('success','Seals Assigned!');
+      $location.url('/store-instance-review/'+$routeParams.storeId);
+    };
+
+    this.assignSealsErrorHandler = function(response){
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      if(response.data) {
+        $scope.formErrors = response.data;
+        return false;
+      }
+      $scope.response500 = true;
+      return false;
+    };
+
+    this.formatPayload = function(){
+      // TODO: Loop through each seal type and make payload
+      var payload = angular.copy($scope.formData);
+      return payload;
     };
 
     this.init = function() {
@@ -134,12 +225,46 @@ angular.module('ts5App')
       }
     };
 
+    this.getSealTypeObjectByName = function(name) {
+      return $scope.sealTypesList.filter(function(sealTypeObject) { return sealTypeObject.name === name; })[0];
+    };
+
     this.init();
 
     $scope.copySeals = function(copyFrom,copyTo) {
        var sealTypeFrom = $scope.sealTypesList.filter(function(sealType) { return sealType.name === copyFrom; })[0];
        var sealTypeTo = $scope.sealTypesList.filter(function(sealType) { return sealType.name === copyTo; })[0];
        sealTypeTo.seals.numbers = angular.copy(sealTypeFrom.seals.numbers);
+    };
+
+    $scope.submitForm = function(saveAndExit) {
+      $scope.assignSealsForm.$setSubmitted(true);
+      if($this.validateForm()) {
+        $this.assignSeals(saveAndExit);
+      }
+      return false;
+    };
+
+    $scope.nextTrigger = function(){
+      $scope.submitForm();
+      return true;
+    };
+
+    $scope.validateSeals = function(sealTypeObject) {
+      var model = $scope.assignSealsForm[sealTypeObject.name];
+      if(angular.isUndefined(model) || model.$pristine && !$scope.assignSealsForm.$submitted) {
+        return '';
+      }
+      if(sealTypeObject.required && sealTypeObject.seals.numbers.length === 0) {
+        model.$setValidity('required', false);
+        return 'has-error';
+      }
+      model.$setValidity('required', true);
+      return 'has-success';
+    };
+
+    $scope.saveAndExit = function() {
+      return $scope.submitForm(true);
     };
 
   });

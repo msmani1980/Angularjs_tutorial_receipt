@@ -17,15 +17,19 @@
   <div class="row">
 
     <div class="col-xs-12">
-      <label for="seal-numbers-outbound">Seal Numbers*:</label>
-      <ui-select multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" title="Add Seals...">
-        <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
-          <ui-select-choices repeat="number in sealTypeObject.seals.numbers | filter:$select.search">
-            <small>
-              Seal: <span ng-bind-html="''+number | highlight: $select.search"></span>
-            </small>
-          </ui-select-choices>
-      </ui-select>
+      <label for="seal-numbers-outbound">
+        Seal Numbers <span ng-show="sealTypeObject.required">*</span>:
+      </label>
+      <div class="form-group" ng-class="$parent.validateSeals(sealTypeObject)">
+        <ui-select name="{{sealTypeObject.name}}" multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" title="Add Seals...">
+          <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
+            <ui-select-choices repeat="number in sealTypeObject.seals.numbers | filter:$select.search">
+              <small>
+                Seal: <span ng-bind-html="''+number | highlight: $select.search"></span>
+              </small>
+            </ui-select-choices>
+        </ui-select>
+      </div>
     </div>
 
   </div>
