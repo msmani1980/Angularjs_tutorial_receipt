@@ -1,6 +1,8 @@
 'use strict';
 
-describe('the Store Instance Seals controller', function() {
+
+ 
+fdescribe('the Store Instance Seals controller', function() {
 
   beforeEach(module(
     'ts5App',
@@ -26,7 +28,7 @@ describe('the Store Instance Seals controller', function() {
   var sealColorsJSON;
   var getSealColorsDeferred;
 
-  beforeEach(inject(function($injector, $rootScope, $controller, $q, _servedSealTypes_, _servedSealColors_) {
+  beforeEach(inject(function($injector, $rootScope, $controller, $q, ngToast, _servedSealTypes_, _servedSealColors_) {
 
     sealTypesJSON = _servedSealTypes_;
     sealColorsJSON = _servedSealColors_;
@@ -160,7 +162,8 @@ describe('the Store Instance Seals controller', function() {
 
         spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
-
+        spyOn(StoreInstanceSealsCtrl, 'createHandoverActions').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'createInboundActions').and.callThrough();
         $scope.$digest();
       });
 
@@ -180,11 +183,82 @@ describe('the Store Instance Seals controller', function() {
         expect($scope.sealTypesList[0].color).toBeDefined();
       });
 
+      it('should defined sealTypesList.actions', function() {
+        expect($scope.sealTypesList[1].actions).toBeDefined();
+      });
+
+      it('should defined sealTypesList.required', function() {
+        expect($scope.sealTypesList[1].required).toBeDefined();
+      });
+
       it('should call the addSealTypeActions function', function() {
         expect(StoreInstanceSealsCtrl.addSealTypeActions).toHaveBeenCalled();
       });
 
+      it('should create the actions for the Handover seal', function() {
+        var mockActions = [{
+          label: 'Copy From Outbound',
+          trigger: function() {
+            return $scope.copySeals('OB', 'HO');
+          }
+        }];
+        var createdAction = StoreInstanceSealsCtrl.createHandoverActions();
+        expect(createdAction.label).toEqual(mockActions.label);
+        expect(createdAction.trigger).toEqual(mockActions.trigger);
+      });
+
+      it('should create the actions for the Inbound seal', function() {
+        var mockActions = [{
+          label: 'Copy From Handover',
+          trigger: function() {
+            return $scope.copySeals('HO', 'IB');
+          }
+        }, {
+          label: 'Copy From Outbound',
+          trigger: function() {
+            return $scope.copySeals('OB', 'IB');
+          }
+        }];
+        var createdAction = StoreInstanceSealsCtrl.createInboundActions();
+        expect(createdAction.label).toEqual(mockActions.label);
+        expect(createdAction.trigger).toEqual(mockActions.trigger);
+      });
+
     });
+
+    describe('the resetErrors method', function() {
+
+      beforeEach(function() {
+        $scope.formErrors = ['error'];
+        $scope.errorCustom = ['error'];
+        $scope.displayError = true;
+        $scope.response500 = true;
+        spyOn(StoreInstanceSealsCtrl, 'resetErrors').and.callThrough();
+        StoreInstanceSealsCtrl.resetErrors();
+      });
+
+      it('should have been called', function() {
+        expect(StoreInstanceSealsCtrl.resetErrors).toHaveBeenCalled();
+      });
+
+      it('should clear formErrors', function() {
+        expect($scope.formErrors.length).toBe(0);
+      });
+
+      it('should clear errorCustom', function() {
+        expect($scope.errorCustom.length).toBe(0);
+      });
+
+      it('should set displayError to false', function() {
+        expect($scope.displayError).toBeFalsy();
+      });
+
+      it('should set response500 to false', function() {
+        expect($scope.response500).toBeFalsy();
+      });
+
+    });
+
 
   });
 
