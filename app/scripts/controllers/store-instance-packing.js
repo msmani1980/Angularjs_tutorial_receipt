@@ -97,10 +97,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
-        if (item.menuQuantity) {
+        if (angular.isDefined(item.menuQuantity)) {
           delete item.id;
         }
-        if (item.quantity !== undefined || item.quantity !== null) {
+        if (angular.isDefined(item.quantity)) {
           item.quantity = item.quantity.toString();
         }
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
@@ -142,7 +142,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     function updateStoreDetails(response, stepObject) {
       $scope.storeDetails.currentStatus = lodash.findWhere($scope.storeDetails.statusList, {id: response.statusId});
-      console.log(stepObject.URL);
       $location.path(stepObject.URL);
     }
 
@@ -214,7 +213,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
         newPayload.response.push(itemPayload);
       });
-      console.log(newPayload);
       return newPayload;
     };
 
