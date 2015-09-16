@@ -11,7 +11,7 @@ describe('the Store Instance Seals controller', function() {
   ));
 
   var StoreInstanceSealsCtrl;
-  var $scope; 
+  var $scope;
   var templateCache;
   var compile;
   var storeDetailsJSON;
@@ -71,6 +71,12 @@ describe('the Store Instance Seals controller', function() {
     var view = angular.element(compiled[0]);
     $scope.$digest();
     return view;
+  }
+
+  function mockFormSubmission(form, saveAndExit) {
+    form.triggerHandler('submit');
+    $scope.submitForm((saveAndExit ? saveAndExit : false));
+    $scope.$digest();
   }
 
   describe('when controller executes', function() {
@@ -278,6 +284,53 @@ describe('the Store Instance Seals controller', function() {
         $scope.saveAndExit();
         expect($scope.submitForm).toHaveBeenCalledWith(true);
       });
+
+    });
+
+    describe('The validateForm method', function() {
+
+      var view;
+      var form;
+
+      beforeEach(function() {
+        storeDetailsJSON = {
+          LMPStation: 'ORD',
+          storeNumber: '180485',
+          scheduleDate: '2015-08-13',
+          scheduleNumber: 'SCHED123',
+          storeInstanceNumber: $scope.storeId
+        };
+
+        getSealColorsDeferred.resolve(sealColorsJSON);
+        getSealTypesDeferred.resolve(sealTypesJSON);
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+
+        spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'createHandoverActions').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'createInboundActions').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'validateForm').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'resetErrors').and.callThrough();
+        spyOn($scope, 'validateSeals').and.callThrough();
+
+        $scope.$digest();
+        view = renderView();
+        form = angular.element(view.find('form')[0]);
+        mockFormSubmission(form);
+      });
+
+      it('should have called the validateForm method', function() {
+        expect(StoreInstanceSealsCtrl.validateForm).toHaveBeenCalled();
+      });
+
+      it('should have called the resetErrors method', function() {
+        expect(StoreInstanceSealsCtrl.resetErrors).toHaveBeenCalled();
+      });
+
+      it('should have called validateSeals with sealTypesList', function() {
+        expect($scope.validateSeals).toHaveBeenCalledWith($scope.sealTypesList[0]);
+      });
+
 
     });
 
