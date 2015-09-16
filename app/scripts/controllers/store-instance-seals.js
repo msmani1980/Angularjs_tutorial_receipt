@@ -194,16 +194,8 @@ angular.module('ts5App')
       return promises;
     };
 
-    this.assignSeals = function() {
-      this.displayLoadingModal('Assigning seals to Store Instance');
-      var promises = this.makeAssignSealsPromises();
-      $q.all(promises).then(function() {
-        // TODO: Update status
-        $this.assignSealsSuccessHandler();
-      });
-    };
-
     this.assignSealsSuccessHandler = function() {
+      // TODO: Update status of Store Instance
       $this.hideLoadingModal();
       $this.showMessage('success', 'Seals Assigned!');
       $location.url('/store-instance-review/' + $routeParams.storeId);
@@ -220,6 +212,15 @@ angular.module('ts5App')
       return false;
     };
 
+    this.assignSeals = function() {
+      this.displayLoadingModal('Assigning seals to Store Instance');
+      var promises = this.makeAssignSealsPromises();
+      $q.all(promises).then(
+        $this.assignSealsSuccessHandler,
+        $this.assignSealsErrorHandler
+      );
+    };
+
     this.init = function() {
       this.getSealTypesDependencies();
       this.setWizardSteps();
@@ -234,12 +235,8 @@ angular.module('ts5App')
     this.init();
 
     $scope.copySeals = function(copyFrom, copyTo) {
-      var sealTypeFrom = $scope.sealTypesList.filter(function(sealType) {
-        return sealType.name === copyFrom;
-      })[0];
-      var sealTypeTo = $scope.sealTypesList.filter(function(sealType) {
-        return sealType.name === copyTo;
-      })[0];
+      var sealTypeFrom = $this.getSealTypeObjectByName(copyFrom);
+      var sealTypeTo = $this.getSealTypeObjectByName(copyTo);
       sealTypeTo.seals.numbers = angular.copy(sealTypeFrom.seals.numbers);
     };
 
