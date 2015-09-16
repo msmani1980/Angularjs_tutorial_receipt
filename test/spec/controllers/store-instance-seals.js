@@ -143,6 +143,49 @@ describe('the Store Instance Seals controller', function() {
 
     });
 
+    fdescribe('the getSealTypesDependencies method', function() {
+
+      beforeEach(function() {
+        storeDetailsJSON = {
+          LMPStation: 'ORD',
+          storeNumber: '180485',
+          scheduleDate: '2015-08-13',
+          scheduleNumber: 'SCHED123',
+          storeInstanceNumber: $scope.storeId
+        };
+
+        getSealColorsDeferred.resolve(sealColorsJSON);
+        getSealTypesDeferred.resolve(sealTypesJSON);
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+
+        spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
+
+        $scope.$digest();
+      });
+
+      it('should get the seal types', function() {
+        expect(StoreInstanceSealsCtrl.generateSealTypeObject).toHaveBeenCalled();
+      });
+
+      it('should set sealTypesList type to 1', function() {
+        expect($scope.sealTypesList[0].type).toBe(1);
+      });
+
+      it('should set sealTypesList name to OB', function() {
+        expect($scope.sealTypesList[0].name).toBe('OB');
+      });
+
+      it('should defined sealTypesList.color', function() {
+        expect($scope.sealTypesList[0].color).toBeDefined();
+      });
+
+      it('should call the addSealTypeActions function', function() {
+        expect(StoreInstanceSealsCtrl.addSealTypeActions).toHaveBeenCalled();
+      });
+
+    });
+
   });
 
   // sorry kelly
@@ -166,32 +209,27 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should have at least one seal-type directive in the view', function() {
-      $scope.sealTypesList = [
-        {
-          name:'Outbound',
-          code: 'OB',
-          color:'#00B200',
-          seals: {
-              numbers:[]
-          }
-        },
-        {
-          name:'Handover',
-          code: 'HO',
-          color:'#E5E500',
-          seals: {
-              numbers:[]
-          },
-          actions: [
-            {
-              label: 'Copy From Outbound',
-              trigger: function() {
-                return $scope.copySeals('Outbound','Handover');
-              }
-            }
-          ]
+      $scope.sealTypesList = [{
+        name: 'Outbound',
+        code: 'OB',
+        color: '#00B200',
+        seals: {
+          numbers: []
         }
-      ];
+      }, {
+        name: 'Handover',
+        code: 'HO',
+        color: '#E5E500',
+        seals: {
+          numbers: []
+        },
+        actions: [{
+          label: 'Copy From Outbound',
+          trigger: function() {
+            return $scope.copySeals('Outbound', 'Handover');
+          }
+        }]
+      }];
       $scope.$digest();
       expect(view.find('seal-type').length).toEqual(2);
     });
