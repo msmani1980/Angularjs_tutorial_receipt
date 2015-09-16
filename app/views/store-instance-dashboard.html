@@ -119,9 +119,13 @@
     <br>
     
     <div class="row">
-      <div class="col-xs-6 col-sm-4 col-md-3 select-all-instances">
+      <div class="col-xs-12 select-all-instances">
         <div class="input-group">
+         <!-- TODO: THESE BUTTONS ARE HIDDEN UNTIL SELECT ALL CHECKBOX IS SELECTED -->
+         <!-- TODO: EACH BUTTON FUNCTION WILL CORRESPOND TO CERTAIN STATUS -->
           <button class="btn btn-info" tabindex="0">Generate Docs</button>
+          <button class="btn btn-info" tabindex="0">Dispatch All</button>
+          <button class="btn btn-info" tabindex="0">Receive All</button>
         </div>
       </div>
     </div>
@@ -137,6 +141,7 @@
         <th>Dispatch LMP Station</th>
         <th>Inbound LMP Station</th>
         <th>Store Number</th>
+        <th>Updated Date/Time</th>
         <th>Schedule Date</th>
         <th>Departure Station</th>
         <th>Departure Time</th>
@@ -145,6 +150,7 @@
         <th>Inbound Seals Tampered</th>
         <th>Store Instance</th>
         <th>Status</th>
+        <th>Updated User</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -155,14 +161,16 @@
         <td>LGW</td>
         <td>LTN</td>
         <td>7321</td>
+        <td>08/07/15 10:00</td>
         <td>08/07/15</td>
         <td>LGW</td>
         <td>10:00</td>
         <td>ORD</td>
-        <td>18:00</td>        
+        <td>18:00</td>
         <td>No</td>
         <td>1121355</td>
         <td>Inbounded</td>
+        <td>rabraham</td>
         <td></td>
       </tr>
       <tr>
@@ -171,6 +179,7 @@
         <td>LTN</td>
         <td>LGW</td>
         <td>7321</td>
+        <td>08/07/15 10:00</td>
         <td>08/07/15</td>
         <td>LTN</td>
         <td>22:00</td>
@@ -179,6 +188,7 @@
         <td>No</td>
         <td>1121356</td>
         <td>Ready for Packing</td>
+        <td>tgunderson</td>
         <td>
           <button class="btn btn-primary btn-xs" tabindex="0">Start Packing</button>
         </td>
@@ -189,6 +199,7 @@
         <td>STN</td>
         <td>ORD</td>
         <td>7453</td>
+        <td>08/07/15 10:00</td>
         <td>08/07/15</td>
         <td>STN</td>
         <td>10:00</td>
@@ -197,6 +208,7 @@
         <td>Yes</td>
         <td>1121357</td>
         <td>Ready for Seals</td>
+        <td>tgunderson</td>
         <td>
           <button class="btn btn-orange btn-xs" tabindex="0">Start Sealing</button>
         </td>
@@ -206,10 +218,14 @@
           <span class="fa fa-plus-square-o" ng-show="!isOpen(item) && hasSubVersions(item)" ng-click="toggleVersionVisibility(item)"></span>
           <span class="fa fa-minus-square" ng-show="isOpen(item)" ng-click="toggleVersionVisibility(item)"></span>
         </td>
-        <td></td>
+        <td>
+          <!-- TODO: CHECKBOX OPTIONS ONLY ON "READY FOR DISPATCH", "DISPATCHED", & "ON FLOOR" -->
+          <input type="checkbox">
+        </td>
         <td>BSL</td>
         <td></td>
         <td>7455</td>
+        <td>08/07/15 10:00</td>
         <td>08/07/15</td>
         <td>BSL</td>
         <td>10:00</td>
@@ -218,6 +234,7 @@
         <td>No</td>    
         <td>1121398</td>
         <td>Ready for Dispatch</td>
+        <td>tgunderson</td>
         <td>
           <button class="btn btn-success btn-xs" tabindex="0">Dispatch</button>
         </td>
@@ -228,11 +245,13 @@
           <span class="fa fa-minus-square" ng-show="isOpen(item)" ng-click="toggleVersionVisibility(item)"></span>
         </td>
         <td>
+          <!-- TODO: CHECKBOX OPTIONS ONLY ON "READY FOR DISPATCH", "DISPATCHED", & "ON FLOOR" -->
           <input type="checkbox">
         </td>
         <td>LHR</td>
         <td>GVA</td>
         <td>7555</td>
+        <td>08/07/15 10:00</td>
         <td>08/07/15</td>
         <td>LHR</td>
         <td>10:00</td>
@@ -241,6 +260,7 @@
         <td>Yes</td>
         <td>1132456</td>
         <td>Dispatched</td>
+        <td>tgunderson</td>
         <td>
           <button class="btn btn-info btn-xs" tabindex="0">Generate Doc</button>
           <button class="btn btn-pink btn-xs" tabindex="0">Replenish</button>
@@ -254,11 +274,13 @@
       <tr class="master-row">
         <td></td>
         <td>
+          <!-- TODO: CHECKBOX OPTIONS ONLY ON "READY FOR DISPATCH", "DISPATCHED", & "ON FLOOR" -->
           <input type="checkbox">
         </td>
         <td>STN</td>
         <td></td>
         <td></td>
+        <td>08/07/15 10:00</td>
         <td>08/07/15</td>
         <td>STN</td>
         <td>12:00</td>
@@ -267,6 +289,7 @@
         <td></td>
         <td></td>
         <td>Dispatched</td>
+        <td>tgunderson</td>
         <td>
           <button class="btn btn-info btn-xs" tabindex="0">Generate Doc</button>
         </td>
@@ -277,6 +300,7 @@
         <td>LGW</td>
         <td></td>
         <td></td>
+        <td>08/07/15 10:00</td>
         <td>08/07/15</td>
         <td>LGW</td>
         <td>11:00</td>
@@ -285,6 +309,7 @@
         <td></td>
         <td></td>
         <td>Ready for Packing</td>
+        <td>tgunderson</td>
         <td>
           <button class="btn btn-primary btn-xs" tabindex="0">Start Packing</button>
         </td>
@@ -292,10 +317,14 @@
       
       <tr>
         <td></td>
-        <td></td>
+        <td>
+          <!-- TODO: CHECKBOX OPTIONS ONLY ON "READY FOR DISPATCH", "DISPATCHED", & "ON FLOOR" -->
+          <input type="checkbox">
+        </td>
         <td>LPL</td>
         <td>LPL</td>
         <td>7278</td>
+        <td>08/07/15 10:00</td>
         <td>08/07/15</td>
         <td>LPL</td>
         <td>10:00</td>
@@ -304,6 +333,7 @@
         <td>No</td>
         <td>1141235</td>
         <td>On Floor</td>
+        <td>tgunderson</td>
         <td>
           <button class="btn btn-success btn-xs" tabindex="0">Dispatch</button>
           <button class="btn btn-danger btn-xs" tabindex="0">End Instance</button>
@@ -317,6 +347,7 @@
         <td>LPL</td>
         <td></td>
         <td>7279</td>
+        <td>08/07/15 10:00</td>
         <td>08/07/15</td>
         <td>LPL</td>
         <td>10:00</td>
@@ -325,6 +356,7 @@
         <td>No</td>
         <td>1165432</td>
         <td>Dispatched</td>
+        <td>tgunderson</td>
         <td>
           <button class="btn btn-info btn-xs" tabindex="0">Generate Doc</button>
           <button class="btn btn-pink btn-xs" tabindex="0">Replenish</button>
