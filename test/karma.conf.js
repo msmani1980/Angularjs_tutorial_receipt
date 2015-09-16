@@ -56,7 +56,7 @@ module.exports = function(config) {
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-cookies/angular-cookies.js',
       'bower_components/angular-dragdrop/draganddrop.js',
-      'bower_components/angular-filter/dist/angular-filter.js',
+      'bower_components/angular-filter/dist/angular-filter.min.js',
       'bower_components/angular-messages/angular-messages.js',
       'bower_components/moment/moment.js',
       'bower_components/angular-moment/angular-moment.js',
@@ -101,12 +101,12 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: [
-      'Chrome'
+      'Firefox'
     ],
 
     // Which plugins to enable
     plugins: [
-      'karma-chrome-launcher',
+      'karma-firefox-launcher',
       'karma-jasmine',
       'karma-ng-html2js-preprocessor',
       'karma-ng-json2js-preprocessor',

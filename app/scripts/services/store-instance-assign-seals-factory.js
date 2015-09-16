@@ -26,11 +26,16 @@ angular.module('ts5App')
       return storeInstanceSealService.updateStoreInstanceSeal(sealId, storeInstanceId, payload);
     }
 
+    function createStoreInstanceSeal(storeInstanceId, payload){
+      return storeInstanceSealService.createStoreInstanceSeal(storeInstanceId, payload);
+    }
+
     return {
       getStoreInstanceSeals: getStoreInstanceSeals,
       getSealColors: getSealColors,
       getSealTypes: getSealTypes,
-      updateStoreInstanceSeal: updateStoreInstanceSeal
+      updateStoreInstanceSeal: updateStoreInstanceSeal,
+      createStoreInstanceSeal: createStoreInstanceSeal
     };
 
   });

@@ -17,15 +17,19 @@
   <div class="row">
 
     <div class="col-xs-12">
-      <label for="seal-numbers-outbound">Seal Numbers*:</label>
-      <ui-select multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" title="Add Seals...">
-        <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
-          <ui-select-choices repeat="number in sealTypeObject.seals.numbers | filter:$select.search">
-            <small>
-              Seal: <span ng-bind-html="''+number | highlight: $select.search"></span>
-            </small>
-          </ui-select-choices>
-      </ui-select>
+      <label for="seal-numbers-outbound">
+        Seal Numbers <span ng-show="sealTypeObject.required">*</span>:
+      </label>
+      <div class="form-group" ng-class="$parent.validateSeals(sealTypeObject)">
+        <ui-select name="{{sealTypeObject.name}}" multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" title="Add Seals...">
+          <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
+            <ui-select-choices repeat="number in sealTypeObject.seals.numbers | filter:$select.search">
+              <small>
+                Seal: <span ng-bind-html="''+number | highlight: $select.search"></span>
+              </small>
+            </ui-select-choices>
+        </ui-select>
+      </div>
     </div>
 
   </div>
@@ -35,23 +39,23 @@
   <button class="btn btn-primary" type="button" ng-show="showClearButton()" ng-click="clearSeals()">Clear</button>
 
   <div class="row" ng-show="isSequentialPossible()">
-
-    <div class="col-xs-3 col-sm-2 col-md-1">
-      <label class="checkbox-custom checkbox-inline pull-left">
-        <input type="checkbox" ng-model="showSequential" value="1">
-        <span class="checkbox-label">Sequential</span>
-      </label>
+    <div class="col-xs-12 col-sm-6">
+      <div class="row">
+        <div class="col-sm-4 col-md-2">
+          <label class="checkbox-inline">
+            <input type="checkbox" ng-model="showSequential" value="1">
+            <span class="checkbox-label">Sequential</span>
+          </label>
+        </div>
+        <div class="col-sm-8 col-md-6 col-md-offset-1">
+          <div class="input-group" ng-show="showSequential">
+            <input type="number" class="form-control" ng-model="numberOfSeals" placeholder="0">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="button" ng-click="addSealsSequentially()" ng-disabled="isAddButtonDisabled()"><span class="fa fa-plus"></span> Add</button>
+            </span>
+          </div>
+        </div>
     </div>
-
-    <div class="col-xs-6 col-sm-3 col-md-2" ng-show="showSequential">
-      <div class="input-group">
-        <input type="number" min="1" max="100" class="form-control" ng-model="numberOfSeals" width="20">
-        <span class="input-group-btn">
-          <button class="btn btn-primary" type="button" ng-click="addSealsSequentially()"><span class="fa fa-plus"></span> Add</button>
-        </span>
-      </div>
-    </div>
-
   </div>
 
 </div>

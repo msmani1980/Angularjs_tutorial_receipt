@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('storeInstanceSealService', function ($resource, ENV) {
 
-    var requestURL = ENV.apiUrl + '/api/store-instances/:id/seals/:storeInstanceId';
+    var requestURL = ENV.apiUrl + '/api/store-instances/:storeInstanceId/seals/:id';
 
     var requestParameters = {
       id: '@id',
@@ -23,13 +23,21 @@ angular.module('ts5App')
       },
       updateStoreInstanceSeal: {
         method: 'PUT'
+      },
+      createStoreInstanceSeal: {
+        method: 'POST',
+        isArray: true
       }
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
 
-    function getStoreInstanceSeals(sealId) {
-      return requestResource.getStoreInstanceSeals({id: sealId}).$promise;
+    function getStoreInstanceSeals(storeInstanceId,sealId) {
+      return requestResource.getStoreInstanceSeals({storeInstanceId: storeInstanceId, id: sealId}).$promise;
+    }
+
+    function createStoreInstanceSeal(storeInstanceId, payload) {
+      return requestResource.createStoreInstanceSeal({storeInstanceId: storeInstanceId}, payload).$promise;
     }
 
     function updateStoreInstanceSeal(sealId, storeInstanceId, payload) {
@@ -38,6 +46,7 @@ angular.module('ts5App')
 
     return {
       getStoreInstanceSeals: getStoreInstanceSeals,
-      updateStoreInstanceSeal: updateStoreInstanceSeal
+      updateStoreInstanceSeal: updateStoreInstanceSeal,
+      createStoreInstanceSeal: createStoreInstanceSeal
     };
   });

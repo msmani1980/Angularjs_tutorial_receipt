@@ -1,0 +1,32 @@
+[
+  {
+    "id": 96,
+    "companyId": 403,
+    "storeInstanceId": 72,
+    "type": 1,
+    "color": "#000000",
+    "sealNumbers": [
+      "4567"
+    ],
+    "createdBy": 1,
+    "createdOn": "2015-09-16 20:18:11.237324",
+    "updatedBy": null,
+    "updatedOn": null,
+    "tampered": false
+  },
+  {
+    "id": 97,
+    "companyId": 403,
+    "storeInstanceId": 72,
+    "type": 1,
+    "color": "#000000",
+    "sealNumbers": [
+      "6789"
+    ],
+    "createdBy": 1,
+    "createdOn": "2015-09-16 20:18:11.6746",
+    "updatedBy": null,
+    "updatedOn": null,
+    "tampered": false
+  }
+]

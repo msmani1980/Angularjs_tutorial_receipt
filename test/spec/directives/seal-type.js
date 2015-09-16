@@ -23,7 +23,7 @@ describe('the Seal Type directive', function() {
         }
       },
       {
-        name:'Handover',
+        name:'Handover', 
         code: 'HO',
         color:'#E5E500',
         seals: {
