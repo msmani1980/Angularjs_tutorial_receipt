@@ -163,6 +163,11 @@ angular.module('ts5App')
       return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(resolveSetStoreInstanceStatus);
     }
 
+    function storeInstanceStatusDispatched(){
+      showMessage('Now what? Redirect user where?', 'info');
+      // TODO redirect user somewhere?
+    }
+
     function resolveGetStoreDetails(dataFromAPI) {
       $scope.storeDetails = dataFromAPI;
       if($scope.storeDetails.currentStatus.statusName !== STATUS_READY_FOR_DISPATCH){
@@ -189,11 +194,6 @@ angular.module('ts5App')
       }
       $q.all([promise]).then(storeInstanceStatusDispatched, showResponseErrors);
     };
-
-    function storeInstanceStatusDispatched(){
-      showMessage('Now what? Redirect user where?', 'info');
-      // TODO redirect user somewhere?
-    }
 
     function init() {
       _initPromises = [];

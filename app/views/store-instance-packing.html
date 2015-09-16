@@ -48,7 +48,7 @@
                    disabled/>
           </td>
           <td>
-            <input type="text" id="templateQuantity-{{$index}}" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" placeholder="0" ng-disabled="readOnly" maxlength="5">
+            <input type="text" id="templateQuantity-{{$index}}" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" ng-disabled="readOnly" maxlength="5">
           </td>
           <td>
             <button type="button" ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
@@ -72,7 +72,7 @@
           <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
         </td>
         <td>
-          <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" placeholder="{{$index}}" maxlength="5">
+          <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" maxlength="5">
         </td>
           <td ng-init="item.index = $index">
             <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
