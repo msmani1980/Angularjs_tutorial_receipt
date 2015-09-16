@@ -33,6 +33,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     }
 
+    function showErrors(dataFromAPI) {
+      showToast('warning', 'Store Instance Packing', 'error saving items!');
+
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+    }
+
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     }
@@ -98,7 +107,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     this.getStoreInstanceItems = function () {
-      storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler);
+      storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler, showErrors);
     };
 
     this.getStoreInstanceMenuItems = function () {
@@ -106,7 +115,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemTypeId: 1,
         date: $scope.storeDetails.scheduleDate
       };
-      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler);
+      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler, showErrors);
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
@@ -125,7 +134,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         startDate: $scope.storeDetails.scheduleDate,
         endDate: $scope.storeDetails.scheduleDate
       };
-      storeInstanceFactory.getItemsMasterList(filterPayload).then(getMasterItemsListSuccess);
+      storeInstanceFactory.getItemsMasterList(filterPayload).then(getMasterItemsListSuccess, showErrors);
     }
 
     function updateStoreDetails(response, stepObject) {
@@ -142,7 +151,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var statusId = statusObject.id;
       storeInstanceFactory.updateStoreInstanceStatus($scope.storeId, statusId).then(function(response){
         updateStoreDetails(response, stepObject);
-      });
+      }, showErrors);
     }
 
     function getStoreDetailsSuccessHandler(storeDetailsJSON) {
@@ -159,36 +168,66 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       getMasterItemsList();
     }
 
-    this.addItemToPayload = function (item, payload) {
-      var itemPayload = {
-        itemMasterId: item.itemMasterId || item.masterItem.id,
-        quantity: parseInt(item.quantity) || 0
-      };
-      if (item.id) {
-        itemPayload.id = item.id;
+    this.checkForDuplicate = function (item) {
+      var duplicates = lodash.filter($scope.emptyMenuItems, function (filteredItem) {
+        return (item.masterItem && filteredItem.masterItem && filteredItem.masterItem.id === item.masterItem.id);
+      });
+      return duplicates.length > 1;
+    };
+
+    $scope.warnForDuplicateSelection = function (selectedItem) {
+      var duplicatesExist = $this.checkForDuplicate(selectedItem);
+      if(duplicatesExist) {
+        showToast('warning', 'Add Item', 'The item ' + selectedItem.masterItem.itemName + ' has already been added');
       }
-      payload.push(itemPayload);
+    };
+
+    this.checkForDuplicatesInPayload = function () {
+      var duplicatesExist = false;
+      angular.forEach($scope.emptyMenuItems, function (item) {
+        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item);
+      });
+      return duplicatesExist;
+    };
+
+    this.checkForEmptyItemsInPayload = function () {
+      var emptyItemsExist = false;
+      angular.forEach($scope.emptyMenuItems, function (item) {
+        emptyItemsExist = emptyItemsExist || (!item.itemMasterId && !item.masterItem);
+      });
+      return emptyItemsExist;
+    };
+
+    this.createPayload = function () {
+      var newPayload = {response: []};
+      var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
+      angular.forEach(mergedItems, function (item) {
+        var itemPayload = {
+          itemMasterId: item.itemMasterId || item.masterItem.id,
+          quantity: parseInt(item.quantity) || 0
+        };
+        if (item.id) {
+          itemPayload.id = item.id;
+        }
+        newPayload.response.push(itemPayload);
+      });
+      console.log(newPayload);
+      return newPayload;
     };
 
     this.formatStoreInstanceItemsPayload = function () {
-      var isPayloadValid = true;
-      var newPayload = {response: []};
-      var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
-
-      angular.forEach(mergedItems, function (item) {
-        if(!item.itemMasterId && !item.masterItem) {
-          isPayloadValid = false;
-          return;
-        }
-        $this.addItemToPayload(item, newPayload.response);
-      });
-
-      if(!isPayloadValid) {
+      var duplicatesExist = $this.checkForDuplicatesInPayload();
+      if (duplicatesExist) {
+        showToast('danger', 'Save Items', 'Duplicate Entries Exist!');
+        return false;
+      }
+      var emptyItemsExist = $this.checkForEmptyItemsInPayload();
+      if (emptyItemsExist) {
         showToast('danger', 'Save Items', 'An item must be selected for all rows');
         return false;
       }
-      return newPayload;
 
+      return $this.createPayload();
     };
 
     function initialize() {
@@ -199,7 +238,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.emptyMenuItems = [];
       storeInstanceFactory.getStoreDetails($scope.storeId).then(getStoreDetailsSuccessHandler, errorHandler);
     }
-
 
     $scope.showDeleteWarning = function (item) {
       if (item.quantity > 0) {
@@ -219,7 +257,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if (itemToDelete.isNewItem) {
         removeNewItem(itemToDelete);
       } else {
-        storeInstanceFactory.deleteStoreInstanceItem($scope.storeId, itemToDelete.id).then(initialize);
+        storeInstanceFactory.deleteStoreInstanceItem($scope.storeId, itemToDelete.id).then(initialize, showErrors);
       }
     };
 
@@ -243,6 +281,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
+      if (!$scope.storeInstancePackingForm.$valid) {
+        showToast('danger', 'Save Items', 'All template quantities must be a number');
+        return false;
+      }
       var payload = $this.formatStoreInstanceItemsPayload();
       if(!payload) {
         return;
@@ -250,11 +292,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       showLoadingModal('Saving...');
       storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeId, payload).then(function (responseData) {
         savePackingDataSuccessHandler(responseData, shouldUpdateStatus);
-      });
+      }, showErrors);
     };
 
     $scope.saveAndExit = function () {
-      $scope.savePackingDataAndUpdateStatus(false);
+      if($scope.readOnly) {
+        $location.path('#');
+      } else {
+        $scope.savePackingDataAndUpdateStatus(false);
+      }
     };
 
     $scope.goToPreviousStep = function () {
