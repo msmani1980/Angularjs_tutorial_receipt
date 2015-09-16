@@ -1,14 +1,13 @@
 'use strict';
 
-
- 
-fdescribe('the Store Instance Seals controller', function() {
+describe('the Store Instance Seals controller', function() {
 
   beforeEach(module(
     'ts5App',
     'template-module',
     'served/seal-types.json',
-    'served/seal-colors.json'
+    'served/seal-colors.json',
+    'served/store-instance-seals.json'
   ));
 
   var StoreInstanceSealsCtrl;
@@ -27,11 +26,14 @@ fdescribe('the Store Instance Seals controller', function() {
   var sealColorsService;
   var sealColorsJSON;
   var getSealColorsDeferred;
+  var storeInstanceSealsJSON;
 
-  beforeEach(inject(function($injector, $rootScope, $controller, $q, ngToast, _servedSealTypes_, _servedSealColors_) {
+  beforeEach(inject(function($injector, $rootScope, $controller, $q, ngToast, _servedSealTypes_, _servedSealColors_,
+    _servedStoreInstanceSeals_) {
 
     sealTypesJSON = _servedSealTypes_;
     sealColorsJSON = _servedSealColors_;
+    storeInstanceSealsJSON = _servedStoreInstanceSeals_;
 
     storeId = 5;
 
@@ -259,6 +261,31 @@ fdescribe('the Store Instance Seals controller', function() {
 
     });
 
+    describe('The save and exit functionality', function() {
+
+      var view;
+      var form;
+
+      beforeEach(function() {
+        spyOn($scope, 'submitForm').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'assignSeals').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'exitOnSave').and.callThrough();
+        $scope.$digest();
+        view = renderView();
+        form = angular.element(view.find('form')[0]);
+      });
+
+      it('should call the submitForm method with the saveAndExit flag set as true', function() {
+        $scope.saveAndExit();
+        expect($scope.submitForm).toHaveBeenCalledWith(true);
+      });
+
+      it('should call the createStoreInstance method and pass the saveAndExit flag ', function() {
+        $scope.saveAndExit();
+        expect(StoreInstanceSealsCtrl.assignSeals).toHaveBeenCalledWith(true);
+      });
+
+    });
 
   });
 
@@ -268,6 +295,7 @@ fdescribe('the Store Instance Seals controller', function() {
     var view;
     beforeEach(function() {
       view = renderView();
+      $scope.assignSealsForm = view.find('form')[0];
     });
 
     it('should render the view template', function() {
