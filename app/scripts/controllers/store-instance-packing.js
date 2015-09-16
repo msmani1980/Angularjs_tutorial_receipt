@@ -100,6 +100,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (item.menuQuantity) {
           delete item.id;
         }
+        if (item.quantity !== undefined || item.quantity !== null) {
+          item.quantity = item.quantity.toString();
+        }
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
 
@@ -282,7 +285,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
       if (!$scope.storeInstancePackingForm.$valid) {
-        showToast('danger', 'Save Items', 'All template quantities must be a number');
+        showToast('danger', 'Save Items', 'All Packed quantities must be a number');
         return false;
       }
       var payload = $this.formatStoreInstanceItemsPayload();
