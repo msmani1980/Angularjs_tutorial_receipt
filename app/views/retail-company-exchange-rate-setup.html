@@ -1,0 +1,80 @@
+<div class="module-container">
+  <h2 class="ng-scope">{{viewName}}</h2>
+  <form name="retailCompanyExchangeRateSetupForm">
+
+    <div class="panel panel-default">
+
+      <div class="panel-heading">
+        <div class="row">
+          <h4 class="col-xs-8">Select an Airline and Currency to Proceed</h4>
+        </div>
+      </div>
+
+      <div class="panel-body">
+
+        <div class="row">
+          <div class="form-group">
+            <label for="dispatchedDeliveryStation" class="col-sm-6 control-label">Airline Names:</label>
+            <div class="col-sm-6">
+              <select class="form-control">
+                <option>
+                  {{ station.stationCode }} ({{ station.stationName}})
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+      
+      <div class="panel-footer text-right" ng-show="showActionButtons">
+        <button class="btn btn-default">Search</button>
+      </div>
+
+    </div>
+    
+    <div class="panel panel-default">
+
+      <div class="panel-heading">
+        <div class="row">
+          <h4 class="col-xs-8">Add/Edit Currency Exchange Rate</h4>
+        </div>
+      </div>
+
+      <div class="panel-body">
+
+        <div class="row">
+          <div class="form-group">
+            <label for="dispatchedDeliveryStation" class="col-sm-6 control-label">Airline Names:</label>
+            <div class="col-sm-6">
+              <select class="form-control">
+                <option>
+                  {{ station.stationCode }} ({{ station.stationName}})
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+      
+      <div class="panel-footer text-right" ng-show="showActionButtons">
+        <button
+          class="btn btn-default save-btn"
+          data-loading-text="Saving..."
+          ng-disabled="requestInProgress"
+          ng-click="checkVarianceAndSave(false)">Save</button>
+
+        <button
+          class="btn btn-primary submit-btn"
+          data-loading-text="Submitting..."
+          ng-disabled="requestInProgress"
+          ng-click="checkVarianceAndSave(true)">Submit</button>
+      </div>
+
+    </div>
+    
+    
+  </form>
+</div>
+<dynamic-left-nav is-editing="1"></dynamic-left-nav>

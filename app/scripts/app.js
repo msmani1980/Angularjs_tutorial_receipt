@@ -198,6 +198,9 @@ angular.module('ts5App', [
   }).when('/store-instance-seals/:storeId', {
     templateUrl: 'views/store-instance-seals.html',
     controller: 'StoreInstanceSealsCtrl'
+  }).when('/retail-company-exchange-rate-setup', {
+    templateUrl: 'views/retail-company-exchange-rate-setup.html',
+    controller: 'RetailCompanyExchangeRateSetupCtrl'
   }).otherwise({
     redirectTo: '/'
   });
