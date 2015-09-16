@@ -484,8 +484,8 @@ describe('Store Instance Create Controller', function () {
         expect(StoreInstanceCreateCtrl.exitOnSave).toHaveBeenCalledWith(storeInstanceCreatedJSON);
       });
 
-      it('should call change the location of the browser', function () {
-        expect(location.path()).toEqual('/store-instance-list');
+      it('should call change the location of the browser', function () { 
+        expect(location.path()).toEqual('/store-instance-dashboard/');
       });
 
     });
