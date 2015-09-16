@@ -59,7 +59,7 @@
 
         <tr ng-repeat="item in emptyMenuItems track by $index" ng-hide="readOnly">
         <td>
-          <ui-select required ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
+          <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
             <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{ $select.selected.itemName }}
             </ui-select-match>
             <ui-select-choices repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
@@ -72,7 +72,7 @@
           <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
         </td>
         <td>
-          <input type="text" class="form-control" ng-model="item.quantity" placeholder="{{$index}}">
+          <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" placeholder="{{$index}}" maxlength="5">
         </td>
           <td ng-init="item.index = $index">
             <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
