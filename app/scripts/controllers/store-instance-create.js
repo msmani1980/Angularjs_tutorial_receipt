@@ -9,12 +9,13 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast,
-    dateUtility, GlobalMenuService, storeInstanceDispatchWizardConfig, $location) {
+    dateUtility, GlobalMenuService, storeInstanceDispatchWizardConfig, $location, schedulesService) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
     $scope.carrierNumbers = [];
     $scope.storesList = [];
+    $scope.scheduleNumbers = [];
     $scope.formData = {
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
@@ -24,13 +25,6 @@ angular.module('ts5App')
    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
    var companyId = GlobalMenuService.company.get();
    var $this = this;
-
-    this.init = function() {
-      this.getCatererStationList();
-      this.getMenuMasterList();
-      this.getCarrierNumbers();
-      this.getStoresList();
-    };
 
     this.generateQuery = function() {
       return {
@@ -111,6 +105,7 @@ angular.module('ts5App')
       var payload = angular.copy($scope.formData);
       payload.menus = this.formatMenus(payload.menus);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
+      payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
       return payload;
     };
 
@@ -161,19 +156,12 @@ angular.module('ts5App')
       );
     };
 
-    this.init();
-
     $scope.submitForm = function(saveAndExit) {
       $scope.createStoreInstance.$setSubmitted(true);
       if($this.validateForm()) {
         $this.createStoreInstance(saveAndExit);
       }
       return false;
-    };
-
-    $scope.nextTrigger = function(){
-      $scope.submitForm();
-      return true;
     };
 
     $scope.validateInput = function(fieldName) {
@@ -201,15 +189,45 @@ angular.module('ts5App')
       return 'has-success';
     };
 
+    $scope.saveAndExit = function() {
+      return $scope.submitForm(true);
+    };
+
+
+    this.setScheduleNumbers = function(apiData){
+      if(!apiData || !apiData.meta.count){
+        return;
+      }
+      $scope.scheduleNumbers = apiData.schedules.map(function(schedule){
+        return {scheduleNumber: schedule.scheduleNumber};
+      });
+    };
+
+    this.getScheduleNumbers = function() {
+      $scope.scheduleNumbers = [];
+      if(!$scope.formData.scheduleDate){
+        this.setScheduleNumbers();
+        return;
+      }
+      var datesForApi = this.generateQuery();
+      schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate).then(this.setScheduleNumbers);
+    };
+
     $scope.$watch('formData.scheduleDate', function(newDate,oldDate) {
       if(newDate && newDate !== oldDate){
         $this.getMenuMasterList();
         $this.getStoresList();
+        $this.getScheduleNumbers();
       }
     });
 
-    $scope.saveAndExit = function() {
-      return $scope.submitForm(true);
+    this.init = function() {
+      this.getCatererStationList();
+      this.getMenuMasterList();
+      this.getCarrierNumbers();
+      this.getStoresList();
+      this.getScheduleNumbers();
     };
+    this.init();
 
   });
