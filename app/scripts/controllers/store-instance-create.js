@@ -9,14 +9,13 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceCreateCtrl', function ($scope, storeInstanceFactory, ngToast,
-                                                   dateUtility,GlobalMenuService,
-                                                   storeInstanceDispatchWizardConfig,
-                                                    $location) {
+    dateUtility, GlobalMenuService, storeInstanceDispatchWizardConfig, $location, schedulesService) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
     $scope.carrierNumbers = [];
     $scope.storesList = [];
+    $scope.scheduleNumbers = [];
     $scope.formData = {
      scheduleDate: dateUtility.nowFormatted(),
      menus: []
@@ -27,25 +26,23 @@ angular.module('ts5App')
    var companyId = GlobalMenuService.company.get();
    var $this = this;
 
-    this.init = function() {
-      this.getCatererStationList();
-      this.getMenuMasterList();
-      this.getCarrierNumbers();
-      this.getStoresList();
-    };
-
     this.generateQuery = function() {
       return {
-        startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate)
+        startDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate),
+        endDate:dateUtility.formatDateForAPI($scope.formData.scheduleDate)
       };
+    };
+
+    this.setCatererStationList = function(dataFromAPI) {
+      $scope.cateringStationList = dataFromAPI.response;
     };
 
     this.getCatererStationList = function() {
       storeInstanceFactory.getCatererStationList().then(this.setCatererStationList);
     };
 
-    this.setCatererStationList = function(dataFromAPI) {
-      $scope.cateringStationList = dataFromAPI.response;
+    this.setMenuMasterList = function(dataFromAPI) {
+      $scope.menuMasterList = dataFromAPI.companyMenuMasters;
     };
 
     this.getMenuMasterList = function() {
@@ -53,16 +50,16 @@ angular.module('ts5App')
       storeInstanceFactory.getMenuMasterList(query).then(this.setMenuMasterList);
     };
 
-    this.setMenuMasterList = function(dataFromAPI) {
-      $scope.menuMasterList = dataFromAPI.companyMenuMasters;
+    this.setCarrierNumbers = function(dataFromAPI) {
+      $scope.carrierNumbers = dataFromAPI.response;
     };
 
     this.getCarrierNumbers = function() {
       storeInstanceFactory.getAllCarrierNumbers(companyId).then(this.setCarrierNumbers);
     };
 
-    this.setCarrierNumbers = function(dataFromAPI) {
-      $scope.carrierNumbers = dataFromAPI.response;
+    this.setStoresList = function(dataFromAPI) {
+      $scope.storesList = dataFromAPI.response;
     };
 
     this.getStoresList = function() {
@@ -71,32 +68,18 @@ angular.module('ts5App')
       storeInstanceFactory.getStoresList(query).then(this.setStoresList);
     };
 
-    this.setStoresList = function(dataFromAPI) {
-      $scope.storesList = dataFromAPI.response;
-    };
-
-    this.createStoreInstance = function() {
-      this.resetErrors();
-      this.displayLoadingModal('Creating a store instance');
-      var payload = this.formatPayload();
-      if(!payload) {
-        return false;
-      }
-      storeInstanceFactory.createStoreInstance(payload).then(
-        this.createStoreInstanceSuccessHandler,
-        this.createStoreInstanceErrorHandler
-      );
+    this.exitOnSave = function(response){
+      $this.hideLoadingModal();
+      $this.showMessage('success','Store Instance created id: ' + response.id);
+      // TODO: Set this to actual URL when dashboard becomes available
+      $location.url('/store-instance-list');
     };
 
     this.createStoreInstanceSuccessHandler = function(response){
       $this.hideLoadingModal();
       if(response.id){
         $this.showMessage('success','Store Instance created id: ' + response.id);
-        if($scope.wizardStepToIndex) {
-          $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(response.id);
-          var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
-          $location.url(uri);
-        }
+        $location.url('/store-instance-packing/'+response.id);
       }
     };
 
@@ -112,8 +95,9 @@ angular.module('ts5App')
     };
 
     this.resetErrors = function() {
-      $scope.displayError = false;
       $scope.formErrors = [];
+      $scope.errorCustom = [];
+      $scope.displayError = false;
       $scope.response500 = false;
     };
 
@@ -121,6 +105,7 @@ angular.module('ts5App')
       var payload = angular.copy($scope.formData);
       payload.menus = this.formatMenus(payload.menus);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
+      payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
       return payload;
     };
 
@@ -151,31 +136,41 @@ angular.module('ts5App')
     };
 
     this.validateForm = function() {
+      this.resetErrors();
       if($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
         return true;
       }
+      $scope.displayError = true;
       return false;
     };
 
-    this.init();
-
-    $scope.submitForm = function() {
-      if($this.validateForm()) {
-        $this.createStoreInstance();
+    this.createStoreInstance = function(saveAndExit) {
+      this.displayLoadingModal('Creating a store instance');
+      var payload = this.formatPayload();
+      if(!payload) {
+        return false;
       }
-      return false;
+      storeInstanceFactory.createStoreInstance(payload).then(
+        ( saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler ),
+        this.createStoreInstanceErrorHandler
+      );
     };
 
-    $scope.nextTrigger = function(){
-      $this.createStoreInstance();
+    $scope.submitForm = function(saveAndExit) {
+      $scope.createStoreInstance.$setSubmitted(true);
+      if($this.validateForm()) {
+        $this.createStoreInstance(saveAndExit);
+      }
       return false;
     };
 
     $scope.validateInput = function(fieldName) {
-      if($scope.createStoreInstance[fieldName].$pristine) {
+      if($scope.createStoreInstance[fieldName].$pristine &&
+        !$scope.createStoreInstance.$submitted) {
         return '';
       }
-      if($scope.createStoreInstance[fieldName].$invalid) {
+      if($scope.createStoreInstance[fieldName].$invalid ||
+        angular.isDefined($scope.createStoreInstance[fieldName].$error.required) ) {
         return 'has-error';
       }
       return 'has-success';
@@ -183,23 +178,56 @@ angular.module('ts5App')
 
     $scope.validateMenus = function() {
       if(angular.isUndefined($scope.createStoreInstance.Menus) ||
-        $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {
+      $scope.createStoreInstance.Menus.$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
       if($scope.formData.menus.length === 0) {
+        $scope.createStoreInstance.Menus.$setValidity('required', false);
         return 'has-error';
       }
-      if($scope.formData.menus.length > 0) {
-        return 'has-success';
-      }
+      $scope.createStoreInstance.Menus.$setValidity('required', true);
+      return 'has-success';
+    };
 
+    $scope.saveAndExit = function() {
+      return $scope.submitForm(true);
+    };
+
+
+    this.setScheduleNumbers = function(apiData){
+      if(!apiData || !apiData.meta.count){
+        return;
+      }
+      $scope.scheduleNumbers = apiData.schedules.map(function(schedule){
+        return {scheduleNumber: schedule.scheduleNumber};
+      });
+    };
+
+    this.getScheduleNumbers = function() {
+      $scope.scheduleNumbers = [];
+      if(!$scope.formData.scheduleDate){
+        this.setScheduleNumbers();
+        return;
+      }
+      var datesForApi = this.generateQuery();
+      schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate, datesForApi.endDate).then(this.setScheduleNumbers);
     };
 
     $scope.$watch('formData.scheduleDate', function(newDate,oldDate) {
       if(newDate && newDate !== oldDate){
         $this.getMenuMasterList();
         $this.getStoresList();
+        $this.getScheduleNumbers();
       }
     });
+
+    this.init = function() {
+      this.getCatererStationList();
+      this.getMenuMasterList();
+      this.getCarrierNumbers();
+      this.getStoresList();
+      this.getScheduleNumbers();
+    };
+    this.init();
 
   });

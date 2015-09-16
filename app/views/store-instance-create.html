@@ -1,8 +1,8 @@
 <div class="container">
 
-  <step-wizard steps="wizardSteps" next-trigger="nextTrigger()"></step-wizard>
+  <step-wizard steps="wizardSteps" save-trigger="saveAndExit()"></step-wizard>
 
-  <form-error-dialog></form-error-dialog>
+  <error-dialog form-object="createStoreInstance"></error-dialog>
 
   <form name="createStoreInstance" class="well" ng-submit="submitForm()">
 
@@ -26,7 +26,24 @@
       </div>
       <div class="col-xs-12 col-sm-8">
           <date-picker-field form="createStoreInstance" name="scheduleDate"
-            min-date="'+1d'" ng-required ng-model="formData.scheduleDate"></date-picker-field>
+            min-date="'+1d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
+        <label>Schedule Number *</label>
+      </div>
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group">
+          <ui-select name="scheduleNumber" required ng-model="formData.scheduleNumber" theme="bootstrap" id="scheduleNumber">
+            <ui-select-match placeholder="Select a schedule" ui-lock-choice="isDisabled()">{{ $select.selected.scheduleNumber }}
+            </ui-select-match>
+            <ui-select-choices  repeat="schedule in scheduleNumbers | filter: {scheduleNumber:$select.search} | orderBy:'scheduleNumber'">
+              <div ng-bind-html="schedule.scheduleNumber | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
       </div>
     </div>
 
@@ -40,17 +57,6 @@
             <option ng-disabled="true" selected="selected" value>Select Store</option>
             <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Schedule Number *</label>
-      </div>
-      <div class="col-xs-12 col-sm-8">
-        <div class="form-group" ng-class="validateInput('ScheduleNumber')">
-          <input name="ScheduleNumber" maxlength="10" required class="form-control" type="text" ng-model="formData.scheduleNumber" placeholder="SCHED123" custom-validity custom-pattern="alphanumeric" />
         </div>
       </div>
     </div>
@@ -87,9 +93,9 @@
     </div>
 
     <footer class="text-right">
-      <button ng-onclick="submitForm()" type="submit" class="btn btn-success">
-        <i class="fa fa-check-square-o"></i>
-        <span class="btn-label">Create Store Instance</span>
+      <button type="submit" class="btn btn-success">
+        <span class="btn-label">Next</span>
+        <i class="fa fa-arrow-right"></i>
       </button>
     </footer>
 

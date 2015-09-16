@@ -46,6 +46,7 @@ describe('The Step Wizard directive', function () {
       scope.param1 = 1;
       scope.param2 = 2;
       scope.param3 = 3;
+      scope.param4 = 4;
       scope.mockNextTrigger1 = function(param1){
         if(param1 === 2){
           return;
@@ -61,10 +62,16 @@ describe('The Step Wizard directive', function () {
         }
         return true;
       };
-
+      scope.mockSaveTrigger1 = function(param4){
+        if(param4 === 5){
+          return;
+        }
+      };
       template = '<step-wizard steps="wizardSteps" ' +
         'prev-trigger="mockPrevTrigger1(param1)" ' +
         'next-trigger="mockNextTrigger1(param2, param3)" ' +
+        'show-next-prev-button="true" ' +
+        'save-trigger="mockSaveTrigger1(param4)" ' +
         '></step-wizard>';
 
       spyOn(location, 'url').and.callThrough();
@@ -72,6 +79,7 @@ describe('The Step Wizard directive', function () {
 
       spyOn(scope,'mockNextTrigger1').and.callThrough();
       spyOn(scope,'mockPrevTrigger1').and.callThrough();
+      spyOn(scope,'mockSaveTrigger1').and.callThrough();
 
       compileDirective();
     }));
@@ -139,6 +147,11 @@ describe('The Step Wizard directive', function () {
 
     it('should return false if index is greater than currentStepIndex', function(){
       expect(directiveScope.goToStepURI(5)).toBe(false);
+    });
+
+    it('should call the parent scopes save trigger when save and exit is clicked', function(){
+      directiveScope.wizardSave();
+      expect(scope.mockSaveTrigger1).toHaveBeenCalledWith(scope.param4);
     });
 
   });
@@ -288,6 +301,10 @@ describe('The Step Wizard directive', function () {
       expect(directiveScope.wizardPrev()).toBe(false);
     });
 
+    it('should not save and exit', function(){
+      expect(directiveScope.wizardSave()).toBe(false);
+    });
+
     it('should not step anywhere', function(){
       expect(directiveScope.goToStepURI(2)).toBe(false);
     });
@@ -313,4 +330,39 @@ describe('The Step Wizard directive', function () {
     });
 
   });
+
+  describe('no triggers set', function() {
+    beforeEach(inject(function () {
+      scope.wizardSteps = [
+        {
+          label: 'Test label 1',
+          uri: '/test-uri-1'
+        },
+        {
+          label: 'Test label 2',
+          uri: '/test-uri-2'
+        },
+        {
+          label: 'Test label 3',
+          uri: '/test-uri-3'
+        }
+      ];
+
+      template = '<step-wizard steps="wizardSteps"></step-wizard>';
+
+      spyOn(location, 'path').and.returnValue('/test-uri-2');
+      compileDirective();
+      spyOn(directiveScope, 'nextTrigger').and.returnValue(undefined);
+      spyOn(directiveScope, 'prevTrigger').and.returnValue(undefined);
+    }));
+    it('should not step forward', function(){
+      expect(directiveScope.wizardNext()).toBe(false);
+    });
+
+    it('should not step backwards', function(){
+      expect(directiveScope.wizardPrev()).toBe(false);
+    });
+
+  });
+
 });

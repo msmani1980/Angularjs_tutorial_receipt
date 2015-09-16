@@ -92,9 +92,14 @@ step-wizard {
     color: #fff;
     font-size: 1.5em;
     font-weight: 700;
-    left: -5px;
+    left: -20px;
     padding: 5px 15px;
     position: relative;
     top: -20px;
     margin:0px;
+    float:left;
+}
+
+.copy-button{
+  margin-left:5px;
 }
