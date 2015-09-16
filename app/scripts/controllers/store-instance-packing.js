@@ -139,7 +139,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     function updateStoreDetails(response, stepObject) {
       $scope.storeDetails.currentStatus = lodash.findWhere($scope.storeDetails.statusList, {id: response.statusId});
-      console.log(stepObject.URL);
       $location.path(stepObject.URL);
     }
 
@@ -211,7 +210,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
         newPayload.response.push(itemPayload);
       });
-      console.log(newPayload);
       return newPayload;
     };
 

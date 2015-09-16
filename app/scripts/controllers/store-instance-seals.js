@@ -12,6 +12,7 @@ angular.module('ts5App')
     storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory) {
 
     // TODO:
+    // Add error handling for create promise resolution
     // On submission mark status as Ready to Be Dispatched
     // Allow a user to Save & Exit
     // Allow a user to press Next, which submits the form
