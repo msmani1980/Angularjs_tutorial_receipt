@@ -14,7 +14,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.search = {};
 
     function getCatererStationListSuccess (dataFromAPI) {
-      console.log(dataFromAPI);
       $scope.catererStationList = dataFromAPI.response;
     }
 
@@ -22,9 +21,19 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstanceDashboardFactory.getCatererStationList().then(getCatererStationListSuccess);
     }
 
+    function getStoreInstanceListSuccess (dataFromAPI) {
+      $scope.storeInstanceList = dataFromAPI.response;
+    }
+
+    function getStoreInstanceList () {
+      storeInstanceDashboardFactory.getStoreInstanceList().then(getStoreInstanceListSuccess);
+    }
+
 
     function init () {
       getCatererStationList();
+      getStoreInstanceList();
+
     }
 
     init();
