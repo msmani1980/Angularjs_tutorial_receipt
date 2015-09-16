@@ -25,9 +25,8 @@ angular.module('ts5App')
         },
         {
           label: 'Review & Dispatch',
-          uri: '/store-instance-review/' + id
+          uri: '/store-instance-review/' + id + '/dispatch'
         }
-
       ];
     }
     return{
