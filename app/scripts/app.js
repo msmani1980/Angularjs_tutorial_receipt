@@ -185,7 +185,7 @@ angular.module('ts5App', [
   }).when('/store-instance-create', {
     templateUrl: 'views/store-instance-create.html',
     controller: 'StoreInstanceCreateCtrl'
-  }).when('/store-instance-review/:storeId', {
+  }).when('/store-instance-review/:storeId/:action', {
     templateUrl: 'views/store-instance-review.html',
     controller: 'StoreInstanceReviewCtrl'
   }).when('/store-instance-packing/:storeId', {
