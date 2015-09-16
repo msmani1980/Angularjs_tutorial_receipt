@@ -141,17 +141,22 @@ angular.module('ts5App')
       return status[0].name;
     }
 
+    function throwError(field, message){
+      var error = {
+        data: [{
+          field: field,
+          value: message
+        }]
+      };
+      showResponseErrors(error);
+    }
+
     function getSetStoreStatusByNamePromise(name){
       $scope.formErrors = [];
       var statusNameInt = getStatusNameIntByName(name);
       if(!statusNameInt){
-        var error = {
-          data: [{
-            field: 'statusId',
-            value: 'Fatal Error. Unable to find statusId of statusName "'+name+'"'
-          }]
-        };
-        showResponseErrors(error);
+        var errorMessgae = 'Fatal Error. Unable to find statusId of statusName "'+name+'"';
+        throwError('statusId', errorMessgae);
         return false;
       }
       displayLoadingModal();
@@ -161,13 +166,8 @@ angular.module('ts5App')
     function resolveGetStoreDetails(dataFromAPI) {
       $scope.storeDetails = dataFromAPI;
       if($scope.storeDetails.currentStatus.statusName !== STATUS_READY_FOR_DISPATCH){
-        var error = {
-          data: [{
-            field: 'statusId',
-            value: 'Action not allowed because current status it: "'+$scope.storeDetails.currentStatus.statusName+'"'
-          }]
-        };
-        showResponseErrors(error);
+        var errorMessage = 'Action not allowed because current status is "'+$scope.storeDetails.currentStatus.statusName+'"';
+        throwError('statusId', errorMessage);
         $scope.actionNotAllowed = true;
         return;
       }
@@ -176,7 +176,21 @@ angular.module('ts5App')
       $q.all(_initPromises).then(initLoadComplete, showResponseErrors);
     }
 
-    function updatedStoreStatusSubmitted(){
+    var actions = {};
+    actions.dispatchInit = function(){
+      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
+      displayLoadingModal();
+      storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
+    };
+    actions.dispatchSubmit = function(){
+      var promise = getSetStoreStatusByNamePromise(STATUS_DISPATCHED);
+      if(!promise){
+        return;
+      }
+      $q.all([promise]).then(storeInstanceStatusDispatched, showResponseErrors);
+    };
+
+    function storeInstanceStatusDispatched(){
       showMessage('Now what? Redirect user where?', 'info');
       // TODO redirect user somewhere?
     }
@@ -190,10 +204,13 @@ angular.module('ts5App')
 
       $scope.displayError = false;
       $scope.formErrors = [];
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
 
-      displayLoadingModal();
-      storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
+      var initAction = $routeParams.action + 'Init';
+      if (actions[initAction]) {
+        actions[initAction]();
+      } else {
+        throwError('routeParams.action', 'Action not supported.');
+      }
     }
     init();
 
@@ -213,11 +230,10 @@ angular.module('ts5App')
     };
 
     $scope.submit = function(){
-      var promise = getSetStoreStatusByNamePromise(STATUS_DISPATCHED);
-      if(!promise){
-        return;
+      var initAction = $routeParams.action + 'Submit';
+      if (actions[initAction]) {
+        actions[initAction]();
       }
-      $q.all([promise]).then(updatedStoreStatusSubmitted, showResponseErrors);
     };
 
   });
