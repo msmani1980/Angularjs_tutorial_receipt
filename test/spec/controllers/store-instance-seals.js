@@ -467,7 +467,7 @@ describe('the Store Instance Seals controller', function() {
 
       beforeEach(function() {
         $scope.$digest();
-        StoreInstanceSealsCtrl.statusUpdateSuccessHandler();
+        StoreInstanceSealsCtrl.statusUpdateSuccessHandler(StoreInstanceSealsCtrl.nextStep);
       });
 
       it('should hide the loading modal', function() {
@@ -557,13 +557,37 @@ describe('the Store Instance Seals controller', function() {
 
     beforeEach(function() {
       spyOn($scope, 'prevTrigger').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep');
+      spyOn(StoreInstanceSealsCtrl, 'prevStep');
     });
 
     it('should return true for stepWizard', function() {
       expect($scope.prevTrigger()).toBeTruthy();
     });
 
+    it('should have called updateStatusToStep', function() {
+      $scope.prevTrigger();
+      expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalledWith(StoreInstanceSealsCtrl.prevStep);
+    });
+
   });
+
+  describe('goToPacking method', function() {
+
+    beforeEach(function() {
+      spyOn($scope, 'goToPacking').and.callThrough();
+      spyOn($scope, 'prevTrigger').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep');
+      spyOn(StoreInstanceSealsCtrl, 'prevStep');
+    });
+
+    it('should call prevTrigger method', function() {
+      $scope.goToPacking();
+      expect($scope.prevTrigger).toHaveBeenCalled();
+    });
+
+  });
+
 
   // sorry kelly
   describe('when view renders', function() {
