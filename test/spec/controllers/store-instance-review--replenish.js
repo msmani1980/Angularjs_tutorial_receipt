@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
+describe('Controller: StoreInstanceReviewCtrl replenish', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -17,7 +17,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
   var storeDetailsJSON;
   var routeParams;
   var getStoreDetailsDeferred;
-  var storeInstanceDispatchWizardConfig;
+  var storeInstanceReplenishWizardConfig;
   var getStoreInstanceMenuItemsDeferred;
   var storeInstanceReviewFactory;
   var getSealColorsDeferred;
@@ -32,11 +32,11 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     scope = $rootScope.$new();
     routeParams = {
       storeId: 17,
-      action: 'dispatch'
+      action: 'replenish'
     };
     location = $location;
 
-    storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
+    storeInstanceReplenishWizardConfig = $injector.get('storeInstanceReplenishWizardConfig');
 
     // storeInstanceFactory
     storeInstanceFactory = $injector.get('storeInstanceFactory');
@@ -72,7 +72,8 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       scheduleNumber: 'SCHED123',
       storeInstanceNumber: scope.storeId,
       currentStatus: {name: '2', statusName: 'Ready for Dispatch'},
-      statusList: [{'id':1,'statusName':'Ready for Packing','name':'1'},{'id':2,'statusName':'Ready for Seals','name':'2'},{'id':3,'statusName':'Ready for Dispatch','name':'3'},{'id':7,'statusName':'Dispatched','name':'4'},{'id':8,'statusName':'Un-dispatched','name':'7'},{'id':9,'statusName':'Inbounded','name':'6'},{'id':10,'statusName':'On Floor','name':'5'}]
+      statusList: [{'id':1,'statusName':'Ready for Packing','name':'1'},{'id':2,'statusName':'Ready for Seals','name':'2'},{'id':3,'statusName':'Ready for Dispatch','name':'3'},{'id':7,'statusName':'Dispatched','name':'4'},{'id':8,'statusName':'Un-dispatched','name':'7'},{'id':9,'statusName':'Inbounded','name':'6'},{'id':10,'statusName':'On Floor','name':'5'}],
+      replenishStoreInstanceId: 1
     };
 
 
@@ -100,7 +101,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     });
 
     it('should set wizardSteps', function () {
-      var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.storeId);
+      var wizardSteps = storeInstanceReplenishWizardConfig.getSteps(routeParams.storeId);
       expect(scope.wizardSteps).toEqual(wizardSteps);
     });
 
@@ -164,7 +165,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         spyOn(location, 'url');
         var mockIndex = 2;
         scope.wizardStepToIndex = mockIndex;
-        var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.storeId);
+        var wizardSteps = storeInstanceReplenishWizardConfig.getSteps(routeParams.storeId);
         var mockUri = wizardSteps[mockIndex].uri;
         scope.loseDataAlertConfirmTrigger();
         expect(location.url).toHaveBeenCalledWith(mockUri);
@@ -187,6 +188,18 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       scope.$digest();
     }));
     it('should set actionNotAllowed to true if not on ready to dispatch status', function () {
+      expect(scope.actionNotAllowed).toBe(true);
+    });
+  });
+
+  describe('Init with invalid store detail model', function(){
+    beforeEach(inject(function () {
+      delete storeDetailsJSON.replenishStoreInstanceId;
+      storeDetailsJSON.statusList = [];
+      getStoreDetailsDeferred.resolve(storeDetailsJSON);
+      scope.$digest();
+    }));
+    it('should set actionNotAllowed to true', function(){
       expect(scope.actionNotAllowed).toBe(true);
     });
   });

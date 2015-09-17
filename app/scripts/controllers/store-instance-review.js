@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
                                                    storeInstanceFactory, $location, storeInstanceReviewFactory,
-                                                   $q, ngToast, $filter) {
+                                                   $q, ngToast, $filter, storeInstanceReplenishWizardConfig) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -19,6 +19,7 @@ angular.module('ts5App')
     var _nextStatusId = null;
     var STATUS_READY_FOR_DISPATCH = 'Ready for Dispatch';
     var STATUS_DISPATCHED = 'Dispatched';
+    var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
 
     function showMessage(message, messageType) {
       ngToast.create({className: messageType, dismissButton: true, content: '<strong>Store Instance Review</strong>: ' + message});
@@ -82,6 +83,14 @@ angular.module('ts5App')
       return sealNumbers;
     }
 
+    function getSealColorByTypeId(sealTypeId){
+        var sealColor = $filter('filter')(_sealColors, {type: sealTypeId}, true);
+      if(!sealColor || !sealColor.length){
+        return null;
+      }
+      return sealColor[0].color;
+    }
+
     function initLoadComplete(){
 
 
@@ -98,7 +107,7 @@ angular.module('ts5App')
       _sealTypes.map(function(sealType){
         $scope.seals.push({
           name: sealType.name,
-          bgColor: $filter('filter')(_sealColors, {type: sealType.id}, true)[0].color,
+          bgColor: getSealColorByTypeId(sealType.id),
           sealNumbers: getSealNumbersByTypeId(sealType.id)
         });
         return _sealTypes;
@@ -142,6 +151,9 @@ angular.module('ts5App')
     }
 
     function throwError(field, message){
+      if(!message){
+        message = MESSAGE_ACTION_NOT_ALLOWED;
+      }
       var error = {
         data: [{
           field: field,
@@ -155,8 +167,7 @@ angular.module('ts5App')
       $scope.formErrors = [];
       var statusNameInt = getStatusNameIntByName(name);
       if(!statusNameInt){
-        var errorMessgae = 'Fatal Error. Unable to find statusId of statusName "'+name+'"';
-        throwError('statusId', errorMessgae);
+        throwError('statusId', 'Unable to find statusId by name: ' + name);
         return false;
       }
       displayLoadingModal();
@@ -168,31 +179,73 @@ angular.module('ts5App')
       // TODO redirect user somewhere?
     }
 
-    function resolveGetStoreDetails(dataFromAPI) {
-      $scope.storeDetails = dataFromAPI;
-      if($scope.storeDetails.currentStatus.statusName !== STATUS_READY_FOR_DISPATCH){
-        var errorMessage = 'Action not allowed because current status is "'+$scope.storeDetails.currentStatus.statusName+'"';
-        throwError('statusId', errorMessage);
-        $scope.actionNotAllowed = true;
-        return;
+    function isReadyForDispatch(){
+      if($scope.storeDetails.currentStatus.statusName === STATUS_READY_FOR_DISPATCH) {
+        return true;
       }
+      throwError('statusId');
+      $scope.actionNotAllowed = true;
+      return false;
+    }
+
+    function getStoreInstanceReviewData(){
       getStoreInstanceMenuItems();
       getStoreInstanceSeals();
       $q.all(_initPromises).then(initLoadComplete, showResponseErrors);
     }
 
+    function resolveGetStoreDetails(dataFromAPI) {
+      $scope.storeDetails = dataFromAPI;
+      if(!isReadyForDispatch()){
+        return;
+      }
+      var storeDetailValid = true;
+      var storeInstanceValid = $routeParams.action + 'StoreInstanceValid';
+      if (actions[storeInstanceValid]) {
+        storeDetailValid = actions[storeInstanceValid]();
+      }
+      if(!storeDetailValid){
+        return;
+      }
+      getStoreInstanceReviewData();
+    }
+
+    function saveStoreInstanceStatus(status){
+      var promise = getSetStoreStatusByNamePromise(status);
+      if(!promise){
+        return;
+      }
+      $q.resolve(promise, storeInstanceStatusDispatched, showResponseErrors);
+    }
+
     var actions = {};
+    // Dispatch
     actions.dispatchInit = function(){
       $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
       displayLoadingModal();
       storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
     };
     actions.dispatchSubmit = function(){
-      var promise = getSetStoreStatusByNamePromise(STATUS_DISPATCHED);
-      if(!promise){
-        return;
+      saveStoreInstanceStatus(STATUS_DISPATCHED);
+    };
+
+    // Replenish
+    actions.replenishInit = function(){
+      $scope.wizardSteps = storeInstanceReplenishWizardConfig.getSteps($routeParams.storeId);
+      displayLoadingModal();
+      storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
+    };
+    actions.replenishStoreInstanceValid = function(){
+      if($scope.storeDetails.replenishStoreInstanceId){
+        return true;
       }
-      $q.all([promise]).then(storeInstanceStatusDispatched, showResponseErrors);
+      // TODO check more stuff here for replenish?
+      throwError('replenishStoreInstanceId');
+      $scope.actionNotAllowed = true;
+      return false;
+    };
+    actions.replenishSubmit = function(){
+      saveStoreInstanceStatus(STATUS_DISPATCHED);
     };
 
     function init() {
@@ -209,7 +262,7 @@ angular.module('ts5App')
       if (actions[initAction]) {
         actions[initAction]();
       } else {
-        throwError('routeParams.action', 'Action not supported.');
+        throwError('routeParams.action');
       }
     }
     init();
