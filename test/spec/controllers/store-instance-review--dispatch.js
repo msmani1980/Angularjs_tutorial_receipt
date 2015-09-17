@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceReviewCtrl', function () {
+describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -123,7 +123,7 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
           bgColor: '#00B200',
           sealNumbers: ['4567', '1']
         },
-        { 
+        {
           name: 'Inbound',
           bgColor: '#0000FF',
           sealNumbers: ['123']
