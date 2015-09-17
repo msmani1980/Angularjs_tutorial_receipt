@@ -136,13 +136,11 @@
               <label for="scheduleNumber" class="col-sm-4 control-label">Schedule Number*</label>              
               <div class="col-sm-5">
 <!-- TODO: RESTRICT TO 1 SELECTION ONLY, CUSTOMIZE FOR SCHEDULE NUMBER -->
-                <ui-select multiple ng-model="formData.tags" theme="bootstrap">
-                  <ui-select-match placeholder="Item Tags" ui-lock-choice="isDisabled()">{{ $item.name }}
-                  </ui-select-match>
-                  <ui-select-choices repeat="tag in tags | filter: $select.search | orderBy:'name'">
-                    <div ng-bind-html="tag.name | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
+                <select class="form-control" id="scheduleNumber">
+                  <option>
+                    (placeholder)
+                  </option>
+                </select>
               </div>
             </div>
 
@@ -170,9 +168,9 @@
             <div class="form-group">
               <label for="aircraftTailNumber" class="col-sm-4 control-label">Aircraft Tail Number</label>
               <div class="col-sm-5">
-                <select class="form-control" id="deliveryStation" ng-model="deliveryStationIndex" ng-change="updateDeliveryInfo()" ng-disabled="readOnly">
-                  <option ng-repeat="station in stationList" value="{{ $index }}">
-                    {{ station.stationCode }} ({{ station.stationName}})
+                <select class="form-control" id="aircraftTailNumber">
+                  <option>
+                    (placeholder)
                   </option>
                 </select>
               </div>
