@@ -92,6 +92,14 @@ angular.module('ts5App')
       return sealColor[0].color;
     }
 
+    function getMenuQuantity(itemMasterId){
+      var masterItem =  $filter('filter')(_menuItems, {itemMasterId:itemMasterId}, true);
+      if(!masterItem || !masterItem.length){
+        return 0;
+      }
+      return masterItem[0].menuQuantity;
+    }
+
     function initLoadComplete(){
 
 
@@ -101,7 +109,7 @@ angular.module('ts5App')
         $scope.items.map(function (item) {
           item.itemDescription = item.itemCode + ' -  ' + item.itemName;
           item.disabled = true;
-          item.menuQuantity = $filter('filter')(_menuItems, {itemMasterId:item.itemMasterId}, true)[0].menuQuantity;
+          item.menuQuantity = getMenuQuantity(item.itemMasterId);
         });
       }
 

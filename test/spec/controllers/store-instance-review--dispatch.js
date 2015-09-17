@@ -9,6 +9,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
   beforeEach(module('served/seal-colors.json'));
   beforeEach(module('served/seal-types.json'));
   beforeEach(module('served/store-status.json'));
+  beforeEach(module('served/store-instance-item-list.json'));
 
 
   var StoreInstanceReviewCtrl;
@@ -29,7 +30,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
-                              _servedSealColors_, _servedSealTypes_, $location) {
+                              _servedSealColors_, _servedSealTypes_, $location, _servedStoreInstanceItemList_) {
     scope = $rootScope.$new();
     routeParams = {
       storeId: 17,
@@ -49,9 +50,8 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     setStoreStatusDeferred = $q.defer();
     setStoreStatusDeferred.resolve({response:200});
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(setStoreStatusDeferred.promise);
-
     getStoreInstanceItemsDeferred = $q.defer();
-    getStoreInstanceItemsDeferred.resolve(_servedStoreInstanceMenuItems_);
+    getStoreInstanceItemsDeferred.resolve(_servedStoreInstanceItemList_);
     spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
 
     storeInstanceReviewFactory = $injector.get('storeInstanceReviewFactory');
@@ -104,14 +104,10 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(routeParams.storeId, expectedPayload);
     });
 
-    it('should call getStoreInstanceItemList', function(){
+    it('should call getStoreInstanceItems', function () {
       expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(routeParams.storeId);
     });
-
-    it('should set scope.items', function(){
-      expect(scope.items).toBeDefined();
-      // TODO test that this was actually set per the data model that is rendered in the view.
-    });
+    // TODO - mock items and check against scope.
 
     it('should set wizardSteps', function () {
       var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.storeId);
