@@ -82,7 +82,6 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
       replenishStoreInstanceId: 1
     };
 
-
   }));
 
   describe('Init', function () {
