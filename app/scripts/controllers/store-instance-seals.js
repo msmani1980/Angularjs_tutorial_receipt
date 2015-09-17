@@ -54,11 +54,20 @@ angular.module('ts5App')
       return sealTypesService.getSealTypes().then($this.setSealTypes);
     };
 
+    this.setStoreInstanceSeals = function(dataFromAPI) {
+      $scope.existingSeals = dataFromAPI.response;
+    };
+
+    this.getStoreInstanceSeals = function() {
+      return storeInstanceAssignSealsFactory.getStoreInstanceSeals($routeParams.storeId).then($this.setStoreInstanceSeals);
+    };
+
     this.makePromises = function() {
       return [
         this.getStoreDetails(),
         this.getSealColors(),
-        this.getSealTypes()
+        this.getSealTypes(),
+        this.getStoreInstanceSeals()
       ];
     };
 
@@ -107,19 +116,6 @@ angular.module('ts5App')
       })[0];
     };
 
-    this.generateSealTypeObject = function(sealType, sealColor) {
-      return {
-        id: sealType.id,
-        name: sealType.name,
-        color: sealColor.color,
-        seals: {
-          numbers: []
-        },
-        actions: $this.addSealTypeActions(sealType),
-        required: $this.isSealTypeRequired(sealType)
-      };
-    };
-
     this.displayLoadingModal = function(loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
     };
@@ -128,11 +124,57 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
+    this.formatExistingSeals = function(sealsList) {
+      var formattedSeals = [];
+      for(var key in sealsList) {
+        var seal = sealsList[key];
+        formattedSeals.push(seal.sealNumbers[0]);
+      }
+      return formattedSeals;
+    };
+
+    this.getExistingSeals = function(typeId) {
+      if(!$scope.existingSeals) {
+        return [];
+      }
+      var sealsList = $scope.existingSeals.filter(function(sealType) {
+        return sealType.type === typeId;
+      });
+      return this.formatExistingSeals(sealsList);
+    };
+
+    this.sealTypeListOrder = function(sealType) {
+      switch (sealType.name) {
+        case 'Outbound':
+          return 1;
+        case 'Hand Over':
+          return 2;
+        case 'Inbound':
+          return 3;
+        case 'High Security':
+          return 4;
+      }
+    };
+
+    this.generateSealTypeObject = function(sealType) {
+        var sealColor = $this.getSealColor(sealType.id);
+      return {
+        id: sealType.id,
+        name: sealType.name,
+        color: sealColor.color,
+        seals: {
+          numbers: $this.getExistingSeals(sealType.id)
+        },
+        actions: $this.addSealTypeActions(sealType),
+        required: $this.isSealTypeRequired(sealType),
+        order: $this.sealTypeListOrder(sealType)
+      };
+    };
+
     this.generateSealTypesList = function() {
       $scope.sealTypesList = [];
       angular.forEach($scope.sealTypes, function(sealType) {
-        var sealColor = $this.getSealColor(sealType.id);
-        var sealTypeObject = $this.generateSealTypeObject(sealType, sealColor);
+        var sealTypeObject = $this.generateSealTypeObject(sealType);
         $scope.sealTypesList.push(sealTypeObject);
       });
       $this.hideLoadingModal();
@@ -197,12 +239,14 @@ angular.module('ts5App')
     };
 
     this.findStatusObject = function(stepObject) {
-      return lodash.findWhere($scope.storeDetails.statusList, {name: stepObject.stepName});
+      return lodash.findWhere($scope.storeDetails.statusList, {
+        name: stepObject.stepName
+      });
     };
 
-    this.statusUpdateSuccessHandler = function() {
+    this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
-      $location.path($this.nextStep.URL);
+      $location.path(stepObject.URL);
     };
 
     this.updateStatusToStep = function(stepObject) {
@@ -210,10 +254,9 @@ angular.module('ts5App')
       if (!statusObject) {
         return;
       }
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(
-        $this.statusUpdateSuccessHandler,
-        $this.assignSealsErrorHandler
-      );
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(function() {
+        $this.statusUpdateSuccessHandler(stepObject);
+      }, $this.assignSealsErrorHandler);
     };
 
     this.assignSealsSuccessHandler = function() {
@@ -269,7 +312,11 @@ angular.module('ts5App')
     };
 
     $scope.goToPacking = function() {
-      $location.path($this.prevStep.URL);
+      return $scope.prevTrigger();
+    };
+
+    $scope.prevTrigger = function() {
+      $this.updateStatusToStep($this.prevStep);
     };
 
     $scope.validateSeals = function(sealTypeObject) {

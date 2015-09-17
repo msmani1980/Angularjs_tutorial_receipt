@@ -35,11 +35,13 @@ describe('the Store Instance Seals controller', function() {
   var storeInstanceAssignSealsFactory;
   var location;
   var httpBackend;
-  var servedStoreInstanceDetailsJSON;
+  var servedStoreInstanceDetailsJSON; 
   var updateStoreInstanceStatusDeferred;
+  var getStoreInstanceSealsDeferred;
 
-  beforeEach(inject(function($injector, $rootScope, $controller, $q, $httpBackend, $location, ngToast, _servedSealTypes_, _servedSealColors_,
-    _servedStoreInstanceSeals_,_servedStoreInstanceSealsCreated_,_servedStoreInstanceDetails_) {
+  beforeEach(inject(function($injector, $rootScope, $controller, $q, $httpBackend, $location, ngToast,
+    _servedSealTypes_, _servedSealColors_,
+    _servedStoreInstanceSeals_, _servedStoreInstanceSealsCreated_, _servedStoreInstanceDetails_) {
 
     servedStoreInstanceDetailsJSON = _servedStoreInstanceDetails_;
     sealTypesJSON = _servedSealTypes_;
@@ -67,17 +69,21 @@ describe('the Store Instance Seals controller', function() {
     getStoreDetailsDeferred = $q.defer();
     getSealTypesDeferred = $q.defer();
     getSealColorsDeferred = $q.defer();
+    getStoreInstanceSealsDeferred = $q.defer();
     createStoreInstanceSealDeferred = $q.defer();
     updateStoreInstanceStatusDeferred = $q.defer();
 
     getStoreDetailsDeferred = $q.defer();
     getStoreDetailsDeferred.resolve(storeDetailsJSON);
 
+    spyOn(storeInstanceAssignSealsFactory, 'getStoreInstanceSeals').and.returnValue(getStoreInstanceSealsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
-    spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(updateStoreInstanceStatusDeferred.promise);
+    spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(
+      updateStoreInstanceStatusDeferred.promise);
     spyOn(sealTypesService, 'getSealTypes').and.returnValue(getSealTypesDeferred.promise);
     spyOn(sealColorsService, 'getSealColors').and.returnValue(getSealColorsDeferred.promise);
-    spyOn(storeInstanceAssignSealsFactory, 'createStoreInstanceSeal').and.returnValue(createStoreInstanceSealDeferred.promise);
+    spyOn(storeInstanceAssignSealsFactory, 'createStoreInstanceSeal').and.returnValue(
+      createStoreInstanceSealDeferred.promise);
 
     StoreInstanceSealsCtrl = $controller('StoreInstanceSealsCtrl', {
       $scope: $scope,
@@ -124,11 +130,18 @@ describe('the Store Instance Seals controller', function() {
 
   function mockAssignSeals() {
     var url = /store-instances\/\d+\/seals+$/;
-    for(var i = 0; i < $scope.sealTypesList.length; i++ ) {
+    for (var i = 0; i < $scope.sealTypesList.length; i++) {
       httpBackend.expectPOST(url).respond(200, {});
     }
     $scope.$digest();
     StoreInstanceSealsCtrl.assignSeals();
+  }
+
+  function resolveAllDependencies() {
+    getSealColorsDeferred.resolve(sealColorsJSON);
+    getSealTypesDeferred.resolve(sealTypesJSON);
+    getStoreDetailsDeferred.resolve(storeDetailsJSON);
+    getStoreInstanceSealsDeferred.resolve(storeInstanceSealsJSON);
   }
   describe('when controller executes', function() {
 
@@ -203,6 +216,19 @@ describe('the Store Instance Seals controller', function() {
 
     });
 
+    describe('the get store instance seals API call', function() {
+
+      beforeEach(function() {
+        getStoreInstanceSealsDeferred.resolve(storeInstanceSealsJSON);
+        $scope.$digest();
+      });
+
+      it('should set a list of existing seals in the scope', function() {
+        expect($scope.existingSeals).toEqual(storeInstanceSealsJSON.response);
+      });
+
+    });
+
     describe('the getSealTypesDependencies method', function() {
 
       beforeEach(function() {
@@ -214,14 +240,14 @@ describe('the Store Instance Seals controller', function() {
           storeInstanceNumber: $scope.storeId
         };
 
-        getSealColorsDeferred.resolve(sealColorsJSON);
-        getSealTypesDeferred.resolve(sealTypesJSON);
-        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+        resolveAllDependencies();
 
         spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'createHandoverActions').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'createInboundActions').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'sealTypeListOrder').and.callThrough();
+
         $scope.$digest();
       });
 
@@ -247,6 +273,10 @@ describe('the Store Instance Seals controller', function() {
 
       it('should defined sealTypesList.required', function() {
         expect($scope.sealTypesList[1].required).toBeDefined();
+      });
+
+      it('should defined sealTypesList.order', function() {
+        expect($scope.sealTypesList[0].order).toBe(1);
       });
 
       it('should call the addSealTypeActions function', function() {
@@ -385,7 +415,7 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-  describe('The makeAssignSealsPromises functionality', function () {
+  describe('The makeAssignSealsPromises functionality', function() {
 
     var promises;
     beforeEach(function() {
@@ -399,31 +429,32 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-  describe('The assignSeals functionality', function () {
+  describe('The assignSeals functionality', function() {
 
     beforeEach(function() {
-      spyOn(StoreInstanceSealsCtrl,'displayLoadingModal');
-      spyOn(StoreInstanceSealsCtrl,'formatPayload').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'makeAssignSealsPromises').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'assignSealsSuccessHandler').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'assignSealsErrorHandler').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'showMessage');
-      spyOn(StoreInstanceSealsCtrl,'updateStatusToStep').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'findStatusObject').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'statusUpdateSuccessHandler').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'hideLoadingModal');
+      spyOn(StoreInstanceSealsCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceSealsCtrl, 'formatPayload').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'makeAssignSealsPromises').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'assignSealsSuccessHandler').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'assignSealsErrorHandler').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'showMessage');
+      spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'findStatusObject').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'statusUpdateSuccessHandler').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'hideLoadingModal');
       mockAssignSeals();
     });
 
-    it('should display the loading modal', function () {
-      expect(StoreInstanceSealsCtrl.displayLoadingModal).toHaveBeenCalledWith('Assigning seals to Store Instance');
+    it('should display the loading modal', function() {
+      expect(StoreInstanceSealsCtrl.displayLoadingModal).toHaveBeenCalledWith(
+        'Assigning seals to Store Instance');
     });
 
-    it('should call the makeAssignSealsPromises', function () {
+    it('should call the makeAssignSealsPromises', function() {
       expect(StoreInstanceSealsCtrl.makeAssignSealsPromises).toHaveBeenCalled();
     });
 
-    describe('success handler', function(){
+    describe('success handler', function() {
 
       beforeEach(function() {
         mockAssignSeals();
@@ -431,16 +462,16 @@ describe('the Store Instance Seals controller', function() {
         $scope.$digest();
       });
 
-      it('should call the success handler', function () {
+      it('should call the success handler', function() {
         expect(StoreInstanceSealsCtrl.assignSealsSuccessHandler).toHaveBeenCalled();
       });
 
       it('should display a success message if the response contains an id', function() {
         var message = 'Seals Assigned!';
-        expect(StoreInstanceSealsCtrl.showMessage).toHaveBeenCalledWith('success',message);
+        expect(StoreInstanceSealsCtrl.showMessage).toHaveBeenCalledWith('success', message);
       });
 
-      describe('updateStatusToStep', function(){
+      describe('updateStatusToStep', function() {
         var nextStep;
         beforeEach(function() {
           nextStep = {
@@ -451,7 +482,7 @@ describe('the Store Instance Seals controller', function() {
           $scope.$digest();
         });
 
-        it('should call the update status call', function () {
+        it('should call the update status call', function() {
           expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalledWith(nextStep);
         });
 
@@ -459,14 +490,14 @@ describe('the Store Instance Seals controller', function() {
 
     });
 
-    describe('statusUpdateSuccessHandler', function(){
+    describe('statusUpdateSuccessHandler', function() {
 
       beforeEach(function() {
         $scope.$digest();
-        StoreInstanceSealsCtrl.statusUpdateSuccessHandler();
+        StoreInstanceSealsCtrl.statusUpdateSuccessHandler(StoreInstanceSealsCtrl.nextStep);
       });
 
-      it('should hide the loading modal', function () {
+      it('should hide the loading modal', function() {
         expect(StoreInstanceSealsCtrl.hideLoadingModal).toHaveBeenCalled();
       });
 
@@ -476,27 +507,27 @@ describe('the Store Instance Seals controller', function() {
 
     });
 
-    describe('error handler', function(){
+    describe('error handler', function() {
 
       var errorResponse;
 
       beforeEach(function() {
         errorResponse = [{
-          field:'storeId',
-          code:'023',
-          value:null,
-          rowIndex:null,
-          columnIndex:null
+          field: 'storeId',
+          code: '023',
+          value: null,
+          rowIndex: null,
+          columnIndex: null
         }];
         createStoreInstanceSealDeferred.reject(errorResponse);
         $scope.$digest();
       });
 
-      it('should hide the loading modal', function () {
+      it('should hide the loading modal', function() {
         expect(StoreInstanceSealsCtrl.hideLoadingModal).toHaveBeenCalled();
       });
 
-      it('should call the error handler', function () {
+      it('should call the error handler', function() {
         expect(StoreInstanceSealsCtrl.assignSealsErrorHandler).toHaveBeenCalledWith(errorResponse);
       });
 
@@ -529,7 +560,7 @@ describe('the Store Instance Seals controller', function() {
     var handoverSealType;
 
     beforeEach(function() {
-      spyOn(StoreInstanceSealsCtrl,'getSealTypeObjectByName').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'getSealTypeObjectByName').and.callThrough();
       $scope.$digest();
       outboundSealType = $scope.sealTypesList[0];
       handoverSealType = $scope.sealTypesList[1];
@@ -537,19 +568,49 @@ describe('the Store Instance Seals controller', function() {
 
     it('should copy seals from one to another', function() {
       outboundSealType.seals.numbers = [5341];
-      $scope.copySeals('Outbound','Hand Over');
+      $scope.copySeals('Outbound', 'Hand Over');
       expect(handoverSealType.seals.numbers).toEqual(outboundSealType.seals.numbers);
     });
 
     it('should call the getSealTypeObjectByName method', function() {
       outboundSealType.seals.numbers = [5341];
-      $scope.copySeals('Outbound','Hand Over');
+      $scope.copySeals('Outbound', 'Hand Over');
       expect(StoreInstanceSealsCtrl.getSealTypeObjectByName).toHaveBeenCalled();
     });
 
   });
 
-  // sorry kelly
+  describe('prevTrigger method', function() {
+
+    beforeEach(function() {
+      spyOn($scope, 'prevTrigger').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep');
+      spyOn(StoreInstanceSealsCtrl, 'prevStep');
+    });
+
+    it('should have called updateStatusToStep', function() {
+      $scope.prevTrigger();
+      expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalledWith(StoreInstanceSealsCtrl.prevStep);
+    });
+
+  });
+
+  describe('goToPacking method', function() {
+
+    beforeEach(function() {
+      spyOn($scope, 'goToPacking').and.callThrough();
+      spyOn($scope, 'prevTrigger').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep');
+      spyOn(StoreInstanceSealsCtrl, 'prevStep');
+    });
+
+    it('should call prevTrigger method', function() {
+      $scope.goToPacking();
+      expect($scope.prevTrigger).toHaveBeenCalled();
+    });
+
+  });
+
   describe('when view renders', function() {
 
     var view;

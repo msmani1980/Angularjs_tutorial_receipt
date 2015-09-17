@@ -8,7 +8,7 @@
 
   <form name="assignSealsForm" ng-submit="submitForm()">
 
-    <div ng-repeat="(sealTypeKey, sealType) in sealTypesList" ng-if="sealTypesList">
+    <div ng-repeat="(sealTypeKey, sealType) in sealTypesList | orderBy:'order'" ng-if="sealTypesList">
 
       <seal-type seal-type-object="sealType"></seal-type>
 

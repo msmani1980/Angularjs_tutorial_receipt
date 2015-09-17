@@ -156,11 +156,11 @@
       </thead>
       <tbody>
         <tr ng-repeat="store in storeInstanceList">
-          <td></td>
-          <td></td>
+          <td><!-- TODO: add expand/collapse button for stores with replenish --></td>
+          <td><!-- TODO: add checkbox for stores in dispatch, onFloor, and readyForDispatch --></td>
           <td>{{ store.cateringStationId }}</td>
           <td><!-- TODO: add Inbound LMP Station --></td>
-          <td>{{ store.storeId }}</td>
+          <td>{{ store.storeNumber }}</td>
           <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
           <td>{{ store.scheduleDate }}</td>
           <td><!-- TODO: add Departure Station --></td>
