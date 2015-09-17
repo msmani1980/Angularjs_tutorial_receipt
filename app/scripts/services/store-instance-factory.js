@@ -133,7 +133,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.statusList = responseCollection[2];
       storeDetails.menuList = [];
       angular.forEach(storeInstanceAPIResponse.menus, function(menu) {
-        var menuObject = storeDetails.menuNameList = lodash.findWhere(responseCollection[3].companyMenuMasters, {id: menu.menuMasterId});
+        var menuObject = lodash.findWhere(responseCollection[3].companyMenuMasters, {id: menu.menuMasterId});
         if (angular.isDefined(menuObject)) {
           storeDetails.menuList.push(menuObject);
         }
