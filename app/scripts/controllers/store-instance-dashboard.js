@@ -11,6 +11,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function ($scope, storeInstanceDashboardFactory) {
 
     $scope.catererStationList = [];
+    $scope.storeInstanceList = [];
     $scope.search = {};
 
     function getCatererStationListSuccess (dataFromAPI) {

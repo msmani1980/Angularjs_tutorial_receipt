@@ -7,8 +7,6 @@
     </div>
   </div>
 
-  {{ search }}
-
   <div class="store-instance-dashboard">
     <div class="row">
       <div class="col-xs-12">
@@ -157,215 +155,24 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>LGW</td>
-        <td>LTN</td>
-        <td>7321</td>
-        <td>08/07/15 10:00</td>
-        <td>08/07/15</td>
-        <td>LGW</td>
-        <td>10:00</td>
-        <td>ORD</td>
-        <td>18:00</td>
-        <td>No</td>
-        <td>1121355</td>
-        <td>Inbounded</td>
-        <td>rabraham</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>LTN</td>
-        <td>LGW</td>
-        <td>7321</td>
-        <td>08/07/15 10:00</td>
-        <td>08/07/15</td>
-        <td>LTN</td>
-        <td>22:00</td>
-        <td>LHR</td>
-        <td>23:00</td>
-        <td>No</td>
-        <td>1121356</td>
-        <td>Ready for Packing</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-primary btn-xs" tabindex="0">Start Packing</button>
-        </td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td>STN</td>
-        <td>ORD</td>
-        <td>7453</td>
-        <td>08/07/15 10:00</td>
-        <td>08/07/15</td>
-        <td>STN</td>
-        <td>10:00</td>
-        <td>ORD</td>
-        <td>18:00</td>
-        <td>Yes</td>
-        <td>1121357</td>
-        <td>Ready for Seals</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-orange btn-xs" tabindex="0">Start Sealing</button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span class="fa fa-plus-square-o" ng-show="!isOpen(item) && hasSubVersions(item)" ng-click="toggleVersionVisibility(item)"></span>
-          <span class="fa fa-minus-square" ng-show="isOpen(item)" ng-click="toggleVersionVisibility(item)"></span>
-        </td>
-        <td>
-          <!-- TODO: CHECKBOX OPTIONS ONLY ON "READY FOR DISPATCH", "DISPATCHED", & "ON FLOOR" -->
-          <input type="checkbox">
-        </td>
-        <td>BSL</td>
-        <td></td>
-        <td>7455</td>
-        <td>08/07/15 10:00</td>
-        <td>08/07/15</td>
-        <td>BSL</td>
-        <td>10:00</td>
-        <td>GVA</td>
-        <td>18:00</td>
-        <td>No</td>
-        <td>1121398</td>
-        <td>Ready for Dispatch</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-success btn-xs" tabindex="0">Dispatch</button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <span class="fa fa-minus-square" ng-show="!isOpen(item) && hasSubVersions(item)" ng-click="toggleVersionVisibility(item)"></span>
-          <span class="fa fa-minus-square" ng-show="isOpen(item)" ng-click="toggleVersionVisibility(item)"></span>
-        </td>
-        <td>
-          <!-- TODO: CHECKBOX OPTIONS ONLY ON "READY FOR DISPATCH", "DISPATCHED", & "ON FLOOR" -->
-          <input type="checkbox">
-        </td>
-        <td>LHR</td>
-        <td>GVA</td>
-        <td>7555</td>
-        <td>08/07/15 10:00</td>
-        <td>08/07/15</td>
-        <td>LHR</td>
-        <td>10:00</td>
-        <td>GVA</td>
-        <td>18:00</td>
-        <td>Yes</td>
-        <td>1132456</td>
-        <td>Dispatched</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-info btn-xs" tabindex="0">Generate Doc</button>
-          <button class="btn btn-pink btn-xs" tabindex="0">Replenish</button>
-          <button class="btn btn-purple btn-xs" tabindex="0">Receive</button>
-          <button class="btn btn-warning btn-xs" tabindex="0">Undispatch</button>
-        </td>
-      </tr>
-
-      <!-- TODO: REPLENISH ROWS WILL OPEN/CLOSE WITH FUNCTION ABOVE -->
-      <!--       <tr ng-repeat="version in item.versions track by $index" ng-class="subversion-row" ng-show="isOpen(item)"> -->
-      <tr class="master-row">
-        <td></td>
-        <td>
-          <!-- TODO: CHECKBOX OPTIONS ONLY ON "READY FOR DISPATCH", "DISPATCHED", & "ON FLOOR" -->
-          <input type="checkbox">
-        </td>
-        <td>STN</td>
-        <td></td>
-        <td></td>
-        <td>08/07/15 10:00</td>
-        <td>08/07/15</td>
-        <td>STN</td>
-        <td>12:00</td>
-        <td>LHR</td>
-        <td>14:00</td>
-        <td></td>
-        <td></td>
-        <td>Dispatched</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-info btn-xs" tabindex="0">Generate Doc</button>
-        </td>
-      </tr>
-      <tr class="master-row">
-        <td></td>
-        <td></td>
-        <td>LGW</td>
-        <td></td>
-        <td></td>
-        <td>08/07/15 10:00</td>
-        <td>08/07/15</td>
-        <td>LGW</td>
-        <td>11:00</td>
-        <td>ORD</td>
-        <td>13:00</td>
-        <td></td>
-        <td></td>
-        <td>Ready for Packing</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-primary btn-xs" tabindex="0">Start Packing</button>
-        </td>
-      </tr>
-
-      <tr>
-        <td></td>
-        <td>
-          <!-- TODO: CHECKBOX OPTIONS ONLY ON "READY FOR DISPATCH", "DISPATCHED", & "ON FLOOR" -->
-          <input type="checkbox">
-        </td>
-        <td>LPL</td>
-        <td>LPL</td>
-        <td>7278</td>
-        <td>08/07/15 10:00</td>
-        <td>08/07/15</td>
-        <td>LPL</td>
-        <td>10:00</td>
-        <td>GVA</td>
-        <td>18:00</td>
-        <td>No</td>
-        <td>1141235</td>
-        <td>On Floor</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-success btn-xs" tabindex="0">Dispatch</button>
-          <button class="btn btn-danger btn-xs" tabindex="0">End Instance</button>
-        </td>
-      </tr>
-      <tr>
-        <td></td>
-        <td>
-          <input type="checkbox">
-        </td>
-        <td>LPL</td>
-        <td></td>
-        <td>7279</td>
-        <td>08/07/15 10:00</td>
-        <td>08/07/15</td>
-        <td>LPL</td>
-        <td>10:00</td>
-        <td>ORD</td>
-        <td>18:00</td>
-        <td>No</td>
-        <td>1165432</td>
-        <td>Dispatched</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-info btn-xs" tabindex="0">Generate Doc</button>
-          <button class="btn btn-pink btn-xs" tabindex="0">Replenish</button>
-          <button class="btn btn-purple btn-xs" tabindex="0">Receive</button>
-          <button class="btn btn-warning btn-xs" tabindex="0">Undispatch</button>
-        </td>
-      </tr>
+        <tr ng-repeat="store in storeInstanceList">
+          <td></td>
+          <td></td>
+          <td>{{ store.cateringStationId }}</td>
+          <td><!-- TODO: add Inbound LMP Station --></td>
+          <td>{{ store.storeId }}</td>
+          <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
+          <td>{{ store.scheduleDate }}</td>
+          <td><!-- TODO: add Departure Station --></td>
+          <td><!-- TODO: add Departure Time --></td>
+          <td><!-- TODO: add Arrival Station --></td>
+          <td><!-- TODO: add Arrival Time --></td>
+          <td>{{ (store.tampered) ? 'true' : 'false' }}</td>
+          <td>{{ store.id }}</td>
+          <td>{{ store.statusId }}</td>
+          <td><!-- TODO: add user, which requires user accounts --></td>
+          <td><!-- TODO: add actions TSVPORTAL-2904 --></td>
+        </tr>
       </tbody>
     </table>
   </div>
