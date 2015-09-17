@@ -206,7 +206,7 @@ describe('the Store Instance Seals controller', function() {
 
     });
 
-    fdescribe('the getSealTypesDependencies method', function() {
+    describe('the getSealTypesDependencies method', function() {
 
       beforeEach(function() {
         storeDetailsJSON = {
