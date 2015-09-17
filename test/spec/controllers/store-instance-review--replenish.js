@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceReviewCtrl', function () {
+describe('Controller: StoreInstanceReviewCtrl replenish', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -120,22 +120,22 @@ describe('Controller: StoreInstanceReviewCtrl', function () {
     it('should create a scope seals object from the 3 seal API calls', function () {
       var mockSealObj = [
         {
-          name: 'OB',
+          name: 'Outbound',
           bgColor: '#00B200',
           sealNumbers: ['4567', '1']
         },
         {
-          name: 'IB',
+          name: 'Inbound',
           bgColor: '#0000FF',
           sealNumbers: ['123']
         },
         {
-          name: 'HO',
+          name: 'Hand Over',
           bgColor: '#E5E500',
           sealNumbers: []
         },
         {
-          name: 'HS',
+          name: 'High Security',
           bgColor: '#B70024',
           sealNumbers: []
         }
