@@ -20,6 +20,7 @@ angular.module('ts5App')
     var STATUS_READY_FOR_DISPATCH = 'Ready for Dispatch';
     var STATUS_DISPATCHED = 'Dispatched';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
+    var actions = {};
 
     function showMessage(message, messageType) {
       ngToast.create({className: messageType, dismissButton: true, content: '<strong>Store Instance Review</strong>: ' + message});
@@ -218,7 +219,6 @@ angular.module('ts5App')
       $q.resolve(promise, storeInstanceStatusDispatched, showResponseErrors);
     }
 
-    var actions = {};
     // Dispatch
     actions.dispatchInit = function(){
       $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
