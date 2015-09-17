@@ -147,11 +147,6 @@ angular.module('ts5App')
       );
     }
 
-    function resolveSetStoreInstanceStatus(response){
-      $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {id: response.statusId}, true)[0];
-      showUserCurrentStatus('updated');
-    }
-
     function getStatusNameIntByName(name){
       var status = $filter('filter')($scope.storeDetails.statusList, {statusName: name}, true);
       if(!status || !status.length){
@@ -173,19 +168,10 @@ angular.module('ts5App')
       showResponseErrors(error);
     }
 
-    function getSetStoreStatusByNamePromise(name){
-      $scope.formErrors = [];
-      var statusNameInt = getStatusNameIntByName(name);
-      if(!statusNameInt){
-        throwError('statusId', 'Unable to find statusId by name: ' + name);
-        return false;
-      }
-      displayLoadingModal();
-      return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(resolveSetStoreInstanceStatus);
-    }
-
-    function storeInstanceStatusDispatched(){
-      // TODO test this.
+    function storeInstanceStatusDispatched(response){
+      hideLoadingModal();
+      $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {id: response.statusId}, true)[0];
+      showUserCurrentStatus('updated');
       $location.url('/store-dispatch-dashboard');
     }
 
@@ -232,11 +218,15 @@ angular.module('ts5App')
     }
 
     function saveStoreInstanceStatus(status){
-      var promise = getSetStoreStatusByNamePromise(status);
-      if(!promise){
-        return;
+      $scope.formErrors = [];
+      var statusNameInt = getStatusNameIntByName(status);
+      if(!statusNameInt){
+        throwError('statusId', 'Unable to find statusId by name: ' + name);
+        return false;
       }
-      $q.resolve(promise, storeInstanceStatusDispatched, showResponseErrors);
+      displayLoadingModal();
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(
+        storeInstanceStatusDispatched, showResponseErrors);
     }
 
     var actions = {};
