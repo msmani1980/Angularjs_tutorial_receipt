@@ -9,17 +9,20 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceDispatchWizardConfig,
-    storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory) {
+    storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
+    lodash) {
 
-    // TODO:
-    // Add error handling for create promise resolution
-    // On submission mark status as Ready to Be Dispatched
-    // Allow a user to Save & Exit
-    // Allow a user to press Next, which submits the form
-    // Allow a user to press Prev, which sends them back to step 2
-    // Allow a user to edit existing seals in each seal type
+    // TODO: Allow a user to edit existing seals in each seal type
 
     var $this = this;
+    this.nextStep = {
+      stepName: '3',
+      URL: '/store-instance-review/' + $routeParams.storeId + '/dispatch'
+    };
+    this.prevStep = {
+      stepName: '2',
+      URL: '/store-instance-packing/' + $routeParams.storeId
+    };
 
     $scope.formData = [];
 
@@ -169,8 +172,7 @@ angular.module('ts5App')
     this.exitOnSave = function() {
       $this.hideLoadingModal();
       $this.showMessage('success', 'Seals Assigned');
-      // TODO: Set this to actual URL when dashboard becomes available
-      $location.url('/store-instance-list');
+      $location.url('/store-instance-dashboard');
     };
 
     this.formatPayload = function(sealTypeObject) {
@@ -194,11 +196,29 @@ angular.module('ts5App')
       return promises;
     };
 
-    this.assignSealsSuccessHandler = function() {
-      // TODO: Update status of Store Instance
+    this.findStatusObject = function(stepObject) {
+      return lodash.findWhere($scope.storeDetails.statusList, {name: stepObject.stepName});
+    };
+
+    this.statusUpdateSuccessHandler = function() {
       $this.hideLoadingModal();
+      $location.path($this.nextStep.URL);
+    };
+
+    this.updateStatusToStep = function(stepObject) {
+      var statusObject = this.findStatusObject(stepObject);
+      if (!statusObject) {
+        return;
+      }
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(
+        $this.statusUpdateSuccessHandler,
+        $this.assignSealsErrorHandler
+      );
+    };
+
+    this.assignSealsSuccessHandler = function() {
+      $this.updateStatusToStep($this.nextStep);
       $this.showMessage('success', 'Seals Assigned!');
-      $location.url('/store-instance-review/' + $routeParams.storeId);
     };
 
     this.assignSealsErrorHandler = function(response) {
@@ -248,9 +268,8 @@ angular.module('ts5App')
       return false;
     };
 
-    $scope.nextTrigger = function() {
-      $scope.submitForm();
-      return true;
+    $scope.goToPacking = function() {
+      $location.path($this.prevStep.URL);
     };
 
     $scope.validateSeals = function(sealTypeObject) {

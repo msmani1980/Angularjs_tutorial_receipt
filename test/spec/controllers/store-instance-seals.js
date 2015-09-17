@@ -8,7 +8,8 @@ describe('the Store Instance Seals controller', function() {
     'served/seal-types.json',
     'served/seal-colors.json',
     'served/store-instance-seals.json',
-    'served/store-instance-seals-created.json'
+    'served/store-instance-seals-created.json',
+    'served/store-instance-details.json'
   ));
 
   var StoreInstanceSealsCtrl;
@@ -34,10 +35,13 @@ describe('the Store Instance Seals controller', function() {
   var storeInstanceAssignSealsFactory;
   var location;
   var httpBackend;
+  var servedStoreInstanceDetailsJSON;
+  var updateStoreInstanceStatusDeferred;
 
   beforeEach(inject(function($injector, $rootScope, $controller, $q, $httpBackend, $location, ngToast, _servedSealTypes_, _servedSealColors_,
-    _servedStoreInstanceSeals_,_servedStoreInstanceSealsCreated_) {
+    _servedStoreInstanceSeals_,_servedStoreInstanceSealsCreated_,_servedStoreInstanceDetails_) {
 
+    servedStoreInstanceDetailsJSON = _servedStoreInstanceDetails_;
     sealTypesJSON = _servedSealTypes_;
     sealColorsJSON = _servedSealColors_;
     storeInstanceSealsJSON = _servedStoreInstanceSeals_;
@@ -64,8 +68,13 @@ describe('the Store Instance Seals controller', function() {
     getSealTypesDeferred = $q.defer();
     getSealColorsDeferred = $q.defer();
     createStoreInstanceSealDeferred = $q.defer();
+    updateStoreInstanceStatusDeferred = $q.defer();
+
+    getStoreDetailsDeferred = $q.defer();
+    getStoreDetailsDeferred.resolve(storeDetailsJSON);
 
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
+    spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(updateStoreInstanceStatusDeferred.promise);
     spyOn(sealTypesService, 'getSealTypes').and.returnValue(getSealTypesDeferred.promise);
     spyOn(sealColorsService, 'getSealColors').and.returnValue(getSealColorsDeferred.promise);
     spyOn(storeInstanceAssignSealsFactory, 'createStoreInstanceSeal').and.returnValue(createStoreInstanceSealDeferred.promise);
@@ -142,7 +151,6 @@ describe('the Store Instance Seals controller', function() {
           scheduleNumber: 'SCHED123',
           storeInstanceNumber: $scope.storeId
         };
-        getStoreDetailsDeferred.resolve(storeDetailsJSON);
         $scope.$digest();
       });
 
@@ -395,12 +403,15 @@ describe('the Store Instance Seals controller', function() {
 
     beforeEach(function() {
       spyOn(StoreInstanceSealsCtrl,'displayLoadingModal');
-      spyOn(StoreInstanceSealsCtrl,'hideLoadingModal');
       spyOn(StoreInstanceSealsCtrl,'formatPayload').and.callThrough();
       spyOn(StoreInstanceSealsCtrl,'makeAssignSealsPromises').and.callThrough();
       spyOn(StoreInstanceSealsCtrl,'assignSealsSuccessHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl,'assignSealsErrorHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl,'showMessage');
+      spyOn(StoreInstanceSealsCtrl,'updateStatusToStep').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl,'findStatusObject').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl,'statusUpdateSuccessHandler').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl,'hideLoadingModal');
       mockAssignSeals();
     });
 
@@ -420,10 +431,6 @@ describe('the Store Instance Seals controller', function() {
         $scope.$digest();
       });
 
-      it('should hide the loading modal', function () {
-        expect(StoreInstanceSealsCtrl.hideLoadingModal).toHaveBeenCalled();
-      });
-
       it('should call the success handler', function () {
         expect(StoreInstanceSealsCtrl.assignSealsSuccessHandler).toHaveBeenCalled();
       });
@@ -433,9 +440,38 @@ describe('the Store Instance Seals controller', function() {
         expect(StoreInstanceSealsCtrl.showMessage).toHaveBeenCalledWith('success',message);
       });
 
+      describe('updateStatusToStep', function(){
+        var nextStep;
+        beforeEach(function() {
+          nextStep = {
+            stepName: '3',
+            URL: '/store-instance-review/' + storeId + '/dispatch'
+          };
+          updateStoreInstanceStatusDeferred.resolve({});
+          $scope.$digest();
+        });
+
+        it('should call the update status call', function () {
+          expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalledWith(nextStep);
+        });
+
+      });
+
+    });
+
+    describe('statusUpdateSuccessHandler', function(){
+
+      beforeEach(function() {
+        $scope.$digest();
+        StoreInstanceSealsCtrl.statusUpdateSuccessHandler();
+      });
+
+      it('should hide the loading modal', function () {
+        expect(StoreInstanceSealsCtrl.hideLoadingModal).toHaveBeenCalled();
+      });
+
       it('should redirect the user to the packing page with the new store instance id', function() {
-        var url = '/store-instance-review/' + storeId;
-        expect(location.path()).toEqual(url);
+        expect(location.path()).toEqual(StoreInstanceSealsCtrl.nextStep.URL);
       });
 
     });
