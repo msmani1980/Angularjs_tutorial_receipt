@@ -8,6 +8,7 @@ describe('Service: storeInstanceDashboardFactory', function () {
 
   // instantiate service
   var catererStationService;
+  var stationsService;
   var storeInstanceService;
   var scope;
   var storeInstanceDashboardFactory;
@@ -15,10 +16,12 @@ describe('Service: storeInstanceDashboardFactory', function () {
   beforeEach(inject(function (_storeInstanceDashboardFactory_, $injector, $rootScope) {
     storeInstanceDashboardFactory = _storeInstanceDashboardFactory_;
     catererStationService = $injector.get('catererStationService');
+    stationsService = $injector.get('stationsService');
     storeInstanceService = $injector.get('storeInstanceService');
     scope = $rootScope.$new();
 
     spyOn(catererStationService, 'getCatererStationList');
+    spyOn(stationsService, 'getGlobalStationList');
     spyOn(storeInstanceService, 'getStoreInstancesList');
 
 
@@ -28,6 +31,13 @@ describe('Service: storeInstanceDashboardFactory', function () {
     it('should call getCatererStationList', function () {
       storeInstanceDashboardFactory.getCatererStationList();
       expect(catererStationService.getCatererStationList).toHaveBeenCalled();
+    });
+  });
+
+  fdescribe('stationsService calls', function () {
+    it('should call getStationList', function () {
+      storeInstanceDashboardFactory.getStationList();
+      expect(stationsService.getGlobalStationList).toHaveBeenCalled();
     });
   });
 
