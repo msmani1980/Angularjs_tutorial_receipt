@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: StoreInstanceReviewCtrl dispatch', function () {
+describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -25,6 +25,7 @@ fdescribe('Controller: StoreInstanceReviewCtrl dispatch', function () {
   var getStoreInstanceSealsDeferred;
   var location;
   var setStoreStatusDeferred;
+  var getStoreInstanceItemsDeferred;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
@@ -48,6 +49,10 @@ fdescribe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     setStoreStatusDeferred = $q.defer();
     setStoreStatusDeferred.resolve({response:200});
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(setStoreStatusDeferred.promise);
+
+    getStoreInstanceItemsDeferred = $q.defer();
+    getStoreInstanceItemsDeferred.resolve(_servedStoreInstanceMenuItems_);
+    spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
 
     storeInstanceReviewFactory = $injector.get('storeInstanceReviewFactory');
     getSealColorsDeferred  = $q.defer();
@@ -94,9 +99,18 @@ fdescribe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     it('should call getStoreInstanceMenuItems', function () {
       var expectedPayload = {
         itemTypeId: 1, // this is 1 because we are requesting regular items.
-        scheduleDate: storeDetailsJSON.scheduleDate
+        date: storeDetailsJSON.scheduleDate
       };
       expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(routeParams.storeId, expectedPayload);
+    });
+
+    it('should call getStoreInstanceItemList', function(){
+      expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(routeParams.storeId);
+    });
+
+    it('should set scope.items', function(){
+      expect(scope.items).toBeDefined();
+      // TODO test that this was actually set per the data model that is rendered in the view.
     });
 
     it('should set wizardSteps', function () {
