@@ -197,12 +197,14 @@ angular.module('ts5App')
     };
 
     this.findStatusObject = function(stepObject) {
-      return lodash.findWhere($scope.storeDetails.statusList, {name: stepObject.stepName});
+      return lodash.findWhere($scope.storeDetails.statusList, {
+        name: stepObject.stepName
+      });
     };
 
-    this.statusUpdateSuccessHandler = function() {
+    this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
-      $location.path($this.nextStep.URL);
+      $location.path(stepObject.URL);
     };
 
     this.updateStatusToStep = function(stepObject) {
@@ -210,10 +212,9 @@ angular.module('ts5App')
       if (!statusObject) {
         return;
       }
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(
-        $this.statusUpdateSuccessHandler,
-        $this.assignSealsErrorHandler
-      );
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(function() {
+        $this.statusUpdateSuccessHandler(stepObject);
+      }, $this.assignSealsErrorHandler);
     };
 
     this.assignSealsSuccessHandler = function() {
@@ -269,7 +270,11 @@ angular.module('ts5App')
     };
 
     $scope.goToPacking = function() {
-      $location.path($this.prevStep.URL);
+      return $scope.prevTrigger();
+    };
+
+    $scope.prevTrigger = function() {
+      $this.updateStatusToStep($this.prevStep);
     };
 
     $scope.validateSeals = function(sealTypeObject) {
