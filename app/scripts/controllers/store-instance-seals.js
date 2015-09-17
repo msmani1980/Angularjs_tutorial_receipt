@@ -54,11 +54,20 @@ angular.module('ts5App')
       return sealTypesService.getSealTypes().then($this.setSealTypes);
     };
 
+    this.setStoreInstanceSeals = function(dataFromAPI) {
+      $scope.existingSeals = dataFromAPI.response;
+    };
+
+    this.getStoreInstanceSeals = function() {
+      return storeInstanceAssignSealsFactory.getStoreInstanceSeals($routeParams.storeId).then($this.setStoreInstanceSeals);
+    };
+
     this.makePromises = function() {
       return [
         this.getStoreDetails(),
         this.getSealColors(),
-        this.getSealTypes()
+        this.getSealTypes(),
+        this.getStoreInstanceSeals()
       ];
     };
 
@@ -107,18 +116,6 @@ angular.module('ts5App')
       })[0];
     };
 
-    this.generateSealTypeObject = function(sealType, sealColor) {
-      return {
-        id: sealType.id,
-        name: sealType.name,
-        color: sealColor.color,
-        seals: {
-          numbers: []
-        },
-        actions: $this.addSealTypeActions(sealType),
-        required: $this.isSealTypeRequired(sealType)
-      };
-    };
 
     this.displayLoadingModal = function(loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
@@ -128,11 +125,43 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
+    this.formatExistingSeals = function(sealsList) {
+      var formattedSeals = [];
+      for(var key in sealsList) {
+        var seal = sealsList[key];
+        formattedSeals.push(seal.sealNumbers[0]);
+      }
+      return formattedSeals;
+    };
+
+    this.getExistingSeals = function(typeId) {
+      if(!$scope.existingSeals) {
+        return [];
+      }
+      var sealsList = $scope.existingSeals.filter(function(sealType) {
+        return sealType.type === typeId;
+      });
+      return this.formatExistingSeals(sealsList);
+    };
+
+    this.generateSealTypeObject = function(sealType) {
+      var sealColor = $this.getSealColor(sealType.id);
+      return {
+        id: sealType.id,
+        name: sealType.name,
+        color: sealColor.color,
+        seals: {
+          numbers: $this.getExistingSeals(sealType.id)
+        },
+        actions: $this.addSealTypeActions(sealType),
+        required: $this.isSealTypeRequired(sealType)
+      };
+    };
+
     this.generateSealTypesList = function() {
       $scope.sealTypesList = [];
       angular.forEach($scope.sealTypes, function(sealType) {
-        var sealColor = $this.getSealColor(sealType.id);
-        var sealTypeObject = $this.generateSealTypeObject(sealType, sealColor);
+        var sealTypeObject = $this.generateSealTypeObject(sealType);
         $scope.sealTypesList.push(sealTypeObject);
       });
       $this.hideLoadingModal();
