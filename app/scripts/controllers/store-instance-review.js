@@ -17,6 +17,7 @@ angular.module('ts5App')
     var _sealColors = [];
     var _storeInstanceSeals = [];
     var _nextStatusId = null;
+    var _menuItems = [];
     var STATUS_READY_FOR_DISPATCH = 'Ready for Dispatch';
     var STATUS_DISPATCHED = 'Dispatched';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
@@ -42,22 +43,22 @@ angular.module('ts5App')
       $scope.displayError = true;
       hideLoadingModal();
     }
-/*
+
     function getItemsSuccessHandler(dataFromAPI) {
-      $scope.menuItems = dataFromAPI.response;
+      _menuItems = dataFromAPI.response;
     }
-/*
+
     function getStoreInstanceMenuItems() {
       var payload = {
         itemTypeId: 1,
-        scheduleDate: $scope.storeDetails.scheduleDate
+        date: $scope.storeDetails.scheduleDate
       };
       _initPromises.push(
         storeInstanceFactory.getStoreInstanceMenuItems($routeParams.storeId, payload)
           .then(getItemsSuccessHandler)
       );
     }
-*/
+
     function setStoreInstanceSeals(dataFromAPI){
       _storeInstanceSeals = dataFromAPI.response;
     }
@@ -96,10 +97,11 @@ angular.module('ts5App')
 
       hideLoadingModal();
 
-      if($scope.menuItems) {
-        $scope.menuItems.map(function (item) {
+      if($scope.items) {
+        $scope.items.map(function (item) {
           item.itemDescription = item.itemCode + ' -  ' + item.itemName;
           item.disabled = true;
+          item.menuQuantity = $filter('filter')(_menuItems, {itemMasterId:item.itemMasterId}, true)[0].menuQuantity;
         });
       }
 
@@ -189,7 +191,7 @@ angular.module('ts5App')
     }
 
     function setStoreInstanceItems(dataFromAPI){
-      $scope.menuItems = dataFromAPI.response;
+      $scope.items = dataFromAPI.response;
     }
 
     function getStoreInstanceItems(){
@@ -200,7 +202,7 @@ angular.module('ts5App')
 
     function getStoreInstanceReviewData(){
       getStoreInstanceItems();
-      // getStoreInstanceMenuItems();
+      getStoreInstanceMenuItems();
       getStoreInstanceSeals();
       $q.all(_initPromises).then(initLoadComplete, showResponseErrors);
     }

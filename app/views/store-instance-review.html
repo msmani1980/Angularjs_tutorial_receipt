@@ -47,7 +47,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+          <tr ng-repeat="item in items | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
             ng-class="hasDiscrepancy(item)">
             <td>
               <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
