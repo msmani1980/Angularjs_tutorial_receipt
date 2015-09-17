@@ -212,10 +212,9 @@ angular.module('ts5App')
       if (!statusObject) {
         return;
       }
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(
-        $this.statusUpdateSuccessHandler(stepObject),
-        $this.assignSealsErrorHandler
-      );
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(function() {
+        $this.statusUpdateSuccessHandler(stepObject);
+      }, $this.assignSealsErrorHandler);
     };
 
     this.assignSealsSuccessHandler = function() {
