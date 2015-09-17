@@ -21,7 +21,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.clearSearchForm = clearSearchForm;
 
     function getStoreInstancesListSuccess(dataFromAPI) {
-      console.log(dataFromAPI.response);
+      $scope.storesList = dataFromAPI.response;
     }
 
     function searchStoreInstanceDashboardData() {
