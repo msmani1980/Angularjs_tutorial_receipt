@@ -202,9 +202,9 @@ angular.module('ts5App')
       });
     };
 
-    this.statusUpdateSuccessHandler = function() {
+    this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
-      $location.path($this.nextStep.URL);
+      $location.path(stepObject.URL);
     };
 
     this.updateStatusToStep = function(stepObject) {
@@ -213,7 +213,7 @@ angular.module('ts5App')
         return;
       }
       storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(
-        $this.statusUpdateSuccessHandler,
+        $this.statusUpdateSuccessHandler(stepObject),
         $this.assignSealsErrorHandler
       );
     };
@@ -271,10 +271,11 @@ angular.module('ts5App')
     };
 
     $scope.goToPacking = function() {
-      $location.path($this.prevStep.URL);
+      return $scope.prevTrigger();
     };
 
     $scope.prevTrigger = function() {
+      $this.updateStatusToStep($this.prevStep);
       return true;
     };
 
