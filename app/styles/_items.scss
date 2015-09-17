@@ -383,6 +383,22 @@
   }
 }
 
+.retail-company-exchange-rate-setup-form {
+
+  label {
+    font-weight:100;
+    font-size:16px
+  }
+
+  .datepicker-container {
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
 @media(min-width:$screen-sm-min){
 
   .delivery-note-form {

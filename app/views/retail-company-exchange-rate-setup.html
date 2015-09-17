@@ -1,80 +1,304 @@
 <div class="module-container">
-  <h2 class="ng-scope">{{viewName}}</h2>
-  <form name="retailCompanyExchangeRateSetupForm">
+  <div class="edit-controls">
+    <div class="row">
 
+      <div class="col-xs-6">
+        <h2 class="view-name"> {{ viewName }} </h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+
+        <fieldset ng-hide="viewOnly">
+
+<!-- COMMENTED OUT FOR MOCKUP           <button class="btn btn-warning" ng-click="toggleReview()" ng-hide="hideReview">
+          <button class="btn btn-warning">
+            <span class="fa fa-file-text-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Review</span>
+          </button> -->
+
+<!-- COMMENTED OUT FOR MOCKUP           <button class="btn btn-primary" ng-click="save(false)" ng-show="showSaveButton()"> -->
+          <button class="btn btn-primary">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Save</span>
+          </button>
+
+          <button type="button" class="btn btn-default" ng-click="cancel()">
+            <span class="fa fa-remove" aria-hidden="true"></span>
+            <span class="hidden-xs">Cancel</span>
+          </button>
+
+<!-- COMMENTED OUT FOR MOCKUP           <button class="btn btn-success" ng-click="save(true)" ng-show="showSaveButton()"> -->
+          <button class="btn btn-success">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Submit</span>
+          </button>
+
+        </fieldset>
+
+      </div>
+
+    </div>
+  </div>
+  
+     <div class="row">
+      <div class="col-xs-12">
+
+        <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="menuSearchForm" ng-submit="searchPostTripData()">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Dispatch LMP Station</label>
+                  <select required class="form-control">
+                    <option selected="selected" value>Select Dispatch Station</option>
+                    <option>{{ station.name }} - {{ station.code }}</option>
+                  </select>
+              </div>
+            </div>
+            
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Inbound LMP Station</label>
+                  <select required class="form-control">
+                    <option selected="selected" value>Select Inbound Station</option>
+                    <option>{{ station.name }} - {{ station.code }}</option>
+                  </select>
+              </div>
+            </div>
+            
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Store Number</label>
+                <input type="text" class="form-control" placeholder="1234">
+              </div>
+            </div>
+            
+            <div class="col-xs-12 col-sm-4">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.scheduleStartDate"
+                end-date-model="search.scheduleEndDate"
+                label-from="Schedule Date From"
+                label-to="Schedule Date To"
+                is-search-field="true">
+              </date-picker>
+            </div>
+            
+          </div>
+          <div class="row">
+          
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="departure-station">Departure Station</label>
+                <ui-select id="departure-station" multiple ng-model="multiSelectedValues.depStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{ station.stationCode }} ({{ station.stationName }})
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+            
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="arrival-station">Arrival Station</label>
+                <ui-select id="arrival-station" multiple ng-model="multiSelectedValues.arrStations" theme="bootstrap">
+                  <ui-select-match placeholder="Select Stations..">{{ $item.stationCode }}</ui-select-match>
+                  <ui-select-choices repeat="station in stationList | filter: $select.search">
+                    {{ station.stationCode }} ({{ station.stationName }})
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+            
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Store Instance</label>
+                <input type="text" class="form-control" placeholder="1234567">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-2">
+              <div class="form-group">
+                <label>Status</label>
+                  <select required class="form-control">
+                    <option selected="selected" value>Select Status</option>
+                    <option>{{ station.name }} - {{ station.code }}</option>
+                  </select>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+    
+  
+  <form class="form edit-form retail-company-exchange-rate-setup-form" name="form">
+    <error-dialog form-object="form"></error-dialog>
     <div class="panel panel-default">
-
       <div class="panel-heading">
         <div class="row">
-          <h4 class="col-xs-8">Select an Airline and Currency to Proceed</h4>
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="form-group">
+              <label for="lmp-station">Operating Currency*</label>
+              <select class="form-control" required>
+                <option selected="selected">GBP</option>
+              </select>
+            </div>
+          </div>
+
         </div>
       </div>
 
       <div class="panel-body">
-
+              
         <div class="row">
-          <div class="form-group">
-            <label for="dispatchedDeliveryStation" class="col-sm-6 control-label">Airline Names:</label>
-            <div class="col-sm-6">
-              <select class="form-control">
-                <option>
-                  {{ station.stationCode }} ({{ station.stationName}})
-                </option>
-              </select>
+        
+<!-- COMMENTED OUT FOR MOCKUP          <div class="col-xs-2">{{cashHandlerCompany.companyName}}</div> -->
+          <div class="col-xs-12 text-right">Base Currency: <span>BGP</span></div>
+<!-- COMMENTED OUT FOR MOCKUP          <div class="col-xs-10 text-right">Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></div> -->
+        </div>
+
+        <div class="well">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-6 col-md-2">
+              <div class="form-group">
+                <label>Accepted Currency</label>
+                <input type="text" class="form-control" placeholder="GBP">
+              </div>
             </div>
+            
+            <div class="col-xs-12 col-sm-6 col-md-2">
+              <div class="form-group">
+                <label>Denomination</label>
+                <input type="text" class="form-control" placeholder="0.01, 0.02, 0.05">
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-2">
+              <div class="form-group">
+                <label>Currency Code</label>
+                <input type="text" class="form-control" placeholder="GBP">
+              </div>
+            </div>
+            
+            <div class="col-xs-12 col-sm-6 col-md-2">
+              <div class="form-group">
+                <label>Exchange Rate</label>
+                <input type="number" class="form-control" placeholder="1.0000000">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.scheduleStartDate"
+                end-date-model="search.scheduleEndDate"
+                label-from="Start Date"
+                label-to="End Date"
+                is-search-field="true">
+              </date-picker>
+            </div>
+
           </div>
         </div>
-       
-      </div>
-      
-      <div class="panel-footer text-right" ng-show="showActionButtons">
-        <button class="btn btn-default">Search</button>
+
       </div>
 
     </div>
-    
-    <div class="panel panel-default">
 
-      <div class="panel-heading">
-        <div class="row">
-          <h4 class="col-xs-8">Add/Edit Currency Exchange Rate</h4>
-        </div>
-      </div>
-
-      <div class="panel-body">
-
-        <div class="row">
-          <div class="form-group">
-            <label for="dispatchedDeliveryStation" class="col-sm-6 control-label">Airline Names:</label>
-            <div class="col-sm-6">
-              <select class="form-control">
-                <option>
-                  {{ station.stationCode }} ({{ station.stationName}})
-                </option>
-              </select>
+    <table class="table table-bordered table-hover ng-scope">
+      <thead>
+        <tr>
+          <th>
+           <!-- TODO: SELECT ALL CHECKBOX  -->
+            <input class="btn btn-default" type="checkbox" value="1">
+          </th>
+          <th>Accepted Currency</th>
+          <th>Denomination</th>
+          <th>Currency Code</th>
+          <th width="20%">Exchange Rate</th>
+          <th>Start/End Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <input type="checkbox">
+          </td>
+          <td>
+            <input type="text" class="form-control" placeholder="GBP">
+          </td>
+          <td>
+            <input type="text" class="form-control" placeholder="0.01, 0.02, 0.05">
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+          </td>
+          <td>
+            <input type="text" class="form-control" placeholder="GBP" disabled="disabled">
+          </td>
+          <td>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-money"></i></span>
+              <input custom-validity
+                     custom-pattern="currencyWithFourDecimalPlace"
+                     ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
+                     ng-model="currenciesFields[currency.code].paperExchangeRate"
+                     ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                     name="{{currency.code}}paperExchangeRate"
+                     currencyType="paperExchangeRate" placeholder="0.0000"
+                     class="form-control"
+                     aria-label="Amount (to the nearest dollar)"/>
             </div>
-          </div>
-        </div>
-       
-      </div>
-      
-      <div class="panel-footer text-right" ng-show="showActionButtons">
-        <button
-          class="btn btn-default save-btn"
-          data-loading-text="Saving..."
-          ng-disabled="requestInProgress"
-          ng-click="checkVarianceAndSave(false)">Save</button>
+          </td>
+          <td colspan="2">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.scheduleStartDate"
+                end-date-model="search.scheduleEndDate"
+                is-search-field="true">
+              </date-picker>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-        <button
-          class="btn btn-primary submit-btn"
-          data-loading-text="Submitting..."
-          ng-disabled="requestInProgress"
-          ng-click="checkVarianceAndSave(true)">Submit</button>
-      </div>
 
-    </div>
-    
-    
+
   </form>
 </div>
 <dynamic-left-nav is-editing="1"></dynamic-left-nav>

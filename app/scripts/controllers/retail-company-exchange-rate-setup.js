@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('RetailCompanyExchangeRateSetupCtrl', function () {
+  .controller('RetailCompanyExchangeRateSetupCtrl', function ($scope) {
 
 	$scope.viewName = 'Retail Company Exchange Rate Setup';
     $scope.search = {};
