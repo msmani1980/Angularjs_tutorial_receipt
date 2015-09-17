@@ -276,7 +276,6 @@ angular.module('ts5App')
 
     $scope.prevTrigger = function() {
       $this.updateStatusToStep($this.prevStep);
-      return true;
     };
 
     $scope.validateSeals = function(sealTypeObject) {

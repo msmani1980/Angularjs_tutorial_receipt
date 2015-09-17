@@ -561,8 +561,8 @@ describe('the Store Instance Seals controller', function() {
       spyOn(StoreInstanceSealsCtrl, 'prevStep');
     });
 
-    it('should return true for stepWizard', function() {
-      expect($scope.prevTrigger()).toBeTruthy();
+    it('should be defined', function() {
+      expect($scope.prevTrigger()).toBeDefined();
     });
 
     it('should have called updateStatusToStep', function() {
