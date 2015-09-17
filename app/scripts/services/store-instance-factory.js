@@ -114,6 +114,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       dependenciesArray.push(getStore(responseData.storeId));
       dependenciesArray.push(getStation(responseData.cateringStationId));
       dependenciesArray.push(getStoreStatusList());
+      dependenciesArray.push(getMenuMasterList());
 
       if (responseData.carrierId) {
         dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
@@ -122,18 +123,26 @@ angular.module('ts5App').service('storeInstanceFactory',
       return dependenciesArray;
     }
 
-    function formatResponseCollection(responseCollection, dataFromAPI) {
+    function formatResponseCollection(responseCollection, storeInstanceAPIResponse) {
       var storeDetails = {};
       storeDetails.LMPStation = responseCollection[1].code;
       storeDetails.storeNumber = responseCollection[0].storeNumber;
-      storeDetails.scheduleDate = dataFromAPI.scheduleDate;
-      storeDetails.scheduleNumber = dataFromAPI.scheduleNumber;
-      storeDetails.storeInstanceNumber = dataFromAPI.id;
+      storeDetails.scheduleDate = storeInstanceAPIResponse.scheduleDate;
+      storeDetails.scheduleNumber = storeInstanceAPIResponse.scheduleNumber;
+      storeDetails.storeInstanceNumber = storeInstanceAPIResponse.id;
       storeDetails.statusList = responseCollection[2];
-      storeDetails.currentStatus = lodash.findWhere(storeDetails.statusList, {id: dataFromAPI.statusId});
+      storeDetails.menuList = [];
+      angular.forEach(storeInstanceAPIResponse.menus, function(menu) {
+        var menuObject = storeDetails.menuNameList = lodash.findWhere(responseCollection[3].companyMenuMasters, {id: menu.menuMasterId});
+        if (angular.isDefined(menuObject)) {
+          storeDetails.menuList.push(menuObject);
+        }
+      });
 
-      if (responseCollection.length > 3) {
-        storeDetails.carrierNumber = responseCollection[3].carrierNumber;
+      storeDetails.currentStatus = lodash.findWhere(storeDetails.statusList, {id: storeInstanceAPIResponse.statusId});
+
+      if (responseCollection.length > 4) {
+        storeDetails.carrierNumber = responseCollection[4].carrierNumber;
       }
       return storeDetails;
     }
@@ -141,10 +150,10 @@ angular.module('ts5App').service('storeInstanceFactory',
     function getStoreDetails(storeId) {
       var getStoreDetailsDeferred = $q.defer();
 
-      getStoreInstance(storeId).then(function (dataFromAPI) {
-        var storeDetailPromiseArray = getDependenciesForStoreInstance(dataFromAPI);
+      getStoreInstance(storeId).then(function (storeInstanceAPIResponse) {
+        var storeDetailPromiseArray = getDependenciesForStoreInstance(storeInstanceAPIResponse);
         $q.all(storeDetailPromiseArray).then(function (responseCollection) {
-          getStoreDetailsDeferred.resolve(formatResponseCollection(responseCollection, dataFromAPI));
+          getStoreDetailsDeferred.resolve(formatResponseCollection(responseCollection, storeInstanceAPIResponse));
         });
       }, getStoreDetailsDeferred.reject);
 
