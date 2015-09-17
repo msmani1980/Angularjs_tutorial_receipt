@@ -71,8 +71,7 @@ angular.module('ts5App')
     this.exitOnSave = function(response){
       $this.hideLoadingModal();
       $this.showMessage('success','Store Instance created id: ' + response.id);
-      // TODO: Set this to actual URL when dashboard becomes available
-      $location.url('/store-instance-list');
+      $location.url('/store-instance-dashboard/');
     };
 
     this.createStoreInstanceSuccessHandler = function(response){
