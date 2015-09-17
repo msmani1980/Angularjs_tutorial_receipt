@@ -225,6 +225,8 @@ describe('the Store Instance Seals controller', function() {
         spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'createHandoverActions').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'createInboundActions').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'sealTypeListOrder').and.callThrough();
+
         $scope.$digest();
       });
 
@@ -250,6 +252,10 @@ describe('the Store Instance Seals controller', function() {
 
       it('should defined sealTypesList.required', function() {
         expect($scope.sealTypesList[1].required).toBeDefined();
+      });
+
+      it('should defined sealTypesList.order', function() {
+        expect($scope.sealTypesList[0].order).toBe(1);
       });
 
       it('should call the addSealTypeActions function', function() {
@@ -584,8 +590,6 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-
-  // sorry kelly
   describe('when view renders', function() {
 
     var view;

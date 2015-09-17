@@ -107,6 +107,19 @@ angular.module('ts5App')
       })[0];
     };
 
+    this.sealTypeListOrder = function(sealType) {
+      switch (sealType.name) {
+        case 'Outbound':
+          return 1;
+        case 'Hand Over':
+          return 2;
+        case 'Inbound':
+          return 3;
+        case 'High Security':
+          return 4;
+      }
+    };
+
     this.generateSealTypeObject = function(sealType, sealColor) {
       return {
         id: sealType.id,
@@ -116,7 +129,8 @@ angular.module('ts5App')
           numbers: []
         },
         actions: $this.addSealTypeActions(sealType),
-        required: $this.isSealTypeRequired(sealType)
+        required: $this.isSealTypeRequired(sealType),
+        order: $this.sealTypeListOrder(sealType)
       };
     };
 
