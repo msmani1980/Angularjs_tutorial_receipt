@@ -83,6 +83,14 @@ angular.module('ts5App')
       return sealNumbers;
     }
 
+    function getSealColorByTypeId(sealTypeId){
+        var sealColor = $filter('filter')(_sealColors, {type: sealTypeId}, true);
+      if(!sealColor || !sealColor.length){
+        return null;
+      }
+      return sealColor[0].color;
+    }
+
     function initLoadComplete(){
 
 
@@ -99,7 +107,7 @@ angular.module('ts5App')
       _sealTypes.map(function(sealType){
         $scope.seals.push({
           name: sealType.name,
-          bgColor: $filter('filter')(_sealColors, {type: sealType.id}, true)[0].color,
+          bgColor: getSealColorByTypeId(sealType.id),
           sealNumbers: getSealNumbersByTypeId(sealType.id)
         });
         return _sealTypes;
