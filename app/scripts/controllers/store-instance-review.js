@@ -175,8 +175,10 @@ angular.module('ts5App')
     }
 
     function storeInstanceStatusDispatched(){
-      showMessage('Now what? Redirect user where?', 'info');
-      // TODO redirect user somewhere?
+      showMessage('Dispatched', 'info');
+      console.log('here');
+      $location.url('/store-dispatch-dashboard');
+      // TODO test this.
     }
 
     function isReadyForDispatch(){

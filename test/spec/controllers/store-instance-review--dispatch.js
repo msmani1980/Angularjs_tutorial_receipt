@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
+fdescribe('Controller: StoreInstanceReviewCtrl dispatch', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -175,6 +175,12 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       it('should set the store instance status to the name value of "Dispatched" which is 4 with current mock data', function () {
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '4');
+      });
+      it('should redirect the user to /store-dispatch-dashboard', function(){
+        // TODO - write this test
+        //spyOn(location, 'url').and.callThrough();
+        //scope.submit();
+        // expect(location.url).toHaveBeenCalledWith('/store-dispatch-dashboard');
       });
     });
 
