@@ -190,6 +190,7 @@ angular.module('ts5App', [
     controller: 'StoreInstanceDashboardCtrl',
     controllerAs: 'storeInstanceDashboard'
   }).when('/store-instance-review/:storeId', {
+  }).when('/store-instance-review/:storeId/:action', {
     templateUrl: 'views/store-instance-review.html',
     controller: 'StoreInstanceReviewCtrl'
   }).when('/store-instance-packing/:storeId', {

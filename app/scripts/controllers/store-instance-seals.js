@@ -8,13 +8,26 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, storeInstanceDispatchWizardConfig,
-    storeInstanceFactory, sealTypesService, sealColorsService) {
+  .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceDispatchWizardConfig,
+    storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
+    lodash) {
+
+    // TODO: Allow a user to edit existing seals in each seal type
 
     var $this = this;
+    this.nextStep = {
+      stepName: '3',
+      URL: '/store-instance-review/' + $routeParams.storeId + '/dispatch'
+    };
+    this.prevStep = {
+      stepName: '2',
+      URL: '/store-instance-packing/' + $routeParams.storeId
+    };
 
-    this.setSealColors = function(sealColorsJSON) {
-      $scope.sealColorsList = sealColorsJSON;
+    $scope.formData = [];
+
+    this.setSealColors = function(dataFromAPI) {
+      $scope.sealColorsList = dataFromAPI.response;
     };
 
     this.setStoreDetails = function(storeDetailsJSON) {
@@ -25,97 +38,274 @@ angular.module('ts5App')
       $scope.sealTypes = sealTypesJSON;
     };
 
-    this.setWizardSteps = function(storeId) {
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps(storeId);
+    this.setWizardSteps = function() {
+      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
     };
 
     this.getSealColors = function() {
-      sealColorsService.getSealColors().then($this.setSealColors);
+      return sealColorsService.getSealColors().then($this.setSealColors);
     };
 
     this.getStoreDetails = function() {
-      storeInstanceFactory.getStoreDetails($scope.storeId).then($this.setStoreDetails);
+      return storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
     };
 
     this.getSealTypes = function() {
-      sealTypesService.getSealTypes().then($this.setSealTypes);
+      return sealTypesService.getSealTypes().then($this.setSealTypes);
+    };
+
+    this.makePromises = function() {
+      return [
+        this.getStoreDetails(),
+        this.getSealColors(),
+        this.getSealTypes()
+      ];
+    };
+
+    this.createHandoverActions = function() {
+      return [{
+        label: 'Copy From Outbound',
+        trigger: function() {
+          return $scope.copySeals('Outbound', 'Hand Over');
+        }
+      }];
+    };
+
+    this.createInboundActions = function() {
+      return [{
+        label: 'Copy From Handover',
+        trigger: function() {
+          return $scope.copySeals('Hand Over', 'Inbound');
+        }
+      }, {
+        label: 'Copy From Outbound',
+        trigger: function() {
+          return $scope.copySeals('Outbound', 'Inbound');
+        }
+      }];
+    };
+
+    this.addSealTypeActions = function(sealTypeObject) {
+      if (sealTypeObject.name === 'Hand Over') {
+        return $this.createHandoverActions();
+      }
+      if (sealTypeObject.name === 'Inbound') {
+        return this.createInboundActions();
+      }
+    };
+
+    this.isSealTypeRequired = function(sealTypeObject) {
+      if (sealTypeObject.name === 'Outbound' || sealTypeObject.name === 'Inbound') {
+        return true;
+      }
+      return false;
+    };
+
+    this.getSealColor = function(typeId) {
+      return $scope.sealColorsList.filter(function(sealColor) {
+        return sealColor.type === typeId;
+      })[0];
+    };
+
+    this.sealTypeListOrder = function(sealType) {
+      switch (sealType.name) {
+        case 'Outbound':
+          return 1;
+        case 'Hand Over':
+          return 2;
+        case 'Inbound':
+          return 3;
+        case 'High Security':
+          return 4;
+      }
+    };
+
+    this.generateSealTypeObject = function(sealType, sealColor) {
+      return {
+        id: sealType.id,
+        name: sealType.name,
+        color: sealColor.color,
+        seals: {
+          numbers: []
+        },
+        actions: $this.addSealTypeActions(sealType),
+        required: $this.isSealTypeRequired(sealType),
+        order: $this.sealTypeListOrder(sealType)
+      };
+    };
+
+    this.displayLoadingModal = function(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
+
+    this.hideLoadingModal = function() {
+      angular.element('#loading').modal('hide');
+    };
+
+    this.generateSealTypesList = function() {
+      $scope.sealTypesList = [];
+      angular.forEach($scope.sealTypes, function(sealType) {
+        var sealColor = $this.getSealColor(sealType.id);
+        var sealTypeObject = $this.generateSealTypeObject(sealType, sealColor);
+        $scope.sealTypesList.push(sealTypeObject);
+      });
+      $this.hideLoadingModal();
+    };
+
+    this.getSealTypesDependencies = function() {
+      this.displayLoadingModal('Loading the Store Instance');
+      var promises = this.makePromises();
+      $q.all(promises).then($this.generateSealTypesList);
+    };
+
+    this.showMessage = function(type, message) {
+      ngToast.create({
+        className: type,
+        dismissButton: true,
+        content: message
+      });
+    };
+
+    this.resetErrors = function() {
+      $scope.formErrors = [];
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+      $scope.response500 = false;
+    };
+
+    this.validateForm = function() {
+      this.resetErrors();
+      for (var key in $scope.sealTypesList) {
+        var sealTypeObject = $scope.sealTypesList[key];
+        $scope.validateSeals(sealTypeObject);
+      }
+      $scope.displayError = $scope.assignSealsForm.$invalid;
+      return $scope.assignSealsForm.$valid;
+    };
+
+    this.exitOnSave = function() {
+      $this.hideLoadingModal();
+      $this.showMessage('success', 'Seals Assigned');
+      $location.url('/store-instance-dashboard');
+    };
+
+    this.formatPayload = function(sealTypeObject) {
+      return {
+        type: sealTypeObject.id,
+        color: sealTypeObject.color,
+        sealNumbers: sealTypeObject.seals.numbers
+      };
+    };
+
+    this.makeAssignSealsPromises = function() {
+      var promises = [];
+      angular.forEach($scope.sealTypesList, function(sealTypeObject) {
+        var payload = $this.formatPayload(sealTypeObject);
+        var promise = storeInstanceAssignSealsFactory.createStoreInstanceSeal(
+          $routeParams.storeId,
+          payload
+        );
+        promises.push(promise);
+      });
+      return promises;
+    };
+
+    this.findStatusObject = function(stepObject) {
+      return lodash.findWhere($scope.storeDetails.statusList, {
+        name: stepObject.stepName
+      });
+    };
+
+    this.statusUpdateSuccessHandler = function(stepObject) {
+      $this.hideLoadingModal();
+      $location.path(stepObject.URL);
+    };
+
+    this.updateStatusToStep = function(stepObject) {
+      var statusObject = this.findStatusObject(stepObject);
+      if (!statusObject) {
+        return;
+      }
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(function() {
+        $this.statusUpdateSuccessHandler(stepObject);
+      }, $this.assignSealsErrorHandler);
+    };
+
+    this.assignSealsSuccessHandler = function() {
+      $this.updateStatusToStep($this.nextStep);
+      $this.showMessage('success', 'Seals Assigned!');
+    };
+
+    this.assignSealsErrorHandler = function(response) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      if (response.data) {
+        $scope.formErrors = response.data;
+        return false;
+      }
+      $scope.response500 = true;
+      return false;
+    };
+
+    this.assignSeals = function() {
+      this.displayLoadingModal('Assigning seals to Store Instance');
+      var promises = this.makeAssignSealsPromises();
+      $q.all(promises).then(
+        $this.assignSealsSuccessHandler,
+        $this.assignSealsErrorHandler
+      );
     };
 
     this.init = function() {
-      $scope.storeId = $routeParams.storeId;
-      if ($scope.storeId) {
-        // TODO: Make a $q
-        this.getStoreDetails();
-        this.getSealColors();
-        this.getSealTypes();
-        this.setWizardSteps($scope.storeId);
-      }
+      this.getSealTypesDependencies();
+      this.setWizardSteps();
+    };
+
+    this.getSealTypeObjectByName = function(name) {
+      return $scope.sealTypesList.filter(function(sealTypeObject) {
+        return sealTypeObject.name === name;
+      })[0];
     };
 
     this.init();
 
-    $scope.copySeals = function(copyFrom,copyTo) {
-       var sealTypeFrom = $scope.sealTypesList.filter(function(sealType) { return sealType.name === copyFrom; })[0];
-       var sealTypeTo = $scope.sealTypesList.filter(function(sealType) { return sealType.name === copyTo; })[0];
-       sealTypeTo.seals.numbers = angular.copy(sealTypeFrom.seals.numbers);
+    $scope.copySeals = function(copyFrom, copyTo) {
+      var sealTypeFrom = $this.getSealTypeObjectByName(copyFrom);
+      var sealTypeTo = $this.getSealTypeObjectByName(copyTo);
+      sealTypeTo.seals.numbers = angular.copy(sealTypeFrom.seals.numbers);
     };
 
-    // TODO: Set with controller method after APIs all resolve
-    $scope.sealTypesList = [
-      {
-        name:'Outbound',
-        code: 'OB',
-        color:'#00B200',
-        seals: {
-            numbers:[]
-        }
-      },
-      {
-        name:'Handover',
-        code: 'HO',
-        color:'#E5E500',
-        seals: {
-            numbers:[]
-        },
-        actions: [
-          {
-            label: 'Copy From Outbound',
-            trigger: function() {
-              return $scope.copySeals('Outbound','Handover');
-            }
-          }
-        ]
-      },
-      {
-        name:'Inbound',
-        code: 'IB',
-        color:'#0000FF',
-        seals: {
-            numbers:[]
-        },
-        actions: [
-          {
-            label: 'Copy From Outbound',
-            trigger: function() {
-              return $scope.copySeals('Outbound','Inbound');
-            }
-          },
-          {
-            label: 'Copy From Handover',
-            trigger: function() {
-              return $scope.copySeals('Handover','Inbound');
-            }
-          },
-        ]
-      },
-      {
-        name:'High Security',
-        code: 'HS',
-        color:'#B70024',
-        seals: {
-            numbers:[]
-        }
-      },
-    ];
+    $scope.submitForm = function(saveAndExit) {
+      $scope.assignSealsForm.$setSubmitted(true);
+      if ($this.validateForm()) {
+        $this.assignSeals(saveAndExit);
+      }
+      return false;
+    };
+
+    $scope.goToPacking = function() {
+      return $scope.prevTrigger();
+    };
+
+    $scope.prevTrigger = function() {
+      $this.updateStatusToStep($this.prevStep);
+    };
+
+    $scope.validateSeals = function(sealTypeObject) {
+      var model = $scope.assignSealsForm[sealTypeObject.name];
+      if (angular.isUndefined(model) || model.$pristine && !$scope.assignSealsForm.$submitted) {
+        return '';
+      }
+      if (sealTypeObject.required && sealTypeObject.seals.numbers.length === 0) {
+        model.$setValidity('required', false);
+        return 'has-error';
+      }
+      model.$setValidity('required', true);
+      return 'has-success';
+    };
+
+    $scope.saveAndExit = function() {
+      return $scope.submitForm(true);
+    };
 
   });

@@ -1,6 +1,6 @@
 <div class="container">
 
-  <step-wizard steps="wizardSteps" next-trigger="nextTrigger()" prev-trigger="prevTrigger()"></step-wizard>
+  <step-wizard steps="wizardSteps" save-trigger="saveAndExit()" next-trigger="nextTrigger()" prev-trigger="prevTrigger()"></step-wizard>
 
   <store-instance-header></store-instance-header>
 
@@ -8,11 +8,22 @@
 
   <form name="assignSealsForm" ng-submit="submitForm()">
 
-    <div ng-repeat="(sealTypeKey, sealType) in sealTypesList" ng-if="sealTypesList">
+    <div ng-repeat="(sealTypeKey, sealType) in sealTypesList | orderBy:'order'" ng-if="sealTypesList">
 
       <seal-type seal-type-object="sealType"></seal-type>
 
     </div>
+
+    <footer class="text-right">
+      <button type="button" ng-click="goToPacking()" class="btn btn-default">
+        <i class="fa fa-arrow-left"></i>
+        <span class="btn-label">Prev</span>
+      </button>
+      <button type="submit" class="btn btn-success">
+        <span class="btn-label">Next</span>
+        <i class="fa fa-arrow-right"></i>
+      </button>
+    </footer>
 
   </form>
 

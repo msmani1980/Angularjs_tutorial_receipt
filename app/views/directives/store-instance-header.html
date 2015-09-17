@@ -1,42 +1,51 @@
 <div class="panel panel-default panel-custom">
   <div class="bg-white panel-heading">
-    <strong>{{storeDetails.currentStatus.statusName}}</strong>
+    <div class="row">
+      <div class="col-xs-4">
+        <strong>{{storeDetails.currentStatus.statusName}}</strong>
+      </div>
+      <div class="col-xs-8 text-right">
+        <span ng-repeat="menu in storeDetails.menuList">
+          {{menu.menuName}}<span ng-if="!$last">, </span>
+        </span>
+      </div>
+    </div>
   </div>
   <div class="bg-gray panel-body">
-  <table class="table">
+    <table class="table">
 
-    <thead>
-    <tr>
-      <th>LMP Station</th>
-      <th>Store Number</th>
-      <th>Schedule Date</th>
-      <th>Schedule Number</th>
-      <th>Aircraft Tail Number</th>
-      <th>Store Instance Number</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td>
-        <input type="text" class="form-control" ng-model="storeDetails.LMPStation" disabled/>
-      </td>
-      <td>
-        <input type="text" class="form-control" ng-model="storeDetails.storeNumber" disabled/>
-      </td>
-      <td>
-        <input type="text" class="form-control" ng-model="storeDetails.scheduleDate" disabled/>
-      </td>
-      <td>
-        <input type="text" class="form-control" ng-model="storeDetails.scheduleNumber" disabled/>
-      </td>
-      <td>
-        <input type="text" class="form-control" ng-model="storeDetails.carrierNumber" disabled/>
-      </td>
-      <td>
-        <input type="text" class="form-control" ng-model="storeDetails.storeInstanceNumber" disabled/>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+      <thead>
+      <tr>
+        <th>LMP Station</th>
+        <th>Store Number</th>
+        <th>Schedule Date</th>
+        <th>Schedule Number</th>
+        <th>Aircraft Tail Number</th>
+        <th>Store Instance Number</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <input type="text" class="form-control" ng-model="storeDetails.LMPStation" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="storeDetails.storeNumber" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="storeDetails.scheduleDate" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="storeDetails.scheduleNumber" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="storeDetails.carrierNumber" disabled/>
+        </td>
+        <td>
+          <input type="text" class="form-control" ng-model="storeDetails.storeInstanceNumber" disabled/>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

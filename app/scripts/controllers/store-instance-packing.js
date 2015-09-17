@@ -97,8 +97,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
-        if (item.menuQuantity) {
+        if (angular.isDefined(item.menuQuantity)) {
           delete item.id;
+        }
+        if (angular.isDefined(item.quantity)) {
+          item.quantity = item.quantity.toString();
         }
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
@@ -139,7 +142,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     function updateStoreDetails(response, stepObject) {
       $scope.storeDetails.currentStatus = lodash.findWhere($scope.storeDetails.statusList, {id: response.statusId});
-      console.log(stepObject.URL);
       $location.path(stepObject.URL);
     }
 
@@ -211,7 +213,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
         newPayload.response.push(itemPayload);
       });
-      console.log(newPayload);
       return newPayload;
     };
 
@@ -282,7 +283,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
       if (!$scope.storeInstancePackingForm.$valid) {
-        showToast('danger', 'Save Items', 'All template quantities must be a number');
+        showToast('danger', 'Save Items', 'All Packed quantities must be a number');
         return false;
       }
       var payload = $this.formatStoreInstanceItemsPayload();
