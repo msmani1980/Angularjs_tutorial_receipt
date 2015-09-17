@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: StoreInstanceDashboardCtrl', function () {
+describe('Controller: StoreInstanceDashboardCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/catering-stations.json'));
