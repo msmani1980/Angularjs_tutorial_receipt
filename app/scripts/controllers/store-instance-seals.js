@@ -197,7 +197,9 @@ angular.module('ts5App')
     };
 
     this.findStatusObject = function(stepObject) {
-      return lodash.findWhere($scope.storeDetails.statusList, {name: stepObject.stepName});
+      return lodash.findWhere($scope.storeDetails.statusList, {
+        name: stepObject.stepName
+      });
     };
 
     this.statusUpdateSuccessHandler = function() {
@@ -270,6 +272,10 @@ angular.module('ts5App')
 
     $scope.goToPacking = function() {
       $location.path($this.prevStep.URL);
+    };
+
+    $scope.prevTrigger = function() {
+      return true;
     };
 
     $scope.validateSeals = function(sealTypeObject) {
