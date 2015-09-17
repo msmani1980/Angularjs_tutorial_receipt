@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
                                                    storeInstanceFactory, $location, storeInstanceReviewFactory,
-                                                   $q, ngToast, $filter) {
+                                                   $q, ngToast, $filter, storeInstanceReplenishWizardConfig) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -239,11 +239,6 @@ angular.module('ts5App')
     actions.replenishSubmit = function(){
       saveStoreInstanceStatus(STATUS_DISPATCHED);
     };
-
-    function storeInstanceStatusDispatched(){
-      showMessage('Now what? Redirect user where?', 'info');
-      // TODO redirect user somewhere?
-    }
 
     function init() {
       _initPromises = [];
