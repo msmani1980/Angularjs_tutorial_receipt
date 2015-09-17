@@ -12,5 +12,21 @@
   "createdOn": "2015-07-28 16:41:00.027412",
   "updatedBy": null,
   "updatedOn": "2015-09-01 15:57:31.444228",
-  "menus": null
+  "menus": [
+    {
+      "id": 28,
+      "storeInstanceId": 38,
+      "menuMasterId": 89
+    },
+    {
+      "id": 29,
+      "storeInstanceId": 38,
+      "menuMasterId": 6
+    },
+    {
+      "id": 30,
+      "storeInstanceId": 38,
+      "menuMasterId": 4
+    }
+  ]
 }
