@@ -561,10 +561,6 @@ describe('the Store Instance Seals controller', function() {
       spyOn(StoreInstanceSealsCtrl, 'prevStep');
     });
 
-    it('should be defined', function() {
-      expect($scope.prevTrigger()).toBeDefined();
-    });
-
     it('should have called updateStatusToStep', function() {
       $scope.prevTrigger();
       expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalledWith(StoreInstanceSealsCtrl.prevStep);
