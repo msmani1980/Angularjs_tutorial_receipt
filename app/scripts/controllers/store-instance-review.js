@@ -42,11 +42,11 @@ angular.module('ts5App')
       $scope.displayError = true;
       hideLoadingModal();
     }
-
+/*
     function getItemsSuccessHandler(dataFromAPI) {
       $scope.menuItems = dataFromAPI.response;
     }
-
+/*
     function getStoreInstanceMenuItems() {
       var payload = {
         itemTypeId: 1,
@@ -57,7 +57,7 @@ angular.module('ts5App')
           .then(getItemsSuccessHandler)
       );
     }
-
+*/
     function setStoreInstanceSeals(dataFromAPI){
       _storeInstanceSeals = dataFromAPI.response;
     }
@@ -176,7 +176,6 @@ angular.module('ts5App')
 
     function storeInstanceStatusDispatched(){
       showMessage('Dispatched', 'info');
-      console.log('here');
       $location.url('/store-dispatch-dashboard');
       // TODO test this.
     }
@@ -190,8 +189,19 @@ angular.module('ts5App')
       return false;
     }
 
+    function setStoreInstanceItems(dataFromAPI){
+      $scope.menuItems = dataFromAPI.response;
+    }
+
+    function getStoreInstanceItems(){
+      _initPromises.push(
+        storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(setStoreInstanceItems)
+      )
+    }
+
     function getStoreInstanceReviewData(){
-      getStoreInstanceMenuItems();
+      getStoreInstanceItems();
+      // getStoreInstanceMenuItems();
       getStoreInstanceSeals();
       $q.all(_initPromises).then(initLoadComplete, showResponseErrors);
     }
@@ -289,6 +299,13 @@ angular.module('ts5App')
       if (actions[initAction]) {
         actions[initAction]();
       }
+    };
+
+    $scope.hasDiscrepancy = function(item){
+      if(item.menuQuantity !== item.quantity){
+        return 'has-discrepancy';
+      }
+      return '';
     };
 
   });

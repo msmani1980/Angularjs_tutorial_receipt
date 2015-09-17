@@ -177,9 +177,9 @@ fdescribe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '4');
       });
       it('should redirect the user to /store-dispatch-dashboard', function(){
-        // TODO - write this test
-        //spyOn(location, 'url').and.callThrough();
-        //scope.submit();
+        // TODO - write this test to check that after submit, user is redirected
+        // spyOn(location, 'url');
+        // scope.submit();
         // expect(location.url).toHaveBeenCalledWith('/store-dispatch-dashboard');
       });
     });
