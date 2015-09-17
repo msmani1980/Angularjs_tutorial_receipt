@@ -205,7 +205,7 @@ angular.module('ts5App')
     function getStoreInstanceItems(){
       _initPromises.push(
         storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(setStoreInstanceItems)
-      )
+      );
     }
 
     function getStoreInstanceReviewData(){

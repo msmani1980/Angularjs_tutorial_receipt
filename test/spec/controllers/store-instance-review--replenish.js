@@ -9,7 +9,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
   beforeEach(module('served/seal-colors.json'));
   beforeEach(module('served/seal-types.json'));
   beforeEach(module('served/store-status.json'));
-
+  beforeEach(module('served/store-instance-item-list.json'));
 
   var StoreInstanceReviewCtrl;
   var scope;
@@ -25,10 +25,11 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
   var getStoreInstanceSealsDeferred;
   var location;
   var setStoreStatusDeferred;
+  var getStoreInstanceItemsDeferred;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
-                              _servedSealColors_, _servedSealTypes_, $location) {
+                              _servedSealColors_, _servedSealTypes_, $location, _servedStoreInstanceItemList_) {
     scope = $rootScope.$new();
     routeParams = {
       storeId: 17,
@@ -48,6 +49,9 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     setStoreStatusDeferred = $q.defer();
     setStoreStatusDeferred.resolve({response:200});
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(setStoreStatusDeferred.promise);
+    getStoreInstanceItemsDeferred = $q.defer();
+    getStoreInstanceItemsDeferred.resolve(_servedStoreInstanceItemList_);
+    spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
 
     storeInstanceReviewFactory = $injector.get('storeInstanceReviewFactory');
     getSealColorsDeferred  = $q.defer();
@@ -95,10 +99,15 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     it('should call getStoreInstanceMenuItems', function () {
       var expectedPayload = {
         itemTypeId: 1, // this is 1 because we are requesting regular items.
-        scheduleDate: storeDetailsJSON.scheduleDate
+        date: storeDetailsJSON.scheduleDate
       };
       expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(routeParams.storeId, expectedPayload);
     });
+
+    it('should call getStoreInstanceItems', function () {
+      expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(routeParams.storeId);
+    });
+    // TODO - mock items and check against scope.
 
     it('should set wizardSteps', function () {
       var wizardSteps = storeInstanceReplenishWizardConfig.getSteps(routeParams.storeId);

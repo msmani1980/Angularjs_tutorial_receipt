@@ -28,6 +28,13 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
   var setStoreStatusDeferred;
   var getStoreInstanceItemsDeferred;
 
+  var getStoreDetailsDeferredPromise;
+  var getStoreInstanceMenuItemsDeferredPromise;
+  var getStoreInstanceItemsDeferredPromise;
+  var getSealColorsDeferredPromise;
+  var getSealTypesDeferredPromise;
+  var getStoreInstanceSealsDeferredPromise;
+
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
                               _servedSealColors_, _servedSealTypes_, $location, _servedStoreInstanceItemList_) {
@@ -43,27 +50,33 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     // storeInstanceFactory
     storeInstanceFactory = $injector.get('storeInstanceFactory');
     getStoreDetailsDeferred = $q.defer();
-    spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
+    getStoreDetailsDeferredPromise = getStoreDetailsDeferred.promise;
+    spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferredPromise);
     getStoreInstanceMenuItemsDeferred = $q.defer();
     getStoreInstanceMenuItemsDeferred.resolve(_servedStoreInstanceMenuItems_);
-    spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
+    getStoreInstanceMenuItemsDeferredPromise = getStoreInstanceMenuItemsDeferred.promise;
+    spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferredPromise);
     setStoreStatusDeferred = $q.defer();
     setStoreStatusDeferred.resolve({response:200});
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(setStoreStatusDeferred.promise);
     getStoreInstanceItemsDeferred = $q.defer();
     getStoreInstanceItemsDeferred.resolve(_servedStoreInstanceItemList_);
-    spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
+    getStoreInstanceItemsDeferredPromise = getStoreInstanceItemsDeferred.promise;
+    spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferredPromise);
 
     storeInstanceReviewFactory = $injector.get('storeInstanceReviewFactory');
     getSealColorsDeferred  = $q.defer();
     getSealColorsDeferred.resolve(_servedSealColors_);
-    spyOn(storeInstanceReviewFactory, 'getSealColors').and.returnValue(getSealColorsDeferred.promise);
+    getSealColorsDeferredPromise = getSealColorsDeferred.promise;
+    spyOn(storeInstanceReviewFactory, 'getSealColors').and.returnValue(getSealColorsDeferredPromise);
     getSealTypesDeferred = $q.defer();
     getSealTypesDeferred.resolve(_servedSealTypes_);
-    spyOn(storeInstanceReviewFactory, 'getSealTypes').and.returnValue(getSealTypesDeferred.promise);
+    getSealTypesDeferredPromise = getSealTypesDeferred.promise;
+    spyOn(storeInstanceReviewFactory, 'getSealTypes').and.returnValue(getSealTypesDeferredPromise);
     getStoreInstanceSealsDeferred = $q.defer();
     getStoreInstanceSealsDeferred.resolve(_servedStoreInstanceSeals_);
-    spyOn(storeInstanceReviewFactory, 'getStoreInstanceSeals').and.returnValue(getStoreInstanceSealsDeferred.promise);
+    getStoreInstanceSealsDeferredPromise = getStoreInstanceSealsDeferred.promise;
+    spyOn(storeInstanceReviewFactory, 'getStoreInstanceSeals').and.returnValue(getStoreInstanceSealsDeferredPromise);
 
     StoreInstanceReviewCtrl = $controller('StoreInstanceReviewCtrl', {
       $scope: scope,
@@ -150,6 +163,10 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         }
       ];
       expect(scope.seals).toEqual(mockSealObj);
+    });
+
+    describe('init async request resolutions', function(){
+
     });
 
     describe('stepWizardPrevTrigger scope function', function () {
