@@ -312,7 +312,7 @@ angular.module('ts5App')
 
     $scope.hasDiscrepancy = function(item){
       if(item.menuQuantity !== item.quantity){
-        return 'has-discrepancy';
+        return 'danger';
       }
       return '';
     };
