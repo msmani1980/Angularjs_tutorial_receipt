@@ -64,7 +64,7 @@ describe('Service: storeInstanceDashboardFactory', function () {
 
   describe('recordsService calls', function () {
     it('should call getStoreStatusList', function () {
-      storeInstanceDashboardFactory.getStoreStatusList();
+      storeInstanceDashboardFactory.getStatusList();
       expect(recordsService.getStoreStatusList).toHaveBeenCalled();
     });
   });

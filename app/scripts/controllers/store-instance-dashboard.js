@@ -14,6 +14,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.stationList = [];
     $scope.storeInstanceList = [];
     $scope.search = {};
+    var openStoreInstanceId = -1;
 
     function clearSearchForm() {
       $scope.search = {};
@@ -46,6 +47,36 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     $scope.searchStoreInstanceDashboardData = searchStoreInstanceDashboardData;
 
+    $scope.doesStoreInstanceHaveReplenishments = function (store) {
+      return (store.replenishItems && store.replenishItems.length > 0);
+    };
+
+    $scope.isStoreViewExpanded = function (store) {
+      return (openStoreInstanceId === store.id);
+    };
+
+    function openAccordion (storeInstance) {
+      angular.element('#store-' + storeInstance.id).addClass('open-accordion');
+    }
+
+    function closeAccordion () {
+      angular.element('#store-' + openStoreInstanceId).removeClass('open-accordion');
+      openStoreInstanceId = -1;
+    }
+
+    $scope.toggleAccordionView = function (storeInstance) {
+      if (!$scope.doesStoreInstanceHaveReplenishments(storeInstance)) {
+        return;
+      }
+      if (openStoreInstanceId === storeInstance.id) {
+        closeAccordion();
+      } else {
+        openAccordion(storeInstance);
+        closeAccordion();
+        openStoreInstanceId = storeInstance.id;
+      }
+    };
+
     function getStoreNumberById (id) {
       var store =  lodash.findWhere($scope.storesList, { id: id });
       if(store) {
@@ -63,10 +94,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function formatStoreInstanceList () {
-      angular.forEach($scope.storeInstanceList, function (storeInstance) {
+      angular.forEach($scope.storeInstanceList, function (storeInstance, index) {
         storeInstance.storeNumber = getStoreNumberById(storeInstance.storeId);
         storeInstance.statusName = getStatusNameById(storeInstance.statusId);
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
+        if(index === 3) {
+          storeInstance.replenishItems = [$scope.storeInstanceList[0], $scope.storeInstanceList[1]];
+        }
       });
     }
 
@@ -111,7 +145,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     $scope.$watchGroup(['storeInstanceList', 'storesList', 'catererStationList'], function () {
-      if($scope.storeInstanceList && $scope.storesList && $scope.catererStationList) {
+      if($scope.storeInstanceList && $scope.storesList && $scope.catererStationList && $scope.storeStatusList) {
         formatStoreInstanceList();
       }
     });

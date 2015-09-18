@@ -101,9 +101,9 @@
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
                 <label>Status</label>
-                <select required class="form-control">
+                <select required class="form-control" ng-model="search.status" name="status">
                   <option selected="selected" value>Select Status</option>
-                  <option>{{ station.name }} - {{ station.code }}</option>
+                  <option ng-repeat="status in storeStatusList | orderBy:'name'" value="{{ status.id }}">{{ status.statusName }}</option>
                 </select>
               </div>
             </div>
@@ -130,7 +130,9 @@
       </div>
     </div>
 
-    <table class="table table-bordered table-hover ng-scope">
+    <div class="table table-responsive table-hover">
+      <table class="table table-bordered table=hover">
+    <!--<table class="table table-bordered table-hover ng-scope">-->
       <thead>
       <tr>
         <th></th>
@@ -141,7 +143,6 @@
         <th>Dispatch LMP Station</th>
         <th>Inbound LMP Station</th>
         <th>Store Number</th>
-        <th>Updated Date/Time</th>
         <th>Schedule Date</th>
         <th>Departure Station</th>
         <th>Departure Time</th>
@@ -150,18 +151,22 @@
         <th>Inbound Seals Tampered</th>
         <th>Store Instance</th>
         <th>Status</th>
+        <th>Updated Date/Time</th>
         <th>Updated User</th>
         <th>Actions</th>
       </tr>
       </thead>
-      <tbody>
-        <tr ng-repeat="store in storeInstanceList">
-          <td><!-- TODO: add expand/collapse button for stores with replenish --></td>
+      <tbody ng-repeat="store in storeInstanceList" id="store-{{ store.id }}">
+        <tr class="master-row">
+          <td>
+            <span class="fa fa-plus-square-o"
+                  ng-click="toggleAccordionView(store)" ng-show="doesStoreInstanceHaveReplenishments(store) && !isStoreViewExpanded(store)"></span>
+            <span class="fa fa-minus-square" ng-show="isStoreViewExpanded(store)" ng-click="toggleAccordionView(store)"></span>
+          </td>
           <td><!-- TODO: add checkbox for stores in dispatch, onFloor, and readyForDispatch --></td>
           <td>{{ store.cateringStationId }}</td>
           <td><!-- TODO: add Inbound LMP Station --></td>
           <td>{{ store.storeNumber }}</td>
-          <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
           <td>{{ store.scheduleDate }}</td>
           <td><!-- TODO: add Departure Station --></td>
           <td><!-- TODO: add Departure Time --></td>
@@ -170,8 +175,28 @@
           <td>{{ (store.tampered) ? 'true' : 'false' }}</td>
           <td>{{ store.id }}</td>
           <td>{{ store.statusName }}</td>
+          <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
           <td><!-- TODO: add user, which requires user accounts --></td>
           <td><!-- TODO: add actions TSVPORTAL-2904 --></td>
+        </tr>
+        <tr ng-repeat="replenishment in store.replenishItems" class="subversion-row" ng-show="isStoreViewExpanded(store)">
+          <td><!-- TODO: add expand/collapse button for stores with replenish --></td>
+          <td><!-- TODO: add checkbox for stores in dispatch, onFloor, and readyForDispatch --></td>
+          <td>{{ replenishment.cateringStationId }}</td>
+          <td><!-- TODO: add Inbound LMP Station --></td>
+          <td>{{ replenishment.storeNumber }}</td>
+          <td>{{ replenishment.scheduleDate }}</td>
+          <td><!-- TODO: add Departure Station --></td>
+          <td><!-- TODO: add Departure Time --></td>
+          <td><!-- TODO: add Arrival Station --></td>
+          <td><!-- TODO: add Arrival Time --></td>
+          <td>{{ (replenishment.tampered) ? 'true' : 'false' }}</td>
+          <td>{{ replenishment.id }}</td>
+          <td>{{ replenishment.statusName }}</td>
+          <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
+          <td><!-- TODO: add user, which requires user accounts --></td>
+          <td><!-- TODO: add actions TSVPORTAL-2904 --></td>
+        </tr>
         </tr>
       </tbody>
     </table>
