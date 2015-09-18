@@ -148,7 +148,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       });
     });
 
-    describe('format store instance response', function () {
+    fdescribe('format store instance response', function () {
       beforeEach(function () {
         scope.$digest();
       });
@@ -159,6 +159,10 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
 
       it('should add status name', function () {
         expect(scope.storeInstanceList[0].storeNumber).toBeDefined();
+      });
+
+      it('should add actionButtons name', function () {
+        expect(scope.storeInstanceList[0].actionButtons).toBeDefined();
       });
     });
   });
