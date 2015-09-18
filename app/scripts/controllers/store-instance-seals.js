@@ -20,7 +20,7 @@ angular.module('ts5App')
       URL: '/store-instance-review/' + $routeParams.storeId + '/dispatch'
     };
     this.prevStep = {
-      stepName: '2',
+      stepName: '1',
       URL: '/store-instance-packing/' + $routeParams.storeId
     };
 

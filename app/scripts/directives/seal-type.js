@@ -32,7 +32,13 @@ angular.module('ts5App')
       };
 
       $scope.isAddButtonDisabled = function() {
-        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals === 0);
+        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 1);
+      };
+
+      $scope.limitSealsLength = function() {
+        var selector = 'input.ui-select-search';
+        var input = angular.element(selector);
+        angular.element(input).attr('maxlength', 50);
       };
 
     };
@@ -41,6 +47,11 @@ angular.module('ts5App')
       controller: sealTypeController,
       scope: {
         sealTypeObject: '='
+      },
+      link: function($scope, $element) {
+        $element.ready(function() {
+          $scope.limitSealsLength();
+        });
       }
     };
   });
