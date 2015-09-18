@@ -47,7 +47,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
+          <tr ng-repeat="item in items | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+            ng-class="hasDiscrepancy(item)">
             <td>
               <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
             </td>
@@ -83,9 +84,8 @@
           </thead>
           <tbody>
           <tr ng-repeat="sealObj in seals">
-            <td width="15%">
-              <input type="text" class="form-control" value="{{ sealObj.name }}"
-                     ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
+            <td>
+              <div class="seal-label" ng-style="{'background':'{{ sealObj.bgColor }}'}">{{ sealObj.name }}</div>
             </td>
             <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
           </tr>
