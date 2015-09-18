@@ -163,7 +163,9 @@
                   ng-click="toggleAccordionView(store)" ng-show="doesStoreInstanceHaveReplenishments(store) && !isStoreViewExpanded(store)"></span>
             <span class="fa fa-minus-square" ng-show="isStoreViewExpanded(store)" ng-click="toggleAccordionView(store)"></span>
           </td>
-          <td><!-- TODO: add checkbox for stores in dispatch, onFloor, and readyForDispatch --></td>
+          <td>
+            <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" type="checkbox">
+          </td>
           <td>{{ store.cateringStationId }}</td>
           <td><!-- TODO: add Inbound LMP Station --></td>
           <td>{{ store.storeNumber }}</td>
@@ -177,11 +179,21 @@
           <td>{{ store.statusName }}</td>
           <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
           <td><!-- TODO: add user, which requires user accounts --></td>
-          <td><!-- TODO: add actions TSVPORTAL-2904 --></td>
+          <td>
+            <button class="btn btn-primary btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Pack')">Start Packing</button>
+            <button class="btn btn-success btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Dispatch')">Dispatch</button>
+            <button class="btn btn-danger btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Delete')">End Instance</button>
+            <button class="btn btn-warning btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Un-dispatch')">Undispatch</button>
+            <button class="btn btn-info btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')">Generate Doc</button>
+            <button class="btn btn-pink btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Replenish')">Replenish</button>
+            <button class="btn btn-purple btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Receive')">Receive</button>
+          </td>
         </tr>
         <tr ng-repeat="replenishment in store.replenishItems" class="subversion-row" ng-show="isStoreViewExpanded(store)">
-          <td><!-- TODO: add expand/collapse button for stores with replenish --></td>
-          <td><!-- TODO: add checkbox for stores in dispatch, onFloor, and readyForDispatch --></td>
+          <td></td>
+          <td>
+            <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" type="checkbox">
+          </td>
           <td>{{ replenishment.cateringStationId }}</td>
           <td><!-- TODO: add Inbound LMP Station --></td>
           <td>{{ replenishment.storeNumber }}</td>
@@ -195,7 +207,15 @@
           <td>{{ replenishment.statusName }}</td>
           <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
           <td><!-- TODO: add user, which requires user accounts --></td>
-          <td><!-- TODO: add actions TSVPORTAL-2904 --></td>
+          <td>
+            <button class="btn btn-primary btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Pack')">Start Packing</button>
+            <button class="btn btn-success btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Dispatch')">Dispatch</button>
+            <button class="btn btn-danger btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Delete')">End Instance</button>
+            <button class="btn btn-warning btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Un-dispatch')">Undispatch</button>
+            <button class="btn btn-info btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')">Generate Doc</button>
+            <button class="btn btn-pink btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Replenish')">Replenish</button>
+            <button class="btn btn-purple btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Receive')">Receive</button>
+          </td>
         </tr>
         </tr>
       </tbody>

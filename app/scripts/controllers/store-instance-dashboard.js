@@ -40,8 +40,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function searchStoreInstanceDashboardData() {
       var payload = {};
-
-
       angular.forEach(SEARCH_TO_PAYLOAD_MAP, function(value, key) {
         payload[value] = $scope.search[key];
       });
@@ -81,6 +79,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     };
 
+
+    $scope.doesStoreInstanceContainAction = function (storeInstance, actionName) {
+      if(storeInstance.actionButtons) {
+        return storeInstance.actionButtons.indexOf(actionName) >= 0;
+      }
+      return false;
+    };
+
     function getStoreNumberById (id) {
       var store =  lodash.findWhere($scope.storesList, { id: id });
       if(store) {
@@ -108,9 +114,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     var STATUS_TO_BUTTONS_MAP = {
       '1' : ['Pack', 'Delete'],
       '2' : ['Seal', 'Delete'],
-      '3' : ['Dispatch', 'Delete'],
-      '4' : ['Receive', 'Get Flight Docs', 'Repelnish', 'Un-dispatch'],
-      '5' : ['End instance', 'Re-dispatch'],
+      '3' : ['Dispatch', 'Delete', 'Checkbox'],
+      '4' : ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
+      '5' : ['End instance', 'Re-dispatch', 'Checkbox'],
       '6' : ['N/A'],
       '7' : ['Instance audit report']
     };
@@ -122,7 +128,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[getStatusIdById(storeInstance.statusId)];
 
-        if(index === 3) {
+        // TODO: remove once API returns nested replenishedItems structure.
+        if(index === 3 || index === 5) {
           storeInstance.replenishItems = [$scope.storeInstanceList[0], $scope.storeInstanceList[1]];
         }
       });
