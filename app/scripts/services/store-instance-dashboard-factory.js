@@ -8,10 +8,14 @@
  * Service in the ts5App.
  */
 angular.module('ts5App').service('storeInstanceDashboardFactory',
-  function (catererStationService, storeInstanceService, storesService, recordsService) {
+  function (catererStationService, stationsService, storeInstanceService, storesService, recordsService) {
 
     function getCatererStationList() {
       return catererStationService.getCatererStationList({limit: null});
+    }
+
+    function getStationList() {
+      return stationsService.getGlobalStationList({limit: null});
     }
 
     function getStoreInstanceList(payload) {
@@ -28,9 +32,9 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
 
     return {
       getCatererStationList: getCatererStationList,
+      getStationList: getStationList,
       getStoreInstanceList: getStoreInstanceList,
       getStoresList: getStoresList,
       getStatusList: getStatusList
     };
-
   });

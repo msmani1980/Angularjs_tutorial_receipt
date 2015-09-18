@@ -11,8 +11,40 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function ($scope, storeInstanceDashboardFactory, lodash, dateUtility) {
 
     $scope.catererStationList = [];
+    $scope.stationList = [];
     $scope.storeInstanceList = [];
     $scope.search = {};
+
+    function clearSearchForm() {
+      $scope.search = {};
+    }
+    $scope.clearSearchForm = clearSearchForm;
+
+    function getStoreInstancesListSuccess(dataFromAPI) {
+      $scope.storesList = dataFromAPI.response;
+    }
+
+    function searchStoreInstanceDashboardData() {
+      var payload = {};
+
+      var payloadParameterMap = {
+        dispatchLMPStation: 'cateringStationId',
+        inboundLMPStation: 'cateringStationId',
+        storeNumber: 'storeId',
+        scheduleStartDate: 'scheduleDate',
+        scheduleEndDate: 'scheduleDate',
+        //depStations: '?',
+        //arrStations: '?',
+        storeInstance: 'id'
+      };
+      angular.forEach(payloadParameterMap, function(value, key) {
+        payload[value] = $scope.search[key];
+      });
+
+      storeInstanceDashboardFactory.getStoreInstanceList(payload).then(getStoreInstancesListSuccess);
+    }
+
+    $scope.searchStoreInstanceDashboardData = searchStoreInstanceDashboardData;
 
     function getStoreNumberById (id) {
       var store =  lodash.findWhere($scope.storesList, { id: id });
@@ -54,6 +86,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstanceDashboardFactory.getStoreInstanceList().then(getStoreInstanceListSuccess);
     }
 
+    function getStationListSuccess (dataFromAPI) {
+      $scope.stationList = dataFromAPI.response;
+    }
+
+    function getStationList () {
+      storeInstanceDashboardFactory.getStationList().then(getStationListSuccess);
+    }
+
     function getStoresListSuccess (dataFromAPI) {
       $scope.storesList = dataFromAPI.response;
     }
@@ -78,11 +118,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function init () {
       getCatererStationList();
+      getStationList();
       getStoreInstanceList();
       getStoresList();
       getStatusList();
     }
 
     init();
+
 
   });
