@@ -11,8 +11,7 @@
     .service('menuCatererStationsService', function ($resource, ENV) {
       var requestURL = ENV.apiUrl + '/api/menus/caterer-stations/:id';
       var requestParameters = {
-        id: '@id',
-        limit: 50
+        id: '@id'
       };
 
       var actions = {

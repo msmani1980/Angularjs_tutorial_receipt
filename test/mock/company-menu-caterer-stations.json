@@ -1,0 +1,19 @@
+{
+  "companyMenuCatererStations": [
+    {
+      "id": 149,
+      "menuId": 100,
+      "catererStationIds": [
+        6,
+        13
+      ],
+      "startDate": "2015-09-18",
+      "endDate": "2021-07-08"
+    }
+  ],
+  "meta": {
+    "count": 1,
+    "limit": 1,
+    "start": 0
+  }
+}
