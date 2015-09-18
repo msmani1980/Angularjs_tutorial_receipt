@@ -31,6 +31,10 @@ angular.module('ts5App')
       getStoreStatusList: {
         method: 'GET',
         isArray: true
+      },
+      getBenefitTypes: {
+        method: 'GET',
+        isArray: true
       }
     };
     var requestResource = $resource(requestURL, requestParameters, actions);
@@ -55,10 +59,16 @@ angular.module('ts5App')
       return requestResource.getStoreStatusList().$promise;
     }
 
+    function getBenefitTypes() {
+      requestParameters.api = 'benefit-types';
+      return requestResource.getBenefitTypes().$promise;
+    }
+
     return {
       getCrewBaseTypes: getCrewBaseTypes,
       getCommissionPayableTypes: getCommissionPayableTypes,
       getDiscountTypes: getDiscountTypes,
-      getStoreStatusList: getStoreStatusList
+      getStoreStatusList: getStoreStatusList,
+      getBenefitTypes: getBenefitTypes
     };
   });

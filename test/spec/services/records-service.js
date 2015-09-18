@@ -82,5 +82,16 @@ describe('Service: commissionDataService', function () {
       });
     });
 
+    describe('getBenefitTypes', function(){
+      it('should make GET request to API', function(){
+        var expectUri = /records\/benefit-types$/;
+        httpBackend.expectGET(expectUri).respond(200, []);
+        recordsService.getBenefitTypes().then(function (response) {
+          expect(response).toBeDefined();
+        });
+        httpBackend.flush();
+      });
+    });
+
   });
 });
