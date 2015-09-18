@@ -6,6 +6,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
   beforeEach(module('served/catering-stations.json'));
   beforeEach(module('served/store-instance-list.json'));
   beforeEach(module('served/stores-list.json'));
+  beforeEach(module('served/store-status.json'));
 
   var StoreInstanceDashboardCtrl;
   var scope;
@@ -16,12 +17,15 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
   var storeInstanceListResponseJSON;
   var storesListDeferred;
   var storesListResponseJSON;
+  var statusListDeferred;
+  var statusListResponseJSON;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedCateringStations_, _servedStoreInstanceList_, _servedStoresList_) {
+    inject(function (_servedCateringStations_, _servedStoreInstanceList_, _servedStoresList_, _servedStoreStatus_) {
       cateringStationResponseJSON = _servedCateringStations_;
       storeInstanceListResponseJSON = _servedStoreInstanceList_;
       storesListResponseJSON = _servedStoresList_;
+      statusListResponseJSON = _servedStoreStatus_;
     });
     scope = $rootScope.$new();
 
@@ -33,10 +37,14 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     storeInstanceListDeferred.resolve(storeInstanceListResponseJSON);
     storesListDeferred = $q.defer();
     storesListDeferred.resolve(storesListResponseJSON);
+    statusListDeferred = $q.defer();
+    statusListDeferred.resolve(statusListResponseJSON);
 
     spyOn(storeInstanceDashboardFactory, 'getCatererStationList').and.returnValue(cateringStationDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStoreInstanceList').and.returnValue(storeInstanceListDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStoresList').and.returnValue(storesListDeferred.promise);
+    spyOn(storeInstanceDashboardFactory, 'getStatusList').and.returnValue(statusListDeferred.promise);
+    //spyOn(storeInstanceDashboardFactory, 'getStatusList').and.returnValue('202');
 
     StoreInstanceDashboardCtrl = $controller('StoreInstanceDashboardCtrl', {
       $scope: scope
@@ -92,10 +100,31 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       });
     });
 
+    describe('getStatusList', function () {
+      it('should get getStatusList from storeInstanceDashboardFactory', function () {
+        expect(storeInstanceDashboardFactory.getStatusList).toHaveBeenCalled();
+      });
+
+      it('should attach storeStatusList to Scope', function () {
+        expect(scope.storeStatusList).toBeDefined();
+      });
+
+      it('should attach all properties of JSON to scope', function () {
+        expect(scope.storeStatusList).toEqual(statusListResponseJSON);
+      });
+    });
+
     describe('format store instance response', function () {
-      it('should add store number based on storeId', function () {
+      beforeEach(function () {
+        scope.$digest();
+      });
+
+      it('should add store number', function () {
         expect(scope.storeInstanceList[0].storeNumber).toBeDefined();
-        expect(scope.storeInstanceList[0].storeNumber).toEqual('180485');
+      });
+
+      it('should add status name', function () {
+        expect(scope.storeInstanceList[0].storeNumber).toBeDefined();
       });
     });
 

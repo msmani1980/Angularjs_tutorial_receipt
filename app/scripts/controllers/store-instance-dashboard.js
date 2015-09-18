@@ -22,9 +22,18 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return '';
     }
 
+    function getStatusNameById (id) {
+      var status =  lodash.findWhere($scope.storeStatusList, { id: id });
+      if(status) {
+        return status.statusName;
+      }
+      return '';
+    }
+
     function formatStoreInstanceList () {
       angular.forEach($scope.storeInstanceList, function (storeInstance) {
         storeInstance.storeNumber = getStoreNumberById(storeInstance.storeId);
+        storeInstance.statusName = getStatusNameById(storeInstance.statusId);
       });
     }
 
@@ -52,6 +61,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstanceDashboardFactory.getStoresList({}).then(getStoresListSuccess);
     }
 
+    function getStatusListSuccess (dataFromAPI) {
+      $scope.storeStatusList = dataFromAPI;
+    }
+
+    function getStatusList () {
+      storeInstanceDashboardFactory.getStatusList().then(getStatusListSuccess);
+    }
+
     $scope.$watchGroup(['storeInstanceList', 'storesList', 'catererStationList'], function () {
       if($scope.storeInstanceList && $scope.storesList && $scope.catererStationList) {
         formatStoreInstanceList();
@@ -62,6 +79,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       getCatererStationList();
       getStoreInstanceList();
       getStoresList();
+      getStatusList();
     }
 
     init();

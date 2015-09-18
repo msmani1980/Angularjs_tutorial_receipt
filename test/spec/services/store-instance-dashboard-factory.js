@@ -10,6 +10,7 @@ describe('Service: storeInstanceDashboardFactory', function () {
   var catererStationService;
   var storeInstanceService;
   var storesService;
+  var recordsService;
   var scope;
   var storeInstanceDashboardFactory;
 
@@ -18,13 +19,13 @@ describe('Service: storeInstanceDashboardFactory', function () {
     catererStationService = $injector.get('catererStationService');
     storeInstanceService = $injector.get('storeInstanceService');
     storesService = $injector.get('storesService');
+    recordsService = $injector.get('recordsService');
     scope = $rootScope.$new();
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(storeInstanceService, 'getStoreInstancesList');
     spyOn(storesService, 'getStoresList');
-
-
+    spyOn(recordsService, 'getStoreStatusList');
 
   }));
 
@@ -48,6 +49,13 @@ describe('Service: storeInstanceDashboardFactory', function () {
       var fakePayload = {fakeKey: 'fakeValue'};
       storeInstanceDashboardFactory.getStoresList(fakePayload);
       expect(storesService.getStoresList).toHaveBeenCalledWith(fakePayload);
+    });
+  });
+
+  describe('recordsService calls', function () {
+    it('should call getStoreStatusList', function () {
+      storeInstanceDashboardFactory.getStoreStatusList();
+      expect(recordsService.getStoreStatusList).toHaveBeenCalled();
     });
   });
 
