@@ -35,7 +35,7 @@ describe('the Store Instance Seals controller', function() {
   var storeInstanceAssignSealsFactory;
   var location;
   var httpBackend;
-  var servedStoreInstanceDetailsJSON; 
+  var servedStoreInstanceDetailsJSON;
   var updateStoreInstanceStatusDeferred;
   var getStoreInstanceSealsDeferred;
 
@@ -152,6 +152,22 @@ describe('the Store Instance Seals controller', function() {
     it('should set wizardSteps', function() {
       var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(storeId);
       expect($scope.wizardSteps).toEqual(wizardSteps);
+    });
+
+    it('should have a nextStep set on the controller', function() {
+      var mockNextStep = {
+        stepName: '3',
+        URL: '/store-instance-review/' + storeId + '/dispatch'
+      };
+      expect(StoreInstanceSealsCtrl.nextStep).toEqual(mockNextStep);
+    });
+
+    it('should have a prevStep set on the controller', function() {
+      var mockPrevStep = {
+        stepName: '1',
+        URL: '/store-instance-packing/' + storeId
+      };
+      expect(StoreInstanceSealsCtrl.prevStep).toEqual(mockPrevStep);
     });
 
     describe('the get store details API call', function() {
