@@ -160,8 +160,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       it('should add status name', function () {
         expect(scope.storeInstanceList[0].storeNumber).toBeDefined();
       });
+    });
   });
-
 
 
 });
