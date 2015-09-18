@@ -161,6 +161,26 @@ describe('the Seal Type directive', function() {
 
     });
 
+    describe('The isAddButtonDisabled method,', function() {
+
+      beforeEach(inject(function() {
+        spyOn(isolatedScope, 'isAddButtonDisabled').and.callThrough();
+      }));
+
+      it('should return true if numberOfSeals is 101', function() {
+        scope.numberOfSeals = 101;
+        isolatedScope.isAddButtonDisabled();
+        expect(isolatedScope.isAddButtonDisabled).toBeTruthy();
+      });
+
+      it('should return true if numberOfSeals is -1', function() {
+        scope.numberOfSeals = -1;
+        isolatedScope.isAddButtonDisabled();
+        expect(isolatedScope.isAddButtonDisabled).toBeTruthy();
+      });
+
+    });
+
   });
 
 });
