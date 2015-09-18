@@ -37,6 +37,7 @@ describe('the Store Instance Seals controller', function() {
   var httpBackend;
   var servedStoreInstanceDetailsJSON;
   var updateStoreInstanceStatusDeferred;
+  var getStoreInstanceSealsDeferred;
 
   beforeEach(inject(function($injector, $rootScope, $controller, $q, $httpBackend, $location, ngToast,
     _servedSealTypes_, _servedSealColors_,
@@ -68,12 +69,14 @@ describe('the Store Instance Seals controller', function() {
     getStoreDetailsDeferred = $q.defer();
     getSealTypesDeferred = $q.defer();
     getSealColorsDeferred = $q.defer();
+    getStoreInstanceSealsDeferred = $q.defer();
     createStoreInstanceSealDeferred = $q.defer();
     updateStoreInstanceStatusDeferred = $q.defer();
 
     getStoreDetailsDeferred = $q.defer();
     getStoreDetailsDeferred.resolve(storeDetailsJSON);
 
+    spyOn(storeInstanceAssignSealsFactory, 'getStoreInstanceSeals').and.returnValue(getStoreInstanceSealsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(
       updateStoreInstanceStatusDeferred.promise);
@@ -133,6 +136,13 @@ describe('the Store Instance Seals controller', function() {
     $scope.$digest();
     StoreInstanceSealsCtrl.assignSeals();
   }
+
+  function resolveAllDependencies() {
+    getSealColorsDeferred.resolve(sealColorsJSON);
+    getSealTypesDeferred.resolve(sealTypesJSON);
+    getStoreDetailsDeferred.resolve(storeDetailsJSON);
+    getStoreInstanceSealsDeferred.resolve(storeInstanceSealsJSON);
+  }
   describe('when controller executes', function() {
 
     beforeEach(function() {
@@ -142,6 +152,22 @@ describe('the Store Instance Seals controller', function() {
     it('should set wizardSteps', function() {
       var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(storeId);
       expect($scope.wizardSteps).toEqual(wizardSteps);
+    });
+
+    it('should have a nextStep set on the controller', function() {
+      var mockNextStep = {
+        stepName: '3',
+        URL: '/store-instance-review/' + storeId + '/dispatch'
+      };
+      expect(StoreInstanceSealsCtrl.nextStep).toEqual(mockNextStep);
+    });
+
+    it('should have a prevStep set on the controller', function() {
+      var mockPrevStep = {
+        stepName: '1',
+        URL: '/store-instance-packing/' + storeId
+      };
+      expect(StoreInstanceSealsCtrl.prevStep).toEqual(mockPrevStep);
     });
 
     describe('the get store details API call', function() {
@@ -206,6 +232,19 @@ describe('the Store Instance Seals controller', function() {
 
     });
 
+    describe('the get store instance seals API call', function() {
+
+      beforeEach(function() {
+        getStoreInstanceSealsDeferred.resolve(storeInstanceSealsJSON);
+        $scope.$digest();
+      });
+
+      it('should set a list of existing seals in the scope', function() {
+        expect($scope.existingSeals).toEqual(storeInstanceSealsJSON.response);
+      });
+
+    });
+
     describe('the getSealTypesDependencies method', function() {
 
       beforeEach(function() {
@@ -217,9 +256,7 @@ describe('the Store Instance Seals controller', function() {
           storeInstanceNumber: $scope.storeId
         };
 
-        getSealColorsDeferred.resolve(sealColorsJSON);
-        getSealTypesDeferred.resolve(sealTypesJSON);
-        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+        resolveAllDependencies();
 
         spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();

@@ -9,7 +9,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
   beforeEach(module('served/seal-colors.json'));
   beforeEach(module('served/seal-types.json'));
   beforeEach(module('served/store-status.json'));
-
+  beforeEach(module('served/store-instance-item-list.json'));
 
   var StoreInstanceReviewCtrl;
   var scope;
@@ -25,10 +25,11 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
   var getStoreInstanceSealsDeferred;
   var location;
   var setStoreStatusDeferred;
+  var getStoreInstanceItemsDeferred;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
-                              _servedSealColors_, _servedSealTypes_, $location) {
+                              _servedSealColors_, _servedSealTypes_, $location, _servedStoreInstanceItemList_) {
     scope = $rootScope.$new();
     routeParams = {
       storeId: 17,
@@ -48,6 +49,9 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     setStoreStatusDeferred = $q.defer();
     setStoreStatusDeferred.resolve({response:200});
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(setStoreStatusDeferred.promise);
+    getStoreInstanceItemsDeferred = $q.defer();
+    getStoreInstanceItemsDeferred.resolve(_servedStoreInstanceItemList_);
+    spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
 
     storeInstanceReviewFactory = $injector.get('storeInstanceReviewFactory');
     getSealColorsDeferred  = $q.defer();
@@ -59,6 +63,8 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     getStoreInstanceSealsDeferred = $q.defer();
     getStoreInstanceSealsDeferred.resolve(_servedStoreInstanceSeals_);
     spyOn(storeInstanceReviewFactory, 'getStoreInstanceSeals').and.returnValue(getStoreInstanceSealsDeferred.promise);
+
+    spyOn(location, 'url').and.callThrough();
 
     StoreInstanceReviewCtrl = $controller('StoreInstanceReviewCtrl', {
       $scope: scope,
@@ -75,7 +81,6 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
       statusList: [{'id':1,'statusName':'Ready for Packing','name':'1'},{'id':2,'statusName':'Ready for Seals','name':'2'},{'id':3,'statusName':'Ready for Dispatch','name':'3'},{'id':7,'statusName':'Dispatched','name':'4'},{'id':8,'statusName':'Un-dispatched','name':'7'},{'id':9,'statusName':'Inbounded','name':'6'},{'id':10,'statusName':'On Floor','name':'5'}],
       replenishStoreInstanceId: 1
     };
-
 
   }));
 
@@ -95,9 +100,18 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     it('should call getStoreInstanceMenuItems', function () {
       var expectedPayload = {
         itemTypeId: 1, // this is 1 because we are requesting regular items.
-        scheduleDate: storeDetailsJSON.scheduleDate
+        date: storeDetailsJSON.scheduleDate
       };
       expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(routeParams.storeId, expectedPayload);
+    });
+
+    it('should call getStoreInstanceItems', function () {
+      expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(routeParams.storeId);
+    });
+
+    it('should format scope.items', function(){
+      var mockedItems = [{id: 1, companyId: 403, storeInstanceId: 13, itemMasterId: 3, itemCode: 'Ip015', itemName: 'Ipad Mini', quantity: 88, createdBy: null, createdOn: '2015-08-17 19:04:35.0437', updatedBy: null, updatedOn: '2015-08-19 15:13:02.863531', itemDescription: 'Ip015 -  Ipad Mini', disabled: true, menuQuantity: 50}, {id: 3, companyId: 403, storeInstanceId: 13, itemMasterId: 5, itemCode: 'Sd005', itemName: 'Pepsi', quantity: 55, createdBy: null, createdOn: '2015-08-17 19:31:27.867813', updatedBy: null, updatedOn: '2015-08-19 15:13:08.002925', itemDescription: 'Sd005 -  Pepsi', disabled: true, menuQuantity: 25}, {id: 13, companyId: 403, storeInstanceId: 13, itemMasterId: 4, itemCode: 'Ru-002', itemName: 'BabyRuth', quantity: 777, createdBy: 1, createdOn: '2015-08-17 19:08:07.817813', updatedBy: 1, updatedOn: '2015-08-31 18:44:54.609744', itemDescription: 'Ru-002 -  BabyRuth', disabled: true, menuQuantity: 15}, {id: 14, companyId: 403, storeInstanceId: 13, itemMasterId: 4, itemCode: 'Ru-002', itemName: 'BabyRuth', quantity: 77, createdBy: 1, createdOn: '2015-08-17 19:08:07.817813', updatedBy: 1, updatedOn: '2015-08-19 15:13:05.317675', itemDescription: 'Ru-002 -  BabyRuth', disabled: true, menuQuantity: 15}, {id: 15, companyId: 403, storeInstanceId: 13, itemMasterId: 4, itemCode: 'Ru-002', itemName: 'BabyRuth', quantity: 77, createdBy: 1, createdOn: '2015-08-17 19:08:07.817813', updatedBy: 1, updatedOn: '2015-08-19 15:13:05.317675', itemDescription: 'Ru-002 -  BabyRuth', disabled: true, menuQuantity: 15}, {id: 16, companyId: 2, storeInstanceId: 13, itemMasterId: 63, itemCode: 'DUP 878', itemName: 'DUP 878', quantity: 22, createdBy: 1, createdOn: '2015-09-01 16:41:37.693056', updatedBy: null, updatedOn: null, itemDescription: 'DUP 878 -  DUP 878', disabled: true, menuQuantity: 0}];
+      expect(scope.items).toEqual(mockedItems);
     });
 
     it('should set wizardSteps', function () {
@@ -147,6 +161,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
       it('should set showLoseDataAlert to true and return false', function () {
         expect(scope.stepWizardPrevTrigger()).toBe(false);
         expect(scope.showLoseDataAlert).toBe(true);
+        expect(scope.wizardStepToIndex).toBe(2);
       });
     });
 
@@ -162,7 +177,6 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
 
     describe('loseDataAlertConfirmTrigger scope function', function () {
       it('should call location URI with wizard URI', function () {
-        spyOn(location, 'url');
         var mockIndex = 2;
         scope.wizardStepToIndex = mockIndex;
         var wizardSteps = storeInstanceReplenishWizardConfig.getSteps(routeParams.storeId);
@@ -176,6 +190,8 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
       it('should set the store instance status to the name value of "Dispatched" which is 4 with current mock data', function () {
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '4');
+        scope.$apply();
+        expect(location.url).toHaveBeenCalledWith('/store-dispatch-dashboard');
       });
     });
 

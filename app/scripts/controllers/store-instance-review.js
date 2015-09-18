@@ -17,6 +17,7 @@ angular.module('ts5App')
     var _sealColors = [];
     var _storeInstanceSeals = [];
     var _nextStatusId = null;
+    var _menuItems = [];
     var STATUS_READY_FOR_DISPATCH = 'Ready for Dispatch';
     var STATUS_DISPATCHED = 'Dispatched';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
@@ -45,13 +46,13 @@ angular.module('ts5App')
     }
 
     function getItemsSuccessHandler(dataFromAPI) {
-      $scope.menuItems = dataFromAPI.response;
+      _menuItems = dataFromAPI.response;
     }
 
     function getStoreInstanceMenuItems() {
       var payload = {
         itemTypeId: 1,
-        scheduleDate: $scope.storeDetails.scheduleDate
+        date: $scope.storeDetails.scheduleDate
       };
       _initPromises.push(
         storeInstanceFactory.getStoreInstanceMenuItems($routeParams.storeId, payload)
@@ -92,15 +93,24 @@ angular.module('ts5App')
       return sealColor[0].color;
     }
 
+    function getMenuQuantity(itemMasterId){
+      var masterItem =  $filter('filter')(_menuItems, {itemMasterId:itemMasterId}, true);
+      if(!masterItem || !masterItem.length){
+        return 0;
+      }
+      return masterItem[0].menuQuantity;
+    }
+
     function initLoadComplete(){
 
 
       hideLoadingModal();
 
-      if($scope.menuItems) {
-        $scope.menuItems.map(function (item) {
+      if($scope.items) {
+        $scope.items.map(function (item) {
           item.itemDescription = item.itemCode + ' -  ' + item.itemName;
           item.disabled = true;
+          item.menuQuantity = getMenuQuantity(item.itemMasterId);
         });
       }
 
@@ -138,11 +148,6 @@ angular.module('ts5App')
       );
     }
 
-    function resolveSetStoreInstanceStatus(response){
-      $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {id: response.statusId}, true)[0];
-      showUserCurrentStatus('updated');
-    }
-
     function getStatusNameIntByName(name){
       var status = $filter('filter')($scope.storeDetails.statusList, {statusName: name}, true);
       if(!status || !status.length){
@@ -164,20 +169,11 @@ angular.module('ts5App')
       showResponseErrors(error);
     }
 
-    function getSetStoreStatusByNamePromise(name){
-      $scope.formErrors = [];
-      var statusNameInt = getStatusNameIntByName(name);
-      if(!statusNameInt){
-        throwError('statusId', 'Unable to find statusId by name: ' + name);
-        return false;
-      }
-      displayLoadingModal();
-      return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(resolveSetStoreInstanceStatus);
-    }
-
-    function storeInstanceStatusDispatched(){
-      showMessage('Now what? Redirect user where?', 'info');
-      // TODO redirect user somewhere?
+    function storeInstanceStatusDispatched(response){
+      hideLoadingModal();
+      $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {id: response.statusId}, true)[0];
+      showUserCurrentStatus('updated');
+      $location.url('/store-dispatch-dashboard');
     }
 
     function isReadyForDispatch(){
@@ -189,7 +185,18 @@ angular.module('ts5App')
       return false;
     }
 
+    function setStoreInstanceItems(dataFromAPI){
+      $scope.items = dataFromAPI.response;
+    }
+
+    function getStoreInstanceItems(){
+      _initPromises.push(
+        storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(setStoreInstanceItems)
+      );
+    }
+
     function getStoreInstanceReviewData(){
+      getStoreInstanceItems();
       getStoreInstanceMenuItems();
       getStoreInstanceSeals();
       $q.all(_initPromises).then(initLoadComplete, showResponseErrors);
@@ -212,11 +219,15 @@ angular.module('ts5App')
     }
 
     function saveStoreInstanceStatus(status){
-      var promise = getSetStoreStatusByNamePromise(status);
-      if(!promise){
-        return;
+      $scope.formErrors = [];
+      var statusNameInt = getStatusNameIntByName(status);
+      if(!statusNameInt){
+        throwError('statusId', 'Unable to find statusId by name: ' + name);
+        return false;
       }
-      $q.resolve(promise, storeInstanceStatusDispatched, showResponseErrors);
+      displayLoadingModal();
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(
+        storeInstanceStatusDispatched, showResponseErrors);
     }
 
     // Dispatch
@@ -228,6 +239,7 @@ angular.module('ts5App')
     actions.dispatchSubmit = function(){
       saveStoreInstanceStatus(STATUS_DISPATCHED);
     };
+    actions.dispatchPrevStepIndex = 2;
 
     // Replenish
     actions.replenishInit = function(){
@@ -247,6 +259,7 @@ angular.module('ts5App')
     actions.replenishSubmit = function(){
       saveStoreInstanceStatus(STATUS_DISPATCHED);
     };
+    actions.replenishPrevStepIndex = 2;
 
     function init() {
       _initPromises = [];
@@ -269,6 +282,12 @@ angular.module('ts5App')
 
     $scope.stepWizardPrevTrigger = function(){
       $scope.showLoseDataAlert = true;
+      if(angular.isUndefined($scope.wizardStepToIndex)){
+        var prevStepAction = $routeParams.action + 'PrevStepIndex';
+        if (actions[prevStepAction]) {
+          $scope.wizardStepToIndex = actions[prevStepAction];
+        }
+      }
       return false;
     };
 
@@ -278,6 +297,7 @@ angular.module('ts5App')
     };
 
     $scope.loseDataAlertConfirmTrigger = function(){
+      console.log($scope.wizardStepToIndex);
       var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
       $location.url(uri);
     };
@@ -287,6 +307,13 @@ angular.module('ts5App')
       if (actions[initAction]) {
         actions[initAction]();
       }
+    };
+
+    $scope.hasDiscrepancy = function(item){
+      if(item.menuQuantity !== item.quantity){
+        return 'danger';
+      }
+      return '';
     };
 
   });
