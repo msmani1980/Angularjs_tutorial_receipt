@@ -35,12 +35,23 @@ angular.module('ts5App')
         return ($scope.numberOfSeals > 100 || $scope.numberOfSeals === 0);
       };
 
+      $scope.limitSealsLength = function() {
+        var selector = 'input.ui-select-search';
+        var input = angular.element(selector);
+        angular.element(input).attr('maxlength', 50);
+      };
+
     };
     return {
       templateUrl: '/views/directives/seal-type.html',
       controller: sealTypeController,
       scope: {
         sealTypeObject: '='
+      },
+      link: function($scope, $element) {
+        $element.ready(function() {
+          $scope.limitSealsLength();
+        });
       }
     };
   });
