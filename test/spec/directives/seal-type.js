@@ -13,32 +13,27 @@ describe('the Seal Type directive', function() {
   beforeEach(inject(function($rootScope, $compile) {
     scope = $rootScope.$new();
     compile = $compile;
-    scope.sealTypesList = [
-      {
-        name:'Outbound',
-        code: 'OB',
-        color:'#00B200',
-        seals: {
-            numbers:[]
-        }
-      },
-      {
-        name:'Handover', 
-        code: 'HO',
-        color:'#E5E500',
-        seals: {
-            numbers:[]
-        },
-        actions: [
-          {
-            label: 'Copy From Outbound',
-            trigger: function() {
-              return scope.copySeals('Outbound','Handover');
-            }
-          }
-        ]
+    scope.sealTypesList = [{
+      name: 'Outbound',
+      code: 'OB',
+      color: '#00B200',
+      seals: {
+        numbers: []
       }
-    ];
+    }, {
+      name: 'Handover',
+      code: 'HO',
+      color: '#E5E500',
+      seals: {
+        numbers: []
+      },
+      actions: [{
+        label: 'Copy From Outbound',
+        trigger: function() {
+          return scope.copySeals('Outbound', 'Handover');
+        }
+      }]
+    }];
   }));
 
   function compileDirective() {
@@ -82,13 +77,15 @@ describe('the Seal Type directive', function() {
       expect(isolatedScope.sealTypeObject.color).toEqual(scope.sealTypesList[0].color);
     });
 
-    it('should have the sealTypeObject.seals array that equals the seals passed from the parent scope', function() {
-      expect(isolatedScope.sealTypeObject.seals).toEqual(scope.sealTypesList[0].seals);
-    });
+    it('should have the sealTypeObject.seals array that equals the seals passed from the parent scope',
+      function() {
+        expect(isolatedScope.sealTypeObject.seals).toEqual(scope.sealTypesList[0].seals);
+      });
 
-    it('should have the sealTypeObject.actions array that equals the actions passed from the parent scope', function() {
-      expect(isolatedScope.sealTypeObject.actions).toEqual(scope.sealTypesList[0].actions);
-    });
+    it('should have the sealTypeObject.actions array that equals the actions passed from the parent scope',
+      function() {
+        expect(isolatedScope.sealTypeObject.actions).toEqual(scope.sealTypesList[0].actions);
+      });
 
     describe('The sequentialPossible method,', function() {
 
@@ -122,7 +119,9 @@ describe('the Seal Type directive', function() {
         scope.sealTypesList[0].seals.numbers = [10];
         isolatedScope.numberOfSeals = 10;
         isolatedScope.addSealsSequentially();
-        expect(scope.sealTypesList[0].seals.numbers).toEqual([10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+        expect(scope.sealTypesList[0].seals.numbers).toEqual([10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20
+        ]);
       });
 
     });
@@ -158,6 +157,20 @@ describe('the Seal Type directive', function() {
         scope.sealTypesList[0].seals.numbers = [5, 3, 4, 1];
         isolatedScope.clearSeals();
         expect(scope.sealTypesList[0].seals.numbers).toEqual([]);
+      });
+
+    });
+
+    describe('The limitSealsLength method,', function() {
+      //TODO: find way to test that the attr is added, issue is triggering dom ready
+      beforeEach(inject(function() {
+        compileDirective();
+        spyOn(isolatedScope, 'limitSealsLength').and.callThrough();
+        isolatedScope.limitSealsLength();
+      }));
+
+      it('should have been called', function() {
+        expect(isolatedScope.limitSealsLength).toHaveBeenCalled();
       });
 
     });
