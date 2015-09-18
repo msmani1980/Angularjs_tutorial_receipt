@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
-  function ($scope, storeInstanceDashboardFactory, lodash) {
+  function ($scope, storeInstanceDashboardFactory, lodash, dateUtility) {
 
     $scope.catererStationList = [];
     $scope.storeInstanceList = [];
@@ -34,6 +34,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       angular.forEach($scope.storeInstanceList, function (storeInstance) {
         storeInstance.storeNumber = getStoreNumberById(storeInstance.storeId);
         storeInstance.statusName = getStatusNameById(storeInstance.statusId);
+        storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
       });
     }
 
