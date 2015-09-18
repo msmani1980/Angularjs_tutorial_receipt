@@ -35,6 +35,14 @@ angular.module('ts5App')
       getBenefitTypes: {
         method: 'GET',
         isArray: true
+      },
+      getPromotionTypes: {
+        method: 'GET',
+        isArray: true
+      },
+      getDiscountApplyTypes: {
+        method: 'GET',
+        isArray: true
       }
     };
     var requestResource = $resource(requestURL, requestParameters, actions);
@@ -64,11 +72,23 @@ angular.module('ts5App')
       return requestResource.getBenefitTypes().$promise;
     }
 
+    function getPromotionTypes() {
+      requestParameters.api = 'promotion-types';
+      return requestResource.getPromotionTypes().$promise;
+    }
+
+    function getDiscountApplyTypes() {
+      requestParameters.api = 'discount-apply-types';
+      return requestResource.getDiscountApplyTypes().$promise;
+    }
+
     return {
       getCrewBaseTypes: getCrewBaseTypes,
       getCommissionPayableTypes: getCommissionPayableTypes,
       getDiscountTypes: getDiscountTypes,
       getStoreStatusList: getStoreStatusList,
-      getBenefitTypes: getBenefitTypes
+      getBenefitTypes: getBenefitTypes,
+      getPromotionTypes: getPromotionTypes,
+      getDiscountApplyTypes: getDiscountApplyTypes
     };
   });
