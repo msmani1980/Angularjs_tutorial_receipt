@@ -12,7 +12,7 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('CateringStation')">
-          <select required class="form-control" ng-model="formData.cateringStationId" name="CateringStation">
+          <select required class="form-control" ng-model="formData.cateringStationId" name="CateringStation" ng-change="getMenuCatererList()">
             <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
             <option ng-repeat="station in cateringStationList | orderBy:'name' track by station.id" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
           </select>
@@ -26,7 +26,7 @@
       </div>
       <div class="col-xs-12 col-sm-8">
           <date-picker-field form="createStoreInstance" name="scheduleDate"
-            min-date="'+1d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
+            min-date="'0d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
       </div>
     </div>
 
@@ -70,7 +70,7 @@
           <ui-select name="Menus" required="true" multiple ng-model="formData.menus" theme="bootstrap" id="menuIds">
             <ui-select-match placeholder="Select one or more Menus" ui-lock-choice="isDisabled()">{{ $item.menuCode }}
             </ui-select-match>
-            <ui-select-choices  repeat="menu in menuMasterList | filter: $select.search | orderBy:'menuCode'">
+            <ui-select-choices  repeat="menu in filteredMenuList | filter: $select.search | orderBy:'menuCode'">
               <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
