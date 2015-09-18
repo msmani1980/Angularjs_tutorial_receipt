@@ -239,6 +239,7 @@ angular.module('ts5App')
     actions.dispatchSubmit = function(){
       saveStoreInstanceStatus(STATUS_DISPATCHED);
     };
+    actions.dispatchPrevStepIndex = 2;
 
     // Replenish
     actions.replenishInit = function(){
@@ -258,6 +259,7 @@ angular.module('ts5App')
     actions.replenishSubmit = function(){
       saveStoreInstanceStatus(STATUS_DISPATCHED);
     };
+    actions.replenishPrevStepIndex = 2;
 
     function init() {
       _initPromises = [];
@@ -280,6 +282,12 @@ angular.module('ts5App')
 
     $scope.stepWizardPrevTrigger = function(){
       $scope.showLoseDataAlert = true;
+      if(angular.isUndefined($scope.wizardStepToIndex)){
+        var prevStepAction = $routeParams.action + 'PrevStepIndex';
+        if (actions[prevStepAction]) {
+          $scope.wizardStepToIndex = actions[prevStepAction];
+        }
+      }
       return false;
     };
 
@@ -289,6 +297,7 @@ angular.module('ts5App')
     };
 
     $scope.loseDataAlertConfirmTrigger = function(){
+      console.log($scope.wizardStepToIndex);
       var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
       $location.url(uri);
     };

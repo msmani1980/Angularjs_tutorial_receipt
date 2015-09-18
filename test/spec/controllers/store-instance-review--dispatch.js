@@ -159,14 +159,11 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       expect(scope.seals).toEqual(mockSealObj);
     });
 
-    describe('init async request resolutions', function(){
-
-    });
-
     describe('stepWizardPrevTrigger scope function', function () {
       it('should set showLoseDataAlert to true and return false', function () {
         expect(scope.stepWizardPrevTrigger()).toBe(false);
         expect(scope.showLoseDataAlert).toBe(true);
+        expect(scope.wizardStepToIndex).toBe(2);
       });
     });
 
