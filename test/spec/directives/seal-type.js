@@ -161,20 +161,6 @@ describe('the Seal Type directive', function() {
 
     });
 
-    describe('The limitSealsLength method,', function() {
-      //TODO: find way to test that the attr is added, issue is triggering dom ready
-      beforeEach(inject(function() {
-        compileDirective();
-        spyOn(isolatedScope, 'limitSealsLength').and.callThrough();
-        isolatedScope.limitSealsLength();
-      }));
-
-      it('should have been called', function() {
-        expect(isolatedScope.limitSealsLength).toHaveBeenCalled();
-      });
-
-    });
-
   });
 
 });
