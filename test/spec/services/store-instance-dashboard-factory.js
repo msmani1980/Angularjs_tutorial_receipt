@@ -39,7 +39,7 @@ describe('Service: storeInstanceDashboardFactory', function () {
     });
   });
 
-  fdescribe('stationsService calls', function () {
+  describe('stationsService calls', function () {
     it('should call getStationList', function () {
       storeInstanceDashboardFactory.getStationList();
       expect(stationsService.getGlobalStationList).toHaveBeenCalled();
