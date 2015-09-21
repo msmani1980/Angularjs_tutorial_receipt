@@ -20,18 +20,22 @@ angular.module('ts5App')
       getCashBag: {
         method: 'GET',
         headers: {companyId: 362} // TODO should this always be here?
+        // TODO - Whats up with this guys ^
       },
       updateCashBag: {
         method: 'PUT',
         headers: {companyId: 362} // TODO should this always be here?
+        // TODO - Whats up with this guys ^
       },
       deleteCashBag: {
         method: 'DELETE',
         headers: {companyId: 362} // TODO should this always be here?
+        // TODO - Whats up with this guys ^
       },
       createCashBag: {
         method: 'POST',
         headers: {companyId: 362} // TODO should this always be here?
+        // TODO - Whats up with this guys ^
       }
     };
 
