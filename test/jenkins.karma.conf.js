@@ -78,8 +78,6 @@ module.exports = function(config) {
       'bower_components/ngtoast/dist/ngToast.js',
       'bower_components/select2/select2.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'bower_components/big.js/big.min.js',
-      'bower_components/angular-big/dist/angular-big.js',
       // endbower
       'app/scripts/**/*.js',
       'test/mock/**/*.json',
