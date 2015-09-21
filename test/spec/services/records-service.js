@@ -82,5 +82,38 @@ describe('Service: commissionDataService', function () {
       });
     });
 
+    describe('getBenefitTypes', function(){
+      it('should make GET request to API', function(){
+        var expectUri = /records\/benefit-types$/;
+        httpBackend.expectGET(expectUri).respond(200, []);
+        recordsService.getBenefitTypes().then(function (response) {
+          expect(response).toBeDefined();
+        });
+        httpBackend.flush();
+      });
+    });
+
+    describe('getPromotionTypes', function(){
+      it('should make GET request to API', function(){
+        var expectUri = /records\/promotion-types$/;
+        httpBackend.expectGET(expectUri).respond(200, []);
+        recordsService.getPromotionTypes().then(function (response) {
+          expect(response).toBeDefined();
+        });
+        httpBackend.flush();
+      });
+    });
+
+    describe('getDiscountApplyTypes', function(){
+      it('should make GET request to API', function(){
+        var expectUri = /records\/discount-apply-types$/;
+        httpBackend.expectGET(expectUri).respond(200, []);
+        recordsService.getDiscountApplyTypes().then(function (response) {
+          expect(response).toBeDefined();
+        });
+        httpBackend.flush();
+      });
+    });
+
   });
 });
