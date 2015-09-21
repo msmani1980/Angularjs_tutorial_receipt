@@ -1,5 +1,4 @@
 'use strict';
-/*global Big*/
 
 /**
  * @ngdoc directive
@@ -16,14 +15,11 @@ angular.module('ts5App')
       };
 
       $scope.addSealsSequentially = function() {
-        var sealNumber = new Big($scope.sealTypeObject.seals.numbers[0]);
-        var numberOfSeals = new Big($scope.numberOfSeals);
-        var count = numberOfSeals.add(1);
+        var sealNumber = parseInt($scope.sealTypeObject.seals.numbers[0]);
+        var count = parseInt($scope.numberOfSeals + 1);
         for (var i = 1; i < count; i++) {
-          var newSeal = sealNumber.add(i);
-          var createSeal = new Big(newSeal);
-          var seal = createSeal.toFixed();
-          $scope.sealTypeObject.seals.numbers.push(seal);
+          var newSeal = Math.ceil(sealNumber + i);
+          $scope.sealTypeObject.seals.numbers.push(newSeal);
         }
       };
 
@@ -39,7 +35,7 @@ angular.module('ts5App')
         return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 1);
       };
 
-      $scope.setInputAttributes = function() {
+      $scope.limitSealsInput = function() {
         var selector = 'input.ui-select-search';
         var input = angular.element(selector);
         angular.element(input).attr('maxlength', 50).attr('type', 'number');
@@ -54,7 +50,7 @@ angular.module('ts5App')
       },
       link: function($scope, $element) {
         $element.ready(function() {
-          $scope.setInputAttributes();
+          $scope.limitSealsInput();
         });
       }
     };
