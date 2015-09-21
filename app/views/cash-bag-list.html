@@ -158,6 +158,7 @@
     <tr>
       <th>Cash Bag</th>
       <th>Bank Ref #</th>
+      <th>Schedule #</th>
       <th>Date</th>
       <th>Store #</th>
       <th>Store Instance</th>
@@ -177,6 +178,7 @@
       ng-repeat="cashBag in cashBagList" ng-class="{'new':isNew(cashBag.id)}">
       <td>{{ cashBag.cashBagNumber }}</td>
       <td>{{ cashBag.bankReferenceNumber }}</td>
+      <td>{{ cashBag.scheduleNumber }}</td>
       <td>{{ cashBag.scheduleDate }}</td>
       <td>{{ cashBag.storeNumber }}</td>
       <td>{{ cashBag.storeInstanceId }}</td>
