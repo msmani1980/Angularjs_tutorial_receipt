@@ -138,22 +138,22 @@
         <th></th>
         <th>
           <!-- TODO: SELECT ALL CHECKBOX, TO SELECT ALL WITH STATUS "DISPATCHED"  -->
-          <input class="btn btn-default" type="checkbox" value="1">
+          <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()">
         </th>
         <th>Dispatch LMP Station</th>
         <th>Inbound LMP Station</th>
         <th>Store Number</th>
         <th>Schedule Date</th>
-        <th>Departure Station</th>
-        <th>Departure Time</th>
-        <th>Arrival Station</th>
-        <th>Arrival Time</th>
+        <!--<th>Departure Station</th>-->
+        <!--<th>Departure Time</th>-->
+        <!--<th>Arrival Station</th>-->
+        <!--<th>Arrival Time</th>-->
         <th>Inbound Seals Tampered</th>
         <th>Store Instance</th>
         <th>Status</th>
         <th>Updated Date/Time</th>
         <th>Updated User</th>
-        <th>Actions</th>
+        <th class="col-xs-1">Actions</th>
       </tr>
       </thead>
       <tbody ng-repeat="store in storeInstanceList" id="store-{{ store.id }}">
@@ -164,22 +164,22 @@
             <span class="fa fa-minus-square" ng-show="isStoreViewExpanded(store)" ng-click="toggleAccordionView(store)"></span>
           </td>
           <td>
-            <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" type="checkbox">
+            <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="store.selected" type="checkbox">
           </td>
-          <td>{{ store.cateringStationId }}</td>
-          <td><!-- TODO: add Inbound LMP Station --></td>
+          <td>{{ store.dispatchStationCode }}</td>
+          <td><!-- TODO: add Inbound dispatchStationCode Station --></td>
           <td>{{ store.storeNumber }}</td>
           <td>{{ store.scheduleDate }}</td>
-          <td><!-- TODO: add Departure Station --></td>
-          <td><!-- TODO: add Departure Time --></td>
-          <td><!-- TODO: add Arrival Station --></td>
-          <td><!-- TODO: add Arrival Time --></td>
+          <!--<td>&lt;!&ndash; TODO: add Departure Station &ndash;&gt;</td>-->
+          <!--<td>&lt;!&ndash; TODO: add Departure Time &ndash;&gt;</td>-->
+          <!--<td>&lt;!&ndash; TODO: add Arrival Station &ndash;&gt;</td>-->
+          <!--<td>&lt;!&ndash; TODO: add Arrival Time &ndash;&gt;</td>-->
           <td>{{ (store.tampered) ? 'true' : 'false' }}</td>
           <td>{{ store.id }}</td>
           <td>{{ store.statusName }}</td>
           <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
           <td><!-- TODO: add user, which requires user accounts --></td>
-          <td>
+          <td class="col-xs-1">
             <button class="btn btn-primary btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Pack')">Start Packing</button>
             <button class="btn btn-success btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Dispatch')">Dispatch</button>
             <button class="btn btn-danger btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Delete')">End Instance</button>
@@ -194,20 +194,20 @@
           <td>
             <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" type="checkbox">
           </td>
-          <td>{{ replenishment.cateringStationId }}</td>
+          <td>{{ replenishment.dispatchStationCode }}</td>
           <td><!-- TODO: add Inbound LMP Station --></td>
           <td>{{ replenishment.storeNumber }}</td>
           <td>{{ replenishment.scheduleDate }}</td>
-          <td><!-- TODO: add Departure Station --></td>
-          <td><!-- TODO: add Departure Time --></td>
-          <td><!-- TODO: add Arrival Station --></td>
-          <td><!-- TODO: add Arrival Time --></td>
+          <!--<td>&lt;!&ndash; TODO: add Departure Station &ndash;&gt;</td>-->
+          <!--<td>&lt;!&ndash; TODO: add Departure Time &ndash;&gt;</td>-->
+          <!--<td>&lt;!&ndash; TODO: add Arrival Station &ndash;&gt;</td>-->
+          <!--<td>&lt;!&ndash; TODO: add Arrival Time &ndash;&gt;</td>-->
           <td>{{ (replenishment.tampered) ? 'true' : 'false' }}</td>
           <td>{{ replenishment.id }}</td>
           <td>{{ replenishment.statusName }}</td>
           <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
           <td><!-- TODO: add user, which requires user accounts --></td>
-          <td>
+          <td class="col-xs-1">
             <button class="btn btn-primary btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Pack')">Start Packing</button>
             <button class="btn btn-success btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Dispatch')">Dispatch</button>
             <button class="btn btn-danger btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Delete')">End Instance</button>

@@ -15,6 +15,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.storeInstanceList = [];
     $scope.storeStatusList = [];
     $scope.search = {};
+    $scope.allCheckboxesSelected = false;
     var openStoreInstanceId = -1;
 
     function clearSearchForm() {
@@ -87,26 +88,18 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return false;
     };
 
-    function getStoreNumberById (id) {
-      var store =  lodash.findWhere($scope.storesList, { id: id });
-      if(store) {
-        return store.storeNumber;
-      }
-      return '';
-    }
+    $scope.toggleAllCheckboxes = function () {
+      angular.forEach($scope.storeInstanceList, function (store) {
+        if($scope.doesStoreInstanceContainAction(store, 'Checkbox')) {
+          store.selected = $scope.allCheckboxesSelected;
+        }
+      });
+    };
 
-    function getStatusNameById (id) {
-      var status =  lodash.findWhere($scope.storeStatusList, { id: id });
-      if(status) {
-        return status.statusName;
-      }
-      return '';
-    }
-
-    function getStatusIdById (id) {
-      var status =  lodash.findWhere($scope.storeStatusList, { id: id });
-      if(status) {
-        return status.name;
+    function getValueByIdInArray(id, valueKey, array) {
+      var matchedObject = lodash.findWhere(array, {id: id});
+      if(matchedObject) {
+        return matchedObject[valueKey];
       }
       return '';
     }
@@ -123,11 +116,15 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function formatStoreInstanceList () {
       angular.forEach($scope.storeInstanceList, function (storeInstance, index) {
-        storeInstance.storeNumber = getStoreNumberById(storeInstance.storeId);
-        storeInstance.statusName = getStatusNameById(storeInstance.statusId);
+        storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
+        console.log(storeInstance.cateringStationId, storeInstance.dispatchStationCode);
+        storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
+        storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
-        storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[getStatusIdById(storeInstance.statusId)];
 
+        var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
+        storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
+        storeInstance.selected = false;
         // TODO: remove once API returns nested replenishedItems structure.
         if(index === 3 || index === 5) {
           storeInstance.replenishItems = [$scope.storeInstanceList[0], $scope.storeInstanceList[1]];
