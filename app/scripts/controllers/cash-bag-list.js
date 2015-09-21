@@ -110,17 +110,12 @@ angular.module('ts5App')
     };
 
     $scope.searchCashBag = function () {
-      if ($scope.search.startDate) {
-        $scope.search.startDate = moment($scope.search.startDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
-        $scope.search.endDate   = $scope.search.startDate;
+      var payload = angular.copy($scope.search);
+      if (payload.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+        payload.endDate   = payload.startDate;
       }
-      cashBagFactory.getCashBagList(_companyId, $scope.search).then(function (response) {
-        $scope.cashBagList = response.cashBags;
-        if ($scope.search.startDate) {
-          $scope.search.startDate = moment($scope.search.startDate, 'YYYYMMDD').format('MM/DD/YYYY').toString();
-          $scope.search.endDate   = $scope.search.endDate;
-        }
-      });
+      cashBagFactory.getCashBagList(_companyId, payload).then(getCashBagResponseHandler);
     };
 
     $scope.clearForm = function () {
