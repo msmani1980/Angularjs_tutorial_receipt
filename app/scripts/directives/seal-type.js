@@ -32,13 +32,13 @@ angular.module('ts5App')
       };
 
       $scope.isAddButtonDisabled = function() {
-        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 1);
+        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 0);
       };
 
       $scope.limitSealsInput = function() {
         var selector = 'input.ui-select-search';
         var input = angular.element(selector);
-        angular.element(input).attr('maxlength', 50).attr('type', 'number');
+        angular.element(input).attr('maxlength', 50);
       };
 
     };
