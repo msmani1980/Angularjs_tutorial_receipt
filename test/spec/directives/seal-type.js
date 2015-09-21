@@ -1,4 +1,5 @@
 'use strict';
+/*global Big*/
 
 describe('the Seal Type directive', function() {
 
@@ -115,12 +116,16 @@ describe('the Seal Type directive', function() {
         expect(isolatedScope.addSealsSequentially).toBeDefined();
       });
 
+      it('should have Big defined', function() {
+        expect(Big).toBeDefined();
+      });
+
       it('should add seals sequentially', function() {
         scope.sealTypesList[0].seals.numbers = [10];
         isolatedScope.numberOfSeals = 10;
         isolatedScope.addSealsSequentially();
-        expect(scope.sealTypesList[0].seals.numbers).toEqual([10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-          20
+        expect(scope.sealTypesList[0].seals.numbers).toEqual([10, '11', '12', '13', '14', '15', '16',
+          '17', '18', '19', '20'
         ]);
       });
 
