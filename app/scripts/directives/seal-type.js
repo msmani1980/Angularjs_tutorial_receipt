@@ -18,7 +18,7 @@ angular.module('ts5App')
         var sealNumber = parseInt($scope.sealTypeObject.seals.numbers[0]);
         var count = parseInt($scope.numberOfSeals + 1);
         for (var i = 1; i < count; i++) {
-          var newSeal = Math.ceil(sealNumber + i);
+          var newSeal = Math.abs(sealNumber + i);
           $scope.sealTypeObject.seals.numbers.push(newSeal);
         }
       };
@@ -38,7 +38,7 @@ angular.module('ts5App')
       $scope.limitSealsInput = function() {
         var selector = 'input.ui-select-search';
         var input = angular.element(selector);
-        angular.element(input).attr('maxlength', 50);
+        angular.element(input).attr('maxlength', 15);
       };
 
     };
