@@ -13,7 +13,7 @@
 angular.module('ts5App')
   .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, ngToast, dateUtility) {
 
-    var _companyId = null
+    var _companyId = null;
     var _services  = null;
 
     $scope.viewName           = 'Manage Cash Bag';
