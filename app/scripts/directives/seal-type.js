@@ -38,7 +38,7 @@ angular.module('ts5App')
       $scope.limitSealsInput = function() {
         var selector = 'input.ui-select-search';
         var input = angular.element(selector);
-        angular.element(input).attr('maxlength', 50).attr('type', 'number');
+        angular.element(input).attr('maxlength', 50);
       };
 
     };
