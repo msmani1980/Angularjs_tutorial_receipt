@@ -197,6 +197,9 @@ angular.module('ts5App', [
   }).when('/store-instance-dashboard', {
     templateUrl: 'views/store-instance-dashboard.html',
     controller: 'StoreInstanceDashboardCtrl'
+  }).when('/promotions/:state/:id?', {
+    templateUrl: 'views/promotions.html',
+    controller: 'PromotionsCtrl'
   }).otherwise({
     redirectTo: '/'
   });

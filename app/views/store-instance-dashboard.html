@@ -140,12 +140,10 @@
 
     <div class="table table-responsive table-hover">
       <table class="table table-bordered table=hover">
-        <!--<table class="table table-bordered table-hover ng-scope">-->
         <thead>
         <tr>
           <th></th>
           <th>
-            <!-- TODO: SELECT ALL CHECKBOX, TO SELECT ALL WITH STATUS "DISPATCHED"  -->
             <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected"
                    ng-click="toggleAllCheckboxes()">
           </th>
@@ -167,7 +165,8 @@
           <th class="col-xs-1">Actions</th>
         </tr>
         </thead>
-        <tbody ng-repeat="store in storeInstanceList" id="store-{{ store.id }}">
+        <!-- TODO: add scheduleNumber to orderBy -->
+        <tbody ng-repeat="store in storeInstanceList | orderBy:['-scheduleDate', 'storeNumber']" id="store-{{ store.id }}">
         <tr class="master-row">
           <td>
             <span class="fa fa-plus-square-o"
