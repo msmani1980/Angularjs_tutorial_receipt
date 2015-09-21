@@ -36,16 +36,6 @@
           <form name="createCashBagForm">
             <div class="row">
               <div class="col-md-6 col-sm-12">
-                <div class="form-group">
-                  <label for="cashBag-origin">Schedule</label>
-                  <select ng-model="scheduleIndex" class="form-control col-md-12" id="cashBag-origin"
-                          ng-change="updateScheduleDate()" required="true">
-                    <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6 col-sm-12">
                 <date-picker
                   id="createCashBagDatePicker"
                   class="col-sm-12"
@@ -57,6 +47,16 @@
                   max-date="scheduleMaxDate"
                   required="true">
                 </date-picker>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label for="create-schedule">Schedule</label>
+                  <select ng-model="scheduleIndex" class="form-control col-md-12" id="create-schedule"
+                          ng-change="updateScheduleDate()" required="true">
+                    <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}
+                    </option>
+                  </select>
+                </div>
               </div>
             </div>
           </form>
@@ -111,7 +111,7 @@
 
           <div class="col-md-3 col-sm-6">
             <date-picker
-              class="col-sm-6"
+              element-class="col-xs-12"
               disable-date-range="true"
               start-date-model="search.startDate"
               is-search-field="true"
@@ -169,8 +169,9 @@
     </thead>
     <tbody>
     <tr>
-      <td colspan="6" ng-click="showCreatePopup()" class="btn-default"><span class="glyphicon glyphicon-plus"
-                                                                             aria-hidden="true"></span>
+      <td colspan="9" ng-click="showCreatePopup()" class="btn-default">
+        <span class="glyphicon glyphicon-plus"
+              aria-hidden="true"></span>
         Add Cash Bag
       </td>
     </tr>
