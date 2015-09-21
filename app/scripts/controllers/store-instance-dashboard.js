@@ -16,11 +16,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.storeStatusList = [];
     $scope.search = {};
     $scope.allCheckboxesSelected = false;
+    $scope.allScheduleDetailsExpanded = false;
     $scope.openStoreInstanceId = -1;
 
     function clearSearchForm() {
       $scope.search = {};
     }
+
     $scope.clearSearchForm = clearSearchForm;
 
     function getStoreInstancesListSuccess(dataFromAPI) {
@@ -41,7 +43,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function searchStoreInstanceDashboardData() {
       var payload = {};
-      angular.forEach(SEARCH_TO_PAYLOAD_MAP, function(value, key) {
+      angular.forEach(SEARCH_TO_PAYLOAD_MAP, function (value, key) {
         payload[value] = $scope.search[key];
       });
 
@@ -58,11 +60,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return ($scope.openStoreInstanceId === store.id);
     };
 
-    function openAccordion (storeInstance) {
+    function openAccordion(storeInstance) {
       angular.element('#store-' + storeInstance.id).addClass('open-accordion');
     }
 
-    function closeAccordion () {
+    function closeAccordion() {
       angular.element('#store-' + $scope.openStoreInstanceId).removeClass('open-accordion');
       $scope.openStoreInstanceId = -1;
     }
@@ -82,7 +84,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
 
     $scope.doesStoreInstanceContainAction = function (storeInstance, actionName) {
-      if(storeInstance.actionButtons) {
+      if (storeInstance.actionButtons) {
         return storeInstance.actionButtons.indexOf(actionName) >= 0;
       }
       return false;
@@ -90,35 +92,51 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     $scope.toggleAllCheckboxes = function () {
       angular.forEach($scope.storeInstanceList, function (store) {
-        if($scope.doesStoreInstanceContainAction(store, 'Checkbox')) {
+        if ($scope.doesStoreInstanceContainAction(store, 'Checkbox')) {
           store.selected = $scope.allCheckboxesSelected;
         }
       });
+    };
+
+
+    $scope.isScheduleDetailOpen = function (id) {
+      return !(angular.element('.scheduleDetails-' + id).hasClass('accordion-cell-closed'));
     };
 
     $scope.toggleScheduleDetails = function (id) {
       angular.element('.scheduleDetails-' + id).toggleClass('accordion-cell-closed');
     };
 
+    $scope.toggleAllScheduleInfo = function () {
+      $scope.allScheduleDetailsExpanded = !$scope.allScheduleDetailsExpanded;
+      angular.forEach($scope.storeInstanceList, function (store) {
+        if ($scope.allScheduleDetailsExpanded && !$scope.isScheduleDetailOpen(store.id)) {
+          angular.element('.scheduleDetails-' + store.id).removeClass('accordion-cell-closed');
+        } else if (!$scope.allScheduleDetailsExpanded && $scope.isScheduleDetailOpen(store.id)) {
+          angular.element('.scheduleDetails-' + store.id).addClass('accordion-cell-closed');
+        }
+      });
+    };
+
     function getValueByIdInArray(id, valueKey, array) {
       var matchedObject = lodash.findWhere(array, {id: id});
-      if(matchedObject) {
+      if (matchedObject) {
         return matchedObject[valueKey];
       }
       return '';
     }
 
     var STATUS_TO_BUTTONS_MAP = {
-      '1' : ['Pack', 'Delete'],
-      '2' : ['Seal', 'Delete'],
-      '3' : ['Dispatch', 'Delete', 'Checkbox'],
-      '4' : ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
-      '5' : ['End instance', 'Re-dispatch', 'Checkbox'],
-      '6' : ['N/A'],
-      '7' : ['Instance audit report']
+      '1': ['Pack', 'Delete'],
+      '2': ['Seal', 'Delete'],
+      '3': ['Dispatch', 'Delete', 'Checkbox'],
+      '4': ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
+      '5': ['End instance', 'Re-dispatch', 'Checkbox'],
+      '6': ['N/A'],
+      '7': ['Instance audit report']
     };
 
-    function formatStoreInstanceList () {
+    function formatStoreInstanceList() {
       angular.forEach($scope.storeInstanceList, function (storeInstance, index) {
         storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
         storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
@@ -129,59 +147,59 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
         storeInstance.selected = false;
         // TODO: remove once API returns nested replenishedItems structure.
-        if(index === 3 || index === 5) {
+        if (index === 3 || index === 5) {
           storeInstance.replenishItems = [$scope.storeInstanceList[0], $scope.storeInstanceList[1]];
         }
       });
     }
 
-    function getCatererStationListSuccess (dataFromAPI) {
+    function getCatererStationListSuccess(dataFromAPI) {
       $scope.catererStationList = dataFromAPI.response;
     }
 
-    function getCatererStationList () {
+    function getCatererStationList() {
       storeInstanceDashboardFactory.getCatererStationList().then(getCatererStationListSuccess);
     }
 
-    function getStoreInstanceListSuccess (dataFromAPI) {
+    function getStoreInstanceListSuccess(dataFromAPI) {
       $scope.storeInstanceList = dataFromAPI.response;
     }
 
-    function getStoreInstanceList () {
+    function getStoreInstanceList() {
       storeInstanceDashboardFactory.getStoreInstanceList().then(getStoreInstanceListSuccess);
     }
 
-    function getStationListSuccess (dataFromAPI) {
+    function getStationListSuccess(dataFromAPI) {
       $scope.stationList = dataFromAPI.response;
     }
 
-    function getStationList () {
+    function getStationList() {
       storeInstanceDashboardFactory.getStationList().then(getStationListSuccess);
     }
 
-    function getStoresListSuccess (dataFromAPI) {
+    function getStoresListSuccess(dataFromAPI) {
       $scope.storesList = dataFromAPI.response;
     }
 
-    function getStoresList () {
+    function getStoresList() {
       storeInstanceDashboardFactory.getStoresList({}).then(getStoresListSuccess);
     }
 
-    function getStatusListSuccess (dataFromAPI) {
+    function getStatusListSuccess(dataFromAPI) {
       $scope.storeStatusList = dataFromAPI;
     }
 
-    function getStatusList () {
+    function getStatusList() {
       storeInstanceDashboardFactory.getStatusList().then(getStatusListSuccess);
     }
 
     $scope.$watchGroup(['storeInstanceList', 'storesList', 'catererStationList'], function () {
-      if($scope.storeInstanceList && $scope.storesList && $scope.catererStationList && $scope.storeStatusList) {
+      if ($scope.storeInstanceList && $scope.storesList && $scope.catererStationList && $scope.storeStatusList) {
         formatStoreInstanceList();
       }
     });
 
-    function init () {
+    function init() {
       getCatererStationList();
       getStationList();
       getStoreInstanceList();

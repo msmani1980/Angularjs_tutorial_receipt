@@ -152,7 +152,13 @@
           <th>Dispatch LMP Station</th>
           <th>Inbound LMP Station</th>
           <th>Store Number</th>
-          <th>Schedule Date</th>
+          <th ng-click="toggleAllScheduleInfo(store.id)">
+            <span class="btn">
+              <span class="fa fa-plus-square-o" ng-hide="allScheduleDetailsExpanded"></span>
+              <span class="fa fa-minus-square" ng-show="allScheduleDetailsExpanded"></span>
+              <span><strong>ScheduleDate</strong></span>
+            </span>
+          </th>
           <th>Inbound Seals Tampered</th>
           <th>Store Instance</th>
           <th>Status</th>
@@ -179,8 +185,8 @@
           <td>{{ store.storeNumber }}</td>
           <td id="schedule-{{store.id}}" ng-click="toggleScheduleDetails(store.id)">
             <span class="btn">
-              <span class="fa fa-plus-square-o scheduleDetails-{{store.id}}"></span>
-              <span class="fa fa-minus-square scheduleDetails-{{store.id}} accordion-cell-closed"></span>
+              <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(store.id)"></span>
+              <span class="fa fa-minus-square" ng-show="isScheduleDetailOpen(store.id)"></span>
               <span><strong>{{ store.scheduleDate }}</strong></span>
             </span>
 
@@ -197,30 +203,44 @@
           <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
           <td><!-- TODO: add user, which requires user accounts --></td>
           <td class="col-xs-1">
-            <button class="btn btn-primary btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Pack')">
+            <a class="btn btn-primary btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Pack')"
+               href="#/store-instance-packing/{{store.id}}">
               Start Packing
-            </button>
-            <button class="btn btn-warning btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Seal')">
+            </a>
+            <a class="btn btn-warning btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Seal')"
+               href="#/store-instance-seals/{{store.id}}">
               Start Seals
-            </button>
-            <button class="btn btn-success btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Dispatch')">Dispatch
-            </button>
-            <button class="btn btn-danger btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Delete')">End Instance
-            </button>
-            <button class="btn btn-warning btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Un-dispatch')">Undispatch
-            </button>
-            <button class="btn btn-info btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')">Generate Doc
-            </button>
-            <button class="btn btn-default btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Replenish')">Replenish
-            </button>
-            <button class="btn btn-default btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Receive')">Receive
-            </button>
+            </a>
+            <a class="btn btn-success btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
+               href="#/store-instance-review/{{store.id}}">Dispatch
+            </a>
+            <!-- TODO: End Dispatch -->
+            <a class="btn btn-danger btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Delete')"
+               href="#/{{store.id}}">End Instance
+            </a>
+            <!-- TODO: UnDispatch-->
+            <a class="btn btn-warning btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Un-dispatch')"
+               href="#/store-instance-undispatch/{{store.id}}">Undispatch
+            </a>
+            <!-- TODO: Generate Doc Download Link -->
+            <a class="btn btn-info btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
+               href="#/{{store.id}}">Generate Doc
+            </a>
+            <a class="btn btn-default btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
+               href="#/store-instance-create/{{store.id}}/replenish">Replenish
+            </a>
+            <!-- TODO: Recieve-->
+            <a class="btn btn-default btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Receive')"
+               href="#/store-instance-recieve/{{store.id}}">Receive
+            </a>
           </td>
         </tr>
         <tr ng-repeat="replenishment in store.replenishItems" class="subversion-row"
@@ -252,27 +272,44 @@
           <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
           <td><!-- TODO: add user, which requires user accounts --></td>
           <td class="col-xs-1">
-            <button class="btn btn-primary btn-xs" tabindex="0" ng-show="doesStoreInstanceContainAction(store, 'Pack')">
+            <a class="btn btn-primary btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Pack')"
+               href="#/store-instance-packing/{{replenishment.id}}">
               Start Packing
-            </button>
-            <button class="btn btn-success btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Dispatch')">Dispatch
-            </button>
-            <button class="btn btn-danger btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Delete')">End Instance
-            </button>
-            <button class="btn btn-warning btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Un-dispatch')">Undispatch
-            </button>
-            <button class="btn btn-info btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')">Generate Doc
-            </button>
-            <button class="btn btn-pink btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Replenish')">Replenish
-            </button>
-            <button class="btn btn-purple btn-xs" tabindex="0"
-                    ng-show="doesStoreInstanceContainAction(store, 'Receive')">Receive
-            </button>
+            </a>
+            <a class="btn btn-warning btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Seal')"
+               href="#/store-instance-seals/{{replenishment.id}}">
+              Start Seals
+            </a>
+            <a class="btn btn-success btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
+               href="#/store-instance-review/{{replenishment.id}}">Dispatch
+            </a>
+            <!-- TODO: End Dispatch -->
+            <a class="btn btn-danger btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Delete')"
+               href="#/{{replenishment.id}}">End Instance
+            </a>
+            <!-- TODO: UnDispatch-->
+            <a class="btn btn-warning btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Un-dispatch')"
+               href="#/store-instance-undispatch/{{replenishment.id}}">Undispatch
+            </a>
+            <!-- TODO: Generate Doc Download Link -->
+            <a class="btn btn-info btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
+               href="#/{{replenishment.id}}">Generate Doc
+            </a>
+            <a class="btn btn-default btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
+               href="#/store-instance-create/{{replenishment.id}}/replenish">Replenish
+            </a>
+            <!-- TODO: Recieve-->
+            <a class="btn btn-default btn-xs" tabindex="0"
+               ng-show="doesStoreInstanceContainAction(store, 'Receive')"
+               href="#/store-instance-recieve/{{replenishment.id}}">Receive
+            </a>
           </td>
         </tr>
         </tr>
