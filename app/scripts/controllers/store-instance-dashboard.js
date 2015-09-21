@@ -96,6 +96,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
     };
 
+    $scope.toggleScheduleDetails = function (id) {
+      angular.element('.scheduleDetails-' + id).toggleClass('accordion-cell-closed');
+    };
+
     function getValueByIdInArray(id, valueKey, array) {
       var matchedObject = lodash.findWhere(array, {id: id});
       if(matchedObject) {
@@ -117,7 +121,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     function formatStoreInstanceList () {
       angular.forEach($scope.storeInstanceList, function (storeInstance, index) {
         storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
-        console.log(storeInstance.cateringStationId, storeInstance.dispatchStationCode);
         storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
         storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
