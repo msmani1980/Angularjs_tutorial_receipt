@@ -19,6 +19,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.allScheduleDetailsExpanded = false;
     $scope.openStoreInstanceId = -1;
 
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
     function clearSearchForm() {
       $scope.search = {};
     }
@@ -163,9 +171,12 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function getStoreInstanceListSuccess(dataFromAPI) {
       $scope.storeInstanceList = dataFromAPI.response;
+      hideLoadingModal();
+
     }
 
     function getStoreInstanceList() {
+      showLoadingModal('Loading Store Instance Dashboard');
       storeInstanceDashboardFactory.getStoreInstanceList().then(getStoreInstanceListSuccess);
     }
 
