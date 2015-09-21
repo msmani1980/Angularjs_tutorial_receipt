@@ -16,7 +16,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.storeStatusList = [];
     $scope.search = {};
     $scope.allCheckboxesSelected = false;
-    var openStoreInstanceId = -1;
+    $scope.openStoreInstanceId = -1;
 
     function clearSearchForm() {
       $scope.search = {};
@@ -55,7 +55,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.isStoreViewExpanded = function (store) {
-      return (openStoreInstanceId === store.id);
+      return ($scope.openStoreInstanceId === store.id);
     };
 
     function openAccordion (storeInstance) {
@@ -63,20 +63,20 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function closeAccordion () {
-      angular.element('#store-' + openStoreInstanceId).removeClass('open-accordion');
-      openStoreInstanceId = -1;
+      angular.element('#store-' + $scope.openStoreInstanceId).removeClass('open-accordion');
+      $scope.openStoreInstanceId = -1;
     }
 
     $scope.toggleAccordionView = function (storeInstance) {
       if (!$scope.doesStoreInstanceHaveReplenishments(storeInstance)) {
         return;
       }
-      if (openStoreInstanceId === storeInstance.id) {
+      if ($scope.openStoreInstanceId === storeInstance.id) {
         closeAccordion();
       } else {
         openAccordion(storeInstance);
         closeAccordion();
-        openStoreInstanceId = storeInstance.id;
+        $scope.openStoreInstanceId = storeInstance.id;
       }
     };
 

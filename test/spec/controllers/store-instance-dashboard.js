@@ -148,7 +148,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       });
     });
 
-    fdescribe('format store instance response', function () {
+    describe('format store instance response', function () {
       beforeEach(function () {
         scope.$digest();
       });
@@ -164,6 +164,61 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       it('should add actionButtons name', function () {
         expect(scope.storeInstanceList[0].actionButtons).toBeDefined();
       });
+    });
+  });
+
+  describe('Table Accordion functions', function () {
+
+    describe('toggleAccordion', function () {
+      var testStore = {
+        id: 2,
+        replenishItems: [{id: 3}]
+      };
+
+      it('should only close if toggling current open accordion', function () {
+        scope.openStoreInstanceId = 2;
+        scope.toggleAccordionView(testStore);
+        scope.$digest();
+        expect(scope.openStoreInstanceId).toEqual(-1);
+      });
+      it('should set new openRowId if toggling a closed accordion', function () {
+        scope.openStoreInstanceId = 5;
+        scope.$digest();
+        scope.toggleAccordionView(testStore);
+        expect(scope.openStoreInstanceId).toEqual(2);
+      });
+    });
+
+    describe('scope check functions', function () {
+      var testStore = {
+        id: 2,
+        replenishItems: [{id: 3}]
+      };
+      it('should check store replenishItems array for doesStoreInstanceHaveReplenishments', function () {
+        expect(scope.doesStoreInstanceHaveReplenishments(testStore)).toEqual(true);
+        testStore.replenishItems = [];
+        expect(scope.doesStoreInstanceHaveReplenishments(testStore)).toEqual(false);
+
+      });
+      it('should return false for isStoreViewExpanded when given store is expanded', function () {
+        scope.openStoreInstanceId = 2;
+        expect(scope.isStoreViewExpanded(testStore)).toEqual(true);
+        testStore.id = 3;
+        expect(scope.doesStoreInstanceHaveReplenishments(testStore)).toEqual(false);
+      });
+    });
+  });
+
+  describe('toggle checkboxes', function () {
+    it('should set all stores with a Checkbox to be selected', function () {
+      scope.storeInstanceList = [
+        {id: 1, selected: false, actionButtons: ['Checkbox']},
+        {id: 2, selected: false, actionButtons: ['Delete']}
+      ];
+      scope.allCheckboxesSelected = true;
+      scope.toggleAllCheckboxes();
+      expect(scope.storeInstanceList[0].selected).toEqual(true);
+      expect(scope.storeInstanceList[1].selected).toEqual(false);
     });
   });
 
