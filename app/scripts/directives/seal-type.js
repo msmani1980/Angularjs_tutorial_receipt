@@ -1,4 +1,5 @@
 'use strict';
+/*global Big*/
 
 /**
  * @ngdoc directive
@@ -15,11 +16,14 @@ angular.module('ts5App')
       };
 
       $scope.addSealsSequentially = function() {
-        var sealNumber = parseInt($scope.sealTypeObject.seals.numbers[0]);
-        var count = parseInt($scope.numberOfSeals + 1);
+        var sealNumber = new Big($scope.sealTypeObject.seals.numbers[0]);
+        var numberOfSeals = new Big($scope.numberOfSeals);
+        var count = numberOfSeals.add(1);
         for (var i = 1; i < count; i++) {
-          var newSeal = Math.ceil(sealNumber + i);
-          $scope.sealTypeObject.seals.numbers.push(newSeal);
+          var newSeal = sealNumber.add(i);
+          var createSeal = new Big(newSeal);
+          var seal = createSeal.toFixed();
+          $scope.sealTypeObject.seals.numbers.push(seal);
         }
       };
 
@@ -32,13 +36,13 @@ angular.module('ts5App')
       };
 
       $scope.isAddButtonDisabled = function() {
-        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals === 0);
+        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 1);
       };
 
-      $scope.limitSealsLength = function() {
+      $scope.setInputAttributes = function() {
         var selector = 'input.ui-select-search';
         var input = angular.element(selector);
-        angular.element(input).attr('maxlength', 50);
+        angular.element(input).attr('maxlength', 50).attr('type', 'number');
       };
 
     };
@@ -50,7 +54,7 @@ angular.module('ts5App')
       },
       link: function($scope, $element) {
         $element.ready(function() {
-          $scope.limitSealsLength();
+          $scope.setInputAttributes();
         });
       }
     };
