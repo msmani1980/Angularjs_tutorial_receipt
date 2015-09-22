@@ -8,6 +8,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
   beforeEach(module('served/store-instance-list.json'));
   beforeEach(module('served/stores-list.json'));
   beforeEach(module('served/store-status.json'));
+  beforeEach(module('served/store-status-response.json'));
 
   var StoreInstanceDashboardCtrl;
   var scope;
@@ -22,14 +23,17 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
   var storesListResponseJSON;
   var statusListDeferred;
   var statusListResponseJSON;
+  var statusDeferred;
+  var statusResponseJSON;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_, _servedStoreStatus_) {
+    inject(function (_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_, _servedStoreStatus_, _servedStoreStatusResponse_) {
       cateringStationResponseJSON = _servedCateringStations_;
       stationResponseJSON = _servedStations_;
       storeInstanceListResponseJSON = _servedStoreInstanceList_;
       storesListResponseJSON = _servedStoresList_;
       statusListResponseJSON = _servedStoreStatus_;
+      statusResponseJSON = _servedStoreStatusResponse_;
     });
     scope = $rootScope.$new();
 
@@ -45,12 +49,15 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
     storesListDeferred.resolve(storesListResponseJSON);
     statusListDeferred = $q.defer();
     statusListDeferred.resolve(statusListResponseJSON);
+    statusDeferred = $q.defer();
+    statusDeferred.resolve(statusResponseJSON);
 
     spyOn(storeInstanceDashboardFactory, 'getCatererStationList').and.returnValue(cateringStationDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStationList').and.returnValue(stationDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStoreInstanceList').and.returnValue(storeInstanceListDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStoresList').and.returnValue(storesListDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStatusList').and.returnValue(statusListDeferred.promise);
+    spyOn(storeInstanceDashboardFactory, 'updateStoreInstanceStatus').and.returnValue(statusDeferred.promise);
 
     StoreInstanceDashboardCtrl = $controller('StoreInstanceDashboardCtrl', {
       $scope: scope
@@ -210,6 +217,49 @@ describe('Controller: StoreInstanceDashboardCtrl', function () {
       expect(scope.storeInstanceList[0].selected).toEqual(true);
       expect(scope.storeInstanceList[1].selected).toEqual(false);
     });
+  });
+
+  describe('bulk actions', function () {
+    describe('bulk dispatch', function () {
+      it('should not update items that are not ready for dispatch', function () {
+        scope.storeInstanceList = [{
+          id: 1,
+          actionButtons: ['Pack'],
+          selected: true
+        },{
+          id: 2,
+          actionButtons: ['Seals'],
+          selected: true
+        }, {
+          id: 3,
+          actionButtons: ['Dispatch'],
+          selected: true
+        }];
+        scope.bulkDispatch();
+        expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(3, '4');
+
+      });
+      it('should call update status for each selected item', function () {
+        scope.storeInstanceList = [{
+          id: 1,
+          actionButtons: ['Dispatch'],
+          selected: true
+        },{
+          id: 2,
+          actionButtons: ['Dispatch'],
+          selected: true
+        }, {
+          id: 3,
+          actionButtons: ['Dispatch'],
+          selected: false
+        }];
+        scope.bulkDispatch();
+        expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(1, '4');
+        expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(2, '4');
+      });
+
+    });
+
   });
 
 
