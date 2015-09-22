@@ -17,7 +17,7 @@ angular.module('ts5App')
         },
         {
           label: 'Replenish Packing',
-          uri: '/store-instance-packing/' + id + '/replenish'
+          uri: '/store-instance-packing/replenish/' + id
         },
         {
           label: 'Assign Replenish Seals',

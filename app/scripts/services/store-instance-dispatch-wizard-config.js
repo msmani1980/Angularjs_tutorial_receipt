@@ -17,7 +17,7 @@ angular.module('ts5App')
         },
         {
           label: 'Packing',
-          uri: '/store-instance-packing/' + id
+          uri: '/store-instance-packing/dispatch/' + id
         },
         {
           label: 'Assign Seals',
