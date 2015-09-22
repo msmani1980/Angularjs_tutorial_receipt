@@ -10,6 +10,8 @@ angular.module('ts5App')
   .directive('sealType', function() {
     var sealTypeController = function($scope) {
 
+      $scope.numberOfSeals = 0;
+
       $scope.isSequentialPossible = function() {
         return ($scope.sealTypeObject.seals.numbers.length === 1 && $scope.sealTypeObject.seals.numbers[0] >= 0);
       };
@@ -32,7 +34,7 @@ angular.module('ts5App')
       };
 
       $scope.isAddButtonDisabled = function() {
-        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 0);
+        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 1);
       };
 
       $scope.limitSealsInput = function() {
