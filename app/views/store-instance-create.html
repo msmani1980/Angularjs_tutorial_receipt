@@ -4,7 +4,7 @@
 
   <error-dialog form-object="createStoreInstance"></error-dialog>
 
-  <form name="createStoreInstance" class="well" ng-submit="submitForm()">
+  <form name="createStoreInstance" class="well" ng-submit="submitForm()" ng-show="uiSelectTemplateReady" >
 
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
@@ -53,7 +53,7 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('StoreNumber')">
-          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber">
+          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber" ng-disabled="action == 'replenish'">
             <option ng-disabled="true" selected="selected" value>Select Store</option>
             <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
@@ -67,8 +67,8 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateMenus()">
-          <ui-select name="Menus" required="true" multiple ng-model="formData.menus" theme="bootstrap" id="menuIds">
-            <ui-select-match placeholder="Select one or more Menus" ui-lock-choice="isDisabled()">{{ $item.menuCode }}
+          <ui-select name="Menus" required="true" multiple ng-model="formData.menus" theme="bootstrap" id="menuIds" >
+            <ui-select-match placeholder="{{action == 'replenish' ? '' : 'Select one or more Menus'}}" ui-lock-choice="action == 'replenish'">{{ $item.menuCode }}
             </ui-select-match>
             <ui-select-choices  repeat="menu in filteredMenuList | filter: $select.search | orderBy:'menuCode'">
               <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
@@ -84,7 +84,7 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group">
-          <select class="form-control" ng-model="formData.carrierId">
+          <select class="form-control" ng-model="formData.carrierId" ng-disabled="action == 'replenish'">
             <option selected="selected" value>Select a Tail Number</option>
             <option ng-repeat="tailNumber in carrierNumbers | orderBy:'carrierNumber' track by tailNumber.id" value="{{ tailNumber.id }}">{{ tailNumber.carrierNumber }}</option>
           </select>
