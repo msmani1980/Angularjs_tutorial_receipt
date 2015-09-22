@@ -309,10 +309,7 @@ angular.module('ts5App')
     };
 
     $scope.hasDiscrepancy = function(item){
-      if(item.menuQuantity !== item.quantity){
-        return 'danger';
-      }
-      return '';
+      return (item.menuQuantity !== item.quantity) ? 'danger' : '';
     };
 
   });

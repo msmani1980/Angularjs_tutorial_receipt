@@ -1,23 +1,31 @@
 .has-error .select2-container ul {
-	border-color: #a94442;
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  border-color: #a94442;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 
 .has-error .btn-default {
-	border-color: #a94442;
-	color:#a94442;
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  border-color: #a94442;
+  color: #a94442;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 
 .has-success .select2-container ul {
-	border-color: #3c763d;
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  border-color: #3c763d;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 
 .form-control[disabled].showAsActive, .form-control[readonly].showAsActive, fieldset[disabled] .form-control.showAsActive {
   background-color: #fff;
 }
 
-.store-instance-review-seals-table input{
+.store-instance-review-seals-table input {
   color: black;
+}
+
+.stations-multi-select ul {
+  @extend .form-control;
+}
+
+.select2-container-multi .select2-choices {
+  background-image: none;
 }
