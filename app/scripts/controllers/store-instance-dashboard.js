@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
-  function ($scope, storeInstanceDashboardFactory, lodash, dateUtility) {
+  function ($scope, storeInstanceDashboardFactory, lodash, dateUtility, $q) {
 
     $scope.catererStationList = [];
     $scope.stationList = [];
@@ -90,7 +90,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     };
 
-
     $scope.doesStoreInstanceContainAction = function (storeInstance, actionName) {
       if (storeInstance.actionButtons) {
         return storeInstance.actionButtons.indexOf(actionName) >= 0;
@@ -164,60 +163,59 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function getCatererStationListSuccess(dataFromAPI) {
-      $scope.catererStationList = dataFromAPI.response;
+      $scope.catererStationList = angular.copy(dataFromAPI.response);
     }
 
     function getCatererStationList() {
-      storeInstanceDashboardFactory.getCatererStationList().then(getCatererStationListSuccess);
+      return storeInstanceDashboardFactory.getCatererStationList().then(getCatererStationListSuccess);
     }
 
     function getStoreInstanceListSuccess(dataFromAPI) {
-      $scope.storeInstanceList = dataFromAPI.response;
-      hideLoadingModal();
-
+      $scope.storeInstanceList = angular.copy(dataFromAPI.response);
     }
 
     function getStoreInstanceList() {
-      showLoadingModal('Loading Store Instance Dashboard');
-      storeInstanceDashboardFactory.getStoreInstanceList().then(getStoreInstanceListSuccess);
+      return storeInstanceDashboardFactory.getStoreInstanceList().then(getStoreInstanceListSuccess);
     }
 
     function getStationListSuccess(dataFromAPI) {
-      $scope.stationList = dataFromAPI.response;
+      $scope.stationList = angular.copy(dataFromAPI.response);
     }
 
     function getStationList() {
-      storeInstanceDashboardFactory.getStationList().then(getStationListSuccess);
+      return storeInstanceDashboardFactory.getStationList().then(getStationListSuccess);
     }
 
     function getStoresListSuccess(dataFromAPI) {
-      $scope.storesList = dataFromAPI.response;
+      $scope.storesList = angular.copy(dataFromAPI.response);
     }
 
     function getStoresList() {
-      storeInstanceDashboardFactory.getStoresList({}).then(getStoresListSuccess);
+      return storeInstanceDashboardFactory.getStoresList({}).then(getStoresListSuccess);
     }
 
     function getStatusListSuccess(dataFromAPI) {
-      $scope.storeStatusList = dataFromAPI;
+      $scope.storeStatusList = angular.copy(dataFromAPI);
     }
 
     function getStatusList() {
-      storeInstanceDashboardFactory.getStatusList().then(getStatusListSuccess);
+      return storeInstanceDashboardFactory.getStatusList().then(getStatusListSuccess);
     }
 
-    $scope.$watchGroup(['storeInstanceList', 'storesList', 'catererStationList'], function () {
-      if ($scope.storeInstanceList && $scope.storesList && $scope.catererStationList && $scope.storeStatusList) {
-        formatStoreInstanceList();
-      }
-    });
-
     function init() {
-      getCatererStationList();
-      getStationList();
-      getStoreInstanceList();
-      getStoresList();
-      getStatusList();
+      showLoadingModal('Loading Store Instance Dashboard');
+
+      var dependenciesArray = [];
+      dependenciesArray.push(getCatererStationList());
+      dependenciesArray.push(getStationList());
+      dependenciesArray.push(getStoreInstanceList());
+      dependenciesArray.push(getStoresList());
+      dependenciesArray.push(getStatusList());
+
+      $q.all(dependenciesArray).then(function () {
+        formatStoreInstanceList();
+        hideLoadingModal();
+      });
     }
 
     init();
