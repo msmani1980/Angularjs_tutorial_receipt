@@ -16,7 +16,27 @@ describe('Controller: PromotionsCtrl', function () {
     });
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
+  describe('scope functions exist', function(){
+    it('should have a scope function promotionCategoryQtyRequired', function(){
+      expect(Object.prototype.toString.call(scope.promotionCategoryQtyRequired)).toBe('[object Function]');
+    });
+    it('should have a scope function addPromotionCategory', function(){
+      expect(Object.prototype.toString.call(scope.addPromotionCategory)).toBe('[object Function]');
+    });
+    it('should have a scope function removePromotionCategoryByIndex', function(){
+      expect(Object.prototype.toString.call(scope.removePromotionCategoryByIndex)).toBe('[object Function]');
+    });
+    it('should have a scope function addRetailItem', function(){
+      expect(Object.prototype.toString.call(scope.addRetailItem)).toBe('[object Function]');
+    });
+    it('should have a scope function removeRetailItemByIndex', function(){
+      expect(Object.prototype.toString.call(scope.removeRetailItemByIndex)).toBe('[object Function]');
+    });
+    it('should have a scope function retailItemQtyRequired', function(){
+      expect(Object.prototype.toString.call(scope.retailItemQtyRequired)).toBe('[object Function]');
+    });
+    it('should have a scope function removeinclusionFilterByIndex', function(){
+      expect(Object.prototype.toString.call(scope.removeinclusionFilterByIndex)).toBe('[object Function]');
+    });
   });
 });

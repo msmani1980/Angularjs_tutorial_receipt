@@ -1,3 +1,296 @@
-<form name="promotionsForm">
+<div class="container module-container">
 
-</form>
+    <div class="top-header">
+      <div class="container">
+        <div class="edit-controls">
+          <div class="row">
+            <div class="col-xs-6">
+              <h2 class="view-name">{{ viewName }}</h2>
+            </div>
+            <div class="col-xs-6 text-right">
+              <fieldset ng-hide="viewOnly">
+                <button class="btn btn-default">
+                  <span class="fa fa-remove" aria-hidden="true"></span>
+                  <span class="hidden-xs">Cancel</span>
+                </button>
+                <button class="btn btn-primary">
+                  <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                  <span class="hidden-xs">Create</span>
+                </button>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-nav btn-group-justified item-top" role="group">
+          <a type="button" class="btn btn-default">Promotion Information</a>
+          <a type="button" class="btn btn-default">Qualifiers</a>
+          <a type="button" class="btn btn-default">Benefits</a>
+          <a type="button" class="btn btn-default">Promotion Inclusion Filter</a>
+        </div>
+        <p>All required fields are marked with a *.</p>
+      </div>
+    </div>
+    <!--/TopHeader -->
+
+    <div class="create-form-container">
+
+      <form name="form" class="form edit-form create-item-form">
+
+        <form-error-dialog></form-error-dialog>
+
+        <h3 id="promotion-information">Item Information</h3>
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label for="promotion-code">Promotion Code*</label>
+              <input type="text" class="form-control" id="promotion-code"
+                     ng-model="promotion" required>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label for="promotion-description">Promotion Description*</label>
+              <textarea class="form-control" id="promotion-description"
+                        ng-model="promotion" required></textarea>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label for="promotion-name">Promotion Name*</label>
+              <input type="text" class="form-control" id="promotion-name"
+                     ng-model="promotion" required>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6">
+            <date-picker class="form-group"
+               element-class="col-xs-12 col-sm-6"
+               label-from="Effective Date - From*"
+               label-to="Effective Date - To*"
+               name-from="startDate"
+               name-to="endDate"
+               start-date-model="promotion.effectiveDateFrom"
+               end-date-model="promotion.effectiveDateTo"
+               required="required">
+            </date-picker>
+          </div>
+        </div>
+
+
+
+        <h3 id="qualifiers">Qualifiers</h3>
+        <div class="row">
+          <div class="col-xs-12 col-sm-6">
+            <div class="form-group">
+              <label>Qualifier Type*</label>
+              <ui-select theme="bootstrap" ng-model="promotion.qualifierType" required>
+                <ui-select-match placeholder="Select Qualifier Type" ui-lock-choice="readOnly">{{ $select.selected.name }}
+                </ui-select-match>
+                <ui-select-choices  repeat="promotionType in promotionTypes | filter: {scheduleNumber:$select.search}">
+                  <div ng-bind-html="promotionType.name | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6" ng-show="showSpendLimitFields">
+            <fieldset>
+              <div class="form-group">
+                <label>Promotion Category</label>
+                <ui-select theme="bootstrap" ng-model="promotion.qualifier.spendLimit.promotionCategory">
+                  <ui-select-match placeholder="Select Category" ui-lock-choice="readOnly">{{ $select.selected.name }}
+                  </ui-select-match>
+                  <ui-select-choices  repeat="companyPromotionCategory in companyPromotionCategories | filter: {scheduleNumber:$select.search}">
+                    <div ng-bind-html="companyPromotionCategory.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+              <div class="form-group">
+                <label>Spend Limit Value*</label>
+                <div class="row" ng-repeat="currency in companyCurrencyGlobals">
+                  <div class="col-xs-3">{{ currency.code }}</div>
+                  <div class="col-xs-9">
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                      <input type="text" class="form-control" custom-validity custom-pattern="currencyWithFourDecimalPlace"
+                           ng-model="promotion.qualifier.spendLimit.currency[currency.id]" ng-required="spendLimitCurrenciesRequired">
+                    </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+
+        <fieldset ng-show="showProductPurchaseFields" class="well">
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-6">
+              <h4>Promotion Category</h4>
+            </div>
+            <div class="col-xs-12 col-sm-6 text-sm-right">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary ng-click-active" ng-click="addPromotionCategory()">
+                  <i class="fa fa-plus"></i> Add Promotion Category
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+              <div class="panel panel-default" ng-repeat="promotionCategory in promotion.qualifier.productPurchase.promotionCategories track by $index">
+                <div class="panel-heading">
+                  <p class="panel-title">
+                    <i class="fa fa-tags"></i> Promotion Category {{ $index+1 }}
+                    <button type="button" class="btn-remove-price-group pull-right btn btn-danger btn-xs" ng-click="removePromotionCategoryByIndex($index)">
+                      <i class="fa fa-close"></i>
+                    </button>
+                  </p>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-5">
+                      <div class="form-group">
+                        <label>Name*</label>
+                        <ui-select theme="bootstrap" ng-model="promotionCategory">
+                          <ui-select-match placeholder="Select Category" ui-lock-choice="readOnly">{{ $select.selected.name }}
+                          </ui-select-match>
+                          <ui-select-choices  repeat="companyPromotionCategory in companyPromotionCategories | filter: {scheduleNumber:$select.search}">
+                            <div ng-bind-html="companyPromotionCategory.name | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-2">
+                      <div class="form-group">
+                        <label>Qty*</label>
+                        <input type="number" class="form-control" min="1" ng-model="promotionCategory.qty" ng-required="promotionCategoryQtyRequired(promotionCategory)">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-6">
+              <h4>Retail Item</h4>
+            </div>
+            <div class="col-xs-12 col-sm-6 text-sm-right">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary ng-click-active" ng-click="addRetailItem()">
+                  <i class="fa fa-plus"></i> Add Retail Item
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+              <div class="panel panel-default" ng-repeat="retailItem in promotion.qualifier.productPurchase.retailItems track by $index">
+                <div class="panel-heading">
+                  <p class="panel-title">
+                    <i class="fa fa-tags"></i> Retail Item {{ $index+1 }}
+                    <button type="button" class="btn-remove-price-group pull-right btn btn-danger btn-xs" ng-click="removeRetailItemByIndex($index)">
+                      <i class="fa fa-close"></i>
+                    </button>
+                  </p>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-5">
+                      <div class="form-group">
+                        <label>Item Category <i class="fa fa-question-circle" title="Filter Retail Items by Category"></i></label>
+                        <ui-select theme="bootstrap" ng-model="retailItem.salesCategory">
+                          <ui-select-match placeholder="Select Category" ui-lock-choice="readOnly">{{ $select.selected.name }}
+                          </ui-select-match>
+                          <ui-select-choices  repeat="salesCategory in salesCategories | filter: {scheduleNumber:$select.search}">
+                            <div ng-bind-html="salesCategory.name | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-5">
+                      <div class="form-group">
+                        <label>Retail Item*</label>
+                        <ui-select theme="bootstrap" ng-model="retailItem.item">
+                          <ui-select-match placeholder="Select Item" ui-lock-choice="readOnly">{{ $select.selected.itemName }}
+                          </ui-select-match>
+                          <ui-select-choices  repeat="masterItem in masterItems | filter: {scheduleNumber:$select.search}">
+                            <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-2">
+                      <div class="form-group">
+                        <label>Qty*</label>
+                        <input type="number" class="form-control" min="1" ng-model="retailItem.qty" ng-required="retailItemQtyRequired(retailItem)">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </fieldset>
+
+        <h3 id="benefits">Benefits</h3>
+        <div class="row">
+          <div class="col-xs-12 col-md-6">
+            <div class="form-group">
+              <label>Benefit Type*</label>
+              // TODO field
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6" ng-show="benefitTypeIsDiscount">
+            <div class="form-group">
+              <label>Discount Rate Type*</label>
+              // TODO field
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6" ng-show="benefitTypeIsDiscount">
+            <div class="form-group">
+              <label>Apply To*</label>
+              // TODO field
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6" ng-show="benefitTypeIsCoupon">
+            <div class="form-group">
+              <label>Coupon*</label>
+              // TODO field
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6" ng-show="benefitTypeIsVoucher">
+            <div class="form-group">
+              <label>Voucher*</label>
+              // TODO field
+            </div>
+          </div>
+        </div>
+
+        <h3 id="promotion-inclusion-filter">Promotion Inclusion Filter</h3>
+        <div class="row" ng-repeat="inclusionFilter in promotion.inclusionFilter">
+          <div class="col-xs-10 col-sm-5">
+            <div class="form-group">
+              <label>Departure Station</label>
+              // TODO field
+            </div>
+          </div>
+          <div class="col-xs-2 col-sm-1 text-xs-right text-sm-center">-</div>
+          <div class="col-xs-10 col-sm-5">
+            <div class="form-group">
+              <label>Arrival Station</label>
+              // TODO field
+            </div>
+          </div>
+          <div class="col-xs-2 col-sm-1 text-right">
+            <button type="button" class="btn-remove-price-group btn btn-danger btn-xs" ng-click="removeinclusionFilterByIndex($index)">
+              <i class="fa fa-close"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+  </div>
+</div>
