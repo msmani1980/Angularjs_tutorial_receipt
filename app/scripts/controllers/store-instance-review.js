@@ -297,7 +297,6 @@ angular.module('ts5App')
     };
 
     $scope.loseDataAlertConfirmTrigger = function(){
-      console.log($scope.wizardStepToIndex);
       var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
       $location.url(uri);
     };

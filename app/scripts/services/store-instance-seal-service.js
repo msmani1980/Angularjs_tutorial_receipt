@@ -27,6 +27,9 @@ angular.module('ts5App')
       createStoreInstanceSeal: {
         method: 'POST',
         isArray: true
+      },
+      deleteStoreInstanceSeal: {
+        method: 'DELETE'
       }
     };
 
@@ -44,9 +47,14 @@ angular.module('ts5App')
       return requestResource.updateStoreInstanceSeal({id: sealId, storeInstanceId: storeInstanceId}, payload).$promise;
     }
 
+    function deleteStoreInstanceSeal(sealId, storeInstanceId) {
+      return requestResource.deleteStoreInstanceSeal({id: sealId, storeInstanceId: storeInstanceId}).$promise;
+    }
+
     return {
       getStoreInstanceSeals: getStoreInstanceSeals,
       updateStoreInstanceSeal: updateStoreInstanceSeal,
-      createStoreInstanceSeal: createStoreInstanceSeal
+      createStoreInstanceSeal: createStoreInstanceSeal,
+      deleteStoreInstanceSeal: deleteStoreInstanceSeal
     };
   });
