@@ -166,29 +166,57 @@ describe('Controller: PromotionsCtrl', function () {
     it('should have a scope function promotionCategoryQtyRequired', function(){
       expect(Object.prototype.toString.call(scope.promotionCategoryQtyRequired)).toBe('[object Function]');
     });
-    it('should have a scope function addPromotionCategory', function(){
-      expect(Object.prototype.toString.call(scope.addPromotionCategory)).toBe('[object Function]');
+    it('should have a scope function addBlankObjectToArray', function(){
+      expect(Object.prototype.toString.call(scope.addBlankObjectToArray)).toBe('[object Function]');
     });
-    it('should have a scope function removePromotionCategoryByIndex', function(){
-      expect(Object.prototype.toString.call(scope.removePromotionCategoryByIndex)).toBe('[object Function]');
-    });
-    it('should have a scope function addRetailItem', function(){
-      expect(Object.prototype.toString.call(scope.addRetailItem)).toBe('[object Function]');
-    });
-    it('should have a scope function removeRetailItemByIndex', function(){
-      expect(Object.prototype.toString.call(scope.removeRetailItemByIndex)).toBe('[object Function]');
+    it('should have a scope function removeFromArrayByIndex', function(){
+      expect(Object.prototype.toString.call(scope.removeFromArrayByIndex)).toBe('[object Function]');
     });
     it('should have a scope function retailItemQtyRequired', function(){
       expect(Object.prototype.toString.call(scope.retailItemQtyRequired)).toBe('[object Function]');
-    });
-    it('should have a scope function removeinclusionFilterByIndex', function(){
-      expect(Object.prototype.toString.call(scope.removeinclusionFilterByIndex)).toBe('[object Function]');
     });
     it('should have a scope function scrollToAnchor that set activeBtn to whatever Id is passed in', function(){
       expect(Object.prototype.toString.call(scope.scrollToAnchor)).toBe('[object Function]');
       scope.scrollToAnchor('test-123');
       expect(scope.activeBtn).toBe('test-123');
 
+    });
+  });
+
+  describe('removeFromArrayByIndex scope function', function(){
+    it('should remove an index item from array', function(){
+      scope.mockArray = [2,3,4,5];
+      scope.removeFromArrayByIndex(scope.mockArray, 2);
+      scope.$apply();
+      expect(scope.mockArray).toEqual([2,3,5]);
+    });
+  });
+  describe('addBlankObjectToArray scope function', function(){
+    it('should add a blank object to a scope array', function(){
+      scope.mockArray2 = [{},{},{},{}];
+      scope.addBlankObjectToArray(scope.mockArray2);
+      scope.$apply();
+      expect(scope.mockArray2.length).toEqual(5);
+    });
+  });
+  describe('promotionCategoryQtyRequired scope function', function(){
+    it('should return true if promotionCategory is defined', function(){
+      var mock = {promotionCategory:{}};
+      expect(scope.promotionCategoryQtyRequired(mock)).toBe(true);
+    });
+    it('should return false if promotionCategory is undefined', function(){
+      var mock = {};
+      expect(scope.promotionCategoryQtyRequired(mock)).toBe(false);
+    });
+  });
+  describe('retailItemQtyRequired scope function', function(){
+    it('should return true if retailItem is defined', function(){
+      var mock = {retailItem:{}};
+      expect(scope.retailItemQtyRequired(mock)).toBe(true);
+    });
+    it('should return false if retailItem is undefined', function(){
+      var mock = {};
+      expect(scope.retailItemQtyRequired(mock)).toBe(false);
     });
   });
 });

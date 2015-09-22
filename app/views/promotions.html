@@ -134,7 +134,7 @@
             </div>
             <div class="col-xs-12 col-sm-6 text-right">
               <div class="form-group">
-                <button type="button" class="btn btn-primary ng-click-active" ng-click="addPromotionCategory()"
+                <button type="button" class="btn btn-primary ng-click-active" ng-click="addBlankObjectToArray(promotion.qualifier.productPurchase.promotionCategories)"
                         ng-disabled="readOnly" ng-hide="readOnly">
                   <i class="fa fa-plus"></i> Add Promotion Category
                 </button>
@@ -149,7 +149,7 @@
                   <p class="panel-title">
                     <i class="fa fa-tags"></i> Promotion Category {{ $index+1 }}
                     <button type="button" class="btn-remove-price-group pull-right btn btn-danger btn-xs"
-                            ng-click="removePromotionCategoryByIndex($index)"
+                            ng-click="removeFromArrayByIndex(promotion.qualifier.productPurchase.promotionCategories, $index)"
                             ng-disabled="readOnly" ng-hide="readOnly">
                       <i class="fa fa-close"></i>
                     </button>
@@ -172,7 +172,7 @@
                       <div class="form-group">
                         <label>Qty*</label>
                         <input type="number" class="form-control" min="1" ng-model="promotionCategoryData.qty"
-                               ng-required="promotionCategoryQtyRequired(promotionCategory)"
+                               ng-required="promotionCategoryQtyRequired(promotionCategoryData)"
                                ng-disabled="readOnly">
                       </div>
                     </div>
@@ -188,7 +188,7 @@
             </div>
             <div class="col-xs-12 col-sm-6 text-right">
               <div class="form-group">
-                <button type="button" class="btn btn-primary ng-click-active" ng-click="addRetailItem()"
+                <button type="button" class="btn btn-primary ng-click-active" ng-click="addBlankObjectToArray(promotion.qualifier.productPurchase.retailItems)"
                         ng-disabled="readOnly" ng-hide="readOnly">
                   <i class="fa fa-plus"></i> Add Retail Item
                 </button>
@@ -203,7 +203,7 @@
                   <p class="panel-title">
                     <i class="fa fa-tags"></i> Retail Item {{ $index+1 }}
                     <button type="button" class="btn-remove-price-group pull-right btn btn-danger btn-xs"
-                            ng-click="removeRetailItemByIndex($index)"
+                            ng-click="removeFromArrayByIndex(promotion.qualifier.productPurchase.retailItems, $index)"
                             ng-hide="readOnly">
                       <i class="fa fa-close"></i>
                     </button>
@@ -238,7 +238,7 @@
                       <div class="form-group">
                         <label>Qty*</label>
                         <input type="number" class="form-control" min="1" ng-model="retailItemData.qty"
-                               ng-required="retailItemQtyRequired(retailItem)"
+                               ng-required="retailItemQtyRequired(retailItemData)"
                                ng-disabled="readOnly">
                       </div>
                     </div>
@@ -336,7 +336,7 @@
           <div class="col-xs-2 col-sm-1 text-right">
             <label ng-hide="readOnly" class="invisible">Remove</label>
             <button type="button" class="btn-remove-price-group btn btn-danger btn-xs"
-                    ng-click="removeinclusionFilterByIndex($index)"
+                    ng-click="removeFromArrayByIndex(promotion.inclusionFilters, $index)"
                     ng-disabled="readOnly" ng-hide="readOnly">
               <i class="fa fa-close"></i>
             </button>

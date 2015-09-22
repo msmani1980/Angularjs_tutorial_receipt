@@ -29,24 +29,24 @@ angular.module('ts5App')
       {
         promotionCategory: {
           companyId: 403,
-          endDate: "2018-12-31",
+          endDate: '2018-12-31',
           id: 63,
-          promotionCategoryName: "PromoCategory1",
-          promotionCount: "28",
-          selectedItems: "28",
-          startDate: "2015-05-13",
+          promotionCategoryName: 'PromoCategory1',
+          promotionCount: '28',
+          selectedItems: '28',
+          startDate: '2015-05-13',
         },
         qty: 123
       },
       {
         promotionCategory: {
           companyId: 403,
-          endDate: "2050-12-31",
+          endDate: '2050-12-31',
           id: 65,
-          promotionCategoryName: "Soft Drinks",
-          promotionCount: "15",
-          selectedItems: "15",
-          startDate: "2015-05-15",
+          promotionCategoryName: 'Soft Drinks',
+          promotionCount: '15',
+          selectedItems: '15',
+          startDate: '2015-05-15',
         },
         qty: 432
       }
@@ -110,16 +110,16 @@ angular.module('ts5App')
     $scope.promotion.qualifier.spendLimit = {};
     $scope.promotion.qualifier.spendLimit.promotionCategory = {
       companyId: 403,
-      endDate: "2018-12-31",
+      endDate: '2018-12-31',
       id: 63,
-      promotionCategoryName: "PromoCategory1",
-      promotionCount: "28",
-      selectedItems: "28",
-      startDate: "2015-05-13",
+      promotionCategoryName: 'PromoCategory1',
+      promotionCount: '28',
+      selectedItems: '28',
+      startDate: '2015-05-13',
     };
     $scope.promotion.qualifier.spendLimit.value = [];
-    $scope.promotion.qualifier.spendLimit.value['GBP'] = 432.1234;
-    $scope.promotion.qualifier.spendLimit.value['EUR'] = 456.1264;
+    $scope.promotion.qualifier.spendLimit.value.GBP = 432.1234;
+    $scope.promotion.qualifier.spendLimit.value.EUR = 456.1264;
     // Benefits
     $scope.promotion.benefits = {};
     $scope.promotion.benefits.type = {id:1, name:'Discount'};
@@ -215,48 +215,48 @@ angular.module('ts5App')
     $scope.selectOptions.promotionCategories = [
       {
         companyId: 403,
-        endDate: "2018-12-31",
+        endDate: '2018-12-31',
         id: 63,
-        promotionCategoryName: "PromoCategory1",
-        promotionCount: "28",
-        selectedItems: "28",
-        startDate: "2015-05-13",
+        promotionCategoryName: 'PromoCategory1',
+        promotionCount: '28',
+        selectedItems: '28',
+        startDate: '2015-05-13',
       },
       {
         companyId: 403,
-        endDate: "2015-05-30",
+        endDate: '2015-05-30',
         id: 64,
-        promotionCategoryName: "name test",
-        promotionCount: "0",
-        selectedItems: "1",
-        startDate: "2015-05-14",
+        promotionCategoryName: 'name test',
+        promotionCount: '0',
+        selectedItems: '1',
+        startDate: '2015-05-14',
       },
       {
         companyId: 403,
-        endDate: "2050-12-31",
+        endDate: '2050-12-31',
         id: 65,
-        promotionCategoryName: "Soft Drinks",
-        promotionCount: "15",
-        selectedItems: "15",
-        startDate: "2015-05-15",
+        promotionCategoryName: 'Soft Drinks',
+        promotionCount: '15',
+        selectedItems: '15',
+        startDate: '2015-05-15',
       },
       {
         companyId: 403,
-        endDate: "2050-12-31",
+        endDate: '2050-12-31',
         id: 66,
-        promotionCategoryName: "Technology",
-        promotionCount: "8",
-        selectedItems: "8",
-        startDate: "2015-05-15",
+        promotionCategoryName: 'Technology',
+        promotionCount: '8',
+        selectedItems: '8',
+        startDate: '2015-05-15',
       },
       {
         companyId: 403,
-        endDate: "2015-07-31",
+        endDate: '2015-07-31',
         id: 67,
-        promotionCategoryName: "newCat",
-        promotionCount: "0",
-        selectedItems: "1",
-        startDate: "2015-07-09"
+        promotionCategoryName: 'newCat',
+        promotionCount: '0',
+        selectedItems: '1',
+        startDate: '2015-07-09'
       }
     ];
     $scope.selectOptions.salesCategories = [
@@ -371,38 +371,21 @@ angular.module('ts5App')
       }
     ];
 
-    $scope.promotionCategoryQtyRequired = function(promotionCategory){
-      // TODO - logic
-      promotionCategory = null;
-      return true;
+    $scope.addBlankObjectToArray = function(_array){
+      _array.push({});
     };
 
-    $scope.addPromotionCategory = function(){
-      // TODO - logic
+    $scope.removeFromArrayByIndex = function(_array, $index){
+      _array.splice($index, 1);
     };
 
-    $scope.removePromotionCategoryByIndex = function($index){
-      // TODO - logic
-      $index = null;
+
+    $scope.promotionCategoryQtyRequired = function(promotionCategoryData){
+      return angular.isDefined(promotionCategoryData.promotionCategory);
     };
 
-    $scope.addRetailItem = function(){
-      // TODO - logic
-    };
-
-    $scope.removeRetailItemByIndex = function($index){
-      // TODO - logic
-      $index = null;
-    };
-
-    $scope.retailItemQtyRequired = function(retailItem){
-      // TODO - logic
-      retailItem = null;
-    };
-
-    $scope.removeinclusionFilterByIndex = function($index){
-      // TODO - logic
-      $index = null;
+    $scope.retailItemQtyRequired = function(retailItemData){
+      return angular.isDefined(retailItemData.retailItem);
     };
 
     $scope.scrollToAnchor = function(id){
