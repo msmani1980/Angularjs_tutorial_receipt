@@ -106,7 +106,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
     };
 
-
     $scope.isScheduleDetailOpen = function (id) {
       return !(angular.element('.scheduleDetails-' + id).hasClass('accordion-cell-closed'));
     };
@@ -118,10 +117,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.toggleAllScheduleInfo = function () {
       $scope.allScheduleDetailsExpanded = !$scope.allScheduleDetailsExpanded;
       angular.forEach($scope.storeInstanceList, function (store) {
+        var storeClass = '.scheduleDetails-' + store.id;
+        var closedClass = 'accordion-cell-closed';
+
         if ($scope.allScheduleDetailsExpanded && !$scope.isScheduleDetailOpen(store.id)) {
-          angular.element('.scheduleDetails-' + store.id).removeClass('accordion-cell-closed');
+          angular.element(storeClass).removeClass(closedClass);
         } else if (!$scope.allScheduleDetailsExpanded && $scope.isScheduleDetailOpen(store.id)) {
-          angular.element('.scheduleDetails-' + store.id).addClass('accordion-cell-closed');
+          angular.element(storeClass).addClass(closedClass);
         }
       });
     };
