@@ -32,7 +32,7 @@ angular.module('ts5App')
       };
 
       $scope.isAddButtonDisabled = function() {
-        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 1);
+        return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 1 || !$scope.numberOfSeals);
       };
 
       $scope.limitSealsInput = function() {
