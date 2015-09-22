@@ -49,10 +49,23 @@ describe('Service: storeInstanceSealService', function () {
     it('should make POST request to API', function() {
       var expectedURL = /store-instances\/\d+\/seals\/\d+$/;
       var sealTypeId = 4;
-      var storeInstanceId = 66; 
+      var storeInstanceId = 66;
       var mockPayload = {foo: 'barts'};
       httpBackend.expectPUT(expectedURL).respond(200, {});
       storeInstanceSealService.updateStoreInstanceSeal(sealTypeId, storeInstanceId, mockPayload).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    }); 
+  });
+
+  describe('deleteStoreInstanceSeal', function(){
+    it('should make DELETE request to API', function() {
+      var expectedURL = /store-instances\/\d+\/seals\/\d+$/;
+      var sealId = 45;
+      var storeInstanceId = 66;
+      httpBackend.expectDELETE(expectedURL).respond(200, {});
+      storeInstanceSealService.deleteStoreInstanceSeal(sealId, storeInstanceId).then(function (response) {
         expect(response).toBeDefined();
       });
       httpBackend.flush();

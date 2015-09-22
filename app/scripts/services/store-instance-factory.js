@@ -8,8 +8,8 @@
  * Service in the ts5App.
  */
 angular.module('ts5App').service('storeInstanceFactory',
-  function (storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
-            menuMasterService, storesService, stationsService, itemsService, recordsService, $q, lodash) {
+  function(storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
+    menuMasterService, storesService, stationsService, itemsService, recordsService, $q, lodash, dateUtility) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
@@ -20,7 +20,9 @@ angular.module('ts5App').service('storeInstanceFactory',
     }
 
     function getCatererStationList() {
-      return catererStationService.getCatererStationList({limit: null});
+      return catererStationService.getCatererStationList({
+        limit: null
+      });
     }
 
     function getStation(catererStationId) {
@@ -127,19 +129,23 @@ angular.module('ts5App').service('storeInstanceFactory',
       var storeDetails = {};
       storeDetails.LMPStation = responseCollection[1].code;
       storeDetails.storeNumber = responseCollection[0].storeNumber;
-      storeDetails.scheduleDate = storeInstanceAPIResponse.scheduleDate;
+      storeDetails.scheduleDate = dateUtility.formatDateForApp(storeInstanceAPIResponse.scheduleDate);
       storeDetails.scheduleNumber = storeInstanceAPIResponse.scheduleNumber;
       storeDetails.storeInstanceNumber = storeInstanceAPIResponse.id;
       storeDetails.statusList = responseCollection[2];
       storeDetails.menuList = [];
       angular.forEach(storeInstanceAPIResponse.menus, function(menu) {
-        var menuObject = lodash.findWhere(responseCollection[3].companyMenuMasters, {id: menu.menuMasterId});
+        var menuObject = lodash.findWhere(responseCollection[3].companyMenuMasters, {
+          id: menu.menuMasterId
+        });
         if (angular.isDefined(menuObject)) {
           storeDetails.menuList.push(menuObject);
         }
       });
 
-      storeDetails.currentStatus = lodash.findWhere(storeDetails.statusList, {id: storeInstanceAPIResponse.statusId});
+      storeDetails.currentStatus = lodash.findWhere(storeDetails.statusList, {
+        id: storeInstanceAPIResponse.statusId
+      });
 
       if (responseCollection.length > 4) {
         storeDetails.carrierNumber = responseCollection[4].carrierNumber;
@@ -150,10 +156,11 @@ angular.module('ts5App').service('storeInstanceFactory',
     function getStoreDetails(storeId) {
       var getStoreDetailsDeferred = $q.defer();
 
-      getStoreInstance(storeId).then(function (storeInstanceAPIResponse) {
+      getStoreInstance(storeId).then(function(storeInstanceAPIResponse) {
         var storeDetailPromiseArray = getDependenciesForStoreInstance(storeInstanceAPIResponse);
-        $q.all(storeDetailPromiseArray).then(function (responseCollection) {
-          getStoreDetailsDeferred.resolve(formatResponseCollection(responseCollection, storeInstanceAPIResponse));
+        $q.all(storeDetailPromiseArray).then(function(responseCollection) {
+          getStoreDetailsDeferred.resolve(formatResponseCollection(responseCollection,
+            storeInstanceAPIResponse));
         });
       }, getStoreDetailsDeferred.reject);
 
@@ -161,7 +168,7 @@ angular.module('ts5App').service('storeInstanceFactory',
     }
 
     function updateStoreInstanceStatus(storeId, statusId) {
-     return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
+      return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
     }
 
     return {
