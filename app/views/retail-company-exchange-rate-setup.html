@@ -338,7 +338,7 @@
                 <input type="text" class="form-control" placeholder="EUR" disabled="disabled">
               </td>
               <td>
-                <input type="text" class="form-control" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100">
+                <input type="text" class="form-control" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100" disabled="disabled">
 <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
 <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
 <!--                 <script>
@@ -358,7 +358,8 @@
                          name="{{currency.code}}paperExchangeRate"
                          currencyType="paperExchangeRate" placeholder="1.290000"
                          class="form-control"
-                         aria-label="Amount (to the nearest dollar)"/>
+                         aria-label="Amount (to the nearest dollar)"
+                         disabled="disabled"/>
                 </div>
               </td>
               <td colspan="2">
@@ -374,18 +375,13 @@
                 <a class="btn btn-warning btn-xs">
                   <i class="fa fa-copy"></i>
                 </a>
-<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
-                <button class="btn btn-danger btn-xs">
-                  <i class="fa fa-trash"></i>
-                </button>
               </td>
             </tr>
             
 <!-- TODO: CLONE OF ROW ABOVE -->
             <tr class="master-row">
               <td>
-                <input type="text" class="form-control" placeholder="EUR (clone)">
+                <input type="text" class="form-control" placeholder="EUR" disabled="disabled">
               </td>
               <td>
                 <input type="text" class="form-control" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100">
