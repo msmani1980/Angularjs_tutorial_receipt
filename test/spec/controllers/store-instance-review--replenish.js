@@ -218,4 +218,12 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     });
   });
 
+  describe('scope.exit', function () {
+    it('should redirect to store instance dashboard', function () {
+      scope.exit();
+      scope.$apply();
+      expect(location.url).toHaveBeenCalledWith('/store-instance-dashboard');
+    });
+  });
+
 });
