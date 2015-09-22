@@ -102,7 +102,9 @@
         <th>Opening Count</th>
         <th>Goods Received</th>
         <th>Dispatched Count</th>
+        <th>Inbound/Offload Count</th>
         <th>Current Count</th>
+        <th>Ullage Count</th>
       </tr>
       </thead>
       <tbody>
@@ -122,10 +124,16 @@
           <input type="text" class="form-control text-right" value="{{stockItem.dispatchedQuantity}}"
                  ng-disabled="true"/>
         </td>
+        <td>
+          <input type="text" class="form-control text-right" value="{{stockItem.inboundOffloadQuantity}}"/>
+        </td>
         <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]"
             ng-click="stockTakeReasonOpen(stockItem)">
           <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentCountQuantity}}"
                  ng-readonly="true"/>
+        </td>
+        <td>
+          <input type="text" class="form-control text-right" value="{{stockItem.ullageQuantity}}"/>
         </td>
       </tr>
 
