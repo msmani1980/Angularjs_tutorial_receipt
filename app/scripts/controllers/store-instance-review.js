@@ -297,7 +297,6 @@ angular.module('ts5App')
     };
 
     $scope.loseDataAlertConfirmTrigger = function(){
-      console.log($scope.wizardStepToIndex);
       var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
       $location.url(uri);
     };
@@ -310,10 +309,7 @@ angular.module('ts5App')
     };
 
     $scope.hasDiscrepancy = function(item){
-      if(item.menuQuantity !== item.quantity){
-        return 'danger';
-      }
-      return '';
+      return (item.menuQuantity !== item.quantity) ? 'danger' : '';
     };
 
   });
