@@ -391,11 +391,12 @@
               <thead>
                 <tr>
                   <th>Retail Item Details</th>
-                  <th width="10%">Inbound Quantity</th>
+                  <th width="10%">Incoming Quantity</th>
                   <th width="10%">Required Quantity</th>
                   <th width="10%">Picked Quantity</th>
                   <th width="10%">Ullage</th>
                   <th>Ullage Reason</th>
+                  <th width="10%">Dispatch Quantity</th>
                 </tr>
               </thead>
               
@@ -405,16 +406,16 @@
                     <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
                   </td>
                   <td>
-                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="10">
+                    <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="5">
                   </td>
                   <td>
                     <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="10" disabled="disabled">
                   </td>
                   <td>
-                    <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="10">
+                    <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="6">
                   </td>
                   <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="0">
+                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="1">
                   </td>
                   <td>
                     <select class="form-control" id="ullage-reason">
@@ -423,6 +424,9 @@
                       <option>Not Present</option>
                       <option>Dropped</option>
                     </select>
+                  </td>
+                  <td>
+                    <input ng-model="dispatchQuantity" type="text" class="form-control" id="dispatch-quantity" placeholder="10" disabled="disabled">
                   </td>
                 </tr>
                 <tr class="has-discrepancy">
@@ -449,6 +453,9 @@
                       <option>Dropped</option>
                     </select>
                   </td>
+                  <td>
+                    <input ng-model="dispatchQuantity" type="text" class="form-control" id="dispatch-quantity" placeholder="0" disabled="disabled">
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -461,18 +468,22 @@
                     <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20" disabled="disabled">
                   </td>
                   <td>
-                    <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20">
+                    <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0">
                   </td>
                   <td>
-                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20">
+                    <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="0">
                   </td>
                   <td>
-                    <select class="form-control" id="ullage-reason">
+                    <select class="form-control" id="ullage-reason" disabled="disabled">
+                      <option></option>
                       <option>Broken</option>
                       <option>Lost</option>
                       <option>Not Present</option>
                       <option>Dropped</option>
                     </select>
+                  </td>
+                  <td>
+                    <input ng-model="dispatchQuantity" type="text" class="form-control" id="dispatch-quantity" placeholder="0" disabled="disabled">
                   </td>
                 </tr>
                 <tr>
@@ -501,6 +512,9 @@
 <!--                       <option>Not Present</option> -->
 <!--                       <option>Dropped</option> -->
 <!--                     </select> -->
+                  </td>
+                  <td>
+                    <input ng-model="dispatchQuantity" type="text" class="form-control" id="dispatch-quantity" placeholder="0" disabled="disabled">
                   </td>
                 </tr>
               </tbody>
@@ -928,6 +942,7 @@
                         <th width="10%">Picked Quantity</th>
                         <th width="10%">Ullage</th>
                         <th>Ullage Reason</th>
+                        <th width="10%">Dispatch Quantity</th>
                       </tr>
                     </thead>
                     
@@ -937,16 +952,16 @@
                           <input ng-model="itemDetails" type="text" class="form-control" id="item-code" placeholder="0001 - Coke" disabled="disabled">
                         </td>
                         <td>
-                          <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="10" disabled="disabled">
+                          <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="5" disabled="disabled">
                         </td>
                         <td>
                           <input ng-model="requiredQuantity" type="text" class="form-control" id="required-quantity" placeholder="10" disabled="disabled">
                         </td>
                         <td>
-                          <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="10" disabled="disabled">
+                          <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="6" disabled="disabled">
                         </td>
                         <td>
-                          <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="0" disabled="disabled">
+                          <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="1" disabled="disabled">
                         </td>
                         <td>
                           <select class="form-control" id="ullage-reason" disabled="disabled">
@@ -955,6 +970,9 @@
                             <option>Not Present</option>
                             <option>Dropped</option>
                           </select>
+                        </td>
+                        <td>
+                          <input ng-model="dispatchQuantity" type="text" class="form-control" id="dispatch-quantity" placeholder="10" disabled="disabled">
                         </td>
                       </tr>
                       <tr class="has-discrepancy">
@@ -981,6 +999,9 @@
                             <option>Dropped</option>
                           </select>
                         </td>
+                        <td>
+                          <input ng-model="dispatchQuantity" type="text" class="form-control" id="dispatch-quantity" placeholder="0" disabled="disabled">
+                        </td>
                       </tr>
                       <tr>
                         <td>
@@ -993,10 +1014,10 @@
                           <input ng-model="inboundQuantity" type="text" class="form-control" id="inbound-quantity" placeholder="20" disabled="disabled">
                         </td>
                         <td>
-                          <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="20" disabled="disabled">
+                          <input ng-model="pickedQuantity" type="text" class="form-control" id="picked-quantity" placeholder="0" disabled="disabled">
                         </td>
                         <td>
-                          <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="20" disabled="disabled">
+                          <input ng-model="ullage" type="text" class="form-control" id="ullage" placeholder="0" disabled="disabled">
                         </td>
                         <td>
                           <select class="form-control" id="ullage-reason" disabled="disabled">
@@ -1005,6 +1026,9 @@
                             <option>Not Present</option>
                             <option>Dropped</option>
                           </select>
+                        </td>
+                        <td>
+                          <input ng-model="dispatchQuantity" type="text" class="form-control" id="dispatch-quantity" placeholder="0" disabled="disabled">
                         </td>
                       </tr>
                       <tr>
@@ -1033,6 +1057,9 @@
       <!--                       <option>Not Present</option> -->
       <!--                       <option>Dropped</option> -->
       <!--                     </select> -->
+                        </td>
+                        <td>
+                          <input ng-model="dispatchQuantity" type="text" class="form-control" id="dispatch-quantity" placeholder="0" disabled="disabled">
                         </td>
                       </tr>
                     </tbody>
