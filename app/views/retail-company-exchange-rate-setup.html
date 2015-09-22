@@ -114,7 +114,7 @@
             </div>
           </div>
           
-          <!-- COMMENTED OUT FOR MOCKUP          <div class="col-xs-2">{{cashHandlerCompany.companyName}}</div> -->
+<!-- COMMENTED OUT FOR MOCKUP          <div class="col-xs-2">{{cashHandlerCompany.companyName}}</div> -->
 <!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW          <div class="col-xs-10 text-right"><p>Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></p></div> -->
           <div class="col-xs-12 col-sm-6 col-md-8 text-right">
             <p>Base Currency: <span>GBP</span></p>
@@ -136,26 +136,321 @@
             </tr>
           </thead>
           <tbody>
-          
-<!-- TODO: FIRST ROW WILL BE THE BASELINE EXCHANGE RATE 1.000000 AND WILL BE DISABLED -->
+
+            <tr>
+              <td>
+                <input type="text" class="form-control" placeholder="CHF" disabled="disabled">
+              </td>
+              <td>
+                <input type="text" class="form-control" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100">
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+              </td>
+              <td>
+                <div>
+                  <input custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         ng-model="currenciesFields[currency.code].paperExchangeRate"
+                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                         name="{{currency.code}}paperExchangeRate"
+                         currencyType="paperExchangeRate" placeholder="1.604000"
+                         class="form-control"
+                         aria-label="Amount (to the nearest dollar)"/>
+                </div>
+              </td>
+              <td colspan="2">
+                  <date-picker
+                    element-class="col-xs-6"
+                    start-date-model="search.scheduleStartDate"
+                    end-date-model="search.scheduleEndDate"
+                    is-search-field="true">
+                  </date-picker>
+              </td>
+              <td>
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
+                <a class="btn btn-warning btn-xs">
+                  <i class="fa fa-copy"></i>
+                </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
+                <button class="btn btn-danger btn-xs">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <input type="text" class="form-control" placeholder="CZK" disabled="disabled">
+              </td>
+              <td>
+                <input type="text" class="form-control" placeholder="50, 100, 200, 500, 1000">
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+              </td>
+              <td>
+                <div>
+                  <input custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         ng-model="currenciesFields[currency.code].paperExchangeRate"
+                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                         name="{{currency.code}}paperExchangeRate"
+                         currencyType="paperExchangeRate" placeholder="40.201000"
+                         class="form-control"
+                         aria-label="Amount (to the nearest dollar)"/>
+                </div>
+              </td>
+              <td colspan="2">
+                  <date-picker
+                    element-class="col-xs-6"
+                    start-date-model="search.scheduleStartDate"
+                    end-date-model="search.scheduleEndDate"
+                    is-search-field="true">
+                  </date-picker>
+              </td>
+              <td>
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
+                <a class="btn btn-warning btn-xs">
+                  <i class="fa fa-copy"></i>
+                </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
+                <button class="btn btn-danger btn-xs">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            
+            <tr>
+              <td>
+                <input type="text" class="form-control" placeholder="DKK" disabled="disabled">
+              </td>
+              <td>
+                <input type="text" class="form-control" placeholder="50, 100, 200, 500, 1000">
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+              </td>
+              <td>
+                <div>
+                  <input custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         ng-model="currenciesFields[currency.code].paperExchangeRate"
+                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                         name="{{currency.code}}paperExchangeRate"
+                         currencyType="paperExchangeRate" placeholder="11.070000"
+                         class="form-control"
+                         aria-label="Amount (to the nearest dollar)"/>
+                </div>
+              </td>
+              <td colspan="2">
+                  <date-picker
+                    element-class="col-xs-6"
+                    start-date-model="search.scheduleStartDate"
+                    end-date-model="search.scheduleEndDate"
+                    is-search-field="true">
+                  </date-picker>
+              </td>
+              <td>
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
+                <a class="btn btn-warning btn-xs">
+                  <i class="fa fa-copy"></i>
+                </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
+                <button class="btn btn-danger btn-xs">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            
+           <tr>
+              <td>
+                <input type="text" class="form-control" placeholder="EGP" disabled="disabled">
+              </td>
+              <td>
+                <input type="text" class="form-control" placeholder="1, 5, 10, 20, 50, 100, 200">
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+              </td>
+              <td>
+                <div>
+                  <input custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         ng-model="currenciesFields[currency.code].paperExchangeRate"
+                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                         name="{{currency.code}}paperExchangeRate"
+                         currencyType="paperExchangeRate" placeholder="13.331000"
+                         class="form-control"
+                         aria-label="Amount (to the nearest dollar)"/>
+                </div>
+              </td>
+              <td colspan="2">
+                  <date-picker
+                    element-class="col-xs-6"
+                    start-date-model="search.scheduleStartDate"
+                    end-date-model="search.scheduleEndDate"
+                    is-search-field="true">
+                  </date-picker>
+              </td>
+              <td>
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
+                <a class="btn btn-warning btn-xs">
+                  <i class="fa fa-copy"></i>
+                </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
+                <button class="btn btn-danger btn-xs">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>            
+            
+            <tr>
+              <td>
+                <input type="text" class="form-control" placeholder="EUR" disabled="disabled">
+              </td>
+              <td>
+                <input type="text" class="form-control" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100">
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+              </td>
+              <td>
+                <div>
+                  <input custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         ng-model="currenciesFields[currency.code].paperExchangeRate"
+                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                         name="{{currency.code}}paperExchangeRate"
+                         currencyType="paperExchangeRate" placeholder="1.290000"
+                         class="form-control"
+                         aria-label="Amount (to the nearest dollar)"/>
+                </div>
+              </td>
+              <td colspan="2">
+                  <date-picker
+                    element-class="col-xs-6"
+                    start-date-model="search.scheduleStartDate"
+                    end-date-model="search.scheduleEndDate"
+                    is-search-field="true">
+                  </date-picker>
+              </td>
+              <td>
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
+                <a class="btn btn-warning btn-xs">
+                  <i class="fa fa-copy"></i>
+                </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
+                <button class="btn btn-danger btn-xs">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            
+<!-- TODO: CLONE OF ROW ABOVE -->
+            <tr class="master-row">
+              <td>
+                <input type="text" class="form-control" placeholder="EUR (clone)">
+              </td>
+              <td>
+                <input type="text" class="form-control" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100">
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+              </td>
+              <td>
+                <div>
+                  <input custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         ng-model="currenciesFields[currency.code].paperExchangeRate"
+                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                         name="{{currency.code}}paperExchangeRate"
+                         currencyType="paperExchangeRate" placeholder="1.290000"
+                         class="form-control"
+                         aria-label="Amount (to the nearest dollar)"/>
+                </div>
+              </td>
+              <td colspan="2">
+                  <date-picker
+                    element-class="col-xs-6"
+                    start-date-model="search.scheduleStartDate"
+                    end-date-model="search.scheduleEndDate"
+                    is-search-field="true">
+                  </date-picker>
+              </td>
+              <td>
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
+                <a class="btn btn-warning btn-xs">
+                  <i class="fa fa-copy"></i>
+                </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
+                <button class="btn btn-danger btn-xs">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>            
+
+<!-- TODO: THIS ROW WILL BE THE BASELINE EXCHANGE RATE 1.000000 AND WILL BE DISABLED -->
             <tr>
               <td>
                 <input type="text" class="form-control" placeholder="GBP" disabled="disabled">
               </td>
               <td>
                 <input type="text" class="form-control" placeholder="0.01, 0.02, 0.05, 0.10, 0.20, 0.50, 1, 2, 5, 10, 20, 50">
-    <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
-    <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
-    <!--                 <script>
-    //                   $('#seal-numbers-inbound').selectize({
-    //                     persist: false,
-    //                     createOnBlur: true,
-    //                     create: true
-    //                   });
-                    </script> -->
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
               </td>
               <td>
-                <div class="input-group">
+                <div>
                   <input custom-validity
                          custom-pattern="currencyWithFourDecimalPlace"
                          ng-readonly="companyBaseCurrency.currencyCode == currency.code || !showActionButtons"
@@ -180,367 +475,32 @@
                 <a class="btn btn-warning btn-xs">
                   <i class="fa fa-copy"></i>
                 </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
 <!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
                 <button class="btn btn-danger btn-xs">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>
             </tr>
-            
-            <tr>
-              <td>
-                <input type="text" class="form-control" placeholder="USD" disabled="disabled">
-              </td>
-              <td>
-                <input type="text" class="form-control" placeholder="1, 2, 5, 10, 20, 50, 100">
-    <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
-    <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
-    <!--                 <script>
-    //                   $('#seal-numbers-inbound').selectize({
-    //                     persist: false,
-    //                     createOnBlur: true,
-    //                     create: true
-    //                   });
-                    </script> -->
-              </td>
-              <td>
-                <div class="input-group">
-                  <input custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
-                         ng-model="currenciesFields[currency.code].paperExchangeRate"
-                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                         name="{{currency.code}}paperExchangeRate"
-                         currencyType="paperExchangeRate" placeholder="1.698000"
-                         class="form-control"
-                         aria-label="Amount (to the nearest dollar)"/>
-                </div>
-              </td>
-              <td colspan="2">
-                  <date-picker
-                    element-class="col-xs-6"
-                    start-date-model="search.scheduleStartDate"
-                    end-date-model="search.scheduleEndDate"
-                    is-search-field="true">
-                  </date-picker>
-              </td>
-              <td>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
-                <a class="btn btn-warning btn-xs">
-                  <i class="fa fa-copy"></i>
-                </a>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
-                <button class="btn btn-danger btn-xs">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            
-            <tr>
-              <td>
-                <input type="text" class="form-control" placeholder="EUR" disabled="disabled">
-              </td>
-              <td>
-                <input type="text" class="form-control" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100">
-    <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
-    <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
-    <!--                 <script>
-    //                   $('#seal-numbers-inbound').selectize({
-    //                     persist: false,
-    //                     createOnBlur: true,
-    //                     create: true
-    //                   });
-                    </script> -->
-              </td>
-              <td>
-                <div class="input-group">
-                  <input custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
-                         ng-model="currenciesFields[currency.code].paperExchangeRate"
-                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                         name="{{currency.code}}paperExchangeRate"
-                         currencyType="paperExchangeRate" placeholder="1.290000"
-                         class="form-control"
-                         aria-label="Amount (to the nearest dollar)"/>
-                </div>
-              </td>
-              <td colspan="2">
-                  <date-picker
-                    element-class="col-xs-6"
-                    start-date-model="search.scheduleStartDate"
-                    end-date-model="search.scheduleEndDate"
-                    is-search-field="true">
-                  </date-picker>
-              </td>
-              <td>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
-                <a class="btn btn-warning btn-xs">
-                  <i class="fa fa-copy"></i>
-                </a>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
-                <button class="btn btn-danger btn-xs">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            
-            <tr>
-              <td>
-                <input type="text" class="form-control" placeholder="CHF" disabled="disabled">
-              </td>
-              <td>
-                <input type="text" class="form-control" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100">
-    <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
-    <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
-    <!--                 <script>
-    //                   $('#seal-numbers-inbound').selectize({
-    //                     persist: false,
-    //                     createOnBlur: true,
-    //                     create: true
-    //                   });
-                    </script> -->
-              </td>
-              <td>
-                <div class="input-group">
-                  <input custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
-                         ng-model="currenciesFields[currency.code].paperExchangeRate"
-                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                         name="{{currency.code}}paperExchangeRate"
-                         currencyType="paperExchangeRate" placeholder="1.604000"
-                         class="form-control"
-                         aria-label="Amount (to the nearest dollar)"/>
-                </div>
-              </td>
-              <td colspan="2">
-                  <date-picker
-                    element-class="col-xs-6"
-                    start-date-model="search.scheduleStartDate"
-                    end-date-model="search.scheduleEndDate"
-                    is-search-field="true">
-                  </date-picker>
-              </td>
-              <td>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
-                <a class="btn btn-warning btn-xs">
-                  <i class="fa fa-copy"></i>
-                </a>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
-                <button class="btn btn-danger btn-xs">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            
-            <tr>
-              <td>
-                <input type="text" class="form-control" placeholder="CZK" disabled="disabled">
-              </td>
-              <td>
-                <input type="text" class="form-control" placeholder="50, 100, 200, 500, 1000">
-    <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
-    <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
-    <!--                 <script>
-    //                   $('#seal-numbers-inbound').selectize({
-    //                     persist: false,
-    //                     createOnBlur: true,
-    //                     create: true
-    //                   });
-                    </script> -->
-              </td>
-              <td>
-                <div class="input-group">
-                  <input custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
-                         ng-model="currenciesFields[currency.code].paperExchangeRate"
-                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                         name="{{currency.code}}paperExchangeRate"
-                         currencyType="paperExchangeRate" placeholder="40.201000"
-                         class="form-control"
-                         aria-label="Amount (to the nearest dollar)"/>
-                </div>
-              </td>
-              <td colspan="2">
-                  <date-picker
-                    element-class="col-xs-6"
-                    start-date-model="search.scheduleStartDate"
-                    end-date-model="search.scheduleEndDate"
-                    is-search-field="true">
-                  </date-picker>
-              </td>
-              <td>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
-                <a class="btn btn-warning btn-xs">
-                  <i class="fa fa-copy"></i>
-                </a>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
-                <button class="btn btn-danger btn-xs">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            
-            <tr>
-              <td>
-                <input type="text" class="form-control" placeholder="DKK" disabled="disabled">
-              </td>
-              <td>
-                <input type="text" class="form-control" placeholder="50, 100, 200, 500, 1000">
-    <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
-    <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
-    <!--                 <script>
-    //                   $('#seal-numbers-inbound').selectize({
-    //                     persist: false,
-    //                     createOnBlur: true,
-    //                     create: true
-    //                   });
-                    </script> -->
-              </td>
-              <td>
-                <div class="input-group">
-                  <input custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
-                         ng-model="currenciesFields[currency.code].paperExchangeRate"
-                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                         name="{{currency.code}}paperExchangeRate"
-                         currencyType="paperExchangeRate" placeholder="11.070000"
-                         class="form-control"
-                         aria-label="Amount (to the nearest dollar)"/>
-                </div>
-              </td>
-              <td colspan="2">
-                  <date-picker
-                    element-class="col-xs-6"
-                    start-date-model="search.scheduleStartDate"
-                    end-date-model="search.scheduleEndDate"
-                    is-search-field="true">
-                  </date-picker>
-              </td>
-              <td>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
-                <a class="btn btn-warning btn-xs">
-                  <i class="fa fa-copy"></i>
-                </a>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
-                <button class="btn btn-danger btn-xs">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            
-            <tr>
-              <td>
-                <input type="text" class="form-control" placeholder="TRY" disabled="disabled">
-              </td>
-              <td>
-                <input type="text" class="form-control" placeholder="1, 5, 10, 20, 50, 100">
-    <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
-    <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
-    <!--                 <script>
-    //                   $('#seal-numbers-inbound').selectize({
-    //                     persist: false,
-    //                     createOnBlur: true,
-    //                     create: true
-    //                   });
-                    </script> -->
-              </td>
-              <td>
-                <div class="input-group">
-                  <input custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
-                         ng-model="currenciesFields[currency.code].paperExchangeRate"
-                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                         name="{{currency.code}}paperExchangeRate"
-                         currencyType="paperExchangeRate" placeholder="4.988000"
-                         class="form-control"
-                         aria-label="Amount (to the nearest dollar)"/>
-                </div>
-              </td>
-              <td colspan="2">
-                  <date-picker
-                    element-class="col-xs-6"
-                    start-date-model="search.scheduleStartDate"
-                    end-date-model="search.scheduleEndDate"
-                    is-search-field="true">
-                  </date-picker>
-              </td>
-              <td>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
-                <a class="btn btn-warning btn-xs">
-                  <i class="fa fa-copy"></i>
-                </a>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
-                <button class="btn btn-danger btn-xs">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            
-            <tr>
-              <td>
-                <input type="text" class="form-control" placeholder="EGP" disabled="disabled">
-              </td>
-              <td>
-                <input type="text" class="form-control" placeholder="1, 5, 10, 20, 50, 100, 200">
-    <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
-    <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
-    <!--                 <script>
-    //                   $('#seal-numbers-inbound').selectize({
-    //                     persist: false,
-    //                     createOnBlur: true,
-    //                     create: true
-    //                   });
-                    </script> -->
-              </td>
-              <td>
-                <div class="input-group">
-                  <input custom-validity
-                         custom-pattern="currencyWithFourDecimalPlace"
-                         ng-model="currenciesFields[currency.code].paperExchangeRate"
-                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
-                         name="{{currency.code}}paperExchangeRate"
-                         currencyType="paperExchangeRate" placeholder="13.331000"
-                         class="form-control"
-                         aria-label="Amount (to the nearest dollar)"/>
-                </div>
-              </td>
-              <td colspan="2">
-                  <date-picker
-                    element-class="col-xs-6"
-                    start-date-model="search.scheduleStartDate"
-                    end-date-model="search.scheduleEndDate"
-                    is-search-field="true">
-                  </date-picker>
-              </td>
-              <td>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
-                <a class="btn btn-warning btn-xs">
-                  <i class="fa fa-copy"></i>
-                </a>
-<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
-                <button class="btn btn-danger btn-xs">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-            
+                    
             <tr>
               <td>
                 <input type="text" class="form-control" placeholder="SEK" disabled="disabled">
               </td>
               <td>
                 <input type="text" class="form-control" placeholder="20, 50, 100, 500">
-    <!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
-    <!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
-    <!--                 <script>
-    //                   $('#seal-numbers-inbound').selectize({
-    //                     persist: false,
-    //                     createOnBlur: true,
-    //                     create: true
-    //                   });
-                    </script> -->
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
               </td>
               <td>
-                <div class="input-group">
+                <div>
                   <input custom-validity
                          custom-pattern="currencyWithFourDecimalPlace"
                          ng-model="currenciesFields[currency.code].paperExchangeRate"
@@ -564,13 +524,112 @@
                 <a class="btn btn-warning btn-xs">
                   <i class="fa fa-copy"></i>
                 </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
 <!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
                 <button class="btn btn-danger btn-xs">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>
             </tr>
-                        
+
+            <tr>
+              <td>
+                <input type="text" class="form-control" placeholder="TRY" disabled="disabled">
+              </td>
+              <td>
+                <input type="text" class="form-control" placeholder="1, 5, 10, 20, 50, 100">
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+              </td>
+              <td>
+                <div>
+                  <input custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         ng-model="currenciesFields[currency.code].paperExchangeRate"
+                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                         name="{{currency.code}}paperExchangeRate"
+                         currencyType="paperExchangeRate" placeholder="4.988000"
+                         class="form-control"
+                         aria-label="Amount (to the nearest dollar)"/>
+                </div>
+              </td>
+              <td colspan="2">
+                  <date-picker
+                    element-class="col-xs-6"
+                    start-date-model="search.scheduleStartDate"
+                    end-date-model="search.scheduleEndDate"
+                    is-search-field="true">
+                  </date-picker>
+              </td>
+              <td>
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
+                <a class="btn btn-warning btn-xs">
+                  <i class="fa fa-copy"></i>
+                </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
+                <button class="btn btn-danger btn-xs">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>                      
+
+            <tr>
+              <td>
+                <input type="text" class="form-control" placeholder="USD" disabled="disabled">
+              </td>
+              <td>
+                <input type="text" class="form-control" placeholder="1, 2, 5, 10, 20, 50, 100">
+<!-- TODO: USE SELECTIVIZE HERE, JUST LIKE ASSIGN SEALS IN DISPATCH SCREENS -->            
+<!--                 <input type="text" id="seal-numbers-inbound" value="" placeholder="Add Seals Here, Enter After Each Seal"> -->
+<!--                 <script>
+//                   $('#seal-numbers-inbound').selectize({
+//                     persist: false,
+//                     createOnBlur: true,
+//                     create: true
+//                   });
+                </script> -->
+              </td>
+              <td>
+                <div>
+                  <input custom-validity
+                         custom-pattern="currencyWithFourDecimalPlace"
+                         ng-model="currenciesFields[currency.code].paperExchangeRate"
+                         ng-required="!(companyBaseCurrency.currencyCode == currency.code || !showActionButtons)"
+                         name="{{currency.code}}paperExchangeRate"
+                         currencyType="paperExchangeRate" placeholder="1.698000"
+                         class="form-control"
+                         aria-label="Amount (to the nearest dollar)"/>
+                </div>
+              </td>
+              <td colspan="2">
+                  <date-picker
+                    element-class="col-xs-6"
+                    start-date-model="search.scheduleStartDate"
+                    end-date-model="search.scheduleEndDate"
+                    is-search-field="true">
+                  </date-picker>
+              </td>
+              <td>
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <a class="btn btn-warning btn-xs" ng-href="#/item-copy/{{item.versions[0].id}}"> -->
+                <a class="btn btn-warning btn-xs">
+                  <i class="fa fa-copy"></i>
+                </a>
+<!-- TODO: DELETE/TRASH BUTTON ONLY AVAILABLE FOR FUTURE START/END DATES -->
+<!-- COMMENTED OUT FOR MOCKUP, USING LINE BELOW                 <button class="btn btn-danger btn-xs" ng-click="deleteRecordDialog(item.versions[0].id)" ng-hide="isDateActive(item.versions[0].startDate) || isDateActive(item.versions[0].endDate)"> -->
+                <button class="btn btn-danger btn-xs">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+     
           </tbody>
         </table>
         
