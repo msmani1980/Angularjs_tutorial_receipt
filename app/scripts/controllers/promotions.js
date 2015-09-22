@@ -8,18 +8,19 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function ($scope) {
-    $scope.readOnly = false;
+  .controller('PromotionsCtrl', function ($scope, $routeParams) {
 
+    $scope.readOnly = ($routeParams.state === 'create');
     $scope.viewName = 'Create Promotion';
-    $scope.showProductPurchaseFields = true;
 
     $scope.promotion = {};
+    // Promotion general
     $scope.promotion.promotionCode = 'ABC1234';
     $scope.promotion.promotionName = 'Test Name';
     $scope.promotion.promotionDescription = 'Test Decription';
     $scope.promotion.effectiveDateFrom = '09/22/2015';
     $scope.promotion.effectiveDateTo = '10/22/2015';
+    // Qualifiers
     $scope.promotion.qualifier = {};
     $scope.promotion.qualifier.type = {id:1, name:'Product Purchase'};
     $scope.promotion.qualifier.productPurchase = {};
@@ -115,30 +116,73 @@ angular.module('ts5App')
       selectedItems: "28",
       startDate: "2015-05-13",
     };
-    $scope.promotion.inclusionFilter = [{}];
     $scope.promotion.qualifier.spendLimit.value = [];
     $scope.promotion.qualifier.spendLimit.value['GBP'] = 432.1234;
     $scope.promotion.qualifier.spendLimit.value['EUR'] = 456.1264;
-
+    // Benefits
     $scope.promotion.benefits = {};
     $scope.promotion.benefits.type = {id:1, name:'Discount'};
-    $scope.promotion.benefits.discount = {id:2, name:'Amount'};
+    $scope.promotion.benefits.discount = {};
+    $scope.promotion.benefits.discount.rateType = {id:2, name:'Amount'};
+    $scope.promotion.benefits.discount.applyTo = {id: 2, name: 'Promotion Qualifier'};
+    $scope.promotion.benefits.coupon = {
+      companyDiscountRestrictions: false,
+      companyId: 403,
+      discountTypeId: 1,
+      discountTypeName: 'Coupon',
+      endDate: '2050-12-31',
+      id: 102,
+      name: '10% off',
+      rateTypeId: 1,
+      rateTypeName: 'Percentage',
+      startDate: '2015-05-09'
+    };
+    $scope.promotion.benefits.voucher = {
+      companyDiscountRestrictions: false,
+      companyId: 403,
+      discountTypeId: 4,
+      discountTypeName: 'Voucher',
+      endDate: '2015-12-31',
+      id: 109,
+      name: 'Executive discount - Autumn edition',
+      rateTypeId: 1,
+      rateTypeName: 'Percentage'
+    };
+    // Inclusion Filter
+    $scope.promotion.inclusionFilter = [{}];
+
+    // Currency array
+    $scope.companyCurrencyGlobals = [
+      {
+        code: 'GBP',
+        companyId: 403,
+        id: 8,
+        name: 'British Pound'
+      },
+      {
+        code: 'EUR',
+        companyId: 403,
+        id: 9,
+        name: 'Euro'
+      }
+    ];
 
     // UI Select options
-    $scope.promotionTypes = [
+    $scope.selectOptions = {};
+    $scope.selectOptions.promotionTypes = [
       {id:1, name:'Product Purchase'},
       {id:2, name:'Spend Limit'}
     ];
-    $scope.benefitTypes = [
+    $scope.selectOptions.benefitTypes = [
       {id:1, name:'Discount'},
       {id:2, name:'Coupon'},
       {id:3, name:'Voucher'}
     ];
-    $scope.discountTypes = [
+    $scope.selectOptions.discountTypes = [
       {id:1, name:'Percentage'},
       {id:2, name:'Amount'}
     ];
-    $scope.promotionCategories = [
+    $scope.selectOptions.promotionCategories = [
       {
         companyId: 403,
         endDate: "2018-12-31",
@@ -185,7 +229,7 @@ angular.module('ts5App')
         startDate: "2015-07-09"
       }
     ];
-    $scope.salesCategories = [
+    $scope.selectOptions.salesCategories = [
       {
         childCategoryCount: null,
         children: null,
@@ -213,8 +257,7 @@ angular.module('ts5App')
         salesCategoryPath: 'Rentals'
       }
     ];
-    // TODO - get master items WITHOUT VERSIONS!
-    $scope.masterItems = [
+    $scope.selectOptions.masterItems = [ // TODO - get master items WITHOUT VERSIONS!
       {
         companyId: 403,
         createdBy: null,
@@ -238,26 +281,42 @@ angular.module('ts5App')
         updatedOn: '2015-07-24 19:41:12.928064',
       }
     ];
-
-    $scope.showSpendLimitFields = true;
-    $scope.companyCurrencyGlobals = [
+    $scope.selectOptions.discountApplyTypes = [
+      {id: 1, name: 'Cart'},
+      {id: 2, name: 'Promotion Qualifier'},
+      {id: 3, name: 'Promotion Category'},
+      {id: 4, name: 'Retail Item'}
+    ];
+    $scope.selectOptions.companyDiscountsCoupon = [ // API Call /api/company-discounts?discountTypeId=1&startDate=20150922
       {
-        code: 'GBP',
+        companyDiscountRestrictions: false,
         companyId: 403,
-        id: 8,
-        name: 'British Pound'
-      },
-      {
-        code: 'EUR',
-        companyId: 403,
-        id: 9,
-        name: 'Euro'
+        discountTypeId: 1,
+        discountTypeName: 'Coupon',
+        endDate: '2050-12-31',
+        id: 102,
+        name: '10% off',
+        rateTypeId: 1,
+        rateTypeName: 'Percentage',
+        startDate: '2015-05-09'
       }
     ];
+    $scope.selectOptions.companyDiscountsVoucher = [ // API Call /api/company-discounts?discountTypeId=4&startDate=20150922
+      {
+        companyDiscountRestrictions: false,
+        companyId: 403,
+        discountTypeId: 4,
+        discountTypeName: 'Voucher',
+        endDate: '2015-12-31',
+        id: 109,
+        name: 'Executive discount - Autumn edition',
+        rateTypeId: 1,
+        rateTypeName: 'Percentage'
+      }
+    ];
+
+    // Field required based on other field set
     $scope.spendLimitCurrenciesRequired = true;
-    $scope.benefitTypeIsDiscount = true;
-    $scope.benefitTypeIsCoupon = true;
-    $scope.benefitTypeIsVoucher = true;
 
     $scope.promotionCategoryQtyRequired = function(promotionCategory){
       // TODO - logic
