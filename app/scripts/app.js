@@ -202,6 +202,9 @@ angular.module('ts5App', [
   }).when('/retail-company-exchange-rate-setup', {
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'
+  }).when('/promotions/:state/:id?', {
+    templateUrl: 'views/promotions.html',
+    controller: 'PromotionsCtrl'
   }).otherwise({
     redirectTo: '/'
   });
