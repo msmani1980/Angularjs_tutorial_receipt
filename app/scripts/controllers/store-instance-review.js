@@ -301,8 +301,12 @@ angular.module('ts5App')
     };
 
     $scope.loseDataAlertConfirmTrigger = function(){
-      var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
-      $location.url(uri);
+      var stepName = angular.copy($scope.wizardStepToIndex).toString();
+
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepName).then(function () {
+        var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
+        $location.url(uri);
+      }, showResponseErrors);
     };
 
     $scope.submit = function(){
