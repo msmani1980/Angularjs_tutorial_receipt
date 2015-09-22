@@ -30,6 +30,7 @@ describe('the Store Instance Seals controller', function() {
   var getSealColorsDeferred;
   var storeInstanceSealsJSON;
   var createStoreInstanceSealDeferred;
+  var deleteStoreInstanceSealDeferred;
   var storeInstanceSealService;
   var storeInstanceSealsCreatedJSON;
   var storeInstanceAssignSealsFactory;
@@ -71,6 +72,7 @@ describe('the Store Instance Seals controller', function() {
     getSealColorsDeferred = $q.defer();
     getStoreInstanceSealsDeferred = $q.defer();
     createStoreInstanceSealDeferred = $q.defer();
+    deleteStoreInstanceSealDeferred = $q.defer();
     updateStoreInstanceStatusDeferred = $q.defer();
 
     getStoreDetailsDeferred = $q.defer();
@@ -84,6 +86,8 @@ describe('the Store Instance Seals controller', function() {
     spyOn(sealColorsService, 'getSealColors').and.returnValue(getSealColorsDeferred.promise);
     spyOn(storeInstanceAssignSealsFactory, 'createStoreInstanceSeal').and.returnValue(
       createStoreInstanceSealDeferred.promise);
+    spyOn(storeInstanceAssignSealsFactory, 'deleteStoreInstanceSeal').and.returnValue(
+      deleteStoreInstanceSealDeferred.promise);
 
     StoreInstanceSealsCtrl = $controller('StoreInstanceSealsCtrl', {
       $scope: $scope,
@@ -431,26 +435,14 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-  describe('The makeAssignSealsPromises functionality', function() {
-
-    var promises;
-    beforeEach(function() {
-      $scope.$digest();
-      promises = StoreInstanceSealsCtrl.makeAssignSealsPromises();
-    });
-
-    it('should the same number of promises as seal types', function() {
-      expect(promises.length).toEqual($scope.sealTypesList.length);
-    });
-
-  });
-
   describe('The assignSeals functionality', function() {
 
     beforeEach(function() {
       spyOn(StoreInstanceSealsCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceSealsCtrl, 'formatPayload').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'makeAssignSealsPromises').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'makeCreatePromise').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'makeDeletePromise').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'assignSealsSuccessHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'assignSealsErrorHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'showMessage');
@@ -458,6 +450,7 @@ describe('the Store Instance Seals controller', function() {
       spyOn(StoreInstanceSealsCtrl, 'findStatusObject').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'statusUpdateSuccessHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'hideLoadingModal');
+      $scope.sealTypesList[0].seals.numbers.push('123');
       mockAssignSeals();
     });
 
@@ -528,6 +521,7 @@ describe('the Store Instance Seals controller', function() {
       var errorResponse;
 
       beforeEach(function() {
+        resolveAllDependencies();
         errorResponse = [{
           field: 'storeId',
           code: '023',
@@ -650,6 +644,170 @@ describe('the Store Instance Seals controller', function() {
     it('should have at least one seal-type directive in the view', function() {
       $scope.$digest();
       expect(view.find('seal-type').length).toEqual(2);
+    });
+
+  });
+
+  describe('getting existing seals by type', function() {
+
+    beforeEach(function() {
+      resolveAllDependencies();
+      $scope.$digest();
+    });
+
+    it('return an array of seals by type', function() {
+      var existingSealTypeObjects = $scope.existingSeals.filter(function(sealTypeObject) {
+        return sealTypeObject.type === 1;
+      });
+      var controlArray = [];
+      existingSealTypeObjects.forEach(function(sealTypeObject){
+        controlArray.push(sealTypeObject.sealNumbers[0]);
+      });
+      expect(StoreInstanceSealsCtrl.getExistingSealsByType(1)).toEqual(controlArray);
+    });
+
+  });
+
+  describe('getting a diff between existing seals and seals in form', function() {
+
+    var sealTypeObject;
+    beforeEach(function() {
+      resolveAllDependencies();
+      $scope.$digest();
+      sealTypeObject = $scope.sealTypesList[0];
+    });
+
+    it('return nothing if there are no existing seal numbers', function() {
+      delete $scope.existingSeals;
+      $scope.$digest();
+      var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(1);
+      expect(existingSeals).toBeUndefined();
+    });
+
+    it('return an empty array if there is no difference', function() {
+      var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(1);
+      var diff = StoreInstanceSealsCtrl.diffExistingSeals(sealTypeObject.seals.numbers,existingSeals);
+      expect(diff).toEqual([]);
+    });
+
+    it('return a seal if there is a difference', function() {
+      sealTypeObject.seals.numbers.push('123');
+      $scope.$digest();
+      var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(sealTypeObject.id);
+      var diff = StoreInstanceSealsCtrl.diffExistingSeals(sealTypeObject.seals.numbers,existingSeals);
+      expect(diff).toEqual(['123']);
+    });
+
+  });
+
+  describe('when an new seal is created', function() {
+
+    var sealTypeObject;
+    beforeEach(function() {
+      resolveAllDependencies();
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      spyOn(StoreInstanceSealsCtrl,'makeCreatePromise').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl,'determineSealsToCreate').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl,'getExistingSealsByType').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl,'diffExistingSeals').and.callThrough();
+      $scope.$digest();
+      sealTypeObject = $scope.sealTypesList[0];
+    });
+
+    it('should determine what seals to be created', function() {
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      expect(StoreInstanceSealsCtrl.determineSealsToCreate).toHaveBeenCalledWith(sealTypeObject);
+    });
+
+    it('should find a list of existing seals by type', function() {
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      expect(StoreInstanceSealsCtrl.getExistingSealsByType).toHaveBeenCalledWith(sealTypeObject.id);
+    });
+
+    it('should do a diff of existing seals', function() {
+      var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(sealTypeObject.id);
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(sealTypeObject.seals.numbers,existingSeals);
+    });
+
+    it('should return an array of new seals to create', function() {
+      var controlArray = ['123'];
+      sealTypeObject.seals.numbers.push('123');
+      var sealsToCreate = StoreInstanceSealsCtrl.determineSealsToCreate(sealTypeObject);
+      expect(sealsToCreate).toEqual(controlArray);
+    });
+
+    it('should call makeCreatePromise', function() {
+      sealTypeObject.seals.numbers.push('123');
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      expect(StoreInstanceSealsCtrl.makeCreatePromise).toHaveBeenCalledWith(sealTypeObject);
+    });
+
+    it('should receive a promise from makeCreatePromise when there is a new seal', function() {
+      sealTypeObject.seals.numbers.push('123');
+      var promise = StoreInstanceSealsCtrl.makeCreatePromise(sealTypeObject);
+      expect(promise).toBeDefined();
+    });
+
+    it('should not receive a promise from makeCreatePromise when there aren\'t new seals', function() {
+      var promise = StoreInstanceSealsCtrl.makeCreatePromise(sealTypeObject);
+      expect(promise).toBeUndefined();
+    });
+
+  });
+
+  describe('when an existing seal is deleted', function() {
+
+    var sealTypeObject;
+    beforeEach(function() {
+      resolveAllDependencies();
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      spyOn(StoreInstanceSealsCtrl,'makeDeletePromise').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl,'determineSealsToDelete').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl,'getExistingSealsByType').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl,'diffExistingSeals').and.callThrough();
+      $scope.$digest();
+      sealTypeObject = $scope.sealTypesList[0];
+    });
+
+    it('should determine what seals to be created', function() {
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      expect(StoreInstanceSealsCtrl.determineSealsToDelete).toHaveBeenCalledWith(sealTypeObject);
+    });
+
+    it('should find a list of existing seals by type', function() {
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      expect(StoreInstanceSealsCtrl.getExistingSealsByType).toHaveBeenCalledWith(sealTypeObject.id);
+    });
+
+    it('should do a diff of existing seals', function() {
+      var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(sealTypeObject.id);
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(existingSeals,sealTypeObject.seals.numbers);
+    });
+
+    it('should return an array of existing seals to delete', function() {
+      var controlArray = ['1'];
+      sealTypeObject.seals.numbers = ['4567'];
+      var sealsToDelete = StoreInstanceSealsCtrl.determineSealsToDelete(sealTypeObject);
+      expect(sealsToDelete).toEqual(controlArray);
+    });
+
+    it('should call makeDeletePromise', function() {
+      sealTypeObject.seals.numbers = ['4567'];
+      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      expect(StoreInstanceSealsCtrl.makeDeletePromise).toHaveBeenCalledWith(sealTypeObject);
+    });
+
+    it('should receive a promise from makeDeletePromise when there is an existing seal removed', function() {
+      sealTypeObject.seals.numbers = ['4567'];
+      var promise = StoreInstanceSealsCtrl.makeDeletePromise(sealTypeObject);
+      expect(promise).toBeDefined();
+    });
+
+    it('should not receive a promise from makeDeletePromise when no existing seals are removed', function() {
+      var promise = StoreInstanceSealsCtrl.makeDeletePromise(sealTypeObject);
+      expect(promise).toBeUndefined();
     });
 
   });
