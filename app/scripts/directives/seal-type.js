@@ -10,15 +10,17 @@ angular.module('ts5App')
   .directive('sealType', function() {
     var sealTypeController = function($scope) {
 
+      $scope.numberOfSeals = 0;
+
       $scope.isSequentialPossible = function() {
-        return ($scope.sealTypeObject.seals.numbers.length === 1 && $scope.sealTypeObject.seals.numbers[0] > 0);
+        return ($scope.sealTypeObject.seals.numbers.length === 1 && $scope.sealTypeObject.seals.numbers[0] >= 0);
       };
 
       $scope.addSealsSequentially = function() {
         var sealNumber = parseInt($scope.sealTypeObject.seals.numbers[0]);
         var count = parseInt($scope.numberOfSeals + 1);
         for (var i = 1; i < count; i++) {
-          var newSeal = Math.ceil(sealNumber + i);
+          var newSeal = Math.abs(sealNumber + i);
           $scope.sealTypeObject.seals.numbers.push(newSeal);
         }
       };
@@ -35,10 +37,10 @@ angular.module('ts5App')
         return ($scope.numberOfSeals > 100 || $scope.numberOfSeals < 1);
       };
 
-      $scope.limitSealsLength = function() {
+      $scope.limitSealsInput = function() {
         var selector = 'input.ui-select-search';
         var input = angular.element(selector);
-        angular.element(input).attr('maxlength', 50);
+        angular.element(input).attr('maxlength', 15);
       };
 
     };
@@ -50,7 +52,7 @@ angular.module('ts5App')
       },
       link: function($scope, $element) {
         $element.ready(function() {
-          $scope.limitSealsLength();
+          $scope.limitSealsInput();
         });
       }
     };

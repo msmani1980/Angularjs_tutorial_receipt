@@ -3,7 +3,7 @@
 // Generated on 2015-04-14 using
 // generator-karma 0.9.0
 
-module.exports = function (config) {
+module.exports = function(config) {
   'use strict';
 
   config.set({
@@ -30,8 +30,7 @@ module.exports = function (config) {
         {
           type: 'html',
           subdir: 'report-html'
-        },
-        {
+        }, {
           type: 'cobertura',
           subdir: '.'
         }
