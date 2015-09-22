@@ -10,8 +10,9 @@
 angular.module('ts5App')
   .controller('PromotionsCtrl', function ($scope, $routeParams) {
 
-    $scope.readOnly = ($routeParams.state === 'create');
+    $scope.readOnly = ($routeParams.state === 'view');
     $scope.viewName = 'Create Promotion';
+    $scope.activeBtn = 'promotion-information';
 
     $scope.promotion = {};
     // Promotion general
@@ -149,7 +150,36 @@ angular.module('ts5App')
       rateTypeName: 'Percentage'
     };
     // Inclusion Filter
-    $scope.promotion.inclusionFilter = [{}];
+    $scope.promotion.inclusionFilters = [
+      {
+        departureStation : {
+          code: 'ORD',
+          companyId: 403,
+          id: 1,
+          name: 'Chicago O-hare'
+        },
+        arrivalStation : {
+          code: 'SAN',
+          companyId: 403,
+          id: 4,
+          name: 'San Jose'
+        }
+      },
+      {
+        departureStation : {
+          code: 'LON3',
+          companyId: 403,
+          id: 3,
+          name: 'London'
+        },
+        arrivalStation : {
+          code: 'SAN',
+          companyId: 403,
+          id: 4,
+          name: 'San Jose'
+        }
+      }
+    ];
 
     // Currency array
     $scope.companyCurrencyGlobals = [
@@ -314,9 +344,32 @@ angular.module('ts5App')
         rateTypeName: 'Percentage'
       }
     ];
-
-    // Field required based on other field set
-    $scope.spendLimitCurrenciesRequired = true;
+    $scope.selectOptions.companyStationGlobals = [
+      {
+        code: 'ORD',
+        companyId: 403,
+        id: 1,
+        name: 'Chicago O-hare'
+      },
+      {
+        code: 'MDW',
+        companyId: 403,
+        id: 2,
+        name: 'Chicago Midway'
+      },
+      {
+        code: 'LON3',
+        companyId: 403,
+        id: 3,
+        name: 'London'
+      },
+      {
+        code: 'SAN',
+        companyId: 403,
+        id: 4,
+        name: 'San Jose'
+      }
+    ];
 
     $scope.promotionCategoryQtyRequired = function(promotionCategory){
       // TODO - logic
@@ -350,6 +403,20 @@ angular.module('ts5App')
     $scope.removeinclusionFilterByIndex = function($index){
       // TODO - logic
       $index = null;
+    };
+
+    $scope.scrollToAnchor = function(id){
+      $scope.activeBtn = id;
+      var elm = angular.element('#' + id);
+      if(!elm || !elm.length){
+        return;
+      }
+      var body = angular.element('body');
+      var navBar = angular.element('.navbar-header').height();
+      var topBar = angular.element('.top-header').height();
+      body.animate({
+        scrollTop: elm.offset().top - (navBar + topBar + 20)
+      }, 'slow');
     };
 
   });
