@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Factory: cashBagFactory', function () {
+fdescribe('Factory: cashBagFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -43,11 +43,11 @@ describe('Factory: cashBagFactory', function () {
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates');
     spyOn(companyPreferencesService, 'getCompanyPreferences');
-    spyOn(companyPreferencesService, 'getStoreList');
+    spyOn(companyStoresService, 'getStoreList');
 
     rootScope      = $rootScope;
     scope          = $rootScope.$new();
-    cashBagFactory = _cashBagFactory_;
+    cashBagFactory = $injector.get('cashBagFactory');
   }));
 
   var companyId = '403';
@@ -84,6 +84,13 @@ describe('Factory: cashBagFactory', function () {
       };
       cashBagFactory.createCashBag(cashBag);
       expect(cashBagService.createCashBag).toHaveBeenCalledWith(cashBag);
+    });
+  });
+
+  describe('companyStoresService API', function () {
+    it('should call companyStoresService on getStoreList', function () {
+      cashBagFactory.getStoreList(companyId);
+      expect(companyStoresService.getStoreList).toHaveBeenCalledWith(companyId);
     });
   });
 
