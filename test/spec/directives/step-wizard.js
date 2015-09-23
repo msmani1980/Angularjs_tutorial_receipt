@@ -365,4 +365,36 @@ describe('The Step Wizard directive', function () {
 
   });
 
+  describe('saveButtonText', function () {
+    beforeEach(inject(function(){
+      scope.wizardSteps = [
+        {
+          label: 'Test label 1',
+          uri: '/test-uri-1'
+        },
+        {
+          label: 'Test label 2',
+          uri: '/test-uri-2'
+        },
+        {
+          label: 'Test label 3',
+          uri: '/test-uri-3'
+        }
+      ];
+    }));
+
+    it('should default to Save&Exit when nothing is set', function () {
+      template = '<step-wizard steps="wizardSteps"></step-wizard>';
+      compileDirective();
+      expect(directiveScope.saveButtonText).toEqual('Save & Exit');
+    });
+    it('should be set to save-button-text attribute', function () {
+      scope.mockButtonText = 'fakeButtonText';
+      template = '<step-wizard steps="wizardSteps" save-button-text="mockButtonText"></step-wizard>';
+      compileDirective();
+      expect(directiveScope.saveButtonText).toEqual(scope.mockButtonText);
+    });
+  });
+
+
 });

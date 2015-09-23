@@ -23,6 +23,8 @@ angular.module('ts5App')
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
     var actions = {};
 
+    $scope.saveButtonText = 'Exit';
+
     function showMessage(message, messageType) {
       ngToast.create({className: messageType, dismissButton: true, content: '<strong>Store Instance Review</strong>: ' + message});
     }
@@ -173,7 +175,7 @@ angular.module('ts5App')
       hideLoadingModal();
       $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {id: response.statusId}, true)[0];
       showUserCurrentStatus('updated');
-      $location.url('/store-dispatch-dashboard');
+      $location.url('/store-instance-dashboard');
     }
 
     function isReadyForDispatch(){
@@ -293,13 +295,18 @@ angular.module('ts5App')
 
     $scope.goToWizardStep = function($index){
       $scope.wizardStepToIndex = $index;
-      $scope.stepWizardPrevTrigger();
+      var stepName = angular.copy($index).toString();
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepName).then(
+        $scope.stepWizardPrevTrigger, showResponseErrors);
     };
 
     $scope.loseDataAlertConfirmTrigger = function(){
-      console.log($scope.wizardStepToIndex);
-      var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
-      $location.url(uri);
+      var stepName = angular.copy($scope.wizardStepToIndex).toString();
+
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepName).then(function () {
+        var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
+        $location.url(uri);
+      }, showResponseErrors);
     };
 
     $scope.submit = function(){
@@ -309,11 +316,12 @@ angular.module('ts5App')
       }
     };
 
+    $scope.exit = function () {
+      $location.url('/store-instance-dashboard');
+    };
+
     $scope.hasDiscrepancy = function(item){
-      if(item.menuQuantity !== item.quantity){
-        return 'danger';
-      }
-      return '';
+      return (item.menuQuantity !== item.quantity) ? 'danger' : '';
     };
 
   });

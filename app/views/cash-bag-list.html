@@ -35,20 +35,33 @@
           </div>
           <form name="createCashBagForm">
             <div class="row">
-              <div class="col-md-6 col-sm-12">
+
+              <div class="col-xs-4">
                 <div class="form-group">
-                  <label for="cashBag-origin">Schedule</label>
-                  <select ng-model="scheduleIndex" class="form-control col-md-12" id="cashBag-origin"
+                  <label for="create-schedule">Schedule Number</label>
+                  <select ng-model="scheduleIndex" class="form-control col-md-12" id="create-schedule"
                           ng-change="updateScheduleDate()" required="true">
                     <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}
                     </option>
                   </select>
                 </div>
               </div>
-              <div class="col-md-6 col-sm-12">
+
+              <div class="col-xs-4">
+                <div class="form-group">
+                  <label for="create-storeNumber">Store Number</label>
+                  <select ng-model="createStoreNumber" class="form-control col-md-12" id="create-storeNumber"
+                          required="true">
+                    <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-xs-4">
                 <date-picker
                   id="createCashBagDatePicker"
-                  class="col-sm-12"
+                  element-class="col-xs-12"
                   disable-date-range="false"
                   start-date-model="scheduleDate"
                   is-search-field="true"
@@ -58,6 +71,7 @@
                   required="true">
                 </date-picker>
               </div>
+
             </div>
           </form>
         </div>
@@ -111,7 +125,7 @@
 
           <div class="col-md-3 col-sm-6">
             <date-picker
-              class="col-sm-6"
+              element-class="col-xs-12"
               disable-date-range="true"
               start-date-model="search.startDate"
               is-search-field="true"
@@ -121,6 +135,21 @@
         </div>
 
         <div class="row">
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBag-storeNumber">Store Number</label>
+              <input ng-model="search.storeNumber" type="text" class="form-control" id="cashBag-storeNumber">
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="cashBag-storeInstanceId">Store Instance</label>
+              <input ng-model="search.storeInstanceId" type="text" class="form-control" id="cashBag-storeInstanceId">
+            </div>
+          </div>
+
           <div class="col-md-3 col-sm-6">
             <div class="form-group">
               <label for="cashBag-origin">Origin</label>
@@ -158,7 +187,10 @@
     <tr>
       <th>Cash Bag</th>
       <th>Bank Ref #</th>
+      <th>Schedule #</th>
       <th>Date</th>
+      <th>Store #</th>
+      <th>Store Instance</th>
       <th>Origin</th>
       <th>Destination</th>
       <th>Actions</th>
@@ -166,8 +198,9 @@
     </thead>
     <tbody>
     <tr>
-      <td colspan="6" ng-click="showCreatePopup()" class="btn-default"><span class="glyphicon glyphicon-plus"
-                                                                             aria-hidden="true"></span>
+      <td colspan="9" ng-click="showCreatePopup()" class="btn-default">
+        <span class="glyphicon glyphicon-plus"
+              aria-hidden="true"></span>
         Add Cash Bag
       </td>
     </tr>
@@ -175,7 +208,10 @@
       ng-repeat="cashBag in cashBagList" ng-class="{'new':isNew(cashBag.id)}">
       <td>{{ cashBag.cashBagNumber }}</td>
       <td>{{ cashBag.bankReferenceNumber }}</td>
+      <td>{{ cashBag.scheduleNumber }}</td>
       <td>{{ cashBag.scheduleDate }}</td>
+      <td>{{ cashBag.storeNumber }}</td>
+      <td>{{ cashBag.storeInstanceId }}</td>
       <td>{{ cashBag.departureStationCode }}</td>
       <td>{{ cashBag.arrivalStationCode }}</td>
       <td>

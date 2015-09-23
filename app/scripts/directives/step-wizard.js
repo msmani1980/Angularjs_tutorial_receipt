@@ -17,7 +17,8 @@ angular.module('ts5App')
       showNextPrevButton: '=',
       nextTrigger: '&',
       prevTrigger: '&',
-      saveTrigger: '&'
+      saveTrigger: '&',
+      saveButtonText: '='
     },
     controller: function($scope, $location) {
 
@@ -39,6 +40,9 @@ angular.module('ts5App')
         $scope.steps.map(trailingSlashOnStepURI);
       }
       function init(){
+        if(angular.isUndefined($scope.saveButtonText)) {
+          $scope.saveButtonText = 'Save & Exit';
+        }
         trailingSlashes();
       }
       init();

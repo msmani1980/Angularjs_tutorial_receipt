@@ -194,6 +194,9 @@ angular.module('ts5App', [
   }).when('/store-instance-review/:action/:storeId?', {
     templateUrl: 'views/store-instance-review.html',
     controller: 'StoreInstanceReviewCtrl'
+  }).when('/store-instance-dashboard', {
+    templateUrl: 'views/store-instance-dashboard.html',
+    controller: 'StoreInstanceDashboardCtrl'
   }).when('/promotions/:state/:id?', {
     templateUrl: 'views/promotions.html',
     controller: 'PromotionsCtrl'

@@ -3,11 +3,11 @@
 }
 
 .master-row {
-  background-color: #f0f0f0;
+  background-color: #fff;
 }
 
 .subversion-row {
-  background-color: #fff;
+  background-color: #f0f0f0;
 
 }
 
@@ -16,7 +16,7 @@
 }
 
 .open-accordion {
-  border-left: 4px solid black;
+  border-left: 4px solid #5e5e5e;
 }
 
 .slideUp.ng-hide {
@@ -39,4 +39,14 @@
 
 .store-instance-review-accordion .panel-title{
   color: #3a87ad;
+}
+
+.accordion-cell-details {
+  color:#888;
+  display: inline-block;
+  margin: 1rem 2rem;
+}
+
+.accordion-cell-closed {
+  display: none;
 }
