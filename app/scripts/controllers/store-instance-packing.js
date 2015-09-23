@@ -14,6 +14,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.filteredMasterItemList = [];
     $scope.addItemsNumber = 1;
     $scope.readOnly = true;
+    $scope.saveButtonName = 'Exit';
 
     var nextStep = {
       stepName: '2',
@@ -163,6 +164,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         showToast('warning', 'Store Instance Status', 'This store instance is not ready for packing');
       } else {
         $scope.readOnly = false;
+        $scope.saveButtonName = 'Save & Exit';
       }
 
       $this.getStoreInstanceItems();

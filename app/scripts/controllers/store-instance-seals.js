@@ -39,7 +39,7 @@ angular.module('ts5App')
     };
 
     this.setWizardSteps = function() {
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
+      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
     };
 
     this.getSealColors = function() {
