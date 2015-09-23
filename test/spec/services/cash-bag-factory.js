@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Factory: cashBagFactory', function () {
+describe('Factory: cashBagFactory', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -89,8 +89,11 @@ fdescribe('Factory: cashBagFactory', function () {
 
   describe('companyStoresService API', function () {
     it('should call companyStoresService on getStoreList', function () {
-      cashBagFactory.getStoreList(companyId);
-      expect(companyStoresService.getStoreList).toHaveBeenCalledWith(companyId);
+      var fakePayload = {
+        startDate: 'fakeDate'
+      };
+      cashBagFactory.getStoreList(fakePayload);
+      expect(companyStoresService.getStoreList).toHaveBeenCalledWith(fakePayload);
     });
   });
 
