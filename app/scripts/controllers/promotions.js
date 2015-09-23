@@ -118,15 +118,15 @@ angular.module('ts5App')
       startDate: '2015-05-13',
     };
     $scope.promotion.qualifier.spendLimit.value = [];
-    $scope.promotion.qualifier.spendLimit.value.GBP = 432.1234;
-    $scope.promotion.qualifier.spendLimit.value.EUR = 456.1264;
+    $scope.promotion.qualifier.spendLimit.value.push({GBP:432.1234});
+    $scope.promotion.qualifier.spendLimit.value.push({EUR:456.1264});
     // Benefits
     $scope.promotion.benefits = {};
     $scope.promotion.benefits.type = {id:1, name:'Discount'};
     $scope.promotion.benefits.discount = {};
     $scope.promotion.benefits.discount.rateType = {id:2, name:'Amount'};
-    $scope.promotion.benefits.discount.applyTo = {}; // TODO Update test
-    $scope.promotion.benefits.discount.applyTo.type = {id: 2, name: 'Promotion Qualifier'}; // TODO test
+    $scope.promotion.benefits.discount.applyTo = {};
+    $scope.promotion.benefits.discount.applyTo.type = {id: 2, name: 'Promotion Qualifier'};
     $scope.promotion.benefits.discount.applyTo.promotionCategory = { // TODO test
       companyId: 403,
       endDate: '2018-12-31',
@@ -135,8 +135,8 @@ angular.module('ts5App')
       promotionCount: '28',
       selectedItems: '28',
       startDate: '2015-05-13',
-    }; // TODO test
-    $scope.promotion.benefits.discount.applyTo.retailItem = {}; // TODO test
+    };
+    $scope.promotion.benefits.discount.applyTo.retailItem = {};
     $scope.promotion.benefits.discount.applyTo.retailItem.retailItem = {
       companyId: 403,
       createdBy: null,
@@ -147,14 +147,14 @@ angular.module('ts5App')
       onBoardName: null,
       updatedBy: null,
       updatedOn: null
-    }; // TODO test
-    $scope.promotion.benefits.discount.applyTo.retailItem.giftWithPurchase = true; // TODO test
-    $scope.promotion.benefits.discount.percentage = {}; // TODO test
-    $scope.promotion.benefits.discount.percentage.value = 50; // TODO test
-    $scope.promotion.benefits.discount.percentage.lowestPricedArticle = true; // TODO test
-    $scope.promotion.benefits.discount.fixedDiscountValue = []; // TODO test
-    $scope.promotion.benefits.discount.fixedDiscountValue.GBP = 234.43; // TODO test
-    $scope.promotion.benefits.discount.fixedDiscountValue.EUR = 432.43; // TODO test
+    };
+    $scope.promotion.benefits.discount.applyTo.retailItem.giftWithPurchase = true;
+    $scope.promotion.benefits.discount.percentage = {}; // TODO Unit test below when promotion.benefits.discount.rateType = 'Percent'
+    $scope.promotion.benefits.discount.percentage.value = 50;
+    $scope.promotion.benefits.discount.percentage.lowestPricedArticle = true;
+    $scope.promotion.benefits.discount.amount = [];
+    $scope.promotion.benefits.discount.amount.push({GBP:234.43});
+    $scope.promotion.benefits.discount.amount.push({EUR:432.12});
     $scope.promotion.benefits.coupon = {
       companyDiscountRestrictions: false,
       companyId: 403,

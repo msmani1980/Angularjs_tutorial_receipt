@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: PromotionsCtrl', function () {
+fdescribe('Controller: PromotionsCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -11,6 +11,8 @@ describe('Controller: PromotionsCtrl', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
+    // TODO - mock scope here
+
     PromotionsCtrl = $controller('PromotionsCtrl', {
       $scope: scope
     });
@@ -80,6 +82,9 @@ describe('Controller: PromotionsCtrl', function () {
         expect(scope.promotion.qualifier.spendLimit.value).toBeDefined();
         expect(Object.prototype.toString.call(scope.promotion.qualifier.spendLimit.value)).toBe('[object Array]');
       });
+      it('should have a value for each currency type', function(){
+        expect(scope.promotion.qualifier.spendLimit.value.length).toEqual(scope.companyCurrencyGlobals.length);
+      });
     });
     describe('when promotion.benefit.type is "Discount"', function(){
       it('should have a discount object', function(){
@@ -93,6 +98,55 @@ describe('Controller: PromotionsCtrl', function () {
       it('should have an applyTo object', function(){
         expect(scope.promotion.benefits.discount.applyTo).toBeDefined();
         expect(Object.prototype.toString.call(scope.promotion.benefits.discount.applyTo)).toBe('[object Object]');
+      });
+      it('should have an applyTo.type object', function(){
+        expect(scope.promotion.benefits.discount.applyTo.type).toBeDefined();
+        expect(Object.prototype.toString.call(scope.promotion.benefits.discount.applyTo.type)).toBe('[object Object]');
+      });
+      describe('when applyTo.type is "Promotion Category"', function(){
+        it('should have a promotionCategory object', function(){
+          expect(scope.promotion.benefits.discount.applyTo.promotionCategory).toBeDefined();
+          expect(Object.prototype.toString.call(scope.promotion.benefits.discount.applyTo.promotionCategory)).toBe('[object Object]');
+        });
+      });
+      describe('when applyTo.type is "Retail Item"', function(){
+        it('should have a retailItem object', function(){
+          expect(scope.promotion.benefits.discount.applyTo.retailItem).toBeDefined();
+          expect(Object.prototype.toString.call(scope.promotion.benefits.discount.applyTo.retailItem)).toBe('[object Object]');
+        });
+        describe('retailItem object', function(){
+          it('should have a retailItem object', function(){
+            expect(scope.promotion.benefits.discount.applyTo.retailItem.retailItem).toBeDefined();
+            expect(Object.prototype.toString.call(scope.promotion.benefits.discount.applyTo.retailItem.retailItem)).toBe('[object Object]');
+          });
+          it('should have a giftWithPurchase boolean', function(){
+            expect(scope.promotion.benefits.discount.applyTo.retailItem.giftWithPurchase).toBeDefined();
+            expect(Object.prototype.toString.call(scope.promotion.benefits.discount.applyTo.retailItem.giftWithPurchase)).toBe('[object Boolean]');
+          });
+        });
+      });
+      describe('when promotion.benefits.discount.rateType == "Percent"', function(){
+        it('should have a promotion.benefits.discount.percentage object', function(){
+          expect(scope.promotion.benefits.discount.percentage).toBeDefined();
+          expect(Object.prototype.toString.call(scope.promotion.benefits.discount.percentage)).toBe('[object Object]');
+        });
+        it('should have a promotion.benefits.discount.percentage.value int', function(){
+          expect(scope.promotion.benefits.discount.percentage.value).toBeDefined();
+          expect(Object.prototype.toString.call(scope.promotion.benefits.discount.percentage.value)).toBe('[object Number]');
+        });
+        it('should have a promotion.benefits.discount.percentage.lowestPricedArticle boolean', function(){
+          expect(scope.promotion.benefits.discount.percentage.lowestPricedArticle).toBeDefined();
+          expect(Object.prototype.toString.call(scope.promotion.benefits.discount.percentage.lowestPricedArticle)).toBe('[object Boolean]');
+        });
+      });
+      describe('when promotion.benefits.discount.rateType == "Amount"', function(){
+        it('should have promotion.benefits.discount.amount array', function(){
+          expect(scope.promotion.benefits.discount.amount).toBeDefined();
+          expect(Object.prototype.toString.call(scope.promotion.benefits.discount.amount)).toBe('[object Array]');
+        });
+        it('should have a value for each currency type', function(){
+          expect(scope.promotion.benefits.discount.amount.length).toEqual(scope.companyCurrencyGlobals.length);
+        });
       });
     });
     describe('when promotion.benefit.type is "Coupon"', function() {
