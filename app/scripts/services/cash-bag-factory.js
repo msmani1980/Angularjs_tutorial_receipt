@@ -8,17 +8,23 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('cashBagFactory', function (cashBagService, GlobalMenuService, stationsService, schedulesService, companyService, currenciesService, dailyExchangeRatesService, companyPreferencesService) {
+  .factory('cashBagFactory',
+  function (cashBagService, GlobalMenuService, stationsService, schedulesService, companyService, currenciesService, dailyExchangeRatesService, companyPreferencesService,
+            companyStoresService) {
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
 
     var getCashBagList = function (id, optionalPayload) {
-      if(arguments.length > 1) {
+      if (arguments.length > 1) {
         return cashBagService.getCashBagList(id, optionalPayload);
       } else {
         return cashBagService.getCashBagList(id);
       }
+    };
+
+    var getStoreList = function(payload) {
+      return companyStoresService.getStoreList(payload);
     };
 
     var getStationList = function (id) {
@@ -37,27 +43,27 @@ angular.module('ts5App')
       return companyService.getCompany(id);
     };
 
-    var updateCashBag = function(id, payload) {
+    var updateCashBag = function (id, payload) {
       return cashBagService.updateCashBag(id, payload);
     };
 
-    var getCashBag = function(id) {
+    var getCashBag = function (id) {
       return cashBagService.getCashBag(id);
     };
 
-    var deleteCashBag = function(id) {
+    var deleteCashBag = function (id) {
       return cashBagService.deleteCashBag(id);
     };
 
-    var createCashBag = function(payload) {
+    var createCashBag = function (payload) {
       return cashBagService.createCashBag(payload);
     };
 
-    var getCompanyCurrencies = function() {
+    var getCompanyCurrencies = function () {
       return currenciesService.getCompanyCurrencies();
     };
 
-    var getDailyExchangeRates = function(id, cashierDate) {
+    var getDailyExchangeRates = function (id, cashierDate) {
       return dailyExchangeRatesService.getDailyExchangeRates(id, cashierDate);
     };
 
@@ -78,6 +84,7 @@ angular.module('ts5App')
       getSchedulesList: getSchedulesList,
       getDailySchedulesList: getDailySchedulesList,
       getDailyExchangeRates: getDailyExchangeRates,
-      getCompanyPreferences: getCompanyPreferences
+      getCompanyPreferences: getCompanyPreferences,
+      getStoreList: getStoreList
     };
   });

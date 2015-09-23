@@ -27,12 +27,12 @@ describe('Service: companyStoresService', function () {
     describe('getStores', function () {
 
       it('should be accessible as a function', function () {
-        expect(companyStoresService.getStores).toBeDefined();
-        expect(Object.prototype.toString.call(companyStoresService.getStores)).toBe('[object Function]');
+        expect(companyStoresService.getStoreList).toBeDefined();
+        expect(Object.prototype.toString.call(companyStoresService.getStoreList)).toBe('[object Function]');
       });
       it('should make a GET request', function(){
         $httpBackend.expectGET(/stores/g).respond(200, '');
-        companyStoresService.getStores();
+        companyStoresService.getStoreList();
         $httpBackend.flush();
       });
     });

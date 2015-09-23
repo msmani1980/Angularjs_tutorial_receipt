@@ -132,11 +132,6 @@ angular.module('ts5App')
       angular.element('#addCashBagModal').modal('show');
     };
 
-    $scope.updateScheduleDate = function () {
-      $scope.scheduleMinDate = moment($scope.schedulesList[$scope.scheduleIndex].minEffectiveStart, 'YYYY-MM-DD').format('MM/DD/YYYY').toString();
-      $scope.scheduleMaxDate = moment($scope.schedulesList[$scope.scheduleIndex].maxEffectiveEnd, 'YYYY-MM-DD').format('MM/DD/YYYY').toString();
-    };
-
     $scope.submitCreate = function () {
       if (!$scope.createCashBagForm.$valid) {
         showModalErrors('Please select both a schedule number and a schedule date');

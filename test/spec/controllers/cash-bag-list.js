@@ -164,27 +164,6 @@ describe('Controller: CashBagListCtrl', function () {
       });
     });
 
-    describe('updateScheduleDate', function(){
-      it('should set scheduleMinDate to yyyymmdd format', function(){
-        scope.schedulesList = [{
-          minEffectiveStart: '2015-06-20',
-          minEffectiveEnd: '2015-08-20'
-        }];
-        scope.scheduleIndex = 0;
-        scope.updateScheduleDate();
-        expect(scope.scheduleMinDate).toEqual('06/20/2015');
-      });
-      it('should set scheduleMaxDate to yyyymmdd format', function(){
-        scope.schedulesList = [{
-          minEffectiveStart: '2015-06-20',
-          maxEffectiveEnd: '2015-08-20'
-        }];
-        scope.scheduleIndex = 0;
-        scope.updateScheduleDate();
-        expect(scope.scheduleMaxDate).toEqual('08/20/2015');
-      });
-    });
-
     describe('isCashBagEditable', function () {
       var testCashBag = {};
       it('should return true if cash bag has not been submitted', function () {
