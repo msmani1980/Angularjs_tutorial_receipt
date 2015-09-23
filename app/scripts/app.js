@@ -203,6 +203,9 @@ angular.module('ts5App', [
   }).when('/promotions/:state/:id?', {
     templateUrl: 'views/promotions.html',
     controller: 'PromotionsCtrl'
+  }).when('/manual-store-instance', {
+    templateUrl: 'views/manual-store-instance.html',
+    controller: 'ManualStoreInstanceCtrl'
   }).otherwise({
     redirectTo: '/'
   });

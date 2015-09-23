@@ -1,0 +1,197 @@
+<div class="module-container">
+  <div class="row">
+    <div class="col-xs-6">
+      <h2 class="view-name">{{viewName}}</h2>
+    </div>
+  </div>
+
+  <br>
+
+  <form name="postTripDataForm">
+
+    <form-error-dialog></form-error-dialog>
+    <!--/TopHeader -->
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <!-- form header-->
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label>Store Instance*</label>
+              <select class="form-control" required="true">
+                <option selected="selected" value>Select a Store Instance</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label>Cash Bag*</label>
+              <select class="form-control" required="true">
+                <option selected="selected" value>Select a Cash Bag</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+<!--       <div class="panel-body"> -->
+<!--         <div class="row"> -->
+<!--           <div class="col-xs-12 col-sm-4"> -->
+<!--             <div class="form-group"> -->
+<!--               <label for="departureStation">Departure Station *</label> -->
+<!--               <select class="form-control" -->
+<!--                       id="departureStation" -->
+<!--                       ng-change="updateDepartureTimeZone()" -->
+<!--                       ng-model="postTrip.depStationId" -->
+<!--                       ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList" -->
+<!--                       ng-disabled="readOnly" -->
+<!--                       required="true"> -->
+<!--                 <option selected="selected" value>Select a Departure Station</option> -->
+<!--               </select> -->
+<!--             </div> -->
+<!--           </div> -->
+
+<!--           <div class="col-xs-12 col-sm-4"> -->
+<!--             <label for="departure-time">Departure Time *</label> -->
+<!--             <input custom-validity -->
+<!--                    custom-pattern="time" -->
+<!--                    ng-model="postTrip.depTime" -->
+<!--                    type="text" -->
+<!--                    class="form-control departure-time" -->
+<!--                    id="departure-time" -->
+<!--                    placeholder="21:34" -->
+<!--                    ng-readonly="readOnly"> -->
+<!--           </div> -->
+
+<!--           <div class="col-xs-12 col-sm-4"> -->
+<!--             <div class="form-group"> -->
+<!--               <label for="departure-time-zone">Departure Time Zone *</label> -->
+<!--               <input type="text" -->
+<!--                      class="form-control" -->
+<!--                      id="departure-time-zone" -->
+<!--                      placeholder="" -->
+<!--                      ng-model="departureTimezone" -->
+<!--                      disabled> -->
+<!--             </div> -->
+<!--           </div> -->
+<!--         </div> -->
+
+<!--         <div class="row"> -->
+<!--           <div class="col-xs-12 col-sm-4"> -->
+<!--             <div class="form-group"> -->
+<!--               <label for="arrival-station">Arrival Station *</label> -->
+<!--               <select class="form-control" -->
+<!--                       id="arrival-station" -->
+<!--                       ng-change="updateArrivalTimeZone()" -->
+<!--                       ng-model="postTrip.arrStationId" -->
+<!--                       ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList" -->
+<!--                       ng-disabled="readOnly" -->
+<!--                       required="true"> -->
+<!--                 <option selected="selected" value>Select an Arrival Station</option> -->
+<!--               </select> -->
+<!--             </div> -->
+<!--           </div> -->
+
+<!--           <div class="col-xs-12 col-sm-4"> -->
+<!--             <div class="form-group"> -->
+<!--               <label>Arrival Time *</label> -->
+<!--               <input custom-validity -->
+<!--                      custom-pattern="time" -->
+<!--                      ng-model="postTrip.arrTime" -->
+<!--                      type="text" -->
+<!--                      class="form-control departure-time" -->
+<!--                      id="departure-time" -->
+<!--                      placeholder="23:34" -->
+<!--                      ng-readonly="readOnly"> -->
+<!--             </div> -->
+<!--           </div> -->
+
+<!--           <div class="col-xs-12 col-sm-4"> -->
+<!--             <div class="form-group"> -->
+<!--               <label>Arrival Time Zone *</label> -->
+<!--               <input type="text" class="form-control" -->
+<!--                      id="arrivalTimeZone" -->
+<!--                      placeholder="" -->
+<!--                      ng-model="arrivalTimezone" -->
+<!--                      disabled> -->
+<!--             </div> -->
+<!--           </div> -->
+
+<!--         </div> -->
+<!--         <div class="row"> -->
+
+<!--           <div class="col-xs-12 col-sm-4"> -->
+<!--             <div class="form-group"> -->
+<!--               <label>Passenger Count *</label> -->
+<!--               <input custom-validity -->
+<!--                      custom-pattern="numberUpToFiveChars" -->
+<!--                      required="true" -->
+<!--                      ng-model="postTrip.passengerCount" -->
+<!--                      type="text" -->
+<!--                      class="form-control passenger-count" -->
+<!--                      placeholder="123" -->
+<!--                      ng-readonly="readOnly"> -->
+<!--             </div> -->
+<!--           </div> -->
+
+<!--           <div class="col-xs-12 col-sm-4"> -->
+<!--             <div class="form-group"> -->
+<!--               <label for="tailNumber">Tail Number *</label> -->
+<!--               <select class="form-control" -->
+<!--                       id="tailNumber" -->
+<!--                       ng-model="postTrip.tailNumber" -->
+<!--                       ng-options="number.carrierNumber as number.carrierNumber for number in carrierNumbers" -->
+<!--                       ng-disabled="readOnly" -->
+<!--                       required="true"> -->
+<!--                 <option selected="selected" value>Select a Tail Number</option> -->
+<!--               </select> -->
+<!--             </div> -->
+<!--           </div> -->
+
+<!--           <div class="col-xs-12 col-sm-4 employee-id"> -->
+<!--             <div class="form-group"> -->
+<!--               <label>Employee ID's *</label> -->
+<!--               <ui-select multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly"> -->
+<!--                 <ui-select-match placeholder="Select Employee IDs from list">{{ $item.employeeIdentifier }}</ui-select-match> -->
+<!--                 <ui-select-choices repeat="employee in employees | filter: $select.search"> -->
+<!--                   {{employee.employeeIdentifier}} ({{ employee.lastName }}, {{ employee.firstName }}) -->
+<!--                 </ui-select-choices> -->
+<!--               </ui-select> -->
+<!--             </div> -->
+<!--           </div> -->
+          
+<!--         </div> -->
+<!--       </div> -->
+      
+      <div class="panel-footer text-right">
+        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+          <span class="fa fa-check-square-o" aria-hidden="true"></span>
+          <span class="hidden-xs">Save</span>
+        </button>
+        <a href="#" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+      </div>
+      
+    </div>
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Post Trip Data"></dynamic-left-nav>
