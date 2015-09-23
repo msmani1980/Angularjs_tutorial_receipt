@@ -1,5 +1,5 @@
 <div class="fluid-container">
-  <step-wizard steps="wizardSteps" save-trigger="saveAndExit()" prev-trigger="goToPreviousStep()"></step-wizard>
+  <step-wizard steps="wizardSteps" save-trigger="saveAndExit()" prev-trigger="goToPreviousStep()" save-button-text="saveButtonName"></step-wizard>
 
   <form-error-dialog></form-error-dialog>
 
@@ -48,7 +48,7 @@
                    disabled/>
           </td>
           <td>
-            <input type="text" id="templateQuantity-{{$index}}" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" ng-disabled="readOnly" maxlength="5">
+            <input type="text" id="templateQuantity-{{$index}}" custom-validity custom-pattern="number" required="true" class="form-control" ng-model="item.quantity" ng-disabled="readOnly" maxlength="5">
           </td>
           <td>
             <button type="button" ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
