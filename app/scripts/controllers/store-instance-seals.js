@@ -143,6 +143,18 @@ angular.module('ts5App')
       return this.formatExistingSeals(sealsList);
     };
 
+    this.getSealTypeObjectByName = function(name) {
+      return $scope.sealTypesList.filter(function(sealTypeObject) {
+        return sealTypeObject.name === name;
+      })[0];
+    };
+
+    this.getExistingSealByNumber = function(sealNumber) {
+      return $scope.existingSeals.filter(function(existingSeal) {
+        return existingSeal.sealNumbers[0] === sealNumber;
+      })[0];
+    };
+
     this.sealTypeListOrder = function(sealType) {
       switch (sealType.name) {
         case 'Outbound':
@@ -217,23 +229,95 @@ angular.module('ts5App')
       $location.url('/store-instance-dashboard');
     };
 
-    this.formatPayload = function(sealTypeObject) {
+    this.getExistingSealsByType = function(typeId) {
+      if(!$scope.existingSeals){
+        return;
+      }
+      var existingSealTypeObjects = $scope.existingSeals.filter(function(sealTypeObject) {
+        return sealTypeObject.type === typeId;
+      });
+      var existingSeals = [];
+      existingSealTypeObjects.forEach(function(sealTypeObject){
+        existingSeals.push(sealTypeObject.sealNumbers[0]);
+      });
+      return existingSeals;
+    };
+
+    this.diffExistingSeals = function(listToCheck, filter) {
+      return lodash.difference(listToCheck,filter);
+    };
+
+    this.determineSealsToCreate = function(sealTypeObject) {
+      var existingSeals = this.getExistingSealsByType(sealTypeObject.id);
+      var diff = this.diffExistingSeals(sealTypeObject.seals.numbers,existingSeals);
+      var newSeals = [];
+      for(var key in diff) {
+        var newSealNumber = diff[key];
+        newSeals.push(newSealNumber);
+      }
+      return newSeals;
+    };
+
+    this.determineSealsToDelete = function(sealTypeObject) {
+      var existingSeals = this.getExistingSealsByType(sealTypeObject.id);
+      var diff = this.diffExistingSeals(existingSeals,sealTypeObject.seals.numbers);
+      var sealsToDelete = [];
+      for(var key in diff) {
+        var sealNumber = diff[key];
+        sealsToDelete.push(sealNumber);
+      }
+      return sealsToDelete;
+    };
+
+    this.formatPayload = function(sealTypeObject,seals) {
       return {
         type: sealTypeObject.id,
         color: sealTypeObject.color,
-        sealNumbers: sealTypeObject.seals.numbers
+        sealNumbers: seals
       };
+    };
+
+    this.makeCreatePromise = function(sealTypeObject) {
+      var sealsToCreate = $this.determineSealsToCreate(sealTypeObject);
+      if(sealsToCreate.length === 0) {
+        return;
+      }
+      var payload = $this.formatPayload(sealTypeObject,sealsToCreate);
+      return storeInstanceAssignSealsFactory.createStoreInstanceSeal(
+        $routeParams.storeId,
+        payload
+      );
+    };
+
+
+    this.makeDeletePromise = function(sealTypeObject) {
+      var sealsToDelete = $this.determineSealsToDelete(sealTypeObject);
+      if(sealsToDelete.length === 0) {
+        return;
+      }
+      var deletePromises = [];
+      for(var key in sealsToDelete) {
+        var sealNumber = sealsToDelete[key];
+        var existingSeal = this.getExistingSealByNumber(sealNumber);
+        deletePromises.push(storeInstanceAssignSealsFactory.deleteStoreInstanceSeal(
+          existingSeal.id,
+          $routeParams.storeId
+        ));
+      }
+      return deletePromises;
     };
 
     this.makeAssignSealsPromises = function() {
       var promises = [];
       angular.forEach($scope.sealTypesList, function(sealTypeObject) {
-        var payload = $this.formatPayload(sealTypeObject);
-        var promise = storeInstanceAssignSealsFactory.createStoreInstanceSeal(
-          $routeParams.storeId,
-          payload
-        );
-        promises.push(promise);
+        var createPromise = $this.makeCreatePromise(sealTypeObject);
+        if(createPromise) {
+          promises.push(createPromise);
+        }
+        var deletePromises = $this.makeDeletePromise(sealTypeObject);
+        if(deletePromises) {
+          promises = promises.concat(deletePromises);
+        }
       });
       return promises;
     };
@@ -287,12 +371,6 @@ angular.module('ts5App')
     this.init = function() {
       this.getSealTypesDependencies();
       this.setWizardSteps();
-    };
-
-    this.getSealTypeObjectByName = function(name) {
-      return $scope.sealTypesList.filter(function(sealTypeObject) {
-        return sealTypeObject.name === name;
-      })[0];
     };
 
     this.init();

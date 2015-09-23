@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: storeInstanceFactory', function () {
+describe('Service: storeInstanceFactory', function() {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -41,9 +41,10 @@ describe('Service: storeInstanceFactory', function () {
 
   var scope;
 
-  beforeEach(inject(function (_servedStoreInstance_, _storeInstanceFactory_, $injector, $q, $rootScope) {
+  beforeEach(inject(function(_servedStoreInstance_, _storeInstanceFactory_, $injector, $q, $rootScope) {
 
-    inject(function (_servedStoreInstance_, _servedStore_, _servedCarrierNumber_, _servedStation_, _servedStoreStatus_, _servedMenuMasterList_) {
+    inject(function(_servedStoreInstance_, _servedStore_, _servedCarrierNumber_, _servedStation_,
+      _servedStoreStatus_, _servedMenuMasterList_) {
       servedStoreInstanceJSON = _servedStoreInstance_;
       servedStoreJSON = _servedStore_;
       servedCarrierNumberJSON = _servedCarrierNumber_;
@@ -111,15 +112,15 @@ describe('Service: storeInstanceFactory', function () {
 
   }));
 
-  describe('storesService calls', function () {
-    it('should call getStoresList', function () {
+  describe('storesService calls', function() {
+    it('should call getStoresList', function() {
       storeInstanceFactory.getStoresList();
       expect(storesService.getStoresList).toHaveBeenCalled();
     });
   });
 
-  describe('menuMasterService calls', function () {
-    it('should call getMenuMasterList', function () {
+  describe('menuMasterService calls', function() {
+    it('should call getMenuMasterList', function() {
       var query = {
         startDate: '09102015'
       };
@@ -128,177 +129,185 @@ describe('Service: storeInstanceFactory', function () {
     });
   });
 
-  describe('itemsService calls', function () {
-    it('should call getItemsList with fetchMasterFlag set to true', function () {
-      var mockPayload = {foo: 'bars'};
+  describe('itemsService calls', function() {
+    it('should call getItemsList with fetchMasterFlag set to true', function() {
+      var mockPayload = {
+        foo: 'bars'
+      };
       storeInstanceFactory.getItemsMasterList(mockPayload);
       expect(itemsService.getItemsList).toHaveBeenCalledWith(mockPayload, true);
     });
   });
 
-  describe('storeInstanceService calls', function () {
+  describe('storeInstanceService calls', function() {
     var id = 123;
     var itemId = 345;
-    var mockPayload = {foo: 'bars'};
-    it('should call getStoreInstancesList', function () {
+    var mockPayload = {
+      foo: 'bars'
+    };
+    it('should call getStoreInstancesList', function() {
       storeInstanceFactory.getStoreInstancesList(mockPayload);
       expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(mockPayload);
     });
-    it('should call getStoreInstance', function () {
+    it('should call getStoreInstance', function() {
       storeInstanceFactory.getStoreInstance(id);
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(id);
     });
-    it('should call createStoreInstance', function () {
+    it('should call createStoreInstance', function() {
       storeInstanceFactory.createStoreInstance(mockPayload);
       expect(storeInstanceService.createStoreInstance).toHaveBeenCalledWith(mockPayload);
     });
-    it('should call updateStoreInstance', function () {
+    it('should call updateStoreInstance', function() {
       storeInstanceFactory.updateStoreInstance(id, mockPayload);
       expect(storeInstanceService.updateStoreInstance).toHaveBeenCalledWith(id, mockPayload);
     });
-    it('should call deleteStoreInstance', function () {
+    it('should call deleteStoreInstance', function() {
       storeInstanceFactory.deleteStoreInstance(id);
       expect(storeInstanceService.deleteStoreInstance).toHaveBeenCalledWith(id);
     });
-    it('should call getStoreInstanceMenuItems', function () {
+    it('should call getStoreInstanceMenuItems', function() {
       storeInstanceFactory.getStoreInstanceMenuItems(id, mockPayload);
       expect(storeInstanceService.getStoreInstanceMenuItems).toHaveBeenCalledWith(id, mockPayload);
     });
-    it('should call getStoreInstanceItemList', function () {
+    it('should call getStoreInstanceItemList', function() {
       storeInstanceFactory.getStoreInstanceItemList(id, mockPayload);
       expect(storeInstanceService.getStoreInstanceItemList).toHaveBeenCalledWith(id, mockPayload);
     });
-    it('should call getStoreInstanceItem', function () {
+    it('should call getStoreInstanceItem', function() {
       storeInstanceFactory.getStoreInstanceItem(id, itemId);
       expect(storeInstanceService.getStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
     });
-    it('should call createStoreInstanceItem', function () {
+    it('should call createStoreInstanceItem', function() {
       storeInstanceFactory.createStoreInstanceItem(id, mockPayload);
       expect(storeInstanceService.createStoreInstanceItem).toHaveBeenCalledWith(id, mockPayload);
     });
-    it('should call updateStoreInstanceItem', function () {
+    it('should call updateStoreInstanceItem', function() {
       storeInstanceFactory.updateStoreInstanceItem(id, itemId, mockPayload);
       expect(storeInstanceService.updateStoreInstanceItem).toHaveBeenCalledWith(id, itemId, mockPayload);
     });
-    it('should call updateStoreInstanceItemsBulk', function () {
+    it('should call updateStoreInstanceItemsBulk', function() {
       storeInstanceFactory.updateStoreInstanceItemsBulk(id, mockPayload);
       expect(storeInstanceService.updateStoreInstanceItemsBulk).toHaveBeenCalledWith(id, mockPayload);
     });
-    it('should call deleteStoreInstanceItem', function () {
+    it('should call deleteStoreInstanceItem', function() {
       storeInstanceFactory.deleteStoreInstanceItem(id, itemId);
       expect(storeInstanceService.deleteStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
     });
 
-    it('should call updateStoreInstanceStatus', function () {
+    it('should call updateStoreInstanceStatus', function() {
       var statusId = 1;
       storeInstanceFactory.updateStoreInstanceStatus(id, statusId);
       expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalledWith(id, statusId);
     });
   });
 
-  describe('GlobalMenuService calls', function () {
-    it('should get company', function () {
+  describe('GlobalMenuService calls', function() {
+    it('should get company', function() {
       storeInstanceFactory.getCompanyId();
       expect(GlobalMenuService.company.get).toHaveBeenCalled();
     });
   });
 
-  describe('catererStationService calls', function () {
-    it('should call getStation', function () {
+  describe('catererStationService calls', function() {
+    it('should call getStation', function() {
       storeInstanceFactory.getCatererStationList();
       expect(catererStationService.getCatererStationList).toHaveBeenCalled();
     });
   });
 
-  describe('schedulesService calls', function () {
-    it('should call getSchedules', function () {
+  describe('schedulesService calls', function() {
+    it('should call getSchedules', function() {
       storeInstanceFactory.getSchedules(companyId);
       expect(schedulesService.getSchedules).toHaveBeenCalledWith(companyId);
     });
   });
 
-  describe('carrierService calls', function () {
-    it('should call getCarrierNumbers', function () {
+  describe('carrierService calls', function() {
+    it('should call getCarrierNumbers', function() {
       var carrierTypeId = 1;
       storeInstanceFactory.getCarrierNumbers(companyId, 1);
       expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId);
     });
-    it('should call getAllCarrierNumbers', function () {
+    it('should call getAllCarrierNumbers', function() {
       var carrierTypeId = 0;
       storeInstanceFactory.getAllCarrierNumbers(companyId);
       expect(carrierService.getCarrierNumbers).toHaveBeenCalledWith(companyId, carrierTypeId);
     });
   });
 
-  describe('getStoreDetails', function () {
+  describe('getStoreDetails', function() {
     var storeId;
     var storeDetails;
-    beforeEach(function () {
+    beforeEach(function() {
       storeId = 1;
-      storeInstanceFactory.getStoreDetails(storeId).then(function(dataFromAPI){
+      storeInstanceFactory.getStoreDetails(storeId).then(function(dataFromAPI) {
         storeDetails = dataFromAPI;
       });
       scope.$digest();
     });
 
-    it('should GET store details from storesService', function () {
+    it('should GET store details from storesService', function() {
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(storeId);
     });
 
-    it('should GET store instance number from storesService', function () {
+    it('should GET store instance number from storesService', function() {
       expect(storesService.getStore).toHaveBeenCalled();
     });
 
-    it('should GET tail number from carrierService', function () {
+    it('should GET tail number from carrierService', function() {
       expect(carrierService.getCarrierNumber).toHaveBeenCalled();
     });
 
-    it('should GET CatererStation from stationsService', function () {
+    it('should GET CatererStation from stationsService', function() {
       expect(stationsService.getStation).toHaveBeenCalled();
     });
 
-    it('should GET MenuMasterList from menuMasterService', function () {
+    it('should GET MenuMasterList from menuMasterService', function() {
       expect(menuMasterService.getMenuMasterList).toHaveBeenCalled();
     });
 
-    describe('formatResponseCollection', function () {
-      it('should return JSON object', function () {
+    describe('formatResponseCollection', function() {
+      it('should return JSON object', function() {
         expect(typeof storeDetails).toBe('object');
       });
 
-      it('should contain LMP station name', function () {
+      it('should contain LMP station name', function() {
         expect(storeDetails.LMPStation).toBeDefined();
       });
 
-      it('should contain scheduleDate', function () {
+      it('should contain scheduleDate', function() {
         expect(storeDetails.scheduleDate).toBeDefined();
       });
 
-      it('should contain scheduleNumber', function () {
+      it('should properly format scheduleDate', function() {
+        expect(storeDetails.scheduleDate).toBe('09/30/2015');
+      });
+
+      it('should contain scheduleNumber', function() {
         expect(storeDetails.scheduleNumber).toBeDefined();
       });
 
-      it('should contain tail number if id is defined', function () {
+      it('should contain tail number if id is defined', function() {
         expect(storeDetails.carrierNumber).toBeDefined();
       });
 
-      it('should contain store number', function () {
+      it('should contain store number', function() {
         expect(storeDetails.storeNumber).toBeDefined();
       });
 
-      it('should contain current status object', function () {
+      it('should contain current status object', function() {
         expect(storeDetails.currentStatus).toBeDefined();
       });
 
-      it('should contain a menuList array', function () {
+      it('should contain a menuList array', function() {
         expect(storeDetails.menuList).toBeDefined();
       });
     });
 
   });
 
-  describe('recordsService calls', function () {
-    it('should call getStoreStatus', function () {
+  describe('recordsService calls', function() {
+    it('should call getStoreStatus', function() {
       storeInstanceFactory.getStoreStatusList();
       expect(recordsService.getStoreStatusList).toHaveBeenCalled();
     });

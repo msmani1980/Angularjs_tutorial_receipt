@@ -21,6 +21,7 @@ describe('Service: storeInstanceAssignSealsFactory', function () {
     spyOn(sealTypesService, 'getSealTypes');
     spyOn(storeInstanceSealService, 'updateStoreInstanceSeal');
     spyOn(storeInstanceSealService, 'createStoreInstanceSeal');
+    spyOn(storeInstanceSealService, 'deleteStoreInstanceSeal');
   }));
 
   describe('storeInstanceSealService API calls', function(){
@@ -45,7 +46,13 @@ describe('Service: storeInstanceAssignSealsFactory', function () {
       storeInstanceAssignSealsFactory.createStoreInstanceSeal(mockStoreInstanceId, mockPayload);
       expect(storeInstanceSealService.createStoreInstanceSeal).toHaveBeenCalledWith(mockStoreInstanceId, mockPayload);
     });
-  });
+    it('should call deleteStoreInstanceSeal', function(){
+      var storeInstanceId = 66;
+      var sealId = 15;
+      storeInstanceAssignSealsFactory.deleteStoreInstanceSeal(sealId, storeInstanceId);
+      expect(storeInstanceSealService.deleteStoreInstanceSeal).toHaveBeenCalledWith(sealId, storeInstanceId);
+    });
+  }); 
 
   describe('sealColorsService API calls', function(){
     it('should call getSealColors', function(){
