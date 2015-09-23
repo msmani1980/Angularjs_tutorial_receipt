@@ -126,7 +126,7 @@ angular.module('ts5App')
 
     this.formatExistingSeals = function(sealsList) {
       var formattedSeals = [];
-      for(var key in sealsList) {
+      for (var key in sealsList) {
         var seal = sealsList[key];
         formattedSeals.push(seal.sealNumbers[0]);
       }
@@ -134,7 +134,7 @@ angular.module('ts5App')
     };
 
     this.getExistingSeals = function(typeId) {
-      if(!$scope.existingSeals) {
+      if (!$scope.existingSeals) {
         return [];
       }
       var sealsList = $scope.existingSeals.filter(function(sealType) {
@@ -169,7 +169,7 @@ angular.module('ts5App')
     };
 
     this.generateSealTypeObject = function(sealType) {
-        var sealColor = $this.getSealColor(sealType.id);
+      var sealColor = $this.getSealColor(sealType.id);
       return {
         id: sealType.id,
         name: sealType.name,
@@ -193,7 +193,7 @@ angular.module('ts5App')
     };
 
     this.getSealTypesDependencies = function() {
-      this.displayLoadingModal('Loading the Store Instance');
+      this.displayLoadingModal('Loading Assign Seals');
       var promises = this.makePromises();
       $q.all(promises).then($this.generateSealTypesList);
     };
@@ -230,28 +230,28 @@ angular.module('ts5App')
     };
 
     this.getExistingSealsByType = function(typeId) {
-      if(!$scope.existingSeals){
+      if (!$scope.existingSeals) {
         return;
       }
       var existingSealTypeObjects = $scope.existingSeals.filter(function(sealTypeObject) {
         return sealTypeObject.type === typeId;
       });
       var existingSeals = [];
-      existingSealTypeObjects.forEach(function(sealTypeObject){
+      existingSealTypeObjects.forEach(function(sealTypeObject) {
         existingSeals.push(sealTypeObject.sealNumbers[0]);
       });
       return existingSeals;
     };
 
     this.diffExistingSeals = function(listToCheck, filter) {
-      return lodash.difference(listToCheck,filter);
+      return lodash.difference(listToCheck, filter);
     };
 
     this.determineSealsToCreate = function(sealTypeObject) {
       var existingSeals = this.getExistingSealsByType(sealTypeObject.id);
-      var diff = this.diffExistingSeals(sealTypeObject.seals.numbers,existingSeals);
+      var diff = this.diffExistingSeals(sealTypeObject.seals.numbers, existingSeals);
       var newSeals = [];
-      for(var key in diff) {
+      for (var key in diff) {
         var newSealNumber = diff[key];
         newSeals.push(newSealNumber);
       }
@@ -260,16 +260,16 @@ angular.module('ts5App')
 
     this.determineSealsToDelete = function(sealTypeObject) {
       var existingSeals = this.getExistingSealsByType(sealTypeObject.id);
-      var diff = this.diffExistingSeals(existingSeals,sealTypeObject.seals.numbers);
+      var diff = this.diffExistingSeals(existingSeals, sealTypeObject.seals.numbers);
       var sealsToDelete = [];
-      for(var key in diff) {
+      for (var key in diff) {
         var sealNumber = diff[key];
         sealsToDelete.push(sealNumber);
       }
       return sealsToDelete;
     };
 
-    this.formatPayload = function(sealTypeObject,seals) {
+    this.formatPayload = function(sealTypeObject, seals) {
       return {
         type: sealTypeObject.id,
         color: sealTypeObject.color,
@@ -279,10 +279,10 @@ angular.module('ts5App')
 
     this.makeCreatePromise = function(sealTypeObject) {
       var sealsToCreate = $this.determineSealsToCreate(sealTypeObject);
-      if(sealsToCreate.length === 0) {
+      if (sealsToCreate.length === 0) {
         return;
       }
-      var payload = $this.formatPayload(sealTypeObject,sealsToCreate);
+      var payload = $this.formatPayload(sealTypeObject, sealsToCreate);
       return storeInstanceAssignSealsFactory.createStoreInstanceSeal(
         $routeParams.storeId,
         payload
@@ -292,11 +292,11 @@ angular.module('ts5App')
 
     this.makeDeletePromise = function(sealTypeObject) {
       var sealsToDelete = $this.determineSealsToDelete(sealTypeObject);
-      if(sealsToDelete.length === 0) {
+      if (sealsToDelete.length === 0) {
         return;
       }
       var deletePromises = [];
-      for(var key in sealsToDelete) {
+      for (var key in sealsToDelete) {
         var sealNumber = sealsToDelete[key];
         var existingSeal = this.getExistingSealByNumber(sealNumber);
         deletePromises.push(storeInstanceAssignSealsFactory.deleteStoreInstanceSeal(
@@ -311,11 +311,11 @@ angular.module('ts5App')
       var promises = [];
       angular.forEach($scope.sealTypesList, function(sealTypeObject) {
         var createPromise = $this.makeCreatePromise(sealTypeObject);
-        if(createPromise) {
+        if (createPromise) {
           promises.push(createPromise);
         }
         var deletePromises = $this.makeDeletePromise(sealTypeObject);
-        if(deletePromises) {
+        if (deletePromises) {
           promises = promises.concat(deletePromises);
         }
       });
