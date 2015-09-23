@@ -109,6 +109,14 @@ angular.module('ts5App').service('storeInstanceFactory',
       return recordsService.getStoreStatusList();
     }
 
+    function getItemTypes() {
+      return recordsService.getItemTypes();
+    }
+
+    function getCharacteristics() {
+      return recordsService.getCharacteristics();
+    }
+
     function getDependenciesForStoreInstance(dataFromAPI) {
       var responseData = angular.copy(dataFromAPI);
       var dependenciesArray = [];
@@ -197,7 +205,9 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStore: getStore,
       getStoreDetails: getStoreDetails,
       getStoreStatusList: getStoreStatusList,
-      updateStoreInstanceStatus: updateStoreInstanceStatus
+      updateStoreInstanceStatus: updateStoreInstanceStatus,
+      getItemTypes: getItemTypes,
+      getCharacteristics: getCharacteristics
     };
 
   });

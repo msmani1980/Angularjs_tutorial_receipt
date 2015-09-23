@@ -109,6 +109,8 @@ describe('Service: storeInstanceFactory', function() {
     spyOn(storesService, 'getStoresList');
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
     spyOn(recordsService, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise);
+    spyOn(recordsService, 'getItemTypes');
+    spyOn(recordsService, 'getCharacteristics');
 
   }));
 
@@ -310,6 +312,14 @@ describe('Service: storeInstanceFactory', function() {
     it('should call getStoreStatus', function() {
       storeInstanceFactory.getStoreStatusList();
       expect(recordsService.getStoreStatusList).toHaveBeenCalled();
+    });
+    it('should call getItemTypes', function() {
+      storeInstanceFactory.getItemTypes();
+      expect(recordsService.getItemTypes).toHaveBeenCalled();
+    });
+    it('should call getCharacteristics', function() {
+      storeInstanceFactory.getCharacteristics();
+      expect(recordsService.getCharacteristics).toHaveBeenCalled();
     });
   });
 
