@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location) {
+  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q) {
     var $this = this;
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
@@ -111,16 +111,40 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.mergeMenuItems(menuItems);
     }
 
+
+    this.getIdByNameFromArray = function (name, array) {
+      var matchedObject = lodash.findWhere(array, {name: name});
+      if (matchedObject) {
+        return matchedObject.id;
+      }
+      return '';
+    };
+
     this.getStoreInstanceItems = function () {
       storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler, showErrors);
     };
 
-    this.getStoreInstanceMenuItems = function () {
-      var payload = {
-        itemTypeId: 1,
+    this.setMenuFiltersAndGetMenuItems = function (responseArray) {
+      var filters = {
         date: $scope.storeDetails.scheduleDate
       };
-      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler, showErrors);
+      filters.itemTypeId = $this.getIdByNameFromArray('Regular', responseArray[0]);
+      if(responseArray.length > 1) {
+        filters.charactersticId = $this.getIdByNameFromArray('Upliftable', responseArray[1]);
+      }
+      storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, filters).then(getItemsSuccessHandler, showErrors);
+    };
+
+    this.getStoreInstanceMenuItems = function () {
+      var dependenciesArrayForMenuFilters = [];
+      dependenciesArrayForMenuFilters.push(storeInstanceFactory.getItemTypes());
+      if($routeParams.action === 'replenish') {
+        dependenciesArrayForMenuFilters.push(storeInstanceFactory.getCharacteristics());
+      }
+
+      $q.all(dependenciesArrayForMenuFilters).then(function (response) {
+        $this.setMenuFiltersAndGetMenuItems(response);
+      }, showErrors);
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
