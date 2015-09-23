@@ -168,23 +168,21 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     });
 
     describe('goToWizardStep scope function', function () {
-      it('should set wizardStepToIndex to whatever value is passed in and call stepWizardPrevTrigger', function () {
+      it('should set wizardStepToIndex to whatever value is passed in and call updateStatus', function () {
         spyOn(scope, 'stepWizardPrevTrigger');
         var newI = 4;
         scope.goToWizardStep(newI);
         expect(scope.wizardStepToIndex).toBe(newI);
-        expect(scope.stepWizardPrevTrigger).toHaveBeenCalled();
+        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, newI.toString());
       });
     });
 
     describe('loseDataAlertConfirmTrigger scope function', function () {
-      it('should call location URI with wizard URI', function () {
+      it('should update status wit wizardStep', function () {
         var mockIndex = 2;
         scope.wizardStepToIndex = mockIndex;
-        var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.storeId);
-        var mockUri = wizardSteps[mockIndex].uri;
         scope.loseDataAlertConfirmTrigger();
-        expect(location.url).toHaveBeenCalledWith(mockUri);
+        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, mockIndex.toString());
       });
     });
 
@@ -193,7 +191,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '4');
         scope.$apply();
-        expect(location.url).toHaveBeenCalledWith('/store-dispatch-dashboard');
+        expect(location.url).toHaveBeenCalledWith('/store-instance-dashboard');
       });
     });
 
@@ -207,6 +205,14 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     }));
     it('should set actionNotAllowed to true if not on ready to dispatch status', function () {
       expect(scope.actionNotAllowed).toBe(true);
+    });
+  });
+
+  describe('scope.exit', function () {
+    it('should redirect to store instance dashboard', function () {
+      scope.exit();
+      scope.$apply();
+      expect(location.url).toHaveBeenCalledWith('/store-instance-dashboard');
     });
   });
 
