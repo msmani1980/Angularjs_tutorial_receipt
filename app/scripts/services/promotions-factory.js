@@ -24,7 +24,7 @@ angular.module('ts5App')
       return recordsService.getDiscountTypes();
     }
 
-    function getStationList(companyId){
+    function getStationList(companyId){ /* TODO - not sure if needed? */
       return stationsService.getStationList(companyId);
     }
 
@@ -44,7 +44,7 @@ angular.module('ts5App')
       return salesCategoriesService.getSalesCategoriesList(payload);
     }
 
-    function getCompanyGlobalCurrencies(payload){
+    function getCompanyGlobalCurrencies(payload){ /* TODO - not sure if needed? */
       return currenciesService.getCompanyGlobalCurrencies(payload);
     }
 

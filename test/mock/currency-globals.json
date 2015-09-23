@@ -1,0 +1,14 @@
+[
+  {
+    "code": "GBP",
+    "companyId": 403,
+    "id": 8,
+    "name": "British Pound"
+  },
+  {
+    "code": "EUR",
+    "companyId": 403,
+    "id": 9,
+    "name": "Euro"
+  }
+]

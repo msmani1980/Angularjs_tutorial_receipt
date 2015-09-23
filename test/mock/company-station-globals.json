@@ -1,0 +1,26 @@
+[
+  {
+    "code": "ORD",
+    "companyId": 403,
+    "id": 1,
+    "name": "Chicago O-hare"
+  },
+  {
+    "code": "MDW",
+    "companyId": 403,
+    "id": 2,
+    "name": "Chicago Midway"
+  },
+  {
+    "code": "LON3",
+    "companyId": 403,
+    "id": 3,
+    "name": "London"
+  },
+  {
+    "code": "SAN",
+    "companyId": 403,
+    "id": 4,
+    "name": "San Jose"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "companyDiscountRestrictions": false,
+    "companyId": 403,
+    "discountTypeId": 1,
+    "discountTypeName": "Coupon",
+    "endDate": "2050-12-31",
+    "id": 102,
+    "name": "10% off",
+    "rateTypeId": 1,
+    "rateTypeName": "Percentage",
+    "startDate": "2015-05-09"
+  }
+]

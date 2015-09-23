@@ -8,11 +8,13 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function ($scope, $routeParams) {
+  .controller('PromotionsCtrl', function ($scope, $routeParams, $q, $filter, $location, promotionsFactory, ngToast, dateUtility) {
 
-    $scope.readOnly = ($routeParams.state === 'view');
+    $scope.readOnly = true;
     $scope.viewName = 'Create Promotion';
     $scope.activeBtn = 'promotion-information';
+    $scope.selectOptions = {};
+
 
     $scope.promotion = {};
     // Promotion general
@@ -210,6 +212,8 @@ angular.module('ts5App')
       }
     ];
 
+
+    /* TODO - Mock data, will remove after API calls are validated.
     // Currency array
     $scope.companyCurrencyGlobals = [
       {
@@ -227,7 +231,7 @@ angular.module('ts5App')
     ];
 
     // UI Select options
-    $scope.selectOptions = {};
+
     $scope.selectOptions.promotionTypes = [
       {id:1, name:'Product Purchase'},
       {id:2, name:'Spend Limit'}
@@ -399,7 +403,239 @@ angular.module('ts5App')
         name: 'San Jose'
       }
     ];
+*/
+    // private controller vars
+    var _companyId = promotionsFactory.getCompanyId();
+    var _initPromises = [];
+    var _todaysDateFormattedForAPI = dateUtility.nowFormatted('YYYYMMDD');
+    // var _currenciesGlobal = null;
+    var states = {};
+    states.createInit = function(){
+      getPromotionMetaData();
+    };
+    // private controller functions
+    function showMessage(message, messageType) {
+      ngToast.create({className: messageType, dismissButton: true, content: '<strong>Promotion</strong>: ' + message});
+    }
 
+    function displayLoadingModal(loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText || 'Loading');
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    function showResponseErrors(response) {
+      if ('data' in response) {
+        angular.forEach(response.data, function (error) {
+          this.push(error);
+        }, $scope.formErrors);
+      }
+      $scope.displayError = true;
+      hideLoadingModal();
+    }
+
+    function throwError(field, message){
+      if(!message){
+        message = 'Action not allowed';
+      }
+      var error = {
+        data: [{
+          field: field,
+          value: message
+        }]
+      };
+      showResponseErrors(error);
+    }
+
+    function setBenefitTypes(dataFromAPI){
+      $scope.selectOptions.benefitTypes = dataFromAPI;
+    }
+
+    function getBenefitTypes(){
+      _initPromises.push(
+        promotionsFactory.getBenefitTypes().then(setBenefitTypes)
+      );
+    }
+
+    function setDiscountTypes(dataFromAPI){
+      $scope.selectOptions.discountTypes = dataFromAPI;
+    }
+
+    function getDiscountTypes(){
+      _initPromises.push(
+        promotionsFactory.getDiscountTypes().then(setDiscountTypes)
+      );
+    }
+    /* TODO - below needed? May be able to remove this API call.
+    function setStationList(dataFromAPI){
+      $scope.selectOptions.companyStationGlobals = dataFromAPI.response;
+    }
+
+    function getStationList(){
+      _initPromises.push(
+        promotionsFactory.getStationList(_companyId).then(setStationList)
+      );
+    }
+    */
+
+    function setPromotionTypes(dataFromAPI){
+      $scope.selectOptions.promotionTypes = dataFromAPI;
+    }
+
+    function getPromotionTypes(){
+      _initPromises.push(
+        promotionsFactory.getPromotionTypes().then(setPromotionTypes)
+      );
+    }
+
+    function setCompanyDiscountsCoupon(dataFromAPI){
+      $scope.selectOptions.companyDiscountsCoupon = dataFromAPI.companyDiscounts;
+    }
+
+    function getCompanyDiscountsCoupon(){
+      _initPromises.push(
+        promotionsFactory.getPromotionTypes({
+          discountTypeId: 1,
+          startDate: _todaysDateFormattedForAPI
+        }).then(setCompanyDiscountsCoupon)
+      );
+    }
+
+    function setCompanyDiscountsVoucher(dataFromAPI){
+      $scope.selectOptions.companyDiscountsVoucher = dataFromAPI.companyDiscounts;
+    }
+
+    function getCompanyDiscountsVoucher(){
+      _initPromises.push(
+        promotionsFactory.getPromotionTypes({
+          discountTypeId: 4,
+          startDate: _todaysDateFormattedForAPI
+        }).then(setCompanyDiscountsVoucher)
+      );
+    }
+
+    function setSalesCategories(dataFromAPI){
+      $scope.selectOptions.salesCategories = dataFromAPI.salesCategories;
+    }
+
+    function getSalesCategories(){
+      _initPromises.push(
+        promotionsFactory.getSalesCategories().then(setSalesCategories)
+      );
+    }
+
+    /* TODO below needed?, May be able to remove below API call. */
+    /*
+    function setCompanyGlobalCurrencies(dataFromAPI){
+      _currenciesGlobal = dataFromAPI.response;
+      // console.log($filter('filter')(_currenciesGlobal, {decimalPrecision:'!2'}));
+      // TODO - maybe its used for client-side validation of decimalPrecision, angular custom-validity only supports 4 decimal place validation?
+    }
+
+    function getCompanyGlobalCurrencies(){
+      _initPromises.push(
+        promotionsFactory.getCompanyGlobalCurrencies().then(setCompanyGlobalCurrencies)
+      );
+    }
+    /**/
+
+    function setDiscountApplyTypes(dataFromAPI){
+      $scope.selectOptions.discountApplyTypes = dataFromAPI;
+    }
+
+    function getDiscountApplyTypes(){
+      _initPromises.push(
+        promotionsFactory.getDiscountApplyTypes().then(setDiscountApplyTypes)
+      );
+    }
+
+    function setPromotionCategories(dataFromAPI){
+      $scope.selectOptions.promotionCategories = dataFromAPI.companyPromotionCategories;
+    }
+
+    function getPromotionCategories(){
+      _initPromises.push(
+        promotionsFactory.getPromotionCategories().then(setPromotionCategories)
+      );
+    }
+
+    function setStationGlobals(dataFromAPI){
+      $scope.selectOptions.companyStationGlobals = dataFromAPI.response;
+    }
+
+    function getStationGlobals(){
+      _initPromises.push(
+        promotionsFactory.getStationGlobals().then(setStationGlobals)
+      );
+    }
+
+    function setCurrencyGlobals(dataFromAPI){
+      $scope.companyCurrencyGlobals = dataFromAPI.response;
+    }
+
+    function getCurrencyGlobals(){
+      _initPromises.push(
+        promotionsFactory.getCurrencyGlobals({isOperatedCurrency:true}).then(setCurrencyGlobals)
+      );
+    }
+
+    function setMasterItems(dataFromAPI){
+      $scope.selectOptions.masterItems = dataFromAPI.masterItems;
+    }
+
+    function getMasterItems(){
+      _initPromises.push(
+        promotionsFactory.getMasterItems({companyId:_companyId}).then(setMasterItems)
+      );
+    }
+
+    function initPromisesResolved(){
+      hideLoadingModal();
+      $scope.readOnly = ($routeParams.state === 'view');
+    }
+
+    function resolveInitPromises(){
+      $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
+    }
+
+    function getPromotionMetaData(){
+      displayLoadingModal();
+      getBenefitTypes();
+      getDiscountTypes();
+      // getStationList(); .. TODO - is this needed?
+      getPromotionTypes();
+      getCompanyDiscountsCoupon();
+      getCompanyDiscountsVoucher();
+      getSalesCategories();
+      // getCompanyGlobalCurrencies(); // TODO - is this needed?
+      getDiscountApplyTypes();
+      getPromotionCategories();
+      getStationGlobals();
+      getCurrencyGlobals();
+      getMasterItems();
+      resolveInitPromises();
+    }
+
+    function init(){
+      console.log('jere');
+      $scope.displayError = false;
+      $scope.formErrors = [];
+
+      var initState = $routeParams.state + 'Init';
+      if (states[initState]) {
+        states[initState]();
+      } else {
+        throwError('routeParams.action');
+      }
+
+      //
+
+    }
+    init();
+
+    // Scope functions
     $scope.addBlankObjectToArray = function(_array){
       _array.push({});
     };
@@ -407,7 +643,6 @@ angular.module('ts5App')
     $scope.removeFromArrayByIndex = function(_array, $index){
       _array.splice($index, 1);
     };
-
 
     $scope.promotionCategoryQtyRequired = function(promotionCategoryData){
       return angular.isDefined(promotionCategoryData.promotionCategory);
