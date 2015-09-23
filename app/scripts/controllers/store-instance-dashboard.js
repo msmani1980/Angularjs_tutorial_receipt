@@ -162,6 +162,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
     }
 
+    function dispatchStoreInstance(storeId) {
+      return storeInstanceDashboardFactory.updateStoreInstanceStatus(storeId, '4');
+    }
+
     function getCatererStationListSuccess(dataFromAPI) {
       $scope.catererStationList = angular.copy(dataFromAPI.response);
     }
@@ -204,7 +208,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function init() {
       showLoadingModal('Loading Store Instance Dashboard');
-
+      $scope.allCheckboxesSelected = false;
       var dependenciesArray = [];
       dependenciesArray.push(getCatererStationList());
       dependenciesArray.push(getStationList());
@@ -217,6 +221,17 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         hideLoadingModal();
       });
     }
+
+    $scope.bulkDispatch = function () {
+      var bulkDispatchDependencies = [];
+      angular.forEach($scope.storeInstanceList, function (store) {
+        if(store.selected && $scope.doesStoreInstanceContainAction(store, 'Dispatch')) {
+          bulkDispatchDependencies.push(dispatchStoreInstance(store.id));
+        }
+      });
+
+      $q.all(bulkDispatchDependencies).then(init());
+    };
 
     init();
 
