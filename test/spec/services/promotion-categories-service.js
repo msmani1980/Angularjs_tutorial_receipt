@@ -21,7 +21,7 @@ describe('Service: promotionCategoriesService', function () {
   describe('getPromotionCategories', function(){
     it('should make a GET request', function(){
       var expectUri = /promotion-categories$/;
-      httpBackend.expectGET(expectUri).respond(200, []);
+      httpBackend.expectGET(expectUri).respond(200, {});
       promotionCategoriesService.getPromotionCategories().then(function (response) {
         expect(response).toBeDefined();
       });

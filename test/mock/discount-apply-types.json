@@ -1,6 +1,1 @@
-[
-  {"id": 1, "name": "Cart"},
-  {"id": 2, "name": "Promotion Qualifier"},
-  {"id": 3, "name": "Promotion Category"},
-  {"id": 4, "name": "Retail Item"}
-]
+[{"id":1,"name":"Cart"},{"id":2,"name":"Promotion Qualifier"},{"id":3,"name":"Promotion Category"},{"id":4,"name":"Retail Item"}]

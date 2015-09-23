@@ -1,13 +1,1 @@
-[
-  {
-    "companyDiscountRestrictions": false,
-    "companyId": 403,
-    "discountTypeId": 4,
-    "discountTypeName": "Voucher",
-    "endDate": "2015-12-31",
-    "id": 109,
-    "name": "Executive discount - Autumn edition",
-    "rateTypeId": 1,
-    "rateTypeName": "Percentage"
-  }
-]
+{"companyDiscounts":[{"id":109,"companyId":403,"discountTypeId":4,"discountTypeName":"Voucher","name":"Executive discount - Autumn edition","rateTypeId":1,"rateTypeName":"Percentage","companyDiscountRestrictions":false,"startDate":"2015-09-01","endDate":"2015-12-31"}],"meta":{"count":1,"limit":1,"start":0}}

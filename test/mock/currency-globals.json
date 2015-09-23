@@ -1,14 +1,1 @@
-[
-  {
-    "code": "GBP",
-    "companyId": 403,
-    "id": 8,
-    "name": "British Pound"
-  },
-  {
-    "code": "EUR",
-    "companyId": 403,
-    "id": 9,
-    "name": "Euro"
-  }
-]
+{"response":[{"id":8,"companyId":403,"code":"GBP","name":"British Pound"},{"id":9,"companyId":403,"code":"EUR","name":"Euro"}],"meta":{"count":2,"limit":2,"start":0}}

@@ -15,8 +15,22 @@ angular.module('ts5App')
     $scope.activeBtn = 'promotion-information';
     $scope.selectOptions = {};
 
-
+    // Promotion object
     $scope.promotion = {};
+    $scope.promotion.qualifier = {};
+    $scope.promotion.qualifier.productPurchase = {};
+    $scope.promotion.qualifier.spendLimit = {};
+    $scope.promotion.qualifier.spendLimit.value = [];
+    $scope.promotion.benefits = {};
+    $scope.promotion.benefits.discount = {};
+    $scope.promotion.benefits.discount.applyTo = {};
+    $scope.promotion.benefits.discount.applyTo.retailItem = {};
+    $scope.promotion.benefits.discount.percentage = {};
+    $scope.promotion.benefits.discount.amount = [];
+    $scope.promotion.inclusionFilters = [];
+
+    /* TODO - Mock data, will remove once API hookedup */
+    /*
     // Promotion general
     $scope.promotion.promotionCode = 'ABC1234';
     $scope.promotion.promotionName = 'Test Name';
@@ -24,9 +38,9 @@ angular.module('ts5App')
     $scope.promotion.effectiveDateFrom = '09/22/2015';
     $scope.promotion.effectiveDateTo = '10/22/2015';
     // Qualifiers
-    $scope.promotion.qualifier = {};
+    // $scope.promotion.qualifier = {};
     $scope.promotion.qualifier.type = {id:1, name:'Product Purchase'};
-    $scope.promotion.qualifier.productPurchase = {};
+    // $scope.promotion.qualifier.productPurchase = {};
     $scope.promotion.qualifier.productPurchase.promotionCategories = [
       {
         promotionCategory: {
@@ -109,7 +123,7 @@ angular.module('ts5App')
         qty: 567
       }
     ];
-    $scope.promotion.qualifier.spendLimit = {};
+    // $scope.promotion.qualifier.spendLimit = {};
     $scope.promotion.qualifier.spendLimit.promotionCategory = {
       companyId: 403,
       endDate: '2018-12-31',
@@ -119,15 +133,15 @@ angular.module('ts5App')
       selectedItems: '28',
       startDate: '2015-05-13',
     };
-    $scope.promotion.qualifier.spendLimit.value = [];
+    // $scope.promotion.qualifier.spendLimit.value = [];
     $scope.promotion.qualifier.spendLimit.value.push({GBP:432.1234});
     $scope.promotion.qualifier.spendLimit.value.push({EUR:456.1264});
     // Benefits
-    $scope.promotion.benefits = {};
+    // $scope.promotion.benefits = {};
     $scope.promotion.benefits.type = {id:1, name:'Discount'};
-    $scope.promotion.benefits.discount = {};
+    // $scope.promotion.benefits.discount = {};
     $scope.promotion.benefits.discount.rateType = {id:2, name:'Amount'};
-    $scope.promotion.benefits.discount.applyTo = {};
+    // $scope.promotion.benefits.discount.applyTo = {};
     $scope.promotion.benefits.discount.applyTo.type = {id: 2, name: 'Promotion Qualifier'};
     $scope.promotion.benefits.discount.applyTo.promotionCategory = { // TODO test
       companyId: 403,
@@ -138,7 +152,7 @@ angular.module('ts5App')
       selectedItems: '28',
       startDate: '2015-05-13',
     };
-    $scope.promotion.benefits.discount.applyTo.retailItem = {};
+    // $scope.promotion.benefits.discount.applyTo.retailItem = {};
     $scope.promotion.benefits.discount.applyTo.retailItem.retailItem = {
       companyId: 403,
       createdBy: null,
@@ -151,10 +165,10 @@ angular.module('ts5App')
       updatedOn: null
     };
     $scope.promotion.benefits.discount.applyTo.retailItem.giftWithPurchase = true;
-    $scope.promotion.benefits.discount.percentage = {}; // TODO Unit test below when promotion.benefits.discount.rateType = 'Percent'
+    // $scope.promotion.benefits.discount.percentage = {}; // TODO Unit test below when promotion.benefits.discount.rateType = 'Percent'
     $scope.promotion.benefits.discount.percentage.value = 50;
     $scope.promotion.benefits.discount.percentage.lowestPricedArticle = true;
-    $scope.promotion.benefits.discount.amount = [];
+    // $scope.promotion.benefits.discount.amount = [];
     $scope.promotion.benefits.discount.amount.push({GBP:234.43});
     $scope.promotion.benefits.discount.amount.push({EUR:432.12});
     $scope.promotion.benefits.coupon = {
@@ -181,6 +195,7 @@ angular.module('ts5App')
       rateTypeName: 'Percentage'
     };
     // Inclusion Filter
+    $scope.promotion.inclusionFilters = [];
     $scope.promotion.inclusionFilters = [
       {
         departureStation : {
@@ -211,9 +226,9 @@ angular.module('ts5App')
         }
       }
     ];
+    /**/
 
-
-    /* TODO - Mock data, will remove after API calls are validated.
+    /* TODO - Mock data, will remove after API calls are validated. *//*
     // Currency array
     $scope.companyCurrencyGlobals = [
       {
@@ -320,7 +335,7 @@ angular.module('ts5App')
         salesCategoryPath: 'Rentals'
       }
     ];
-    $scope.selectOptions.masterItems = [ // TODO - get master items WITHOUT VERSIONS!
+    $scope.selectOptions.masterItems = [
       {
         companyId: 403,
         createdBy: null,
@@ -403,18 +418,20 @@ angular.module('ts5App')
         name: 'San Jose'
       }
     ];
-*/
+    /**/
+
     // private controller vars
     var _companyId = promotionsFactory.getCompanyId();
     var _initPromises = [];
-    var _todaysDateFormattedForAPI = dateUtility.nowFormatted('YYYYMMDD');
-    // var _currenciesGlobal = null;
     var states = {};
     states.createInit = function(){
       getPromotionMetaData();
     };
     // private controller functions
     function showMessage(message, messageType) {
+      if(!messageType){
+        messageType = 'info';
+      }
       ngToast.create({className: messageType, dismissButton: true, content: '<strong>Promotion</strong>: ' + message});
     }
 
@@ -468,17 +485,6 @@ angular.module('ts5App')
         promotionsFactory.getDiscountTypes().then(setDiscountTypes)
       );
     }
-    /* TODO - below needed? May be able to remove this API call.
-    function setStationList(dataFromAPI){
-      $scope.selectOptions.companyStationGlobals = dataFromAPI.response;
-    }
-
-    function getStationList(){
-      _initPromises.push(
-        promotionsFactory.getStationList(_companyId).then(setStationList)
-      );
-    }
-    */
 
     function setPromotionTypes(dataFromAPI){
       $scope.selectOptions.promotionTypes = dataFromAPI;
@@ -496,10 +502,7 @@ angular.module('ts5App')
 
     function getCompanyDiscountsCoupon(){
       _initPromises.push(
-        promotionsFactory.getPromotionTypes({
-          discountTypeId: 1,
-          startDate: _todaysDateFormattedForAPI
-        }).then(setCompanyDiscountsCoupon)
+        promotionsFactory.getCompanyDiscountsCoupon().then(setCompanyDiscountsCoupon)
       );
     }
 
@@ -509,10 +512,7 @@ angular.module('ts5App')
 
     function getCompanyDiscountsVoucher(){
       _initPromises.push(
-        promotionsFactory.getPromotionTypes({
-          discountTypeId: 4,
-          startDate: _todaysDateFormattedForAPI
-        }).then(setCompanyDiscountsVoucher)
+        promotionsFactory.getCompanyDiscountsVoucher().then(setCompanyDiscountsVoucher)
       );
     }
 
@@ -525,21 +525,6 @@ angular.module('ts5App')
         promotionsFactory.getSalesCategories().then(setSalesCategories)
       );
     }
-
-    /* TODO below needed?, May be able to remove below API call. */
-    /*
-    function setCompanyGlobalCurrencies(dataFromAPI){
-      _currenciesGlobal = dataFromAPI.response;
-      // console.log($filter('filter')(_currenciesGlobal, {decimalPrecision:'!2'}));
-      // TODO - maybe its used for client-side validation of decimalPrecision, angular custom-validity only supports 4 decimal place validation?
-    }
-
-    function getCompanyGlobalCurrencies(){
-      _initPromises.push(
-        promotionsFactory.getCompanyGlobalCurrencies().then(setCompanyGlobalCurrencies)
-      );
-    }
-    /**/
 
     function setDiscountApplyTypes(dataFromAPI){
       $scope.selectOptions.discountApplyTypes = dataFromAPI;
@@ -593,6 +578,8 @@ angular.module('ts5App')
 
     function initPromisesResolved(){
       hideLoadingModal();
+      var today = dateUtility.nowFormatted('YYYYMMDD');
+      showMessage('Background APIs loaded, ' + today);
       $scope.readOnly = ($routeParams.state === 'view');
     }
 
@@ -604,12 +591,10 @@ angular.module('ts5App')
       displayLoadingModal();
       getBenefitTypes();
       getDiscountTypes();
-      // getStationList(); .. TODO - is this needed?
       getPromotionTypes();
       getCompanyDiscountsCoupon();
       getCompanyDiscountsVoucher();
       getSalesCategories();
-      // getCompanyGlobalCurrencies(); // TODO - is this needed?
       getDiscountApplyTypes();
       getPromotionCategories();
       getStationGlobals();
@@ -619,7 +604,7 @@ angular.module('ts5App')
     }
 
     function init(){
-      console.log('jere');
+
       $scope.displayError = false;
       $scope.formErrors = [];
 
