@@ -132,7 +132,7 @@
           <!-- TODO: THESE BUTTONS ARE HIDDEN UNTIL SELECT ALL CHECKBOX IS SELECTED -->
           <!-- TODO: EACH BUTTON FUNCTION WILL CORRESPOND TO CERTAIN STATUS -->
           <button class="btn btn-info" tabindex="0">Generate Docs</button>
-          <button class="btn btn-info" tabindex="0">Dispatch All</button>
+          <button class="btn btn-info" tabindex="0" ng-click="bulkDispatch()">Dispatch All</button>
           <button class="btn btn-info" tabindex="0">Receive All</button>
         </div>
       </div>
@@ -213,7 +213,7 @@
             </a>
             <a class="btn btn-success btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
-               href="#/store-instance-review/{{store.id}}">Dispatch
+               href="#/store-instance-review/{{store.id}}/dispatch">Dispatch
             </a>
             <!-- TODO: End Dispatch -->
             <a class="btn btn-danger btn-xs" tabindex="0"
