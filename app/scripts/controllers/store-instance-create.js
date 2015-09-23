@@ -40,12 +40,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.cateringStationList = dataFromAPI.response;
     };
 
-    this.getCatererStationList = function () {
-      $this.getCatererStationListPromise().then(this.setCatererStationList);
-    };
-
     this.getCatererStationListPromise = function () {
       return storeInstanceFactory.getCatererStationList();
+    };
+
+    this.getCatererStationList = function () {
+      $this.getCatererStationListPromise().then(this.setCatererStationList);
     };
 
     this.menuCatererResponseHandler = function (dataFromAPI) {
@@ -73,39 +73,39 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.getMenuCatererList();
     };
 
-    this.getMenuMasterList = function () {
-      $this.getMenuMasterListPromise().then(this.menuMasterResponseHandler);
-    };
-
     this.getMenuMasterListPromise = function () {
       var query = this.getFormattedDatesPayload();
       return storeInstanceFactory.getMenuMasterList(query);
+    };
+
+    this.getMenuMasterList = function () {
+      $this.getMenuMasterListPromise().then(this.menuMasterResponseHandler);
     };
 
     this.setCarrierNumbers = function (dataFromAPI) {
       $scope.carrierNumbers = dataFromAPI.response;
     };
 
-    this.getCarrierNumbers = function () {
-      $this.getCarrierNumbersPromise().then(this.setCarrierNumbers);
-    };
-
     this.getCarrierNumbersPromise = function () {
       return storeInstanceFactory.getAllCarrierNumbers(companyId);
+    };
+
+    this.getCarrierNumbers = function () {
+      $this.getCarrierNumbersPromise().then(this.setCarrierNumbers);
     };
 
     this.setStoresList = function (dataFromAPI) {
       $scope.storesList = dataFromAPI.response;
     };
 
-    this.getStoresList = function () {
-      $this.getStoresListPromise().then(this.setStoresList);
-    };
-
     this.getStoresListPromise = function () {
       var query = this.getFormattedDatesPayload();
       query.readyToUse = true;
       return storeInstanceFactory.getStoresList(query);
+    };
+
+    this.getStoresList = function () {
+      $this.getStoresListPromise().then(this.setStoresList);
     };
 
     this.exitOnSave = function (response) {
@@ -259,6 +259,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       });
     };
 
+    this.getScheduleNumbersPromise = function () {
+      var datesForApi = this.getFormattedDatesPayload();
+      return schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate,
+        datesForApi.endDate);
+    };
+
     this.getScheduleNumbers = function () {
       $scope.scheduleNumbers = [];
       if (!$scope.formData.scheduleDate) {
@@ -266,12 +272,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       $this.getScheduleNumbersPromise().then($this.setScheduleNumbers);
-    };
-
-    this.getScheduleNumbersPromise = function () {
-      var datesForApi = this.getFormattedDatesPayload();
-      return schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate,
-        datesForApi.endDate);
     };
 
     function registerScopeWatchers() {
