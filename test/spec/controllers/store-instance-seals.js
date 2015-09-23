@@ -19,9 +19,9 @@ describe('the Store Instance Seals controller', function() {
   var storeDetailsJSON;
   var storeInstanceFactory;
   var storeInstanceDispatchWizardConfig;
-  var routeParams;
   var getStoreDetailsDeferred;
   var storeId;
+  var routeParams;
   var sealTypesService;
   var sealTypesJSON;
   var getSealTypesDeferred;
@@ -92,6 +92,7 @@ describe('the Store Instance Seals controller', function() {
     StoreInstanceSealsCtrl = $controller('StoreInstanceSealsCtrl', {
       $scope: $scope,
       $routeParams: {
+        action: 'dispatch',
         storeId: storeId
       }
     });
@@ -154,7 +155,7 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should set wizardSteps', function() {
-      var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(storeId);
+      var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.action, storeId);
       expect($scope.wizardSteps).toEqual(wizardSteps);
     });
 
@@ -196,7 +197,7 @@ describe('the Store Instance Seals controller', function() {
       });
 
       it('should set wizardSteps', function() {
-        var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(storeId);
+        var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.action, storeId);
         expect($scope.wizardSteps).toEqual(wizardSteps);
       });
 
