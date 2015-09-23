@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: PromotionsCtrl', function () {
+describe('Controller: PromotionsCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
