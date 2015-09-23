@@ -118,7 +118,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.hideLoadingModal();
       if (response.id) {
         $this.showMessage('success', 'Store Instance created id: ' + response.id);
-        $location.url('/store-instance-packing/' + response.id);
+        $location.url('/store-instance-packing/' + $routeParams.action + '/' + response.id);
       }
     };
 

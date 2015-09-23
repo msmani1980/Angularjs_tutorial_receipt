@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceDispatchWizardConfig, storeInstanceReplenishWizardConfig, $location) {
+  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceDispatchWizardConfig, $location) {
     var $this = this;
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
@@ -17,12 +17,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     var nextStep = {
       stepName: '2',
-      URL: 'store-instance-seals/' + $routeParams.storeId
+      URL: 'store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId
     };
     var prevStep = {
       stepName: '1',
-      URL: 'store-instance-create/'
+      URL: 'store-instance-create/' + $routeParams.action + '/' + $routeParams.storeId
     };
+
+    var dashboardURL = 'store-instance-dashboard';
 
     function showToast(className, type, message) {
       ngToast.create({
@@ -231,11 +233,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     function initialize() {
-      if($routeParams.action === 'dispatch') {
-        $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
-      } else if($routeParams.action === 'replenish') {
-        $scope.wizardSteps = storeInstanceReplenishWizardConfig.getSteps($routeParams.storeId);
-      }
+      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
 
       showLoadingModal('Loading Store Detail for Packing...');
       $scope.storeId = $routeParams.storeId;
@@ -280,7 +278,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         updateStatusToStep(nextStep);
       } else {
         showToast('success', 'Save Packing Data', 'Data successfully updated!');
-        $location.path('#');
+        $location.path(dashboardURL);
       }
 
       hideLoadingModal();
@@ -303,16 +301,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.saveAndExit = function () {
       if($scope.readOnly) {
-        $location.path('#');
+        $location.path(dashboardURL);
       } else {
         $scope.savePackingDataAndUpdateStatus(false);
       }
     };
 
     $scope.goToPreviousStep = function () {
-      updateStatusToStep(prevStep);
+      $location.path(prevStep.URL);
       // TODO: show warning modal before leaving
-      // TODO: update URL with storeId
     };
 
     $scope.goToNextStep = function () {

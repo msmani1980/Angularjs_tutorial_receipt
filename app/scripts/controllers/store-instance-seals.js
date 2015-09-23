@@ -17,11 +17,11 @@ angular.module('ts5App')
     var $this = this;
     this.nextStep = {
       stepName: '3',
-      URL: '/store-instance-review/' + $routeParams.storeId + '/dispatch'
+      URL: '/store-instance-review/' + $routeParams.action + '/' + $routeParams.storeId
     };
     this.prevStep = {
       stepName: '1',
-      URL: '/store-instance-packing/' + $routeParams.storeId
+      URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
     };
 
     $scope.formData = [];
