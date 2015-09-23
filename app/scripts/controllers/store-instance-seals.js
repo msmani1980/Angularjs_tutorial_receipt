@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceDispatchWizardConfig,
+  .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceWizardConfig,
     storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
     lodash) {
 
@@ -39,7 +39,7 @@ angular.module('ts5App')
     };
 
     this.setWizardSteps = function() {
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
     };
 
     this.getSealColors = function() {

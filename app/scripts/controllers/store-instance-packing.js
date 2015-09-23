@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceDispatchWizardConfig, $location) {
+  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location) {
     var $this = this;
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
@@ -235,7 +235,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     function initialize() {
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
 
       showLoadingModal('Loading Store Detail for Packing...');
       $scope.storeId = $routeParams.storeId;

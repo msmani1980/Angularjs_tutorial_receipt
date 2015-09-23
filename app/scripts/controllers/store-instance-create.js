@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
-  function ($scope, $routeParams, $q, storeInstanceFactory, ngToast, dateUtility, GlobalMenuService, storeInstanceDispatchWizardConfig,
+  function ($scope, $routeParams, $q, storeInstanceFactory, ngToast, dateUtility, GlobalMenuService, storeInstanceWizardConfig,
             $location, schedulesService, menuCatererStationsService, lodash) {
 
     $scope.cateringStationList = [];
@@ -22,7 +22,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       scheduleNumbers: [],
       menus: []
     };
-    $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+    $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
     $scope.action = $routeParams.action;
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
