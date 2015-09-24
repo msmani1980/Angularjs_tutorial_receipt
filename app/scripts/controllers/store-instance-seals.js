@@ -12,8 +12,6 @@ angular.module('ts5App')
     storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
     lodash) {
 
-    // TODO: Allow a user to edit existing seals in each seal type
-
     var $this = this;
     this.nextStep = {
       stepName: '3',
@@ -149,9 +147,9 @@ angular.module('ts5App')
       })[0];
     };
 
-    this.getExistingSealByNumber = function(sealNumber) {
+    this.getExistingSealByNumber = function(sealNumber,sealType) {
       return $scope.existingSeals.filter(function(existingSeal) {
-        return existingSeal.sealNumbers[0] === sealNumber;
+        return (existingSeal.sealNumbers[0] === sealNumber && existingSeal.type === parseInt(sealType));
       })[0];
     };
 
@@ -298,7 +296,7 @@ angular.module('ts5App')
       var deletePromises = [];
       for(var key in sealsToDelete) {
         var sealNumber = sealsToDelete[key];
-        var existingSeal = this.getExistingSealByNumber(sealNumber);
+        var existingSeal = this.getExistingSealByNumber(sealNumber,sealTypeObject.id);
         deletePromises.push(storeInstanceAssignSealsFactory.deleteStoreInstanceSeal(
           existingSeal.id,
           $routeParams.storeId
@@ -349,6 +347,7 @@ angular.module('ts5App')
     };
 
     this.assignSealsErrorHandler = function(response) {
+      $this.getStoreInstanceSeals();
       $this.hideLoadingModal();
       $scope.displayError = true;
       if (response.data) {
