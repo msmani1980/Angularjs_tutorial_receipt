@@ -36,7 +36,6 @@ describe('the Store Instance Seals controller', function() {
   var storeInstanceAssignSealsFactory;
   var location;
   var httpBackend;
-  var servedStoreInstanceDetailsJSON;
   var updateStoreInstanceStatusDeferred;
   var getStoreInstanceSealsDeferred;
 
@@ -44,7 +43,7 @@ describe('the Store Instance Seals controller', function() {
     _servedSealTypes_, _servedSealColors_,
     _servedStoreInstanceSeals_, _servedStoreInstanceSealsCreated_, _servedStoreInstanceDetails_) {
 
-    servedStoreInstanceDetailsJSON = _servedStoreInstanceDetails_;
+    storeDetailsJSON = _servedStoreInstanceDetails_;
     sealTypesJSON = _servedSealTypes_;
     sealColorsJSON = _servedSealColors_;
     storeInstanceSealsJSON = _servedStoreInstanceSeals_;
@@ -71,19 +70,18 @@ describe('the Store Instance Seals controller', function() {
     getSealTypesDeferred = $q.defer();
     getSealColorsDeferred = $q.defer();
     getStoreInstanceSealsDeferred = $q.defer();
+
     createStoreInstanceSealDeferred = $q.defer();
     deleteStoreInstanceSealDeferred = $q.defer();
     updateStoreInstanceStatusDeferred = $q.defer();
 
-    getStoreDetailsDeferred = $q.defer();
-    getStoreDetailsDeferred.resolve(storeDetailsJSON);
-
     spyOn(storeInstanceAssignSealsFactory, 'getStoreInstanceSeals').and.returnValue(getStoreInstanceSealsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
-    spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(
-      updateStoreInstanceStatusDeferred.promise);
     spyOn(sealTypesService, 'getSealTypes').and.returnValue(getSealTypesDeferred.promise);
     spyOn(sealColorsService, 'getSealColors').and.returnValue(getSealColorsDeferred.promise);
+
+    spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(
+      updateStoreInstanceStatusDeferred.promise);
     spyOn(storeInstanceAssignSealsFactory, 'createStoreInstanceSeal').and.returnValue(
       createStoreInstanceSealDeferred.promise);
     spyOn(storeInstanceAssignSealsFactory, 'deleteStoreInstanceSeal').and.returnValue(
@@ -148,6 +146,7 @@ describe('the Store Instance Seals controller', function() {
     getStoreDetailsDeferred.resolve(storeDetailsJSON);
     getStoreInstanceSealsDeferred.resolve(storeInstanceSealsJSON);
   }
+
   describe('when controller executes', function() {
 
     beforeEach(function() {
@@ -178,22 +177,56 @@ describe('the Store Instance Seals controller', function() {
     describe('the get store details API call', function() {
 
       beforeEach(function() {
-        storeDetailsJSON = {
-          LMPStation: 'ORD',
-          storeNumber: '180485',
-          scheduleDate: '2015-08-13',
-          scheduleNumber: 'SCHED123',
-          storeInstanceNumber: $scope.storeId
-        };
+        spyOn(StoreInstanceSealsCtrl,'isInstanceReadOnly').and.callThrough();
         $scope.$digest();
       });
 
       it('should get the store details', function() {
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+        $scope.$digest();
         expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(storeId);
       });
 
       it('should attach all properties of JSON to scope', function() {
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+        $scope.$digest();
         expect($scope.storeDetails).toEqual(storeDetailsJSON);
+      });
+
+      it('should check to see if the instance is read only', function() {
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+        $scope.$digest();
+        expect(StoreInstanceSealsCtrl.isInstanceReadOnly).toHaveBeenCalled();
+      });
+
+      it('should have the readOnly set flag to true as default', function() {
+        expect($scope.readOnly).toBeTruthy();
+      });
+
+      describe('when the controller checks if an instance is read only', function() {
+
+        it('should have the readOnly set flag to false if instance is not Ready For Seals', function() {
+          storeDetailsJSON.currentStatus = {
+            'id': 3,
+            'statusName': 'Ready for Dispatch',
+            'name': '3'
+          };
+          getStoreDetailsDeferred.resolve(storeDetailsJSON);
+          $scope.$digest();
+          expect($scope.readOnly).toBeTruthy();
+        });
+
+        it('should have the readOnly set flag to true if instance is Ready For Seals', function() {
+          storeDetailsJSON.currentStatus = {
+            'id': 2,
+            'statusName': 'Ready for Seals',
+            'name': '2'
+          };
+          getStoreDetailsDeferred.resolve(storeDetailsJSON);
+          $scope.$digest();
+          expect($scope.readOnly).toBeFalsy();
+        });
+
       });
 
       it('should set wizardSteps', function() {
@@ -253,22 +286,13 @@ describe('the Store Instance Seals controller', function() {
     describe('the getSealTypesDependencies method', function() {
 
       beforeEach(function() {
-        storeDetailsJSON = {
-          LMPStation: 'ORD',
-          storeNumber: '180485',
-          scheduleDate: '2015-08-13',
-          scheduleNumber: 'SCHED123',
-          storeInstanceNumber: $scope.storeId
-        };
-
         resolveAllDependencies();
-
         spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'createHandoverActions').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'createInboundActions').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'sealTypeListOrder').and.callThrough();
-
+        $scope.readOnly = false;
         $scope.$digest();
       });
 
@@ -304,6 +328,13 @@ describe('the Store Instance Seals controller', function() {
         expect(StoreInstanceSealsCtrl.addSealTypeActions).toHaveBeenCalled();
       });
 
+      it('should not return any actions if set to read Only', function() {
+        $scope.readOnly = true;
+        $scope.$digest();
+        var createdActions = StoreInstanceSealsCtrl.addSealTypeActions();
+        expect(createdActions).toBeUndefined();
+      });
+
       it('should create the actions for the Handover seal', function() {
         var mockActions = [{
           label: 'Copy From Outbound',
@@ -332,6 +363,7 @@ describe('the Store Instance Seals controller', function() {
         expect(createdAction.label).toEqual(mockActions.label);
         expect(createdAction.trigger).toEqual(mockActions.trigger);
       });
+
 
     });
 
@@ -375,7 +407,6 @@ describe('the Store Instance Seals controller', function() {
 
       beforeEach(function() {
         spyOn($scope, 'submitForm');
-        // TODO: extend tests to call through to assign Seals
         $scope.$digest();
         view = renderView();
         form = angular.element(view.find('form')[0]);
@@ -388,23 +419,33 @@ describe('the Store Instance Seals controller', function() {
 
     });
 
+    describe('The exit on save functionality', function() {
+
+      beforeEach(function() {
+        spyOn(StoreInstanceSealsCtrl, 'hideLoadingModal');
+        spyOn(StoreInstanceSealsCtrl, 'showMessage');
+        $scope.$digest();
+      });
+
+      it('should call hideLoadingModal method', function() {
+        StoreInstanceSealsCtrl.exitOnSave();
+        expect(StoreInstanceSealsCtrl.hideLoadingModal).toHaveBeenCalled();
+      });
+
+      it('should call showMessage method', function() {
+        StoreInstanceSealsCtrl.exitOnSave();
+        expect(StoreInstanceSealsCtrl.showMessage).toHaveBeenCalled();
+      });
+
+    });
+
     describe('The validateForm method', function() {
 
       var view;
       var form;
 
       beforeEach(function() {
-        storeDetailsJSON = {
-          LMPStation: 'ORD',
-          storeNumber: '180485',
-          scheduleDate: '2015-08-13',
-          scheduleNumber: 'SCHED123',
-          storeInstanceNumber: $scope.storeId
-        };
-
-        getSealColorsDeferred.resolve(sealColorsJSON);
-        getSealTypesDeferred.resolve(sealTypesJSON);
-        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+        resolveAllDependencies();
 
         spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
@@ -467,7 +508,7 @@ describe('the Store Instance Seals controller', function() {
     describe('success handler', function() {
 
       beforeEach(function() {
-        mockAssignSeals();
+        resolveAllDependencies();
         createStoreInstanceSealDeferred.resolve(storeInstanceSealsCreatedJSON);
         $scope.$digest();
       });
@@ -520,9 +561,7 @@ describe('the Store Instance Seals controller', function() {
     describe('error handler', function() {
 
       var errorResponse;
-
       beforeEach(function() {
-        resolveAllDependencies();
         errorResponse = [{
           field: 'storeId',
           code: '023',

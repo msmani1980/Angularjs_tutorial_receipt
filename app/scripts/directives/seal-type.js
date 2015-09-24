@@ -12,7 +12,10 @@ angular.module('ts5App')
 
       $scope.numberOfSeals = 0;
 
-      $scope.isSequentialPossible = function() {
+      $scope.isSequentialPossible = function(readOnly) {
+        if(readOnly){
+          return false;
+        }
         return ($scope.sealTypeObject.seals.numbers.length === 1 && $scope.sealTypeObject.seals.numbers[0] >= 0);
       };
 
@@ -25,7 +28,10 @@ angular.module('ts5App')
         }
       };
 
-      $scope.showClearButton = function() {
+      $scope.showClearButton = function(readOnly) {
+        if(readOnly){
+          return false;
+        }
         return ($scope.sealTypeObject.seals.numbers.length > 1);
       };
 

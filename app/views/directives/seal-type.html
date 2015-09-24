@@ -21,7 +21,7 @@
         Seal Numbers <span ng-show="sealTypeObject.required">*</span>:
       </label>
       <div class="form-group" ng-class="$parent.validateSeals(sealTypeObject)">
-        <ui-select name="{{sealTypeObject.name}}" multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true" ng-disabled="disabled" title="Add Seals...">
+        <ui-select name="{{sealTypeObject.name}}" multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true" disabled="$parent.readOnly" title="Add Seals...">
           <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
             <ui-select-choices repeat="number in sealTypeObject.seals.numbers | filter:$select.search">
               <small>
@@ -36,9 +36,9 @@
 
   </br>
 
-  <button class="btn btn-primary" type="button" ng-show="showClearButton()" ng-click="clearSeals()">Clear</button>
+  <button class="btn btn-primary" type="button" ng-show="showClearButton($parent.readOnly)" ng-click="clearSeals()">Clear</button>
 
-  <div class="row" ng-show="isSequentialPossible()">
+  <div class="row" ng-show="isSequentialPossible($parent.readOnly)">
     <div class="col-xs-12 col-sm-6">
       <div class="row">
         <div class="col-sm-4 col-md-2">
