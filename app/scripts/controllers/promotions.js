@@ -20,13 +20,13 @@ angular.module('ts5App')
     $scope.promotion.qualifier = {};
     $scope.promotion.qualifier.productPurchase = {};
     $scope.promotion.qualifier.spendLimit = {};
-    $scope.promotion.qualifier.spendLimit.value = [];
+    $scope.promotion.qualifier.spendLimit.values = [];
     $scope.promotion.benefits = {};
     $scope.promotion.benefits.discount = {};
     $scope.promotion.benefits.discount.applyTo = {};
     $scope.promotion.benefits.discount.applyTo.retailItem = {};
     $scope.promotion.benefits.discount.percentage = {};
-    $scope.promotion.benefits.discount.amount = [];
+    $scope.promotion.benefits.discount.amounts = [];
     $scope.promotion.inclusionFilters = [];
 
     /* TODO - Mock data, will remove once API hookedup */
@@ -37,6 +37,8 @@ angular.module('ts5App')
     $scope.promotion.promotionDescription = 'Test Decription';
     $scope.promotion.effectiveDateFrom = '09/22/2015';
     $scope.promotion.effectiveDateTo = '10/22/2015';
+    */
+    /*
     // Qualifiers
     // $scope.promotion.qualifier = {};
     $scope.promotion.qualifier.type = {id:1, name:'Product Purchase'};
@@ -424,6 +426,7 @@ angular.module('ts5App')
     var _companyId = promotionsFactory.getCompanyId();
     var _initPromises = [];
     var states = {};
+    var _payload = null;
     states.createInit = function(){
       getPromotionMetaData();
     };
@@ -441,6 +444,164 @@ angular.module('ts5App')
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+    }
+
+    function payloadGenerate(){
+      _payload = {
+        promotionCode: $scope.promotion.promotionCode,
+        promotionName: $scope.promotion.promotionName,
+        description: $scope.promotion.promotionDescription,
+        startDate: dateUtility.formatDateForAPI($scope.promotion.effectiveDateFrom),
+        endDate: dateUtility.formatDateForAPI($scope.promotion.effectiveDateTo)
+      };
+
+      /* Qualifier Types */
+      // Qualifier Type = Product Purchase
+      _payload.promotionTypeId = $scope.promotion.qualifier.type.id;
+      if($scope.promotion.qualifier.type.id === 1){
+        /*
+         $scope.promotion.qualifier.productPurchase.promotionCategories = [
+         {
+         promotionCategory: {
+         companyId: 403,
+         endDate: '2018-12-31',
+         id: 63,
+         promotionCategoryName: 'PromoCategory1',
+         promotionCount: '28',
+         selectedItems: '28',
+         startDate: '2015-05-13',
+         },
+         qty: 123
+         },
+         {
+         promotionCategory: {
+         companyId: 403,
+         endDate: '2050-12-31',
+         id: 65,
+         promotionCategoryName: 'Soft Drinks',
+         promotionCount: '15',
+         selectedItems: '15',
+         startDate: '2015-05-15',
+         },
+         qty: 432
+         }
+         ];
+         */
+        /*
+        _payload.promotionCategories = [ // TODO loop these
+          {categoryQty:'12',companyPromotionCategoryId:'63'}
+        ];
+        */
+        _payload.promotionCategories = $scope.promotion.qualifier.productPurchase.promotionCategories.map(function(prodCat){
+          return {
+            companyPromotionCategoryId: prodCat.id,
+            categoryQty:prodCat.qty
+          };
+        });
+        /*
+        _payload.items = [ // TODO loops these
+          {itemQty:'2',itemId:'9'},
+          {itemQty:'1',itemId:'7'}
+        ];
+        */
+        /*
+         $scope.promotion.qualifier.productPurchase.retailItems = [
+         {
+         salesCategory: {
+         childCategoryCount: null,
+         children: null,
+         companyId: 403,
+         countTotalSubcategories: null,
+         description: 'Rental Items',
+         id: 206,
+         itemCount: '15',
+         name: 'Rentals',
+         nextCategoryId: 221,
+         parentId: null,
+         salesCategoryPath: 'Rentals'
+         },
+         retailItem: {
+         companyId: 403,
+         createdBy: null,
+         createdOn: '2015-06-26 20:16:21.079879',
+         id: 93,
+         itemCode: '1234567max',
+         itemName: '1234567max',
+         onBoardName: null,
+         updatedBy: null,
+         updatedOn: null
+         },
+         qty: 432
+         },
+         */
+        _payload.items = $scope.promotion.qualifier.productPurchase.retailItems.map(function(retailItemData){
+          return {
+            itemQty:retailItemData.qty,
+            itemId:retailItemData.retailItem.id
+          };
+        });
+      }
+      // Qualifier Type = Spend Limit
+      if($scope.promotion.qualifier.type.id === 2){
+        /*
+        _payload.spendLimitAmounts = [ // TODO loop these
+          {amount:12,companyCurrencyId:'8'},
+          {amount:12,companyCurrencyId:'9'}
+        ];
+        */
+
+        _payload.spendLimitAmounts = $scope.promotion.qualifier.spendLimit.value.map(function(amount, index){
+
+        });
+        _payload.spendLimitCategoryId = '65';
+      }
+
+      /* Benefit Types */
+      _payload.benefitTypeId = $scope.promotion.benefits.type.id;
+      // Benefit Type = Discount
+      if($scope.promotion.benefits.type.id === 1){
+        /* Discount Rate Types */
+        // Discount Rate Type - Percentage
+        _payload.discountTypeId = $scope.promotion.benefits.discount.rateType.id;
+        if($scope.promotion.benefits.discount.rateType.id === 1){
+          _payload.discountPercentage = '33'; // TODO get value
+          _payload.lowestPricedArticle = 'true'; // TODO get value
+        }
+        // Discount Rate Type - Amount
+        if($scope.promotion.benefits.discount.rateType.id === 2){
+          _payload.benefitAmounts = [ // TODO loops these
+            {amount: 432, companyCurrencyId: "8"},
+            {amount: 543, companyCurrencyId: "9"}
+          ];
+        }
+
+        // Set apply to type
+        /* Apply Tos */
+        // Apply to - Promotion Category
+        _payload.benefitDiscountApplyId = $scope.promotion.benefits.discount.applyTo.type.id;
+        if($scope.promotion.benefits.discount.applyTo.type.id === 3 ){
+          _payload.discountCategoryId = '66';
+        }
+        // Apply to - Retail Item
+        if($scope.promotion.benefits.discount.applyTo.type.id === 4 ){
+          _payload.discountItemId = 187; // TODO get value
+          _payload.giftWithPurchase = "true"; // TODO get value
+        }
+      }
+      // Benefit Type = Coupon
+      if($scope.promotion.benefits.type.id === 2){
+        _payload.companyCouponId = '102'; // TODO Get value
+      }
+      // Benefit Type = Voucher
+      if($scope.promotion.benefits.type.id === 3){
+        _payload.companyVoucherId = '109'; // TODO get value
+      }
+
+      // Promotion Inclusion Filter
+      _payload.filters = [ // TODO loops this
+        {departureStationId:'8',arrivalStationId:'6'}
+      ];
+
     }
 
     function showResponseErrors(response) {
@@ -558,6 +719,15 @@ angular.module('ts5App')
 
     function setCurrencyGlobals(dataFromAPI){
       $scope.companyCurrencyGlobals = dataFromAPI.response;
+      angular.forEach(dataFromAPI.response, function(currency){
+        var currencyModel = {
+          id: angular.copy(currency.id),
+          code: angular.copy(currency.code),
+          value: null
+        };
+        $scope.promotion.qualifier.spendLimit.values.push(currencyModel);
+        $scope.promotion.benefits.discount.amounts.push(currencyModel)
+      });
     }
 
     function getCurrencyGlobals(){
@@ -622,10 +792,16 @@ angular.module('ts5App')
 
     // Scope functions
     $scope.addBlankObjectToArray = function(_array){
+      if($scope.readOnly){
+        return;
+      }
       _array.push({});
     };
 
     $scope.removeFromArrayByIndex = function(_array, $index){
+      if($scope.readOnly){
+        return;
+      }
       _array.splice($index, 1);
     };
 
@@ -649,6 +825,11 @@ angular.module('ts5App')
       body.animate({
         scrollTop: elm.offset().top - (navBar + topBar + 20)
       }, 'slow');
+    };
+
+    $scope.save = function(){ // TODO test
+      console.log($scope.promotion.qualifier.spendLimit.values);
+      console.log($scope.promotion.benefits.discount.amounts);
     };
 
   });

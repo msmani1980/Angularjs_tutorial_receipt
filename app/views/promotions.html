@@ -9,11 +9,11 @@
             </div>
             <div class="col-xs-6 text-right">
               <fieldset ng-hide="viewOnly">
-                <button class="btn btn-default">
+                <button class="btn btn-default" type="button">
                   <span class="fa fa-remove" aria-hidden="true"></span>
                   <span class="hidden-xs">Cancel</span>
                 </button>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" ng-click="save()">
                   <span class="fa fa-check-square-o" aria-hidden="true"></span>
                   <span class="hidden-xs">Create</span>
                 </button>
@@ -110,13 +110,14 @@
               </div>
               <div class="form-group">
                 <label>Spend Limit Value*</label>
-                <div class="row" ng-repeat="currency in companyCurrencyGlobals">
+                <div class="row" ng-repeat="currency in promotion.qualifier.spendLimit.values">
                   <div class="col-xs-2 col-sm-1 text-right">{{ currency.code }}</div>
                   <div class="col-xs-10 col-sm-8">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-money"></i></span>
-                      <input type="text" class="form-control" custom-validity custom-pattern="currencyWithFourDecimalPlace"
-                             ng-model="promotion.qualifier.spendLimit.value[currency.code]"
+                      <input type="text" class="form-control"
+                             custom-validity custom-pattern="currencyWithFourDecimalPlace"
+                             ng-model="currency.value"
                              ng-required="promotion.qualifier.type.name === 'Spend Limit'"
                              ng-disabled="readOnly">
                     </div>
@@ -351,13 +352,14 @@
               <fieldset ng-show="promotion.benefits.discount.rateType.name === 'Amount'">
                 <div class="form-group">
                   <label>Fixed Discount Value</label>
-                  <div class="row" ng-repeat="currency in companyCurrencyGlobals">
+                  <div class="row" ng-repeat="currency in promotion.benefits.discount.amounts">
                     <div class="col-xs-2 col-sm-1 text-right">{{ currency.code }}</div>
                     <div class="col-xs-10 col-sm-8">
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-money"></i></span>
-                        <input type="text" class="form-control" custom-validity custom-pattern="currencyWithFourDecimalPlace"
-                               ng-model="promotion.benefits.discount.amount[currency.code]"
+                        <input type="text" class="form-control"
+                               custom-validity custom-pattern="currencyWithFourDecimalPlace"
+                               ng-model="currency.value"
                                ng-disabled="readOnly">
                       </div>
                     </div>
@@ -392,7 +394,10 @@
           </div>
         </div>
 
-        <h3 id="promotion-inclusion-filter">Promotion Inclusion Filter</h3>
+        <h3 id="promotion-inclusion-filter">Promotion Inclusion Filter <a class="pull-right"
+                                                                          ng-click="addBlankObjectToArray(promotion.inclusionFilters)"
+                                                                          ng-hidden="readOnly"
+                                                                          ng-disabled="readOnly">Add Promotion Inclusion Filter</a></h3>
         <div class="row" ng-repeat="inclusionFilterData in promotion.inclusionFilters">
           <div class="col-xs-10 col-sm-5">
             <div class="form-group">
