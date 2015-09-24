@@ -166,6 +166,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       payload.menus = this.formatMenus(payload.menus);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
+
+      if(payload.scheduleNumbers) {
+        delete payload.scheduleNumbers;
+      }
       return payload;
     };
 
