@@ -8,9 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
+  .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig,
                                                    storeInstanceFactory, $location, storeInstanceReviewFactory,
-                                                   $q, ngToast, $filter, storeInstanceReplenishWizardConfig) {
+                                                   $q, ngToast, $filter) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -234,7 +234,7 @@ angular.module('ts5App')
 
     // Dispatch
     actions.dispatchInit = function(){
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       displayLoadingModal();
       storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
     };
@@ -245,7 +245,7 @@ angular.module('ts5App')
 
     // Replenish
     actions.replenishInit = function(){
-      $scope.wizardSteps = storeInstanceReplenishWizardConfig.getSteps($routeParams.storeId);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       displayLoadingModal();
       storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
     };

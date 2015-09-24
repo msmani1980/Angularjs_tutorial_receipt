@@ -185,10 +185,10 @@ angular.module('ts5App', [
   }).when('/store-instance-create/:action/:storeId?', {
     templateUrl: 'views/store-instance-create.html',
     controller: 'StoreInstanceCreateCtrl'
-  }).when('/store-instance-packing/:storeId', {
+  }).when('/store-instance-packing/:action/:storeId', {
     templateUrl: 'views/store-instance-packing.html',
     controller: 'StoreInstancePackingCtrl'
-  }).when('/store-instance-seals/:storeId', {
+  }).when('/store-instance-seals/:action/:storeId', {
     templateUrl: 'views/store-instance-seals.html',
     controller: 'StoreInstanceSealsCtrl'
   }).when('/store-instance-review/:action/:storeId?', {

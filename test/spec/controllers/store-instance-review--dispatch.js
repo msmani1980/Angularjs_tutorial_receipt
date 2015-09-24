@@ -18,7 +18,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
   var storeDetailsJSON;
   var routeParams;
   var getStoreDetailsDeferred;
-  var storeInstanceDispatchWizardConfig;
+  var storeInstanceWizardConfig;
   var getStoreInstanceMenuItemsDeferred;
   var storeInstanceReviewFactory;
   var getSealColorsDeferred;
@@ -38,7 +38,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     };
     location = $location;
 
-    storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
+    storeInstanceWizardConfig = $injector.get('storeInstanceWizardConfig');
 
     // storeInstanceFactory
     storeInstanceFactory = $injector.get('storeInstanceFactory');
@@ -117,7 +117,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     });
 
     it('should set wizardSteps', function () {
-      var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.storeId);
+      var wizardSteps = storeInstanceWizardConfig.getSteps(routeParams.action, routeParams.storeId);
       expect(scope.wizardSteps).toEqual(wizardSteps);
     });
 
