@@ -13,15 +13,16 @@ angular.module('ts5App')
 
     var actions = {
       getTimeConfig: {
-        method: 'GET',
-        isArray: true
+        method: 'GET'
       }
     };
 
     var requestResource = $resource(requestURL, {}, actions);
 
-    function getTimeConfig() {
-      return requestResource.getTimeConfig().$promise;
+    function getTimeConfig(storeInstanceId) {
+      return requestResource.getTimeConfig({
+        storeInstanceId: storeInstanceId
+      }).$promise;
     }
 
     return {

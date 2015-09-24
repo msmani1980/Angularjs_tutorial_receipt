@@ -18,14 +18,26 @@ describe('Service: storeTimeConfig', function() {
     httpBackend.verifyNoOutstandingRequest();
   });
 
+  it('should exist', function() {
+    expect(!!storeTimeConfig).toBe(true);
+  });
+
   describe('getTimeConfig', function() {
-    it('should make GET request to API', function() {
-      var expectedURL = /records\/seal-types$/;
-      httpBackend.expectGET(expectedURL).respond(200, []);
-      storeTimeConfig.getTimeConfig().then(function(response) {
-        expect(response).toBeDefined();
+    it('should be accessible in the service', function() {
+      expect(storeTimeConfig.getTimeConfig).toBeDefined();
+    });
+
+    beforeEach(function() {
+      httpBackend.whenGET(/api\/companies\/time-configuration/).respond({
+        done: true
       });
+    });
+
+    it('should make GET request to API', function() {
+      storeTimeConfig.getTimeConfig();
+      httpBackend.expectGET(/api\/companies\/time-configuration/);
       httpBackend.flush();
     });
+
   });
 });
