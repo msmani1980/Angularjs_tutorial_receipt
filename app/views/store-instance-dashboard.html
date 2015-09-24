@@ -203,17 +203,17 @@
           <td class="col-xs-1">
             <a class="btn btn-primary btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Pack')"
-               href="#/store-instance-packing/{{store.id}}">
+               href="#/store-instance-packing/dispatch/{{store.id}}">
               Start Packing
             </a>
             <a class="btn btn-warning btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Seal')"
-               href="#/store-instance-seals/{{store.id}}">
+               href="#/store-instance-seals/dispatch/{{store.id}}">
               Start Seals
             </a>
             <a class="btn btn-success btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
-               href="#/store-instance-review/{{store.id}}/dispatch">Dispatch
+               href="#/store-instance-review/dispatch/{{store.id}}/dispatch">Dispatch
             </a>
             <!-- TODO: End Dispatch -->
             <a class="btn btn-danger btn-xs" tabindex="0"
@@ -223,7 +223,7 @@
             <!-- TODO: UnDispatch-->
             <a class="btn btn-warning btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Un-dispatch')"
-               href="#/store-instance-undispatch/{{store.id}}">Undispatch
+               href="#/store-instance-undispatch/dispatch/{{store.id}}">Undispatch
             </a>
             <!-- TODO: Generate Doc Download Link -->
             <a class="btn btn-info btn-xs" tabindex="0"
@@ -232,7 +232,7 @@
             </a>
             <a class="btn btn-default btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
-               href="#/store-instance-create/{{store.id}}/replenish">Replenish
+               href="#/store-instance-create/replenish/{{store.id}}">Replenish
             </a>
             <!-- TODO: Recieve-->
             <a class="btn btn-default btn-xs" tabindex="0"
@@ -271,17 +271,17 @@
           <td class="col-xs-1">
             <a class="btn btn-primary btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Pack')"
-               href="#/store-instance-packing/{{replenishment.id}}">
+               href="#/store-instance-packing/replenish/{{replenishment.id}}">
               Start Packing
             </a>
             <a class="btn btn-warning btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Seal')"
-               href="#/store-instance-seals/{{replenishment.id}}">
+               href="#/store-instance-seals/replenish/{{replenishment.id}}">
               Start Seals
             </a>
             <a class="btn btn-success btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
-               href="#/store-instance-review/{{replenishment.id}}">Dispatch
+               href="#/store-instance-review/replenish/{{replenishment.id}}">Dispatch
             </a>
             <!-- TODO: End Dispatch -->
             <a class="btn btn-danger btn-xs" tabindex="0"
@@ -300,7 +300,7 @@
             </a>
             <a class="btn btn-default btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
-               href="#/store-instance-create/{{replenishment.id}}/replenish">Replenish
+               href="#/store-instance-create/replenish/{{replenishment.id}}">Replenish
             </a>
             <!-- TODO: Recieve-->
             <a class="btn btn-default btn-xs" tabindex="0"

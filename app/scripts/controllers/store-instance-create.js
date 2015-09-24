@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
-  function ($scope, $routeParams, $q, storeInstanceFactory, ngToast, dateUtility, GlobalMenuService, storeInstanceDispatchWizardConfig,
+  function ($scope, $routeParams, $q, storeInstanceFactory, ngToast, dateUtility, GlobalMenuService, storeInstanceWizardConfig,
             $location, schedulesService, menuCatererStationsService, lodash) {
 
     $scope.cateringStationList = [];
@@ -22,7 +22,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       scheduleNumbers: [],
       menus: []
     };
-    $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+    $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
     $scope.action = $routeParams.action;
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
@@ -118,7 +118,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.hideLoadingModal();
       if (response.id) {
         $this.showMessage('success', 'Store Instance created id: ' + response.id);
-        $location.url('/store-instance-packing/' + response.id);
+        $location.url('/store-instance-packing/' + $routeParams.action + '/' + response.id);
       }
     };
 
@@ -166,6 +166,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       payload.menus = this.formatMenus(payload.menus);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
+
+      if(payload.scheduleNumbers) {
+        delete payload.scheduleNumbers;
+      }
       return payload;
     };
 

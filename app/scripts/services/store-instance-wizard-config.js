@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc service
- * @name ts5App.storeInstanceDispatchWizardConfig
+ * @name ts5App.storeInstanceWizardConfig
  * @description
- * # storeInstanceDispatchWizardConfig
+ * # storeInstanceWizardConfig
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('storeInstanceDispatchWizardConfig', function () {
+  .service('storeInstanceWizardConfig', function () {
     function getSteps(action, id){
       if (!action) {
         action = 'dispatch';
