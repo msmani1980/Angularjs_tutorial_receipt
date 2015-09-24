@@ -49,6 +49,14 @@ angular.module('ts5App')
         angular.element(input).attr('maxlength', 15);
       };
 
+      $scope.disabledAndNoSeals = function() {
+        return ( $scope.$parent.readOnly && $scope.sealTypeObject.seals.numbers.length < 1);
+      };
+
+      $scope.isReadOnly = function() {
+        return $scope.$parent.readOnly;
+      };
+
     };
     return {
       templateUrl: '/views/directives/seal-type.html',

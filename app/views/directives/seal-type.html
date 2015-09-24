@@ -20,9 +20,10 @@
       <label for="seal-numbers-outbound">
         Seal Numbers <span ng-show="sealTypeObject.required">*</span>:
       </label>
-      <div class="form-group" ng-class="$parent.validateSeals(sealTypeObject)">
-        <ui-select name="{{sealTypeObject.name}}" multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true" disabled="$parent.readOnly" title="Add Seals...">
-          <ui-select-match placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
+      <p ng-show="disabledAndNoSeals()">There are no seals assigned</p>
+      <div class="form-group" ng-class="$parent.validateSeals(sealTypeObject)" ng-hide="disabledAndNoSeals()">
+        <ui-select ng-disabled="isReadOnly()" name="{{sealTypeObject.name}}" multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers" theme="bootstrap" sortable="true"  title="Add Seals...">
+          <ui-select-match ui-locked-choice="true" placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
             <ui-select-choices repeat="number in sealTypeObject.seals.numbers | filter:$select.search">
               <small>
                 Seal: <span ng-bind-html="''+number | highlight: $select.search"></span>

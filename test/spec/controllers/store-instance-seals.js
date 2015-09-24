@@ -10,7 +10,7 @@ describe('the Store Instance Seals controller', function() {
     'served/store-instance-seals.json',
     'served/store-instance-seals-created.json',
     'served/store-instance-details.json'
-  ));
+  )); 
 
   var StoreInstanceSealsCtrl;
   var $scope;
