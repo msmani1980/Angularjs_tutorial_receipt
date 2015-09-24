@@ -38,8 +38,8 @@ angular.module('ts5App')
     var createStore = function (payload) {
       return storesRequestResource.createStore(payload).$promise;
     };
-    var getStoreList = function () {
-      return storesRequestResource.getStoreList().$promise;
+    var getStoreList = function (payload) {
+      return storesRequestResource.getStoreList(payload).$promise;
     };
     var deleteStore = function (_id) {
       return storesRequestResource.deleteStore({id:_id}).$promise;

@@ -35,6 +35,10 @@ angular.module('ts5App')
       return schedulesService.getSchedules(id);
     };
 
+    var getSchedulesInDateRange = function(companyId, startDate, endDate){
+      return schedulesService.getSchedulesInDateRange(companyId, startDate, endDate);
+    };
+
     var getDailySchedulesList = function (id, scheduleNumber, scheduleDate) {
       return schedulesService.getDailySchedules(id, scheduleNumber, scheduleDate);
     };
@@ -82,6 +86,7 @@ angular.module('ts5App')
       createCashBag: createCashBag,
       getCompanyCurrencies: getCompanyCurrencies,
       getSchedulesList: getSchedulesList,
+      getSchedulesInDateRange: getSchedulesInDateRange,
       getDailySchedulesList: getDailySchedulesList,
       getDailyExchangeRates: getDailyExchangeRates,
       getCompanyPreferences: getCompanyPreferences,
