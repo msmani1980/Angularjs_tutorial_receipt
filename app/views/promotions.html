@@ -262,50 +262,56 @@
                 </ui-select-choices>
               </ui-select>
             </div>
-            <div class="form-group" ng-show="promotion.benefits.type.name === 'Discount'">
-              <label>Apply To*</label>
-              <ui-select theme="bootstrap" ng-model="promotion.benefits.discount.applyTo.type" ng-disabled="readOnly">
-                <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
-                <ui-select-choices repeat="discountType in selectOptions.discountApplyTypes | filter: {name:$select.search}">
-                  <div ng-bind-html="discountType.name | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-            <div class="form-group" ng-show="promotion.benefits.discount.applyTo.type.name === 'Promotion Category'">
-              <label>Promotion Category*</label>
-              <ui-select theme="bootstrap" ng-model="promotion.benefits.discount.applyTo.promotionCategory"
-                         ng-required="promotion.benefits.discount.applyTo.type.name === 'Promotion Category'"
-                         ng-disabled="readOnly">
-                <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
-                <ui-select-choices repeat="promotionCategory in selectOptions.promotionCategories | filter: {promotionCategoryName:$select.search}">
-                  <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
+            <fieldset ng-show="promotion.benefits.type.name === 'Discount'">
 
-            <div class="row" ng-show="promotion.benefits.discount.applyTo.type.name === 'Retail Item'">
-              <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
-                  <label>Retail Item*</label>
-                  <ui-select theme="bootstrap" ng-model="promotion.benefits.discount.applyTo.retailItem.retailItem"
-                             ng-disabled="readOnly" ng-required="promotion.benefits.discount.applyTo.type.name === 'Retail Item'">
-                    <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
-                    <ui-select-choices repeat="masterItem in selectOptions.masterItems | filter: {itemName:$select.search}">
-                      <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
-                    </ui-select-choices>
-                  </ui-select>
+              <div class="form-group">
+                <label>Apply To*</label>
+                <ui-select theme="bootstrap" ng-model="promotion.benefits.discount.applyTo.type" ng-disabled="readOnly">
+                  <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
+                  <ui-select-choices repeat="discountType in selectOptions.discountApplyTypes | filter: {name:$select.search}">
+                    <div ng-bind-html="discountType.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+
+              <div class="form-group" ng-show="promotion.benefits.discount.applyTo.type.name === 'Promotion Category'">
+                <label>Promotion Category*</label>
+                <ui-select theme="bootstrap" ng-model="promotion.benefits.discount.applyTo.promotionCategory"
+                           ng-required="promotion.benefits.discount.applyTo.type.name === 'Promotion Category'"
+                           ng-disabled="readOnly">
+                  <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
+                  <ui-select-choices repeat="promotionCategory in selectOptions.promotionCategories | filter: {promotionCategoryName:$select.search}">
+                    <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
+              <div class="row" ng-show="promotion.benefits.discount.applyTo.type.name === 'Retail Item'">
+                <div class="col-xs-12 col-sm-6">
+                  <div class="form-group">
+                    <label>Retail Item*</label>
+                    <ui-select theme="bootstrap" ng-model="promotion.benefits.discount.applyTo.retailItem.retailItem"
+                               ng-disabled="readOnly" ng-required="promotion.benefits.discount.applyTo.type.name === 'Retail Item'">
+                      <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
+                      <ui-select-choices repeat="masterItem in selectOptions.masterItems | filter: {itemName:$select.search}">
+                        <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                  <label class="invisible">Checkbox</label>
+                  <div class="form-group">
+                    <input type="checkbox"
+                           id="benefits-discount-apply-to-retail-item-gift-with-purchase"
+                           ng-model="promotion.benefits.discount.applyTo.retailItem.giftWithPurchase">
+                    <label for="benefits-discount-apply-to-retail-item-gift-with-purchase">Gift With Purchase</label>
+                  </div>
                 </div>
               </div>
-              <div class="col-xs-12 col-sm-6">
-                <label class="invisible">Checkbox</label>
-                <div class="form-group">
-                  <input type="checkbox"
-                         id="benefits-discount-apply-to-retail-item-gift-with-purchase"
-                         ng-model="promotion.benefits.discount.applyTo.retailItem.giftWithPurchase">
-                  <label for="benefits-discount-apply-to-retail-item-gift-with-purchase">Gift With Purchase</label>
-                </div>
-              </div>
-            </div>
+
+            </fieldset>
           </div>
           <div class="col-xs-12 col-md-6">
 
