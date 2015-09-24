@@ -1,17 +1,17 @@
 'use strict';
 
-describe('Service: storeInstanceDispatchWizardConfig', function () {
+describe('Service: storeInstanceWizardConfig', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));
 
   // instantiate service
-  var storeInstanceDispatchWizardConfig;
+  var storeInstanceWizardConfig;
   var mockedConfigDispatch;
   var mockedConfigReplenish;
   var mockId;
-  beforeEach(inject(function (_storeInstanceDispatchWizardConfig_) {
-    storeInstanceDispatchWizardConfig = _storeInstanceDispatchWizardConfig_;
+  beforeEach(inject(function (_storeInstanceWizardConfig_) {
+    storeInstanceWizardConfig = _storeInstanceWizardConfig_;
     mockId = 7;
     mockedConfigDispatch = [
       {
@@ -52,9 +52,9 @@ describe('Service: storeInstanceDispatchWizardConfig', function () {
   }));
 
   it('should match mocked dispatch config', function(){
-    var configDispatch = storeInstanceDispatchWizardConfig.getSteps('dispatch', mockId);
+    var configDispatch = storeInstanceWizardConfig.getSteps('dispatch', mockId);
     expect(configDispatch).toEqual(mockedConfigDispatch);
-    var configReplenish = storeInstanceDispatchWizardConfig.getSteps('replenish', mockId);
+    var configReplenish = storeInstanceWizardConfig.getSteps('replenish', mockId);
     expect(configReplenish).toEqual(mockedConfigReplenish);
   });
 });

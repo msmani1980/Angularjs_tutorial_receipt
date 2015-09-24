@@ -8,6 +8,7 @@ describe('Store Instance Create Controller', function () {
 
   var StoreInstanceCreateCtrl;
   var $scope;
+  var $routeParams;
   var storeInstanceFactory;
   var storeInstanceService;
   var catererStationService;
@@ -31,7 +32,7 @@ describe('Store Instance Create Controller', function () {
   var createStoreInstanceDeferred;
   var templateCache;
   var compile;
-  var storeInstanceDispatchWizardConfig;
+  var storeInstanceWizardConfig;
   var schedulesService;
   var getSchedulesInDateRangeDeferred;
   var schedulesDateRangeJSON;
@@ -65,7 +66,7 @@ describe('Store Instance Create Controller', function () {
     menuCatererStationsService = $injector.get('menuCatererStationsService');
     templateCache = $injector.get('$templateCache');
     compile = $injector.get('$compile');
-    storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
+    storeInstanceWizardConfig = $injector.get('storeInstanceWizardConfig');
     schedulesService = $injector.get('schedulesService');
 
     getMenuMasterListDeferred = $q.defer();
@@ -95,8 +96,13 @@ describe('Store Instance Create Controller', function () {
     getRelationshipListDeferred.resolve(companyMenuCatererStationsJSON);
     spyOn(menuCatererStationsService, 'getRelationshipList').and.returnValue(getRelationshipListDeferred.promise);
 
+    $routeParams = {
+      state: 'dispatch'
+    };
+
     StoreInstanceCreateCtrl = $controller('StoreInstanceCreateCtrl', {
-      $scope: $scope
+      $scope: $scope,
+      $routeParams: $routeParams
     });
 
     postPayloadControl = {
@@ -154,7 +160,7 @@ describe('Store Instance Create Controller', function () {
     });
 
     it('should set wizardSteps', function () {
-      var wizardSteps = storeInstanceDispatchWizardConfig.getSteps();
+      var wizardSteps = storeInstanceWizardConfig.getSteps();
       expect($scope.wizardSteps).toEqual(wizardSteps);
     });
 
@@ -363,7 +369,7 @@ describe('Store Instance Create Controller', function () {
       });
 
       it('should redirect the user to the packing page with the new store instance id', function () {
-        var url = '/store-instance-packing/' + storeInstanceCreatedJSON.id;
+        var url = '/store-instance-packing/' + $routeParams.action + '/' + storeInstanceCreatedJSON.id;
         expect(location.path()).toEqual(url);
       });
 

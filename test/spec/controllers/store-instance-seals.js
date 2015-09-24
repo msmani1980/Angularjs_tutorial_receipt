@@ -18,7 +18,7 @@ describe('the Store Instance Seals controller', function() {
   var compile;
   var storeDetailsJSON;
   var storeInstanceFactory;
-  var storeInstanceDispatchWizardConfig;
+  var storeInstanceWizardConfig;
   var getStoreDetailsDeferred;
   var storeId;
   var routeParams;
@@ -58,7 +58,7 @@ describe('the Store Instance Seals controller', function() {
     compile = $injector.get('$compile');
 
     storeInstanceFactory = $injector.get('storeInstanceFactory');
-    storeInstanceDispatchWizardConfig = $injector.get('storeInstanceDispatchWizardConfig');
+    storeInstanceWizardConfig = $injector.get('storeInstanceWizardConfig');
     sealTypesService = $injector.get('sealTypesService');
     sealColorsService = $injector.get('sealColorsService');
     storeInstanceSealService = $injector.get('storeInstanceSealService');
@@ -154,14 +154,14 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should set wizardSteps', function() {
-      var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.action, storeId);
+      var wizardSteps = storeInstanceWizardConfig.getSteps(routeParams.action, storeId);
       expect($scope.wizardSteps).toEqual(wizardSteps);
     });
 
     it('should have a nextStep set on the controller', function() {
       var mockNextStep = {
         stepName: '3',
-        URL: '/store-instance-review/' + storeId + '/dispatch'
+        URL: '/store-instance-review/dispatch/' + storeId
       };
       expect(StoreInstanceSealsCtrl.nextStep).toEqual(mockNextStep);
     });
@@ -169,7 +169,7 @@ describe('the Store Instance Seals controller', function() {
     it('should have a prevStep set on the controller', function() {
       var mockPrevStep = {
         stepName: '1',
-        URL: '/store-instance-packing/' + storeId
+        URL: '/store-instance-packing/dispatch/' + storeId
       };
       expect(StoreInstanceSealsCtrl.prevStep).toEqual(mockPrevStep);
     });
@@ -230,7 +230,7 @@ describe('the Store Instance Seals controller', function() {
       });
 
       it('should set wizardSteps', function() {
-        var wizardSteps = storeInstanceDispatchWizardConfig.getSteps(routeParams.action, storeId);
+        var wizardSteps = storeInstanceWizardConfig.getSteps(routeParams.action, storeId);
         expect($scope.wizardSteps).toEqual(wizardSteps);
       });
 
@@ -527,7 +527,7 @@ describe('the Store Instance Seals controller', function() {
         beforeEach(function() {
           nextStep = {
             stepName: '3',
-            URL: '/store-instance-review/' + storeId + '/dispatch'
+            URL: '/store-instance-review/dispatch/' + storeId
           };
           updateStoreInstanceStatusDeferred.resolve({});
           $scope.$digest();
