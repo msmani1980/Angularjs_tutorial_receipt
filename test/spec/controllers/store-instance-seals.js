@@ -383,7 +383,8 @@ describe('the Store Instance Seals controller', function() {
 
       it('should call the submitForm method with the saveAndExit flag set as true', function() {
         $scope.saveAndExit();
-        expect($scope.submitForm).toHaveBeenCalledWith(true);
+        expect($scope.submitForm).toHaveBeenCalled();
+        expect(StoreInstanceSealsCtrl.exitAfterSave).toBeTruthy();
       });
 
     });

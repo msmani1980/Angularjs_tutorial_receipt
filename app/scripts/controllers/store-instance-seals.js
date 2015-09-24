@@ -342,6 +342,10 @@ angular.module('ts5App')
     };
 
     this.assignSealsSuccessHandler = function() {
+      if($this.exitAfterSave) {
+        $this.exitOnSave();
+        return;
+      }
       $this.updateStatusToStep($this.nextStep);
       $this.showMessage('success', 'Seals Assigned!');
     };
@@ -380,10 +384,10 @@ angular.module('ts5App')
       sealTypeTo.seals.numbers = angular.copy(sealTypeFrom.seals.numbers);
     };
 
-    $scope.submitForm = function(saveAndExit) {
+    $scope.submitForm = function() {
       $scope.assignSealsForm.$setSubmitted(true);
       if ($this.validateForm()) {
-        $this.assignSeals(saveAndExit);
+        $this.assignSeals();
       }
       return false;
     };
@@ -410,7 +414,12 @@ angular.module('ts5App')
     };
 
     $scope.saveAndExit = function() {
-      return $scope.submitForm(true);
+      if($scope.readOnly) {
+        $location.url('/store-instance-dashboard');
+        return;
+      }
+      $this.exitAfterSave = true;
+      return $scope.submitForm();
     };
 
   });
