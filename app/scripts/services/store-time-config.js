@@ -9,6 +9,7 @@
  */
 angular.module('ts5App')
   .service('storeTimeConfig', function($resource, ENV) {
+
     var requestURL = ENV.apiUrl + '/api/companies/time-configuration';
 
     var actions = {
