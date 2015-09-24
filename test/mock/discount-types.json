@@ -1,10 +1,1 @@
-[
-  {
-    "id": 1,
-    "name": "Percentage"
-  },
-  {
-    "id": 2,
-    "name": "Amount"
-  }
-]
+[{"id":1,"name":"Percentage"},{"id":2,"name":"Amount"}]
