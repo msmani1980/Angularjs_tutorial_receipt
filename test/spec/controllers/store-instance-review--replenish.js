@@ -17,7 +17,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
   var storeDetailsJSON;
   var routeParams;
   var getStoreDetailsDeferred;
-  var storeInstanceReplenishWizardConfig;
+  var storeInstanceWizardConfig;
   var getStoreInstanceMenuItemsDeferred;
   var storeInstanceReviewFactory;
   var getSealColorsDeferred;
@@ -37,7 +37,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     };
     location = $location;
 
-    storeInstanceReplenishWizardConfig = $injector.get('storeInstanceReplenishWizardConfig');
+    storeInstanceWizardConfig = $injector.get('storeInstanceWizardConfig');
 
     // storeInstanceFactory
     storeInstanceFactory = $injector.get('storeInstanceFactory');
@@ -115,7 +115,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     });
 
     it('should set wizardSteps', function () {
-      var wizardSteps = storeInstanceReplenishWizardConfig.getSteps(routeParams.storeId);
+      var wizardSteps = storeInstanceWizardConfig.getSteps(routeParams.action, routeParams.storeId);
       expect(scope.wizardSteps).toEqual(wizardSteps);
     });
 
