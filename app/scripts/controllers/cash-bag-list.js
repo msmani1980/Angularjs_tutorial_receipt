@@ -61,7 +61,7 @@ angular.module('ts5App')
     }
 
     function setFilteredScheduleList(dataFromAPI) {
-      var scheduleArray = dataFromAPI.distinctSchedules || dataFromAPI.schedules;
+      var scheduleArray            = dataFromAPI.distinctSchedules || dataFromAPI.schedules;
       $scope.filteredSchedulesList = angular.copy(scheduleArray);
     }
 
@@ -141,6 +141,18 @@ angular.module('ts5App')
     function getStoreListResponseHandler(storeListFromAPI) {
       $scope.storeList = angular.copy(storeListFromAPI.response);
     }
+
+    $scope.isDateSelected = function () {
+      return !$scope.scheduleDate;
+    };
+
+    $scope.clearSelectedSchedule = function () {
+      $scope.selectedSchedule = {};
+    };
+
+    $scope.clearStoreNumber = function () {
+      $scope.selectedStoreNumber = {};
+    };
 
     $scope.$watch('scheduleDate', function () {
       if (!$scope.scheduleDate) {

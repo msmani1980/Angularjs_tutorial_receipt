@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CashBagListCtrl', function () {
+fdescribe('Controller: CashBagListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App', 'template-module'));
@@ -30,33 +30,40 @@ describe('Controller: CashBagListCtrl', function () {
       schedulesDailyResponseJSON = _servedSchedulesDaily_;
 
     });
-    location               = $location;
-    cashBagFactory         = $injector.get('cashBagFactory');
-    scope                  = $rootScope.$new();
+    location       = $location;
+    cashBagFactory = $injector.get('cashBagFactory');
+    scope          = $rootScope.$new();
+
     getCashBagListDeferred = $q.defer();
     getCashBagListDeferred.resolve(cashBagListResponseJSON);
-    stationsListDeferred   = $q.defer();
+
+    stationsListDeferred = $q.defer();
     stationsListDeferred.resolve(stationsResponseJSON);
-    schedulesListDeferred  = $q.defer();
+
+    schedulesListDeferred = $q.defer();
     schedulesListDeferred.resolve(schedulesResponseJSON);
+
     schedulesDailyDeferred = $q.defer();
     schedulesDailyDeferred.resolve(schedulesDailyResponseJSON);
+
     spyOn(cashBagFactory, 'getCashBagList').and.returnValue(getCashBagListDeferred.promise);
     spyOn(cashBagFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(cashBagFactory, 'getSchedulesList').and.returnValue(schedulesListDeferred.promise);
     spyOn(cashBagFactory, 'getDailySchedulesList').and.returnValue(schedulesDailyDeferred.promise);
+    spyOn(cashBagFactory, 'getCompanyId').and.returnValue('fakeCompanyId');
     spyOn(cashBagFactory, 'deleteCashBag').and.returnValue({
       then: function () {
         return;
       }
     });
-    CashBagListCtrl        = $controller('CashBagListCtrl', {
+
+    CashBagListCtrl = $controller('CashBagListCtrl', {
       $scope: scope
     });
-    companyId              = cashBagFactory.getCompanyId();
+
+    companyId = cashBagFactory.getCompanyId();
     scope.$digest();
   }));
-  companyId = '403';
 
   describe('scope globals', function () {
     it('should have cashBagList attached to scope', function () {
@@ -156,7 +163,7 @@ describe('Controller: CashBagListCtrl', function () {
         scope.createCashBagForm = {
           $valid: true
         };
-        scope.selectedSchedule     = {scheduleNumber: '105'};
+        scope.selectedSchedule  = {scheduleNumber: '105'};
         scope.scheduleDate      = '06/18/2015';
         scope.submitCreate();
         expect(cashBagFactory.getDailySchedulesList).toHaveBeenCalledWith(companyId, '105', '20150618');

@@ -53,11 +53,13 @@
                 <div class="form-group">
                   <label for="create-schedule">Schedule Number</label>
                   <select
+                    ng-disabled="isDateSelected()"
                     ng-model="selectedSchedule"
+                    ng-change="clearStoreNumber()"
                     class="form-control col-md-12"
                     id="create-schedule"
                     ng-options="schedule.scheduleNumber as schedule.scheduleNumber for schedule in filteredSchedulesList">
-                    <option disabled value>Select Schedule Number</option>
+                    <option disabled value>Select Schedule</option>
                   </select>
                 </div>
               </div>
@@ -66,7 +68,9 @@
                 <div class="form-group">
                   <label for="create-storeNumber">Store Number</label>
                   <select
+                    ng-disabled="isDateSelected()"
                     ng-model="selectedStoreNumber"
+                    ng-change="clearSelectedSchedule()"
                     class="form-control col-md-12"
                     id="create-storeNumber"
                     ng-options="store.id as store.storeNumber for store in storeList">
