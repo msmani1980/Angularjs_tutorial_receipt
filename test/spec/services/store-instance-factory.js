@@ -240,6 +240,7 @@ describe('Service: storeInstanceFactory', function() {
   describe('getStoreDetails', function() {
     var storeId;
     var storeDetails;
+    var parentId = 3;  // replenishStoreInstanceId from store-instance.json
     beforeEach(function() {
       storeId = 1;
       storeInstanceFactory.getStoreDetails(storeId).then(function(dataFromAPI) {
@@ -250,6 +251,10 @@ describe('Service: storeInstanceFactory', function() {
 
     it('should GET store details from storesService', function() {
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(storeId);
+    });
+
+    it('should GET parent store details from storesService using replenishStoreInstanceId', function() {
+      expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(parentId);
     });
 
     it('should GET store instance number from storesService', function() {
