@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig,
                                                    storeInstanceFactory, $location, storeInstanceReviewFactory,
-                                                   $q, ngToast, $filter) {
+                                                   $q, ngToast, $filter, dateUtility) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -52,9 +52,10 @@ angular.module('ts5App')
     }
 
     function getStoreInstanceMenuItems() {
+      var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var payload = {
         itemTypeId: 1,
-        date: $scope.storeDetails.scheduleDate
+        date: payloadDate
       };
       _initPromises.push(
         storeInstanceFactory.getStoreInstanceMenuItems($routeParams.storeId, payload)
