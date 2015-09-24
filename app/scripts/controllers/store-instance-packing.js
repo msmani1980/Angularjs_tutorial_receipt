@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location) {
+  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, dateUtility) {
     var $this = this;
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
@@ -116,9 +116,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getStoreInstanceMenuItems = function () {
+      var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var payload = {
         itemTypeId: 1,
-        date: $scope.storeDetails.scheduleDate
+        date: payloadDate
       };
       storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler, showErrors);
     };
@@ -134,10 +135,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     function getMasterItemsList() {
+      var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var filterPayload = {
         itemTypeId: 1,
-        startDate: $scope.storeDetails.scheduleDate,
-        endDate: $scope.storeDetails.scheduleDate
+        startDate: payloadDate,
+        endDate: payloadDate
       };
       storeInstanceFactory.getItemsMasterList(filterPayload).then(getMasterItemsListSuccess, showErrors);
     }
@@ -271,8 +273,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.emptyMenuItems = [];
       angular.forEach(dataFromAPI.response, function (item) {
         var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId});
-        item.itemCode = masterItem.itemCode;
-        item.itemName = masterItem.itemName;
+        item.itemCode = angular.isDefined(masterItem) ? masterItem.itemCode : '';
+        item.itemName = angular.isDefined(masterItem) ? masterItem.itemName : '';
       });
       getItemsSuccessHandler(dataFromAPI);
 
