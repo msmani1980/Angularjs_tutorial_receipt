@@ -124,27 +124,40 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.getStoreInstanceItemList($scope.storeId).then(getItemsSuccessHandler, showErrors);
     };
 
-    this.setMenuFiltersAndGetMenuItems = function (responseArray) {
+    this.getRegularItemTypeIdSuccess = function (dataFromAPI) {
+      $scope.regularItemTypeId = $this.getIdByNameFromArray('Regular', dataFromAPI);
+    };
+
+    this.getRegularItemTypeId = function () {
+      return storeInstanceFactory.getItemTypes().then($this.getRegularItemTypeIdSuccess);
+    };
+
+    this.getUpliftableCharacteristicIdSuccess = function (dataFromAPI) {
+      $scope.upliftableCharacteristicId = $this.getIdByNameFromArray('Upliftable', dataFromAPI);
+    };
+
+    this.getUpliftableCharacteristicId = function () {
+      return storeInstanceFactory.getCharacteristics().then($this.getUpliftableCharacteristicIdSuccess);
+    };
+
+    this.setMenuFiltersAndGetMenuItems = function () {
       var filters = {
-        date: $scope.storeDetails.scheduleDate
+        date: $scope.storeDetails.scheduleDate,
+        itemTypeId: $scope.regularItemTypeId
       };
-      filters.itemTypeId = $this.getIdByNameFromArray('Regular', responseArray[0]);
-      if(responseArray.length > 1) {
-        filters.charactersticId = $this.getIdByNameFromArray('Upliftable', responseArray[1]);
+      if($routeParams.action == 'replenish') {
+        filters.characteristicId = $scope.upliftableCharacteristicId;
       }
       storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, filters).then(getItemsSuccessHandler, showErrors);
     };
 
     this.getStoreInstanceMenuItems = function () {
       var dependenciesArrayForMenuFilters = [];
-      dependenciesArrayForMenuFilters.push(storeInstanceFactory.getItemTypes());
+      dependenciesArrayForMenuFilters.push($this.getRegularItemTypeId());
       if($routeParams.action === 'replenish') {
-        dependenciesArrayForMenuFilters.push(storeInstanceFactory.getCharacteristics());
+        dependenciesArrayForMenuFilters.push($this.getUpliftableCharacteristicId());
       }
-
-      $q.all(dependenciesArrayForMenuFilters).then(function (response) {
-        $this.setMenuFiltersAndGetMenuItems(response);
-      }, showErrors);
+      $q.all(dependenciesArrayForMenuFilters).then($this.setMenuFiltersAndGetMenuItems, showErrors);
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
