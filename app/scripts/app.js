@@ -182,18 +182,18 @@ angular.module('ts5App', [
   }).when('/store-instance-step-1', {
     templateUrl: 'views/store-instance-step-1.html',
     controller: 'StoreInstanceStep1Ctrl'
-  }).when('/store-instance-create', {
+  }).when('/store-instance-create/:action/:storeId?', {
     templateUrl: 'views/store-instance-create.html',
     controller: 'StoreInstanceCreateCtrl'
-  }).when('/store-instance-review/:storeId/:action', {
-    templateUrl: 'views/store-instance-review.html',
-    controller: 'StoreInstanceReviewCtrl'
-  }).when('/store-instance-packing/:storeId', {
+  }).when('/store-instance-packing/:action/:storeId', {
     templateUrl: 'views/store-instance-packing.html',
     controller: 'StoreInstancePackingCtrl'
-  }).when('/store-instance-seals/:storeId', {
+  }).when('/store-instance-seals/:action/:storeId', {
     templateUrl: 'views/store-instance-seals.html',
     controller: 'StoreInstanceSealsCtrl'
+  }).when('/store-instance-review/:action/:storeId?', {
+    templateUrl: 'views/store-instance-review.html',
+    controller: 'StoreInstanceReviewCtrl'
   }).when('/store-instance-dashboard', {
     templateUrl: 'views/store-instance-dashboard.html',
     controller: 'StoreInstanceDashboardCtrl'

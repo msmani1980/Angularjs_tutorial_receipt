@@ -263,6 +263,11 @@ angular.module('ts5App')
           route: '/#/store-instance-create',
           icon: 'icon-manage-schedule',
           className: 'dashboard-storeDispatch'
+        }, {
+          name: 'Store Instance Dashboard',
+          route: '/#/store-instance-dashboard',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-storeInstanceDashboard'
         }]
       }, {
         title: 'Stock Manager',
