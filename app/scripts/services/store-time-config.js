@@ -8,6 +8,23 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('storeTimeConfig', function () {
-    // AngularJS will instantiate a singleton by calling "new" on this function
+  .service('storeTimeConfig', function($resource, ENV) {
+    var requestURL = ENV.apiUrl + '/api/companies/time-configuration';
+
+    var actions = {
+      getTimeConfig: {
+        method: 'GET',
+        isArray: true
+      }
+    };
+
+    var requestResource = $resource(requestURL, {}, actions);
+
+    function getTimeConfig() {
+      return requestResource.getTimeConfig().$promise;
+    }
+
+    return {
+      getTimeConfig: getTimeConfig
+    };
   });
