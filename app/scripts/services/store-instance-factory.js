@@ -117,23 +117,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       return recordsService.getCharacteristics();
     }
 
-    function getDependenciesForStoreInstance(dataFromAPI) {
-      var responseData = angular.copy(dataFromAPI);
-      var dependenciesArray = [];
-
-      dependenciesArray.push(getStore(responseData.storeId));
-      dependenciesArray.push(getStation(responseData.cateringStationId));
-      dependenciesArray.push(getStoreStatusList());
-      dependenciesArray.push(getMenuMasterList());
-
-      if (responseData.carrierId) {
-        dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
-      }
-
-      return dependenciesArray;
-    }
-
-    function formatResponseCollection(responseCollection, storeInstanceAPIResponse) {
+    function formatResponseCollection(responseCollection, storeInstanceAPIResponse, parentStoreInstanceAPIResponse) {
       var storeDetails = {};
       storeDetails.LMPStation = responseCollection[1].code;
       storeDetails.storeNumber = responseCollection[0].storeNumber;
@@ -142,10 +126,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.storeInstanceNumber = storeInstanceAPIResponse.id;
       storeDetails.statusList = responseCollection[2];
       storeDetails.menuList = [];
-      angular.forEach(storeInstanceAPIResponse.menus, function(menu) {
-        var menuObject = lodash.findWhere(responseCollection[3].companyMenuMasters, {
-          id: menu.menuMasterId
-        });
+
+      var storeMenus = (parentStoreInstanceAPIResponse ? angular.copy(parentStoreInstanceAPIResponse.menus) : angular.copy(storeInstanceAPIResponse.menus));
+      angular.forEach(storeMenus, function(menu) {
+        var menuObject = lodash.findWhere(responseCollection[3].companyMenuMasters, {id: menu.menuMasterId});
         if (angular.isDefined(menuObject)) {
           storeDetails.menuList.push(menuObject);
         }
@@ -161,17 +145,46 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storeDetails;
     }
 
+    function getDependenciesForStoreInstance(storeInstanceDataFromAPI, parentStoreInstanceDataFromAPI) {
+      var responseData = angular.copy(storeInstanceDataFromAPI);
+      var dependenciesArray = [];
+
+      var storeId = (angular.isDefined(parentStoreInstanceDataFromAPI) ? angular.copy(parentStoreInstanceDataFromAPI.storeId) : responseData.storeId);
+      dependenciesArray.push(getStore(storeId));
+      dependenciesArray.push(getStation(responseData.cateringStationId));
+      dependenciesArray.push(getStoreStatusList());
+      dependenciesArray.push(getMenuMasterList());
+
+      if (responseData.carrierId) {
+        dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
+      }
+
+      return dependenciesArray;
+    }
+
+    function getRemainingDataForStoreDetails(storeDetailsDeferred, storeInstanceAPIResponse, parentStoreInstanceAPIResponse) {
+      var storeDetailPromiseArray = getDependenciesForStoreInstance(storeInstanceAPIResponse, parentStoreInstanceAPIResponse);
+      $q.all(storeDetailPromiseArray).then(function(responseCollection) {
+        storeDetailsDeferred.resolve(formatResponseCollection(responseCollection, storeInstanceAPIResponse, parentStoreInstanceAPIResponse));
+      });
+    }
+
+    function getParentStoreInstance(storeDetailsDeferred, storeInstanceAPIResponse) {
+      getStoreInstance(replenishmentAPIResponse.replenishStoreInstanceId).then(function(parentStoreInstanceAPIResponse) {
+        getRemainingDataForStoreDetails(storeDetailsDeferred, storeInstanceAPIResponse, parentStoreInstanceAPIResponse);
+      }, storeDetailsDeferred.reject);
+      return storeDetailsDeferred.promise;
+    }
+
     function getStoreDetails(storeId) {
       var getStoreDetailsDeferred = $q.defer();
-
       getStoreInstance(storeId).then(function(storeInstanceAPIResponse) {
-        var storeDetailPromiseArray = getDependenciesForStoreInstance(storeInstanceAPIResponse);
-        $q.all(storeDetailPromiseArray).then(function(responseCollection) {
-          getStoreDetailsDeferred.resolve(formatResponseCollection(responseCollection,
-            storeInstanceAPIResponse));
-        });
+        if(storeInstanceAPIResponse.replenishStoreInstanceId) {
+          getParentStoreInstance(getStoreDetailsDeferred, storeInstanceAPIResponse);
+        } else {
+          getRemainingDataForStoreDetails(getStoreDetailsDeferred, storeInstanceAPIResponse);
+        }
       }, getStoreDetailsDeferred.reject);
-
       return getStoreDetailsDeferred.promise;
     }
 
