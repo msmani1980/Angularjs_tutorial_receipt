@@ -423,10 +423,7 @@ angular.module('ts5App')
     // private controller vars
     var _companyId = promotionsFactory.getCompanyId();
     var _initPromises = [];
-    var states = {};
-    states.createInit = function(){
-      getPromotionMetaData();
-    };
+
     // private controller functions
     function showMessage(message, messageType) {
       if(!messageType){
@@ -603,6 +600,10 @@ angular.module('ts5App')
       resolveInitPromises();
     }
 
+    var states = {};
+    states.createInit = function(){
+      getPromotionMetaData();
+    };
     function init(){
 
       $scope.displayError = false;
