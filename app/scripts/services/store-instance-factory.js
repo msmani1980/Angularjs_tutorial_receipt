@@ -170,7 +170,7 @@ angular.module('ts5App').service('storeInstanceFactory',
     }
 
     function getParentStoreInstance(storeDetailsDeferred, storeInstanceAPIResponse) {
-      getStoreInstance(replenishmentAPIResponse.replenishStoreInstanceId).then(function(parentStoreInstanceAPIResponse) {
+      getStoreInstance(storeInstanceAPIResponse.replenishStoreInstanceId).then(function(parentStoreInstanceAPIResponse) {
         getRemainingDataForStoreDetails(storeDetailsDeferred, storeInstanceAPIResponse, parentStoreInstanceAPIResponse);
       }, storeDetailsDeferred.reject);
       return storeDetailsDeferred.promise;

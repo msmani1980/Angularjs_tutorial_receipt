@@ -145,7 +145,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         date: $scope.storeDetails.scheduleDate,
         itemTypeId: $scope.regularItemTypeId
       };
-      if($routeParams.action == 'replenish') {
+      if($routeParams.action === 'replenish') {
         filters.characteristicId = $scope.upliftableCharacteristicId;
       }
       storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, filters).then(getItemsSuccessHandler, showErrors);
