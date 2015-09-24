@@ -7,37 +7,37 @@ describe('Controller: CashBagListCtrl', function () {
   beforeEach(module('served/cash-bag-list.json', 'served/stations.json', 'served/schedules.json', 'served/schedules-daily.json'));
 
   var CashBagListCtrl,
-    scope,
-    cashBagListResponseJSON,
-    getCashBagListDeferred,
-    companyId,
-    stationsListDeferred,
-    stationsResponseJSON,
-    schedulesListDeferred,
-    schedulesDailyDeferred,
-    schedulesResponseJSON,
-    schedulesDailyResponseJSON,
-    cashBagFactory,
-    location;
+      scope,
+      cashBagListResponseJSON,
+      getCashBagListDeferred,
+      companyId,
+      stationsListDeferred,
+      stationsResponseJSON,
+      schedulesListDeferred,
+      schedulesDailyDeferred,
+      schedulesResponseJSON,
+      schedulesDailyResponseJSON,
+      cashBagFactory,
+      location;
 
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location) {
     inject(function (_servedCashBagList_, _servedStations_, _servedSchedules_, _servedSchedulesDaily_) {
-      cashBagListResponseJSON = _servedCashBagList_;
-      stationsResponseJSON = _servedStations_;
-      schedulesResponseJSON = _servedSchedules_;
+      cashBagListResponseJSON    = _servedCashBagList_;
+      stationsResponseJSON       = _servedStations_;
+      schedulesResponseJSON      = _servedSchedules_;
       schedulesDailyResponseJSON = _servedSchedulesDaily_;
 
     });
-    location = $location;
-    cashBagFactory = $injector.get('cashBagFactory');
-    scope = $rootScope.$new();
+    location               = $location;
+    cashBagFactory         = $injector.get('cashBagFactory');
+    scope                  = $rootScope.$new();
     getCashBagListDeferred = $q.defer();
     getCashBagListDeferred.resolve(cashBagListResponseJSON);
-    stationsListDeferred = $q.defer();
+    stationsListDeferred   = $q.defer();
     stationsListDeferred.resolve(stationsResponseJSON);
-    schedulesListDeferred = $q.defer();
+    schedulesListDeferred  = $q.defer();
     schedulesListDeferred.resolve(schedulesResponseJSON);
     schedulesDailyDeferred = $q.defer();
     schedulesDailyDeferred.resolve(schedulesDailyResponseJSON);
@@ -50,10 +50,10 @@ describe('Controller: CashBagListCtrl', function () {
         return;
       }
     });
-    CashBagListCtrl = $controller('CashBagListCtrl', {
+    CashBagListCtrl        = $controller('CashBagListCtrl', {
       $scope: scope
     });
-    companyId = cashBagFactory.getCompanyId();
+    companyId              = cashBagFactory.getCompanyId();
     scope.$digest();
   }));
   companyId = '403';
@@ -72,7 +72,7 @@ describe('Controller: CashBagListCtrl', function () {
   describe('cash bag constructor calls', function () {
     describe('get cashBag list', function () {
       it('should call getCashBagList with companyId', function () {
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, { isDelete: 'false' });
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {isDelete: 'false'});
       });
       describe('sorted bankRefList results', function () {
         it('should have bankRefList attached to scope', function () {
@@ -118,14 +118,14 @@ describe('Controller: CashBagListCtrl', function () {
       });
       it('should call get CashBagList with search params', function () {
         var testCashBagNumber = '123';
-        scope.search = {cashBagNumber: testCashBagNumber};
+        scope.search          = {cashBagNumber: testCashBagNumber};
         scope.searchCashBag();
         expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {cashBagNumber: testCashBagNumber});
       });
-      it('should send searchDate with yyyymmdd format', function(){
+      it('should send searchDate with yyyymmdd format', function () {
         scope.search = {startDate: '06/20/2015'};
         scope.searchCashBag();
-        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {startDate: '20150620', endDate:'20150620'});
+        expect(cashBagFactory.getCashBagList).toHaveBeenCalledWith(companyId, {startDate: '20150620', endDate: '20150620'});
       });
       it('should clear search model and make a API call', function () {
         scope.search = {cashBagNumber: 'fakeCashBagNumber'};
@@ -140,8 +140,8 @@ describe('Controller: CashBagListCtrl', function () {
         scope.createCashBagForm = {
           $valid: true
         };
-        scope.scheduleIndex = '0';
-        scope.scheduleDate = '06/18/2015';
+        scope.scheduleIndex     = '0';
+        scope.scheduleDate      = '06/18/2015';
         scope.submitCreate();
         expect(cashBagFactory.getDailySchedulesList).toHaveBeenCalled();
       });
@@ -156,9 +156,8 @@ describe('Controller: CashBagListCtrl', function () {
         scope.createCashBagForm = {
           $valid: true
         };
-        scope.schedulesList = [{scheduleNumber:'105'}];
-        scope.scheduleIndex = '0';
-        scope.scheduleDate = '06/18/2015';
+        scope.selectedSchedule     = {scheduleNumber: '105'};
+        scope.scheduleDate      = '06/18/2015';
         scope.submitCreate();
         expect(cashBagFactory.getDailySchedulesList).toHaveBeenCalledWith(companyId, '105', '20150618');
       });
@@ -168,16 +167,16 @@ describe('Controller: CashBagListCtrl', function () {
       var testCashBag = {};
       it('should return true if cash bag has not been submitted', function () {
         testCashBag.isSubmitted = false;
-        testCashBag.isDelete = 'false';
+        testCashBag.isDelete    = 'false';
         expect(scope.isCashBagEditable(testCashBag)).toEqual(true);
         testCashBag.isSubmitted = true;
         expect(scope.isCashBagEditable(testCashBag)).toEqual(false);
       });
       it('should return true if cash bag has not been deleted', function () {
         testCashBag.isSubmitted = false;
-        testCashBag.isDelete = 'false';
+        testCashBag.isDelete    = 'false';
         expect(scope.isCashBagEditable(testCashBag)).toEqual(true);
-        testCashBag.isDelete = 'true';
+        testCashBag.isDelete    = 'true';
         expect(scope.isCashBagEditable(testCashBag)).toEqual(false);
       });
     });
