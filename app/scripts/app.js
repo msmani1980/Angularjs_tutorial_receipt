@@ -61,7 +61,8 @@ angular.module('ts5App', [
   url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
 }).config(function ($routeProvider, $httpProvider) {
   $httpProvider.interceptors.push('defaultData');
-  $routeProvider.when('/', {
+  $httpProvider.interceptors.push('httpErrorHandlerFactory');
+    $routeProvider.when('/', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl'
   }).when('/item-list', {
@@ -210,11 +211,6 @@ angular.module('ts5App', [
   'GlobalMenuService',
   '$http',
   function ($rootScope, regexp, GlobalMenuService, $http) {
-
-    $http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
-
-    // TODO: move this away when login is there
-    $http.defaults.headers.common.sessionToken = '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
 
     var user = GlobalMenuService.user.get();
     var companyId = GlobalMenuService.company.get();
