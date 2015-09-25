@@ -24,6 +24,7 @@ angular.module('ts5App')
 
     $scope.formData = [];
     $scope.readOnly = true;
+    $scope.saveButtonName = 'Exit';
 
     this.setSealColors = function(dataFromAPI) {
       $scope.sealColorsList = dataFromAPI.response;
@@ -34,6 +35,7 @@ angular.module('ts5App')
         this.showMessage('warning', 'This store instance is not ready for seals');
       } else {
         $scope.readOnly = false;
+        $scope.saveButtonName = 'Save & Exit';
       }
     };
 
