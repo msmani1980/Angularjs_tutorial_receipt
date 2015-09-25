@@ -190,9 +190,9 @@
             </span>
             <div class="scheduleDetails-{{store.id}} accordion-cell-details accordion-cell-closed">
               <strong>Departure Station:</strong> {{ store.departureStationCode }}<br>
-              <strong>Departure Time:</strong> 12:30 <br>
+              <strong>Departure Time:</strong> {{ store.arrivalTime }} <br>
               <strong>Arrival Station:</strong> {{ store.arrivalStationCode }}<br>
-              <strong>Arrival Time:</strong> 3:30 <br>
+              <strong>Arrival Time:</strong> {{ store.departureTime }} <br>
             </div>
           </td>
           <td>{{ (store.tampered) ? 'true' : 'false' }}</td>
@@ -258,9 +258,9 @@
             </span>
             <div class="scheduleDetails-{{replenishment.id}} accordion-cell-details accordion-cell-closed">
               <strong>Departure Station:</strong> {{ replenishment.departureStationCode }}<br>
-              <strong>Departure Time:</strong> 12:30 <br>
+              <strong>Departure Time:</strong> {{ replenishment.arrivalTime }} <br>
               <strong>Arrival Station:</strong> {{ replenishment.arrivalStationCode }}<br>
-              <strong>Arrival Time:</strong> 3:30 <br>
+              <strong>Arrival Time:</strong> {{ replenishment.departureTime }} <br>
             </div>
           </td>
           <td>{{ (replenishment.tampered) ? 'true' : 'false' }}</td>
