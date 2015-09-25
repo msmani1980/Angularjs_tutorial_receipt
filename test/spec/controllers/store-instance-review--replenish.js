@@ -17,7 +17,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
   var storeDetailsJSON;
   var routeParams;
   var getStoreDetailsDeferred;
-  var storeInstanceReplenishWizardConfig;
+  var storeInstanceWizardConfig;
   var getStoreInstanceMenuItemsDeferred;
   var storeInstanceReviewFactory;
   var getSealColorsDeferred;
@@ -26,6 +26,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
   var location;
   var setStoreStatusDeferred;
   var getStoreInstanceItemsDeferred;
+  var dateUtility;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
@@ -37,7 +38,8 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     };
     location = $location;
 
-    storeInstanceReplenishWizardConfig = $injector.get('storeInstanceReplenishWizardConfig');
+    storeInstanceWizardConfig = $injector.get('storeInstanceWizardConfig');
+    dateUtility = $injector.get('dateUtility');
 
     // storeInstanceFactory
     storeInstanceFactory = $injector.get('storeInstanceFactory');
@@ -98,9 +100,10 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     });
 
     it('should call getStoreInstanceMenuItems', function () {
+      var formattedDate = dateUtility.formatDateForAPI(storeDetailsJSON.scheduleDate);
       var expectedPayload = {
         itemTypeId: 1, // this is 1 because we are requesting regular items.
-        date: storeDetailsJSON.scheduleDate
+        date: formattedDate
       };
       expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(routeParams.storeId, expectedPayload);
     });
@@ -115,7 +118,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     });
 
     it('should set wizardSteps', function () {
-      var wizardSteps = storeInstanceReplenishWizardConfig.getSteps(routeParams.storeId);
+      var wizardSteps = storeInstanceWizardConfig.getSteps(routeParams.action, routeParams.storeId);
       expect(scope.wizardSteps).toEqual(wizardSteps);
     });
 

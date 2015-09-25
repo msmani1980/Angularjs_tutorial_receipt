@@ -8,9 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceDispatchWizardConfig,
+  .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig,
                                                    storeInstanceFactory, $location, storeInstanceReviewFactory,
-                                                   $q, ngToast, $filter, storeInstanceReplenishWizardConfig) {
+                                                   $q, ngToast, $filter, dateUtility) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -52,9 +52,10 @@ angular.module('ts5App')
     }
 
     function getStoreInstanceMenuItems() {
+      var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var payload = {
         itemTypeId: 1,
-        date: $scope.storeDetails.scheduleDate
+        date: payloadDate
       };
       _initPromises.push(
         storeInstanceFactory.getStoreInstanceMenuItems($routeParams.storeId, payload)
@@ -234,7 +235,7 @@ angular.module('ts5App')
 
     // Dispatch
     actions.dispatchInit = function(){
-      $scope.wizardSteps = storeInstanceDispatchWizardConfig.getSteps($routeParams.storeId);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       displayLoadingModal();
       storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
     };
@@ -245,7 +246,7 @@ angular.module('ts5App')
 
     // Replenish
     actions.replenishInit = function(){
-      $scope.wizardSteps = storeInstanceReplenishWizardConfig.getSteps($routeParams.storeId);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       displayLoadingModal();
       storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
     };

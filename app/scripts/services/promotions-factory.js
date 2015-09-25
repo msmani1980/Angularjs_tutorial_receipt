@@ -10,7 +10,9 @@
 angular.module('ts5App')
   .service('promotionsFactory', function (itemsService, recordsService, GlobalMenuService, stationsService,
                                           companyDiscountService, salesCategoriesService, currenciesService,
-                                          promotionCategoriesService, promotionsService) {
+                                          promotionCategoriesService, promotionsService, dateUtility) {
+
+    var today = dateUtility.nowFormatted('YYYYMMDD');
 
     function getMasterItems(searchParams){
       return itemsService.getItemsList(searchParams, true);
@@ -24,10 +26,6 @@ angular.module('ts5App')
       return recordsService.getDiscountTypes();
     }
 
-    function getStationList(companyId){
-      return stationsService.getStationList(companyId);
-    }
-
     function getCompanyId(){
       return GlobalMenuService.company.get();
     }
@@ -36,16 +34,22 @@ angular.module('ts5App')
       return recordsService.getPromotionTypes();
     }
 
-    function getCompanyDiscounts(payload){
-      return companyDiscountService.getDiscountList(payload);
+    function getCompanyDiscountsCoupon(){
+      return companyDiscountService.getDiscountList({
+        discountTypeId: 1,
+        startDate: today
+      });
+    }
+
+    function getCompanyDiscountsVoucher(){
+      return companyDiscountService.getDiscountList({
+        discountTypeId: 4,
+        startDate: today
+      });
     }
 
     function getSalesCategories(payload){
       return salesCategoriesService.getSalesCategoriesList(payload);
-    }
-
-    function getCompanyGlobalCurrencies(payload){
-      return currenciesService.getCompanyGlobalCurrencies(payload);
     }
 
     function getDiscountApplyTypes(){
@@ -80,12 +84,11 @@ angular.module('ts5App')
       getMasterItems: getMasterItems,
       getBenefitTypes: getBenefitTypes,
       getDiscountTypes: getDiscountTypes,
-      getStationList: getStationList,
       getCompanyId: getCompanyId,
       getPromotionTypes: getPromotionTypes,
-      getCompanyDiscounts: getCompanyDiscounts,
+      getCompanyDiscountsCoupon: getCompanyDiscountsCoupon,
+      getCompanyDiscountsVoucher: getCompanyDiscountsVoucher,
       getSalesCategories: getSalesCategories,
-      getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
       getDiscountApplyTypes: getDiscountApplyTypes,
       getPromotionCategories: getPromotionCategories,
       getStationGlobals: getStationGlobals,

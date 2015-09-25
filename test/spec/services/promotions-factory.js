@@ -16,6 +16,8 @@ describe('Service: promotionsFactory', function () {
   var currenciesService;
   var promotionCategoriesService;
   var promotionsService;
+  var dateUtility;
+  var today;
   beforeEach(inject(function (_promotionsFactory_, $injector) {
     promotionsFactory = _promotionsFactory_;
     itemsService = $injector.get('itemsService');
@@ -27,16 +29,17 @@ describe('Service: promotionsFactory', function () {
     currenciesService = $injector.get('currenciesService');
     promotionCategoriesService = $injector.get('promotionCategoriesService');
     promotionsService = $injector.get('promotionsService');
+    dateUtility = $injector.get('dateUtility');
+
+    today = dateUtility.nowFormatted('YYYYMMDD');
 
     spyOn(itemsService, 'getItemsList');
     spyOn(recordsService, 'getBenefitTypes');
     spyOn(recordsService, 'getDiscountTypes');
-    spyOn(stationsService, 'getStationList');
     spyOn(GlobalMenuService.company, 'get');
     spyOn(recordsService, 'getPromotionTypes');
     spyOn(companyDiscountService, 'getDiscountList');
     spyOn(salesCategoriesService, 'getSalesCategoriesList');
-    spyOn(currenciesService, 'getCompanyGlobalCurrencies');
     spyOn(recordsService, 'getDiscountApplyTypes');
     spyOn(promotionCategoriesService, 'getPromotionCategories');
     spyOn(stationsService, 'getGlobalStationList');
@@ -85,11 +88,6 @@ describe('Service: promotionsFactory', function () {
 
   // stationsService
   describe('stationsService service calls', function(){
-    it('should call getStationList', function(){
-      var mockId = 123;
-      promotionsFactory.getStationList(mockId);
-      expect(stationsService.getStationList).toHaveBeenCalledWith(mockId);
-    });
     it('should call getGlobalStationList', function(){
       var mockObj = {id:123};
       promotionsFactory.getStationGlobals(mockObj);
@@ -99,10 +97,21 @@ describe('Service: promotionsFactory', function () {
 
   // companyDiscountService
   describe('companyDiscountService service calls', function(){
-    it('should call getDiscountList', function(){
-      var mockObj = {foo:'bars'};
-      promotionsFactory.getCompanyDiscounts(mockObj);
-      expect(companyDiscountService.getDiscountList).toHaveBeenCalledWith(mockObj);
+    it('should call getDiscountList when calling getCompanyDiscountsCoupon', function(){
+      promotionsFactory.getCompanyDiscountsCoupon();
+      var mock = {
+        discountTypeId: 1,
+        startDate: today
+      };
+      expect(companyDiscountService.getDiscountList).toHaveBeenCalledWith(mock);
+    });
+    it('should call getDiscountList when calling getCompanyDiscountsVoucher', function(){
+      promotionsFactory.getCompanyDiscountsVoucher();
+      var mock = {
+        discountTypeId: 4,
+        startDate: today
+      };
+      expect(companyDiscountService.getDiscountList).toHaveBeenCalledWith(mock);
     });
   });
 
@@ -117,11 +126,6 @@ describe('Service: promotionsFactory', function () {
 
   // currenciesService
   describe('currenciesService service calls', function(){
-    it('should call getCompanyGlobalCurrencies', function(){
-      var mockObj = {foo:'bars'};
-      promotionsFactory.getCompanyGlobalCurrencies(mockObj);
-      expect(currenciesService.getCompanyGlobalCurrencies).toHaveBeenCalledWith(mockObj);
-    });
     it('should call getCompanyCurrencies', function(){
       var mockObj = {foo:'bars'};
       promotionsFactory.getCurrencyGlobals(mockObj);
