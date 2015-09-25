@@ -17,16 +17,13 @@ angular.module('ts5App')
 
     var actions = {
       getPromotion: {
-        method: 'GET',
-        isArray: true
+        method: 'GET'
       },
       createPromotion: {
-        method: 'POST',
-        isArray: true
+        method: 'POST'
       },
       savePromotion: {
-        method: 'PUT',
-        isArray: true
+        method: 'PUT'
       }
     };
 
