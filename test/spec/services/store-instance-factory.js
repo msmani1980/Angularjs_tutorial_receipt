@@ -109,6 +109,8 @@ describe('Service: storeInstanceFactory', function() {
     spyOn(storesService, 'getStoresList');
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
     spyOn(recordsService, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise);
+    spyOn(recordsService, 'getItemTypes');
+    spyOn(recordsService, 'getCharacteristics');
 
   }));
 
@@ -238,6 +240,7 @@ describe('Service: storeInstanceFactory', function() {
   describe('getStoreDetails', function() {
     var storeId;
     var storeDetails;
+    var parentId = 3;  // replenishStoreInstanceId from store-instance.json
     beforeEach(function() {
       storeId = 1;
       storeInstanceFactory.getStoreDetails(storeId).then(function(dataFromAPI) {
@@ -248,6 +251,10 @@ describe('Service: storeInstanceFactory', function() {
 
     it('should GET store details from storesService', function() {
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(storeId);
+    });
+
+    it('should GET parent store details from storesService using replenishStoreInstanceId', function() {
+      expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(parentId);
     });
 
     it('should GET store instance number from storesService', function() {
@@ -310,6 +317,14 @@ describe('Service: storeInstanceFactory', function() {
     it('should call getStoreStatus', function() {
       storeInstanceFactory.getStoreStatusList();
       expect(recordsService.getStoreStatusList).toHaveBeenCalled();
+    });
+    it('should call getItemTypes', function() {
+      storeInstanceFactory.getItemTypes();
+      expect(recordsService.getItemTypes).toHaveBeenCalled();
+    });
+    it('should call getCharacteristics', function() {
+      storeInstanceFactory.getCharacteristics();
+      expect(recordsService.getCharacteristics).toHaveBeenCalled();
     });
   });
 
