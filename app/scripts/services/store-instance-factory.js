@@ -176,6 +176,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storeDetailsDeferred.promise;
     }
 
+    // TODO: refactor this! separate out getStoreDetailsForDispatch and getStoreDetailsForReplenish :D
     function getStoreDetails(storeId) {
       var getStoreDetailsDeferred = $q.defer();
       getStoreInstance(storeId).then(function(storeInstanceAPIResponse) {
@@ -187,6 +188,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       }, getStoreDetailsDeferred.reject);
       return getStoreDetailsDeferred.promise;
     }
+
 
     function updateStoreInstanceStatus(storeId, statusId) {
       return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
