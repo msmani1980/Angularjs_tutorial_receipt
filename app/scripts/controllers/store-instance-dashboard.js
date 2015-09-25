@@ -262,5 +262,4 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     init();
 
-
   });
