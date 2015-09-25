@@ -31,6 +31,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var servedItemTypesJSON;
   var getCharacteristicsDeferred;
   var servedCharacteristicsJSON;
+  var dateUtility;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
@@ -71,6 +72,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     getCharacteristicsDeferred = $q.defer();
     getCharacteristicsDeferred.resolve(servedCharacteristicsJSON);
+    dateUtility = $injector.get('dateUtility');
 
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
@@ -112,10 +114,11 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should call getStoreInstanceMenuItems with Regular and Uplifted filters', function () {
+        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
         var expectedPayload = {
           itemTypeId: 1, // this is 1 because we are requesting regular items.
           characteristicId: 2, // this is 2 for upliftable items
-          date: servedStoreInstanceDetailsJSON.scheduleDate
+          date: formattedDate
         };
         expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeId, expectedPayload);
       });
@@ -139,10 +142,11 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should call getItemsMasterList', function () {
+        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
         var expectedPayload = {
           itemTypeId: 1,
-          startDate: servedStoreInstanceDetailsJSON.scheduleDate,
-          endDate: servedStoreInstanceDetailsJSON.scheduleDate
+          startDate: formattedDate,
+          endDate: formattedDate
         };
         expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
       });

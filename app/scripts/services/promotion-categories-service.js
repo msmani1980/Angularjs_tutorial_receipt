@@ -12,8 +12,7 @@ angular.module('ts5App')
     var requestURL = ENV.apiUrl + '/api/promotion-categories';
     var actions = {
       getPromotionCategories: {
-        method: 'GET',
-        isArray: true
+        method: 'GET'
       }
     };
     var requestResource = $resource(requestURL, null, actions);
