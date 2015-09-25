@@ -10,6 +10,7 @@
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q) {
 
+    $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
     $scope.stationList = [];
     $scope.storeInstanceList = [];
