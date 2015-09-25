@@ -33,6 +33,11 @@
       "id": 2,
       "statusName": "Packing",
       "name": "2"
+    },
+    {
+      "id": 4,
+      "statusName": "Dispatched",
+      "name": "4"
     }
   ],
   "storeInstanceNumber": 19,

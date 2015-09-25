@@ -20,15 +20,18 @@ describe('Service: storeInstanceWizardConfig', function () {
       },
       {
         label: 'Packing',
-        uri: '/store-instance-packing/dispatch/' + mockId
+        uri: '/store-instance-packing/dispatch/' + mockId,
+        stepName:'1'
       },
       {
         label: 'Assign Seals',
-        uri: '/store-instance-seals/dispatch/' + mockId
+        uri: '/store-instance-seals/dispatch/' + mockId,
+        stepName:'2'
       },
       {
         label: 'Review & Dispatch',
-        uri: '/store-instance-review/dispatch/' + mockId
+        uri: '/store-instance-review/dispatch/' + mockId,
+        stepName:'3'
       }
     ];
     mockedConfigReplenish = [
@@ -38,15 +41,18 @@ describe('Service: storeInstanceWizardConfig', function () {
       },
       {
         label: 'Replenish Packing',
-        uri: '/store-instance-packing/replenish/' + mockId
+        uri: '/store-instance-packing/replenish/' + mockId,
+        stepName:'1'
       },
       {
         label: 'Assign Replenish Seals',
-        uri: '/store-instance-seals/replenish/' + mockId
+        uri: '/store-instance-seals/replenish/' + mockId,
+        stepName:'2'
       },
       {
         label: 'Review & Dispatch Replenish',
-        uri: '/store-instance-review/replenish/' + mockId
+        uri: '/store-instance-review/replenish/' + mockId,
+        stepName:'3'
       }
     ];
   }));

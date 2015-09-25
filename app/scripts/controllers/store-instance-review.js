@@ -154,6 +154,7 @@ angular.module('ts5App')
 
     function getStatusNameIntByName(name){
       var status = $filter('filter')($scope.storeDetails.statusList, {statusName: name}, true);
+      console.log(status);
       if(!status || !status.length){
         return false;
       }
@@ -286,7 +287,6 @@ angular.module('ts5App')
 
     this.updateInstanceToByStepName = function(stepName) {
       if(angular.isUndefined(stepName)) {
-        console.log('undefined');
         $location.url('/store-instance-create/dispatch');
         return;
       }
