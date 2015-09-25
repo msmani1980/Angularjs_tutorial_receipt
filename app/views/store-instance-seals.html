@@ -1,6 +1,6 @@
 <div class="container">
 
-  <step-wizard steps="wizardSteps" save-trigger="saveAndExit()" next-trigger="nextTrigger()" prev-trigger="prevTrigger()"></step-wizard>
+  <step-wizard steps="wizardSteps" save-trigger="saveAndExit()" next-trigger="nextTrigger()" prev-trigger="prevTrigger()" save-button-text="saveButtonName"></step-wizard>
 
   <store-instance-header></store-instance-header>
 
@@ -14,7 +14,7 @@
 
     </div>
 
-    <footer class="text-right">
+    <footer ng-hide="readOnly" class="text-right">
       <button type="button" ng-click="goToPacking()" class="btn btn-default">
         <i class="fa fa-arrow-left"></i>
         <span class="btn-label">Prev</span>

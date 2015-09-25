@@ -13,6 +13,9 @@ angular.module('ts5App')
       $scope.numberOfSeals = 0;
 
       $scope.isSequentialPossible = function() {
+        if($scope.$parent.readOnly){
+          return false;
+        }
         return ($scope.sealTypeObject.seals.numbers.length === 1 && $scope.sealTypeObject.seals.numbers[0] >= 0);
       };
 
@@ -26,6 +29,9 @@ angular.module('ts5App')
       };
 
       $scope.showClearButton = function() {
+        if($scope.$parent.readOnly){
+          return false;
+        }
         return ($scope.sealTypeObject.seals.numbers.length > 1);
       };
 
@@ -41,6 +47,14 @@ angular.module('ts5App')
         var selector = 'input.ui-select-search';
         var input = angular.element(selector);
         angular.element(input).attr('maxlength', 15);
+      };
+
+      $scope.disabledAndNoSeals = function() {
+        return ( $scope.$parent.readOnly && $scope.sealTypeObject.seals.numbers.length < 1);
+      };
+
+      $scope.isReadOnly = function() {
+        return $scope.$parent.readOnly;
       };
 
     };

@@ -28,7 +28,7 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Dispatch LMP Station</label>
-                <select required class="form-control" ng-model="search.dispatchLMPStation" name="dispatchLMPStation">
+                <select class="form-control" ng-model="search.dispatchLMPStation" name="dispatchLMPStation">
                   <option ng-disabled="true" selected="selected" value>Select Dispatch Station</option>
                   <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
                     station.name }} - {{ station.code }}
@@ -40,7 +40,7 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Inbound LMP Station</label>
-                <select required class="form-control" ng-model="search.inboundLMPStation" name="inboundLMPStation">
+                <select class="form-control" ng-model="search.inboundLMPStation" name="inboundLMPStation">
                   <option selected="selected" value>Select Inbound Station</option>
                   <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
                     station.name }} - {{ station.code }}
@@ -107,7 +107,7 @@
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
                 <label>Status</label>
-                <select required class="form-control" ng-model="search.status" name="status">
+                <select class="form-control" ng-model="search.status" name="status">
                   <option selected="selected" value>Select Status</option>
                   <option ng-repeat="status in storeStatusList | orderBy:'name'" value="{{ status.id }}">{{
                     status.statusName }}
@@ -166,8 +166,8 @@
         </tr>
         </thead>
         <!-- TODO: add scheduleNumber to orderBy -->
-        <tbody ng-repeat="store in storeInstanceList | orderBy:['-scheduleDate', 'storeNumber']" id="store-{{ store.id }}">
-        <tr class="master-row">
+        <tbody >
+        <tr class="master-row" ng-repeat="store in storeInstanceList | orderBy:['-scheduleDate', 'storeNumber']" id="store-{{ store.id }}">
           <td>
             <span class="fa fa-plus-square-o"
                   ng-click="toggleAccordionView(store)"
@@ -180,7 +180,7 @@
                    type="checkbox">
           </td>
           <td>{{ store.dispatchStationCode }}</td>
-          <td><!-- TODO: add Inbound dispatchStationCode Station --></td>
+          <td>{{ store.inboundStationCode }}</td>
           <td>{{ store.storeNumber }}</td>
           <td id="schedule-{{store.id}}" ng-click="toggleScheduleDetails(store.id)">
             <span class="btn">

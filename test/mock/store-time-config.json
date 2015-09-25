@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "count": 2,
+    "limit": 2,
+    "start": 0
+  },
+  "response": [{
+    "id": 1,
+    "hours": 10000,
+    "startDate": "2015-09-16",
+    "featureId": 1
+  }, {
+    "id": 2,
+    "hours": 999999,
+    "startDate": "2015-09-16",
+    "featureId": 2
+  }]
+}
