@@ -132,7 +132,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var matchedObject = lodash.findWhere(array, {
         id: id
       });
-      //  console.log(matchedObject, valueKey);
       if (matchedObject) {
         return matchedObject[valueKey];
       }
