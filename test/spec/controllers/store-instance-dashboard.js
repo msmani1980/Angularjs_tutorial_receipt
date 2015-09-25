@@ -166,7 +166,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       });
 
       it('should attach all properties of JSON to scope', function() {
-        expect(scope.timeConfigList).toEqual(storeTimeConfigResponseJSON);
+        expect(scope.timeConfigList).toEqual(storeTimeConfigResponseJSON.response);
       });
     });
 
