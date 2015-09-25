@@ -144,9 +144,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var payload = {
         itemTypeId: $scope.regularItemTypeId,
-        characteristicId: $scope.upliftableCharacteristicId,
         date: payloadDate
       };
+      if($scope.upliftableCharacteristicId) {
+        payload.characteristicId = $scope.upliftableCharacteristicId;
+      }
       storeInstanceFactory.getStoreInstanceMenuItems($scope.storeId, payload).then(getItemsSuccessHandler, showErrors);
     };
 
@@ -164,10 +166,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var filterPayload = {
         itemTypeId: $scope.regularItemTypeId,
-        characteristicId: $scope.upliftableCharacteristicId,
         startDate: payloadDate,
         endDate: payloadDate
       };
+      if($scope.upliftableCharacteristicId) {
+        filterPayload.characteristicId = $scope.upliftableCharacteristicId;
+      }
       storeInstanceFactory.getItemsMasterList(filterPayload).then($this.getMasterItemsListSuccess, showErrors);
     };
 
@@ -281,9 +285,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var dependenciesArray = [
         $this.getStoreDetails(),
-        $this.getUpliftableCharacteristicId(),
         $this.getRegularItemTypeId()
       ];
+      if($routeParams.action === 'replenish') {
+        dependenciesArray.push($this.getUpliftableCharacteristicId());
+      }
 
       $q.all(dependenciesArray).then($this.completeInitializeAfterDependencies);
     }
