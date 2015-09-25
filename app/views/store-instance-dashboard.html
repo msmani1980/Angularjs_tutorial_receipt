@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="panel panel-default no-transition" id="search-collapse">
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
       <form name="menuSearchForm" ng-submit="searchStoreInstanceDashboardData()">
         <div class="panel-body">
           <div class="row">
@@ -107,7 +107,7 @@
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
                 <label>Status</label>
-                <select class="form-control" ng-model="search.status" name="status">
+                <select class="form-control" ng-model="search.storeStatusId" name="status">
                   <option selected="selected" value>Select Status</option>
                   <option ng-repeat="status in storeStatusList | orderBy:'name'" value="{{ status.id }}">{{
                     status.statusName }}
@@ -154,7 +154,7 @@
             <span class="btn">
               <span class="fa fa-plus-square-o" ng-hide="allScheduleDetailsExpanded"></span>
               <span class="fa fa-minus-square" ng-show="allScheduleDetailsExpanded"></span>
-              <span><strong>ScheduleDate</strong></span>
+              <span><strong>Schedule Information</strong></span>
             </span>
           </th>
           <th>Inbound Seals Tampered</th>
@@ -186,13 +186,13 @@
             <span class="btn">
               <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(store.id)"></span>
               <span class="fa fa-minus-square" ng-show="isScheduleDetailOpen(store.id)"></span>
-              <span><strong>{{ store.scheduleDate }}</strong></span>
+              <span><strong>Schedule Date: {{ store.scheduleDate }}</strong></span>
             </span>
             <div class="scheduleDetails-{{store.id}} accordion-cell-details accordion-cell-closed">
-              <strong>Departure Station:</strong> ORD <br>
-              <strong>Departure Time:</strong> 12:30 <br>
-              <strong>Arrival Station:</strong> BOS <br>
-              <strong>Arrival Time:</strong> 3:30 <br>
+              <strong>Departure Station:</strong> {{ store.departureStationCode }}<br>
+              <strong>Departure Time:</strong> {{ store.arrivalTime }} <br>
+              <strong>Arrival Station:</strong> {{ store.arrivalStationCode }}<br>
+              <strong>Arrival Time:</strong> {{ store.departureTime }} <br>
             </div>
           </td>
           <td>{{ (store.tampered) ? 'true' : 'false' }}</td>
@@ -254,13 +254,13 @@
             <span class="btn">
               <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(replenishment.id)"></span>
               <span class="fa fa-minus-square" ng-show="isScheduleDetailOpen(replenishment.id)"></span>
-              <span><strong>{{ replenishment.scheduleDate }}</strong></span>
+              <span><strong>Schedule Date: {{ replenishment.scheduleDate }}</strong></span>
             </span>
             <div class="scheduleDetails-{{replenishment.id}} accordion-cell-details accordion-cell-closed">
-              <strong>Departure Station:</strong> ORD <br>
-              <strong>Departure Time:</strong> 12:30 <br>
-              <strong>Arrival Station:</strong> BOS <br>
-              <strong>Arrival Time:</strong> 3:30 <br>
+              <strong>Departure Station:</strong> {{ replenishment.departureStationCode }}<br>
+              <strong>Departure Time:</strong> {{ replenishment.arrivalTime }} <br>
+              <strong>Arrival Station:</strong> {{ replenishment.arrivalStationCode }}<br>
+              <strong>Arrival Time:</strong> {{ replenishment.departureTime }} <br>
             </div>
           </td>
           <td>{{ (replenishment.tampered) ? 'true' : 'false' }}</td>
