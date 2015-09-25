@@ -23,13 +23,23 @@ angular.module('ts5App')
     };
 
     $scope.formData = [];
+    $scope.readOnly = true;
 
     this.setSealColors = function(dataFromAPI) {
       $scope.sealColorsList = dataFromAPI.response;
     };
 
+    this.isInstanceReadOnly = function(){
+      if($scope.storeDetails.currentStatus.name !== '2') {
+        this.showMessage('warning', 'This store instance is not ready for seals');
+      } else {
+        $scope.readOnly = false;
+      }
+    };
+
     this.setStoreDetails = function(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
+      $this.isInstanceReadOnly();
     };
 
     this.setSealTypes = function(sealTypesJSON) {
@@ -93,6 +103,9 @@ angular.module('ts5App')
     };
 
     this.addSealTypeActions = function(sealTypeObject) {
+      if($scope.readOnly) {
+        return;
+      }
       if (sealTypeObject.name === 'Hand Over') {
         return $this.createHandoverActions();
       }
