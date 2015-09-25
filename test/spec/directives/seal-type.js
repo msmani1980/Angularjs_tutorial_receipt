@@ -181,6 +181,17 @@ describe('the Seal Type directive', function() {
 
     });
 
+    describe('The isReadOnly method,', function() {
+
+      it('should return true the pare', function() {
+        scope.readOnly = true;
+        scope.$digest();
+        var testIsReadOnly = isolatedScope.isReadOnly();
+        expect(testIsReadOnly).toEqual(scope.readOnly);
+      });
+
+    });
+
   });
 
 });
