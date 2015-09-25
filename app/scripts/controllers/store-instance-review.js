@@ -22,6 +22,7 @@ angular.module('ts5App')
     var STATUS_DISPATCHED = 'Dispatched';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
     var actions = {};
+    var $this = this;
 
     $scope.saveButtonText = 'Exit';
 
@@ -283,6 +284,18 @@ angular.module('ts5App')
     }
     init();
 
+    this.updateInstanceToByStepName = function(stepName) {
+      if(angular.isUndefined(stepName)) {
+        console.log('undefined');
+        $location.url('/store-instance-create/dispatch');
+        return;
+      }
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepName).then(function () {
+        var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
+        $location.url(uri);
+      }, showResponseErrors);
+    };
+
     $scope.stepWizardPrevTrigger = function(){
       $scope.showLoseDataAlert = true;
       if(angular.isUndefined($scope.wizardStepToIndex)){
@@ -296,18 +309,13 @@ angular.module('ts5App')
 
     $scope.goToWizardStep = function($index){
       $scope.wizardStepToIndex = $index;
-      var stepName = angular.copy($index).toString();
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepName).then(
-        $scope.stepWizardPrevTrigger, showResponseErrors);
+      var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
+      $this.updateInstanceToByStepName(stepName);
     };
 
     $scope.loseDataAlertConfirmTrigger = function(){
-      var stepName = angular.copy($scope.wizardStepToIndex).toString();
-
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepName).then(function () {
-        var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
-        $location.url(uri);
-      }, showResponseErrors);
+      var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
+      $this.updateInstanceToByStepName(stepName);
     };
 
     $scope.submit = function(){

@@ -22,15 +22,18 @@ angular.module('ts5App')
             },
             {
               label: 'Packing',
-              uri: '/store-instance-packing/' + action + '/' + id
+              uri: '/store-instance-packing/' + action + '/' + id,
+              stepName: '1',
             },
             {
               label: 'Assign Seals',
-              uri: '/store-instance-seals/' + action + '/' + id
+              uri: '/store-instance-seals/' + action + '/' + id,
+              stepName: '2',
             },
             {
               label: 'Review & Dispatch',
-              uri: '/store-instance-review/' + action + '/' + id
+              uri: '/store-instance-review/' + action + '/' + id,
+              stepName: '3',
             }
           ],
         replenish:
@@ -41,15 +44,18 @@ angular.module('ts5App')
           },
           {
             label: 'Replenish Packing',
-            uri: '/store-instance-packing/' + action + '/' + id
+            uri: '/store-instance-packing/' + action + '/' + id,
+            stepName: '1',
           },
           {
             label: 'Assign Replenish Seals',
-            uri: '/store-instance-seals/' + action + '/' + id
+            uri: '/store-instance-seals/' + action + '/' + id,
+            stepName: '2',
           },
           {
             label: 'Review & Dispatch Replenish',
-            uri: '/store-instance-review/' + action + '/' + id
+            uri: '/store-instance-review/' + action + '/' + id,
+            stepName: '3',
           }
         ]
       }[action];
