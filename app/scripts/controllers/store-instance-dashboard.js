@@ -14,6 +14,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.stationList = [];
     $scope.storeInstanceList = [];
     $scope.storeStatusList = [];
+    $scope.timeConfigList = [];
     $scope.search = {};
     $scope.allCheckboxesSelected = false;
     $scope.allScheduleDetailsExpanded = false;
@@ -131,6 +132,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var matchedObject = lodash.findWhere(array, {
         id: id
       });
+      //  console.log(matchedObject, valueKey);
       if (matchedObject) {
         return matchedObject[valueKey];
       }
@@ -153,6 +155,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
         storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
+        storeInstance.hours = getValueByIdInArray(storeInstance.storeId, 'hours', $scope.timeConfigList);
+        storeInstance.startDate = getValueByIdInArray(storeInstance.storeId, 'startDate', $scope.timeConfigList);
 
         var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
@@ -209,7 +213,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function getTimeConfigSuccess(dataFromAPI) {
-      $scope.timeConfigList = angular.copy(dataFromAPI);
+      $scope.timeConfigList = angular.copy(dataFromAPI.response);
     }
 
     function getStoreInstanceTimeConfig() {
