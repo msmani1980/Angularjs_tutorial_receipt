@@ -145,6 +145,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
         var expectedPayload = {
           itemTypeId: 1,
+          characteristicId: 2,
           startDate: formattedDate,
           endDate: formattedDate
         };

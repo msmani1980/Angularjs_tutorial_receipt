@@ -192,7 +192,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getStoreDetails = function () {
-      storeInstanceFactory.getStoreDetails($scope.storeId).then(this.getStoreDetailsSuccess, errorHandler);
+      return storeInstanceFactory.getStoreDetails($scope.storeId).then(this.getStoreDetailsSuccess, errorHandler);
     };
 
     this.checkForDuplicate = function (item) {
