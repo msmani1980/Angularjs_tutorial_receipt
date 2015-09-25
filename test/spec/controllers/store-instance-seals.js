@@ -10,7 +10,7 @@ describe('the Store Instance Seals controller', function() {
     'served/store-instance-seals.json',
     'served/store-instance-seals-created.json',
     'served/store-instance-details.json'
-  )); 
+  ));
 
   var StoreInstanceSealsCtrl;
   var $scope;
@@ -205,7 +205,7 @@ describe('the Store Instance Seals controller', function() {
 
       describe('when the controller checks if an instance is read only', function() {
 
-        it('should have the readOnly set flag to false if instance is not Ready For Seals', function() {
+        it('should keep readOnly flag set to true if instance is not Ready For Seals', function() {
           storeDetailsJSON.currentStatus = {
             'id': 3,
             'statusName': 'Ready for Dispatch',
@@ -216,7 +216,7 @@ describe('the Store Instance Seals controller', function() {
           expect($scope.readOnly).toBeTruthy();
         });
 
-        it('should have the readOnly set flag to true if instance is Ready For Seals', function() {
+        it('should set the readOnly  flag to false if instance is Ready For Seals', function() {
           storeDetailsJSON.currentStatus = {
             'id': 2,
             'statusName': 'Ready for Seals',
@@ -225,6 +225,7 @@ describe('the Store Instance Seals controller', function() {
           getStoreDetailsDeferred.resolve(storeDetailsJSON);
           $scope.$digest();
           expect($scope.readOnly).toBeFalsy();
+          expect($scope.saveButtonName).toEqual('Save & Exit');
         });
 
       });
@@ -406,15 +407,24 @@ describe('the Store Instance Seals controller', function() {
       var form;
 
       beforeEach(function() {
-        spyOn($scope, 'submitForm');
-        $scope.$digest();
         view = renderView();
         form = angular.element(view.find('form')[0]);
       });
 
-      it('should call the submitForm method with the saveAndExit flag set as true', function() {
+      it('should call the submitForm if the instance is not read only', function() {
+        $scope.readOnly = false;
+        spyOn($scope, 'submitForm');
+        $scope.$digest();
         $scope.saveAndExit();
-        expect($scope.submitForm).toHaveBeenCalledWith(true);
+        expect($scope.submitForm).toHaveBeenCalled();
+        expect(StoreInstanceSealsCtrl.exitAfterSave).toBeTruthy();
+      });
+
+      it('should redirect the user if the instance is read only', function() {
+        spyOn($scope, 'submitForm');
+        $scope.$digest();
+        $scope.saveAndExit();
+        expect(location.path()).toBeTruthy('/store-instance-dashboard');
       });
 
     });
