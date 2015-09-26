@@ -168,6 +168,10 @@ angular.module('ts5App')
 
     });
 
+    $scope.findStoreInstance = function() {
+      var formattedDate = dateUtility.formatDateForAPI($scope.scheduleDate);
+    };
+
     $scope.submitCreate = function () {
       if (!$scope.createCashBagForm.$valid) {
         showModalErrors('Please select both a schedule number and a schedule date');

@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .factory('cashBagFactory',
   function (cashBagService, GlobalMenuService, stationsService, schedulesService, companyService, currenciesService, dailyExchangeRatesService, companyPreferencesService,
-            companyStoresService) {
+            companyStoresService, storeInstanceService) {
     var getCompanyId = function () {
       return GlobalMenuService.company.get();
     };
@@ -26,6 +26,10 @@ angular.module('ts5App')
     var getStoreList = function(payload) {
       return companyStoresService.getStoreList(payload);
     };
+
+    function getStoreInstanceList(payload) {
+      return storeInstanceService.getStoreInstancesList(payload);
+    }
 
     var getStationList = function (id) {
       return stationsService.getStationList(id);
@@ -90,6 +94,7 @@ angular.module('ts5App')
       getDailySchedulesList: getDailySchedulesList,
       getDailyExchangeRates: getDailyExchangeRates,
       getCompanyPreferences: getCompanyPreferences,
-      getStoreList: getStoreList
+      getStoreList: getStoreList,
+      getStoreInstanceList: getStoreInstanceList
     };
   });

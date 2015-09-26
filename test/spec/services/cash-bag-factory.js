@@ -18,6 +18,7 @@ describe('Factory: cashBagFactory', function () {
   var dailyExchangeRatesService;
   var companyPreferencesService;
   var companyStoresService;
+  var storeInstanceService;
 
   beforeEach(inject(function ($rootScope, $injector) {
     cashBagService            = $injector.get('cashBagService');
@@ -29,6 +30,7 @@ describe('Factory: cashBagFactory', function () {
     dailyExchangeRatesService = $injector.get('dailyExchangeRatesService');
     companyPreferencesService = $injector.get('companyPreferencesService');
     companyStoresService      = $injector.get('companyStoresService');
+    storeInstanceService      = $injector.get('storeInstanceService');
 
     spyOn(cashBagService, 'getCashBagList');
     spyOn(GlobalMenuService.company, 'get');
@@ -44,6 +46,7 @@ describe('Factory: cashBagFactory', function () {
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates');
     spyOn(companyPreferencesService, 'getCompanyPreferences');
     spyOn(companyStoresService, 'getStoreList');
+    spyOn(storeInstanceService, 'getStoreInstancesList');
 
     rootScope      = $rootScope;
     scope          = $rootScope.$new();
@@ -94,6 +97,16 @@ describe('Factory: cashBagFactory', function () {
       };
       cashBagFactory.getStoreList(fakePayload);
       expect(companyStoresService.getStoreList).toHaveBeenCalledWith(fakePayload);
+    });
+  });
+
+  describe('getStoreInstanceList', function () {
+    it('should call storeInstanceService on getStoreInstanceList', function () {
+      var fakePayload = {
+        startDate: 'fakeDate'
+      };
+      cashBagFactory.getStoreInstanceList(fakePayload);
+      expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(fakePayload);
     });
   });
 
