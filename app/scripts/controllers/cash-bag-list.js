@@ -13,14 +13,14 @@ angular.module('ts5App')
     var _companyId = null;
     var _services  = null;
 
-    $scope.viewName            = 'Manage Cash Bag';
-    $scope.displayModalError   = false;
-    $scope.displayError        = false;
-    $scope.createCashBagError  = 'temp error message';
-    $scope.search              = {};
-    $scope.selectedSchedule    = {};
-    $scope.selectedStoreNumber = {};
-    $scope.storeList           = [];
+    $scope.viewName           = 'Manage Cash Bag';
+    $scope.displayModalError  = false;
+    $scope.displayError       = false;
+    $scope.createCashBagError = 'temp error message';
+    $scope.search             = {};
+    $scope.storeList          = [];
+    $scope.selectedSchedule;
+    $scope.selectedStoreNumber;
 
     function showSuccessMessage(error) {
       ngToast.create({
@@ -147,11 +147,11 @@ angular.module('ts5App')
     };
 
     $scope.clearSelectedSchedule = function () {
-      $scope.selectedSchedule = {};
+      delete $scope.selectedSchedule;
     };
 
     $scope.clearStoreNumber = function () {
-      $scope.selectedStoreNumber = {};
+      delete $scope.selectedStoreNumber;
     };
 
     $scope.$watch('scheduleDate', function () {
@@ -168,8 +168,24 @@ angular.module('ts5App')
 
     });
 
-    $scope.findStoreInstance = function() {
-      var formattedDate = dateUtility.formatDateForAPI($scope.scheduleDate);
+    function createPayloadForStoreInstance() {
+      var payload = {
+        //scheduleDate: dateUtility.formatDateForAPI($scope.scheduleDate);
+      };
+
+      if ($scope.selectedSchedule) {
+        payload.scheduleNumber = $scope.selectedSchedule;
+      }
+
+      if ($scope.selectedStoreNumber) {
+        payload.storeId = $scope.selectedStoreNumber;
+      }
+      return payload;
+    }
+
+    $scope.findStoreInstance = function () {
+      var payload = createPayloadForStoreInstance();
+      cashBagFactory.getStoreInstanceList(payload);
     };
 
     $scope.submitCreate = function () {
