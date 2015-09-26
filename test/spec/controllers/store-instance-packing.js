@@ -9,6 +9,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   beforeEach(module('served/store-instance-item-list.json'));
   beforeEach(module('served/master-item-list.json'));
   beforeEach(module('served/store-status-response.json'));
+  beforeEach(module('served/item-types.json'));
+  beforeEach(module('served/characteristics.json'));
 
 
   var StoreInstancePackingCtrl;
@@ -25,20 +27,28 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var servedStoreInstanceItemsJSON;
   var getMasterItemsDeferred;
   var servedMasterItemsJSON;
+  var getItemTypesDeferred;
+  var servedItemTypesJSON;
+  var getCharacteristicsDeferred;
+  var servedCharacteristicsJSON;
   var dateUtility;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedMasterItemList_, _servedStoreInstanceDetails_, _servedStoreStatusResponse_) {
+    inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedMasterItemList_,
+                     _servedStoreInstanceDetails_, _servedStoreStatusResponse_, _servedCharacteristics_, _servedItemTypes_) {
       servedStoreInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
       servedStoreInstanceItemsJSON = _servedStoreInstanceItemList_;
       servedMasterItemsJSON = _servedMasterItemList_;
       servedStoreInstanceDetailsJSON = _servedStoreInstanceDetails_;
       servedStoreStatusJSON = _servedStoreStatusResponse_;
+      servedItemTypesJSON = _servedItemTypes_;
+      servedCharacteristicsJSON = _servedCharacteristics_;
     });
     scope = $rootScope.$new();
     routeParams = {
-      storeId: 5
+      storeId: 5,
+      action: 'replenish'
     };
 
     storeInstanceFactory = $injector.get('storeInstanceFactory');
@@ -57,6 +67,11 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     getMasterItemsDeferred = $q.defer();
     getMasterItemsDeferred.resolve(servedMasterItemsJSON);
 
+    getItemTypesDeferred = $q.defer();
+    getItemTypesDeferred.resolve(servedItemTypesJSON);
+
+    getCharacteristicsDeferred = $q.defer();
+    getCharacteristicsDeferred.resolve(servedCharacteristicsJSON);
     dateUtility = $injector.get('dateUtility');
 
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
@@ -64,6 +79,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
     spyOn(storeInstanceFactory, 'getItemsMasterList').and.returnValue(getMasterItemsDeferred.promise);
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(getUpdatedStoreStatusDeferred.promise);
+    spyOn(storeInstanceFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
+    spyOn(storeInstanceFactory, 'getCharacteristics').and.returnValue(getCharacteristicsDeferred.promise);
 
 
     StoreInstancePackingCtrl = $controller('StoreInstancePackingCtrl', {
@@ -88,10 +105,19 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(scope.storeDetails).toEqual(servedStoreInstanceDetailsJSON);
       });
 
-      it('should call getStoreInstanceMenuItems', function () {
+      it('should call getItemTypes', function () {
+        expect(storeInstanceFactory.getItemTypes).toHaveBeenCalled();
+      });
+
+      it('should call getCharacteristics', function () {
+        expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
+      });
+
+      it('should call getStoreInstanceMenuItems with Regular and Uplifted filters', function () {
         var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
         var expectedPayload = {
           itemTypeId: 1, // this is 1 because we are requesting regular items.
+          characteristicId: 2, // this is 2 for upliftable items
           date: formattedDate
         };
         expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeId, expectedPayload);
@@ -119,6 +145,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
         var expectedPayload = {
           itemTypeId: 1,
+          characteristicId: 2,
           startDate: formattedDate,
           endDate: formattedDate
         };
@@ -242,5 +269,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     });
 
   });
+
 
 });

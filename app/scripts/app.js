@@ -192,6 +192,9 @@ angular.module('ts5App', [
   }).when('/store-instance-seals/:action/:storeId', {
     templateUrl: 'views/store-instance-seals.html',
     controller: 'StoreInstanceSealsCtrl'
+  }).when('/retail-company-exchange-rate-setup', {
+    templateUrl: 'views/retail-company-exchange-rate-setup.html',
+    controller: 'RetailCompanyExchangeRateSetupCtrl'
   }).when('/store-instance-review/:action/:storeId?', {
     templateUrl: 'views/store-instance-review.html',
     controller: 'StoreInstanceReviewCtrl'
@@ -201,6 +204,12 @@ angular.module('ts5App', [
   }).when('/promotions/:state/:id?', {
     templateUrl: 'views/promotions.html',
     controller: 'PromotionsCtrl'
+  }).when('/manual-store-instance', {
+    templateUrl: 'views/manual-store-instance.html',
+    controller: 'ManualStoreInstanceCtrl'
+  }).when('/retail-company-exchange-rate-setup', {
+    templateUrl: 'views/retail-company-exchange-rate-setup.html',
+    controller: 'RetailCompanyExchangeRateSetupCtrl'
   }).otherwise({
     redirectTo: '/'
   });

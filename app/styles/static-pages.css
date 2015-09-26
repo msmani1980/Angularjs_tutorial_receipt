@@ -23,6 +23,10 @@
   z-index: 9999;
 }
 
+.fuelux .wizard .well {
+  position: relative;
+}
+
 .fuelux .wizard .well .table {
   margin-bottom: 0;
 }
@@ -38,6 +42,12 @@
   font-weight: bold;
   color: #3a87ad;
   margin-top: 0;
+}
+
+.fuelux .wizard .well p.info-bar-menu-status {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .fuelux .wizard .info-bar-status-packing:after {
