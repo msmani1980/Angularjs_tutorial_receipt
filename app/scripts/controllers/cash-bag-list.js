@@ -20,8 +20,6 @@ angular.module('ts5App')
     $scope.search             = {};
     $scope.storeList          = [];
     $scope.storeInstanceList  = [];
-    $scope.selectedSchedule;
-    $scope.selectedStoreNumber;
 
     function showSuccessMessage(error) {
       ngToast.create({

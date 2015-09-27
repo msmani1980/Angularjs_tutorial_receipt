@@ -26,7 +26,7 @@ angular.module('ts5App')
           rejection = {
             status: 404,
             message: rejection.message
-          }
+          };
         }
         return $q.reject(rejection);
       },
