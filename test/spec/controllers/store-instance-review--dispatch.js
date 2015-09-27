@@ -164,7 +164,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     describe('stepWizardPrevTrigger scope function', function () {
       it('should set showLoseDataAlert to true and return false', function () {
         expect(scope.stepWizardPrevTrigger()).toBe(false);
-        expect(scope.showLoseDataAlert).toBe(true);
+        expect(scope.showLoseDataAlert).toBe(false);
         expect(scope.wizardStepToIndex).toBe(2);
       });
     });
