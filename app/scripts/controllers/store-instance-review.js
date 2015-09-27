@@ -296,7 +296,6 @@ angular.module('ts5App')
     };
 
     $scope.stepWizardPrevTrigger = function(){
-      $scope.showLoseDataAlert = true;
       if(angular.isUndefined($scope.wizardStepToIndex)){
         var prevStepAction = $routeParams.action + 'PrevStepIndex';
         if (actions[prevStepAction]) {
