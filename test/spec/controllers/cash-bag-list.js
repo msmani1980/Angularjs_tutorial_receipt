@@ -4,34 +4,52 @@ fdescribe('Controller: CashBagListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App', 'template-module'));
-  beforeEach(module('served/cash-bag-list.json', 'served/stations.json', 'served/schedules.json', 'served/schedules-daily.json'));
+  beforeEach(module('served/cash-bag-list.json'));
+  beforeEach(module('served/stations.json'));
+  beforeEach(module('served/schedules.json'));
+  beforeEach(module('served/schedules-daily.json'));
+  beforeEach(module('served/store-instance-list.json'));
+  beforeEach(module('served/stores-list.json'));
+  beforeEach(module('served/schedules-date-range.json'));
 
-  var CashBagListCtrl,
-      scope,
-      cashBagListResponseJSON,
-      getCashBagListDeferred,
-      companyId,
-      stationsListDeferred,
-      stationsResponseJSON,
-      schedulesListDeferred,
-      schedulesDailyDeferred,
-      schedulesResponseJSON,
-      schedulesDailyResponseJSON,
-      cashBagFactory,
-      location;
+  var CashBagListCtrl;
+  var scope;
+  var companyId;
+  var cashBagFactory;
+  var location;
+  var dateUtility;
 
+  var getCashBagListDeferred;
+  var stationsListDeferred;
+  var schedulesListDeferred;
+  var schedulesDailyDeferred;
+  var getStoreInstanceListDeferred;
+  var getStoreListDeferred;
+  var getSchedulesInDateRangeDeferred;
+
+  var stationsResponseJSON;
+  var cashBagListResponseJSON;
+  var schedulesResponseJSON;
+  var schedulesDailyResponseJSON;
+  var storeInstanceListJSON;
+  var storeListJSON;
+  var schedulesDateRangeJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location) {
-    inject(function (_servedCashBagList_, _servedStations_, _servedSchedules_, _servedSchedulesDaily_) {
+    inject(function (_servedCashBagList_, _servedStations_, _servedSchedules_, _servedSchedulesDaily_, _servedStoreInstanceList_, _servedStoresList_, _servedSchedulesDateRange_) {
       cashBagListResponseJSON    = _servedCashBagList_;
       stationsResponseJSON       = _servedStations_;
       schedulesResponseJSON      = _servedSchedules_;
       schedulesDailyResponseJSON = _servedSchedulesDaily_;
+      storeInstanceListJSON      = _servedStoreInstanceList_;
+      storeListJSON              = _servedStoresList_;
+      schedulesDateRangeJSON     = _servedSchedulesDateRange_;
 
     });
     location       = $location;
     cashBagFactory = $injector.get('cashBagFactory');
+    dateUtility    = $injector.get('dateUtility');
     scope          = $rootScope.$new();
 
     getCashBagListDeferred = $q.defer();
@@ -43,13 +61,27 @@ fdescribe('Controller: CashBagListCtrl', function () {
     schedulesListDeferred = $q.defer();
     schedulesListDeferred.resolve(schedulesResponseJSON);
 
+    getStoreInstanceListDeferred = $q.defer();
+    getStoreInstanceListDeferred.resolve(storeInstanceListJSON);
+
     schedulesDailyDeferred = $q.defer();
     schedulesDailyDeferred.resolve(schedulesDailyResponseJSON);
+
+    getStoreListDeferred = $q.defer();
+    getStoreListDeferred.resolve(storeListJSON);
+
+    getSchedulesInDateRangeDeferred = $q.defer();
+    getSchedulesInDateRangeDeferred.resolve(getSchedulesInDateRangeDeferred);
 
     spyOn(cashBagFactory, 'getCashBagList').and.returnValue(getCashBagListDeferred.promise);
     spyOn(cashBagFactory, 'getStationList').and.returnValue(stationsListDeferred.promise);
     spyOn(cashBagFactory, 'getSchedulesList').and.returnValue(schedulesListDeferred.promise);
     spyOn(cashBagFactory, 'getDailySchedulesList').and.returnValue(schedulesDailyDeferred.promise);
+    spyOn(cashBagFactory, 'getStoreInstanceList').and.returnValue(getStoreInstanceListDeferred.promise);
+
+    spyOn(cashBagFactory, 'getStoreList').and.returnValue(getStoreListDeferred.promise);
+    spyOn(cashBagFactory, 'getSchedulesInDateRange').and.returnValue(getSchedulesInDateRangeDeferred.promise);
+
     spyOn(cashBagFactory, 'getCompanyId').and.returnValue('fakeCompanyId');
     spyOn(cashBagFactory, 'deleteCashBag').and.returnValue({
       then: function () {
@@ -142,13 +174,62 @@ fdescribe('Controller: CashBagListCtrl', function () {
       });
     });
 
+    describe('store instance', function () {
+      it('should not call getStoreInstanceList if missing required fields', function () {
+        scope.findStoreInstance();
+        expect(cashBagFactory.getStoreInstanceList).not.toHaveBeenCalled();
+        expect(scope.displayModalError).toBe(true);
+      });
+
+      it('should call getStoreInstanceList with date and schedule number', function () {
+        scope.scheduleDate     = '06/15/2015';
+        scope.selectedSchedule = '0008';
+        var expectedPayload    = {scheduleNumber: scope.selectedSchedule};
+
+        scope.findStoreInstance();
+        expect(cashBagFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload);
+        expect(scope.displayModalError).toBe(false);
+      });
+
+      it('should call getStoreInstanceList with date and store number', function () {
+        scope.scheduleDate        = '06/15/2015';
+        scope.selectedStoreNumber = 'store001';
+        var expectedPayload       = {storeId: scope.selectedStoreNumber};
+
+        scope.findStoreInstance();
+        expect(cashBagFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload);
+        expect(scope.displayModalError).toBe(false);
+      });
+    });
+
+    describe('search store and schedules when date changes', function () {
+
+      var expectedScheduleDate;
+
+      beforeEach(function () {
+        scope.scheduleDate   = '06/15/2015';
+        expectedScheduleDate = dateUtility.formatDateForAPI(scope.scheduleDate);
+        scope.$digest();
+      });
+
+      it('should call getStoreList when date changes', function () {
+        var expectedPayload = {startDate: expectedScheduleDate, endDate: expectedScheduleDate};
+        expect(cashBagFactory.getStoreList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+      it('should call getSchedulesInDateRange when date changes', function () {
+        expect(cashBagFactory.getSchedulesInDateRange).toHaveBeenCalledWith(companyId, expectedScheduleDate, expectedScheduleDate);
+      });
+
+    });
+
     describe('submit new schedule form', function () {
       it('should call getDailySchedulesList API', function () {
         scope.createCashBagForm = {
           $valid: true
         };
-        scope.scheduleIndex     = '0';
         scope.scheduleDate      = '06/18/2015';
+        scope.selectedSchedule  = '08000';
         scope.submitCreate();
         expect(cashBagFactory.getDailySchedulesList).toHaveBeenCalled();
       });
