@@ -171,7 +171,7 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     describe('goToWizardStep scope function', function () {
       it('should set wizardStepToIndex to whatever value is passed in and call updateStatus', function () {
         spyOn(scope, 'stepWizardPrevTrigger');
-        var newI = 4;
+        var newI = 3;
         scope.goToWizardStep(newI);
         expect(scope.wizardStepToIndex).toBe(newI);
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, newI.toString());
