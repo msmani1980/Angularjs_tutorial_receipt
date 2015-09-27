@@ -1,0 +1,52 @@
+{
+  "startDate": "2016-10-27",
+  "endDate": "2016-12-30",
+  "createdBy": 1,
+  "createdOn": "2015-07-31 02:15:08.968586",
+  "updatedBy": 1,
+  "updatedOn": "2015-09-25 15:20:13.919789",
+  "benefitDiscountApplyId": 3,
+  "benefitTypeId": 3,
+  "companyCouponId": null,
+  "companyVoucherId": 146,
+  "companyId": 403,
+  "description": "Holiday Promotion",
+  "discountCategoryId": null,
+  "discountItemId": null,
+  "discountPercentage": null,
+  "discountTypeId": 1,
+  "giftWithPurchase": "false",
+  "id": 181,
+  "lowestPricedArticle": "false",
+  "promotionCode": "EGS1114",
+  "promotionName": "Promo1",
+  "promotionTypeId": 1,
+  "spendLimitCategoryId": null,
+  "filters": [],
+  "items": [
+    {
+      "id": 42,
+      "companyPromotionId": 181,
+      "itemId": 36,
+      "itemQty": "7",
+      "createdBy": null,
+      "createdOn": "2015-09-25 15:20:14.546898",
+      "updatedBy": null,
+      "updatedOn": null
+    }
+  ],
+  "benefitAmounts": [],
+  "spendLimitAmounts": [],
+  "promotionCategories": [
+    {
+      "id": 71,
+      "companyPromotionCategoryId": 66,
+      "companyPromotionId": 181,
+      "categoryQty": "3",
+      "createdBy": null,
+      "createdOn": "2015-07-31 02:21:33.75378",
+      "updatedBy": null,
+      "updatedOn": "2015-09-25 15:20:14.317517"
+    }
+  ]
+}

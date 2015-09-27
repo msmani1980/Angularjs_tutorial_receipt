@@ -10,6 +10,7 @@
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q) {
 
+    $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
     $scope.stationList = [];
     $scope.storeInstanceList = [];
@@ -28,38 +29,17 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       angular.element('#loading').modal('hide');
     }
 
-    function clearSearchForm() {
-      $scope.search = {};
-    }
-
-    $scope.clearSearchForm = clearSearchForm;
-
-    function getStoreInstancesListSuccess(dataFromAPI) {
-      $scope.storesList = dataFromAPI.response;
-    }
-
     var SEARCH_TO_PAYLOAD_MAP = {
       dispatchLMPStation: 'cateringStationId',
-      inboundLMPStation: 'cateringStationId',
-      storeNumber: 'storeId',
-      scheduleStartDate: 'scheduleDate',
-      scheduleEndDate: 'scheduleDate',
-      //depStations: '?',
-      //arrStations: '?',
+      inboundLMPStation: 'inboundStationId',
+      storeNumber: 'storeId', // TODO storeNumber
+      scheduleStartDate: 'scheduleDate', // TODO
+      scheduleEndDate: 'scheduleDate', // TODO
+      depStations: 'departureStationCode',
+      arrStations: 'arrivalStationCode',
       storeInstance: 'id',
       storeStatusId: 'statusId'
     };
-
-    function searchStoreInstanceDashboardData() {
-      var payload = {};
-      angular.forEach(SEARCH_TO_PAYLOAD_MAP, function(value, key) {
-        payload[value] = $scope.search[key];
-      });
-
-      storeInstanceDashboardFactory.getStoreInstanceList(payload).then(getStoreInstancesListSuccess);
-    }
-
-    $scope.searchStoreInstanceDashboardData = searchStoreInstanceDashboardData;
 
     $scope.doesStoreInstanceHaveReplenishments = function(store) {
       return (store.replenishItems && store.replenishItems.length > 0);
@@ -151,6 +131,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     function formatStoreInstanceList() {
       angular.forEach($scope.storeInstanceList, function(storeInstance, index) {
         storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
+        storeInstance.inboundStationCode = getValueByIdInArray(storeInstance.inboundStationId, 'code', $scope.stationList);
         storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
         storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
@@ -219,6 +200,38 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return storeTimeConfig.getTimeConfig().then(getTimeConfigSuccess);
     }
 
+    function searchStoreInstanceDashboardDataSuccess(apiData) {
+      getStoreInstanceListSuccess(apiData);
+      formatStoreInstanceList();
+      hideLoadingModal();
+    }
+
+    function searchStoreInstanceDashboardData() {
+      showLoadingModal('Loading Store Instance Dashboard');
+      var payload = {};
+      angular.forEach(SEARCH_TO_PAYLOAD_MAP, function(value, key) {
+        if ($scope.search[key]) {
+          if (key === 'depStations' || key === 'arrStations') {
+            payload[value] = lodash.map($scope.search[key], function(station) { return station.code; }).join(',');
+          } else {
+            payload[value] = angular.copy($scope.search[key]);
+          }
+        }
+      });
+
+      storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess);
+    }
+
+    $scope.searchStoreInstanceDashboardData = searchStoreInstanceDashboardData;
+
+    function clearSearchForm() {
+      $scope.search = {};
+      storeInstanceDashboardFactory.getStoreInstanceList({}).then(searchStoreInstanceDashboardDataSuccess);
+    }
+
+    $scope.clearSearchForm = clearSearchForm;
+
+
     function init() {
       showLoadingModal('Loading Store Instance Dashboard');
       $scope.allCheckboxesSelected = false;
@@ -248,6 +261,5 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     init();
-
 
   });
