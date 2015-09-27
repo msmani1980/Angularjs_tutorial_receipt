@@ -296,12 +296,15 @@ angular.module('ts5App')
     };
 
     $scope.stepWizardPrevTrigger = function(){
+      $scope.showLoseDataAlert = false;
       if(angular.isUndefined($scope.wizardStepToIndex)){
         var prevStepAction = $routeParams.action + 'PrevStepIndex';
         if (actions[prevStepAction]) {
           $scope.wizardStepToIndex = actions[prevStepAction];
         }
       }
+      var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
+      $this.updateInstanceToByStepName(stepName);
       return false;
     };
 
@@ -310,6 +313,11 @@ angular.module('ts5App')
       if (!$scope.wizardSteps[$scope.wizardStepToIndex]) {
         return;
       }
+      var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
+      $this.updateInstanceToByStepName(stepName);
+    };
+
+    $scope.loseDataAlertConfirmTrigger = function(){
       var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
       $this.updateInstanceToByStepName(stepName);
     };
