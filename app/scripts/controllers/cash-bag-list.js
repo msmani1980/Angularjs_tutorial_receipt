@@ -40,17 +40,17 @@ angular.module('ts5App')
       return bankRefList;
     }
 
-    function formatDateForApp() {
-      $scope.cashBagList.map(function (cashBag) {
-        if (cashBag.scheduleDate) {
-          cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
+    function formatScheduleDateForApp(containingArray) {
+      containingArray.map(function (obj) {
+        if (obj.scheduleDate) {
+          obj.scheduleDate = dateUtility.formatDateForApp(obj.scheduleDate);
         }
       });
+      return containingArray;
     }
 
     function getCashBagResponseHandler(response) {
-      $scope.cashBagList = angular.copy(response.cashBags);
-      formatDateForApp();
+      $scope.cashBagList = formatScheduleDateForApp(angular.copy(response.cashBags));
       angular.forEach($scope.cashBagList, function (cashBag) {
         if ($scope.isNew(cashBag.id)) {
           showSuccessMessage('successfully created');
@@ -160,8 +160,9 @@ angular.module('ts5App')
       return payload;
     }
 
-    var getStoreInstanceListHandler = function (storeInstanceListFromAPI) {
-      $scope.storeInstanceList = angular.copy(storeInstanceListFromAPI.response);
+    var getStoreInstanceListHandler = function (dataFromAPI) {
+      var storeListFromAPI = angular.copy(dataFromAPI.response);
+        $scope.storeInstanceList = formatScheduleDateForApp(storeListFromAPI);
     };
 
     $scope.findStoreInstance = function () {
