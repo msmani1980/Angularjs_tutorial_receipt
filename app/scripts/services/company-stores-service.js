@@ -20,7 +20,7 @@ angular.module('ts5App')
       createStore: {
         method: 'POST'
       },
-      getStores: {
+      getStoreList: {
         method: 'GET'
       },
       deleteStore: {
@@ -38,8 +38,8 @@ angular.module('ts5App')
     var createStore = function (payload) {
       return storesRequestResource.createStore(payload).$promise;
     };
-    var getStores = function () {
-      return storesRequestResource.getStores().$promise;
+    var getStoreList = function (payload) {
+      return storesRequestResource.getStoreList(payload).$promise;
     };
     var deleteStore = function (_id) {
       return storesRequestResource.deleteStore({id:_id}).$promise;
@@ -53,7 +53,7 @@ angular.module('ts5App')
     return {
       getStore: getStore,
       createStore: createStore,
-      getStores: getStores,
+      getStoreList: getStoreList,
       deleteStore: deleteStore,
       saveStore: saveStore
     };

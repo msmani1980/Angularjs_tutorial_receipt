@@ -89,7 +89,7 @@ angular.module('ts5App')
       $scope.editing = false;
       $scope.storeNumbersList = [];
       displayLoadingModal();
-      companyStoresService.getStores(_companyId).then(getStoreNumbers,showApiErrors);
+      companyStoresService.getStoreList(_companyId).then(getStoreNumbers,showApiErrors);
     }
 
     function submitFormSuccess(){
