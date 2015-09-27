@@ -315,11 +315,6 @@ angular.module('ts5App')
       $this.updateInstanceToByStepName(stepName);
     };
 
-    $scope.loseDataAlertConfirmTrigger = function(){
-      var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
-      $this.updateInstanceToByStepName(stepName);
-    };
-
     $scope.submit = function(){
       var initAction = $routeParams.action + 'Submit';
       if (actions[initAction]) {

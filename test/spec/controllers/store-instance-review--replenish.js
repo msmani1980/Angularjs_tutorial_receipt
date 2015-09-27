@@ -178,15 +178,6 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
       });
     });
 
-    describe('loseDataAlertConfirmTrigger scope function', function () {
-      it('should update status wit wizardStep', function () {
-        var mockIndex = 2;
-        scope.wizardStepToIndex = mockIndex;
-        scope.loseDataAlertConfirmTrigger();
-        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, mockIndex.toString());
-      });
-    });
-
     describe('submit scope function', function () {
       it('should set the store instance status to the name value of "Dispatched" which is 4 with current mock data', function () {
         scope.submit();
