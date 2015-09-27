@@ -82,6 +82,7 @@
           <table ng-if="shouldShowInstanceTable()" class="table table-bordered table-hover">
             <thead>
             <tr>
+              <th></th>
               <th>Store Instance</th>
               <th>Store Number</th>
               <th>Schedule Number</th>
@@ -90,6 +91,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="storeInstance in storeInstanceList">
+              <td><input name="storeInstanceRadio" type="radio" value="{{storeInstance.id}}"/></td>
               <td>{{storeInstance.storeId}}</td>
               <td>{{storeInstance.storeNumber}}</td>
               <td>{{storeInstance.scheduleNumber}}</td>
