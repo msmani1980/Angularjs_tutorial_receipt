@@ -212,7 +212,7 @@ angular.module('ts5App')
 
     });
 
-    $scope.submitCreate = function () {
+    $scope.submitCreate = function (storeInstance) {
       if ($scope.scheduleDate && ($scope.selectedSchedule || $scope.selectedStoreNumber)) {
         showModalErrors('Please select both a schedule number and a schedule date');
         return;
