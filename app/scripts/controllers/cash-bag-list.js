@@ -160,13 +160,32 @@ angular.module('ts5App')
       return payload;
     }
 
+    $scope.shouldShowInstanceTable = function () {
+      return ($scope.storeInstanceList.length > 0);
+    };
+
+    function validateStoreInstanceResponse(response) {
+      return (response && response.length > 0);
+    }
+
     var getStoreInstanceListHandler = function (dataFromAPI) {
-      var storeListFromAPI = angular.copy(dataFromAPI.response);
+      var isResponseValid = validateStoreInstanceResponse(dataFromAPI.response);
+      if (isResponseValid) {
+        var storeListFromAPI     = angular.copy(dataFromAPI.response);
         $scope.storeInstanceList = formatScheduleDateForApp(storeListFromAPI);
+        return;
+      }
+      showModalErrors('No Store Instance found, please check search criteria');
     };
 
     $scope.findStoreInstance = function () {
+      if (!$scope.scheduleDate && (!$scope.selectedSchedule || !$scope.selectedStoreNumber)) {
+        showModalErrors('Please select date and schedule number or store number');
+        return;
+      }
+
       $scope.storeInstanceList = [];
+      $scope.displayModalError = false;
       var payload              = createPayloadForStoreInstance();
       cashBagFactory.getStoreInstanceList(payload).then(getStoreInstanceListHandler);
     };
@@ -194,7 +213,7 @@ angular.module('ts5App')
     });
 
     $scope.submitCreate = function () {
-      if (!$scope.createCashBagForm.$valid) {
+      if ($scope.scheduleDate && ($scope.selectedSchedule || $scope.selectedStoreNumber)) {
         showModalErrors('Please select both a schedule number and a schedule date');
         return;
       }
