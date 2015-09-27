@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: CashBagListCtrl', function () {
+describe('Controller: CashBagListCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App', 'template-module'));
@@ -224,31 +224,20 @@ fdescribe('Controller: CashBagListCtrl', function () {
     });
 
     describe('submit new schedule form', function () {
-      it('should call getDailySchedulesList API', function () {
-        scope.createCashBagForm = {
-          $valid: true
-        };
-        scope.scheduleDate      = '06/18/2015';
-        scope.selectedSchedule  = '08000';
-        scope.submitCreate();
-        expect(cashBagFactory.getDailySchedulesList).toHaveBeenCalled();
+      it('should call redirect to cash bag create with store instance as parameter', function () {
+        var storeInstance = {id: 'fakeStoreInstanceId'};
+        var expectedParameters = { storeInstanceId: 'fakeStoreInstanceId' };
+        scope.submitCreate(storeInstance);
+
+        expect(location.path()).toBe('/cash-bag/create');
+        expect(location.search()).toEqual(expectedParameters);
       });
-      it('should throw error message if there are blank values', function () {
-        scope.createCashBagForm = {
-          $valid: false
-        };
+
+      it('should stay on the same url if store instance is invalid', function () {
         scope.submitCreate();
-        expect(cashBagFactory.getDailySchedulesList).not.toHaveBeenCalled();
+        expect(location.path()).not.toBe('/cash-bag/create');
       });
-      it('should reformat date structure', function () {
-        scope.createCashBagForm = {
-          $valid: true
-        };
-        scope.selectedSchedule  = {scheduleNumber: '105'};
-        scope.scheduleDate      = '06/18/2015';
-        scope.submitCreate();
-        expect(cashBagFactory.getDailySchedulesList).toHaveBeenCalledWith(companyId, '105', '20150618');
-      });
+
     });
 
     describe('isCashBagEditable', function () {

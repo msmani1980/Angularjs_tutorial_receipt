@@ -217,18 +217,9 @@ angular.module('ts5App')
         showModalErrors('Please select a store instance');
         return;
       }
-      var formattedDate = dateUtility.formatDateForAPI($scope.scheduleDate);
-      cashBagFactory.getDailySchedulesList(_companyId, $scope.selectedSchedule, formattedDate).then(function (response) {
-        if (response.schedules.length < 1) {
-          showModalErrors('Not a valid schedule');
-        } else {
-          $scope.displayError = false;
-          angular.element('#addCashBagModal').removeClass('fade').modal('hide');
-          $location.path('cash-bag/create').search({
-            scheduleNumber: $scope.selectedSchedule,
-            scheduleDate: formattedDate
-          });
-        }
+      angular.element('#addCashBagModal').removeClass('fade').modal('hide');
+      $location.path('cash-bag/create').search({
+        storeInstanceId: storeInstance.id
       });
     };
 
