@@ -309,6 +309,9 @@ angular.module('ts5App')
 
     $scope.goToWizardStep = function($index){
       $scope.wizardStepToIndex = $index;
+      if (!$scope.wizardSteps[$scope.wizardStepToIndex]) {
+        return;
+      }
       var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
       $this.updateInstanceToByStepName(stepName);
     };
