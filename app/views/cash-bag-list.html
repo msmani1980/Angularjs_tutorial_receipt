@@ -78,9 +78,27 @@
                   </select>
                 </div>
               </div>
-
             </div>
           </form>
+
+          <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th>Store Instance</th>
+              <th>Store Number</th>
+              <th>Schedule Number</th>
+              <th>Schedule Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="storeInstance in storeInstanceList">
+              <td>{{storeInstance.storeId}}</td>
+              <td>{{storeInstance.storeNumber}}</td>
+              <td>{{storeInstance.scheduleNumber}}</td>
+              <td>{{storeInstance.scheduleDate}}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" ng-click="findStoreInstance()">Submit</button>

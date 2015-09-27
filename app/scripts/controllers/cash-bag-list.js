@@ -14,11 +14,12 @@ angular.module('ts5App')
     var _services  = null;
 
     $scope.viewName           = 'Manage Cash Bag';
+    $scope.createCashBagError = 'temp error message';
     $scope.displayModalError  = false;
     $scope.displayError       = false;
-    $scope.createCashBagError = 'temp error message';
     $scope.search             = {};
     $scope.storeList          = [];
+    $scope.storeInstanceList  = [];
     $scope.selectedSchedule;
     $scope.selectedStoreNumber;
 
@@ -146,6 +147,31 @@ angular.module('ts5App')
       return !$scope.scheduleDate;
     };
 
+    function createPayloadForStoreInstance() {
+      var payload = {
+        //scheduleDate: dateUtility.formatDateForAPI($scope.scheduleDate);
+      };
+
+      if ($scope.selectedSchedule) {
+        payload.scheduleNumber = $scope.selectedSchedule;
+      }
+
+      if ($scope.selectedStoreNumber) {
+        payload.storeId = $scope.selectedStoreNumber;
+      }
+      return payload;
+    }
+
+    var getStoreInstanceListHandler = function (storeInstanceListFromAPI) {
+      $scope.storeInstanceList = angular.copy(storeInstanceListFromAPI.response);
+    };
+
+    $scope.findStoreInstance = function () {
+      $scope.storeInstanceList = [];
+      var payload              = createPayloadForStoreInstance();
+      cashBagFactory.getStoreInstanceList(payload).then(getStoreInstanceListHandler);
+    };
+
     $scope.clearSelectedSchedule = function () {
       delete $scope.selectedSchedule;
     };
@@ -167,26 +193,6 @@ angular.module('ts5App')
       cashBagFactory.getSchedulesInDateRange(_companyId, searchDate, searchDate).then(setFilteredScheduleList);
 
     });
-
-    function createPayloadForStoreInstance() {
-      var payload = {
-        //scheduleDate: dateUtility.formatDateForAPI($scope.scheduleDate);
-      };
-
-      if ($scope.selectedSchedule) {
-        payload.scheduleNumber = $scope.selectedSchedule;
-      }
-
-      if ($scope.selectedStoreNumber) {
-        payload.storeId = $scope.selectedStoreNumber;
-      }
-      return payload;
-    }
-
-    $scope.findStoreInstance = function () {
-      var payload = createPayloadForStoreInstance();
-      cashBagFactory.getStoreInstanceList(payload);
-    };
 
     $scope.submitCreate = function () {
       if (!$scope.createCashBagForm.$valid) {
