@@ -28,7 +28,7 @@ describe('Controller: StoreNumberCreateCtrl', function () {
 
     getStoresDeferred = $q.defer();
     getStoresDeferred.resolve(_servedCompanyStores_);
-    spyOn(companyStoresService, 'getStores').and.returnValue(getStoresDeferred.promise);
+    spyOn(companyStoresService, 'getStoreList').and.returnValue(getStoresDeferred.promise);
 
     spyOn(companyStoresService, 'deleteStore').and.returnValue(getStoresDeferred.promise);
 
@@ -54,7 +54,7 @@ describe('Controller: StoreNumberCreateCtrl', function () {
       expect(Object.prototype.toString.call(scope.formData)).toBe('[object Object]');
     });
     it('should call companyService.getStores', function(){
-      expect(companyStoresService.getStores).toHaveBeenCalledWith(companyId);
+      expect(companyStoresService.getStoreList).toHaveBeenCalledWith(companyId);
     });
     it('should set storeNumbersList in scope', function(){
       expect(scope.storeNumbersList).toBeDefined();

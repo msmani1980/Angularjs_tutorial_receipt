@@ -1,0 +1,128 @@
+<div class="module-container">
+
+  <div class="edit-controls">
+    <div class="row">
+    
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+          
+      <div class="col-xs-6 text-right">
+    
+        <fieldset ng-hide="viewOnly">
+    
+<!--           <button class="btn btn-warning" ng-click="toggleReview()" ng-hide="hideReview"> -->
+<!--             <span class="fa fa-file-text-o" aria-hidden="true"></span> -->
+<!--             <span class="hidden-xs">Review</span> -->
+<!--           </button> -->
+    
+          <button class="btn btn-primary">
+<!--           <button class="btn btn-primary" ng-click="save(false)" ng-show="showSaveButton()"> -->
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Save</span>
+          </button>
+    
+          <button type="button" class="btn btn-default" ng-click="cancel()">
+            <span class="fa fa-remove" aria-hidden="true"></span>
+            <span class="hidden-xs">Cancel</span>
+          </button>
+    
+          <button class="btn btn-success" ng-click="save(true)" ng-show="showSaveButton()">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs">Submit</span>
+          </button>
+    
+        </fieldset>
+    
+      </div>
+    </div>
+  </div>
+
+  <form class="manual-store-instance-form">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <!-- form header-->
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label>Store Instance*</label>
+              <select class="form-control" required="true">
+                <option selected="selected" value>Select a Store Instance</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label>Cash Bag*</label>
+              <select class="form-control" required="true">
+                <option selected="selected" value>Select a Cash Bag</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <div class="row">
+        
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group">
+              <date-picker
+                disable-date-range="true"
+                is-search-field="true"
+                disable-start-date="readOnly"
+                required="required"
+                label-from="Flight Date*"
+                name-from="Flight Date">
+              </date-picker>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label>Flight Number*</label>
+              <input type="text" class="form-control">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-3">
+            <div class="form-group">
+              <label for="arrival-station">Flight Route*</label>
+              <select class="form-control">
+                <option selected="selected" value>Select a Flight Route</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label>PAX Count*</label>
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          
+      </div>
+      
+<!--       <div class="panel-footer text-right"> -->
+<!--         <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly"> -->
+<!--           <span class="fa fa-check-square-o" aria-hidden="true"></span> -->
+<!--           <span class="hidden-xs">Save</span> -->
+<!--         </button> -->
+<!--         <a href="#" class="btn btn-default" ng-hide="readOnly">Cancel</a> -->
+<!--       </div> -->
+      
+    </div>
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav></dynamic-left-nav>

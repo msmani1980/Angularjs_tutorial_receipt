@@ -22,7 +22,7 @@ describe('Service: promotionsService', function () {
     it('should make a GET request', function(){
       var expectedUri = /promotions\/\d+$/;
       var mockId = 123;
-      httpBackend.expectGET(expectedUri).respond(200, []);
+      httpBackend.expectGET(expectedUri).respond(200, {});
       promotionsService.getPromotion(mockId).then(function (response) {
         expect(response).toBeDefined();
       });
@@ -35,7 +35,7 @@ describe('Service: promotionsService', function () {
       var expectedUri = /promotions\/\d+$/;
       var mockId = 123;
       var mockPayload = {foo:'bars'};
-      httpBackend.expectPUT(expectedUri).respond(200, []);
+      httpBackend.expectPUT(expectedUri).respond(200, {});
       promotionsService.savePromotion(mockId, mockPayload).then(function (response) {
         expect(response).toBeDefined();
       });
@@ -47,7 +47,7 @@ describe('Service: promotionsService', function () {
     it('should make a POST request', function(){
       var expectedUri = /promotions$/;
       var mockPayload = {foo:'bars'};
-      httpBackend.expectPOST(expectedUri).respond(200, []);
+      httpBackend.expectPOST(expectedUri).respond(200, {});
       promotionsService.createPromotion(mockPayload).then(function (response) {
         expect(response).toBeDefined();
       });

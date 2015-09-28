@@ -87,43 +87,43 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.getStoreInstanceItemList(requestPayload).$promise;
   }
 
-  function getStoreInstanceItem(storeId, itemId) {
+  function getStoreInstanceItem(id, itemId) {
     var requestPayload = angular.extend({}, {
-      id: storeId,
+      id: id,
       api: 'items',
       itemIdOrBulk: itemId
     });
     return requestResource.getStoreInstanceItem(requestPayload).$promise;
   }
 
-  function updateStoreInstanceItem(storeId, itemId, payload) {
+  function updateStoreInstanceItem(id, itemId, payload) {
     var requestPayload = angular.extend({}, {
-      id: storeId,
+      id: id,
       api: 'items',
       itemIdOrBulk: itemId
     });
     return requestResource.updateStoreInstanceItem(requestPayload, payload).$promise;
   }
 
-  function updateStoreInstanceItemsBulk(storeId, payload) {
+  function updateStoreInstanceItemsBulk(id, payload) {
     var requestPayload = angular.extend({}, {
-      id: storeId,
+      id: id,
       api: 'items',
       itemIdOrBulk: 'bulk'
     });
     return requestResource.updateStoreInstanceItemsBulk(requestPayload, payload).$promise;
   }
-  function createStoreInstanceItem(storeId, payload) {
+  function createStoreInstanceItem(id, payload) {
     var requestPayload = angular.extend({}, {
-      id: storeId,
+      id: id,
       api: 'items'
     });
     return requestResource.createStoreInstanceItem(requestPayload, payload).$promise;
   }
 
-  function deleteStoreInstanceItem(storeId, itemId, payload) {
+  function deleteStoreInstanceItem(id, itemId, payload) {
     var requestPayload = angular.extend({}, {
-      id: storeId,
+      id: id,
       api: 'items',
       itemIdOrBulk: itemId
     }, payload);
@@ -138,9 +138,9 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.getStoreInstanceMenuItems(requestPayload).$promise;
   }
 
-  function updateStoreInstanceStatus(storeId, statusId) {
+  function updateStoreInstanceStatus(id, statusId) {
     var requestPayload = angular.extend({}, {
-      id: storeId,
+      id: id,
       api: 'status',
       itemIdOrBulk: statusId
     });

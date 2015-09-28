@@ -23,13 +23,25 @@ angular.module('ts5App')
     };
 
     $scope.formData = [];
+    $scope.readOnly = true;
+    $scope.saveButtonName = 'Exit';
 
     this.setSealColors = function(dataFromAPI) {
       $scope.sealColorsList = dataFromAPI.response;
     };
 
+    this.isInstanceReadOnly = function(){
+      if($scope.storeDetails.currentStatus.name !== '2') {
+        this.showMessage('warning', 'This store instance is not ready for seals');
+      } else {
+        $scope.readOnly = false;
+        $scope.saveButtonName = 'Save & Exit';
+      }
+    };
+
     this.setStoreDetails = function(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
+      $this.isInstanceReadOnly();
     };
 
     this.setSealTypes = function(sealTypesJSON) {
@@ -93,6 +105,9 @@ angular.module('ts5App')
     };
 
     this.addSealTypeActions = function(sealTypeObject) {
+      if($scope.readOnly) {
+        return;
+      }
       if (sealTypeObject.name === 'Hand Over') {
         return $this.createHandoverActions();
       }
@@ -342,6 +357,10 @@ angular.module('ts5App')
     };
 
     this.assignSealsSuccessHandler = function() {
+      if($this.exitAfterSave) {
+        $this.exitOnSave();
+        return;
+      }
       $this.updateStatusToStep($this.nextStep);
       $this.showMessage('success', 'Seals Assigned!');
     };
@@ -380,10 +399,10 @@ angular.module('ts5App')
       sealTypeTo.seals.numbers = angular.copy(sealTypeFrom.seals.numbers);
     };
 
-    $scope.submitForm = function(saveAndExit) {
+    $scope.submitForm = function() {
       $scope.assignSealsForm.$setSubmitted(true);
       if ($this.validateForm()) {
-        $this.assignSeals(saveAndExit);
+        $this.assignSeals();
       }
       return false;
     };
@@ -410,7 +429,12 @@ angular.module('ts5App')
     };
 
     $scope.saveAndExit = function() {
-      return $scope.submitForm(true);
+      if($scope.readOnly) {
+        $location.url('/store-instance-dashboard');
+        return;
+      }
+      $this.exitAfterSave = true;
+      return $scope.submitForm();
     };
 
   });

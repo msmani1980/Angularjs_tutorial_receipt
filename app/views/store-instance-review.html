@@ -1,30 +1,24 @@
-<div class="fluid-container">
-  <!--<step-wizard></step-wizard>-->
+<div class="container">
 
   <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()" save-trigger="exit()" disabled="actionNotAllowed" save-button-text="saveButtonText"></step-wizard>
   <lose-data-alert show-alert="showLoseDataAlert" confirm-trigger="loseDataAlertConfirmTrigger()"></lose-data-alert>
 
   <form-error-dialog></form-error-dialog>
 
-  <form name="createStoreInstance" class="well" ng-submit="submitForm()">
+  <form name="createStoreInstance" ng-submit="submitForm()">
 
-    <!-- INFORMATION BAR -->
+    <store-instance-header></store-instance-header>
+
     <div class="well">
-      <store-instance-header></store-instance-header>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-12 col-sm-1">
-        <div class="form-group">
-          <label>Filter by:</label>
-        </div>
-      </div>
-      <div class="col-xs-12 col-sm-4">
-        <div class="form-group">
-          <label>Item Details</label>
-          <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details"
-                 placeholder="Coke" ng-readonly="readOnly">
-        </div>
+      <div class="form-group">
+        <p class="input-group">
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-disabled="true">
+              <i class="fa fa-filter"></i> Filter By
+          </button>
+          </span>
+          <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details" placeholder="Type an item code or name" />
+        </p>
       </div>
     </div>
 
@@ -99,7 +93,7 @@
         <span class="fa fa-arrow-left"></span>
         <span class="hidden-xs">Prev</span>
       </button>
-      <button type="button" class="btn btn-default btn-primary btn-next" ng-click="submit()">Dispatch</button>
+      <button type="button" class="btn btn-default btn-success btn-next" ng-click="submit()">Dispatch</button>
     </footer>
 
   </form>

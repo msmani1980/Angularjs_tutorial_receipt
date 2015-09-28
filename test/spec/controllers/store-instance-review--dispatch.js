@@ -164,27 +164,17 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     describe('stepWizardPrevTrigger scope function', function () {
       it('should set showLoseDataAlert to true and return false', function () {
         expect(scope.stepWizardPrevTrigger()).toBe(false);
-        expect(scope.showLoseDataAlert).toBe(true);
+        expect(scope.showLoseDataAlert).toBe(false);
         expect(scope.wizardStepToIndex).toBe(2);
       });
     });
 
     describe('goToWizardStep scope function', function () {
       it('should set wizardStepToIndex to whatever value is passed in and call updateStatus', function () {
-        spyOn(scope, 'stepWizardPrevTrigger');
-        var newI = 4;
+        var newI = 2;
         scope.goToWizardStep(newI);
-        expect(scope.wizardStepToIndex).toBe(newI);
+        expect(scope.wizardStepToIndex).toEqual(newI);
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, newI.toString());
-      });
-    });
-
-    describe('loseDataAlertConfirmTrigger scope function', function () {
-      it('should update status wit wizardStep', function () {
-        var mockIndex = 2;
-        scope.wizardStepToIndex = mockIndex;
-        scope.loseDataAlertConfirmTrigger();
-        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, mockIndex.toString());
       });
     });
 
@@ -192,7 +182,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       it('should set the store instance status to the name value of "Dispatched" which is 4 with current mock data', function () {
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '4');
-        scope.$apply();
+        scope.$digest();
         expect(location.url).toHaveBeenCalledWith('/store-instance-dashboard');
       });
     });

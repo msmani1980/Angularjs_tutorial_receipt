@@ -2,6 +2,7 @@
 
 describe('Controller: StoreInstanceDashboardCtrl', function() {
 
+  // load the controller's module
   beforeEach(module('ts5App'));
   beforeEach(module('served/catering-stations.json'));
   beforeEach(module('served/stations.json'));
@@ -72,9 +73,9 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
     StoreInstanceDashboardCtrl = $controller('StoreInstanceDashboardCtrl', {
       $scope: scope
+      // place here mocked dependencies
     });
   }));
-
 
   describe('init', function() {
 
