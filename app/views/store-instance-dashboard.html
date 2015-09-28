@@ -222,7 +222,7 @@
             </a>
             <!-- TODO: UnDispatch-->
             <a class="btn btn-warning btn-xs" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Un-dispatch')"
+               ng-show="isUndispatchPossible(store)"
                href="#/store-instance-undispatch/dispatch/{{store.id}}">Undispatch
             </a>
             <!-- TODO: Generate Doc Download Link -->
@@ -290,7 +290,7 @@
             </a>
             <!-- TODO: UnDispatch-->
             <a class="btn btn-warning btn-xs" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Un-dispatch')"
+               ng-show="isUndispatchPossible(store)"
                href="#/store-instance-undispatch/{{replenishment.id}}">Undispatch
             </a>
             <!-- TODO: Generate Doc Download Link -->

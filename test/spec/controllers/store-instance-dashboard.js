@@ -296,5 +296,24 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
   });
 
+  describe('isUndispatchPossible', function() {
+    it('should return true if hours and startDate are populated', function() {
+      scope.storeInstanceList = [{
+        id: 1,
+        startDate: '09302014',
+        hours: 77
+      }];
+      expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toBeTruthy();
+    });
+    it('should return true if hours are 0', function() {
+      scope.storeInstanceList = [{
+        id: 1,
+        startDate: '09302014',
+        hours: 0
+      }];
+      expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toBeFalsy();
+    });
+
+  });
 
 });
