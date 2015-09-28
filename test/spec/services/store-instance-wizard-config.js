@@ -16,7 +16,7 @@ describe('Service: storeInstanceWizardConfig', function () {
     mockId = 7;
     mockedConfigDispatch = [
       {
-        label: 'Create Store Instance',
+        label: 'Create Store Instance', 
         uri: '/store-instance-create/dispatch/' + mockId
       },
       {
