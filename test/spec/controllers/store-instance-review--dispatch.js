@@ -164,7 +164,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     describe('stepWizardPrevTrigger scope function', function () {
       it('should set showLoseDataAlert to true and return false', function () {
         expect(scope.stepWizardPrevTrigger()).toBe(false);
-        expect(scope.showLoseDataAlert).toBe(true);
+        expect(scope.showLoseDataAlert).toBe(false);
         expect(scope.wizardStepToIndex).toBe(2);
       });
     });
@@ -175,15 +175,6 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         scope.goToWizardStep(newI);
         expect(scope.wizardStepToIndex).toEqual(newI);
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, newI.toString());
-      });
-    });
-
-    describe('loseDataAlertConfirmTrigger scope function', function () {
-      it('should update status wit wizardStep', function () {
-        var mockIndex = 2;
-        scope.wizardStepToIndex = mockIndex;
-        scope.loseDataAlertConfirmTrigger();
-        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, mockIndex.toString());
       });
     });
 
