@@ -1,5 +1,5 @@
 <div class="container module-container">
-  <form name="form" class="form edit-form create-item-form">
+  <form name="promotionsForm" class="form edit-form create-item-form">
     <div class="edit-controls">
       <div class="row">
         <div class="col-xs-6">
@@ -38,29 +38,43 @@
     </div>
 
 
-    <form-error-dialog></form-error-dialog>
+    <error-dialog form-object="promotionsForm"></error-dialog>
 
     <h3 id="promotion-information">Information</h3>
     <div class="row">
       <div class="col-xs-12 col-sm-6">
         <div class="form-group">
           <label for="promotion-code">Promotion Code*</label>
-          <input type="text" class="form-control" id="promotion-code"
-                 ng-model="promotion.promotionCode" ng-disabled="readOnly" required>
+          <input type="text"
+                 class="form-control"
+                 id="promotion-code"
+                 name="promotionCode"
+                 ng-model="promotion.promotionCode"
+                 ng-disabled="readOnly"
+                 required>
         </div>
       </div>
       <div class="col-xs-12 col-sm-6">
         <div class="form-group">
           <label for="promotion-description">Promotion Description*</label>
-          <textarea class="form-control" id="promotion-description"
-                    ng-model="promotion.description" ng-disabled="readOnly" required></textarea>
+          <textarea class="form-control"
+                    id="promotion-description"
+                    name="promotionDescription"
+                    ng-model="promotion.description"
+                    ng-disabled="readOnly"
+                    required></textarea>
         </div>
       </div>
       <div class="col-xs-12 col-sm-6">
         <div class="form-group">
           <label for="promotion-name">Promotion Name*</label>
-          <input type="text" class="form-control" id="promotion-name"
-                 ng-model="promotion.promotionName" ng-disabled="readOnly" required>
+          <input type="text"
+                 class="form-control"
+                 id="promotion-name"
+                 name="promotionName"
+                 ng-model="promotion.promotionName"
+                 ng-disabled="readOnly"
+                 required>
         </div>
       </div>
       <div class="col-xs-12 col-md-6">
@@ -112,12 +126,12 @@
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-money"></i></span>
                   <input type="text" class="form-control"
-                         name="Spend Limit Amount {{ spendLimitAmountData.code }}"
+                         name="spendLimitAmount{{ spendLimitAmountData.code }}"
                          custom-validity
                          custom-pattern="currencyWithThreeDecimalPlace"
+                         ng-show="promotion.promotionType.name === 'Spend Limit'"
                          ng-model="spendLimitAmountData.amount"
-                         ng-required="promotion.promotionType.name === 'Spend Limit'"
-                         ng-disabled="readOnly">
+                         ng-disabled="readOnly || promotion.promotionType.name !== 'Spend Limit'">
                 </div>
               </div>
           </div>
@@ -140,9 +154,11 @@
         <div class="col-xs-12 col-sm-4 col-sm-offset-1">
           <div class="form-group">
             <label>Name*</label>
-            <ui-select theme="bootstrap" ng-model="promotionCategoryData.promotionCategory" ng-disabled="readOnly">
+            <ui-select theme="bootstrap" ng-model="promotionCategoryData.promotionCategory" ng-disabled="readOnly"
+                       ng-change="promotionCategorySelectChanged($index)">
               <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
-              <ui-select-choices repeat="promotionCategory in selectOptions.promotionCategories | filter: {promotionCategoryName:$select.search}">
+              <ui-select-choices repeat="promotionCategory in selectOptions.promotionCategories | filter: {promotionCategoryName:$select.search}"
+                                 ui-disable-choice="disabledPromotionCategory(promotionCategory)">
                 <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -159,7 +175,7 @@
         <div class="col-xs-1 col-xs-offset-4 col-sm-offset-0">
           <label ng-hide="readOnly" class="invisible">Remove</label>
           <button type="button" class="btn-remove-price-group pull-right btn btn-danger btn-xs"
-                  ng-click="removeFromArrayByIndex(promotion.promotionCategories, $index)"
+                  ng-click="removeFromPromotionCategoryByIndex($index)"
                   ng-hide="readOnly">
             <i class="fa fa-close"></i>
           </button>
@@ -170,9 +186,9 @@
       <div class="row">
         <div class="col-xs-12 col-sm-11 col-md-10 col-sm-offset-1">
           <h3>Retail Item <span class="badge">{{ promotion.items.length }}</span><a class="pull-right"
-                                                            ng-click="addBlankObjectToArray(promotion.items)"
-                                                            ng-hidden="readOnly"
-                                                            ng-disabled="readOnly">Add Retail Item</a></h3>
+                                      ng-click="addBlankObjectToArray(promotion.items)"
+                                      ng-hidden="readOnly"
+                                      ng-disabled="readOnly">Add Retail Item</a></h3>
         </div>
       </div>
 
@@ -181,7 +197,11 @@
           <div class="form-group">
             <label>Item Category <i class="fa fa-question-circle" title="Filter Retail Items by Category"
                                     ng-hide="readOnly"></i></label>
-            <ui-select theme="bootstrap" ng-model="retailItemData.salesCategory" ng-disabled="readOnly">
+            <ui-select theme="bootstrap"
+                       ng-model="itemCategorySelects[$index]"
+                       ng-change="itemCategoryChanged($index)"
+                       ng-disabled="readOnly"
+                       refresh-delay="0">
               <ui-select-match placeholder="Select Category">{{ $select.selected.name }}</ui-select-match>
               <ui-select-choices repeat="salesCategory in selectOptions.salesCategories | filter: {name:$select.search}">
                 <div ng-bind-html="salesCategory.name | highlight: $select.search"></div>
@@ -192,9 +212,11 @@
         <div class="col-xs-12 col-sm-4 col-md-3">
           <div class="form-group">
             <label>Retail Item*</label>
-            <ui-select theme="bootstrap" ng-model="retailItemData.retailItem" ng-disabled="readOnly">
+            <ui-select theme="bootstrap" ng-model="retailItemData.retailItem" ng-disabled="readOnly"
+                       ng-init="itemSelectInit($index)" ng-change="itemSelectChanged($index)">
               <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
-              <ui-select-choices repeat="masterItem in selectOptions.masterItems | filter: {itemName:$select.search}">
+              <ui-select-choices repeat="masterItem in repeatableItemListSelectOptions[$index] | filter: {itemName:$select.search}"
+                                 ui-disable-choice="disabledItems(masterItem)">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
@@ -211,7 +233,7 @@
         <div class="col-xs-1 col-xs-offset-4 col-sm-offset-0">
           <label ng-hide="readOnly" class="invisible">Remove</label>
           <button type="button" class="btn-remove-price-group pull-right btn btn-danger btn-xs"
-                  ng-click="removeFromArrayByIndex(promotion.items, $index)"
+                  ng-click="removeFromItemListByIndex($index)"
                   ng-hide="readOnly">
             <i class="fa fa-close"></i>
           </button>
@@ -303,12 +325,12 @@
                 <label for="discount-rate-type-percentage-value">Percentage Value*</label>
                 <input type="text" id="discount-rate-type-percentage-value"
                        class="form-control"
-                       name="Percentage Value"
+                       name="percentageValue"
                        custom-validity
                        custom-pattern="currencyWithThreeDecimalPlace"
                        ng-model="promotion.discountPercentage"
                        ng-required="promotion.discountType.name === 'Percentage'"
-                       ng-disabled="readOnly">
+                       ng-disabled="readOnly || promotion.discountType.name !== 'Percentage'">
               </div>
             </div>
             <div class="col-xs-12 col-sm-6">
@@ -330,11 +352,11 @@
                   <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-money"></i></span>
                     <input type="text" class="form-control"
-                           name="Benefit Amount {{ benefitAmountData.code }}"
+                           name="benefitAmount{{ benefitAmountData.code }}"
                            custom-validity
                            custom-pattern="currencyWithThreeDecimalPlace"
                            ng-model="benefitAmountData.amount"
-                           ng-disabled="readOnly">
+                           ng-disabled="readOnly || promotion.discountType.name !== 'Amount'">
                   </div>
                 </div>
               </div>
@@ -376,9 +398,11 @@
       <div class="col-xs-10 col-sm-5">
         <div class="form-group">
           <label>Departure Station</label>
-          <ui-select theme="bootstrap" ng-model="inclusionFilterData.departureStation" ng-disabled="readOnly">
-            <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
-            <ui-select-choices repeat="companyStation in selectOptions.companyStationGlobals | filter: {name:$select.search}">
+          <ui-select theme="bootstrap" ng-model="inclusionFilterData.departureStation" ng-disabled="readOnly"
+                     ng-change="stationListChanged($index)">
+            <ui-select-match placeholder="Select Departure Station">{{ $select.selected.name }}</ui-select-match>
+            <ui-select-choices repeat="companyStation in selectOptions.companyStationGlobals | filter: {name:$select.search}"
+                               ui-disable-choice="disabledDepartureStations(companyStation, inclusionFilterData)">
               <div ng-bind-html="companyStation.name | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -387,9 +411,11 @@
       <div class="col-xs-10 col-sm-5 col-sm-offset-1">
         <div class="form-group">
           <label>Arrival Station</label>
-          <ui-select theme="bootstrap" ng-model="inclusionFilterData.arrivalStation" ng-disabled="readOnly">
-            <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
-            <ui-select-choices repeat="companyStation in selectOptions.companyStationGlobals | filter: {name:$select.search}">
+          <ui-select theme="bootstrap" ng-model="inclusionFilterData.arrivalStation" ng-disabled="readOnly"
+                     ng-change="stationListChanged($index)">
+            <ui-select-match placeholder="Select Arrival Station">{{ $select.selected.name }}</ui-select-match>
+            <ui-select-choices repeat="companyStation in selectOptions.companyStationGlobals | filter: {name:$select.search}"
+                               ui-disable-choice="disabledArrivalStations(companyStation, inclusionFilterData)">
               <div ng-bind-html="companyStation.name | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -398,7 +424,7 @@
       <div class="col-xs-2 col-sm-1 text-right">
         <label ng-hide="readOnly" class="invisible">Remove</label>
         <button type="button" class="btn-remove-price-group btn btn-danger btn-xs"
-                ng-click="removeFromArrayByIndex(promotion.filters, $index)"
+                ng-click="removeFromStationListByIndex($index)"
                 ng-disabled="readOnly" ng-hide="readOnly">
           <i class="fa fa-close"></i>
         </button>

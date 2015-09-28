@@ -16,6 +16,14 @@ angular.module('ts5App')
     $scope.saveButtonText = 'Create';
     $scope.activeBtn = 'promotion-information';
     $scope.selectOptions = {};
+    $scope.itemCategorySelects = [];
+    $scope.repeatableItemListSelectOptions = [];
+    $scope.repeatableProductPurchaseItemIds = [];
+    $scope.repeatableProductPurchasePromotionCategoryIds = [];
+    $scope.repeatableStations = {
+      arrivalHas: [],
+      departureHas: []
+    };
 
     // Scope models
     $scope.promotion = {};
@@ -47,6 +55,7 @@ angular.module('ts5App')
     var _initPromises = [];
     var _payload = null;
     var _promotionFromAPI = null;
+    var _cachedRetailItemsByCatId = [];
 
     // private controller functions
     function showMessage(message, messageType) {
@@ -152,6 +161,9 @@ angular.module('ts5App')
     }
 
     function payloadGenerate(){
+      if($scope.readOnly){
+        return;
+      }
       _payload = {
         companyId: _companyId,
         promotionCode: $scope.promotion.promotionCode,
@@ -533,6 +545,9 @@ angular.module('ts5App')
     }
 
     function createPromotion(){
+      if(!formValid()){
+        return;
+      }
       displayLoadingModal('Creating promotion');
       promotionsFactory.createPromotion(_payload).then(resolveCreatePromotion, showResponseErrors);
     }
@@ -543,7 +558,25 @@ angular.module('ts5App')
 
     }
 
+    function resetErrors(){
+      $scope.formErrors = [];
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+    }
+
+    function formValid() {
+      resetErrors();
+      if ($scope.promotionsForm.$valid) {
+        return true;
+      }
+      $scope.displayError = true;
+      return false;
+    }
+
     function savePromotion(){
+      if(!formValid()){
+        return;
+      }
       displayLoadingModal('Saving promotion');
       promotionsFactory.savePromotion($routeParams.id, _payload).then(resolveSavePromotion, showResponseErrors);
     }
@@ -597,13 +630,6 @@ angular.module('ts5App')
       _array.push({});
     };
 
-    $scope.removeFromArrayByIndex = function(_array, $index){
-      if($scope.readOnly){
-        return;
-      }
-      _array.splice($index, 1);
-    };
-
     $scope.promotionCategoryQtyRequired = function(promotionCategoryData){
       return angular.isDefined(promotionCategoryData.promotionCategory);
     };
@@ -627,9 +653,6 @@ angular.module('ts5App')
     };
 
     $scope.save = function(){ // TODO test
-      if($scope.readOnly){
-        return;
-      }
       payloadGenerate();
       var initState = $routeParams.state + 'Save';
       if (states[initState]) {
@@ -639,6 +662,145 @@ angular.module('ts5App')
 
     $scope.cancel = function(){ // TODO test
       redirectToEmberListing();
+    };
+
+    $scope.itemCategoryChanged = function($index){
+      var _categoryId = $scope.itemCategorySelects[$index].id;
+      if(_cachedRetailItemsByCatId[_categoryId]){
+        $scope.repeatableItemListSelectOptions[$index] = _cachedRetailItemsByCatId[_categoryId];
+        return;
+      }
+      var _payload = {companyId:_companyId,categoryId:_categoryId};
+      displayLoadingModal();
+      promotionsFactory.getMasterItems(_payload).then(function(dataFromAPI){
+        $scope.repeatableItemListSelectOptions[$index] = dataFromAPI.masterItems;
+        _cachedRetailItemsByCatId[_categoryId] = dataFromAPI.masterItems;
+        hideLoadingModal();
+      }, showResponseErrors);
+    };
+
+    $scope.promotionCategorySelectChanged = function($index){
+      $scope.repeatableProductPurchasePromotionCategoryIds[$index] =  $scope.promotion.promotionCategories[$index].promotionCategory.id;
+    };
+
+    $scope.disabledPromotionCategory = function(promotionCategory){
+      return $scope.repeatableProductPurchasePromotionCategoryIds.indexOf(promotionCategory.id) !== -1;
+    };
+
+    $scope.removeFromPromotionCategoryByIndex = function($index){
+      $scope.promotion.promotionCategories.splice($index, 1);
+      $scope.repeatableProductPurchasePromotionCategoryIds.splice($index, 1);
+    };
+
+
+    $scope.itemSelectInit = function($index){
+      $scope.repeatableItemListSelectOptions[$index] = $scope.selectOptions.masterItems;
+    };
+
+    $scope.itemSelectChanged = function($index){
+      $scope.repeatableProductPurchaseItemIds[$index] = $scope.promotion.items[$index].retailItem.id;
+    };
+
+    $scope.disabledItems = function(item){
+      return $scope.repeatableProductPurchaseItemIds.indexOf(item.id) !== -1;
+    };
+
+    $scope.removeFromItemListByIndex = function($index){
+      $scope.repeatableProductPurchaseItemIds.splice($index, 1);
+      $scope.promotion.items.splice($index, 1);
+    };
+
+    function hasCompleteStationObject($index){
+      if(angular.isUndefined($scope.promotion.filters[$index])){
+        return false;
+      }
+      if(angular.isUndefined($scope.promotion.filters[$index].departureStation)){
+        return false;
+      }
+      if(angular.isUndefined($scope.promotion.filters[$index].arrivalStation)){
+        return false;
+      }
+      if(angular.isUndefined($scope.promotion.filters[$index].departureStation.id)){
+        return false;
+      }
+      if(angular.isUndefined($scope.promotion.filters[$index].arrivalStation.id)){
+        return false;
+      }
+      return true;
+    }
+
+    $scope.removeFromStationListByIndex = function($index){
+      if(!hasCompleteStationObject($index)){
+        return;
+      }
+
+      var arrivalId = $scope.promotion.filters[$index].arrivalStation.id;
+      var departureId = $scope.promotion.filters[$index].departureStation.id;
+
+      var departureIndex = -1;
+      if($scope.repeatableStations.arrivalHas[arrivalId]){
+        departureIndex = $scope.repeatableStations.arrivalHas[arrivalId].indexOf(departureId);
+      }
+      if(departureIndex !== -1){
+        $scope.repeatableStations.arrivalHas[arrivalId].splice(departureIndex, 1);
+      }
+
+      var arrivalIndex = -1;
+      if($scope.repeatableStations.departureHas[departureId]){
+        arrivalIndex = $scope.repeatableStations.departureHas[departureId].indexOf(arrivalId);
+      }
+      if(arrivalIndex !== -1){
+        $scope.repeatableStations.departureHas[departureId].splice(arrivalIndex, 1);
+      }
+
+      $scope.promotion.filters.splice($index, 1);
+    };
+
+    $scope.disabledDepartureStations = function(station, stations){
+      if(angular.isUndefined(stations.arrivalStation) || angular.isUndefined(stations.arrivalStation.id)){
+        return false;
+      }
+      var arrivalId = stations.arrivalStation.id;
+      if(station.id == arrivalId){
+        return true;
+      }
+      if(!$scope.repeatableStations.arrivalHas[arrivalId]){
+        return false;
+      }
+      var departureIdsAssignedToArrivalId = $scope.repeatableStations.arrivalHas[arrivalId];
+      return departureIdsAssignedToArrivalId.indexOf(station.id) !== -1;
+    };
+
+    $scope.disabledArrivalStations = function(station, stations){
+      if(angular.isUndefined(stations.departureStation) || angular.isUndefined(stations.departureStation.id)){
+        return false;
+      }
+      var departureId = stations.departureStation.id;
+      if(station.id == departureId){
+        return true;
+      }
+      if(!$scope.repeatableStations.departureHas[departureId]){
+        return false;
+      }
+      var arrivalIdsAssignedToDepartureId = $scope.repeatableStations.departureHas[departureId];
+      return arrivalIdsAssignedToDepartureId.indexOf(station.id) !== -1;
+    };
+
+
+    $scope.stationListChanged = function($index){
+      if(!hasCompleteStationObject($index)){
+        return;
+      }
+      var departureId = $scope.promotion.filters[$index].departureStation.id;
+      var arrivalId = $scope.promotion.filters[$index].arrivalStation.id;
+      if(!$scope.repeatableStations.departureHas[departureId]){
+        $scope.repeatableStations.departureHas[departureId] = [];
+      }
+      $scope.repeatableStations.departureHas[departureId].push(arrivalId);
+      if(!$scope.repeatableStations.arrivalHas[arrivalId]){
+        $scope.repeatableStations.arrivalHas[arrivalId] = [];
+      }
+      $scope.repeatableStations.arrivalHas[arrivalId].push(departureId);
     };
 
   });
