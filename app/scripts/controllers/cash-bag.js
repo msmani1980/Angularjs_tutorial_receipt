@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, factoryHelper) {
+  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, factoryHelper, dateUtility) {
 
     // controller global properties
     var _companyId     = null;
@@ -131,41 +131,46 @@ angular.module('ts5App')
       return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === 'true');
     };
 
+    function getStoreInstanceListResponseHandler(dataFromAPI) {
+      var storeInstanceData         = angular.copy(dataFromAPI);
+      $scope.displayedScheduleDate  = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
+      $scope.cashBag.scheduleNumber = storeInstanceData.scheduleNumber;
+      $scope.cashBag.scheduleDate   = storeInstanceData.scheduleDate;
+    }
+
     // CRUD - Create
     function create() {
       var _promises = _factoryHelper.callServices(['getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
+      cashBagFactory.getStoreInstanceList({id: $routeParams.storeInstanceId}).then(getStoreInstanceListResponseHandler);
 
-      $scope.readOnly              = false;
-      $scope.cashBag               = {
+      $scope.readOnly             = false;
+      $scope.cashBag              = {
         isSubmitted: 'false',
         retailCompanyId: _companyId,
-        scheduleDate: $routeParams.scheduleDate,
-        scheduleNumber: $routeParams.scheduleNumber,
+        storeInstanceId: $routeParams.storeInstanceId,
         cashBagCurrencies: []
       };
-      $scope.displayedScheduleDate = moment($routeParams.scheduleDate, 'YYYYMMDD').format('YYYY-MM-DD').toString();
-      $scope.displayedCashierDate  = moment().format('YYYY-MM-DD');
-      $scope.saveButtonName        = 'Create';
+      $scope.displayedCashierDate = dateUtility.formatDateForApp(dateUtility.now(), 'x');
+      $scope.saveButtonName       = 'Create';
 
       $q.all(_promises).then(function () {
         if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
           $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
+          angular.forEach($scope.dailyExchangeRates[0].dailyExchangeRateCurrencies, function (currency) {
+            $scope.cashBag.cashBagCurrencies.push(
+              {
+                currencyId: currency.retailCompanyCurrencyId,
+                bankAmount: currency.bankExchangeRate,
+                paperAmountManual: '0.0000',
+                coinAmountManual: '0.0000',
+                paperAmountEpos: currency.paperExchangeRate,
+                coinAmountEpos: currency.coinExchangeRate
+              }
+            );
+          });
         } else {
           showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
         }
-        angular.forEach($scope.dailyExchangeRates[0].dailyExchangeRateCurrencies, function (currency) {
-          $scope.cashBag.cashBagCurrencies.push(
-            {
-              currencyId: currency.retailCompanyCurrencyId,
-              bankAmount: currency.bankExchangeRate,
-              paperAmountManual: '0.0000',
-              coinAmountManual: '0.0000',
-              paperAmountEpos: currency.paperExchangeRate,
-              coinAmountEpos: currency.coinExchangeRate
-            }
-          );
-        });
-
       });
     }
 
