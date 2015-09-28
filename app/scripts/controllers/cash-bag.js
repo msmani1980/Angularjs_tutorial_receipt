@@ -12,20 +12,20 @@ angular.module('ts5App')
   .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, factoryHelper) {
 
     // controller global properties
-    var _companyId = null,
-      _factoryHelper = factoryHelper;
+    var _companyId     = null;
+    var _factoryHelper = factoryHelper;
 
     // scope properties
-    $scope.viewName = 'Cash Bag';
-    $scope.readOnly = true;
-    $scope.displayError = false;
+    $scope.viewName              = 'Cash Bag';
+    $scope.readOnly              = true;
+    $scope.displayError          = false;
     $scope.displayedScheduleDate = '';
-    $scope.displayedCashierDate = '';
-    $scope.saveButtonName = '';
-    $scope.state = '';
+    $scope.displayedCashierDate  = '';
+    $scope.saveButtonName        = '';
+    $scope.state                 = '';
 
     function showMessage(error, isError, message) {
-      if(arguments.length < 2) {
+      if (arguments.length < 2) {
         isError = true;
         message = 'error';
       }
@@ -35,9 +35,9 @@ angular.module('ts5App')
         dismissButton: true,
         content: '<strong>Cash bag</strong>:' + message + '!'
       });
-      if(error !== null && isError) {
+      if (error !== null && isError) {
         $scope.displayError = true;
-        $scope.formErrors = error.data;
+        $scope.formErrors   = error.data;
       }
     }
 
@@ -45,15 +45,15 @@ angular.module('ts5App')
     $scope.formSave = function (formCashBag) {
       switch ($routeParams.state) {
         case 'edit':
-          if(formCashBag.isSubmitted === 'true') {
+          if (formCashBag.isSubmitted === 'true') {
             showMessage(null, true, 'cannot edit cash bags that have been submitted!');
             break;
           }
-          var saveCashBag = angular.copy(formCashBag);
-          saveCashBag.totalCashBags = parseInt(saveCashBag.totalCashBags, 10);
-          saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
+          var saveCashBag             = angular.copy(formCashBag);
+          saveCashBag.totalCashBags   = parseInt(saveCashBag.totalCashBags, 10);
+          saveCashBag.scheduleDate    = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
           $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
-          var payload = {
+          var payload                 = {
             cashBag: saveCashBag
           };
           cashBagFactory.updateCashBag($routeParams.id, payload).then(
@@ -73,7 +73,7 @@ angular.module('ts5App')
       }
     };
 
-    function cashBagCurrenciesIsSet(cashBagCurrencies){
+    function cashBagCurrenciesIsSet(cashBagCurrencies) {
       var isSet = true;
       angular.forEach(cashBagCurrencies, function (currency) {
         if (isSet) {
@@ -91,17 +91,17 @@ angular.module('ts5App')
       return isSet;
     }
 
-    function canDelete(cashBag){
-      if($scope.state !== 'edit'){
+    function canDelete(cashBag) {
+      if ($scope.state !== 'edit') {
         return false;
       }
-      if($scope.readOnly){
+      if ($scope.readOnly) {
         return false;
       }
-      if(cashBag.isSubmitted === 'true') {
+      if (cashBag.isSubmitted === 'true') {
         return false;
       }
-      if(cashBag.isDelete === 'true') {
+      if (cashBag.isDelete === 'true') {
         return false;
       }
       return cashBagCurrenciesIsSet(cashBag.cashBagCurrencies);
@@ -135,8 +135,8 @@ angular.module('ts5App')
     function create() {
       var _promises = _factoryHelper.callServices(['getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
 
-      $scope.readOnly = false;
-      $scope.cashBag = {
+      $scope.readOnly              = false;
+      $scope.cashBag               = {
         isSubmitted: 'false',
         retailCompanyId: _companyId,
         scheduleDate: $routeParams.scheduleDate,
@@ -144,8 +144,8 @@ angular.module('ts5App')
         cashBagCurrencies: []
       };
       $scope.displayedScheduleDate = moment($routeParams.scheduleDate, 'YYYYMMDD').format('YYYY-MM-DD').toString();
-      $scope.displayedCashierDate = moment().format('YYYY-MM-DD');
-      $scope.saveButtonName = 'Create';
+      $scope.displayedCashierDate  = moment().format('YYYY-MM-DD');
+      $scope.saveButtonName        = 'Create';
 
       $q.all(_promises).then(function () {
         if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
@@ -174,23 +174,23 @@ angular.module('ts5App')
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
-        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
+        $scope.displayedCashierDate  = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
       });
     }
 
     // CRUD - Update
     function update() {
       $scope.readOnly = false;
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
+      var _promises   = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
-        $scope.displayedCashierDate = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
-        $scope.saveButtonName = 'Save';
+        $scope.displayedCashierDate  = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
+        $scope.saveButtonName        = 'Save';
       });
     }
 
     // Constructor
-    function init(){
+    function init() {
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
       // in object of our services, to be called with the factory helper
@@ -198,12 +198,12 @@ angular.module('ts5App')
         getCashBag: function () {
           return cashBagFactory.getCashBag($routeParams.id).then(
             function (response) {
-              $scope.cashBag = response;
-              $scope.displayError = false;
-              $scope.formErrors = {};
+              $scope.cashBag          = response;
+              $scope.displayError     = false;
+              $scope.formErrors       = {};
               $scope.showDeleteButton = canDelete(response);
 
-              if($scope.cashBag.eposCashBagsId === null) {
+              if ($scope.cashBag.eposCashBagsId === null) {
                 $scope.flightAmount = '0.0000';
               } else {
                 // TODO: API call to get flight amount based on eposCashBagsId
@@ -233,7 +233,7 @@ angular.module('ts5App')
           return cashBagFactory.getCompanyCurrencies().then(
             function (response) {
               $scope.companyCurrencies = response.response;
-              $scope.currencyCodes = [];
+              $scope.currencyCodes     = [];
               angular.forEach(response.response, function (currency) {
                 $scope.currencyCodes[currency.id] = currency.code;
               });
@@ -248,7 +248,7 @@ angular.module('ts5App')
           );
         },
         getCompanyPreferences: function () {
-          return cashBagFactory.getCompanyPreferences().then(function(response){
+          return cashBagFactory.getCompanyPreferences().then(function (response) {
             $scope.companyPreferences = response.preferences;
           });
         }
@@ -268,6 +268,7 @@ angular.module('ts5App')
           break;
       }
     }
+
     init();
 
   });

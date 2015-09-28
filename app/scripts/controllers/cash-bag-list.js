@@ -147,7 +147,7 @@ angular.module('ts5App')
 
     function createPayloadForStoreInstance() {
       var payload = {
-        //scheduleDate: dateUtility.formatDateForAPI($scope.scheduleDate);
+        scheduleDate: dateUtility.formatDateForAPI($scope.scheduleDate)
       };
 
       if ($scope.selectedSchedule) {

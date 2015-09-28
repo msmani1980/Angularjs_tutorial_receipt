@@ -184,7 +184,10 @@ describe('Controller: CashBagListCtrl', function () {
       it('should call getStoreInstanceList with date and schedule number', function () {
         scope.scheduleDate     = '06/15/2015';
         scope.selectedSchedule = '0008';
-        var expectedPayload    = {scheduleNumber: scope.selectedSchedule};
+        var expectedPayload    = {
+          scheduleDate: dateUtility.formatDateForAPI(scope.scheduleDate),
+          scheduleNumber: scope.selectedSchedule
+        };
 
         scope.findStoreInstance();
         expect(cashBagFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload);
@@ -194,7 +197,10 @@ describe('Controller: CashBagListCtrl', function () {
       it('should call getStoreInstanceList with date and store number', function () {
         scope.scheduleDate        = '06/15/2015';
         scope.selectedStoreNumber = 'store001';
-        var expectedPayload       = {storeId: scope.selectedStoreNumber};
+        var expectedPayload       = {
+          scheduleDate: dateUtility.formatDateForAPI(scope.scheduleDate),
+          storeId: scope.selectedStoreNumber
+        };
 
         scope.findStoreInstance();
         expect(cashBagFactory.getStoreInstanceList).toHaveBeenCalledWith(expectedPayload);
@@ -225,8 +231,8 @@ describe('Controller: CashBagListCtrl', function () {
 
     describe('submit new schedule form', function () {
       it('should call redirect to cash bag create with store instance as parameter', function () {
-        var storeInstance = {id: 'fakeStoreInstanceId'};
-        var expectedParameters = { storeInstanceId: 'fakeStoreInstanceId' };
+        var storeInstance      = {id: 'fakeStoreInstanceId'};
+        var expectedParameters = {storeInstanceId: 'fakeStoreInstanceId'};
         scope.submitCreate(storeInstance);
 
         expect(location.path()).toBe('/cash-bag/create');
