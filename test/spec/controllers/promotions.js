@@ -203,9 +203,6 @@ describe('Controller: PromotionsCtrl', function () {
       it('should have a scope function addBlankObjectToArray', function () {
         expect(Object.prototype.toString.call(scope.addBlankObjectToArray)).toBe('[object Function]');
       });
-      it('should have a scope function removeFromArrayByIndex', function () {
-        expect(Object.prototype.toString.call(scope.removeFromArrayByIndex)).toBe('[object Function]');
-      });
       it('should have a scope function retailItemQtyRequired', function () {
         expect(Object.prototype.toString.call(scope.retailItemQtyRequired)).toBe('[object Function]');
       });
@@ -216,15 +213,6 @@ describe('Controller: PromotionsCtrl', function () {
       });
       it('should have a scope function save', function () {
         expect(Object.prototype.toString.call(scope.save)).toBe('[object Function]');
-      });
-    });
-
-    describe('removeFromArrayByIndex scope function', function () {
-      it('should remove an index item from array', function () {
-        scope.mockArray = [2, 3, 4, 5];
-        scope.removeFromArrayByIndex(scope.mockArray, 2);
-        scope.$apply();
-        expect(scope.mockArray).toEqual([2, 3, 5]);
       });
     });
 

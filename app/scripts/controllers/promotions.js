@@ -591,6 +591,60 @@ angular.module('ts5App')
       promotionsFactory.getPromotion($routeParams.id).then(resolveGetPromotion, showResponseErrors);
     }
 
+
+    function hasDepartureStationObject($index){
+      if(angular.isUndefined($scope.promotion.filters[$index].departureStation)){
+        return false;
+      }
+      if(angular.isUndefined($scope.promotion.filters[$index].departureStation.id)){
+        return false;
+      }
+      return true;
+    }
+
+    function hasCompleteArrivalStation($index){
+      if(angular.isUndefined($scope.promotion.filters[$index].arrivalStation)){
+        return false;
+      }
+      if(angular.isUndefined($scope.promotion.filters[$index].arrivalStation.id)){
+        return false;
+      }
+      return true;
+    }
+
+    function hasCompleteStationObject($index){
+      if(angular.isUndefined($scope.promotion.filters[$index])){
+        return false;
+      }
+      if(!hasDepartureStationObject($index)){
+        return false;
+      }
+      if(!hasCompleteArrivalStation($index)){
+        return false;
+      }
+      return true;
+    }
+
+    function removeDepartureFromHasArrival(arrivalId, departureId){
+      var departureIndex = -1;
+      if($scope.repeatableStations.arrivalHas[arrivalId]){
+        departureIndex = $scope.repeatableStations.arrivalHas[arrivalId].indexOf(departureId);
+      }
+      if(departureIndex !== -1){
+        $scope.repeatableStations.arrivalHas[arrivalId].splice(departureIndex, 1);
+      }
+    }
+
+    function removeArrivalFromHasDeparture(arrivalId, departureId){
+      var arrivalIndex = -1;
+      if($scope.repeatableStations.departureHas[departureId]){
+        arrivalIndex = $scope.repeatableStations.departureHas[departureId].indexOf(arrivalId);
+      }
+      if(arrivalIndex !== -1){
+        $scope.repeatableStations.departureHas[departureId].splice(arrivalIndex, 1);
+      }
+    }
+
     var states = {};
     states.createInit = function(){
       getPromotionMetaData();
@@ -710,49 +764,14 @@ angular.module('ts5App')
       $scope.promotion.items.splice($index, 1);
     };
 
-    function hasCompleteStationObject($index){
-      if(angular.isUndefined($scope.promotion.filters[$index])){
-        return false;
-      }
-      if(angular.isUndefined($scope.promotion.filters[$index].departureStation)){
-        return false;
-      }
-      if(angular.isUndefined($scope.promotion.filters[$index].arrivalStation)){
-        return false;
-      }
-      if(angular.isUndefined($scope.promotion.filters[$index].departureStation.id)){
-        return false;
-      }
-      if(angular.isUndefined($scope.promotion.filters[$index].arrivalStation.id)){
-        return false;
-      }
-      return true;
-    }
-
     $scope.removeFromStationListByIndex = function($index){
       if(!hasCompleteStationObject($index)){
         return;
       }
-
       var arrivalId = $scope.promotion.filters[$index].arrivalStation.id;
       var departureId = $scope.promotion.filters[$index].departureStation.id;
-
-      var departureIndex = -1;
-      if($scope.repeatableStations.arrivalHas[arrivalId]){
-        departureIndex = $scope.repeatableStations.arrivalHas[arrivalId].indexOf(departureId);
-      }
-      if(departureIndex !== -1){
-        $scope.repeatableStations.arrivalHas[arrivalId].splice(departureIndex, 1);
-      }
-
-      var arrivalIndex = -1;
-      if($scope.repeatableStations.departureHas[departureId]){
-        arrivalIndex = $scope.repeatableStations.departureHas[departureId].indexOf(arrivalId);
-      }
-      if(arrivalIndex !== -1){
-        $scope.repeatableStations.departureHas[departureId].splice(arrivalIndex, 1);
-      }
-
+      removeDepartureFromHasArrival(arrivalId, departureId);
+      removeArrivalFromHasDeparture(arrivalId, departureId);
       $scope.promotion.filters.splice($index, 1);
     };
 
@@ -761,7 +780,7 @@ angular.module('ts5App')
         return false;
       }
       var arrivalId = stations.arrivalStation.id;
-      if(station.id == arrivalId){
+      if(station.id === arrivalId){
         return true;
       }
       if(!$scope.repeatableStations.arrivalHas[arrivalId]){
@@ -776,7 +795,7 @@ angular.module('ts5App')
         return false;
       }
       var departureId = stations.departureStation.id;
-      if(station.id == departureId){
+      if(station.id === departureId){
         return true;
       }
       if(!$scope.repeatableStations.departureHas[departureId]){
