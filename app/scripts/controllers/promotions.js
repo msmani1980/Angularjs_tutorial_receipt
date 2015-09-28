@@ -57,6 +57,43 @@ angular.module('ts5App')
     var _promotionFromAPI = null;
     var _cachedRetailItemsByCatId = [];
 
+    function getObjectByIdFromSelectOptions(_arrayName, _obj){
+      var _array = $scope.selectOptions[_arrayName];
+      var object = $filter('filter')(_array, _obj, true);
+      if(!object || !object.length){
+        return {id:null};
+      }
+      return object[0];
+    }
+
+    function getRetailItemId(retailItemData){
+      if(angular.isDefined(retailItemData.itemId)){
+        return retailItemData.itemId;
+      }
+      if(angular.isDefined(retailItemData.retailItem) && angular.isDefined(retailItemData.retailItem.id)){
+        return retailItemData.retailItem.id;
+      }
+      return null;
+    }
+
+    function mapItems(_array, bindWholeObjectForView){
+      return _array.map(function(retailItemData){
+        var retailItem = {};
+        if(angular.isDefined(retailItemData.id)){
+          retailItem = angular.copy(retailItemData);
+        }
+        retailItem.itemQty = parseInt(retailItemData.itemQty, 10);
+        retailItem.itemId = getRetailItemId(retailItemData);
+        if(bindWholeObjectForView){
+          retailItem.retailItem =  getObjectByIdFromSelectOptions('masterItems', {id:retailItem.itemId});
+        }
+        else if(angular.isDefined(retailItem.retailItem)){
+          delete retailItem.retailItem;
+        }
+        return retailItem;
+      });
+    }
+
     // private controller functions
     function showMessage(message, messageType) {
       if(!messageType){
@@ -71,6 +108,34 @@ angular.module('ts5App')
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+    }
+
+    function getCompanyPromotionCategoryId(promotionCategoryData){
+      if(angular.isDefined(promotionCategoryData.companyPromotionCategoryId)){
+        return promotionCategoryData.companyPromotionCategoryId;
+      }
+      if(angular.isDefined(promotionCategoryData.promotionCategory) && angular.isDefined(promotionCategoryData.promotionCategory.id)){
+        return promotionCategoryData.promotionCategory.id;
+      }
+      return null;
+    }
+
+    function mapPromotionCategories(_array, bindWholeObjectForView){
+      return _array.map(function(promotionCategoryData){
+        var promotionCategory = {};
+        if(angular.isDefined(promotionCategoryData.id)){
+          promotionCategory = angular.copy(promotionCategoryData);
+        }
+        promotionCategory.companyPromotionCategoryId = getCompanyPromotionCategoryId(promotionCategoryData);
+        promotionCategory.categoryQty = parseInt(promotionCategoryData.categoryQty, 10);
+        if(bindWholeObjectForView){
+          promotionCategory.promotionCategory =  getObjectByIdFromSelectOptions('promotionCategories', {id:promotionCategory.companyPromotionCategoryId});
+        }
+        else if(angular.isDefined(promotionCategory.promotionCategory)){
+          delete promotionCategory.promotionCategory;
+        }
+        return promotionCategory;
+      });
     }
 
     function payloadGenerateQualifierTypeProductPurchase(){
@@ -137,6 +202,46 @@ angular.module('ts5App')
         _payload.discountItemId = $scope.promotion.discountItem.id;
         _payload.giftWithPurchase = $scope.promotion.giftWithPurchase;
       }
+    }
+
+    function getArrivalStationId(stationData){
+      if(angular.isDefined(stationData.arrivalStationId)){
+        return stationData.arrivalStationId;
+      }
+      if(angular.isDefined(stationData.arrivalStation) && angular.isDefined(stationData.arrivalStation.id)){
+        return stationData.arrivalStation.id;
+      }
+      return null;
+    }
+
+    function getDepartureStationId(stationData){
+      if(angular.isDefined(stationData.departureStationId)){
+        return stationData.departureStationId;
+      }
+      if(angular.isDefined(stationData.departureStation) && angular.isDefined(stationData.departureStation.id)){
+        return stationData.departureStation.id;
+      }
+      return null;
+    }
+
+    function mapFilters(_array, bindWholeObjectForView){
+      return _array.map(function(stationData){
+        var stationFilters = {};
+        if(angular.isDefined(stationData.id)){
+          stationFilters = angular.copy(stationData);
+        }
+        stationFilters.arrivalStationId = getArrivalStationId(stationData);
+        stationFilters.departureStationId = getDepartureStationId(stationData);
+        if(bindWholeObjectForView){
+          stationFilters.arrivalStation = getObjectByIdFromSelectOptions('companyStationGlobals', {id:stationData.arrivalStationId});
+          stationFilters.departureStation = getObjectByIdFromSelectOptions('companyStationGlobals', {id:stationData.departureStationId});
+        }
+        else if(angular.isDefined(stationFilters.arrivalStation)){
+          delete stationFilters.arrivalStation;
+          delete stationFilters.departureStation;
+        }
+        return stationFilters;
+      });
     }
 
     function payloadGenerateFilters(){
@@ -353,111 +458,6 @@ angular.module('ts5App')
       _initPromises.push(
         promotionsFactory.getMasterItems({companyId:_companyId}).then(setMasterItems)
       );
-    }
-
-    function getObjectByIdFromSelectOptions(_arrayName, _obj){
-      var _array = $scope.selectOptions[_arrayName];
-      var object = $filter('filter')(_array, _obj, true);
-      if(!object || !object.length){
-        return {id:null};
-      }
-      return object[0];
-    }
-
-    function getRetailItemId(retailItemData){
-      if(angular.isDefined(retailItemData.itemId)){
-        return retailItemData.itemId;
-      }
-      if(angular.isDefined(retailItemData.retailItem) && angular.isDefined(retailItemData.retailItem.id)){
-        return retailItemData.retailItem.id;
-      }
-      return null;
-    }
-
-    function mapItems(_array, bindWholeObjectForView){
-      return _array.map(function(retailItemData){
-        var retailItem = {};
-        if(angular.isDefined(retailItemData.id)){
-          retailItem = angular.copy(retailItemData);
-        }
-        retailItem.itemQty = parseInt(retailItemData.itemQty, 10);
-        retailItem.itemId = getRetailItemId(retailItemData);
-        if(bindWholeObjectForView){
-          retailItem.retailItem =  getObjectByIdFromSelectOptions('masterItems', {id:retailItem.itemId});
-        }
-        else if(angular.isDefined(retailItem.retailItem)){
-          delete retailItem.retailItem;
-        }
-        return retailItem;
-      });
-    }
-
-    function getCompanyPromotionCategoryId(promotionCategoryData){
-      if(angular.isDefined(promotionCategoryData.companyPromotionCategoryId)){
-        return promotionCategoryData.companyPromotionCategoryId;
-      }
-      if(angular.isDefined(promotionCategoryData.promotionCategory) && angular.isDefined(promotionCategoryData.promotionCategory.id)){
-        return promotionCategoryData.promotionCategory.id;
-      }
-      return null;
-    }
-
-    function mapPromotionCategories(_array, bindWholeObjectForView){
-      return _array.map(function(promotionCategoryData){
-        var promotionCategory = {};
-        if(angular.isDefined(promotionCategoryData.id)){
-          promotionCategory = angular.copy(promotionCategoryData);
-        }
-        promotionCategory.companyPromotionCategoryId = getCompanyPromotionCategoryId(promotionCategoryData);
-        promotionCategory.categoryQty = parseInt(promotionCategoryData.categoryQty, 10);
-        if(bindWholeObjectForView){
-          promotionCategory.promotionCategory =  getObjectByIdFromSelectOptions('promotionCategories', {id:promotionCategory.companyPromotionCategoryId});
-        }
-        else if(angular.isDefined(promotionCategory.promotionCategory)){
-          delete promotionCategory.promotionCategory;
-        }
-        return promotionCategory;
-      });
-    }
-
-    function getArrivalStationId(stationData){
-      if(angular.isDefined(stationData.arrivalStationId)){
-        return stationData.arrivalStationId;
-      }
-      if(angular.isDefined(stationData.arrivalStation) && angular.isDefined(stationData.arrivalStation.id)){
-        return stationData.arrivalStation.id;
-      }
-      return null;
-    }
-
-    function getDepartureStationId(stationData){
-      if(angular.isDefined(stationData.departureStationId)){
-        return stationData.departureStationId;
-      }
-      if(angular.isDefined(stationData.departureStation) && angular.isDefined(stationData.departureStation.id)){
-        return stationData.departureStation.id;
-      }
-      return null;
-    }
-
-    function mapFilters(_array, bindWholeObjectForView){
-      return _array.map(function(stationData){
-        var stationFilters = {};
-        if(angular.isDefined(stationData.id)){
-          stationFilters = angular.copy(stationData);
-        }
-        stationFilters.arrivalStationId = getArrivalStationId(stationData);
-        stationFilters.departureStationId = getDepartureStationId(stationData);
-        if(bindWholeObjectForView){
-          stationFilters.arrivalStation = getObjectByIdFromSelectOptions('companyStationGlobals', {id:stationData.arrivalStationId});
-          stationFilters.departureStation = getObjectByIdFromSelectOptions('companyStationGlobals', {id:stationData.departureStationId});
-        }
-        else if(angular.isDefined(stationFilters.arrivalStation)){
-          delete stationFilters.arrivalStation;
-          delete stationFilters.departureStation;
-        }
-        return stationFilters;
-      });
     }
 
     function getCurrencyCodeFromCurrencyId(_companyCurrencyId){
