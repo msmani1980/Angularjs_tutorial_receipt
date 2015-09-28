@@ -293,7 +293,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       showLoadingModal('Loading Store Detail for Packing...');
       $scope.menuItems = [];
       $scope.emptyMenuItems = [];
-      var promises = this.makeInitializePromises();
+      var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies);
     };
 
