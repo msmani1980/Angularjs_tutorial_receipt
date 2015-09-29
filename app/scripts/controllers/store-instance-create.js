@@ -209,6 +209,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
         return true;
       }
+      if ($routeParams.action === 'end-instance') {
+        console.log(
+          'return true');
+        return true;
+      }
       $scope.displayError = true;
       return false;
     };
@@ -247,7 +252,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $scope.createStoreInstance.$submitted) {
         return '';
       }
-      if ($scope.formData.menus.length === 0) {
+      if ($scope.formData.menus.length === 0 && $scope.action !== 'end-instance') {
         $scope.createStoreInstance.Menus.$setValidity('required', false);
         return 'has-error';
       }
@@ -260,12 +265,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     $scope.isEndInstance = function() {
-      console.log('here', $scope.action);
-      return $scope.action === 'end-instance';
+      return $routeParams.action === 'end-instance';
     };
 
     $scope.isReplenish = function() {
-      return $scope.action === 'replenish';
+      return $routeParams.action === 'replenish';
     };
 
     this.setScheduleNumbers = function(apiData) {
