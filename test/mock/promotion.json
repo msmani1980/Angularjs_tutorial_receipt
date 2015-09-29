@@ -1,0 +1,43 @@
+{
+  "startDate": "2015-09-30",
+  "endDate": "2015-09-30",
+  "createdBy": 1,
+  "createdOn": "2015-09-29 20:38:15.13529",
+  "updatedBy": null,
+  "updatedOn": null,
+  "benefitDiscountApplyId": 4,
+  "benefitTypeId": 1,
+  "companyCouponId": null,
+  "companyVoucherId": null,
+  "companyId": 403,
+  "description": "test5",
+  "discountCategoryId": null,
+  "discountItemId": 36,
+  "discountPercentage": "1.234",
+  "discountTypeId": 1,
+  "giftWithPurchase": "true",
+  "id": 253,
+  "lowestPricedArticle": "true",
+  "promotionCode": "test5",
+  "promotionName": "test5",
+  "promotionTypeId": 2,
+  "spendLimitCategoryId": 67,
+  "filters": [],
+  "items": [],
+  "benefitAmounts": [],
+  "spendLimitAmounts": [
+    {
+      "amount": "1.123",
+      "companyPromotionId": 253,
+      "companyCurrencyId": 8,
+      "id": 137
+    },
+    {
+      "amount": "3.223",
+      "companyPromotionId": 253,
+      "companyCurrencyId": 9,
+      "id": 138
+    }
+  ],
+  "promotionCategories": []
+}
