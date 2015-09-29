@@ -67,6 +67,7 @@ angular.module('ts5App')
             $location.search('newId', newCashBag.id)
               .search('scheduleDate', null)
               .search('scheduleNumber', null)
+              .search('storeInstanceId', null)
               .path('cash-bag-list');
           }, showMessage);
           break;
@@ -135,7 +136,7 @@ angular.module('ts5App')
       var storeInstanceData         = angular.copy(dataFromAPI);
       $scope.displayedScheduleDate  = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       $scope.cashBag.scheduleNumber = storeInstanceData.scheduleNumber;
-      $scope.cashBag.scheduleDate   = storeInstanceData.scheduleDate;
+      $scope.cashBag.scheduleDate   = moment(storeInstanceData.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
     }
 
     // CRUD - Create
