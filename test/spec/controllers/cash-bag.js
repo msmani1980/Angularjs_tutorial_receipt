@@ -4,33 +4,43 @@ describe('Controller: CashBagCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/cash-bag.json', 'served/company.json', 'served/company-currency-globals.json', 'served/daily-exchange-rates.json', 'served/company-preferences.json'));
+  beforeEach(module('served/cash-bag.json'));
+  beforeEach(module('served/company.json'));
+  beforeEach(module('served/company-currency-globals.json'));
+  beforeEach(module('served/daily-exchange-rates.json'));
+  beforeEach(module('served/company-preferences.json'));
+  beforeEach(module('served/store-instance.json'));
 
-  var CashBagEditCtrl,
-    scope,
-    cashBagFactory,
-    cashBagResponseJSON,
-    getCashBagDeferred,
-    companyId,
-    companyResponseJSON,
-    getCompanyDeferred,
-    companyCurrencyGlobalsResponseJSON,
-    getCompanyCurrenciesDeferred,
-    getDailyExchangeRatesDeferred,
-    dailyExchangeRatesResponseJSON,
-    getCompanyPreferencesDeferred,
-    getCompanyPreferencesJSON;
+  var CashBagEditCtrl;
+  var scope;
+  var cashBagFactory;
+  var companyId;
+
+  var getCashBagDeferred;
+  var getCompanyDeferred;
+  var getCompanyCurrenciesDeferred;
+  var getDailyExchangeRatesDeferred;
+  var getCompanyPreferencesDeferred;
+  var getStoreInstanceListDeferred;
+
+  var cashBagResponseJSON;
+  var companyResponseJSON;
+  var companyCurrencyGlobalsResponseJSON;
+  var dailyExchangeRatesResponseJSON;
+  var getCompanyPreferencesJSON;
+  var getStoreInstanceListJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_) {
     scope = $rootScope.$new();
 
-    inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedCompanyPreferences_) {
-      cashBagResponseJSON = _servedCashBag_;
-      companyResponseJSON = _servedCompany_;
+    inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedCompanyPreferences_, _servedStoreInstance_) {
+      cashBagResponseJSON                = _servedCashBag_;
+      companyResponseJSON                = _servedCompany_;
       companyCurrencyGlobalsResponseJSON = _servedCompanyCurrencyGlobals_;
-      dailyExchangeRatesResponseJSON = _servedDailyExchangeRates_;
-      getCompanyPreferencesJSON = _servedCompanyPreferences_;
+      dailyExchangeRatesResponseJSON     = _servedDailyExchangeRates_;
+      getCompanyPreferencesJSON          = _servedCompanyPreferences_;
+      getStoreInstanceListJSON           = _servedStoreInstance_;
     });
 
     cashBagFactory = _cashBagFactory_;
@@ -58,6 +68,10 @@ describe('Controller: CashBagCtrl', function () {
     getCompanyPreferencesDeferred.resolve(getCompanyPreferencesJSON);
     spyOn(cashBagFactory, 'getCompanyPreferences').and.returnValue(getCompanyPreferencesDeferred.promise);
 
+    getStoreInstanceListDeferred = $q.defer();
+    getStoreInstanceListDeferred.resolve(getStoreInstanceListJSON);
+    spyOn(cashBagFactory, 'getStoreInstanceList').and.returnValue(getStoreInstanceListDeferred.promise);
+
     spyOn(cashBagFactory, 'deleteCashBag').and.returnValue(getCompanyDeferred.promise);
 
     companyId = cashBagFactory.getCompanyId();
@@ -67,8 +81,7 @@ describe('Controller: CashBagCtrl', function () {
   describe('CREATE controller action', function () {
     var routeParams = {
       state: 'create',
-      scheduleDate: '20151231',
-      scheduleNumber: '105'
+      storeInstanceId: '5'
     };
     beforeEach(inject(function ($controller) {
       CashBagEditCtrl = $controller('CashBagCtrl', {
@@ -78,7 +91,7 @@ describe('Controller: CashBagCtrl', function () {
       scope.$digest();
     }));
 
-    describe('scope globals', function(){
+    describe('scope globals', function () {
       it('should attach a viewName to the scope', function () {
         expect(scope.viewName).toBe('Cash Bag');
       });
@@ -102,7 +115,7 @@ describe('Controller: CashBagCtrl', function () {
       });
     });
 
-    describe('cashBagFactory API calls', function(){
+    describe('cashBagFactory API calls', function () {
       it('should call getCompany with companyId', function () {
         expect(cashBagFactory.getCompany).toHaveBeenCalledWith(companyId);
       });
@@ -121,7 +134,7 @@ describe('Controller: CashBagCtrl', function () {
       it('should have dailyExchangeRates attached to scope after API call', function () {
         expect(scope.dailyExchangeRates).toBeDefined();
       });
-      it('should call getCompanyPreferences', function(){
+      it('should call getCompanyPreferences', function () {
         expect(cashBagFactory.getCompanyPreferences).toHaveBeenCalled();
       });
     });
@@ -129,17 +142,15 @@ describe('Controller: CashBagCtrl', function () {
     describe('cashBag definition', function () {
       it('should have scheduleDate defined in cashBag', function () {
         expect(scope.cashBag.scheduleDate).toBeDefined();
-        expect(scope.cashBag.scheduleDate).toEqual(routeParams.scheduleDate);
       });
       it('should have scheduleNumber defined in cashBag', function () {
-        expect(scope.cashBag.scheduleNumber).toBeDefined();
-        expect(scope.cashBag.scheduleNumber).toEqual(routeParams.scheduleNumber);
+        expect(scope.cashBag.scheduleNumber).toEqual(getStoreInstanceListJSON.scheduleNumber);
       });
       it('should have cashBagCurrencies in cashBag', function () {
         expect(scope.cashBag.cashBagCurrencies).toBeDefined();
       });
       it('should have cashBagCurrencies that is an array', function () {
-        expect(Object.prototype.toString.call(scope.cashBag.cashBagCurrencies)).toBe('[object Array]');
+        expect(angular.isArray(scope.cashBag.cashBagCurrencies)).toBe(true);
       });
       // TODO handle empty company currency globals result
       it('should be formatted like companyCurrencies', function () {
@@ -148,7 +159,7 @@ describe('Controller: CashBagCtrl', function () {
       });
     });
 
-    describe('formSave form action', function() {
+    describe('formSave form action', function () {
       it('should call cashBagFactory createCashBag', function () {
         scope.formSave(scope.cashBag);
         expect(cashBagFactory.createCashBag).toHaveBeenCalledWith({cashBag: scope.cashBag});
@@ -159,7 +170,7 @@ describe('Controller: CashBagCtrl', function () {
   });
 
   // READ
-  describe('READ controller action', function(){
+  describe('READ controller action', function () {
     var routeParams = {
       state: 'view',
       id: 95
@@ -172,7 +183,7 @@ describe('Controller: CashBagCtrl', function () {
       scope.$digest();
     }));
 
-    describe('scope globals', function() {
+    describe('scope globals', function () {
       it('should attach a viewName to the scope', function () {
         expect(scope.viewName).toBe('Cash Bag');
       });
@@ -188,7 +199,7 @@ describe('Controller: CashBagCtrl', function () {
       });
     });
 
-    describe('cashBagFactory API calls', function(){
+    describe('cashBagFactory API calls', function () {
       it('should call getCashBag', function () {
         expect(cashBagFactory.getCashBag).toHaveBeenCalled();
       });
@@ -217,7 +228,7 @@ describe('Controller: CashBagCtrl', function () {
 
     describe('isCashBagDeleted', function () {
       it('should return true if cash bag has been deleted', function () {
-        scope.cashBag = {};
+        scope.cashBag          = {};
         scope.cashBag.isDelete = 'true';
         expect(scope.isCashBagDeleted()).toEqual(true);
         scope.cashBag.isDelete = 'false';
@@ -240,7 +251,7 @@ describe('Controller: CashBagCtrl', function () {
       scope.$digest();
     }));
 
-    describe('scope globals', function(){
+    describe('scope globals', function () {
       it('should attach a viewName to the scope', function () {
         expect(scope.viewName).toBe('Cash Bag');
       });
@@ -256,7 +267,7 @@ describe('Controller: CashBagCtrl', function () {
       });
     });
 
-    describe('cashBagFactory API calls', function(){
+    describe('cashBagFactory API calls', function () {
       it('should call getCashBag', function () {
         expect(cashBagFactory.getCashBag).toHaveBeenCalled();
       });
@@ -283,17 +294,17 @@ describe('Controller: CashBagCtrl', function () {
       });
     });
 
-    describe('formSave', function() {
+    describe('formSave', function () {
       it('should call cashBagFactory updateCashBag', function () {
         scope.formSave(scope.cashBag);
-        expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(routeParams.id, {cashBag:scope.cashBag});
+        expect(cashBagFactory.updateCashBag).toHaveBeenCalledWith(routeParams.id, {cashBag: scope.cashBag});
       });
       // TODO - test for error?
     });
 
   });
 
-  describe('removeRecord scope function cannot delete', function(){
+  describe('removeRecord scope function cannot delete', function () {
     beforeEach(inject(function ($controller) {
       CashBagEditCtrl = $controller('CashBagCtrl', {
         $scope: scope,
@@ -304,72 +315,72 @@ describe('Controller: CashBagCtrl', function () {
       });
       scope.$digest();
     }));
-    it('should return false if state is not edit', function(){
+    it('should return false if state is not edit', function () {
       scope.state = 'view';
       scope.$digest();
       expect(scope.removeRecord({})).toBe(false);
     });
-    it('should return false if readOnly is true', function(){
-      scope.state = 'edit';
+    it('should return false if readOnly is true', function () {
+      scope.state    = 'edit';
       scope.readOnly = true;
       scope.$digest();
       expect(scope.removeRecord({})).toBe(false);
     });
-    it('should return false if cashBag has a property isSubmitted which is set to string value true', function(){
-      scope.state = 'edit';
+    it('should return false if cashBag has a property isSubmitted which is set to string value true', function () {
+      scope.state    = 'edit';
       scope.readOnly = false;
       scope.$digest();
-      expect(scope.removeRecord({isSubmitted:'true'})).toBe(false);
+      expect(scope.removeRecord({isSubmitted: 'true'})).toBe(false);
     });
-    it('should return false if cashBag has a property isDelete which is set to string value true', function(){
-      scope.state = 'edit';
+    it('should return false if cashBag has a property isDelete which is set to string value true', function () {
+      scope.state    = 'edit';
       scope.readOnly = false;
       scope.$digest();
-      expect(scope.removeRecord({isDelete:'true'})).toBe(false);
+      expect(scope.removeRecord({isDelete: 'true'})).toBe(false);
     });
-    it('should return false if a cashBag has a cashBagCurrencies.bankAmount value set to a value and not 0.0000', function(){
-      var cashBag = {
-        cashBagCurrencies:[
-          {bankAmount:'1.000'}
+    it('should return false if a cashBag has a cashBagCurrencies.bankAmount value set to a value and not 0.0000', function () {
+      var cashBag    = {
+        cashBagCurrencies: [
+          {bankAmount: '1.000'}
         ]
       };
-      scope.state = 'edit';
+      scope.state    = 'edit';
       scope.readOnly = false;
       scope.$digest();
       expect(scope.removeRecord(cashBag)).toBe(false);
     });
-    it('should return false if a cashBag has a cashBagCurrencies.coinAmountManual that is not null', function(){
-      var cashBag = {
-        cashBagCurrencies:[
+    it('should return false if a cashBag has a cashBagCurrencies.coinAmountManual that is not null', function () {
+      var cashBag    = {
+        cashBagCurrencies: [
           {
-            bankAmount:null,
+            bankAmount: null,
             coinAmountManual: '1'
           }
         ]
       };
-      scope.state = 'edit';
+      scope.state    = 'edit';
       scope.readOnly = false;
       scope.$digest();
       expect(scope.removeRecord(cashBag)).toBe(false);
     });
-    it('should return false if a cashBag has a cashBagCurrencies.paperAmountManual that is not null', function(){
-      var cashBag = {
-        cashBagCurrencies:[
+    it('should return false if a cashBag has a cashBagCurrencies.paperAmountManual that is not null', function () {
+      var cashBag    = {
+        cashBagCurrencies: [
           {
-            bankAmount:'0.000',
-            coinAmountManual:null,
+            bankAmount: '0.000',
+            coinAmountManual: null,
             paperAmountManual: '1'
           }
         ]
       };
-      scope.state = 'edit';
+      scope.state    = 'edit';
       scope.readOnly = false;
       scope.$digest();
       expect(scope.removeRecord(cashBag)).toBe(false);
     });
   });
 
-  describe('removeRecord scope function', function() {
+  describe('removeRecord scope function', function () {
     beforeEach(inject(function ($controller) {
       CashBagEditCtrl = $controller('CashBagCtrl', {
         $scope: scope,
@@ -382,14 +393,14 @@ describe('Controller: CashBagCtrl', function () {
     }));
 
     it('should call deleteCashBag with ID passed to scope function', function () {
-      var cbid = 503;
+      var cbid    = 503;
       var cashBag = {
         id: cbid,
-        cashBagCurrencies:[
+        cashBagCurrencies: [
           {
-            bankAmount:null,
-            coinAmountManual:null,
-            paperAmountManual:null
+            bankAmount: null,
+            coinAmountManual: null,
+            paperAmountManual: null
           }
         ]
       };
@@ -397,14 +408,14 @@ describe('Controller: CashBagCtrl', function () {
       expect(cashBagFactory.deleteCashBag).toHaveBeenCalledWith(cbid);
     });
 
-    it('should return false if cannot delete', function(){
+    it('should return false if cannot delete', function () {
       scope.state = 'view';
       scope.$digest();
       expect(scope.removeRecord({})).toBe(false);
     });
   });
 
-  describe('isBankExchangePreferred scope function', function(){
+  describe('isBankExchangePreferred scope function', function () {
     beforeEach(inject(function ($controller) {
       CashBagEditCtrl = $controller('CashBagCtrl', {
         $scope: scope,
@@ -415,7 +426,7 @@ describe('Controller: CashBagCtrl', function () {
       });
       scope.$digest();
     }));
-    it('should return false if companyPreferences is set to false', function(){
+    it('should return false if companyPreferences is set to false', function () {
       scope.companyPreferences = false;
       scope.$digest();
       expect(scope.isBankExchangePreferred()).toBe(false);
