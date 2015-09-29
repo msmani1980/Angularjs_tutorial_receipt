@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: httpSessionInterceptor', function () {
+describe('Service: httpSessionInterceptor', function () {
 
   // load the service's module
   beforeEach(module('ts5App'));

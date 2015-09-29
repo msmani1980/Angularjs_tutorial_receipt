@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function ($scope, $routeParams, $q, $filter, $location, $timeout, promotionsFactory, ngToast, dateUtility) {
+  .controller('PromotionsCtrl', function ($scope, $routeParams, $q, $filter, $timeout,
+                                          promotionsFactory, ngToast, dateUtility) {
 
     $scope.readOnly = true;
     $scope.editing = false;
@@ -16,8 +17,15 @@ angular.module('ts5App')
     $scope.saveButtonText = 'Create';
     $scope.activeBtn = 'promotion-information';
     $scope.selectOptions = {};
+    $scope.itemCategorySelects = [];
+    $scope.repeatableItemListSelectOptions = [];
+    $scope.repeatableProductPurchaseItemIds = [];
+    $scope.repeatableProductPurchasePromotionCategoryIds = [];
+    $scope.repeatableStations = {
+      arrivalHas: [],
+      departureHas: []
+    };
 
-    // Scope models
     $scope.promotion = {};
     $scope.promotion.promotionCode = null;
     $scope.promotion.promotionName = null;
@@ -43,10 +51,14 @@ angular.module('ts5App')
     $scope.promotion.filters = [];
 
     // private controller vars
+
     var _companyId = promotionsFactory.getCompanyId();
     var _initPromises = [];
     var _payload = null;
     var _promotionFromAPI = null;
+    var _cachedRetailItemsByCatId = [];
+
+    // private controller functions
 
     function getObjectByIdFromSelectOptions(_arrayName, _obj){
       var _array = $scope.selectOptions[_arrayName];
@@ -76,7 +88,7 @@ angular.module('ts5App')
         retailItem.itemQty = parseInt(retailItemData.itemQty, 10);
         retailItem.itemId = getRetailItemId(retailItemData);
         if(bindWholeObjectForView){
-          retailItem.retailItem =  getObjectByIdFromSelectOptions('masterItems', {id:retailItem.itemId});
+          retailItem.retailItem = getObjectByIdFromSelectOptions('masterItems', {id:retailItem.itemId});
         }
         else if(angular.isDefined(retailItem.retailItem)){
           delete retailItem.retailItem;
@@ -85,7 +97,6 @@ angular.module('ts5App')
       });
     }
 
-    // private controller functions
     function showMessage(message, messageType) {
       if(!messageType){
         messageType = 'info';
@@ -120,7 +131,7 @@ angular.module('ts5App')
         promotionCategory.companyPromotionCategoryId = getCompanyPromotionCategoryId(promotionCategoryData);
         promotionCategory.categoryQty = parseInt(promotionCategoryData.categoryQty, 10);
         if(bindWholeObjectForView){
-          promotionCategory.promotionCategory =  getObjectByIdFromSelectOptions('promotionCategories', {id:promotionCategory.companyPromotionCategoryId});
+          promotionCategory.promotionCategory = getObjectByIdFromSelectOptions('promotionCategories', {id:promotionCategory.companyPromotionCategoryId});
         }
         else if(angular.isDefined(promotionCategory.promotionCategory)){
           delete promotionCategory.promotionCategory;
@@ -171,7 +182,7 @@ angular.module('ts5App')
     }
 
     function payloadGenerateBenefitTypeDiscount(){
-      /* Discount Rate Types */
+      // Discount Rate Types
       // Discount Rate Type - Percentage
       _payload.discountTypeId = $scope.promotion.discountType.id;
       if(_payload.discountTypeId === 1){
@@ -182,7 +193,7 @@ angular.module('ts5App')
         payloadGenerateDiscountRateTypeAmount();
       }
       // Set apply to type
-      /* Apply Tos */
+      // Apply Tos
       // Apply to - Promotion Category
       _payload.benefitDiscountApplyId = $scope.promotion.benefitDiscountApply.id;
       if(_payload.benefitDiscountApplyId === 3 ){
@@ -245,7 +256,6 @@ angular.module('ts5App')
       if(_payload.benefitTypeId === 1) {
         payloadGenerateBenefitTypeDiscount();
       }
-
       // Benefit Type = Coupon
       if(_payload.benefitTypeId === 2){
         _payload.companyCouponId = $scope.promotion.companyCoupon.id;
@@ -283,7 +293,7 @@ angular.module('ts5App')
         filters: null
       };
 
-      /* Qualifier Types */
+      // Qualifier Types
       // Qualifier Type = Product Purchase
       _payload.promotionTypeId = $scope.promotion.promotionType.id;
       if(_payload.promotionTypeId === 1){
@@ -294,22 +304,21 @@ angular.module('ts5App')
         payloadGenerateQualifierTypeSpendLimit();
       }
 
-      /* Benefit Types */
+      // Benefit Types
       payloadGenerateBenefitTypes();
 
       // Promotion Inclusion Filter
       payloadGenerateFilters();
-
     }
 
     function showResponseErrors(response) {
-      if ('data' in response) {
-        angular.forEach(response.data, function (error) {
-          this.push(error);
-        }, $scope.formErrors);
-      }
-      $scope.displayError = true;
       hideLoadingModal();
+      $scope.displayError = true;
+      if (response.data) {
+        $scope.formErrors = response.data;
+        return;
+      }
+      throwError('500error', 'Unable to connect to APIs');
     }
 
     function throwError(field, message){
@@ -415,9 +424,8 @@ angular.module('ts5App')
       );
     }
 
-    // get complicated here, need to have this data always set for API calls
     function setCurrencyGlobals(dataFromAPI){
-      $scope.companyCurrencyGlobals = angular.copy(dataFromAPI.response);
+      $scope.companyCurrencyGlobals = dataFromAPI.response;
       angular.forEach(dataFromAPI.response, function(currency){
         $scope.spendLimitAmountsUi.push({
           companyCurrencyId: currency.id,
@@ -488,7 +496,6 @@ angular.module('ts5App')
       $scope.benefitAmountsUi = addCurrencyCodeToArrayItems($scope.benefitAmountsUi, _promotionFromAPI.benefitAmounts);
     }
 
-
     function initPromisesResolved(){
       hideLoadingModal();
       showMessage('Promotion loaded');
@@ -519,7 +526,7 @@ angular.module('ts5App')
     }
 
     function redirectToEmberListing(){
-        window.location.href = '/ember/#/promotions';
+      window.location.href = '/ember/#/promotions';
     }
 
     function waitThenRedirectToEmberListing(promotionId){
@@ -543,6 +550,21 @@ angular.module('ts5App')
 
     }
 
+    function resetErrors(){
+      $scope.formErrors = [];
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+    }
+
+    function formValid() {
+      resetErrors();
+      if ($scope.promotionsForm.$valid) {
+        return true;
+      }
+      $scope.displayError = true;
+      return false;
+    }
+
     function savePromotion(){
       displayLoadingModal('Saving promotion');
       promotionsFactory.savePromotion($routeParams.id, _payload).then(resolveSavePromotion, showResponseErrors);
@@ -556,6 +578,87 @@ angular.module('ts5App')
     function getPromotion(){
       displayLoadingModal('Getting promotion');
       promotionsFactory.getPromotion($routeParams.id).then(resolveGetPromotion, showResponseErrors);
+    }
+
+    function hasDepartureStationObject($index){
+      if(angular.isUndefined($scope.promotion.filters[$index].departureStation)){
+        return false;
+      }
+      if(angular.isUndefined($scope.promotion.filters[$index].departureStation.id)){
+        return false;
+      }
+      return true;
+    }
+
+    function hasCompleteArrivalStation($index){
+      if(angular.isUndefined($scope.promotion.filters[$index].arrivalStation)){
+        return false;
+      }
+      if(angular.isUndefined($scope.promotion.filters[$index].arrivalStation.id)){
+        return false;
+      }
+      return true;
+    }
+
+    function hasCompleteStationObject($index){
+      if(angular.isUndefined($scope.promotion.filters[$index])){
+        return false;
+      }
+      if(!hasDepartureStationObject($index)){
+        return false;
+      }
+      if(!hasCompleteArrivalStation($index)){
+        return false;
+      }
+      return true;
+    }
+
+    function removeDepartureFromHasArrival(arrivalId, departureId){
+      var departureIndex = -1;
+      if($scope.repeatableStations.arrivalHas[arrivalId]){
+        departureIndex = $scope.repeatableStations.arrivalHas[arrivalId].indexOf(departureId);
+      }
+      if(departureIndex !== -1){
+        $scope.repeatableStations.arrivalHas[arrivalId].splice(departureIndex, 1);
+      }
+    }
+
+    function removeArrivalFromHasDeparture(arrivalId, departureId){
+      var arrivalIndex = -1;
+      if($scope.repeatableStations.departureHas[departureId]){
+        arrivalIndex = $scope.repeatableStations.departureHas[departureId].indexOf(arrivalId);
+      }
+      if(arrivalIndex !== -1){
+        $scope.repeatableStations.departureHas[departureId].splice(arrivalIndex, 1);
+      }
+    }
+
+    function stationVarsSet(station, stations, stationTypeProp){
+      if(angular.isUndefined(stations[stationTypeProp])){
+          return false;
+      }
+      if(angular.isUndefined(stations[stationTypeProp].id)){
+        return false;
+      }
+      if(angular.isUndefined(station.id)){
+        return false;
+      }
+      return true;
+    }
+
+    function disabledStations(station, stations, stationTypeProp, stationHasProp){
+      if(!stationVarsSet(station, stations, stationTypeProp)){
+        return false;
+      }
+      var stationId = stations[stationTypeProp].id;
+      if(station.id === stationId){
+        return true;
+      }
+      if(!$scope.repeatableStations[stationHasProp][stationId]){
+        return false;
+      }
+      var hasStationsAssigned = $scope.repeatableStations[stationHasProp][stationId];
+      return hasStationsAssigned.indexOf(station.id) !== -1;
     }
 
     var states = {};
@@ -581,27 +684,21 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.formErrors = [];
       var initState = $routeParams.state + 'Init';
-      if (states[initState]) {
-        states[initState]();
-      } else {
+      if(!states[initState]) {
         throwError('routeParams.action');
+        return;
       }
+      states[initState]();
     }
     init();
 
     // Scope functions
+
     $scope.addBlankObjectToArray = function(_array){
       if($scope.readOnly){
-        return;
+        return false;
       }
       _array.push({});
-    };
-
-    $scope.removeFromArrayByIndex = function(_array, $index){
-      if($scope.readOnly){
-        return;
-      }
-      _array.splice($index, 1);
     };
 
     $scope.promotionCategoryQtyRequired = function(promotionCategoryData){
@@ -612,33 +709,103 @@ angular.module('ts5App')
       return angular.isDefined(retailItemData.retailItem) || angular.isDefined(retailItemData.itemId);
     };
 
-    $scope.scrollToAnchor = function(id){
-      $scope.activeBtn = id;
-      var elm = angular.element('#' + id);
-      if(!elm || !elm.length){
-        return;
-      }
-      var body = angular.element('body');
-      var navBar = angular.element('.navbar-header').height();
-      var topBar = angular.element('.top-header').height();
-      body.animate({
-        scrollTop: elm.offset().top - (navBar + topBar)
-      }, 'fast');
+    $scope.cancel = function(){
+      redirectToEmberListing();
     };
 
-    $scope.save = function(){ // TODO test
-      if($scope.readOnly){
+    $scope.disabledArrivalStations = function(station, stations){
+      return disabledStations(station, stations, 'departureStation', 'departureHas');
+    };
+
+    $scope.promotionCategorySelectChanged = function($index){
+      $scope.repeatableProductPurchasePromotionCategoryIds[$index] = $scope.promotion.promotionCategories[$index].promotionCategory.id;
+    };
+
+    $scope.disabledPromotionCategory = function(promotionCategory){
+      return $scope.repeatableProductPurchasePromotionCategoryIds.indexOf(promotionCategory.id) !== -1;
+    };
+
+    $scope.removeFromPromotionCategoryByIndex = function($index){
+      $scope.promotion.promotionCategories.splice($index, 1);
+      $scope.repeatableProductPurchasePromotionCategoryIds.splice($index, 1);
+    };
+
+    $scope.itemSelectInit = function($index){
+      $scope.repeatableItemListSelectOptions[$index] = $scope.selectOptions.masterItems;
+    };
+
+    $scope.itemSelectChanged = function($index){
+      $scope.repeatableProductPurchaseItemIds[$index] = $scope.promotion.items[$index].retailItem.id;
+    };
+
+    $scope.disabledItems = function(item){
+      return $scope.repeatableProductPurchaseItemIds.indexOf(item.id) !== -1;
+    };
+
+    $scope.removeFromItemListByIndex = function($index){
+      $scope.repeatableProductPurchaseItemIds.splice($index, 1);
+      $scope.promotion.items.splice($index, 1);
+    };
+
+    $scope.removeFromStationListByIndex = function($index){
+      if(!hasCompleteStationObject($index)){
+        return false;
+      }
+      var arrivalId = $scope.promotion.filters[$index].arrivalStation.id;
+      var departureId = $scope.promotion.filters[$index].departureStation.id;
+      removeDepartureFromHasArrival(arrivalId, departureId);
+      removeArrivalFromHasDeparture(arrivalId, departureId);
+      $scope.promotion.filters.splice($index, 1);
+    };
+
+    $scope.disabledDepartureStations = function(station, stations){
+      return disabledStations(station, stations, 'arrivalStation', 'arrivalHas');
+    };
+
+    $scope.stationListChanged = function($index){
+      if(!hasCompleteStationObject($index)){
+        return false;
+      }
+      var departureId = $scope.promotion.filters[$index].departureStation.id;
+      var arrivalId = $scope.promotion.filters[$index].arrivalStation.id;
+      if(!$scope.repeatableStations.departureHas[departureId]){
+        $scope.repeatableStations.departureHas[departureId] = [];
+      }
+      $scope.repeatableStations.departureHas[departureId].push(arrivalId);
+      if(!$scope.repeatableStations.arrivalHas[arrivalId]){
+        $scope.repeatableStations.arrivalHas[arrivalId] = [];
+      }
+      $scope.repeatableStations.arrivalHas[arrivalId].push(departureId);
+    };
+
+    $scope.itemCategoryChanged = function($index){
+      var _categoryId = $scope.itemCategorySelects[$index].id;
+      if(_cachedRetailItemsByCatId[_categoryId]){
+        $scope.repeatableItemListSelectOptions[$index] = _cachedRetailItemsByCatId[_categoryId];
         return;
+      }
+      var _payload = {companyId:_companyId,categoryId:_categoryId};
+      displayLoadingModal();
+      promotionsFactory.getMasterItems(_payload).then(function(dataFromAPI){
+        $scope.repeatableItemListSelectOptions[$index] = dataFromAPI.masterItems;
+        _cachedRetailItemsByCatId[_categoryId] = dataFromAPI.masterItems;
+        hideLoadingModal();
+      }, showResponseErrors);
+    };
+
+    $scope.save = function(){
+      if($scope.readOnly){
+        return false;
+      }
+      if(!formValid()) {
+        return false;
+      }
+      var initState = $routeParams.state + 'Save';
+      if (!states[initState]) {
+        return false;
       }
       payloadGenerate();
-      var initState = $routeParams.state + 'Save';
-      if (states[initState]) {
-        states[initState]();
-      }
-    };
-
-    $scope.cancel = function(){ // TODO test
-      redirectToEmberListing();
+      states[initState]();
     };
 
   });
