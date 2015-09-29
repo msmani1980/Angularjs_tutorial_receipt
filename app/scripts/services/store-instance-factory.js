@@ -127,6 +127,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.statusList = responseCollection[2];
       storeDetails.menuList = [];
 
+      if(parentStoreInstanceAPIResponse) {
+        storeDetails.parentStoreInstance = parentStoreInstanceAPIResponse.response;
+      }
+
       var storeMenus = (parentStoreInstanceAPIResponse ? angular.copy(parentStoreInstanceAPIResponse.menus) : angular.copy(storeInstanceAPIResponse.menus));
       angular.forEach(storeMenus, function(menu) {
         var menuObject = lodash.findWhere(responseCollection[3].companyMenuMasters, {id: menu.menuMasterId});

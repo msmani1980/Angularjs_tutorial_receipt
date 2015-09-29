@@ -1,5 +1,4 @@
-<div class="fluid-container module-container">
-  <h1>{{ viewName }}</h1>
+<div class="container module-container">
 
   <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
@@ -25,38 +24,14 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Search Schedules</h4>
+          <h4 class="modal-title">Search Store Instance</h4>
         </div>
         <div class="modal-body">
-          <div ng-show="displayModalError" class="alert alert-danger alert-dismissible fade in" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-            </button>
-            <h4>{{ createCashBagError }}</h4>
+          <div ng-show="displayModalError" class="alert alert-danger fade in" role="alert">
+            <p>{{ createCashBagError }}</p>
           </div>
           <form name="createCashBagForm">
             <div class="row">
-
-              <div class="col-xs-4">
-                <div class="form-group">
-                  <label for="create-schedule">Schedule Number</label>
-                  <select ng-model="scheduleIndex" class="form-control col-md-12" id="create-schedule"
-                          ng-change="updateScheduleDate()" required="true">
-                    <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="col-xs-4">
-                <div class="form-group">
-                  <label for="create-storeNumber">Store Number</label>
-                  <select ng-model="createStoreNumber" class="form-control col-md-12" id="create-storeNumber"
-                          required="true">
-                    <option ng-repeat="schedule in schedulesList" value="{{ $index }}">{{ schedule.scheduleNumber }}
-                    </option>
-                  </select>
-                </div>
-              </div>
 
               <div class="col-xs-4">
                 <date-picker
@@ -72,25 +47,91 @@
                 </date-picker>
               </div>
 
+              <div class="col-xs-4">
+                <div class="form-group">
+                  <label for="create-schedule">Schedule Number</label>
+                  <select
+                    ng-disabled="isDateSelected()"
+                    ng-model="selectedSchedule"
+                    ng-change="clearStoreNumber()"
+                    class="form-control col-md-12"
+                    id="create-schedule"
+                    ng-options="schedule.scheduleNumber as schedule.scheduleNumber for schedule in filteredSchedulesList">
+                    <option disabled value>Select Schedule</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-xs-4">
+                <div class="form-group">
+                  <label for="create-storeNumber">Store Number</label>
+                  <select
+                    ng-disabled="isDateSelected()"
+                    ng-model="selectedStoreNumber"
+                    ng-change="clearSelectedSchedule()"
+                    class="form-control col-md-12"
+                    id="create-storeNumber"
+                    ng-options="store.id as store.storeNumber for store in storeList">
+                    <option disabled value>Select Store Number</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </form>
+
+          <table ng-if="shouldShowInstanceTable()" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th>Store Instance</th>
+              <th>Store Number</th>
+              <th>Schedule Number</th>
+              <th>Schedule Date</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="storeInstance in storeInstanceList">
+              <td>{{storeInstance.storeId}}</td>
+              <td>{{storeInstance.storeNumber}}</td>
+              <td>{{storeInstance.scheduleNumber}}</td>
+              <td>{{storeInstance.scheduleDate}}</td>
+              <td>
+                <button type="button" class="btn btn-info btn-xs" ng-click="submitCreate(storeInstance)">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" ng-click="submitCreate()">Submit</button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" ng-click="findStoreInstance()">Submit</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-xs-12 text-right pull-right">
-      <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
-              aria-expanded="false"
-              aria-controls="search-collapse">
-        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-        <span class="hidden-xs">Search</span>
-      </button>
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+
+        <button ng-click="showCreatePopup()" class="btn btn-primary">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+          <span class="hidden-xs">Add Cash Bag</span>
+        </button>
+
+      </div>
     </div>
   </div>
 
@@ -197,13 +238,6 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <td colspan="9" ng-click="showCreatePopup()" class="btn-default">
-        <span class="glyphicon glyphicon-plus"
-              aria-hidden="true"></span>
-        Add Cash Bag
-      </td>
-    </tr>
     <tr
       ng-repeat="cashBag in cashBagList" ng-class="{'new':isNew(cashBag.id)}">
       <td>{{ cashBag.cashBagNumber }}</td>
