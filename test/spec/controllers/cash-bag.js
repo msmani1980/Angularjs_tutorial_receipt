@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: CashBagCtrl', function () {
+describe('Controller: CashBagCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));

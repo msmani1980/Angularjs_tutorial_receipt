@@ -139,6 +139,26 @@ angular.module('ts5App')
       $scope.cashBag.scheduleDate   = moment(storeInstanceData.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
     }
 
+    function promisesResponseHandler() {
+      if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
+        $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
+        angular.forEach($scope.dailyExchangeRates[0].dailyExchangeRateCurrencies, function (currency) {
+          $scope.cashBag.cashBagCurrencies.push(
+            {
+              currencyId: currency.retailCompanyCurrencyId,
+              bankAmount: currency.bankExchangeRate,
+              paperAmountManual: '0.0000',
+              coinAmountManual: '0.0000',
+              paperAmountEpos: currency.paperExchangeRate,
+              coinAmountEpos: currency.coinExchangeRate
+            }
+          );
+        });
+      } else {
+        showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
+      }
+    }
+
     // CRUD - Create
     function create() {
       var _promises = _factoryHelper.callServices(['getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
@@ -154,25 +174,7 @@ angular.module('ts5App')
       $scope.displayedCashierDate = dateUtility.formatDateForApp(dateUtility.now(), 'x');
       $scope.saveButtonName       = 'Create';
 
-      $q.all(_promises).then(function () {
-        if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
-          $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
-          angular.forEach($scope.dailyExchangeRates[0].dailyExchangeRateCurrencies, function (currency) {
-            $scope.cashBag.cashBagCurrencies.push(
-              {
-                currencyId: currency.retailCompanyCurrencyId,
-                bankAmount: currency.bankExchangeRate,
-                paperAmountManual: '0.0000',
-                coinAmountManual: '0.0000',
-                paperAmountEpos: currency.paperExchangeRate,
-                coinAmountEpos: currency.coinExchangeRate
-              }
-            );
-          });
-        } else {
-          showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
-        }
-      });
+      $q.all(_promises).then(promisesResponseHandler);
     }
 
     // CRUD - Read
