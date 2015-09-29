@@ -181,7 +181,6 @@
                ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
                href="#/store-instance-review/dispatch/{{store.id}}">Dispatch
             </a>
-            <!-- TODO: End Dispatch -->
             <a class="btn btn-danger btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Delete')"
                href="#/store-instance-create/end-instance/{{store.id}}">End Instance
@@ -249,10 +248,9 @@
                ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
                href="#/store-instance-review/replenish/{{replenishment.id}}">Dispatch
             </a>
-            <!-- TODO: End Dispatch -->
             <a class="btn btn-danger btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Delete')"
-               href="#/{{replenishment.id}}">End Instance
+               href="#/store-instance-create/end-instance/{{store.id}}">End Instance
             </a>
             <!-- TODO: UnDispatch-->
             <a class="btn btn-warning btn-xs" tabindex="0"

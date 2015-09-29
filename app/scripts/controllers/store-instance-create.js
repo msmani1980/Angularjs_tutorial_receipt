@@ -210,8 +210,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return true;
       }
       if ($routeParams.action === 'end-instance') {
-        console.log(
-          'return true');
         return true;
       }
       $scope.displayError = true;
