@@ -175,7 +175,14 @@ describe('Controller: CashBagListCtrl', function () {
     });
 
     describe('store instance', function () {
-      it('should not call getStoreInstanceList if missing required fields', function () {
+      it('should not call getStoreInstanceList if no fields selected', function () {
+        scope.findStoreInstance();
+        expect(cashBagFactory.getStoreInstanceList).not.toHaveBeenCalled();
+        expect(scope.displayModalError).toBe(true);
+      });
+
+      it('should not call getStoreInstanceList if only date is selected', function () {
+        scope.scheduleDate     = '06/15/2015';
         scope.findStoreInstance();
         expect(cashBagFactory.getStoreInstanceList).not.toHaveBeenCalled();
         expect(scope.displayModalError).toBe(true);

@@ -179,7 +179,12 @@ angular.module('ts5App')
     };
 
     $scope.findStoreInstance = function () {
-      if (!$scope.scheduleDate && (!$scope.selectedSchedule || !$scope.selectedStoreNumber)) {
+      if (!$scope.scheduleDate) {
+        showModalErrors('Please select date and schedule number or store number');
+        return;
+      }
+
+      if (!($scope.selectedSchedule || $scope.selectedStoreNumber)) {
         showModalErrors('Please select date and schedule number or store number');
         return;
       }
@@ -202,6 +207,8 @@ angular.module('ts5App')
       if (!$scope.scheduleDate) {
         return;
       }
+      $scope.clearSelectedSchedule();
+      $scope.clearStoreNumber();
       var searchDate = dateUtility.formatDateForAPI($scope.scheduleDate);
       var payload    = {
         startDate: searchDate,
