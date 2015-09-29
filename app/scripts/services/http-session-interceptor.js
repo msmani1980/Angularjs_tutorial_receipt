@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc service
- * @name ts5App.httpErrorHandlerFactory
+ * @name ts5App.httpSessionInterceptor
  * @description
- * # httpErrorHandlerFactory
+ * # httpSessionInterceptor
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('httpErrorHandlerFactory', function ($q) {
+  .factory('httpSessionInterceptor', function ($q) {
 
     //$http.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
     var sessionInjector = {

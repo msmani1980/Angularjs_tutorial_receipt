@@ -61,7 +61,7 @@ angular.module('ts5App', [
   url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
 }).config(function ($routeProvider, $httpProvider) {
   $httpProvider.interceptors.push('defaultData');
-  $httpProvider.interceptors.push('httpErrorHandlerFactory');
+  $httpProvider.interceptors.push('httpSessionInterceptor');
     $routeProvider.when('/', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl'
