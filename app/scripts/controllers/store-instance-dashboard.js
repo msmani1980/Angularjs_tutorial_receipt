@@ -32,11 +32,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     var SEARCH_TO_PAYLOAD_MAP = {
       dispatchLMPStation: 'cateringStationId',
       inboundLMPStation: 'inboundStationId',
-      storeNumber: 'storeId', // TODO storeNumber
-      scheduleStartDate: 'scheduleDate', // TODO
-      scheduleEndDate: 'scheduleDate', // TODO
-      depStations: 'departureStationCode',
-      arrStations: 'arrivalStationCode',
+      storeNumber: 'storeNumber',
+      scheduleStartDate: 'startDate',
+      scheduleEndDate: 'endDate',
+      departureStations: 'departureStationCode',
+      arrivalStations: 'arrivalStationCode',
       storeInstance: 'id',
       storeStatusId: 'statusId'
     };
@@ -218,7 +218,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var payload = {};
       angular.forEach(SEARCH_TO_PAYLOAD_MAP, function(value, key) {
         if ($scope.search[key]) {
-          if (key === 'depStations' || key === 'arrStations') {
+          if (key === 'departureStations' || key === 'arrivalStations') {
             payload[value] = lodash.map($scope.search[key], function(station) {
               return station.code;
             }).join(',');
@@ -235,7 +235,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function clearSearchForm() {
       $scope.search = {};
-      storeInstanceDashboardFactory.getStoreInstanceList({}).then(searchStoreInstanceDashboardDataSuccess);
+      searchStoreInstanceDashboardData();
     }
 
     $scope.clearSearchForm = clearSearchForm;

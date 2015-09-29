@@ -39,11 +39,19 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Inbound LMP Station</label>
+                <select class="form-control" ng-model="search.inboundLMPStation" name="inboundLMPStation">
+                  <option ng-disabled="true" selected="selected" value>Select Inbound Station</option>
+                  <option ng-repeat="station in catererStationList | orderBy:'name'" value="{{ station.id }}">{{
+                    station.name }} - {{ station.code }}
+                  </option>
+                </select>
               </div>
             </div>
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
                 <label>Store Number</label>
+                <input type="text" class="form-control" placeholder="1234" name="storeNumber"
+                       ng-model="search.storeNumber">
               </div>
             </div>
             <div class="col-xs-12 col-sm-4">
@@ -62,28 +70,42 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="departure-station">Departure Station</label>
-                  <ui-select-choices repeat="station in stationList | filter: $select.search">
-                  </ui-select-choices>
-                </ui-select>
+                  <ui-select multiple ng-model="search.departureStations" theme="bootstrap">
+                    <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
+                      <ui-select-choices repeat="station in stationList | filter: $select.search">
+                        {{station.name}}
+                      </ui-select-choices>
+                  </ui-select>
               </div>
             </div>
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label for="arrival-station">Arrival Station</label>
-                  <ui-select-choices repeat="station in stationList | filter: $select.search">
-                  </ui-select-choices>
-                </ui-select>
+                  <ui-select multiple ng-model="search.arrivalStations" theme="bootstrap">
+                    <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
+                      <ui-select-choices repeat="station in stationList | filter: $select.search">
+                        {{station.name}}
+                      </ui-select-choices>
+                  </ui-select>
               </div>
             </div>
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
                 <label>Store Instance</label>
+                <input type="text" class="form-control" placeholder="1234567" name="storeInstance"
+                       ng-model="search.storeInstance">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-2">
               <div class="form-group">
                 <label>Status</label>
+                <select class="form-control" ng-model="search.status" name="status">
+                  <option selected="selected" value>Select Status</option>
+                  <option ng-repeat="status in storeStatusList | orderBy:'name'" value="{{ status.id }}">{{
+                    status.statusName }}
+                  </option>
+                </select>
               </div>
             </div>
           </div>
@@ -281,8 +303,3 @@
     </div>
 
   </div>
-
-
-
-
-
