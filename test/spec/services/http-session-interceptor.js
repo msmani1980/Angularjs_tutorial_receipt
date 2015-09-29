@@ -35,6 +35,6 @@ fdescribe('Service: httpSessionInterceptor', function () {
     it('should add a timeout header', function () {
       expect(angular.isDefined(actualConfig.headers.timeout)).toBe(true);
     });
-  })
+  });
 
 });
