@@ -41,6 +41,10 @@ angular.module('ts5App')
     }
 
     function formatScheduleDateForApp(containingArray) {
+      if(!angular.isArray(containingArray)) {
+        return;
+      }
+
       containingArray.map(function (obj) {
         if (obj.scheduleDate) {
           obj.scheduleDate = dateUtility.formatDateForApp(obj.scheduleDate);
