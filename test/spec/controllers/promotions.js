@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: PromotionsCtrl', function () {
+fdescribe('Controller: PromotionsCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -34,7 +34,6 @@ describe('Controller: PromotionsCtrl', function () {
   var getStationGlobalsDeferred;
   var getCurrencyGlobalsDeferred;
   var getMasterItemsDeferred;
-
 
   /**/
   // Initialize the controller and a mock scope
@@ -88,7 +87,6 @@ describe('Controller: PromotionsCtrl', function () {
     spyOn(promotionsFactory, 'getStationGlobals').and.returnValue(getStationGlobalsDeferred.promise);
     spyOn(promotionsFactory, 'getCurrencyGlobals').and.returnValue(getCurrencyGlobalsDeferred.promise);
     spyOn(promotionsFactory, 'getMasterItems').and.returnValue(getMasterItemsDeferred.promise);
-    /**/
 
   }));
 
@@ -141,7 +139,6 @@ describe('Controller: PromotionsCtrl', function () {
       });
       /**/
     });
-
 
     describe('scope selection options and data arrays', function () {
       it('should have companyCurrencyGlobals', function () {
@@ -196,26 +193,6 @@ describe('Controller: PromotionsCtrl', function () {
       });
     });
 
-    describe('scope functions exist', function () {
-      it('should have a scope function promotionCategoryQtyRequired', function () {
-        expect(Object.prototype.toString.call(scope.promotionCategoryQtyRequired)).toBe('[object Function]');
-      });
-      it('should have a scope function addBlankObjectToArray', function () {
-        expect(Object.prototype.toString.call(scope.addBlankObjectToArray)).toBe('[object Function]');
-      });
-      it('should have a scope function retailItemQtyRequired', function () {
-        expect(Object.prototype.toString.call(scope.retailItemQtyRequired)).toBe('[object Function]');
-      });
-      it('should have a scope function scrollToAnchor that set activeBtn to whatever Id is passed in', function () {
-        expect(Object.prototype.toString.call(scope.scrollToAnchor)).toBe('[object Function]');
-        scope.scrollToAnchor('test-123');
-        expect(scope.activeBtn).toBe('test-123');
-      });
-      it('should have a scope function save', function () {
-        expect(Object.prototype.toString.call(scope.save)).toBe('[object Function]');
-      });
-    });
-
     describe('addBlankObjectToArray scope function', function () {
       it('should add a blank object to a scope array', function () {
         scope.mockArray2 = [{}, {}, {}, {}];
@@ -225,25 +202,120 @@ describe('Controller: PromotionsCtrl', function () {
       });
     });
 
-    describe('promotionCategoryQtyRequired scope function', function () {
-      it('should return true if promotionCategory is defined', function () {
-        var mock = {promotionCategory: {}};
-        expect(scope.promotionCategoryQtyRequired(mock)).toBe(true);
+    describe('promotionCategoryQtyRequired scope function', function(){
+      it('should return true if whatever passed into it has a promotionCategory property', function(){
+        expect(scope.promotionCategoryQtyRequired({promotionCategory:'yes'})).toBe(true);
       });
-      it('should return false if promotionCategory is undefined', function () {
-        var mock = {};
-        expect(scope.promotionCategoryQtyRequired(mock)).toBe(false);
+      it('should return false if whatever passed into it does not have a promotionCategory property', function(){
+        expect(scope.promotionCategoryQtyRequired({foo:'bar'})).toBe(false);
       });
     });
 
-    describe('retailItemQtyRequired scope function', function () {
-      it('should return true if retailItem is defined', function () {
-        var mock = {retailItem: {}};
-        expect(scope.retailItemQtyRequired(mock)).toBe(true);
+    describe('retailItemQtyRequired scope function', function(){
+      it('should return true if retailItem is set', function(){
+        expect(scope.retailItemQtyRequired({retailItem:'bar'})).toBe(true);
       });
-      it('should return false if retailItem is undefined', function () {
-        var mock = {};
-        expect(scope.retailItemQtyRequired(mock)).toBe(false);
+      it('should return true if itemId is set', function(){
+        expect(scope.retailItemQtyRequired({itemId:'bar'})).toBe(true);
+      });
+      it('should return false neither are set', function(){
+        expect(scope.retailItemQtyRequired({foo:'bar'})).toBe(false);
+      });
+    });
+
+    describe('cancel scope function', function(){
+      it('should have a scope function cancel', function () {
+        expect(Object.prototype.toString.call(scope.cancel)).toBe('[object Function]');
+      });
+    });
+
+    describe('promotionCategorySelectChanged scope function', function(){
+      it('should add the promotion.promotionCategories to repeatableProductPurchasePromotionCategoryIds', function(){
+        scope.promotion.promotionCategories = [
+          {
+            promotionCategory:{
+              id: 123
+            }
+          },
+          {
+            promotionCategory:{
+              id: 543
+            }
+          }
+        ];
+        scope.promotionCategorySelectChanged(1);
+        expect(scope.repeatableProductPurchasePromotionCategoryIds[1]).toBe(543);
+      });
+    });
+
+    describe('disabledPromotionCategory scope function', function(){
+      it('should return true if id in repeatableProductPurchasePromotionCategoryIds', function(){
+        scope.repeatableProductPurchasePromotionCategoryIds = [321,234,43];
+        expect(scope.disabledPromotionCategory({id:43})).toBe(true);
+      });
+      it('should return false if id not in repeatableProductPurchasePromotionCategoryIds', function(){
+        scope.repeatableProductPurchasePromotionCategoryIds = [321,234,43];
+        expect(scope.disabledPromotionCategory({id:65})).toBe(false);
+      });
+    });
+
+    describe('removeFromPromotionCategoryByIndex scope function', function(){
+      it('should splice on index of promotion.promotionCategories and repeatableProductPurchasePromotionCategoryIds', function(){
+        scope.promotion.promotionCategories = [
+          {id:1},
+          {id:2},
+          {id:3}
+        ];
+        scope.repeatableProductPurchasePromotionCategoryIds = [1,2,3];
+        scope.removeFromPromotionCategoryByIndex(1);
+        expect(scope.promotion.promotionCategories).toEqual([{id:1},{id:3}]);
+        expect(scope.repeatableProductPurchasePromotionCategoryIds).toEqual([1,3]);
+      });
+    });
+
+    describe('itemSelectInit scope function', function(){
+      it('should set repeatableItemListSelectOptions index to selectOptions.masterItems', function(){
+        var mockMasterItems = [
+          {mock:'123'},{data:6543}
+        ];
+        scope.selectOptions.masterItems = mockMasterItems;
+        scope.itemSelectInit(5);
+        expect(scope.repeatableItemListSelectOptions[5]).toEqual(mockMasterItems);
+      });
+    });
+
+    describe('itemSelectChanged scope function', function(){
+      it('should set repeatableProductPurchaseItemIds index to promotion.items[$index].retailItem.id', function(){
+        var mockId = 45;
+        scope.promotion.items = [
+          {retailItem: {id:76}},
+          {retailItem: {id:mockId}}
+        ];
+        scope.itemSelectChanged(1);
+        expect(scope.repeatableProductPurchaseItemIds[1]).toEqual(mockId);
+      });
+    });
+
+    describe('disabledItems scope function', function(){
+      it('should return true if id in repeatableProductPurchaseItemIds', function(){
+        var mockItem = {id:23};
+        scope.repeatableProductPurchaseItemIds = [45,54,23];
+        expect(scope.disabledItems(mockItem)).toBe(true);
+      });
+      it('should return false if id not in repeatableProductPurchaseItemIds', function(){
+        var mockItem = {id:2};
+        scope.repeatableProductPurchaseItemIds = [45,54,23];
+        expect(scope.disabledItems(mockItem)).toBe(false);
+      });
+    });
+
+    describe('removeFromItemListByIndex scope function', function(){
+      it('should splice index of repeatableProductPurchaseItemIds and promotion.items', function(){
+        scope.repeatableProductPurchaseItemIds = [23,54,46];
+        scope.promotion.items = [{id:23},{id:54},{id:46}];
+        scope.removeFromItemListByIndex(1);
+        expect(scope.repeatableProductPurchaseItemIds).toEqual([23,46]);
+        expect(scope.promotion.items).toEqual([{id:23},{id:46}]);
       });
     });
 
