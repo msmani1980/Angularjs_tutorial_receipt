@@ -6,27 +6,31 @@ describe('Factory: cashBagFactory', function () {
   beforeEach(module('ts5App'));
 
   // instantiate service
-  var cashBagFactory,
-    cashBagService,
-    GlobalMenuService,
-    stationsService,
-    schedulesService,
-    rootScope,
-    scope,
-    companyService,
-    currenciesService,
-    dailyExchangeRatesService,
-    companyPreferencesService;
+  var cashBagFactory;
+  var cashBagService;
+  var GlobalMenuService;
+  var stationsService;
+  var schedulesService;
+  var rootScope;
+  var scope;
+  var companyService;
+  var currenciesService;
+  var dailyExchangeRatesService;
+  var companyPreferencesService;
+  var companyStoresService;
+  var storeInstanceService;
 
-  beforeEach(inject(function ($rootScope, _cashBagFactory_, _cashBagService_, _GlobalMenuService_, _stationsService_, _schedulesService_, _companyService_, _currenciesService_, _dailyExchangeRatesService_, _companyPreferencesService_) {
-    cashBagService = _cashBagService_;
-    GlobalMenuService = _GlobalMenuService_;
-    stationsService = _stationsService_;
-    schedulesService = _schedulesService_;
-    companyService = _companyService_;
-    currenciesService = _currenciesService_;
-    dailyExchangeRatesService = _dailyExchangeRatesService_;
-    companyPreferencesService = _companyPreferencesService_;
+  beforeEach(inject(function ($rootScope, $injector) {
+    cashBagService            = $injector.get('cashBagService');
+    GlobalMenuService         = $injector.get('GlobalMenuService');
+    stationsService           = $injector.get('stationsService');
+    schedulesService          = $injector.get('schedulesService');
+    companyService            = $injector.get('companyService');
+    currenciesService         = $injector.get('currenciesService');
+    dailyExchangeRatesService = $injector.get('dailyExchangeRatesService');
+    companyPreferencesService = $injector.get('companyPreferencesService');
+    companyStoresService      = $injector.get('companyStoresService');
+    storeInstanceService      = $injector.get('storeInstanceService');
 
     spyOn(cashBagService, 'getCashBagList');
     spyOn(GlobalMenuService.company, 'get');
@@ -41,10 +45,12 @@ describe('Factory: cashBagFactory', function () {
     spyOn(currenciesService, 'getCompanyCurrencies');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates');
     spyOn(companyPreferencesService, 'getCompanyPreferences');
+    spyOn(companyStoresService, 'getStoreList');
+    spyOn(storeInstanceService, 'getStoreInstancesList');
 
-    rootScope = $rootScope;
-    scope = $rootScope.$new();
-    cashBagFactory = _cashBagFactory_;
+    rootScope      = $rootScope;
+    scope          = $rootScope.$new();
+    cashBagFactory = $injector.get('cashBagFactory');
   }));
 
   var companyId = '403';
@@ -57,23 +63,23 @@ describe('Factory: cashBagFactory', function () {
       cashBagFactory.getCashBagList(companyId);
       expect(cashBagService.getCashBagList).toHaveBeenCalledWith(companyId);
     });
-    it('should call cashBagService updateCashBag', function(){
-      var id = 1;
-      var payload = {t:123,d:323};
+    it('should call cashBagService updateCashBag', function () {
+      var id      = 1;
+      var payload = {t: 123, d: 323};
       cashBagFactory.updateCashBag(id, payload);
       expect(cashBagService.updateCashBag).toHaveBeenCalledWith(id, payload);
     });
-    it('should call cashBagService getCashBag', function(){
+    it('should call cashBagService getCashBag', function () {
       var id = 123;
       cashBagFactory.getCashBag(id);
       expect(cashBagService.getCashBag).toHaveBeenCalledWith(id);
     });
-    it('should call cashBagService deleteCashBag', function(){
+    it('should call cashBagService deleteCashBag', function () {
       var id = 123;
       cashBagFactory.deleteCashBag(id);
       expect(cashBagService.deleteCashBag).toHaveBeenCalledWith(id);
     });
-    it('should call cashBagService createCashBag', function(){
+    it('should call cashBagService createCashBag', function () {
       var cashBag = {
         scheduleDate: '20150611',
         scheduleNumber: '105',
@@ -81,6 +87,26 @@ describe('Factory: cashBagFactory', function () {
       };
       cashBagFactory.createCashBag(cashBag);
       expect(cashBagService.createCashBag).toHaveBeenCalledWith(cashBag);
+    });
+  });
+
+  describe('companyStoresService API', function () {
+    it('should call companyStoresService on getStoreList', function () {
+      var fakePayload = {
+        startDate: 'fakeDate'
+      };
+      cashBagFactory.getStoreList(fakePayload);
+      expect(companyStoresService.getStoreList).toHaveBeenCalledWith(fakePayload);
+    });
+  });
+
+  describe('getStoreInstanceList', function () {
+    it('should call storeInstanceService on getStoreInstanceList', function () {
+      var fakePayload = {
+        startDate: 'fakeDate'
+      };
+      cashBagFactory.getStoreInstanceList(fakePayload);
+      expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(fakePayload);
     });
   });
 
@@ -110,32 +136,32 @@ describe('Factory: cashBagFactory', function () {
     });
   });
 
-  describe('companyService API', function() {
-    it('should call getCompany', function() {
+  describe('companyService API', function () {
+    it('should call getCompany', function () {
       var id = 1;
       cashBagFactory.getCompany(id);
       expect(companyService.getCompany).toHaveBeenCalledWith(id);
     });
   });
 
-  describe('currenciesService API', function(){
-    it('should call getCompanyCurrencies', function(){
+  describe('currenciesService API', function () {
+    it('should call getCompanyCurrencies', function () {
       cashBagFactory.getCompanyCurrencies();
       expect(currenciesService.getCompanyCurrencies).toHaveBeenCalled();
     });
   });
 
-  describe('dailyExchangeRatesService API', function() {
+  describe('dailyExchangeRatesService API', function () {
     it('should call getDailyExchangeRates', function () {
-      var companyId = '403';
+      var companyId   = '403';
       var cashierDate = '20150617';
       cashBagFactory.getDailyExchangeRates(companyId, cashierDate);
       expect(dailyExchangeRatesService.getDailyExchangeRates).toHaveBeenCalledWith(companyId, cashierDate);
     });
   });
 
-  describe('company preferences API', function() {
-    it('should call getCompanyPreferences', function(){
+  describe('company preferences API', function () {
+    it('should call getCompanyPreferences', function () {
       cashBagFactory.getCompanyPreferences();
       expect(companyPreferencesService.getCompanyPreferences).toHaveBeenCalled();
     });

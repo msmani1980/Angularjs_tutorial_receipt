@@ -108,6 +108,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
     };
 
+    $scope.isUndispatchPossible = function(store) {
+      if (store.startDate && store.hours > 0) {
+        return true;
+      }
+      return false;
+    };
+
     function getValueByIdInArray(id, valueKey, array) {
       var matchedObject = lodash.findWhere(array, {
         id: id
@@ -212,7 +219,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       angular.forEach(SEARCH_TO_PAYLOAD_MAP, function(value, key) {
         if ($scope.search[key]) {
           if (key === 'depStations' || key === 'arrStations') {
-            payload[value] = lodash.map($scope.search[key], function(station) { return station.code; }).join(',');
+            payload[value] = lodash.map($scope.search[key], function(station) {
+              return station.code;
+            }).join(',');
           } else {
             payload[value] = angular.copy($scope.search[key]);
           }

@@ -30,8 +30,12 @@ angular.module('ts5App')
       $scope.sealColorsList = dataFromAPI.response;
     };
 
+    this.canReplenish = function()  {
+      return angular.isDefined($scope.storeDetails.parentStoreInstance);
+    };
+
     this.isInstanceReadOnly = function(){
-      if($scope.storeDetails.currentStatus.name !== '2') {
+      if(!this.canReplenish() || $scope.storeDetails.currentStatus.name !== '2') {
         this.showMessage('warning', 'This store instance is not ready for seals');
       } else {
         $scope.readOnly = false;
@@ -40,6 +44,10 @@ angular.module('ts5App')
     };
 
     this.setStoreDetails = function(storeDetailsJSON) {
+      // TODO: Remove me when this is actually working LOL
+      storeDetailsJSON.parentStoreInstance = {
+        replenishStoreInstanceId: 123
+      };
       $scope.storeDetails = storeDetailsJSON;
       $this.isInstanceReadOnly();
     };

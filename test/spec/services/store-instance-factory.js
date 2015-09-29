@@ -309,6 +309,23 @@ describe('Service: storeInstanceFactory', function() {
       it('should contain a menuList array', function() {
         expect(storeDetails.menuList).toBeDefined();
       });
+
+      describe('when there is no parent Id', function() {
+
+        beforeEach(function() {
+          delete servedStoreStatusJSON.replenishStoreInstanceId;
+          storeInstanceFactory.getStoreDetails(storeId).then(function(dataFromAPI) {
+            storeDetails = dataFromAPI;
+          });
+          scope.$digest();
+        });
+
+        it('should not set the parentStoreInstance', function() {
+          expect(storeDetails.parentStoreInstance).toBeUndefined();
+        });
+
+      });
+
     });
 
   });

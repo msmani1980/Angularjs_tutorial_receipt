@@ -862,4 +862,30 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
+  describe('the canReplenish functionality', function() { 
+
+    beforeEach(function() {
+      resolveAllDependencies();
+      spyOn(StoreInstanceSealsCtrl,'canReplenish').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should be called when isInstanceReadOnly is called', function() {
+      expect(StoreInstanceSealsCtrl.canReplenish).toHaveBeenCalled();
+    });
+
+    it('should return true if the storeDetails has parent store instance data', function() {
+      var canReplenish  = StoreInstanceSealsCtrl.canReplenish();
+      expect(canReplenish).toBeTruthy();
+    });
+
+    it('should return false is the storeDetails does not have parent store instance data', function() {
+      delete $scope.storeDetails.parentStoreInstance;
+      $scope.$digest();
+      var canReplenish  = StoreInstanceSealsCtrl.canReplenish();
+      expect(canReplenish).toBeFalsy();
+    });
+
+  });
+
 });
