@@ -97,7 +97,7 @@
           </ui-select>
         </div>
       </div>
-      <div class="col-xs-12 col-sm-6" ng-show="promotion.promotionType.name === 'Spend Limit'">
+      <div class="col-xs-12 col-sm-6" ng-if="promotion.promotionType.name === 'Spend Limit'">
         <fieldset>
           <div class="form-group">
             <label>Promotion Category</label>
@@ -121,7 +121,7 @@
                          custom-pattern="currencyWithThreeDecimalPlace"
                          ng-show="promotion.promotionType.name === 'Spend Limit'"
                          ng-model="spendLimitAmountData.amount"
-                         ng-disabled="readOnly || promotion.promotionType.name !== 'Spend Limit'">
+                         ng-disabled="readOnly">
                 </div>
               </div>
           </div>
@@ -129,7 +129,7 @@
       </div>
     </div>
 
-    <fieldset ng-show="promotion.promotionType.name === 'Product Purchase'">
+    <fieldset ng-if="promotion.promotionType.name === 'Product Purchase'">
 
       <div class="row">
         <div class="col-xs-12 col-sm-11 col-md-10 col-sm-offset-1">
@@ -244,7 +244,7 @@
             </ui-select-choices>
           </ui-select>
         </div>
-        <fieldset ng-show="promotion.benefitType.name === 'Discount'">
+        <fieldset ng-if="promotion.benefitType.name === 'Discount'">
 
           <div class="form-group">
             <label>Apply To*</label>
@@ -257,7 +257,7 @@
           </div>
 
 
-          <div class="form-group" ng-show="promotion.benefitDiscountApply.name === 'Promotion Category'">
+          <div class="form-group" ng-if="promotion.benefitDiscountApply.name === 'Promotion Category'">
             <label>Promotion Category*</label>
             <ui-select theme="bootstrap" ng-model="promotion.discountCategory"
                        ng-required="promotion.benefitDiscountApply.name === 'Promotion Category'"
@@ -269,7 +269,7 @@
             </ui-select>
           </div>
 
-          <div class="row" ng-show="promotion.benefitDiscountApply.name === 'Retail Item'">
+          <div class="row" ng-if="promotion.benefitDiscountApply.name === 'Retail Item'">
             <div class="col-xs-12 col-sm-6">
               <div class="form-group">
                 <label>Retail Item*</label>
@@ -297,7 +297,7 @@
       </div>
       <div class="col-xs-12 col-md-6">
 
-        <fieldset ng-show="promotion.benefitType.name === 'Discount'">
+        <fieldset ng-if="promotion.benefitType.name === 'Discount'">
           <div class="form-group">
             <label>Discount Rate Type*</label>
             <ui-select theme="bootstrap" ng-model="promotion.discountType"
@@ -309,7 +309,7 @@
               </ui-select-choices>
             </ui-select>
           </div>
-          <div class="row" ng-show="promotion.discountType.name === 'Percentage'">
+          <div class="row" ng-if="promotion.discountType.name === 'Percentage'">
             <div class="col-xs-12 col-sm-6">
               <div class="form-group">
                 <label for="discount-rate-type-percentage-value">Percentage Value*</label>
@@ -320,7 +320,7 @@
                        custom-pattern="currencyWithThreeDecimalPlace"
                        ng-model="promotion.discountPercentage"
                        ng-required="promotion.discountType.name === 'Percentage'"
-                       ng-disabled="readOnly || promotion.discountType.name !== 'Percentage'">
+                       ng-disabled="readOnly">
               </div>
             </div>
             <div class="col-xs-12 col-sm-6">
@@ -333,7 +333,7 @@
                 </div>
             </div>
           </div>
-          <fieldset ng-show="promotion.discountType.name === 'Amount'">
+          <fieldset ng-if="promotion.discountType.name === 'Amount'">
             <div class="form-group">
               <label>Fixed Discount Value</label>
               <div class="row" ng-repeat="benefitAmountData in benefitAmountsUi track by $index">
@@ -346,14 +346,14 @@
                            custom-validity
                            custom-pattern="currencyWithThreeDecimalPlace"
                            ng-model="benefitAmountData.amount"
-                           ng-disabled="readOnly || promotion.discountType.name !== 'Amount'">
+                           ng-disabled="readOnly">
                   </div>
                 </div>
               </div>
           </fieldset>
         </fieldset>
 
-        <div class="form-group" ng-show="promotion.benefitType.name === 'Coupon'">
+        <div class="form-group" ng-if="promotion.benefitType.name === 'Coupon'">
           <label>Coupon*</label>
           <ui-select theme="bootstrap" ng-model="promotion.companyCoupon"
                      ng-required="promotion.benefitType.name === 'Coupon'"
@@ -365,7 +365,7 @@
           </ui-select>
         </div>
 
-        <div class="form-group" ng-show="promotion.benefitType.name === 'Voucher'">
+        <div class="form-group" ng-if="promotion.benefitType.name === 'Voucher'">
           <label>Voucher*</label>
           <ui-select theme="bootstrap" ng-model="promotion.companyVoucher"
                      ng-required="promotion.benefitType.name === 'Voucher'"

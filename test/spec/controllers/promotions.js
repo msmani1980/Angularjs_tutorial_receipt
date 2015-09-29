@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: PromotionsCtrl', function () {
+describe('Controller: PromotionsCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -16,7 +16,8 @@ fdescribe('Controller: PromotionsCtrl', function () {
     'served/promotion-categories.json',
     'served/company-station-globals.json',
     'served/currency-globals.json',
-    'served/master-item-list.json'
+    'served/master-item-list.json',
+    'served/promotion.json'
   ));
 
   var PromotionsCtrl;
@@ -34,6 +35,10 @@ fdescribe('Controller: PromotionsCtrl', function () {
   var getStationGlobalsDeferred;
   var getCurrencyGlobalsDeferred;
   var getMasterItemsDeferred;
+  var companyId;
+  var masterItemsList;
+  var savePromotionDeferred;
+  var getPromotionDeferred;
 
   /**/
   // Initialize the controller and a mock scope
@@ -48,10 +53,12 @@ fdescribe('Controller: PromotionsCtrl', function () {
                               _servedPromotionCategories_,
                               _servedCompanyStationGlobals_,
                               _servedCurrencyGlobals_,
-                              _servedMasterItemList_) {
+                              _servedMasterItemList_,
+                              _servedPromotion_) {
     scope = $rootScope.$new();
 
     promotionsFactory = $injector.get('promotionsFactory');
+    companyId = 403;
 
     getBenefitTypesDeferred = $q.defer();
     getBenefitTypesDeferred.resolve(_servedBenefitTypes_);
@@ -74,7 +81,12 @@ fdescribe('Controller: PromotionsCtrl', function () {
     getCurrencyGlobalsDeferred = $q.defer();
     getCurrencyGlobalsDeferred.resolve(_servedCurrencyGlobals_);
     getMasterItemsDeferred = $q.defer();
-    getMasterItemsDeferred.resolve(_servedMasterItemList_);
+    masterItemsList = _servedMasterItemList_;
+    getMasterItemsDeferred.resolve(masterItemsList);
+    savePromotionDeferred = $q.defer();
+    savePromotionDeferred.resolve(true);
+    getPromotionDeferred = $q.defer();
+    getPromotionDeferred.resolve(_servedPromotion_);
 
     spyOn(promotionsFactory, 'getBenefitTypes').and.returnValue(getBenefitTypesDeferred.promise);
     spyOn(promotionsFactory, 'getDiscountTypes').and.returnValue(getDiscountTypesDeferred.promise);
@@ -87,10 +99,14 @@ fdescribe('Controller: PromotionsCtrl', function () {
     spyOn(promotionsFactory, 'getStationGlobals').and.returnValue(getStationGlobalsDeferred.promise);
     spyOn(promotionsFactory, 'getCurrencyGlobals').and.returnValue(getCurrencyGlobalsDeferred.promise);
     spyOn(promotionsFactory, 'getMasterItems').and.returnValue(getMasterItemsDeferred.promise);
+    spyOn(promotionsFactory, 'getCompanyId').and.returnValue(companyId);
+    spyOn(promotionsFactory, 'getPromotion').and.returnValue(getPromotionDeferred.promise);
+    spyOn(promotionsFactory, 'createPromotion').and.returnValue(savePromotionDeferred.promise);
+    spyOn(promotionsFactory, 'savePromotion').and.returnValue(savePromotionDeferred.promise);
 
   }));
 
-  describe('Init create', function () {
+  describe('create promotion', function () {
     beforeEach(inject(function($controller){
       routeParams = {
         state:'create'
@@ -229,6 +245,40 @@ fdescribe('Controller: PromotionsCtrl', function () {
       });
     });
 
+    describe('disabledDepartureStations scope function', function(){
+      it('should return false if stations is passed in with arrivalStation undefined', function(){
+        expect(scope.disabledDepartureStations(null, {})).toBe(false);
+      });
+      it('should return false if stations is passed in with arrivalStation.id undefined', function(){
+        expect(scope.disabledDepartureStations(null, {arrivalStation:{}})).toBe(false);
+      });
+      it('should return false if passed in station does not contain an id', function(){
+        scope.repeatableStations.arrivalHas = [];
+        scope.repeatableStations.arrivalHas[5] = [1,2,3];
+        expect(scope.disabledDepartureStations({foo:'bar'}, {arrivalStation:{id:1}})).toBe(false);
+      });
+      it('should return false if arrivalStation.id doesn not exist in repeatableStations.arrivalHas', function(){
+        scope.repeatableStations.arrivalHas = [];
+        scope.repeatableStations.arrivalHas[5] = [1,2,3];
+        expect(scope.disabledDepartureStations({id:7}, {arrivalStation:{id:1}})).toBe(false);
+      });
+      it('should return false if the station.id is not in repeatableStations.arrivalHas', function(){
+        scope.repeatableStations.arrivalHas = [];
+        scope.repeatableStations.arrivalHas[5] = [1,2,3];
+        expect(scope.disabledDepartureStations({id:4}, {arrivalStation:{id:5}})).toBe(false);
+      });
+      it('should return true if the station.id of the arrivalStation.id is in repeatableStations.arrivalHas', function(){
+        scope.repeatableStations.arrivalHas = [];
+        scope.repeatableStations.arrivalHas[5] = [1,2,3];
+        expect(scope.disabledDepartureStations({id:2}, {arrivalStation:{id:5}})).toBe(true);
+      });
+      it('should return true if passed in station.id is same as arrivalStation.id', function(){
+        scope.repeatableStations.arrivalHas = [];
+        scope.repeatableStations.arrivalHas[5] = [1,2,3];
+        expect(scope.disabledDepartureStations({id:5}, {arrivalStation:{id:5}})).toBe(true);
+      });
+    });
+
     describe('promotionCategorySelectChanged scope function', function(){
       it('should add the promotion.promotionCategories to repeatableProductPurchasePromotionCategoryIds', function(){
         scope.promotion.promotionCategories = [
@@ -319,11 +369,589 @@ fdescribe('Controller: PromotionsCtrl', function () {
       });
     });
 
-    describe('save scope function', function(){
-      // TODO these test when this is written
+    describe('removeFromStationListByIndex scope function', function(){
+      describe('hasCompleteStationObject private function', function(){
+        it('should return false if promotion.filters[$index] is undefined', function(){
+          expect(scope.removeFromStationListByIndex(0)).toBe(false);
+        });
+        it('should return false if promotion.filters[$index].arrivalStation is undefined', function(){
+          scope.promotion.filters = [
+            {},{}
+          ];
+          expect(scope.removeFromStationListByIndex(0)).toBe(false);
+        });
+        it('should return false if promotion.filters[$index].arrivalStation.id is undefined', function(){
+          scope.promotion.filters = [
+            {arrivalStation:{}},{arrivalStation:{}}
+          ];
+          expect(scope.removeFromStationListByIndex(0)).toBe(false);
+        });
+        it('should return false if promotion.filters[$index].departureStation is undefined', function(){
+          scope.promotion.filters = [
+            {arrivalStation:{id:1}},{arrivalStation:{id:2}}
+          ];
+          expect(scope.removeFromStationListByIndex(0)).toBe(false);
+        });
+        it('should return false if promotion.filters[$index].departureStation.id is undefined', function(){
+          scope.promotion.filters = [
+            {arrivalStation:{id:1},departureStation:{}},{arrivalStation:{id:2},departureStation:{}}
+          ];
+          expect(scope.removeFromStationListByIndex(0)).toBe(false);
+        });
+      });
+      it('should remove by index from promotion.filters, by id from repeatableStations.arrivalHas and by id from repeatableStations.departureHas', function(){
+        scope.promotion.filters = [
+          {
+            departureStation: {id:5},
+            arrivalStation:   {id:6}},
+          {
+            departureStation: {id:5},
+            arrivalStation:   {id:4}
+          },
+          {
+            arrivalStation:   {id:4},
+            departureStation: {id:3}
+          },
+          {
+            departureStation: {id:3},
+            arrivalStation:   {id:6}
+          },
+          {
+            departureStation: {id:7}
+          }
+        ];
+        scope.repeatableStations = {
+          arrivalHas:   [ null, null, null, null,     [ 5, 3 ], null,     [ 5, 3 ], [  ] ],
+          departureHas: [ null, null, null, [ 4, 6 ], null,     [ 6, 4 ], [  ] ]
+        };
+
+        scope.removeFromStationListByIndex(2);
+
+        expect(scope.promotion.filters).toEqual([
+          {
+            departureStation: {id:5},
+            arrivalStation:   {id:6}
+          },
+          {
+            departureStation: {id:5},
+            arrivalStation:   {id:4}
+          },
+          {
+            departureStation: {id:3},
+            arrivalStation:   {id:6}
+          },
+          {
+            departureStation: {id:7}
+          }
+        ]);
+        expect(scope.repeatableStations).toEqual({
+          arrivalHas:   [ null, null, null, null,     [ 5 ],    null,     [ 5, 3 ], [  ] ],
+          departureHas: [ null, null, null, [ 6 ],    null,     [ 6, 4 ], [  ] ]
+        });
+      });
     });
 
-    // TODO tests for create by mocking scope
+    describe('disabledArrivalStations scope function', function(){
+      it('should return false if stations is passed in with departureStation undefined', function(){
+        expect(scope.disabledArrivalStations(null, {})).toBe(false);
+      });
+      it('should return false if stations is passed in with departureStation.id undefined', function(){
+        expect(scope.disabledArrivalStations(null, {departureStation:{}})).toBe(false);
+      });
+      it('should return false if passed in station does not contain an id', function(){
+        scope.repeatableStations.departureHas = [];
+        scope.repeatableStations.departureHas[5] = [1,2,3];
+        expect(scope.disabledArrivalStations({foo:'bar'}, {departureStation:{id:1}})).toBe(false);
+      });
+      it('should return false if departureStation.id doesn not exist in repeatableStations.departureHas', function(){
+        scope.repeatableStations.departureHas = [];
+        scope.repeatableStations.departureHas[5] = [1,2,3];
+        expect(scope.disabledArrivalStations({id:7}, {departureStation:{id:1}})).toBe(false);
+      });
+      it('should return false if the station.id is not in repeatableStations.departureHas', function(){
+        scope.repeatableStations.departureHas = [];
+        scope.repeatableStations.departureHas[5] = [1,2,3];
+        expect(scope.disabledArrivalStations({id:4}, {departureStation:{id:5}})).toBe(false);
+      });
+      it('should return true if the station.id of the departureStation.id is in repeatableStations.departureHas', function(){
+        scope.repeatableStations.departureHas = [];
+        scope.repeatableStations.departureHas[5] = [1,2,3];
+        expect(scope.disabledArrivalStations({id:2}, {departureStation:{id:5}})).toBe(true);
+      });
+      it('should return true if passed in station.id is same as departureStation.id', function(){
+        scope.repeatableStations.departureHas = [];
+        scope.repeatableStations.departureHas[5] = [1,2,3];
+        expect(scope.disabledArrivalStations({id:5}, {departureStation:{id:5}})).toBe(true);
+      });
+    });
+
+    describe('stationListChanged scope function', function(){
+      it('should set the correct station Has array items', function() {
+        scope.promotion.filters = [
+          {
+            departureStation: {id: 1},
+            arrivalStation: {id: 2}
+          },
+          {
+            departureStation: {id: 2},
+            arrivalStation: {id: 4}
+          }
+        ];
+        scope.stationListChanged(1);
+        var mock = {arrivalHas:[],departureHas:[]};
+        mock.arrivalHas[4] = [2];
+        mock.departureHas[2] = [4];
+
+        expect(scope.repeatableStations).toEqual(mock);
+      });
+    });
+
+    describe('itemCategoryChanged scope function', function(){
+      var mockId = 432;
+      beforeEach(function(){
+        scope.itemCategorySelects = [];
+        scope.itemCategorySelects[5] = {id:mockId};
+        scope.itemCategoryChanged(5);
+        scope.$digest();
+      });
+      it('should make an API call', function(){
+        expect(promotionsFactory.getMasterItems).toHaveBeenCalledWith({companyId:companyId,categoryId:mockId});
+      });
+      it('should set repeatableItemListSelectOptions index to API response', function(){
+        expect(scope.repeatableItemListSelectOptions[5]).toEqual(masterItemsList.masterItems);
+      });
+      it('should set repeatableItemListSelectOptions index to cached API response', function(){
+        scope.itemCategoryChanged(5);
+        scope.$digest();
+        expect(scope.repeatableItemListSelectOptions[5]).toEqual(masterItemsList.masterItems);
+      });
+    });
+
+    describe('save scope function', function(){
+      beforeEach(function(){
+        scope.promotionsForm = {$valid:true};
+      });
+      it('should call create with formatted payload 1', function(){
+        scope.promotion = {
+          'promotionCode': 'test1',
+          'promotionName': 'test1',
+          'description': 'test1',
+          'startDate': '09/30/2015',
+          'endDate': '09/30/2015',
+          'promotionType': {
+            'id': 1,
+          },
+          'promotionCategories': [
+            {
+              'promotionCategory': {
+                'id': 63
+              },
+              'categoryQty': 1
+            },
+            {
+              'promotionCategory': {
+                'id': 64
+              },
+              'categoryQty': 2
+            }
+          ],
+          'items': [
+            {
+              'retailItem': {
+                'id': 206
+              },
+              'itemQty': 2
+            },
+            {
+              'retailItem': {
+                'id': 36
+              },
+              'itemQty': 3
+            }
+          ],
+          'spendLimitCategory': {
+            'id': null
+          },
+          'benefitType': {
+            'id': 1,
+            'name': 'Discount'
+          },
+          'discountType': {
+            'id': 1,
+            'name': 'Percentage'
+          },
+          'benefitDiscountApply': {
+            'id': 1,
+            'name': 'Cart'
+          },
+          'discountItem': {
+            'id': null
+          },
+          'giftWithPurchase': false,
+          'discountCategory': {
+            'id': null
+          },
+          'companyCoupon': {
+            'id': null
+          },
+          'companyVoucher': {
+            'id': null
+          },
+          'discountPercentage': '1.123',
+          'lowestPricedArticle': true,
+          'filters': [
+            {
+              'departureStation': {
+                'id': 2
+              },
+              'arrivalStation': {
+                'id': 3
+              }
+            },
+            {
+              'departureStation': {
+                'id': 4
+              },
+              'arrivalStation': {
+                'id': 5,
+              }
+            }
+          ]
+        };
+        scope.save();
+        var mockPayload1 = {
+          companyId: 403,
+          promotionCode: 'test1',
+          promotionName: 'test1',
+          description: 'test1',
+          startDate: '20150930',
+          endDate: '20150930',
+          benefitTypeId: 1,
+          promotionCategories: [
+            {
+              companyPromotionCategoryId: 63,
+              categoryQty: 1
+            },
+            {
+              companyPromotionCategoryId: 64,
+              categoryQty: 2
+            }
+          ],
+          items: [
+            {
+              itemQty: 2,
+              itemId: 206
+            },
+            {
+              itemQty: 3,
+              itemId: 36
+            }
+          ],
+          spendLimitAmounts: null,
+          spendLimitCategoryId: null,
+          companyCouponId: null,
+          companyVoucherId: null,
+          discountTypeId: 1,
+          benefitDiscountApplyId: 1,
+          discountCategoryId: null,
+          discountItemId: null,
+          giftWithPurchase: null,
+          discountPercentage: '1.123',
+          lowestPricedArticle: true,
+          benefitAmounts: null,
+          filters: [
+            {
+              arrivalStationId: 3,
+              departureStationId: 2
+            },
+            {
+              arrivalStationId: 5,
+              departureStationId: 4 }
+          ],
+          promotionTypeId: 1
+        };
+        expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload1);
+      });
+      it('should call create with formatted payload 2', function(){
+        scope.promotion = {
+          'promotionCode': 'test2',
+          'promotionName': 'test2',
+          'description': 'test2',
+          'startDate': '09/30/2015',
+          'endDate': '09/30/2015',
+          'promotionType': {
+            'id': 2
+          },
+          'promotionCategories': [],
+          'items': [],
+          'spendLimitCategory': {
+            'id': 64
+          },
+          'benefitType': {
+            'id': 2
+          },
+          'discountType': {
+            'id': null
+          },
+          'benefitDiscountApply': {
+            'id': null
+          },
+          'discountItem': {
+            'id': null
+          },
+          'giftWithPurchase': false,
+          'discountCategory': {
+            'id': null
+          },
+          'companyCoupon': {
+            'id': 102,
+          },
+          'companyVoucher': {
+            'id': null
+          },
+          'discountPercentage': null,
+          'lowestPricedArticle': false,
+          'filters': []
+        };
+        scope.save();
+        var mockPayload2 = { companyId: 403, promotionCode: 'test2', promotionName: 'test2', description: 'test2', startDate: '20150930', endDate: '20150930', benefitTypeId: 2, promotionCategories: null, items: null, spendLimitAmounts: [ { amount: null, companyCurrencyId: 8 }, { amount: null, companyCurrencyId: 9 } ], spendLimitCategoryId: 64, companyCouponId: 102, companyVoucherId: null, discountTypeId: null, benefitDiscountApplyId: null, discountCategoryId: null, discountItemId: null, giftWithPurchase: null, discountPercentage: null, lowestPricedArticle: null, benefitAmounts: null, filters: [  ], promotionTypeId: 2 };
+        expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload2);
+      });
+      it('should call create with formatted payload 3', function(){
+        scope.promotion = {
+          'promotionCode': 'test3',
+          'promotionName': 'test3',
+          'description': 'test3',
+          'startDate': '09/30/2015',
+          'endDate': '09/30/2015',
+          'promotionType': {
+            'id': 2
+          },
+          'promotionCategories': [],
+          'items': [],
+          'spendLimitCategory': {
+            'id': 66
+          },
+          'benefitType': {
+            'id': 3
+          },
+          'discountType': {
+            'id': null
+          },
+          'benefitDiscountApply': {
+            'id': null
+          },
+          'discountItem': {
+            'id': null
+          },
+          'giftWithPurchase': false,
+          'discountCategory': {
+            'id': null
+          },
+          'companyCoupon': {
+            'id': null
+          },
+          'companyVoucher': {
+            'id': 109
+          },
+          'discountPercentage': null,
+          'lowestPricedArticle': false,
+          'filters': []
+        };
+        scope.save();
+        var mockPayload3 = { companyId: 403, promotionCode: 'test3', promotionName: 'test3', description: 'test3', startDate: '20150930', endDate: '20150930', benefitTypeId: 3, promotionCategories: null, items: null, spendLimitAmounts: [ { amount: null, companyCurrencyId: 8 }, { amount: null, companyCurrencyId: 9 } ], spendLimitCategoryId: 66, companyCouponId: null, companyVoucherId: 109, discountTypeId: null, benefitDiscountApplyId: null, discountCategoryId: null, discountItemId: null, giftWithPurchase: null, discountPercentage: null, lowestPricedArticle: null, benefitAmounts: null, filters: [  ], promotionTypeId: 2 };
+        expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload3);
+      });
+      it('should call create with formatted payload 4', function(){
+        scope.promotion = {
+          'promotionCode': 'test4',
+          'promotionName': 'test4',
+          'description': 'test4',
+          'startDate': '09/30/2015',
+          'endDate': '09/30/2015',
+          'promotionType': {
+            'id': 2,
+            'name': 'Spend Limit'
+          },
+          'promotionCategories': [],
+          'items': [],
+          'spendLimitCategory': {
+            'id': 67
+          },
+          'benefitType': {
+            'id': 1,
+            'name': 'Discount'
+          },
+          'discountType': {
+            'id': 2,
+            'name': 'Amount'
+          },
+          'benefitDiscountApply': {
+            'id': 2
+          },
+          'discountItem': {
+            'id': null
+          },
+          'giftWithPurchase': false,
+          'discountCategory': {
+            'id': null
+          },
+          'companyCoupon': {
+            'id': null
+          },
+          'companyVoucher': {
+            'id': null
+          },
+          'discountPercentage': null,
+          'lowestPricedArticle': false,
+          'filters': []
+        };
+        scope.save();
+        var mockPayload4 = { companyId: 403, promotionCode: 'test4', promotionName: 'test4', description: 'test4', startDate: '20150930', endDate: '20150930', benefitTypeId: 1, promotionCategories: null, items: null, spendLimitAmounts: [ { amount: null, companyCurrencyId: 8 }, { amount: null, companyCurrencyId: 9 } ], spendLimitCategoryId: 67, companyCouponId: null, companyVoucherId: null, discountTypeId: 2, benefitDiscountApplyId: 2, discountCategoryId: null, discountItemId: null, giftWithPurchase: null, discountPercentage: null, lowestPricedArticle: null, benefitAmounts: [ { amount: null, companyCurrencyId: 8 }, { amount: null, companyCurrencyId: 9 } ], filters: [  ], promotionTypeId: 2 };
+        expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload4);
+      });
+      it('should call create with formatted payload 5', function(){
+        scope.promotion = {
+          'promotionCode': 'test5',
+          'promotionName': 'test5',
+          'description': 'test5',
+          'startDate': '09/30/2015',
+          'endDate': '09/30/2015',
+          'promotionType': {
+            'id': 2
+          },
+          'promotionCategories': [],
+          'items': [],
+          'spendLimitCategory': {
+            'id': 64
+          },
+          'benefitType': {
+            'id': 1
+          },
+          'discountType': {
+            'id': 1
+          },
+          'benefitDiscountApply': {
+            'id': 3
+          },
+          'discountItem': {
+            'id': null
+          },
+          'giftWithPurchase': false,
+          'discountCategory': {
+            'id': 65
+          },
+          'companyCoupon': {
+            'id': null
+          },
+          'companyVoucher': {
+            'id': null
+          },
+          'discountPercentage': '1.234',
+          'lowestPricedArticle': false,
+          'filters': []
+        };
+        scope.save();
+        var mockPayload5 = { companyId: 403, promotionCode: 'test5', promotionName: 'test5', description: 'test5', startDate: '20150930', endDate: '20150930', benefitTypeId: 1, promotionCategories: null, items: null, spendLimitAmounts: [ { amount: null, companyCurrencyId: 8 }, { amount: null, companyCurrencyId: 9 } ], spendLimitCategoryId: 64, companyCouponId: null, companyVoucherId: null, discountTypeId: 1, benefitDiscountApplyId: 3, discountCategoryId: 65, discountItemId: null, giftWithPurchase: null, discountPercentage: '1.234', lowestPricedArticle: false, benefitAmounts: null, filters: [  ], promotionTypeId: 2 };
+        expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload5);
+      });
+      it('should call create with formatted payload 6', function(){
+        scope.promotion = {
+          'promotionCode': 'test5',
+          'promotionName': 'test5',
+          'description': 'test5',
+          'startDate': '09/30/2015',
+          'endDate': '09/30/2015',
+          'promotionType': {
+            'id': 2
+          },
+          'promotionCategories': [],
+          'items': [],
+          'spendLimitCategory': {
+            'id': 67
+          },
+          'benefitType': {
+            'id': 1
+          },
+          'discountType': {
+            'id': 1
+          },
+          'benefitDiscountApply': {
+            'id': 4
+          },
+          'discountItem': {
+            'id': 36,
+          },
+          'giftWithPurchase': true,
+          'discountCategory': {
+            'id': null
+          },
+          'companyCoupon': {
+            'id': null
+          },
+          'companyVoucher': {
+            'id': null
+          },
+          'discountPercentage': '1.234',
+          'lowestPricedArticle': true,
+          'filters': []
+        };
+        scope.save();
+        var mockPayload6 = { companyId: 403, promotionCode: 'test5', promotionName: 'test5', description: 'test5', startDate: '20150930', endDate: '20150930', benefitTypeId: 1, promotionCategories: null, items: null, spendLimitAmounts: [ { amount: null, companyCurrencyId: 8 }, { amount: null, companyCurrencyId: 9 } ], spendLimitCategoryId: 67, companyCouponId: null, companyVoucherId: null, discountTypeId: 1, benefitDiscountApplyId: 4, discountCategoryId: null, discountItemId: 36, giftWithPurchase: true, discountPercentage: '1.234', lowestPricedArticle: true, benefitAmounts: null, filters: [  ], promotionTypeId: 2 };
+        expect(promotionsFactory.createPromotion).toHaveBeenCalledWith(mockPayload6);
+      });
+    });
+
+    describe('edit promotion', function(){
+      beforeEach(inject(function ($controller) {
+        routeParams = {
+          state: 'edit',
+          id: 253
+        };
+        PromotionsCtrl = $controller('PromotionsCtrl', {
+          $scope: scope,
+          $routeParams: routeParams
+        });
+        scope.$digest();
+        scope.promotionsForm = {$valid:true};
+      }));
+      it('should call get promotion API', function(){
+        expect(promotionsFactory.getPromotion).toHaveBeenCalledWith(253);
+      });
+      it('should call save promotion API', function(){
+        scope.save();
+        expect(promotionsFactory.savePromotion).toHaveBeenCalled();
+      });
+    });
+
+    describe('view promotion', function () {
+      beforeEach(inject(function ($controller) {
+        routeParams = {
+          state: 'view',
+          id: 253
+        };
+        PromotionsCtrl = $controller('PromotionsCtrl', {
+          $scope: scope,
+          $routeParams: routeParams
+        });
+        scope.$digest();
+      }));
+      it('should call get promotion API', function(){
+        expect(promotionsFactory.getPromotion).toHaveBeenCalledWith(253);
+      });
+      it('should set readOnly to true', function(){
+        expect(scope.readOnly).toBe(true);
+      });
+      it('should return false: addBlankObjectToArray', function(){
+        expect(scope.addBlankObjectToArray([])).toBe(false);
+      });
+      it('should return false: save', function(){
+        expect(scope.save()).toBe(false);
+      });
+      it('should set scope.promotion.id', function(){
+        expect(scope.promotion.id).toEqual(253);
+      });
+    });
 
   });
 });

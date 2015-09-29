@@ -88,7 +88,7 @@ angular.module('ts5App')
         retailItem.itemQty = parseInt(retailItemData.itemQty, 10);
         retailItem.itemId = getRetailItemId(retailItemData);
         if(bindWholeObjectForView){
-          retailItem.retailItem =  getObjectByIdFromSelectOptions('masterItems', {id:retailItem.itemId});
+          retailItem.retailItem = getObjectByIdFromSelectOptions('masterItems', {id:retailItem.itemId});
         }
         else if(angular.isDefined(retailItem.retailItem)){
           delete retailItem.retailItem;
@@ -131,7 +131,7 @@ angular.module('ts5App')
         promotionCategory.companyPromotionCategoryId = getCompanyPromotionCategoryId(promotionCategoryData);
         promotionCategory.categoryQty = parseInt(promotionCategoryData.categoryQty, 10);
         if(bindWholeObjectForView){
-          promotionCategory.promotionCategory =  getObjectByIdFromSelectOptions('promotionCategories', {id:promotionCategory.companyPromotionCategoryId});
+          promotionCategory.promotionCategory = getObjectByIdFromSelectOptions('promotionCategories', {id:promotionCategory.companyPromotionCategoryId});
         }
         else if(angular.isDefined(promotionCategory.promotionCategory)){
           delete promotionCategory.promotionCategory;
@@ -312,9 +312,6 @@ angular.module('ts5App')
 
       // Promotion Inclusion Filter
       payloadGenerateFilters();
-
-      console.log('$scope.promotion',$scope.promotion);
-      console.log('_payload', _payload);
     }
 
     function showResponseErrors(response) {
@@ -532,7 +529,7 @@ angular.module('ts5App')
     }
 
     function redirectToEmberListing(){
-      window.location.href('/ember/#/promotions');
+      // window.location.href = '/ember/#/promotions';
     }
 
     function waitThenRedirectToEmberListing(promotionId){
@@ -645,6 +642,34 @@ angular.module('ts5App')
       }
     }
 
+    function stationVarsSet(station, stations, stationTypeProp){
+      if(angular.isUndefined(stations[stationTypeProp])){
+          return false;
+      }
+      if(angular.isUndefined(stations[stationTypeProp].id)){
+        return false;
+      }
+      if(angular.isUndefined(station.id)){
+        return false;
+      }
+      return true;
+    }
+
+    function disabledStations(station, stations, stationTypeProp, stationHasProp){
+      if(!stationVarsSet(station, stations, stationTypeProp)){
+        return false;
+      }
+      var stationId = stations[stationTypeProp].id;
+      if(station.id === stationId){
+        return true;
+      }
+      if(!$scope.repeatableStations[stationHasProp][stationId]){
+        return false;
+      }
+      var hasStationsAssigned = $scope.repeatableStations[stationHasProp][stationId];
+      return hasStationsAssigned.indexOf(station.id) !== -1;
+    }
+
     var states = {};
     states.createInit = function(){
       getPromotionMetaData();
@@ -680,7 +705,7 @@ angular.module('ts5App')
 
     $scope.addBlankObjectToArray = function(_array){
       if($scope.readOnly){
-        return;
+        return false;
       }
       _array.push({});
     };
@@ -695,6 +720,10 @@ angular.module('ts5App')
 
     $scope.cancel = function(){
       redirectToEmberListing();
+    };
+
+    $scope.disabledArrivalStations = function(station, stations){
+      return disabledStations(station, stations, 'departureStation', 'departureHas');
     };
 
     $scope.promotionCategorySelectChanged = function($index){
@@ -727,7 +756,7 @@ angular.module('ts5App')
       $scope.promotion.items.splice($index, 1);
     };
 
-    $scope.removeFromStationListByIndex = function($index){ // TODO test
+    $scope.removeFromStationListByIndex = function($index){
       if(!hasCompleteStationObject($index)){
         return false;
       }
@@ -738,22 +767,11 @@ angular.module('ts5App')
       $scope.promotion.filters.splice($index, 1);
     };
 
-    $scope.disabledDepartureStations = function(station, stations){ // TODO test
-      if(angular.isUndefined(stations.arrivalStation) || angular.isUndefined(stations.arrivalStation.id)){
-        return false;
-      }
-      var arrivalId = stations.arrivalStation.id;
-      if(station.id === arrivalId){
-        return true;
-      }
-      if(!$scope.repeatableStations.arrivalHas[arrivalId]){
-        return false;
-      }
-      var departureIdsAssignedToArrivalId = $scope.repeatableStations.arrivalHas[arrivalId];
-      return departureIdsAssignedToArrivalId.indexOf(station.id) !== -1;
+    $scope.disabledDepartureStations = function(station, stations){
+      return disabledStations(station, stations, 'arrivalStation', 'arrivalHas');
     };
 
-    $scope.stationListChanged = function($index){ // TODO test
+    $scope.stationListChanged = function($index){
       if(!hasCompleteStationObject($index)){
         return false;
       }
@@ -769,7 +787,7 @@ angular.module('ts5App')
       $scope.repeatableStations.arrivalHas[arrivalId].push(departureId);
     };
 
-    $scope.itemCategoryChanged = function($index){ // TODO test
+    $scope.itemCategoryChanged = function($index){
       var _categoryId = $scope.itemCategorySelects[$index].id;
       if(_cachedRetailItemsByCatId[_categoryId]){
         $scope.repeatableItemListSelectOptions[$index] = _cachedRetailItemsByCatId[_categoryId];
@@ -784,22 +802,10 @@ angular.module('ts5App')
       }, showResponseErrors);
     };
 
-    $scope.disabledArrivalStations = function(station, stations){ // TODO test
-      if(angular.isUndefined(stations.departureStation) || angular.isUndefined(stations.departureStation.id)){
+    $scope.save = function(){
+      if($scope.readOnly){
         return false;
       }
-      var departureId = stations.departureStation.id;
-      if(station.id === departureId){
-        return true;
-      }
-      if(!$scope.repeatableStations.departureHas[departureId]){
-        return false;
-      }
-      var arrivalIdsAssignedToDepartureId = $scope.repeatableStations.departureHas[departureId];
-      return arrivalIdsAssignedToDepartureId.indexOf(station.id) !== -1;
-    };
-
-    $scope.save = function(){ // TODO test
       payloadGenerate();
       var initState = $routeParams.state + 'Save';
       if (states[initState]) {
