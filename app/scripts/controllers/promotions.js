@@ -267,9 +267,6 @@ angular.module('ts5App')
     }
 
     function payloadGenerate(){
-      if($scope.readOnly){
-        return;
-      }
       _payload = {
         companyId: _companyId,
         promotionCode: $scope.promotion.promotionCode,
@@ -529,7 +526,7 @@ angular.module('ts5App')
     }
 
     function redirectToEmberListing(){
-      // window.location.href = '/ember/#/promotions';
+      window.location.href = '/ember/#/promotions';
     }
 
     function waitThenRedirectToEmberListing(promotionId){
@@ -543,9 +540,6 @@ angular.module('ts5App')
     }
 
     function createPromotion(){
-      if(!formValid()){
-        return;
-      }
       displayLoadingModal('Creating promotion');
       promotionsFactory.createPromotion(_payload).then(resolveCreatePromotion, showResponseErrors);
     }
@@ -572,9 +566,6 @@ angular.module('ts5App')
     }
 
     function savePromotion(){
-      if(!formValid()){
-        return;
-      }
       displayLoadingModal('Saving promotion');
       promotionsFactory.savePromotion($routeParams.id, _payload).then(resolveSavePromotion, showResponseErrors);
     }
@@ -806,11 +797,15 @@ angular.module('ts5App')
       if($scope.readOnly){
         return false;
       }
-      payloadGenerate();
-      var initState = $routeParams.state + 'Save';
-      if (states[initState]) {
-        states[initState]();
+      if(!formValid()) {
+        return false;
       }
+      var initState = $routeParams.state + 'Save';
+      if (!states[initState]) {
+        return false;
+      }
+      payloadGenerate();
+      states[initState]();
     };
 
   });

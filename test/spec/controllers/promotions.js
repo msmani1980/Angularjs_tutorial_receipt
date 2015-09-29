@@ -902,6 +902,23 @@ describe('Controller: PromotionsCtrl', function () {
       });
     });
 
+    describe('foobar state', function() {
+      beforeEach(inject(function ($controller) {
+        routeParams = {
+          state: 'foobar'
+        };
+        PromotionsCtrl = $controller('PromotionsCtrl', {
+          $scope: scope,
+          $routeParams: routeParams
+        });
+        scope.$digest();
+        scope.promotionsForm = {$valid: true};
+      }));
+      it('should return false if form.$invalid', function(){
+        expect(scope.save()).toBe(false);
+      });
+    });
+
     describe('edit promotion', function(){
       beforeEach(inject(function ($controller) {
         routeParams = {
@@ -921,6 +938,10 @@ describe('Controller: PromotionsCtrl', function () {
       it('should call save promotion API', function(){
         scope.save();
         expect(promotionsFactory.savePromotion).toHaveBeenCalled();
+      });
+      it('should return false if form.$invalid', function(){
+        scope.promotionsForm = {$valid:false};
+        expect(scope.save()).toBe(false);
       });
     });
 
