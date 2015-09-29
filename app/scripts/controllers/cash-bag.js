@@ -179,8 +179,8 @@ angular.module('ts5App')
     function read() {
       var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
-        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
-        $scope.displayedCashierDate  = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
+        $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
+        $scope.displayedCashierDate  = dateUtility.formatDateForApp($scope.cashBag.createdOn);
       });
     }
 
@@ -189,8 +189,8 @@ angular.module('ts5App')
       $scope.readOnly = false;
       var _promises   = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
-        $scope.displayedScheduleDate = $scope.cashBag.scheduleDate;
-        $scope.displayedCashierDate  = moment($scope.cashBag.createdOn, 'YYYY-MM-DD hh:mm:ss.SSSSSS').format('YYYY-MM-DD');
+        $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
+        $scope.displayedCashierDate  = dateUtility.formatDateForApp($scope.cashBag.createdOn);
         $scope.saveButtonName        = 'Save';
       });
     }
@@ -204,7 +204,7 @@ angular.module('ts5App')
         getCashBag: function () {
           return cashBagFactory.getCashBag($routeParams.id).then(
             function (response) {
-              $scope.cashBag          = response;
+              $scope.cashBag          = angular.copy(response);
               $scope.displayError     = false;
               $scope.formErrors       = {};
               $scope.showDeleteButton = canDelete(response);
@@ -231,14 +231,14 @@ angular.module('ts5App')
           // TODO: get correct cash handler company
           return cashBagFactory.getCompany(362).then(
             function (response) {
-              $scope.cashHandlerCompany = response;
+              $scope.cashHandlerCompany = angular.copy(response);
             }
           );
         },
         getCompanyCurrencies: function () {
           return cashBagFactory.getCompanyCurrencies().then(
             function (response) {
-              $scope.companyCurrencies = response.response;
+              $scope.companyCurrencies = angular.copy(response.response);
               $scope.currencyCodes     = [];
               angular.forEach(response.response, function (currency) {
                 $scope.currencyCodes[currency.id] = currency.code;
@@ -249,13 +249,13 @@ angular.module('ts5App')
         getDailyExchangeRates: function () {
           return cashBagFactory.getDailyExchangeRates(_companyId, moment().format('YYYYMMDD')).then(
             function (response) {
-              $scope.dailyExchangeRates = response.dailyExchangeRates;
+              $scope.dailyExchangeRates = angular.copy(response.dailyExchangeRates);
             }
           );
         },
         getCompanyPreferences: function () {
           return cashBagFactory.getCompanyPreferences().then(function (response) {
-            $scope.companyPreferences = response.preferences;
+            $scope.companyPreferences = angular.copy(response.preferences);
           });
         }
       };
