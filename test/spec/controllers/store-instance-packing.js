@@ -32,6 +32,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var getCharacteristicsDeferred;
   var servedCharacteristicsJSON;
   var dateUtility;
+  var storeId;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
@@ -45,9 +46,10 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       servedItemTypesJSON = _servedItemTypes_;
       servedCharacteristicsJSON = _servedCharacteristics_;
     });
+    storeId = 5;
     scope = $rootScope.$new();
     routeParams = {
-      storeId: 5,
+      storeId: storeId,
       action: 'replenish'
     };
 
@@ -98,7 +100,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should get the store details', function () {
-        expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(scope.storeId);
+        expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(storeId);
       });
 
       it('should attach all properties of JSON to scope', function () {
@@ -120,11 +122,11 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           characteristicId: 2, // this is 2 for upliftable items
           date: formattedDate
         };
-        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeId, expectedPayload);
+        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(storeId, expectedPayload);
       });
 
       it('should call getStoreInstanceItems', function () {
-        expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(scope.storeId);
+        expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(storeId);
       });
 
       it('should remove the id of the instance items', function () {
