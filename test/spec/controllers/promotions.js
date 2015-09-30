@@ -530,7 +530,11 @@ describe('Controller: PromotionsCtrl', function () {
 
     describe('save scope function', function(){
       beforeEach(function(){
-        scope.promotionsForm = {$valid:true};
+        scope.promotionsForm = {
+          $valid:true,
+          QualifierType: { $modelValue: {id: 1} },
+          BenefitType: { $modelValue: {id: 1} }
+        };
       });
       it('should call create with formatted payload 1', function(){
         scope.promotion = {
@@ -931,7 +935,11 @@ describe('Controller: PromotionsCtrl', function () {
           $routeParams: routeParams
         });
         scope.$digest();
-        scope.promotionsForm = {$valid:true};
+        scope.promotionsForm = {
+          $valid:true,
+          QualifierType: { $modelValue: {id: 1} },
+          BenefitType: { $modelValue: {id: 1} }
+        };
       }));
       it('should call get promotion API', function(){
         expect(promotionsFactory.getPromotion).toHaveBeenCalledWith(253);
@@ -941,7 +949,11 @@ describe('Controller: PromotionsCtrl', function () {
         expect(promotionsFactory.savePromotion).toHaveBeenCalled();
       });
       it('should return false if form.$invalid', function(){
-        scope.promotionsForm = {$valid:false};
+        scope.promotionsForm = {
+          $invalid:true,
+          QualifierType: { $modelValue: {id: null} },
+          BenefitType: { $modelValue: {id: null} }
+        };
         expect(scope.save()).toBe(false);
       });
     });
