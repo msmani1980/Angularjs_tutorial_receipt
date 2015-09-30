@@ -318,12 +318,10 @@ angular.module('ts5App')
         $scope.formErrors = response.data;
         return;
       }
-      $scope.formErrors = {
-        data: [{
-          field: 'Response',
-          value: '500 Error?'
-        }]
-      };
+      $scope.formErrors = [{
+        field: 'Response',
+        value: '500 Error?'
+      }];
     }
 
     function throwError(field, message){
