@@ -38,6 +38,7 @@ describe('the Store Instance Seals controller', function() {
   var httpBackend;
   var updateStoreInstanceStatusDeferred;
   var getStoreInstanceSealsDeferred;
+  var controller;
 
   beforeEach(inject(function($injector, $rootScope, $controller, $q, $httpBackend, $location, ngToast,
     _servedSealTypes_, _servedSealColors_,
@@ -65,6 +66,7 @@ describe('the Store Instance Seals controller', function() {
     storeInstanceAssignSealsFactory = $injector.get('storeInstanceAssignSealsFactory');
     location = $location;
     httpBackend = $httpBackend;
+    controller = $controller;
 
     getStoreDetailsDeferred = $q.defer();
     getSealTypesDeferred = $q.defer();
@@ -87,35 +89,19 @@ describe('the Store Instance Seals controller', function() {
     spyOn(storeInstanceAssignSealsFactory, 'deleteStoreInstanceSeal').and.returnValue(
       deleteStoreInstanceSealDeferred.promise);
 
-    StoreInstanceSealsCtrl = $controller('StoreInstanceSealsCtrl', {
+
+
+  }));
+
+  function initController(action) {
+    StoreInstanceSealsCtrl = controller('StoreInstanceSealsCtrl', {
       $scope: $scope,
       $routeParams: {
-        action: 'dispatch',
+        action: (action ? action : 'dispatch'),
         storeId: storeId
       }
     });
-
-    $scope.sealTypesList = [{
-      name: 'Outbound',
-      color: '#00B200',
-      seals: {
-        numbers: []
-      }
-    }, {
-      name: 'Hand Over',
-      color: '#E5E500',
-      seals: {
-        numbers: []
-      },
-      actions: [{
-        label: 'Copy From Outbound',
-        trigger: function() {
-          return $scope.copySeals('Outbound', 'Hand Over');
-        }
-      }]
-    }];
-
-  }));
+  }
 
   function renderView() {
     var html = templateCache.get('/views/store-instance-seals.html');
@@ -150,6 +136,7 @@ describe('the Store Instance Seals controller', function() {
   describe('when controller executes', function() {
 
     beforeEach(function() {
+      initController();
       $scope.$digest();
     });
 
@@ -365,7 +352,6 @@ describe('the Store Instance Seals controller', function() {
         expect(createdAction.trigger).toEqual(mockActions.trigger);
       });
 
-
     });
 
     describe('the resetErrors method', function() {
@@ -456,7 +442,6 @@ describe('the Store Instance Seals controller', function() {
 
       beforeEach(function() {
         resolveAllDependencies();
-
         spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
         spyOn(StoreInstanceSealsCtrl, 'createHandoverActions').and.callThrough();
@@ -490,6 +475,10 @@ describe('the Store Instance Seals controller', function() {
   describe('The assignSeals functionality', function() {
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceSealsCtrl, 'formatPayload').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'makeAssignSealsPromises').and.callThrough();
@@ -502,6 +491,7 @@ describe('the Store Instance Seals controller', function() {
       spyOn(StoreInstanceSealsCtrl, 'findStatusObject').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'statusUpdateSuccessHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'hideLoadingModal');
+      $scope.$digest();
       $scope.sealTypesList[0].seals.numbers.push('123');
       mockAssignSeals();
     });
@@ -598,6 +588,10 @@ describe('the Store Instance Seals controller', function() {
   describe('getSealTypeObjectByName functionality', function() {
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
       $scope.$digest();
     });
 
@@ -620,6 +614,10 @@ describe('the Store Instance Seals controller', function() {
     var handoverSealType;
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'getSealTypeObjectByName').and.callThrough();
       $scope.$digest();
       outboundSealType = $scope.sealTypesList[0];
@@ -627,7 +625,7 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should copy seals from one to another', function() {
-      outboundSealType.seals.numbers = [5341];
+      outboundSealType.seals.numbers = ['123'];
       $scope.copySeals('Outbound', 'Hand Over');
       expect(handoverSealType.seals.numbers).toEqual(outboundSealType.seals.numbers);
     });
@@ -643,6 +641,7 @@ describe('the Store Instance Seals controller', function() {
   describe('prevTrigger method', function() {
 
     beforeEach(function() {
+      initController();
       spyOn($scope, 'prevTrigger').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep');
       spyOn(StoreInstanceSealsCtrl, 'prevStep');
@@ -658,6 +657,7 @@ describe('the Store Instance Seals controller', function() {
   describe('goToPacking method', function() {
 
     beforeEach(function() {
+      initController();
       spyOn($scope, 'goToPacking').and.callThrough();
       spyOn($scope, 'prevTrigger').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep');
@@ -675,6 +675,10 @@ describe('the Store Instance Seals controller', function() {
 
     var view;
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
       view = renderView();
       $scope.assignSealsForm = view.find('form')[0];
     });
@@ -693,7 +697,7 @@ describe('the Store Instance Seals controller', function() {
 
     it('should have at least one seal-type directive in the view', function() {
       $scope.$digest();
-      expect(view.find('seal-type').length).toEqual(2);
+      expect(view.find('seal-type').length).toEqual($scope.sealTypesList.length);
     });
 
   });
@@ -701,6 +705,7 @@ describe('the Store Instance Seals controller', function() {
   describe('getting existing seals by type', function() {
 
     beforeEach(function() {
+      initController();
       resolveAllDependencies();
       $scope.$digest();
     });
@@ -722,6 +727,7 @@ describe('the Store Instance Seals controller', function() {
 
     var sealTypeObject;
     beforeEach(function() {
+      initController();
       resolveAllDependencies();
       $scope.$digest();
       sealTypeObject = $scope.sealTypesList[0];
@@ -754,6 +760,7 @@ describe('the Store Instance Seals controller', function() {
 
     var sealTypeObject;
     beforeEach(function() {
+      initController();
       resolveAllDependencies();
       StoreInstanceSealsCtrl.makeAssignSealsPromises();
       spyOn(StoreInstanceSealsCtrl,'makeCreatePromise').and.callThrough();
@@ -810,6 +817,7 @@ describe('the Store Instance Seals controller', function() {
 
     var sealTypeObject;
     beforeEach(function() {
+      initController();
       resolveAllDependencies();
       StoreInstanceSealsCtrl.makeAssignSealsPromises();
       spyOn(StoreInstanceSealsCtrl,'makeDeletePromise').and.callThrough();
@@ -862,9 +870,10 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-  describe('the canReplenish functionality', function() { 
+  describe('the canReplenish functionality', function() {
 
     beforeEach(function() {
+      initController();
       resolveAllDependencies();
       spyOn(StoreInstanceSealsCtrl,'canReplenish').and.callThrough();
       $scope.$digest();
@@ -884,6 +893,42 @@ describe('the Store Instance Seals controller', function() {
       $scope.$digest();
       var canReplenish  = StoreInstanceSealsCtrl.canReplenish();
       expect(canReplenish).toBeFalsy();
+    });
+
+  });
+
+  describe('the getSealTypesDependencies method for replenish', function() {
+
+    beforeEach(function() {
+      initController('replenish');
+      resolveAllDependencies();
+      spyOn(StoreInstanceSealsCtrl, 'generateSealTypeObject').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'createHandoverActions').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'createInboundActions').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'sealTypeListOrder').and.callThrough();
+      $scope.readOnly = false;
+      $scope.$digest();
+    });
+
+    it('should have 3 seal types', function() {
+      expect($scope.sealTypesList.length).toBe(3);
+    });
+
+    it('should have high security as the 3rd seal type', function() {
+      expect($scope.sealTypesList[2].name).toBe('High Security');
+    });
+
+    it('should create the actions for the Inbound seal', function() {
+      var mockActions = [{
+        label: 'Copy From Outbound',
+        trigger: function() {
+          return $scope.copySeals('Outbound', 'Inbound');
+        }
+      }];
+      var createdAction = StoreInstanceSealsCtrl.createInboundActions();
+      expect(createdAction.label).toEqual(mockActions.label);
+      expect(createdAction.trigger).toEqual(mockActions.trigger);
     });
 
   });
