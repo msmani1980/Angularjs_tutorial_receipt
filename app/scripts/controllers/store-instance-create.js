@@ -9,8 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, ngToast, dateUtility, GlobalMenuService,
-    storeInstanceWizardConfig,
-    $location, schedulesService, menuCatererStationsService, lodash) {
+    storeInstanceWizardConfig, $location, schedulesService, menuCatererStationsService, lodash) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -166,7 +165,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return newMenus;
     };
 
-
     this.formatPayload = function() {
       var payload = angular.copy($scope.formData);
       payload.menus = this.formatMenus(payload.menus);
@@ -183,7 +181,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.formData = {
         cateringStationId: (apiData.cateringStationId ? apiData.cateringStationId.toString() : null),
         scheduleDate: dateUtility.formatDate(apiData.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY'),
-        scheduleNumber: angular.copy(apiData.scheduleNumber),
+        scheduleNumber: {
+          'scheduleNumber': angular.copy(apiData.scheduleNumber)
+        },
         storeId: (apiData.storeId ? apiData.storeId.toString() : null),
         carrierId: (apiData.carrierId ? apiData.carrierId.toString() : null),
         menus: $this.menusFromApi(apiData.menus)
@@ -272,6 +272,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return $routeParams.action === 'replenish';
     };
 
+    $scope.scheduleNumberIsReadOnly = function() {
+      return $scope.isEndInstance || $scope.isReplenish();
+    };
+
     this.setScheduleNumbers = function(apiData) {
       if (!apiData || !apiData.meta.count) {
         return;
@@ -321,6 +325,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getLoadStorePromises = function() {
+      console.log('getLoadStorePromises');
       return [
         $this.getMenuMasterListPromise(),
         $this.getCatererStationListPromise(),
@@ -334,17 +339,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
+
     this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
     };
-
 
     this.setUIReady = function() {
       $scope.uiSelectTemplateReady = true;
       $this.hideLoadingModal();
       registerScopeWatchers();
     };
-
 
     this.init = function() {
       if ($routeParams.storeId) {
@@ -353,6 +357,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $q.all(dependencyPromises).then(function(response) {
           $this.setDependencies(response);
           $this.setUIReady();
+          console.log($scope.formData);
         });
       } else {
         this.getCatererStationList();
