@@ -38,9 +38,11 @@
           <div class="col-sm-6">
             <div>Cash Handler Base Currency: {{ currencyCodes[cashHandlerCompany.baseCurrencyId] }}</div>
             <div>Airline Base Currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
+            <div>Store Number: {{ cashBag.storeNumber }}</div>
           </div>
           <div class="col-sm-6 text-right">
             <div>Cashier's entry date: <date>{{ displayedCashierDate }}</date></div>
+            <div>Store Instance: {{ cashBag.storeInstance }}</div>
           </div>
         </div>
       </div>
