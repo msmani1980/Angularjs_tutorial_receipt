@@ -311,15 +311,6 @@ angular.module('ts5App')
       payloadGenerateFilters();
     }
 
-    function showResponseErrors(response) {
-      hideLoadingModal();
-      $scope.displayError = true;
-      if (response.data) {
-        $scope.formErrors = response.data;
-        return;
-      }
-      throwError('500error', 'Unable to connect to APIs');
-    }
 
     function throwError(field, message){
       if(!message){
@@ -332,6 +323,16 @@ angular.module('ts5App')
         }]
       };
       showResponseErrors(error);
+    }
+
+    function showResponseErrors(response) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      if (response.data) {
+        $scope.formErrors = response.data;
+        return;
+      }
+      throwError('500error', 'Unable to connect to APIs');
     }
 
     function setBenefitTypes(dataFromAPI){
