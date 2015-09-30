@@ -65,15 +65,15 @@ angular.module('ts5App')
     }
 
     function setStoreInstanceSeals(dataFromAPI){
-      _storeInstanceSeals = dataFromAPI.response;
+      _storeInstanceSeals = angular.copy(dataFromAPI.response);
     }
 
     function setSealColors(dataFromAPI){
-      _sealColors = dataFromAPI.response;
+      _sealColors = angular.copy(dataFromAPI.response);
     }
 
     function setSealTypes(dataFromAPI){
-      _sealTypes = dataFromAPI;
+      _sealTypes = angular.copy(dataFromAPI);
     }
 
     function getSealNumbersByTypeId(sealTypeId){
@@ -105,11 +105,35 @@ angular.module('ts5App')
       return masterItem[0].menuQuantity;
     }
 
+    function addSealToScope(sealType) {
+      $scope.seals.push({
+        name: sealType.name,
+        bgColor: getSealColorByTypeId(sealType.id),
+        sealNumbers: getSealNumbersByTypeId(sealType.id)
+      });
+    }
+
+    function removeHandoverSealType() {
+      var handover = _sealTypes.filter(function(sealType){
+        return sealType.name ===  'Hand Over';
+      })[0];
+      var index = _sealTypes.indexOf(handover);
+      delete _sealTypes[index];
+    }
+
+    function setSealsList() {
+      $scope.seals = [];
+      if($routeParams.action === 'replenish') {
+        removeHandoverSealType();
+      }
+      _sealTypes.map(function(sealType){
+        addSealToScope(sealType);
+        return _sealTypes;
+      });
+    }
+
     function initLoadComplete(){
-
-
       hideLoadingModal();
-
       if($scope.items) {
         $scope.items.map(function (item) {
           item.itemDescription = item.itemCode + ' -  ' + item.itemName;
@@ -117,16 +141,7 @@ angular.module('ts5App')
           item.menuQuantity = getMenuQuantity(item.itemMasterId);
         });
       }
-
-      $scope.seals = [];
-      _sealTypes.map(function(sealType){
-        $scope.seals.push({
-          name: sealType.name,
-          bgColor: getSealColorByTypeId(sealType.id),
-          sealNumbers: getSealNumbersByTypeId(sealType.id)
-        });
-        return _sealTypes;
-      });
+      setSealsList();
     }
 
     function showUserCurrentStatus(messageAction) {
