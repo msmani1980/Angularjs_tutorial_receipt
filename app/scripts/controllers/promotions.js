@@ -554,17 +554,11 @@ angular.module('ts5App')
     function uiSelectRequiredFieldsValid(){
       var valid = true;
       if(!$scope.promotionsForm.QualifierType.$modelValue.id){
-        $scope.formErrors.push({
-          field: 'QualifierType',
-          value: 'is a required field.'
-        });
+        $scope.promotionsForm.QualifierType.$setValidity('required', false);
         valid = false;
       }
       if(!$scope.promotionsForm.BenefitType.$modelValue.id){
-        $scope.formErrors.push({
-          field: 'BenefitType',
-          value: 'is a required field.'
-        });
+        $scope.promotionsForm.BenefitType.$setValidity('required', false);
         valid = false;
       }
       return valid;
@@ -572,9 +566,7 @@ angular.module('ts5App')
 
     function formValid() {
       resetErrors();
-      if(!uiSelectRequiredFieldsValid()){
-        return false;
-      }
+      uiSelectRequiredFieldsValid();
       if ($scope.promotionsForm.$invalid) {
         return false;
       }
