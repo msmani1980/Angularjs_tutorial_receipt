@@ -148,7 +148,7 @@ angular.module('ts5App')
           className: 'dashboard-managePromotions'
         }, {
           name: 'Create Promotion',
-          route: emberURL + 'promotions/create',
+          route: '/#/promotions/create',
           icon: 'icon-create-promotion',
           className: 'dashboard-createPromotion'
         }, {

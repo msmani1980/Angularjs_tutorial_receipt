@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('PromotionsCtrl', function ($scope, $routeParams, $q, $filter, $timeout,
-                                          promotionsFactory, ngToast, dateUtility) {
+                                          promotionsFactory, dateUtility) {
 
     $scope.readOnly = true;
     $scope.editing = false;
@@ -95,13 +95,6 @@ angular.module('ts5App')
         }
         return retailItem;
       });
-    }
-
-    function showMessage(message, messageType) {
-      if(!messageType){
-        messageType = 'info';
-      }
-      ngToast.create({className: messageType, dismissButton: true, content: '<strong>Promotion</strong>: ' + message});
     }
 
     function displayLoadingModal(loadingText) {
@@ -320,7 +313,7 @@ angular.module('ts5App')
       }
       $scope.formErrors = [{
         field: 'Response',
-        value: '500 Error?'
+        value: '500 Error'
       }];
     }
 
@@ -501,7 +494,6 @@ angular.module('ts5App')
 
     function initPromisesResolved(){
       hideLoadingModal();
-      showMessage('Promotion loaded');
       $scope.readOnly = ($routeParams.state === 'view');
       if(_promotionFromAPI){
         setScopePromotionForViewFromAPIdata();
@@ -654,9 +646,6 @@ angular.module('ts5App')
         return false;
       }
       var stationId = stations[stationTypeProp].id;
-      if(station.id === stationId){
-        return true;
-      }
       if(!$scope.repeatableStations[stationHasProp][stationId]){
         return false;
       }

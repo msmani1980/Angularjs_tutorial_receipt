@@ -272,10 +272,10 @@ describe('Controller: PromotionsCtrl', function () {
         scope.repeatableStations.arrivalHas[5] = [1,2,3];
         expect(scope.disabledDepartureStations({id:2}, {arrivalStation:{id:5}})).toBe(true);
       });
-      it('should return true if passed in station.id is same as arrivalStation.id', function(){
+      it('should return false if passed in station.id is same as arrivalStation.id', function(){
         scope.repeatableStations.arrivalHas = [];
         scope.repeatableStations.arrivalHas[5] = [1,2,3];
-        expect(scope.disabledDepartureStations({id:5}, {arrivalStation:{id:5}})).toBe(true);
+        expect(scope.disabledDepartureStations({id:5}, {arrivalStation:{id:5}})).toBe(false);
       });
     });
 
@@ -478,10 +478,10 @@ describe('Controller: PromotionsCtrl', function () {
         scope.repeatableStations.departureHas[5] = [1,2,3];
         expect(scope.disabledArrivalStations({id:2}, {departureStation:{id:5}})).toBe(true);
       });
-      it('should return true if passed in station.id is same as departureStation.id', function(){
+      it('should return false if passed in station.id is same as departureStation.id', function(){
         scope.repeatableStations.departureHas = [];
         scope.repeatableStations.departureHas[5] = [1,2,3];
-        expect(scope.disabledArrivalStations({id:5}, {departureStation:{id:5}})).toBe(true);
+        expect(scope.disabledArrivalStations({id:5}, {departureStation:{id:5}})).toBe(false);
       });
     });
 
