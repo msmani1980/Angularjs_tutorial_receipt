@@ -104,7 +104,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getStoresListPromise = function() {
       var query = this.getFormattedDatesPayload();
-      query.readyToUse = true;
+      if ($routeParams.action === 'dispatch') {
+        query.readyToUse = true;
+      }
       return storeInstanceFactory.getStoresList(query);
     };
 
