@@ -552,16 +552,12 @@ angular.module('ts5App')
     }
 
     function uiSelectRequiredFieldsValid(){
-      var valid = true;
       if(!$scope.promotionsForm.QualifierType.$modelValue.id){
         $scope.promotionsForm.QualifierType.$setValidity('required', false);
-        valid = false;
       }
       if(!$scope.promotionsForm.BenefitType.$modelValue.id){
         $scope.promotionsForm.BenefitType.$setValidity('required', false);
-        valid = false;
       }
-      return valid;
     }
 
     function formValid() {
