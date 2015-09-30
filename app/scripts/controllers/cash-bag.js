@@ -12,8 +12,8 @@ angular.module('ts5App')
   .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, dateUtility) {
 
     // controller global properties
-    var _companyId     = null;
-    var _promises      = [];
+    var _companyId = null;
+    var _promises  = [];
 
     // scope properties
     $scope.viewName              = 'Cash Bag';
@@ -132,11 +132,17 @@ angular.module('ts5App')
       return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === 'true');
     };
 
+    function getStoreResponseHandler(dataFromAPI) {
+      var storeData              = angular.copy(dataFromAPI);
+      $scope.cashBag.storeNumber = storeData.storeNumber;
+    }
+
     function getStoreInstanceListResponseHandler(dataFromAPI) {
       var storeInstanceData         = angular.copy(dataFromAPI);
       $scope.displayedScheduleDate  = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       $scope.cashBag.scheduleNumber = storeInstanceData.scheduleNumber;
       $scope.cashBag.scheduleDate   = moment(storeInstanceData.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
+      cashBagFactory.getStoreList({id: storeInstanceData.storeId}).then(getStoreResponseHandler);
     }
 
     function promisesResponseHandler() {
@@ -223,7 +229,7 @@ angular.module('ts5App')
       );
     }
 
-    function setCreatePromises(){
+    function setCreatePromises() {
       getCompany();
       getCashHandlerCompany();
       getCompanyCurrencies();
@@ -235,6 +241,7 @@ angular.module('ts5App')
     function create() {
       setCreatePromises();
       cashBagFactory.getStoreInstanceList({id: $routeParams.storeInstanceId}).then(getStoreInstanceListResponseHandler);
+
 
       $scope.readOnly             = false;
       $scope.cashBag              = {
@@ -249,7 +256,7 @@ angular.module('ts5App')
       $q.all(_promises).then(promisesResponseHandler, showMessage);
     }
 
-    function setReadPromises(){
+    function setReadPromises() {
       getCashBag();
       getCompany();
       getCashHandlerCompany();
@@ -266,7 +273,7 @@ angular.module('ts5App')
       }, showMessage);
     }
 
-    function setUpdatePromises(){
+    function setUpdatePromises() {
       getCashBag();
       getCompany();
       getCashHandlerCompany();
@@ -288,7 +295,7 @@ angular.module('ts5App')
     // Constructor
     function init() {
       // set global controller properties
-      _companyId = cashBagFactory.getCompanyId();
+      _companyId   = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;
       switch ($routeParams.state) {
         case 'create':

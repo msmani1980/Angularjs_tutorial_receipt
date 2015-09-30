@@ -12,6 +12,15 @@
   transition: height 0.001s;
 }
 
+.row-as-table {
+  position: relative;
+  .type-info {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
+
 .navbar-default {
   background-color: $header-bg-color;
   color: #FFF;
