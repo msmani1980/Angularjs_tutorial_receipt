@@ -951,8 +951,9 @@ describe('Controller: PromotionsCtrl', function () {
       it('should return false if form.$invalid', function(){
         scope.promotionsForm = {
           $invalid:true,
-          QualifierType: { $modelValue: {id: null} },
-          BenefitType: { $modelValue: {id: null} }
+          $valid:false,
+          QualifierType: { $modelValue: {id: null}, $setValidity:function(){} },
+          BenefitType: { $modelValue: {id: null}, $setValidity:function(){} }
         };
         expect(scope.save()).toBe(false);
       });
