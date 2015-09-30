@@ -90,7 +90,7 @@
       <div class="col-xs-12 col-sm-6">
         <div class="form-group">
           <label>Qualifier Type*</label>
-          <ui-select theme="bootstrap" ng-model="promotion.promotionType" ng-disabled="readOnly" name="QualifierType" ng-required="{{1}}">
+          <ui-select theme="bootstrap" ng-model="promotion.promotionType" ng-disabled="readOnly" name="QualifierType">
             <ui-select-match placeholder="Select Qualifier Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="promotionType in selectOptions.promotionTypes | filter: {name:$select.search}">
               <div ng-bind-html="promotionType.name | highlight: $select.search"></div>
@@ -238,7 +238,7 @@
       <div class="col-xs-12 col-md-6">
         <div class="form-group">
           <label>Benefit Type*</label>
-          <ui-select theme="bootstrap" ng-model="promotion.benefitType" ng-disabled="readOnly" name="BenefitType" required>
+          <ui-select theme="bootstrap" ng-model="promotion.benefitType" ng-disabled="readOnly" name="BenefitType">
             <ui-select-match placeholder="Select Benefit Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="benefitType in selectOptions.benefitTypes | filter: {name:$select.search}">
               <div ng-bind-html="benefitType.name | highlight: $select.search"></div>

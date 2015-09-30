@@ -551,13 +551,34 @@ angular.module('ts5App')
       $scope.displayError = false;
     }
 
+    function uiSelectRequiredFieldsValid(){
+      var valid = true;
+      if(!$scope.promotionsForm.QualifierType.$modelValue.id){
+        $scope.formErrors.push({
+          field: 'QualifierType',
+          value: 'is a required field.'
+        });
+        valid = false;
+      }
+      if(!$scope.promotionsForm.BenefitType.$modelValue.id){
+        $scope.formErrors.push({
+          field: 'BenefitType',
+          value: 'is a required field.'
+        });
+        valid = false;
+      }
+      return valid;
+    }
+
     function formValid() {
       resetErrors();
-      if ($scope.promotionsForm.$valid) {
-        return true;
+      if(!uiSelectRequiredFieldsValid()){
+        return false;
       }
-      $scope.displayError = true;
-      return false;
+      if ($scope.promotionsForm.$invalid) {
+        return false;
+      }
+      return true;
     }
 
     function savePromotion(){
@@ -790,6 +811,7 @@ angular.module('ts5App')
         return false;
       }
       if(!formValid()) {
+        $scope.displayError = true;
         return false;
       }
       var initState = $routeParams.state + 'Save';
