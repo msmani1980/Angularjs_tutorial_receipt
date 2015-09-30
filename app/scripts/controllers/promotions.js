@@ -563,10 +563,7 @@ angular.module('ts5App')
     function formValid() {
       resetErrors();
       uiSelectRequiredFieldsValid();
-      if ($scope.promotionsForm.$invalid) {
-        return false;
-      }
-      return true;
+      return $scope.promotionsForm.$valid;
     }
 
     function savePromotion(){
