@@ -20,13 +20,27 @@
       </div>
     </div>
 
+    <div class="row" ng-if="isEndInstance()">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
+        <label>Store Number *</label>
+      </div>
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group" ng-class="validateInput('StoreNumber')">
+          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber">
+            <option ng-disabled="true" selected="selected" value>Select Store</option>
+            <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Schedule Date *</label>
       </div>
       <div class="col-xs-12 col-sm-8">
           <date-picker-field form="createStoreInstance" name="scheduleDate"
-            min-date="'0d'" required="true" ng-model="formData.scheduleDate"></date-picker-field>
+            min-date="'0d'" required="true" ng-model="formData.scheduleDate" disable="isEndInstance()"></date-picker-field>
       </div>
     </div>
 
@@ -36,7 +50,7 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group">
-          <ui-select name="scheduleNumber" required ng-model="formData.scheduleNumber" theme="bootstrap" id="scheduleNumber">
+          <ui-select name="scheduleNumber" required ng-model="formData.scheduleNumber" theme="bootstrap" id="scheduleNumber" ng-disabled="isEndInstance()">
             <ui-select-match placeholder="Select a schedule" ui-lock-choice="isDisabled()">{{ $select.selected.scheduleNumber }}
             </ui-select-match>
             <ui-select-choices  repeat="schedule in scheduleNumbers | filter: {scheduleNumber:$select.search} | orderBy:'scheduleNumber'">
@@ -47,13 +61,13 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" ng-if="!isEndInstance()">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Store Number *</label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('StoreNumber')">
-          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber" ng-disabled="action == 'replenish'">
+          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber" ng-disabled="isEndInstance() || isReplenish()">
             <option ng-disabled="true" selected="selected" value>Select Store</option>
             <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>
@@ -67,8 +81,8 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateMenus()">
-          <ui-select name="Menus" required="true" multiple ng-model="formData.menus" theme="bootstrap" id="menuIds" >
-            <ui-select-match placeholder="{{action == 'replenish' ? '' : 'Select one or more Menus'}}" ui-lock-choice="action == 'replenish'">{{ $item.menuCode }}
+          <ui-select name="Menus" required="true" multiple ng-model="formData.menus" theme="bootstrap" id="menuIds" ng-disabled="isEndInstance() || isReplenish()" style="min-height:34px;">
+            <ui-select-match placeholder="{{action == 'replenish' ? '' : 'Select one or more Menus'}}">{{ $item.menuCode }}
             </ui-select-match>
             <ui-select-choices  repeat="menu in filteredMenuList | filter: $select.search | orderBy:'menuCode'">
               <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
@@ -84,7 +98,7 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group">
-          <select class="form-control" ng-model="formData.carrierId" ng-disabled="action == 'replenish'">
+          <select class="form-control" ng-model="formData.carrierId" ng-disabled="isEndInstance() || isReplenish()">
             <option selected="selected" value>Select a Tail Number</option>
             <option ng-repeat="tailNumber in carrierNumbers | orderBy:'carrierNumber' track by tailNumber.id" value="{{ tailNumber.id }}">{{ tailNumber.carrierNumber }}</option>
           </select>
