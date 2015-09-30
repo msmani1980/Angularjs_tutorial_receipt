@@ -1,7 +1,4 @@
 'use strict';
-/*global moment*/
-/*global $*/
-
 
 /**
  * @ngdoc function
@@ -17,16 +14,18 @@ angular.module('ts5App')
     var _services  = null;
 
     $scope.viewName           = 'Manage Cash Bag';
+    $scope.createCashBagError = 'temp error message';
     $scope.displayModalError  = false;
     $scope.displayError       = false;
-    $scope.createCashBagError = 'temp error message';
     $scope.search             = {};
+    $scope.storeList          = [];
+    $scope.storeInstanceList  = [];
 
     function showSuccessMessage(error) {
       ngToast.create({
         className: 'success',
         dismissButton: true,
-        content: '<strong>Cash bag</strong>:' + error
+        content: '<strong>Cash bag</strong>: ' + error
       });
       $scope.formErrors = {};
     }
@@ -41,17 +40,21 @@ angular.module('ts5App')
       return bankRefList;
     }
 
-    function formatDateForApp() {
-      $scope.cashBagList.map(function (cashBag) {
-        if (cashBag.scheduleDate) {
-          cashBag.scheduleDate = dateUtility.formatDateForApp(cashBag.scheduleDate);
+    function formatScheduleDateForApp(containingArray) {
+      if(!angular.isArray(containingArray)) {
+        return;
+      }
+
+      containingArray.map(function (obj) {
+        if (obj.scheduleDate) {
+          obj.scheduleDate = dateUtility.formatDateForApp(obj.scheduleDate);
         }
       });
+      return containingArray;
     }
 
-    function getCashBagResponseHandler (response) {
-      $scope.cashBagList = angular.copy(response.cashBags);
-      formatDateForApp();
+    function getCashBagResponseHandler(response) {
+      $scope.cashBagList = formatScheduleDateForApp(angular.copy(response.cashBags));
       angular.forEach($scope.cashBagList, function (cashBag) {
         if ($scope.isNew(cashBag.id)) {
           showSuccessMessage('successfully created');
@@ -60,7 +63,23 @@ angular.module('ts5App')
       $scope.bankRefList = getSortedBankRefList(response.cashBags);
     }
 
-    // Constructor
+    function setFilteredScheduleList(dataFromAPI) {
+      var scheduleArray            = dataFromAPI.distinctSchedules || dataFromAPI.schedules;
+      $scope.filteredSchedulesList = angular.copy(scheduleArray);
+    }
+
+    function getSchedulesListResponseHandler(dataFromAPI) {
+      $scope.schedulesList = angular.copy(dataFromAPI.distinctSchedules);
+      setFilteredScheduleList(dataFromAPI);
+    }
+
+
+    function getStationListResponseHandler(dataFromAPI) {
+      $scope.stationList = angular.copy(dataFromAPI.response);
+      angular.element('.stations-multi-select').select2({width: '100%'});
+    }
+
+
     (function constructor() {
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
@@ -75,20 +94,10 @@ angular.module('ts5App')
           return cashBagFactory.getCashBagList(_companyId, {isDelete: 'false'}).then(getCashBagResponseHandler);
         },
         getStationList: function () {
-          return cashBagFactory.getStationList(_companyId).then(
-            function (response) {
-              $scope.stationList = angular.copy(response.response);
-              $('.stations-multi-select').select2({width: '100%'});
-
-            }
-          );
+          return cashBagFactory.getStationList(_companyId).then(getStationListResponseHandler);
         },
         getSchedulesList: function () {
-          return cashBagFactory.getSchedulesList(_companyId).then(
-            function (response) {
-              $scope.schedulesList = angular.copy(response.distinctSchedules);
-            }
-          );
+          return cashBagFactory.getSchedulesList(_companyId).then(getSchedulesListResponseHandler);
         }
       };
       _services.call(['getCashBagList', 'getStationList', 'getSchedulesList']);
@@ -120,7 +129,7 @@ angular.module('ts5App')
 
     $scope.clearForm = function () {
       $scope.search = {};
-      $('.stations-multi-select').select2('data', null);
+      angular.element('.stations-multi-select').select2('data', null);
       $scope.searchCashBag();
     };
 
@@ -132,28 +141,96 @@ angular.module('ts5App')
       angular.element('#addCashBagModal').modal('show');
     };
 
-    $scope.updateScheduleDate = function () {
-      $scope.scheduleMinDate = moment($scope.schedulesList[$scope.scheduleIndex].minEffectiveStart, 'YYYY-MM-DD').format('MM/DD/YYYY').toString();
-      $scope.scheduleMaxDate = moment($scope.schedulesList[$scope.scheduleIndex].maxEffectiveEnd, 'YYYY-MM-DD').format('MM/DD/YYYY').toString();
+    function getStoreListResponseHandler(storeListFromAPI) {
+      $scope.storeList = angular.copy(storeListFromAPI.response);
+    }
+
+    $scope.isDateSelected = function () {
+      return !$scope.scheduleDate;
     };
 
-    $scope.submitCreate = function () {
-      if (!$scope.createCashBagForm.$valid) {
-        showModalErrors('Please select both a schedule number and a schedule date');
+    function createPayloadForStoreInstance() {
+      var payload = {
+        scheduleDate: dateUtility.formatDateForAPI($scope.scheduleDate)
+      };
+
+      if ($scope.selectedSchedule) {
+        payload.scheduleNumber = $scope.selectedSchedule;
+      }
+
+      if ($scope.selectedStoreNumber) {
+        payload.storeId = $scope.selectedStoreNumber;
+      }
+      return payload;
+    }
+
+    $scope.shouldShowInstanceTable = function () {
+      return ($scope.storeInstanceList.length > 0);
+    };
+
+    function validateStoreInstanceResponse(response) {
+      return (response && response.length > 0);
+    }
+
+    var getStoreInstanceListHandler = function (dataFromAPI) {
+      var isResponseValid = validateStoreInstanceResponse(dataFromAPI.response);
+      if (isResponseValid) {
+        var storeListFromAPI     = angular.copy(dataFromAPI.response);
+        $scope.storeInstanceList = formatScheduleDateForApp(storeListFromAPI);
         return;
       }
-      var formattedDate = moment($scope.scheduleDate, 'MM/DD/YYYY').format('YYYYMMDD').toString();
-      cashBagFactory.getDailySchedulesList(_companyId, $scope.schedulesList[$scope.scheduleIndex].scheduleNumber, formattedDate).then(function (response) {
-        if (response.schedules.length < 1) {
-          showModalErrors('Not a valid schedule');
-        } else {
-          $scope.displayError = false;
-          $('#addCashBagModal').removeClass('fade').modal('hide');
-          $location.path('cash-bag/create').search({
-            scheduleNumber: $scope.schedulesList[$scope.scheduleIndex].scheduleNumber,
-            scheduleDate: formattedDate
-          });
-        }
+      showModalErrors('No Store Instance found, please check search criteria');
+    };
+
+    $scope.findStoreInstance = function () {
+      if (!$scope.scheduleDate) {
+        showModalErrors('Please select date and schedule number or store number');
+        return;
+      }
+
+      if (!($scope.selectedSchedule || $scope.selectedStoreNumber)) {
+        showModalErrors('Please select date and schedule number or store number');
+        return;
+      }
+
+      $scope.storeInstanceList = [];
+      $scope.displayModalError = false;
+      var payload              = createPayloadForStoreInstance();
+      cashBagFactory.getStoreInstanceList(payload).then(getStoreInstanceListHandler);
+    };
+
+    $scope.clearSelectedSchedule = function () {
+      delete $scope.selectedSchedule;
+    };
+
+    $scope.clearStoreNumber = function () {
+      delete $scope.selectedStoreNumber;
+    };
+
+    $scope.$watch('scheduleDate', function () {
+      if (!$scope.scheduleDate) {
+        return;
+      }
+      $scope.clearSelectedSchedule();
+      $scope.clearStoreNumber();
+      var searchDate = dateUtility.formatDateForAPI($scope.scheduleDate);
+      var payload    = {
+        startDate: searchDate,
+        endDate: searchDate
+      };
+      cashBagFactory.getStoreList(payload).then(getStoreListResponseHandler);
+      cashBagFactory.getSchedulesInDateRange(_companyId, searchDate, searchDate).then(setFilteredScheduleList);
+
+    });
+
+    $scope.submitCreate = function (storeInstance) {
+      if (!storeInstance) {
+        showModalErrors('Please select a store instance');
+        return;
+      }
+      angular.element('#addCashBagModal').removeClass('fade').modal('hide');
+      $location.path('cash-bag/create').search({
+        storeInstanceId: storeInstance.id
       });
     };
 

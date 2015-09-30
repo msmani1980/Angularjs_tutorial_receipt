@@ -12,6 +12,11 @@ angular.module('ts5App')
     storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
     lodash) {
 
+    var HANDOVER = 'Hand Over';
+    var OUTBOUND = 'Outbound';
+    var INBOUND = 'Inbound';
+    var HIGH_SECURITY = 'High Security';
+
     var $this = this;
     this.nextStep = {
       stepName: '3',
@@ -93,39 +98,43 @@ angular.module('ts5App')
       return [{
         label: 'Copy From Outbound',
         trigger: function() {
-          return $scope.copySeals('Outbound', 'Hand Over');
+          return $scope.copySeals(OUTBOUND, HANDOVER);
         }
       }];
     };
 
     this.createInboundActions = function() {
-      return [{
+      var actions = [{
         label: 'Copy From Handover',
         trigger: function() {
-          return $scope.copySeals('Hand Over', 'Inbound');
+          return $scope.copySeals(HANDOVER, INBOUND);
         }
       }, {
         label: 'Copy From Outbound',
         trigger: function() {
-          return $scope.copySeals('Outbound', 'Inbound');
+          return $scope.copySeals(OUTBOUND, INBOUND);
         }
       }];
+      if($routeParams.action === 'replenish') {
+        actions.splice(0,1);
+      }
+      return actions;
     };
 
     this.addSealTypeActions = function(sealTypeObject) {
       if($scope.readOnly) {
         return;
       }
-      if (sealTypeObject.name === 'Hand Over') {
+      if (sealTypeObject.name === HANDOVER) {
         return $this.createHandoverActions();
       }
-      if (sealTypeObject.name === 'Inbound') {
+      if (sealTypeObject.name === INBOUND) {
         return this.createInboundActions();
       }
     };
 
     this.isSealTypeRequired = function(sealTypeObject) {
-      if (sealTypeObject.name === 'Outbound' || sealTypeObject.name === 'Inbound') {
+      if (sealTypeObject.name === OUTBOUND || sealTypeObject.name === INBOUND) {
         return true;
       }
       return false;
@@ -178,13 +187,13 @@ angular.module('ts5App')
 
     this.sealTypeListOrder = function(sealType) {
       switch (sealType.name) {
-        case 'Outbound':
+        case OUTBOUND:
           return 1;
-        case 'Hand Over':
+        case HANDOVER:
           return 2;
-        case 'Inbound':
+        case INBOUND:
           return 3;
-        case 'High Security':
+        case HIGH_SECURITY:
           return 4;
       }
     };
@@ -204,8 +213,19 @@ angular.module('ts5App')
       };
     };
 
+    this.removeHandoverSealType = function() {
+      var handover = $scope.sealTypes.filter(function(sealType){
+        return sealType.name === HANDOVER;
+      })[0];
+      var index = $scope.sealTypes.indexOf(handover);
+      delete $scope.sealTypes[index];
+    };
+
     this.generateSealTypesList = function() {
       $scope.sealTypesList = [];
+      if($routeParams.action === 'replenish') {
+        $this.removeHandoverSealType();
+      }
       angular.forEach($scope.sealTypes, function(sealType) {
         var sealTypeObject = $this.generateSealTypeObject(sealType);
         $scope.sealTypesList.push(sealTypeObject);
@@ -309,7 +329,6 @@ angular.module('ts5App')
         payload
       );
     };
-
 
     this.makeDeletePromise = function(sealTypeObject) {
       var sealsToDelete = $this.determineSealsToDelete(sealTypeObject);
