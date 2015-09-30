@@ -310,11 +310,20 @@ describe('Service: storeInstanceFactory', function() {
         expect(storeDetails.menuList).toBeDefined();
       });
 
+      it('should contain a replenishStoreInstanceId', function() {
+        expect(storeDetails.replenishStoreInstanceId).toEqual(parentId);
+      });
+
+      it('should contain a parentStoreInstance property', function() {
+        expect(storeDetails.parentStoreInstance).toBeDefined();
+      });
+
       describe('when there is no parent Id', function() {
 
         beforeEach(function() {
-          delete servedStoreStatusJSON.replenishStoreInstanceId;
           storeInstanceFactory.getStoreDetails(storeId).then(function(dataFromAPI) {
+            delete dataFromAPI.parentStoreInstance;
+            delete dataFromAPI.replenishStoreInstanceId;
             storeDetails = dataFromAPI;
           });
           scope.$digest();
@@ -322,6 +331,10 @@ describe('Service: storeInstanceFactory', function() {
 
         it('should not set the parentStoreInstance', function() {
           expect(storeDetails.parentStoreInstance).toBeUndefined();
+        });
+
+        it('should not set the replenishStoreInstanceId', function() {
+          expect(storeDetails.replenishStoreInstanceId).toBeUndefined();
         });
 
       });
