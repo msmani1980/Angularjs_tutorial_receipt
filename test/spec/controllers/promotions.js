@@ -481,6 +481,7 @@ describe('Controller: PromotionsCtrl', function () {
       it('should return false if passed in station.id is same as departureStation.id', function(){
         scope.repeatableStations.departureHas = [];
         scope.repeatableStations.departureHas[5] = [1,2,3];
+
         expect(scope.disabledArrivalStations({id:5}, {departureStation:{id:5}})).toBe(false);
       });
     });
