@@ -270,6 +270,7 @@ angular.module('ts5App')
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.displayedCashierDate  = dateUtility.formatDateForApp($scope.cashBag.createdOn);
+        cashBagFactory.getStoreInstanceList({id: $scope.cashBag.storeInstanceId}).then(getStoreInstanceListResponseHandler);
       }, showMessage);
     }
 
@@ -289,6 +290,7 @@ angular.module('ts5App')
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.displayedCashierDate  = dateUtility.formatDateForApp($scope.cashBag.createdOn);
         $scope.saveButtonName        = 'Save';
+        cashBagFactory.getStoreInstanceList({id: $scope.cashBag.storeInstanceId}).then(getStoreInstanceListResponseHandler);
       }, showMessage);
     }
 
