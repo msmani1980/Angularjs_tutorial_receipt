@@ -37,12 +37,12 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       scheduleEndDate: 'endDate',
       departureStations: 'departureStationCode',
       arrivalStations: 'arrivalStationCode',
-      storeInstance: 'id',
+      storeInstance: 'storeInstanceId',
       storeStatusId: 'statusId'
     };
 
     $scope.doesStoreInstanceHaveReplenishments = function(store) {
-      return (store.replenishItems && store.replenishItems.length > 0);
+      return (store.replenishments && store.replenishments.length > 0);
     };
 
     $scope.isStoreViewExpanded = function(store) {
@@ -136,7 +136,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     function formatStoreInstanceList() {
-      angular.forEach($scope.storeInstanceList, function(storeInstance, index) {
+      angular.forEach($scope.storeInstanceList, function(storeInstance) {
         storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
         storeInstance.inboundStationCode = getValueByIdInArray(storeInstance.inboundStationId, 'code', $scope.stationList);
         storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
@@ -148,10 +148,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
         storeInstance.selected = false;
-        // TODO: remove once API returns nested replenishedItems structure.
-        if (index === 3 || index === 5) {
-          storeInstance.replenishItems = [$scope.storeInstanceList[0], $scope.storeInstanceList[1]];
-        }
       });
     }
 
@@ -221,7 +217,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           if (key === 'departureStations' || key === 'arrivalStations') {
             payload[value] = lodash.map($scope.search[key], function(station) {
               return station.code;
-            }).join(',');
+            });
           } else {
             payload[value] = angular.copy($scope.search[key]);
           }
