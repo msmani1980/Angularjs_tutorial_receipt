@@ -251,6 +251,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       $q.all(dependenciesArray).then(function() {
         formatStoreInstanceList();
         hideLoadingModal();
+        $scope.isReady = true;
       });
     }
 
