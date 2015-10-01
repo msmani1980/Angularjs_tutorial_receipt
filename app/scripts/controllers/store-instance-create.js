@@ -115,7 +115,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.exitOnSave = function(response) {
       $this.hideLoadingModal();
-      $this.showMessage('success', 'Store Instance created id: ' + response.id);
+      if (!$scope.isEndInstance()) {
+        $this.showMessage('success', 'Store Instance created id: ' + response.id);
+      }
       $location.url('/store-instance-dashboard/');
     };
 
@@ -131,7 +133,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.hideLoadingModal();
       $this.showMessage('success', 'End Store Instance id: ' + $routeParams.storeId);
       $location.url('/store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId);
-
     };
 
     this.createStoreInstanceErrorHandler = function(response) {
@@ -236,13 +237,22 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.createStoreInstanceErrorHandler);
     };
 
+    this.setStatusToInbound = function(saveAndExit) {
+      if (saveAndExit) {
+        this.displayLoadingModal('Loading Store Instance Dashboard');
+        $location.url('/store-instance-dashboard/');
+      } else {
+        this.displayLoadingModal('Loading Inbound Seals');
+        storeInstanceService.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
+          .then(saveAndExit ? this.exitOnSave : this.endStoreInstanceSuccessHandler);
+      }
+    };
+
     $scope.submitForm = function(saveAndExit) {
       $scope.createStoreInstance.$setSubmitted(true);
       if ($this.validateForm()) {
         if ($scope.isEndInstance()) {
-          $this.displayLoadingModal('Loading Inbound Seals');
-          storeInstanceService.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
-            .then($this.endStoreInstanceSuccessHandler());
+          $this.setStatusToInbound(saveAndExit);
         } else {
           $this.createStoreInstance(saveAndExit);
         }
@@ -254,7 +264,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.createStoreInstance[fieldName].$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
-      if ($scope.createStoreInstance[fieldName].$invalid || angular.isDefined($scope.createStoreInstance[fieldName]
+      if ($scope.createStoreInstance[fieldName].$invalid || angular.isDefined($scope.createStoreInstance[
+            fieldName]
           .$error.required)) {
         return 'has-error';
       }
@@ -262,7 +273,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     $scope.validateMenus = function() {
-      if (angular.isUndefined($scope.createStoreInstance.menus) || $scope.createStoreInstance.menus.$pristine && !
+      if (angular.isUndefined($scope.createStoreInstance.menus) || $scope.createStoreInstance.menus.$pristine &&
+        !
         $scope.createStoreInstance.$submitted) {
         return '';
       }
