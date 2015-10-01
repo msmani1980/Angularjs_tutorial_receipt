@@ -16,15 +16,25 @@
     </div>
 
     <div class="panel panel-default collapse no-transition" id="search-collapse">
-      <form name="commissionDataSearchForm" ng-submit="searchCommissionData()">
+      <form name="commissionDataSearchForm">
         <div class="panel-body">
           <div class="row">
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="schedule-number">Crew Base</label>
-                <input ng-model="search.crewBase" type="text" class="form-control" id="schedule-number"
-                       placeholder="T1">
+                <label>Crew Base</label>
+                <ui-select
+                  required="true"
+                  ng-model="search.crewBaseType"
+                  theme="bootstrap"
+                  placeholder="Select crew base">
+                  <ui-select-match
+                    placeholder="Select crew base">{{ $select.selected.name}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="crewBase in crewBaseTypes">
+                    <div ng-bind-html="crewBase.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
               </div>
             </div>
 
@@ -43,7 +53,7 @@
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-          <button type="submit" class="btn btn-primary" ng-click="search()">Search</button>
+          <button type="button" class="btn btn-primary" ng-click="searchCommissionData()">Search</button>
         </div>
       </form>
     </div>

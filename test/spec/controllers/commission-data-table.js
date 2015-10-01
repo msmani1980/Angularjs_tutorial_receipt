@@ -1,39 +1,49 @@
 'use strict';
 
 describe('Controller: CommissionDataTableCtrl', function () {
-  beforeEach(module('ts5App', 'template-module', 'served/commission-payable-list.json', 'served/crew-base-types.json', 'served/discount-types.json', 'served/commission-payable-types.json'));
-  var CommissionDataTableCtrl,
-    commissionPayableListDeferred,
-    commissionPayableListResponseJSON,
-    crewBaseListDeferred,
-    crewBaseListJSON,
-    discountTypesDeferred,
-    discountTypesResponseJSON,
-    commissionPayableTypesDeferred,
-    commissionPayableTypesResponseJSON,
-    commissionFactory,
-    location,
-    scope;
+
+  beforeEach(module('ts5App'));
+  beforeEach(module('template-module'));
+  beforeEach(module('served/commission-payable-list.json'));
+  beforeEach(module('served/crew-base-types.json'));
+  beforeEach(module('served/discount-types.json'));
+  beforeEach(module('served/commission-payable-types.json'));
+
+  var CommissionDataTableCtrl;
+
+  var commissionPayableListDeferred;
+  var commissionPayableTypesDeferred;
+  var discountTypesDeferred;
+  var crewBaseListDeferred;
+
+  var commissionPayableListResponseJSON;
+  var commissionPayableTypesResponseJSON;
+  var discountTypesResponseJSON;
+  var crewBaseListJSON;
+
+  var commissionFactory;
+  var location;
+  var scope;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
 
     inject(function (_servedCommissionPayableList_, _servedCrewBaseTypes_, _servedDiscountTypes_, _servedCommissionPayableTypes_) {
-      commissionPayableListResponseJSON = _servedCommissionPayableList_;
-      crewBaseListJSON = _servedCrewBaseTypes_;
-      discountTypesResponseJSON = _servedDiscountTypes_;
+      commissionPayableListResponseJSON  = _servedCommissionPayableList_;
+      crewBaseListJSON                   = _servedCrewBaseTypes_;
+      discountTypesResponseJSON          = _servedDiscountTypes_;
       commissionPayableTypesResponseJSON = _servedCommissionPayableTypes_;
     });
 
-    location = $location;
-    scope = $rootScope.$new();
+    location          = $location;
+    scope             = $rootScope.$new();
     commissionFactory = $injector.get('commissionFactory');
 
 
-    commissionPayableListDeferred = $q.defer();
+    commissionPayableListDeferred  = $q.defer();
     commissionPayableListDeferred.resolve(commissionPayableListResponseJSON);
-    crewBaseListDeferred = $q.defer();
+    crewBaseListDeferred           = $q.defer();
     crewBaseListDeferred.resolve(crewBaseListJSON);
-    discountTypesDeferred = $q.defer();
+    discountTypesDeferred          = $q.defer();
     discountTypesDeferred.resolve(discountTypesResponseJSON);
     commissionPayableTypesDeferred = $q.defer();
     commissionPayableTypesDeferred.resolve(commissionPayableTypesResponseJSON);
@@ -88,8 +98,14 @@ describe('Controller: CommissionDataTableCtrl', function () {
         expect(scope.search).toBeDefined();
       });
       it('should call getCommissionData with search query', function () {
+        scope.search = {
+          crewBaseType: {
+            id: 'fakeId'
+          }
+        };
+
         scope.searchCommissionData();
-        //expect(commissionFactory.getCommissionDataList).toHaveBeenCalledWith(scope.search);
+        expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith({ crewBaseTypeId: 'fakeId' });
       });
       it('should set commissionData with new response', function () {
         scope.searchCommissionData();
