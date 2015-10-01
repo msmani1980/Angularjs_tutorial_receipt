@@ -210,7 +210,12 @@ angular.module('ts5App', [
   }).when('/retail-company-exchange-rate-setup', {
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'
-  }).otherwise({
+  }).when('/discount-list', {
+    templateUrl: 'views/discount-list.html',
+    controller: 'DiscountListCtrl',
+    controllerAs: 'discountList'
+  })
+  .otherwise({
     redirectTo: '/'
   });
 
