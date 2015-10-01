@@ -11,13 +11,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q, dateUtility) {
 
     this.actions = {};
-    var $this = this;
+    var $this    = this;
 
-    $scope.emptyMenuItems = [];
+    $scope.emptyMenuItems         = [];
     $scope.filteredMasterItemList = [];
-    $scope.addItemsNumber = 1;
-    $scope.readOnly = true;
-    $scope.saveButtonName = 'Exit';
+    $scope.addItemsNumber         = 1;
+    $scope.readOnly               = true;
+    $scope.saveButtonName         = 'Exit';
 
     var nextStep = {
       stepName: '2',
@@ -143,11 +143,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.getStoreInstanceMenuItems = function () {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
-      var payload = {
+      var payload     = {
         itemTypeId: $scope.regularItemTypeId,
         date: payloadDate
       };
-      if($scope.upliftableCharacteristicId) {
+      if ($scope.upliftableCharacteristicId) {
         payload.characteristicId = $scope.upliftableCharacteristicId;
       }
       storeInstanceFactory.getStoreInstanceMenuItems($routeParams.storeId, payload).then(getItemsSuccessHandler, showErrors);
@@ -159,18 +159,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     });
 
-    this.getMasterItemsListSuccess = function(itemsListJSON) {
+    this.getMasterItemsListSuccess = function (itemsListJSON) {
       $scope.masterItemsList = itemsListJSON.masterItems;
     };
 
-    this.getMasterItemsList = function() {
-      var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
+    this.getMasterItemsList = function () {
+      var payloadDate   = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var filterPayload = {
         itemTypeId: $scope.regularItemTypeId,
         startDate: payloadDate,
         endDate: payloadDate
       };
-      if($scope.upliftableCharacteristicId) {
+      if ($scope.upliftableCharacteristicId) {
         filterPayload.characteristicId = $scope.upliftableCharacteristicId;
       }
       storeInstanceFactory.getItemsMasterList(filterPayload).then($this.getMasterItemsListSuccess, showErrors);
@@ -187,7 +187,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return;
       }
       var statusId = statusObject.id;
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusId).then(function(response){
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusId).then(function (response) {
         updateStoreDetails(response, stepObject);
       }, showErrors);
     }
@@ -209,7 +209,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.warnForDuplicateSelection = function (selectedItem) {
       var duplicatesExist = $this.checkForDuplicate(selectedItem);
-      if(duplicatesExist) {
+      if (duplicatesExist) {
         showToast('warning', 'Add Item', 'The item ' + selectedItem.masterItem.itemName + ' has already been added');
       }
     };
@@ -231,7 +231,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.createPayload = function () {
-      var newPayload = {response: []};
+      var newPayload  = {response: []};
       var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
       angular.forEach(mergedItems, function (item) {
         var itemPayload = {
@@ -261,11 +261,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return $this.createPayload();
     };
 
-    this.isInstanceReadOnly = function(){
-      if($scope.storeDetails.currentStatus.name !== '1') {
+    this.isInstanceReadOnly = function () {
+      if ($scope.storeDetails.currentStatus.name !== '1') {
         showToast('warning', 'Store Instance Status', 'This store instance is not ready for packing');
       } else {
-        $scope.readOnly = false;
+        $scope.readOnly       = false;
         $scope.saveButtonName = 'Save & Exit';
       }
     };
@@ -277,23 +277,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.getMasterItemsList();
     };
 
-    this.makeInitializePromises = function() {
+    this.makeInitializePromises = function () {
       var promises = [
         this.getStoreDetails(),
         this.getRegularItemTypeId()
       ];
-      if($routeParams.action === 'replenish') {
+      if ($routeParams.action === 'replenish') {
         promises.push(this.getUpliftableCharacteristicId());
       }
       return promises;
     };
 
-    this.initialize = function() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+    this.initialize = function () {
+      $scope.wizardSteps    = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       showLoadingModal('Loading Store Detail for Packing...');
-      $scope.menuItems = [];
+      $scope.menuItems      = [];
       $scope.emptyMenuItems = [];
-      var promises = $this.makeInitializePromises();
+      var promises          = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies);
     };
 
@@ -325,8 +325,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.emptyMenuItems = [];
       angular.forEach(dataFromAPI.response, function (item) {
         var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId});
-        item.itemCode = angular.isDefined(masterItem) ? masterItem.itemCode : '';
-        item.itemName = angular.isDefined(masterItem) ? masterItem.itemName : '';
+        item.itemCode  = angular.isDefined(masterItem) ? masterItem.itemCode : '';
+        item.itemName  = angular.isDefined(masterItem) ? masterItem.itemName : '';
       });
       getItemsSuccessHandler(dataFromAPI);
 
@@ -341,12 +341,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
-      if (!$scope.storeInstancePackingForm.$valid) {
+      if ($scope.readOnly) {
+        $location.path(dashboardURL);
+        return;
+      }
+      if ($scope.storeInstancePackingForm.$invalid) {
         showToast('danger', 'Save Items', 'All Packed quantities must be a number');
         return false;
       }
       var payload = $this.formatStoreInstanceItemsPayload();
-      if(!payload) {
+      if (!payload) {
         return;
       }
       showLoadingModal('Saving...');
@@ -356,7 +360,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.saveAndExit = function () {
-      if($scope.readOnly) {
+      if ($scope.readOnly) {
         $location.path(dashboardURL);
       } else {
         $scope.savePackingDataAndUpdateStatus(false);
@@ -365,7 +369,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.goToPreviousStep = function () {
       $location.path(prevStep.URL);
-      // TODO: show warning modal before leaving
     };
 
     $scope.goToNextStep = function () {
