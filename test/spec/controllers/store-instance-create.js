@@ -578,7 +578,7 @@ describe('Store Instance Create Controller', function() {
     it('should return .has-error if there are no menus', function() {
       $scope.formData.menus = [];
       $scope.$digest();
-      $scope.createStoreInstance.Menus.$setViewValue([]);
+      $scope.createStoreInstance.menus.$setViewValue([]);
       mockFormSubmission(form);
       var className = $scope.validateMenus();
       expect(className).toEqual('has-error');
@@ -589,7 +589,7 @@ describe('Store Instance Create Controller', function() {
         id: 100,
         name: 'ABC43124'
       }];
-      $scope.createStoreInstance.Menus.$setViewValue($scope.formData.menus);
+      $scope.createStoreInstance.menus.$setViewValue($scope.formData.menus);
       $scope.formData.menus = menus;
 
       var className = $scope.validateMenus();

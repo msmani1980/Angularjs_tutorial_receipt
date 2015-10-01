@@ -222,9 +222,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
         return true;
       }
-      if ($scope.isEndInstance) {
-        return true;
-      }
       $scope.displayError = true;
       return false;
     };
@@ -266,15 +263,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     $scope.validateMenus = function() {
-      if (angular.isUndefined($scope.createStoreInstance.Menus) || $scope.createStoreInstance.Menus.$pristine && !
+      if (angular.isUndefined($scope.createStoreInstance.menus) || $scope.createStoreInstance.menus.$pristine && !
         $scope.createStoreInstance.$submitted) {
         return '';
       }
       if ($scope.formData.menus.length === 0) {
-        $scope.createStoreInstance.Menus.$setValidity('required', false);
+        $scope.createStoreInstance.menus.$setValidity('required', false);
         return 'has-error';
       }
-      $scope.createStoreInstance.Menus.$setValidity('required', true);
+      $scope.createStoreInstance.menus.$setValidity('required', true);
       return 'has-success';
     };
 
