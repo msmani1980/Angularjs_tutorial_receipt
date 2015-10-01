@@ -128,7 +128,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.menuList = [];
 
       if(parentStoreInstanceAPIResponse) {
-        storeDetails.parentStoreInstance = parentStoreInstanceAPIResponse.response;
+        storeDetails.replenishStoreInstanceId = storeInstanceAPIResponse.replenishStoreInstanceId;
+        storeDetails.parentStoreInstance = parentStoreInstanceAPIResponse;
       }
 
       var storeMenus = (parentStoreInstanceAPIResponse ? angular.copy(parentStoreInstanceAPIResponse.menus) : angular.copy(storeInstanceAPIResponse.menus));

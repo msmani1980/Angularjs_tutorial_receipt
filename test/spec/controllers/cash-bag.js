@@ -10,6 +10,7 @@ describe('Controller: CashBagCtrl', function () {
   beforeEach(module('served/daily-exchange-rates.json'));
   beforeEach(module('served/company-preferences.json'));
   beforeEach(module('served/store-instance.json'));
+  beforeEach(module('served/store.json'));
 
   var CashBagEditCtrl;
   var scope;
@@ -22,6 +23,7 @@ describe('Controller: CashBagCtrl', function () {
   var getDailyExchangeRatesDeferred;
   var getCompanyPreferencesDeferred;
   var getStoreInstanceListDeferred;
+  var getStoreListDeferred;
 
   var cashBagResponseJSON;
   var companyResponseJSON;
@@ -29,18 +31,21 @@ describe('Controller: CashBagCtrl', function () {
   var dailyExchangeRatesResponseJSON;
   var getCompanyPreferencesJSON;
   var getStoreInstanceListJSON;
+  var getStoreListJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $q, _cashBagFactory_) {
     scope = $rootScope.$new();
 
-    inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedCompanyPreferences_, _servedStoreInstance_) {
+    inject(function (_servedCashBag_, _servedCompany_, _servedCompanyCurrencyGlobals_, _servedDailyExchangeRates_, _servedCompanyPreferences_, _servedStoreInstance_,
+                     _servedStore_) {
       cashBagResponseJSON                = _servedCashBag_;
       companyResponseJSON                = _servedCompany_;
       companyCurrencyGlobalsResponseJSON = _servedCompanyCurrencyGlobals_;
       dailyExchangeRatesResponseJSON     = _servedDailyExchangeRates_;
       getCompanyPreferencesJSON          = _servedCompanyPreferences_;
       getStoreInstanceListJSON           = _servedStoreInstance_;
+      getStoreListJSON                   = _servedStore_;
     });
 
     cashBagFactory = _cashBagFactory_;
@@ -71,6 +76,10 @@ describe('Controller: CashBagCtrl', function () {
     getStoreInstanceListDeferred = $q.defer();
     getStoreInstanceListDeferred.resolve(getStoreInstanceListJSON);
     spyOn(cashBagFactory, 'getStoreInstanceList').and.returnValue(getStoreInstanceListDeferred.promise);
+
+    getStoreListDeferred = $q.defer();
+    getStoreListDeferred.resolve(getStoreListJSON);
+    spyOn(cashBagFactory, 'getStoreList').and.returnValue(getStoreListDeferred.promise);
 
     spyOn(cashBagFactory, 'deleteCashBag').and.returnValue(getCompanyDeferred.promise);
 
