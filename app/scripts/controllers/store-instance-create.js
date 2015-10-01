@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, ngToast, dateUtility, GlobalMenuService,
-    storeInstanceWizardConfig, $location, schedulesService, menuCatererStationsService, lodash) {
+    storeInstanceWizardConfig, $location, schedulesService, menuCatererStationsService, lodash, storeInstanceService) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -127,6 +127,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
+    this.endStoreInstanceSuccessHandler = function() {
+      $this.hideLoadingModal();
+      $this.showMessage('success', 'End Store Instance id: ' + $routeParams.storeId);
+      $location.url('/store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId);
+
+    };
+
     this.createStoreInstanceErrorHandler = function(response) {
       $this.hideLoadingModal();
       $scope.displayError = true;
@@ -235,7 +242,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.submitForm = function(saveAndExit) {
       $scope.createStoreInstance.$setSubmitted(true);
       if ($this.validateForm()) {
-        $this.createStoreInstance(saveAndExit);
+        if ($scope.isEndInstance()) {
+          $this.displayLoadingModal('One Moment Please...');
+          console.log($routeParams.storeId, 3, $scope.formData.cateringStationId);
+          storeInstanceService.updateStoreInstanceStatus($routeParams.storeId, 3, $scope.formData.cateringStationId)
+            .then($this.endStoreInstanceSuccessHandler());
+        } else {
+          $this.createStoreInstance(saveAndExit);
+        }
       }
       return false;
     };
