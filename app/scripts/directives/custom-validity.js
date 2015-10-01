@@ -11,7 +11,7 @@ angular.module('ts5App')
     var patternsJSON = {
       word: [/^[\w\s]+$/, 'Error message for word'],
       bit: [/^(0|1)$/, 'Error message for bit'],
-      number: [/^-?([0-9]*)$/, 'Error message for number'],
+      number: [/^([0-9]*)$/, 'Error message for number'],
       numberUpToFiveChars: [/^-?([0-9]{0,5})$/, 'This field can only contain numbers with up to 5 digits'],
       alpha: [/^[a-zA-z]+$/, 'Error message for alpha'],
       alphanumeric: [/^[a-zA-Z0-9]+$/, 'Error message for alphanumeric'],
