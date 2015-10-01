@@ -52,7 +52,7 @@
         <div class="form-group">
           <ui-select name="scheduleNumber" required ng-model="formData.scheduleNumber" theme="bootstrap" id="scheduleNumber" ng-disabled="isEndInstance()">
             <ui-select-match placeholder="Select a schedule">{{ $select.selected.scheduleNumber }}</ui-select-match>
-            <ui-select-choices repeat="schedule in scheduleNumbers | filter: {scheduleNumber:$select.search} | orderBy:'scheduleNumber' track by schedule.scheduleNumber" ui-lock-choice="isDisabled()">
+            <ui-select-choices repeat="schedule in scheduleNumbers | filter: {scheduleNumber:$select.search} | orderBy:'scheduleNumber' track by schedule.id" ui-lock-choice="isDisabled()">
               <div ng-bind-html="schedule.scheduleNumber | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>

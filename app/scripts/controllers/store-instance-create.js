@@ -21,8 +21,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       scheduleDate: dateUtility.nowFormatted(),
       menus: []
     };
-    $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
-    $scope.action = $routeParams.action;
 
     // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
     var companyId = GlobalMenuService.company.get();
@@ -227,7 +225,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
         return true;
       }
-      if ($scope.isEndInstance) {
+      if ($scope.isEndInstance()) {
         return true;
       }
       $scope.displayError = true;
@@ -264,15 +262,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     $scope.validateMenus = function() {
-      if (angular.isUndefined($scope.createStoreInstance.Menus) || $scope.createStoreInstance.Menus.$pristine && !
+      if (angular.isUndefined($scope.createStoreInstance.menus) || $scope.createStoreInstance.menus.$pristine && !
         $scope.createStoreInstance.$submitted) {
         return '';
       }
       if ($scope.formData.menus.length === 0) {
-        $scope.createStoreInstance.Menus.$setValidity('required', false);
+        $scope.createStoreInstance.menus.$setValidity('required', false);
         return 'has-error';
       }
-      $scope.createStoreInstance.Menus.$setValidity('required', true);
+      $scope.createStoreInstance.menus.$setValidity('required', true);
       return 'has-success';
     };
 
@@ -292,11 +290,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (!apiData || !apiData.meta.count) {
         return;
       }
-      $scope.scheduleNumbers = apiData.schedules.map(function(schedule) {
-        return {
-          scheduleNumber: schedule.scheduleNumber
-        };
-      });
+      $scope.scheduleNumbers = angular.copy(apiData.schedules);
     };
 
     this.getScheduleNumbersPromise = function() {
@@ -371,6 +365,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.init = function() {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       if ($routeParams.storeId) {
         this.loadStoreInstance();
       } else {
