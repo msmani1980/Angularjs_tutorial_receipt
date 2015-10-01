@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('PromotionsCtrl', function ($scope, $routeParams, $q, $filter, $timeout,
-                                          promotionsFactory, ngToast, dateUtility) {
+                                          promotionsFactory, dateUtility) {
 
     $scope.readOnly = true;
     $scope.editing = false;
@@ -95,13 +95,6 @@ angular.module('ts5App')
         }
         return retailItem;
       });
-    }
-
-    function showMessage(message, messageType) {
-      if(!messageType){
-        messageType = 'info';
-      }
-      ngToast.create({className: messageType, dismissButton: true, content: '<strong>Promotion</strong>: ' + message});
     }
 
     function displayLoadingModal(loadingText) {
@@ -318,7 +311,10 @@ angular.module('ts5App')
         $scope.formErrors = response.data;
         return;
       }
-      throwError('500error', 'Unable to connect to APIs');
+      $scope.formErrors = [{
+        field: 'Response',
+        value: '500 Error'
+      }];
     }
 
     function throwError(field, message){
@@ -498,7 +494,6 @@ angular.module('ts5App')
 
     function initPromisesResolved(){
       hideLoadingModal();
-      showMessage('Promotion loaded');
       $scope.readOnly = ($routeParams.state === 'view');
       if(_promotionFromAPI){
         setScopePromotionForViewFromAPIdata();
@@ -556,13 +551,19 @@ angular.module('ts5App')
       $scope.displayError = false;
     }
 
+    function uiSelectRequiredFieldsValid(){
+      if(!$scope.promotionsForm.QualifierType.$modelValue.id){
+        $scope.promotionsForm.QualifierType.$setValidity('required', false);
+      }
+      if(!$scope.promotionsForm.BenefitType.$modelValue.id){
+        $scope.promotionsForm.BenefitType.$setValidity('required', false);
+      }
+    }
+
     function formValid() {
       resetErrors();
-      if ($scope.promotionsForm.$valid) {
-        return true;
-      }
-      $scope.displayError = true;
-      return false;
+      uiSelectRequiredFieldsValid();
+      return $scope.promotionsForm.$valid;
     }
 
     function savePromotion(){
@@ -651,9 +652,6 @@ angular.module('ts5App')
         return false;
       }
       var stationId = stations[stationTypeProp].id;
-      if(station.id === stationId){
-        return true;
-      }
       if(!$scope.repeatableStations[stationHasProp][stationId]){
         return false;
       }
@@ -798,6 +796,7 @@ angular.module('ts5App')
         return false;
       }
       if(!formValid()) {
+        $scope.displayError = true;
         return false;
       }
       var initState = $routeParams.state + 'Save';

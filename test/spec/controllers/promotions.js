@@ -272,10 +272,10 @@ describe('Controller: PromotionsCtrl', function () {
         scope.repeatableStations.arrivalHas[5] = [1,2,3];
         expect(scope.disabledDepartureStations({id:2}, {arrivalStation:{id:5}})).toBe(true);
       });
-      it('should return true if passed in station.id is same as arrivalStation.id', function(){
+      it('should return false if passed in station.id is same as arrivalStation.id', function(){
         scope.repeatableStations.arrivalHas = [];
         scope.repeatableStations.arrivalHas[5] = [1,2,3];
-        expect(scope.disabledDepartureStations({id:5}, {arrivalStation:{id:5}})).toBe(true);
+        expect(scope.disabledDepartureStations({id:5}, {arrivalStation:{id:5}})).toBe(false);
       });
     });
 
@@ -478,10 +478,11 @@ describe('Controller: PromotionsCtrl', function () {
         scope.repeatableStations.departureHas[5] = [1,2,3];
         expect(scope.disabledArrivalStations({id:2}, {departureStation:{id:5}})).toBe(true);
       });
-      it('should return true if passed in station.id is same as departureStation.id', function(){
+      it('should return false if passed in station.id is same as departureStation.id', function(){
         scope.repeatableStations.departureHas = [];
         scope.repeatableStations.departureHas[5] = [1,2,3];
-        expect(scope.disabledArrivalStations({id:5}, {departureStation:{id:5}})).toBe(true);
+
+        expect(scope.disabledArrivalStations({id:5}, {departureStation:{id:5}})).toBe(false);
       });
     });
 
@@ -529,7 +530,11 @@ describe('Controller: PromotionsCtrl', function () {
 
     describe('save scope function', function(){
       beforeEach(function(){
-        scope.promotionsForm = {$valid:true};
+        scope.promotionsForm = {
+          $valid:true,
+          QualifierType: { $modelValue: {id: 1} },
+          BenefitType: { $modelValue: {id: 1} }
+        };
       });
       it('should call create with formatted payload 1', function(){
         scope.promotion = {
@@ -930,7 +935,11 @@ describe('Controller: PromotionsCtrl', function () {
           $routeParams: routeParams
         });
         scope.$digest();
-        scope.promotionsForm = {$valid:true};
+        scope.promotionsForm = {
+          $valid:true,
+          QualifierType: { $modelValue: {id: 1} },
+          BenefitType: { $modelValue: {id: 1} }
+        };
       }));
       it('should call get promotion API', function(){
         expect(promotionsFactory.getPromotion).toHaveBeenCalledWith(253);
@@ -940,7 +949,12 @@ describe('Controller: PromotionsCtrl', function () {
         expect(promotionsFactory.savePromotion).toHaveBeenCalled();
       });
       it('should return false if form.$invalid', function(){
-        scope.promotionsForm = {$valid:false};
+        scope.promotionsForm = {
+          $invalid:true,
+          $valid:false,
+          QualifierType: { $modelValue: {id: null}, $setValidity:function(){} },
+          BenefitType: { $modelValue: {id: null}, $setValidity:function(){} }
+        };
         expect(scope.save()).toBe(false);
       });
     });

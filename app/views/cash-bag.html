@@ -1,53 +1,69 @@
 <div class="fluid-container module-container">
-  <h1><span style="text-transform: capitalize" class="controller-state">{{ state }}</span> {{ viewName }}</h1>
+  <h1><span class="controller-state text-capitalize">{{ state }}</span> {{ ::viewName }}</h1>
 
-  <h2>{{ company.companyName }} <small>Flight {{ cashBag.scheduleNumber }} <small><date class="text-right">{{ displayedScheduleDate }}</date></small></small></h2>
-
-  <form name="cashBagCreateForm" class="form edit-form">
-
-    <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-      </button>
+  <div class="row row-as-table">
+    <div class="col-xs-6">
+      <h3>
+        {{ company.companyName }}
+        <small>Flight {{ cashBag.scheduleNumber }}</small>
+        <small>{{ displayedScheduleDate }}</small>
+      </h3>
+    </div>
+    <div class="type-info col-xs-6 text-right">
       <h4>
-        We weren't able to {{ state }} your cash bag!
+        Store Number:
+        <small>{{ cashBag.storeNumber }}</small>
+        Store Instance:
+        <small>{{ cashBag.storeInstanceId }}</small>
       </h4>
-
-      <ul>
-        <li ng-repeat="error in form.$error.required">
-          <strong>{{ error.$name }}</strong> is required
-        </li>
-        <li ng-repeat="error in form.$error.pattern">
-          <strong>{{ error.$name }}</strong> is invalid
-        </li>
-        <li ng-show="formErrors" ng-repeat="error in formErrors">
-          <strong>{{error.field}}</strong>
-          <span> {{ error.value }}</span>
-          <span> {{ error.code }}</span>
-        </li>
-      </ul>
     </div>
+  </div>
+  <div ng-if="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+    </button>
+    <h4>
+      We weren't able to {{ state }} your cash bag!
+    </h4>
 
-    <div ng-show="isCashBagDeleted()" class="alert alert-danger" role="alert">
-      This cash bag has been deleted!
-    </div>
+    <ul>
+      <li ng-repeat="error in form.$error.required">
+        <strong>{{ error.$name }}</strong> is required
+      </li>
+      <li ng-repeat="error in form.$error.pattern">
+        <strong>{{ error.$name }}</strong> is invalid
+      </li>
+      <li ng-show="formErrors" ng-repeat="error in formErrors">
+        <strong>{{error.field}}</strong>
+        <span> {{ error.value }}</span>
+        <span> {{ error.code }}</span>
+      </li>
+    </ul>
+  </div>
 
-    <div class="panel panel-default">
+  <div ng-if="isCashBagDeleted()" class="alert alert-danger" role="alert">
+    This cash bag has been deleted!
+  </div>
 
-      <div class="panel-heading">
-        <div class="row">
-          <div class="col-sm-6">
-            <div>Cash Handler Base Currency: {{ currencyCodes[cashHandlerCompany.baseCurrencyId] }}</div>
-            <div>Airline Base Currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
-          </div>
-          <div class="col-sm-6 text-right">
-            <div>Cashier's entry date: <date>{{ displayedCashierDate }}</date></div>
+  <div class="panel panel-default">
+
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-sm-6">
+          <div>Cash Handler Base Currency: {{ currencyCodes[cashHandlerCompany.baseCurrencyId] }}</div>
+          <div>Airline Base Currency: {{ currencyCodes[company.baseCurrencyId] }}</div>
+        </div>
+        <div class="col-sm-6 text-right">
+          <div>Cashier's entry date:
+            <date>{{ displayedCashierDate }}</date>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="panel-body">
+    <div class="panel-body">
+      <form name="cashBagCreateForm" class="form edit-form">
 
-        <div class="row form-group">
+        <div class="row">
           <div class="col-sm-4">
             <label for="cashBagNumber">Cash Bag #</label>
             <input custom-pattern="regexp.alpha"
@@ -70,7 +86,7 @@
                    name="totalCashBags"
                    class="form-control"
                    id="totalCashBags"
-                   ng-model="cashBag.totalCashBags",
+                   ng-model="cashBag.totalCashBags"
                    ng-readonly="readOnly"/>
           </div>
 
@@ -83,7 +99,7 @@
                    name="bankReferenceNumber"
                    class="form-control"
                    id="bankReferenceNumber"
-                   ng-model="cashBag.bankReferenceNumber",
+                   ng-model="cashBag.bankReferenceNumber"
                    ng-readonly="readOnly"/>
           </div>
         </div>
@@ -122,23 +138,19 @@
             </tbody>
           </table>
         </div>
-      </div>
-
-      <div class="panel-footer text-center">
-        <button class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly" type="button">Cancel</button>
-        <button class="btn btn-primary" ng-click="formSave(cashBag)" ng-hide="readOnly">
-          <span class="fa fa-check-square-o" aria-hidden="true"></span>
-          <span class="hidden-xs">{{ saveButtonName }}</span>
-        </button>
-        <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="showDeleteButton" ng-disabled="readOnly">Delete</button>
-      </div>
-
+      </form>
     </div>
 
-    <leave-view-modal></leave-view-modal>
-
-
-  </form>
+    <div class="panel-footer text-center">
+      <button class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly" type="button">Cancel</button>
+      <button class="btn btn-primary" ng-click="formSave(cashBag)" ng-hide="readOnly">
+        <span class="fa fa-check-square-o" aria-hidden="true"></span>
+        <span class="hidden-xs">{{ saveButtonName }}</span>
+      </button>
+      <button type="button" class="btn btn-danger" ng-click="deleteRecordDialog(cashBag)" ng-show="showDeleteButton" ng-disabled="readOnly">Delete</button>
+    </div>
+  </div>
+  <leave-view-modal></leave-view-modal>
 </div>
 <dynamic-left-nav title="Cash Management"></dynamic-left-nav>
 <delete-record-dialog></delete-record-dialog>

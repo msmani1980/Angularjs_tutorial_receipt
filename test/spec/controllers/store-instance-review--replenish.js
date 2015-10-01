@@ -147,11 +147,6 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
           sealNumbers: ['123']
         },
         {
-          name: 'Hand Over',
-          bgColor: '#E5E500',
-          sealNumbers: []
-        },
-        {
           name: 'High Security',
           bgColor: '#B70024',
           sealNumbers: []

@@ -4,7 +4,7 @@
 
   <form-error-dialog></form-error-dialog>
 
-  <form name="storeInstancePackingForm">
+  <form name="storeInstancePackingForm" ng-submit="savePackingDataAndUpdateStatus(true)">
 
     <!-- INFORMATION BAR -->
     <store-instance-header></store-instance-header>
@@ -14,10 +14,10 @@
         <p class="input-group">
           <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-disabled="true">
-              <i class="fa fa-filter"></i> Filter By
+            <i class="fa fa-filter"></i> Filter By
           </button>
           </span>
-          <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details" placeholder="Type an item code or name" />
+          <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details" placeholder="Type an item code or name"/>
         </p>
       </div>
     </div>
@@ -46,7 +46,15 @@
                    disabled/>
           </td>
           <td>
-            <input type="text" id="templateQuantity-{{$index}}" custom-validity custom-pattern="number" required="true" class="form-control" ng-model="item.quantity" ng-disabled="readOnly" maxlength="5">
+            <input type="text"
+                   name="templateQuantity-{{$index}}"
+                   custom-validity
+                   custom-pattern="number"
+                   required="true"
+                   class="form-control"
+                   ng-model="item.quantity"
+                   ng-disabled="readOnly"
+                   maxlength="5"/>
           </td>
           <td>
             <button type="button" ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
@@ -56,22 +64,22 @@
         </tr>
 
         <tr ng-repeat="item in emptyMenuItems track by $index" ng-hide="readOnly">
-        <td>
-          <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
-            <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{ $select.selected.itemName }}
-            </ui-select-match>
-            <ui-select-choices repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
-              <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
+          <td>
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
+              <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{ $select.selected.itemName }}
+              </ui-select-match>
+              <ui-select-choices repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
 
-        </td>
-        <td>
-          <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
-        </td>
-        <td>
-          <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" maxlength="5">
-        </td>
+          </td>
+          <td>
+            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
+          </td>
+          <td>
+            <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" maxlength="5">
+          </td>
           <td ng-init="item.index = $index">
             <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
               <i class="fa fa-close"></i>
@@ -104,7 +112,7 @@
         <i class="fa fa-arrow-left"></i>
         <span class="btn-label">Prev</span>
       </button>
-      <button type="button" ng-click="goToNextStep(false)" class="btn btn-success">
+      <button type="submit" class="btn btn-success">
         <span class="btn-label">Next</span>
         <i class="fa fa-arrow-right"></i>
       </button>

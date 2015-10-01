@@ -9,11 +9,11 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, factoryHelper, dateUtility) {
+  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, dateUtility) {
 
     // controller global properties
-    var _companyId     = null;
-    var _factoryHelper = factoryHelper;
+    var _companyId = null;
+    var _promises  = [];
 
     // scope properties
     $scope.viewName              = 'Cash Bag';
@@ -132,11 +132,17 @@ angular.module('ts5App')
       return ($scope.state !== 'create' && $scope.cashBag && $scope.cashBag.isDelete === 'true');
     };
 
+    function getStoreResponseHandler(dataFromAPI) {
+      var storeData              = angular.copy(dataFromAPI);
+      $scope.cashBag.storeNumber = storeData.storeNumber;
+    }
+
     function getStoreInstanceListResponseHandler(dataFromAPI) {
       var storeInstanceData         = angular.copy(dataFromAPI);
       $scope.displayedScheduleDate  = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       $scope.cashBag.scheduleNumber = storeInstanceData.scheduleNumber;
       $scope.cashBag.scheduleDate   = moment(storeInstanceData.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
+      cashBagFactory.getStoreList({id: storeInstanceData.storeId}).then(getStoreResponseHandler);
     }
 
     function promisesResponseHandler() {
@@ -159,10 +165,83 @@ angular.module('ts5App')
       }
     }
 
+    function getCashBag() {
+      _promises.push(
+        cashBagFactory.getCashBag($routeParams.id).then(function (response) {
+          $scope.cashBag          = angular.copy(response);
+          $scope.displayError     = false;
+          $scope.formErrors       = {};
+          $scope.showDeleteButton = canDelete(response);
+
+          if ($scope.cashBag.eposCashBagsId === null) {
+            $scope.flightAmount = '0.0000';
+          } else {
+            // TODO: API call to get flight amount based on eposCashBagsId
+            $scope.flightAmount = '-';
+          }
+        })
+      );
+    }
+
+    function getCompany() {
+      _promises.push(
+        cashBagFactory.getCompany(_companyId).then(function (response) {
+          $scope.company = response;
+        })
+      );
+    }
+
+    function getCashHandlerCompany() {
+      // TODO: get correct cash handler company
+      _promises.push(
+        cashBagFactory.getCompany(362).then(function (response) {
+          $scope.cashHandlerCompany = angular.copy(response);
+        })
+      );
+
+    }
+
+    function getCompanyCurrencies() {
+      _promises.push(
+        cashBagFactory.getCompanyCurrencies().then(function (response) {
+          $scope.companyCurrencies = angular.copy(response.response);
+          $scope.currencyCodes     = [];
+          angular.forEach(response.response, function (currency) {
+            $scope.currencyCodes[currency.id] = currency.code;
+          });
+        })
+      );
+    }
+
+    function getDailyExchangeRates() {
+      _promises.push(
+        cashBagFactory.getDailyExchangeRates(_companyId, moment().format('YYYYMMDD')).then(function (response) {
+          $scope.dailyExchangeRates = angular.copy(response.dailyExchangeRates);
+        })
+      );
+    }
+
+    function getCompanyPreferences() {
+      _promises.push(
+        cashBagFactory.getCompanyPreferences().then(function (response) {
+          $scope.companyPreferences = angular.copy(response.preferences);
+        })
+      );
+    }
+
+    function setCreatePromises() {
+      getCompany();
+      getCashHandlerCompany();
+      getCompanyCurrencies();
+      getDailyExchangeRates();
+      getCompanyPreferences();
+    }
+
     // CRUD - Create
     function create() {
-      var _promises = _factoryHelper.callServices(['getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getDailyExchangeRates', 'getCompanyPreferences']);
+      setCreatePromises();
       cashBagFactory.getStoreInstanceList({id: $routeParams.storeInstanceId}).then(getStoreInstanceListResponseHandler);
+
 
       $scope.readOnly             = false;
       $scope.cashBag              = {
@@ -174,95 +253,51 @@ angular.module('ts5App')
       $scope.displayedCashierDate = dateUtility.formatDateForApp(dateUtility.now(), 'x');
       $scope.saveButtonName       = 'Create';
 
-      $q.all(_promises).then(promisesResponseHandler);
+      $q.all(_promises).then(promisesResponseHandler, showMessage);
+    }
+
+    function setReadPromises() {
+      getCashBag();
+      getCompany();
+      getCashHandlerCompany();
+      getCompanyCurrencies();
+      getCompanyPreferences();
     }
 
     // CRUD - Read
     function read() {
-      var _promises = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
+      setReadPromises();
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.displayedCashierDate  = dateUtility.formatDateForApp($scope.cashBag.createdOn);
-      });
+        cashBagFactory.getStoreInstanceList({id: $scope.cashBag.storeInstanceId}).then(getStoreInstanceListResponseHandler);
+      }, showMessage);
+    }
+
+    function setUpdatePromises() {
+      getCashBag();
+      getCompany();
+      getCashHandlerCompany();
+      getCompanyCurrencies();
+      getCompanyPreferences();
     }
 
     // CRUD - Update
     function update() {
+      setUpdatePromises();
       $scope.readOnly = false;
-      var _promises   = _factoryHelper.callServices(['getCashBag', 'getCompany', 'getCashHandlerCompany', 'getCompanyCurrencies', 'getCompanyPreferences']);
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.displayedCashierDate  = dateUtility.formatDateForApp($scope.cashBag.createdOn);
         $scope.saveButtonName        = 'Save';
-      });
+        cashBagFactory.getStoreInstanceList({id: $scope.cashBag.storeInstanceId}).then(getStoreInstanceListResponseHandler);
+      }, showMessage);
     }
 
     // Constructor
     function init() {
       // set global controller properties
-      _companyId = cashBagFactory.getCompanyId();
-      // in object of our services, to be called with the factory helper
-      var services = {
-        getCashBag: function () {
-          return cashBagFactory.getCashBag($routeParams.id).then(
-            function (response) {
-              $scope.cashBag          = angular.copy(response);
-              $scope.displayError     = false;
-              $scope.formErrors       = {};
-              $scope.showDeleteButton = canDelete(response);
-
-              if ($scope.cashBag.eposCashBagsId === null) {
-                $scope.flightAmount = '0.0000';
-              } else {
-                // TODO: API call to get flight amount based on eposCashBagsId
-                $scope.flightAmount = '-';
-
-              }
-            },
-            showMessage
-          );
-        },
-        getCompany: function () {
-          return cashBagFactory.getCompany(_companyId).then(
-            function (response) {
-              $scope.company = response;
-            }
-          );
-        },
-        getCashHandlerCompany: function () {
-          // TODO: get correct cash handler company
-          return cashBagFactory.getCompany(362).then(
-            function (response) {
-              $scope.cashHandlerCompany = angular.copy(response);
-            }
-          );
-        },
-        getCompanyCurrencies: function () {
-          return cashBagFactory.getCompanyCurrencies().then(
-            function (response) {
-              $scope.companyCurrencies = angular.copy(response.response);
-              $scope.currencyCodes     = [];
-              angular.forEach(response.response, function (currency) {
-                $scope.currencyCodes[currency.id] = currency.code;
-              });
-            }
-          );
-        },
-        getDailyExchangeRates: function () {
-          return cashBagFactory.getDailyExchangeRates(_companyId, moment().format('YYYYMMDD')).then(
-            function (response) {
-              $scope.dailyExchangeRates = angular.copy(response.dailyExchangeRates);
-            }
-          );
-        },
-        getCompanyPreferences: function () {
-          return cashBagFactory.getCompanyPreferences().then(function (response) {
-            $scope.companyPreferences = angular.copy(response.preferences);
-          });
-        }
-      };
-
-      _factoryHelper.setServices(services);
+      _companyId   = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;
       switch ($routeParams.state) {
         case 'create':
