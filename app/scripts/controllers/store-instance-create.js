@@ -240,9 +240,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.createStoreInstance.$setSubmitted(true);
       if ($this.validateForm()) {
         if ($scope.isEndInstance()) {
-          $this.displayLoadingModal('One Moment Please...');
-          console.log($routeParams.storeId, 3, $scope.formData.cateringStationId);
-          storeInstanceService.updateStoreInstanceStatus($routeParams.storeId, 3, $scope.formData.cateringStationId)
+          $this.displayLoadingModal('Loading Inbound Seals');
+          storeInstanceService.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
             .then($this.endStoreInstanceSuccessHandler());
         } else {
           $this.createStoreInstance(saveAndExit);
