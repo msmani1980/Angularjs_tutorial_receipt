@@ -158,8 +158,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.menusFromApi = function(menus) {
       var newMenus = [];
       angular.forEach(menus, function(menu) {
+        var existingMenu = $scope.menuMasterList.filter(function(menuMaster) {
+          return menuMaster.id === menu.menuMasterId;
+        })[0];
         newMenus.push({
-          id: menu.menuMasterId
+          id: menu.menuMasterId,
+          menuCode: existingMenu.menuCode
         });
       });
       return newMenus;
@@ -211,7 +215,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
         return true;
       }
-      if ($routeParams.action === 'end-instance') {
+      if ($scope.isEndInstance) {
         return true;
       }
       $scope.displayError = true;
@@ -252,7 +256,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $scope.createStoreInstance.$submitted) {
         return '';
       }
-      if ($scope.formData.menus.length === 0 && $scope.action !== 'end-instance') {
+      if ($scope.formData.menus.length === 0) {
         $scope.createStoreInstance.Menus.$setValidity('required', false);
         return 'has-error';
       }
@@ -270,10 +274,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     $scope.isReplenish = function() {
       return $routeParams.action === 'replenish';
-    };
-
-    $scope.scheduleNumberIsReadOnly = function() {
-      return $scope.isEndInstance || $scope.isReplenish();
     };
 
     this.setScheduleNumbers = function(apiData) {
@@ -315,7 +315,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     }
 
     this.setDependencies = function(response) {
-      $this.setStoreInstanceData(response[5]);
       $this.menuMasterResponseHandler(response[0]);
       $this.setCatererStationList(response[1]);
       $this.setStoresList(response[2]);
@@ -325,7 +324,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getLoadStorePromises = function() {
-      console.log('getLoadStorePromises');
       return [
         $this.getMenuMasterListPromise(),
         $this.getCatererStationListPromise(),
@@ -357,7 +355,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $q.all(dependencyPromises).then(function(response) {
           $this.setDependencies(response);
           $this.setUIReady();
-          console.log($scope.formData);
         });
       } else {
         this.getCatererStationList();
