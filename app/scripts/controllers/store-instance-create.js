@@ -19,7 +19,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.scheduleNumbers = [];
     $scope.formData = {
       scheduleDate: dateUtility.nowFormatted(),
-      scheduleNumbers: [],
       menus: []
     };
     $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
@@ -115,14 +114,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.exitOnSave = function(response) {
       $this.hideLoadingModal();
-      $this.showMessage('success', 'Store Instance created id: ' + response.id);
+      $this.showMessage('success', 'Store '+ $routeParams.action + ' ' + response.id +' created!');
       $location.url('/store-instance-dashboard/');
     };
 
     this.createStoreInstanceSuccessHandler = function(response) {
       $this.hideLoadingModal();
       if (response.id) {
-        $this.showMessage('success', 'Store Instance created id: ' + response.id);
+        $this.showMessage('success', 'Store '+ $routeParams.action + ' ' + response.id + ' created!');
         $location.url('/store-instance-packing/' + $routeParams.action + '/' + response.id);
       }
     };
@@ -169,14 +168,27 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return newMenus;
     };
 
+    this.formatDispatchPayload = function(payload) {
+      payload.menus = this.formatMenus(payload.menus);
+    };
+
+    this.formatReplenishPayload = function(payload) {
+      payload.replenishStoreInstanceId = $routeParams.storeId;
+      delete payload.storeId;
+      delete payload.menus;
+    };
+
     this.formatPayload = function() {
       var payload = angular.copy($scope.formData);
-      payload.menus = this.formatMenus(payload.menus);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
-
-      if (payload.scheduleNumbers) {
-        delete payload.scheduleNumbers;
+      switch($routeParams.action) {
+        case 'replenish':
+          $this.formatReplenishPayload(payload);
+        break;
+        default:
+          $this.formatDispatchPayload(payload);
+        break;
       }
       return payload;
     };
@@ -223,7 +235,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.createStoreInstance = function(saveAndExit) {
-      this.displayLoadingModal('Creating a store instance');
+      this.displayLoadingModal('Creating a store '+ $routeParams.action);
       var payload = this.formatPayload();
       if (!payload) {
         return false;
@@ -302,7 +314,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.getScheduleNumbersPromise().then($this.setScheduleNumbers);
     };
 
-    function registerScopeWatchers() {
+    this.registerScopeWatchers = function() {
       $scope.$watch('formData.scheduleDate', function(newDate, oldDate) {
         if (newDate && newDate !== oldDate) {
           delete $scope.formData.storeId;
@@ -312,7 +324,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.getScheduleNumbers();
         }
       });
-    }
+    };
 
     this.setDependencies = function(response) {
       $this.menuMasterResponseHandler(response[0]);
@@ -345,17 +357,22 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.setUIReady = function() {
       $scope.uiSelectTemplateReady = true;
       $this.hideLoadingModal();
-      registerScopeWatchers();
+      $this.registerScopeWatchers();
+    };
+
+    // TODO: Refactor this to just push dependencyPromises
+    this.loadStoreInstance = function() {
+      $this.showLoadingModal('We are loading the Store Instance!');
+      var dependencyPromises = this.getLoadStorePromises();
+      $q.all(dependencyPromises).then(function(response) {
+        $this.setDependencies(response);
+        $this.setUIReady();
+      });
     };
 
     this.init = function() {
       if ($routeParams.storeId) {
-        $this.showLoadingModal('We are loading the Store Instance!');
-        var dependencyPromises = this.getLoadStorePromises();
-        $q.all(dependencyPromises).then(function(response) {
-          $this.setDependencies(response);
-          $this.setUIReady();
-        });
+        this.loadStoreInstance();
       } else {
         this.getCatererStationList();
         this.getMenuMasterList();
