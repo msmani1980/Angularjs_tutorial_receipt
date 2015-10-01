@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CommissionDataTableCtrl', function () {
+fdescribe('Controller: CommissionDataTableCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -23,6 +23,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
   var commissionFactory;
   var location;
+  var dateUtility;
   var scope;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
@@ -35,6 +36,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
     });
 
     location          = $location;
+    dateUtility       = $injector.get('dateUtility');
     scope             = $rootScope.$new();
     commissionFactory = $injector.get('commissionFactory');
 
@@ -94,10 +96,11 @@ describe('Controller: CommissionDataTableCtrl', function () {
     });
 
     describe('searchCommissionData', function () {
-      it('search query should be defined', function () {
-        expect(scope.search).toBeDefined();
+      beforeEach(function () {
+        scope.search = {};
       });
-      it('should call getCommissionData with search query', function () {
+
+      it('should call getCommissionData with crewBaseTypeId', function () {
         scope.search = {
           crewBaseType: {
             id: 'fakeId'
@@ -105,24 +108,48 @@ describe('Controller: CommissionDataTableCtrl', function () {
         };
 
         scope.searchCommissionData();
-        expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith({ crewBaseTypeId: 'fakeId' });
+        expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith({crewBaseTypeId: 'fakeId'});
       });
-      it('should set commissionData with new response', function () {
+
+      it('should call getCommissionData with dates', function () {
+        scope.search = {
+          startDate: '01/01/2015',
+          endDate: '01/01/2015'
+        };
+
+        var expectedPayload = {
+          startDate: dateUtility.formatDateForAPI(scope.search.startDate),
+          endDate: dateUtility.formatDateForAPI(scope.search.endDate)
+        };
+
         scope.searchCommissionData();
-        //expect(scope.commissionData).toEqual(response);
+        expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+      it('should set commissionData with new response', function () {
+        delete scope.commissionData;
+        scope.searchCommissionData();
+        scope.$digest();
+        expect(angular.isArray(scope.commissionData)).toEqual(true);
+      });
+
+      describe('clearSearch', function () {
+        beforeEach(function () {
+          scope.search.startDate = '01/01/2017';
+        });
+
+        it('should clear search query', function () {
+          scope.clearSearchForm();
+          expect(scope.search).toEqual({});
+        });
+
+        it('should call getCommissionData with empty search query', function () {
+          scope.clearSearchForm();
+          expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith({});
+        });
       });
     });
 
-    describe('clearSearch', function () {
-      it('should clear search query', function () {
-        scope.clearSearchForm();
-        expect(scope.search).toEqual({});
-      });
-      it('should call getCommissionData with empty search query', function () {
-        scope.clearSearchForm();
-        expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith({});
-      });
-    });
 
     describe('delete', function () {
       it('should call delete API with record id', function () {

@@ -28,8 +28,16 @@ angular.module('ts5App')
 
     $scope.searchCommissionData = function () {
       var payload = {};
-      if (angular.isDefined($scope.search.crewBaseType)) {
+      if ($scope.search.crewBaseType) {
         payload.crewBaseTypeId = $scope.search.crewBaseType.id;
+      }
+
+      if ($scope.search.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
+      }
+
+      if ($scope.search.endDate) {
+        payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
       }
       getDataList(payload);
     };
