@@ -18,7 +18,7 @@ angular.module('ts5App')
     var percentTypeUnit = '%';
 
     $scope.updateCommissionPercent = function () {
-      $scope.commissionPercentDisabled        = ($scope.commissionData.commissionPayable === 'Retail Item')
+      $scope.commissionPercentDisabled        = ($scope.commissionData.commissionPayable === 'Retail Item');
       $scope.commissionData.commissionPercent = 0;
     };
 
