@@ -242,6 +242,11 @@ angular.module('ts5App')
           route: '/#/employee-commission-list',
           icon: 'icon-manage-schedule',
           className: 'dashboard-employeeCommission'
+        },{
+          name: 'Commission Data Table',
+          route: '/#/commission-data-table',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-CommissionDataTable'
         }]
       }, {
         title: 'Reason',
