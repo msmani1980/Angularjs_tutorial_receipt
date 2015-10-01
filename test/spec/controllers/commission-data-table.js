@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CommissionDataTableCtrl', function () {
+fdescribe('Controller: CommissionDataTableCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -43,10 +43,13 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
     commissionPayableListDeferred  = $q.defer();
     commissionPayableListDeferred.resolve(commissionPayableListResponseJSON);
+
     crewBaseListDeferred           = $q.defer();
     crewBaseListDeferred.resolve(crewBaseListJSON);
+
     discountTypesDeferred          = $q.defer();
     discountTypesDeferred.resolve(discountTypesResponseJSON);
+
     commissionPayableTypesDeferred = $q.defer();
     commissionPayableTypesDeferred.resolve(commissionPayableTypesResponseJSON);
 
