@@ -97,7 +97,7 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group">
-          <select class="form-control" ng-model="formData.carrierId" name="carrierNumber" ng-disabled="isEndInstance() || isReplenish()">
+          <select class="form-control" ng-model="formData.carrierId" name="carrierNumber" ng-disabled="isEndInstance()">
             <option ng-disabled="true" selected="selected" value>Select a Tail Number</option>
             <option ng-repeat="tailNumber in carrierNumbers | orderBy:'carrierNumber' track by tailNumber.id" value="{{ tailNumber.id }}">{{ tailNumber.carrierNumber }}</option>
           </select>

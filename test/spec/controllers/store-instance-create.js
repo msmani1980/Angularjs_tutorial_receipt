@@ -168,7 +168,7 @@ describe('Store Instance Create Controller', function() {
   }
 
   function mockLoadStoreInstance() {
-    spyOn(StoreInstanceCreateCtrl, 'setStoreInstanceData').and.callThrough();
+    spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
     getStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
   }
 
@@ -280,22 +280,6 @@ describe('Store Instance Create Controller', function() {
         expect($scope.scheduleNumbers.length).toBe(schedulesDateRangeJSON.meta.count);
       });
 
-    });
-
-  });
-
-
-  describe('loading the dispatch for replenish', function() {
-
-    beforeEach(function() {
-      initController('replenish');
-      resolveAllDependencies();
-      mockLoadStoreInstance();
-      $scope.$digest();
-    });
-
-    it('should have called the setStoreInstanceData method', function(){
-      expect(StoreInstanceCreateCtrl.setStoreInstanceData).toHaveBeenCalled();
     });
 
   });
@@ -544,8 +528,7 @@ describe('Store Instance Create Controller', function() {
       initController('replenish');
       resolveAllDependencies();
       getStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
-      spyOn(StoreInstanceCreateCtrl, 'loadStoreInstance').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'setStoreInstanceData').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
       spyOn(storeInstanceFactory, 'createStoreInstance').and.callThrough();
