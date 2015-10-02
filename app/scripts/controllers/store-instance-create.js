@@ -96,18 +96,19 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
 
-    this.exitOnSave = function(response) {
+    this.successMessage = function(response) {
       $this.hideLoadingModal();
       $this.showMessage('success', 'Store '+ $routeParams.action + ' ' + response.id +' created!');
+    };
+
+    this.exitOnSave = function(response) {
+      $this.successMessage(response);
       $location.url('/store-instance-dashboard/');
     };
 
     this.createStoreInstanceSuccessHandler = function(response) {
-      $this.hideLoadingModal();
-      if (response.id) {
-        $this.showMessage('success', 'Store '+ $routeParams.action + ' ' + response.id + ' created!');
-        $location.url('/store-instance-packing/' + $routeParams.action + '/' + response.id);
-      }
+      $this.successMessage(response);
+      $location.url('/store-instance-packing/' + $routeParams.action + '/' + response.id);
     };
 
     this.createStoreInstanceErrorHandler = function(response) {
