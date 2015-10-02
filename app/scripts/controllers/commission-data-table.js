@@ -9,22 +9,37 @@
  */
 angular.module('ts5App')
   .controller('CommissionDataTableCtrl', function ($scope, dateUtility, commissionFactory, $location) {
-    var $this = this;
-    $scope.viewName = 'Commission Data Table';
-    $scope.search = {};
+    $scope.viewName       = 'Commission Data Table';
+    $scope.search         = {};
     $scope.commissionData = [];
 
-    $scope.searchCommissionData = function () {
-      $this.getDataList($scope.search);
-    };
+    function setDataList(dataFromAPI) {
+      $scope.commissionData = dataFromAPI.response;
+    }
+
+    function getDataList(query) {
+      commissionFactory.getCommissionPayableList(query).then(setDataList);
+    }
 
     $scope.clearSearchForm = function () {
       $scope.search = {};
-      $this.getDataList({});
+      getDataList({});
     };
 
-    $scope.search = function () {
-      // TODO: call commissionFactory.getCommissionData($scope.search);
+    $scope.searchCommissionData = function () {
+      var payload = {};
+      if ($scope.search.crewBaseType) {
+        payload.crewBaseTypeId = $scope.search.crewBaseType.id;
+      }
+
+      if ($scope.search.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI($scope.search.startDate);
+      }
+
+      if ($scope.search.endDate) {
+        payload.endDate = dateUtility.formatDateForAPI($scope.search.endDate);
+      }
+      getDataList(payload);
     };
 
     $scope.canDelete = function (data) {
@@ -35,17 +50,27 @@ angular.module('ts5App')
       // TODO: call commissionFactory.deleteCommissionData();
     };
 
+    function getNameForId(id, array) {
+      var name = '';
+      angular.forEach(array, function (item) {
+        if (item.id === id) {
+          name = item.name;
+        }
+      });
+      return name;
+    }
+
     $scope.getCrewBaseName = function (id) {
-      return $this.getNameForId(id, $scope.crewBaseTypes);
+      return getNameForId(id, $scope.crewBaseTypes);
     };
 
     $scope.getCommissionTypeName = function (id) {
-      return $this.getNameForId(id, $scope.commissionTypes);
+      return getNameForId(id, $scope.commissionTypes);
     };
 
-    $scope.getUnitById = function(id) {
-      var type = $this.getNameForId(id, $scope.discountTypes);
-      if(type === 'Percentage') {
+    $scope.getUnitById = function (id) {
+      var type = getNameForId(id, $scope.discountTypes);
+      if (type === 'Percentage') {
         return '%';
       }
       return 'GBP'; // TODO: get base currency
@@ -55,48 +80,30 @@ angular.module('ts5App')
       $location.path('commission-data/' + state + '/' + id).search();
     };
 
-    this.setDataList = function (dataFromAPI) {
-      $scope.commissionData = dataFromAPI.response;
-    };
-
-    this.getDataList = function (query) {
-      commissionFactory.getCommissionPayableList(query).then($this.setDataList);
-    };
-
-    this.getCrewBaseTypes = function () {
+    function getCrewBaseTypes() {
       commissionFactory.getCrewBaseTypes().then(function (response) {
-        $scope.crewBaseTypes = response;
+        $scope.crewBaseTypes = angular.copy(response);
       });
-    };
+    }
 
-    this.getCommissionPayableTypes = function () {
+    function getCommissionPayableTypes() {
       commissionFactory.getCommissionPayableTypes().then(function (response) {
-        $scope.commissionTypes = response;
+        $scope.commissionTypes = angular.copy(response);
       });
-    };
+    }
 
-    this.getDiscountTypes = function () {
+    function getDiscountTypes() {
       commissionFactory.getDiscountTypes().then(function (response) {
-        $scope.discountTypes = response;
+        $scope.discountTypes = angular.copy(response);
       });
-    };
+    }
 
-    this.getNameForId = function (id, array) {
-      var name = '';
-      angular.forEach(array, function (item) {
-        if(item.id === id) {
-          name = item.name;
-        }
-      });
-      return name;
-    };
+    function init() {
+      getCrewBaseTypes();
+      getCommissionPayableTypes();
+      getDiscountTypes();
+      getDataList({});
+    }
 
-    this.init = function () {
-      $this.getCrewBaseTypes();
-      $this.getCommissionPayableTypes();
-      $this.getDiscountTypes();
-      $this.getDataList({});
-    };
-
-    this.init();
+    init();
   });
