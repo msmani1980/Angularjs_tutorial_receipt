@@ -126,7 +126,57 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
 
     describe('searchStoreInstanceDashboardData', function() {
-      // TODO: test Search once it is implemented
+      beforeEach(function() {
+        scope.search = {
+          dispatchLMPStation: '1',
+          inboundLMPStation: '2',
+          storeNumber: '3',
+          scheduleStartDate: '10/06/2015',
+          scheduleEndDate: '10/08/2015',
+          departureStations: [{
+            code: 'ORD',
+            companyId: 403,
+            id: 1,
+            name: 'Chicago O\'Hara'
+          }, {
+            code: 'MDW',
+            companyId: 403,
+            id: 2,
+            name: 'Chicago Midway'
+          }],
+          arrivalStations: [{
+            code: 'LON3',
+            companyId: 403,
+            id: 3,
+            name: 'London'
+          }, {
+            code: 'MDW',
+            companyId: 403,
+            id: 2,
+            name: 'Chicago Midway'
+          }],
+          storeInstance: '4',
+          storeStatusId: '5'
+        };
+        scope.$digest();
+      });
+
+
+      it('should get getStoresList from storeInstanceDashboardFactory', function() {
+        scope.searchStoreInstanceDashboardData();
+        expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({
+          cateringStationId: '1',
+          inboundStationId: '2',
+          storeNumber: '3',
+          startDate: '10/06/2015',
+          endDate: '10/08/2015',
+          departureStationCode: ['ORD', 'MDW'],
+          arrivalStationCode: ['LON3', 'MDW'],
+          storeInstanceId: '4',
+          statusId: '5'
+
+        });
+      });
     });
 
     describe('getStoresList', function() {
@@ -195,7 +245,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     describe('toggleAccordion', function() {
       var testStore = {
         id: 2,
-        replenishItems: [{
+        replenishments: [{
           id: 3
         }]
       };
@@ -217,13 +267,13 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     describe('scope check functions', function() {
       var testStore = {
         id: 2,
-        replenishItems: [{
+        replenishments: [{
           id: 3
         }]
       };
-      it('should check store replenishItems array for doesStoreInstanceHaveReplenishments', function() {
+      it('should check store replenishments array for doesStoreInstanceHaveReplenishments', function() {
         expect(scope.doesStoreInstanceHaveReplenishments(testStore)).toEqual(true);
-        testStore.replenishItems = [];
+        testStore.replenishments = [];
         expect(scope.doesStoreInstanceHaveReplenishments(testStore)).toEqual(false);
 
       });

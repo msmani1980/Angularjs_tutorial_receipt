@@ -120,7 +120,7 @@ describe('Controller: CommissionDataCtrl', function () {
 
       });
 
-      it('should attache commission data to scope', function () {
+      it('should attach commission data to scope', function () {
 
       });
     });
