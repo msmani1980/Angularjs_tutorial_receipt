@@ -275,7 +275,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
     };
 
-    $scope.refreshPage = function() {
+    $scope.reloadRoute = function() {
       $route.reload();
     };
 
@@ -291,7 +291,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       showLoadingModal('Changing Store Instance ' + store.id + ' Status');
       storeInstanceService.updateStoreInstanceStatus(store.id, 5, store.cateringStationId).then(function() {
         $scope.showMessage('success', 'Store has been logged as received.');
-        $scope.refreshPage();
+        $scope.reloadRoute();
       });
     };
 

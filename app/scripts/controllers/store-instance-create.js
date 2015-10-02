@@ -129,13 +129,26 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
-    this.endStoreInstanceSuccessHandler = function() {
+    this.endStoreInstanceSuccessHandler = function(response) {
       $this.hideLoadingModal();
-      $this.showMessage('success', 'End Store Instance id: ' + $routeParams.storeId);
-      $location.url('/store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId);
+      if (response.id) {
+        $this.showMessage('success', 'End Store Instance id: ' + $routeParams.storeId);
+        $location.url('/store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId);
+      }
     };
 
     this.createStoreInstanceErrorHandler = function(response) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      if (response.data) {
+        $scope.formErrors = response.data;
+        return false;
+      }
+      $scope.response500 = true;
+      return false;
+    };
+
+    this.endStoreInstanceErrorHandler = function(response) {
       $this.hideLoadingModal();
       $scope.displayError = true;
       if (response.data) {
@@ -244,7 +257,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       } else {
         this.displayLoadingModal('Loading Inbound Seals');
         storeInstanceService.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
-          .then(saveAndExit ? this.exitOnSave : this.endStoreInstanceSuccessHandler);
+          .then((saveAndExit ? this.exitOnSave : this.endStoreInstanceSuccessHandler), this.endStoreInstanceErrorHandler);
       }
     };
 
@@ -356,14 +369,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       ];
     };
 
-    this.showLoadingModal = function(text) {
-      angular.element('#loading').modal('show').find('p').text(text);
-    };
-
-    this.hideLoadingModal = function() {
-      angular.element('#loading').modal('hide');
-    };
-
     this.setUIReady = function() {
       $scope.uiSelectTemplateReady = true;
       $this.hideLoadingModal();
@@ -372,7 +377,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.init = function() {
       if ($routeParams.storeId) {
-        $this.showLoadingModal('We are loading the Store Instance!');
+        $this.displayLoadingModal('We are loading the Store Instance!');
         var dependencyPromises = this.getLoadStorePromises();
         $q.all(dependencyPromises).then(function(response) {
           $this.setDependencies(response);
