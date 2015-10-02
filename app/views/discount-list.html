@@ -14,7 +14,7 @@
                     <span class="hidden-sm hidden-xs">Filter</span>
                 </button>
 
-                <a href="#/ember/#/discounts/create" class="btn btn-primary">
+                <a href="/ember/#/discounts/create" class="btn btn-primary">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     <span class="hidden-xs">Create Discount</span>
                 </a>
@@ -28,15 +28,16 @@
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="discount-type">Discount Type</label>
-                                <input ng-model="search.discountType" type="text" class="form-control" id="discount-type" placeholder="Coupon">
+                                <select ng-model="search.discountTypeId" class="form-control" id="discount-type">
+                                    <option value="{{type.id}}" ng-repeat="type in discountTypes | unique: 'id'">{{ type.globalDiscountTypeName }}</option>
+                                </select>
                             </div>
-
                         </div>
 
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
                                 <label for="discount-name">Discount</label>
-                                <input ng-model="search.discountName" type="text" class="form-control" id="discount-name" placeholder="10% Off">
+                                <input ng-model="search.name" type="text" class="form-control" id="discount-name" placeholder="10% Off">
                             </div>
                         </div>
 
@@ -76,8 +77,8 @@
             </li>
             <li ng-show="formErrors" ng-repeat="error in formErrors">
                 <strong>{{error.field}}</strong>
-                <span> {{ error.value }}</span>
-                <span> {{ error.code }}</span>
+                <span>{{ error.value }}</span>
+                <span>{{ error.code }}</span>
             </li>
         </ul>
     </div>
@@ -95,7 +96,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="discount in discountList | filter:{discountTypeName: search.discountType, name: search.discountName}">
+        <tr ng-repeat="discount in discountList | toArray:false |  filter:{discountTypeId: search.discountTypeId, name: search.name}">
             <td>{{ discount.discountTypeName }}</td>
             <td>{{ discount.name }}</td>
             <td>{{ discount.rateTypeName }}</td>

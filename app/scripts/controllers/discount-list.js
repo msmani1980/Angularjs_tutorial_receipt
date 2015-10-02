@@ -8,12 +8,38 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('DiscountListCtrl', function ($scope, $location, menuService, ngToast, dateUtility) {
+  .controller('DiscountListCtrl', function ($scope, $location, discountFactory, ngToast, dateUtility) {
+    var $this = this;
     $scope.viewName = 'Discount';
     $scope.search = {};
+    $scope.discountList = [];
+
+    this.getDiscountList = function () {
+      discountFactory.getDiscountList().then(attachDiscountListToScope);
+    }
+
+    this.getDiscountTypesList = function () {
+      discountFactory.getDiscountTypesList().then(function (discountTypes) {
+        $scope.discountTypes = discountTypes.discounts;
+      });
+    };
+
+    $scope.editDiscount = function (discount) {
+      $location.search({});
+      $location.path('/ember/#/discounts/' + discount.id + '/edit');
+    };
+
+    $scope.searchDiscounts = function () {
+      discountFactory.getDiscountList(serializeDates($scope.search)).then(attachDiscountListToScope);
+    };
+
+    $scope.clearForm = function () {
+      $scope.search = {};
+      $scope.searchDiscounts();
+    };
 
     var attachDiscountListToScope = function (discountListFromAPI) {
-      $scope.menuList = formatDates(discountListFromAPI.discounts);
+      $scope.discountList = formatDates(discountListFromAPI.companyDiscounts);
     };
 
     function formatDates(discountArray) {
@@ -24,10 +50,6 @@ angular.module('ts5App')
       });
       return formattedDiscountArray;
     }
-
-    $scope.searchDiscounts = function () {
-      discountService.getDiscountList(serializeDates($scope.search)).then(attachDiscountListToScope);
-    };
 
     function serializeDates(payload) {
       var formattedPayload = angular.copy(payload);
@@ -40,11 +62,6 @@ angular.module('ts5App')
       return formattedPayload;
     }
 
-    $scope.editDiscount = function (discount) {
-      $location.search({});
-      $location.path('ember/#/discounts/' + discount.id + '/edit');
-    };
-
     $scope.isDiscountEditable = function (discount) {
       if (angular.isUndefined(discount)) {
         return false;
@@ -52,8 +69,10 @@ angular.module('ts5App')
       return dateUtility.isAfterToday(discount.endDate);
     };
 
-    $scope.clearForm = function () {
-      $scope.search = {};
-      $scope.searchMenus();
+    this.init = function () {
+      $this.getDiscountList();
+      $this.getDiscountTypesList();
     };
+
+    this.init();
   });
