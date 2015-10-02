@@ -2,13 +2,20 @@
 
 describe('Store Instance Create Controller', function() {
 
-  beforeEach(module('ts5App', 'template-module', 'served/catering-stations.json', 'served/menu-master-list.json',
-    'served/carrier-numbers.json', 'served/stores-list.json', 'served/store-instance-created.json',
-    'served/schedules-date-range.json', 'served/company-menu-caterer-stations.json'));
+  beforeEach(module(
+    'ts5App',
+    'template-module',
+    'served/catering-stations.json',
+    'served/menu-master-list.json',
+    'served/carrier-numbers.json',
+    'served/stores-list.json',
+    'served/store-instance-created.json',
+    'served/schedules-date-range.json',
+    'served/company-menu-caterer-stations.json'
+  ));
 
   var StoreInstanceCreateCtrl;
   var $scope;
-  var $routeParams;
   var storeInstanceFactory;
   var storeInstanceService;
   var catererStationService;
@@ -38,6 +45,9 @@ describe('Store Instance Create Controller', function() {
   var schedulesDateRangeJSON;
   var companyMenuCatererStationsJSON;
   var getRelationshipListDeferred;
+  var controller;
+  var storeInstanceId;
+  var getStoreInstanceDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedCateringStations_,
@@ -57,6 +67,7 @@ describe('Store Instance Create Controller', function() {
     location = $injector.get('$location');
     $scope = $rootScope.$new();
     dateUtility = $injector.get('dateUtility');
+    controller = $controller;
 
     storeInstanceFactory = $injector.get('storeInstanceFactory');
     storeInstanceService = $injector.get('storeInstanceService');
@@ -71,40 +82,30 @@ describe('Store Instance Create Controller', function() {
     schedulesService = $injector.get('schedulesService');
 
     getMenuMasterListDeferred = $q.defer();
-    getMenuMasterListDeferred.resolve(menuMasterListJSON);
     spyOn(menuMasterService, 'getMenuMasterList').and.returnValue(getMenuMasterListDeferred.promise);
 
     getCatererStationListDeferred = $q.defer();
-    getCatererStationListDeferred.resolve(cateringStationsJSON);
     spyOn(catererStationService, 'getCatererStationList').and.returnValue(getCatererStationListDeferred.promise);
 
     getCarrierNumbersDeferred = $q.defer();
-    getCarrierNumbersDeferred.resolve(carrierNumbersJSON);
     spyOn(carrierService, 'getCarrierNumbers').and.returnValue(getCarrierNumbersDeferred.promise);
 
     getStoresListDeferred = $q.defer();
-    getStoresListDeferred.resolve(storesListJSON);
     spyOn(storesService, 'getStoresList').and.returnValue(getStoresListDeferred.promise);
 
     createStoreInstanceDeferred = $q.defer();
     spyOn(storeInstanceService, 'createStoreInstance').and.returnValue(createStoreInstanceDeferred.promise);
 
     getSchedulesInDateRangeDeferred = $q.defer();
-    getSchedulesInDateRangeDeferred.resolve(schedulesDateRangeJSON);
     spyOn(schedulesService, 'getSchedulesInDateRange').and.returnValue(getSchedulesInDateRangeDeferred.promise);
 
     getRelationshipListDeferred = $q.defer();
-    getRelationshipListDeferred.resolve(companyMenuCatererStationsJSON);
     spyOn(menuCatererStationsService, 'getRelationshipList').and.returnValue(getRelationshipListDeferred.promise);
 
-    $routeParams = {
-      state: 'dispatch'
-    };
+    getStoreInstanceDeferred = $q.defer();
+    spyOn(storeInstanceService, 'getStoreInstance').and.returnValue(getStoreInstanceDeferred.promise);
 
-    StoreInstanceCreateCtrl = $controller('StoreInstanceCreateCtrl', {
-      $scope: $scope,
-      $routeParams: $routeParams
-    });
+    storeInstanceId = 13;
 
     postPayloadControl = {
       scheduleDate: '20150915',
@@ -114,24 +115,8 @@ describe('Store Instance Create Controller', function() {
         menuMasterId: 6
       }],
       cateringStationId: 13,
-      scheduleNumber: 'SCH1241411',
-      storeId: 13
-    };
-
-    $scope.formData = {
-      scheduleDate: '9/15/2015',
-      menus: [{
-        id: 100,
-        name: 'ABC43124'
-      }, {
-        id: 6,
-        name: 'MNDA412'
-      }],
-      cateringStationId: 13,
-      scheduleNumber: {
-        scheduleNumber: 'SCH1241411'
-      },
-      storeId: 13
+      scheduleNumber: { scheduleNumber: 'SCH1241411' },
+      storeId: storeInstanceId
     };
 
   }));
@@ -140,6 +125,28 @@ describe('Store Instance Create Controller', function() {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
   });
+
+  function resolveAllDependencies() {
+    getMenuMasterListDeferred.resolve(menuMasterListJSON);
+    getCatererStationListDeferred.resolve(cateringStationsJSON);
+    getCarrierNumbersDeferred.resolve(carrierNumbersJSON);
+    getStoresListDeferred.resolve(storesListJSON);
+    getSchedulesInDateRangeDeferred.resolve(schedulesDateRangeJSON);
+    getRelationshipListDeferred.resolve(companyMenuCatererStationsJSON);
+  }
+
+  function initController(action) {
+    var params = {
+      action: (action ? action : 'dispatch')
+    };
+    if(params.action !== 'dispatch'){
+      params.storeId = storeInstanceId;
+    }
+    StoreInstanceCreateCtrl = controller('StoreInstanceCreateCtrl', {
+      $scope: $scope,
+      $routeParams: params
+    });
+  }
 
   function renderView() {
     var html = templateCache.get('/views/store-instance-create.html');
@@ -160,20 +167,30 @@ describe('Store Instance Create Controller', function() {
     StoreInstanceCreateCtrl.createStoreInstance();
   }
 
-  describe('when the controller loads', function() {
+  function mockLoadStoreInstance() {
+    spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
+    getStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
+  }
+
+  describe('when the Dispatch controller loads', function() {
+
+    beforeEach(function(){
+      initController();
+    });
+
+    it('should set wizardSteps', function() {
+      var wizardSteps = storeInstanceWizardConfig.getSteps('dispatch');
+      expect($scope.wizardSteps).toEqual(wizardSteps);
+    });
 
     it('should have an empty stations list before the scope is digested', function() {
       expect($scope.cateringStationList).toEqual([]);
     });
 
-    it('should set wizardSteps', function() {
-      var wizardSteps = storeInstanceWizardConfig.getSteps();
-      expect($scope.wizardSteps).toEqual(wizardSteps);
-    });
-
     describe('The cateringStationList array', function() {
 
       beforeEach(function() {
+        resolveAllDependencies();
         $scope.$digest();
       });
 
@@ -194,6 +211,7 @@ describe('Store Instance Create Controller', function() {
     describe('The menuMasterList array', function() {
 
       beforeEach(function() {
+        resolveAllDependencies();
         $scope.$digest();
       });
 
@@ -214,6 +232,7 @@ describe('Store Instance Create Controller', function() {
     describe('The carrierNumbers array', function() {
 
       beforeEach(function() {
+        resolveAllDependencies();
         $scope.$digest();
       });
 
@@ -234,6 +253,7 @@ describe('Store Instance Create Controller', function() {
     describe('The storesList array', function() {
 
       beforeEach(function() {
+        resolveAllDependencies();
         $scope.$digest();
       });
 
@@ -253,6 +273,7 @@ describe('Store Instance Create Controller', function() {
 
     describe('the scheduleNumbers array', function() {
       beforeEach(function() {
+        resolveAllDependencies();
         $scope.$digest();
       });
       it('should be set to same lenght as API response', function() {
@@ -263,42 +284,96 @@ describe('Store Instance Create Controller', function() {
 
   });
 
-  describe('The formatPayload functionality', function() {
+  describe('formatting the payload for a dispatch', function() {
 
-    function mockFormatPayload() {
-      $scope.formData.menus = [{
-        id: 100,
-        name: 'ABC43124'
-      }];
-      $scope.$digest();
-      return StoreInstanceCreateCtrl.formatPayload();
-    }
-
+    var payloadControl;
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
+      spyOn(StoreInstanceCreateCtrl, 'formatDispatchPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'formatMenus').and.callThrough();
+      $scope.formData = {
+        scheduleDate: dateUtility.nowFormatted(),
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: { scheduleNumber: 'SCH1241411' },
+        storeId: storeInstanceId
+      };
+      $scope.$digest();
+      payloadControl = StoreInstanceCreateCtrl.formatPayload();
     });
 
-    it('should call the formatMenus method', function() {
-      mockFormatPayload();
-      expect(StoreInstanceCreateCtrl.formatMenus).toHaveBeenCalled();
+    it('should call the formatDispatchPayload method', function() {
+      expect(StoreInstanceCreateCtrl.formatDispatchPayload).toHaveBeenCalled();
     });
 
     it('should format the scheduleDate for the API', function() {
       var formattedDateControl = dateUtility.formatDateForAPI($scope.formData.scheduleDate);
-      var payload = mockFormatPayload();
-      expect(payload.scheduleDate).toEqual(formattedDateControl);
+      expect(payloadControl.scheduleDate).toEqual(formattedDateControl);
     });
 
     it('should return a formatted payload object', function() {
-      var payload = mockFormatPayload();
-      var expectedPayload = {
-        scheduleDate: '20150915',
-        menus: [],
-        cateringStationId: 13,
+      var mockPayload = {
+        scheduleDate:  dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
+        menus: [{
+          menuMasterId:100
+        }],
+        cateringStationId:13,
         scheduleNumber: 'SCH1241411',
         storeId: 13
       };
-      expect(payload).toEqual(expectedPayload);
+      expect(mockPayload).toEqual(payloadControl);
+    });
+
+  });
+
+  describe('formatting the payload for a replenish', function() {
+
+    var payloadControl;
+    beforeEach(function() {
+      initController('replenish');
+      resolveAllDependencies();
+      mockLoadStoreInstance();
+      $scope.formData = {
+        scheduleDate: dateUtility.nowFormatted(),
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: {
+          scheduleNumber: 'SCH1241411'
+        },
+        storeId: storeInstanceId
+      };
+      spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'formatReplenishPayload').and.callThrough();
+      $scope.$digest();
+      payloadControl = StoreInstanceCreateCtrl.formatPayload();
+    });
+
+    it('should call the formatReplenishPayload method', function() {
+      expect(StoreInstanceCreateCtrl.formatReplenishPayload).toHaveBeenCalled();
+    });
+
+    it('should format the scheduleDate for the API', function() {
+      var formattedDateControl = dateUtility.formatDateForAPI($scope.formData.scheduleDate);
+      expect(payloadControl.scheduleDate).toEqual(formattedDateControl);
+    });
+
+    it('should return a formatted payload object', function() {
+      var mockPayload = {
+        scheduleDate: '20150902',
+        cateringStationId: '13',
+        scheduleNumber: 'SCH1241411',
+        carrierId: null,
+        replenishStoreInstanceId: storeInstanceId
+      };
+      expect(mockPayload).toEqual(payloadControl);
     });
 
   });
@@ -312,6 +387,22 @@ describe('Store Instance Create Controller', function() {
     }
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
+      $scope.formData = {
+        scheduleDate: dateUtility.nowFormatted(),
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: {
+          scheduleNumber: 'SCH1241411'
+        },
+        storeId: storeInstanceId
+      };
+      $scope.$digest();
       menus = mockFormatMenus();
     });
 
@@ -332,8 +423,27 @@ describe('Store Instance Create Controller', function() {
   describe('The createStoreInstance functionality', function() {
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      $scope.formData = {
+        scheduleDate: '9/15/2015',
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }, {
+          id: 6,
+          name: 'MNDA412'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: {
+          scheduleNumber: 'SCH1241411'
+        },
+        storeId: storeInstanceId
+      };
+      $scope.$digest();
       spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'formatDispatchPayload').and.callThrough();
       spyOn(storeInstanceFactory, 'createStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
@@ -343,7 +453,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal', function() {
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith('Creating a store instance');
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith('Creating a store dispatch');
     });
 
     it('should format the payload', function() {
@@ -372,12 +482,12 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should display a success message if the response contains an id', function() {
-        var message = 'Store Instance created id: ' + storeInstanceCreatedJSON.id;
+        var message = 'Store dispatch '+ storeInstanceCreatedJSON.id + ' created!';
         expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
       });
 
       it('should redirect the user to the packing page with the new store instance id', function() {
-        var url = '/store-instance-packing/' + $routeParams.action + '/' + storeInstanceCreatedJSON.id;
+        var url = '/store-instance-packing/dispatch/' + storeInstanceCreatedJSON.id;
         expect(location.path()).toEqual(url);
       });
 
@@ -412,18 +522,61 @@ describe('Store Instance Create Controller', function() {
 
   });
 
+  describe('The create replenish functionality', function() {
+
+    beforeEach(function() {
+      initController('replenish');
+      resolveAllDependencies();
+      getStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
+      spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
+      spyOn(storeInstanceFactory, 'createStoreInstance').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'showMessage');
+      $scope.$digest();
+      mockStoreInstanceCreate();
+    });
+
+    describe('success handler', function() {
+
+      beforeEach(function() {
+        mockStoreInstanceCreate();
+        createStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
+        $scope.$digest();
+      });
+
+      it('should display a success message if the response contains an id', function() {
+        var message = 'Store replenish '+ storeInstanceCreatedJSON.id + ' created!';
+        expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
+      });
+
+      it('should redirect the user to the packing page with the new store replenish id', function() {
+        var url = '/store-instance-packing/replenish/' + storeInstanceCreatedJSON.id;
+        expect(location.path()).toEqual(url);
+      });
+
+    });
+
+  });
+
   describe('The submit form method', function() {
 
     var view;
     var form;
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
       spyOn(StoreInstanceCreateCtrl, 'validateForm').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'resetErrors');
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstance');
       $scope.$digest();
       view = renderView();
       form = angular.element(view.find('form')[0]);
+      $scope.$digest();
     });
 
     it('should call the validateForm method', function() {
@@ -455,11 +608,17 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should return true if all the correct data is passed', function() {
+        $scope.formData = {
+          scheduleDate: dateUtility.nowFormatted(),
+          menus: [{
+            id: 100,
+            name: 'ABC43124'
+          }],
+          cateringStationId: 13,
+          scheduleNumber: { scheduleNumber: 'SCH1241411' },
+          storeId: storeInstanceId
+        };
         $scope.$digest();
-        $scope.formData.menus = [{
-          id: 100,
-          name: 'ABC43124'
-        }];
         var formIsValid = StoreInstanceCreateCtrl.validateForm();
         expect(formIsValid).toBeTruthy();
       });
@@ -467,11 +626,17 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should call createStoreInstance if the form does validate', function() {
+      $scope.formData = {
+        scheduleDate: dateUtility.nowFormatted(),
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: { scheduleNumber: 'SCH1241411' },
+        storeId: storeInstanceId
+      };
       $scope.$digest();
-      $scope.formData.menus = [{
-        id: 100,
-        name: 'ABC43124'
-      }];
       mockFormSubmission(form);
       expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalled();
     });
@@ -484,14 +649,23 @@ describe('Store Instance Create Controller', function() {
     var form;
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
+      $scope.formData = {
+        scheduleDate: dateUtility.nowFormatted(),
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: { scheduleNumber: 'SCH1241411' },
+        storeId: storeInstanceId
+      };
       spyOn($scope, 'submitForm').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'exitOnSave').and.callThrough();
       $scope.$digest();
-      $scope.formData.menus = [{
-        id: 100,
-        name: 'ABC43124'
-      }];
       view = renderView();
       form = angular.element(view.find('form')[0]);
     });
@@ -532,6 +706,8 @@ describe('Store Instance Create Controller', function() {
     var form;
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
       view = renderView();
       form = angular.element(view.find('form')[0]);
     });
@@ -564,6 +740,9 @@ describe('Store Instance Create Controller', function() {
     var menuSelect;
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
       view = renderView();
       form = angular.element(view.find('form')[0]);
       menuSelect = angular.element(form.find('ui-select')[0]);
@@ -578,7 +757,6 @@ describe('Store Instance Create Controller', function() {
     it('should return .has-error if there are no menus', function() {
       $scope.formData.menus = [];
       $scope.$digest();
-      $scope.createStoreInstance.Menus.$setViewValue([]);
       mockFormSubmission(form);
       var className = $scope.validateMenus();
       expect(className).toEqual('has-error');
@@ -589,7 +767,7 @@ describe('Store Instance Create Controller', function() {
         id: 100,
         name: 'ABC43124'
       }];
-      $scope.createStoreInstance.Menus.$setViewValue($scope.formData.menus);
+      $scope.createStoreInstance.menus.$setViewValue($scope.formData.menus);
       $scope.formData.menus = menus;
 
       var className = $scope.validateMenus();
@@ -601,12 +779,27 @@ describe('Store Instance Create Controller', function() {
   describe('when a user changes the scheduleDate', function() {
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
       spyOn(StoreInstanceCreateCtrl, 'getMenuMasterList').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'registerScopeWatchers').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setUIReady').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'menuMasterResponseHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'getStoresList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'setStoresList').and.callThrough();
+      $scope.formData = {
+        scheduleDate: dateUtility.nowFormatted(),
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: { scheduleNumber: 'SCH1241411' },
+        storeId: storeInstanceId
+      };
       $scope.$digest();
-      $scope.formData.scheduleDate = '10/01/2015';
+      $scope.formData.scheduleDate = '10/01/2020';
       $scope.$digest();
     });
 
@@ -638,6 +831,8 @@ describe('Store Instance Create Controller', function() {
   describe('generating the query', function() {
 
     beforeEach(function() {
+      initController();
+      resolveAllDependencies();
       spyOn(StoreInstanceCreateCtrl, 'getFormattedDatesPayload').and.callThrough();
       $scope.$digest();
     });
@@ -667,12 +862,12 @@ describe('Store Instance Create Controller', function() {
   describe('isReplenish method', function() {
 
     it('should be true, if $routeParams.action is Replenish', function() {
-      $routeParams.action = 'replenish';
+      initController('replenish');
       expect($scope.isReplenish()).toBeTruthy();
     });
 
     it('should be false, if $routeParams.action is End-Dispatch', function() {
-      $routeParams.action = 'end-dispatch';
+      initController('end-dispatch');
       expect($scope.isReplenish()).toBeFalsy();
     });
 
@@ -681,12 +876,12 @@ describe('Store Instance Create Controller', function() {
   describe('isEndInstance method', function() {
 
     it('should be true, if $routeParams.action is End-Dispatch', function() {
-      $routeParams.action = 'end-instance';
+      initController('end-instance');
       expect($scope.isEndInstance()).toBeTruthy();
     });
 
     it('should be false, if $routeParams.action is Replenish', function() {
-      $routeParams.action = 'replenish';
+      initController('replenish');
       expect($scope.isEndInstance()).toBeFalsy();
     });
 
