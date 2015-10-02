@@ -16,7 +16,7 @@ angular.module('ts5App')
 
     this.getDiscountList = function () {
       discountFactory.getDiscountList().then(attachDiscountListToScope);
-    }
+    };
 
     this.getDiscountTypesList = function () {
       discountFactory.getDiscountTypesList().then(function (discountTypes) {
