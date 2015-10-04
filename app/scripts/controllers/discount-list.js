@@ -15,7 +15,7 @@ angular.module('ts5App')
     $scope.discountList = [];
 
     this.getDiscountList = function () {
-      discountFactory.getDiscountList().then(attachDiscountListToScope);
+      discountFactory.getDiscountList().then($this.attachDiscountListToScope);
     };
 
     this.getDiscountTypesList = function () {
@@ -30,7 +30,7 @@ angular.module('ts5App')
     };
 
     $scope.searchDiscounts = function () {
-      discountFactory.getDiscountList(serializeDates($scope.search)).then(attachDiscountListToScope);
+      discountFactory.getDiscountList($this.serializeDates($scope.search)).then($this.attachDiscountListToScope);
     };
 
     $scope.clearForm = function () {
@@ -38,20 +38,20 @@ angular.module('ts5App')
       $scope.searchDiscounts();
     };
 
-    var attachDiscountListToScope = function (discountListFromAPI) {
-      $scope.discountList = formatDates(discountListFromAPI.companyDiscounts);
+    this.attachDiscountListToScope = function (discountListFromAPI) {
+      $scope.discountList = $this.formatDates(discountListFromAPI.companyDiscounts);
     };
 
-    function formatDates(discountArray) {
+    this.formatDates = function(discountArray) {
       var formattedDiscountArray = angular.copy(discountArray);
       angular.forEach(formattedDiscountArray, function (discount) {
         discount.startDate = dateUtility.formatDateForApp(discount.startDate);
         discount.endDate = dateUtility.formatDateForApp(discount.endDate);
       });
       return formattedDiscountArray;
-    }
+    };
 
-    function serializeDates(payload) {
+    this.serializeDates = function(payload) {
       var formattedPayload = angular.copy(payload);
       if (formattedPayload.startDate) {
         formattedPayload.startDate = dateUtility.formatDateForAPI(formattedPayload.startDate);
@@ -60,7 +60,7 @@ angular.module('ts5App')
         formattedPayload.endDate = dateUtility.formatDateForAPI(formattedPayload.endDate);
       }
       return formattedPayload;
-    }
+    };
 
     $scope.isDiscountEditable = function (discount) {
       if (angular.isUndefined(discount)) {

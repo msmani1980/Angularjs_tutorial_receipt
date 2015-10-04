@@ -1,0 +1,29 @@
+{
+  "discounts": [
+    {
+      "id": 2,
+      "description": "Comp",
+      "globalDiscountTypeName": "Comp"
+    },
+    {
+      "id": 1,
+      "description": "Coupon",
+      "globalDiscountTypeName": "Coupon"
+    },
+    {
+      "id": 3,
+      "description": "Frequent Flyer",
+      "globalDiscountTypeName": "Frequent Flyer"
+    },
+    {
+      "id": 4,
+      "description": "Voucher",
+      "globalDiscountTypeName": "Voucher"
+    }
+  ],
+  "meta": {
+    "count": 4,
+    "limit": 4,
+    "start": 0
+  }
+}
