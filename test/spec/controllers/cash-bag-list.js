@@ -182,18 +182,18 @@ describe('Controller: CashBagListCtrl', function () {
       });
 
       it('should not call getStoreInstanceList if only date is selected', function () {
-        scope.scheduleDate     = '06/15/2015';
+        scope.scheduleDate = '06/15/2015';
         scope.findStoreInstance();
         expect(cashBagFactory.getStoreInstanceList).not.toHaveBeenCalled();
         expect(scope.displayModalError).toBe(true);
       });
 
       it('should call getStoreInstanceList with date and schedule number', function () {
-        scope.scheduleDate     = '06/15/2015';
-        scope.selectedSchedule = '0008';
-        var expectedPayload    = {
+        scope.scheduleDate            = '06/15/2015';
+        scope.search.selectedSchedule = {scheduleNumber: '0008'};
+        var expectedPayload           = {
           scheduleDate: dateUtility.formatDateForAPI(scope.scheduleDate),
-          scheduleNumber: scope.selectedSchedule
+          scheduleNumber: scope.search.selectedSchedule.scheduleNumber
         };
 
         scope.findStoreInstance();
@@ -202,11 +202,14 @@ describe('Controller: CashBagListCtrl', function () {
       });
 
       it('should call getStoreInstanceList with date and store number', function () {
-        scope.scheduleDate        = '06/15/2015';
-        scope.selectedStoreNumber = 'store001';
-        var expectedPayload       = {
+        scope.scheduleDate               = '06/15/2015';
+        scope.search.selectedStoreNumber = {
+          id: 'store001'
+        };
+
+        var expectedPayload = {
           scheduleDate: dateUtility.formatDateForAPI(scope.scheduleDate),
-          storeId: scope.selectedStoreNumber
+          storeId: scope.search.selectedStoreNumber.id
         };
 
         scope.findStoreInstance();

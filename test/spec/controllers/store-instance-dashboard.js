@@ -372,6 +372,15 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
   });
 
+  describe('undispatch', function () {
+    beforeEach(function () {
+      scope.undispatch(2);
+    });
+    it('should update status to 1', function () {
+      expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(2, 1);
+    });
+  });
+
   describe('storeStatusReceived', function() {
     beforeEach(function() {
       spyOn(scope, 'storeStatusReceived').and.callThrough();
@@ -383,7 +392,6 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       scope.storeStatusReceived(33);
       expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalled();
     });
-
   });
 
 });
