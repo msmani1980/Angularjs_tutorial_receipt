@@ -27,7 +27,7 @@ angular.module('ts5App')
     $scope.saveButtonText = 'Exit';
 
     function showMessage(message, messageType) {
-      ngToast.create({className: messageType, dismissButton: true, content: '<strong>Store Instance Review</strong>: ' + message});
+      ngToast.create({className: messageType, dismissButton: true, content: message});
     }
 
     function displayLoadingModal(loadingText) {
@@ -144,12 +144,13 @@ angular.module('ts5App')
       setSealsList();
     }
 
-    function showUserCurrentStatus(messageAction) {
+    function showUserCurrentStatus() {
       hideLoadingModal();
-      if (!messageAction) {
-        messageAction = 'is set';
+      var action = 'dispatched';
+      if($routeParams.action === 'replenish') {
+        action = 'replenished';
       }
-      showMessage('Status ' + messageAction + ' to "' + $scope.storeDetails.currentStatus.statusName + '"', 'info');
+      showMessage('Store Instance ' + $routeParams.storeId + 'has been ' + action + '!', 'success');
     }
 
     function getStoreInstanceSeals() {
@@ -191,7 +192,7 @@ angular.module('ts5App')
     function storeInstanceStatusDispatched(response){
       hideLoadingModal();
       $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {id: response.statusId}, true)[0];
-      showUserCurrentStatus('updated');
+      showUserCurrentStatus();
       $location.url('/store-instance-dashboard');
     }
 

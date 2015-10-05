@@ -303,5 +303,39 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
   });
 
+  describe('if a user can proceed', function () {
+
+    beforeEach(function() {
+      initController();
+    });
+
+    it('should allow the user to proceed if there are menu items in the view', function () {
+      scope.menuItems = [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}];
+      scope.$digest();
+      var canProceed = scope.canProceed();
+      expect(canProceed).toBeTruthy();
+    });
+
+    it('should allow the user to proceed if there are menu items in the view', function () {
+      scope.emptyMenuItems = [{
+        quantity: 9,
+        nonsenseKey: 4,
+        masterItem: {id: 5}
+      }];
+      scope.$digest();
+      var canProceed = scope.canProceed();
+      expect(canProceed).toBeTruthy();
+    });
+
+    it('should not allow the user to proceed if there are no items in the view', function () {
+      scope.emptyMenuItems = [];
+      scope.menuItems = [];
+      scope.$digest();
+      var canProceed = scope.canProceed();
+      expect(canProceed).toBeFalsy();
+    });
+
+  });
+
 
 });
