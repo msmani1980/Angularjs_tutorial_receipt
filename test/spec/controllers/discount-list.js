@@ -32,10 +32,8 @@ describe('Controller: DiscountListCtrl', function () {
     getDiscountTypesListDeferred = $q.defer();
     getDiscountTypesListDeferred.resolve(discountTypesListJSON);
 
-    spyOn(discountFactory, 'getDiscountList').and.returnValue(
-      getDiscountListDeferred.promise);
-    spyOn(discountFactory, 'getDiscountTypesList').and.returnValue(
-      getDiscountTypesListDeferred.promise);
+    spyOn(discountFactory, 'getDiscountList').and.returnValue(getDiscountListDeferred.promise);
+    spyOn(discountFactory, 'getDiscountTypesList').and.returnValue(getDiscountTypesListDeferred.promise);
 
     DiscountListCtrl = $controller('DiscountListCtrl', {
       $scope: scope
