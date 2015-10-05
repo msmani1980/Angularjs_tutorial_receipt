@@ -278,10 +278,8 @@
                ng-show="doesStoreInstanceContainAction(store, 'End instance')"
                href="#/store-instance-create/end-instance/{{replenishment.id}}">End Instance
             </a>
-            <a class="btn btn-warning btn-xs" tabindex="0"
-               ng-show="isUndispatchPossible(replenishment)"
-               ng-click="undispatch(replenishment.id)">Undispatch
-            </a>
+            <!-- NOTE: undispatch not allowed for replenishments-->
+
             <!-- TODO: Generate Doc Download Link -->
             <a class="btn btn-info btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"

@@ -118,7 +118,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.isUndispatchPossible = function(store) {
-      return (store.startDate && store.hours > 0 && $scope.doesStoreInstanceHaveReplenishments(store));
+      return (store.startDate && store.hours > 0 && !$scope.doesStoreInstanceHaveReplenishments(store));
     };
 
     $scope.undispatch = function(id) {
