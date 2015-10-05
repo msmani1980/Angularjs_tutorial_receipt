@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: CommissionDataTableCtrl', function () {
+describe('Controller: CommissionDataTableCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
