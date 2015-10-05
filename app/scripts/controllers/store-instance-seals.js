@@ -53,8 +53,7 @@ angular.module('ts5App')
     };
 
     this.isInstanceReadOnly = function() {
-      console.log($scope.storeDetails.currentStatus.name);
-      if ($scope.storeDetails.currentStatus.name === '1' && $routeParams.action === 'end-instance') {
+      if ($scope.storeDetails.currentStatus.name === '2' && $routeParams.action === 'end-instance') {
         $scope.readOnly = false;
         $scope.saveButtonName = 'Save & Exit';
         return;

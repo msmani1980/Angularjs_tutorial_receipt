@@ -964,5 +964,34 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
+  describe('isReplenish method', function() {
+
+    it('should be true, if $routeParams.action is Replenish', function() {
+      initController('replenish');
+      expect($scope.isReplenish()).toBeTruthy();
+    });
+
+    it('should be false, if $routeParams.action is End-Dispatch', function() {
+      initController('end-dispatch');
+      expect($scope.isReplenish()).toBeFalsy();
+    });
+
+  });
+
+  describe('isEndInstance method', function() {
+
+    it('should be true, if $routeParams.action is End-Dispatch', function() {
+      initController('end-instance');
+      expect($scope.isEndInstance()).toBeTruthy();
+    });
+
+    it('should be false, if $routeParams.action is Replenish', function() {
+      initController('replenish');
+      expect($scope.isEndInstance()).toBeFalsy();
+    });
+
+  });
+
+
 
 });
