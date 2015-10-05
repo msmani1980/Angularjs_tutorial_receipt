@@ -7,7 +7,7 @@
  * # storeInstanceService
  * Service in the ts5App.
  */
-angular.module('ts5App').service('storeInstanceService', function ($resource, ENV) {
+angular.module('ts5App').service('storeInstanceService', function($resource, ENV) {
   var requestURL = ENV.apiUrl + '/api/dispatch/store-instances/:id/:api/:itemIdOrBulk';
   var requestParameters = {
     id: '@id',
@@ -63,7 +63,9 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
   }
 
   function getStoreInstance(id) {
-    return requestResource.getStoreInstance({id: id}).$promise;
+    return requestResource.getStoreInstance({
+      id: id
+    }).$promise;
   }
 
   function createStoreInstance(payload) {
@@ -71,12 +73,16 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
   }
 
   function updateStoreInstance(id, payload) {
-    var requestPayload = angular.extend({}, {id: id}, payload);
+    var requestPayload = angular.extend({}, {
+      id: id
+    }, payload);
     return requestResource.updateStoreInstance(requestPayload).$promise;
   }
 
   function deleteStoreInstance(id) {
-    return requestResource.deleteStoreInstance({id: id}).$promise;
+    return requestResource.deleteStoreInstance({
+      id: id
+    }).$promise;
   }
 
   function getStoreInstanceItemList(id, payload) {
@@ -113,6 +119,7 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     });
     return requestResource.updateStoreInstanceItemsBulk(requestPayload, payload).$promise;
   }
+
   function createStoreInstanceItem(id, payload) {
     var requestPayload = angular.extend({}, {
       id: id,
@@ -138,9 +145,10 @@ angular.module('ts5App').service('storeInstanceService', function ($resource, EN
     return requestResource.getStoreInstanceMenuItems(requestPayload).$promise;
   }
 
-  function updateStoreInstanceStatus(id, statusId) {
+  function updateStoreInstanceStatus(id, statusId, inboundId) {
     var requestPayload = angular.extend({}, {
       id: id,
+      inboundStationId: inboundId,
       api: 'status',
       itemIdOrBulk: statusId
     });

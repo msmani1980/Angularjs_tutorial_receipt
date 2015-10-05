@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
-  function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q) {
+  function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q,
+    $route, ngToast) {
 
     $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
@@ -264,6 +265,34 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
 
       $q.all(bulkDispatchDependencies).then(init());
+    };
+
+    $scope.showMessage = function(type, message) {
+      ngToast.create({
+        className: type,
+        dismissButton: true,
+        content: message
+      });
+    };
+
+    $scope.reloadRoute = function() {
+      $route.reload();
+    };
+
+    $scope.openReceiveConfirmation = function(store) {
+      var modalElement = angular.element('#receive-confirm');
+      modalElement.modal('show');
+      $scope.receiveStore = store;
+    };
+
+    $scope.storeStatusReceived = function(store) {
+      var modalElement = angular.element('#receive-confirm');
+      modalElement.modal('hide');
+      showLoadingModal('Changing Store Instance ' + store.id + ' Status');
+      storeInstanceDashboardFactory.updateStoreInstanceStatus(store.id, 5, store.cateringStationId).then(function() {
+        $scope.showMessage('success', 'Store has been logged as received.');
+        $scope.reloadRoute();
+      });
     };
 
     init();
