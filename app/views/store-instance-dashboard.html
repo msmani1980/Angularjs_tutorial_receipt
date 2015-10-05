@@ -1,17 +1,16 @@
 <div class="fluid-container">
-  <div class="edit-controls">
-    <div class="row">
-      <div class="col-xs-12">
-        <h2 class="view-name">{{ viewName }}</h2>
-      </div>
-    </div>
-  </div>
 
   <div class="store-instance-dashboard">
-    <div class="list-controls">
-    		<div class="row item-list-row">
 
-          <div class="col-xs-12 text-right">
+    <div class="list-controls">
+
+      <div class="row item-list-row">
+
+          <div class="col-xs-6">
+            <h2 class="view-name">{{ viewName }}</h2>
+          </div>
+
+          <div class="col-xs-6 text-right">
 
             <button class="btn btn-info" tabindex="0">Generate Docs</button>
             <button class="btn btn-info" tabindex="0">Receive All</button>
@@ -23,7 +22,9 @@
           </div>
 
     		</div>
+
       </div>
+
     </div>
 
     <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': isReady }">
