@@ -1,27 +1,34 @@
 <div class="fluid-container">
-  <div class="edit-controls">
-    <div class="row">
-      <div class="col-xs-12">
-        <h2 class="view-name">{{ viewName }}</h2>
-      </div>
-    </div>
-  </div>
 
   <div class="store-instance-dashboard">
-    <div class="row">
-      <div class="col-xs-12">
 
-        <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
-                aria-expanded="false"
-                aria-controls="search-collapse">
-          <span class="fa fa-search" aria-hidden="true"></span>
-          <span class="hidden-xs">Search</span>
-        </button>
+    <div class="list-controls">
+
+      <div class="row item-list-row">
+
+          <div class="col-xs-6">
+            <h2 class="view-name">{{ viewName }}</h2>
+          </div>
+
+          <div class="col-xs-6 text-right">
+
+            <button class="btn btn-info" tabindex="0">Generate Docs</button>
+            <button class="btn btn-info" tabindex="0">Receive All</button>
+            <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+              <span class="fa fa-filter" aria-hidden="true"></span>
+    					<span class="hidden-sm hidden-xs">Filter</span>
+    				</button>
+
+          </div>
+
+    		</div>
+
       </div>
+
     </div>
 
     <div class="panel panel-default no-transition" id="search-collapse" ng-class="{'collapse': isReady }">
-      <form name="menuSearchForm" ng-submit="searchStoreInstanceDashboardData()">
+      <form class="form" >
         <div class="panel-body">
           <div class="row">
 
@@ -111,195 +118,189 @@
           </div>
         </div>
         <div class="panel-footer text-right">
-          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-          <button type="submit" class="btn btn-primary">Search</button>
+          <button class="btn btn-default btn-search-clear"
+            ng-click="clearSearchForm()"
+            ng-show="search.dispatchLMPStation.length || search.inboundLMPStation.length || search.storeNumber.length || search.scheduleStartDate.length || search.scheduleEndDate.length || search.departureStations.length || search.arrivalStations.length || search.storeInstance.length || search.storeStatusId.length">
+            <span class="btn-label">Clear</span>
+          </button>
+          <button ng-click="searchStoreInstanceDashboardData()" class="btn btn-primary btn-search">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs btn-label">Search</span>
+          </button>
         </div>
       </form>
     </div>
-    <br>
-    <div class="row">
-      <div class="col-xs-12 select-all-instances">
-        <div class="input-group">
-          <button class="btn btn-info" tabindex="0">Generate Docs</button>
-          <button class="btn btn-info" tabindex="0">Receive All</button>
-        </div>
-      </div>
-    </div>
 
-    <div class="table table-responsive table-hover" ng-show="isReady">
-      <table class="table table-bordered table=hover">
-        <thead>
-        <tr>
-          <th></th>
-          <th>
-            <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected"
-                   ng-click="toggleAllCheckboxes()">
-          </th>
-          <th>Dispatch LMP Station</th>
-          <th>Inbound LMP Station</th>
-          <th>Store Number</th>
-          <th ng-click="toggleAllScheduleInfo(store.id)">
-            <span class="btn">
-              <span class="fa fa-plus-square-o" ng-hide="allScheduleDetailsExpanded"></span>
-              <span class="fa fa-minus-square" ng-show="allScheduleDetailsExpanded"></span>
-              <span><strong>Schedule Information</strong></span>
-            </span>
-          </th>
-          <th>Inbound Seals Tampered</th>
-          <th>Store Instance</th>
-          <th>Status</th>
-          <th>Updated Date/Time</th>
-          <th>Updated User</th>
-          <th class="col-xs-1">Actions</th>
-        </tr>
-        </thead>
-        <!-- TODO: add scheduleNumber to orderBy -->
-        <tbody >
-        <tr class="master-row" ng-repeat="store in storeInstanceList | orderBy:['-scheduleDate', 'storeNumber']" id="store-{{ store.id }}">
-          <td>
-            <span class="fa fa-plus-square-o"
-                  ng-click="toggleAccordionView(store)"
-                  ng-show="doesStoreInstanceHaveReplenishments(store) && !isStoreViewExpanded(store)"></span>
-            <span class="fa fa-minus-square" ng-show="isStoreViewExpanded(store)"
-                  ng-click="toggleAccordionView(store)"></span>
-          </td>
-          <td>
-            <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="store.selected"
-                   type="checkbox">
-            </input>
-          </td>
-          <td>{{ store.dispatchStationCode }}</td>
-          <td>{{ store.inboundStationCode }}</td>
-          <td>{{ store.storeNumber }}</td>
-          <td id="schedule-{{store.id}}" ng-click="toggleScheduleDetails(store.id)">
-            <span class="btn">
-              <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(store.id)"></span>
-              <span class="fa fa-minus-square" ng-show="isScheduleDetailOpen(store.id)"></span>
-              <span><strong>Schedule Date: {{ store.scheduleDate }}</strong></span>
-            </span>
-            <div class="scheduleDetails-{{store.id}} accordion-cell-details accordion-cell-closed">
-              <strong>Schedule Number:</strong> {{ store.scheduleNumber }}<br>
-              <strong>Departure Station:</strong> {{ store.departureStationCode }}<br>
-              <strong>Departure Time:</strong> {{ store.arrivalTime }} <br>
-              <strong>Arrival Station:</strong> {{ store.arrivalStationCode }}<br>
-              <strong>Arrival Time:</strong> {{ store.departureTime }} <br>
-            </div>
-          </td>
-          <td>
-            <span ng-show="store.tampered" class="label label-success">Yes</span>
-            <span ng-hide="store.tampered" class="label label-default">No</span>
-          </td>
-          <td>{{ store.id }}</td>
-          <td><span class="label label-default">{{ store.statusName }}</span></td>
-          <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
-          <td><!-- TODO: add user, which requires user accounts --></td>
-          <td class="col-xs-1">
-            <a class="btn btn-primary btn-xs btn-block" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Pack')"
-               href="#/store-instance-packing/dispatch/{{store.id}}">
-              Start Packing
-            </a>
-            <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Seal')"
-               href="#/store-instance-seals/dispatch/{{store.id}}">
-              Start Seals
-            </a>
-            <a class="btn btn-success btn-xs btn-block" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
-               href="#/store-instance-review/dispatch/{{store.id}}">Dispatch
-            </a>
-            <a class="btn btn-danger btn-xs btn-block" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'End instance')"
-               href="#/store-instance-create/end-instance/{{store.id}}">End Instance
-            </a>
-            <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-               ng-show="isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
-               ng-click="undispatch(store.id)">Undispatch
-            </a>
-            <!-- TODO: Generate Doc Download Link -->
-            <a class="btn btn-info btn-xs btn-block" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
-               href="#/{{store.id}}">Generate Doc
-            </a>
-            <a class="btn btn-default btn-xs btn-block" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
-               href="#/store-instance-create/replenish/{{store.id}}">Replenish
-            </a>
-            <a class="btn btn-default btn-xs btn-block" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Receive')"
-               ng-click="openReceiveConfirmation(store)">
-               Receive
-            </a>
-          </td>
-        </tr>
-        <tr ng-repeat="replenishment in store.replenishItems" class="subversion-row"
-            ng-show="isStoreViewExpanded(store)">
-          <td></td>
-          <td>
-            <input ng-show="doesStoreInstanceContainAction(replenishment, 'Checkbox')" type="checkbox">
-          </td>
-          <td>{{ replenishment.dispatchStationCode }}</td>
-          <td><!-- TODO: add Inbound LMP Station --></td>
-          <td>{{ replenishment.storeNumber }}</td>
-          <td id="schedule-{{replenishment.id}}" ng-click="toggleScheduleDetails(replenishment.id)">
-            <span class="btn">
-              <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(replenishment.id)"></span>
-              <span class="fa fa-minus-square" ng-show="isScheduleDetailOpen(replenishment.id)"></span>
-              <span><strong>Schedule Date: {{ replenishment.scheduleDate }}</strong></span>
-            </span>
-            <div class="scheduleDetails-{{replenishment.id}} accordion-cell-details accordion-cell-closed">
-              <strong>Departure Station:</strong> {{ replenishment.departureStationCode }}<br>
-              <strong>Departure Time:</strong> {{ replenishment.arrivalTime }} <br>
-              <strong>Arrival Station:</strong> {{ replenishment.arrivalStationCode }}<br>
-              <strong>Arrival Time:</strong> {{ replenishment.departureTime }} <br>
-            </div>
-          </td>
-          <td>{{ (replenishment.tampered) ? 'true' : 'false' }}</td>
-          <td>{{ replenishment.id }}</td>
-          <td><span class="label label-default">{{ replenishment.statusName }}</span></td>
-          <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
-          <td><!-- TODO: add user, which requires user accounts --></td>
-          <td class="col-xs-1">
-            <a class="btn btn-primary btn-xs" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Pack')"
-               href="#/store-instance-packing/replenish/{{replenishment.id}}">
-              Start Packing
-            </a>
-            <a class="btn btn-warning btn-xs" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Seal')"
-               href="#/store-instance-seals/replenish/{{replenishment.id}}">
-              Start Seals
-            </a>
-            <a class="btn btn-success btn-xs" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
-               href="#/store-instance-review/replenish/{{replenishment.id}}">Dispatch
-            </a>
-            <a class="btn btn-danger btn-xs" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'End instance')"
-               href="#/store-instance-create/end-instance/{{replenishment.id}}">End Instance
-            </a>
-            <!-- NOTE: undispatch not allowed for replenishments-->
+    <table class="table table-bordered table-responsive table-hover" ng-show="isReady">
+      <thead>
+      <tr>
+        <th></th>
+        <th>
+          <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected"
+                 ng-click="toggleAllCheckboxes()">
+        </th>
+        <th>Dispatch LMP Station</th>
+        <th>Inbound LMP Station</th>
+        <th>Store Number</th>
+        <th ng-click="toggleAllScheduleInfo(store.id)">
+          <span class="btn">
+            <span class="fa fa-plus-square-o" ng-hide="allScheduleDetailsExpanded"></span>
+            <span class="fa fa-minus-square" ng-show="allScheduleDetailsExpanded"></span>
+            <span><strong>Schedule Information</strong></span>
+          </span>
+        </th>
+        <th>Inbound Seals Tampered</th>
+        <th>Store Instance</th>
+        <th>Status</th>
+        <th>Updated Date/Time</th>
+        <th>Updated User</th>
+        <th class="col-xs-1">Actions</th>
+      </tr>
+      </thead>
+      <tbody >
+      <tr class="master-row" ng-repeat="store in storeInstanceList | orderBy:['-scheduleDate', 'storeNumber']" id="store-{{ store.id }}">
+        <td>
+          <span class="fa fa-plus-square-o"
+                ng-click="toggleAccordionView(store)"
+                ng-show="doesStoreInstanceHaveReplenishments(store) && !isStoreViewExpanded(store)"></span>
+          <span class="fa fa-minus-square" ng-show="isStoreViewExpanded(store)"
+                ng-click="toggleAccordionView(store)"></span>
+        </td>
+        <td>
+          <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="store.selected"
+                 type="checkbox">
+          </input>
+        </td>
+        <td>{{ store.dispatchStationCode }}</td>
+        <td>{{ store.inboundStationCode }}</td>
+        <td>{{ store.storeNumber }}</td>
+        <td id="schedule-{{store.id}}" ng-click="toggleScheduleDetails(store.id)">
+          <span class="btn">
+            <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(store.id)"></span>
+            <span class="fa fa-minus-square" ng-show="isScheduleDetailOpen(store.id)"></span>
+            <span><strong>Schedule Date: {{ store.scheduleDate }}</strong></span>
+          </span>
+          <div class="scheduleDetails-{{store.id}} accordion-cell-details accordion-cell-closed">
+            <strong>Schedule Number:</strong> {{ store.scheduleNumber }}<br>
+            <strong>Departure Station:</strong> {{ store.departureStationCode }}<br>
+            <strong>Departure Time:</strong> {{ store.arrivalTime }} <br>
+            <strong>Arrival Station:</strong> {{ store.arrivalStationCode }}<br>
+            <strong>Arrival Time:</strong> {{ store.departureTime }} <br>
+          </div>
+        </td>
+        <td>
+          <span ng-show="store.tampered" class="label label-success">Yes</span>
+          <span ng-hide="store.tampered" class="label label-default">No</span>
+        </td>
+        <td>{{ store.id }}</td>
+        <td><span class="label label-default">{{ store.statusName }}</span></td>
+        <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
+        <td><!-- TODO: add user, which requires user accounts --></td>
+        <td class="col-xs-1">
+          <a class="btn btn-primary btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Pack')"
+             href="#/store-instance-packing/dispatch/{{store.id}}">
+            Start Packing
+          </a>
+          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Seal')"
+             href="#/store-instance-seals/dispatch/{{store.id}}">
+            Start Seals
+          </a>
+          <a class="btn btn-success btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
+             href="#/store-instance-review/dispatch/{{store.id}}">Dispatch
+          </a>
+          <a class="btn btn-danger btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'End instance')"
+             href="#/store-instance-create/end-instance/{{store.id}}">End Instance
+          </a>
+          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
+             ng-show="isUndispatchPossible(store)"
+             ng-show="isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
+             ng-click="undispatch(store.id)">Undispatch
+          </a>
+          <!-- TODO: Generate Doc Download Link -->
+          <a class="btn btn-info btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
+             href="#/{{store.id}}">Generate Doc
+          </a>
+          <a class="btn btn-default btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
+             href="#/store-instance-create/replenish/{{store.id}}">Replenish
+          </a>
+          <a class="btn btn-default btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Receive')"
+             ng-click="openReceiveConfirmation(store)">
+             Receive
+          </a>
+        </td>
+      </tr>
+      <tr ng-repeat="replenishment in store.replenishItems" class="subversion-row"
+          ng-show="isStoreViewExpanded(store)">
+        <td></td>
+        <td>
+          <input ng-show="doesStoreInstanceContainAction(replenishment, 'Checkbox')" type="checkbox">
+        </td>
+        <td>{{ replenishment.dispatchStationCode }}</td>
+        <td><!-- TODO: add Inbound LMP Station --></td>
+        <td>{{ replenishment.storeNumber }}</td>
+        <td id="schedule-{{replenishment.id}}" ng-click="toggleScheduleDetails(replenishment.id)">
+          <span class="btn">
+            <span class="fa fa-plus-square-o" ng-hide="isScheduleDetailOpen(replenishment.id)"></span>
+            <span class="fa fa-minus-square" ng-show="isScheduleDetailOpen(replenishment.id)"></span>
+            <span><strong>Schedule Date: {{ replenishment.scheduleDate }}</strong></span>
+          </span>
+          <div class="scheduleDetails-{{replenishment.id}} accordion-cell-details accordion-cell-closed">
+            <strong>Departure Station:</strong> {{ replenishment.departureStationCode }}<br>
+            <strong>Departure Time:</strong> {{ replenishment.arrivalTime }} <br>
+            <strong>Arrival Station:</strong> {{ replenishment.arrivalStationCode }}<br>
+            <strong>Arrival Time:</strong> {{ replenishment.departureTime }} <br>
+          </div>
+        </td>
+        <td>{{ (replenishment.tampered) ? 'true' : 'false' }}</td>
+        <td>{{ replenishment.id }}</td>
+        <td><span class="label label-default">{{ replenishment.statusName }}</span></td>
+        <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
+        <td><!-- TODO: add user, which requires user accounts --></td>
+        <td class="col-xs-1">
+          <a class="btn btn-primary btn-xs" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Pack')"
+             href="#/store-instance-packing/replenish/{{replenishment.id}}">
+            Start Packing
+          </a>
+          <a class="btn btn-warning btn-xs" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Seal')"
+             href="#/store-instance-seals/replenish/{{replenishment.id}}">
+            Start Seals
+          </a>
+          <a class="btn btn-success btn-xs" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
+             href="#/store-instance-review/replenish/{{replenishment.id}}">Dispatch
+          </a>
+          <a class="btn btn-danger btn-xs" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Delete')"
+             href="#/store-instance-create/end-instance/{{replenishment.id}}">End Instance
+          </a>
+          <!-- NOTE: undispatch not allowed for replenishments-->
 
-            <!-- TODO: Generate Doc Download Link -->
-            <a class="btn btn-info btn-xs" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
-               href="#/{{replenishment.id}}">Generate Doc
-            </a>
-            <a class="btn btn-default btn-xs" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
-               href="#/store-instance-create/replenish/{{replenishment.id}}">Replenish
-            </a>
-            <a class="btn btn-default btn-xs" tabindex="0"
-               ng-show="doesStoreInstanceContainAction(store, 'Receive')"
-               ng-click="openReceiveConfirmation(store)">Receive
-            </a>
-          </td>
-        </tr>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-
+          <!-- TODO: Generate Doc Download Link -->
+          <a class="btn btn-info btn-xs" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
+             href="#/{{replenishment.id}}">Generate Doc
+          </a>
+          <a class="btn btn-default btn-xs" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
+             href="#/store-instance-create/replenish/{{replenishment.id}}">Replenish
+          </a>
+          <a class="btn btn-default btn-xs" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Receive')"
+             ng-click="openReceiveConfirmation(store)">Receive
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 
 <div class="modal fade" id="receive-confirm" data-backdrop="static" data-keyboard="false">
