@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, ngToast, dateUtility, GlobalMenuService,
-    storeInstanceWizardConfig, $location, schedulesService, menuCatererStationsService, lodash, storeInstanceService) {
+    storeInstanceWizardConfig, $location, schedulesService, menuCatererStationsService, lodash) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -259,7 +259,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $location.url('/store-instance-dashboard/');
       } else {
         this.displayLoadingModal('Loading Inbound Seals');
-        storeInstanceService.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
+        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
           .then((saveAndExit ? this.exitOnSave : this.endStoreInstanceSuccessHandler), this.endStoreInstanceErrorHandler);
       }
     };

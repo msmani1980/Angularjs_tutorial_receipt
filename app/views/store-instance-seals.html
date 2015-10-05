@@ -8,6 +8,11 @@
 
   <form name="assignSealsForm" ng-submit="submitForm()">
 
+    <div class="well" ng-if="isEndInstance()">
+      <h5><input type="checkbox" ng-model="isTampered"/> Inbound Seals Tampered</h5>
+      <input-textarea ng-if="isTampered" placeholder="Notes"></input-textarea>
+    </div>
+
     <div ng-repeat="(sealTypeKey, sealType) in sealTypesList | orderBy:'order'" ng-if="sealTypesList">
 
       <seal-type seal-type-object="sealType"></seal-type>
