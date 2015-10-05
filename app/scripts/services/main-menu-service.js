@@ -166,7 +166,7 @@ angular.module('ts5App')
         title: 'Discount Management',
         menuItems: [{
           name: 'Manage Discounts',
-          route: emberURL + 'discounts',
+          route: '/#/discount-list',
           icon: 'icon-manage-discount',
           className: 'dashboard-manageDiscount'
         }, {

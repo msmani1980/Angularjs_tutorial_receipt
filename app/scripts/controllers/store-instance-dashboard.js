@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
-  function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q, storeInstanceService,
+  function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q,
     $route, ngToast) {
 
     $scope.viewName = 'Store Instance Dashboard';
@@ -289,7 +289,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var modalElement = angular.element('#receive-confirm');
       modalElement.modal('hide');
       showLoadingModal('Changing Store Instance ' + store.id + ' Status');
-      storeInstanceService.updateStoreInstanceStatus(store.id, 5, store.cateringStationId).then(function() {
+      storeInstanceDashboardFactory.updateStoreInstanceStatus(store.id, 5, store.cateringStationId).then(function() {
         $scope.showMessage('success', 'Store has been logged as received.');
         $scope.reloadRoute();
       });
