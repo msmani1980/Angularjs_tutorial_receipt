@@ -8,13 +8,21 @@
   </div>
 
   <div class="store-instance-dashboard">
-    <div class="row">
-      <div class="col-xs-12">
+    <div class="list-controls">
+    		<div class="row item-list-row">
 
-        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
-          <span class="fa fa-filter" aria-hidden="true"></span>
-					<span class="hidden-sm hidden-xs">Filter</span>
-				</button>
+          <div class="col-xs-12 text-right">
+
+            <button class="btn btn-info" tabindex="0">Generate Docs</button>
+            <button class="btn btn-info" tabindex="0">Receive All</button>
+            <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+              <span class="fa fa-filter" aria-hidden="true"></span>
+    					<span class="hidden-sm hidden-xs">Filter</span>
+    				</button>
+
+          </div>
+
+    		</div>
       </div>
     </div>
 
@@ -120,15 +128,6 @@
           </button>
         </div>
       </form>
-    </div>
-    <br>
-    <div class="row">
-      <div class="col-xs-12 select-all-instances">
-        <div class="input-group">
-          <button class="btn btn-info" tabindex="0">Generate Docs</button>
-          <button class="btn btn-info" tabindex="0">Receive All</button>
-        </div>
-      </div>
     </div>
 
     <table class="table table-bordered table-responsive table-hover" ng-show="isReady">
