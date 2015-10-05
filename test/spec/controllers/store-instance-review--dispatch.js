@@ -208,4 +208,11 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     });
   });
 
+  describe('the show qty functionality', function () {
+    it('should show the qty since this is dispatch', function () {
+      var showQty = scope.showQty();
+      expect(showQty).toBeTruthy();
+    });
+  });
+
 });

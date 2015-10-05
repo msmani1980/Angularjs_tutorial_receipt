@@ -49,29 +49,37 @@
               </div>
 
               <div class="form-group col-xs-4">
-                <label for="create-schedule">Schedule Number</label>
-                <select
+                <label>Schedule Number</label>
+                <ui-select
                   ng-disabled="isDateSelected()"
-                  ng-model="selectedSchedule"
+                  ng-model="search.selectedSchedule"
                   ng-change="clearStoreNumber()"
-                  class="form-control col-md-12"
-                  id="create-schedule"
-                  ng-options="schedule.scheduleNumber as schedule.scheduleNumber for schedule in filteredSchedulesList">
-                  <option disabled value>Select Schedule</option>
-                </select>
+                  theme="bootstrap"
+                  placeholder="Select Schedule">
+                  <ui-select-match
+                    placeholder="Select Schedule">{{ $select.selected.scheduleNumber}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="schedule in filteredSchedulesList | filter: $select.search | orderBy:'scheduleNumber'">
+                    <div ng-bind-html="schedule.scheduleNumber | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
               </div>
 
               <div class="form-group col-xs-4">
-                <label for="create-storeNumber">Store Number</label>
-                <select
+                <label>Store Number</label>
+                <ui-select
                   ng-disabled="isDateSelected()"
-                  ng-model="selectedStoreNumber"
+                  ng-model="search.selectedStoreNumber"
                   ng-change="clearSelectedSchedule()"
-                  class="form-control col-md-12"
-                  id="create-storeNumber"
-                  ng-options="store.id as store.storeNumber for store in storeList">
-                  <option disabled value>Select Store Number</option>
-                </select>
+                  theme="bootstrap"
+                  placeholder="Select Store Number">
+                  <ui-select-match
+                    placeholder="Select Store Number">{{ $select.selected.storeNumber}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="store in storeList | filter: $select.search | orderBy:'storeNumber'">
+                    <div ng-bind-html="store.storeNumber | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
               </div>
 
               <div class="form-group col-xs-12 text-right">

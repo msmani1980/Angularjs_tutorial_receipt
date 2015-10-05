@@ -16,7 +16,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var StoreInstancePackingCtrl;
   var scope;
   var storeInstanceFactory;
-  var routeParams;
   var getUpdatedStoreStatusDeferred;
   var servedStoreStatusJSON;
   var getStoreDetailsDeferred;
@@ -33,6 +32,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var servedCharacteristicsJSON;
   var dateUtility;
   var storeId;
+  var controller;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
@@ -48,10 +48,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     });
     storeId = 5;
     scope = $rootScope.$new();
-    routeParams = {
-      storeId: storeId,
-      action: 'replenish'
-    };
+    controller = $controller;
 
     storeInstanceFactory = $injector.get('storeInstanceFactory');
 
@@ -84,17 +81,24 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     spyOn(storeInstanceFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
     spyOn(storeInstanceFactory, 'getCharacteristics').and.returnValue(getCharacteristicsDeferred.promise);
 
-
-    StoreInstancePackingCtrl = $controller('StoreInstancePackingCtrl', {
-      $scope: scope,
-      $routeParams: routeParams
-    });
   }));
 
-  describe('Init', function () {
-    describe('API calls', function () {
+  function initController(action) {
+    StoreInstancePackingCtrl = controller('StoreInstancePackingCtrl', {
+      $scope: scope,
+      $routeParams: {
+        storeId: storeId,
+        action: ( action ? action : 'dispatch')
+      }
+    });
+  }
+
+  describe('when the controller initializes', function () {
+
+    describe('during the dispatch process', function () {
 
       beforeEach(function () {
+        initController();
         getStoreDetailsDeferred.resolve(servedStoreInstanceDetailsJSON);
         scope.$digest();
       });
@@ -109,20 +113,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       it('should call getItemTypes', function () {
         expect(storeInstanceFactory.getItemTypes).toHaveBeenCalled();
-      });
-
-      it('should call getCharacteristics', function () {
-        expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
-      });
-
-      it('should call getStoreInstanceMenuItems with Regular and Uplifted filters', function () {
-        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
-        var expectedPayload = {
-          itemTypeId: 1, // this is 1 because we are requesting regular items.
-          characteristicId: 2, // this is 2 for upliftable items
-          date: formattedDate
-        };
-        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(storeId, expectedPayload);
       });
 
       it('should call getStoreInstanceItems', function () {
@@ -141,17 +131,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         StoreInstancePackingCtrl.getStoreInstanceItems();
         scope.$digest();
         expect(scope.menuItems[0].id).toBeDefined();
-      });
-
-      it('should call getItemsMasterList', function () {
-        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
-        var expectedPayload = {
-          itemTypeId: 1,
-          characteristicId: 2,
-          startDate: formattedDate,
-          endDate: formattedDate
-        };
-        expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
       });
 
       it('should update store details status objects', function () {
@@ -192,11 +171,58 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         });
       });
 
+      it('should show the template qty field', function () {
+        var showQty = scope.showQty();
+        expect(showQty).toBeTruthy();
+      });
+
     });
+
+    describe('during the replenish process', function () {
+
+      beforeEach(function () {
+        initController('replenish');
+        getStoreDetailsDeferred.resolve(servedStoreInstanceDetailsJSON);
+        scope.$digest();
+      });
+
+      it('should call getCharacteristics', function () {
+        expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
+      });
+
+      it('should call getStoreInstanceMenuItems with Regular and Uplifted filters', function () {
+        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
+        var expectedPayload = {
+          itemTypeId: 1, // this is 1 because we are requesting regular items.
+          characteristicId: 2, // this is 2 for upliftable items
+          date: formattedDate
+        };
+        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(storeId, expectedPayload);
+      });
+
+      it('should call getItemsMasterList', function () {
+        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
+        var expectedPayload = {
+          itemTypeId: 1,
+          characteristicId: 2,
+          startDate: formattedDate,
+          endDate: formattedDate
+        };
+        expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+      it('should not show the template qty field', function () {
+        var showQty = scope.showQty();
+        expect(showQty).toBeFalsy();
+      });
+
+    });
+
   });
 
   describe('formatStoreInstanceItemsPayload', function () {
     beforeEach(function () {
+      initController();
       scope.menuItems = [{
         id: 1,
         itemMasterId: 2,
@@ -241,6 +267,11 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   });
 
   describe('filtered master menu items', function () {
+
+    beforeEach(function() {
+      initController();
+    });
+
     it('should not allow to add items that are already in the store items', function () {
       scope.menuItems = [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}];
       scope.masterItemsList = [{id: 1}, {id: 2}, {id: 5}];
@@ -268,6 +299,40 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         scope.addItems();
         expect(scope.emptyMenuItems.length).toBe(0);
       });
+    });
+
+  });
+
+  describe('if a user can proceed', function () {
+
+    beforeEach(function() {
+      initController();
+    });
+
+    it('should allow the user to proceed if there are menu items in the view', function () {
+      scope.menuItems = [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}];
+      scope.$digest();
+      var canProceed = scope.canProceed();
+      expect(canProceed).toBeTruthy();
+    });
+
+    it('should allow the user to proceed if there are menu items in the view', function () {
+      scope.emptyMenuItems = [{
+        quantity: 9,
+        nonsenseKey: 4,
+        masterItem: {id: 5}
+      }];
+      scope.$digest();
+      var canProceed = scope.canProceed();
+      expect(canProceed).toBeTruthy();
+    });
+
+    it('should not allow the user to proceed if there are no items in the view', function () {
+      scope.emptyMenuItems = [];
+      scope.menuItems = [];
+      scope.$digest();
+      var canProceed = scope.canProceed();
+      expect(canProceed).toBeFalsy();
     });
 
   });

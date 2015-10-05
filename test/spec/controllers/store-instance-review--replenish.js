@@ -215,4 +215,18 @@ describe('Controller: StoreInstanceReviewCtrl replenish', function () {
     });
   });
 
+  describe('the show qty functionality', function () {
+    it('should not show the qty since this is replenish', function () {
+      var showQty = scope.showQty();
+      expect(showQty).toBeFalsy();
+    });
+  });
+
+  describe('has discrepancy functionality', function () {
+    it('should never return a class name', function () {
+      var hasDiscrepancy = scope.hasDiscrepancy();
+      expect(hasDiscrepancy).toEqual('');
+    });
+  });
+
 });

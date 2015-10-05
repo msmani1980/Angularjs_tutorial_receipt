@@ -30,6 +30,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   var storeTimeConfig;
   var storeTimeConfigDeferred;
   var storeTimeConfigResponseJSON;
+  var storeInstanceService;
+  var updateStoreInstanceStatusDeferred;
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     inject(function(_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_,
@@ -47,6 +49,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
     storeInstanceDashboardFactory = $injector.get('storeInstanceDashboardFactory');
     storeTimeConfig = $injector.get('storeTimeConfig');
+    storeInstanceService = $injector.get('storeInstanceService');
 
     cateringStationDeferred = $q.defer();
     cateringStationDeferred.resolve(cateringStationResponseJSON);
@@ -62,6 +65,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     statusDeferred.resolve(statusResponseJSON);
     storeTimeConfigDeferred = $q.defer();
     storeTimeConfigDeferred.resolve(storeTimeConfigResponseJSON);
+    updateStoreInstanceStatusDeferred = $q.defer();
+
 
     spyOn(storeInstanceDashboardFactory, 'getCatererStationList').and.returnValue(cateringStationDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStationList').and.returnValue(stationDeferred.promise);
@@ -73,7 +78,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
     StoreInstanceDashboardCtrl = $controller('StoreInstanceDashboardCtrl', {
       $scope: scope
-      // place here mocked dependencies
+        // place here mocked dependencies
     });
   }));
 
@@ -373,6 +378,19 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
     it('should update status to 1', function () {
       expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(2, 1);
+    });
+  });
+
+  describe('storeStatusReceived', function() {
+    beforeEach(function() {
+      spyOn(scope, 'storeStatusReceived').and.callThrough();
+      updateStoreInstanceStatusDeferred.resolve();
+      scope.$digest();
+    });
+
+    it('updateStoreInstance should have been called', function() {
+      scope.storeStatusReceived(33);
+      expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalled();
     });
   });
 
