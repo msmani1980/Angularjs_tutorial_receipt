@@ -13,7 +13,7 @@ angular.module('ts5App')
       $scope.numberOfSeals = 0;
 
       $scope.isSequentialPossible = function() {
-        if($scope.$parent.readOnly){
+        if ($scope.$parent.readOnly) {
           return false;
         }
         return ($scope.sealTypeObject.seals.numbers.length === 1 && $scope.sealTypeObject.seals.numbers[0] >= 0);
@@ -29,7 +29,7 @@ angular.module('ts5App')
       };
 
       $scope.showClearButton = function() {
-        if($scope.$parent.readOnly){
+        if ($scope.$parent.readOnly) {
           return false;
         }
         return ($scope.sealTypeObject.seals.numbers.length > 1);
@@ -50,7 +50,7 @@ angular.module('ts5App')
       };
 
       $scope.disabledAndNoSeals = function() {
-        return ( $scope.$parent.readOnly && $scope.sealTypeObject.seals.numbers.length < 1);
+        return ($scope.$parent.readOnly && $scope.sealTypeObject.seals.numbers.length < 1);
       };
 
       $scope.isReadOnly = function() {

@@ -18,14 +18,26 @@ angular.module('ts5App')
     var HIGH_SECURITY = 'High Security';
 
     var $this = this;
-    this.nextStep = {
-      stepName: '3',
-      URL: '/store-instance-review/' + $routeParams.action + '/' + $routeParams.storeId
-    };
-    this.prevStep = {
-      stepName: '1',
-      URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
-    };
+
+    if ($routeParams.action === 'end-instance') {
+      this.nextStep = {
+        stepName: '3',
+        URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
+      };
+      this.prevStep = {
+        stepName: '1',
+        URL: '/store-instance-create/' + $routeParams.action + '/' + $routeParams.storeId
+      };
+    } else {
+      this.nextStep = {
+        stepName: '3',
+        URL: '/store-instance-review/' + $routeParams.action + '/' + $routeParams.storeId
+      };
+      this.prevStep = {
+        stepName: '1',
+        URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
+      };
+    }
 
     $scope.formData = [];
     $scope.readOnly = true;
@@ -41,6 +53,12 @@ angular.module('ts5App')
     };
 
     this.isInstanceReadOnly = function() {
+      console.log($scope.storeDetails.currentStatus.name);
+      if ($scope.storeDetails.currentStatus.name === '1' && $routeParams.action === 'end-instance') {
+        $scope.readOnly = false;
+        $scope.saveButtonName = 'Save & Exit';
+        return;
+      }
       if ($scope.storeDetails.currentStatus.name !== '2' ||
         $routeParams.action === 'replenish' && !this.canReplenish()) {
         this.showMessage('warning', 'This store instance is not ready for seals');
@@ -93,30 +111,34 @@ angular.module('ts5App')
     };
 
     this.createHandoverActions = function() {
-      return [{
-        label: 'Copy From Outbound',
-        trigger: function() {
-          return $scope.copySeals(OUTBOUND, HANDOVER);
-        }
-      }];
+      if ($routeParams.action !== 'end-instance') {
+        return [{
+          label: 'Copy From Outbound',
+          trigger: function() {
+            return $scope.copySeals(OUTBOUND, HANDOVER);
+          }
+        }];
+      }
     };
 
     this.createInboundActions = function() {
-      var actions = [{
-        label: 'Copy From Handover',
-        trigger: function() {
-          return $scope.copySeals(HANDOVER, INBOUND);
+      if ($routeParams.action !== 'end-instance') {
+        var actions = [{
+          label: 'Copy From Handover',
+          trigger: function() {
+            return $scope.copySeals(HANDOVER, INBOUND);
+          }
+        }, {
+          label: 'Copy From Outbound',
+          trigger: function() {
+            return $scope.copySeals(OUTBOUND, INBOUND);
+          }
+        }];
+        if ($routeParams.action === 'replenish') {
+          actions.splice(0, 1);
         }
-      }, {
-        label: 'Copy From Outbound',
-        trigger: function() {
-          return $scope.copySeals(OUTBOUND, INBOUND);
-        }
-      }];
-      if ($routeParams.action === 'replenish') {
-        actions.splice(0, 1);
+        return actions;
       }
-      return actions;
     };
 
     this.addSealTypeActions = function(sealTypeObject) {
@@ -472,14 +494,13 @@ angular.module('ts5App')
 
     $scope.hideSealTypeIfEndInstance = function(type) {
       if ($scope.isEndInstance() && $scope.sealTypesList) {
-        if (type === 'Outbound') {
+        if (type.name === OUTBOUND) {
           return true;
         }
-        if (type === 'Hand Over') {
+        if (type.name === HANDOVER) {
           return true;
         }
       }
     };
-
 
   });
