@@ -1,0 +1,117 @@
+<div class="container">
+
+    <div class="list-controls">
+        <div class="row item-list-row">
+            <div class="col-xs-4">
+                <h2 class="view-name">{{viewName}}</h2>
+            </div>
+
+            <div class="col-xs-8 text-right">
+
+                <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                        aria-controls="search-collapse">
+                    <span class="fa fa-filter" aria-hidden="true"></span>
+                    <span class="hidden-sm hidden-xs">Filter</span>
+                </button>
+
+                <a href="/ember/#/discounts/create" class="btn btn-primary">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    <span class="hidden-xs">Create Discount</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="panel panel-default collapse no-transition" id="search-collapse">
+            <form name="discountSearchForm" ng-submit="searchDiscounts()">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="form-group">
+                                <label for="discount-type">Discount Type</label>
+                                <select ng-model="search.discountTypeId" class="form-control" id="discount-type">
+                                    <option value="{{type.id}}" ng-repeat="type in discountTypes | unique: 'id'">{{ type.globalDiscountTypeName }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="form-group">
+                                <label for="discount-name">Discount</label>
+                                <input ng-model="search.name" type="text" class="form-control" id="discount-name" placeholder="10% Off">
+                            </div>
+                        </div>
+
+                        <date-picker
+                                class="col-xs-12 col-md-6 col-sm-12"
+                                element-class="col-xs-6 col-sm-6"
+                                start-date-model="search.startDate"
+                                end-date-model="search.endDate"
+                                label-from="Effective From *"
+                                label-to="Effective To *"
+                                is-search-field="true">
+                        </date-picker>
+
+                    </div>
+                </div>
+                <div class="panel-footer text-right">
+                    <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+        </button>
+        <h4>
+            We found errors :( !
+        </h4>
+
+        <ul>
+            <li ng-repeat="error in form.$error.required">
+                <strong>{{ error.$name }}</strong> is required
+            </li>
+            <li ng-repeat="error in form.$error.pattern">
+                <strong>{{ error.$name }}</strong> is invalid
+            </li>
+            <li ng-show="formErrors" ng-repeat="error in formErrors">
+                <strong>{{error.field}}</strong>
+                <span>{{ error.value }}</span>
+                <span>{{ error.code }}</span>
+            </li>
+        </ul>
+    </div>
+
+    <table class="table table-responsive table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Discount type</th>
+            <th>Discount</th>
+            <th>Benefit Type</th>
+            <th>Restriction</th>
+            <th>Effective From</th>
+            <th>Effective To</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="discount in discountList | toArray:false |  filter:{discountTypeId: search.discountTypeId, name: search.name}">
+            <td>{{ discount.discountTypeName }}</td>
+            <td>{{ discount.name }}</td>
+            <td>{{ discount.rateTypeName }}</td>
+            <td>{{ discount.companyDiscountRestrictions }}</td>
+            <td>{{ discount.startDate }}</td>
+            <td>{{ discount.endDate }}</td>
+            <td>
+                <button class="btn btn-primary btn-xs" ng-click="editDiscount(discount)" ng-show="isDiscountEditable(discount)">
+                    <i class="fa fa-pencil"></i>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+</div>
