@@ -11,13 +11,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q, dateUtility) {
 
     this.actions = {};
-    var $this    = this;
+    var $this = this;
 
-    $scope.emptyMenuItems         = [];
+    $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
-    $scope.addItemsNumber         = 1;
-    $scope.readOnly               = true;
-    $scope.saveButtonName         = 'Exit';
+    $scope.addItemsNumber = 1;
+    $scope.readOnly = true;
+    $scope.saveButtonName = 'Exit';
 
     var nextStep = {
       stepName: '2',
@@ -143,7 +143,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.getStoreInstanceMenuItems = function () {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
-      var payload     = {
+      var payload = {
         itemTypeId: $scope.regularItemTypeId,
         date: payloadDate
       };
@@ -164,7 +164,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getMasterItemsList = function () {
-      var payloadDate   = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
+      var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var filterPayload = {
         itemTypeId: $scope.regularItemTypeId,
         startDate: payloadDate,
@@ -231,7 +231,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.createPayload = function () {
-      var newPayload  = {response: []};
+      var newPayload = {response: []};
       var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
       angular.forEach(mergedItems, function (item) {
         var itemPayload = {
@@ -265,7 +265,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($scope.storeDetails.currentStatus.name !== '1') {
         showToast('warning', 'Store Instance Status', 'This store instance is not ready for packing');
       } else {
-        $scope.readOnly       = false;
+        $scope.readOnly = false;
         $scope.saveButtonName = 'Save & Exit';
       }
     };
@@ -289,11 +289,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.initialize = function () {
-      $scope.wizardSteps    = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       showLoadingModal('Loading Store Detail for Packing...');
-      $scope.menuItems      = [];
+      $scope.menuItems = [];
       $scope.emptyMenuItems = [];
-      var promises          = $this.makeInitializePromises();
+      var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies);
     };
 
@@ -325,8 +325,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.emptyMenuItems = [];
       angular.forEach(dataFromAPI.response, function (item) {
         var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId});
-        item.itemCode  = angular.isDefined(masterItem) ? masterItem.itemCode : '';
-        item.itemName  = angular.isDefined(masterItem) ? masterItem.itemName : '';
+        item.itemCode = angular.isDefined(masterItem) ? masterItem.itemCode : '';
+        item.itemName = angular.isDefined(masterItem) ? masterItem.itemName : '';
       });
       getItemsSuccessHandler(dataFromAPI);
 
@@ -375,11 +375,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.savePackingDataAndUpdateStatus(true);
     };
 
-    $scope.showQty = function() {
+    $scope.showQty = function () {
       return ($routeParams.action === 'dispatch');
     };
 
-    $scope.canProceed = function() {
+    $scope.canProceed = function () {
       return ($scope.menuItems.length > 0 || $scope.emptyMenuItems.length > 0);
     };
 
