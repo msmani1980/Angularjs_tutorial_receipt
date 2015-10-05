@@ -31,7 +31,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function showErrors(dataFromAPI) {
-      showToast('warning', 'Store Instance Packing', 'error saving items!');
       $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
