@@ -134,7 +134,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getUpliftableCharacteristicIdSuccess = function (dataFromAPI, characteristicName) {
-      $scope.upliftableCharacteristicId = $this.getIdByNameFromArray(characteristicName, dataFromAPI);
+      $scope.characteristicFilterId = $this.getIdByNameFromArray(characteristicName, dataFromAPI);
     };
 
     this.getCharacteristicIdForName = function (characteristicName) {
@@ -149,8 +149,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemTypeId: $scope.regularItemTypeId,
         date: payloadDate
       };
-      if ($scope.upliftableCharacteristicId) {
-        payload.characteristicId = $scope.upliftableCharacteristicId;
+      if ($scope.characteristicFilterId) {
+        payload.characteristicId = $scope.characteristicFilterId;
       }
       storeInstanceFactory.getStoreInstanceMenuItems($routeParams.storeId, payload).then(getItemsSuccessHandler, showErrors);
     };
@@ -172,8 +172,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         startDate: payloadDate,
         endDate: payloadDate
       };
-      if ($scope.upliftableCharacteristicId) {
-        filterPayload.characteristicId = $scope.upliftableCharacteristicId;
+      if ($scope.characteristicFilterId) {
+        filterPayload.characteristicId = $scope.characteristicFilterId;
       }
       storeInstanceFactory.getItemsMasterList(filterPayload).then($this.getMasterItemsListSuccess, showErrors);
     };
@@ -296,7 +296,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       ];
       if ($routeParams.action === 'replenish') {
         promises.push(this.getCharacteristicIdForName('Upliftable'));
-      } else if($routeParams.action === 'end-dispatch') {
+      } else if($routeParams.action === 'end-instance') {
         promises.push(this.getCharacteristicIdForName('Inventory'));
       }
 
