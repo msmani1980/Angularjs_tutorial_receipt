@@ -15,7 +15,7 @@
 
     <div ng-repeat="(sealTypeKey, sealType) in sealTypesList | orderBy:'order'" ng-if="sealTypesList">
 
-      <seal-type seal-type-object="sealType" ng-hide="hideSealTypeIfEndInstance(sealType)"></seal-type>
+      <seal-type seal-type-object="sealType" ng-hide="hideSealTypeIfEndInstance(sealType.name)"></seal-type>
 
     </div>
 

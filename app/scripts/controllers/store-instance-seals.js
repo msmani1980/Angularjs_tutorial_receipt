@@ -494,10 +494,10 @@ angular.module('ts5App')
 
     $scope.hideSealTypeIfEndInstance = function(type) {
       if ($scope.isEndInstance() && $scope.sealTypesList) {
-        if (type.name === OUTBOUND) {
+        if (type === OUTBOUND) {
           return true;
         }
-        if (type.name === HANDOVER) {
+        if (type === HANDOVER) {
           return true;
         }
       }
