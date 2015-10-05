@@ -29,7 +29,7 @@
         <thead>
         <tr>
           <th>Retail Item Details</th>
-          <th width="15%">Template Quantity</th>
+          <th ng-show="showQty()" width="15%">Template Quantity</th>
           <th width="15%">Packed Quantity</th>
           <th width="5%"></th>
         </tr>
@@ -45,7 +45,7 @@
             <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"
                    disabled/>
           </td>
-          <td>
+          <td ng-show="showQty()">
             <input type="text"
                    name="templateQuantity-{{$index}}"
                    custom-validity

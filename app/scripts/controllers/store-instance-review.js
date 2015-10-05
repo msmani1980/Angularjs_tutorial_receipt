@@ -349,7 +349,14 @@ angular.module('ts5App')
     };
 
     $scope.hasDiscrepancy = function(item){
+      if($routeParams.action !== 'dispatch') {
+        return '';
+      }
       return (item.menuQuantity !== item.quantity) ? 'danger' : '';
+    };
+
+    $scope.showQty = function() {
+      return ($routeParams.action === 'dispatch');
     };
 
   });
