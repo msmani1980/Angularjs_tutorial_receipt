@@ -133,12 +133,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return storeInstanceFactory.getItemTypes().then($this.getRegularItemTypeIdSuccess);
     };
 
-    this.getUpliftableCharacteristicIdSuccess = function (dataFromAPI) {
-      $scope.upliftableCharacteristicId = $this.getIdByNameFromArray('Upliftable', dataFromAPI);
+    this.getUpliftableCharacteristicIdSuccess = function (dataFromAPI, characteristicName) {
+      $scope.upliftableCharacteristicId = $this.getIdByNameFromArray(characteristicName, dataFromAPI);
     };
 
-    this.getUpliftableCharacteristicId = function () {
-      return storeInstanceFactory.getCharacteristics().then($this.getUpliftableCharacteristicIdSuccess);
+    this.getCharacteristicIdForName = function (characteristicName) {
+      return storeInstanceFactory.getCharacteristics().then(function (dataFromAPI) {
+        $this.getUpliftableCharacteristicIdSuccess(dataFromAPI, characteristicName);
+      });
     };
 
     this.getStoreInstanceMenuItems = function () {
@@ -261,12 +263,22 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return $this.createPayload();
     };
 
+
+    this.isStatusCorrectForSetAction = function (statusName) {
+      if($routeParams.action === 'end-instance' && statusName === '5') {
+        return true;
+      } else if($routeParams.action !== 'end-instance' && statusName === '1') {
+        return true;
+      }
+      return false;
+    };
+
     this.isInstanceReadOnly = function () {
-      if ($scope.storeDetails.currentStatus.name !== '1') {
-        showToast('warning', 'Store Instance Status', 'This store instance is not ready for packing');
-      } else {
+      if($this.isStatusCorrectForSetAction($scope.storeDetails.currentStatus.name)) {
         $scope.readOnly = false;
         $scope.saveButtonName = 'Save & Exit';
+      } else {
+        showToast('warning', 'Store Instance Status', 'This store instance is not ready for packing');
       }
     };
 
@@ -283,8 +295,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         this.getRegularItemTypeId()
       ];
       if ($routeParams.action === 'replenish') {
-        promises.push(this.getUpliftableCharacteristicId());
+        promises.push(this.getCharacteristicIdForName('Upliftable'));
+      } else if($routeParams.action === 'end-dispatch') {
+        promises.push(this.getCharacteristicIdForName('Inventory'));
       }
+
       return promises;
     };
 
