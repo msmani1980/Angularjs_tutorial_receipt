@@ -212,10 +212,9 @@
                ng-show="doesStoreInstanceContainAction(store, 'End instance')"
                href="#/store-instance-create/end-instance/{{store.id}}">End Instance
             </a>
-            <!-- TODO: UnDispatch-->
             <a class="btn btn-warning btn-xs btn-block" tabindex="0"
                ng-show="isUndispatchPossible(store)"
-               href="#/store-instance-undispatch/dispatch/{{store.id}}">Undispatch
+               ng-click="undispatch(store.id)">Undispatch
             </a>
             <!-- TODO: Generate Doc Download Link -->
             <a class="btn btn-info btn-xs btn-block" tabindex="0"
@@ -277,12 +276,11 @@
             </a>
             <a class="btn btn-danger btn-xs" tabindex="0"
                ng-show="doesStoreInstanceContainAction(store, 'End instance')"
-               href="#/store-instance-create/end-instance/{{store.id}}">End Instance
+               href="#/store-instance-create/end-instance/{{replenishment.id}}">End Instance
             </a>
-            <!-- TODO: UnDispatch-->
             <a class="btn btn-warning btn-xs" tabindex="0"
-               ng-show="isUndispatchPossible(store)"
-               href="#/store-instance-undispatch/{{replenishment.id}}">Undispatch
+               ng-show="isUndispatchPossible(replenishment)"
+               ng-click="undispatch(replenishment.id)">Undispatch
             </a>
             <!-- TODO: Generate Doc Download Link -->
             <a class="btn btn-info btn-xs" tabindex="0"

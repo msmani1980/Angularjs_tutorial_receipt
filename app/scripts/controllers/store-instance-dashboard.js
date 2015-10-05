@@ -30,6 +30,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       angular.element('#loading').modal('hide');
     }
 
+    function showErrors(dataFromAPI) {
+      showToast('warning', 'Store Instance Packing', 'error saving items!');
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+    }
+
     var SEARCH_TO_PAYLOAD_MAP = {
       dispatchLMPStation: 'cateringStationId',
       inboundLMPStation: 'inboundStationId',
@@ -110,10 +118,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.isUndispatchPossible = function(store) {
-      if (store.startDate && store.hours > 0) {
-        return true;
-      }
-      return false;
+      return (store.startDate && store.hours > 0 && $scope.doesStoreInstanceHaveReplenishments(store));
+    };
+
+    $scope.undispatch = function(id) {
+      var undispatchStatusId = 1;
+      storeInstanceDashboardFactory.updateStoreInstanceStatus(id, undispatchStatusId).then(function() {
+        $location.path('store-instance-packing/dispatch/' + id);
+      }, showErrors);
     };
 
     function getValueByIdInArray(id, valueKey, array) {
