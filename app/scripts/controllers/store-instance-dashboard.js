@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q, storeInstanceService,
-    $route, ngToast) {
+    $route, ngToast, $location) {
 
     $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];

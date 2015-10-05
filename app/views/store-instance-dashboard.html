@@ -213,7 +213,7 @@
                href="#/store-instance-create/end-instance/{{store.id}}">End Instance
             </a>
             <a class="btn btn-warning btn-xs btn-block" tabindex="0"
-               ng-show="isUndispatchPossible(store)"
+               ng-show="isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
                ng-click="undispatch(store.id)">Undispatch
             </a>
             <!-- TODO: Generate Doc Download Link -->
