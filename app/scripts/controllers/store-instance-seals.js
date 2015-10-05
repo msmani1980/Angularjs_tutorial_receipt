@@ -470,4 +470,16 @@ angular.module('ts5App')
       return $routeParams.action === 'replenish';
     };
 
+    $scope.hideSealTypeIfEndInstance = function(type) {
+      if ($scope.isEndInstance() && $scope.sealTypesList) {
+        if (type === 'Outbound') {
+          return true;
+        }
+        if (type === 'Hand Over') {
+          return true;
+        }
+      }
+    };
+
+
   });
