@@ -154,12 +154,12 @@ angular.module('ts5App')
         scheduleDate: dateUtility.formatDateForAPI($scope.scheduleDate)
       };
 
-      if ($scope.selectedSchedule) {
-        payload.scheduleNumber = $scope.selectedSchedule;
+      if ($scope.search.selectedSchedule) {
+        payload.scheduleNumber = $scope.search.selectedSchedule.scheduleNumber;
       }
 
-      if ($scope.selectedStoreNumber) {
-        payload.storeId = $scope.selectedStoreNumber;
+      if ($scope.search.selectedStoreNumber) {
+        payload.storeId = $scope.search.selectedStoreNumber.id;
       }
       return payload;
     }
@@ -188,7 +188,7 @@ angular.module('ts5App')
         return;
       }
 
-      if (!($scope.selectedSchedule || $scope.selectedStoreNumber)) {
+      if (!($scope.search.selectedSchedule || $scope.search.selectedStoreNumber)) {
         showModalErrors('Please select date and schedule number or store number');
         return;
       }
@@ -200,11 +200,11 @@ angular.module('ts5App')
     };
 
     $scope.clearSelectedSchedule = function () {
-      delete $scope.selectedSchedule;
+      delete $scope.search.selectedSchedule;
     };
 
     $scope.clearStoreNumber = function () {
-      delete $scope.selectedStoreNumber;
+      delete $scope.search.selectedStoreNumber;
     };
 
     $scope.$watch('scheduleDate', function () {

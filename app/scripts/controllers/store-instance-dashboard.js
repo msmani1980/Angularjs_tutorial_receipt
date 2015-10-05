@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
-  function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q, storeInstanceService,
-    $route, ngToast) {
+  function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q,
+    $route, ngToast, $location) {
 
     $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
@@ -28,6 +28,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
+    }
+
+    function showErrors(dataFromAPI) {
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
     }
 
     var SEARCH_TO_PAYLOAD_MAP = {
@@ -110,10 +117,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.isUndispatchPossible = function(store) {
-      if (store.startDate && store.hours > 0) {
-        return true;
-      }
-      return false;
+      return (store.startDate && store.hours > 0 && !$scope.doesStoreInstanceHaveReplenishments(store));
+    };
+
+    $scope.undispatch = function(id) {
+      var undispatchStatusId = 1;
+      storeInstanceDashboardFactory.updateStoreInstanceStatus(id, undispatchStatusId).then(function() {
+        $location.path('store-instance-packing/dispatch/' + id);
+      }, showErrors);
     };
 
     function getValueByIdInArray(id, valueKey, array) {
@@ -289,7 +300,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var modalElement = angular.element('#receive-confirm');
       modalElement.modal('hide');
       showLoadingModal('Changing Store Instance ' + store.id + ' Status');
-      storeInstanceService.updateStoreInstanceStatus(store.id, 5, store.cateringStationId).then(function() {
+      storeInstanceDashboardFactory.updateStoreInstanceStatus(store.id, 5, store.cateringStationId).then(function() {
         $scope.showMessage('success', 'Store has been logged as received.');
         $scope.reloadRoute();
       });
