@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, ngToast, dateUtility, GlobalMenuService,
-    storeInstanceWizardConfig, $location, schedulesService, menuCatererStationsService, lodash) {
+    storeInstanceWizardConfig, $location, schedulesService, menuCatererStationsService, lodash, storeInstanceService) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -98,10 +98,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.successMessage = function(response) {
       $this.hideLoadingModal();
-      $this.showMessage('success', 'Store '+ $routeParams.action + ' ' + response.id +' created!');
+      $this.showMessage('success', 'Store ' + $routeParams.action + ' ' + response.id + ' created!');
     };
 
     this.exitOnSave = function(response) {
+      $this.hideLoadingModal();
+      if (!$scope.isEndInstance()) {
+        $this.showMessage('success', 'Store Instance created id: ' + response.id);
+      }
       $this.successMessage(response);
       $location.url('/store-instance-dashboard/');
     };
@@ -111,7 +115,26 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $location.url('/store-instance-packing/' + $routeParams.action + '/' + response.id);
     };
 
+    this.endStoreInstanceSuccessHandler = function(response) {
+      $this.hideLoadingModal();
+      if (response.id) {
+        $this.showMessage('success', 'End Store Instance id: ' + $routeParams.storeId);
+        $location.url('/store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId);
+      }
+    };
+
     this.createStoreInstanceErrorHandler = function(response) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      if (response.data) {
+        $scope.formErrors = response.data;
+        return false;
+      }
+      $scope.response500 = true;
+      return false;
+    };
+
+    this.endStoreInstanceErrorHandler = function(response) {
       $this.hideLoadingModal();
       $scope.displayError = true;
       if (response.data) {
@@ -167,13 +190,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var payload = angular.copy($scope.formData);
       payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
-      switch($routeParams.action) {
+      switch ($routeParams.action) {
         case 'replenish':
           $this.formatReplenishPayload(payload);
-        break;
+          break;
         default:
           $this.formatDispatchPayload(payload);
-        break;
+          break;
       }
       return payload;
     };
@@ -216,15 +239,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
         return true;
       }
-      if ($scope.isEndInstance()) {
-        return true;
-      }
       $scope.displayError = true;
       return false;
     };
 
     this.createStoreInstance = function(saveAndExit) {
-      this.displayLoadingModal('Creating a store '+ $routeParams.action);
+      this.displayLoadingModal('Creating a store ' + $routeParams.action);
       var payload = this.formatPayload();
       if (!payload) {
         return false;
@@ -233,10 +253,25 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.createStoreInstanceErrorHandler);
     };
 
+    this.setStatusToInbound = function(saveAndExit) {
+      if (saveAndExit) {
+        this.displayLoadingModal('Loading Store Instance Dashboard');
+        $location.url('/store-instance-dashboard/');
+      } else {
+        this.displayLoadingModal('Loading Inbound Seals');
+        storeInstanceService.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
+          .then((saveAndExit ? this.exitOnSave : this.endStoreInstanceSuccessHandler), this.endStoreInstanceErrorHandler);
+      }
+    };
+
     $scope.submitForm = function(saveAndExit) {
       $scope.createStoreInstance.$setSubmitted(true);
       if ($this.validateForm()) {
-        $this.createStoreInstance(saveAndExit);
+        if ($scope.isEndInstance()) {
+          $this.setStatusToInbound(saveAndExit);
+        } else {
+          $this.createStoreInstance(saveAndExit);
+        }
       }
       return false;
     };
@@ -245,7 +280,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.createStoreInstance[fieldName].$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
       }
-      if ($scope.createStoreInstance[fieldName].$invalid || angular.isDefined($scope.createStoreInstance[fieldName]
+      if ($scope.createStoreInstance[fieldName].$invalid || angular.isDefined($scope.createStoreInstance[
+            fieldName]
           .$error.required)) {
         return 'has-error';
       }
@@ -253,8 +289,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     $scope.validateMenus = function() {
-      if (angular.isUndefined($scope.createStoreInstance.menus) || $scope.createStoreInstance.menus.$pristine && !
-        $scope.createStoreInstance.$submitted) {
+      if (angular.isUndefined($scope.createStoreInstance.menus) || $scope.createStoreInstance.menus.$pristine &&
+        !$scope.createStoreInstance.$submitted) {
         return '';
       }
       if ($scope.formData.menus.length === 0) {
@@ -301,7 +337,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.updateInstanceDependencies = function() {
       $this.getScheduleNumbers();
-      if($routeParams.action === 'dispatch'){
+      if ($routeParams.action === 'dispatch') {
         $this.getMenuMasterList();
         $this.getStoresList();
       }
@@ -349,7 +385,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.init = function() {
       var loadingText = 'Hang tight, we are loading some data for you';
-      if($routeParams.storeId) {
+      if ($routeParams.storeId) {
         loadingText = 'We are loading Store Instance ' + $routeParams.storeId;
       }
       this.showLoadingModal(loadingText);

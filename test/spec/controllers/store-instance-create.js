@@ -48,6 +48,7 @@ describe('Store Instance Create Controller', function() {
   var controller;
   var storeInstanceId;
   var getStoreInstanceDeferred;
+  var updateStoreInstanceStatusDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedCateringStations_,
@@ -105,6 +106,10 @@ describe('Store Instance Create Controller', function() {
     getStoreInstanceDeferred = $q.defer();
     spyOn(storeInstanceService, 'getStoreInstance').and.returnValue(getStoreInstanceDeferred.promise);
 
+    updateStoreInstanceStatusDeferred = $q.defer();
+    spyOn(storeInstanceService, 'updateStoreInstanceStatus').and.returnValue(
+      updateStoreInstanceStatusDeferred.promise);
+
     storeInstanceId = 13;
 
     postPayloadControl = {
@@ -115,7 +120,9 @@ describe('Store Instance Create Controller', function() {
         menuMasterId: 6
       }],
       cateringStationId: 13,
-      scheduleNumber: { scheduleNumber: 'SCH1241411' },
+      scheduleNumber: {
+        scheduleNumber: 'SCH1241411'
+      },
       storeId: storeInstanceId
     };
 
@@ -139,7 +146,7 @@ describe('Store Instance Create Controller', function() {
     var params = {
       action: (action ? action : 'dispatch')
     };
-    if(params.action !== 'dispatch'){
+    if (params.action !== 'dispatch') {
       params.storeId = storeInstanceId;
     }
     StoreInstanceCreateCtrl = controller('StoreInstanceCreateCtrl', {
@@ -172,9 +179,14 @@ describe('Store Instance Create Controller', function() {
     getStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
   }
 
+  function mockSetStatusToInbound() {
+    $scope.$digest();
+    StoreInstanceCreateCtrl.setStatusToInbound();
+  }
+
   describe('when the Dispatch controller loads', function() {
 
-    beforeEach(function(){
+    beforeEach(function() {
       initController();
     });
 
@@ -300,7 +312,9 @@ describe('Store Instance Create Controller', function() {
           name: 'ABC43124'
         }],
         cateringStationId: 13,
-        scheduleNumber: { scheduleNumber: 'SCH1241411' },
+        scheduleNumber: {
+          scheduleNumber: 'SCH1241411'
+        },
         storeId: storeInstanceId
       };
       $scope.$digest();
@@ -318,11 +332,11 @@ describe('Store Instance Create Controller', function() {
 
     it('should return a formatted payload object', function() {
       var mockPayload = {
-        scheduleDate:  dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
+        scheduleDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
         menus: [{
-          menuMasterId:100
+          menuMasterId: 100
         }],
-        cateringStationId:13,
+        cateringStationId: 13,
         scheduleNumber: 'SCH1241411',
         storeId: 13
       };
@@ -482,7 +496,7 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should display a success message if the response contains an id', function() {
-        var message = 'Store dispatch '+ storeInstanceCreatedJSON.id + ' created!';
+        var message = 'Store dispatch ' + storeInstanceCreatedJSON.id + ' created!';
         expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
       });
 
@@ -549,7 +563,7 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should display a success message if the response contains an id', function() {
-        var message = 'Store replenish '+ storeInstanceCreatedJSON.id + ' created!';
+        var message = 'Store replenish ' + storeInstanceCreatedJSON.id + ' created!';
         expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
       });
 
@@ -615,7 +629,9 @@ describe('Store Instance Create Controller', function() {
             name: 'ABC43124'
           }],
           cateringStationId: 13,
-          scheduleNumber: { scheduleNumber: 'SCH1241411' },
+          scheduleNumber: {
+            scheduleNumber: 'SCH1241411'
+          },
           storeId: storeInstanceId
         };
         $scope.$digest();
@@ -633,7 +649,9 @@ describe('Store Instance Create Controller', function() {
           name: 'ABC43124'
         }],
         cateringStationId: 13,
-        scheduleNumber: { scheduleNumber: 'SCH1241411' },
+        scheduleNumber: {
+          scheduleNumber: 'SCH1241411'
+        },
         storeId: storeInstanceId
       };
       $scope.$digest();
@@ -659,7 +677,9 @@ describe('Store Instance Create Controller', function() {
           name: 'ABC43124'
         }],
         cateringStationId: 13,
-        scheduleNumber: { scheduleNumber: 'SCH1241411' },
+        scheduleNumber: {
+          scheduleNumber: 'SCH1241411'
+        },
         storeId: storeInstanceId
       };
       spyOn($scope, 'submitForm').and.callThrough();
@@ -795,7 +815,9 @@ describe('Store Instance Create Controller', function() {
           name: 'ABC43124'
         }],
         cateringStationId: 13,
-        scheduleNumber: { scheduleNumber: 'SCH1241411' },
+        scheduleNumber: {
+          scheduleNumber: 'SCH1241411'
+        },
         storeId: storeInstanceId
       };
       $scope.$digest();
@@ -883,6 +905,90 @@ describe('Store Instance Create Controller', function() {
     it('should be false, if $routeParams.action is Replenish', function() {
       initController('replenish');
       expect($scope.isEndInstance()).toBeFalsy();
+    });
+
+  });
+
+  describe('The setStatusToInbound functionality', function() {
+
+    beforeEach(function() {
+      initController('end-instance');
+      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'setStatusToInbound').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'endStoreInstanceSuccessHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'endStoreInstanceErrorHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();
+      mockSetStatusToInbound();
+    });
+
+    it('should display the loading modal', function() {
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith('Loading Inbound Seals');
+    });
+
+    it('should display the loading modal, when saveAndExit is passed', function() {
+      StoreInstanceCreateCtrl.setStatusToInbound(true);
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+        'Loading Store Instance Dashboard');
+    });
+
+    it('should call the updateStoreInstance method on the factory', function() {
+      expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalled();
+    });
+
+    it('should call the setStatusToInbound method on the controller', function() {
+      expect(StoreInstanceCreateCtrl.setStatusToInbound).toHaveBeenCalled();
+    });
+
+    describe('success handler', function() {
+      var response;
+      beforeEach(function() {
+        response = {
+          id: 13,
+          statusId: 11
+        };
+        updateStoreInstanceStatusDeferred.resolve(response);
+        $scope.$digest();
+      });
+
+      it('should hide the loading modal', function() {
+        expect(StoreInstanceCreateCtrl.hideLoadingModal).toHaveBeenCalled();
+      });
+
+      it('should display a success message if the response contains an id', function() {
+        var message = 'End Store Instance id: ' + response.id;
+        expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
+      });
+
+      it('should redirect the user to the packing page with the new store instance id', function() {
+        var url = '/store-instance-seals/' + 'end-instance' + '/' + response.id;
+        expect(location.path()).toEqual(url);
+      });
+
+    });
+
+    describe('error handler', function() {
+
+      var errorResponse;
+
+      beforeEach(function() {
+        errorResponse = {
+          id: 13,
+          statusId: 11
+        };
+        updateStoreInstanceStatusDeferred.reject(errorResponse);
+        $scope.$digest();
+      });
+
+      it('should hide the loading modal', function() {
+        expect(StoreInstanceCreateCtrl.hideLoadingModal).toHaveBeenCalled();
+      });
+
+      it('should call the error handler', function() {
+        expect(StoreInstanceCreateCtrl.endStoreInstanceErrorHandler).toHaveBeenCalledWith(
+          errorResponse);
+      });
+
     });
 
   });
