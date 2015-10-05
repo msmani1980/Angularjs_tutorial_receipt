@@ -36,7 +36,7 @@
           <thead>
           <tr>
             <th>Retail Item Details</th>
-            <th width="15%">Template Quantity</th>
+            <th ng-show="showQty()" width="15%">Template Quantity</th>
             <th width="15%">Packed Quantity</th>
           </tr>
           </thead>
@@ -46,7 +46,7 @@
             <td>
               <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
             </td>
-            <td>
+            <td ng-show="showQty()">
               <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
             </td>
             <td>
