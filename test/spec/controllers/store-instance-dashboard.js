@@ -367,4 +367,13 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
   });
 
+  describe('undispatch', function () {
+    beforeEach(function () {
+      scope.undispatch(2);
+    });
+    it('should update status to 1', function () {
+      expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(2, 1);
+    });
+  });
+
 });
