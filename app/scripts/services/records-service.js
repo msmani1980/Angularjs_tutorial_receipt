@@ -51,6 +51,10 @@ angular.module('ts5App')
       getCharacteristics: {
         method: 'GET',
         isArray: true
+      },
+      getFeatures: {
+        method: 'GET',
+        isArray: true
       }
     };
     var requestResource = $resource(requestURL, requestParameters, actions);
@@ -100,6 +104,11 @@ angular.module('ts5App')
       return requestResource.getCharacteristics().$promise;
     }
 
+    function getFeatures() {
+      requestParameters.api = 'features';
+      return requestResource.getFeatures().$promise;
+    }
+
     return {
       getCrewBaseTypes: getCrewBaseTypes,
       getCommissionPayableTypes: getCommissionPayableTypes,
@@ -109,6 +118,7 @@ angular.module('ts5App')
       getPromotionTypes: getPromotionTypes,
       getDiscountApplyTypes: getDiscountApplyTypes,
       getItemTypes: getItemTypes,
-      getCharacteristics: getCharacteristics
+      getCharacteristics: getCharacteristics,
+      getFeatures: getFeatures
     };
   });
