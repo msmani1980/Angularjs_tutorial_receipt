@@ -23,6 +23,7 @@ angular.module('ts5App')
       return '/store-instance-' + name + '/' + $routeParams.action + '/' + $routeParams.storeId;
     };
 
+    //TODO: Sanitize the smell and refactor the switch
     this.determineSteps = function() {
       switch ($routeParams.action) {
         default: $this.nextStep = {
