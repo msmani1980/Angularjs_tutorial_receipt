@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q,
-    $route, ngToast, $location) {
+    $route, ngToast, $location, $filter) {
 
     $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
@@ -161,6 +161,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
         storeInstance.selected = false;
       });
+      $scope.storeInstanceList = $filter('orderBy')($scope.storeInstanceList, ['scheduleDate', 'storeNumber','scheduleNumber']);
     }
 
     function dispatchStoreInstance(storeId) {
