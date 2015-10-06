@@ -19,25 +19,39 @@ angular.module('ts5App')
 
     var $this = this;
 
-    if ($routeParams.action === 'end-instance') {
-      this.nextStep = {
-        stepName: '3',
-        URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
-      };
-      this.prevStep = {
-        stepName: '1',
-        URL: '/store-instance-create/' + $routeParams.action + '/' + $routeParams.storeId
-      };
-    } else {
-      this.nextStep = {
-        stepName: '3',
-        URL: '/store-instance-review/' + $routeParams.action + '/' + $routeParams.storeId
-      };
-      this.prevStep = {
-        stepName: '1',
-        URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
-      };
-    }
+    this.determineSteps = function() {
+      switch ($routeParams.action) {
+        default: $this.nextStep = {
+          stepName: '3',
+          URL: '/store-instance-review/' + $routeParams.action + '/' + $routeParams.storeId
+        };
+        $this.prevStep = {
+          stepName: '1',
+          URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
+        };
+        break;
+        case 'replenish':
+            $this.nextStep = {
+            stepName: '4',
+            URL: '/store-instance-review/' + $routeParams.action + '/' + $routeParams.storeId
+          };
+          $this.prevStep = {
+            stepName: '2',
+            URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
+          };
+          break;
+        case 'end-instance':
+            $this.nextStep = {
+            stepName: '3',
+            URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
+          };
+          $this.prevStep = {
+            stepName: '1',
+            URL: '/store-instance-create/' + $routeParams.action + '/' + $routeParams.storeId
+          };
+          break;
+      }
+    };
 
     $scope.formData = [];
     $scope.readOnly = true;
@@ -433,8 +447,10 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      this.determineSteps();
       this.getSealTypesDependencies();
       this.setWizardSteps();
+
     };
 
     this.init();

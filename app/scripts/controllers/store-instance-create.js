@@ -393,6 +393,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var promises = this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };
+
     this.init();
 
   });
