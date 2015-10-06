@@ -992,7 +992,7 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-  describe('determineSteps method', function() {
+  describe('setWizardSteps method', function() {
 
     it('if the action is dispatch/default, this method should set nextStep to review', function() {
       initController('dispatch');
@@ -1003,7 +1003,6 @@ describe('the Store Instance Seals controller', function() {
       initController('dispatch');
       expect(StoreInstanceSealsCtrl.prevStep.URL).toBe('/store-instance-packing/dispatch/5');
     });
-    c
 
     it('if the action is end-instance, this method should set nextStep to packing', function() {
       initController('end-instance');
