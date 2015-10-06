@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Store Instance Create Controller', function() {
+fdescribe('Store Instance Create Controller', function() {
 
   beforeEach(module(
     'ts5App',
@@ -352,12 +352,14 @@ describe('Store Instance Create Controller', function() {
       initController('replenish');
       resolveAllDependencies();
       mockLoadStoreInstance();
+      $scope.$digest();
       $scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
           id: 100,
           name: 'ABC43124'
         }],
+        dispatchedCateringStationId: 3,
         cateringStationId: 13,
         scheduleNumber: {
           scheduleNumber: 'SCH1241411'
@@ -381,10 +383,9 @@ describe('Store Instance Create Controller', function() {
 
     it('should return a formatted payload object', function() {
       var mockPayload = {
-        scheduleDate: '20150902',
-        cateringStationId: '13',
+        scheduleDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
+        cateringStationId: 13,
         scheduleNumber: 'SCH1241411',
-        carrierId: null,
         replenishStoreInstanceId: storeInstanceId
       };
       expect(mockPayload).toEqual(payloadControl);
