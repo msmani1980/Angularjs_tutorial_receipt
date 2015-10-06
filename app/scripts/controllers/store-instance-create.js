@@ -184,6 +184,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       payload.replenishStoreInstanceId = $routeParams.storeId;
       delete payload.storeId;
       delete payload.menus;
+      delete payload.dispatchedCateringStationId;
     };
 
     this.formatPayload = function() {
@@ -203,7 +204,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setStoreInstance = function(apiData) {
       $scope.formData = {
-        cateringStationId: (apiData.cateringStationId ? apiData.cateringStationId.toString() : null),
+        dispatchedCateringStationId: (apiData.cateringStationId ? apiData.cateringStationId.toString() : null),
         scheduleDate: dateUtility.formatDate(apiData.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY'),
         scheduleNumber: {
           'scheduleNumber': angular.copy(apiData.scheduleNumber)
