@@ -379,12 +379,12 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
 
     it('should return true if current time is within set hours of updatedTime', function () {
-      scope.storeInstanceList[0].updatedOn = moment().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
+      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(true);
     });
 
     it('should return false if current time is within set hours of updatedTime', function () {
-      scope.storeInstanceList[0].updatedOn = moment().subtract(50, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
+      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
     });
 
@@ -394,13 +394,13 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
 
     it('should return false if the store instance has replenishments', function () {
-      scope.storeInstanceList[0].updatedOn = moment().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
+      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
       scope.storeInstanceList[0].replenishments = [{id: 3}];
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
     });
 
     it('should return true if hours equal -1 (the default hours)', function () {
-      scope.storeInstanceList[0].updatedOn = moment().subtract(50, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
+      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
       scope.storeInstanceList[0].hours = -1;
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(true);
     });
