@@ -119,13 +119,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.isUndispatchPossible = function(store) {
-      if(store.hours === -1) {
-        return true;
-      }
       var storeUpdatedDate = moment.utc(store.updatedOn, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
       var hoursSinceUpdatedDate = moment.duration(moment.utc().diff(storeUpdatedDate)).asHours();
       var isNowWithinAllowedHours = hoursSinceUpdatedDate > 0 && hoursSinceUpdatedDate < store.hours;
-      return (isNowWithinAllowedHours && !$scope.doesStoreInstanceHaveReplenishments(store));
+      return (store.hours === -1) || (isNowWithinAllowedHours && !$scope.doesStoreInstanceHaveReplenishments(store));
     };
 
     $scope.undispatch = function(id) {
