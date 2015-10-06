@@ -124,7 +124,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
       var storeUpdatedDate = moment(store.updatedOn, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
       var hoursSinceUpdatedDate = moment.duration(moment().diff(storeUpdatedDate)).asHours();
-
       var isNowWithinAllowedHours = hoursSinceUpdatedDate > 0 && hoursSinceUpdatedDate < store.hours;
       return (isNowWithinAllowedHours && !$scope.doesStoreInstanceHaveReplenishments(store));
     };
