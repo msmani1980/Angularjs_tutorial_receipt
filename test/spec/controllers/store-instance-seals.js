@@ -996,32 +996,32 @@ describe('the Store Instance Seals controller', function() {
 
     it('if the action is dispatch/default, this method should set nextStep to review', function() {
       initController('dispatch');
-      expect(StoreInstanceSealsCtrl.nextStep.URL).toBe('/store-instance-review/dispatch/5');
+      expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-review/dispatch/5');
     });
 
     it('if the action is dispatch/default, this method should set prevStep to packing', function() {
       initController('dispatch');
-      expect(StoreInstanceSealsCtrl.prevStep.URL).toBe('/store-instance-packing/dispatch/5');
+      expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-packing/dispatch/5');
     });
 
     it('if the action is end-instance, this method should set nextStep to packing', function() {
       initController('end-instance');
-      expect(StoreInstanceSealsCtrl.nextStep.URL).toBe('/store-instance-packing/end-instance/5');
+      expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-packing/end-instance/5');
     });
 
     it('if the action is end-instance, this method should set prevStep to create', function() {
       initController('end-instance');
-      expect(StoreInstanceSealsCtrl.prevStep.URL).toBe('/store-instance-create/end-instance/5');
+      expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-create/end-instance/5');
     });
 
     it('if the action is replenish, this method should set nextStep to review', function() {
       initController('replenish');
-      expect(StoreInstanceSealsCtrl.nextStep.URL).toBe('/store-instance-review/replenish/5');
+      expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-review/replenish/5');
     });
 
     it('if the action is replenish, this method should set prevStep to packing', function() {
       initController('replenish');
-      expect(StoreInstanceSealsCtrl.prevStep.URL).toBe('/store-instance-packing/replenish/5');
+      expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-packing/replenish/5');
     });
 
   });
