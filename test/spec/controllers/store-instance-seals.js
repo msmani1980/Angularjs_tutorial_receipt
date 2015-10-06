@@ -77,7 +77,8 @@ describe('the Store Instance Seals controller', function() {
     deleteStoreInstanceSealDeferred = $q.defer();
     updateStoreInstanceStatusDeferred = $q.defer();
 
-    spyOn(storeInstanceAssignSealsFactory, 'getStoreInstanceSeals').and.returnValue(getStoreInstanceSealsDeferred.promise);
+    spyOn(storeInstanceAssignSealsFactory, 'getStoreInstanceSeals').and.returnValue(
+      getStoreInstanceSealsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
     spyOn(sealTypesService, 'getSealTypes').and.returnValue(getSealTypesDeferred.promise);
     spyOn(sealColorsService, 'getSealColors').and.returnValue(getSealColorsDeferred.promise);
@@ -164,7 +165,7 @@ describe('the Store Instance Seals controller', function() {
     describe('the get store details API call', function() {
 
       beforeEach(function() {
-        spyOn(StoreInstanceSealsCtrl,'isInstanceReadOnly').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'isInstanceReadOnly').and.callThrough();
         $scope.$digest();
       });
 
@@ -715,7 +716,7 @@ describe('the Store Instance Seals controller', function() {
         return sealTypeObject.type === 1;
       });
       var controlArray = [];
-      existingSealTypeObjects.forEach(function(sealTypeObject){
+      existingSealTypeObjects.forEach(function(sealTypeObject) {
         controlArray.push(sealTypeObject.sealNumbers[0]);
       });
       expect(StoreInstanceSealsCtrl.getExistingSealsByType(1)).toEqual(controlArray);
@@ -742,7 +743,7 @@ describe('the Store Instance Seals controller', function() {
 
     it('return an empty array if there is no difference', function() {
       var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(1);
-      var diff = StoreInstanceSealsCtrl.diffExistingSeals(sealTypeObject.seals.numbers,existingSeals);
+      var diff = StoreInstanceSealsCtrl.diffExistingSeals(sealTypeObject.seals.numbers, existingSeals);
       expect(diff).toEqual([]);
     });
 
@@ -750,7 +751,7 @@ describe('the Store Instance Seals controller', function() {
       sealTypeObject.seals.numbers.push('123');
       $scope.$digest();
       var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(sealTypeObject.id);
-      var diff = StoreInstanceSealsCtrl.diffExistingSeals(sealTypeObject.seals.numbers,existingSeals);
+      var diff = StoreInstanceSealsCtrl.diffExistingSeals(sealTypeObject.seals.numbers, existingSeals);
       expect(diff).toEqual(['123']);
     });
 
@@ -763,10 +764,10 @@ describe('the Store Instance Seals controller', function() {
       initController();
       resolveAllDependencies();
       StoreInstanceSealsCtrl.makeAssignSealsPromises();
-      spyOn(StoreInstanceSealsCtrl,'makeCreatePromise').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'determineSealsToCreate').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'getExistingSealsByType').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'diffExistingSeals').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'makeCreatePromise').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'determineSealsToCreate').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'getExistingSealsByType').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'diffExistingSeals').and.callThrough();
       $scope.$digest();
       sealTypeObject = $scope.sealTypesList[0];
     });
@@ -784,7 +785,8 @@ describe('the Store Instance Seals controller', function() {
     it('should do a diff of existing seals', function() {
       var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(sealTypeObject.id);
       StoreInstanceSealsCtrl.makeAssignSealsPromises();
-      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(sealTypeObject.seals.numbers,existingSeals);
+      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(sealTypeObject.seals.numbers,
+        existingSeals);
     });
 
     it('should return an array of new seals to create', function() {
@@ -820,10 +822,10 @@ describe('the Store Instance Seals controller', function() {
       initController();
       resolveAllDependencies();
       StoreInstanceSealsCtrl.makeAssignSealsPromises();
-      spyOn(StoreInstanceSealsCtrl,'makeDeletePromise').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'determineSealsToDelete').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'getExistingSealsByType').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl,'diffExistingSeals').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'makeDeletePromise').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'determineSealsToDelete').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'getExistingSealsByType').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'diffExistingSeals').and.callThrough();
       $scope.$digest();
       sealTypeObject = $scope.sealTypesList[0];
     });
@@ -841,7 +843,8 @@ describe('the Store Instance Seals controller', function() {
     it('should do a diff of existing seals', function() {
       var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(sealTypeObject.id);
       StoreInstanceSealsCtrl.makeAssignSealsPromises();
-      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(existingSeals,sealTypeObject.seals.numbers);
+      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(existingSeals, sealTypeObject.seals
+        .numbers);
     });
 
     it('should return an array of existing seals to delete', function() {
@@ -875,7 +878,7 @@ describe('the Store Instance Seals controller', function() {
     beforeEach(function() {
       initController('replenish');
       resolveAllDependencies();
-      spyOn(StoreInstanceSealsCtrl,'canReplenish').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'canReplenish').and.callThrough();
       $scope.$digest();
     });
 
@@ -884,7 +887,7 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should return false is the storeDetails does not have parent store instance data', function() {
-      var canReplenish  = StoreInstanceSealsCtrl.canReplenish();
+      var canReplenish = StoreInstanceSealsCtrl.canReplenish();
       expect(canReplenish).toBeFalsy();
     });
 
@@ -892,7 +895,7 @@ describe('the Store Instance Seals controller', function() {
       $scope.storeDetails.parentStoreInstance = storeDetailsJSON;
       $scope.storeDetails.replenishStoreInstanceId = 3;
       $scope.$digest();
-      var canReplenish  = StoreInstanceSealsCtrl.canReplenish();
+      var canReplenish = StoreInstanceSealsCtrl.canReplenish();
       expect(canReplenish).toBeTruthy();
     });
 
@@ -930,6 +933,95 @@ describe('the Store Instance Seals controller', function() {
       var createdAction = StoreInstanceSealsCtrl.createInboundActions();
       expect(createdAction.label).toEqual(mockActions.label);
       expect(createdAction.trigger).toEqual(mockActions.trigger);
+    });
+
+  });
+
+  describe('the hideSealTypeIfEndInstance method for end-instance', function() {
+
+    beforeEach(function() {
+      initController('end-instance');
+      resolveAllDependencies();
+      spyOn($scope, 'hideSealTypeIfEndInstance').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should return true if the type is Hand Over', function() {
+      expect($scope.hideSealTypeIfEndInstance('Hand Over')).toBeTruthy();
+    });
+
+    it('should return true if the type is Outbound', function() {
+      expect($scope.hideSealTypeIfEndInstance('Outbound')).toBeTruthy();
+    });
+
+    it('should return false if the type is High Security', function() {
+      expect($scope.hideSealTypeIfEndInstance('High Security')).toBeFalsy();
+    });
+
+    it('should return false if the type is Inbound', function() {
+      expect($scope.hideSealTypeIfEndInstance('Inbound')).toBeFalsy();
+    });
+
+  });
+
+  describe('isReplenish method', function() {
+
+    it('should be true, if $routeParams.action is Replenish', function() {
+      initController('replenish');
+      expect($scope.isReplenish()).toBeTruthy();
+    });
+
+    it('should be false, if $routeParams.action is End-Dispatch', function() {
+      initController('end-dispatch');
+      expect($scope.isReplenish()).toBeFalsy();
+    });
+
+  });
+
+  describe('isEndInstance method', function() {
+
+    it('should be true, if $routeParams.action is End-Dispatch', function() {
+      initController('end-instance');
+      expect($scope.isEndInstance()).toBeTruthy();
+    });
+
+    it('should be false, if $routeParams.action is Replenish', function() {
+      initController('replenish');
+      expect($scope.isEndInstance()).toBeFalsy();
+    });
+
+  });
+
+  describe('setWizardSteps method', function() {
+
+    it('if the action is dispatch/default, this method should set nextStep to review', function() {
+      initController('dispatch');
+      expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-review/dispatch/5');
+    });
+
+    it('if the action is dispatch/default, this method should set prevStep to packing', function() {
+      initController('dispatch');
+      expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-packing/dispatch/5');
+    });
+
+    it('if the action is end-instance, this method should set nextStep to packing', function() {
+      initController('end-instance');
+      expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-packing/end-instance/5');
+    });
+
+    it('if the action is end-instance, this method should set prevStep to create', function() {
+      initController('end-instance');
+      expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-create/end-instance/5');
+    });
+
+    it('if the action is replenish, this method should set nextStep to review', function() {
+      initController('replenish');
+      expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-review/replenish/5');
+    });
+
+    it('if the action is replenish, this method should set prevStep to packing', function() {
+      initController('replenish');
+      expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-packing/replenish/5');
     });
 
   });

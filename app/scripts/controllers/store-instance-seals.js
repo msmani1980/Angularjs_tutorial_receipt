@@ -18,14 +18,6 @@ angular.module('ts5App')
     var HIGH_SECURITY = 'High Security';
 
     var $this = this;
-    this.nextStep = {
-      stepName: '3',
-      URL: '/store-instance-review/' + $routeParams.action + '/' + $routeParams.storeId
-    };
-    this.prevStep = {
-      stepName: '1',
-      URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
-    };
 
     $scope.formData = [];
     $scope.readOnly = true;
@@ -34,15 +26,20 @@ angular.module('ts5App')
     this.setSealColors = function(dataFromAPI) {
       $scope.sealColorsList = dataFromAPI.response;
     };
- 
-    this.canReplenish = function()  {
+
+    this.canReplenish = function() {
       return angular.isDefined($scope.storeDetails.replenishStoreInstanceId) &&
         angular.isDefined($scope.storeDetails.parentStoreInstance);
     };
 
-    this.isInstanceReadOnly = function(){
-      if($scope.storeDetails.currentStatus.name !== '2' ||
-        $routeParams.action === 'replenish' && !this.canReplenish() ) {
+    this.isInstanceReadOnly = function() {
+      var currentStatus = parseInt($scope.storeDetails.currentStatus.name);
+      if (currentStatus === 2 && $routeParams.action === 'end-instance') {
+        $scope.readOnly = false;
+        $scope.saveButtonName = 'Save & Exit';
+        return;
+      }
+      if (currentStatus !== 2 || $routeParams.action === 'replenish' && !this.canReplenish()) {
         this.showMessage('warning', 'This store instance is not ready for seals');
       } else {
         $scope.readOnly = false;
@@ -61,6 +58,11 @@ angular.module('ts5App')
 
     this.setWizardSteps = function() {
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
+        controllerName: 'Seals'
+      });
+      $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
+      $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
     };
 
     this.getSealColors = function() {
@@ -93,34 +95,38 @@ angular.module('ts5App')
     };
 
     this.createHandoverActions = function() {
-      return [{
-        label: 'Copy From Outbound',
-        trigger: function() {
-          return $scope.copySeals(OUTBOUND, HANDOVER);
-        }
-      }];
+      if ($routeParams.action !== 'end-instance') {
+        return [{
+          label: 'Copy From Outbound',
+          trigger: function() {
+            return $scope.copySeals(OUTBOUND, HANDOVER);
+          }
+        }];
+      }
     };
 
     this.createInboundActions = function() {
-      var actions = [{
-        label: 'Copy From Handover',
-        trigger: function() {
-          return $scope.copySeals(HANDOVER, INBOUND);
+      if ($routeParams.action !== 'end-instance') {
+        var actions = [{
+          label: 'Copy From Handover',
+          trigger: function() {
+            return $scope.copySeals(HANDOVER, INBOUND);
+          }
+        }, {
+          label: 'Copy From Outbound',
+          trigger: function() {
+            return $scope.copySeals(OUTBOUND, INBOUND);
+          }
+        }];
+        if ($routeParams.action === 'replenish') {
+          actions.splice(0, 1);
         }
-      }, {
-        label: 'Copy From Outbound',
-        trigger: function() {
-          return $scope.copySeals(OUTBOUND, INBOUND);
-        }
-      }];
-      if($routeParams.action === 'replenish') {
-        actions.splice(0,1);
+        return actions;
       }
-      return actions;
     };
 
     this.addSealTypeActions = function(sealTypeObject) {
-      if($scope.readOnly) {
+      if ($scope.readOnly) {
         return;
       }
       if (sealTypeObject.name === HANDOVER) {
@@ -177,7 +183,7 @@ angular.module('ts5App')
       })[0];
     };
 
-    this.getExistingSealByNumber = function(sealNumber,sealType) {
+    this.getExistingSealByNumber = function(sealNumber, sealType) {
       return $scope.existingSeals.filter(function(existingSeal) {
         return (existingSeal.sealNumbers[0] === sealNumber && existingSeal.type === parseInt(sealType));
       })[0];
@@ -212,7 +218,7 @@ angular.module('ts5App')
     };
 
     this.removeHandoverSealType = function() {
-      var handover = $scope.sealTypes.filter(function(sealType){
+      var handover = $scope.sealTypes.filter(function(sealType) {
         return sealType.name === HANDOVER;
       })[0];
       var index = $scope.sealTypes.indexOf(handover);
@@ -221,7 +227,7 @@ angular.module('ts5App')
 
     this.generateSealTypesList = function() {
       $scope.sealTypesList = [];
-      if($routeParams.action === 'replenish') {
+      if ($routeParams.action === 'replenish') {
         $this.removeHandoverSealType();
       }
       angular.forEach($scope.sealTypes, function(sealType) {
@@ -336,7 +342,7 @@ angular.module('ts5App')
       var deletePromises = [];
       for (var key in sealsToDelete) {
         var sealNumber = sealsToDelete[key];
-        var existingSeal = this.getExistingSealByNumber(sealNumber,sealTypeObject.id);
+        var existingSeal = this.getExistingSealByNumber(sealNumber, sealTypeObject.id);
         deletePromises.push(storeInstanceAssignSealsFactory.deleteStoreInstanceSeal(
           existingSeal.id,
           $routeParams.storeId
@@ -368,7 +374,7 @@ angular.module('ts5App')
 
     this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
-      $location.path(stepObject.URL);
+      $location.path(stepObject.uri);
     };
 
     this.updateStatusToStep = function(stepObject) {
@@ -382,7 +388,7 @@ angular.module('ts5App')
     };
 
     this.assignSealsSuccessHandler = function() {
-      if($this.exitAfterSave) {
+      if ($this.exitAfterSave) {
         $this.exitOnSave();
         return;
       }
@@ -412,8 +418,8 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      this.getSealTypesDependencies();
       this.setWizardSteps();
+      this.getSealTypesDependencies();
     };
 
     this.init();
@@ -454,12 +460,31 @@ angular.module('ts5App')
     };
 
     $scope.saveAndExit = function() {
-      if($scope.readOnly) {
+      if ($scope.readOnly) {
         $location.url('/store-instance-dashboard');
         return;
       }
       $this.exitAfterSave = true;
       return $scope.submitForm();
+    };
+
+    $scope.isEndInstance = function() {
+      return $routeParams.action === 'end-instance';
+    };
+
+    $scope.isReplenish = function() {
+      return $routeParams.action === 'replenish';
+    };
+
+    $scope.hideSealTypeIfEndInstance = function(type) {
+      if ($scope.isEndInstance() && $scope.sealTypesList) {
+        if (type === OUTBOUND) {
+          return true;
+        }
+        if (type === HANDOVER) {
+          return true;
+        }
+      }
     };
 
   });
