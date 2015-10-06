@@ -155,9 +155,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
         storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
-        storeInstance.hours = getValueByIdInArray(storeInstance.storeId, 'hours', $scope.timeConfigList);
-        storeInstance.startDate = getValueByIdInArray(storeInstance.storeId, 'startDate', $scope.timeConfigList);
-
+        storeInstance.hours = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId}).hours;
+        storeInstance.startDate = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId}).startDate;
         var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
         storeInstance.selected = false;
@@ -217,6 +216,16 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return storeTimeConfig.getTimeConfig().then(getTimeConfigSuccess);
     }
 
+    function getUndispatchFeatureIdSucccess(dataFromAPI) {
+      var featuresList = angular.copy(dataFromAPI);
+      var undispatchFeature = lodash.findWhere(featuresList, {name: 'Undispatch'});
+      $scope.undispatchFeatureId = undispatchFeature.id;
+    }
+
+    function getUndispatchFeatureId() {
+      return storeInstanceDashboardFactory.getFeaturesList().then(getUndispatchFeatureIdSucccess);
+    }
+
     function searchStoreInstanceDashboardDataSuccess(apiData) {
       getStoreInstanceListSuccess(apiData);
       formatStoreInstanceList();
@@ -265,6 +274,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       dependenciesArray.push(getStoresList());
       dependenciesArray.push(getStatusList());
       dependenciesArray.push(getStoreInstanceTimeConfig());
+      dependenciesArray.push(getUndispatchFeatureId());
 
       $q.all(dependenciesArray).then(function() {
         formatStoreInstanceList();
