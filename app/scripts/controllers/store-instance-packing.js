@@ -21,10 +21,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     var dashboardURL = 'store-instance-dashboard';
 
-    var camelCasedAction = $routeParams.action.replace(/-([a-z])/g, function (g) {
-      return g[1].toUpperCase();
-    });
-
     function showToast(className, type, message) {
       ngToast.create({
         className: className,
@@ -291,11 +287,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       ];
 
       var characteristicForAction = {
-        replenish: 'Upliftable',
-        endInstance: 'Inventory'
+        'replenish': 'Upliftable',
+        'end-instance': 'Inventory'
       };
-      if (characteristicForAction[camelCasedAction]) {
-        promises.push(this.getCharacteristicIdForName(characteristicForAction[camelCasedAction]));
+      if (characteristicForAction[$routeParams.action]) {
+        promises.push(this.getCharacteristicIdForName(characteristicForAction[$routeParams.action]));
       }
 
       return promises;
