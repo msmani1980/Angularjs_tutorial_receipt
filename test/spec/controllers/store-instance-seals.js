@@ -90,8 +90,6 @@ describe('the Store Instance Seals controller', function() {
     spyOn(storeInstanceAssignSealsFactory, 'deleteStoreInstanceSeal').and.returnValue(
       deleteStoreInstanceSealDeferred.promise);
 
-
-
   }));
 
   function initController(action) {
@@ -143,21 +141,26 @@ describe('the Store Instance Seals controller', function() {
 
     it('should set wizardSteps', function() {
       var wizardSteps = storeInstanceWizardConfig.getSteps(routeParams.action, storeId);
+      StoreInstanceSealsCtrl.setWizardSteps();
       expect($scope.wizardSteps).toEqual(wizardSteps);
     });
 
     it('should have a nextStep set on the controller', function() {
       var mockNextStep = {
+        label: 'Review & Dispatch',
+        uri: '/store-instance-review/dispatch/' + storeId,
         stepName: '3',
-        URL: '/store-instance-review/dispatch/' + storeId
+        controllerName: 'Review'
       };
       expect(StoreInstanceSealsCtrl.nextStep).toEqual(mockNextStep);
     });
 
     it('should have a prevStep set on the controller', function() {
       var mockPrevStep = {
+        label: 'Packing',
+        uri: '/store-instance-packing/dispatch/' + storeId,
         stepName: '1',
-        URL: '/store-instance-packing/dispatch/' + storeId
+        controllerName: 'Packing'
       };
       expect(StoreInstanceSealsCtrl.prevStep).toEqual(mockPrevStep);
     });
@@ -527,8 +530,10 @@ describe('the Store Instance Seals controller', function() {
         var nextStep;
         beforeEach(function() {
           nextStep = {
+            label: 'Review & Dispatch',
+            uri: '/store-instance-review/dispatch/' + storeId,
             stepName: '3',
-            URL: '/store-instance-review/dispatch/' + storeId
+            controllerName: 'Review'
           };
           updateStoreInstanceStatusDeferred.resolve({});
           $scope.$digest();
@@ -554,7 +559,7 @@ describe('the Store Instance Seals controller', function() {
       });
 
       it('should redirect the user to the packing page with the new store instance id', function() {
-        expect(location.path()).toEqual(StoreInstanceSealsCtrl.nextStep.URL);
+        expect(location.path()).toEqual(StoreInstanceSealsCtrl.nextStep.uri);
       });
 
     });
@@ -971,8 +976,8 @@ describe('the Store Instance Seals controller', function() {
       expect($scope.isReplenish()).toBeTruthy();
     });
 
-    it('should be false, if $routeParams.action is End-Dispatch', function() {
-      initController('end-dispatch');
+    it('should be false, if $routeParams.action is End-instance', function() {
+      initController('end-instance');
       expect($scope.isReplenish()).toBeFalsy();
     });
 
