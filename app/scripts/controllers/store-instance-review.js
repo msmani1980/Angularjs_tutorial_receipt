@@ -20,7 +20,7 @@ angular.module('ts5App')
     var _menuItems = [];
     var STATUS_READY_FOR_DISPATCH = 'Ready for Dispatch';
     var STATUS_DISPATCHED = 'Dispatched';
-    var status_end_instance = 'Unpacking';
+    var STATUS_END_INSTANCE = 'Unpacking';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
     var actions = {};
     var $this = this;
@@ -205,6 +205,10 @@ angular.module('ts5App')
       $scope.actionNotAllowed = true;
       return false;
     }
+
+    $scope.isEndInstance = function(){
+      $scope.storeDetails.currentStatus.statusName === STATUS_END_INSTANCE;
+    };
 
     function setStoreInstanceItems(dataFromAPI) {
       $scope.items = dataFromAPI.response;
