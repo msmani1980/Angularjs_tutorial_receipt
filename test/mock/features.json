@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "Exchange Rate",
+    "code": "EXR"
+  },
+  {
+    "id": 2,
+    "name": "Cash Bag",
+    "code": "CBG"
+  },
+  {
+    "id": 3,
+    "name": "Undispatch",
+    "code": "UDP"
+  }
+]

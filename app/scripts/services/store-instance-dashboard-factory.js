@@ -30,6 +30,10 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
       return recordsService.getStoreStatusList();
     }
 
+    function getFeaturesList () {
+      return recordsService.getFeatures();
+    }
+
     function updateStoreInstanceStatus (storeId, statusId) {
       return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
     }
@@ -40,6 +44,7 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
       getStoreInstanceList: getStoreInstanceList,
       getStoresList: getStoresList,
       getStatusList: getStatusList,
-      updateStoreInstanceStatus: updateStoreInstanceStatus
+      updateStoreInstanceStatus: updateStoreInstanceStatus,
+      getFeaturesList: getFeaturesList
     };
   });
