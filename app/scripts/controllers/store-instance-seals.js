@@ -71,13 +71,13 @@ angular.module('ts5App')
     };
 
     this.isInstanceReadOnly = function() {
-      if ($scope.storeDetails.currentStatus.name === '2' && $routeParams.action === 'end-instance') {
+      var currentStatus = parseInt($scope.storeDetails.currentStatus.name);
+      if (currentStatus === 2 && $routeParams.action === 'end-instance') {
         $scope.readOnly = false;
         $scope.saveButtonName = 'Save & Exit';
         return;
       }
-      if ($scope.storeDetails.currentStatus.name !== '2' ||
-        $routeParams.action === 'replenish' && !this.canReplenish()) {
+      if (currentStatus !== 2 || $routeParams.action === 'replenish' && !this.canReplenish()) {
         this.showMessage('warning', 'This store instance is not ready for seals');
       } else {
         $scope.readOnly = false;
@@ -454,7 +454,6 @@ angular.module('ts5App')
       this.determineSteps();
       this.getSealTypesDependencies();
       this.setWizardSteps();
-
     };
 
     this.init();
