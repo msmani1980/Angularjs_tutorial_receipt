@@ -336,7 +336,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    function savePackingDataSuccessHandler(dataFromAPI, updateStatus) {
+    function savePackingDataSuccessHandler(dataFromAPI, updateStatus, redirectURL) {
       $scope.emptyMenuItems = [];
       angular.forEach(dataFromAPI.response, function (item) {
         var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId});
@@ -349,13 +349,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         updateStatusToStep(nextStep);
       } else {
         showToast('success', 'Save Packing Data', 'Data successfully updated!');
-        $location.path(dashboardURL);
+        $location.path(redirectURL);
       }
 
       hideLoadingModal();
     }
 
-    $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
+    $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus, redirectURL) {
       if ($scope.readOnly) {
         $location.path(dashboardURL);
         return;
@@ -370,7 +370,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
       showLoadingModal('Saving...');
       storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, payload).then(function (responseData) {
-        savePackingDataSuccessHandler(responseData, shouldUpdateStatus);
+        savePackingDataSuccessHandler(responseData, shouldUpdateStatus, redirectURL);
       }, showErrors);
     };
 
@@ -378,7 +378,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($scope.readOnly) {
         $location.path(dashboardURL);
       } else {
-        $scope.savePackingDataAndUpdateStatus(false);
+        $scope.savePackingDataAndUpdateStatus(false, dashboardURL);
       }
     };
 
@@ -387,7 +387,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.goToNextStep = function () {
-      $scope.savePackingDataAndUpdateStatus(true);
+      var shouldUpdateStatus = ($routeParams.action !== 'end-instance');
+      $scope.savePackingDataAndUpdateStatus(shouldUpdateStatus, nextStep.URL);
     };
 
     $scope.showQty = function () {
