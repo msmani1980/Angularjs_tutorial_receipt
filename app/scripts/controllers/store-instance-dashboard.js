@@ -130,7 +130,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     $scope.undispatch = function(id) {
       var undispatchStatusId = 1;
+      showLoadingModal('Undispatching store instance ' + id + '...');
       storeInstanceDashboardFactory.updateStoreInstanceStatus(id, undispatchStatusId).then(function() {
+        hideLoadingModal();
         $location.path('store-instance-packing/dispatch/' + id);
       }, showErrors);
     };
