@@ -206,8 +206,10 @@ angular.module('ts5App')
       return false;
     }
 
-    $scope.isEndInstance = function(){
-      $scope.storeDetails.currentStatus.statusName === STATUS_END_INSTANCE;
+    $scope.isEndInstance = function () {
+      if ($scope.storeDetails) {
+        return $scope.storeDetails.currentStatus.statusName === STATUS_END_INSTANCE;
+      }
     };
 
     function setStoreInstanceItems(dataFromAPI) {
@@ -255,13 +257,13 @@ angular.module('ts5App')
         storeInstanceStatusDispatched, showResponseErrors);
     }
 
-    // Dispatch
-    actions.dispatchInit = function () {
+    function getDataFromAPI() {
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       displayLoadingModal();
       storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
-    };
+    }
 
+    // Dispatch
     actions.dispatchSubmit = function () {
       saveStoreInstanceStatus(STATUS_DISPATCHED);
     };
@@ -269,12 +271,6 @@ angular.module('ts5App')
     actions.dispatchPrevStepIndex = 2;
 
     // Replenish
-    actions.replenishInit = function () {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
-      displayLoadingModal();
-      storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
-    };
-
     actions.replenishStoreInstanceValid = function () {
       if ($scope.storeDetails.replenishStoreInstanceId) {
         return true;
@@ -366,16 +362,12 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.formErrors = [];
 
-      var camelCasedAction = $routeParams.action.replace(/-([a-z])/g, function (g) {
-        return g[1].toUpperCase();
-      });
+      //var camelCasedAction = $routeParams.action.replace(/-([a-z])/g, function (g) {
+      //  return g[1].toUpperCase();
+      //});
 
-      var initAction = camelCasedAction + 'Init';
-      if (actions[initAction]) {
-        actions[initAction]();
-      } else {
-        throwError('routeParams.action');
-      }
+      getDataFromAPI();
+
     }
 
     init();
