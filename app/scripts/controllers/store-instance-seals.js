@@ -19,45 +19,6 @@ angular.module('ts5App')
 
     var $this = this;
 
-    this.createUrl = function(name) {
-      return '/store-instance-' + name + '/' + $routeParams.action + '/' + $routeParams.storeId;
-    };
-
-    //TODO: Sanitize the smell and refactor the switch
-    this.determineSteps = function() {
-      switch ($routeParams.action) {
-        default: $this.nextStep = {
-          stepName: '3',
-          URL: $this.createUrl('review')
-        };
-        $this.prevStep = {
-          stepName: '1',
-          URL: $this.createUrl('packing')
-        };
-        break;
-        case 'replenish':
-            $this.nextStep = {
-            stepName: '4',
-            URL: $this.createUrl('review')
-          };
-          $this.prevStep = {
-            stepName: '2',
-            URL: $this.createUrl('packing')
-          };
-          break;
-        case 'end-instance':
-            $this.nextStep = {
-            stepName: '3',
-            URL: $this.createUrl('packing')
-          };
-          $this.prevStep = {
-            stepName: '1',
-            URL: $this.createUrl('create')
-          };
-          break;
-      }
-    };
-
     $scope.formData = [];
     $scope.readOnly = true;
     $scope.saveButtonName = 'Exit';
@@ -97,6 +58,11 @@ angular.module('ts5App')
 
     this.setWizardSteps = function() {
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
+        controllerName: 'Seals'
+      });
+      $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
+      $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
     };
 
     this.getSealColors = function() {
@@ -408,7 +374,7 @@ angular.module('ts5App')
 
     this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
-      $location.path(stepObject.URL);
+      $location.path(stepObject.uri);
     };
 
     this.updateStatusToStep = function(stepObject) {
@@ -452,9 +418,8 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      this.determineSteps();
-      this.getSealTypesDependencies();
       this.setWizardSteps();
+      this.getSealTypesDependencies();
     };
 
     this.init();
