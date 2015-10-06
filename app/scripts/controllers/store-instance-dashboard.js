@@ -1,5 +1,7 @@
 'use strict';
 
+/* global moment */
+
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstanceDashboardCtrl
@@ -120,7 +122,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if(store.hours === -1) {
         return true;
       }
-      return (store.startDate && store.hours > 0 && !$scope.doesStoreInstanceHaveReplenishments(store));
+      var storeUpdatedDate = moment(store.updatedOn, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+      var hoursSinceUpdatedDate = moment.duration(moment().diff(storeUpdatedDate)).asHours();
+
+      var isNowWithinAllowedHours = hoursSinceUpdatedDate > 0 && hoursSinceUpdatedDate < store.hours;
+      return (isNowWithinAllowedHours && !$scope.doesStoreInstanceHaveReplenishments(store));
     };
 
     $scope.undispatch = function(id) {
@@ -162,7 +168,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         // TODO: get timeConfig that has most recent startDate -- will be a new API
         var timeConfig = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId});
         storeInstance.hours = (angular.isDefined(timeConfig)) ? timeConfig.hours : -1;
-        storeInstance.startDate = (angular.isDefined(timeConfig)) ? timeConfig.startDate : dateUtility.nowFormatted();
 
         var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
