@@ -308,7 +308,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {controllerName: 'Packing'});
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
-      
+
       $scope.menuItems = [];
       $scope.emptyMenuItems = [];
       var promises = $this.makeInitializePromises();
