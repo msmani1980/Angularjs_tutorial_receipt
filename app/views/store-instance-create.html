@@ -12,7 +12,7 @@
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('CateringStation')">
-          <select required class="form-control" ng-model="formData.cateringStationId" name="CateringStation" ng-change="getMenuCatererList()">
+          <select required class="form-control" ng-model="formData.cateringStationId" name="CateringStation">
             <option ng-disabled="true" selected="selected" value>Select Catering Station</option>
             <option ng-repeat="station in cateringStationList | orderBy:'name' track by station.id" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
           </select>
