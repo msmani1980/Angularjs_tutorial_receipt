@@ -11,6 +11,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   beforeEach(module('served/store-status.json'));
   beforeEach(module('served/store-status-response.json'));
   beforeEach(module('served/store-time-config.json'));
+  beforeEach(module('served/features.json'));
 
   var StoreInstanceDashboardCtrl;
   var scope;
@@ -32,10 +33,12 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   var storeTimeConfigResponseJSON;
   var storeInstanceService;
   var updateStoreInstanceStatusDeferred;
+  var featuresListDeferred;
+  var featuresListResponseJSON;
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
     inject(function(_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_,
-      _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_) {
+      _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_, _servedFeatures_) {
       cateringStationResponseJSON = _servedCateringStations_;
       stationResponseJSON = _servedStations_;
       storeInstanceListResponseJSON = _servedStoreInstanceList_;
@@ -43,6 +46,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       statusListResponseJSON = _servedStoreStatus_;
       statusResponseJSON = _servedStoreStatusResponse_;
       storeTimeConfigResponseJSON = _servedStoreTimeConfig_;
+      featuresListResponseJSON = _servedFeatures_;
 
     });
     scope = $rootScope.$new();
@@ -66,6 +70,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     storeTimeConfigDeferred = $q.defer();
     storeTimeConfigDeferred.resolve(storeTimeConfigResponseJSON);
     updateStoreInstanceStatusDeferred = $q.defer();
+    featuresListDeferred = $q.defer();
+    featuresListDeferred.resolve(featuresListResponseJSON);
 
 
     spyOn(storeInstanceDashboardFactory, 'getCatererStationList').and.returnValue(cateringStationDeferred.promise);
@@ -75,6 +81,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     spyOn(storeInstanceDashboardFactory, 'getStatusList').and.returnValue(statusListDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'updateStoreInstanceStatus').and.returnValue(statusDeferred.promise);
     spyOn(storeTimeConfig, 'getTimeConfig').and.returnValue(storeTimeConfigDeferred.promise);
+    spyOn(storeInstanceDashboardFactory, 'getFeaturesList').and.returnValue(featuresListDeferred.promise);
+
 
     StoreInstanceDashboardCtrl = $controller('StoreInstanceDashboardCtrl', {
       $scope: scope
@@ -209,6 +217,15 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
       it('should attach all properties of JSON to scope', function() {
         expect(scope.storeStatusList).toEqual(statusListResponseJSON);
+      });
+    });
+
+    describe('getUndispatchFeatureid', function () {
+      it('should get featureList', function () {
+        expect(storeInstanceDashboardFactory.getFeaturesList).toHaveBeenCalled();
+      });
+      it('should set undispatchFeatureid', function () {
+        expect(scope.undispatchFeatureId).toBeDefined();
       });
     });
 

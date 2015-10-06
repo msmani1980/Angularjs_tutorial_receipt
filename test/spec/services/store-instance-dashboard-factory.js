@@ -30,6 +30,7 @@ describe('Service: storeInstanceDashboardFactory', function () {
     spyOn(storeInstanceService, 'updateStoreInstanceStatus');
     spyOn(storesService, 'getStoresList');
     spyOn(recordsService, 'getStoreStatusList');
+    spyOn(recordsService, 'getFeatures');
 
   }));
 
@@ -74,6 +75,10 @@ describe('Service: storeInstanceDashboardFactory', function () {
     it('should call getStoreStatusList', function () {
       storeInstanceDashboardFactory.getStatusList();
       expect(recordsService.getStoreStatusList).toHaveBeenCalled();
+    });
+    it('should call getFeatures', function () {
+      storeInstanceDashboardFactory.getFeaturesList();
+      expect(recordsService.getFeatures).toHaveBeenCalled();
     });
   });
 

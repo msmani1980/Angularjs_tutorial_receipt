@@ -14,5 +14,10 @@
     "hours": 999999,
     "startDate": "2015-09-16",
     "featureId": 2
+  }, {
+    "id":3,
+    "hours": 999999,
+    "startDate": "2015-09-16",
+    "featureId": 3
   }]
 }

@@ -16,65 +16,77 @@ describe('Service: storeInstanceWizardConfig', function () {
     mockId = 7;
     mockedConfigDispatch = [
       {
-        label: 'Create Store Instance', 
-        uri: '/store-instance-create/dispatch/' + mockId
+        label: 'Create Store Instance',
+        uri: '/store-instance-create/dispatch/' + mockId,
+        controllerName: 'Create'
       },
       {
         label: 'Packing',
         uri: '/store-instance-packing/dispatch/' + mockId,
-        stepName:'1'
+        stepName:'1',
+        controllerName: 'Packing'
       },
       {
         label: 'Assign Seals',
         uri: '/store-instance-seals/dispatch/' + mockId,
-        stepName:'2'
+        stepName:'2',
+        controllerName: 'Seals'
       },
       {
         label: 'Review & Dispatch',
         uri: '/store-instance-review/dispatch/' + mockId,
-        stepName:'3'
+        stepName:'3',
+        controllerName: 'Review'
       }
     ];
     mockedConfigReplenish = [
       {
         label: 'Create Store Replenish',
-        uri: '/store-instance-create/replenish/' + mockId
+        uri: '/store-instance-create/replenish/' + mockId,
+        controllerName: 'Create'
       },
       {
         label: 'Replenish Packing',
         uri: '/store-instance-packing/replenish/' + mockId,
-        stepName:'1'
+        stepName:'1',
+        controllerName: 'Packing'
       },
       {
         label: 'Assign Replenish Seals',
         uri: '/store-instance-seals/replenish/' + mockId,
-        stepName:'2'
+        stepName:'2',
+        controllerName: 'Seals'
       },
       {
         label: 'Review & Dispatch Replenish',
         uri: '/store-instance-review/replenish/' + mockId,
-        stepName:'3'
+        stepName:'3',
+        controllerName: 'Review'
       }
     ];
     mockedConfigEndInstance = [
       {
         label: 'End Store Instance',
         uri: '/store-instance-create/end-instance/' + mockId,
+        controllerName: 'Create'
       },
       {
         label: 'Inbound Seals',
         uri: '/store-instance-seals/end-instance/' + mockId,
         stepName: '1',
+        controllerName: 'Seals'
       },
       {
         label: 'Packing',
         uri: '/store-instance-packing/end-instance/' + mockId,
         stepName: '2',
+        controllerName: 'Packing'
       },
       {
         label: 'Review & End Dispatch',
         uri: '/store-instance-review/end-instance/' + mockId,
         stepName: '3',
+        controllerName: 'Review'
       }
     ];
   }));

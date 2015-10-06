@@ -218,6 +218,41 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     });
 
+    describe('during the end-instance process', function () {
+
+      beforeEach(function () {
+        initController('end-instance');
+        getStoreDetailsDeferred.resolve(servedStoreInstanceDetailsJSON);
+        scope.$digest();
+      });
+
+      it('should call getCharacteristics', function () {
+        expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
+      });
+
+      it('should call getStoreInstanceMenuItems with Regular and Inventory filters', function () {
+        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
+        var expectedPayload = {
+          itemTypeId: 1, // this is 1 because we are requesting regular items.
+          characteristicId: 1, // this is 1 for inventory items
+          date: formattedDate
+        };
+        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(storeId, expectedPayload);
+      });
+
+      it('should call getItemsMasterList', function () {
+        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
+        var expectedPayload = {
+          itemTypeId: 1,
+          characteristicId: 1,
+          startDate: formattedDate,
+          endDate: formattedDate
+        };
+        expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
+      });
+
+    });
+
   });
 
   describe('formatStoreInstanceItemsPayload', function () {
