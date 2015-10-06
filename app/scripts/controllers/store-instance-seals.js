@@ -19,35 +19,39 @@ angular.module('ts5App')
 
     var $this = this;
 
+    this.createUrl = function(name) {
+      return '/store-instance-' + name + '/' + $routeParams.action + '/' + $routeParams.storeId;
+    };
+
     this.determineSteps = function() {
       switch ($routeParams.action) {
         default: $this.nextStep = {
           stepName: '3',
-          URL: '/store-instance-review/' + $routeParams.action + '/' + $routeParams.storeId
+          URL: $this.createUrl('review')
         };
         $this.prevStep = {
           stepName: '1',
-          URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
+          URL: $this.createUrl('packing')
         };
         break;
         case 'replenish':
             $this.nextStep = {
             stepName: '4',
-            URL: '/store-instance-review/' + $routeParams.action + '/' + $routeParams.storeId
+            URL: $this.createUrl('review')
           };
           $this.prevStep = {
             stepName: '2',
-            URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
+            URL: $this.createUrl('packing')
           };
           break;
         case 'end-instance':
             $this.nextStep = {
             stepName: '3',
-            URL: '/store-instance-packing/' + $routeParams.action + '/' + $routeParams.storeId
+            URL: $this.createUrl('packing')
           };
           $this.prevStep = {
             stepName: '1',
-            URL: '/store-instance-create/' + $routeParams.action + '/' + $routeParams.storeId
+            URL: $this.createUrl('create')
           };
           break;
       }
