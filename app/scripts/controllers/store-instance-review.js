@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig,
                                                    storeInstanceFactory, $location, storeInstanceReviewFactory,
-                                                   $q, ngToast, $filter, dateUtility) {
+                                                   $q, ngToast, $filter, dateUtility, lodash) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -114,19 +114,29 @@ angular.module('ts5App')
       });
     }
 
-    function removeHandoverSealType() {
-      var handover = _sealTypes.filter(function (sealType) {
-        return sealType.name === 'Hand Over';
-      })[0];
-      var index = _sealTypes.indexOf(handover);
-      delete _sealTypes[index];
+    function removeHandoverSealType(sealsArray) {
+      return sealsArray.filter(function(sealType) {
+        return sealType.name !== 'Hand Over';
+      });
+    }
+
+    function removeSealTypeForEndInstance(sealsArray) {
+      return sealsArray.filter(function(sealType) {
+        return sealType.name !== 'Hand Over' && sealType.name !== 'Outbound';
+      });
     }
 
     function setSealsList() {
       $scope.seals = [];
+
       if ($routeParams.action === 'replenish') {
-        removeHandoverSealType();
+        _sealTypes = removeSealTypeForEndInstance(_sealTypes);
       }
+
+      if ($routeParams.action === 'end-instance') {
+        _sealTypes = removeSealTypeForEndInstance(_sealTypes);
+      }
+
       _sealTypes.map(function (sealType) {
         addSealToScope(sealType);
         return _sealTypes;
