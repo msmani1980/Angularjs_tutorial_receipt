@@ -114,29 +114,20 @@ angular.module('ts5App')
       });
     }
 
-    function removeHandoverSealType(sealsArray) {
-      return sealsArray.filter(function(sealType) {
-        return sealType.name !== 'Hand Over';
-      });
-    }
-
-    function removeSealTypeForEndInstance(sealsArray) {
-      return sealsArray.filter(function(sealType) {
-        return sealType.name !== 'Hand Over' && sealType.name !== 'Outbound';
+    function removeSealNotUsed(sealsArray) {
+      var itemsToRemove = {
+        'replenish': ['Hand Over'],
+        'end-instance': ['Hand Over', 'Outbound']
+      };
+      return sealsArray.filter(function (sealType) {
+        return itemsToRemove[$routeParams.action].indexOf(sealType.name) < 0;
       });
     }
 
     function setSealsList() {
       $scope.seals = [];
-
-      if ($routeParams.action === 'replenish') {
-        _sealTypes = removeSealTypeForEndInstance(_sealTypes);
-      }
-
-      if ($routeParams.action === 'end-instance') {
-        _sealTypes = removeSealTypeForEndInstance(_sealTypes);
-      }
-
+      
+      _sealTypes = removeSealNotUsed(_sealTypes);
       _sealTypes.map(function (sealType) {
         addSealToScope(sealType);
         return _sealTypes;
