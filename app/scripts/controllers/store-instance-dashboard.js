@@ -153,6 +153,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.inboundStationCode = getValueByIdInArray(storeInstance.inboundStationId, 'code', $scope.stationList);
         storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
         storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
+        storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
         storeInstance.hours = getValueByIdInArray(storeInstance.storeId, 'hours', $scope.timeConfigList);
         storeInstance.startDate = getValueByIdInArray(storeInstance.storeId, 'startDate', $scope.timeConfigList);
@@ -161,7 +162,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
         storeInstance.selected = false;
       });
-      $scope.storeInstanceList = $filter('orderBy')($scope.storeInstanceList, ['scheduleDate', 'storeNumber','scheduleNumber']);
+      $scope.storeInstanceList = $filter('orderBy')($scope.storeInstanceList, ['scheduleDateApi', 'storeNumber','scheduleNumber']);
     }
 
     function dispatchStoreInstance(storeId) {
@@ -181,7 +182,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function getStoreInstanceList() {
-      return storeInstanceDashboardFactory.getStoreInstanceList().then(getStoreInstanceListSuccess);
+      return storeInstanceDashboardFactory.getStoreInstanceList({'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted())}).then(getStoreInstanceListSuccess);
     }
 
     function getStationListSuccess(dataFromAPI) {
@@ -236,6 +237,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           }
         }
       });
+
+      if (!payload.startDate) {
+        payload.startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      }
 
       storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess);
     }
