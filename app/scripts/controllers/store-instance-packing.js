@@ -19,16 +19,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.readOnly = true;
     $scope.saveButtonName = 'Exit';
 
-    var nextStep = {
-      stepName: '2',
-      URL: 'store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId
-    };
-    var prevStep = {
-      stepName: '1',
-      URL: 'store-instance-create/' + $routeParams.action + '/' + $routeParams.storeId
-    };
-
     var dashboardURL = 'store-instance-dashboard';
+
+    var camelCasedAction = $routeParams.action.replace(/-([a-z])/g, function (g) {
+      return g[1].toUpperCase();
+    });
 
     function showToast(className, type, message) {
       ngToast.create({
@@ -180,7 +175,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     function updateStoreDetails(response, stepObject) {
       $scope.storeDetails.currentStatus = lodash.findWhere($scope.storeDetails.statusList, {id: response.statusId});
-      $location.path(stepObject.URL);
+      $location.path(stepObject.uri);
     }
 
     function updateStatusToStep(stepObject) {
@@ -294,18 +289,26 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         this.getStoreDetails(),
         this.getRegularItemTypeId()
       ];
-      if ($routeParams.action === 'replenish') {
-        promises.push(this.getCharacteristicIdForName('Upliftable'));
-      } else if($routeParams.action === 'end-instance') {
-        promises.push(this.getCharacteristicIdForName('Inventory'));
+
+      var characteristicForAction = {
+        replenish: 'Upliftable',
+        endInstance: 'Inventory'
+      };
+      if (characteristicForAction[camelCasedAction]) {
+        promises.push(this.getCharacteristicIdForName(characteristicForAction[camelCasedAction]));
       }
 
       return promises;
     };
 
     this.initialize = function () {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       showLoadingModal('Loading Store Detail for Packing...');
+
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.wizardSteps, {controllerName: 'Packing'});
+      $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
+      $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
+      
       $scope.menuItems = [];
       $scope.emptyMenuItems = [];
       var promises = $this.makeInitializePromises();
@@ -346,7 +349,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       getItemsSuccessHandler(dataFromAPI);
 
       if (updateStatus) {
-        updateStatusToStep(nextStep);
+        updateStatusToStep($this.nextStep);
       } else {
         showToast('success', 'Save Packing Data', 'Data successfully updated!');
         $location.path(redirectURL);
@@ -383,12 +386,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.goToPreviousStep = function () {
-      $location.path(prevStep.URL);
+      $location.path($this.prevStep.uri);
     };
 
     $scope.goToNextStep = function () {
       var shouldUpdateStatus = ($routeParams.action !== 'end-instance');
-      $scope.savePackingDataAndUpdateStatus(shouldUpdateStatus, nextStep.URL);
+      $scope.savePackingDataAndUpdateStatus(shouldUpdateStatus, $this.nextStep.uri);
     };
 
     $scope.showQty = function () {

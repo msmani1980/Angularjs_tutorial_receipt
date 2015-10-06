@@ -23,64 +23,76 @@ angular.module('ts5App')
         'dispatch': [
           {
             label: 'Create Store Instance',
-            uri: createURL + action + (id ? '/' + id : '')
+            uri: createURL + action + (id ? '/' + id : ''),
+            controllerName: 'Create'
           },
           {
             label: 'Packing',
             uri: packingURL + action + '/' + id,
             stepName: '1',
+            controllerName: 'Packing'
           },
           {
             label: 'Assign Seals',
             uri: sealsURL + action + '/' + id,
             stepName: '2',
+            controllerName: 'Seals'
           },
           {
             label: 'Review & Dispatch',
             uri: reviewURL + action + '/' + id,
             stepName: '3',
+            controllerName: 'Review'
           }
         ],
         'replenish': [
           {
             label: 'Create Store Replenish',
-            uri: createURL + action + (id ? '/' + id : '')
+            uri: createURL + action + (id ? '/' + id : ''),
+            controllerName: 'Create'
           },
           {
             label: 'Replenish Packing',
             uri: packingURL + action + '/' + id,
             stepName: '1',
+            controllerName: 'Packing'
           },
           {
             label: 'Assign Replenish Seals',
             uri: sealsURL + action + '/' + id,
             stepName: '2',
+            controllerName: 'Seals'
           },
           {
             label: 'Review & Dispatch Replenish',
             uri: reviewURL + action + '/' + id,
             stepName: '3',
+            controllerName: 'Review'
           }
         ],
         'end-instance': [
           {
             label: 'End Store Instance',
-            uri: createURL + action + (id ? '/' + id : '')
+            uri: createURL + action + (id ? '/' + id : ''),
+            controllerName: 'Create'
           },
           {
             label: 'Inbound Seals',
             uri: sealsURL + action + '/' + id,
             stepName: '1',
+            controllerName: 'Seals'
           },
           {
             label: 'Packing',
             uri: packingURL + action + '/' + id,
             stepName: '2',
+            controllerName: 'Packing'
           },
           {
             label: 'Review & End Dispatch',
             uri: reviewURL + action + '/' + id,
             stepName: '3',
+            controllerName: 'Review'
           }
         ]
       };
