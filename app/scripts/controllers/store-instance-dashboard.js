@@ -117,6 +117,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.isUndispatchPossible = function(store) {
+      if(store.hours === -1) {
+        return true;
+      }
       return (store.startDate && store.hours > 0 && !$scope.doesStoreInstanceHaveReplenishments(store));
     };
 
@@ -155,8 +158,12 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
         storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
-        storeInstance.hours = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId}).hours;
-        storeInstance.startDate = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId}).startDate;
+
+        // TODO: get timeConfig that has most recent startDate -- will be a new API
+        var timeConfig = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId});
+        storeInstance.hours = (angular.isDefined(timeConfig)) ? timeConfig.hours : -1;
+        storeInstance.startDate = (angular.isDefined(timeConfig)) ? timeConfig.startDate : dateUtility.nowFormatted();
+
         var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
         storeInstance.selected = false;
