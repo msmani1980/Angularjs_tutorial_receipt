@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Store Instance Create Controller', function() {
+describe('Store Instance Create Controller', function() {
 
   beforeEach(module(
     'ts5App',
