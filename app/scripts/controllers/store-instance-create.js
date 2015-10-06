@@ -350,6 +350,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.updateInstanceDependencies();
         }
       });
+      if($routeParams.action==='dispatch') {
+        $scope.$watch('formData.cateringStationId', function(newId, oldId) {
+          if (newId && oldId && newId !== oldId) {
+            $this.getMenuMasterList();
+          }
+        });
+      }
     };
 
     this.showLoadingModal = function(text) {
