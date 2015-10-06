@@ -60,6 +60,19 @@
       </div>
     </div>
 
+    <div class="row" ng-if="isReplenish()">
+      <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
+        <label>Dispatched LMP Station *</label>
+      </div>
+      <div class="col-xs-12 col-sm-8">
+        <div class="form-group" ng-class="validateInput('DispatchedCateringStation')">
+          <select ng-disabled="true" required class="form-control" ng-model="formData.dispatchedCateringStationId" name="DispatchedCateringStation">
+            <option ng-repeat="station in cateringStationList | orderBy:'name' track by station.id" value="{{ station.id }}">{{ station.name }} - {{ station.code }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="row" ng-if="!isEndInstance()">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>Store Number *</label>
@@ -76,7 +89,9 @@
 
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Select Menus *</label>
+        <label>
+          <span ng-hide="isReplenish()">Select</span> Menus *
+        </label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateMenus()">
