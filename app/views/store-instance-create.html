@@ -76,7 +76,9 @@
 
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Select Menus *</label>
+        <label>
+          <span ng-hide="isReplenish()">Select</span> Menus *
+        </label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateMenus()">
