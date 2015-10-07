@@ -76,6 +76,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
     spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
+    spyOn(storeInstanceFactory, 'getStoreInstanceUpliftList').and.returnValue(getStoreInstanceItemsDeferred.promise);
     spyOn(storeInstanceFactory, 'getItemsMasterList').and.returnValue(getMasterItemsDeferred.promise);
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(getUpdatedStoreStatusDeferred.promise);
     spyOn(storeInstanceFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
@@ -188,6 +189,10 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       it('should call getCharacteristics', function () {
         expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
+      });
+
+      it('should call getStoreInstanceUpliftList', function () {
+        expect(storeInstanceFactory.getStoreInstanceUpliftList).toHaveBeenCalledWith(scope.storeDetails.replenishStoreInstanceId);
       });
 
       it('should call getStoreInstanceMenuItems with Regular and Uplifted filters', function () {

@@ -36,6 +36,9 @@ angular.module('ts5App').service('storeInstanceService', function($resource, ENV
     getStoreInstanceItem: {
       method: 'GET'
     },
+    getStoreInstanceUpliftList: {
+      method: 'GET'
+    },
     updateStoreInstanceItem: {
       method: 'PUT'
     },
@@ -100,6 +103,14 @@ angular.module('ts5App').service('storeInstanceService', function($resource, ENV
       itemIdOrBulk: itemId
     });
     return requestResource.getStoreInstanceItem(requestPayload).$promise;
+  }
+
+  function getStoreInstanceUpliftList(id, payload) {
+    var requestPayload = angular.extend({}, {
+      id: id,
+      api: 'uplift'
+    }, payload);
+    return requestResource.getStoreInstanceItemList(requestPayload).$promise;
   }
 
   function updateStoreInstanceItem(id, itemId, payload) {
@@ -168,6 +179,7 @@ angular.module('ts5App').service('storeInstanceService', function($resource, ENV
     updateStoreInstanceItemsBulk: updateStoreInstanceItemsBulk,
     updateStoreInstanceStatus: updateStoreInstanceStatus,
     createStoreInstanceItem: createStoreInstanceItem,
-    deleteStoreInstanceItem: deleteStoreInstanceItem
+    deleteStoreInstanceItem: deleteStoreInstanceItem,
+    getStoreInstanceUpliftList: getStoreInstanceUpliftList
   };
 });

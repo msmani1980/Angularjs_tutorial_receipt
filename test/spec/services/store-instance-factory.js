@@ -100,6 +100,7 @@ describe('Service: storeInstanceFactory', function() {
     spyOn(storeInstanceService, 'getStoreInstanceMenuItems');
     spyOn(storeInstanceService, 'getStoreInstanceItemList');
     spyOn(storeInstanceService, 'getStoreInstanceItem');
+    spyOn(storeInstanceService, 'getStoreInstanceUpliftList');
     spyOn(storeInstanceService, 'createStoreInstanceItem');
     spyOn(storeInstanceService, 'updateStoreInstanceItem');
     spyOn(storeInstanceService, 'updateStoreInstanceItemsBulk');
@@ -178,6 +179,10 @@ describe('Service: storeInstanceFactory', function() {
     it('should call getStoreInstanceItem', function() {
       storeInstanceFactory.getStoreInstanceItem(id, itemId);
       expect(storeInstanceService.getStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
+    });
+    it('should call getStoreInstanceUpliftList', function() {
+      storeInstanceFactory.getStoreInstanceUpliftList(id, mockPayload);
+      expect(storeInstanceService.getStoreInstanceUpliftList).toHaveBeenCalledWith(id, mockPayload);
     });
     it('should call createStoreInstanceItem', function() {
       storeInstanceFactory.createStoreInstanceItem(id, mockPayload);

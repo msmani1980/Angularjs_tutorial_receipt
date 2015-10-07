@@ -113,6 +113,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getStoreInstanceItems = function () {
+      if($routeParams.action==='replenish') {
+        storeInstanceFactory.getStoreInstanceUpliftList($scope.storeDetails.replenishStoreInstanceId).then(getItemsSuccessHandler, showErrors);
+      }
       storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(getItemsSuccessHandler, showErrors);
     };
 
