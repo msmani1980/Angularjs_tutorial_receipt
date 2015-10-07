@@ -372,5 +372,33 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
   });
 
+  describe('checking an action state', function () {
+
+    it('should return true if the state passed matches the action state of the controller', function () {
+      initController();
+      var isDispatch = scope.isActionState('dispatch');
+      expect(isDispatch).toBeTruthy();
+    });
+
+    it('should return false if the state passed does not matches the action state of the controller', function () {
+      initController();
+      var isDispatch = scope.isActionState('replenish');
+      expect(isDispatch).toBeFalsy();
+    });
+
+    it('should return true if the state passed matches the action state of the controller', function () {
+      initController('replenish');
+      var isReplenish = scope.isActionState('replenish');
+      expect(isReplenish).toBeTruthy();
+    });
+
+    it('should return false if the state passed does not matches the action state of the controller', function () {
+      initController();
+      var isReplenish = scope.isActionState('replenish');
+      expect(isReplenish).toBeFalsy();
+    });
+
+  });
+
 
 });

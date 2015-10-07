@@ -30,7 +30,10 @@
         <tr>
           <th>Retail Item Details</th>
           <th ng-show="showQty()" width="15%">Template Quantity</th>
-          <th width="15%">Packed Quantity</th>
+          <th width="15%">
+            <span ng-show="isActionState('dispatch')">Packed</span>
+            <span ng-show="isActionState('replenish')">Picked</span> Quantity
+          </th>
           <th width="5%"></th>
         </tr>
         </thead>
