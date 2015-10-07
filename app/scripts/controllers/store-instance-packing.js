@@ -89,10 +89,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         hideLoadingModal();
         return;
       }
-
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
-        console.table(item);
         if (angular.isDefined(item.menuQuantity)) {
           delete item.id;
         }
@@ -101,7 +99,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
-
       $this.mergeMenuItems(menuItems);
     }
 
