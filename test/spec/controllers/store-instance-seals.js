@@ -37,10 +37,11 @@ describe('the Store Instance Seals controller', function() {
   var location;
   var httpBackend;
   var updateStoreInstanceStatusDeferred;
+  var updateStoreInstanceDeferred;
   var getStoreInstanceSealsDeferred;
   var controller;
 
-  beforeEach(inject(function($injector, $rootScope, $controller, $q, $httpBackend, $location, ngToast,
+  beforeEach(inject(function($injector, $rootScope, $controller, $q, $httpBackend, $location, ngToast, lodash,
     _servedSealTypes_, _servedSealColors_,
     _servedStoreInstanceSeals_, _servedStoreInstanceSealsCreated_, _servedStoreInstanceDetails_) {
 
@@ -76,6 +77,7 @@ describe('the Store Instance Seals controller', function() {
     createStoreInstanceSealDeferred = $q.defer();
     deleteStoreInstanceSealDeferred = $q.defer();
     updateStoreInstanceStatusDeferred = $q.defer();
+    updateStoreInstanceDeferred = $q.defer();
 
     spyOn(storeInstanceAssignSealsFactory, 'getStoreInstanceSeals').and.returnValue(
       getStoreInstanceSealsDeferred.promise);
@@ -85,6 +87,8 @@ describe('the Store Instance Seals controller', function() {
 
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(
       updateStoreInstanceStatusDeferred.promise);
+    spyOn(storeInstanceFactory, 'updateStoreInstance').and.returnValue(
+      updateStoreInstanceDeferred.promise);
     spyOn(storeInstanceAssignSealsFactory, 'createStoreInstanceSeal').and.returnValue(
       createStoreInstanceSealDeferred.promise);
     spyOn(storeInstanceAssignSealsFactory, 'deleteStoreInstanceSeal').and.returnValue(
@@ -541,6 +545,45 @@ describe('the Store Instance Seals controller', function() {
 
         it('should call the update status call', function() {
           expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalledWith(nextStep);
+        });
+
+      });
+
+      describe('updateStatusToStep', function() {
+        var nextStep;
+        var mockTampered;
+        beforeEach(function() {
+          initController('end-instance');
+          $scope.storeDetails.tampered = true;
+          $scope.storeDetails.note = 'test note';
+          nextStep = {
+            label: 'Review & Dispatch',
+            uri: '/store-instance-review/end-instance/' + storeId,
+            stepName: '2',
+            controllerName: 'Review'
+          };
+
+          mockTampered = {
+            menus: [],
+            tampered: true,
+            note: 'test note'
+          };
+
+          updateStoreInstanceStatusDeferred.resolve({});
+
+          spyOn(StoreInstanceSealsCtrl, 'updateStoreInstanceTampered').and.callThrough();
+          StoreInstanceSealsCtrl.updateStatusToStep(nextStep);
+
+          $scope.$digest();
+        });
+
+        it('should called updateStoreInstanceTampered', function() {
+          expect(StoreInstanceSealsCtrl.updateStoreInstanceTampered).toHaveBeenCalled();
+        });
+
+
+        it('should call the PUT with the tampered payload', function() {
+          expect(storeInstanceFactory.updateStoreInstance).toHaveBeenCalledWith(5, mockTampered);
         });
 
       });

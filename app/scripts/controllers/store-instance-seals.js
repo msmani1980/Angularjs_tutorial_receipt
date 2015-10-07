@@ -376,6 +376,7 @@ angular.module('ts5App')
 
     this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
+      $this.updateStoreInstanceTampered();
       $location.path(stepObject.uri);
     };
 
@@ -390,14 +391,12 @@ angular.module('ts5App')
     };
 
     this.updateStoreInstanceTampered = function() {
-      if ($scope.storeDetails.tampered) {
-        var payload = {
-          menus: $this.formatMenus($scope.storeDetails.menuList),
-          tampered: $scope.storeDetails.tampered,
-          note: $scope.storeDetails.note
-        };
-        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload);
-      }
+      var payload = {
+        menus: $this.formatMenus($scope.storeDetails.menuList),
+        tampered: $scope.storeDetails.tampered,
+        note: $scope.storeDetails.note
+      };
+      return storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload);
     };
 
     this.updateStatusToStep = function(stepObject) {
@@ -409,11 +408,14 @@ angular.module('ts5App')
       if (!statusObject) {
         return;
       }
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(function() {
+      var promises = [];
+      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id));
+      if ($scope.storeDetails.tampered) {
+        promises.push($this.updateStoreInstanceTampered());
+      }
+      $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
       }, $this.assignSealsErrorHandler);
-
-      $this.updateStoreInstanceTampered();
     };
 
     this.assignSealsSuccessHandler = function() {
