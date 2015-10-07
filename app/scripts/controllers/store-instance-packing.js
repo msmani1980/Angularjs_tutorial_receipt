@@ -258,7 +258,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
 
     this.isStatusCorrectForSetAction = function (statusName) {
-      if($routeParams.action === 'end-instance' && statusName === '5') {
+      if($routeParams.action === 'end-instance' && statusName === '7') {
         return true;
       } else if($routeParams.action !== 'end-instance' && statusName === '1') {
         return true;
