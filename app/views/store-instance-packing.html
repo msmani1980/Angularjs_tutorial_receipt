@@ -29,11 +29,17 @@
         <thead>
         <tr>
           <th>Retail Item Details</th>
-          <th ng-show="showQty()" width="15%">Template Quantity</th>
-          <th width="15%">
-            <span ng-show="isActionState('dispatch')">Packed</span>
-            <span ng-show="isActionState('replenish')">Picked</span> Quantity
+          <th ng-show="isActionState('dispatch')" width="15%">Template Quantity</th>
+          <th width="15%" ng-show="isActionState('dispatch') || isActionState('replenish')">
+            <span ng-show="isActionState('dispatch')">Packed Quantity</span>
+            <span ng-show="isActionState('replenish')">Picked Quantity</span>
           </th>
+
+          <th ng-show="isActionState('end-instance')" width="10%">Inbound Quantity</th>
+          <th ng-show="isActionState('end-instance')" width="10%">Ulage Quantity</th>
+          <th ng-show="isActionState('end-instance')" width="30%">Ulage Reason</th>
+
+
           <th width="5%"></th>
         </tr>
         </thead>
@@ -44,11 +50,11 @@
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
           </td>
-          <td ng-show="showQty()">
+          <td ng-show="isActionState('dispatch')">
             <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"
                    disabled/>
           </td>
-          <td>
+          <td ng-show="isActionState('dispatch') || isActionState('replenish')">
             <input type="text"
                    name="templateQuantity-{{$index}}"
                    custom-validity
@@ -59,6 +65,29 @@
                    ng-disabled="readOnly"
                    maxlength="5"/>
           </td>
+          <!-- TODO: inbound quantity-->
+          <td ng-show="isActionState('end-instance')">
+            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"
+                   disabled/>
+          </td>
+          <!-- TODO: ulage-->
+          <td ng-show="isActionState('end-instance')">
+            <input type="text"
+                   name="templateQuantity-{{$index}}"
+                   custom-validity
+                   custom-pattern="number"
+                   required="true"
+                   class="form-control"
+                   ng-model="item.quantity"
+                   ng-disabled="readOnly"
+                   maxlength="5"/>
+          </td>
+          <!-- TODO: ulage reason -- need to resolve ulageReasonCode -->
+          <td ng-show="isActionState('end-instance')">
+            <input type="text" class="form-control" ng-model="item.itemDescription"
+                   disabled/>
+          </td>
+
           <td>
             <button type="button" ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
@@ -77,12 +106,34 @@
             </ui-select>
 
           </td>
-          <td ng-show="showQty()">
+          <td ng-show="isActionState('dispatch')">
             <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
           </td>
-          <td>
+          <td ng-show="isActionState('dispatch') || isActionState('replenish')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" maxlength="5">
           </td>
+
+          <!-- TODO: inbound quantity-->
+          <td ng-show="isActionState('end-instance')">
+            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
+
+          </td>
+          <!-- TODO: ulage-->
+          <td ng-show="isActionState('end-instance')">
+            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
+          </td>
+          <!-- TODO: ulage reason -- need to resolve ulageReasonCode -->
+          <td ng-show="isActionState('end-instance')">
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
+              <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{ $select.selected.itemName }}
+              </ui-select-match>
+              <ui-select-choices repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </td>
+
+
           <td ng-init="item.index = $index">
             <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
               <i class="fa fa-close"></i>

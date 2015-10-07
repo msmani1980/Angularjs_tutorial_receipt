@@ -392,10 +392,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.savePackingDataAndUpdateStatus(shouldUpdateStatus, $this.nextStep.uri);
     };
 
-    $scope.showQty = function () {
-      return ($routeParams.action === 'dispatch');
-    };
-
     $scope.canProceed = function () {
       return ($scope.menuItems.length > 0 || $scope.emptyMenuItems.length > 0);
     };
