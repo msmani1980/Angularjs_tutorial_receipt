@@ -13,21 +13,19 @@
   "updatedBy": null,
   "updatedOn": "2015-09-01 15:57:31.444228",
   "replenishStoreInstanceId": 3,
-  "menus": [
-    {
-      "id": 28,
-      "storeInstanceId": 38,
-      "menuMasterId": 89
-    },
-    {
-      "id": 29,
-      "storeInstanceId": 38,
-      "menuMasterId": 6
-    },
-    {
-      "id": 30,
-      "storeInstanceId": 38,
-      "menuMasterId": 4
-    }
-  ]
+  "tampered": true,
+  "note": "this is a test note",
+  "menus": [{
+    "id": 28,
+    "storeInstanceId": 38,
+    "menuMasterId": 89
+  }, {
+    "id": 29,
+    "storeInstanceId": 38,
+    "menuMasterId": 6
+  }, {
+    "id": 30,
+    "storeInstanceId": 38,
+    "menuMasterId": 4
+  }]
 }
