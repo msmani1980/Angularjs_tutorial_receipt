@@ -34,7 +34,7 @@ angular.module('ts5App')
 
     this.isInstanceReadOnly = function() {
       var currentStatus = parseInt($scope.storeDetails.currentStatus.name);
-      if (currentStatus === 2 && $routeParams.action === 'end-instance') {
+      if (currentStatus === 6 && $routeParams.action === 'end-instance') {
         $scope.readOnly = false;
         $scope.saveButtonName = 'Save & Exit';
         return;
@@ -367,9 +367,11 @@ angular.module('ts5App')
     };
 
     this.findStatusObject = function(stepObject) {
-      return lodash.findWhere($scope.storeDetails.statusList, {
-        name: stepObject.stepName
-      });
+      if (stepObject) {
+        return lodash.findWhere($scope.storeDetails.statusList, {
+          name: stepObject.stepName
+        });
+      }
     };
 
     this.statusUpdateSuccessHandler = function(stepObject) {
@@ -377,7 +379,32 @@ angular.module('ts5App')
       $location.path(stepObject.uri);
     };
 
+    this.formatMenus = function(menus) {
+      var newMenus = [];
+      angular.forEach(menus, function(menu) {
+        newMenus.push({
+          menuMasterId: menu.id
+        });
+      });
+      return newMenus;
+    };
+
+    this.updateStoreInstanceTampered = function() {
+      if ($scope.storeDetails.tampered) {
+        var payload = {
+          menus: $this.formatMenus($scope.storeDetails.menuList),
+          tampered: $scope.storeDetails.tampered,
+          note: $scope.storeDetails.note
+        };
+        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload);
+      }
+    };
+
     this.updateStatusToStep = function(stepObject) {
+      if ($routeParams.actions !== 'dispatch' && angular.isUndefined(stepObject.stepName)) {
+        $this.statusUpdateSuccessHandler(stepObject);
+        return;
+      }
       var statusObject = this.findStatusObject(stepObject);
       if (!statusObject) {
         return;
@@ -385,6 +412,8 @@ angular.module('ts5App')
       storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
       }, $this.assignSealsErrorHandler);
+
+      $this.updateStoreInstanceTampered();
     };
 
     this.assignSealsSuccessHandler = function() {
