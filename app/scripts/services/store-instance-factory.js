@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').service('storeInstanceFactory',
   function(storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
-    menuMasterService, storesService, stationsService, itemsService, recordsService, $q, lodash, dateUtility) {
+    menuMasterService, storesService, stationsService, itemsService, companyReasonCodesService, recordsService, $q, lodash, dateUtility) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
@@ -205,9 +205,12 @@ angular.module('ts5App').service('storeInstanceFactory',
       return getStoreDetailsDeferred.promise;
     }
 
-
     function updateStoreInstanceStatus(storeId, statusId) {
       return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
+    }
+
+    function getReasonCodeList(payload) {
+      return companyReasonCodesService.getAll(payload);
     }
 
     return {
@@ -238,7 +241,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreStatusList: getStoreStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
       getItemTypes: getItemTypes,
-      getCharacteristics: getCharacteristics
+      getCharacteristics: getCharacteristics,
+      getReasonCodeList: getReasonCodeList
     };
 
   });
