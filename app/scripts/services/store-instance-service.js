@@ -36,6 +36,9 @@ angular.module('ts5App').service('storeInstanceService', function($resource, ENV
     getStoreInstanceItem: {
       method: 'GET'
     },
+    getStoreInstanceUpliftList: {
+      method: 'GET'
+    },
     updateStoreInstanceItem: {
       method: 'PUT'
     },

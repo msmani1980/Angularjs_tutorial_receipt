@@ -89,7 +89,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         hideLoadingModal();
         return;
       }
-
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
         if (angular.isDefined(item.menuQuantity)) {
@@ -100,7 +99,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         }
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
-
       $this.mergeMenuItems(menuItems);
     }
 
@@ -143,7 +141,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($scope.characteristicFilterId) {
         payload.characteristicId = $scope.characteristicFilterId;
       }
-      storeInstanceFactory.getStoreInstanceMenuItems($routeParams.storeId, payload).then(getItemsSuccessHandler, showErrors);
+      var instanceId = $routeParams.storeId;
+      if($routeParams.action==='replenish') {
+        instanceId = $scope.storeDetails.replenishStoreInstanceId;
+      }
+      storeInstanceFactory.getStoreInstanceMenuItems(instanceId, payload).then(getItemsSuccessHandler, showErrors);
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
@@ -396,6 +398,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.canProceed = function () {
       return ($scope.menuItems.length > 0 || $scope.emptyMenuItems.length > 0);
+    };
+
+    $scope.isActionState = function(actionState) {
+      return $routeParams.action === actionState;
     };
 
   });
