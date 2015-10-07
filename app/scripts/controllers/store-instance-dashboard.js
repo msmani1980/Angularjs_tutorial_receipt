@@ -1,5 +1,7 @@
 'use strict';
 
+/* global moment */
+
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstanceDashboardCtrl
@@ -117,12 +119,17 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.isUndispatchPossible = function(store) {
-      return (store.startDate && store.hours > 0 && !$scope.doesStoreInstanceHaveReplenishments(store));
+      var storeUpdatedDate = moment.utc(store.updatedOn, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+      var hoursSinceUpdatedDate = moment.duration(moment.utc().diff(storeUpdatedDate)).asHours();
+      var isNowWithinAllowedHours = hoursSinceUpdatedDate > 0 && hoursSinceUpdatedDate < store.hours;
+      return (store.hours === -1) || (isNowWithinAllowedHours && !$scope.doesStoreInstanceHaveReplenishments(store));
     };
 
     $scope.undispatch = function(id) {
       var undispatchStatusId = 1;
+      showLoadingModal('Undispatching store instance ' + id + '...');
       storeInstanceDashboardFactory.updateStoreInstanceStatus(id, undispatchStatusId).then(function() {
+        hideLoadingModal();
         $location.path('store-instance-packing/dispatch/' + id);
       }, showErrors);
     };
@@ -155,8 +162,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
         storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
-        storeInstance.hours = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId}).hours;
-        storeInstance.startDate = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId}).startDate;
+
+        // TODO: get timeConfig that has most recent startDate -- will be a new API
+        var timeConfig = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId});
+        storeInstance.hours = (angular.isDefined(timeConfig)) ? timeConfig.hours : -1;
+
         var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
         storeInstance.selected = false;

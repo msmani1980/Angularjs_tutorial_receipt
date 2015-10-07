@@ -398,4 +398,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return ($scope.menuItems.length > 0 || $scope.emptyMenuItems.length > 0);
     };
 
+    $scope.isActionState = function(actionState) {
+      return $routeParams.action === actionState;
+    };
+
   });
