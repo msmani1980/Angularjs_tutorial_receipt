@@ -132,6 +132,32 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
+    this.getUpliftableCharacteristicIdSuccess = function (dataFromAPI, characteristicName) {
+      $scope.characteristicFilterId = $this.getIdByNameFromArray(characteristicName, dataFromAPI);
+    };
+
+    this.getCharacteristicIdForName = function (characteristicName) {
+      return storeInstanceFactory.getCharacteristics().then(function (dataFromAPI) {
+        $this.getUpliftableCharacteristicIdSuccess(dataFromAPI, characteristicName);
+      });
+    };
+
+    this.getUlageReasonCodesSuccess = function (dateFromAPI) {
+      $scope.ulageReasonCodes = dateFromAPI;
+    };
+
+    this.getUlageReasonCodes = function () {
+      storeInstanceFactory.getReasonCodeList().then($this.getUlageReasonCodesSuccess, showErrors);
+    };
+
+    this.getCountTypesSuccess = function (dataFromAPI) {
+      $scope.countTypes = dataFromAPI;
+    };
+
+    this.getCountTypes = function () {
+      storeInstanceFactory.getCountTypes().then($this.getCountTypesSuccess, showErrors);
+    };
+
     this.getStoreInstanceMenuItems = function () {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var payload = {
@@ -287,6 +313,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         this.getStoreDetails(),
         this.getRegularItemTypeId()
       ];
+
+      if($routeParams.action === 'end-instance') {
+        promises.push($this.getCountTypes());
+        promises.push($this.getUlageReasonCodes());
+      }
 
       var characteristicForAction = {
         'replenish': 'Upliftable',
