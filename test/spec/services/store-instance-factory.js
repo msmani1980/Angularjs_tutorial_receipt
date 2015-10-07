@@ -240,7 +240,7 @@ describe('Service: storeInstanceFactory', function() {
   describe('getStoreDetails', function() {
     var storeId;
     var storeDetails;
-    var parentId = 3;  // replenishStoreInstanceId from store-instance.json
+    var parentId = 3; // replenishStoreInstanceId from store-instance.json
     beforeEach(function() {
       storeId = 1;
       storeInstanceFactory.getStoreDetails(storeId).then(function(dataFromAPI) {
@@ -316,6 +316,14 @@ describe('Service: storeInstanceFactory', function() {
 
       it('should contain a parentStoreInstance property', function() {
         expect(storeDetails.parentStoreInstance).toBeDefined();
+      });
+
+      it('should contain a tampered property', function() {
+        expect(storeDetails.tampered).toBeDefined();
+      });
+
+      it('should contain a note property', function() {
+        expect(storeDetails.note).toBeDefined();
       });
 
       describe('when there is no parent Id', function() {
