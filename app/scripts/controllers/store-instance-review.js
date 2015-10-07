@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig,
                                                    storeInstanceFactory, $location, storeInstanceReviewFactory,
-                                                   $q, ngToast, $filter, dateUtility, lodash) {
+                                                   $q, ngToast, $filter, dateUtility) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -126,7 +126,7 @@ angular.module('ts5App')
 
     function setSealsList() {
       $scope.seals = [];
-      
+
       _sealTypes = removeSealNotUsed(_sealTypes);
       _sealTypes.map(function (sealType) {
         addSealToScope(sealType);

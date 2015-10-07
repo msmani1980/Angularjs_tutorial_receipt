@@ -73,14 +73,15 @@
           <table class="table store-instance-review-seals-table">
             <thead>
             <tr>
-              <th>Seal Type</th>
-              <th>Seal Numbers</th>
+              <th class="col-xs-3">Seal Type</th>
+              <th class="col-xs-9">Seal Numbers</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="sealObj in seals">
               <td>
-                <div class="seal-label" ng-style="{'background':'{{ sealObj.bgColor }}'}">{{ sealObj.name }}</div>
+                <input type="text" class="form-control" placeholder="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
+                <!--<div class="seal-label" ng-style="{'background':'{{ sealObj.bgColor }}'}">{{ sealObj.name }}</div>-->
               </td>
               <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
             </tr>
