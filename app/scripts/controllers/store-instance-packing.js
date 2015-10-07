@@ -84,6 +84,44 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     };
 
+    $this.getItemType = function (item) {
+      var inboundCountTypeId = $this.getIdByNameFromArray($scope.countTypes, 'Offload');
+      var ullageCountTypeId = $this.getIdByNameFromArray($scope.countTypes, 'Ullage');
+      if (angular.isDefined(item.menuQuantity)) {
+        return 'Template';
+      } else if(angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId == inboundCountTypeId) {
+        return 'Inbound';
+      } else if(angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId == ullageCountTypeId) {
+        return 'Ullage';
+      }
+      return 'Packed';
+    };
+
+    $this.formatTemplateQuantity = function (item) {
+      delete item.id;
+    };
+
+    $this.formatPackedQuantity = function (item) {
+      item.quantity = item.quantity.toString();
+    };
+
+    $this.formatInboundItem = function (item) {
+      item.inboundQuantity = angular.copy(item.quantity.toString());
+      item.inboundQuantityId = angular.copy(item.id);
+      delete item.quantity;
+      delete item.id;
+    };
+
+    $this.formatUllageItem = function (item) {
+      item.ullageQuantity = angular.copy(item.quantity.toString());
+      item.ullageId = angular.copy(item.id);
+      var itemUllage = lodash.findWhere($scope.ullageReasonCodes, {companyReasonCodeName: item.ullageReasonCode});
+      item.ullageReason = itemUllage || null;
+      delete item.quantity;
+      delete item.id;
+      delete item.ullageReasonCode;
+    };
+
     function getItemsSuccessHandler(dataFromAPI) {
       if (!dataFromAPI.response) {
         hideLoadingModal();
@@ -91,12 +129,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
-        if (angular.isDefined(item.menuQuantity)) {
-          delete item.id;
-        }
-        if (angular.isDefined(item.quantity)) {
-          item.quantity = item.quantity.toString();
-        }
+        var itemType = $this.getItemType(item);
+        var formatItemFunctionName = 'format' + itemType + 'Item';
+        $this[formatItemFunctionName](item);
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
       $this.mergeMenuItems(menuItems);
