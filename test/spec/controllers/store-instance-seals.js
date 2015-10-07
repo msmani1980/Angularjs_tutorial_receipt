@@ -556,6 +556,7 @@ describe('the Store Instance Seals controller', function() {
           initController('end-instance');
           $scope.storeDetails.tampered = true;
           $scope.storeDetails.note = 'test note';
+          $scope.storeDetails.cateringStationId = 120;
           nextStep = {
             label: 'Review & Dispatch',
             uri: '/store-instance-review/end-instance/' + storeId,
@@ -564,6 +565,10 @@ describe('the Store Instance Seals controller', function() {
           };
 
           mockTampered = {
+            cateringStationId: 120,
+            scheduleNumber: 'SCHED123',
+            scheduleDate: '20150813',
+            storeId: 13,
             menus: [],
             tampered: true,
             note: 'test note'
