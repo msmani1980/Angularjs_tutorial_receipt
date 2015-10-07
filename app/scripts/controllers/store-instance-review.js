@@ -230,8 +230,16 @@ angular.module('ts5App')
       $q.all(_initPromises).then(initLoadComplete, showResponseErrors);
     }
 
-    function resolveGetStoreDetails(dataFromAPI) {
-      $scope.storeDetails = angular.copy(dataFromAPI);
+    $scope.getUllageReason = function (ullageReasonCode) {
+      if (ullageReasonCode) {
+        return $filter('filter')($scope.ullageReasonList, {id: ullageReasonCode}, true)[0].companyReasonCodeName;
+      }
+    };
+
+    function storeDetailsResponseHandler(responseArray) {
+      $scope.storeDetails = angular.copy(responseArray[0]);
+      $scope.ullageReasonList = angular.copy(responseArray[1].companyReasonCodes);
+
       if (!isReadyForDispatch()) {
         //return;
       }
@@ -259,9 +267,14 @@ angular.module('ts5App')
     }
 
     function getDataFromAPI() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      var promiseArray = [];
       displayLoadingModal();
-      storeInstanceFactory.getStoreDetails($routeParams.storeId).then(resolveGetStoreDetails, showResponseErrors);
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+
+      promiseArray.push(storeInstanceFactory.getStoreDetails($routeParams.storeId));
+      promiseArray.push(storeInstanceFactory.getReasonCodeList());
+
+      $q.all(promiseArray).then(storeDetailsResponseHandler, showResponseErrors);
     }
 
     // Dispatch
@@ -362,10 +375,7 @@ angular.module('ts5App')
 
       $scope.displayError = false;
       $scope.formErrors = [];
-
-      //var camelCasedAction = $routeParams.action.replace(/-([a-z])/g, function (g) {
-      //  return g[1].toUpperCase();
-      //});
+      $scope.action = $routeParams.action;
 
       getDataFromAPI();
 

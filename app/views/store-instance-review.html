@@ -35,24 +35,47 @@
           </div>
           <table class="table table-striped pick-list">
             <thead>
-            <tr>
+            <tr ng-switch on="action">
               <th>Retail Item Details</th>
-              <th ng-show="showQty()" width="15%">Template Quantity</th>
-              <th width="15%">Packed Quantity</th>
+              <th ng-switch-when="dispatch" width="15%">Template Quantity</th>
+              <th ng-switch-when="dispatch" width="15%">Packed Quantity</th>
+
+              <th ng-switch-when="replenish" width="15%">Packed Quantity</th>
+
+              <th ng-switch-when="end-instance" width="15%">Inbound Qty</th>
+              <th ng-switch-when="end-instance" width="15%">Ullage</th>
+              <th ng-switch-when="end-instance">Ullage Reason</th>
+
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="item in items | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
-                ng-class="hasDiscrepancy(item)">
+                ng-class="hasDiscrepancy(item)" ng-switch on="action">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
               </td>
-              <td ng-show="showQty()">
+
+              <td ng-switch-when="dispatch">
                 <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
               </td>
-              <td>
+              <td ng-switch-when="dispatch">
                 <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
               </td>
+
+              <td ng-switch-when="replenish">
+                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+              </td>
+
+              <td ng-switch-when="end-instance">
+                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+              </td>
+              <td ng-switch-when="end-instance">
+                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+              </td>
+              <td ng-switch-when="end-instance">
+                <input type="text" class="form-control" value="{{getUllageReason(item.ullageReasonCode)}}" disabled>
+              </td>
+
             </tr>
             </tbody>
           </table>
@@ -81,7 +104,6 @@
             <tr ng-repeat="sealObj in seals">
               <td>
                 <input type="text" class="form-control" placeholder="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
-                <!--<div class="seal-label" ng-style="{'background':'{{ sealObj.bgColor }}'}">{{ sealObj.name }}</div>-->
               </td>
               <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
             </tr>

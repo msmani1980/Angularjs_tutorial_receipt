@@ -10,15 +10,15 @@
 angular.module('ts5App')
   .service('storeInstanceReviewFactory', function (storeInstanceSealService, sealColorsService,
                                                    sealTypesService) {
-    function getStoreInstanceSeals(id){
+    function getStoreInstanceSeals(id) {
       return storeInstanceSealService.getStoreInstanceSeals(id);
     }
 
-    function getSealColors(){
+    function getSealColors() {
       return sealColorsService.getSealColors();
     }
 
-    function getSealTypes(){
+    function getSealTypes() {
       return sealTypesService.getSealTypes();
     }
 
