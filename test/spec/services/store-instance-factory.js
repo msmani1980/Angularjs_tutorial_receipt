@@ -112,6 +112,7 @@ describe('Service: storeInstanceFactory', function() {
     spyOn(recordsService, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise);
     spyOn(recordsService, 'getItemTypes');
     spyOn(recordsService, 'getCharacteristics');
+    spyOn(recordsService, 'getCountTypes');
     spyOn(companyReasonCodesService, 'getAll');
 
   }));
@@ -365,6 +366,10 @@ describe('Service: storeInstanceFactory', function() {
     it('should call getCharacteristics', function() {
       storeInstanceFactory.getCharacteristics();
       expect(recordsService.getCharacteristics).toHaveBeenCalled();
+    });
+    it('should call getCountTypes', function() {
+      storeInstanceFactory.getCountTypes();
+      expect(recordsService.getCountTypes).toHaveBeenCalled();
     });
   });
 
