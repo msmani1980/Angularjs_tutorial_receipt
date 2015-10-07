@@ -10,6 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceWizardConfig,
     storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
+    dateUtility,
     lodash) {
 
     var HANDOVER = 'Hand Over';
@@ -376,7 +377,6 @@ angular.module('ts5App')
 
     this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
-      $this.updateStoreInstanceTampered();
       $location.path(stepObject.uri);
     };
 
@@ -392,6 +392,10 @@ angular.module('ts5App')
 
     this.updateStoreInstanceTampered = function() {
       var payload = {
+        cateringStationId: $scope.storeDetails.cateringStationId,
+        scheduleNumber: $scope.storeDetails.scheduleNumber,
+        scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
+        storeId: $scope.storeDetails.storeId,
         menus: $this.formatMenus($scope.storeDetails.menuList),
         tampered: $scope.storeDetails.tampered,
         note: $scope.storeDetails.note
