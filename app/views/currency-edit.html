@@ -2,42 +2,30 @@
 
     <div class="list-controls">
         <div class="row item-list-row">
-            <div class="col-xs-4">
+            <div class="col-xs-8">
                 <h2 class="view-name">{{viewName}}</h2>
             </div>
 
-            <div class="col-xs-8 text-right">
+            <div class="col-xs-4 text-right">
 
                 <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
                         aria-controls="search-collapse">
                     <span class="fa fa-filter" aria-hidden="true"></span>
                     <span class="hidden-sm hidden-xs">Filter</span>
                 </button>
-
-                <a href="/ember/#/discounts/create" class="btn btn-primary">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                    <span class="hidden-xs">Create Discount</span>
-                </a>
             </div>
         </div>
 
         <div class="panel panel-default collapse no-transition" id="search-collapse">
-            <form name="discountSearchForm" ng-submit="searchDiscounts()">
+            <form name="currencySearchForm" ng-submit="searchCurrencies()">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-3 col-sm-6">
                             <div class="form-group">
-                                <label for="discount-type">Discount Type</label>
-                                <select ng-model="search.discountTypeId" class="form-control" id="discount-type">
-                                    <option value="{{type.id}}" ng-repeat="type in discountTypes | unique: 'id'">{{ type.globalDiscountTypeName }}</option>
+                                <label for="currency-type">Currency</label>
+                                <select ng-model="search.currencyId" class="form-control" id="currency-type">
+                                    <option value="{{globalCurreny.id}}" ng-repeat="globalCurreny in globalCurrencyList | unique: 'id'">{{ globalCurreny.currencyCode }}</option>
                                 </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-6">
-                            <div class="form-group">
-                                <label for="discount-name">Discount</label>
-                                <input ng-model="search.name" type="text" class="form-control" id="discount-name" placeholder="10% Off">
                             </div>
                         </div>
 
@@ -83,33 +71,12 @@
         </ul>
     </div>
 
-    <table class="table table-responsive table-bordered table-hover">
-        <thead>
-        <tr>
-            <th>Discount type</th>
-            <th>Discount</th>
-            <th>Benefit Type</th>
-            <th>Restriction</th>
-            <th>Effective From</th>
-            <th>Effective To</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="discount in discountList | toArray:false |  filter:{discountTypeId: search.discountTypeId, name: search.name}">
-            <td>{{ discount.discountTypeName }}</td>
-            <td>{{ discount.name }}</td>
-            <td>{{ discount.rateTypeName }}</td>
-            <td>{{ discount.companyDiscountRestrictions }}</td>
-            <td>{{ discount.startDate }}</td>
-            <td>{{ discount.endDate }}</td>
-            <td>
-                <button class="btn btn-primary btn-xs" ng-click="editDiscount(discount)" ng-show="isDiscountEditable(discount)">
-                    <i class="fa fa-pencil"></i>
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="panel panel-default">
+        <div class="panel-heading text-right">Base currency: {{companyBaseCurrency.currencyCode}}</div>
+        <div class="panel-body">
+            Panel content
+        </div>
+    </div>
 </div>
+
 
