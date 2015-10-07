@@ -143,7 +143,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getUlageReasonCodesSuccess = function (dateFromAPI) {
-      $scope.ulageReasonCodes = dateFromAPI;
+      $scope.ulageReasonCodes = dateFromAPI.companyReasonCodes;
     };
 
     this.getUlageReasonCodes = function () {

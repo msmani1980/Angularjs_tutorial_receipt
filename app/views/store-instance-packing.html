@@ -37,7 +37,7 @@
 
           <th ng-show="isActionState('end-instance')" width="10%">Inbound Quantity</th>
           <th ng-show="isActionState('end-instance')" width="10%">Ulage Quantity</th>
-          <th ng-show="isActionState('end-instance')" width="30%">Ulage Reason</th>
+          <th ng-show="isActionState('end-instance')" width="35%">Ulage Reason</th>
 
 
           <th width="5%"></th>
@@ -111,20 +111,20 @@
           </td>
           <!-- TODO: new inbound quantity-->
           <td ng-show="isActionState('end-instance')">
-            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"/>
+            <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0"/>
 
           </td>
           <!-- TODO: new ulage-->
           <td ng-show="isActionState('end-instance')">
-            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"/>
+            <input type="text" class="form-control" ng-model="item.ulageQuantity" placeholder="0"/>
           </td>
           <!-- TODO: new ulage reason -- need to resolve ulageReasonCode -->
           <td ng-show="isActionState('end-instance')">
-            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
-              <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{ $select.selected.itemName }}
+            <ui-select ng-model="item.ulageReasonCode" theme="bootstrap">
+              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}
               </ui-select-match>
-              <ui-select-choices repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
-                <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
+              <ui-select-choices repeat="ulageReason in ulageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
+                <div ng-bind-html="ulageReason.companyReasonCodeName + ' - ' + ulageReason.description  | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </td>
