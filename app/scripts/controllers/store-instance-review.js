@@ -50,7 +50,7 @@ angular.module('ts5App')
     }
 
     function getItemsSuccessHandler(dataFromAPI) {
-      _menuItems = dataFromAPI.response;
+      _menuItems = angular.copy(dataFromAPI.response);
     }
 
     function getStoreInstanceMenuItems() {
@@ -116,6 +116,7 @@ angular.module('ts5App')
 
     function removeSealNotUsed(sealsArray) {
       var itemsToRemove = {
+        'dispatch': [],
         'replenish': ['Hand Over'],
         'end-instance': ['Hand Over', 'Outbound']
       };
@@ -136,13 +137,6 @@ angular.module('ts5App')
 
     function initLoadComplete() {
       hideLoadingModal();
-      if ($scope.items) {
-        $scope.items.map(function (item) {
-          item.itemDescription = item.itemCode + ' -  ' + item.itemName;
-          item.disabled = true;
-          item.menuQuantity = getMenuQuantity(item.itemMasterId);
-        });
-      }
       setSealsList();
     }
 
@@ -213,8 +207,37 @@ angular.module('ts5App')
       }
     };
 
+    function mergeInboundUllageItems(rawItemList) {
+      var inboundItemList = rawItemList.filter(function (item) {
+        return item.countTypeId === 14;
+      });
+
+      var ullageItemList = rawItemList.filter(function (item) {
+        return item.countTypeId === 7;
+      });
+
+      ullageItemList.map(function (item) {
+        item.ullageQuantity = item.quantity;
+        delete item.quantity;
+      });
+
+      return angular.merge(inboundItemList, ullageItemList);
+    }
+
+    function formatItems() {
+      $scope.items.map(function (item) {
+        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+        item.disabled = true;
+        if (!$scope.isEndInstance) {
+          item.menuQuantity = getMenuQuantity(item.itemMasterId);
+        }
+      });
+    }
+
     function setStoreInstanceItems(dataFromAPI) {
-      $scope.items = dataFromAPI.response;
+      var rawItemList = angular.copy(dataFromAPI.response);
+      $scope.items = $scope.isEndInstance() ? mergeInboundUllageItems(rawItemList) : rawItemList;
+      formatItems();
     }
 
     function getStoreInstanceItems() {
