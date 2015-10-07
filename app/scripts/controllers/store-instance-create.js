@@ -168,10 +168,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         var existingMenu = $scope.menuMasterList.filter(function(menuMaster) {
           return menuMaster.id === menu.menuMasterId;
         })[0];
-        newMenus.push({
-          id: menu.menuMasterId,
-          menuCode: existingMenu.menuCode
-        });
+        var newMenu = {
+          id: menu.menuMasterId
+        };
+        if(angular.isDefined(existingMenu)){
+          newMenu.menuCode = existingMenu.menuCode;
+        }
+        newMenus.push(newMenu);
       });
       return newMenus;
     };

@@ -197,7 +197,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           characteristicId: 2, // this is 2 for upliftable items
           date: formattedDate
         };
-        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(storeId, expectedPayload);
+        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeDetails.replenishStoreInstanceId, expectedPayload);
       });
 
       it('should call getItemsMasterList', function () {
