@@ -143,7 +143,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getUlageReasonCodesSuccess = function (dateFromAPI) {
-      $scope.ulageReasonCodes = dateFromAPI.companyReasonCodes;
+      $scope.ullageReasonCodes = dateFromAPI.companyReasonCodes;
     };
 
     this.getUlageReasonCodes = function () {
@@ -251,18 +251,50 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return emptyItemsExist;
     };
 
+
+    this.dispatchAndReplenishCreatePayload = function (item, workingPayload) {
+      var itemPayload = {
+        itemMasterId: item.itemMasterId || item.masterItem.id,
+        quantity: parseInt(item.quantity) || 0
+      };
+      if (item.id) {
+        itemPayload.id = item.id;
+      }
+      workingPayload.push(itemPayload);
+    };
+
+    this.endInstanceCreatePayload = function (item, workingPayload) {
+      var ullagePayload = {
+        itemMasterId: item.itemMasterId || item.masterItem.id,
+        quantity: parseInt(item.ulageQuantity) || 0,
+        countTypeId: 7,
+        ullageReasonCode: ((item.ullageReason) ? item.ullageReason.companyReasonCodeName :  item.ullageReasonCode )
+      };
+      workingPayload.response.push(ullagePayload);
+
+      var inboundPayload = {
+        itemMasterId: item.itemMasterId || item.masterItem.id,
+        quantity: parseInt(item.inboundQuantity),
+        countTypeId: 7
+      };
+      workingPayload.response.push(inboundPayload);
+
+
+      // TODO: set id!
+      //if (item.id) {
+      //  ulagePayload.id = item.id;
+      //}
+    };
+
     this.createPayload = function () {
       var newPayload = {response: []};
       var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
       angular.forEach(mergedItems, function (item) {
-        var itemPayload = {
-          itemMasterId: item.itemMasterId || item.masterItem.id,
-          quantity: parseInt(item.quantity) || 0
-        };
-        if (item.id) {
-          itemPayload.id = item.id;
+        if($routeParams.action === 'end-instance') {
+          $this.endInstanceCreatePayload(item, newPayload);
+        } else {
+          $this.dispatchAndReplenishCreatePayload(item, newPayload);
         }
-        newPayload.response.push(itemPayload);
       });
       return newPayload;
     };

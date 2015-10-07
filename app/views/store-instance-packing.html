@@ -36,8 +36,8 @@
           </th>
 
           <th ng-show="isActionState('end-instance')" width="10%">Inbound Quantity</th>
-          <th ng-show="isActionState('end-instance')" width="10%">Ulage Quantity</th>
-          <th ng-show="isActionState('end-instance')" width="35%">Ulage Reason</th>
+          <th ng-show="isActionState('end-instance')" width="10%">Ullage Quantity</th>
+          <th ng-show="isActionState('end-instance')" width="35%">Ullage Reason</th>
 
 
           <th width="5%"></th>
@@ -50,11 +50,11 @@
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
           </td>
-          <td ng-show="isActionState('dispatch')">
+          <td ng-if="isActionState('dispatch')">
             <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"
                    disabled/>
           </td>
-          <td ng-show="isActionState('dispatch') || isActionState('replenish')">
+          <td ng-if="isActionState('dispatch') || isActionState('replenish')">
             <input type="text"
                    name="templateQuantity-{{$index}}"
                    custom-validity
@@ -66,24 +66,30 @@
                    maxlength="5"/>
           </td>
           <!-- TODO: inbound quantity-->
-          <td ng-show="isActionState('end-instance')">
-            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"/>
+          <td ng-if="isActionState('end-instance')">
+            <input type="text" class="form-control" ng-model="item.inboundQuantity" name="inboundQuantity-{{$index}}" placeholder="0"/>
           </td>
-          <!-- TODO: ulage-->
-          <td ng-show="isActionState('end-instance')">
+          <!-- TODO: ullage-->
+          <td ng-if="isActionState('end-instance')">
             <input type="text"
-                   name="templateQuantity-{{$index}}"
+                   name="ullageQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    required="true"
                    class="form-control"
-                   ng-model="item.quantity"
+                   ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"/>
           </td>
-          <!-- TODO: ulage reason -- need to resolve ulageReasonCode -->
-          <td ng-show="isActionState('end-instance')">
-            <input type="text" class="form-control" ng-model="item.itemDescription"/>
+          <!-- TODO: ullage reason -- need to resolve ullageReasonCode -->
+          <td ng-if="isActionState('end-instance')">
+            <ui-select ng-model="item.ullageReason" theme="bootstrap">
+              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}
+              </ui-select-match>
+              <ui-select-choices repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
+                <div ng-bind-html="ullageReason.companyReasonCodeName + ' - ' + ullageReason.description  | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </td>
           <td>
             <button type="button" ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
@@ -101,30 +107,29 @@
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
-
           </td>
-          <td ng-show="isActionState('dispatch')">
+          <td ng-if="isActionState('dispatch')">
             <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
           </td>
-          <td ng-show="isActionState('dispatch') || isActionState('replenish')">
+          <td ng-if="isActionState('dispatch') || isActionState('replenish')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" maxlength="5">
           </td>
           <!-- TODO: new inbound quantity-->
-          <td ng-show="isActionState('end-instance')">
+          <td ng-if="isActionState('end-instance')">
             <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0"/>
 
           </td>
           <!-- TODO: new ulage-->
-          <td ng-show="isActionState('end-instance')">
-            <input type="text" class="form-control" ng-model="item.ulageQuantity" placeholder="0"/>
+          <td ng-if="isActionState('end-instance')">
+            <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0"/>
           </td>
           <!-- TODO: new ulage reason -- need to resolve ulageReasonCode -->
-          <td ng-show="isActionState('end-instance')">
-            <ui-select ng-model="item.ulageReasonCode" theme="bootstrap">
+          <td ng-if="isActionState('end-instance')">
+            <ui-select ng-model="item.ullageReason" theme="bootstrap">
               <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}
               </ui-select-match>
-              <ui-select-choices repeat="ulageReason in ulageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
-                <div ng-bind-html="ulageReason.companyReasonCodeName + ' - ' + ulageReason.description  | highlight: $select.search"></div>
+              <ui-select-choices repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
+                <div ng-bind-html="ullageReason.companyReasonCodeName + ' - ' + ullageReason.description  | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </td>
