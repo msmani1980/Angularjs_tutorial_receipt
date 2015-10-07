@@ -105,14 +105,6 @@ angular.module('ts5App').service('storeInstanceService', function($resource, ENV
     return requestResource.getStoreInstanceItem(requestPayload).$promise;
   }
 
-  function getStoreInstanceUpliftList(id, payload) {
-    var requestPayload = angular.extend({}, {
-      id: id,
-      api: 'uplift'
-    }, payload);
-    return requestResource.getStoreInstanceItemList(requestPayload).$promise;
-  }
-
   function updateStoreInstanceItem(id, itemId, payload) {
     var requestPayload = angular.extend({}, {
       id: id,
@@ -179,7 +171,6 @@ angular.module('ts5App').service('storeInstanceService', function($resource, ENV
     updateStoreInstanceItemsBulk: updateStoreInstanceItemsBulk,
     updateStoreInstanceStatus: updateStoreInstanceStatus,
     createStoreInstanceItem: createStoreInstanceItem,
-    deleteStoreInstanceItem: deleteStoreInstanceItem,
-    getStoreInstanceUpliftList: getStoreInstanceUpliftList
+    deleteStoreInstanceItem: deleteStoreInstanceItem
   };
 });

@@ -77,10 +77,6 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storeInstanceService.getStoreInstanceItem(id, itemId);
     }
 
-    function getStoreInstanceUpliftList(id, payload) {
-      return storeInstanceService.getStoreInstanceUpliftList(id, payload);
-    }
-
     function createStoreInstanceItem(id, payload) {
       return storeInstanceService.createStoreInstanceItem(id, payload);
     }
@@ -231,8 +227,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreStatusList: getStoreStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
       getItemTypes: getItemTypes,
-      getCharacteristics: getCharacteristics,
-      getStoreInstanceUpliftList: getStoreInstanceUpliftList
+      getCharacteristics: getCharacteristics
     };
 
   });

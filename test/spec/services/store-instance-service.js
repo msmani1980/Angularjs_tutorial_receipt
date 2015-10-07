@@ -148,22 +148,6 @@ describe('Service: storeInstanceService', function () {
     });
   });
 
-  describe('getStoreInstanceUpliftList', function () {
-    it('should make GET request to API', function () {
-      var expectedURL = /dispatch\/store-instances\/\d+\/uplift/;
-      var fakeId = 12;
-      var payload = {
-        fakeKey: 'fakeValue'
-      };
-
-      httpBackend.expectGET(expectedURL).respond(200, {});
-      storeInstanceService.getStoreInstanceUpliftList(fakeId, payload).then(function (response) {
-        expect(response).toBeDefined();
-      });
-      httpBackend.flush();
-    });
-  });
-
   describe('updateStoreInstanceItemBulk', function () {
     it('should make PUT request to API', function () {
       var expectedURL = /dispatch\/store-instances\/\d+\/items\/bulk$/;

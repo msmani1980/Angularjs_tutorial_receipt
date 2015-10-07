@@ -92,6 +92,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
+        console.table(item);
         if (angular.isDefined(item.menuQuantity)) {
           delete item.id;
         }
@@ -113,9 +114,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getStoreInstanceItems = function () {
-      if($routeParams.action==='replenish') {
-        storeInstanceFactory.getStoreInstanceUpliftList($scope.storeDetails.replenishStoreInstanceId).then(getItemsSuccessHandler, showErrors);
-      }
       storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(getItemsSuccessHandler, showErrors);
     };
 
@@ -146,7 +144,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($scope.characteristicFilterId) {
         payload.characteristicId = $scope.characteristicFilterId;
       }
-      storeInstanceFactory.getStoreInstanceMenuItems($routeParams.storeId, payload).then(getItemsSuccessHandler, showErrors);
+      var instanceId = $routeParams.storeId;
+      if($routeParams.action==='replenish') {
+        instanceId = $scope.storeDetails.replenishStoreInstanceId;
+      }
+      storeInstanceFactory.getStoreInstanceMenuItems(instanceId, payload).then(getItemsSuccessHandler, showErrors);
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
