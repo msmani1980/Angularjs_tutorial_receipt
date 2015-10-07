@@ -13,9 +13,10 @@ angular.module('ts5App')
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Retail Company Currency & Denomination Setup';
-    $scope.companyBaseCurrency = {};
     $scope.search = {};
+    $scope.companyBaseCurrency = {};
     $scope.globalCurrencyList = [];
+    $scope.companyCurrencyList = [];
 
     this.getCompanyGlobalCurrencies = function () {
       currencyFactory.getCompanyGlobalCurrencies().then(function (globalCurrencyList) {
@@ -36,6 +37,12 @@ angular.module('ts5App')
       })[0];
     };
 
+    this.getCompanyCurrencies = function () {
+      currencyFactory.getCompanyCurrencies().then(function (companyCurrencyList) {
+        $scope.companyCurrencyList = companyCurrencyList.response;
+      });
+    };
+
     $scope.clearForm = function () {
       $scope.search = {};
       //$scope.searchCurrencies();
@@ -43,7 +50,7 @@ angular.module('ts5App')
 
     this.init = function () {
       $this.getCompanyGlobalCurrencies();
-      $this.getCompanyBaseCurrency(companyId);
+      $this.getCompanyCurrencies();
     };
 
     this.init();

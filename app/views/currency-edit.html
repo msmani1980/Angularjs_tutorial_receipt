@@ -1,5 +1,4 @@
-<div class="container">
-
+<div class="fluid-container">
     <div class="list-controls">
         <div class="row item-list-row">
             <div class="col-xs-8">
@@ -7,7 +6,6 @@
             </div>
 
             <div class="col-xs-4 text-right">
-
                 <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
                         aria-controls="search-collapse">
                     <span class="fa fa-filter" aria-hidden="true"></span>
@@ -74,9 +72,50 @@
     <div class="panel panel-default">
         <div class="panel-heading text-right">Base currency: {{companyBaseCurrency.currencyCode}}</div>
         <div class="panel-body">
-            Panel content
+            <form ng-repeat="currency in companyCurrencyList" name="currency" ng-submit="saveCurrency(currency)">
+                <div class="well">
+                    <div class="col-xs-12 col-md-2 col-sm-12">
+                        <div class="form-group">
+                            <label for="currency-type1">Currency*</label>
+                            <select class="form-control" id="currency-type1">
+                                <option value="{{globalCurreny.id}}" ng-repeat="globalCurreny in globalCurrencyList | unique: 'id'">{{ globalCurreny.currencyCode }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-2 col-sm-12">
+                        <div class="form-group">
+                            <strong>Operating Currency</strong>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-2 col-sm-12">
+                        <div class="form-group">
+                            <label for="denomination">Denomination*</label>
+                            <input class="form-control" id="denomination" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-sm-12">
+                        <div class="form-group">
+                            <label for="easypay-denomination">EasyPay Denomination</label>
+                            <input class="form-control" id="easypay-denomination" />
+                        </div>
+                    </div>
+                    <date-picker
+                            class="col-xs-12 col-md-3 col-sm-12"
+                            element-class="col-xs-6 col-sm-6"
+                            start-date-model="search.startDate"
+                            end-date-model="search.endDate"
+                            label-from="Start Date *"
+                            label-to="End Date *"
+                            is-search-field="true">
+                    </date-picker>
+                </div>
+            </form>
         </div>
     </div>
+
 </div>
-
-
