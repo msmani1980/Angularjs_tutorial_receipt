@@ -193,7 +193,7 @@ angular.module('ts5App')
     function checkOnValidStatus() {
       var validStatusList = {
         'dispatch': 'Ready for Dispatch',
-        'replenish': 'Dispatched',
+        'replenish': 'Ready for Dispatch',
         'end-instance': 'Unpacking'
       };
 
