@@ -18,8 +18,6 @@ angular.module('ts5App')
     var _storeInstanceSeals = [];
     var _nextStatusId = null;
     var _menuItems = [];
-    var STATUS_READY_FOR_DISPATCH = 'Ready for Dispatch';
-    var STATUS_DISPATCHED = 'Dispatched';
     var STATUS_END_INSTANCE = 'Unpacking';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
     var actions = {};
@@ -50,7 +48,7 @@ angular.module('ts5App')
     }
 
     function getItemsSuccessHandler(dataFromAPI) {
-      _menuItems = dataFromAPI.response;
+      _menuItems = angular.copy(dataFromAPI.response);
     }
 
     function getStoreInstanceMenuItems() {
@@ -91,9 +89,9 @@ angular.module('ts5App')
     }
 
     function getSealColorByTypeId(sealTypeId) {
-      var sealColor = $filter('filter')(_sealColors, {type: sealTypeId}, true);
+      var sealColor = $filter('filter')(_storeInstanceSeals, {type: sealTypeId}, true);
       if (!sealColor || !sealColor.length) {
-        return null;
+        sealColor = $filter('filter')(_sealColors, {type: sealTypeId}, true);
       }
       return sealColor[0].color;
     }
@@ -116,6 +114,7 @@ angular.module('ts5App')
 
     function removeSealNotUsed(sealsArray) {
       var itemsToRemove = {
+        'dispatch': [],
         'replenish': ['Hand Over'],
         'end-instance': ['Hand Over', 'Outbound']
       };
@@ -136,13 +135,6 @@ angular.module('ts5App')
 
     function initLoadComplete() {
       hideLoadingModal();
-      if ($scope.items) {
-        $scope.items.map(function (item) {
-          item.itemDescription = item.itemCode + ' -  ' + item.itemName;
-          item.disabled = true;
-          item.menuQuantity = getMenuQuantity(item.itemMasterId);
-        });
-      }
       setSealsList();
     }
 
@@ -198,13 +190,17 @@ angular.module('ts5App')
       $location.url('/store-instance-dashboard');
     }
 
-    function isReadyForDispatch() {
-      if ($scope.storeDetails.currentStatus.statusName === STATUS_READY_FOR_DISPATCH) {
-        return true;
+    function checkOnValidStatus() {
+      var validStatusList = {
+        'dispatch': 'Ready for Dispatch',
+        'replenish': 'Dispatched',
+        'end-instance': 'Unpacking'
+      };
+
+      if ($scope.storeDetails.currentStatus.statusName !== validStatusList[$routeParams.action]) {
+        throwError('Wrong Status');
+        $scope.actionNotAllowed = true;
       }
-      throwError('statusId');
-      $scope.actionNotAllowed = true;
-      return false;
     }
 
     $scope.isEndInstance = function () {
@@ -213,8 +209,37 @@ angular.module('ts5App')
       }
     };
 
+    function mergeInboundUllageItems(rawItemList) {
+      var inboundItemList = rawItemList.filter(function (item) {
+        return item.countTypeId === 14;
+      });
+
+      var ullageItemList = rawItemList.filter(function (item) {
+        return item.countTypeId === 7;
+      });
+
+      ullageItemList.map(function (item) {
+        item.ullageQuantity = item.quantity;
+        delete item.quantity;
+      });
+
+      return angular.merge(inboundItemList, ullageItemList);
+    }
+
+    function formatItems() {
+      $scope.items.map(function (item) {
+        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+        item.disabled = true;
+        if (!$scope.isEndInstance()) {
+          item.menuQuantity = getMenuQuantity(item.itemMasterId);
+        }
+      });
+    }
+
     function setStoreInstanceItems(dataFromAPI) {
-      $scope.items = dataFromAPI.response;
+      var rawItemList = angular.copy(dataFromAPI.response);
+      $scope.items = $scope.isEndInstance() ? mergeInboundUllageItems(rawItemList) : rawItemList;
+      formatItems();
     }
 
     function getStoreInstanceItems() {
@@ -239,18 +264,7 @@ angular.module('ts5App')
     function storeDetailsResponseHandler(responseArray) {
       $scope.storeDetails = angular.copy(responseArray[0]);
       $scope.ullageReasonList = angular.copy(responseArray[1].companyReasonCodes);
-
-      if (!isReadyForDispatch()) {
-        //return;
-      }
-      var storeDetailValid = true;
-      var storeInstanceValid = $routeParams.action + 'StoreInstanceValid';
-      if (actions[storeInstanceValid]) {
-        storeDetailValid = actions[storeInstanceValid]();
-      }
-      if (!storeDetailValid) {
-        //return;
-      }
+      checkOnValidStatus();
       getStoreInstanceReviewData();
     }
 
@@ -277,37 +291,13 @@ angular.module('ts5App')
       $q.all(promiseArray).then(storeDetailsResponseHandler, showResponseErrors);
     }
 
-    // Dispatch
-    actions.dispatchSubmit = function () {
-      saveStoreInstanceStatus(STATUS_DISPATCHED);
-    };
 
     actions.dispatchPrevStepIndex = 2;
-
-    // Replenish
-    actions.replenishStoreInstanceValid = function () {
-      if ($scope.storeDetails.replenishStoreInstanceId) {
-        return true;
-      }
-      // TODO check more stuff here for replenish?
-      throwError('replenishStoreInstanceId');
-      $scope.actionNotAllowed = true;
-      return false;
-    };
-
-    actions.replenishSubmit = function () {
-      saveStoreInstanceStatus(STATUS_DISPATCHED);
-    };
-
     actions.replenishPrevStepIndex = 2;
-
-    actions.endInstanceInit = function () {
-
-    };
 
     this.updateInstanceToByStepName = function (stepName) {
       if (angular.isUndefined(stepName)) {
-        $location.url('/store-instance-create/dispatch');
+        $location.url('/store-instance-dashboard');
         return;
       }
       storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepName).then(function () {
@@ -344,9 +334,14 @@ angular.module('ts5App')
     };
 
     $scope.submit = function () {
-      var initAction = $routeParams.action + 'Submit';
-      if (actions[initAction]) {
-        actions[initAction]();
+      var submitStatus = {
+        'dispatch': 'Dispatched',
+        'replenish': 'Dispatched',
+        'end-instance': 'Inbounded'
+      };
+
+      if (submitStatus[$routeParams.action]) {
+        saveStoreInstanceStatus(submitStatus[$routeParams.action]);
       }
     };
 
@@ -360,11 +355,6 @@ angular.module('ts5App')
       }
       return (item.menuQuantity !== item.quantity) ? 'danger' : '';
     };
-
-    $scope.showQty = function () {
-      return ($routeParams.action === 'dispatch');
-    };
-
 
     function init() {
       _initPromises = [];
