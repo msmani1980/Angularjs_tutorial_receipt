@@ -89,9 +89,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
       if (angular.isDefined(item.menuQuantity)) {
         return 'Template';
-      } else if(angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId == inboundCountTypeId) {
+      } else if(angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === inboundCountTypeId) {
         return 'Inbound';
-      } else if(angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId == ullageCountTypeId) {
+      } else if(angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ullageCountTypeId) {
         return 'Ullage';
       }
       return 'Packed';
@@ -310,9 +310,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
       var ullagePayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
-        quantity: parseInt(item.ullageQuantity) || 0,
+        quantity: parseInt(item.ullageQuantity),
         countTypeId: ullageCountTypeId,
-        ullageReasonCodeId: ((item.ullageReason) ? item.ullageReason.id :  item.ullageReasonCode )
+        ullageReasonCodeId: item.ullageReason.id
       };
       if(item.ullageId) {
         ullagePayload.id = item.ullageId;
