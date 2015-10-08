@@ -889,8 +889,8 @@ describe('Store Instance Create Controller', function() {
       expect($scope.isReplenish()).toBeTruthy();
     });
 
-    it('should be false, if $routeParams.action is End-Dispatch', function() {
-      initController('end-dispatch');
+    it('should be false, if $routeParams.action is End-Instance', function() {
+      initController('end-instance');
       expect($scope.isReplenish()).toBeFalsy();
     });
 
@@ -898,7 +898,7 @@ describe('Store Instance Create Controller', function() {
 
   describe('isEndInstance method', function() {
 
-    it('should be true, if $routeParams.action is End-Dispatch', function() {
+    it('should be true, if $routeParams.action is End Instance', function() {
       initController('end-instance');
       expect($scope.isEndInstance()).toBeTruthy();
     });
@@ -906,6 +906,38 @@ describe('Store Instance Create Controller', function() {
     it('should be false, if $routeParams.action is Replenish', function() {
       initController('replenish');
       expect($scope.isEndInstance()).toBeFalsy();
+    });
+
+  });
+
+  describe('isRedispatch method', function() {
+
+    it('should be false, if $routeParams.action is End Instance', function() {
+      initController('end-instance');
+      expect($scope.isRedispatch()).toBeFalsy();
+    });
+
+    it('should be true, if $routeParams.action is Redispatch', function() {
+      initController('redispatch');
+      expect($scope.isRedispatch()).toBeTruthy();
+    });
+
+  });
+
+  describe('isEndInstanceOrRedispatch method', function() {
+
+    it('should be true, if $routeParams.action is End Instance or ', function() {
+      initController('end-instance');
+      expect($scope.isEndInstanceOrRedispatch()).toBeTruthy();
+    });
+
+    it('should be false, if $routeParams.action is Replenish', function() {
+      initController('replenish');
+      expect($scope.isEndInstanceOrRedispatch()).toBeFalsy();
+    });
+    it('should be true, if $routeParams.action is Redispatch', function() {
+      initController('redispatch');
+      expect($scope.isEndInstanceOrRedispatch()).toBeTruthy();
     });
 
   });
