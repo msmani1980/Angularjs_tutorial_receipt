@@ -303,7 +303,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         countTypeId: ullageCountTypeId,
       };
       if(item.ullageQuantity > 0) {
-        ullagePayload.ullageReasonCodeId = item.ullageReason.id;
+        ullagePayload.ullageReasonCode = item.ullageReason.id;
       }
       if(item.ullageId) {
         ullagePayload.id = item.ullageId;
@@ -319,7 +319,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         countTypeId: inboundCountTypeId
       };
       if(item.inboundQuantityId) {
-        ullagePayload.id = item.inboundQuantityId;
+        inboundPayload.id = item.inboundQuantityId;
       }
       return inboundPayload;
     };
