@@ -67,7 +67,15 @@
           </td>
           <!-- TODO: inbound quantity-->
           <td ng-if="isActionState('end-instance')">
-            <input type="text" class="form-control" ng-model="item.inboundQuantity" name="inboundQuantity-{{$index}}" placeholder="0"/>
+            <input type="text"
+                   name="inboundQuantity-{{$index}}"
+                   custom-validity
+                   custom-pattern="number"
+                   required="true"
+                   class="form-control"
+                   ng-model="item.inboundQuantity"
+                   ng-disabled="readOnly"
+                   maxlength="5"/>
           </td>
           <!-- TODO: ullage-->
           <td ng-if="isActionState('end-instance')">

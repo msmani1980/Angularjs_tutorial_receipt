@@ -85,8 +85,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $this.getItemType = function (item) {
-      var inboundCountTypeId = $this.getIdByNameFromArray($scope.countTypes, 'Offload');
-      var ullageCountTypeId = $this.getIdByNameFromArray($scope.countTypes, 'Ullage');
+      var inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
+      var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
       if (angular.isDefined(item.menuQuantity)) {
         return 'Template';
       } else if(angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId == inboundCountTypeId) {
@@ -97,11 +97,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return 'Packed';
     };
 
-    $this.formatTemplateQuantity = function (item) {
+    $this.formatTemplateItem = function (item) {
       delete item.id;
     };
 
-    $this.formatPackedQuantity = function (item) {
+    $this.formatPackedItem = function (item) {
       item.quantity = item.quantity.toString();
     };
 
@@ -115,8 +115,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $this.formatUllageItem = function (item) {
       item.ullageQuantity = angular.copy(item.quantity.toString());
       item.ullageId = angular.copy(item.id);
-      var itemUllage = lodash.findWhere($scope.ullageReasonCodes, {companyReasonCodeName: item.ullageReasonCode});
-      item.ullageReason = itemUllage || null;
+      var itemUllageReasonObject = lodash.findWhere($scope.ullageReasonCodes, {companyReasonCodeName: item.ullageReasonCode});
+      item.ullageReason = itemUllageReasonObject || null;
       delete item.quantity;
       delete item.id;
       delete item.ullageReasonCode;
@@ -203,7 +203,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         payload.characteristicId = $scope.characteristicFilterId;
       }
       var instanceId = $routeParams.storeId;
-      if($routeParams.action==='replenish') {
+      if($routeParams.action === 'replenish') {
         instanceId = $scope.storeDetails.replenishStoreInstanceId;
       }
       storeInstanceFactory.getStoreInstanceMenuItems(instanceId, payload).then(getItemsSuccessHandler, showErrors);
@@ -299,26 +299,29 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.endInstanceCreatePayload = function (item, workingPayload) {
+      var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
       var ullagePayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
-        quantity: parseInt(item.ulageQuantity) || 0,
-        countTypeId: 7,
-        ullageReasonCode: ((item.ullageReason) ? item.ullageReason.companyReasonCodeName :  item.ullageReasonCode )
+        quantity: parseInt(item.ullageQuantity) || 0,
+        countTypeId: ullageCountTypeId,
+        ullageReasonCodeId: ((item.ullageReason) ? item.ullageReason.id :  item.ullageReasonCode )
       };
-      workingPayload.response.push(ullagePayload);
+      if(item.ullageId) {
+        ullagePayload.id = item.ullageId;
+      }
 
+      var inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
       var inboundPayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
         quantity: parseInt(item.inboundQuantity),
-        countTypeId: 7
+        countTypeId: inboundCountTypeId
       };
+      if(item.inboundQuantityId) {
+        ullagePayload.id = item.inboundQuantityId;
+      }
+
+      workingPayload.response.push(ullagePayload);
       workingPayload.response.push(inboundPayload);
-
-
-      // TODO: set id!
-      //if (item.id) {
-      //  ulagePayload.id = item.id;
-      //}
     };
 
     this.createPayload = function () {
