@@ -149,7 +149,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       '2': ['Seal', 'Delete'],
       '3': ['Dispatch', 'Delete', 'Checkbox'],
       '4': ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
-      '5': ['End instance', 'Re-dispatch', 'Checkbox'],
+      '5': ['End instance', 'Redispatch', 'Checkbox'],
       '6': ['N/A'],
       '7': ['Instance audit report']
     };
@@ -164,14 +164,18 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
 
         // TODO: get timeConfig that has most recent startDate -- will be a new API
-        var timeConfig = lodash.findWhere($scope.timeConfigList, {featureId: $scope.undispatchFeatureId});
+        var timeConfig = lodash.findWhere($scope.timeConfigList, {
+          featureId: $scope.undispatchFeatureId
+        });
         storeInstance.hours = (angular.isDefined(timeConfig)) ? timeConfig.hours : -1;
 
         var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
         storeInstance.selected = false;
       });
-      $scope.storeInstanceList = $filter('orderBy')($scope.storeInstanceList, ['scheduleDateApi', 'storeNumber','scheduleNumber']);
+      $scope.storeInstanceList = $filter('orderBy')($scope.storeInstanceList, ['scheduleDateApi', 'storeNumber',
+        'scheduleNumber'
+      ]);
     }
 
     function dispatchStoreInstance(storeId) {
@@ -191,7 +195,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     function getStoreInstanceList() {
-      return storeInstanceDashboardFactory.getStoreInstanceList({'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted())}).then(getStoreInstanceListSuccess);
+      return storeInstanceDashboardFactory.getStoreInstanceList({
+        'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      }).then(getStoreInstanceListSuccess);
     }
 
     function getStationListSuccess(dataFromAPI) {
@@ -228,7 +234,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function getUndispatchFeatureIdSucccess(dataFromAPI) {
       var featuresList = angular.copy(dataFromAPI);
-      var undispatchFeature = lodash.findWhere(featuresList, {name: 'Undispatch'});
+      var undispatchFeature = lodash.findWhere(featuresList, {
+        name: 'Undispatch'
+      });
       $scope.undispatchFeatureId = undispatchFeature.id;
     }
 
