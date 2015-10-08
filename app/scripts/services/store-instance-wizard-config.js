@@ -74,24 +74,25 @@ angular.module('ts5App')
           {
             label: 'End Store Instance',
             uri: createURL + action + (id ? '/' + id : ''),
+            stepName: '5',
             controllerName: 'Create'
           },
           {
             label: 'Inbound Seals',
             uri: sealsURL + action + '/' + id,
-            stepName: '1',
+            stepName: '6',
             controllerName: 'Seals'
           },
           {
             label: 'Packing',
             uri: packingURL + action + '/' + id,
-            stepName: '2',
+            stepName: '7',
             controllerName: 'Packing'
           },
           {
             label: 'Review & End Dispatch',
             uri: reviewURL + action + '/' + id,
-            stepName: '3',
+            stepName: '7',
             controllerName: 'Review'
           }
         ]
