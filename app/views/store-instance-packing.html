@@ -89,7 +89,7 @@
                    ng-disabled="readOnly"
                    maxlength="5"/>
           </td>
-          <!-- TODO: ullage reason -- need to resolve ullageReasonCode -->
+          <!-- TODO: ullage reason -->
           <td ng-if="isActionState('end-instance')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
               <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}

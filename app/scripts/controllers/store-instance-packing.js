@@ -497,7 +497,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.goToPreviousStep = function () {
-      $location.path($this.prevStep.uri);
+      if($routeParams.action === 'end-instance') {
+        showLoadingModal('Updating Status...');
+        updateStatusToStep($this.prevStep);
+      } else {
+        $location.path($this.prevStep.uri);
+      }
     };
 
     $scope.goToNextStep = function () {
