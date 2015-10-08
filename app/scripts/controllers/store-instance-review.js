@@ -356,6 +356,27 @@ angular.module('ts5App')
       return (item.menuQuantity !== item.quantity) ? 'danger' : '';
     };
 
+    $scope.getTitleFor = function (section) {
+      var titles = {
+        seals: {
+          'dispatch': 'Seal Number Assignment',
+          'replenish': 'Seal Number Assignment',
+          'end-instance': 'Inbound Seals'
+        },
+        items: {
+          'dispatch': 'Pick List',
+          'replenish': 'Pick List',
+          'end-instance': 'Offload List'
+        }
+      };
+
+      if (!titles[section] || !titles[section][$routeParams.action]) {
+        return '';
+      }
+
+      return titles[section][$routeParams.action];
+    };
+
     function init() {
       _initPromises = [];
       _sealTypes = [];
