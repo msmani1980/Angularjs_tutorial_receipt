@@ -68,11 +68,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     this.mergeMenuItems = function (menuItemsFromAPI) {
-      if ($scope.menuItems.length <= 0) {
-        $scope.menuItems = menuItemsFromAPI;
-        return;
-      }
-
       angular.forEach(menuItemsFromAPI, function (item) {
         var itemMatch = lodash.findWhere($scope.menuItems, {itemMasterId: item.itemMasterId});
         if (itemMatch) {
@@ -306,7 +301,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemMasterId: item.itemMasterId || item.masterItem.id,
         quantity: parseInt(item.ullageQuantity),
         countTypeId: ullageCountTypeId,
-        ullageReasonCodeId: item.ullageReason.id
+        ullageReasonCodeId: (item.ullageReason) ? item.ullageReason.id : null
       };
       if(item.ullageId) {
         ullagePayload.id = item.ullageId;
