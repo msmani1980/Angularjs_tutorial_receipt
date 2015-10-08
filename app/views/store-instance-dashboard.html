@@ -239,7 +239,9 @@
           ng-show="isStoreViewExpanded(store)">
         <td></td>
         <td>
-          <input ng-show="doesStoreInstanceContainAction(replenishment, 'Checkbox')" type="checkbox">
+          <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="replenishment.selected"
+                 type="checkbox">
+          </input>
         </td>
         <td>{{ replenishment.dispatchStationCode }}</td>
         <td>{{ replenishment.inboundStationCode }}</td>
@@ -258,8 +260,10 @@
             <strong>Arrival Time:</strong> {{ replenishment.departureTime }} <br>
           </div>
         </td>
-        <span ng-show="replenishment.tampered" class="label label-success">Yes</span>
-        <span ng-hide="replenishment.tampered" class="label label-default">No</span>
+        <td>
+          <span ng-show="replenishment.tampered" class="label label-success">Yes</span>
+          <span ng-hide="replenishment.tampered" class="label label-default">No</span>
+        </td>
         <td>{{ replenishment.id }}</td>
         <td><span class="label label-default">{{ replenishment.statusName }}</span></td>
         <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
