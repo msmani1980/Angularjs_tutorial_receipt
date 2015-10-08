@@ -55,7 +55,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $scope.filteredMenuList.push(filteredMenu);
         }
       });
-
     };
 
     this.getMenuCatererList = function() {
@@ -319,6 +318,17 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return $routeParams.action === 'replenish';
     };
 
+    $scope.menuPlaceholderText = function() {
+      if($routeParams.action !== 'dispatch'){
+        return '';
+      }
+      var placeholder = 'Select one or more Menus';
+      if($scope.filteredMenuList.length === 0) {
+        placeholder = 'No menus are available to select';
+      }
+      return placeholder;
+    };
+
     this.setScheduleNumbers = function(apiData) {
       if (!apiData || !apiData.meta.count) {
         return;
@@ -345,6 +355,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.getScheduleNumbers();
       if ($routeParams.action === 'dispatch') {
         $this.getMenuMasterList();
+        $this.getMenuCatererList();
         $this.getStoresList();
       }
     };
@@ -359,6 +370,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $scope.$watch('formData.cateringStationId', function(newId, oldId) {
           if (newId && oldId && newId !== oldId) {
             $this.getMenuMasterList();
+            $this.getMenuCatererList();
           }
         });
       }
