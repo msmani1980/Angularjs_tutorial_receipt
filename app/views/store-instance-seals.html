@@ -8,7 +8,7 @@
 
   <form name="assignSealsForm" ng-submit="submitForm()">
 
-    <div class="well" ng-if="isEndInstance()" >
+    <div class="well" ng-if="isActionState('end-instance')" >
       <input type="checkbox" ng-model="storeDetails.tampered" ng-disabled="readOnly"/> <span>Inbound Seals Tampered</span>
       <textarea class="form-control" ng-if="storeDetails.tampered" ng-model="storeDetails.note" placeholder="Notes" max-length="255" ng-disabled="readOnly"></textarea>
     </div>
