@@ -154,6 +154,25 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       '7': ['Instance audit report']
     };
 
+    function formatStoreInstance(storeInstance) {
+      storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
+      storeInstance.inboundStationCode = getValueByIdInArray(storeInstance.inboundStationId, 'code', $scope.stationList);
+      storeInstance.storeNumber = getValueByIdInArray(storeInstance.storeId, 'storeNumber', $scope.storesList);
+      storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
+      storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
+      storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
+
+      // TODO: get timeConfig that has most recent startDate -- will be a new API
+      var timeConfig = lodash.findWhere($scope.timeConfigList, {
+        featureId: $scope.undispatchFeatureId
+      });
+      storeInstance.hours = (angular.isDefined(timeConfig)) ? timeConfig.hours : -1;
+
+      var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
+      storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
+      storeInstance.selected = false;
+    }
+
     function formatStoreInstanceList() {
       angular.forEach($scope.storeInstanceList, function(storeInstance) {
         storeInstance.dispatchStationCode = getValueByIdInArray(storeInstance.cateringStationId, 'code', $scope.stationList);
@@ -172,6 +191,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
         storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
         storeInstance.selected = false;
+        formatStoreInstance(storeInstance);
+        angular.forEach(storeInstance.replenishments, function(storeInstance) {
+          formatStoreInstance(storeInstance);
+        });
       });
       $scope.storeInstanceList = $filter('orderBy')($scope.storeInstanceList, ['scheduleDateApi', 'storeNumber',
         'scheduleNumber'
