@@ -272,7 +272,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       scope.$digest();
     }));
 
-    it('should attach action to scope', function(){
+    it('should attach action to scope', function () {
       expect(scope.action).toBe('end-instance');
     });
   });
@@ -293,6 +293,32 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       scope.exit();
       scope.$apply();
       expect(location.url).toHaveBeenCalledWith('/store-instance-dashboard');
+    });
+  });
+
+  describe('section title label', function () {
+    it('should return the proper string for the seals when in dispatch', function () {
+      routeParams.action = 'dispatch';
+      var title = scope.getTitleFor('seals');
+      expect(title).toBe('Seal Number Assignment');
+    });
+
+    it('should return the proper string for the items when in replenish', function () {
+      routeParams.action = 'replenish';
+      var title = scope.getTitleFor('items');
+      expect(title).toBe('Pick List');
+    });
+
+    it('should return the proper string for the seals when in end-instance', function () {
+      routeParams.action = 'end-instance';
+      var title = scope.getTitleFor('seals');
+      expect(title).toBe('Inbound Seals');
+    });
+
+    it('should return empty string if either section or action is invalid ', function () {
+      routeParams.action = 'fake action';
+      var title = scope.getTitleFor('fakeSection');
+      expect(title).toBe('');
     });
   });
 
