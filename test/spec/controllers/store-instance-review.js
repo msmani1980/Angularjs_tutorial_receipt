@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
+fdescribe('Controller: StoreInstanceReviewCtrl dispatch', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -31,6 +31,14 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
   var dateUtility;
   var getReasonCodeListDeferred;
   var getReasonCodeListJSON;
+  var controller;
+
+  function initController($controller) {
+    StoreInstanceReviewCtrl = $controller('StoreInstanceReviewCtrl', {
+      $scope: scope,
+      $routeParams: routeParams
+    });
+  }
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
@@ -81,10 +89,8 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
 
     spyOn(location, 'url').and.callThrough();
 
-    StoreInstanceReviewCtrl = $controller('StoreInstanceReviewCtrl', {
-      $scope: scope,
-      $routeParams: routeParams
-    });
+    controller = $controller;
+    initController(controller);
 
     storeDetailsJSON = {
       LMPStation: 'ORD',
@@ -190,6 +196,37 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         expect(scope.wizardStepToIndex).toEqual(newI);
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, newI.toString());
       });
+
+      it('should not do anything if no valid step for provided index', function () {
+        var fakeIndex = 200;
+        scope.goToWizardStep(fakeIndex);
+        expect(storeInstanceFactory.updateStoreInstanceStatus).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('update instance', function () {
+      it('should redirect to dashboard if step is undefined', function () {
+        StoreInstanceReviewCtrl.updateInstanceToByStepName();
+        expect(location.url).toHaveBeenCalledWith('/store-instance-dashboard');
+      });
+
+      it('should redirect to proper url', function () {
+        scope.goToWizardStep(2);
+        scope.$digest();
+        expect(location.url).toHaveBeenCalledWith('/store-instance-seals/dispatch/17');
+      });
+    });
+
+    describe('getUllageReason', function () {
+      it('should get the ullage reason', function () {
+        var ullageReason = scope.getUllageReason(34);
+        expect(ullageReason).toBe('Damaged');
+      });
+
+      it('should not return a value is reason code is unfined', function () {
+        var ullageReason = scope.getUllageReason();
+        expect(ullageReason).toBeUndefined();
+      });
     });
 
     describe('submit scope function', function () {
@@ -225,6 +262,19 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       });
     });
 
+  });
+
+  describe('Init', function () {
+    beforeEach(inject(function () {
+      routeParams.action = 'end-instance';
+      getStoreDetailsDeferred.resolve(storeDetailsJSON);
+      initController(controller);
+      scope.$digest();
+    }));
+
+    it('should attach action to scope', function(){
+      expect(scope.action).toBe('end-instance');
+    });
   });
 
   describe('if current status is not "ready for dispatch"', function () {

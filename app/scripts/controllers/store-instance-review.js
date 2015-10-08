@@ -230,7 +230,7 @@ angular.module('ts5App')
       $scope.items.map(function (item) {
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
         item.disabled = true;
-        if (!$scope.isEndInstance) {
+        if (!$scope.isEndInstance()) {
           item.menuQuantity = getMenuQuantity(item.itemMasterId);
         }
       });
@@ -297,7 +297,7 @@ angular.module('ts5App')
 
     this.updateInstanceToByStepName = function (stepName) {
       if (angular.isUndefined(stepName)) {
-        $location.url('/store-instance-create/dispatch');
+        $location.url('/store-instance-dashboard');
         return;
       }
       storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepName).then(function () {
