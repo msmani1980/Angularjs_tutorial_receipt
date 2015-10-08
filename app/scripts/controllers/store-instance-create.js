@@ -102,7 +102,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.exitOnSave = function(response) {
       $this.hideLoadingModal();
-      if (!$scope.isEndInstance()) {
+      if (!$scope.isActionState('end-instance')) {
         $this.showMessage('success', 'Store Instance created id: ' + response.id);
       }
       $this.successMessage(response);
@@ -272,7 +272,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.submitForm = function(saveAndExit) {
       $scope.createStoreInstance.$setSubmitted(true);
       if ($this.validateForm()) {
-        if ($scope.isEndInstance()) {
+        if ($scope.isActionState('end-instance')) {
           $this.setStatusToInbound(saveAndExit);
         } else {
           $this.createStoreInstance(saveAndExit);
@@ -310,12 +310,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return $scope.submitForm(true);
     };
 
-    $scope.isEndInstance = function() {
-      return $routeParams.action === 'end-instance';
+    $scope.isActionState = function(action) {
+      return $routeParams.action === action;
     };
 
-    $scope.isReplenish = function() {
-      return $routeParams.action === 'replenish';
+    $scope.isEndInstanceOrRedispatch = function() {
+      if ($scope.isActionState('end-instance') || $scope.isActionState('redispatch')) {
+        return true;
+      }
     };
 
     $scope.menuPlaceholderText = function() {
@@ -366,7 +368,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.updateInstanceDependencies();
         }
       });
-      if($routeParams.action==='dispatch') {
+      if ($routeParams.action === 'dispatch') {
         $scope.$watch('formData.cateringStationId', function(newId, oldId) {
           if (newId && oldId && newId !== oldId) {
             $this.getMenuMasterList();

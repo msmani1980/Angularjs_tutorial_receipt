@@ -10,6 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceWizardConfig,
     storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
+    dateUtility,
     lodash) {
 
     var HANDOVER = 'Hand Over';
@@ -376,7 +377,6 @@ angular.module('ts5App')
 
     this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
-      $this.updateStoreInstanceTampered();
       $location.path(stepObject.uri);
     };
 
@@ -392,6 +392,10 @@ angular.module('ts5App')
 
     this.updateStoreInstanceTampered = function() {
       var payload = {
+        cateringStationId: $scope.storeDetails.cateringStationId,
+        scheduleNumber: $scope.storeDetails.scheduleNumber,
+        scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
+        storeId: $scope.storeDetails.storeId,
         menus: $this.formatMenus($scope.storeDetails.menuList),
         tampered: $scope.storeDetails.tampered,
         note: $scope.storeDetails.note
@@ -409,7 +413,7 @@ angular.module('ts5App')
         return;
       }
       var promises = [];
-      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.id));
+      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name));
       if ($scope.storeDetails.tampered) {
         promises.push($this.updateStoreInstanceTampered());
       }
@@ -499,16 +503,12 @@ angular.module('ts5App')
       return $scope.submitForm();
     };
 
-    $scope.isEndInstance = function() {
-      return $routeParams.action === 'end-instance';
-    };
-
-    $scope.isReplenish = function() {
-      return $routeParams.action === 'replenish';
+    $scope.isActionState = function(action) {
+      return $routeParams.action === action;
     };
 
     $scope.hideSealTypeIfEndInstance = function(type) {
-      if ($scope.isEndInstance() && $scope.sealTypesList) {
+      if ($scope.isActionState('end-instance') && $scope.sealTypesList) {
         if (type === OUTBOUND) {
           return true;
         }

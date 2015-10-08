@@ -556,6 +556,7 @@ describe('the Store Instance Seals controller', function() {
           initController('end-instance');
           $scope.storeDetails.tampered = true;
           $scope.storeDetails.note = 'test note';
+          $scope.storeDetails.cateringStationId = 120;
           nextStep = {
             label: 'Review & Dispatch',
             uri: '/store-instance-review/end-instance/' + storeId,
@@ -564,6 +565,10 @@ describe('the Store Instance Seals controller', function() {
           };
 
           mockTampered = {
+            cateringStationId: 120,
+            scheduleNumber: 'SCHED123',
+            scheduleDate: '20150813',
+            storeId: 13,
             menus: [],
             tampered: true,
             note: 'test note'
@@ -1012,30 +1017,30 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-  describe('isReplenish method', function() {
+  describe('isActionState method', function() {
 
-    it('should be true, if $routeParams.action is Replenish', function() {
+    it('should return true if the state passed matches the action state of the controller', function() {
+      initController();
+      var isDispatch = $scope.isActionState('dispatch');
+      expect(isDispatch).toBeTruthy();
+    });
+
+    it('should return false if the state passed does not matches the action state of the controller', function() {
+      initController();
+      var isDispatch = $scope.isActionState('replenish');
+      expect(isDispatch).toBeFalsy();
+    });
+
+    it('should return true if the state passed matches the action state of the controller', function() {
       initController('replenish');
-      expect($scope.isReplenish()).toBeTruthy();
+      var isReplenish = $scope.isActionState('replenish');
+      expect(isReplenish).toBeTruthy();
     });
 
-    it('should be false, if $routeParams.action is End-instance', function() {
-      initController('end-instance');
-      expect($scope.isReplenish()).toBeFalsy();
-    });
-
-  });
-
-  describe('isEndInstance method', function() {
-
-    it('should be true, if $routeParams.action is End-Dispatch', function() {
-      initController('end-instance');
-      expect($scope.isEndInstance()).toBeTruthy();
-    });
-
-    it('should be false, if $routeParams.action is Replenish', function() {
-      initController('replenish');
-      expect($scope.isEndInstance()).toBeFalsy();
+    it('should return false if the state passed does not matches the action state of the controller', function() {
+      initController();
+      var isReplenish = $scope.isActionState('replenish');
+      expect(isReplenish).toBeFalsy();
     });
 
   });

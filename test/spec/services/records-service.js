@@ -148,5 +148,17 @@ describe('Service: commissionDataService', function () {
       });
     });
 
+    describe('getCountTypes', function(){
+      it('should make GET request to API', function(){
+        var expectUri = /records\/count-types/;
+        httpBackend.expectGET(expectUri).respond(200, []);
+        recordsService.getCountTypes().then(function (response) {
+          expect(response).toBeDefined();
+        });
+        httpBackend.flush();
+      });
+    });
+
+
   });
 });
