@@ -115,11 +115,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $this.formatUllageItem = function (item) {
       item.ullageQuantity = angular.copy(item.quantity.toString());
       item.ullageId = angular.copy(item.id);
-      var itemUllageReasonObject = lodash.findWhere($scope.ullageReasonCodes, {companyReasonCodeName: item.ullageReasonCode});
-      item.ullageReason = itemUllageReasonObject || null;
+      var itemUllageReasonObject = lodash.findWhere($scope.ullageReasonCodes, {id: item.ullageReasonCode});
+      item.ullageReason = itemUllageReasonObject ||  null;
       delete item.quantity;
       delete item.id;
-      delete item.ullageReasonCode;
     };
 
     function getItemsSuccessHandler(dataFromAPI) {
