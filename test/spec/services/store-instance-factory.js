@@ -24,6 +24,7 @@ describe('Service: storeInstanceFactory', function() {
   var stationsService;
   var itemsService;
   var recordsService;
+  var companyReasonCodesService;
 
   var getStationDeferred;
   var getCarrierNumberDeferred;
@@ -83,7 +84,7 @@ describe('Service: storeInstanceFactory', function() {
     menuMasterService = $injector.get('menuMasterService');
     storesService = $injector.get('storesService');
     recordsService = $injector.get('recordsService');
-
+    companyReasonCodesService = $injector.get('companyReasonCodesService');
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(itemsService, 'getItemsList');
@@ -111,6 +112,8 @@ describe('Service: storeInstanceFactory', function() {
     spyOn(recordsService, 'getStoreStatusList').and.returnValue(getStoreStatusDeferred.promise);
     spyOn(recordsService, 'getItemTypes');
     spyOn(recordsService, 'getCharacteristics');
+    spyOn(recordsService, 'getCountTypes');
+    spyOn(companyReasonCodesService, 'getAll');
 
   }));
 
@@ -367,6 +370,18 @@ describe('Service: storeInstanceFactory', function() {
     it('should call getCharacteristics', function() {
       storeInstanceFactory.getCharacteristics();
       expect(recordsService.getCharacteristics).toHaveBeenCalled();
+    });
+    it('should call getCountTypes', function() {
+      storeInstanceFactory.getCountTypes();
+      expect(recordsService.getCountTypes).toHaveBeenCalled();
+    });
+  });
+
+  describe('companyReasonCodesService API calls', function(){
+    it('should call getAll', function(){
+      var payload = {id: 'fakeId'};
+      storeInstanceFactory.getReasonCodeList(payload);
+      expect(companyReasonCodesService.getAll).toHaveBeenCalledWith(payload);
     });
   });
 
