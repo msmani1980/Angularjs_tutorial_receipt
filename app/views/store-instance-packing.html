@@ -65,7 +65,6 @@
                    ng-disabled="readOnly"
                    maxlength="5"/>
           </td>
-          <!-- TODO: inbound quantity-->
           <td ng-if="isActionState('end-instance')">
             <input type="text"
                    name="inboundQuantity-{{$index}}"
@@ -75,9 +74,9 @@
                    class="form-control"
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
-                   maxlength="5"/>
+                   maxlength="5"
+                   placeholder="0"/>
           </td>
-          <!-- TODO: ullage-->
           <td ng-if="isActionState('end-instance')">
             <input type="text"
                    name="ullageQuantity-{{$index}}"
@@ -87,9 +86,9 @@
                    class="form-control"
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
-                   maxlength="5"/>
+                   maxlength="5"
+                   placeholder="0"/>
           </td>
-          <!-- TODO: ullage reason -->
           <td ng-if="isActionState('end-instance')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
               <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}
@@ -122,16 +121,13 @@
           <td ng-if="isActionState('dispatch') || isActionState('replenish')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" maxlength="5">
           </td>
-          <!-- TODO: new inbound quantity-->
           <td ng-if="isActionState('end-instance')">
             <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0"/>
 
           </td>
-          <!-- TODO: new ulage-->
           <td ng-if="isActionState('end-instance')">
             <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0"/>
           </td>
-          <!-- TODO: new ulage reason -- need to resolve ulageReasonCode -->
           <td ng-if="isActionState('end-instance')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
               <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}

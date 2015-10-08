@@ -237,12 +237,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     function updateStatusToStep(stepObject) {
-      var statusObject = lodash.findWhere($scope.storeDetails.statusList, {name: stepObject.stepName});
-      if (!statusObject) {
-        return;
-      }
-      var statusId = statusObject.id;
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusId).then(function (response) {
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName).then(function (response) {
         updateStoreDetails(response, stepObject);
       }, showErrors);
     }
