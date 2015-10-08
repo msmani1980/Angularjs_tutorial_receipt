@@ -157,8 +157,8 @@
         <th class="col-xs-1">Actions</th>
       </tr>
       </thead>
-      <tbody >
-      <tr class="master-row" ng-repeat="store in storeInstanceList" id="store-{{ store.id }}">
+      <tbody ng-repeat="store in storeInstanceList" >
+      <tr class="master-row" id="store-{{ store.id }}">
         <td>
           <span class="fa fa-plus-square-o"
                 ng-click="toggleAccordionView(store)"
@@ -235,7 +235,7 @@
           </a>
         </td>
       </tr>
-      <tr ng-repeat="replenishment in store.replenishItems" class="subversion-row"
+      <tr ng-repeat="replenishment in store.replenishments" class="subversion-row"
           ng-show="isStoreViewExpanded(store)">
         <td></td>
         <td>
