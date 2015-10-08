@@ -117,6 +117,10 @@ angular.module('ts5App').service('storeInstanceFactory',
       return recordsService.getCharacteristics();
     }
 
+    function getCountTypes() {
+      return recordsService.getCountTypes();
+    }
+
     function formatResponseCollection(responseCollection, storeInstanceAPIResponse, parentStoreInstanceAPIResponse) {
       var storeDetails = {};
       storeDetails.LMPStation = responseCollection[1].code;
@@ -244,7 +248,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       updateStoreInstanceStatus: updateStoreInstanceStatus,
       getItemTypes: getItemTypes,
       getCharacteristics: getCharacteristics,
-      getReasonCodeList: getReasonCodeList
+      getReasonCodeList: getReasonCodeList,
+      getCountTypes: getCountTypes
     };
 
   });

@@ -11,6 +11,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   beforeEach(module('served/store-status-response.json'));
   beforeEach(module('served/item-types.json'));
   beforeEach(module('served/characteristics.json'));
+  beforeEach(module('served/company-reason-codes.json'));
+  beforeEach(module('served/count-types.json'));
 
 
   var StoreInstancePackingCtrl;
@@ -30,6 +32,10 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var servedItemTypesJSON;
   var getCharacteristicsDeferred;
   var servedCharacteristicsJSON;
+  var getCountTypesDeferred;
+  var servedCountTypesJSON;
+  var getCompanyReasonCodesDeferred;
+  var servedCompanyReasonCodesJSON;
   var dateUtility;
   var storeId;
   var controller;
@@ -37,7 +43,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedMasterItemList_,
-                     _servedStoreInstanceDetails_, _servedStoreStatusResponse_, _servedCharacteristics_, _servedItemTypes_) {
+                     _servedStoreInstanceDetails_, _servedStoreStatusResponse_, _servedCharacteristics_,
+                     _servedItemTypes_, _servedCompanyReasonCodes_, _servedCountTypes_) {
       servedStoreInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
       servedStoreInstanceItemsJSON = _servedStoreInstanceItemList_;
       servedMasterItemsJSON = _servedMasterItemList_;
@@ -45,6 +52,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       servedStoreStatusJSON = _servedStoreStatusResponse_;
       servedItemTypesJSON = _servedItemTypes_;
       servedCharacteristicsJSON = _servedCharacteristics_;
+      servedCountTypesJSON = _servedCountTypes_;
+      servedCompanyReasonCodesJSON = _servedCompanyReasonCodes_;
     });
     storeId = 5;
     scope = $rootScope.$new();
@@ -71,6 +80,13 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     getCharacteristicsDeferred = $q.defer();
     getCharacteristicsDeferred.resolve(servedCharacteristicsJSON);
+
+    getCountTypesDeferred = $q.defer();
+    getCountTypesDeferred.resolve(servedCountTypesJSON);
+
+    getCompanyReasonCodesDeferred = $q.defer();
+    getCompanyReasonCodesDeferred.resolve(servedCompanyReasonCodesJSON);
+
     dateUtility = $injector.get('dateUtility');
 
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
@@ -80,6 +96,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(getUpdatedStoreStatusDeferred.promise);
     spyOn(storeInstanceFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
     spyOn(storeInstanceFactory, 'getCharacteristics').and.returnValue(getCharacteristicsDeferred.promise);
+    spyOn(storeInstanceFactory, 'getCountTypes').and.returnValue(getCountTypesDeferred.promise);
+    spyOn(storeInstanceFactory, 'getReasonCodeList').and.returnValue(getCompanyReasonCodesDeferred.promise);
 
   }));
 
@@ -171,11 +189,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         });
       });
 
-      it('should show the template qty field', function () {
-        var showQty = scope.showQty();
-        expect(showQty).toBeTruthy();
-      });
-
     });
 
     describe('during the replenish process', function () {
@@ -211,11 +224,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
       });
 
-      it('should not show the template qty field', function () {
-        var showQty = scope.showQty();
-        expect(showQty).toBeFalsy();
-      });
-
     });
 
     describe('during the end-instance process', function () {
@@ -228,6 +236,14 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       it('should call getCharacteristics', function () {
         expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
+      });
+
+      it('should call getCharacteristics', function () {
+        expect(storeInstanceFactory.getCountTypes).toHaveBeenCalled();
+      });
+
+      it('should call getCharacteristics', function () {
+        expect(storeInstanceFactory.getReasonCodeList).toHaveBeenCalled();
       });
 
       it('should call getStoreInstanceMenuItems with Regular and Inventory filters', function () {
