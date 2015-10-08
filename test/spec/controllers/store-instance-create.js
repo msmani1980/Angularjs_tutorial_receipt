@@ -455,7 +455,6 @@ describe('Store Instance Create Controller', function() {
         },
         storeId: storeInstanceId
       };
-      $scope.$digest();
       spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'formatDispatchPayload').and.callThrough();
@@ -806,7 +805,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'getMenuMasterList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'registerScopeWatchers').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'setUIReady').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'menuMasterResponseHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setMenuMasterList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'getStoresList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'setStoresList').and.callThrough();
       $scope.formData = {
@@ -831,7 +830,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should call setMenuMasterList', function() {
-      expect(StoreInstanceCreateCtrl.menuMasterResponseHandler).toHaveBeenCalled();
+      expect(StoreInstanceCreateCtrl.setMenuMasterList).toHaveBeenCalled();
     });
 
     it('should call getStoresList', function() {
@@ -874,8 +873,8 @@ describe('Store Instance Create Controller', function() {
       $scope.formData.scheduleDate = '10/01/2015';
       $scope.$digest();
       var queryControl = {
-        endDate: '20151001',
-        startDate: '20151001'
+        startDate: '20151001',
+        endDate: '20151001'
       };
       expect(StoreInstanceCreateCtrl.getFormattedDatesPayload()).toEqual(queryControl);
     });
@@ -1009,6 +1008,58 @@ describe('Store Instance Create Controller', function() {
           errorResponse);
       });
 
+    });
+
+  });
+
+  describe('menuPlaceholderText functionality',function (){
+
+    it('should return nothing if the controller is not dispatch action', function() {
+      initController('replenish');
+      var menuPlaceholderText = $scope.menuPlaceholderText();
+      expect(menuPlaceholderText).toEqual('');
+    });
+
+    it('should return text telling the user when there are menus to select', function() {
+      initController();
+      $scope.filteredMenuList = [
+         {
+            'id':184,
+            'menuCode':'Replenish1234',
+            'companyId':403,
+            'createdBy':1,
+            'createdOn':'2015-10-05 20:04:23.738279',
+            'updatedBy':null,
+            'updatedOn':null,
+            'menuName':'Replenish',
+            'companyMenus':[
+               {
+                  'startDate':'2015-10-06',
+                  'endDate':'2018-10-06',
+                  'createdBy':1,
+                  'createdOn':'2015-10-05 20:04:23.89218',
+                  'updatedBy':null,
+                  'updatedOn':null,
+                  'id':350,
+                  'menuCode':null,
+                  'menuName':null,
+                  'description':null,
+                  'companyId':null,
+                  'menuId':184,
+                  'menuItems':null
+               }
+            ]
+         }
+      ];
+      $scope.$digest();
+      var menuPlaceholderText = $scope.menuPlaceholderText();
+      expect(menuPlaceholderText).toEqual('Select one or more Menus');
+    });
+
+    it('should return text telling the user when there are no menus to select', function() {
+      initController();
+      var menuPlaceholderText = $scope.menuPlaceholderText();
+      expect(menuPlaceholderText).toEqual('No menus are available to select');
     });
 
   });
