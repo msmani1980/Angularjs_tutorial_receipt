@@ -8,9 +8,9 @@ describe('Service: storeInstanceWizardConfig', function() {
   // instantiate service
   var storeInstanceWizardConfig;
   var mockedConfigDispatch;
-  var mockedConfigRedispatch;
   var mockedConfigReplenish;
   var mockedConfigEndInstance;
+  var mockedConfigRedispatch;
   var mockId;
 
   beforeEach(inject(function(_storeInstanceWizardConfig_) {
@@ -56,26 +56,6 @@ describe('Service: storeInstanceWizardConfig', function() {
       stepName: '3',
       controllerName: 'Review'
     }];
-    mockedConfigEndInstance = [{
-      label: 'End Store Instance',
-      uri: '/store-instance-create/end-instance/' + mockId,
-      controllerName: 'Create'
-    }, {
-      label: 'Inbound Seals',
-      uri: '/store-instance-seals/end-instance/' + mockId,
-      stepName: '1',
-      controllerName: 'Seals'
-    }, {
-      label: 'Packing',
-      uri: '/store-instance-packing/end-instance/' + mockId,
-      stepName: '2',
-      controllerName: 'Packing'
-    }, {
-      label: 'Review & End Dispatch',
-      uri: '/store-instance-review/end-instance/' + mockId,
-      stepName: '3',
-      controllerName: 'Review'
-    }];
     mockedConfigRedispatch = [{
       label: 'Create Store Instance',
       uri: '/store-instance-create/redispatch/' + mockId,
@@ -101,6 +81,27 @@ describe('Service: storeInstanceWizardConfig', function() {
       stepName: '4',
       controllerName: 'Review'
     }];
+    mockedConfigEndInstance = [{
+      label: 'End Store Instance',
+      uri: '/store-instance-create/end-instance/7',
+      stepName: '5',
+      controllerName: 'Create'
+    }, {
+      label: 'Inbound Seals',
+      uri: '/store-instance-seals/end-instance/7',
+      stepName: '6',
+      controllerName: 'Seals'
+    }, {
+      label: 'Packing',
+      uri: '/store-instance-packing/end-instance/7',
+      stepName: '7',
+      controllerName: 'Packing'
+    }, {
+      label: 'Review & End Dispatch',
+      uri: '/store-instance-review/end-instance/7',
+      stepName: '7',
+      controllerName: 'Review'
+    }];
   }));
 
   it('should return the dispatch wizard steps', function() {
@@ -118,9 +119,8 @@ describe('Service: storeInstanceWizardConfig', function() {
     expect(configDispatch).toEqual(mockedConfigEndInstance);
   });
 
-  it('should match mocked redispatchconfig', function() {
+  it('should match mocked redispatch config', function() {
     var configDispatch = storeInstanceWizardConfig.getSteps('redispatch', mockId);
     expect(configDispatch).toEqual(mockedConfigRedispatch);
   });
-
 });
