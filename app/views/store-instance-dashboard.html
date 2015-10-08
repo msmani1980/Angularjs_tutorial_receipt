@@ -242,7 +242,7 @@
           <input ng-show="doesStoreInstanceContainAction(replenishment, 'Checkbox')" type="checkbox">
         </td>
         <td>{{ replenishment.dispatchStationCode }}</td>
-        <td><!-- TODO: add Inbound LMP Station --></td>
+        <td>{{ replenishment.inboundStationCode }}</td>
         <td>{{ replenishment.storeNumber }}</td>
         <td id="schedule-{{replenishment.id}}" ng-click="toggleScheduleDetails(replenishment.id)">
           <span class="btn">
@@ -251,13 +251,15 @@
             <span><strong>Schedule Date: {{ replenishment.scheduleDate }}</strong></span>
           </span>
           <div class="scheduleDetails-{{replenishment.id}} accordion-cell-details accordion-cell-closed">
+            <strong>Schedule Number:</strong> {{ replenishment.scheduleNumber }}<br>
             <strong>Departure Station:</strong> {{ replenishment.departureStationCode }}<br>
             <strong>Departure Time:</strong> {{ replenishment.arrivalTime }} <br>
             <strong>Arrival Station:</strong> {{ replenishment.arrivalStationCode }}<br>
             <strong>Arrival Time:</strong> {{ replenishment.departureTime }} <br>
           </div>
         </td>
-        <td>{{ (replenishment.tampered) ? 'true' : 'false' }}</td>
+        <span ng-show="replenishment.tampered" class="label label-success">Yes</span>
+        <span ng-hide="replenishment.tampered" class="label label-default">No</span>
         <td>{{ replenishment.id }}</td>
         <td><span class="label label-default">{{ replenishment.statusName }}</span></td>
         <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
