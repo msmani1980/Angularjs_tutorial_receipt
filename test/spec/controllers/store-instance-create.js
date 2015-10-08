@@ -455,7 +455,6 @@ describe('Store Instance Create Controller', function() {
         },
         storeId: storeInstanceId
       };
-      $scope.$digest();
       spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'formatDispatchPayload').and.callThrough();
@@ -806,7 +805,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'getMenuMasterList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'registerScopeWatchers').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'setUIReady').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'menuMasterResponseHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setMenuMasterList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'getStoresList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'setStoresList').and.callThrough();
       $scope.formData = {
@@ -831,7 +830,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should call setMenuMasterList', function() {
-      expect(StoreInstanceCreateCtrl.menuMasterResponseHandler).toHaveBeenCalled();
+      expect(StoreInstanceCreateCtrl.setMenuMasterList).toHaveBeenCalled();
     });
 
     it('should call getStoresList', function() {
@@ -874,8 +873,8 @@ describe('Store Instance Create Controller', function() {
       $scope.formData.scheduleDate = '10/01/2015';
       $scope.$digest();
       var queryControl = {
-        endDate: '20151001',
-        startDate: '20151001'
+        startDate: '20151001',
+        endDate: '20151001'
       };
       expect(StoreInstanceCreateCtrl.getFormattedDatesPayload()).toEqual(queryControl);
     });

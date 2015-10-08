@@ -45,9 +45,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.getCatererStationListPromise().then(this.setCatererStationList);
     };
 
-    this.menuCatererResponseHandler = function(dataFromAPI) {
+    this.setMenuCatererList = function(dataFromAPI) {
       $scope.filteredMenuList = [];
-      $scope.formData.menus = [];
       angular.forEach(dataFromAPI.companyMenuCatererStations, function(menuCaterer) {
         var filteredMenu = lodash.findWhere($scope.menuMasterList, {
           id: menuCaterer.menuId
@@ -56,26 +55,27 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $scope.filteredMenuList.push(filteredMenu);
         }
       });
+
     };
 
-    $scope.getMenuCatererList = function() {
-      if (!$scope.formData.cateringStationId || !$scope.formData.scheduleDate) {
-        return;
-      }
+    this.getMenuCatererList = function() {
       var payload = angular.extend({}, $this.getFormattedDatesPayload(), {
         catererStationId: $scope.formData.cateringStationId
       });
-      menuCatererStationsService.getRelationshipList(payload).then($this.menuCatererResponseHandler);
+      if($routeParams.action==='replenish') {
+        payload.catererStationId = $scope.formData.dispatchedCateringStationId;
+      }
+      menuCatererStationsService.getRelationshipList(payload).then($this.setMenuCatererList);
     };
 
-    this.menuMasterResponseHandler = function(dataFromAPI) {
+    this.setMenuMasterList = function(dataFromAPI) {
       $scope.menuMasterList = dataFromAPI.companyMenuMasters;
-      $scope.getMenuCatererList();
+      $this.menusFromApi();
     };
 
     this.getMenuMasterList = function() {
       var query = this.getFormattedDatesPayload();
-      storeInstanceFactory.getMenuMasterList(query).then($this.menuMasterResponseHandler);
+      storeInstanceFactory.getMenuMasterList(query).then($this.setMenuMasterList);
     };
 
     this.setCarrierNumbers = function(dataFromAPI) {
@@ -162,21 +162,21 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return newMenus;
     };
 
-    this.menusFromApi = function(menus) {
+    this.menusFromApi = function() {
       var newMenus = [];
-      angular.forEach(menus, function(menu) {
-        var existingMenu = $scope.menuMasterList.filter(function(menuMaster) {
-          return menuMaster.id === menu.menuMasterId;
-        })[0];
+      angular.forEach($scope.formData.menus, function(menu) {
         var newMenu = {
           id: menu.menuMasterId
         };
+        var existingMenu = $scope.menuMasterList.filter(function(menuMaster) {
+          return menuMaster.id === menu.menuMasterId;
+        })[0];
         if(angular.isDefined(existingMenu)){
           newMenu.menuCode = existingMenu.menuCode;
         }
         newMenus.push(newMenu);
       });
-      return newMenus;
+      $scope.formData.menus = newMenus;
     };
 
     this.formatDispatchPayload = function(payload) {
@@ -214,8 +214,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         },
         storeId: (apiData.storeId ? apiData.storeId.toString() : null),
         carrierId: (apiData.carrierId ? apiData.carrierId.toString() : null),
-        menus: $this.menusFromApi(apiData.menus)
+        menus: angular.copy(apiData.menus)
       };
+      var promises = $this.makeInitPromises();
+      $q.all(promises).then($this.initSuccessHandler);
     };
 
     this.getStoreInstance = function() {
@@ -378,14 +380,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.makeInitPromises = function() {
       var promises = [
         $this.getMenuMasterList(),
+        $this.getMenuCatererList(),
         $this.getCatererStationList(),
         $this.getStoresList(),
         $this.getCarrierNumbers(),
         $this.getScheduleNumbers(),
       ];
-      if ($routeParams.storeId) {
-        promises.push($this.getStoreInstance());
-      }
       return promises;
     };
 
@@ -401,6 +401,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       this.showLoadingModal(loadingText);
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      if($routeParams.storeId) {
+        $this.getStoreInstance();
+        return;
+      }
       var promises = this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };
