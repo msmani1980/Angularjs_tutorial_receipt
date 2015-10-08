@@ -327,8 +327,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         ullagePayload.id = item.inboundQuantityId;
       }
 
-      workingPayload.response.push(ullagePayload);
-      workingPayload.response.push(inboundPayload);
+      workingPayload.push(ullagePayload);
+      workingPayload.push(inboundPayload);
     };
 
     this.createPayload = function () {
@@ -336,9 +336,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
       angular.forEach(mergedItems, function (item) {
         if($routeParams.action === 'end-instance') {
-          $this.endInstanceCreatePayload(item, newPayload);
+          $this.endInstanceCreatePayload(item, newPayload.response);
         } else {
-          $this.dispatchAndReplenishCreatePayload(item, newPayload);
+          $this.dispatchAndReplenishCreatePayload(item, newPayload.response);
         }
       });
       return newPayload;
