@@ -286,6 +286,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return emptyItemsExist;
     };
 
+    this.checkForCompleteUllagePayload = function () {
+      var mergedMenuItems = angular.copy($scope.menuItems).concat(angular.copy($scope.emptyMenuItems));
+      var ullageDataIncomplete = false;
+      angular.forEach(mergedMenuItems, function (item) {
+        ullageDataIncomplete = ullageDataIncomplete || (item.ullageQuantity > 0 && !item.ullageReason);
+      });
+      return ullageDataIncomplete;
+    };
 
     this.dispatchAndReplenishCreatePayload = function (item, workingPayload) {
       var itemPayload = {
@@ -346,6 +354,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var emptyItemsExist = $this.checkForEmptyItemsInPayload();
       if (emptyItemsExist) {
         showToast('danger', 'Save Items', 'An item must be selected for all rows');
+        return false;
+      }
+      var ullagePayloadIncomplete = ($routeParams.action !== 'end-instance') ? false : $this.checkForCompleteUllagePayload();
+      if(ullagePayloadIncomplete) {
+        showToast('danger', 'Save Items', 'All items with an ullage quantity require an ullage reason');
         return false;
       }
 
