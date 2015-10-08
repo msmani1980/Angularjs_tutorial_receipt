@@ -295,18 +295,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       workingPayload.push(itemPayload);
     };
 
-    this.endInstanceCreatePayload = function (item, workingPayload) {
+    this.createUllagePayload = function (item) {
       var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
       var ullagePayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
         quantity: parseInt(item.ullageQuantity),
         countTypeId: ullageCountTypeId,
-        ullageReasonCodeId: (item.ullageReason) ? item.ullageReason.id : null
       };
+      if(item.ullageQuantity > 0) {
+        ullagePayload.ullageReasonCodeId = item.ullageReason.id;
+      }
       if(item.ullageId) {
         ullagePayload.id = item.ullageId;
       }
+      return ullagePayload;
+    };
 
+    this.createInboundPayload = function (item) {
       var inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
       var inboundPayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
@@ -316,7 +321,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if(item.inboundQuantityId) {
         ullagePayload.id = item.inboundQuantityId;
       }
+      return inboundPayload;
+    };
 
+    this.endInstanceCreatePayload = function (item, workingPayload) {
+      var ullagePayload = $this.createUllagePayload(item);
+      var inboundPayload = $this.createInboundPayload(item);
       workingPayload.push(ullagePayload);
       workingPayload.push(inboundPayload);
     };
