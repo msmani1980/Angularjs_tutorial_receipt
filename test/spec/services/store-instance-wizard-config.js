@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: storeInstanceWizardConfig', function () {
+describe('Service: storeInstanceWizardConfig', function() {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -8,101 +8,119 @@ describe('Service: storeInstanceWizardConfig', function () {
   // instantiate service
   var storeInstanceWizardConfig;
   var mockedConfigDispatch;
+  var mockedConfigRedispatch;
   var mockedConfigReplenish;
   var mockedConfigEndInstance;
   var mockId;
-  beforeEach(inject(function (_storeInstanceWizardConfig_) {
+
+  beforeEach(inject(function(_storeInstanceWizardConfig_) {
     storeInstanceWizardConfig = _storeInstanceWizardConfig_;
     mockId = 7;
-    mockedConfigDispatch = [
-      {
-        label: 'Create Store Instance',
-        uri: '/store-instance-create/dispatch/' + mockId,
-        controllerName: 'Create'
-      },
-      {
-        label: 'Packing',
-        uri: '/store-instance-packing/dispatch/' + mockId,
-        stepName:'1',
-        controllerName: 'Packing'
-      },
-      {
-        label: 'Assign Seals',
-        uri: '/store-instance-seals/dispatch/' + mockId,
-        stepName:'2',
-        controllerName: 'Seals'
-      },
-      {
-        label: 'Review & Dispatch',
-        uri: '/store-instance-review/dispatch/' + mockId,
-        stepName:'3',
-        controllerName: 'Review'
-      }
-    ];
-    mockedConfigReplenish = [
-      {
-        label: 'Create Store Replenish',
-        uri: '/store-instance-create/replenish/' + mockId,
-        controllerName: 'Create'
-      },
-      {
-        label: 'Replenish Packing',
-        uri: '/store-instance-packing/replenish/' + mockId,
-        stepName:'1',
-        controllerName: 'Packing'
-      },
-      {
-        label: 'Assign Replenish Seals',
-        uri: '/store-instance-seals/replenish/' + mockId,
-        stepName:'2',
-        controllerName: 'Seals'
-      },
-      {
-        label: 'Review & Dispatch Replenish',
-        uri: '/store-instance-review/replenish/' + mockId,
-        stepName:'3',
-        controllerName: 'Review'
-      }
-    ];
-    mockedConfigEndInstance = [
-      {
-        label: 'End Store Instance',
-        uri: '/store-instance-create/end-instance/' + mockId,
-        controllerName: 'Create'
-      },
-      {
-        label: 'Inbound Seals',
-        uri: '/store-instance-seals/end-instance/' + mockId,
-        stepName: '1',
-        controllerName: 'Seals'
-      },
-      {
-        label: 'Packing',
-        uri: '/store-instance-packing/end-instance/' + mockId,
-        stepName: '2',
-        controllerName: 'Packing'
-      },
-      {
-        label: 'Review & End Dispatch',
-        uri: '/store-instance-review/end-instance/' + mockId,
-        stepName: '3',
-        controllerName: 'Review'
-      }
-    ];
+    mockedConfigDispatch = [{
+      label: 'Create Store Instance',
+      uri: '/store-instance-create/dispatch/' + mockId,
+      controllerName: 'Create'
+    }, {
+      label: 'Packing',
+      uri: '/store-instance-packing/dispatch/' + mockId,
+      stepName: '1',
+      controllerName: 'Packing'
+    }, {
+      label: 'Assign Seals',
+      uri: '/store-instance-seals/dispatch/' + mockId,
+      stepName: '2',
+      controllerName: 'Seals'
+    }, {
+      label: 'Review & Dispatch',
+      uri: '/store-instance-review/dispatch/' + mockId,
+      stepName: '3',
+      controllerName: 'Review'
+    }];
+    mockedConfigReplenish = [{
+      label: 'Create Store Replenish',
+      uri: '/store-instance-create/replenish/' + mockId,
+      controllerName: 'Create'
+    }, {
+      label: 'Replenish Packing',
+      uri: '/store-instance-packing/replenish/' + mockId,
+      stepName: '1',
+      controllerName: 'Packing'
+    }, {
+      label: 'Assign Replenish Seals',
+      uri: '/store-instance-seals/replenish/' + mockId,
+      stepName: '2',
+      controllerName: 'Seals'
+    }, {
+      label: 'Review & Dispatch Replenish',
+      uri: '/store-instance-review/replenish/' + mockId,
+      stepName: '3',
+      controllerName: 'Review'
+    }];
+    mockedConfigEndInstance = [{
+      label: 'End Store Instance',
+      uri: '/store-instance-create/end-instance/' + mockId,
+      controllerName: 'Create'
+    }, {
+      label: 'Inbound Seals',
+      uri: '/store-instance-seals/end-instance/' + mockId,
+      stepName: '1',
+      controllerName: 'Seals'
+    }, {
+      label: 'Packing',
+      uri: '/store-instance-packing/end-instance/' + mockId,
+      stepName: '2',
+      controllerName: 'Packing'
+    }, {
+      label: 'Review & End Dispatch',
+      uri: '/store-instance-review/end-instance/' + mockId,
+      stepName: '3',
+      controllerName: 'Review'
+    }];
+    mockedConfigRedispatch = [{
+      label: 'Create Store Instance',
+      uri: '/store-instance-create/redispatch/' + mockId,
+      controllerName: 'Create'
+    }, {
+      label: 'Inbound Seals',
+      uri: '/store-instance-seals/redispatch/' + mockId,
+      stepName: '1',
+      controllerName: 'Seals'
+    }, {
+      label: 'Packing',
+      uri: '/store-instance-packing/redispatch/' + mockId,
+      stepName: '2',
+      controllerName: 'Packing'
+    }, {
+      label: 'Assign Seals',
+      uri: '/store-instance-seals/redispatch/' + mockId,
+      stepName: '3',
+      controllerName: 'Seals'
+    }, {
+      label: 'Review & Dispatch',
+      uri: '/store-instance-review/redispatch/' + mockId,
+      stepName: '4',
+      controllerName: 'Review'
+    }];
   }));
 
-  it('should return the dispatch wizard steps', function(){
+  it('should return the dispatch wizard steps', function() {
     var configDispatch = storeInstanceWizardConfig.getSteps('dispatch', mockId);
     expect(configDispatch).toEqual(mockedConfigDispatch);
   });
 
-  it('should return the replenish wizard steps', function(){
+  it('should return the replenish wizard steps', function() {
     var configReplenish = storeInstanceWizardConfig.getSteps('replenish', mockId);
     expect(configReplenish).toEqual(mockedConfigReplenish);
   });
 
-  it('should match mocked end-instance config', function(){
+  it('should match mocked end-instance config', function() {
     var configDispatch = storeInstanceWizardConfig.getSteps('end-instance', mockId);
     expect(configDispatch).toEqual(mockedConfigEndInstance);
   });
+
+  it('should match mocked redispatchconfig', function() {
+    var configDispatch = storeInstanceWizardConfig.getSteps('redispatch', mockId);
+    expect(configDispatch).toEqual(mockedConfigRedispatch);
+  });
+
 });

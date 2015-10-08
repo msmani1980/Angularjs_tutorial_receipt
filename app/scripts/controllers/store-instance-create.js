@@ -171,7 +171,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         var newMenu = {
           id: menu.menuMasterId
         };
-        if(angular.isDefined(existingMenu)){
+        if (angular.isDefined(existingMenu)) {
           newMenu.menuCode = existingMenu.menuCode;
         }
         newMenus.push(newMenu);
@@ -317,6 +317,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return $routeParams.action === 'replenish';
     };
 
+    $scope.isRedispatch = function() {
+      return $routeParams.action === 'redispatch';
+    };
+
+    $scope.isEndInstanceOrRedispatch = function() {
+      if ($scope.isEndInstance() || $scope.isRedispatch()) {
+        return true;
+      }
+    };
+
     this.setScheduleNumbers = function(apiData) {
       if (!apiData || !apiData.meta.count) {
         return;
@@ -353,7 +363,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.updateInstanceDependencies();
         }
       });
-      if($routeParams.action==='dispatch') {
+      if ($routeParams.action === 'dispatch') {
         $scope.$watch('formData.cateringStationId', function(newId, oldId) {
           if (newId && oldId && newId !== oldId) {
             $this.getMenuMasterList();
