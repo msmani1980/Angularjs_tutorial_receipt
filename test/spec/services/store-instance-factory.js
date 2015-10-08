@@ -329,6 +329,10 @@ describe('Service: storeInstanceFactory', function() {
         expect(storeDetails.note).toBeDefined();
       });
 
+      it('should contain storeId property', function() {
+        expect(storeDetails.storeId).toBeDefined();
+      });
+
       describe('when there is no parent Id', function() {
 
         beforeEach(function() {

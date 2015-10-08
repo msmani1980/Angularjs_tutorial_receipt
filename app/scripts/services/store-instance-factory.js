@@ -132,6 +132,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.menuList = [];
       storeDetails.tampered = storeInstanceAPIResponse.tampered;
       storeDetails.note = storeInstanceAPIResponse.note;
+      storeDetails.storeId = storeInstanceAPIResponse.storeId;
+      storeDetails.cateringStationId = storeInstanceAPIResponse.cateringStationId;
 
       if (parentStoreInstanceAPIResponse) {
         storeDetails.replenishStoreInstanceId = storeInstanceAPIResponse.replenishStoreInstanceId;
