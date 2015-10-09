@@ -161,6 +161,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
       storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
+      storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) : '';
 
       // TODO: get timeConfig that has most recent startDate -- will be a new API
       var timeConfig = lodash.findWhere($scope.timeConfigList, {
