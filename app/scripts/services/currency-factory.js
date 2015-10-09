@@ -30,6 +30,10 @@ angular.module('ts5App')
       return currenciesService.getCompanyCurrencies(payload);
     };
 
+    var getDetailedCompanyCurrencies = function (payload) {
+      return currenciesService.getDetailedCompanyCurrencies(payload);
+    };
+
     var saveDailyExchangeRates = function (payload) {
       return dailyExchangeRatesService.saveDailyExchangeRates(payload);
     };
@@ -42,6 +46,7 @@ angular.module('ts5App')
       getCompany: getCompany,
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
       getCompanyCurrencies: getCompanyCurrencies,
+      getDetailedCompanyCurrencies: getDetailedCompanyCurrencies,
       getDailyExchangeRates: getDailyExchangeRates,
       getPreviousExchangeRates: getPreviousExchangeRates,
       saveDailyExchangeRates: saveDailyExchangeRates,

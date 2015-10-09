@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('DiscountListCtrl', function ($scope, $location, discountFactory, ngToast, dateUtility) {
+  .controller('DiscountListCtrl', function ($scope, $location, discountFactory, ngToast, dateUtility, payloadUtility) {
     var $this = this;
     $scope.viewName = 'Discount';
     $scope.search = {};
@@ -30,7 +30,7 @@ angular.module('ts5App')
     };
 
     $scope.searchDiscounts = function () {
-      discountFactory.getDiscountList($this.serializeDates($scope.search)).then($this.attachDiscountListToScope);
+      discountFactory.getDiscountList(payloadUtility.serializeDates($scope.search)).then($this.attachDiscountListToScope);
     };
 
     $scope.clearForm = function () {
@@ -49,17 +49,6 @@ angular.module('ts5App')
         discount.endDate = dateUtility.formatDateForApp(discount.endDate);
       });
       return formattedDiscountArray;
-    };
-
-    this.serializeDates = function(payload) {
-      var formattedPayload = angular.copy(payload);
-      if (formattedPayload.startDate) {
-        formattedPayload.startDate = dateUtility.formatDateForAPI(formattedPayload.startDate);
-      }
-      if (formattedPayload.endDate) {
-        formattedPayload.endDate = dateUtility.formatDateForAPI(formattedPayload.endDate);
-      }
-      return formattedPayload;
     };
 
     $scope.isDiscountEditable = function (discount) {

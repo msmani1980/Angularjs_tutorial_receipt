@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CurrencyEditCtrl', function ($scope, currencyFactory, GlobalMenuService) {
+  .controller('CurrencyEditCtrl', function ($scope, currencyFactory, GlobalMenuService, dateUtility, payloadUtility) {
     var $this = this;
     var companyId = GlobalMenuService.company.get();
 
@@ -37,20 +37,35 @@ angular.module('ts5App')
       })[0];
     };
 
-    this.getCompanyCurrencies = function () {
-      currencyFactory.getCompanyCurrencies().then(function (companyCurrencyList) {
-        $scope.companyCurrencyList = companyCurrencyList.response;
-      });
+    this.getDetailedCompanyCurrencies = function () {
+      currencyFactory.getDetailedCompanyCurrencies().then($this.attachCompanyCurrencyListToScope);
+    };
+
+    this.attachCompanyCurrencyListToScope = function (companyCurrencyListFromAPI) {
+      $scope.companyCurrencyList = $this.normalizeDetailedCompanyCurrencies(companyCurrencyListFromAPI.companyCurrencies);
+    };
+
+    $scope.searchDetailedCompanyCurrencies = function () {
+      currencyFactory.getDetailedCompanyCurrencies(payloadUtility.serializeDates($scope.search)).then($this.attachCompanyCurrencyListToScope);
     };
 
     $scope.clearForm = function () {
       $scope.search = {};
-      //$scope.searchCurrencies();
+      $scope.searchDetailedCompanyCurrencies();
+    };
+
+    this.normalizeDetailedCompanyCurrencies = function(currencies) {
+      var formattedCurrencies = angular.copy(currencies);
+      angular.forEach(formattedCurrencies, function (currency) {
+        currency.startDate = dateUtility.formatDateForApp(currency.startDate);
+        currency.endDate = dateUtility.formatDateForApp(currency.endDate);
+      });
+      return formattedCurrencies;
     };
 
     this.init = function () {
       $this.getCompanyGlobalCurrencies();
-      $this.getCompanyCurrencies();
+      $this.getDetailedCompanyCurrencies();
     };
 
     this.init();
