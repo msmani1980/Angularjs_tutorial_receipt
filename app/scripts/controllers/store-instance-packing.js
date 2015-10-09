@@ -139,8 +139,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return '';
     };
 
-    this.getStoreInstanceItems = function () {
-      storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(getItemsSuccessHandler, showErrors);
+    this.getStoreInstanceItems = function (storeInstanceId) {
+      storeInstanceFactory.getStoreInstanceItemList(storeInstanceId).then(getItemsSuccessHandler, showErrors);
     };
 
     this.getRegularItemTypeIdSuccess = function (dataFromAPI) {
@@ -187,7 +187,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.getCountTypes().then($this.getCountTypesSuccess, showErrors);
     };
 
-    this.getStoreInstanceMenuItems = function () {
+    this.getStoreInstanceMenuItems = function (storeInstanceId) {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var payload = {
         itemTypeId: $scope.regularItemTypeId,
@@ -196,11 +196,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($scope.characteristicFilterId) {
         payload.characteristicId = $scope.characteristicFilterId;
       }
-      var instanceId = $routeParams.storeId;
-      if($routeParams.action === 'replenish') {
-        instanceId = $scope.storeDetails.replenishStoreInstanceId;
-      }
-      storeInstanceFactory.getStoreInstanceMenuItems(instanceId, payload).then(getItemsSuccessHandler, showErrors);
+      storeInstanceFactory.getStoreInstanceMenuItems(storeInstanceId, payload).then(getItemsSuccessHandler, showErrors);
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
@@ -385,9 +381,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.completeInitializeAfterDependencies = function () {
       $this.isInstanceReadOnly();
-      $this.getStoreInstanceItems();
-      $this.getStoreInstanceMenuItems();
       $this.getMasterItemsList();
+      $this.getStoreInstanceItems($routeParams.storeId);
+      var storeInstanceForMenuItems = ($routeParams.action === 'replenish') ? $scope.storeDetails.replenishStoreInstanceId : $routeParams.storeId;
+      $this.getStoreInstanceMenuItems(storeInstanceForMenuItems);
+
+      if($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
+        $this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId);
+        $this.getStoreInstanceMenuItems($scope.storeDetails.prevStoreInstanceId);
+      }
     };
 
     this.makeInitializePromises = function () {
@@ -403,7 +405,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var characteristicForAction = {
         'replenish': 'Upliftable',
-        'end-instance': 'Inventory'
+        'end-instance': 'Inventory',
+        'redispatch': 'Inventory'
       };
       if (characteristicForAction[$routeParams.action]) {
         promises.push(this.getCharacteristicIdForName(characteristicForAction[$routeParams.action]));
