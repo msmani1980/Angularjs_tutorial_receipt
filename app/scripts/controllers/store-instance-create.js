@@ -61,7 +61,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var payload = angular.extend({}, $this.getFormattedDatesPayload(), {
         catererStationId: $scope.formData.cateringStationId
       });
-      if($routeParams.action==='replenish') {
+      if ($routeParams.action === 'replenish') {
         payload.catererStationId = $scope.formData.dispatchedCateringStationId;
       }
       menuCatererStationsService.getRelationshipList(payload).then($this.setMenuCatererList);
@@ -170,7 +170,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         var existingMenu = $scope.menuMasterList.filter(function(menuMaster) {
           return menuMaster.id === menu.menuMasterId;
         })[0];
-        if(angular.isDefined(existingMenu)){
+        if (angular.isDefined(existingMenu)) {
           newMenu.menuCode = existingMenu.menuCode;
         }
         newMenus.push(newMenu);
@@ -180,6 +180,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.formatDispatchPayload = function(payload) {
       payload.menus = this.formatMenus(payload.menus);
+    };
+
+    this.formatRedispatchPayload = function(payload) {
+      payload.menus = this.formatMenus(payload.menus);
+      delete payload.dispatchedCateringStationId;
     };
 
     this.formatReplenishPayload = function(payload) {
@@ -196,6 +201,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       switch ($routeParams.action) {
         case 'replenish':
           $this.formatReplenishPayload(payload);
+          break;
+        case 'redispatch':
+          $this.formatRedispatchPayload(payload);
           break;
         default:
           $this.formatDispatchPayload(payload);
@@ -321,11 +329,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     $scope.menuPlaceholderText = function() {
-      if($routeParams.action !== 'dispatch'){
+      if ($routeParams.action !== 'dispatch') {
         return '';
       }
       var placeholder = 'Select one or more Menus';
-      if($scope.filteredMenuList.length === 0) {
+      if ($scope.filteredMenuList.length === 0) {
         placeholder = 'No menus are available to select';
       }
       return placeholder;
@@ -415,7 +423,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       this.showLoadingModal(loadingText);
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
-      if($routeParams.storeId) {
+      if ($routeParams.storeId) {
         $this.getStoreInstance();
         return;
       }

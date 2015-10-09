@@ -67,6 +67,44 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     }
 
+    this.mergeIfItemHasPickListMatch = function (item, itemMatch) {
+      lodash.extend(itemMatch, item);
+    };
+
+    this.mergeNewInstanceItem = function (item) {
+      var offloadItemMatch = lodash.findWhere($scope.offloadMenuItems, {itemMasterId: item.itemMasterId});
+      if(offloadItemMatch) {
+        var mergedItem = lodash.extend(angular.copy(item), angular.copy(offloadItemMatch));
+        $scope.menuItemList.push(mergedItem);
+        lodash.remove($scope.offloadMenuItems, offloadItemMatch);
+      } else {
+        $scope.menuItems.push(item);
+      }
+    };
+
+    this.mergePrevInstanceItem = function (item) {
+      var offloadItemMatch = lodash.findWhere($scope.offloadMenuItems, {itemMasterId: item.itemMasterId});
+      if(offloadItemMatch) {
+        lodash.extend(offloadItemMatch, item);
+      } else {
+        $scope.offloadMenuItems.push(item);
+      }
+    };
+
+    this.mergeMenuItemsForRedispatch = function (menuItemsFromAPI) {
+      angular.forEach(menuItemsFromAPI, function (item) {
+        var itemMatch = lodash.findWhere($scope.menuItems, {itemMasterId: item.itemMasterId});
+        if(itemMatch) {
+          $this.mergeIfItemHasPickListMatch(item, itemMatch);
+        } else {
+          var storeInstanceItemType = (item.storeInstanceId === $routeParams.storeId) ? 'newInstance' : 'prevInstance';
+          var mergeFunctionName = 'merge' + storeInstanceItemType + 'Itme';
+          $this[mergeFunctionName](item);
+        }
+      });
+      hideLoadingModal();
+    };
+
     this.mergeMenuItems = function (menuItemsFromAPI) {
       angular.forEach(menuItemsFromAPI, function (item) {
         var itemMatch = lodash.findWhere($scope.menuItems, {itemMasterId: item.itemMasterId});
@@ -128,7 +166,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $this[formatItemFunctionName](item);
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
-      $this.mergeMenuItems(menuItems);
+      if($routeParams.action === 'redispatch') {
+        $this.mergeMenuItemsForRedispatch(menuItems);
+      } else {
+        $this.mergeMenuItems(menuItems);
+      }
     }
 
     this.getIdByNameFromArray = function (name, array) {
@@ -139,8 +181,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return '';
     };
 
-    this.getStoreInstanceItems = function () {
-      storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(getItemsSuccessHandler, showErrors);
+    this.getStoreInstanceItems = function (storeInstanceId) {
+      storeInstanceFactory.getStoreInstanceItemList(storeInstanceId).then(getItemsSuccessHandler, showErrors);
     };
 
     this.getRegularItemTypeIdSuccess = function (dataFromAPI) {
@@ -180,14 +222,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getCountTypesSuccess = function (dataFromAPI) {
-      $scope.countTypes = dataFromAPI;
+      $scope.countTypes = angular.copy(dataFromAPI);
     };
 
     this.getCountTypes = function () {
       storeInstanceFactory.getCountTypes().then($this.getCountTypesSuccess, showErrors);
     };
 
-    this.getStoreInstanceMenuItems = function () {
+    this.getStoreInstanceMenuItems = function (storeInstanceId) {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var payload = {
         itemTypeId: $scope.regularItemTypeId,
@@ -196,11 +238,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($scope.characteristicFilterId) {
         payload.characteristicId = $scope.characteristicFilterId;
       }
-      var instanceId = $routeParams.storeId;
-      if($routeParams.action === 'replenish') {
-        instanceId = $scope.storeDetails.replenishStoreInstanceId;
-      }
-      storeInstanceFactory.getStoreInstanceMenuItems(instanceId, payload).then(getItemsSuccessHandler, showErrors);
+      storeInstanceFactory.getStoreInstanceMenuItems(storeInstanceId, payload).then(getItemsSuccessHandler, showErrors);
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
@@ -385,9 +423,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.completeInitializeAfterDependencies = function () {
       $this.isInstanceReadOnly();
-      $this.getStoreInstanceItems();
-      $this.getStoreInstanceMenuItems();
       $this.getMasterItemsList();
+      $this.getStoreInstanceItems($routeParams.storeId);
+      var storeInstanceForMenuItems = ($routeParams.action === 'replenish') ? $scope.storeDetails.replenishStoreInstanceId : $routeParams.storeId;
+      $this.getStoreInstanceMenuItems(storeInstanceForMenuItems);
+
+      if($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
+        $this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId);
+        $this.getStoreInstanceMenuItems($scope.storeDetails.prevStoreInstanceId);
+      }
     };
 
     this.makeInitializePromises = function () {
@@ -403,7 +447,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var characteristicForAction = {
         'replenish': 'Upliftable',
-        'end-instance': 'Inventory'
+        'end-instance': 'Inventory',
+        'redispatch': 'Inventory'
       };
       if (characteristicForAction[$routeParams.action]) {
         promises.push(this.getCharacteristicIdForName(characteristicForAction[$routeParams.action]));
@@ -422,6 +467,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $scope.menuItems = [];
       $scope.emptyMenuItems = [];
+      if($routeParams.action === 'redispatch') {
+        $scope.offloadMenuItems = [];
+      }
       var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies);
     };
@@ -516,6 +564,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.isActionState = function(actionState) {
       return $routeParams.action === actionState;
+    };
+
+    $scope.shouldDisplayQuantityField = function (fieldName) {
+      var actionToFieldMap = {
+        'dispatch':['template', 'packed'],
+        'replenish':['packed'],
+        'end-instance':['ullage', 'inbound'],
+        'redispatch':['inbound', 'ullage', 'template', 'packed', 'dispatch']
+      };
+      return actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0;
     };
 
   });

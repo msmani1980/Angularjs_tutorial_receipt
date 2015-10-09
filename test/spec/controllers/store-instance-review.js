@@ -11,6 +11,8 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
   beforeEach(module('served/store-status.json'));
   beforeEach(module('served/store-instance-item-list.json'));
   beforeEach(module('served/company-reason-codes.json'));
+  beforeEach(module('served/count-types.json'));
+  beforeEach(module('served/end-instance-review-store-details.json'));
 
 
   var StoreInstanceReviewCtrl;
@@ -29,9 +31,12 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
   var getStoreInstanceItemsDeferred;
   var updateStoreInstanceStatusDeferred;
   var dateUtility;
+  var controller;
   var getReasonCodeListDeferred;
   var getReasonCodeListJSON;
-  var controller;
+  var getCountTypesDeferred;
+  var getCountTypesJSON;
+  var endInstanceStoreDetailsJSON;
 
   function initController($controller) {
     StoreInstanceReviewCtrl = $controller('StoreInstanceReviewCtrl', {
@@ -42,7 +47,8 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
-                              _servedSealColors_, _servedSealTypes_, $location, _servedStoreInstanceItemList_, _servedCompanyReasonCodes_) {
+                              _servedSealColors_, _servedSealTypes_, $location, _servedStoreInstanceItemList_, _servedCompanyReasonCodes_, _servedCountTypes_,
+                              _servedEndInstanceReviewStoreDetails_) {
     scope = $rootScope.$new();
     routeParams = {
       storeId: 17,
@@ -86,6 +92,12 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     getReasonCodeListDeferred = $q.defer();
     getReasonCodeListDeferred.resolve(getReasonCodeListJSON);
     spyOn(storeInstanceFactory, 'getReasonCodeList').and.returnValue(getReasonCodeListDeferred.promise);
+
+    getCountTypesJSON = _servedCountTypes_;
+    getCountTypesDeferred = $q.defer();
+    getCountTypesDeferred.resolve(getCountTypesJSON);
+    spyOn(storeInstanceFactory, 'getCountTypes').and.returnValue(getCountTypesDeferred.promise);
+    endInstanceStoreDetailsJSON = _servedEndInstanceReviewStoreDetails_;
 
     spyOn(location, 'url').and.callThrough();
 
@@ -263,9 +275,12 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
   describe('Init', function () {
     beforeEach(inject(function () {
       routeParams.action = 'end-instance';
-      getStoreDetailsDeferred.resolve(storeDetailsJSON);
+      getStoreDetailsDeferred.resolve(endInstanceStoreDetailsJSON);
+      scope.$digest();
       initController(controller);
       scope.$digest();
+
+
     }));
 
     it('should attach action to scope', function () {
