@@ -115,7 +115,8 @@ angular.module('ts5App')
       var itemsToRemove = {
         'dispatch': [],
         'replenish': ['Hand Over'],
-        'end-instance': ['Hand Over', 'Outbound']
+        'end-instance': ['Hand Over', 'Outbound'],
+        'redispatch': []
       };
       return sealsArray.filter(function (sealType) {
         return itemsToRemove[$routeParams.action].indexOf(sealType.name) < 0;
@@ -193,7 +194,8 @@ angular.module('ts5App')
       var validStatusList = {
         'dispatch': 'Ready for Dispatch',
         'replenish': 'Ready for Dispatch',
-        'end-instance': 'Unpacking'
+        'end-instance': 'Unpacking',
+        'redispatch': 'Unpacking'
       };
 
       if ($scope.storeDetails.currentStatus.statusName !== validStatusList[$routeParams.action]) {
@@ -245,6 +247,11 @@ angular.module('ts5App')
       _initPromises.push(
         storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(setStoreInstanceItems)
       );
+      if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
+        _initPromises.push(
+          storeInstanceFactory.getStoreInstanceItemList($scope.storeDetails.prevStoreInstanceId).then(setStoreInstanceItems)
+        );
+      }
     }
 
     function getStoreInstanceReviewData() {
@@ -330,12 +337,17 @@ angular.module('ts5App')
       var submitStatus = {
         'dispatch': 'Dispatched',
         'replenish': 'Dispatched',
-        'end-instance': 'Inbounded'
+        'end-instance': 'Inbounded',
+        'redispatch': ['Inbounded', 'Dispatched']
       };
 
       if (submitStatus[$routeParams.action]) {
         saveStoreInstanceStatus(submitStatus[$routeParams.action]);
       }
+    };
+
+    $scope.removeInboundSeals = function(params) {
+      console.log(params);
     };
 
     $scope.exit = function () {
