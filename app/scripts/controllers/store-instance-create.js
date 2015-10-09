@@ -289,6 +289,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (saveAndExit) {
         this.exitToDashboard();
       } else {
+        this.displayLoadingModal('Loading Inbound Seals');
         this.redispatchStoreInstanceSuccessHandler($routeParams.storeId);
       }
     };
