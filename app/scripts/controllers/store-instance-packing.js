@@ -67,6 +67,29 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     }
 
+    this.mergeMenuItemsForRedispatch = function (menuItemsFromAPI) {
+      angular.forEach(menuItemsFromAPI, function (item) {
+        var itemMatch = lodash.findWhere($scope.menuItems, {itemMasterId: item.itemMasterId});
+        var offloadItemMatch = lodash.findWhere($scope.offloadMenuItems, {itemMasterId: item.itemMasterId});
+        var isItemFromNewStoreInstance = item.storeInstanceId === $routeParams.storeId;
+
+        if (itemMatch) {
+          lodash.extend(itemMatch, item);
+        } else if (!isItemFromNewStoreInstance && offloadItemMatch) {
+          lodash.extend(offloadItemMatch, item);
+        } else if (!isItemFromNewStoreInstance && !offloadItemMatch) {
+          $scope.offloadMenuItems.push(item);
+        } else if (isItemFromNewStoreInstance && offloadItemMatch) {
+          var mergedItem = lodash.extend(angular.copy(item), angular.copy(offloadItemMatch));
+          $scope.menuItemList.push(mergedItem);
+          lodash.remove($scope.offloadMenuItems, offloadItemMatch);
+        } else {
+          $scope.menuItems.push(item);
+        }
+      });
+      hideLoadingModal();
+    };
+
     this.mergeMenuItems = function (menuItemsFromAPI) {
       angular.forEach(menuItemsFromAPI, function (item) {
         var itemMatch = lodash.findWhere($scope.menuItems, {itemMasterId: item.itemMasterId});
@@ -128,7 +151,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $this[formatItemFunctionName](item);
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
-      $this.mergeMenuItems(menuItems);
+      if($routeParams.action === 'redispatch') {
+        $this.mergeMenuItemsForRedispatch(menuItems);
+      } else {
+        $this.mergeMenuItems(menuItems);
+      }
     }
 
     this.getIdByNameFromArray = function (name, array) {
@@ -180,7 +207,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getCountTypesSuccess = function (dataFromAPI) {
-      $scope.countTypes = dataFromAPI;
+      $scope.countTypes = angular.copy(dataFromAPI);
     };
 
     this.getCountTypes = function () {
@@ -425,6 +452,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $scope.menuItems = [];
       $scope.emptyMenuItems = [];
+      if($routeParams.action === 'redispatch') {
+        $scope.offloadMenuItems = [];
+      }
       var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies);
     };
@@ -529,6 +559,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         'redispatch':['inbound', 'ullage', 'template', 'packed', 'dispatch']
       };
       return actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0;
-    }
+    };
 
   });
