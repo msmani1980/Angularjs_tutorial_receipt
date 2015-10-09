@@ -359,6 +359,11 @@ angular.module('ts5App')
           'dispatch': 'Pick List',
           'replenish': 'Pick List',
           'end-instance': 'Offload List'
+        },
+        dispatch: {
+          'dispatch': 'Dispatch',
+          'replenish': 'Dispatch',
+          'end-instance': 'End Instance'
         }
       };
 
