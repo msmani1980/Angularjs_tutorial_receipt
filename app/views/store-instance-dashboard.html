@@ -194,7 +194,7 @@
         </td>
         <td>{{ store.id }}</td>
         <td><span class="label label-default">{{ store.statusName }}</span></td>
-        <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
+        <td>{{ store.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
           <a class="btn btn-primary btn-xs btn-block" tabindex="0"
@@ -266,7 +266,7 @@
         </td>
         <td>{{ replenishment.id }}</td>
         <td><span class="label label-default">{{ replenishment.statusName }}</span></td>
-        <td><!-- TODO: add Updated date / time, which requires user accounts --></td>
+        <td>{{ replenishment.updatedOnDisplay }}</td>
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
           <a class="btn btn-primary btn-xs" tabindex="0"
