@@ -49,19 +49,28 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.emptyMenuItems.splice(itemIndex, 1);
     };
 
-    $scope.addItems = function () {
+    this.addItemsToArray = function (array, itemNumber) {
       if ($scope.filteredMasterItemList.length === 0) {
         showToast('warning', 'Add Item', 'There are no items available');
         return;
       }
-
-      for (var i = 0; i < $scope.addItemsNumber; i++) {
-        $scope.emptyMenuItems.push({
+      for (var i = 0; i < itemNumber; i++) {
+        array.push({
           menuQuantity: 0,
           isNewItem: true
         });
       }
     };
+
+    $scope.addItems = function () {
+      $this.addItemsToArray($scope.emptyMenuItems, $scope.addItemsNumber);
+    };
+
+    $scope.addOffloadItems = function () {
+      console.log($scope.addOffloadItemsQty, $scope.emptyOffloadMenuItems);
+      $this.addItemsToArray($scope.emptyOffloadMenuItems, $scope.addOffloadItemsQty);
+    };
+
 
     function errorHandler() {
       hideLoadingModal();
@@ -248,7 +257,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
       $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
-        return !(lodash.findWhere($scope.menuItems, {itemMasterId: item.id}));
+        var mergedMenuItems = angular.copy($scope.menuItems).concat(angular.copy($scope.offloadMenuItems));
+        return !(lodash.findWhere(mergedMenuItems, {itemMasterId: item.id}));
       });
     });
 
@@ -343,7 +353,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var ullagePayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
         quantity: parseInt(item.ullageQuantity),
-        countTypeId: ullageCountTypeId,
+        countTypeId: ullageCountTypeId
       };
       if(item.ullageQuantity > 0) {
         ullagePayload.ullageReasonCode = item.ullageReason.id;
@@ -473,6 +483,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.emptyMenuItems = [];
       if($routeParams.action === 'redispatch') {
         $scope.offloadMenuItems = [];
+        $scope.emptyOffloadMenuItems = [];
+        $scope.addOffloadItemsQty = 1;
       }
       var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies);
