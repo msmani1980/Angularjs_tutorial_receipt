@@ -97,8 +97,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if(itemMatch) {
           $this.mergeIfItemHasPickListMatch(item, itemMatch);
         } else {
-          var storeInstanceItemType = (item.storeInstanceId === $routeParams.storeId) ? 'newInstance' : 'prevInstance';
-          var mergeFunctionName = 'merge' + storeInstanceItemType + 'Itme';
+          var storeInstanceItemType = (item.storeInstanceId === parseInt($routeParams.storeId)) ? 'NewInstance' : 'PrevInstance';
+          var mergeFunctionName = 'merge' + storeInstanceItemType + 'Item';
           $this[mergeFunctionName](item);
         }
       });
@@ -231,9 +231,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.getStoreInstanceMenuItems = function (storeInstanceId) {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
+
+      // TODO: use this instead, remove bad payload below
+      //var payload = {
+      //  itemTypeId: $scope.regularItemTypeId,
+      //  date: payloadDate
+      //};
       var payload = {
-        itemTypeId: $scope.regularItemTypeId,
-        date: payloadDate
+        itemTypeId: $scope.regularItemTypeId
       };
       if ($scope.characteristicFilterId) {
         payload.characteristicId = $scope.characteristicFilterId;
@@ -430,7 +435,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       if($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
         $this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId);
-        $this.getStoreInstanceMenuItems($scope.storeDetails.prevStoreInstanceId);
       }
     };
 
@@ -573,7 +577,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         'end-instance':['ullage', 'inbound'],
         'redispatch':['inbound', 'ullage', 'template', 'packed', 'dispatch']
       };
-      return actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0;
+      return (actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0);
     };
+
+    $scope.shouldDisplayInboundFields = function (item) {
+      return ($routeParams.action === 'redisptach' && item.storeInstanceId === parseInt($routeParams.storeId));
+    };
+
+    $scope.calculateTotalDispatchedQty = function (item) {
+      var total = parseInt(item.quantity) || 0;
+      total += parseInt(item.menuQuantity) || 0;
+      total -= parseInt(item.ullageQuantity) || 0;
+      return total.toString();
+    }
 
   });

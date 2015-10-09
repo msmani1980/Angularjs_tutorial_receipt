@@ -50,6 +50,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
             <input type="text"
+                   ng-if="shouldDisplayInboundFields(item)"
                    name="inboundQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
@@ -62,6 +63,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text"
+                   ng-if="shouldDisplayInboundFields(item)"
                    name="ullageQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
@@ -73,7 +75,7 @@
                    placeholder="0"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
-            <ui-select ng-model="item.ullageReason" theme="bootstrap">
+            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
               <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}
               </ui-select-match>
               <ui-select-choices repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
@@ -96,8 +98,8 @@
                    maxlength="5"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('dispatch')">
-            <input type="text" class="form-control" ng-model="item.totalQuantity" placeholder="0"
-                   disabled/>
+            <input type="text" class="form-control" ng-model="item.totalQty" placeholder="0"
+                   disabled ng-value="calculateTotalDispatchedQty(item)"/>
           </td>
           <td>
             <button type="button" ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
@@ -117,13 +119,13 @@
             </ui-select>
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
-            <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0"/>
+            <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0" ng-if="shouldDisplayInboundFields(item)"/>
           </td>
-          <td ng-if="shouldDisplayQuantityField('ullage')">
+          <td ng-if="shouldDisplayQuantityField('ullage') && shouldDisplayInboundFields(item)">
             <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
-            <ui-select ng-model="item.ullageReason" theme="bootstrap">
+            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
               <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}
               </ui-select-match>
               <ui-select-choices repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
