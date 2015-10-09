@@ -498,7 +498,7 @@ describe('the Store Instance Seals controller', function() {
       spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'findStatusObject').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'statusUpdateSuccessHandler').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl, 'hideLoadingModal');
+      spyOn(StoreInstanceSealsCtrl, 'hideLoadingModal').and.callThrough();
       $scope.$digest();
       $scope.sealTypesList[0].seals.numbers.push('123');
       mockAssignSeals();
@@ -608,6 +608,22 @@ describe('the Store Instance Seals controller', function() {
 
       it('should redirect the user to the packing page with the new store instance id', function() {
         expect(location.path()).toEqual(StoreInstanceSealsCtrl.nextStep.uri);
+      });
+
+
+    });
+
+    describe('statusUpdateSuccessHandler on re-dispatch', function() {
+
+      beforeEach(function() {
+        initController('redispatch');
+        $scope.$digest();
+        StoreInstanceSealsCtrl.statusUpdateSuccessHandler(StoreInstanceSealsCtrl.nextStep);
+      });
+
+      it('should redirect the user to the packing page with the new store instance id', function() {
+        var uriControl = StoreInstanceSealsCtrl.nextStep.uri.replace(/[0-9]+/,$scope.storeDetails.prevStoreInstanceId);
+        expect(location.path()).toEqual(uriControl);
       });
 
     });
