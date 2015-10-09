@@ -59,26 +59,27 @@ describe('Service: storeInstanceWizardConfig', function() {
     mockedConfigRedispatch = [{
       label: 'Create Store Instance',
       uri: '/store-instance-create/redispatch/' + mockId,
+      stepName: '5',
       controllerName: 'Create'
     }, {
       label: 'Inbound Seals',
       uri: '/store-instance-seals/redispatch/' + mockId,
-      stepName: '1',
+      stepName: '6',
       controllerName: 'Seals'
     }, {
       label: 'Packing',
       uri: '/store-instance-packing/redispatch/' + mockId,
-      stepName: '2',
+      stepName: '1',
       controllerName: 'Packing'
     }, {
       label: 'Assign Seals',
       uri: '/store-instance-seals/redispatch/' + mockId,
-      stepName: '3',
+      stepName: '2',
       controllerName: 'Seals'
     }, {
       label: 'Review & Dispatch',
       uri: '/store-instance-review/redispatch/' + mockId,
-      stepName: '4',
+      stepName: '3',
       controllerName: 'Review'
     }];
     mockedConfigEndInstance = [{

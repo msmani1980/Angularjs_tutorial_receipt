@@ -91,17 +91,17 @@ angular.module('ts5App')
         }, {
           label: 'Packing',
           uri: packingURL + action + '/' + id,
-          stepName: '7',
+          stepName: '1',
           controllerName: 'Packing'
         }, {
           label: 'Assign Seals',
           uri: sealsURL + action + '/' + id,
-          stepName: '7',
+          stepName: '2',
           controllerName: 'Seals'
         }, {
           label: 'Review & Dispatch',
           uri: reviewURL + action + '/' + id,
-          stepName: '7',
+          stepName: '3',
           controllerName: 'Review'
         }]
       };
