@@ -91,7 +91,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getStoresList = function() {
       var query = this.getFormattedDatesPayload();
-      query.readyToUse = ($routeParams.action === 'dispatch');
+      query.readyToUse = ($routeParams.action !== 'replenish');
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
 
