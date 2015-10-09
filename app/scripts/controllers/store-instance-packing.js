@@ -525,7 +525,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         'end-instance':['ullage', 'inbound'],
         'redispatch':['inbound', 'ullage', 'template', 'packed', 'dispatch']
       };
-      console.log(fieldName, $routeParams.action, actionToFieldMap[$routeParams.action].indexOf(fieldName));
       return actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0;
     }
 

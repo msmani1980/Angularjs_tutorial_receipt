@@ -48,7 +48,7 @@
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
           </td>
-          <td ng-if="isActionState('end-instance')">
+          <td ng-if="shouldDisplayQuantityField('inbound')">
             <input type="text"
                    name="inboundQuantity-{{$index}}"
                    custom-validity
@@ -60,7 +60,7 @@
                    maxlength="5"
                    placeholder="0"/>
           </td>
-          <td ng-if="isActionState('end-instance')">
+          <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text"
                    name="ullageQuantity-{{$index}}"
                    custom-validity
@@ -72,7 +72,7 @@
                    maxlength="5"
                    placeholder="0"/>
           </td>
-          <td ng-if="isActionState('end-instance')">
+          <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
               <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}
               </ui-select-match>
@@ -85,7 +85,7 @@
             <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"
                    disabled/>
           </td>
-          <td ng-if="isActionState('dispatch') || isActionState('replenish')">
+          <td ng-if="shouldDisplayQuantityField('packed')">
             <input type="text"
                    custom-validity
                    custom-pattern="number"
