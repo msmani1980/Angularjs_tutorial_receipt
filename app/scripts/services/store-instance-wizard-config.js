@@ -81,6 +81,7 @@ angular.module('ts5App')
         'redispatch': [{
           label: 'Create Store Instance',
           uri: createURL + action + (id ? '/' + id : ''),
+          stepName: '5',
           controllerName: 'Create'
         }, {
           label: 'Inbound Seals',

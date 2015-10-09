@@ -59,6 +59,7 @@ describe('Service: storeInstanceWizardConfig', function() {
     mockedConfigRedispatch = [{
       label: 'Create Store Instance',
       uri: '/store-instance-create/redispatch/' + mockId,
+      stepName: '5',
       controllerName: 'Create'
     }, {
       label: 'Inbound Seals',
