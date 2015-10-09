@@ -518,4 +518,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return $routeParams.action === actionState;
     };
 
+    $scope.shouldDisplayQuantityField = function (fieldName) {
+      var actionToFieldMap = {
+        'dispatch':['template', 'packed'],
+        'replenish':['packed'],
+        'end-instance':['ullage', 'inbound'],
+        'redispatch':['inbound', 'ullage', 'template', 'packed', 'dispatch']
+      };
+      console.log(fieldName, $routeParams.action, actionToFieldMap[$routeParams.action].indexOf(fieldName));
+      return actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0;
+    }
+
   });

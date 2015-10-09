@@ -29,17 +29,15 @@
         <thead>
         <tr>
           <th>Retail Item Details</th>
-          <th ng-show="isActionState('dispatch')" width="15%">Template Quantity</th>
-          <th width="15%" ng-show="isActionState('dispatch') || isActionState('replenish')">
+          <th ng-show="shouldDisplayQuantityField('inbound')" width="10%">Inbound Quantity</th>
+          <th ng-show="shouldDisplayQuantityField('ullage')" width="10%">Ullage Quantity</th>
+          <th ng-show="shouldDisplayQuantityField('ullage')" width="35%">Ullage Reason</th>
+          <th ng-show="shouldDisplayQuantityField('template')" width="15%">Template Quantity</th>
+          <th width="15%" ng-show="shouldDisplayQuantityField('packed')">
             <span ng-show="isActionState('dispatch')">Packed Quantity</span>
-            <span ng-show="isActionState('replenish')">Picked Quantity</span>
+            <span ng-show="isActionState('replenish') || isActionState('redispatch')">Picked Quantity</span>
           </th>
-
-          <th ng-show="isActionState('end-instance')" width="10%">Inbound Quantity</th>
-          <th ng-show="isActionState('end-instance')" width="10%">Ullage Quantity</th>
-          <th ng-show="isActionState('end-instance')" width="35%">Ullage Reason</th>
-
-
+          <th ng-show="shouldDisplayQuantityField('dispatch')" width="10%">Dispatched Quantity</th>
           <th width="5%"></th>
         </tr>
         </thead>
@@ -49,21 +47,6 @@
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
-          </td>
-          <td ng-if="isActionState('dispatch')">
-            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"
-                   disabled/>
-          </td>
-          <td ng-if="isActionState('dispatch') || isActionState('replenish')">
-            <input type="text"
-                   name="templateQuantity-{{$index}}"
-                   custom-validity
-                   custom-pattern="number"
-                   required="true"
-                   class="form-control"
-                   ng-model="item.quantity"
-                   ng-disabled="readOnly"
-                   maxlength="5"/>
           </td>
           <td ng-if="isActionState('end-instance')">
             <input type="text"
@@ -98,6 +81,24 @@
               </ui-select-choices>
             </ui-select>
           </td>
+          <td ng-if="shouldDisplayQuantityField('template')">
+            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"
+                   disabled/>
+          </td>
+          <td ng-if="isActionState('dispatch') || isActionState('replenish')">
+            <input type="text"
+                   custom-validity
+                   custom-pattern="number"
+                   required="true"
+                   class="form-control"
+                   ng-model="item.quantity"
+                   ng-disabled="readOnly"
+                   maxlength="5"/>
+          </td>
+          <td ng-if="shouldDisplayQuantityField('dispatch')">
+            <input type="text" class="form-control" ng-model="item.totalQuantity" placeholder="0"
+                   disabled/>
+          </td>
           <td>
             <button type="button" ng-if="!item.menuQuantity" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
@@ -115,20 +116,13 @@
               </ui-select-choices>
             </ui-select>
           </td>
-          <td ng-if="isActionState('dispatch')">
-            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
-          </td>
-          <td ng-if="isActionState('dispatch') || isActionState('replenish')">
-            <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" maxlength="5">
-          </td>
-          <td ng-if="isActionState('end-instance')">
+          <td ng-if="shouldDisplayQuantityField('inbound')">
             <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0"/>
-
           </td>
-          <td ng-if="isActionState('end-instance')">
+          <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0"/>
           </td>
-          <td ng-if="isActionState('end-instance')">
+          <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
               <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{ $select.selected.description }}
               </ui-select-match>
@@ -136,6 +130,16 @@
                 <div ng-bind-html="ullageReason.companyReasonCodeName + ' - ' + ullageReason.description  | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
+          </td>
+          <td ng-if="shouldDisplayQuantityField('template')">
+            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
+          </td>
+          <td ng-if="shouldDisplayQuantityField('packed')">
+            <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity" maxlength="5">
+          </td>
+          <td ng-if="shouldDisplayQuantityField('dispatch')">
+            <input type="text" class="form-control" ng-model="item.totalQuantity" placeholder="0"
+                   disabled/>
           </td>
           <td ng-init="item.index = $index">
             <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
