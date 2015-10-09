@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig,
                                                    storeInstanceFactory, $location, storeInstanceReviewFactory,
-                                                   $q, ngToast, $filter, dateUtility) {
+                                                   $q, ngToast, $filter, dateUtility, lodash) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -20,7 +20,6 @@ angular.module('ts5App')
     var _menuItems = [];
     var STATUS_END_INSTANCE = 'Unpacking';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
-    var actions = {};
     var $this = this;
 
     $scope.saveButtonText = 'Exit';
@@ -280,52 +279,45 @@ angular.module('ts5App')
         storeInstanceStatusDispatched, showResponseErrors);
     }
 
+    function setupSteps() {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.wizardSteps, {controllerName: 'Review'});
+      $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
+      $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
+    }
+
     function getDataFromAPI() {
       var promiseArray = [];
       displayLoadingModal();
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
-
+      setupSteps();
       promiseArray.push(storeInstanceFactory.getStoreDetails($routeParams.storeId));
       promiseArray.push(storeInstanceFactory.getReasonCodeList());
 
       $q.all(promiseArray).then(storeDetailsResponseHandler, showResponseErrors);
     }
 
-
-    actions.dispatchPrevStepIndex = 2;
-    actions.replenishPrevStepIndex = 2;
-
-    this.updateInstanceToByStepName = function (stepName) {
-      if (angular.isUndefined(stepName)) {
+    this.updateInstanceToByStepName = function (stepObject) {
+      if (angular.isUndefined(stepObject)) {
         $location.url('/store-instance-dashboard');
         return;
       }
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepName).then(function () {
-        var uri = $scope.wizardSteps[$scope.wizardStepToIndex].uri;
-        $location.url(uri);
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName).then(function () {
+        $location.url(stepObject.uri);
       }, showResponseErrors);
     };
 
     $scope.stepWizardPrevTrigger = function () {
       $scope.showLoseDataAlert = false;
-      if (angular.isUndefined($scope.wizardStepToIndex)) {
-        var prevStepAction = $routeParams.action + 'PrevStepIndex';
-        if (actions[prevStepAction]) {
-          $scope.wizardStepToIndex = actions[prevStepAction];
-        }
-      }
-      var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
-      $this.updateInstanceToByStepName(stepName);
+      $this.updateInstanceToByStepName($this.prevStep);
       return false;
     };
 
-    $scope.goToWizardStep = function ($index) {
-      $scope.wizardStepToIndex = $index;
-      if (!$scope.wizardSteps[$scope.wizardStepToIndex]) {
+    $scope.redirectTo = function (controllerName) {
+      if (!controllerName) {
         return;
       }
-      var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
-      $this.updateInstanceToByStepName(stepName);
+      var step = lodash.findWhere($scope.wizardSteps, {controllerName: controllerName}, true);
+      $this.updateInstanceToByStepName(step);
     };
 
     $scope.loseDataAlertConfirmTrigger = function () {
@@ -367,6 +359,11 @@ angular.module('ts5App')
           'dispatch': 'Pick List',
           'replenish': 'Pick List',
           'end-instance': 'Offload List'
+        },
+        dispatch: {
+          'dispatch': 'Dispatch',
+          'replenish': 'Dispatch',
+          'end-instance': 'End Instance'
         }
       };
 

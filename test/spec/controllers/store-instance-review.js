@@ -185,21 +185,17 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       it('should set showLoseDataAlert to true and return false', function () {
         expect(scope.stepWizardPrevTrigger()).toBe(false);
         expect(scope.showLoseDataAlert).toBe(false);
-        expect(scope.wizardStepToIndex).toBe(2);
       });
     });
 
     describe('goToWizardStep scope function', function () {
       it('should set wizardStepToIndex to whatever value is passed in and call updateStatus', function () {
-        var newI = 2;
-        scope.goToWizardStep(newI);
-        expect(scope.wizardStepToIndex).toEqual(newI);
-        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, newI.toString());
+        scope.redirectTo('Seals');
+        expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '2');
       });
 
       it('should not do anything if no valid step for provided index', function () {
-        var fakeIndex = 200;
-        scope.goToWizardStep(fakeIndex);
+        scope.redirectTo();
         expect(storeInstanceFactory.updateStoreInstanceStatus).not.toHaveBeenCalled();
       });
     });
@@ -211,7 +207,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
       });
 
       it('should redirect to proper url', function () {
-        scope.goToWizardStep(2);
+        scope.redirectTo('Seals');
         scope.$digest();
         expect(location.url).toHaveBeenCalledWith('/store-instance-seals/dispatch/17');
       });
