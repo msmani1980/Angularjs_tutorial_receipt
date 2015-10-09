@@ -242,15 +242,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.getStoreInstanceMenuItems = function (storeInstanceId) {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
-
-      // TODO: use this instead, remove bad payload below
-      //var payload = {
-      //  itemTypeId: $scope.regularItemTypeId,
-      //  date: payloadDate
-      //};
       var payload = {
-        itemTypeId: $scope.regularItemTypeId
+        itemTypeId: $scope.regularItemTypeId,
+        date: payloadDate
       };
+
       if ($scope.characteristicFilterId) {
         payload.characteristicId = $scope.characteristicFilterId;
       }
@@ -503,9 +499,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     function removeNewItem(itemToDelete) {
-      console.log(itemToDelete);
       var workingArray = (itemToDelete.isInOffload) ? $scope.emptyOffloadMenuItems : $scope.emptyMenuItems;
-      console.log(workingArray);
       var index = workingArray.indexOf(itemToDelete);
       workingArray.splice(index, 1);
     }
@@ -538,6 +532,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     }
 
+
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus, redirectURL) {
       if ($scope.readOnly) {
         $location.path(dashboardURL);
@@ -551,6 +546,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if (!payload) {
         return;
       }
+      // TODO: uncomment!!
       showLoadingModal('Saving...');
       storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, payload).then(function (responseData) {
         savePackingDataSuccessHandler(responseData, shouldUpdateStatus, redirectURL);
@@ -606,6 +602,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       total += parseInt(item.menuQuantity) || 0;
       total -= parseInt(item.ullageQuantity) || 0;
       return total.toString();
-    }
+    };
 
   });
