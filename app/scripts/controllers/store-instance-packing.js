@@ -67,24 +67,39 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     }
 
+    this.mergeIfItemHasPickListMatch = function (item, itemMatch) {
+      lodash.extend(itemMatch, item);
+    };
+
+    this.mergeNewInstanceItem = function (item) {
+      var offloadItemMatch = lodash.findWhere($scope.offloadMenuItems, {itemMasterId: item.itemMasterId});
+      if(offloadItemMatch) {
+        var mergedItem = lodash.extend(angular.copy(item), angular.copy(offloadItemMatch));
+        $scope.menuItemList.push(mergedItem);
+        lodash.remove($scope.offloadMenuItems, offloadItemMatch);
+      } else {
+        $scope.menuItems.push(item);
+      }
+    };
+
+    this.mergePrevInstanceItem = function (item) {
+      var offloadItemMatch = lodash.findWhere($scope.offloadMenuItems, {itemMasterId: item.itemMasterId});
+      if(offloadItemMatch) {
+        lodash.extend(offloadItemMatch, item);
+      } else {
+        $scope.offloadMenuItems.push(item);
+      }
+    };
+
     this.mergeMenuItemsForRedispatch = function (menuItemsFromAPI) {
       angular.forEach(menuItemsFromAPI, function (item) {
         var itemMatch = lodash.findWhere($scope.menuItems, {itemMasterId: item.itemMasterId});
-        var offloadItemMatch = lodash.findWhere($scope.offloadMenuItems, {itemMasterId: item.itemMasterId});
-        var isItemFromNewStoreInstance = item.storeInstanceId === $routeParams.storeId;
-
-        if (itemMatch) {
-          lodash.extend(itemMatch, item);
-        } else if (!isItemFromNewStoreInstance && offloadItemMatch) {
-          lodash.extend(offloadItemMatch, item);
-        } else if (!isItemFromNewStoreInstance && !offloadItemMatch) {
-          $scope.offloadMenuItems.push(item);
-        } else if (isItemFromNewStoreInstance && offloadItemMatch) {
-          var mergedItem = lodash.extend(angular.copy(item), angular.copy(offloadItemMatch));
-          $scope.menuItemList.push(mergedItem);
-          lodash.remove($scope.offloadMenuItems, offloadItemMatch);
+        if(itemMatch) {
+          $this.mergeIfItemHasPickListMatch(item, itemMatch);
         } else {
-          $scope.menuItems.push(item);
+          var storeInstanceItemType = (item.storeInstanceId === $routeParams.storeId) ? 'newInstance' : 'prevInstance';
+          var mergeFunctionName = 'merge' + storeInstanceItemType + 'Itme';
+          $this[mergeFunctionName](item);
         }
       });
       hideLoadingModal();
