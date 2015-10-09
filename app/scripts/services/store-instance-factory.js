@@ -140,6 +140,10 @@ angular.module('ts5App').service('storeInstanceFactory',
         storeDetails.parentStoreInstance = parentStoreInstanceAPIResponse;
       }
 
+      if(storeInstanceAPIResponse.prevStoreInstanceId) {
+        storeDetails.prevStoreInstanceId = storeInstanceAPIResponse.prevStoreInstanceId;
+      }
+
       var storeMenus = (parentStoreInstanceAPIResponse ? angular.copy(parentStoreInstanceAPIResponse.menus) : angular
         .copy(storeInstanceAPIResponse.menus));
       angular.forEach(storeMenus, function(menu) {
