@@ -210,11 +210,11 @@ angular.module('ts5App')
 
     function mergeInboundUllageItems(rawItemList) {
       var inboundItemList = rawItemList.filter(function (item) {
-        return item.countTypeId === 14;
+        return item.countTypeId === lodash.findWhere($this.countTypes, {name: 'Offload'}).id;
       });
 
       var ullageItemList = rawItemList.filter(function (item) {
-        return item.countTypeId === 7;
+        return item.countTypeId === lodash.findWhere($this.countTypes, {name: 'Ullage'}).id;
       });
 
       ullageItemList.map(function (item) {
@@ -237,7 +237,7 @@ angular.module('ts5App')
 
     function setStoreInstanceItems(dataFromAPI) {
       var rawItemList = angular.copy(dataFromAPI.response);
-      $scope.items = $scope.isEndInstance() ? mergeInboundUllageItems(rawItemList) : rawItemList;
+      $scope.items = ($scope.isEndInstance() ? mergeInboundUllageItems(rawItemList) : rawItemList);
       formatItems();
     }
 
@@ -263,6 +263,7 @@ angular.module('ts5App')
     function storeDetailsResponseHandler(responseArray) {
       $scope.storeDetails = angular.copy(responseArray[0]);
       $scope.ullageReasonList = angular.copy(responseArray[1].companyReasonCodes);
+      $this.countTypes = angular.copy(responseArray[2]);
       checkOnValidStatus();
       getStoreInstanceReviewData();
     }
@@ -282,7 +283,6 @@ angular.module('ts5App')
     function setupSteps() {
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {controllerName: 'Review'});
-      $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
     }
 
@@ -292,6 +292,7 @@ angular.module('ts5App')
       setupSteps();
       promiseArray.push(storeInstanceFactory.getStoreDetails($routeParams.storeId));
       promiseArray.push(storeInstanceFactory.getReasonCodeList());
+      promiseArray.push(storeInstanceFactory.getCountTypes());
 
       $q.all(promiseArray).then(storeDetailsResponseHandler, showResponseErrors);
     }

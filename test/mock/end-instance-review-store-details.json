@@ -1,0 +1,88 @@
+{
+  "LMPStation": "ORD",
+  "storeNumber": "4124ccad",
+  "scheduleDate": "12/05/2015",
+  "scheduleNumber": "0008",
+  "storeInstanceNumber": 159,
+  "statusList": [
+    {
+      "id": 1,
+      "statusName": "Ready for Packing",
+      "name": "1"
+    },
+    {
+      "id": 2,
+      "statusName": "Ready for Seals",
+      "name": "2"
+    },
+    {
+      "id": 3,
+      "statusName": "Ready for Dispatch",
+      "name": "3"
+    },
+    {
+      "id": 7,
+      "statusName": "Dispatched",
+      "name": "4"
+    },
+    {
+      "id": 8,
+      "statusName": "Inbounded",
+      "name": "8"
+    },
+    {
+      "id": 9,
+      "statusName": "Unpacking",
+      "name": "7"
+    },
+    {
+      "id": 10,
+      "statusName": "On Floor",
+      "name": "5"
+    },
+    {
+      "id": 11,
+      "statusName": "Inbound Seals",
+      "name": "6"
+    }
+  ],
+  "menuList": [
+    {
+      "id": 1,
+      "menuCode": "T1",
+      "companyId": 403,
+      "createdBy": 1,
+      "createdOn": "2015-05-05 22:06:05.498251",
+      "updatedBy": null,
+      "updatedOn": null,
+      "menuName": "Test",
+      "companyMenus": [
+        {
+          "startDate": "2015-10-04",
+          "endDate": "2015-10-05",
+          "createdBy": 1,
+          "createdOn": "2015-05-05 22:06:05.600559",
+          "updatedBy": null,
+          "updatedOn": "2015-10-05 16:41:27.061767",
+          "id": 139,
+          "menuCode": null,
+          "menuName": null,
+          "description": "Test Damir",
+          "companyId": null,
+          "menuId": 1,
+          "menuItems": null
+        }
+      ]
+    }
+  ],
+  "tampered": null,
+  "note": null,
+  "storeId": 122,
+  "cateringStationId": 1,
+  "currentStatus": {
+    "id": 9,
+    "statusName": "Unpacking",
+    "name": "7"
+  },
+  "carrierNumber": "G-EZAC"
+}
