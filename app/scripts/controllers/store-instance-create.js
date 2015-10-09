@@ -124,7 +124,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.redispatchStoreInstanceSuccessHandler = function(response) {
       $this.hideLoadingModal();
-      if (response.id) {
+      if (response) {
         $this.showMessage('success', 'Redispatch Instance id: ' + $routeParams.storeId);
         $location.url('/store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId);
       }
@@ -289,9 +289,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (saveAndExit) {
         this.exitToDashboard();
       } else {
-        this.displayLoadingModal('Loading Inbound Seals');
-        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
-          .then((saveAndExit ? this.exitOnSave : this.redispatchStoreInstanceSuccessHandler), this.createStoreInstanceErrorHandler);
+        this.redispatchStoreInstanceSuccessHandler($routeParams.storeId);
       }
     };
 

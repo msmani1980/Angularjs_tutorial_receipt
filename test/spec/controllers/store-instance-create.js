@@ -1070,7 +1070,6 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'redispatchStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'redispatchStoreInstanceSuccessHandler').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();
       mockRedispatchStoreInstance();
     });
@@ -1084,11 +1083,6 @@ describe('Store Instance Create Controller', function() {
       expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
         'Loading Store Instance Dashboard');
     });
-
-    it('should call the updateStoreInstance method on the factory', function() {
-      expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalled();
-    });
-
     it('should call the redispatchStoreInstance method on the controller', function() {
       expect(StoreInstanceCreateCtrl.redispatchStoreInstance).toHaveBeenCalled();
     });
@@ -1116,30 +1110,6 @@ describe('Store Instance Create Controller', function() {
       it('should redirect the user to the packing page with the new store instance id', function() {
         var url = '/store-instance-seals/' + 'redispatch' + '/' + response.id;
         expect(location.path()).toEqual(url);
-      });
-
-    });
-
-    describe('error handler', function() {
-
-      var errorResponse;
-
-      beforeEach(function() {
-        errorResponse = {
-          id: 13,
-          statusId: 11
-        };
-        updateStoreInstanceStatusDeferred.reject(errorResponse);
-        $scope.$digest();
-      });
-
-      it('should hide the loading modal', function() {
-        expect(StoreInstanceCreateCtrl.hideLoadingModal).toHaveBeenCalled();
-      });
-
-      it('should call the error handler', function() {
-        expect(StoreInstanceCreateCtrl.createStoreInstanceErrorHandler).toHaveBeenCalledWith(
-          errorResponse);
       });
 
     });
