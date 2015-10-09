@@ -881,6 +881,50 @@ describe('Store Instance Create Controller', function() {
 
   });
 
+  describe('getting a stores list', function() {
+
+    beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      spyOn(storeInstanceFactory, 'getStoresList').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should get stores that are ready to use', function() {
+      $scope.formData.scheduleDate = '10/01/2015';
+      var queryControl = {
+        startDate: '20151001',
+        endDate: '20151001',
+        readyToUse: true
+      };
+      StoreInstanceCreateCtrl.getStoresList();
+      expect(storeInstanceFactory.getStoresList).toHaveBeenCalledWith(queryControl);
+    });
+
+  });
+
+  describe('get stores during replenish', function() {
+
+    beforeEach(function() {
+      initController('replenish');
+      resolveAllDependencies();
+      spyOn(storeInstanceFactory, 'getStoresList').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should get stores that are not ready to use', function() {
+      $scope.formData.scheduleDate = '10/01/2015';
+      var queryControl = {
+        startDate: '20151001',
+        endDate: '20151001',
+        readyToUse: false
+      };
+      StoreInstanceCreateCtrl.getStoresList();
+      expect(storeInstanceFactory.getStoresList).toHaveBeenCalledWith(queryControl);
+    });
+
+  });
+
   describe('isActionState method', function() {
 
     it('should return true if the state passed matches the action state of the controller', function() {
