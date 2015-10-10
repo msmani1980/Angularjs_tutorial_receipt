@@ -294,12 +294,12 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     it('should merge menuItems and emptyMenuItems', function () {
       var expectedLength = scope.menuItems.length + scope.emptyMenuItems.length;
-      var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
+      var result = StoreInstancePackingCtrl.createPayload();
       expect(result.response.length).toEqual(expectedLength);
     });
 
     it('should only keep id, itemMasterId, and quantity for menuItems', function () {
-      var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
+      var result = StoreInstancePackingCtrl.createPayload();
       var expectdItem = {
         id: 1,
         itemMasterId: 2,
@@ -308,7 +308,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       expect(result.response[0]).toEqual(expectdItem);
     });
     it('should only keep itemMasterId and quantity for emptyMenuItems', function () {
-      var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
+      var result = StoreInstancePackingCtrl.createPayload();
       var expectdItem = {
         itemMasterId: 5,
         quantity: 9

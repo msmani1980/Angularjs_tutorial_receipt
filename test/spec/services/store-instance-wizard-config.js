@@ -93,7 +93,7 @@ describe('Service: storeInstanceWizardConfig', function() {
       stepName: '6',
       controllerName: 'Seals'
     }, {
-      label: 'Packing',
+      label: 'Offload',
       uri: '/store-instance-packing/end-instance/7',
       stepName: '7',
       controllerName: 'Packing'

@@ -9,17 +9,23 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function($scope, $routeParams, storeInstanceWizardConfig,
-    storeInstanceFactory, $location, storeInstanceReviewFactory,
-    $q, ngToast, $filter, dateUtility, lodash) {
+    storeInstanceFactory, $location, storeInstanceReviewFactory, $q, ngToast, $filter, dateUtility, lodash) {
 
     var _initPromises = [];
     var _sealTypes = [];
     var _sealColors = [];
     var _storeInstanceSeals = [];
+    var _storeOneSeals = [];
     var _nextStatusId = null;
     var _menuItems = [];
     var STATUS_END_INSTANCE = 'Unpacking';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
+    var sealsToRemove = {
+      'dispatch': [],
+      'replenish': ['Hand Over'],
+      'end-instance': ['Hand Over', 'Outbound'],
+      'redispatch': []
+    };
     var $this = this;
 
     $scope.saveButtonText = 'Exit';
@@ -70,6 +76,10 @@ angular.module('ts5App')
       _storeInstanceSeals = angular.copy(dataFromAPI.response);
     }
 
+    function setStoreOneInstanceSeals(dataFromAPI) {
+      _storeOneSeals = angular.copy(dataFromAPI.response);
+    }
+
     function setSealColors(dataFromAPI) {
       _sealColors = angular.copy(dataFromAPI.response);
     }
@@ -78,8 +88,8 @@ angular.module('ts5App')
       _sealTypes = angular.copy(dataFromAPI);
     }
 
-    function getSealNumbersByTypeId(sealTypeId) {
-      var seals = $filter('filter')(_storeInstanceSeals, {
+    function getSealNumbersByTypeId(sealArray, sealTypeId) {
+      var seals = $filter('filter')(sealArray, {
         type: sealTypeId
       }, true);
       var sealNumbers = [];
@@ -115,27 +125,39 @@ angular.module('ts5App')
       return masterItem[0].menuQuantity;
     }
 
+    function isRedispatch() {
+      return $routeParams.action === 'redispatch';
+    }
+
     function addSealToScope(sealType) {
       $scope.seals.push({
         name: sealType.name,
         bgColor: getSealColorByTypeId(sealType.id),
-        sealNumbers: getSealNumbersByTypeId(sealType.id)
+        sealNumbers: getSealNumbersByTypeId(_storeInstanceSeals, sealType.id)
       });
+
+      if (isRedispatch()) {
+        $scope.storeOneSeals.push({
+          name: sealType.name,
+          bgColor: getSealColorByTypeId(sealType.id),
+          sealNumbers: getSealNumbersByTypeId(_storeOneSeals, sealType.id)
+        });
+      }
     }
 
     function removeSealNotUsed(sealsArray) {
-      var itemsToRemove = {
-        'dispatch': [],
-        'replenish': ['Hand Over'],
-        'end-instance': ['Hand Over', 'Outbound']
-      };
       return sealsArray.filter(function(sealType) {
-        return itemsToRemove[$routeParams.action].indexOf(sealType.name) < 0;
+        return sealsToRemove[$routeParams.action].indexOf(sealType.name) < 0;
       });
     }
 
+    $scope.removeSealsForStoreOne = function(seal) {
+      return sealsToRemove['end-instance'].indexOf(seal.name) < 0;
+    };
+
     function setSealsList() {
       $scope.seals = [];
+      $scope.storeOneSeals = [];
 
       _sealTypes = removeSealNotUsed(_sealTypes);
       _sealTypes.map(function(sealType) {
@@ -144,9 +166,36 @@ angular.module('ts5App')
       });
     }
 
+    function setPackingSection() {
+      $scope.pickListItems = [];
+      $scope.offloadItemList = [];
+      angular.forEach($scope.storeOneItemList, function(item) {
+        var storeTwoItem = lodash.findWhere($scope.items, {
+          itemMasterId: item.itemMasterId
+        });
+        if (storeTwoItem) {
+          $scope.pickListItems.push(angular.merge(item, storeTwoItem));
+          lodash.remove($scope.items, storeTwoItem);
+        } else {
+          $scope.offloadItemList.push(item);
+        }
+      });
+
+      if (angular.isArray($scope.items)) {
+        $scope.pickListItems.concat($scope.items);
+      }
+
+      $scope.pickListItems.map(function(item) {
+        item.pickedQuantity = item.dispatchedQuantity - item.quantity;
+      });
+    }
+
     function initLoadComplete() {
       hideLoadingModal();
       setSealsList();
+      if (isRedispatch()) {
+        setPackingSection();
+      }
     }
 
     function showUserCurrentStatus() {
@@ -155,7 +204,7 @@ angular.module('ts5App')
       if ($routeParams.action === 'replenish') {
         action = 'replenished';
       }
-      showMessage('Store Instance ' + $routeParams.storeId + ' has been ' + action + '!', 'success');
+      showMessage('Store Instance ' + $routeParams.storeId + 'has been ' + action + '!', 'success');
     }
 
     function getStoreInstanceSeals() {
@@ -163,6 +212,14 @@ angular.module('ts5App')
         storeInstanceReviewFactory.getStoreInstanceSeals($routeParams.storeId)
         .then(setStoreInstanceSeals)
       );
+
+      if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
+        _initPromises.push(
+          storeInstanceReviewFactory.getStoreInstanceSeals($scope.storeDetails.prevStoreInstanceId)
+          .then(setStoreOneInstanceSeals)
+        );
+      }
+
       _initPromises.push(
         storeInstanceReviewFactory.getSealColors()
         .then(setSealColors)
@@ -198,6 +255,9 @@ angular.module('ts5App')
 
     function storeInstanceStatusDispatched(response) {
       hideLoadingModal();
+      if (angular.isArray(response)) {
+        response = response[0];
+      }
       $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {
         id: response.statusId
       }, true)[0];
@@ -209,7 +269,8 @@ angular.module('ts5App')
       var validStatusList = {
         'dispatch': 'Ready for Dispatch',
         'replenish': 'Ready for Dispatch',
-        'end-instance': 'Unpacking'
+        'end-instance': 'Unpacking',
+        'redispatch': 'Unpacking'
       };
 
       if ($scope.storeDetails.currentStatus.statusName !== validStatusList[$routeParams.action]) {
@@ -245,26 +306,60 @@ angular.module('ts5App')
       return angular.merge(inboundItemList, ullageItemList);
     }
 
-    function formatItems() {
-      $scope.items.map(function(item) {
+    function getDispatchedItemList(rawItemList, filteredItems) {
+      var dispatchedItemList = rawItemList.filter(function(item) {
+        return item.countTypeId === lodash.findWhere($this.countTypes, {
+          name: 'Warehouse Open'
+        }).id;
+      });
+
+      dispatchedItemList.map(function(item) {
+        item.dispatchedQuantity = item.quantity;
+        delete item.quantity;
+      });
+
+      return angular.merge(dispatchedItemList, filteredItems);
+    }
+
+    function formatItems(itemArray, excludeMenuQty) {
+      itemArray.map(function(item) {
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
         item.disabled = true;
-        if (!$scope.isEndInstance()) {
+
+        if (!excludeMenuQty) {
           item.menuQuantity = getMenuQuantity(item.itemMasterId);
         }
       });
+      return itemArray;
     }
 
     function setStoreInstanceItems(dataFromAPI) {
       var rawItemList = angular.copy(dataFromAPI.response);
-      $scope.items = ($scope.isEndInstance() ? mergeInboundUllageItems(rawItemList) : rawItemList);
-      formatItems();
+      var mergedItems = ($scope.isEndInstance() ? mergeInboundUllageItems(rawItemList) : rawItemList);
+      if (isRedispatch()) {
+        mergedItems = getDispatchedItemList(rawItemList, mergedItems);
+      }
+      $scope.items = formatItems(mergedItems);
+    }
+
+    function setStoreOneItemList(dataFromAPI) {
+      var mergedItems = mergeInboundUllageItems(angular.copy(dataFromAPI.response));
+      mergedItems.map(function(item) {
+        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+      });
+      $scope.storeOneItemList = formatItems(mergedItems, true);
     }
 
     function getStoreInstanceItems() {
       _initPromises.push(
         storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(setStoreInstanceItems)
       );
+      if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
+        _initPromises.push(
+          storeInstanceFactory.getStoreInstanceItemList($scope.storeDetails.prevStoreInstanceId).then(
+            setStoreOneItemList)
+        );
+      }
     }
 
     function getStoreInstanceReviewData() {
@@ -290,14 +385,27 @@ angular.module('ts5App')
       getStoreInstanceReviewData();
     }
 
+    function saveStoreStatusIfRedispatch(status) {
+      var statusNameArray = [getStatusNameIntByName(status[0]), getStatusNameIntByName(status[1])];
+      var statusPromise = [];
+      statusPromise.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameArray[0]));
+      statusPromise.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
+        statusNameArray[1]));
+      $q.all(statusPromise).then(storeInstanceStatusDispatched, showResponseErrors);
+    }
+
     function saveStoreInstanceStatus(status) {
       $scope.formErrors = [];
+      displayLoadingModal();
+      if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId && angular.isArray(status)) {
+        saveStoreStatusIfRedispatch(status);
+        return;
+      }
       var statusNameInt = getStatusNameIntByName(status);
-      if (!statusNameInt) {
+      if (!status) {
         throwError('statusId', 'Unable to find statusId by name: ' + name);
         return false;
       }
-      displayLoadingModal();
       storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(
         storeInstanceStatusDispatched, showResponseErrors);
     }
@@ -356,7 +464,8 @@ angular.module('ts5App')
       var submitStatus = {
         'dispatch': 'Dispatched',
         'replenish': 'Dispatched',
-        'end-instance': 'Inbounded'
+        'end-instance': 'Inbounded',
+        'redispatch': ['Inbounded', 'Dispatched']
       };
 
       if (submitStatus[$routeParams.action]) {
