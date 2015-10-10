@@ -51,7 +51,6 @@
                    disabled/>
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
-            <!--{{ shouldDisplayInboundFields(item) }} - {{ item }}-->
             <input type="text"
                    ng-if="shouldDisplayInboundFields(item)"
                    name="inboundQuantity-{{$index}}"
@@ -100,7 +99,8 @@
                    class="form-control"
                    ng-model="item.quantity"
                    ng-disabled="readOnly"
-                   maxlength="5"/>
+                   maxlength="5"
+                   placeholder="0"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('dispatch')">
             <input type="text" class="form-control" placeholder="0"
@@ -127,12 +127,12 @@
             </ui-select>
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
-            <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0"
-                   ng-if="shouldDisplayInboundFields(item)"/>
+            <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.inboundQuantity" placeholder="0"
+                   ng-if="shouldDisplayInboundFields(item)" required="true" maxlength="5"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
-            <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0"
-                   ng-if="shouldDisplayInboundFields(item)"/>
+            <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.ullageQuantity" placeholder="0"
+                   ng-if="shouldDisplayInboundFields(item)" required="true" maxlength="5"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
@@ -146,15 +146,15 @@
             </ui-select>
           </td>
           <td ng-if="shouldDisplayQuantityField('template')">
-            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled/>
+            <input type="text" class="form-control" ng-model="item.menuQuantity" disabled/>
           </td>
           <td ng-if="shouldDisplayQuantityField('packed')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity"
-                   maxlength="5">
+                   maxlength="5" required="true" placeholder="0">
           </td>
           <td ng-if="shouldDisplayQuantityField('dispatch')">
             <input type="text" class="form-control" placeholder="0"
-                   disabled ng-value="calculateTotalDispatchedQty(item)"/>
+                   disabled ng-value="calculateTotalDispatchedQty(item)" required="true"/>
           </td>
           <td ng-init="item.index = $index">
             <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
@@ -257,10 +257,12 @@
             </ui-select>
           </td>
           <td>
-            <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0"/>
+            <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.inboundQuantity"
+                   required="true" maxlength="5" placeholder="0"/>
           </td>
           <td>
-            <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0"/>
+            <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.ullageQuantity"
+                   required="true" maxlength="5" placeholder="0"/>
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
