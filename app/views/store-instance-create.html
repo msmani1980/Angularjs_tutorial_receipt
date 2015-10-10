@@ -4,7 +4,7 @@
 
   <error-dialog form-object="createStoreInstance"></error-dialog>
 
-  <form name="createStoreInstance" class="well" ng-submit="submitForm()" ng-show="uiSelectTemplateReady" >
+  <form name="createStoreInstance" class="well" ng-submit="submitForm()" ng-show="uiSelectTemplateReady">
 
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
@@ -22,7 +22,7 @@
 
     <div class="row" ng-if="isEndInstanceOrRedispatch()">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Store Number *</label>
+        <label>Store Number <span ng-show="!isEndInstanceOrRedispatch()">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('StoreNumber')">
@@ -36,7 +36,7 @@
 
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Schedule Date *</label>
+        <label>Schedule Date <span ng-show="!isActionState('end-instance')">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
           <date-picker-field form="createStoreInstance" name="scheduleDate"
@@ -46,7 +46,7 @@
 
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Schedule Number *</label>
+        <label>Schedule Number <span ng-show="!isActionState('end-instance')">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group">
@@ -62,7 +62,7 @@
 
     <div class="row" ng-if="isActionState('replenish')">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Dispatched LMP Station *</label>
+        <label>Dispatched LMP Station <span ng-show="!isActionState('end-instance')">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('DispatchedCateringStation')">
@@ -75,7 +75,7 @@
 
     <div class="row" ng-if="!isEndInstanceOrRedispatch()">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Store Number *</label>
+        <label>Store Number <span ng-show="!isActionState('end-instance')">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('StoreNumber')">
@@ -90,7 +90,7 @@
     <div class="row">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
         <label>
-          <span ng-hide="isActionState('replenish')">Select</span> Menus *
+          <span ng-hide="isActionState('replenish')">Select</span> Menus <span ng-show="!isActionState('end-instance')">*</span>
         </label>
       </div>
       <div class="col-xs-12 col-sm-8">
