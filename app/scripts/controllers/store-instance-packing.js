@@ -240,7 +240,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.getUlageReasonCodesSuccess = function (dataFromAPI) {
       $scope.ullageReasonCodes = lodash.filter(angular.copy(dataFromAPI.companyReasonCodes), function (reason) {
-        return reason.description === 'Ullage'
+        return reason.description === 'Ullage';
       });
     };
 
@@ -362,7 +362,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return emptyItemsExist;
     };
 
-    this.checkForCompleteUllagePayload = function () {
+    this.checkForIncompleteUllagePayload = function () {
+      if ($routeParams.action !== 'end-instance' && $routeParams.action !== 'redispatch') {
+        return false;
+      }
       var mergedMenuItems = angular.copy($scope.menuItems).concat(angular.copy($scope.emptyMenuItems));
       if ($routeParams.action === 'redispatch') {
         mergedMenuItems = mergedMenuItems.concat(angular.copy($scope.offloadMenuItems));
@@ -545,7 +548,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         showToast('danger', 'Save Items', 'An item must be selected for all rows');
         return false;
       }
-      var ullagePayloadIncomplete = ($routeParams.action !== 'end-instance' && $routeParams.action !== 'redispatch') ? false : $this.checkForCompleteUllagePayload();
+      var ullagePayloadIncomplete = $this.checkForIncompleteUllagePayload();
       if (ullagePayloadIncomplete) {
         showToast('danger', 'Save Items', 'All items with an ullage quantity require an ullage reason');
         return false;
