@@ -496,13 +496,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.makeUpdateStatusPromisesForRedispatch = function () {
-      var endInstanceWizardSteps = storeInstanceWizardConfig.getSteps('end-instance', $routeParams.storeId);
-      var currentStepIndex = lodash.findIndex(endInstanceWizardSteps, {controllerName: 'Packing'});
-      var endInstanceNextStep = angular.copy(endInstanceWizardSteps[currentStepIndex + 1]);
-
       var promises = [
         updateStatusToStep($this.nextStep, $routeParams.storeId, true),
-        updateStatusToStep(endInstanceNextStep, $scope.storeDetails.prevStoreInstanceId, false)
+        updateStatusToStep($this.prevInstanceNextStep, $scope.storeDetails.prevStoreInstanceId, false)
       ];
       $q.all(promises).then(function () {
         hideLoadingModal();
@@ -610,6 +606,17 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return promises;
     };
 
+    this.redispatchInit = function () {
+      $scope.offloadMenuItems = [];
+      $scope.emptyOffloadMenuItems = [];
+      $scope.addOffloadItemsQty = 1;
+
+      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps('end-instance', $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.prevInstanceWizardSteps, {controllerName: 'Packing'});
+      $this.prevInstanceNextStep = angular.copy($scope.prevInstanceWizardSteps[currentStepIndex + 1]);
+      $this.prevInstancePrevStep = angular.copy($scope.prevInstanceWizardSteps[currentStepIndex - 1]);
+    };
+
     this.initialize = function () {
       showLoadingModal('Loading Store Detail for Packing...');
 
@@ -621,9 +628,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.menuItems = [];
       $scope.emptyMenuItems = [];
       if ($routeParams.action === 'redispatch') {
-        $scope.offloadMenuItems = [];
-        $scope.emptyOffloadMenuItems = [];
-        $scope.addOffloadItemsQty = 1;
+        $this.redispatchInit();
       }
       var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies);
@@ -681,6 +686,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($routeParams.action === 'end-instance') {
         showLoadingModal('Updating Status...');
         updateStatusToStep($this.prevStep, $routeParams.storeId, true);
+      } else if($routeParams.action === 'redispatch') {
+        showLoadingModal('Updating Status...');
+        updateStatusToStep($this.prevStep, $routeParams.storeId, true);
+        updateStatusToStep($this.prevInstancePrevStep, $scope.storeDetails.prevStoreInstanceId, false);
       } else {
         $location.path($this.prevStep.uri);
       }
