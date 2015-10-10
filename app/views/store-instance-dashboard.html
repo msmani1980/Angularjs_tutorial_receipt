@@ -212,7 +212,7 @@
              href="#/store-instance-review/dispatch/{{store.id}}">Dispatch
           </a>
           <a class="btn btn-danger btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'End instance')"
+             ng-show="doesStoreInstanceContainAction(store, 'End Instance')"
              href="#/store-instance-create/end-instance/{{store.id}}">End Instance
           </a>
           <a class="btn btn-warning btn-xs btn-block" tabindex="0"
@@ -236,6 +236,14 @@
              ng-show="doesStoreInstanceContainAction(store, 'Receive')"
              ng-click="openReceiveConfirmation(store)">
              Receive
+          </a>
+          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Start Inbound Seals')"
+             href="#/store-instance-seals/end-instance/{{store.id}}">Start Inbound Seals
+          </a>
+          <a class="btn btn-primary btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Start Offload')"
+             href="#/store-instance-packing/end-instance/{{store.id}}">Start Offload
           </a>
         </td>
       </tr>
