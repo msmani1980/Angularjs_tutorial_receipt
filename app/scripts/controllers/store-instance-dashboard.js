@@ -149,9 +149,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       '2': ['Seal', 'Delete'],
       '3': ['Dispatch', 'Delete', 'Checkbox'],
       '4': ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
-      '5': ['End instance', 'Redispatch', 'Checkbox'],
-      '6': ['N/A'],
-      '7': ['Instance audit report']
+      '5': ['End Instance', 'Redispatch', 'Checkbox'],
+      '6': ['Start Inbound Seals'],
+      '7': ['Start Offload', 'Instance audit report'],
     };
 
     function formatStoreInstance(storeInstance) {
@@ -161,7 +161,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
       storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
-      storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) : '';
+      storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) :
+        '';
 
       // TODO: get timeConfig that has most recent startDate -- will be a new API
       var timeConfig = lodash.findWhere($scope.timeConfigList, {
