@@ -146,7 +146,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     });
 
     it('should format scope.items', function () {
-      var expectedItemDescription = 'Ip015 -  Ipad Mini';
+      var expectedItemDescription = 'Ru-002 -  BabyRuth';
       expect(scope.items[0].itemDescription).toEqual(expectedItemDescription);
     });
 
