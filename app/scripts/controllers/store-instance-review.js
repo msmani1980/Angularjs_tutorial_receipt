@@ -114,6 +114,10 @@ angular.module('ts5App')
       return masterItem[0].menuQuantity;
     }
 
+    function isRedispatch() {
+      return $routeParams.action === 'redispatch';
+    }
+
     function addSealToScope(sealType) {
       $scope.seals.push({
         name: sealType.name,
@@ -171,10 +175,6 @@ angular.module('ts5App')
       $scope.pickListItems.map(function(item){
         item.pickedQuantity = item.dispatchedQuantity - item.quantity;
       });
-    }
-
-    function isRedispatch() {
-      return $routeParams.action === 'redispatch';
     }
 
     function initLoadComplete() {
