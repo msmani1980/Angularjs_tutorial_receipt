@@ -144,12 +144,16 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should set wizardSteps', function() {
+      resolveAllDependencies();
+      $scope.$digest();
       var wizardSteps = storeInstanceWizardConfig.getSteps(routeParams.action, storeId);
       StoreInstanceSealsCtrl.setWizardSteps();
       expect($scope.wizardSteps).toEqual(wizardSteps);
     });
 
     it('should have a nextStep set on the controller', function() {
+      resolveAllDependencies();
+      $scope.$digest();
       var mockNextStep = {
         label: 'Review & Dispatch',
         uri: '/store-instance-review/dispatch/' + storeId,
@@ -160,6 +164,8 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should have a prevStep set on the controller', function() {
+      resolveAllDependencies();
+      $scope.$digest();
       var mockPrevStep = {
         label: 'Packing',
         uri: '/store-instance-packing/dispatch/' + storeId,
@@ -173,6 +179,9 @@ describe('the Store Instance Seals controller', function() {
 
       beforeEach(function() {
         spyOn(StoreInstanceSealsCtrl, 'isInstanceReadOnly').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'setStoreDetails').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'isInboundDuringEndInstance').and.callThrough();
+        spyOn(StoreInstanceSealsCtrl, 'isInboundDuringRedispatch').and.callThrough();
         $scope.$digest();
       });
 
@@ -223,11 +232,6 @@ describe('the Store Instance Seals controller', function() {
           expect($scope.saveButtonName).toEqual('Save & Exit');
         });
 
-      });
-
-      it('should set wizardSteps', function() {
-        var wizardSteps = storeInstanceWizardConfig.getSteps(routeParams.action, storeId);
-        expect($scope.wizardSteps).toEqual(wizardSteps);
       });
 
     });
@@ -712,9 +716,9 @@ describe('the Store Instance Seals controller', function() {
 
     beforeEach(function() {
       initController();
+      resolveAllDependencies();
       spyOn($scope, 'prevTrigger').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep');
-      spyOn(StoreInstanceSealsCtrl, 'prevStep');
     });
 
     it('should have called updateStatusToStep', function() {
@@ -731,7 +735,6 @@ describe('the Store Instance Seals controller', function() {
       spyOn($scope, 'goToPacking').and.callThrough();
       spyOn($scope, 'prevTrigger').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'updateStatusToStep');
-      spyOn(StoreInstanceSealsCtrl, 'prevStep');
     });
 
     it('should call prevTrigger method', function() {
@@ -1006,29 +1009,64 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-  describe('the hideSealTypeIfEndInstance method for end-instance', function() {
+  describe('the hideSealType method for end-instance', function() {
 
     beforeEach(function() {
+      storeDetailsJSON.currentStatus = {
+        'id': 6,
+        'statusName': 'Ready for Seals',
+        'name': '6'
+      };
       initController('end-instance');
       resolveAllDependencies();
-      spyOn($scope, 'hideSealTypeIfEndInstance').and.callThrough();
       $scope.$digest();
     });
 
     it('should return true if the type is Hand Over', function() {
-      expect($scope.hideSealTypeIfEndInstance('Hand Over')).toBeTruthy();
+      expect($scope.hideSealType('Hand Over')).toBeTruthy();
     });
 
     it('should return true if the type is Outbound', function() {
-      expect($scope.hideSealTypeIfEndInstance('Outbound')).toBeTruthy();
+      expect($scope.hideSealType('Outbound')).toBeTruthy();
     });
 
     it('should return false if the type is High Security', function() {
-      expect($scope.hideSealTypeIfEndInstance('High Security')).toBeFalsy();
+      expect($scope.hideSealType('High Security')).toBeFalsy();
     });
 
     it('should return false if the type is Inbound', function() {
-      expect($scope.hideSealTypeIfEndInstance('Inbound')).toBeFalsy();
+      expect($scope.hideSealType('Inbound')).toBeFalsy();
+    });
+
+  });
+
+  describe('the hideSealType method for redispatch', function() {
+
+    beforeEach(function() {
+      storeDetailsJSON.currentStatus = {
+        'id': 10,
+        'statusName': 'Ready for Seals',
+        'name': '5'
+      };
+      initController('redispatch');
+      resolveAllDependencies();
+      $scope.$digest();
+    });
+
+    it('should return true if the type is Hand Over', function() {
+      expect($scope.hideSealType('Hand Over')).toBeTruthy();
+    });
+
+    it('should return true if the type is Outbound', function() {
+      expect($scope.hideSealType('Outbound')).toBeTruthy();
+    });
+
+    it('should return false if the type is High Security', function() {
+      expect($scope.hideSealType('High Security')).toBeFalsy();
+    });
+
+    it('should return false if the type is Inbound', function() {
+      expect($scope.hideSealType('Inbound')).toBeFalsy();
     });
 
   });
@@ -1064,32 +1102,44 @@ describe('the Store Instance Seals controller', function() {
   describe('setWizardSteps method', function() {
 
     it('if the action is dispatch/default, this method should set nextStep to review', function() {
-      initController('dispatch');
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
       expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-review/dispatch/5');
     });
 
     it('if the action is dispatch/default, this method should set prevStep to packing', function() {
-      initController('dispatch');
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
       expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-packing/dispatch/5');
     });
 
     it('if the action is end-instance, this method should set nextStep to packing', function() {
       initController('end-instance');
+      resolveAllDependencies();
+      $scope.$digest();
       expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-packing/end-instance/5');
     });
 
     it('if the action is end-instance, this method should set prevStep to create', function() {
       initController('end-instance');
+      resolveAllDependencies();
+      $scope.$digest();
       expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-create/end-instance/5');
     });
 
     it('if the action is replenish, this method should set nextStep to review', function() {
       initController('replenish');
+      resolveAllDependencies();
+      $scope.$digest();
       expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-review/replenish/5');
     });
 
     it('if the action is replenish, this method should set prevStep to packing', function() {
       initController('replenish');
+      resolveAllDependencies();
+      $scope.$digest();
       expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-packing/replenish/5');
     });
 

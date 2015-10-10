@@ -33,14 +33,36 @@ angular.module('ts5App')
         angular.isDefined($scope.storeDetails.parentStoreInstance);
     };
 
+    this.getCurrentStepName = function() {
+      if( angular.isUndefined($scope.storeDetails) ) {
+        return false;
+      }
+      return parseInt($scope.storeDetails.currentStatus.name);
+    };
+
+    this.isActionState = function(actionState) {
+      return ($routeParams.action === actionState );
+    };
+
+    this.isInboundDuringEndInstance = function() {
+      return ( this.getCurrentStepName() === 6 && $routeParams.action === 'end-instance');
+    };
+
+    this.isInboundDuringRedispatch = function() {
+      return ( this.getCurrentStepName() === 5 && $routeParams.action === 'redispatch');
+    };
+
+    this.setAsEdit = function() {
+      $scope.readOnly = false;
+      $scope.saveButtonName = 'Save & Exit';
+    };
+
     this.isInstanceReadOnly = function() {
-      var currentStatus = parseInt($scope.storeDetails.currentStatus.name);
-      if (currentStatus === 6 && $routeParams.action === 'end-instance') {
-        $scope.readOnly = false;
-        $scope.saveButtonName = 'Save & Exit';
+      if(this.isInboundDuringEndInstance() || this.isInboundDuringRedispatch() ) {
+        this.setAsEdit();
         return;
       }
-      if (currentStatus !== 2 || $routeParams.action === 'replenish' && !this.canReplenish()) {
+      if (this.getCurrentStepName() !== 2 || $routeParams.action === 'replenish' && !this.canReplenish()) {
         this.showMessage('warning', 'This store instance is not ready for seals');
       } else {
         $scope.readOnly = false;
@@ -50,6 +72,7 @@ angular.module('ts5App')
 
     this.setStoreDetails = function(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
+      $this.setWizardSteps();
       $this.isInstanceReadOnly();
     };
 
@@ -58,9 +81,13 @@ angular.module('ts5App')
     };
 
     this.setWizardSteps = function() {
+      var controllerName = 'Seals';
+      if( $this.isInboundDuringRedispatch() ){
+        controllerName = 'InboundSeals';
+      }
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
-        controllerName: 'Seals'
+        controllerName: controllerName
       });
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
@@ -107,23 +134,24 @@ angular.module('ts5App')
     };
 
     this.createInboundActions = function() {
-      if ($routeParams.action !== 'end-instance') {
-        var actions = [{
-          label: 'Copy From Handover',
-          trigger: function() {
-            return $scope.copySeals(HANDOVER, INBOUND);
-          }
-        }, {
-          label: 'Copy From Outbound',
-          trigger: function() {
-            return $scope.copySeals(OUTBOUND, INBOUND);
-          }
-        }];
-        if ($routeParams.action === 'replenish') {
-          actions.splice(0, 1);
-        }
-        return actions;
+      if ($this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch() ) {
+        return [];
       }
+      var actions = [{
+        label: 'Copy From Handover',
+        trigger: function() {
+          return $scope.copySeals(HANDOVER, INBOUND);
+        }
+      }, {
+        label: 'Copy From Outbound',
+        trigger: function() {
+          return $scope.copySeals(OUTBOUND, INBOUND);
+        }
+      }];
+      if ($routeParams.action === 'replenish') {
+        actions.splice(0, 1);
+      }
+      return actions;
     };
 
     this.addSealTypeActions = function(sealTypeObject) {
@@ -456,7 +484,6 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      this.setWizardSteps();
       this.getSealTypesDependencies();
     };
 
@@ -507,18 +534,18 @@ angular.module('ts5App')
     };
 
     $scope.isActionState = function(action) {
-      return $routeParams.action === action;
+      return $this.isActionState(action);
     };
 
-    $scope.hideSealTypeIfEndInstance = function(type) {
-      if ($scope.isActionState('end-instance') && $scope.sealTypesList) {
-        if (type === OUTBOUND) {
-          return true;
-        }
-        if (type === HANDOVER) {
-          return true;
-        }
+    $scope.hideSealType = function(type) {
+      if( $this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch() ){
+        return (type === OUTBOUND || type === HANDOVER);
       }
+      return false;
+    };
+
+    $scope.showTamperedSeals = function() {
+      return ( $this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch() );
     };
 
   });
