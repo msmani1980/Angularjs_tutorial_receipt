@@ -122,18 +122,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
-    this.createStoreInstanceErrorHandler = function(response) {
+    this.redispatchStoreInstanceSuccessHandler = function(response) {
       $this.hideLoadingModal();
-      $scope.displayError = true;
-      if (response.data) {
-        $scope.formErrors = response.data;
-        return false;
+      if (response) {
+        $this.showMessage('success', 'Redispatch Instance id: ' + $routeParams.storeId);
+        $location.url('/store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId);
       }
-      $scope.response500 = true;
-      return false;
     };
 
-    this.endStoreInstanceErrorHandler = function(response) {
+    this.createStoreInstanceErrorHandler = function(response) {
       $this.hideLoadingModal();
       $scope.displayError = true;
       if (response.data) {
@@ -192,6 +189,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       delete payload.storeId;
       delete payload.menus;
       delete payload.dispatchedCateringStationId;
+    };
+    this.setWizardSteps = function() {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
+        controllerName: 'Create'
+      });
+      $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
     };
 
     this.formatPayload = function() {
@@ -266,14 +270,27 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.createStoreInstanceErrorHandler);
     };
 
-    this.setStatusToInbound = function(saveAndExit) {
+    this.exitToDashboard = function() {
+      this.displayLoadingModal('Loading Store Instance Dashboard');
+      $location.url('/store-instance-dashboard/');
+    };
+
+    this.endStoreInstance = function(saveAndExit) {
       if (saveAndExit) {
-        this.displayLoadingModal('Loading Store Instance Dashboard');
-        $location.url('/store-instance-dashboard/');
+        this.exitToDashboard();
       } else {
         this.displayLoadingModal('Loading Inbound Seals');
         storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
-          .then((saveAndExit ? this.exitOnSave : this.endStoreInstanceSuccessHandler), this.endStoreInstanceErrorHandler);
+          .then((saveAndExit ? this.exitOnSave : this.endStoreInstanceSuccessHandler), this.createStoreInstanceErrorHandler);
+      }
+    };
+
+    this.redispatchStoreInstance = function(saveAndExit) {
+      if (saveAndExit) {
+        this.exitToDashboard();
+      } else {
+        this.displayLoadingModal('Loading Inbound Seals');
+        this.redispatchStoreInstanceSuccessHandler($routeParams.storeId);
       }
     };
 
@@ -281,7 +298,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.createStoreInstance.$setSubmitted(true);
       if ($this.validateForm()) {
         if ($scope.isActionState('end-instance')) {
-          $this.setStatusToInbound(saveAndExit);
+          $this.endStoreInstance(saveAndExit);
+        } else if ($scope.isActionState('redispatch')) {
+          $this.redispatchStoreInstance(saveAndExit);
         } else {
           $this.createStoreInstance(saveAndExit);
         }
@@ -422,7 +441,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         loadingText = 'We are loading Store Instance ' + $routeParams.storeId;
       }
       this.showLoadingModal(loadingText);
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      this.setWizardSteps();
       if ($routeParams.storeId) {
         $this.getStoreInstance();
         return;
