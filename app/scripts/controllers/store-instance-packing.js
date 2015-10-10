@@ -242,10 +242,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.getStoreInstanceMenuItems = function (storeInstanceId) {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
-      // TODO: uncomment date
       var payload = {
-        itemTypeId: $scope.regularItemTypeId
-        //date: payloadDate
+        itemTypeId: $scope.regularItemTypeId,
+        date: payloadDate
       };
 
       if ($scope.characteristicFilterId) {
@@ -283,9 +282,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $location.path(stepObject.uri);
     }
 
-    function updateStatusToStep(stepObject, storeInstanceId) {
+    function updateStatusToStep(stepObject, storeInstanceId, shouldRedirectToStep) {
       storeInstanceFactory.updateStoreInstanceStatus(storeInstanceId, stepObject.stepName).then(function (response) {
-        var shouldRedirectToStep = $routeParams.action !== 'redispatch' || ($routeParams.action === 'redispatch' && storeInstanceId === $routeParams.storeId);
         if(shouldRedirectToStep) {
           updateStoreDetails(response, stepObject, storeInstanceId);
         }
@@ -309,12 +307,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
       getItemsSuccessHandler(dataFromAPI);
     }
-
-    this.saveStoreInstanceItemsBulk = function (storeInstanceId, payload, shouldUpdateStatus) {
-      storeInstanceFactory.updateStoreInstanceItemsBulk(storeInstanceId, payload).then(function (responseData) {
-          savePackingDataSuccessHandler(responseData, shouldUpdateStatus);
-        }, showErrors);
-    };
 
     this.checkForDuplicate = function (item) {
       var duplicates = lodash.filter($scope.emptyMenuItems, function (filteredItem) {
@@ -472,11 +464,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.createPayloadAndSave = function (shouldUpdateStatus, redirectURL) {
       var payload = $this.createPayload();
+      console.log('HIYA');
       showLoadingModal('Saving...');
-      $this.saveStoreInstanceItemsBulk($routeParams.storeId, payload).then(function (responseData) {
+      storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, payload).then(function (responseData) {
         savePackingDataSuccessHandler(responseData);
         if (shouldUpdateStatus) {
-          updateStatusToStep($this.nextStep, $routeParams.storeId);
+          updateStatusToStep($this.nextStep, $routeParams.storeId, true);
         } else {
           showToast('success', 'Save Packing Data', 'Data successfully updated!');
           $location.path(redirectURL);
@@ -491,26 +484,33 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var endInstanceNextStep = angular.copy(endInstanceWizardSteps[currentStepIndex + 1]);
 
       var promises = [
-        $this.updateStatusToStep($this.nextStep, $routeParams.storeId),
-        $this.updateStatusToStep(endInstanceNextStep, $scope.storeDetails.prevStoreInstanceId)
+        updateStatusToStep($this.nextStep, $routeParams.storeId, true),
+        updateStatusToStep(endInstanceNextStep, $scope.storeDetails.prevStoreInstanceId, false)
       ];
       $q.all(promises).then(function () {
         hideLoadingModal();
       });
     };
 
-    this.createPayloadAndSaveForRedispatch = function () {
+    this.createPayloadAndSaveForRedispatch = function (shouldUpdateStatus, redirectURL) {
       showLoadingModal('Saving...');
       var combinedPayload = $this.createPayloadForRedispatch();
       var currentStorePayload = {response:combinedPayload.currentStoreInstancePayload};
       var prevStorePayload = {response:combinedPayload.prevStoreInstancePayload};
       var promises = [
-        $this.saveStoreInstanceItemsBulk($routeParams.storeId, currentStorePayload),
-        $this.saveStoreInstanceItemsBulk($scope.storeDetails.prevStoreInstanceId, prevStorePayload)
+        storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, currentStorePayload),
       ];
+      if(prevStorePayload.response.length > 0) {
+        promises.push(storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeDetails.prevStoreInstanceId, prevStorePayload));
+      }
       $q.all(promises).then(function () {
         hideLoadingModal();
-        $this.makeUpdateStatusPromisesForRedispatch();
+        if(shouldUpdateStatus) {
+          $this.makeUpdateStatusPromisesForRedispatch();
+        } else {
+          showToast('success', 'Save Packing Data', 'Data successfully updated!');
+          $location.path(redirectURL);
+        }
       });
 
       // make 2 API calls for save and 2 for update status
@@ -642,10 +642,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $location.path(dashboardURL);
         return;
       }
-      if ($this.checkFormValidity()) {
-        $this.createPayloadAndSave(shouldUpdateStatus, redirectURL);
+      var isFormValid = $this.checkFormValidity();
+      if(isFormValid && $routeParams.action === 'redispatch') {
         $this.createPayloadAndSaveForRedispatch(shouldUpdateStatus, redirectURL);
+      } else if(isFormValid) {
+        $this.createPayloadAndSave(shouldUpdateStatus, redirectURL);
       }
+
     };
 
     $scope.saveAndExit = function () {
@@ -660,7 +663,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.goToPreviousStep = function () {
       if ($routeParams.action === 'end-instance') {
         showLoadingModal('Updating Status...');
-        updateStatusToStep($this.prevStep, $routeParams.storeId);
+        updateStatusToStep($this.prevStep, $routeParams.storeId, true);
       } else {
         $location.path($this.prevStep.uri);
       }
