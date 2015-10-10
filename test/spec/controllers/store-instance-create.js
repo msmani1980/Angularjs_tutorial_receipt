@@ -1108,7 +1108,7 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should redirect the user to the packing page with the new store instance id', function() {
-        var url = '/store-instance-seals/' + 'redispatch' + '/' + response.id;
+        var url = '/store-instance-inbound-seals/' + 'redispatch' + '/' + response.id;
         expect(location.path()).toEqual(url);
       });
 
