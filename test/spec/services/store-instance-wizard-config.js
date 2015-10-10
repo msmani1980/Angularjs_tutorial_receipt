@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: storeInstanceWizardConfig', function() {
+describe('Service: storeInstanceWizardConfig', function() {
 
   // load the service's module
   beforeEach(module('ts5App'));
