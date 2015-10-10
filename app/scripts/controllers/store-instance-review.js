@@ -139,19 +139,20 @@ angular.module('ts5App')
 
     function setPackingSection() {
       $scope.pickListItems = [];
-      $scope.offloadItemList = [];
+      var offloadItemList = [];
       angular.forEach($scope.storeOneItemList, function (item) {
         var storeTwoItem = lodash.findWhere($scope.items, {itemMasterId: item.itemMasterId});
         if (storeTwoItem) {
-          console.log('picklist', storeTwoItem);
           $scope.pickListItems.push(angular.merge(item, storeTwoItem));
           lodash.remove($scope.items, storeTwoItem);
         } else {
-          console.log('offload', item);
-          $scope.offloadItemList.push(item);
+          offloadItemList.push(item);
         }
       });
-      //$scope.items;
+
+      if (angular.isArray($scope.items)) {
+        $scope.pickListItems.concat($scope.items);
+      }
     }
 
     function isRedispatch() {
