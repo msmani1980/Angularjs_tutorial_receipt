@@ -435,4 +435,5 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.init();
 
+    
   });
