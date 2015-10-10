@@ -192,6 +192,9 @@ angular.module('ts5App', [
   }).when('/store-instance-seals/:action/:storeId', {
     templateUrl: 'views/store-instance-seals.html',
     controller: 'StoreInstanceSealsCtrl'
+  }).when('/store-instance-inbound-seals/:action/:storeId', {
+    templateUrl: 'views/store-instance-seals.html',
+    controller: 'StoreInstanceSealsCtrl'
   }).when('/retail-company-exchange-rate-setup', {
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'

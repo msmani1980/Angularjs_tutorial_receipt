@@ -126,7 +126,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.hideLoadingModal();
       if (response) {
         $this.showMessage('success', 'Redispatch Instance id: ' + $routeParams.storeId);
-        $location.url('/store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId);
+        $location.url('/store-instance-inbound-seals/' + $routeParams.action + '/' + $routeParams.storeId);
       }
     };
 
