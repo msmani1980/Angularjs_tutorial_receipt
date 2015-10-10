@@ -20,6 +20,12 @@ angular.module('ts5App')
     var _menuItems = [];
     var STATUS_END_INSTANCE = 'Unpacking';
     var MESSAGE_ACTION_NOT_ALLOWED = 'Action not allowed';
+    var sealsToRemove = {
+      'dispatch': [],
+      'replenish': ['Hand Over'],
+      'end-instance': ['Hand Over', 'Outbound'],
+      'redispatch': []
+    };
     var $this = this;
 
     $scope.saveButtonText = 'Exit';
@@ -112,16 +118,14 @@ angular.module('ts5App')
     }
 
     function removeSealNotUsed(sealsArray) {
-      var itemsToRemove = {
-        'dispatch': [],
-        'replenish': ['Hand Over'],
-        'end-instance': ['Hand Over', 'Outbound'],
-        'redispatch': []
-      };
       return sealsArray.filter(function (sealType) {
-        return itemsToRemove[$routeParams.action].indexOf(sealType.name) < 0;
+        return sealsToRemove[$routeParams.action].indexOf(sealType.name) < 0;
       });
     }
+
+    $scope.removeInboundSeals = function(seal) {
+      return sealsToRemove['end-instance'].indexOf(seal.name) < 0;
+    };
 
     function setSealsList() {
       $scope.seals = [];
@@ -344,10 +348,6 @@ angular.module('ts5App')
       if (submitStatus[$routeParams.action]) {
         saveStoreInstanceStatus(submitStatus[$routeParams.action]);
       }
-    };
-
-    $scope.removeInboundSeals = function(params) {
-      console.log(params);
     };
 
     $scope.exit = function () {
