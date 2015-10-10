@@ -169,6 +169,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.formatRedispatchPayload = function(payload) {
+      payload.prevStoreInstanceId = $routeParams.storeId;
       payload.menus = this.formatMenus(payload.menus);
       delete payload.dispatchedCateringStationId;
     };
