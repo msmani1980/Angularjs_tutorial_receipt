@@ -103,7 +103,7 @@
                    maxlength="5"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('dispatch')">
-            <input type="text" class="form-control" ng-model="item.totalQuantity" placeholder="0"
+            <input type="text" class="form-control" placeholder="0"
                    disabled ng-value="calculateTotalDispatchedQty(item)"/>
           </td>
           <td>
@@ -154,7 +154,7 @@
                    maxlength="5">
           </td>
           <td ng-if="shouldDisplayQuantityField('dispatch')">
-            <input type="text" class="form-control" ng-model="item.totalQuantity" placeholder="0"
+            <input type="text" class="form-control" placeholder="0"
                    disabled ng-value="calculateTotalDispatchedQty(item)"/>
           </td>
           <td ng-init="item.index = $index">
