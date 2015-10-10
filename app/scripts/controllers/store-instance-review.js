@@ -16,6 +16,7 @@ angular.module('ts5App')
     var _sealTypes = [];
     var _sealColors = [];
     var _storeInstanceSeals = [];
+    var _storeOneSeals = [];
     var _nextStatusId = null;
     var _menuItems = [];
     var STATUS_END_INSTANCE = 'Unpacking';
@@ -72,6 +73,10 @@ angular.module('ts5App')
       _storeInstanceSeals = angular.copy(dataFromAPI.response);
     }
 
+    function setStoreOneInstanceSeals(dataFromAPI) {
+      _storeOneSeals = angular.copy(dataFromAPI.response);
+    }
+
     function setSealColors(dataFromAPI) {
       _sealColors = angular.copy(dataFromAPI.response);
     }
@@ -80,8 +85,8 @@ angular.module('ts5App')
       _sealTypes = angular.copy(dataFromAPI);
     }
 
-    function getSealNumbersByTypeId(sealTypeId) {
-      var seals = $filter('filter')(_storeInstanceSeals, {type: sealTypeId}, true);
+    function getSealNumbersByTypeId(sealArray, sealTypeId) {
+      var seals = $filter('filter')(sealArray, {type: sealTypeId}, true);
       var sealNumbers = [];
       for (var sealKey in seals) {
         var seal = seals[sealKey];
@@ -113,8 +118,16 @@ angular.module('ts5App')
       $scope.seals.push({
         name: sealType.name,
         bgColor: getSealColorByTypeId(sealType.id),
-        sealNumbers: getSealNumbersByTypeId(sealType.id)
+        sealNumbers: getSealNumbersByTypeId(_storeInstanceSeals, sealType.id)
       });
+
+      if(isRedispatch()) {
+        $scope.storeOneSeals.push({
+          name: sealType.name,
+          bgColor: getSealColorByTypeId(sealType.id),
+          sealNumbers: getSealNumbersByTypeId(_storeOneSeals, sealType.id)
+        });
+      }
     }
 
     function removeSealNotUsed(sealsArray) {
@@ -123,12 +136,13 @@ angular.module('ts5App')
       });
     }
 
-    $scope.removeInboundSeals = function (seal) {
+    $scope.removeSealsForStoreOne = function (seal) {
       return sealsToRemove['end-instance'].indexOf(seal.name) < 0;
     };
 
     function setSealsList() {
       $scope.seals = [];
+      $scope.storeOneSeals = [];
 
       _sealTypes = removeSealNotUsed(_sealTypes);
       _sealTypes.map(function (sealType) {
@@ -181,6 +195,14 @@ angular.module('ts5App')
         storeInstanceReviewFactory.getStoreInstanceSeals($routeParams.storeId)
           .then(setStoreInstanceSeals)
       );
+
+      if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
+        _initPromises.push(
+          storeInstanceReviewFactory.getStoreInstanceSeals($scope.storeDetails.prevStoreInstanceId)
+            .then(setStoreOneInstanceSeals)
+        );
+      }
+
       _initPromises.push(
         storeInstanceReviewFactory.getSealColors()
           .then(setSealColors)
