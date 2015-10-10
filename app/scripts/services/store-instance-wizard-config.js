@@ -69,7 +69,7 @@ angular.module('ts5App')
           stepName: '6',
           controllerName: 'Seals'
         }, {
-          label: 'Packing',
+          label: 'Offload',
           uri: packingURL + action + '/' + id,
           stepName: '7',
           controllerName: 'Packing'
