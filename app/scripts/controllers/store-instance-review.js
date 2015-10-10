@@ -167,6 +167,10 @@ angular.module('ts5App')
       if (angular.isArray($scope.items)) {
         $scope.pickListItems.concat($scope.items);
       }
+
+      $scope.pickListItems.map(function(item){
+        item.pickedQuantity = item.dispatchedQuantity - item.quantity;
+      });
     }
 
     function isRedispatch() {
