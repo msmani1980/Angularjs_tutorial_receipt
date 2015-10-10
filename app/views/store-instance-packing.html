@@ -33,9 +33,9 @@
           <th>Retail Item Details</th>
           <th ng-show="shouldDisplayQuantityField('inbound')" width="10%">Inbound Quantity</th>
           <th ng-show="shouldDisplayQuantityField('ullage')" width="10%">Ullage Quantity</th>
-          <th ng-show="shouldDisplayQuantityField('ullage')" width="20%">Ullage Reason</th>
-          <th ng-show="shouldDisplayQuantityField('template')" width="15%">Template Quantity</th>
-          <th width="15%" ng-show="shouldDisplayQuantityField('packed')">
+          <th ng-show="shouldDisplayQuantityField('ullage')" width="15%">Ullage Reason</th>
+          <th ng-show="shouldDisplayQuantityField('template')" width="10%">Template Quantity</th>
+          <th width="10%" ng-show="shouldDisplayQuantityField('packed')">
             <span ng-show="isActionState('dispatch')">Packed Quantity</span>
             <span ng-show="isActionState('replenish') || isActionState('redispatch')">Picked Quantity</span>
           </th>
@@ -51,6 +51,7 @@
                    disabled/>
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
+            <!--{{ shouldDisplayInboundFields(item) }} - {{ item }}-->
             <input type="text"
                    ng-if="shouldDisplayInboundFields(item)"
                    name="inboundQuantity-{{$index}}"
