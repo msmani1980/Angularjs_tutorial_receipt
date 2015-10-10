@@ -111,23 +111,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.createStoreInstanceSuccessHandler = function(response) {
       $this.successMessage(response);
-      $location.url('/store-instance-packing/' + $routeParams.action + '/' + response.id);
-    };
-
-    this.endStoreInstanceSuccessHandler = function(response) {
-      $this.hideLoadingModal();
-      if (response.id) {
-        $this.showMessage('success', 'End Store Instance id: ' + $routeParams.storeId);
-        $location.url('/store-instance-seals/' + $routeParams.action + '/' + $routeParams.storeId);
+      var uri = $this.nextStep.uri.replace('undefined',response.id);
+      if($routeParams.action !== 'dispatch') {
+        uri = $this.nextStep.uri.replace(/[0-9]+/,response.id);
       }
-    };
-
-    this.redispatchStoreInstanceSuccessHandler = function(response) {
       $this.hideLoadingModal();
-      if (response) {
-        $this.showMessage('success', 'Redispatch Instance id: ' + $routeParams.storeId);
-        $location.url('/store-instance-inbound-seals/' + $routeParams.action + '/' + $routeParams.storeId);
-      }
+      $location.url(uri);
     };
 
     this.createStoreInstanceErrorHandler = function(response) {
@@ -180,6 +169,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.formatRedispatchPayload = function(payload) {
+      payload.prevStoreInstanceId = $routeParams.storeId;
       payload.menus = this.formatMenus(payload.menus);
       delete payload.dispatchedCateringStationId;
     };
@@ -260,37 +250,32 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return false;
     };
 
+    this.exitToDashboard = function() {
+      this.displayLoadingModal('Loading Store Instance Dashboard');
+      $location.url('/store-instance-dashboard/');
+    };
+
     this.createStoreInstance = function(saveAndExit) {
-      this.displayLoadingModal('Creating a store ' + $routeParams.action);
+      this.displayLoadingModal('Creating new Store Instance');
       var payload = this.formatPayload();
       if (!payload) {
         return false;
       }
-      storeInstanceFactory.createStoreInstance(payload).then((saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
-        this.createStoreInstanceErrorHandler);
-    };
-
-    this.exitToDashboard = function() {
-      this.displayLoadingModal('Loading Store Instance Dashboard');
-      $location.url('/store-instance-dashboard/');
+      storeInstanceFactory.createStoreInstance(payload).then(
+        (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
+        this.createStoreInstanceErrorHandler
+      );
     };
 
     this.endStoreInstance = function(saveAndExit) {
       if (saveAndExit) {
         this.exitToDashboard();
       } else {
-        this.displayLoadingModal('Loading Inbound Seals');
-        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId)
-          .then((saveAndExit ? this.exitOnSave : this.endStoreInstanceSuccessHandler), this.createStoreInstanceErrorHandler);
-      }
-    };
-
-    this.redispatchStoreInstance = function(saveAndExit) {
-      if (saveAndExit) {
-        this.exitToDashboard();
-      } else {
-        this.displayLoadingModal('Loading Inbound Seals');
-        this.redispatchStoreInstanceSuccessHandler($routeParams.storeId);
+        this.displayLoadingModal('Starting the End Instance process');
+        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId).then(
+            (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
+            this.createStoreInstanceErrorHandler
+        );
       }
     };
 
@@ -299,11 +284,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.validateForm()) {
         if ($scope.isActionState('end-instance')) {
           $this.endStoreInstance(saveAndExit);
-        } else if ($scope.isActionState('redispatch')) {
-          $this.redispatchStoreInstance(saveAndExit);
-        } else {
-          $this.createStoreInstance(saveAndExit);
+          return;
         }
+        $this.createStoreInstance(saveAndExit);
       }
       return false;
     };
@@ -431,6 +414,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.initSuccessHandler = function() {
+      $this.setWizardSteps();
       $this.setUIReady();
       $this.registerScopeWatchers();
     };
@@ -441,7 +425,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         loadingText = 'We are loading Store Instance ' + $routeParams.storeId;
       }
       this.showLoadingModal(loadingText);
-      this.setWizardSteps();
       if ($routeParams.storeId) {
         $this.getStoreInstance();
         return;
@@ -452,4 +435,5 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.init();
 
+    
   });
