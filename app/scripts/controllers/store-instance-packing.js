@@ -76,16 +76,26 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     }
 
+    $this.calculatePickedQtyFromTotal = function (item) {
+      var totalQuantity = angular.copy(item.totalQuantity);
+      item.quantity = parseInt(totalQuantity);
+      item.quantity += parseInt(item.ullageQuantity) || 0;
+      item.quantity -= parseInt(item.inboundQuantity) || 0;
+      item.quantity = item.quantity.toString();
+    };
+
     this.mergeIfItemHasPickListMatch = function (item, itemMatch) {
       lodash.extend(itemMatch, item);
+      $this.calculatePickedQtyFromTotal(itemMatch);
     };
 
     this.mergeNewInstanceItem = function (item) {
       var offloadItemMatch = lodash.findWhere($scope.offloadMenuItems, {itemMasterId: item.itemMasterId});
-      if(offloadItemMatch) {
+      if (offloadItemMatch) {
         var mergedItem = lodash.extend(angular.copy(item), angular.copy(offloadItemMatch));
         mergedItem.isInOffload = false;
-        $scope.menuItemList.push(mergedItem);
+        $scope.menuItems.push(mergedItem);
+        $this.calculatePickedQtyFromTotal(mergedItem);
         lodash.remove($scope.offloadMenuItems, offloadItemMatch);
       } else {
         $scope.menuItems.push(item);
@@ -94,7 +104,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.mergePrevInstanceItem = function (item) {
       var offloadItemMatch = lodash.findWhere($scope.offloadMenuItems, {itemMasterId: item.itemMasterId});
-      if(offloadItemMatch) {
+      if (offloadItemMatch) {
         lodash.extend(offloadItemMatch, item);
       } else {
         item.isInOffload = true;
@@ -105,7 +115,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.mergeMenuItemsForRedispatch = function (menuItemsFromAPI) {
       angular.forEach(menuItemsFromAPI, function (item) {
         var itemMatch = lodash.findWhere($scope.menuItems, {itemMasterId: item.itemMasterId});
-        if(itemMatch) {
+        if (itemMatch) {
           $this.mergeIfItemHasPickListMatch(item, itemMatch);
         } else {
           var storeInstanceItemType = (item.storeInstanceId === parseInt($routeParams.storeId)) ? 'NewInstance' : 'PrevInstance';
@@ -133,9 +143,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
       if (angular.isDefined(item.menuQuantity)) {
         return 'Template';
-      } else if(angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === inboundCountTypeId) {
+      } else if (angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === inboundCountTypeId) {
         return 'Inbound';
-      } else if(angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ullageCountTypeId) {
+      } else if (angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ullageCountTypeId) {
         return 'Ullage';
       }
       return 'Packed';
@@ -146,6 +156,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $this.formatPackedItem = function (item) {
+      if ($routeParams.action === 'redispatch') {
+        item.totalQuantity = item.quantity;
+        $this.calculatePickedQtyFromTotal(item);
+      }
       item.quantity = item.quantity.toString();
     };
 
@@ -160,7 +174,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       item.ullageQuantity = angular.copy(item.quantity.toString());
       item.ullageId = angular.copy(item.id);
       var itemUllageReasonObject = lodash.findWhere($scope.ullageReasonCodes, {id: item.ullageReasonCode});
-      item.ullageReason = itemUllageReasonObject ||  null;
+      item.ullageReason = itemUllageReasonObject || null;
       delete item.quantity;
       delete item.id;
     };
@@ -177,7 +191,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $this[formatItemFunctionName](item);
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
       });
-      if($routeParams.action === 'redispatch') {
+      if ($routeParams.action === 'redispatch') {
         $this.mergeMenuItemsForRedispatch(menuItems);
       } else {
         $this.mergeMenuItems(menuItems);
@@ -224,8 +238,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
-    this.getUlageReasonCodesSuccess = function (dateFromAPI) {
-      $scope.ullageReasonCodes = dateFromAPI.companyReasonCodes;
+    this.getUlageReasonCodesSuccess = function (dataFromAPI) {
+      $scope.ullageReasonCodes = lodash.filter(angular.copy(dataFromAPI.companyReasonCodes), function (reason) {
+        return reason.description === 'Ullage';
+      });
     };
 
     this.getUlageReasonCodes = function () {
@@ -282,9 +298,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $location.path(stepObject.uri);
     }
 
-    function updateStatusToStep(stepObject) {
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName).then(function (response) {
-        updateStoreDetails(response, stepObject);
+    function updateStatusToStep(stepObject, storeInstanceId, shouldRedirectToStep) {
+      storeInstanceFactory.updateStoreInstanceStatus(storeInstanceId, stepObject.stepName).then(function (response) {
+        if (shouldRedirectToStep) {
+          updateStoreDetails(response, stepObject, storeInstanceId);
+        }
       }, showErrors);
     }
 
@@ -295,6 +313,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getStoreDetails = function () {
       return storeInstanceFactory.getStoreDetails($routeParams.storeId).then(this.getStoreDetailsSuccess, errorHandler);
     };
+
+    function savePackingDataSuccessHandler(dataFromAPI) {
+      $scope.emptyMenuItems = [];
+      angular.forEach(dataFromAPI.response, function (item) {
+        var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId});
+        item.itemCode = angular.isDefined(masterItem) ? masterItem.itemCode : '';
+        item.itemName = angular.isDefined(masterItem) ? masterItem.itemName : '';
+      });
+      getItemsSuccessHandler(dataFromAPI);
+    }
 
     this.checkForDuplicate = function (item) {
       var duplicates = lodash.filter($scope.emptyMenuItems, function (filteredItem) {
@@ -312,7 +340,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.checkForDuplicatesInPayload = function () {
       var duplicatesExist = false;
-      angular.forEach($scope.emptyMenuItems, function (item) {
+      var mergedMenuItems = (angular.copy($scope.emptyMenuItems));
+      if ($routeParams.action === 'redispatch') {
+        mergedMenuItems = mergedMenuItems.concat(angular.copy($scope.emptyOffloadMenuItems));
+      }
+      angular.forEach(mergedMenuItems, function (item) {
         duplicatesExist = duplicatesExist || $this.checkForDuplicate(item);
       });
       return duplicatesExist;
@@ -320,14 +352,26 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.checkForEmptyItemsInPayload = function () {
       var emptyItemsExist = false;
-      angular.forEach($scope.emptyMenuItems, function (item) {
+      var mergedMenuItems = (angular.copy($scope.emptyMenuItems));
+      if ($routeParams.action === 'redispatch') {
+        mergedMenuItems = mergedMenuItems.concat(angular.copy($scope.emptyOffloadMenuItems));
+      }
+      angular.forEach(mergedMenuItems, function (item) {
         emptyItemsExist = emptyItemsExist || (!item.itemMasterId && !item.masterItem);
       });
       return emptyItemsExist;
     };
 
-    this.checkForCompleteUllagePayload = function () {
+    this.checkForIncompleteUllagePayload = function () {
+      if ($routeParams.action !== 'end-instance' && $routeParams.action !== 'redispatch') {
+        return false;
+      }
       var mergedMenuItems = angular.copy($scope.menuItems).concat(angular.copy($scope.emptyMenuItems));
+      if ($routeParams.action === 'redispatch') {
+        mergedMenuItems = mergedMenuItems.concat(angular.copy($scope.offloadMenuItems));
+        mergedMenuItems = mergedMenuItems.concat(angular.copy($scope.emptyOffloadMenuItems));
+      }
+
       var ullageDataIncomplete = false;
       angular.forEach(mergedMenuItems, function (item) {
         ullageDataIncomplete = ullageDataIncomplete || (item.ullageQuantity > 0 && !item.ullageReason);
@@ -353,10 +397,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         quantity: parseInt(item.ullageQuantity),
         countTypeId: ullageCountTypeId
       };
-      if(item.ullageQuantity > 0) {
+
+      if (!angular.isNumber(item.ullageQuantity)) {
+        ullagePayload.quantity = 0;
+      }
+      if (item.ullageQuantity > 0) {
         ullagePayload.ullageReasonCode = item.ullageReason.id;
       }
-      if(item.ullageId) {
+      if (item.ullageId) {
         ullagePayload.id = item.ullageId;
       }
       return ullagePayload;
@@ -369,10 +417,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         quantity: parseInt(item.inboundQuantity),
         countTypeId: inboundCountTypeId
       };
-      if(item.inboundQuantityId) {
+      if (item.inboundQuantityId) {
         inboundPayload.id = item.inboundQuantityId;
       }
       return inboundPayload;
+    };
+
+    this.createDispatchedPayload = function (item) {
+      var dispatchedCountTypeId = $this.getIdByNameFromArray('Warehouse Open', $scope.countTypes);
+      var dispatchedPayload = {
+        itemMasterId: item.itemMasterId || item.masterItem.id,
+        quantity: $scope.calculateTotalDispatchedQty(item),
+        countTypeId: dispatchedCountTypeId
+      };
+      if (item.id) {
+        dispatchedPayload.id = item.id;
+      }
+      return dispatchedPayload;
     };
 
     this.endInstanceCreatePayload = function (item, workingPayload) {
@@ -382,11 +443,27 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       workingPayload.push(inboundPayload);
     };
 
+    this.redispatchCreatePayload = function (item, workingPayload) {
+
+      if (item.ullageQuantity) {
+        var ullagePayload = $this.createUllagePayload(item);
+        workingPayload.prevStoreInstancePayload.push(ullagePayload);
+      }
+      if (item.inboundQuantity) {
+        var inboundPayload = $this.createInboundPayload(item);
+        workingPayload.prevStoreInstancePayload.push(inboundPayload);
+      }
+      if (!item.isInOffload) {
+        var dispatchedPayload = $this.createDispatchedPayload(item);
+        workingPayload.currentStoreInstancePayload.push(dispatchedPayload);
+      }
+    };
+
     this.createPayload = function () {
       var newPayload = {response: []};
       var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
       angular.forEach(mergedItems, function (item) {
-        if($routeParams.action === 'end-instance') {
+        if ($routeParams.action === 'end-instance') {
           $this.endInstanceCreatePayload(item, newPayload.response);
         } else {
           $this.dispatchAndReplenishCreatePayload(item, newPayload.response);
@@ -395,7 +472,72 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return newPayload;
     };
 
-    this.formatStoreInstanceItemsPayload = function () {
+    $this.createPayloadForRedispatch = function () {
+      var combinedPayload = {currentStoreInstancePayload: [], prevStoreInstancePayload: []};
+      var mergedItems = $scope.menuItems.concat($scope.emptyMenuItems);
+      mergedItems = mergedItems.concat($scope.offloadMenuItems);
+      mergedItems = mergedItems.concat($scope.emptyOffloadMenuItems);
+
+      angular.forEach(mergedItems, function (item) {
+        $this.redispatchCreatePayload(item, combinedPayload);
+      });
+      return combinedPayload;
+    };
+
+    this.createPayloadAndSave = function (shouldUpdateStatus, redirectURL) {
+      var payload = $this.createPayload();
+      showLoadingModal('Saving...');
+      storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, payload).then(function (responseData) {
+        savePackingDataSuccessHandler(responseData);
+        if (shouldUpdateStatus) {
+          updateStatusToStep($this.nextStep, $routeParams.storeId, true);
+        } else {
+          showToast('success', 'Save Packing Data', 'Data successfully updated!');
+          $location.path(redirectURL);
+        }
+        hideLoadingModal();
+      });
+    };
+
+    this.makeUpdateStatusPromisesForRedispatch = function () {
+      var promises = [
+        updateStatusToStep($this.nextStep, $routeParams.storeId, true),
+        updateStatusToStep($this.prevInstanceNextStep, $scope.storeDetails.prevStoreInstanceId, false)
+      ];
+      $q.all(promises).then(function () {
+        hideLoadingModal();
+      });
+    };
+
+    this.createPayloadAndSaveForRedispatch = function (shouldUpdateStatus, redirectURL) {
+      showLoadingModal('Saving...');
+      var combinedPayload = $this.createPayloadForRedispatch();
+      var currentStorePayload = {response: combinedPayload.currentStoreInstancePayload};
+      var prevStorePayload = {response: combinedPayload.prevStoreInstancePayload};
+      var promises = [
+        storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, currentStorePayload),
+      ];
+      if (prevStorePayload.response.length > 0) {
+        promises.push(storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeDetails.prevStoreInstanceId, prevStorePayload));
+      }
+      $q.all(promises).then(function () {
+        hideLoadingModal();
+        if (shouldUpdateStatus) {
+          $this.makeUpdateStatusPromisesForRedispatch();
+        } else {
+          showToast('success', 'Save Packing Data', 'Data successfully updated!');
+          $location.path(redirectURL);
+        }
+      });
+
+      // make 2 API calls for save and 2 for update status
+    };
+
+    this.checkFormValidity = function () {
+      if ($scope.storeInstancePackingForm.$invalid) {
+        showToast('danger', 'Save Items', 'All Packed quantities must be a number');
+        return false;
+      }
       var duplicatesExist = $this.checkForDuplicatesInPayload();
       if (duplicatesExist) {
         showToast('danger', 'Save Items', 'Duplicate Entries Exist!');
@@ -406,27 +548,26 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         showToast('danger', 'Save Items', 'An item must be selected for all rows');
         return false;
       }
-      var ullagePayloadIncomplete = ($routeParams.action !== 'end-instance') ? false : $this.checkForCompleteUllagePayload();
-      if(ullagePayloadIncomplete) {
+      var ullagePayloadIncomplete = $this.checkForIncompleteUllagePayload();
+      if (ullagePayloadIncomplete) {
         showToast('danger', 'Save Items', 'All items with an ullage quantity require an ullage reason');
         return false;
       }
-
-      return $this.createPayload();
+      return true;
     };
 
 
     this.isStatusCorrectForSetAction = function (statusName) {
-      if($routeParams.action === 'end-instance' && statusName === '7') {
+      if ($routeParams.action === 'end-instance' && statusName === '7') {
         return true;
-      } else if($routeParams.action !== 'end-instance' && statusName === '1') {
+      } else if ($routeParams.action !== 'end-instance' && statusName === '1') {
         return true;
       }
       return false;
     };
 
     this.isInstanceReadOnly = function () {
-      if($this.isStatusCorrectForSetAction($scope.storeDetails.currentStatus.name)) {
+      if ($this.isStatusCorrectForSetAction($scope.storeDetails.currentStatus.name)) {
         $scope.readOnly = false;
         $scope.saveButtonName = 'Save & Exit';
       } else {
@@ -441,7 +582,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var storeInstanceForMenuItems = ($routeParams.action === 'replenish') ? $scope.storeDetails.replenishStoreInstanceId : $routeParams.storeId;
       $this.getStoreInstanceMenuItems(storeInstanceForMenuItems);
 
-      if($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
+      if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
         $this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId);
       }
     };
@@ -452,7 +593,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         this.getRegularItemTypeId()
       ];
 
-      if($routeParams.action === 'end-instance') {
+      if ($routeParams.action === 'end-instance' || $routeParams.action === 'redispatch') {
         promises.push($this.getCountTypes());
         promises.push($this.getUlageReasonCodes());
       }
@@ -469,6 +610,17 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return promises;
     };
 
+    this.redispatchInit = function () {
+      $scope.offloadMenuItems = [];
+      $scope.emptyOffloadMenuItems = [];
+      $scope.addOffloadItemsQty = 1;
+
+      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps('end-instance', $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.prevInstanceWizardSteps, {controllerName: 'Packing'});
+      $this.prevInstanceNextStep = angular.copy($scope.prevInstanceWizardSteps[currentStepIndex + 1]);
+      $this.prevInstancePrevStep = angular.copy($scope.prevInstanceWizardSteps[currentStepIndex - 1]);
+    };
+
     this.initialize = function () {
       showLoadingModal('Loading Store Detail for Packing...');
 
@@ -479,10 +631,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $scope.menuItems = [];
       $scope.emptyMenuItems = [];
-      if($routeParams.action === 'redispatch') {
-        $scope.offloadMenuItems = [];
-        $scope.emptyOffloadMenuItems = [];
-        $scope.addOffloadItemsQty = 1;
+      if ($routeParams.action === 'redispatch') {
+        $this.redispatchInit();
       }
       var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies);
@@ -513,44 +663,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    function savePackingDataSuccessHandler(dataFromAPI, updateStatus, redirectURL) {
-      $scope.emptyMenuItems = [];
-      angular.forEach(dataFromAPI.response, function (item) {
-        var masterItem = lodash.findWhere($scope.masterItemsList, {id: item.itemMasterId});
-        item.itemCode = angular.isDefined(masterItem) ? masterItem.itemCode : '';
-        item.itemName = angular.isDefined(masterItem) ? masterItem.itemName : '';
-      });
-      getItemsSuccessHandler(dataFromAPI);
-
-      if (updateStatus) {
-        updateStatusToStep($this.nextStep);
-      } else {
-        showToast('success', 'Save Packing Data', 'Data successfully updated!');
-        $location.path(redirectURL);
-      }
-
-      hideLoadingModal();
-    }
-
-
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus, redirectURL) {
       if ($scope.readOnly) {
         $location.path(dashboardURL);
         return;
       }
-      if ($scope.storeInstancePackingForm.$invalid) {
-        showToast('danger', 'Save Items', 'All Packed quantities must be a number');
-        return false;
+      var isFormValid = $this.checkFormValidity();
+      if (isFormValid && $routeParams.action === 'redispatch') {
+        $this.createPayloadAndSaveForRedispatch(shouldUpdateStatus, redirectURL);
+      } else if (isFormValid) {
+        $this.createPayloadAndSave(shouldUpdateStatus, redirectURL);
       }
-      var payload = $this.formatStoreInstanceItemsPayload();
-      if (!payload) {
-        return;
-      }
-      // TODO: uncomment!!
-      showLoadingModal('Saving...');
-      storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, payload).then(function (responseData) {
-        savePackingDataSuccessHandler(responseData, shouldUpdateStatus, redirectURL);
-      }, showErrors);
+
     };
 
     $scope.saveAndExit = function () {
@@ -561,10 +685,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    // TODO: handle redispatch previous!!
     $scope.goToPreviousStep = function () {
-      if($routeParams.action === 'end-instance') {
+      if ($routeParams.action === 'end-instance') {
         showLoadingModal('Updating Status...');
-        updateStatusToStep($this.prevStep);
+        updateStatusToStep($this.prevStep, $routeParams.storeId, true);
+      } else if($routeParams.action === 'redispatch') {
+        showLoadingModal('Updating Status...');
+        updateStatusToStep($this.prevStep, $routeParams.storeId, true);
+        updateStatusToStep($this.prevInstancePrevStep, $scope.storeDetails.prevStoreInstanceId, false);
       } else {
         $location.path($this.prevStep.uri);
       }
@@ -579,29 +708,29 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return ($scope.menuItems.length > 0 || $scope.emptyMenuItems.length > 0);
     };
 
-    $scope.isActionState = function(actionState) {
+    $scope.isActionState = function (actionState) {
       return $routeParams.action === actionState;
     };
 
     $scope.shouldDisplayQuantityField = function (fieldName) {
       var actionToFieldMap = {
-        'dispatch':['template', 'packed'],
-        'replenish':['packed'],
-        'end-instance':['ullage', 'inbound'],
-        'redispatch':['inbound', 'ullage', 'template', 'packed', 'dispatch']
+        'dispatch': ['template', 'packed'],
+        'replenish': ['packed'],
+        'end-instance': ['ullage', 'inbound'],
+        'redispatch': ['inbound', 'ullage', 'template', 'packed', 'dispatch']
       };
       return (actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0);
     };
 
     $scope.shouldDisplayInboundFields = function (item) {
-      return ($routeParams.action === 'redisptach' && item.storeInstanceId === parseInt($routeParams.storeId));
+      return ($routeParams.action === 'end-instance') || ($routeParams.action === 'redispatch' && angular.isDefined(item.inboundQuantity));
     };
 
     $scope.calculateTotalDispatchedQty = function (item) {
       var total = parseInt(item.quantity) || 0;
-      total += parseInt(item.menuQuantity) || 0;
+      total += parseInt(item.inboundQuantity) || 0;
       total -= parseInt(item.ullageQuantity) || 0;
-      return total.toString();
+      return total;
     };
 
   });
