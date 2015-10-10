@@ -146,7 +146,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     });
 
     it('should format scope.items', function () {
-      var expectedItemDescription = 'Ip015 -  Ipad Mini';
+      var expectedItemDescription = 'Ru-002 -  BabyRuth';
       expect(scope.items[0].itemDescription).toEqual(expectedItemDescription);
     });
 
@@ -272,15 +272,28 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
 
   });
 
-  describe('Init', function () {
+  describe('Init for redispatch', function () {
+    beforeEach(inject(function () {
+      routeParams.action = 'redispatch';
+      var redispatchStoreDetails = angular.copy(endInstanceStoreDetailsJSON);
+      redispatchStoreDetails.prevStoreInstanceId = 165;
+
+      getStoreDetailsDeferred.resolve(redispatchStoreDetails);
+      scope.$digest();
+      initController(controller);
+    }));
+
+    it('should attach action to scope', function () {
+      expect(scope.action).toBe('redispatch');
+    });
+  });
+
+  describe('Init for end-instance', function () {
     beforeEach(inject(function () {
       routeParams.action = 'end-instance';
       getStoreDetailsDeferred.resolve(endInstanceStoreDetailsJSON);
       scope.$digest();
       initController(controller);
-      scope.$digest();
-
-
     }));
 
     it('should attach action to scope', function () {
