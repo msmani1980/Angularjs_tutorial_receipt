@@ -204,7 +204,7 @@ angular.module('ts5App')
       if ($routeParams.action === 'replenish') {
         action = 'replenished';
       }
-      showMessage('Store Instance ' + $routeParams.storeId + 'has been ' + action + '!', 'success');
+      showMessage('Store Instance ' + $routeParams.storeId + ' has been ' + action + '!', 'success');
     }
 
     function getStoreInstanceSeals() {

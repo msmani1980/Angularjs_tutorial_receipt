@@ -762,12 +762,19 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return (actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0);
     };
 
-    $scope.isEndInstanceOrRedispatch = function() {
-      return ($routeParams.action === 'end-instance') || ($routeParams.action === 'redispatch');
+    $scope.showInboundBasedOnAction = function(action, item) {
+      if (action === 'end-instance') {
+        return true;
+      }
+      if (action === 'redispatch') {
+        return (angular.isDefined(item.ullageQuantity));
+      }
+      return false;
     };
 
     $scope.shouldDisplayInboundFields = function(item) {
-      return ($scope.isEndInstanceOrRedispatch() && item.storeInstanceId === parseInt($routeParams.storeId));
+      return ($scope.showInboundBasedOnAction('end-instance', item) || $scope.showInboundBasedOnAction('redispatch',
+        item));
     };
 
     $scope.calculateTotalDispatchedQty = function(item) {
