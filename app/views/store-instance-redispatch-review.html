@@ -66,45 +66,45 @@
           </div>
           <table class="table table-striped pick-list">
             <thead>
-            <tr ng-switch on="action">
+            <tr>
               <th>Retail Item Details</th>
-              <th ng-switch-when="dispatch" width="15%">Template Quantity</th>
-              <th ng-switch-when="dispatch" width="15%">Packed Quantity</th>
-
-              <th ng-switch-when="replenish" width="15%">Packed Quantity</th>
-
-              <th ng-switch-when="end-instance" width="15%">Inbound Qty</th>
-              <th ng-switch-when="end-instance" width="15%">Ullage</th>
-              <th ng-switch-when="end-instance">Ullage Reason</th>
+              <th width="15%">Inbound Quantity</th>
+              <th width="15%">Required Quantity</th>
+              <th width="15%">Picked Quantity</th>
+              <th width="15%">Ullage</th>
+              <th>Ullage Reason</th>
+              <th width="15%">Dispatched Quantity</th>
 
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in items | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
-                ng-class="hasDiscrepancy(item)" ng-switch on="action">
+            <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+                ng-class="hasDiscrepancy(item)">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
               </td>
 
-              <td ng-switch-when="dispatch">
+              <td>
+                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+              </td>
+              <td>
                 <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
               </td>
-              <td ng-switch-when="dispatch">
-                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+
+              <td>
+                <input type="text" class="form-control" ng-model="item.pickedQuantity" placeholder="0" disabled>
               </td>
 
-              <td ng-switch-when="replenish">
-                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
-              </td>
-
-              <td ng-switch-when="end-instance">
-                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
-              </td>
-              <td ng-switch-when="end-instance">
+              <td>
                 <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0" disabled>
               </td>
-              <td ng-switch-when="end-instance">
+
+              <td>
                 <input type="text" class="form-control" value="{{getUllageReason(item.ullageReasonCode)}}" disabled>
+              </td>
+
+              <td>
+                <input type="text" class="form-control" ng-model="item.dispatchedQuantity" placeholder="0" disabled>
               </td>
 
             </tr>

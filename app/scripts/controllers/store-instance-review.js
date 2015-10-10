@@ -123,7 +123,7 @@ angular.module('ts5App')
       });
     }
 
-    $scope.removeInboundSeals = function(seal) {
+    $scope.removeInboundSeals = function (seal) {
       return sealsToRemove['end-instance'].indexOf(seal.name) < 0;
     };
 
@@ -137,9 +137,29 @@ angular.module('ts5App')
       });
     }
 
+    function setPackingSection() {
+      $scope.pickListItems = [];
+      $scope.offloadItemList = [];
+      angular.forEach($scope.storeOneItemList, function (item) {
+        var storeTwoItem = lodash.findWhere($scope.items, {itemMasterId: item.itemMasterId});
+        if (storeTwoItem) {
+          console.log('picklist', storeTwoItem);
+          $scope.pickListItems.push(angular.merge(item, storeTwoItem));
+          lodash.remove($scope.items, storeTwoItem);
+        } else {
+          console.log('offload', item);
+          $scope.offloadItemList.push(item);
+        }
+      });
+      //$scope.items;
+    }
+
     function initLoadComplete() {
       hideLoadingModal();
       setSealsList();
+      if (isRedispatch()) {
+        setPackingSection();
+      }
     }
 
     function showUserCurrentStatus() {
@@ -214,6 +234,10 @@ angular.module('ts5App')
       }
     };
 
+    function isRedispatch() {
+      return $routeParams.action === 'redispatch';
+    }
+
     function mergeInboundUllageItems(rawItemList) {
       var inboundItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {name: 'Offload'}).id;
@@ -231,29 +255,55 @@ angular.module('ts5App')
       return angular.merge(inboundItemList, ullageItemList);
     }
 
-    function formatItems() {
-      $scope.items.map(function (item) {
+    function getDispatchedItemList(rawItemList, filteredItems) {
+      var dispatchedItemList = rawItemList.filter(function (item) {
+        return item.countTypeId === lodash.findWhere($this.countTypes, {name: 'Warehouse Open'}).id;
+      });
+
+      dispatchedItemList.map(function (item) {
+        item.dispatchedQuantity = item.quantity;
+        delete item.quantity;
+      });
+
+      return angular.merge(dispatchedItemList, filteredItems);
+    }
+
+    function formatItems(itemArray, excludeMenuQty) {
+      itemArray.map(function (item) {
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
         item.disabled = true;
-        if (!$scope.isEndInstance()) {
+
+        if (!excludeMenuQty) {
           item.menuQuantity = getMenuQuantity(item.itemMasterId);
         }
       });
+      return itemArray;
     }
 
     function setStoreInstanceItems(dataFromAPI) {
       var rawItemList = angular.copy(dataFromAPI.response);
-      $scope.items = ($scope.isEndInstance() ? mergeInboundUllageItems(rawItemList) : rawItemList);
-      formatItems();
+      var mergedItems = ($scope.isEndInstance() ? mergeInboundUllageItems(rawItemList) : rawItemList);
+      if (isRedispatch()) {
+        mergedItems = getDispatchedItemList(rawItemList, mergedItems);
+      }
+      $scope.items = formatItems(mergedItems);
+    }
+
+    function setStoreOneItemList(dataFromAPI) {
+      var mergedItems = mergeInboundUllageItems(angular.copy(dataFromAPI.response));
+      mergedItems.map(function (item) {
+        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
+      });
+      $scope.storeOneItemList = formatItems(mergedItems, true);
     }
 
     function getStoreInstanceItems() {
       _initPromises.push(
         storeInstanceFactory.getStoreInstanceItemList($routeParams.storeId).then(setStoreInstanceItems)
       );
-      if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
+      if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
         _initPromises.push(
-          storeInstanceFactory.getStoreInstanceItemList($scope.storeDetails.prevStoreInstanceId).then(setStoreInstanceItems)
+          storeInstanceFactory.getStoreInstanceItemList($scope.storeDetails.prevStoreInstanceId).then(setStoreOneItemList)
         );
       }
     }
