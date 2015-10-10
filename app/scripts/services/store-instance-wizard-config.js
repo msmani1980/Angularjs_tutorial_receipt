@@ -13,6 +13,7 @@ angular.module('ts5App')
     var createURL = '/store-instance-create/';
     var packingURL = '/store-instance-packing/';
     var sealsURL = '/store-instance-seals/';
+    var inboundSealsURL = '/store-instance-inbound-seals/';
     var reviewURL = '/store-instance-review/';
 
     function setSteps(action, id) {
@@ -81,12 +82,13 @@ angular.module('ts5App')
         'redispatch': [{
           label: 'Create Store Instance',
           uri: createURL + action + (id ? '/' + id : ''),
+          stepName: '5',
           controllerName: 'Create'
         }, {
           label: 'Inbound Seals',
-          uri: sealsURL + action + '/' + id,
-          stepName: '1',
-          controllerName: 'Seals'
+          uri: inboundSealsURL + action + '/' + id,
+          stepName: '6',
+          controllerName: 'InboundSeals'
         }, {
           label: 'Packing',
           uri: packingURL + action + '/' + id,
@@ -112,7 +114,6 @@ angular.module('ts5App')
         action = 'dispatch';
       }
       var steps = setSteps(action, id);
-
       return steps[action];
     }
     return {

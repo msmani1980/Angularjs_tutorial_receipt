@@ -179,10 +179,16 @@ describe('Store Instance Create Controller', function() {
     getStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
   }
 
-  function mockSetStatusToInbound() {
+  function mockEndStoreInstance() {
     $scope.$digest();
-    StoreInstanceCreateCtrl.setStatusToInbound();
+    StoreInstanceCreateCtrl.endStoreInstance();
   }
+
+  function mockRedispatchStoreInstance() {
+    $scope.$digest();
+    StoreInstanceCreateCtrl.redispatchStoreInstance();
+  }
+
 
   describe('when the Dispatch controller loads', function() {
 
@@ -972,17 +978,17 @@ describe('Store Instance Create Controller', function() {
 
   });
 
-  describe('The setStatusToInbound functionality', function() {
+  describe('The endStoreInstance functionality', function() {
 
     beforeEach(function() {
       initController('end-instance');
       spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
-      spyOn(StoreInstanceCreateCtrl, 'setStatusToInbound').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'endStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'endStoreInstanceSuccessHandler').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'endStoreInstanceErrorHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();
-      mockSetStatusToInbound();
+      mockEndStoreInstance();
     });
 
     it('should display the loading modal', function() {
@@ -990,7 +996,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal, when saveAndExit is passed', function() {
-      StoreInstanceCreateCtrl.setStatusToInbound(true);
+      StoreInstanceCreateCtrl.endStoreInstance(true);
       expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
         'Loading Store Instance Dashboard');
     });
@@ -999,8 +1005,8 @@ describe('Store Instance Create Controller', function() {
       expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalled();
     });
 
-    it('should call the setStatusToInbound method on the controller', function() {
-      expect(StoreInstanceCreateCtrl.setStatusToInbound).toHaveBeenCalled();
+    it('should call the endStoreInstance method on the controller', function() {
+      expect(StoreInstanceCreateCtrl.endStoreInstance).toHaveBeenCalled();
     });
 
     describe('success handler', function() {
@@ -1048,7 +1054,7 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should call the error handler', function() {
-        expect(StoreInstanceCreateCtrl.endStoreInstanceErrorHandler).toHaveBeenCalledWith(
+        expect(StoreInstanceCreateCtrl.createStoreInstanceErrorHandler).toHaveBeenCalledWith(
           errorResponse);
       });
 
@@ -1056,7 +1062,61 @@ describe('Store Instance Create Controller', function() {
 
   });
 
-  describe('menuPlaceholderText functionality',function (){
+  describe('The redispatchStoreInstance functionality', function() {
+
+    beforeEach(function() {
+      initController('redispatch');
+      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'redispatchStoreInstance').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'redispatchStoreInstanceSuccessHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();
+      mockRedispatchStoreInstance();
+    });
+
+    it('should display the loading modal', function() {
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith('Loading Inbound Seals');
+    });
+
+    it('should display the loading modal, when saveAndExit is passed', function() {
+      StoreInstanceCreateCtrl.redispatchStoreInstance(true);
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+        'Loading Store Instance Dashboard');
+    });
+    it('should call the redispatchStoreInstance method on the controller', function() {
+      expect(StoreInstanceCreateCtrl.redispatchStoreInstance).toHaveBeenCalled();
+    });
+
+    describe('success handler', function() {
+      var response;
+      beforeEach(function() {
+        response = {
+          id: 13,
+          statusId: 11
+        };
+        updateStoreInstanceStatusDeferred.resolve(response);
+        $scope.$digest();
+      });
+
+      it('should hide the loading modal', function() {
+        expect(StoreInstanceCreateCtrl.hideLoadingModal).toHaveBeenCalled();
+      });
+
+      it('should display a success message if the response contains an id', function() {
+        var message = 'Redispatch Instance id: ' + response.id;
+        expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
+      });
+
+      it('should redirect the user to the packing page with the new store instance id', function() {
+        var url = '/store-instance-inbound-seals/' + 'redispatch' + '/' + response.id;
+        expect(location.path()).toEqual(url);
+      });
+
+    });
+
+  });
+
+  describe('menuPlaceholderText functionality', function() {
 
     it('should return nothing if the controller is not dispatch action', function() {
       initController('replenish');
@@ -1066,35 +1126,31 @@ describe('Store Instance Create Controller', function() {
 
     it('should return text telling the user when there are menus to select', function() {
       initController();
-      $scope.filteredMenuList = [
-         {
-            'id':184,
-            'menuCode':'Replenish1234',
-            'companyId':403,
-            'createdBy':1,
-            'createdOn':'2015-10-05 20:04:23.738279',
-            'updatedBy':null,
-            'updatedOn':null,
-            'menuName':'Replenish',
-            'companyMenus':[
-               {
-                  'startDate':'2015-10-06',
-                  'endDate':'2018-10-06',
-                  'createdBy':1,
-                  'createdOn':'2015-10-05 20:04:23.89218',
-                  'updatedBy':null,
-                  'updatedOn':null,
-                  'id':350,
-                  'menuCode':null,
-                  'menuName':null,
-                  'description':null,
-                  'companyId':null,
-                  'menuId':184,
-                  'menuItems':null
-               }
-            ]
-         }
-      ];
+      $scope.filteredMenuList = [{
+        'id': 184,
+        'menuCode': 'Replenish1234',
+        'companyId': 403,
+        'createdBy': 1,
+        'createdOn': '2015-10-05 20:04:23.738279',
+        'updatedBy': null,
+        'updatedOn': null,
+        'menuName': 'Replenish',
+        'companyMenus': [{
+          'startDate': '2015-10-06',
+          'endDate': '2018-10-06',
+          'createdBy': 1,
+          'createdOn': '2015-10-05 20:04:23.89218',
+          'updatedBy': null,
+          'updatedOn': null,
+          'id': 350,
+          'menuCode': null,
+          'menuName': null,
+          'description': null,
+          'companyId': null,
+          'menuId': 184,
+          'menuItems': null
+        }]
+      }];
       $scope.$digest();
       var menuPlaceholderText = $scope.menuPlaceholderText();
       expect(menuPlaceholderText).toEqual('Select one or more Menus');

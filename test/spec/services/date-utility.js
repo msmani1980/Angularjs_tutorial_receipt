@@ -58,6 +58,54 @@ describe('Date Utility service', function () {
 
   });
 
+  describe('formatDateForApp method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.formatDateForApp).toBeDefined();
+    });
+
+    it('should format a date string from one format to another',
+      function () {
+        var expectedDateString = '06/19/2015';
+        var formattedString = dateUtility.formatDateForApp(
+          '20150619');
+        expect(formattedString).toEqual(expectedDateString);
+      });
+
+  });
+
+  describe('formatTimestampForAPI method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.formatTimestampForAPI).toBeDefined();
+    });
+
+    it('should format a timestamp string from one format to another',
+      function () {
+        var expectedString = '2015-10-01 18:25:00.000000';
+        var formattedString = dateUtility.formatTimestampForAPI(
+          '10/01/2015 18:25');
+        expect(formattedString).toEqual(expectedString);
+      });
+
+  });
+
+  describe('formatTimestampForApp method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.formatTimestampForApp).toBeDefined();
+    });
+
+    it('should format a timestamp string from one format to another',
+      function () {
+        var expectedString = '10/01/2015 18:25';
+        var formattedString = dateUtility.formatTimestampForApp(
+          '2015-10-01 18:25:12.123456');
+        expect(formattedString).toEqual(expectedString);
+      });
+
+  });
+
   describe('isValid() method', function () {
 
     it('should be defined for APP', function () {
