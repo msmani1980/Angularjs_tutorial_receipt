@@ -767,7 +767,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.shouldDisplayInboundFields = function(item) {
-      return ($scope.isEndInstanceOrRedispatch() && angular.isDefined(item.inboundQuantity));
+      return ($scope.isEndInstanceOrRedispatch() && item.storeInstanceId === parseInt($routeParams.storeId));
     };
 
     $scope.calculateTotalDispatchedQty = function(item) {

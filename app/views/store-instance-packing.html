@@ -66,13 +66,13 @@
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text"
                    ng-if="shouldDisplayInboundFields(item)"
-                   name="ullageQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
-                    ng-required="!isActionState('end-instance')"
+                   name="ullageQuantity-{{$index}}"
                    class="form-control"
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
+                   ng-required="!isActionState('end-instance')"
                    maxlength="5"
                    placeholder="0"/>
           </td>
