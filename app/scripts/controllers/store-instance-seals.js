@@ -405,9 +405,6 @@ angular.module('ts5App')
 
     this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
-      if($routeParams.action==='redispatch'){
-        stepObject.uri = stepObject.uri.replace(/[0-9]+/,$scope.storeDetails.prevStoreInstanceId);
-      }
       $location.path(stepObject.uri);
     };
 

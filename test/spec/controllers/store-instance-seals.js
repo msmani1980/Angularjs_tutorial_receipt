@@ -617,21 +617,6 @@ describe('the Store Instance Seals controller', function() {
 
     });
 
-    describe('statusUpdateSuccessHandler on re-dispatch', function() {
-
-      beforeEach(function() {
-        initController('redispatch');
-        $scope.$digest();
-        StoreInstanceSealsCtrl.statusUpdateSuccessHandler(StoreInstanceSealsCtrl.nextStep);
-      });
-
-      it('should redirect the user to the packing page with the new store instance id', function() {
-        var uriControl = StoreInstanceSealsCtrl.nextStep.uri.replace(/[0-9]+/,$scope.storeDetails.prevStoreInstanceId);
-        expect(location.path()).toEqual(uriControl);
-      });
-
-    });
-
     describe('error handler', function() {
 
       var errorResponse;
