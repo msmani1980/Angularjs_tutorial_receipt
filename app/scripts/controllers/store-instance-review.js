@@ -154,6 +154,10 @@ angular.module('ts5App')
       //$scope.items;
     }
 
+    function isRedispatch() {
+      return $routeParams.action === 'redispatch';
+    }
+
     function initLoadComplete() {
       hideLoadingModal();
       setSealsList();
@@ -233,10 +237,6 @@ angular.module('ts5App')
         return $scope.storeDetails.currentStatus.statusName === STATUS_END_INSTANCE;
       }
     };
-
-    function isRedispatch() {
-      return $routeParams.action === 'redispatch';
-    }
 
     function mergeInboundUllageItems(rawItemList) {
       var inboundItemList = rawItemList.filter(function (item) {
