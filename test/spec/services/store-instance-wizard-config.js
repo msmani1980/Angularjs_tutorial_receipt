@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: storeInstanceWizardConfig', function() {
+fdescribe('Service: storeInstanceWizardConfig', function() {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -64,7 +64,7 @@ describe('Service: storeInstanceWizardConfig', function() {
     }, {
       label: 'Inbound Seals',
       uri: '/store-instance-inbound-seals/redispatch/' + mockId,
-      stepName: '6',
+      stepName: '1',
       controllerName: 'InboundSeals'
     }, {
       label: 'Packing',

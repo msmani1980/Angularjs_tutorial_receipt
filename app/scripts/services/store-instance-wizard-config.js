@@ -87,7 +87,7 @@ angular.module('ts5App')
         }, {
           label: 'Inbound Seals',
           uri: inboundSealsURL + action + '/' + id,
-          stepName: '6',
+          stepName: '1',
           controllerName: 'InboundSeals'
         }, {
           label: 'Packing',
