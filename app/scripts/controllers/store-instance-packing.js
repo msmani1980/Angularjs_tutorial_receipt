@@ -224,8 +224,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
-    this.getUlageReasonCodesSuccess = function (dateFromAPI) {
-      $scope.ullageReasonCodes = dateFromAPI.companyReasonCodes;
+    this.getUlageReasonCodesSuccess = function (dataFromAPI) {
+      $scope.ullageReasonCodes = lodash.filter(angular.copy(dataFromAPI.companyReasonCodes), function (reason) {
+        return reason.description === 'Ullage'
+      });
     };
 
     this.getUlageReasonCodes = function () {

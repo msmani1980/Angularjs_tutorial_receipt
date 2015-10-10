@@ -78,13 +78,12 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
-              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{
-                $select.selected.description }}
+              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
                 <div
-                  ng-bind-html="ullageReason.companyReasonCodeName + ' - ' + ullageReason.description  | highlight: $select.search"></div>
+                  ng-bind-html="ullageReason.companyReasonCodeName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </td>
@@ -136,13 +135,12 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
-              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{
-                $select.selected.description }}
+              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
                 <div
-                  ng-bind-html="ullageReason.companyReasonCodeName + ' - ' + ullageReason.description  | highlight: $select.search"></div>
+                  ng-bind-html="ullageReason.companyReasonCodeName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </td>
@@ -228,13 +226,12 @@
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
-              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{
-                $select.selected.description }}
+              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
                 <div
-                  ng-bind-html="ullageReason.companyReasonCodeName + ' - ' + ullageReason.description  | highlight: $select.search"></div>
+                  ng-bind-html="ullageReason.companyReasonCodeName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </td>
@@ -266,13 +263,12 @@
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
-              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }} - {{
-                $select.selected.description }}
+              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
                 <div
-                  ng-bind-html="ullageReason.companyReasonCodeName + ' - ' + ullageReason.description  | highlight: $select.search"></div>
+                  ng-bind-html="ullageReason.companyReasonCodeName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </td>
