@@ -125,7 +125,7 @@ angular.module('ts5App')
         sealNumbers: getSealNumbersByTypeId(_storeInstanceSeals, sealType.id)
       });
 
-      if(isRedispatch()) {
+      if (isRedispatch()) {
         $scope.storeOneSeals.push({
           name: sealType.name,
           bgColor: getSealColorByTypeId(sealType.id),
@@ -172,7 +172,7 @@ angular.module('ts5App')
         $scope.pickListItems.concat($scope.items);
       }
 
-      $scope.pickListItems.map(function(item){
+      $scope.pickListItems.map(function (item) {
         item.pickedQuantity = item.dispatchedQuantity - item.quantity;
       });
     }
@@ -240,6 +240,9 @@ angular.module('ts5App')
 
     function storeInstanceStatusDispatched(response) {
       hideLoadingModal();
+      if (angular.isArray(response)) {
+        response = response[0];
+      }
       $scope.storeDetails.currentStatus = $filter('filter')($scope.storeDetails.statusList, {id: response.statusId}, true)[0];
       showUserCurrentStatus();
       $location.url('/store-instance-dashboard');
@@ -356,16 +359,27 @@ angular.module('ts5App')
       getStoreInstanceReviewData();
     }
 
+    function saveStoreStatusIfRedispatch(status) {
+      var statusNameArray = [getStatusNameIntByName(status[0]), getStatusNameIntByName(status[1])];
+      var statusPromise = [];
+      statusPromise.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameArray[0]));
+      statusPromise.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, statusNameArray[1]));
+      $q.all(statusPromise).then(storeInstanceStatusDispatched, showResponseErrors);
+    }
+
     function saveStoreInstanceStatus(status) {
       $scope.formErrors = [];
+      displayLoadingModal();
+      if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId && angular.isArray(status)) {
+        saveStoreStatusIfRedispatch(status);
+        return;
+      }
       var statusNameInt = getStatusNameIntByName(status);
-      if (!statusNameInt) {
+      if (!status) {
         throwError('statusId', 'Unable to find statusId by name: ' + name);
         return false;
       }
-      displayLoadingModal();
-      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(
-        storeInstanceStatusDispatched, showResponseErrors);
+      storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameInt).then(storeInstanceStatusDispatched, showResponseErrors);
     }
 
     function setupSteps() {
