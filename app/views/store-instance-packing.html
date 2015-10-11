@@ -66,19 +66,19 @@
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text"
                    ng-if="shouldDisplayInboundFields(item)"
-                   name="ullageQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
-                   required="true"
+                   name="ullageQuantity-{{$index}}"
                    class="form-control"
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
+                   ng-required="!isActionState('end-instance')"
                    maxlength="5"
                    placeholder="0"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
-              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }}
+              <ui-select-match placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
@@ -136,7 +136,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
-              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }}
+              <ui-select-match placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
@@ -227,7 +227,7 @@
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
-              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }}
+              <ui-select-match placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
@@ -266,7 +266,7 @@
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
-              <ui-select-match placeholder="Select an Ulage Reason">{{ $select.selected.companyReasonCodeName }}
+              <ui-select-match placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">

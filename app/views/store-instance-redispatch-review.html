@@ -1,0 +1,201 @@
+<div class="container">
+
+  <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()" save-trigger="exit()" disabled="actionNotAllowed" save-button-text="saveButtonText"></step-wizard>
+  <lose-data-alert show-alert="showLoseDataAlert" confirm-trigger="loseDataAlertConfirmTrigger()"></lose-data-alert>
+
+  <form-error-dialog></form-error-dialog>
+
+  <form name="createStoreInstance" ng-submit="submitForm()">
+
+    <store-instance-header></store-instance-header>
+
+    <div class="well">
+      <div class="form-group">
+        <p class="input-group">
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-disabled="true">
+            <i class="fa fa-filter"></i> Filter By
+          </button>
+          </span>
+          <input ng-model="filterItemDetails" type="text" class="form-control" id="filter-item-details" placeholder="Type an item code or name"/>
+        </p>
+      </div>
+    </div>
+
+    <div class="accordion-wrapper">
+
+      <accordion class="store-instance-review-accordion">
+        <accordion-group>
+          <accordion-heading class="accordion-heading">
+            Inbound Seals <i class="fa fa-chevron-down"></i>
+          </accordion-heading>
+          <div class="row">
+            <div class="col-xs-12 text-right">
+              <button type="button" class="btn btn-info" ng-click="redirectTo('Seals')">Edit</button>
+            </div>
+          </div>
+
+          <table class="table store-instance-review-seals-table">
+            <thead>
+            <tr>
+              <th class="col-xs-3">Seal Type</th>
+              <th class="col-xs-9">Seal Numbers</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="sealObj in storeOneSeals | filter:removeSealsForStoreOne">
+              <td>
+                <input type="text" class="form-control" placeholder="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
+              </td>
+              <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
+            </tr>
+            </tbody>
+          </table>
+        </accordion-group>
+      </accordion>
+
+      <accordion class="store-instance-review-accordion">
+        <accordion-group>
+          <accordion-heading class="accordion-heading">
+            Packing <i class="fa fa-chevron-down"></i>
+          </accordion-heading>
+
+          <div class="row">
+            <div class="col-xs-6">
+              <h5>Pick List</h5>
+            </div>
+            <div class="col-xs-6 text-right">
+              <button type="button" class="btn btn-info" ng-click="redirectTo('Packing')">Edit</button>
+            </div>
+          </div>
+          <table class="table table-striped pick-list">
+            <thead>
+            <tr>
+              <th>Retail Item Details</th>
+              <th width="15%">Inbound Quantity</th>
+              <th width="15%">Required Quantity</th>
+              <th width="15%">Picked Quantity</th>
+              <th width="15%">Ullage</th>
+              <th>Ullage Reason</th>
+              <th width="15%">Dispatched Quantity</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+                ng-class="hasDiscrepancy(item)">
+              <td>
+                <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
+              </td>
+
+              <td>
+                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+              </td>
+              <td>
+                <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
+              </td>
+
+              <td>
+                <input type="text" class="form-control" ng-model="item.pickedQuantity" placeholder="0" disabled>
+              </td>
+
+              <td>
+                <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0" disabled>
+              </td>
+
+              <td>
+                <input type="text" class="form-control" value="{{getUllageReason(item.ullageReasonCode)}}" disabled>
+              </td>
+
+              <td>
+                <input type="text" class="form-control" ng-model="item.dispatchedQuantity" placeholder="0" disabled>
+              </td>
+
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="row">
+            <div class="col-xs-12">
+              <h5>Offload List</h5>
+            </div>
+          </div>
+          <table class="table table-striped pick-list">
+            <thead>
+            <tr>
+              <th>Retail Item Details</th>
+              <th width="15%">Inbound Quantity</th>
+              <th width="15%">Ullage</th>
+              <th>Ullage Reason</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in offloadItemList | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+                ng-class="hasDiscrepancy(item)">
+              <td>
+                <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
+              </td>
+
+              <td>
+                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+              </td>
+
+              <td>
+                <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0" disabled>
+              </td>
+
+              <td>
+                <input type="text" class="form-control" value="{{getUllageReason(item.ullageReasonCode)}}" disabled>
+              </td>
+
+            </tr>
+            </tbody>
+          </table>
+
+        </accordion-group>
+      </accordion>
+
+      <accordion class="store-instance-review-accordion">
+        <accordion-group>
+          <accordion-heading class="accordion-heading">
+            Seal Number assignment <i class="fa fa-chevron-down"></i>
+          </accordion-heading>
+          <div class="row">
+            <div class="col-xs-12 text-right">
+              <button type="button" class="btn btn-info" ng-click="redirectTo('Seals')">Edit</button>
+            </div>
+          </div>
+
+          <table class="table store-instance-review-seals-table">
+            <thead>
+            <tr>
+              <th class="col-xs-3">Seal Type</th>
+              <th class="col-xs-9">Seal Numbers</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="sealObj in seals">
+              <td>
+                <input type="text" class="form-control" placeholder="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
+              </td>
+              <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
+            </tr>
+            </tbody>
+          </table>
+        </accordion-group>
+      </accordion>
+
+    </div>
+
+    <footer class="text-right" ng-hide="actionNotAllowed">
+      <button type="button" class="btn btn-default btn-prev" ng-click="stepWizardPrevTrigger()">
+        <span class="fa fa-arrow-left"></span>
+        <span class="hidden-xs">Prev</span>
+      </button>
+      <button type="button" class="btn btn-default btn-success btn-next" ng-click="submit()">Redispatch</button>
+    </footer>
+
+  </form>
+
+</div>

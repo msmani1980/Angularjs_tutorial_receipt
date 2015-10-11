@@ -49,7 +49,7 @@ angular.module('ts5App')
     };
 
     this.isInboundDuringRedispatch = function() {
-      return ( this.getCurrentStepName() === 5 && $routeParams.action === 'redispatch');
+      return ( this.getCurrentStepName() === 1 && $routeParams.action === 'redispatch');
     };
 
     this.setAsEdit = function() {
@@ -351,14 +351,23 @@ angular.module('ts5App')
       };
     };
 
+    this.determineInstanceToUpdate = function() {
+      var storeInstanceId = $routeParams.storeId;
+      if($routeParams.action === 'redispatch') {
+        storeInstanceId = $scope.storeDetails.prevStoreInstanceId;
+      }
+      return storeInstanceId;
+    };
+
     this.makeCreatePromise = function(sealTypeObject) {
       var sealsToCreate = $this.determineSealsToCreate(sealTypeObject);
       if (sealsToCreate.length === 0) {
         return;
       }
+      var storeInstanceId = $this.determineInstanceToUpdate();
       var payload = $this.formatPayload(sealTypeObject, sealsToCreate);
       return storeInstanceAssignSealsFactory.createStoreInstanceSeal(
-        $routeParams.storeId,
+        storeInstanceId,
         payload
       );
     };
@@ -368,13 +377,14 @@ angular.module('ts5App')
       if (sealsToDelete.length === 0) {
         return;
       }
+      var storeInstanceId = $this.determineInstanceToUpdate();
       var deletePromises = [];
       for (var key in sealsToDelete) {
         var sealNumber = sealsToDelete[key];
         var existingSeal = this.getExistingSealByNumber(sealNumber, sealTypeObject.id);
         deletePromises.push(storeInstanceAssignSealsFactory.deleteStoreInstanceSeal(
           existingSeal.id,
-          $routeParams.storeId
+          storeInstanceId
         ));
       }
       return deletePromises;

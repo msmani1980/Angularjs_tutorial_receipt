@@ -212,7 +212,7 @@
              href="#/store-instance-review/dispatch/{{store.id}}">Dispatch
           </a>
           <a class="btn btn-danger btn-xs btn-block" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'End instance')"
+             ng-show="doesStoreInstanceContainAction(store, 'End Instance')"
              href="#/store-instance-create/end-instance/{{store.id}}">End Instance
           </a>
           <a class="btn btn-warning btn-xs btn-block" tabindex="0"
@@ -236,6 +236,14 @@
              ng-show="doesStoreInstanceContainAction(store, 'Receive')"
              ng-click="openReceiveConfirmation(store)">
              Receive
+          </a>
+          <a class="btn btn-warning btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Start Inbound Seals')"
+             href="#/store-instance-seals/end-instance/{{store.id}}">Start Inbound Seals
+          </a>
+          <a class="btn btn-primary btn-xs btn-block" tabindex="0"
+             ng-show="doesStoreInstanceContainAction(store, 'Start Offload')"
+             href="#/store-instance-packing/end-instance/{{store.id}}">Start Offload
           </a>
         </td>
       </tr>
@@ -274,41 +282,41 @@
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
           <a class="btn btn-primary btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Pack')"
+             ng-show="doesStoreInstanceContainAction(replenishment, 'Pack')"
              href="#/store-instance-packing/replenish/{{replenishment.id}}">
             Start Packing
           </a>
           <a class="btn btn-warning btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Seal')"
+             ng-show="doesStoreInstanceContainAction(replenishment, 'Seal')"
              href="#/store-instance-seals/replenish/{{replenishment.id}}">
             Start Seals
           </a>
           <a class="btn btn-success btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
+             ng-show="doesStoreInstanceContainAction(replenishment, 'Dispatch')"
              href="#/store-instance-review/replenish/{{replenishment.id}}">Dispatch
           </a>
           <a class="btn btn-danger btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Delete')"
+             ng-show="doesStoreInstanceContainAction(replenishment, 'Delete')"
              href="#/store-instance-create/end-instance/{{replenishment.id}}">End Instance
           </a>
           <a class="btn btn-success btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Redispatch')"
-             href="#/store-instance-create/redispatch/{{store.id}}">Redispatch
+             ng-show="doesStoreInstanceContainAction(replenishment, 'Redispatch')"
+             href="#/store-instance-create/redispatch/{{replenishment.id}}">Redispatch
           </a>
           <!-- NOTE: undispatch not allowed for replenishments-->
 
           <!-- TODO: Generate Doc Download Link -->
           <a class="btn btn-info btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
+             ng-show="doesStoreInstanceContainAction(replenishment, 'Get Flight Docs')"
              href="#/{{replenishment.id}}">Generate Doc
           </a>
           <a class="btn btn-default btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
+             ng-show="doesStoreInstanceContainAction(replenishment, 'Replenish')"
              href="#/store-instance-create/replenish/{{replenishment.id}}">Replenish
           </a>
           <a class="btn btn-default btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(store, 'Receive')"
-             ng-click="openReceiveConfirmation(store)">Receive
+             ng-show="doesStoreInstanceContainAction(replenishment, 'Receive')"
+             ng-click="openReceiveConfirmation(replenishment)">Receive
           </a>
         </td>
       </tr>

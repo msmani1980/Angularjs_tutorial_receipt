@@ -1,6 +1,6 @@
 <div class="container">
 
-  <step-wizard steps="wizardSteps" save-trigger="saveAndExit()"></step-wizard>
+  <step-wizard ng-if="wizardSteps" steps="wizardSteps" save-trigger="saveAndExit()"></step-wizard>
 
   <error-dialog form-object="createStoreInstance"></error-dialog>
 

@@ -1029,9 +1029,9 @@ describe('the Store Instance Seals controller', function() {
 
     beforeEach(function() {
       storeDetailsJSON.currentStatus = {
-        'id': 10,
+        'id': 1,
         'statusName': 'Ready for Seals',
-        'name': '5'
+        'name': '1'
       };
       initController('redispatch');
       resolveAllDependencies();
