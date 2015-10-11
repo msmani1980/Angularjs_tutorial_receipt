@@ -75,11 +75,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.addItems = function() {
-      if($routeParams.action === 'end-instance') {
-        $this.addItemsToArray($scope.emptyMenuItems, $scope.addItemsNumber, true);
-      } else {
-        $this.addItemsToArray($scope.emptyMenuItems, $scope.addItemsNumber, false);
-      }
+      var isEndInstance = $routeParams.action === 'end-instance';
+      $this.addItemsToArray($scope.emptyMenuItems, $scope.addItemsNumber, isEndInstance);
     };
 
     $scope.addOffloadItems = function() {
