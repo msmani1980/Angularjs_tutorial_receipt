@@ -797,8 +797,4 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return total;
     };
 
-    $scope.defaultQuantityToZero = function (quantity) {
-      return (quantity) ? quantity : '0';
-    };
-
   });
