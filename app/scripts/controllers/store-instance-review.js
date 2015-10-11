@@ -464,11 +464,6 @@ angular.module('ts5App')
       return false;
     };
 
-    $scope.storeInstancePreviousStep = function () {
-      displayLoadingModal();
-      $this.updateInstanceToByStepName($this.prevStep);
-    };
-
     $scope.redirectTo = function (controllerName) {
       if (!controllerName) {
         return;
