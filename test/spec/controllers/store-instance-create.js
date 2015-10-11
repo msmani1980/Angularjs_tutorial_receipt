@@ -11,7 +11,8 @@ describe('Store Instance Create Controller', function() {
     'served/stores-list.json',
     'served/store-instance-created.json',
     'served/schedules-date-range.json',
-    'served/company-menu-caterer-stations.json'
+    'served/company-menu-caterer-stations.json',
+    'served/store-instance-details.json'
   ));
 
   var StoreInstanceCreateCtrl;
@@ -49,12 +50,15 @@ describe('Store Instance Create Controller', function() {
   var storeInstanceId;
   var getStoreInstanceDeferred;
   var updateStoreInstanceStatusDeferred;
+  var getStoreDetailsDeferred;
+  var storeDetailsJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedCateringStations_,
     _servedMenuMasterList_,
     _servedCarrierNumbers_, _servedStoresList_, _servedStoreInstanceCreated_,
-    _servedSchedulesDateRange_, _servedCompanyMenuCatererStations_) {
+    _servedSchedulesDateRange_, _servedCompanyMenuCatererStations_,
+    _servedStoreInstanceDetails_) {
 
     cateringStationsJSON = _servedCateringStations_;
     menuMasterListJSON = _servedMenuMasterList_;
@@ -63,6 +67,7 @@ describe('Store Instance Create Controller', function() {
     storeInstanceCreatedJSON = _servedStoreInstanceCreated_;
     schedulesDateRangeJSON = _servedSchedulesDateRange_;
     companyMenuCatererStationsJSON = _servedCompanyMenuCatererStations_;
+    storeDetailsJSON = _servedStoreInstanceDetails_;
 
     httpBackend = $injector.get('$httpBackend');
     location = $injector.get('$location');
@@ -110,6 +115,9 @@ describe('Store Instance Create Controller', function() {
     spyOn(storeInstanceService, 'updateStoreInstanceStatus').and.returnValue(
       updateStoreInstanceStatusDeferred.promise);
 
+    getStoreDetailsDeferred = $q.defer();
+    spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
+
     storeInstanceId = 13;
 
     postPayloadControl = {
@@ -140,6 +148,7 @@ describe('Store Instance Create Controller', function() {
     getStoresListDeferred.resolve(storesListJSON);
     getSchedulesInDateRangeDeferred.resolve(schedulesDateRangeJSON);
     getRelationshipListDeferred.resolve(companyMenuCatererStationsJSON);
+    getStoreDetailsDeferred.resolve(storeDetailsJSON);
   }
 
   function initController(action) {
@@ -300,6 +309,30 @@ describe('Store Instance Create Controller', function() {
         expect($scope.scheduleNumbers.length).toBe(schedulesDateRangeJSON.meta.count);
       });
 
+    });
+
+  });
+
+  describe('the get store details API call', function() {
+
+    beforeEach(function() {
+      initController('redispatch');
+      resolveAllDependencies();
+      mockLoadStoreInstance();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreDetails').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should get the store details', function() {
+      getStoreDetailsDeferred.resolve(storeDetailsJSON);
+      $scope.$digest();
+      expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(storeInstanceId);
+    });
+
+    it('should attach all properties of JSON to scope', function() {
+      getStoreDetailsDeferred.resolve(storeDetailsJSON);
+      $scope.$digest();
+      expect($scope.storeDetails).toEqual(storeDetailsJSON);
     });
 
   });
@@ -490,7 +523,6 @@ describe('Store Instance Create Controller', function() {
 
       beforeEach(function() {
         resolveAllDependencies();
-        mockStoreInstanceCreate();
         createStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
         $scope.$digest();
       });
@@ -500,8 +532,7 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should call the success handler', function() {
-        expect(StoreInstanceCreateCtrl.createStoreInstanceSuccessHandler).toHaveBeenCalledWith(
-          storeInstanceCreatedJSON);
+        expect(StoreInstanceCreateCtrl.createStoreInstanceSuccessHandler).toHaveBeenCalledWith([storeInstanceCreatedJSON]);
       });
 
       it('should display a success message if the response contains an id', function() {
@@ -510,8 +541,9 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should redirect the user to the packing page with the new store instance id', function() {
-        var uriTest = StoreInstanceCreateCtrl.nextStep.uri.replace('undefined',storeInstanceCreatedJSON.id);
-        var uriControl = '/store-instance-packing/dispatch/' + storeInstanceCreatedJSON.id;
+        var mockResponse = [storeInstanceCreatedJSON];
+        var uriTest = StoreInstanceCreateCtrl.nextStep.uri.replace('undefined',mockResponse[0].id);
+        var uriControl = '/store-instance-packing/dispatch/' + mockResponse[0].id;
         expect(uriTest).toEqual(uriControl);
       });
 
@@ -719,7 +751,7 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should call exitOnSave', function() {
-        expect(StoreInstanceCreateCtrl.exitOnSave).toHaveBeenCalledWith(storeInstanceCreatedJSON);
+        expect(StoreInstanceCreateCtrl.exitOnSave).toHaveBeenCalledWith([storeInstanceCreatedJSON]);
       });
 
       it('should call change the location of the browser', function() {
@@ -1019,10 +1051,10 @@ describe('Store Instance Create Controller', function() {
     describe('success handler', function() {
       var response;
       beforeEach(function() {
-        response = {
-          id: 13,
-          statusId: 11
-        };
+        response = [
+          storeInstanceCreatedJSON,
+          { id: 13, statusId: 11 }
+        ];
         updateStoreInstanceStatusDeferred.resolve(response);
         $scope.$digest();
       });
@@ -1032,12 +1064,12 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should display a success message if the response contains an id', function() {
-        var message = 'Store end-instance ' + response.id + ' created!';
+        var message = 'Store end-instance ' + response[0].id + ' created!';
         expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
       });
 
       it('should redirect the user to the packing page with the new store instance id', function() {
-        var url = '/store-instance-seals/' + 'end-instance' + '/' + response.id;
+        var url = '/store-instance-seals/' + 'end-instance' + '/' + response[0].id;
         expect(location.path()).toEqual(url);
       });
 

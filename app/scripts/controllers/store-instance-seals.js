@@ -72,6 +72,7 @@ angular.module('ts5App')
 
     this.setStoreDetails = function(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
+      $this.getSealTypesDependencies();
       $this.setWizardSteps();
       $this.isInstanceReadOnly();
     };
@@ -98,7 +99,7 @@ angular.module('ts5App')
     };
 
     this.getStoreDetails = function() {
-      return storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
+      storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
     };
 
     this.getSealTypes = function() {
@@ -110,12 +111,12 @@ angular.module('ts5App')
     };
 
     this.getStoreInstanceSeals = function() {
-      return storeInstanceAssignSealsFactory.getStoreInstanceSeals($routeParams.storeId).then($this.setStoreInstanceSeals);
+      var storeInstanceId = this.determineInstanceToUpdate();
+      return storeInstanceAssignSealsFactory.getStoreInstanceSeals(storeInstanceId).then($this.setStoreInstanceSeals);
     };
 
     this.makePromises = function() {
       return [
-        this.getStoreDetails(),
         this.getSealColors(),
         this.getSealTypes(),
         this.getStoreInstanceSeals()
@@ -267,7 +268,6 @@ angular.module('ts5App')
     };
 
     this.getSealTypesDependencies = function() {
-      this.displayLoadingModal('Loading Assign Seals');
       var promises = this.makePromises();
       $q.all(promises).then($this.generateSealTypesList);
     };
@@ -491,7 +491,8 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      this.getSealTypesDependencies();
+      this.displayLoadingModal('Loading Seals for Store Instance');
+      this.getStoreDetails();
     };
 
     this.init();
