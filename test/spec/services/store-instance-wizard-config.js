@@ -64,7 +64,7 @@ describe('Service: storeInstanceWizardConfig', function() {
     }, {
       label: 'Inbound Seals',
       uri: '/store-instance-inbound-seals/redispatch/' + mockId,
-      stepName: '1',
+      stepName: '6',
       controllerName: 'InboundSeals'
     }, {
       label: 'Packing',
