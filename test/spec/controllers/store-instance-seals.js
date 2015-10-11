@@ -239,6 +239,7 @@ describe('the Store Instance Seals controller', function() {
     describe('the get sealType API call', function() {
 
       beforeEach(function() {
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
         getSealTypesDeferred.resolve(sealTypesJSON);
         $scope.$digest();
       });
@@ -256,6 +257,7 @@ describe('the Store Instance Seals controller', function() {
     describe('the get sealColor API call', function() {
 
       beforeEach(function() {
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
         getSealColorsDeferred.resolve(sealColorsJSON);
         $scope.$digest();
       });
@@ -273,6 +275,7 @@ describe('the Store Instance Seals controller', function() {
     describe('the get store instance seals API call', function() {
 
       beforeEach(function() {
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
         getStoreInstanceSealsDeferred.resolve(storeInstanceSealsJSON);
         $scope.$digest();
       });

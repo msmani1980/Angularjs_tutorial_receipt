@@ -26,6 +26,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     var companyId = GlobalMenuService.company.get();
     var $this = this;
 
+    this.setStoreDetails = function(storeDetailsJSON) {
+      $scope.storeDetails = storeDetailsJSON;
+    };
+
+    this.getStoreDetails = function() {
+      return storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
+    };
+
     this.getFormattedDatesPayload = function() {
       return {
         startDate: dateUtility.formatDateForAPI($scope.formData.scheduleDate),
@@ -109,11 +117,27 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $location.url('/store-instance-dashboard/');
     };
 
+    this.findStatusObject = function(stepObject) {
+      if (stepObject) {
+        return lodash.findWhere($scope.storeDetails.statusList, {
+          name: stepObject.stepName
+        });
+      }
+    };
+
+    this.updateStatusToStep = function(stepObject) {
+      var statusObject = this.findStatusObject(stepObject);
+      if (!statusObject) {
+        return;
+      }
+      return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name);
+    };
+
     this.createStoreInstanceSuccessHandler = function(response) {
-      $this.successMessage(response);
-      var uri = $this.nextStep.uri.replace('undefined',response.id);
+      $this.successMessage(response[0]);
+      var uri = $this.nextStep.uri.replace('undefined',response[0].id);
       if($routeParams.action !== 'dispatch') {
-        uri = $this.nextStep.uri.replace(/[0-9]+/,response.id);
+        uri = $this.nextStep.uri.replace(/[0-9]+/,response[0].id);
       }
       $this.hideLoadingModal();
       $location.url(uri);
@@ -180,6 +204,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       delete payload.menus;
       delete payload.dispatchedCateringStationId;
     };
+
     this.setWizardSteps = function() {
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
@@ -261,9 +286,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (!payload) {
         return false;
       }
-      storeInstanceFactory.createStoreInstance(payload).then(
+      var promises = [];
+      promises.push(storeInstanceFactory.createStoreInstance(payload));
+      if($routeParams.action === 'redispatch'){
+        promises.push( $this.updateStatusToStep($this.nextStep) );
+      }
+      $q.all(promises).then(
         (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
-        this.createStoreInstanceErrorHandler
+        $this.createStoreInstanceErrorHandler
       );
     };
 
@@ -408,8 +438,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.getCatererStationList(),
         $this.getStoresList(),
         $this.getCarrierNumbers(),
-        $this.getScheduleNumbers(),
+        $this.getScheduleNumbers()
       ];
+      if($routeParams.storeId){
+        promises.push($this.getStoreDetails());
+      }
       return promises;
     };
 
@@ -435,5 +468,5 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.init();
 
-    
+
   });

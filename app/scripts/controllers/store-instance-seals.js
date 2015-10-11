@@ -34,22 +34,22 @@ angular.module('ts5App')
     };
 
     this.getCurrentStepName = function() {
-      if( angular.isUndefined($scope.storeDetails) ) {
+      if (angular.isUndefined($scope.storeDetails)) {
         return false;
       }
       return parseInt($scope.storeDetails.currentStatus.name);
     };
 
     this.isActionState = function(actionState) {
-      return ($routeParams.action === actionState );
+      return ($routeParams.action === actionState);
     };
 
     this.isInboundDuringEndInstance = function() {
-      return ( this.getCurrentStepName() === 6 && $routeParams.action === 'end-instance');
+      return (this.getCurrentStepName() === 6 && $routeParams.action === 'end-instance');
     };
 
     this.isInboundDuringRedispatch = function() {
-      return ( this.getCurrentStepName() === 1 && $routeParams.action === 'redispatch');
+      return (this.getCurrentStepName() === 1 && $routeParams.action === 'redispatch');
     };
 
     this.setAsEdit = function() {
@@ -58,7 +58,7 @@ angular.module('ts5App')
     };
 
     this.isInstanceReadOnly = function() {
-      if(this.isInboundDuringEndInstance() || this.isInboundDuringRedispatch() ) {
+      if (this.isInboundDuringEndInstance() || this.isInboundDuringRedispatch()) {
         this.setAsEdit();
         return;
       }
@@ -72,6 +72,7 @@ angular.module('ts5App')
 
     this.setStoreDetails = function(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
+      $this.getSealTypesDependencies();
       $this.setWizardSteps();
       $this.isInstanceReadOnly();
     };
@@ -82,7 +83,7 @@ angular.module('ts5App')
 
     this.setWizardSteps = function() {
       var controllerName = 'Seals';
-      if( $this.isInboundDuringRedispatch() ){
+      if ($this.isInboundDuringRedispatch()) {
         controllerName = 'InboundSeals';
       }
       $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
@@ -98,7 +99,7 @@ angular.module('ts5App')
     };
 
     this.getStoreDetails = function() {
-      return storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
+      storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
     };
 
     this.getSealTypes = function() {
@@ -110,12 +111,12 @@ angular.module('ts5App')
     };
 
     this.getStoreInstanceSeals = function() {
-      return storeInstanceAssignSealsFactory.getStoreInstanceSeals($routeParams.storeId).then($this.setStoreInstanceSeals);
+      var storeInstanceId = this.determineInstanceToUpdate();
+      return storeInstanceAssignSealsFactory.getStoreInstanceSeals(storeInstanceId).then($this.setStoreInstanceSeals);
     };
 
     this.makePromises = function() {
       return [
-        this.getStoreDetails(),
         this.getSealColors(),
         this.getSealTypes(),
         this.getStoreInstanceSeals()
@@ -134,7 +135,7 @@ angular.module('ts5App')
     };
 
     this.createInboundActions = function() {
-      if ($this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch() ) {
+      if ($this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch()) {
         return [];
       }
       var actions = [{
@@ -267,7 +268,6 @@ angular.module('ts5App')
     };
 
     this.getSealTypesDependencies = function() {
-      this.displayLoadingModal('Loading Assign Seals');
       var promises = this.makePromises();
       $q.all(promises).then($this.generateSealTypesList);
     };
@@ -353,7 +353,7 @@ angular.module('ts5App')
 
     this.determineInstanceToUpdate = function() {
       var storeInstanceId = $routeParams.storeId;
-      if($routeParams.action === 'redispatch') {
+      if ($routeParams.action === 'redispatch') {
         storeInstanceId = $scope.storeDetails.prevStoreInstanceId;
       }
       return storeInstanceId;
@@ -455,6 +455,10 @@ angular.module('ts5App')
       if ($scope.storeDetails.tampered) {
         promises.push($this.updateStoreInstanceTampered());
       }
+      if ($routeParams.action === 'redispatch') {
+        var prevInstance = $this.determineInstanceToUpdate();
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), '7'));
+      }
       $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
       }, $this.assignSealsErrorHandler);
@@ -491,7 +495,8 @@ angular.module('ts5App')
     };
 
     this.init = function() {
-      this.getSealTypesDependencies();
+      this.displayLoadingModal('Loading Seals for Store Instance');
+      this.getStoreDetails();
     };
 
     this.init();
@@ -545,14 +550,14 @@ angular.module('ts5App')
     };
 
     $scope.hideSealType = function(type) {
-      if( $this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch() ){
+      if ($this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch()) {
         return (type === OUTBOUND || type === HANDOVER);
       }
       return false;
     };
 
     $scope.showTamperedSeals = function() {
-      return ( $this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch() );
+      return ($this.isInboundDuringEndInstance() || $this.isInboundDuringRedispatch());
     };
 
   });
