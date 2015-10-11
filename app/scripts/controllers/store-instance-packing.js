@@ -676,7 +676,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: 'Packing'
       });
-      $this.currentStep = angular.copy($scope.wizardSteps[currentStepIndex]);
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
 
