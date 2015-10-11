@@ -67,8 +67,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else {
           newItem.quantity = '0';
         }
-
-
         array.push(newItem);
 
       }
@@ -737,13 +735,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     // TODO: handle redispatch previous!!
     $scope.goToPreviousStep = function() {
+      var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex];
       if ($routeParams.action === 'end-instance') {
         showLoadingModal('Updating Status...');
-        updateStatusToStep($this.prevStep, $routeParams.storeId, true);
+        updateStatusToStep(prevStep, $routeParams.storeId, true);
       } else if ($routeParams.action === 'redispatch') {
+        var prevInstancePrevStep = $scope.prevInstanceWizardSteps[$scope.wizardStepToIndex];
         showLoadingModal('Updating Status...');
-        updateStatusToStep($this.prevStep, $routeParams.storeId, true);
-        updateStatusToStep($this.prevInstancePrevStep, $scope.storeDetails.prevStoreInstanceId, false);
+        updateStatusToStep(prevStep, $routeParams.storeId, true);
+        updateStatusToStep(prevInstancePrevStep, $scope.storeDetails.prevStoreInstanceId, false);
       } else {
         $location.path($this.prevStep.uri);
       }
