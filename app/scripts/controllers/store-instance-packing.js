@@ -213,7 +213,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var formatItemFunctionName = 'format' + itemType + 'Item';
         $this[formatItemFunctionName](item);
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
+        if($routeParams.action === 'redispatch' && item.storeInstanceId === $scope.storeDetails.prevStoreInstanceId) {
+          item.isFromPrevInstance = true;
+        }
       });
+
       if ($routeParams.action === 'redispatch') {
         $this.mergeMenuItemsForRedispatch(menuItems);
       } else {
@@ -777,7 +781,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return true;
       }
       if (action === 'redispatch') {
-        return (angular.isDefined(item.ullageQuantity));
+        return (angular.isDefined(item.ullageQuantity)) || item.isFromPrevInstance;
       }
       return false;
     };
