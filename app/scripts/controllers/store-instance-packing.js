@@ -740,11 +740,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.goToPreviousStep = function() {
       showLoadingModal('Updating Status...');
-      var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex];
+      var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       updateStatusToStep(prevStep, $routeParams.storeId, true);
 
       if ($routeParams.action === 'redispatch') {
-        var prevInstancePrevStep = $scope.prevInstanceWizardSteps[$scope.wizardStepToIndex];
+        var prevInstancePrevStep = $scope.prevInstanceWizardSteps[$scope.wizardStepToIndex] || $this.prevInstancePrevStep;
         updateStatusToStep(prevInstancePrevStep, $scope.storeDetails.prevStoreInstanceId, false);
       }
     };
