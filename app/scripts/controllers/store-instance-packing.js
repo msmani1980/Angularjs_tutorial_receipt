@@ -676,6 +676,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: 'Packing'
       });
+      $this.currentStep = angular.copy($scope.wizardSteps[currentStepIndex]);
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
 
@@ -737,19 +738,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    // TODO: handle redispatch previous!!
     $scope.goToPreviousStep = function() {
+      showLoadingModal('Updating Status...');
       var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex];
-      if ($routeParams.action === 'end-instance') {
-        showLoadingModal('Updating Status...');
-        updateStatusToStep(prevStep, $routeParams.storeId, true);
-      } else if ($routeParams.action === 'redispatch') {
+      updateStatusToStep(prevStep, $routeParams.storeId, true);
+
+      if ($routeParams.action === 'redispatch') {
         var prevInstancePrevStep = $scope.prevInstanceWizardSteps[$scope.wizardStepToIndex];
-        showLoadingModal('Updating Status...');
-        updateStatusToStep(prevStep, $routeParams.storeId, true);
         updateStatusToStep(prevInstancePrevStep, $scope.storeDetails.prevStoreInstanceId, false);
-      } else {
-        $location.path($this.prevStep.uri);
       }
     };
 
