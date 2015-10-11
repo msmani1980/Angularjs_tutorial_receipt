@@ -416,14 +416,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.createUllagePayload = function(item) {
       var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
+
       var ullagePayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
-        quantity: parseInt(item.ullageQuantity),
+        quantity: parseInt(item.ullageQuantity) || 0,
         countTypeId: ullageCountTypeId
       };
-      if (!angular.isNumber(item.ullageQuantity)) {
-        ullagePayload.quantity = 0;
-      }
+
       if (item.ullageQuantity > 0) {
         ullagePayload.ullageReasonCode = item.ullageReason.id;
       }
