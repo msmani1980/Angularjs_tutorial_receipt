@@ -61,7 +61,7 @@
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"/>
+                   ng-value="defaultQuantityToZero(item.inboundQuantity)"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text"
@@ -74,7 +74,7 @@
                    ng-disabled="readOnly"
                    ng-required="!isActionState('end-instance')"
                    maxlength="5"
-                   placeholder="0"/>
+                   ng-value="defaultQuantityToZero(item.ullageQuantity)"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
@@ -100,7 +100,7 @@
                    ng-model="item.quantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"/>
+                   ng-value="defaultQuantityToZero(item.quantity)"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('dispatch')">
             <input type="text" class="form-control" placeholder="0"
@@ -211,7 +211,7 @@
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"/>
+                   ng-value="defaultQuantityToZero(item.inboundQuantity)"/>
           </td>
           <td>
             <input type="text"
@@ -223,7 +223,7 @@
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"/>
+                   ng-value="defaultQuantityToZero(item.ullageQuantity)"/>
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
