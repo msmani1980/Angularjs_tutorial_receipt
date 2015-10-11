@@ -56,16 +56,27 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return;
       }
       for (var i = 0; i < itemNumber; i++) {
-        array.push({
+        var newItem = {
           menuQuantity: 0,
           isNewItem: true,
           isInOffload: isInOffload
-        });
+        };
+        if(isInOffload) {
+          newItem.ullageQuantity = '0';
+          newItem.inboundQuantity = '0';
+        } else {
+          newItem.quantity = '0';
+        }
+
+
+        array.push(newItem);
+
       }
     };
 
     $scope.addItems = function() {
-      $this.addItemsToArray($scope.emptyMenuItems, $scope.addItemsNumber, false);
+      var isEndInstance = $routeParams.action === 'end-instance';
+      $this.addItemsToArray($scope.emptyMenuItems, $scope.addItemsNumber, isEndInstance);
     };
 
     $scope.addOffloadItems = function() {
@@ -772,8 +783,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.shouldDisplayInboundFields = function(item) {
-      return ($scope.showInboundBasedOnAction('end-instance', item) || $scope.showInboundBasedOnAction('redispatch',
-        item));
+      return ($scope.showInboundBasedOnAction($routeParams.action, item));
     };
 
     $scope.calculateTotalDispatchedQty = function(item) {
@@ -781,6 +791,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       total += parseInt(item.inboundQuantity) || 0;
       total -= parseInt(item.ullageQuantity) || 0;
       return total;
+    };
+
+    $scope.defaultQuantityToZero = function (quantity) {
+      return (quantity) ? quantity : '0';
     };
 
   });
