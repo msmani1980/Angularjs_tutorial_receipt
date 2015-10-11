@@ -67,8 +67,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else {
           newItem.quantity = '0';
         }
-
-
         array.push(newItem);
 
       }
@@ -215,7 +213,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var formatItemFunctionName = 'format' + itemType + 'Item';
         $this[formatItemFunctionName](item);
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
+        if($routeParams.action === 'redispatch' && item.storeInstanceId === $scope.storeDetails.prevStoreInstanceId) {
+          item.isFromPrevInstance = true;
+        }
       });
+
       if ($routeParams.action === 'redispatch') {
         $this.mergeMenuItemsForRedispatch(menuItems);
       } else {
@@ -735,17 +737,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    // TODO: handle redispatch previous!!
     $scope.goToPreviousStep = function() {
-      if ($routeParams.action === 'end-instance') {
-        showLoadingModal('Updating Status...');
-        updateStatusToStep($this.prevStep, $routeParams.storeId, true);
-      } else if ($routeParams.action === 'redispatch') {
-        showLoadingModal('Updating Status...');
-        updateStatusToStep($this.prevStep, $routeParams.storeId, true);
-        updateStatusToStep($this.prevInstancePrevStep, $scope.storeDetails.prevStoreInstanceId, false);
-      } else {
-        $location.path($this.prevStep.uri);
+      showLoadingModal('Updating Status...');
+      var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
+      updateStatusToStep(prevStep, $routeParams.storeId, true);
+
+      if ($routeParams.action === 'redispatch') {
+        var prevInstancePrevStep = $scope.prevInstanceWizardSteps[$scope.wizardStepToIndex] || $this.prevInstancePrevStep;
+        updateStatusToStep(prevInstancePrevStep, $scope.storeDetails.prevStoreInstanceId, false);
       }
     };
 
@@ -777,7 +776,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return true;
       }
       if (action === 'redispatch') {
-        return (angular.isDefined(item.ullageQuantity));
+        return (angular.isDefined(item.ullageQuantity)) || item.isFromPrevInstance;
       }
       return false;
     };
@@ -791,10 +790,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       total += parseInt(item.inboundQuantity) || 0;
       total -= parseInt(item.ullageQuantity) || 0;
       return total;
-    };
-
-    $scope.defaultQuantityToZero = function (quantity) {
-      return (quantity) ? quantity : '0';
     };
 
   });
