@@ -298,11 +298,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else {
           $scope.variance = 99999999;
         }
-      });
+      }, showErrors);
     };
 
     this.getThresholdVariance = function () {
-      storeInstanceFactory.getFeaturesList().then($this.getVarianceForDispatchFeature);
+      storeInstanceFactory.getFeaturesList().then($this.getVarianceForDispatchFeature, showErrors);
     };
 
     this.getStoreInstanceMenuItems = function(storeInstanceId) {
@@ -653,13 +653,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.makeInitializePromises = function() {
       var promises = [
         this.getStoreDetails(),
-        this.getRegularItemTypeId()
+        this.getRegularItemTypeId(),
+        this.getThresholdVariance()
       ];
 
       if ($routeParams.action === 'end-instance' || $routeParams.action === 'redispatch') {
         promises.push($this.getCountTypes());
         promises.push($this.getUllageReasonCodes());
-        promises.push($this.getThresholdVariance());
       }
 
       var characteristicForAction = {
