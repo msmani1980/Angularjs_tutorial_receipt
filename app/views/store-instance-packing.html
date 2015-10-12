@@ -133,7 +133,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.ullageQuantity" placeholder="0"
-                   ng-if="shouldDisplayInboundFields(item)" required="true" maxlength="5"/>
+                   ng-if="shouldDisplayInboundFields(item)" maxlength="5"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
