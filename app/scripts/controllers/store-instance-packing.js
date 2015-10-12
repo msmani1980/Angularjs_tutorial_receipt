@@ -283,6 +283,26 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.getCountTypes().then($this.getCountTypesSuccess, showErrors);
     };
 
+    this.getVarianceForDispatchFeature = function (featuresList) {
+      // TODO: change undispatch to dispatch once data has been created on BE
+      var dispatchFeature = lodash.findWhere(featuresList, {name: 'dispatch'});
+      if(!dispatchFeature) {
+        $scope.variance = 9999999;   // show no variance warning if no variance for dispatch is set
+        return;
+      }
+      storeInstanceFactory.getThresholdList(dispatchFeature.id).then(function(dataFromAPI) {
+        if(dataFromAPI.response) {
+          $scope.variance = dataFromAPI.response[0];
+        } else {
+          $scope.variance = 99999999;
+        }
+      });
+    };
+
+    this.getThresholdVariance = function () {
+      storeInstanceFactory.getFeaturesList().then($this.getVarianceForDispatchFeature);
+    };
+
     this.getStoreInstanceMenuItems = function(storeInstanceId) {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
       var payload = {
@@ -477,7 +497,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.redispatchCreatePayload = function(item, workingPayload) {
-
       if (item.ullageQuantity) {
         var ullagePayload = $this.createUllagePayload(item);
         workingPayload.prevStoreInstancePayload.push(ullagePayload);
@@ -572,8 +591,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $location.path(redirectURL);
         }
       });
-
-      // make 2 API calls for save and 2 for update status
     };
 
     this.checkFormValidity = function() {
@@ -640,6 +657,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($routeParams.action === 'end-instance' || $routeParams.action === 'redispatch') {
         promises.push($this.getCountTypes());
         promises.push($this.getUllageReasonCodes());
+        promises.push($this.getThresholdVariance());
       }
 
       var characteristicForAction = {
@@ -795,6 +813,19 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.defaultQuantityToZero = function (quantity) {
       return (quantity) ? quantity : '0';
+    };
+
+    $scope.setClassBasedOnVariance = function (requiredQuantity, pickedQuantity) {
+      var requiredQuantityNum = requiredQuantity || 1;
+      requiredQuantityNum = (angular.isNumber(requiredQuantity)) ? requiredQuantity : parseInt(requiredQuantity);
+      var pickedQuantityNum = (angular.isNumber(pickedQuantity)) ? pickedQuantity : parseInt(pickedQuantity);
+
+      var threshold = ((pickedQuantityNum /requiredQuantityNum) - 1) * 100;
+      if (threshold > $scope.variance) {
+        return 'warning-row';
+      }
+      return '';
+
     };
 
   });
