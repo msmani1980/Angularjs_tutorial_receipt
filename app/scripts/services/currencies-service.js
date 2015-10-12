@@ -24,8 +24,11 @@ angular.module('ts5App')
       getCurrencies: {
         method: 'GET'
       },
-      create: {
+      createDetailedCompanyCurrency: {
         method: 'POST'
+      },
+      updateDetailedCompanyCurrency: {
+        method: 'PUT'
       },
       getDetailedCompanyCurrency: {
         method: 'GET'
@@ -55,11 +58,21 @@ angular.module('ts5App')
       return detailedCompanyCurrenciesResource.deleteDetailedCompanyCurrency({id: currencyId}).$promise;
     };
 
+    var createDetailedCompanyCurrency = function (payload) {
+      return detailedCompanyCurrenciesResource.createDetailedCompanyCurrency(payload).$promise;
+    };
+
+    var updateDetailedCompanyCurrency = function (payload) {
+      return detailedCompanyCurrenciesResource.updateDetailedCompanyCurrency(payload).$promise;
+    };
+
     return {
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
       getCompanyCurrencies: getCompanyCurrencies,
       getDetailedCompanyCurrencies: getDetailedCompanyCurrencies,
-      deleteDetailedCompanyCurrency: deleteDetailedCompanyCurrency
+      deleteDetailedCompanyCurrency: deleteDetailedCompanyCurrency,
+      createDetailedCompanyCurrency: createDetailedCompanyCurrency,
+      updateDetailedCompanyCurrency: updateDetailedCompanyCurrency
     };
   });
 

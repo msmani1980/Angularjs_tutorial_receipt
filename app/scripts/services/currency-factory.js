@@ -38,6 +38,14 @@ angular.module('ts5App')
       return currenciesService.deleteDetailedCompanyCurrency(currencyId);
     };
 
+    var createDetailedCompanyCurrency = function (payload) {
+      return currenciesService.createDetailedCompanyCurrency(payload);
+    };
+
+    var updateDetailedCompanyCurrency = function (payload) {
+      return currenciesService.updateDetailedCompanyCurrency(payload);
+    };
+
     var saveDailyExchangeRates = function (payload) {
       return dailyExchangeRatesService.saveDailyExchangeRates(payload);
     };
@@ -52,6 +60,8 @@ angular.module('ts5App')
       getCompanyCurrencies: getCompanyCurrencies,
       getDetailedCompanyCurrencies: getDetailedCompanyCurrencies,
       deleteDetailedCompanyCurrency: deleteDetailedCompanyCurrency,
+      createDetailedCompanyCurrency: createDetailedCompanyCurrency,
+      updateDetailedCompanyCurrency: updateDetailedCompanyCurrency,
       getDailyExchangeRates: getDailyExchangeRates,
       getPreviousExchangeRates: getPreviousExchangeRates,
       saveDailyExchangeRates: saveDailyExchangeRates,

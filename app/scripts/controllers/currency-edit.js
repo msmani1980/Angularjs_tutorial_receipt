@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CurrencyEditCtrl', function ($scope, currencyFactory, GlobalMenuService, dateUtility, payloadUtility) {
+  .controller('CurrencyEditCtrl', function ($scope, currencyFactory, GlobalMenuService, dateUtility, payloadUtility, ngToast) {
     var $this = this;
     var companyId = GlobalMenuService.company.get();
 
@@ -40,19 +40,57 @@ angular.module('ts5App')
     };
 
     this.getDetailedCompanyCurrencies = function () {
-      currencyFactory.getDetailedCompanyCurrencies().then($this.attachCompanyCurrencyListToScope);
+      currencyFactory.getDetailedCompanyCurrencies().then($this.attachDetailedCompanyCurrencyListToScope);
     };
 
-    this.attachCompanyCurrencyListToScope = function (companyCurrencyListFromAPI) {
+    this.attachDetailedCompanyCurrencyListToScope = function (companyCurrencyListFromAPI) {
       $scope.companyCurrencyList = $this.normalizeDetailedCompanyCurrencies(companyCurrencyListFromAPI.companyCurrencies);
     };
 
     this.deleteDetailedCompanyCurrency = function(currencyId) {
       currencyFactory.deleteDetailedCompanyCurrency(currencyId);
+    };
+
+    $scope.saveDetailedCompanyCurrency = function(currency) {
+      if (currency.isNew) {
+        currencyFactory.createDetailedCompanyCurrency(currency).then(function() {
+            $this.showSaveSuccess();
+          },
+          $this.showSaveErrors
+        );
+      }
+      else {
+        currencyFactory.updateDetailedCompanyCurrency(currency).then(function() {
+            $this.showSaveSuccess();
+          },
+          $this.showSaveErrors
+        );
+      }
+    };
+
+    this.showSaveSuccess = function (dataFromAPI) {
+      $this.showToast('success', 'Currency', 'currency successfully saved!');
+    };
+
+    this.showSaveErrors = function (dataFromAPI) {
+      $this.showToast('danger', 'Currency', 'error saving currency!');
+
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+    };
+
+    this.showToast = function (className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
     }
 
     $scope.searchDetailedCompanyCurrencies = function () {
-      currencyFactory.getDetailedCompanyCurrencies(payloadUtility.serializeDates($scope.search)).then($this.attachCompanyCurrencyListToScope);
+      currencyFactory.getDetailedCompanyCurrencies(payloadUtility.serializeDates($scope.search)).then($this.attachDetailedCompanyCurrencyListToScope);
     };
 
     $scope.isCurrencyReadOnly = function (currency) {
@@ -93,7 +131,6 @@ angular.module('ts5App')
       angular.forEach(formattedCurrencies, function (currency) {
         currency.startDate = dateUtility.formatDateForApp(currency.startDate);
         currency.endDate = dateUtility.formatDateForApp(currency.endDate);
-
 
         currency.flatDenominations = currency.denominations.map(function(denomination){
           return denomination.currencyDenominationId;

@@ -121,7 +121,7 @@
                             disable-end-date="isCurrencyPartialReadOnly(currency)">
                     </date-picker>
                     <div class="col-xs-12 col-sm-12 col-md-1 text-right">
-                        <button type="button" class="btn btn-sm btn-primary glyphicon glyphicon-check" ng-click="saveCurrency($index, currency)" ng-hide="isCurrencyPartialReadOnly(currency)" />
+                        <button type="button" class="btn btn-sm btn-primary glyphicon glyphicon-check" ng-click="saveDetailedCompanyCurrency(currency)" ng-hide="isCurrencyPartialReadOnly(currency)" />
                         <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteConfirmation($index, currency)" ng-hide="isCurrencyReadOnly(currency)">
                             <i class="fa fa-close"></i>
                         </button>
