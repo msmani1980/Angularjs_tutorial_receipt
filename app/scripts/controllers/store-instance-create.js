@@ -134,10 +134,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.createStoreInstanceSuccessHandler = function(response) {
-      $this.successMessage(response[0]);
-      var uri = $this.nextStep.uri.replace('undefined',response[0].id);
-      if($routeParams.action !== 'dispatch') {
-        uri = $this.nextStep.uri.replace(/[0-9]+/,response[0].id);
+      if ($routeParams.action !== 'end-instance') {
+        response = response[0];
+      }
+      $this.successMessage(response);
+      var uri = $this.nextStep.uri.replace('undefined', response.id);
+      if ($routeParams.action !== 'dispatch') {
+        uri = $this.nextStep.uri.replace(/[0-9]+/, response.id);
       }
       $this.hideLoadingModal();
       $location.url(uri);
@@ -288,8 +291,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       var promises = [];
       promises.push(storeInstanceFactory.createStoreInstance(payload));
-      if($routeParams.action === 'redispatch'){
-        promises.push( $this.updateStatusToStep($this.nextStep) );
+      if ($routeParams.action === 'redispatch') {
+        promises.push($this.updateStatusToStep($this.nextStep));
       }
       $q.all(promises).then(
         (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
@@ -302,10 +305,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
       } else {
         this.displayLoadingModal('Starting the End Instance process');
-        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, 6, $scope.formData.cateringStationId).then(
+        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, '6', $scope.formData.cateringStationId)
+          .then(
             (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
             this.createStoreInstanceErrorHandler
-        );
+          );
       }
     };
 
@@ -440,7 +444,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.getCarrierNumbers(),
         $this.getScheduleNumbers()
       ];
-      if($routeParams.storeId){
+      if ($routeParams.storeId) {
         promises.push($this.getStoreDetails());
       }
       return promises;

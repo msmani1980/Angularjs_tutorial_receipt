@@ -508,7 +508,8 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal', function() {
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith('Creating new Store Instance');
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+        'Creating new Store Instance');
     });
 
     it('should format the payload', function() {
@@ -532,7 +533,9 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should call the success handler', function() {
-        expect(StoreInstanceCreateCtrl.createStoreInstanceSuccessHandler).toHaveBeenCalledWith([storeInstanceCreatedJSON]);
+        expect(StoreInstanceCreateCtrl.createStoreInstanceSuccessHandler).toHaveBeenCalledWith([
+          storeInstanceCreatedJSON
+        ]);
       });
 
       it('should display a success message if the response contains an id', function() {
@@ -542,8 +545,8 @@ describe('Store Instance Create Controller', function() {
 
       it('should redirect the user to the packing page with the new store instance id', function() {
         var mockResponse = [storeInstanceCreatedJSON];
-        var uriTest = StoreInstanceCreateCtrl.nextStep.uri.replace('undefined',mockResponse[0].id);
-        var uriControl = '/store-instance-packing/dispatch/' + mockResponse[0].id;
+        var uriTest = StoreInstanceCreateCtrl.nextStep.uri.replace('undefined', mockResponse.id);
+        var uriControl = '/store-instance-packing/dispatch/' + mockResponse.id;
         expect(uriTest).toEqual(uriControl);
       });
 
@@ -1031,7 +1034,8 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal', function() {
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith('Starting the End Instance process');
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+        'Starting the End Instance process');
     });
 
     it('should display the loading modal, when saveAndExit is passed', function() {
@@ -1052,8 +1056,10 @@ describe('Store Instance Create Controller', function() {
       var response;
       beforeEach(function() {
         response = [
-          storeInstanceCreatedJSON,
-          { id: 13, statusId: 11 }
+          storeInstanceCreatedJSON, {
+            id: 13,
+            statusId: 11
+          }
         ];
         updateStoreInstanceStatusDeferred.resolve(response);
         $scope.$digest();
@@ -1064,12 +1070,12 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should display a success message if the response contains an id', function() {
-        var message = 'Store end-instance ' + response[0].id + ' created!';
+        var message = 'Store end-instance ' + response.id + ' created!';
         expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
       });
 
       it('should redirect the user to the packing page with the new store instance id', function() {
-        var url = '/store-instance-seals/' + 'end-instance' + '/' + response[0].id;
+        var url = '/store-instance-seals/' + 'end-instance' + '/' + response.id;
         expect(location.path()).toEqual(url);
       });
 
@@ -1128,7 +1134,8 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal', function() {
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith('Creating new Store Instance');
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+        'Creating new Store Instance');
     });
 
     it('should call the createStoreInstance method on the controller', function() {
