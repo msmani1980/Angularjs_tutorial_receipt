@@ -57,7 +57,6 @@
                    name="inboundQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
-                   required="true"
                    class="form-control"
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
@@ -73,7 +72,6 @@
                    class="form-control"
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
-                   ng-required="!isActionState('end-instance')"
                    maxlength="5"
                    placeholder="0"/>
           </td>
@@ -129,7 +127,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.inboundQuantity" placeholder="0"
-                   ng-if="shouldDisplayInboundFields(item)" required="true" maxlength="5"/>
+                   ng-if="shouldDisplayInboundFields(item)" maxlength="5"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.ullageQuantity" placeholder="0"
@@ -207,7 +205,6 @@
                    name="inboundQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
-                   required="true"
                    class="form-control"
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
@@ -219,7 +216,6 @@
                    name="ullageQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
-                   required="true"
                    class="form-control"
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
@@ -259,11 +255,11 @@
           </td>
           <td>
             <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.inboundQuantity"
-                   required="true" maxlength="5" placeholder="0"/>
+                   maxlength="5" placeholder="0"/>
           </td>
           <td>
             <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.ullageQuantity"
-                   required="true" maxlength="5" placeholder="0"/>
+                   maxlength="5" placeholder="0"/>
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
