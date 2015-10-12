@@ -27,7 +27,7 @@
     <div class="well">
       <h3>Pick List</h3>
 
-      <table class="table table-striped pick-list">
+      <table class="table pick-list">
         <thead>
         <tr>
           <th>Retail Item Details</th>
@@ -45,7 +45,8 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
+        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+            ng-class="setClassBasedOnVariance(item.menuQuantity, item.quantity)">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>

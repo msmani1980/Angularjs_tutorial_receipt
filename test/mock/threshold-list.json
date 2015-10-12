@@ -1,0 +1,15 @@
+{
+  "response": [
+    {
+      "id": 9,
+      "companyId": 403,
+      "percentage": 5.26,
+      "featureId": 1,
+      "startDate": "2017-06-10 00:00:00.0",
+      "createdBy": null,
+      "createdOn": "2015-09-09 14:46:46.739065",
+      "updatedBy": 1,
+      "updatedOn": null
+    }
+  ]
+}

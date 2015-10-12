@@ -10,6 +10,8 @@ describe('Service: storeInstanceFactory', function() {
   beforeEach(module('served/station.json'));
   beforeEach(module('served/store-status.json'));
   beforeEach(module('served/menu-master-list.json'));
+  beforeEach(module('served/features.json'));
+  beforeEach(module('served/threshold-list.json'));
 
   // instantiate service
   var storeInstanceFactory;
@@ -25,6 +27,7 @@ describe('Service: storeInstanceFactory', function() {
   var itemsService;
   var recordsService;
   var companyReasonCodesService;
+  var featureThresholdsService;
 
   var getStationDeferred;
   var getCarrierNumberDeferred;
@@ -32,6 +35,8 @@ describe('Service: storeInstanceFactory', function() {
   var getStoreInstanceDeferred;
   var getStoreStatusDeferred;
   var getMenuMasterListDeferred;
+  var getFeaturesListDeferred;
+  var getThresholdListDeferred;
 
   var servedStoreInstanceJSON;
   var servedStoreJSON;
@@ -39,19 +44,23 @@ describe('Service: storeInstanceFactory', function() {
   var servedStationJSON;
   var servedStoreStatusJSON;
   var servedMenuMasterListJSON;
+  var servedFeaturesListJSON;
+  var servedThresholdListJSON;
 
   var scope;
 
   beforeEach(inject(function(_servedStoreInstance_, _storeInstanceFactory_, $injector, $q, $rootScope) {
 
     inject(function(_servedStoreInstance_, _servedStore_, _servedCarrierNumber_, _servedStation_,
-      _servedStoreStatus_, _servedMenuMasterList_) {
+      _servedStoreStatus_, _servedMenuMasterList_, _servedFeatures_, _servedThresholdList_) {
       servedStoreInstanceJSON = _servedStoreInstance_;
       servedStoreJSON = _servedStore_;
       servedCarrierNumberJSON = _servedCarrierNumber_;
       servedStationJSON = _servedStation_;
       servedStoreStatusJSON = _servedStoreStatus_;
       servedMenuMasterListJSON = _servedMenuMasterList_;
+      servedFeaturesListJSON = _servedFeatures_;
+      servedThresholdListJSON = _servedThresholdList_;
     });
     scope = $rootScope.$new();
     storeInstanceFactory = _storeInstanceFactory_;
@@ -74,6 +83,12 @@ describe('Service: storeInstanceFactory', function() {
     getMenuMasterListDeferred = $q.defer();
     getMenuMasterListDeferred.resolve(servedMenuMasterListJSON);
 
+    getFeaturesListDeferred = $q.defer();
+    getFeaturesListDeferred.resolve(servedFeaturesListJSON);
+
+    getThresholdListDeferred = $q.defer();
+    getThresholdListDeferred.resolve(servedThresholdListJSON);
+
     itemsService = $injector.get('itemsService');
     catererStationService = $injector.get('catererStationService');
     stationsService = $injector.get('stationsService');
@@ -85,6 +100,7 @@ describe('Service: storeInstanceFactory', function() {
     storesService = $injector.get('storesService');
     recordsService = $injector.get('recordsService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
+    featureThresholdsService = $injector.get('featureThresholdsService');
 
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(itemsService, 'getItemsList');
@@ -113,6 +129,8 @@ describe('Service: storeInstanceFactory', function() {
     spyOn(recordsService, 'getItemTypes');
     spyOn(recordsService, 'getCharacteristics');
     spyOn(recordsService, 'getCountTypes');
+    spyOn(recordsService, 'getFeatures');
+    spyOn(featureThresholdsService, 'getThresholdList');
     spyOn(companyReasonCodesService, 'getAll');
 
   }));
@@ -374,6 +392,17 @@ describe('Service: storeInstanceFactory', function() {
     it('should call getCountTypes', function() {
       storeInstanceFactory.getCountTypes();
       expect(recordsService.getCountTypes).toHaveBeenCalled();
+    });
+    it('should call getThresholdForDispatchProcess', function() {
+      storeInstanceFactory.getFeaturesList();
+      expect(recordsService.getFeatures).toHaveBeenCalled();
+    });
+  });
+
+  describe('featureThresholdsService calls', function () {
+    it('should call getThresholdList ', function () {
+      storeInstanceFactory.getThresholdList();
+      expect(featureThresholdsService.getThresholdList).toHaveBeenCalled();
     });
   });
 

@@ -8,8 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App').service('storeInstanceFactory',
-  function(storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
-    menuMasterService, storesService, stationsService, itemsService, companyReasonCodesService, recordsService, $q, lodash, dateUtility) {
+  function(storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService, menuMasterService,
+           storesService, stationsService, itemsService, companyReasonCodesService, recordsService,
+           featureThresholdsService, $q, lodash, dateUtility) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
@@ -119,6 +120,14 @@ angular.module('ts5App').service('storeInstanceFactory',
 
     function getCountTypes() {
       return recordsService.getCountTypes();
+    }
+
+    function getFeaturesList() {
+      return recordsService.getFeatures();
+    }
+
+    function getThresholdList(featureId) {
+      return featureThresholdsService.getThresholdList(featureId);
     }
 
     function formatResponseCollection(responseCollection, storeInstanceAPIResponse, parentStoreInstanceAPIResponse) {
@@ -253,7 +262,9 @@ angular.module('ts5App').service('storeInstanceFactory',
       getItemTypes: getItemTypes,
       getCharacteristics: getCharacteristics,
       getReasonCodeList: getReasonCodeList,
-      getCountTypes: getCountTypes
+      getCountTypes: getCountTypes,
+      getThresholdList: getThresholdList,
+      getFeaturesList: getFeaturesList
     };
 
   });
