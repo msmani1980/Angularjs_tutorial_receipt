@@ -39,6 +39,16 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     }
 
+    function getValueByIdInArray(id, valueKey, array) {
+      var matchedObject = lodash.findWhere(array, {
+        id: id
+      });
+      if (matchedObject) {
+        return matchedObject[valueKey];
+      }
+      return '';
+    }
+
     var SEARCH_TO_PAYLOAD_MAP = {
       dispatchLMPStation: 'cateringStationId',
       inboundLMPStation: 'inboundStationId',
@@ -81,11 +91,15 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     };
 
+
     $scope.doesStoreInstanceContainAction = function(storeInstance, actionName) {
-      if (storeInstance.actionButtons) {
-        return storeInstance.actionButtons.indexOf(actionName) >= 0;
+      var statusNumber = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
+      var isReplenishment = storeInstance.replenishStoreInstanceId !== null;
+      var isStoreReplenishmentInStatusAfterDispatch = isReplenishment && parseInt(statusNumber) >= 4;
+      if(!storeInstance.actionButtons || isStoreReplenishmentInStatusAfterDispatch) {
+        return false;
       }
-      return false;
+      return storeInstance.actionButtons.indexOf(actionName) >= 0;
     };
 
     $scope.toggleAllCheckboxes = function() {
@@ -133,16 +147,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         $location.path('store-instance-packing/dispatch/' + id);
       }, showErrors);
     };
-
-    function getValueByIdInArray(id, valueKey, array) {
-      var matchedObject = lodash.findWhere(array, {
-        id: id
-      });
-      if (matchedObject) {
-        return matchedObject[valueKey];
-      }
-      return '';
-    }
 
     var STATUS_TO_BUTTONS_MAP = {
       '1': ['Pack', 'Delete'],
