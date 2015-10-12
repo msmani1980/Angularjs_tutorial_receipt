@@ -455,8 +455,8 @@ angular.module('ts5App')
       if ($scope.storeDetails.tampered) {
         promises.push($this.updateStoreInstanceTampered());
       }
-      if ($routeParams.action === 'redispatch') {
-        var prevInstance = $this.determineInstanceToUpdate();
+      var prevInstance = $this.determineInstanceToUpdate();
+      if ($routeParams.action === 'redispatch' && $this.isInboundDuringRedispatch()) {
         promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), '7'));
       }
       $q.all(promises).then(function() {
