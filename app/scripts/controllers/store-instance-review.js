@@ -397,9 +397,9 @@ angular.module('ts5App')
     function saveStoreStatusIfRedispatch(status) {
       var statusNameArray = [getStatusNameIntByName(status[0]), getStatusNameIntByName(status[1])];
       var statusPromise = [];
-      statusPromise.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameArray[0]));
       statusPromise.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
-        statusNameArray[1]));
+        statusNameArray[0]));
+      statusPromise.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusNameArray[1]));
       $q.all(statusPromise).then(storeInstanceStatusDispatched, showResponseErrors);
     }
 
