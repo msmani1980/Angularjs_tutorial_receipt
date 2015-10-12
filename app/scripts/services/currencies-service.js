@@ -13,10 +13,11 @@ angular.module('ts5App')
 
     var masterCurrenciesURL = ENV.apiUrl + '/api/currencies';
     var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
-    var detailedCompanyCurrenciesURL = ENV.apiUrl + '/api/companies/' + companyId + '/currencies';
+    var detailedCompanyCurrenciesURL = ENV.apiUrl + '/api/companies/:companyId/currencies/:id';
 
     var requestParameters = {
-      id: '@id'
+      id: '@id',
+      companyId: companyId
     };
 
     var actions = {
@@ -25,8 +26,15 @@ angular.module('ts5App')
       },
       create: {
         method: 'POST'
+      },
+      getDetailedCompanyCurrency: {
+        method: 'GET'
+      },
+      deleteDetailedCompanyCurrency: {
+        method: 'DELETE'
       }
     };
+
     var masterCurrenciesResource = $resource(masterCurrenciesURL, requestParameters, actions);
     var companyCurrenciesResource = $resource(companyCurrenciesURL, requestParameters, actions);
     var detailedCompanyCurrenciesResource = $resource(detailedCompanyCurrenciesURL, requestParameters, actions);
@@ -40,13 +48,18 @@ angular.module('ts5App')
     };
 
     var getDetailedCompanyCurrencies = function (payload) {
-      return detailedCompanyCurrenciesResource.getCurrencies(payload).$promise;
+      return detailedCompanyCurrenciesResource.getDetailedCompanyCurrency(payload).$promise;
+    };
+
+    var deleteDetailedCompanyCurrency = function (currencyId) {
+      return detailedCompanyCurrenciesResource.deleteDetailedCompanyCurrency({id: currencyId}).$promise;
     };
 
     return {
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
       getCompanyCurrencies: getCompanyCurrencies,
-      getDetailedCompanyCurrencies: getDetailedCompanyCurrencies
+      getDetailedCompanyCurrencies: getDetailedCompanyCurrencies,
+      deleteDetailedCompanyCurrency: deleteDetailedCompanyCurrency
     };
   });
 
