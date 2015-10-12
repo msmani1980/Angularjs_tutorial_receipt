@@ -287,14 +287,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.getVarianceForDispatchFeature = function (featuresList) {
       // TODO: change undispatch to dispatch once data has been created on BE
-      var dispatchFeature = lodash.findWhere(featuresList, {name: 'dispatch'});
+      var dispatchFeature = lodash.findWhere(featuresList, {name: 'Dispatch'});
       if(!dispatchFeature) {
         $scope.variance = 9999999;   // show no variance warning if no variance for dispatch is set
         return;
       }
       storeInstanceFactory.getThresholdList(dispatchFeature.id).then(function(dataFromAPI) {
         if(dataFromAPI.response) {
-          $scope.variance = dataFromAPI.response[0];
+          $scope.variance = angular.copy(dataFromAPI.response[0].percentage);
         } else {
           $scope.variance = 99999999;
         }
