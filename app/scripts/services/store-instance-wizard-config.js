@@ -21,7 +21,8 @@ angular.module('ts5App')
         'dispatch': [{
           label: 'Create Store Instance',
           uri: createURL + action + (id ? '/' + id : ''),
-          controllerName: 'Create'
+          controllerName: 'Create',
+          stepName: '1'
         }, {
           label: 'Packing',
           uri: packingURL + action + '/' + id,
@@ -41,7 +42,8 @@ angular.module('ts5App')
         'replenish': [{
           label: 'Create Store Replenish',
           uri: createURL + action + (id ? '/' + id : ''),
-          controllerName: 'Create'
+          controllerName: 'Create',
+          stepName: '1'
         }, {
           label: 'Replenish Packing',
           uri: packingURL + action + '/' + id,
@@ -82,12 +84,12 @@ angular.module('ts5App')
         'redispatch': [{
           label: 'Create Store Instance',
           uri: createURL + action + (id ? '/' + id : ''),
-          stepName: '5',
+          stepName: '1',
           controllerName: 'Create'
         }, {
           label: 'Inbound Seals',
           uri: inboundSealsURL + action + '/' + id,
-          stepName: '1',
+          stepName: '6',
           controllerName: 'InboundSeals'
         }, {
           label: 'Packing',
