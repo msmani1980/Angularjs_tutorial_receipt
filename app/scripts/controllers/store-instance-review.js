@@ -279,7 +279,7 @@ angular.module('ts5App')
         'dispatch': 'Ready for Dispatch',
         'replenish': 'Ready for Dispatch',
         'end-instance': 'Unpacking',
-        'redispatch': 'Unpacking'
+        'redispatch': 'Ready for Dispatch'
       };
 
       if ($scope.storeDetails.currentStatus.statusName !== validStatusList[$routeParams.action]) {
