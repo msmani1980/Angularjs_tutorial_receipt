@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('storeInstanceWizardConfig', function() {
+  .service('storeInstanceWizardConfig', function () {
 
     var createURL = '/store-instance-create/';
     var packingURL = '/store-instance-packing/';
@@ -85,26 +85,31 @@ angular.module('ts5App')
           label: 'Create Store Instance',
           uri: createURL + action + (id ? '/' + id : ''),
           stepName: '1',
+          storeOne: {stepName: '5'},
           controllerName: 'Create'
         }, {
           label: 'Inbound Seals',
           uri: inboundSealsURL + action + '/' + id,
-          stepName: '6',
+          stepName: '1',
+          storeOne: {stepName: '6'},
           controllerName: 'InboundSeals'
         }, {
           label: 'Packing',
           uri: packingURL + action + '/' + id,
           stepName: '1',
+          storeOne: {stepName: '7'},
           controllerName: 'Packing'
         }, {
           label: 'Assign Seals',
           uri: sealsURL + action + '/' + id,
           stepName: '2',
+          storeOne: {stepName: '7'},
           controllerName: 'Seals'
         }, {
           label: 'Review & Dispatch',
           uri: reviewURL + action + '/' + id,
           stepName: '3',
+          storeOne: {stepName: '7'},
           controllerName: 'Review'
         }]
       };
@@ -118,6 +123,7 @@ angular.module('ts5App')
       var steps = setSteps(action, id);
       return steps[action];
     }
+
     return {
       getSteps: getSteps
     };

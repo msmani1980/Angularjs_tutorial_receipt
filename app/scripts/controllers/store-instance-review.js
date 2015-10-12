@@ -438,16 +438,22 @@ angular.module('ts5App')
       $q.all(promiseArray).then(storeDetailsResponseHandler, showResponseErrors);
     }
 
-    this.updateInstanceToByStepName = function (stepObject, storeIdToUpdate) {
-      if (angular.isUndefined(stepObject)) {
+    this.updateInstanceToByStepName = function (stepObject) {
+      if (!stepObject) {
         $location.url('/store-instance-dashboard');
         return;
       }
-      storeInstanceFactory.updateStoreInstanceStatus(storeIdToUpdate || $routeParams.storeId, stepObject.stepName).then(function () {
-        if (!storeIdToUpdate) {
-          $location.url(stepObject.uri);
-        }
+
+      var statusUpdatePromiseArray = [];
+      statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
+      if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
+        statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, stepObject.storeOne.stepName));
+      }
+
+      $q.all(statusUpdatePromiseArray).then(function () {
+        $location.url(stepObject.uri);
       }, showResponseErrors);
+
     };
 
     $scope.stepWizardPrevTrigger = function () {
@@ -455,12 +461,6 @@ angular.module('ts5App')
       $scope.showLoseDataAlert = false;
       var wizardStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       $this.updateInstanceToByStepName(wizardStep);
-
-      if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
-        var prevInstancePrevStep = $scope.prevInstanceWizardSteps[$scope.wizardStepToIndex] || $this.prevInstancePrevStep;
-        $this.updateInstanceToByStepName(prevInstancePrevStep, $scope.storeDetails.prevStoreInstanceId, false);
-      }
-
       return false;
     };
 
