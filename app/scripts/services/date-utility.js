@@ -109,4 +109,11 @@ angular.module('ts5App')
       return date.replace(/\.[0-9]+/, '');
     };
 
+    this.diff = function(from,to,type) {
+     var diffType = (type ? type : 'days');
+     var fromDate = Date.parse(from);
+     var toDate = moment(Date.parse(to));
+     return toDate.diff(fromDate, diffType);
+    } ;
+
   });
