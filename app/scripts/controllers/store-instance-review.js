@@ -182,11 +182,14 @@ angular.module('ts5App')
       });
 
       if (angular.isArray($scope.items)) {
-        $scope.pickListItems.concat($scope.items);
+        $scope.items.map(function (item) {
+          item.quantity = 0;
+        });
+        $scope.pickListItems = $scope.pickListItems.concat($scope.items);
       }
 
       $scope.pickListItems.map(function (item) {
-        item.pickedQuantity = item.dispatchedQuantity - item.quantity;
+        item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - item.quantity;
       });
     }
 
