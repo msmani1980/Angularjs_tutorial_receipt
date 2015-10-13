@@ -200,11 +200,11 @@ describe('Store Instance Create Controller', function() {
     StoreInstanceCreateCtrl.createStoreInstance();
   }
 
-
   describe('when the Dispatch controller loads', function() {
 
     beforeEach(function() {
       initController();
+      spyOn(StoreInstanceCreateCtrl,'determineMinDate').and.callThrough();
     });
 
     it('should set wizardSteps', function() {
@@ -212,6 +212,19 @@ describe('Store Instance Create Controller', function() {
       $scope.$digest();
       var wizardSteps = storeInstanceWizardConfig.getSteps('dispatch');
       expect($scope.wizardSteps).toEqual(wizardSteps);
+    });
+
+    it('should determine the minimum date on success', function() {
+      resolveAllDependencies();
+      $scope.$digest();
+      expect(StoreInstanceCreateCtrl.determineMinDate).toHaveBeenCalled();
+    });
+
+    it('should set the minimum date in the scope on success', function() {
+      resolveAllDependencies();
+      $scope.$digest();
+      var minDateControl = StoreInstanceCreateCtrl.determineMinDate();
+      expect($scope.minDate).toEqual(minDateControl);
     });
 
     it('should have an empty stations list before the scope is digested', function() {
@@ -631,6 +644,9 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage');
       $scope.$digest();
+      $scope.formData.scheduleNumber = {
+        scheduleNumber: '194231'
+      };
       mockStoreInstanceCreate();
     });
 
@@ -930,6 +946,35 @@ describe('Store Instance Create Controller', function() {
 
   });
 
+  describe('when a user changes the cateringStationId', function() {
+
+    beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
+      spyOn(StoreInstanceCreateCtrl, 'getMenuMasterList').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'getMenuCatererList').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'registerScopeWatchers').and.callThrough();
+      $scope.formData = {
+        cateringStationId: 13
+      };
+      $scope.$digest();
+      $scope.formData = {
+        cateringStationId: 3
+      };
+      $scope.$digest();
+    });
+
+    it('should call getMenuMasterList', function() {
+      expect(StoreInstanceCreateCtrl.getMenuMasterList).toHaveBeenCalled();
+    });
+
+    it('should call getMenuCatererList', function() {
+      expect(StoreInstanceCreateCtrl.getMenuCatererList).toHaveBeenCalled();
+    });
+
+  });
+
   describe('generating the query', function() {
 
     beforeEach(function() {
@@ -1005,6 +1050,25 @@ describe('Store Instance Create Controller', function() {
 
   });
 
+  describe('get store instance during replenish', function() {
+
+    beforeEach(function() {
+      initController('replenish');
+      resolveAllDependencies();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should not have a scheduleNumber set', function() {
+      expect($scope.formData.scheduleNumber).toBeUndefined();
+    });
+
+    it('should set the scheduleDate to todays date', function() {
+      expect($scope.formData.scheduleDate).toEqual(dateUtility.nowFormatted());
+    });
+
+  });
+
   describe('isActionState method', function() {
 
     it('should return true if the state passed matches the action state of the controller', function() {
@@ -1048,6 +1112,45 @@ describe('Store Instance Create Controller', function() {
     it('should be true, if $routeParams.action is Redispatch', function() {
       initController('redispatch');
       expect($scope.isEndInstanceOrRedispatch()).toBeTruthy();
+    });
+
+  });
+
+  describe('findStatusObject functionality', function() {
+
+    beforeEach(function(){
+      initController('redispatch');
+      mockLoadStoreInstance();
+      resolveAllDependencies();
+      $scope.$digest();
+    });
+
+    it('should return a status object ', function() {
+      var statusObject = StoreInstanceCreateCtrl.findStatusObject(StoreInstanceCreateCtrl.nextStep);
+      expect(statusObject).toBeDefined();
+    });
+
+  });
+
+  describe('updateStatusToStep functionality', function() {
+
+    beforeEach(function(){
+      initController('redispatch');
+      spyOn(storeInstanceFactory,'updateStoreInstanceStatus')();
+      spyOn(StoreInstanceCreateCtrl,'findStatusObject').and.callThrough();
+      mockLoadStoreInstance();
+      resolveAllDependencies();
+      $scope.$digest();
+      StoreInstanceCreateCtrl.updateStatusToStep(StoreInstanceCreateCtrl.nextStep);
+    });
+
+    it('should call the findStatusObject function with the controllers next step ', function() {
+      expect(StoreInstanceCreateCtrl.findStatusObject).toHaveBeenCalledWith(StoreInstanceCreateCtrl.nextStep);
+    });
+
+    it('should call the update status factore call', function() {
+      var statusObject = StoreInstanceCreateCtrl.findStatusObject(StoreInstanceCreateCtrl.nextStep);
+      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(storeInstanceId,statusObject.name);
     });
 
   });
@@ -1146,9 +1249,12 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       initController('redispatch');
+      resolveAllDependencies();
+      mockLoadStoreInstance();
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'updateStatusToStep').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();

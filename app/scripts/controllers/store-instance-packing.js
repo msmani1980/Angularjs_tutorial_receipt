@@ -714,17 +714,37 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       workingArray.splice(index, 1);
     }
 
+    function removeItemFromArray(itemArray, itemToDelete){
+      var itemMatch = lodash.findWhere(itemArray, {itemMasterId: itemToDelete.itemMasterId});
+      if (itemMatch) {
+        lodash.remove(itemArray, itemMatch);
+        return true;
+      }
+      return false;
+    }
+
+    function removeExistingItemFromList(itemToDelete) {
+      var storeInstance = (itemToDelete.isInOffload && $scope.storeDetails.prevStoreInstanceId) ? $scope.storeDetails.prevStoreInstanceId : $routeParams.storeId;
+
+      var item = {
+        storeInstance: storeInstance,
+        itemToDelete: angular.copy(itemToDelete)
+      };
+
+      removeItemFromArray($scope.menuItems, itemToDelete);
+      if (removeItemFromArray($scope.offloadMenuItems, itemToDelete)) {
+        item.storeInstance = $scope.storeDetails.prevStoreInstanceId;
+      }
+
+      return item;
+    }
+
     $scope.removeRecord = function (itemToDelete) {
       if (itemToDelete.isNewItem) {
         removeNewItem(itemToDelete);
       } else {
-        var storeInstance = (itemToDelete.isInOffload && $scope.storeDetails.prevStoreInstanceId) ? $scope.storeDetails.prevStoreInstanceId : $routeParams.storeId;
-        $this.itemsToDeleteArray.push({
-          storeInstance: storeInstance,
-          itemToDelete: angular.copy(itemToDelete)
-        });
-        var index = $scope.menuItems.indexOf(itemToDelete);
-        $scope.menuItems.splice(index, 1);
+        var item = removeExistingItemFromList(itemToDelete);
+        $this.itemsToDeleteArray.push(item);
       }
     };
 
@@ -736,29 +756,34 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    function createPromiseToDeleteItems() {
+      var deleteItemsPromiseArray = [];
+      angular.forEach($this.itemsToDeleteArray, function (item) {
+        var storeInstance = item.storeInstance;
+        var itemToDelete = item.itemToDelete;
+        deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(storeInstance, itemToDelete.id));
+      });
+      return deleteItemsPromiseArray;
+    }
+
+    function saveData(shouldUpdateStatus, redirectURL) {
+      if ($routeParams.action === 'redispatch') {
+        $this.createPayloadAndSaveForRedispatch(shouldUpdateStatus, redirectURL);
+        return;
+      }
+      $this.createPayloadAndSave(shouldUpdateStatus, redirectURL);
+    }
+
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus, redirectURL) {
       if ($scope.readOnly) {
         $location.path(dashboardURL);
         return;
       }
-      var isFormValid = $this.checkFormValidity();
 
-      if (isFormValid) {
-
-        var deleteItemsPromiseArray = [];
-        angular.forEach($this.itemsToDeleteArray, function (item) {
-          var storeInstance = item.storeInstance;
-          var itemToDelete = item.itemToDelete;
-          deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(storeInstance, itemToDelete.id));
-        });
-
+      if ($this.checkFormValidity()) {
+        var deleteItemsPromiseArray = createPromiseToDeleteItems();
         $q.all(deleteItemsPromiseArray).then(function () {
-          if ($routeParams.action === 'redispatch') {
-            $this.createPayloadAndSaveForRedispatch(shouldUpdateStatus, redirectURL);
-            return;
-          }
-
-          $this.createPayloadAndSave(shouldUpdateStatus, redirectURL);
+          saveData(shouldUpdateStatus, redirectURL);
         });
       }
 
