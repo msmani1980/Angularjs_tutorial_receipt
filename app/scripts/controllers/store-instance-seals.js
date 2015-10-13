@@ -75,6 +75,9 @@ angular.module('ts5App')
       $this.getSealTypesDependencies();
       $this.setWizardSteps();
       $this.isInstanceReadOnly();
+      if ($this.isInboundDuringRedispatch) {
+        $this.getStepsForStoreOne();
+      }
     };
 
     this.setSealTypes = function(sealTypesJSON) {
@@ -91,7 +94,19 @@ angular.module('ts5App')
         controllerName: controllerName
       });
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
-      $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
+    };
+
+    this.getStepsForStoreOne = function() {
+      var controllerName = 'Seals';
+      if ($this.isInboundDuringRedispatch()) {
+        controllerName = 'InboundSeals';
+      }
+      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps('redispatch', $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.prevInstanceWizardSteps, {
+        controllerName: controllerName
+      });
+      $this.prevInstanceNextStep = angular.copy(Math.abs(parseInt($scope.prevInstanceWizardSteps[currentStepIndex].storeOne
+        .stepName) + 1).toString());
     };
 
     this.getSealColors = function() {
@@ -457,7 +472,7 @@ angular.module('ts5App')
       }
       var prevInstance = $this.determineInstanceToUpdate();
       if ($this.isInboundDuringRedispatch()) {
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), '7'));
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), $this.prevInstanceNextStep));
       }
       $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
