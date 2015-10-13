@@ -61,7 +61,7 @@ describe('Service: storeInstanceWizardConfig', function() {
     mockedConfigRedispatch = [{
       label: 'Create Store Instance',
       uri: '/store-instance-create/redispatch/7',
-      stepName: '5',
+      stepName: '1',
       storeOne: {
         stepName: '5'
       },

@@ -49,7 +49,7 @@ angular.module('ts5App')
     };
 
     this.isInboundDuringRedispatch = function() {
-      return (this.getCurrentStepName() === 6 && $routeParams.action === 'redispatch');
+      return (this.getCurrentStepName() === 1 && $routeParams.action === 'redispatch');
     };
 
     this.setAsEdit = function() {
@@ -524,7 +524,9 @@ angular.module('ts5App')
     };
 
     $scope.prevTrigger = function() {
-      $this.updateStatusToStep($this.prevStep);
+      if (!$this.isInboundDuringRedispatch()) {
+        $this.updateStatusToStep($this.prevStep);
+      }
     };
 
     $scope.validateSeals = function(sealTypeObject) {

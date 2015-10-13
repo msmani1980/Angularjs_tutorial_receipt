@@ -1,6 +1,6 @@
 'use strict';
 
-describe('the Store Instance Seals controller', function() {
+fdescribe('the Store Instance Seals controller', function() {
 
   beforeEach(module(
     'ts5App',
@@ -1034,7 +1034,7 @@ describe('the Store Instance Seals controller', function() {
       storeDetailsJSON.currentStatus = {
         'id': 1,
         'statusName': 'Ready for Seals',
-        'name': '6'
+        'name': '1'
       };
       initController('redispatch');
       resolveAllDependencies();
