@@ -221,10 +221,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return storeInstanceDashboardFactory.getStationList().then(getStationListSuccess);
     }
 
-    function getStoreInstance(storeId) {
-      return storeInstanceDashboardFactory.getStoreInstance(storeId);
-    }
-
     function getStoresListSuccess(dataFromAPI) {
       $scope.storesList = angular.copy(dataFromAPI.response);
     }
@@ -369,11 +365,22 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         var storeInstanceForNavigation = angular.copy(storeInstance);
         if (dataFromAPI.response && dataFromAPI.response[0]) {
           actionToURLMap['Inbound Seals'] = 'store-instance-inbound-seals/redispatch/';
-          actionToURLMap['Offload'] = 'store-instance-inbound-seals/redispatch/';
+          actionToURLMap.Offload = 'store-instance-inbound-seals/redispatch/';
           storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
         }
         completeNavigateToAction(actionToURLMap[actionName], storeInstanceForNavigation);
       });
+    }
+
+    function setPackingAndSealsURL (actionName, actionToURLMap, storeInstance) {
+      if(storeInstance.prevStoreInstanceId !== null) {
+        actionToURLMap.Pack = 'store-instance-packing/redispatch/';
+        actionToURLMap.Seal = 'store-instance-seals/redispatch/';
+      } else if(storeInstance.replenishStoreInstanceId !== null) {
+        actionToURLMap.Pack = 'store-instance-packing/replenish/';
+        actionToURLMap.Seal = 'store-instance-seals/replenish/';
+      }
+      completeNavigateToAction(actionToURLMap[actionName], storeInstance);
     }
 
     $scope.navigateToAction = function (storeInstance, actionName) {
@@ -390,16 +397,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       };
 
       if (actionName === 'Pack' || actionName === 'Seal') {
-        if(storeInstance.prevStoreInstanceId !== null) {
-          actionToURLMap['Pack'] = 'store-instance-packing/redispatch/';
-          actionToURLMap['Seal'] = 'store-instance-seals/redispatch/';
-        } else if(storeInstance.replenishStoreInstanceId !== null) {
-          actionToURLMap['Pack'] = 'store-instance-packing/replenish/';
-          actionToURLMap['Seal'] = 'store-instance-seals/replenish/';
-        }
-        completeNavigateToAction(actionToURLMap[actionName], storeInstance);
+        setPackingAndSealsURL(actionName, actionToURLMap, storeInstance);
       } else if(actionName === 'Offload' || actionName === 'Inbound Seals') {
-        getStoreInstanceNextId(actionName, actionToURLMap, storeInstance)
+        getStoreInstanceNextId(actionName, actionToURLMap, storeInstance);
       } else {
         completeNavigateToAction(actionToURLMap[actionName], storeInstance);
       }
