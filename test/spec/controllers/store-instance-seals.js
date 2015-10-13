@@ -1087,7 +1087,7 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-  describe('setWizardSteps method', function() {
+  fdescribe('setWizardSteps method', function() {
 
     it('if the action is dispatch/default, this method should set nextStep to review', function() {
       initController();
@@ -1129,6 +1129,20 @@ describe('the Store Instance Seals controller', function() {
       resolveAllDependencies();
       $scope.$digest();
       expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-packing/replenish/5');
+    });
+
+    it('if the action is redispatch, this method should set nextStep to packing', function() {
+      initController('redispatch');
+      resolveAllDependencies();
+      $scope.$digest();
+      expect(StoreInstanceSealsCtrl.nextStep.storeOne.stepName).toBe('7');
+    });
+
+    it('if the controller is redispatch, this method should set nextStep to packing', function() {
+      initController('redispatch');
+      resolveAllDependencies();
+      $scope.$digest();
+      expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-packing/redispatch/5');
     });
 
   });

@@ -49,7 +49,7 @@ angular.module('ts5App')
     };
 
     this.isInboundDuringRedispatch = function() {
-      return (this.getCurrentStepName() === 1 && $routeParams.action === 'redispatch');
+      return (this.getCurrentStepName() === 6 && $routeParams.action === 'redispatch');
     };
 
     this.setAsEdit = function() {
@@ -75,9 +75,6 @@ angular.module('ts5App')
       $this.getSealTypesDependencies();
       $this.setWizardSteps();
       $this.isInstanceReadOnly();
-      if ($this.isInboundDuringRedispatch) {
-        $this.getStepsForStoreOne();
-      }
     };
 
     this.setSealTypes = function(sealTypesJSON) {
@@ -95,19 +92,10 @@ angular.module('ts5App')
       });
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
-    };
-
-    this.getStepsForStoreOne = function() {
-      var controllerName = 'Seals';
       if ($this.isInboundDuringRedispatch()) {
-        controllerName = 'InboundSeals';
+        $this.prevInstanceNextStep = angular.copy(Math.abs(parseInt($scope.wizardSteps[currentStepIndex].storeOne.stepName) +
+          1).toString());
       }
-      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps('redispatch', $routeParams.storeId);
-      var currentStepIndex = lodash.findIndex($scope.prevInstanceWizardSteps, {
-        controllerName: controllerName
-      });
-      $this.prevInstanceNextStep = angular.copy(Math.abs(parseInt($scope.prevInstanceWizardSteps[currentStepIndex].storeOne
-        .stepName) + 1).toString());
     };
 
     this.getSealColors = function() {
