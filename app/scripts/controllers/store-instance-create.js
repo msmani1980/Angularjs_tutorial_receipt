@@ -258,6 +258,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         carrierId: (apiData.carrierId ? apiData.carrierId.toString() : null),
         menus: angular.copy(apiData.menus)
       };
+      if($routeParams.action === 'replenish') {
+        delete $scope.formData.scheduleNumber;
+        $scope.formData.scheduleDate = dateUtility.nowFormatted();
+      }
       var promises = $this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };

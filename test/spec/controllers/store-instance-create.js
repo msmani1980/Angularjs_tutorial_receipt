@@ -644,6 +644,9 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage');
       $scope.$digest();
+      $scope.formData.scheduleNumber = {
+        scheduleNumber: '194231'
+      };
       mockStoreInstanceCreate();
     });
 
@@ -1043,6 +1046,25 @@ describe('Store Instance Create Controller', function() {
       };
       StoreInstanceCreateCtrl.getStoresList();
       expect(storeInstanceFactory.getStoresList).toHaveBeenCalledWith(queryControl);
+    });
+
+  });
+
+  describe('get store instance during replenish', function() {
+
+    beforeEach(function() {
+      initController('replenish');
+      resolveAllDependencies();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
+      $scope.$digest();
+    });
+
+    it('should not have a scheduleNumber set', function() {
+      expect($scope.formData.scheduleNumber).toBeUndefined();
+    });
+
+    it('should set the scheduleDate to todays date', function() {
+      expect($scope.formData.scheduleDate).toEqual(dateUtility.nowFormatted());
     });
 
   });
