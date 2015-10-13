@@ -221,6 +221,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return storeInstanceDashboardFactory.getStationList().then(getStationListSuccess);
     }
 
+    function getStoreInstance(storeId) {
+      return storeInstanceDashboardFactory.getStoreInstance(storeId);
+    }
+
     function getStoresListSuccess(dataFromAPI) {
       $scope.storesList = angular.copy(dataFromAPI.response);
     }
@@ -351,6 +355,56 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         $scope.showMessage('success', 'Store has been logged as received.');
         $scope.reloadRoute();
       });
+    };
+
+
+    function completeNavigateToAction(URL) {
+      hideLoadingModal();
+      $location.path(URL + storeInstance.id);
+    }
+
+    function getStoreInstanceNextId(actionToURLMap, storeInstance) {
+      var searchPayload = {prevStoreInstanceId: storeInstance.id, limit: 1};
+      storeInstanceDashboardFactory.getCatererStationList(searchPayload).then(function (dataFromAPI) {
+        if (dataFromAPI.response && dataFromAPI.response[0]) {
+          actionToURLMap['Inbound Seals'] = 'store-instance-inbound-seals/redispatch/' + storeInstance.id
+          actionToURLMap['Offload'] = 'store-instance-inbound-seals/redispatch/' + storeInstance.id
+        }
+        completeNavigateToAction(actionToURLMap[actionName], storeInstance);
+      });
+    }
+
+    $scope.navigateToAction = function (actionName, storeInstance) {
+      showLoadingModal('Redirecting ... ');
+      var actionToURLMap = {
+        'Pack': 'store-instance-packing/dispatch/',
+        'Seal': 'store-instance-seals/dispatch/',
+        'Dispatch': 'store-instance-review/dispatch/',
+        'Replenish': 'store-instance-create/replenish/',
+        'Redispatch': 'store-instance-create/redispatch/',
+        'End Instance': 'store-instance-create/end-instance/',
+        'Inbound Seals': 'store-instance-inbound-seals/end-instance/',
+        'Offload': 'store-instance-create/end-instance/'
+      };
+
+      if (actionName === 'Pack' || actionName === 'Seals') {
+        if(storeInstance.prevStoreInstanceId) {
+          actionToURLMap['Pack'] = 'store-instance-packing/redispatch/';
+          actionToURLMap['Seal'] = 'store-instance-seals/redispatch/';
+        } else if(storeInstance.replenishStoreInstanceId) {
+          actionToURLMap['Seal'] = 'store-instance-packing/replenish/';
+          actionToURLMap['Seal'] = 'store-instance-seals/replenish/';
+        }
+        completeNavigateToAction(actionToURLMap[actionName], storeIntance);
+      } else if(actionName === 'Offload' || actionName === 'Inbound Seals') {
+        getStoreInstanceNextId(actionToURLMap, storeInstance)
+      } else {
+        completeNavigateToAction(actionToURLMap[actionName], storeInstance);
+      }
+
+
+
+
     };
 
     init();
