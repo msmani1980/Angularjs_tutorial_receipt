@@ -1087,7 +1087,7 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
-  fdescribe('setWizardSteps method', function() {
+  describe('setWizardSteps method', function() {
 
     it('if the action is dispatch/default, this method should set nextStep to review', function() {
       initController();
