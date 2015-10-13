@@ -278,4 +278,22 @@ describe('Date Utility service', function () {
     });
   });
 
+  describe('the diff method', function(){
+
+    it('should return a difference in days by default', function(){
+      var fromDate = '10/01/2015';
+      var toDate = '10/11/2015';
+      var result = dateUtility.diff(fromDate,toDate);
+      expect(result).toEqual(10);
+    });
+
+    it('should return a difference in months if passed as a parameter', function(){
+      var fromDate = '10/01/2015';
+      var toDate = '11/01/2015';
+      var result = dateUtility.diff(fromDate,toDate,'months');
+      expect(result).toEqual(1);
+    });
+
+  });
+
 });
