@@ -356,19 +356,26 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function completeNavigateToAction(URL, storeInstance) {
       hideLoadingModal();
-      $location.path(URL + storeInstance.id);
+      console.log(URL);
+      if(URL) {
+        $location.path(URL + storeInstance.id);
+      } else {
+        $scope.showMessage('danger', 'This store instance contains bad data, no further action can be taken');
+      }
     }
 
     function getStoreInstanceNextId(actionName, actionToURLMap, storeInstance) {
       var searchPayload = {prevStoreInstanceId: storeInstance.id, limit: 1};
+      var storeInstanceForNavigation = angular.copy(storeInstance);
       storeInstanceDashboardFactory.getStoreInstanceList(searchPayload).then(function (dataFromAPI) {
         var nextStoreInstanceExists = dataFromAPI.response !== null && dataFromAPI.response[0];
         if(nextStoreInstanceExists) {
-          var storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
+          storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
           var nextStoreInstanceStepName = getValueByIdInArray(storeInstanceForNavigation.statusId, 'statusName', $scope.storeStatusList);
-          actionName = (actionName === 'Offload') ? actionName : actionName + '-' + nextStoreInstanceStepName;
+          actionName = (actionName === 'Inbound Seals') ? actionName + '-Redispatch' : actionName + '-' + nextStoreInstanceStepName;
         }
-        completeNavigateToAction(actionToURLMap[actionName], storeInstance);
+        console.log(actionName, actionToURLMap[actionName]);
+        completeNavigateToAction(actionToURLMap[actionName], storeInstanceForNavigation);
       });
     }
 
@@ -393,6 +400,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         'Redispatch': 'store-instance-create/redispatch/',
         'End Instance': 'store-instance-create/end-instance/',
         'Inbound Seals': 'store-instance-inbound-seals/end-instance/',
+        'Inbound Seals-Redispatch': 'store-instance-inbound-seals/redispatch/',
         'Offload': 'store-instance-packing/end-instance/',
         'Offload-Ready for Packing': 'store-instance-packing/redispatch/',
         'Offload-Ready for Seals': 'store-instance-seals/redispatch/',
