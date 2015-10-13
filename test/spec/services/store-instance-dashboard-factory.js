@@ -27,6 +27,7 @@ describe('Service: storeInstanceDashboardFactory', function () {
     spyOn(catererStationService, 'getCatererStationList');
     spyOn(stationsService, 'getGlobalStationList');
     spyOn(storeInstanceService, 'getStoreInstancesList');
+    spyOn(storeInstanceService, 'getStoreInstance');
     spyOn(storeInstanceService, 'updateStoreInstanceStatus');
     spyOn(storesService, 'getStoresList');
     spyOn(recordsService, 'getStoreStatusList');
@@ -53,6 +54,12 @@ describe('Service: storeInstanceDashboardFactory', function () {
       var fakePayload = {fakeKey: 'fakeValue'};
       storeInstanceDashboardFactory.getStoreInstanceList(fakePayload);
       expect(storeInstanceService.getStoreInstancesList).toHaveBeenCalledWith(fakePayload);
+    });
+
+    it('should call getStoreInstance', function () {
+      var fakeStoreId = 1;
+      storeInstanceDashboardFactory.getStoreInstance(fakeStoreId);
+      expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(fakeStoreId);
     });
 
     it('should call updateStoreInstanceStatus', function () {
