@@ -84,7 +84,7 @@ angular.module('ts5App')
         'redispatch': [{
           label: 'Create Store Instance',
           uri: createURL + action + (id ? '/' + id : ''),
-          stepName: '1',
+          stepName: '5',
           storeOne: {
             stepName: '5'
           },
