@@ -54,8 +54,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setMenuCatererList = function(dataFromAPI) {
+      $scope.menuCatererList = angular.copy(dataFromAPI.companyMenuCatererStations);
+    };
+
+    this.filterMenusList = function() {
       $scope.filteredMenuList = [];
-      angular.forEach(dataFromAPI.companyMenuCatererStations, function(menuCaterer) {
+      angular.forEach($scope.menuCatererList, function(menuCaterer) {
         var filteredMenu = lodash.findWhere($scope.menuMasterList, {
           id: menuCaterer.menuId
         });
@@ -63,6 +67,24 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $scope.filteredMenuList.push(filteredMenu);
         }
       });
+      this.setStoreInstanceMenus();
+    };
+
+    this.setStoreInstanceMenus = function() {
+      var newMenus = [];
+      angular.forEach($scope.formData.menus, function(menu) {
+        var newMenu = {
+          id: menu.menuMasterId
+        };
+        var existingMenu = $scope.filteredMenuList.filter(function(menuMaster) {
+          return menuMaster.id === menu.menuMasterId;
+        })[0];
+        if (angular.isDefined(existingMenu)) {
+          newMenu.menuCode = existingMenu.menuCode;
+        }
+        newMenus.push(newMenu);
+      });
+      $scope.formData.menus = newMenus;
     };
 
     this.getMenuCatererList = function() {
@@ -77,7 +99,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setMenuMasterList = function(dataFromAPI) {
       $scope.menuMasterList = dataFromAPI.companyMenuMasters;
-      $this.menusFromApi();
     };
 
     this.getMenuMasterList = function() {
@@ -127,9 +148,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.updateStatusToStep = function(stepObject) {
       var statusObject = this.findStatusObject(stepObject);
-      if (!statusObject) {
-        return;
-      }
       return storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name);
     };
 
@@ -172,23 +190,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         });
       });
       return newMenus;
-    };
-
-    this.menusFromApi = function() {
-      var newMenus = [];
-      angular.forEach($scope.formData.menus, function(menu) {
-        var newMenu = {
-          id: menu.menuMasterId
-        };
-        var existingMenu = $scope.menuMasterList.filter(function(menuMaster) {
-          return menuMaster.id === menu.menuMasterId;
-        })[0];
-        if (angular.isDefined(existingMenu)) {
-          newMenu.menuCode = existingMenu.menuCode;
-        }
-        newMenus.push(newMenu);
-      });
-      $scope.formData.menus = newMenus;
     };
 
     this.formatDispatchPayload = function(payload) {
@@ -299,9 +300,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.createStoreInstance = function(saveAndExit) {
       this.displayLoadingModal('Creating new Store Instance');
       var payload = this.formatPayload();
-      if (!payload) {
-        return false;
-      }
       var promises = [];
       promises.push(storeInstanceFactory.createStoreInstance(payload));
       if ($routeParams.action === 'redispatch') {
@@ -389,25 +387,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setScheduleNumbers = function(apiData) {
-      if (!apiData || !apiData.meta.count) {
-        return;
-      }
       $scope.scheduleNumbers = angular.copy(apiData.schedules);
     };
 
-    this.getScheduleNumbersPromise = function() {
-      var datesForApi = this.getFormattedDatesPayload();
-      return schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate,
-        datesForApi.endDate);
-    };
-
     this.getScheduleNumbers = function() {
-      $scope.scheduleNumbers = [];
-      if (!$scope.formData.scheduleDate) {
-        this.setScheduleNumbers();
-        return;
-      }
-      $this.getScheduleNumbersPromise().then($this.setScheduleNumbers);
+      var datesForApi = $this.getFormattedDatesPayload();
+      schedulesService.getSchedulesInDateRange(companyId, datesForApi.startDate,  datesForApi.endDate)
+      .then(this.setScheduleNumbers);
     };
 
     this.updateInstanceDependencies = function() {
@@ -464,6 +450,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.initSuccessHandler = function() {
+      $this.filterMenusList();
       $this.setWizardSteps();
       $this.setUIReady();
       $this.registerScopeWatchers();
