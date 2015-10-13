@@ -362,13 +362,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     function getStoreInstanceNextId(actionName, actionToURLMap, storeInstance) {
       var searchPayload = {prevStoreInstanceId: storeInstance.id, limit: 1};
       storeInstanceDashboardFactory.getStoreInstanceList(searchPayload).then(function (dataFromAPI) {
-        var storeInstanceForNavigation = angular.copy(storeInstance);
-        if (dataFromAPI.response && dataFromAPI.response[0]) {
-          actionToURLMap['Inbound Seals'] = 'store-instance-inbound-seals/redispatch/';
-          actionToURLMap.Offload = 'store-instance-inbound-seals/redispatch/';
-          storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
+        var nextStoreInstanceExists = dataFromAPI.response !== null && dataFromAPI.response[0];
+        if(nextStoreInstanceExists) {
+          var storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
+          var nextStoreInstanceStepName = getValueByIdInArray(storeInstanceForNavigation.statusId, 'statusName', $scope.storeStatusList);
+          actionName = (actionName === 'Offload') ? actionName : actionName + '-' + nextStoreInstanceStepName;
         }
-        completeNavigateToAction(actionToURLMap[actionName], storeInstanceForNavigation);
+        completeNavigateToAction(actionToURLMap[actionName], storeInstance);
       });
     }
 
@@ -393,7 +393,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         'Redispatch': 'store-instance-create/redispatch/',
         'End Instance': 'store-instance-create/end-instance/',
         'Inbound Seals': 'store-instance-inbound-seals/end-instance/',
-        'Offload': 'store-instance-packing/end-instance/'
+        'Offload': 'store-instance-packing/end-instance/',
+        'Offload-Ready for Packing': 'store-instance-packing/redispatch/',
+        'Offload-Ready for Seals': 'store-instance-seals/redispatch/',
+        'Offload-Ready for Dispatch': 'store-instance-review/redispatch/'
       };
 
       if (actionName === 'Pack' || actionName === 'Seal') {
