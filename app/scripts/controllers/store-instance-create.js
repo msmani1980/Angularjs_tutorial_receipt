@@ -234,6 +234,18 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return payload;
     };
 
+    this.determineMinDate = function() {
+      var diff = dateUtility.diff(
+        dateUtility.nowFormatted(),
+        $scope.formData.scheduleDate
+      );
+      var dateString = diff.toString() + 'd';
+      if(diff >=0 ){
+        dateString = '+' + dateString;
+      }
+      return dateString;
+    };
+
     this.setStoreInstance = function(apiData) {
       $scope.formData = {
         dispatchedCateringStationId: (apiData.cateringStationId ? apiData.cateringStationId.toString() : null),
@@ -245,6 +257,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         carrierId: (apiData.carrierId ? apiData.carrierId.toString() : null),
         menus: angular.copy(apiData.menus)
       };
+      $scope.minDate = $this.determineMinDate();
       var promises = $this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };

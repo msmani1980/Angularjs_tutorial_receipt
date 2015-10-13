@@ -39,8 +39,8 @@
         <label>Schedule Date <span ng-show="!isActionState('end-instance')">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
-          <date-picker-field form="createStoreInstance" name="scheduleDate"
-            min-date="'0d'" required="true" ng-model="formData.scheduleDate" disable="isActionState('end-instance')"></date-picker-field>
+          <date-picker-field form="createStoreInstance" name="scheduleDate" ng-if="minDate"
+            min-date="minDate" required="true" ng-model="formData.scheduleDate" disable="isActionState('end-instance')"></date-picker-field>
       </div>
     </div>
 
