@@ -390,7 +390,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       };
 
       if (actionName === 'Pack' || actionName === 'Seal') {
-        console.log(storeInstance.prevStoreInstanceId, storeInstance.replenishStoreInstanceId);
         if(storeInstance.prevStoreInstanceId !== null) {
           actionToURLMap['Pack'] = 'store-instance-packing/redispatch/';
           actionToURLMap['Seal'] = 'store-instance-seals/redispatch/';
