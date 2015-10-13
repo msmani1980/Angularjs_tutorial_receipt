@@ -94,6 +94,7 @@ angular.module('ts5App')
         controllerName: controllerName
       });
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
+      $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
     };
 
     this.getStepsForStoreOne = function() {

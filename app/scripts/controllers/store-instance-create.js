@@ -240,7 +240,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $scope.formData.scheduleDate
       );
       var dateString = diff.toString() + 'd';
-      if(diff >=0 ){
+      if (diff >= 0) {
         dateString = '+' + dateString;
       }
       return dateString;
@@ -318,11 +318,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
       } else {
         this.displayLoadingModal('Starting the End Instance process');
-        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, '6', $scope.formData.cateringStationId)
-          .then(
-            (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
-            this.createStoreInstanceErrorHandler
-          );
+        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, $this.nextStep, $scope.formData.cateringStationId)
+          .then((saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler), this.createStoreInstanceErrorHandler);
       }
     };
 
