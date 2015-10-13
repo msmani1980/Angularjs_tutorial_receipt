@@ -76,7 +76,7 @@
           <div class="row">
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="departure-station">Departure Station</label>
+                <label>Departure Station</label>
                   <ui-select multiple ng-model="search.departureStations" theme="bootstrap">
                     <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
                       <ui-select-choices repeat="station in stationList | filter: $select.search">
@@ -87,7 +87,7 @@
             </div>
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="arrival-station">Arrival Station</label>
+                <label>Arrival Station</label>
                   <ui-select multiple ng-model="search.arrivalStations" theme="bootstrap">
                     <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
                       <ui-select-choices repeat="station in stationList | filter: $select.search">

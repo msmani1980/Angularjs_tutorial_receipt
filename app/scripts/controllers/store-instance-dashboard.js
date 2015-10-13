@@ -149,13 +149,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     var STATUS_TO_BUTTONS_MAP = {
-      '1': ['Pack', 'Delete'],
-      '2': ['Seal', 'Delete'],
-      '3': ['Dispatch', 'Delete', 'Checkbox'],
+      '1': ['Pack', 'Start Offload'],
+      '2': ['Seal', 'Start Inbound Seals'],
+      '3': ['Dispatch', 'Offload', 'Checkbox'],
       '4': ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
       '5': ['End Instance', 'Redispatch', 'Checkbox'],
       '6': ['Start Inbound Seals'],
-      '7': ['Start Offload', 'Instance audit report'],
+      '7': ['Start Offload']
     };
 
     function formatStoreInstance(storeInstance) {
