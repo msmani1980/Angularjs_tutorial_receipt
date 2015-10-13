@@ -183,9 +183,11 @@ describe('Store Instance Create Controller', function() {
     StoreInstanceCreateCtrl.createStoreInstance();
   }
 
-  function mockLoadStoreInstance() {
-    spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
-    getStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
+  function mockLoadStoreInstance(data) {
+    getStoreInstanceDeferred.resolve(
+      (data ? data : storeInstanceCreatedJSON)
+    );
+    $scope.$digest();
   }
 
   function mockEndStoreInstance(exitOnSave) {
@@ -318,21 +320,54 @@ describe('Store Instance Create Controller', function() {
     beforeEach(function() {
       initController('redispatch');
       resolveAllDependencies();
-      mockLoadStoreInstance();
-      spyOn(StoreInstanceCreateCtrl, 'setStoreDetails').and.callThrough();
+      $scope.$digest();
+      spyOn(StoreInstanceCreateCtrl,'determineMinDate').and.callThrough();
+      spyOn(dateUtility,'diff').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
       $scope.$digest();
     });
 
     it('should get the store details', function() {
-      getStoreDetailsDeferred.resolve(storeDetailsJSON);
-      $scope.$digest();
+      mockLoadStoreInstance();
       expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(storeInstanceId);
     });
 
     it('should attach all properties of JSON to scope', function() {
-      getStoreDetailsDeferred.resolve(storeDetailsJSON);
+      mockLoadStoreInstance();
       $scope.$digest();
       expect($scope.storeDetails).toEqual(storeDetailsJSON);
+    });
+
+    describe('determining the mininum date', function() {
+
+      it('should have been called the determineMinDate method when the store instance is loaded', function() {
+        mockLoadStoreInstance();
+        expect(StoreInstanceCreateCtrl.determineMinDate).toHaveBeenCalled();
+      });
+
+      it('should call the date utility diff method', function() {
+        mockLoadStoreInstance();
+        expect(dateUtility.diff).toHaveBeenCalled();
+      });
+
+      it('should set the minDate in the scope', function() {
+        mockLoadStoreInstance();
+        expect($scope.minDate).toEqual(StoreInstanceCreateCtrl.determineMinDate());
+      });
+
+      it('should return a formatted string', function() {
+        var mockData = angular.copy(storeDetailsJSON);
+        mockData.scheduleDate = '20201010';
+        mockLoadStoreInstance(mockData);
+        var controlDiff = dateUtility.diff(
+          dateUtility.nowFormatted(),
+          $scope.formData.scheduleDate
+        );
+        var dateStringControl = '+' + controlDiff.toString() + 'd';
+        var dateStringTest = StoreInstanceCreateCtrl.determineMinDate();
+        expect(dateStringTest).toEqual(dateStringControl);
+      });
+
     });
 
   });
