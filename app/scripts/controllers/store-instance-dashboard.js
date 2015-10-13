@@ -393,7 +393,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         'Redispatch': 'store-instance-create/redispatch/',
         'End Instance': 'store-instance-create/end-instance/',
         'Inbound Seals': 'store-instance-inbound-seals/end-instance/',
-        'Offload': 'store-instance-create/end-instance/'
+        'Offload': 'store-instance-packing/end-instance/'
       };
 
       if (actionName === 'Pack' || actionName === 'Seal') {
