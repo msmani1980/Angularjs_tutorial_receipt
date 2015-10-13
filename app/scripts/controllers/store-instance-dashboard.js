@@ -91,12 +91,12 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     };
 
-
     $scope.doesStoreInstanceContainAction = function(storeInstance, actionName) {
       var statusNumber = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
       var isReplenishment = storeInstance.replenishStoreInstanceId !== null;
-      var isStoreReplenishmentInStatusAfterDispatch = isReplenishment && parseInt(statusNumber) >= 4;
-      if(!storeInstance.actionButtons || isStoreReplenishmentInStatusAfterDispatch) {
+      var isReplenishmentAfterDispatch = isReplenishment && parseInt(statusNumber) >= 4;
+
+      if(!storeInstance.actionButtons || (isReplenishmentAfterDispatch && actionName !== 'Get Flight Docs')) {
         return false;
       }
       return storeInstance.actionButtons.indexOf(actionName) >= 0;
@@ -149,8 +149,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     var STATUS_TO_BUTTONS_MAP = {
-      '1': ['Pack', 'Start Offload'],
-      '2': ['Seal', 'Start Inbound Seals'],
+      '1': ['Pack'],
+      '2': ['Seal'],
       '3': ['Dispatch', 'Offload', 'Checkbox'],
       '4': ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
       '5': ['End Instance', 'Redispatch', 'Checkbox'],
@@ -358,23 +358,25 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
 
-    function completeNavigateToAction(URL) {
+    function completeNavigateToAction(URL, storeInstance) {
       hideLoadingModal();
       $location.path(URL + storeInstance.id);
     }
 
-    function getStoreInstanceNextId(actionToURLMap, storeInstance) {
+    function getStoreInstanceNextId(actionName, actionToURLMap, storeInstance) {
       var searchPayload = {prevStoreInstanceId: storeInstance.id, limit: 1};
-      storeInstanceDashboardFactory.getCatererStationList(searchPayload).then(function (dataFromAPI) {
+      storeInstanceDashboardFactory.getStoreInstanceList(searchPayload).then(function (dataFromAPI) {
+        var storeInstanceForNavigation = angular.copy(storeInstance);
         if (dataFromAPI.response && dataFromAPI.response[0]) {
-          actionToURLMap['Inbound Seals'] = 'store-instance-inbound-seals/redispatch/' + storeInstance.id
-          actionToURLMap['Offload'] = 'store-instance-inbound-seals/redispatch/' + storeInstance.id
+          actionToURLMap['Inbound Seals'] = 'store-instance-inbound-seals/redispatch/';
+          actionToURLMap['Offload'] = 'store-instance-inbound-seals/redispatch/';
+          storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
         }
-        completeNavigateToAction(actionToURLMap[actionName], storeInstance);
+        completeNavigateToAction(actionToURLMap[actionName], storeInstanceForNavigation);
       });
     }
 
-    $scope.navigateToAction = function (actionName, storeInstance) {
+    $scope.navigateToAction = function (storeInstance, actionName) {
       showLoadingModal('Redirecting ... ');
       var actionToURLMap = {
         'Pack': 'store-instance-packing/dispatch/',
@@ -387,24 +389,21 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         'Offload': 'store-instance-create/end-instance/'
       };
 
-      if (actionName === 'Pack' || actionName === 'Seals') {
-        if(storeInstance.prevStoreInstanceId) {
+      if (actionName === 'Pack' || actionName === 'Seal') {
+        console.log(storeInstance.prevStoreInstanceId, storeInstance.replenishStoreInstanceId);
+        if(storeInstance.prevStoreInstanceId !== null) {
           actionToURLMap['Pack'] = 'store-instance-packing/redispatch/';
           actionToURLMap['Seal'] = 'store-instance-seals/redispatch/';
-        } else if(storeInstance.replenishStoreInstanceId) {
-          actionToURLMap['Seal'] = 'store-instance-packing/replenish/';
+        } else if(storeInstance.replenishStoreInstanceId !== null) {
+          actionToURLMap['Pack'] = 'store-instance-packing/replenish/';
           actionToURLMap['Seal'] = 'store-instance-seals/replenish/';
         }
-        completeNavigateToAction(actionToURLMap[actionName], storeIntance);
+        completeNavigateToAction(actionToURLMap[actionName], storeInstance);
       } else if(actionName === 'Offload' || actionName === 'Inbound Seals') {
-        getStoreInstanceNextId(actionToURLMap, storeInstance)
+        getStoreInstanceNextId(actionName, actionToURLMap, storeInstance)
       } else {
         completeNavigateToAction(actionToURLMap[actionName], storeInstance);
       }
-
-
-
-
     };
 
     init();
