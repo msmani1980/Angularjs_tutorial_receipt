@@ -258,7 +258,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         carrierId: (apiData.carrierId ? apiData.carrierId.toString() : null),
         menus: angular.copy(apiData.menus)
       };
-      $scope.minDate = $this.determineMinDate();
       var promises = $this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };
@@ -450,6 +449,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.initSuccessHandler = function() {
+      $scope.minDate = $this.determineMinDate();
       $this.filterMenusList();
       $this.setWizardSteps();
       $this.setUIReady();

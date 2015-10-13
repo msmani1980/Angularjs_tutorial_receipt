@@ -204,6 +204,7 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       initController();
+      spyOn(StoreInstanceCreateCtrl,'determineMinDate').and.callThrough();
     });
 
     it('should set wizardSteps', function() {
@@ -211,6 +212,19 @@ describe('Store Instance Create Controller', function() {
       $scope.$digest();
       var wizardSteps = storeInstanceWizardConfig.getSteps('dispatch');
       expect($scope.wizardSteps).toEqual(wizardSteps);
+    });
+
+    it('should determine the minimum date on success', function() {
+      resolveAllDependencies();
+      $scope.$digest();
+      expect(StoreInstanceCreateCtrl.determineMinDate).toHaveBeenCalled();
+    });
+
+    it('should set the minimum date in the scope on success', function() {
+      resolveAllDependencies();
+      $scope.$digest();
+      var minDateControl = StoreInstanceCreateCtrl.determineMinDate();
+      expect($scope.minDate).toEqual(minDateControl);
     });
 
     it('should have an empty stations list before the scope is digested', function() {
