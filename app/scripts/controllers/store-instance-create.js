@@ -425,7 +425,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       });
       if ($routeParams.action === 'dispatch') {
         $scope.$watch('formData.cateringStationId', function(newId, oldId) {
-          if (newId && oldId && newId !== oldId) {
+          if (angular.isUndefined(oldId) || newId && newId !== oldId) {
             $this.updateInstanceDependencies();
           }
         });

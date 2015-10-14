@@ -71,11 +71,7 @@ angular.module('ts5App')
 
     function successDeleteHandler() {
       $scope.searchMenus();
-      ngToast.create({
-        className: 'success',
-        dismissButton: true,
-        content: '<strong>Menu Management</strong>: successfully deleted menu!'
-      });
+      showToast('success', 'Menu Management', 'successfully deleted menu!');
     }
 
     $scope.deleteMenu = function () {
@@ -111,7 +107,7 @@ angular.module('ts5App')
     };
 
     function initializeList() {
-      menuService.getMenuList().then(attachMenuListToScope);
+      menuService.getMenuList({startDate:dateUtility.nowFormatted('YYYYMMDD')}).then(attachMenuListToScope);
       if ($location.search().newMenuName) {
         showToast('success', 'Create Menu', 'successfully created menu named ' + $location.search().newMenuName);
       }
