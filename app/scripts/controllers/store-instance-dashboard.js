@@ -11,7 +11,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q,
-    $route, ngToast, $location, $filter, ENV) {
+    $route, ngToast, $location, $filter, storeInstanceDashboardActionsConfig, ENV) {
 
     $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
@@ -372,68 +372,68 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
 
-    function completeNavigateToAction(URL, storeInstance) {
+    function completeNavigateToAction(actionName, storeInstance) {
+      var URL = storeInstanceDashboardActionsConfig.getURL(actionName, storeInstance.id);
       hideLoadingModal();
       if(URL) {
-        $location.path(URL + storeInstance.id);
+        $location.path(URL);
       } else {
-        $scope.showMessage('danger', 'This store instance contains bad data, no further action can be taken');
+        $scope.showMessage('danger', 'Error loading next page!');
       }
     }
 
-    function getStoreInstanceNextId(actionName, actionToURLMap, storeInstance) {
+    function checkChildIdAndAdjustAction (actionName, storeInstance) {
       var searchPayload = {prevStoreInstanceId: storeInstance.id, limit: 1};
       var storeInstanceForNavigation = angular.copy(storeInstance);
+      var actionModifierMap = {
+        'Ready for Packing': '-Redispatch-Pack',
+        'Ready for Seals': '-Redispatch-Seal',
+        'Ready for Dispatch': '-Redispatch-Dispatch'
+      };
+
       storeInstanceDashboardFactory.getStoreInstanceList(searchPayload).then(function (dataFromAPI) {
         var nextStoreInstanceExists = dataFromAPI.response !== null && dataFromAPI.response[0];
         if(nextStoreInstanceExists) {
           storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
           var nextStoreInstanceStepName = getValueByIdInArray(storeInstanceForNavigation.statusId, 'statusName', $scope.storeStatusList);
-          actionName = (actionName === 'Inbound Seals') ? actionName + '-Redispatch' : actionName + '-' + nextStoreInstanceStepName;
+          actionName = actionName + actionModifierMap[nextStoreInstanceStepName];
         }
-        completeNavigateToAction(actionToURLMap[actionName], storeInstanceForNavigation);
+        completeNavigateToAction(actionName, storeInstanceForNavigation);
       });
     }
 
-    function setPackingAndSealsURL (actionName, actionToURLMap, storeInstance) {
-      if(storeInstance.prevStoreInstanceId !== null) {
-        actionToURLMap.Pack = 'store-instance-packing/redispatch/';
-        actionToURLMap.Seal = 'store-instance-seals/redispatch/';
-        actionToURLMap.Dispatch = 'store-instance-review/redispatch/';
-      } else if(storeInstance.replenishStoreInstanceId !== null) {
-        actionToURLMap.Pack = 'store-instance-packing/replenish/';
-        actionToURLMap.Seal = 'store-instance-seals/replenish/';
-        actionToURLMap.Dispatch = 'store-instance-review/replenish/';
+    function getPrevStoreInstanceAndCompleteAction(actionName, storeInstance) {
+      storeInstanceDashboardFactory.getStoreInstance(storeInstance.prevStoreInstanceId).then(function (dataFromAPI) {
+        var prevStoreInstance = angular.copy(dataFromAPI);
+        var prevStoreInstanceStepName =  getValueByIdInArray(prevStoreInstance.statusId, 'statusName', $scope.storeStatusList);
+        actionName = (prevStoreInstanceStepName === 'Inbound Seals') ? 'Inbound Seals' : actionName;
+        completeNavigateToAction(actionName + '-Redispatch', storeInstance);
+      });
+    }
+
+    function checkParentIdAndAdjustAction (actionName, storeInstance) {
+      var isRedispatch = storeInstance.prevStoreInstanceId !== null;
+      var isReplenish = storeInstance.replenishStoreInstanceId !== null;
+      var actionModifier = (isReplenish) ? '-Replenish' : '';
+      actionModifier = (isRedispatch) ? '-Redispatch' : actionModifier;
+
+      if(isRedispatch && actionName === 'Pack') {
+        getPrevStoreInstanceAndCompleteAction(actionName, storeInstance);
+      } else {
+        completeNavigateToAction(actionName + actionModifier, storeInstance);
       }
-      completeNavigateToAction(actionToURLMap[actionName], storeInstance);
     }
 
     $scope.navigateToAction = function (storeInstance, actionName) {
       showLoadingModal('Redirecting ... ');
-      var actionToURLMap = {
-        'Pack': 'store-instance-packing/dispatch/',
-        'Seal': 'store-instance-seals/dispatch/',
-        'Dispatch': 'store-instance-review/dispatch/',
-        'Replenish': 'store-instance-create/replenish/',
-        'Redispatch': 'store-instance-create/redispatch/',
-        'End Instance': 'store-instance-create/end-instance/',
-        'Inbound Seals': 'store-instance-inbound-seals/end-instance/',
-        'Inbound Seals-Redispatch': 'store-instance-inbound-seals/redispatch/',
-        'Offload': 'store-instance-packing/end-instance/',
-        'Offload-Ready for Packing': 'store-instance-packing/redispatch/',
-        'Offload-Ready for Seals': 'store-instance-seals/redispatch/',
-        'Offload-Ready for Dispatch': 'store-instance-review/redispatch/'
-      };
-
       var shouldCheckParentId = actionName === 'Pack' || actionName === 'Seal' || actionName === 'Dispatch';
       var shouldCheckChildId = actionName === 'Offload' || actionName === 'Inbound Seals';
-
       if (shouldCheckParentId) {
-        setPackingAndSealsURL(actionName, actionToURLMap, storeInstance);
+        checkParentIdAndAdjustAction(actionName, storeInstance);
       } else if(shouldCheckChildId) {
-        getStoreInstanceNextId(actionName, actionToURLMap, storeInstance);
+        checkChildIdAndAdjustAction(actionName, storeInstance);
       } else {
-        completeNavigateToAction(actionToURLMap[actionName], storeInstance);
+        completeNavigateToAction(actionName, storeInstance);
       }
     };
 

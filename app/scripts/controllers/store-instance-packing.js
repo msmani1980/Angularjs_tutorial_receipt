@@ -351,6 +351,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return;
       }
 
+      showLoadingModal('Updating Status...');
       var statusUpdatePromiseArray = [];
       statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
@@ -358,6 +359,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
 
       $q.all(statusUpdatePromiseArray).then(function () {
+        hideLoadingModal();
         $location.url(stepObject.uri);
       }, showErrors);
 
