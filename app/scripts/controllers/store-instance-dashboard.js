@@ -382,9 +382,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       if(storeInstance.prevStoreInstanceId !== null) {
         actionToURLMap.Pack = 'store-instance-packing/redispatch/';
         actionToURLMap.Seal = 'store-instance-seals/redispatch/';
+        actionToURLMap.Dispatch = 'store-instance-review/redispatch/';
       } else if(storeInstance.replenishStoreInstanceId !== null) {
         actionToURLMap.Pack = 'store-instance-packing/replenish/';
         actionToURLMap.Seal = 'store-instance-seals/replenish/';
+        actionToURLMap.Dispatch = 'store-instance-review/replenish/';
       }
       completeNavigateToAction(actionToURLMap[actionName], storeInstance);
     }
@@ -406,7 +408,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         'Offload-Ready for Dispatch': 'store-instance-review/redispatch/'
       };
 
-      if (actionName === 'Pack' || actionName === 'Seal') {
+      if (actionName === 'Pack' || actionName === 'Seal' || actionName === 'Dispatch') {
         setPackingAndSealsURL(actionName, actionToURLMap, storeInstance);
       } else if(actionName === 'Offload' || actionName === 'Inbound Seals') {
         getStoreInstanceNextId(actionName, actionToURLMap, storeInstance);
