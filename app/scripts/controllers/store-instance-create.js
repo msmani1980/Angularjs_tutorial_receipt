@@ -214,10 +214,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         controllerName: 'Create'
       });
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
-      if ($routeParams.action === 'redispatch') {
-        $this.prevInstanceNextStep = angular.copy(Math.abs(parseInt($scope.wizardSteps[currentStepIndex].storeOne.stepName) +
-          1).toString());
-      }
+    };
+
+    this.setPrevInstanceWizardSteps = function() {
+      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.prevInstanceWizardSteps, {
+        controllerName: 'Create'
+      });
+      $this.prevInstanceNextStep = angular.copy($scope.prevInstanceWizardSteps[currentStepIndex]);
     };
 
     this.formatPayload = function() {
@@ -309,7 +313,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var promises = [];
       promises.push(storeInstanceFactory.createStoreInstance(payload));
       if ($routeParams.action === 'redispatch') {
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, $this.prevInstanceNextStep));
+        var prevInstanceStatus = Math.abs(parseInt($this.prevInstanceNextStep.storeOne.stepName) + 1).toString();
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, prevInstanceStatus));
       }
       $q.all(promises).then(
         (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
@@ -322,11 +327,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
       } else {
         this.displayLoadingModal('Starting the End Instance process');
-        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, $this.nextStep, $scope.formData.cateringStationId)
+        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, $this.nextStep.stepName, $scope.formData
+            .cateringStationId)
           .then((saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler), this.createStoreInstanceErrorHandler);
       }
     };
-
     $scope.submitForm = function(saveAndExit) {
       $scope.createStoreInstance.$setSubmitted(true);
       if ($this.validateForm()) {
@@ -465,8 +470,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.filterMenusList();
       $this.setStoreInstanceMenus();
       $this.setWizardSteps();
+      if ($routeParams.action === 'redispatch') {
+        $this.setPrevInstanceWizardSteps();
+      }
       $this.setUIReady();
       $this.registerScopeWatchers();
+
     };
 
     this.init = function() {
