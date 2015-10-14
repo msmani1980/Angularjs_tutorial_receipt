@@ -82,8 +82,6 @@
       </div>
     </div>
 
-
-
     <h3 id="qualifiers">Qualifiers</h3>
     <div class="row">
       <div class="col-xs-12 col-sm-6">
@@ -101,7 +99,7 @@
         <fieldset>
           <div class="form-group">
             <label>Promotion Category</label>
-            <ui-select theme="bootstrap" ng-model="promotion.spendLimitCategory" ng-disabled="readOnly" required name="spendLimitCategory">
+            <ui-select theme="bootstrap" ng-model="promotion.spendLimitCategory" ng-disabled="readOnly" ng-required="true" name="spendLimitCategory">
               <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
               <ui-select-choices repeat="promotionCategory in selectOptions.promotionCategories | filter: {promotionCategoryName:$select.search}">
                 <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
@@ -177,10 +175,11 @@
 
       <div class="row">
         <div class="col-xs-12 col-sm-11 col-md-10 col-sm-offset-1">
-          <h3>Retail Item <span class="badge">{{ promotion.items.length }}</span><a class="pull-right"
-                                      ng-click="addBlankObjectToArray(promotion.items)"
-                                      ng-hidden="readOnly"
-                                      ng-disabled="readOnly">Add Retail Item</a></h3>
+          <h3>Retail Item <span class="badge">{{ promotion.items.length }}</span>
+            <a class="pull-right"
+                                ng-click="addBlankObjectToArray(promotion.items)"
+                                ng-hidden="readOnly"
+                                ng-disabled="readOnly">Add Retail Item</a></h3>
         </div>
       </div>
 
@@ -221,7 +220,8 @@
             <label>Qty*</label>
             <input type="number" class="form-control" min="1" ng-model="retailItemData.itemQty"
                    ng-required="retailItemQtyRequired(retailItemData)"
-                   ng-disabled="readOnly">
+                   ng-disabled="readOnly"
+                   name="RetailItemQty">
           </div>
         </div>
         <div class="col-xs-1 col-xs-offset-4 col-sm-offset-0">
@@ -241,25 +241,26 @@
       <div class="col-xs-12 col-md-6">
         <div class="form-group">
           <label>Benefit Type*</label>
-          <ui-select theme="bootstrap" ng-model="promotion.benefitType" required ng-disabled="readOnly" name="BenefitType">
+          <fieldset>
+          <ui-select theme="bootstrap" ng-model="promotion.benefitType" ng-disabled="readOnly" required name="BenefitType">
             <ui-select-match placeholder="Select Benefit Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="benefitType in selectOptions.benefitTypes | filter: {name:$select.search}">
               <div ng-bind-html="benefitType.name | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
         </div>
+
         <fieldset ng-if="promotion.benefitType.name === 'Discount'">
 
           <div class="form-group">
             <label>Apply To*</label>
-            <ui-select theme="bootstrap" ng-model="promotion.benefitDiscountApply" ng-disabled="readOnly">
+            <ui-select theme="bootstrap" ng-model="promotion.benefitDiscountApply" ng-disabled="readOnly" required>
               <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
               <ui-select-choices repeat="discountType in selectOptions.discountApplyTypes | filter: {name:$select.search}">
                 <div ng-bind-html="discountType.name | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </div>
-
 
           <div class="form-group" ng-if="promotion.benefitDiscountApply.name === 'Promotion Category'">
             <label>Promotion Category*</label>
@@ -362,8 +363,9 @@
         <div class="form-group" ng-if="promotion.benefitType.name === 'Coupon'">
           <label>Coupon*</label>
           <ui-select theme="bootstrap" ng-model="promotion.companyCoupon"
-                     ng-required="promotion.benefitType.name === 'Coupon'"
-                     ng-disabled="readOnly">
+                     required
+                     ng-disabled="readOnly"
+                     name="CompanyCoupon">
             <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="discountType in selectOptions.companyDiscountsCoupon | filter: {name:$select.search}">
               <div ng-bind-html="discountType.name | highlight: $select.search"></div>
@@ -387,9 +389,9 @@
     </div>
 
     <h3 id="promotion-inclusion-filter">Inclusion Filter <a class="pull-right"
-                                                                      ng-click="addBlankObjectToArray(promotion.filters)"
-                                                                      ng-hide="readOnly"
-                                                                      ng-disabled="readOnly">Add Promotion Inclusion Filter</a></h3>
+                                                            ng-click="addBlankObjectToArray(promotion.filters)"
+                                                            ng-hide="readOnly"
+                                                            ng-disabled="readOnly">Add Promotion Inclusion Filter</a></h3>
     <div class="row" ng-repeat="inclusionFilterData in promotion.filters">
       <div class="col-xs-10 col-sm-5">
         <div class="form-group">
