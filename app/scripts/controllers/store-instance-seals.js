@@ -92,6 +92,10 @@ angular.module('ts5App')
       });
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
+      if ($this.isInboundDuringRedispatch()) {
+        $this.prevInstanceNextStep = angular.copy(Math.abs(parseInt($scope.wizardSteps[currentStepIndex].storeOne.stepName) +
+          1).toString());
+      }
     };
 
     this.getSealColors = function() {
@@ -457,7 +461,7 @@ angular.module('ts5App')
       }
       var prevInstance = $this.determineInstanceToUpdate();
       if ($this.isInboundDuringRedispatch()) {
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), '7'));
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), $this.prevInstanceNextStep));
       }
       $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
@@ -520,7 +524,9 @@ angular.module('ts5App')
     };
 
     $scope.prevTrigger = function() {
-      $this.updateStatusToStep($this.prevStep);
+      if (!$this.isInboundDuringRedispatch()) {
+        $this.updateStatusToStep($this.prevStep);
+      }
     };
 
     $scope.validateSeals = function(sealTypeObject) {
