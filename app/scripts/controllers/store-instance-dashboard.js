@@ -380,7 +380,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           var nextStoreInstanceStepName = getValueByIdInArray(storeInstanceForNavigation.statusId, 'statusName', $scope.storeStatusList);
           actionName = actionName + actionModifierMap[nextStoreInstanceStepName];
         }
-        completeNavigateToAction(actionToURLMap[actionName], storeInstanceForNavigation);
+        completeNavigateToAction(actionName, storeInstanceForNavigation);
       });
     }
 
@@ -389,7 +389,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         var prevStoreInstance = angular.copy(dataFromAPI);
         var prevStoreInstanceStepName =  getValueByIdInArray(prevStoreInstance.statusId, 'statusName', $scope.storeStatusList);
         actionName = (prevStoreInstanceStepName === 'Inbound Seals') ? 'Inbound Seals' : actionName;
-        completeNavigateToAction(actionToURLMap[actionName + '-Redispatch'], storeInstance);
+        completeNavigateToAction(actionName + '-Redispatch', storeInstance);
       });
     }
 
