@@ -27,7 +27,6 @@
       </div>
     </div>
 
-
     <error-dialog form-object="promotionsForm"></error-dialog>
 
     <h3 id="promotion-information">Promotion Information</h3>
@@ -90,7 +89,7 @@
       <div class="col-xs-12 col-sm-6">
         <div class="form-group">
           <label>Qualifier Type*</label>
-          <ui-select theme="bootstrap" ng-model="promotion.promotionType" ng-disabled="readOnly" name="QualifierType">
+          <ui-select theme="bootstrap" ng-model="promotion.promotionType" ng-disabled="readOnly" required name="QualifierType">
             <ui-select-match placeholder="Select Qualifier Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="promotionType in selectOptions.promotionTypes | filter: {name:$select.search}">
               <div ng-bind-html="promotionType.name | highlight: $select.search"></div>
@@ -102,7 +101,7 @@
         <fieldset>
           <div class="form-group">
             <label>Promotion Category</label>
-            <ui-select theme="bootstrap" ng-model="promotion.spendLimitCategory" ng-disabled="readOnly">
+            <ui-select theme="bootstrap" ng-model="promotion.spendLimitCategory" ng-disabled="readOnly" required name="spendLimitCategory">
               <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
               <ui-select-choices repeat="promotionCategory in selectOptions.promotionCategories | filter: {promotionCategoryName:$select.search}">
                 <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
@@ -122,7 +121,8 @@
                          custom-pattern="currencyWithThreeDecimalPlace"
                          ng-show="promotion.promotionType.name === 'Spend Limit'"
                          ng-model="spendLimitAmountData.amount"
-                         ng-disabled="readOnly">
+                         ng-disabled="readOnly"
+                         required>
                 </div>
               </div>
           </div>
@@ -145,7 +145,7 @@
         <div class="col-xs-12 col-sm-4 col-sm-offset-1">
           <div class="form-group">
             <label>Name*</label>
-            <ui-select theme="bootstrap" ng-model="promotionCategoryData.promotionCategory" ng-disabled="readOnly"
+            <ui-select theme="bootstrap" ng-model="promotionCategoryData.promotionCategory" ng-disabled="readOnly" required name="PromotionCategoryName"
                        ng-change="promotionCategorySelectChanged($index)">
               <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
               <ui-select-choices repeat="promotionCategory in selectOptions.promotionCategories | filter: {promotionCategoryName:$select.search}"
@@ -160,7 +160,8 @@
             <label>Qty*</label>
             <input type="number" class="form-control" min="1" ng-model="promotionCategoryData.categoryQty"
                    ng-required="promotionCategoryQtyRequired(promotionCategoryData)"
-                   ng-disabled="readOnly">
+                   ng-disabled="readOnly"
+                   name="promotionCategoryQty">
           </div>
         </div>
         <div class="col-xs-1 col-xs-offset-4 col-sm-offset-0">
@@ -192,7 +193,9 @@
                        ng-model="itemCategorySelects[$index]"
                        ng-change="itemCategoryChanged($index)"
                        ng-disabled="readOnly"
-                       refresh-delay="0">
+                       required
+                       refresh-delay="0"
+                       name="ItemCategory">
               <ui-select-match placeholder="Select Category">{{ $select.selected.name }}</ui-select-match>
               <ui-select-choices repeat="salesCategory in selectOptions.salesCategories | filter: {name:$select.search}">
                 <div ng-bind-html="salesCategory.name | highlight: $select.search"></div>
@@ -203,8 +206,8 @@
         <div class="col-xs-12 col-sm-4 col-md-3">
           <div class="form-group">
             <label>Retail Item*</label>
-            <ui-select theme="bootstrap" ng-model="retailItemData.retailItem" ng-disabled="readOnly"
-                       ng-init="itemSelectInit($index)" ng-change="itemSelectChanged($index)">
+            <ui-select theme="bootstrap" ng-model="retailItemData.retailItem" ng-disabled="readOnly" required
+                       ng-init="itemSelectInit($index)" ng-change="itemSelectChanged($index)" name="RetailItem">
               <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
               <ui-select-choices repeat="masterItem in repeatableItemListSelectOptions[$index] | filter: {itemName:$select.search}"
                                  ui-disable-choice="disabledItems(masterItem)">
@@ -238,7 +241,7 @@
       <div class="col-xs-12 col-md-6">
         <div class="form-group">
           <label>Benefit Type*</label>
-          <ui-select theme="bootstrap" ng-model="promotion.benefitType" ng-disabled="readOnly" name="BenefitType">
+          <ui-select theme="bootstrap" ng-model="promotion.benefitType" required ng-disabled="readOnly" name="BenefitType">
             <ui-select-match placeholder="Select Benefit Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="benefitType in selectOptions.benefitTypes | filter: {name:$select.search}">
               <div ng-bind-html="benefitType.name | highlight: $select.search"></div>
@@ -262,7 +265,8 @@
             <label>Promotion Category*</label>
             <ui-select theme="bootstrap" ng-model="promotion.discountCategory"
                        ng-required="promotion.benefitDiscountApply.name === 'Promotion Category'"
-                       ng-disabled="readOnly">
+                       ng-disabled="readOnly"
+                       name="PromotionCategory">
               <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
               <ui-select-choices repeat="promotionCategory in selectOptions.promotionCategories | filter: {promotionCategoryName:$select.search}">
                 <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
@@ -303,7 +307,8 @@
             <label>Discount Rate Type*</label>
             <ui-select theme="bootstrap" ng-model="promotion.discountType"
                        ng-required="promotion.benefitType.name === 'Discount'"
-                       ng-disabled="readOnly">
+                       ng-disabled="readOnly"
+                       name="DiscountRateType">
               <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
               <ui-select-choices repeat="discountType in selectOptions.discountTypes | filter: {name:$select.search}">
                 <div ng-bind-html="discountType.name | highlight: $select.search"></div>
