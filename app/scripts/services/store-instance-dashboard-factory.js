@@ -22,6 +22,10 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
       return storeInstanceService.getStoreInstancesList(payload);
     }
 
+    function getStoreInstance(id) {
+      return storeInstanceService.getStoreInstance(id);
+    }
+
     function getStoresList(payload) {
       return storesService.getStoresList(payload);
     }
@@ -42,6 +46,7 @@ angular.module('ts5App').service('storeInstanceDashboardFactory',
       getCatererStationList: getCatererStationList,
       getStationList: getStationList,
       getStoreInstanceList: getStoreInstanceList,
+      getStoreInstance: getStoreInstance,
       getStoresList: getStoresList,
       getStatusList: getStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
