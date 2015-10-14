@@ -345,14 +345,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       storeInstanceFactory.getItemsMasterList(filterPayload).then($this.getMasterItemsListSuccess, showErrors);
     };
 
-    function updateStoreDetails(response, stepObject) {
-      $scope.storeDetails.currentStatus = lodash.findWhere($scope.storeDetails.statusList, {
-        id: response.statusId
-      });
-      $location.path(stepObject.uri);
-    }
-
-
     this.updateInstanceToByStepName = function (stepObject) {
       if (!stepObject) {
         $location.url('/store-instance-dashboard');
@@ -367,7 +359,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $q.all(statusUpdatePromiseArray).then(function () {
         $location.url(stepObject.uri);
-      }, showResponseErrors);
+      }, showErrors);
 
     };
 
