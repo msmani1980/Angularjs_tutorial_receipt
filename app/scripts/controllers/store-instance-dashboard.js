@@ -13,8 +13,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q,
     $route, ngToast, $location, $filter, ENV) {
 
-    var $this = this;
-
     $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
     $scope.stationList = [];
@@ -106,15 +104,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       return storeInstance.actionButtons.indexOf(actionName) >= 0;
     };
 
-    $scope.toggleAllCheckboxes = function() {
-      angular.forEach($scope.storeInstanceList, function(store) {
-        if ($scope.doesStoreInstanceContainAction(store, 'Checkbox')) {
-          store.selected = $scope.allCheckboxesSelected;
-        }
-      });
-      $this.storeSelectionToggled();
-    };
-
     $scope.storeSelectionToggled = function() {
       var selectedStores = lodash.filter($scope.storeInstanceList, function(store) {
         return store.selected && $scope.doesStoreInstanceContainAction(store, 'Get Flight Docs');
@@ -130,6 +119,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     };
 
+    $scope.toggleAllCheckboxes = function() {
+      angular.forEach($scope.storeInstanceList, function(store) {
+        if ($scope.doesStoreInstanceContainAction(store, 'Checkbox')) {
+          store.selected = $scope.allCheckboxesSelected;
+        }
+      });
+      $scope.storeSelectionToggled();
+    };
 
     $scope.isScheduleDetailOpen = function(id) {
       return !(angular.element('.scheduleDetails-' + id).hasClass('accordion-cell-closed'));
