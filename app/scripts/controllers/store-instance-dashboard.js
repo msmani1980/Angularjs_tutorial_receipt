@@ -358,13 +358,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var URL = storeInstanceDashboardActionsConfig.getURL(actionName, storeInstance.id);
       hideLoadingModal();
       if(URL) {
-        $location.path(URL + storeInstance.id);
+        $location.path(URL);
       } else {
         $scope.showMessage('danger', 'Error loading next page!');
       }
     }
 
-    function checkChildIdAndAdjustAction (actionName, actionToURLMap, storeInstance) {
+    function checkChildIdAndAdjustAction (actionName, storeInstance) {
       var searchPayload = {prevStoreInstanceId: storeInstance.id, limit: 1};
       var storeInstanceForNavigation = angular.copy(storeInstance);
       var actionModifierMap = {
@@ -384,7 +384,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       });
     }
 
-    function getPrevStoreInstanceAndCompleteAction(actionName, actionToURLMap, storeInstance) {
+    function getPrevStoreInstanceAndCompleteAction(actionName, storeInstance) {
       storeInstanceDashboardFactory.getStoreInstance(storeInstance.prevStoreInstanceId).then(function (dataFromAPI) {
         var prevStoreInstance = angular.copy(dataFromAPI);
         var prevStoreInstanceStepName =  getValueByIdInArray(prevStoreInstance.statusId, 'statusName', $scope.storeStatusList);

@@ -8,6 +8,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   beforeEach(module('served/catering-stations.json'));
   beforeEach(module('served/stations.json'));
   beforeEach(module('served/store-instance-list.json'));
+  beforeEach(module('served/store-instance.json'));
   beforeEach(module('served/stores-list.json'));
   beforeEach(module('served/store-status.json'));
   beforeEach(module('served/store-status-response.json'));
@@ -23,6 +24,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   var stationResponseJSON;
   var storeInstanceListDeferred;
   var storeInstanceListResponseJSON;
+  var storeInstanceDeferred;
+  var storeInstanceResponseJSON;
   var storesListDeferred;
   var storesListResponseJSON;
   var statusListDeferred;
@@ -41,10 +44,11 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location) {
     inject(function(_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_,
-      _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_, _servedFeatures_) {
+      _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_, _servedFeatures_, _servedStoreInstance_) {
       cateringStationResponseJSON = _servedCateringStations_;
       stationResponseJSON = _servedStations_;
       storeInstanceListResponseJSON = _servedStoreInstanceList_;
+      storeInstanceResponseJSON = _servedStoreInstance_;
       storesListResponseJSON = _servedStoresList_;
       statusListResponseJSON = _servedStoreStatus_;
       statusResponseJSON = _servedStoreStatusResponse_;
@@ -65,6 +69,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     stationDeferred.resolve(stationResponseJSON);
     storeInstanceListDeferred = $q.defer();
     storeInstanceListDeferred.resolve(storeInstanceListResponseJSON);
+    storeInstanceDeferred = $q.defer();
+    storeInstanceDeferred.resolve(storeInstanceResponseJSON);
     storesListDeferred = $q.defer();
     storesListDeferred.resolve(storesListResponseJSON);
     statusListDeferred = $q.defer();
@@ -81,6 +87,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     spyOn(storeInstanceDashboardFactory, 'getCatererStationList').and.returnValue(cateringStationDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStationList').and.returnValue(stationDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStoreInstanceList').and.returnValue(storeInstanceListDeferred.promise);
+    spyOn(storeInstanceDashboardFactory, 'getStoreInstance').and.returnValue(storeInstanceDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStoresList').and.returnValue(storesListDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getStatusList').and.returnValue(statusListDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'updateStoreInstanceStatus').and.returnValue(statusDeferred.promise);
@@ -492,11 +499,13 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       };
     });
 
-    it('should navigate to dispatch wizard if replenishId and prevId is null for packing/seals', function () {
+    it('should navigate to dispatch wizard if replenishId and prevId is null for packing/seals/dispatch', function () {
       scope.navigateToAction(testStoreInstance, 'Seal');
       expect(location.path).toHaveBeenCalledWith('store-instance-seals/dispatch/1');
       scope.navigateToAction(testStoreInstance, 'Pack');
       expect(location.path).toHaveBeenCalledWith('store-instance-packing/dispatch/1');
+      scope.navigateToAction(testStoreInstance, 'Dispatch');
+      expect(location.path).toHaveBeenCalledWith('store-instance-review/dispatch/1');
     });
     it('should navigate to replenish wizard if replenishID is not null for packing/seals', function () {
       testStoreInstance.replenishStoreInstanceId = 2;
@@ -505,20 +514,25 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       scope.navigateToAction(testStoreInstance, 'Pack');
       expect(location.path).toHaveBeenCalledWith('store-instance-packing/replenish/1');
     });
-    it('should navigate to redispatch wizard if prevId is not null for packing/seals', function () {
+    it('should navigate to redispatch wizard if prevId is not null for seals/dispatch', function () {
       testStoreInstance.prevStoreInstanceId = 5;
       scope.navigateToAction(testStoreInstance, 'Seal');
       expect(location.path).toHaveBeenCalledWith('store-instance-seals/redispatch/1');
-      scope.navigateToAction(testStoreInstance, 'Pack');
-      expect(location.path).toHaveBeenCalledWith('store-instance-packing/redispatch/1');
+      scope.navigateToAction(testStoreInstance, 'Dispatch');
+      expect(location.path).toHaveBeenCalledWith('store-instance-review/redispatch/1');
     });
-    it('should call store instances to find a redispatched child store instance for offload/inbound seals', function () {
+    it('should call get store instance to find parent instance for pack', function () {
+      testStoreInstance.prevStoreInstanceId = 5;
+      scope.navigateToAction(testStoreInstance, 'Pack');
+      expect(storeInstanceDashboardFactory.getStoreInstance).toHaveBeenCalledWith(5);
+    });
+    it('should call get store instances to find a redispatched child store instance for offload/inbound seals', function () {
       scope.navigateToAction(testStoreInstance, 'Offload');
       expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({prevStoreInstanceId: 1, limit: 1});
       scope.navigateToAction(testStoreInstance, 'Inbound Seals');
       expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({prevStoreInstanceId: 1, limit: 1});
     });
-    it('should navigate to replenish/redispatch/end-instance create for replenish/redispatch/end-instance actions', function () {
+    it('should navigate to create for replenish/redispatch/end-instance actions', function () {
       scope.navigateToAction(testStoreInstance, 'Replenish');
       expect(location.path).toHaveBeenCalledWith('store-instance-create/replenish/1');
       scope.navigateToAction(testStoreInstance, 'Redispatch');

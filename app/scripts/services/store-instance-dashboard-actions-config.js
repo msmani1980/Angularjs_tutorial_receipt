@@ -10,22 +10,22 @@
 angular.module('ts5App')
   .service('storeInstanceDashboardActionsConfig', function () {
 
-    var createURL = '/store-instance-create/';
-    var packingURL = '/store-instance-packing/';
-    var sealsURL = '/store-instance-seals/';
-    var inboundSealsURL = '/store-instance-inbound-seals/';
-    var reviewURL = '/store-instance-review/';
-    var dashboardURL = '/store-instance-dashboard';
+    var createURL = 'store-instance-create/';
+    var packingURL = 'store-instance-packing/';
+    var sealsURL = 'store-instance-seals/';
+    var inboundSealsURL = 'store-instance-inbound-seals/';
+    var reviewURL = 'store-instance-review/';
+    var dashboardURL = 'store-instance-dashboard';
 
     function setActions() {
       var actionToURLMap = {
         'Dashboard': dashboardURL,
         'Pack': packingURL + 'dispatch/',
         'Pack-Redispatch': packingURL + 'redispatch/',
-        'Pack-Replenish': packingURL + 'redispatch/',
+        'Pack-Replenish': packingURL + 'replenish/',
         'Seal': sealsURL + 'dispatch/',
         'Seal-Redispatch': sealsURL + 'redispatch/',
-        'Seal-Replenish': sealsURL + 'redispatch/',
+        'Seal-Replenish': sealsURL + 'replenish/',
         'Dispatch': reviewURL + 'dispatch/',
         'Dispatch-Redispatch': reviewURL + 'redispatch/',
         'Dispatch-Replenish': reviewURL + 'replenish/',
