@@ -1,7 +1,7 @@
 'use strict';
 
 /* global moment */
-
+// jshint maxcomplexity:6
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstanceDashboardCtrl
@@ -373,7 +373,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           var nextStoreInstanceStepName = getValueByIdInArray(storeInstanceForNavigation.statusId, 'statusName', $scope.storeStatusList);
           actionName = (actionName === 'Inbound Seals') ? actionName + '-Redispatch' : actionName + '-' + nextStoreInstanceStepName;
         }
-        console.log(actionName, actionToURLMap[actionName]);
         completeNavigateToAction(actionToURLMap[actionName], storeInstanceForNavigation);
       });
     }
@@ -408,9 +407,12 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         'Offload-Ready for Dispatch': 'store-instance-review/redispatch/'
       };
 
-      if (actionName === 'Pack' || actionName === 'Seal' || actionName === 'Dispatch') {
+      var shouldCheckParentId = actionName === 'Pack' || actionName === 'Seal' || actionName === 'Dispatch';
+      var shouldCheckChildId = actionName === 'Offload' || actionName === 'Inbound Seals';
+
+      if (shouldCheckParentId) {
         setPackingAndSealsURL(actionName, actionToURLMap, storeInstance);
-      } else if(actionName === 'Offload' || actionName === 'Inbound Seals') {
+      } else if(shouldCheckChildId) {
         getStoreInstanceNextId(actionName, actionToURLMap, storeInstance);
       } else {
         completeNavigateToAction(actionToURLMap[actionName], storeInstance);
