@@ -112,19 +112,19 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           store.selected = $scope.allCheckboxesSelected;
         }
       });
-      $this.storeSelectionToglled();
+      $this.storeSelectionToggled();
     };
 
-    $scope.storeSelectionToglled = function() {
-      $scope.hasSelectedStore = lodash.reduce($scope.storeInstanceList, function(total, item) {
-        return total || item.selected;
-      }, false);
+    $scope.storeSelectionToggled = function() {
+      var selectedStores = lodash.filter($scope.storeInstanceList, function(store) {
+        return store.selected && $scope.doesStoreInstanceContainAction(store, 'Get Flight Docs');
+      });
+      $scope.hasSelectedStore = (selectedStores.length !== 0);
       if ($scope.hasSelectedStore) {
-        $scope.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5' +
-          lodash.reduce($scope.storeInstanceList, function(total, item) {
-            return (item.selected ? total + '&storeInstanceId=' + item.id : total);
-          }, '')
-        ;//$http.defaults.headers.common.sessionToken;
+        var storeInstanceIds = lodash.map(selectedStores, function(item) {
+            return item.id;
+        }).join('+');
+        $scope.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5&storeInstanceIds=' + storeInstanceIds;//$http.defaults.headers.common.sessionToken;
       } else {
         $scope.exportURL = '';
       }
