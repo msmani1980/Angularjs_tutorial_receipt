@@ -1131,6 +1131,20 @@ describe('the Store Instance Seals controller', function() {
       expect(StoreInstanceSealsCtrl.prevStep.uri).toBe('/store-instance-packing/replenish/5');
     });
 
+    it('if the action is redispatch, this method should set nextStep to packing', function() {
+      initController('redispatch');
+      resolveAllDependencies();
+      $scope.$digest();
+      expect(StoreInstanceSealsCtrl.nextStep.storeOne.stepName).toBe('7');
+    });
+
+    it('if the controller is redispatch, this method should set nextStep to packing', function() {
+      initController('redispatch');
+      resolveAllDependencies();
+      $scope.$digest();
+      expect(StoreInstanceSealsCtrl.nextStep.uri).toBe('/store-instance-packing/redispatch/5');
+    });
+
   });
 
 });

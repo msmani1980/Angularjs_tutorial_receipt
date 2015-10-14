@@ -76,7 +76,7 @@
           <div class="row">
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="departure-station">Departure Station</label>
+                <label>Departure Station</label>
                   <ui-select multiple ng-model="search.departureStations" theme="bootstrap">
                     <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
                       <ui-select-choices repeat="station in stationList | filter: $select.search">
@@ -87,7 +87,7 @@
             </div>
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
-                <label for="arrival-station">Arrival Station</label>
+                <label>Arrival Station</label>
                   <ui-select multiple ng-model="search.arrivalStations" theme="bootstrap">
                     <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
                       <ui-select-choices repeat="station in stationList | filter: $select.search">
@@ -199,38 +199,44 @@
         <td class="col-xs-1">
           <a class="btn btn-primary btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Pack')"
-             href="#/store-instance-packing/dispatch/{{store.id}}">
+             ng-click="navigateToAction(store, 'Pack')">
             Start Packing
           </a>
           <a class="btn btn-warning btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Seal')"
-             href="#/store-instance-seals/dispatch/{{store.id}}">
+             ng-click="navigateToAction(store, 'Seal')">
             Start Seals
           </a>
           <a class="btn btn-success btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Dispatch')"
-             href="#/store-instance-review/dispatch/{{store.id}}">Dispatch
+             ng-click="navigateToAction(store, 'Dispatch')">
+            Dispatch
           </a>
           <a class="btn btn-danger btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'End Instance')"
-             href="#/store-instance-create/end-instance/{{store.id}}">End Instance
+             ng-click="navigateToAction(store, 'End Instance')">
+            End Instance
           </a>
           <a class="btn btn-warning btn-xs btn-block" tabindex="0"
              ng-show="isUndispatchPossible(store) && doesStoreInstanceContainAction(store, 'Un-dispatch')"
-             ng-click="undispatch(store.id)">Undispatch
+             ng-click="undispatch(store.id)">
+            Undispatch
           </a>
           <a class="btn btn-success btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Redispatch')"
-             href="#/store-instance-create/redispatch/{{store.id}}">Redispatch
+             ng-click="navigateToAction(store, 'Redispatch')">
+            Redispatch
           </a>
           <!-- TODO: Generate Doc Download Link -->
           <a class="btn btn-info btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
-             href="#/{{store.id}}">Generate Doc
+             href="#/{{store.id}}">
+            Generate Doc
           </a>
           <a class="btn btn-default btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Replenish')"
-             href="#/store-instance-create/replenish/{{store.id}}">Replenish
+             ng-click="navigateToAction(store, 'Replenish')">
+            Replenish
           </a>
           <a class="btn btn-default btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Receive')"
@@ -239,11 +245,13 @@
           </a>
           <a class="btn btn-warning btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Start Inbound Seals')"
-             href="#/store-instance-seals/end-instance/{{store.id}}">Start Inbound Seals
+             ng-click="navigateToAction(store, 'Inbound Seals')">
+            Start Inbound Seals
           </a>
           <a class="btn btn-primary btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Start Offload')"
-             href="#/store-instance-packing/end-instance/{{store.id}}">Start Offload
+             ng-click="navigateToAction(store, 'Offload')">
+            Start Offload
           </a>
         </td>
       </tr>
@@ -283,40 +291,22 @@
         <td class="col-xs-1">
           <a class="btn btn-primary btn-xs" tabindex="0"
              ng-show="doesStoreInstanceContainAction(replenishment, 'Pack')"
-             href="#/store-instance-packing/replenish/{{replenishment.id}}">
+             ng-click="navigateToAction(replenishment, 'Pack')">
             Start Packing
           </a>
           <a class="btn btn-warning btn-xs" tabindex="0"
              ng-show="doesStoreInstanceContainAction(replenishment, 'Seal')"
-             href="#/store-instance-seals/replenish/{{replenishment.id}}">
+             ng-click="navigateToAction(replenishment, 'Seal')">
             Start Seals
           </a>
           <a class="btn btn-success btn-xs" tabindex="0"
              ng-show="doesStoreInstanceContainAction(replenishment, 'Dispatch')"
-             href="#/store-instance-review/replenish/{{replenishment.id}}">Dispatch
+             ng-click="navigateToAction(replenishment, 'Dispatch')">Dispatch
           </a>
-          <a class="btn btn-danger btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Delete')"
-             href="#/store-instance-create/end-instance/{{replenishment.id}}">End Instance
-          </a>
-          <a class="btn btn-success btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Redispatch')"
-             href="#/store-instance-create/redispatch/{{replenishment.id}}">Redispatch
-          </a>
-          <!-- NOTE: undispatch not allowed for replenishments-->
-
           <!-- TODO: Generate Doc Download Link -->
           <a class="btn btn-info btn-xs" tabindex="0"
              ng-show="doesStoreInstanceContainAction(replenishment, 'Get Flight Docs')"
              href="#/{{replenishment.id}}">Generate Doc
-          </a>
-          <a class="btn btn-default btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Replenish')"
-             href="#/store-instance-create/replenish/{{replenishment.id}}">Replenish
-          </a>
-          <a class="btn btn-default btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Receive')"
-             ng-click="openReceiveConfirmation(replenishment)">Receive
           </a>
         </td>
       </tr>
