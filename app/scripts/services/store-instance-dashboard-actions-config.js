@@ -34,6 +34,7 @@ angular.module('ts5App')
         'End Instance': createURL + 'end-instance/',
         'Inbound Seals': inboundSealsURL + 'end-instance/',
         'Inbound Seals-Redispatch': inboundSealsURL + 'redispatch/',
+        'Inbound Seals-Redispatch-Pack': inboundSealsURL + 'redispatch/',
         'Offload': packingURL + 'end-instance/',
         'Offload-Redispatch-Pack': packingURL + 'redispatch/',
         'Offload-Redispatch-Seal': sealsURL + 'redispatch/',
