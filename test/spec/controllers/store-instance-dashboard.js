@@ -526,10 +526,6 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       scope.navigateToAction(testStoreInstance, 'End Instance');
       expect(location.path).toHaveBeenCalledWith('store-instance-create/end-instance/1');
     });
-    it('should navigate to review page for dispatch action', function () {
-      scope.navigateToAction(testStoreInstance, 'Dispatch');
-      expect(location.path).toHaveBeenCalledWith('store-instance-review/dispatch/1');
-    });
   });
 
 });

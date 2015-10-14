@@ -353,7 +353,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var statusUpdatePromiseArray = [];
       statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
-      if ($routeParams.action === 'Redispatch' && $scope.storeDetails.prevStoreInstanceId) {
+      if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
         statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, stepObject.storeOne.stepName));
       }
 
