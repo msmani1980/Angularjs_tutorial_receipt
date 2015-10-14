@@ -355,7 +355,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
 
     function completeNavigateToAction(actionName, storeInstance) {
-      var URL = storeInstanceDashboardActionsConfig.getSteps($routeParams.action, storeInstance.id);
+      var URL = storeInstanceDashboardActionsConfig.getURL(actionName, storeInstance.id);
       hideLoadingModal();
       if(URL) {
         $location.path(URL + storeInstance.id);
