@@ -904,6 +904,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'setMenuMasterList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'getStoresList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'setStoresList').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'updateInstanceDependenciesSuccess').and.callThrough();
       $scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
@@ -937,6 +938,10 @@ describe('Store Instance Create Controller', function() {
       expect(StoreInstanceCreateCtrl.setStoresList).toHaveBeenCalled();
     });
 
+    it('should call updateInstanceDependenciesSuccess', function() {
+      expect(StoreInstanceCreateCtrl.updateInstanceDependenciesSuccess).toHaveBeenCalled();
+    });
+
     it('should call getRelationshipList from menuCatererStationsService', function() {
       expect(menuCatererStationsService.getRelationshipList).toHaveBeenCalled();
     });
@@ -955,6 +960,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'getMenuMasterList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'getMenuCatererList').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'registerScopeWatchers').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'updateInstanceDependenciesSuccess').and.callThrough();
       $scope.formData = {
         cateringStationId: 13
       };
@@ -971,6 +977,10 @@ describe('Store Instance Create Controller', function() {
 
     it('should call getMenuCatererList', function() {
       expect(StoreInstanceCreateCtrl.getMenuCatererList).toHaveBeenCalled();
+    });
+
+    it('should call updateInstanceDependenciesSuccess', function() {
+      expect(StoreInstanceCreateCtrl.updateInstanceDependenciesSuccess).toHaveBeenCalled();
     });
 
   });
