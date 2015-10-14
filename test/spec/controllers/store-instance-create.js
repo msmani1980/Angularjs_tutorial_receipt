@@ -962,10 +962,6 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'registerScopeWatchers').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'updateInstanceDependenciesSuccess').and.callThrough();
       $scope.formData = {
-        cateringStationId: 13
-      };
-      $scope.$digest();
-      $scope.formData = {
         cateringStationId: 3
       };
       $scope.$digest();
