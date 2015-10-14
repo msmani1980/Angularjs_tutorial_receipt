@@ -42,8 +42,7 @@ angular.module('ts5App')
     }
 
     // scope methods
-    $scope.formSave = function (formData) {
-      var payloadFromForm = angular.copy(formData);
+    $scope.formSave = function (payloadFromForm) {
       switch ($routeParams.state) {
         case 'edit':
           if (payloadFromForm.isSubmitted === 'true') {
@@ -51,6 +50,7 @@ angular.module('ts5App')
             break;
           }
           var saveCashBag = angular.copy(payloadFromForm);
+          delete payloadFromForm.storeNumber;
           saveCashBag.totalCashBags = parseInt(saveCashBag.totalCashBags, 10);
           saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
           $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
@@ -140,7 +140,6 @@ angular.module('ts5App')
 
     function getStoreInstanceListResponseHandler(dataFromAPI) {
       var storeInstanceData = angular.copy(dataFromAPI);
-      delete storeInstanceData.storeNumber;
       $scope.displayedScheduleDate = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       $scope.cashBag.scheduleNumber = storeInstanceData.scheduleNumber;
       $scope.cashBag.scheduleDate = moment(storeInstanceData.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
