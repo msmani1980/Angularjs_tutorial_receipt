@@ -11,7 +11,9 @@
  */
 angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
   function($scope, storeInstanceDashboardFactory, storeTimeConfig, lodash, dateUtility, $q,
-    $route, ngToast, $location, $filter) {
+    $route, ngToast, $location, $filter, ENV) {
+
+    var $this = this;
 
     $scope.viewName = 'Store Instance Dashboard';
     $scope.catererStationList = [];
@@ -23,6 +25,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.allCheckboxesSelected = false;
     $scope.allScheduleDetailsExpanded = false;
     $scope.openStoreInstanceId = -1;
+    $scope.hasSelectedStore = false;
+    $scope.exportURL = '';
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -108,7 +112,24 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           store.selected = $scope.allCheckboxesSelected;
         }
       });
+      $this.storeSelectionToggled();
     };
+
+    $scope.storeSelectionToggled = function() {
+      var selectedStores = lodash.filter($scope.storeInstanceList, function(store) {
+        return store.selected && $scope.doesStoreInstanceContainAction(store, 'Get Flight Docs');
+      });
+      $scope.hasSelectedStore = (selectedStores.length !== 0);
+      if ($scope.hasSelectedStore) {
+        var storeInstanceIds = lodash.map(selectedStores, function(item) {
+            return item.id;
+        }).join('+');
+        $scope.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5&storeInstanceIds=' + storeInstanceIds;//$http.defaults.headers.common.sessionToken;
+      } else {
+        $scope.exportURL = '';
+      }
+    };
+
 
     $scope.isScheduleDetailOpen = function(id) {
       return !(angular.element('.scheduleDetails-' + id).hasClass('accordion-cell-closed'));
