@@ -363,39 +363,57 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     }
 
-    function getStoreInstanceNextId(actionName, actionToURLMap, storeInstance) {
+    function checkChildIdAndAdjustAction (actionName, actionToURLMap, storeInstance) {
       var searchPayload = {prevStoreInstanceId: storeInstance.id, limit: 1};
       var storeInstanceForNavigation = angular.copy(storeInstance);
+      var actionModifier = '-Redispatch';
       storeInstanceDashboardFactory.getStoreInstanceList(searchPayload).then(function (dataFromAPI) {
         var nextStoreInstanceExists = dataFromAPI.response !== null && dataFromAPI.response[0];
         if(nextStoreInstanceExists) {
           storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
           var nextStoreInstanceStepName = getValueByIdInArray(storeInstanceForNavigation.statusId, 'statusName', $scope.storeStatusList);
-          actionName = (actionName === 'Inbound Seals') ? actionName + '-Redispatch' : actionName + '-' + nextStoreInstanceStepName;
+          actionModifier = (actionName !== 'Inbound Seals') ? ('-' + nextStoreInstanceStepName) : actionModifier;
         }
-        completeNavigateToAction(actionToURLMap[actionName], storeInstanceForNavigation);
+        completeNavigateToAction(actionToURLMap[actionName + actionModifier], storeInstanceForNavigation);
       });
     }
 
-    function setPackingAndSealsURL (actionName, actionToURLMap, storeInstance) {
-      if(storeInstance.prevStoreInstanceId !== null) {
-        actionToURLMap.Pack = 'store-instance-packing/redispatch/';
-        actionToURLMap.Seal = 'store-instance-seals/redispatch/';
-        actionToURLMap.Dispatch = 'store-instance-review/redispatch/';
-      } else if(storeInstance.replenishStoreInstanceId !== null) {
-        actionToURLMap.Pack = 'store-instance-packing/replenish/';
-        actionToURLMap.Seal = 'store-instance-seals/replenish/';
-        actionToURLMap.Dispatch = 'store-instance-review/replenish/';
+    function getPrevStoreInstanceAndCompleteAction(actionName, actionToURLMap, storeInstance) {
+      storeInstanceDashboardFactory.getStoreInstance(storeInstance.prevStoreInstanceId).then(function (dataFromAPI) {
+        var prevStoreInstance = angular.copy(dataFromAPI);
+        var prevStoreInstanceStepName =  getValueByIdInArray(prevStoreInstance.statusId, 'statusName', $scope.storeStatusList);
+        if(prevStoreInstanceStepName === 'Inbound Seals') {
+          actionName = 'Inbound Seals-Redispatch';
+        }
+        completeNavigateToAction(actionToURLMap[actionName + '-Redispatch'], storeInstance);
+      });
+    }
+
+    function checkParentIdAndAdjustAction (actionName, actionToURLMap, storeInstance) {
+      var isRedispatch = storeInstance.prevStoreInstanceId !== null;
+      var isReplenish = storeInstance.replenishStoreInstanceId !== null;
+      var actionModifier = (isReplenish) ? '-Replenish' : '';
+      actionModifier = (isRedispatch) ? '-Redispatch' : actionModifier;
+
+      if(isRedispatch && actionName === 'Pack') {
+        getPrevStoreInstanceAndCompleteAction(actionName, actionToURLMap, storeInstance);
+      } else {
+        completeNavigateToAction(actionToURLMap[actionName + actionModifier], storeInstance);
       }
-      completeNavigateToAction(actionToURLMap[actionName], storeInstance);
     }
 
     $scope.navigateToAction = function (storeInstance, actionName) {
       showLoadingModal('Redirecting ... ');
       var actionToURLMap = {
         'Pack': 'store-instance-packing/dispatch/',
+        'Pack-Redispatch': 'store-instance-packing/redispatch/',
+        'Pack-Replenish': 'store-instance-packing/redispatch/',
         'Seal': 'store-instance-seals/dispatch/',
+        'Seal-Redispatch': 'store-instance-seals/redispatch/',
+        'Seal-Replenish': 'store-instance-seals/redispatch/',
         'Dispatch': 'store-instance-review/dispatch/',
+        'Dispatch-Redispatch': 'store-instance-review/redispatch/',
+        'Dispatch-Replenish': 'store-instance-review/replenish/',
         'Replenish': 'store-instance-create/replenish/',
         'Redispatch': 'store-instance-create/redispatch/',
         'End Instance': 'store-instance-create/end-instance/',
@@ -411,9 +429,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var shouldCheckChildId = actionName === 'Offload' || actionName === 'Inbound Seals';
 
       if (shouldCheckParentId) {
-        setPackingAndSealsURL(actionName, actionToURLMap, storeInstance);
+        checkParentIdAndAdjustAction(actionName, actionToURLMap, storeInstance);
       } else if(shouldCheckChildId) {
-        getStoreInstanceNextId(actionName, actionToURLMap, storeInstance);
+        checkChildIdAndAdjustAction(actionName, actionToURLMap, storeInstance);
       } else {
         completeNavigateToAction(actionToURLMap[actionName], storeInstance);
       }
