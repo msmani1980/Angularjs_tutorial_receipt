@@ -39,6 +39,16 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     }
 
+    function getValueByIdInArray(id, valueKey, array) {
+      var matchedObject = lodash.findWhere(array, {
+        id: id
+      });
+      if (matchedObject) {
+        return matchedObject[valueKey];
+      }
+      return '';
+    }
+
     var SEARCH_TO_PAYLOAD_MAP = {
       dispatchLMPStation: 'cateringStationId',
       inboundLMPStation: 'inboundStationId',
@@ -82,10 +92,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.doesStoreInstanceContainAction = function(storeInstance, actionName) {
-      if (storeInstance.actionButtons) {
-        return storeInstance.actionButtons.indexOf(actionName) >= 0;
+      var statusNumber = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
+      var isReplenishment = storeInstance.replenishStoreInstanceId !== null;
+      var isReplenishmentAfterDispatch = isReplenishment && parseInt(statusNumber) >= 4;
+
+      if(!storeInstance.actionButtons || (isReplenishmentAfterDispatch && actionName !== 'Get Flight Docs')) {
+        return false;
       }
-      return false;
+      return storeInstance.actionButtons.indexOf(actionName) >= 0;
     };
 
     $scope.toggleAllCheckboxes = function() {
@@ -134,24 +148,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }, showErrors);
     };
 
-    function getValueByIdInArray(id, valueKey, array) {
-      var matchedObject = lodash.findWhere(array, {
-        id: id
-      });
-      if (matchedObject) {
-        return matchedObject[valueKey];
-      }
-      return '';
-    }
-
     var STATUS_TO_BUTTONS_MAP = {
-      '1': ['Pack', 'Delete'],
-      '2': ['Seal', 'Delete'],
-      '3': ['Dispatch', 'Delete', 'Checkbox'],
+      '1': ['Pack'],
+      '2': ['Seal'],
+      '3': ['Dispatch', 'Offload', 'Checkbox'],
       '4': ['Receive', 'Get Flight Docs', 'Replenish', 'Un-dispatch', 'Checkbox'],
       '5': ['End Instance', 'Redispatch', 'Checkbox'],
       '6': ['Start Inbound Seals'],
-      '7': ['Start Offload', 'Instance audit report'],
+      '7': ['Start Offload']
     };
 
     function formatStoreInstance(storeInstance) {
@@ -347,6 +351,68 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         $scope.showMessage('success', 'Store has been logged as received.');
         $scope.reloadRoute();
       });
+    };
+
+
+    function completeNavigateToAction(URL, storeInstance) {
+      hideLoadingModal();
+      if(URL) {
+        $location.path(URL + storeInstance.id);
+      } else {
+        $scope.showMessage('danger', 'This store instance contains bad data, no further action can be taken');
+      }
+    }
+
+    function getStoreInstanceNextId(actionName, actionToURLMap, storeInstance) {
+      var searchPayload = {prevStoreInstanceId: storeInstance.id, limit: 1};
+      var storeInstanceForNavigation = angular.copy(storeInstance);
+      storeInstanceDashboardFactory.getStoreInstanceList(searchPayload).then(function (dataFromAPI) {
+        var nextStoreInstanceExists = dataFromAPI.response !== null && dataFromAPI.response[0];
+        if(nextStoreInstanceExists) {
+          storeInstanceForNavigation = angular.copy(dataFromAPI.response[0]);
+          var nextStoreInstanceStepName = getValueByIdInArray(storeInstanceForNavigation.statusId, 'statusName', $scope.storeStatusList);
+          actionName = (actionName === 'Inbound Seals') ? actionName + '-Redispatch' : actionName + '-' + nextStoreInstanceStepName;
+        }
+        console.log(actionName, actionToURLMap[actionName]);
+        completeNavigateToAction(actionToURLMap[actionName], storeInstanceForNavigation);
+      });
+    }
+
+    function setPackingAndSealsURL (actionName, actionToURLMap, storeInstance) {
+      if(storeInstance.prevStoreInstanceId !== null) {
+        actionToURLMap.Pack = 'store-instance-packing/redispatch/';
+        actionToURLMap.Seal = 'store-instance-seals/redispatch/';
+      } else if(storeInstance.replenishStoreInstanceId !== null) {
+        actionToURLMap.Pack = 'store-instance-packing/replenish/';
+        actionToURLMap.Seal = 'store-instance-seals/replenish/';
+      }
+      completeNavigateToAction(actionToURLMap[actionName], storeInstance);
+    }
+
+    $scope.navigateToAction = function (storeInstance, actionName) {
+      showLoadingModal('Redirecting ... ');
+      var actionToURLMap = {
+        'Pack': 'store-instance-packing/dispatch/',
+        'Seal': 'store-instance-seals/dispatch/',
+        'Dispatch': 'store-instance-review/dispatch/',
+        'Replenish': 'store-instance-create/replenish/',
+        'Redispatch': 'store-instance-create/redispatch/',
+        'End Instance': 'store-instance-create/end-instance/',
+        'Inbound Seals': 'store-instance-inbound-seals/end-instance/',
+        'Inbound Seals-Redispatch': 'store-instance-inbound-seals/redispatch/',
+        'Offload': 'store-instance-packing/end-instance/',
+        'Offload-Ready for Packing': 'store-instance-packing/redispatch/',
+        'Offload-Ready for Seals': 'store-instance-seals/redispatch/',
+        'Offload-Ready for Dispatch': 'store-instance-review/redispatch/'
+      };
+
+      if (actionName === 'Pack' || actionName === 'Seal') {
+        setPackingAndSealsURL(actionName, actionToURLMap, storeInstance);
+      } else if(actionName === 'Offload' || actionName === 'Inbound Seals') {
+        getStoreInstanceNextId(actionName, actionToURLMap, storeInstance);
+      } else {
+        completeNavigateToAction(actionToURLMap[actionName], storeInstance);
+      }
     };
 
     init();
