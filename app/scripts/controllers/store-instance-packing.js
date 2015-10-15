@@ -842,15 +842,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     $scope.setClassBasedOnVariance = function (requiredQuantity, pickedQuantity) {
-      if($routeParams.action === 'end-instance') {
-        return '';
-      }
       var requiredQuantityNum = requiredQuantity || 1;
       requiredQuantityNum = (angular.isNumber(requiredQuantity)) ? requiredQuantity : parseInt(requiredQuantity);
       var pickedQuantityNum = (angular.isNumber(pickedQuantity)) ? pickedQuantity : parseInt(pickedQuantity);
 
       var threshold = ((pickedQuantityNum / requiredQuantityNum) - 1) * 100;
-      if (threshold > $scope.variance) {
+      if (threshold > $scope.variance && $routeParams.action !== 'end-instance') {
         displayVarianceWarning();
         return 'warning-row';
       }
