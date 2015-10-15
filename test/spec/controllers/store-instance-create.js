@@ -390,10 +390,9 @@ describe('Store Instance Create Controller', function() {
     var payloadControl;
     beforeEach(function() {
       initController();
-      resolveAllDependencies();
-      $scope.$digest();
       spyOn(StoreInstanceCreateCtrl, 'formatDispatchPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'formatMenus').and.callThrough();
+      $scope.$digest();
       $scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
@@ -492,8 +491,6 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       initController();
-      resolveAllDependencies();
-      $scope.$digest();
       $scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
@@ -506,7 +503,6 @@ describe('Store Instance Create Controller', function() {
         },
         storeId: storeInstanceId
       };
-      $scope.$digest();
       menus = mockFormatMenus();
     });
 
@@ -679,7 +675,6 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       initController();
-      resolveAllDependencies();
       spyOn(StoreInstanceCreateCtrl, 'validateForm').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'resetErrors');
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstance');
@@ -764,8 +759,6 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       initController();
-      resolveAllDependencies();
-      $scope.$digest();
       $scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{

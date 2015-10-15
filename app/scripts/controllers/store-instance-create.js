@@ -45,12 +45,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.cateringStationList = dataFromAPI.response;
     };
 
-    this.getCatererStationListPromise = function() {
-      return storeInstanceFactory.getCatererStationList();
-    };
-
     this.getCatererStationList = function() {
-      $this.getCatererStationListPromise().then(this.setCatererStationList);
+      return storeInstanceFactory.getCatererStationList().then(this.setCatererStationList);
     };
 
     this.setMenuCatererList = function(dataFromAPI) {
@@ -93,7 +89,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($routeParams.action === 'replenish') {
         payload.catererStationId = $scope.formData.dispatchedCateringStationId;
       }
-      menuCatererStationsService.getRelationshipList(payload).then($this.setMenuCatererList);
+      return menuCatererStationsService.getRelationshipList(payload).then($this.setMenuCatererList);
     };
 
     this.setMenuMasterList = function(dataFromAPI) {
@@ -102,7 +98,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getMenuMasterList = function() {
       var query = this.getFormattedDatesPayload();
-      storeInstanceFactory.getMenuMasterList(query).then($this.setMenuMasterList);
+      return storeInstanceFactory.getMenuMasterList(query).then($this.setMenuMasterList);
     };
 
     this.setCarrierNumbers = function(dataFromAPI) {
@@ -110,7 +106,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getCarrierNumbers = function() {
-      storeInstanceFactory.getAllCarrierNumbers(companyId).then($this.setCarrierNumbers);
+      return storeInstanceFactory.getAllCarrierNumbers(companyId).then($this.setCarrierNumbers);
     };
 
     this.setStoresList = function(dataFromAPI) {
@@ -405,6 +401,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.updateInstanceDependenciesSuccess = function() {
+      $scope.formData.menus = [];
       $this.filterMenusList();
     };
 
@@ -412,14 +409,16 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var updatePromises = [
         $this.getScheduleNumbers(),
       ];
-      if ($routeParams.action === 'dispatch') {
+      if ($routeParams.action === 'dispatch' || $routeParams.action === 'redispatch') {
         updatePromises.push(
           $this.getMenuMasterList(),
           $this.getMenuCatererList(),
           $this.getStoresList()
         );
       }
-      $q.all(updatePromises).then($this.updateInstanceDependenciesSuccess);
+      $q.all(updatePromises).then(function() {
+        $this.updateInstanceDependenciesSuccess();
+      });
     };
 
     this.registerScopeWatchers = function() {
@@ -431,6 +430,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($routeParams.action === 'dispatch') {
         $scope.$watch('formData.cateringStationId', function(newId, oldId) {
           if (angular.isUndefined(oldId) || newId && newId !== oldId) {
+            $this.updateInstanceDependencies();
+          }
+        });
+      }
+      if ($routeParams.action === 'redispatch') {
+        $scope.$watch('formData.cateringStationId', function(newId, oldId) {
+          if (newId && newId !== oldId) {
             $this.updateInstanceDependencies();
           }
         });
@@ -468,7 +474,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.initSuccessHandler = function() {
       $scope.minDate = $this.determineMinDate();
       $this.filterMenusList();
-      $this.setStoreInstanceMenus();
+      if($routeParams.storeId){
+        $this.setStoreInstanceMenus();
+      }
       $this.setWizardSteps();
       if ($routeParams.action === 'redispatch') {
         $this.setPrevInstanceWizardSteps();
