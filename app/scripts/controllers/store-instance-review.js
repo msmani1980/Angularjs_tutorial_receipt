@@ -169,11 +169,13 @@ angular.module('ts5App')
     function setPackingSection() {
       $scope.pickListItems = [];
       $scope.offloadItemList = [];
+
       angular.forEach($scope.storeOneItemList, function (item) {
         var storeTwoItem = lodash.findWhere($scope.items, {
           itemMasterId: item.itemMasterId
         });
         if (storeTwoItem) {
+          delete storeTwoItem.ullageReasonCode;
           $scope.pickListItems.push(angular.merge(item, storeTwoItem));
           lodash.remove($scope.items, storeTwoItem);
         } else {
