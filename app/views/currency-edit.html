@@ -27,7 +27,6 @@
                                 </select>
                             </div>
                         </div>
-
                         <date-picker
                                 class="col-xs-12 col-md-6 col-sm-12"
                                 element-class="col-xs-6 col-sm-6"
@@ -37,7 +36,6 @@
                                 label-to="Effective To *"
                                 is-search-field="true">
                         </date-picker>
-
                     </div>
                 </div>
                 <div class="panel-footer text-right">
@@ -75,6 +73,7 @@
         <div class="panel-body">
             <div class="well" id="currency-{{$index}}" ng-repeat="currency in companyCurrencyList  | filter:{currencyId: search.currencyId} track by $index">
                 <div class="row">
+
                     <div class="col-xs-12 col-md-1 col-sm-12">
                         <div class="form-group">
                             <label for="currencyId-{{$index}}">Currency* </label>
@@ -87,6 +86,7 @@
                             </select>
                          </div>
                     </div>
+
                     <div class="col-xs-12 col-md-2 col-sm-12">
                         <div class="form-group">
                             <strong>Operating Currency</strong>
@@ -97,6 +97,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-xs-12 col-md-3 col-sm-12">
                         <div class="form-group">
                             <label for="denomination-{{$index}}">Denomination*</label>
@@ -108,6 +109,7 @@
                             </ui-select>
                         </div>
                     </div>
+
                     <div class="col-xs-12 col-md-2 col-sm-12">
                         <div class="form-group">
                             <label for="easypay-denomination-{{$index}}">EasyPay Denomination</label>
@@ -119,6 +121,7 @@
                             </ui-select>
                         </div>
                     </div>
+
                     <date-picker
                             class="col-xs-12 col-md-3 col-sm-12"
                             element-class="col-xs-6 col-sm-6"
@@ -128,11 +131,13 @@
                             label-to="End Date *"
                             required="true"
                             is-search-field="false"
+                            disable-past="true"
                             disable-start-date="isCurrencyReadOnly(currency)"
                             disable-end-date="isCurrencyPartialReadOnly(currency)">
                     </date-picker>
+
                     <div class="col-xs-12 col-sm-12 col-md-1 text-right">
-                        <button type="button" class="btn btn-sm btn-primary glyphicon glyphicon-check" ng-click="saveDetailedCompanyCurrency(currency)" ng-hide="isCurrencyPartialReadOnly(currency)" />
+                        <button type="button" class="btn btn-sm btn-primary glyphicon glyphicon-check" ng-click="saveDetailedCompanyCurrency($index, currency)" ng-hide="isCurrencyPartialReadOnly(currency)" />
                         <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteConfirmation($index, currency)" ng-hide="isCurrencyReadOnly(currency)">
                             <i class="fa fa-close"></i>
                         </button>
@@ -169,7 +174,6 @@
 
             <ul>
                 <li><strong>Operating Currency: </strong>{{ currencyToDelete.isOperatedCurrency }}</li>
-                <li><strong>Denomination: </strong>{{ currencyToDelete.flatDenominations }}</li>
                 <li><strong>Start Date: </strong>{{ currencyToDelete.startDate }}</li>
                 <li><strong>End Date: </strong>{{ currencyToDelete.endDate }}</li>
             </ul>
@@ -182,3 +186,4 @@
         </div>
     </div>
 </div>
+{{saving}}
