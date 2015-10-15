@@ -847,7 +847,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var pickedQuantityNum = (angular.isNumber(pickedQuantity)) ? pickedQuantity : parseInt(pickedQuantity);
 
       var threshold = ((pickedQuantityNum / requiredQuantityNum) - 1) * 100;
-      if (threshold > $scope.variance) {
+      if (threshold > $scope.variance && $routeParams.action !== 'end-instance') {
         displayVarianceWarning();
         return 'warning-row';
       }
