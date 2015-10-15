@@ -38,8 +38,8 @@ angular.module('ts5App')
       time: [/^([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)?$/,
         'This field should use 24 hour time format (hh:mm) or (hh:mm:ss)'
       ],
-      percentage: [/^[-+]?([1-9]\d?(\.\d{1,2})?|0\.(\d?[1-9]|[1-9]\d))$/,
-        'This field should use percentage format 0.01-99.99'
+      percentage: [/^[-+]?([0-9]\d?(\.\d{1,2})?|0\.(\d?[1-9]|[1-9]\d))$|^100$/,
+        'This field should use percentage format 0-100'
       ]
     };
     return {
