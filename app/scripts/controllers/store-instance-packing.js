@@ -21,6 +21,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.saveButtonName = 'Exit';
     this.itemsToDeleteArray = [];
     var dashboardURL = 'store-instance-dashboard';
+    var shouldShowVarianceWarning = true;
 
     function showToast(className, type, message) {
       ngToast.create({
@@ -840,6 +841,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var threshold = ((pickedQuantityNum / requiredQuantityNum) - 1) * 100;
       if (threshold > $scope.variance) {
+        if(shouldShowVarianceWarning) {
+          shouldShowVarianceWarning = false;
+          showToast('warning', 'Packing Warning', 'highlighted rows indicate that the template and picked quantity variance exceeds the set threshold variance');
+        }
         return 'warning-row';
       }
       return '';
