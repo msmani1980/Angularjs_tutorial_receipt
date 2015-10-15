@@ -24,7 +24,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     $scope.allScheduleDetailsExpanded = false;
     $scope.openStoreInstanceId = -1;
     $scope.hasSelectedStore = false;
-    $scope.exportURL = '';
+    $scope.exportBulkURL = '';
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -113,9 +113,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         var storeInstanceIds = lodash.map(selectedStores, function(item) {
             return item.id;
         }).join('+');
-        $scope.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5&storeInstanceIds=' + storeInstanceIds;//$http.defaults.headers.common.sessionToken;
+        $scope.exportBulkURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5&storeInstanceIds=' + storeInstanceIds;//$http.defaults.headers.common.sessionToken;
       } else {
-        $scope.exportURL = '';
+        $scope.exportBulkURL = '';
       }
     };
 
@@ -183,8 +183,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.statusName = getValueByIdInArray(storeInstance.statusId, 'statusName', $scope.storeStatusList);
       storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
-      storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) :
-        '';
+      storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) : '';
+      storeInstance.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/'+ storeInstance.id + '/documents/C208?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';//$http.defaults.headers.common.sessionToken;
 
       // TODO: get timeConfig that has most recent startDate -- will be a new API
       var timeConfig = lodash.findWhere($scope.timeConfigList, {
