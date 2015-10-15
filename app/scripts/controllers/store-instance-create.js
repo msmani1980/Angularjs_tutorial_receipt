@@ -26,6 +26,18 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     var companyId = GlobalMenuService.company.get();
     var $this = this;
 
+    this.isActionState = function(action) {
+      return $routeParams.action === action;
+    };
+
+    this.isDispatchOrRedispatch = function() {
+      return (this.isActionState('dispatch') || this.isActionState('redispatch'));
+    };
+
+    this.isEndInstanceOrRedispatch = function() {
+      return (this.isActionState('end-instance') || this.isActionState('redispatch'));
+    };
+
     this.setStoreDetails = function(storeDetailsJSON) {
       $scope.storeDetails = storeDetailsJSON;
     };
@@ -307,7 +319,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var payload = this.formatPayload();
       var promises = [];
       promises.push(storeInstanceFactory.createStoreInstance(payload));
-      if ($routeParams.action === 'redispatch') {
+      if ($this.isActionState('redispatch')) {
         var prevInstanceStatus = Math.abs(parseInt($this.prevInstanceNextStep.storeOne.stepName) + 1).toString();
         promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, prevInstanceStatus));
       }
@@ -369,13 +381,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     $scope.isActionState = function(action) {
-      return $routeParams.action === action;
+      return $this.isActionState(action);
     };
 
     $scope.isEndInstanceOrRedispatch = function() {
-      if ($scope.isActionState('end-instance') || $scope.isActionState('redispatch')) {
-        return true;
-      }
+      return $this.isEndInstanceOrRedispatch();
     };
 
     $scope.menuPlaceholderText = function() {
@@ -400,7 +410,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.updateInstanceDependenciesSuccess = function() {
-      $scope.formData.menus = [];
+      if( $this.isDispatchOrRedispatch() ) {
+        $scope.formData.menus = [];
+      }
       $this.filterMenusList();
     };
 
@@ -408,12 +420,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var updatePromises = [
         $this.getScheduleNumbers(),
       ];
-      if ($routeParams.action === 'dispatch' || $routeParams.action === 'redispatch') {
+      if ($this.isDispatchOrRedispatch()) {
         updatePromises.push(
           $this.getMenuMasterList(),
-          $this.getMenuCatererList(),
-          $this.getStoresList()
+          $this.getMenuCatererList()
         );
+      }
+      if ($this.isActionState('dispatch')) {
+        updatePromises.push( $this.getStoresList() );
       }
       $q.all(updatePromises).then(function() {
         $this.updateInstanceDependenciesSuccess();
@@ -426,14 +440,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.updateInstanceDependencies();
         }
       });
-      if ($routeParams.action === 'dispatch') {
+      if ($this.isActionState('dispatch')) {
         $scope.$watch('formData.cateringStationId', function(newId, oldId) {
           if (angular.isUndefined(oldId) || newId && newId !== oldId) {
             $this.updateInstanceDependencies();
           }
         });
       }
-      if ($routeParams.action === 'redispatch') {
+      if ($this.isActionState('redispatch')) {
         $scope.$watch('formData.cateringStationId', function(newId, oldId) {
           if (newId && newId !== oldId) {
             $this.updateInstanceDependencies();
