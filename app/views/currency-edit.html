@@ -81,7 +81,8 @@
                             <select name="mySelect" id="currencyId-{{$index}}" class="form-control" required="required"
                                     ng-options="selectCurrency.id as selectCurrency.currencyCode for selectCurrency in globalCurrencyList"
                                     ng-model="currency.currencyId"
-                                    ng-disabled="isCurrencyReadOnly(currency)">
+                                    ng-disabled="isCurrencyReadOnly(currency)"
+                                    ng-change="clearDenominations(currency)">
                                 <option value="">Select Currency</option>
                             </select>
                          </div>
@@ -99,13 +100,23 @@
                     <div class="col-xs-12 col-md-3 col-sm-12">
                         <div class="form-group">
                             <label for="denomination-{{$index}}">Denomination*</label>
-                            <input class="form-control" id="denomination-{{$index}}" required="required" value="{{currency.flatDenominations}}" ng-disabled="isCurrencyReadOnly(currency)" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100" />
+                            <ui-select id="denomination-{{$index}}" multiple ng-model="currency.selectedDenominations " ng-change="removeInvalidEasyPayDenominations(currency)" ng-disabled="isCurrencyReadOnly(currency)" theme="bootstrap">
+                                <ui-select-match placeholder="Select denomination...">{{$item.denomination}}</ui-select-match>
+                                <ui-select-choices repeat="denomination in currencyDenominations[currency.currencyId] | filter:{denomination: $select.search}">
+                                    <div ng-bind-html="denomination.denomination | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-2 col-sm-12">
                         <div class="form-group">
                             <label for="easypay-denomination-{{$index}}">EasyPay Denomination</label>
-                            <input class="form-control" id="easypay-denomination-{{$index}}" value="{{currency.flatEasyPayDenominations}}" ng-disabled="isCurrencyReadOnly(currency)" placeholder="0.5, 1, 2, 5" />
+                            <ui-select id="easypay-denomination-{{$index}}" multiple ng-model="currency.selectedEasyPayDenominations" ng-disabled="isCurrencyReadOnly(currency)" theme="bootstrap" style="min-height: 30px;">
+                                <ui-select-match placeholder="Select denomination...">{{$item.denomination}}</ui-select-match>
+                                <ui-select-choices repeat="denomination in currency.selectedDenominations | filter:{denomination: $select.search}">
+                                    <div ng-bind-html="denomination.denomination | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
                         </div>
                     </div>
                     <date-picker
