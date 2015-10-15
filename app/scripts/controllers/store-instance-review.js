@@ -500,10 +500,15 @@ angular.module('ts5App')
     };
 
     $scope.hasDiscrepancy = function (item) {
-      if ($routeParams.action !== 'dispatch') {
-        return '';
+      if ($routeParams.action === 'dispatch') {
+        return (item.menuQuantity !== item.quantity) ? 'danger' : '';
       }
-      return (item.menuQuantity !== item.quantity) ? 'danger' : '';
+
+      if ($routeParams.action === 'redispatch') {
+        return (item.menuQuantity !== (item.pickedQuantity || 0)) ? 'danger' : '';
+      }
+
+      return '';
     };
 
     $scope.getTitleFor = function (section) {
