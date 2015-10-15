@@ -1072,45 +1072,106 @@ describe('Store Instance Create Controller', function() {
 
     it('should return true if the state passed matches the action state of the controller', function() {
       initController();
-      var isDispatch = $scope.isActionState('dispatch');
+      var isDispatch = StoreInstanceCreateCtrl.isActionState('dispatch');
       expect(isDispatch).toBeTruthy();
     });
 
     it('should return false if the state passed does not matches the action state of the controller', function() {
       initController();
-      var isDispatch = $scope.isActionState('replenish');
+      var isDispatch = StoreInstanceCreateCtrl.isActionState('replenish');
       expect(isDispatch).toBeFalsy();
     });
 
     it('should return true if the state passed matches the action state of the controller', function() {
       initController('replenish');
-      var isReplenish = $scope.isActionState('replenish');
+      var isReplenish = StoreInstanceCreateCtrl.isActionState('replenish');
       expect(isReplenish).toBeTruthy();
     });
 
     it('should return false if the state passed does not matches the action state of the controller', function() {
       initController();
-      var isReplenish = $scope.isActionState('replenish');
+      var isReplenish = StoreInstanceCreateCtrl.isActionState('replenish');
       expect(isReplenish).toBeFalsy();
+    });
+
+    describe('when calling it from the $scope', function() {
+
+      beforeEach(function() {
+        initController();
+        spyOn(StoreInstanceCreateCtrl,'isActionState');
+        $scope.$digest();
+      });
+
+      it('should call the controllers method', function() {
+        $scope.isActionState('dispatch');
+        expect(StoreInstanceCreateCtrl.isActionState).toHaveBeenCalledWith('dispatch');
+      });
+
+      it('should return what the controller method returns', function() {
+        var scopeTest = $scope.isActionState('dispatch');
+        var actionStateControl = StoreInstanceCreateCtrl.isActionState('dispatch');
+        expect(scopeTest).toEqual(actionStateControl);
+      });
+
+    });
+
+  });
+
+  describe('isDispatchOrRedispatch method', function() {
+
+    it('should be true is action state is dispatch', function() {
+      initController('dispatch');
+      expect(StoreInstanceCreateCtrl.isDispatchOrRedispatch()).toBeTruthy();
+    });
+
+    it('should be false is action state is not dispatch', function() {
+      initController('replenish');
+      expect(StoreInstanceCreateCtrl.isDispatchOrRedispatch()).toBeFalsy();
+    });
+
+    it('should be true is action state is redispatch', function() {
+      initController('redispatch');
+      expect(StoreInstanceCreateCtrl.isDispatchOrRedispatch()).toBeTruthy();
     });
 
   });
 
   describe('isEndInstanceOrRedispatch method', function() {
 
-    it('should be true, if $routeParams.action is End Instance or ', function() {
+    it('should be true is action state is end-instance', function() {
       initController('end-instance');
-      expect($scope.isEndInstanceOrRedispatch()).toBeTruthy();
+      expect(StoreInstanceCreateCtrl.isEndInstanceOrRedispatch()).toBeTruthy();
     });
 
-    it('should be false, if $routeParams.action is Replenish', function() {
-      initController('replenish');
-      expect($scope.isEndInstanceOrRedispatch()).toBeFalsy();
+    it('should be false is action state is not end-instance', function() {
+      initController();
+      expect(StoreInstanceCreateCtrl.isEndInstanceOrRedispatch()).toBeFalsy();
     });
 
-    it('should be true, if $routeParams.action is Redispatch', function() {
+    it('should be true is action state is redispatch', function() {
       initController('redispatch');
-      expect($scope.isEndInstanceOrRedispatch()).toBeTruthy();
+      expect(StoreInstanceCreateCtrl.isEndInstanceOrRedispatch()).toBeTruthy();
+    });
+
+    describe('when calling it from the $scope', function() {
+
+      beforeEach(function() {
+        initController('end-instance');
+        spyOn(StoreInstanceCreateCtrl,'isEndInstanceOrRedispatch');
+        $scope.$digest();
+      });
+
+      it('should call the controllers method', function() {
+        $scope.isEndInstanceOrRedispatch();
+        expect(StoreInstanceCreateCtrl.isEndInstanceOrRedispatch).toHaveBeenCalled();
+      });
+
+      it('should return what the controller method returns', function() {
+        var scopeTest = $scope.isEndInstanceOrRedispatch();
+        var actionStateControl = StoreInstanceCreateCtrl.isEndInstanceOrRedispatch();
+        expect(scopeTest).toEqual(actionStateControl);
+      });
+
     });
 
   });
