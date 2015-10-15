@@ -103,7 +103,7 @@
             <tbody>
             <tr ng-repeat="sealObj in seals">
               <td>
-                <input type="text" class="form-control" placeholder="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
+                <input type="text" class="form-control text-white" value="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
               </td>
               <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
             </tr>
