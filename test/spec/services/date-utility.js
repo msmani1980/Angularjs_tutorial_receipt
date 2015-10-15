@@ -58,6 +58,54 @@ describe('Date Utility service', function () {
 
   });
 
+  describe('formatDateForApp method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.formatDateForApp).toBeDefined();
+    });
+
+    it('should format a date string from one format to another',
+      function () {
+        var expectedDateString = '06/19/2015';
+        var formattedString = dateUtility.formatDateForApp(
+          '20150619');
+        expect(formattedString).toEqual(expectedDateString);
+      });
+
+  });
+
+  describe('formatTimestampForAPI method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.formatTimestampForAPI).toBeDefined();
+    });
+
+    it('should format a timestamp string from one format to another',
+      function () {
+        var expectedString = '2015-10-01 18:25:00.000000';
+        var formattedString = dateUtility.formatTimestampForAPI(
+          '10/01/2015 18:25');
+        expect(formattedString).toEqual(expectedString);
+      });
+
+  });
+
+  describe('formatTimestampForApp method', function () {
+
+    it('should be defined', function () {
+      expect(dateUtility.formatTimestampForApp).toBeDefined();
+    });
+
+    it('should format a timestamp string from one format to another',
+      function () {
+        var expectedString = '10/01/2015 18:25';
+        var formattedString = dateUtility.formatTimestampForApp(
+          '2015-10-01 18:25:12.123456');
+        expect(formattedString).toEqual(expectedString);
+      });
+
+  });
+
   describe('isValid() method', function () {
 
     it('should be defined for APP', function () {
@@ -228,6 +276,24 @@ describe('Date Utility service', function () {
       var result = dateUtility.removeMilliseconds('2015-08-07 13:35:59.924555');
       expect(result).toEqual(expected);
     });
+  });
+
+  describe('the diff method', function(){
+
+    it('should return a difference in days by default', function(){
+      var fromDate = '10/01/2015';
+      var toDate = '10/11/2015';
+      var result = dateUtility.diff(fromDate,toDate);
+      expect(result).toEqual(10);
+    });
+
+    it('should return a difference in months if passed as a parameter', function(){
+      var fromDate = '10/01/2015';
+      var toDate = '11/01/2015';
+      var result = dateUtility.diff(fromDate,toDate,'months');
+      expect(result).toEqual(1);
+    });
+
   });
 
 });

@@ -8,8 +8,9 @@
  * Service in the ts5App.
  */
 angular.module('ts5App').service('storeInstanceFactory',
-  function(storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService,
-    menuMasterService, storesService, stationsService, itemsService, recordsService, $q, lodash, dateUtility) {
+  function(storeInstanceService, catererStationService, schedulesService, carrierService, GlobalMenuService, menuMasterService,
+           storesService, stationsService, itemsService, companyReasonCodesService, recordsService,
+           featureThresholdsService, $q, lodash, dateUtility) {
 
     function getCompanyId() {
       return GlobalMenuService.company.get();
@@ -117,6 +118,18 @@ angular.module('ts5App').service('storeInstanceFactory',
       return recordsService.getCharacteristics();
     }
 
+    function getCountTypes() {
+      return recordsService.getCountTypes();
+    }
+
+    function getFeaturesList() {
+      return recordsService.getFeatures();
+    }
+
+    function getThresholdList(featureId) {
+      return featureThresholdsService.getThresholdList(featureId);
+    }
+
     function formatResponseCollection(responseCollection, storeInstanceAPIResponse, parentStoreInstanceAPIResponse) {
       var storeDetails = {};
       storeDetails.LMPStation = responseCollection[1].code;
@@ -126,15 +139,26 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.storeInstanceNumber = storeInstanceAPIResponse.id;
       storeDetails.statusList = responseCollection[2];
       storeDetails.menuList = [];
+      storeDetails.tampered = storeInstanceAPIResponse.tampered;
+      storeDetails.note = storeInstanceAPIResponse.note;
+      storeDetails.storeId = storeInstanceAPIResponse.storeId;
+      storeDetails.cateringStationId = storeInstanceAPIResponse.cateringStationId;
 
-      if(parentStoreInstanceAPIResponse) {
+      if (parentStoreInstanceAPIResponse) {
         storeDetails.replenishStoreInstanceId = storeInstanceAPIResponse.replenishStoreInstanceId;
         storeDetails.parentStoreInstance = parentStoreInstanceAPIResponse;
       }
 
-      var storeMenus = (parentStoreInstanceAPIResponse ? angular.copy(parentStoreInstanceAPIResponse.menus) : angular.copy(storeInstanceAPIResponse.menus));
+      if(storeInstanceAPIResponse.prevStoreInstanceId) {
+        storeDetails.prevStoreInstanceId = storeInstanceAPIResponse.prevStoreInstanceId;
+      }
+
+      var storeMenus = (parentStoreInstanceAPIResponse ? angular.copy(parentStoreInstanceAPIResponse.menus) : angular
+        .copy(storeInstanceAPIResponse.menus));
       angular.forEach(storeMenus, function(menu) {
-        var menuObject = lodash.findWhere(responseCollection[3].companyMenuMasters, {id: menu.menuMasterId});
+        var menuObject = lodash.findWhere(responseCollection[3].companyMenuMasters, {
+          id: menu.menuMasterId
+        });
         if (angular.isDefined(menuObject)) {
           storeDetails.menuList.push(menuObject);
         }
@@ -154,7 +178,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       var responseData = angular.copy(storeInstanceDataFromAPI);
       var dependenciesArray = [];
 
-      var storeId = (angular.isDefined(parentStoreInstanceDataFromAPI) ? angular.copy(parentStoreInstanceDataFromAPI.storeId) : responseData.storeId);
+      var storeId = (angular.isDefined(parentStoreInstanceDataFromAPI) ? angular.copy(parentStoreInstanceDataFromAPI.storeId) :
+        responseData.storeId);
       dependenciesArray.push(getStore(storeId));
       dependenciesArray.push(getStation(responseData.cateringStationId));
       dependenciesArray.push(getStoreStatusList());
@@ -167,16 +192,21 @@ angular.module('ts5App').service('storeInstanceFactory',
       return dependenciesArray;
     }
 
-    function getRemainingDataForStoreDetails(storeDetailsDeferred, storeInstanceAPIResponse, parentStoreInstanceAPIResponse) {
-      var storeDetailPromiseArray = getDependenciesForStoreInstance(storeInstanceAPIResponse, parentStoreInstanceAPIResponse);
+    function getRemainingDataForStoreDetails(storeDetailsDeferred, storeInstanceAPIResponse,
+      parentStoreInstanceAPIResponse) {
+      var storeDetailPromiseArray = getDependenciesForStoreInstance(storeInstanceAPIResponse,
+        parentStoreInstanceAPIResponse);
       $q.all(storeDetailPromiseArray).then(function(responseCollection) {
-        storeDetailsDeferred.resolve(formatResponseCollection(responseCollection, storeInstanceAPIResponse, parentStoreInstanceAPIResponse));
+        storeDetailsDeferred.resolve(formatResponseCollection(responseCollection, storeInstanceAPIResponse,
+          parentStoreInstanceAPIResponse));
       });
     }
 
     function getParentStoreInstance(storeDetailsDeferred, storeInstanceAPIResponse) {
-      getStoreInstance(storeInstanceAPIResponse.replenishStoreInstanceId).then(function(parentStoreInstanceAPIResponse) {
-        getRemainingDataForStoreDetails(storeDetailsDeferred, storeInstanceAPIResponse, parentStoreInstanceAPIResponse);
+      getStoreInstance(storeInstanceAPIResponse.replenishStoreInstanceId).then(function(
+        parentStoreInstanceAPIResponse) {
+        getRemainingDataForStoreDetails(storeDetailsDeferred, storeInstanceAPIResponse,
+          parentStoreInstanceAPIResponse);
       }, storeDetailsDeferred.reject);
       return storeDetailsDeferred.promise;
     }
@@ -185,7 +215,7 @@ angular.module('ts5App').service('storeInstanceFactory',
     function getStoreDetails(storeId) {
       var getStoreDetailsDeferred = $q.defer();
       getStoreInstance(storeId).then(function(storeInstanceAPIResponse) {
-        if(storeInstanceAPIResponse.replenishStoreInstanceId) {
+        if (storeInstanceAPIResponse.replenishStoreInstanceId) {
           getParentStoreInstance(getStoreDetailsDeferred, storeInstanceAPIResponse);
         } else {
           getRemainingDataForStoreDetails(getStoreDetailsDeferred, storeInstanceAPIResponse);
@@ -194,9 +224,12 @@ angular.module('ts5App').service('storeInstanceFactory',
       return getStoreDetailsDeferred.promise;
     }
 
-
     function updateStoreInstanceStatus(storeId, statusId) {
       return storeInstanceService.updateStoreInstanceStatus(storeId, statusId);
+    }
+
+    function getReasonCodeList(payload) {
+      return companyReasonCodesService.getAll(payload);
     }
 
     return {
@@ -227,7 +260,11 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreStatusList: getStoreStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
       getItemTypes: getItemTypes,
-      getCharacteristics: getCharacteristics
+      getCharacteristics: getCharacteristics,
+      getReasonCodeList: getReasonCodeList,
+      getCountTypes: getCountTypes,
+      getThresholdList: getThresholdList,
+      getFeaturesList: getFeaturesList
     };
 
   });

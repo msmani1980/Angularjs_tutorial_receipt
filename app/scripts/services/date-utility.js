@@ -12,6 +12,8 @@ angular.module('ts5App')
 
     var _dateFormatForAPI = 'YYYYMMDD';
     var _dateFormatForApp = 'MM/DD/YYYY';
+    var _timestampFormatForAPI = 'YYYY-MM-DD HH:mm:ss.SSSSSS';
+    var _timestampFormatForApp = 'MM/DD/YYYY HH:mm';
 
     this.formatDate = function (dateString, formatFrom, formatTo) {
       return moment(dateString, formatFrom).format(formatTo).toString();
@@ -33,6 +35,24 @@ angular.module('ts5App')
 
       return this.formatDate(dateToFormat, dateForAPIFormat,
         dateForAppFormat);
+    };
+
+    this.formatTimestampForAPI = function (timestampToFormat, timestampForAppFormat,
+      timestampForAPIFormat) {
+      timestampForAppFormat = timestampForAppFormat || _timestampFormatForApp;
+      timestampForAPIFormat = timestampForAPIFormat || _timestampFormatForAPI;
+
+      return this.formatDate(timestampToFormat, timestampForAppFormat,
+        timestampForAPIFormat);
+    };
+
+    this.formatTimestampForApp = function (timestampToFormat, timestampForAPIFormat,
+      timestampForAppFormat) {
+      timestampForAPIFormat = timestampForAPIFormat || _timestampFormatForAPI;
+      timestampForAppFormat = timestampForAppFormat || _timestampFormatForApp;
+
+      return this.formatDate(timestampToFormat, timestampForAPIFormat,
+        timestampForAppFormat);
     };
 
     this.isDateValidForApp = function (dateToCheck) {
@@ -88,5 +108,12 @@ angular.module('ts5App')
       }
       return date.replace(/\.[0-9]+/, '');
     };
+
+    this.diff = function(from,to,type) {
+     var diffType = (type ? type : 'days');
+     var fromDate = Date.parse(from);
+     var toDate = moment(Date.parse(to));
+     return toDate.diff(fromDate, diffType);
+    } ;
 
   });

@@ -1,6 +1,6 @@
 <div class="container">
 
-  <step-wizard steps="wizardSteps" save-trigger="saveAndExit()" next-trigger="nextTrigger()" prev-trigger="prevTrigger()" save-button-text="saveButtonName"></step-wizard>
+  <step-wizard ng-if="wizardSteps" steps="wizardSteps" save-trigger="saveAndExit()" next-trigger="nextTrigger()" prev-trigger="prevTrigger()" save-button-text="saveButtonName"></step-wizard>
 
   <store-instance-header></store-instance-header>
 
@@ -8,10 +8,13 @@
 
   <form name="assignSealsForm" ng-submit="submitForm()">
 
+    <div class="well" ng-if="showTamperedSeals()">
+      <input type="checkbox" ng-model="storeDetails.tampered" ng-disabled="readOnly"/> <span>Inbound Seals Tampered</span>
+      <textarea class="form-control" ng-if="storeDetails.tampered" ng-model="storeDetails.note" placeholder="Notes" max-length="255" ng-disabled="readOnly"></textarea>
+    </div>
+
     <div ng-repeat="(sealTypeKey, sealType) in sealTypesList | orderBy:'order'" ng-if="sealTypesList">
-
-      <seal-type seal-type-object="sealType"></seal-type>
-
+      <seal-type seal-type-object="sealType" ng-if="!hideSealType(sealType.name)"></seal-type>
     </div>
 
     <footer ng-hide="readOnly" class="text-right">

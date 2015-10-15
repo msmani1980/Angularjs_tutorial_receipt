@@ -62,7 +62,8 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     this.setExportURL = function(cateringStation) {
       $scope.exportURL = ENV.apiUrl + '/api/stock-management/dashboard/' + cateringStation.id;
-      $scope.exportURL += '/file/export?sessionToken=' + $http.defaults.headers.common.sessionToken;
+      // TODO: get sessionToken from the request headers from server
+      $scope.exportURL += '/file/export?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';//$http.defaults.headers.common.sessionToken;
     };
 
     this.generateStockTakeQuery = function () {

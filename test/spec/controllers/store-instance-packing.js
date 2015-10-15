@@ -11,6 +11,10 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   beforeEach(module('served/store-status-response.json'));
   beforeEach(module('served/item-types.json'));
   beforeEach(module('served/characteristics.json'));
+  beforeEach(module('served/company-reason-codes.json'));
+  beforeEach(module('served/count-types.json'));
+  beforeEach(module('served/features.json'));
+  beforeEach(module('served/threshold-list.json'));
 
 
   var StoreInstancePackingCtrl;
@@ -30,6 +34,14 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   var servedItemTypesJSON;
   var getCharacteristicsDeferred;
   var servedCharacteristicsJSON;
+  var getCountTypesDeferred;
+  var servedCountTypesJSON;
+  var getCompanyReasonCodesDeferred;
+  var servedCompanyReasonCodesJSON;
+  var getFeaturesDeferred;
+  var getFeaturesJSON;
+  var getThresholdDeferred;
+  var getThresholdJSON;
   var dateUtility;
   var storeId;
   var controller;
@@ -37,7 +49,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedMasterItemList_,
-                     _servedStoreInstanceDetails_, _servedStoreStatusResponse_, _servedCharacteristics_, _servedItemTypes_) {
+                     _servedStoreInstanceDetails_, _servedStoreStatusResponse_, _servedCharacteristics_,
+                     _servedItemTypes_, _servedCompanyReasonCodes_, _servedCountTypes_, _servedFeatures_, _servedThresholdList_) {
       servedStoreInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
       servedStoreInstanceItemsJSON = _servedStoreInstanceItemList_;
       servedMasterItemsJSON = _servedMasterItemList_;
@@ -45,6 +58,10 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       servedStoreStatusJSON = _servedStoreStatusResponse_;
       servedItemTypesJSON = _servedItemTypes_;
       servedCharacteristicsJSON = _servedCharacteristics_;
+      servedCountTypesJSON = _servedCountTypes_;
+      servedCompanyReasonCodesJSON = _servedCompanyReasonCodes_;
+      getFeaturesJSON = _servedFeatures_;
+      getThresholdJSON = _servedThresholdList_;
     });
     storeId = 5;
     scope = $rootScope.$new();
@@ -71,6 +88,19 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     getCharacteristicsDeferred = $q.defer();
     getCharacteristicsDeferred.resolve(servedCharacteristicsJSON);
+
+    getCountTypesDeferred = $q.defer();
+    getCountTypesDeferred.resolve(servedCountTypesJSON);
+
+    getCompanyReasonCodesDeferred = $q.defer();
+    getCompanyReasonCodesDeferred.resolve(servedCompanyReasonCodesJSON);
+
+    getFeaturesDeferred = $q.defer();
+    getFeaturesDeferred.resolve(getFeaturesJSON);
+
+    getThresholdDeferred = $q.defer();
+    getThresholdDeferred.resolve(getThresholdJSON);
+
     dateUtility = $injector.get('dateUtility');
 
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
@@ -80,6 +110,10 @@ describe('Controller: StoreInstancePackingCtrl', function () {
     spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(getUpdatedStoreStatusDeferred.promise);
     spyOn(storeInstanceFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
     spyOn(storeInstanceFactory, 'getCharacteristics').and.returnValue(getCharacteristicsDeferred.promise);
+    spyOn(storeInstanceFactory, 'getCountTypes').and.returnValue(getCountTypesDeferred.promise);
+    spyOn(storeInstanceFactory, 'getReasonCodeList').and.returnValue(getCompanyReasonCodesDeferred.promise);
+    spyOn(storeInstanceFactory, 'getFeaturesList').and.returnValue(getFeaturesDeferred.promise);
+    spyOn(storeInstanceFactory, 'getThresholdList').and.returnValue(getThresholdDeferred.promise);
 
   }));
 
@@ -117,6 +151,14 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       it('should call getStoreInstanceItems', function () {
         expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(storeId);
+      });
+
+      it('should call getFeatures', function () {
+        expect(storeInstanceFactory.getFeaturesList).toHaveBeenCalled();
+      });
+
+      it('should cal getThresholdList', function () {
+        expect(storeInstanceFactory.getThresholdList).toHaveBeenCalled();
       });
 
       it('should remove the id of the instance items', function () {
@@ -171,11 +213,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         });
       });
 
-      it('should show the template qty field', function () {
-        var showQty = scope.showQty();
-        expect(showQty).toBeTruthy();
-      });
-
     });
 
     describe('during the replenish process', function () {
@@ -197,7 +234,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
           characteristicId: 2, // this is 2 for upliftable items
           date: formattedDate
         };
-        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(storeId, expectedPayload);
+        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeDetails.replenishStoreInstanceId, expectedPayload);
       });
 
       it('should call getItemsMasterList', function () {
@@ -211,9 +248,47 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
       });
 
-      it('should not show the template qty field', function () {
-        var showQty = scope.showQty();
-        expect(showQty).toBeFalsy();
+    });
+
+    describe('during the end-instance process', function () {
+
+      beforeEach(function () {
+        initController('end-instance');
+        getStoreDetailsDeferred.resolve(servedStoreInstanceDetailsJSON);
+        scope.$digest();
+      });
+
+      it('should call getCharacteristics', function () {
+        expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
+      });
+
+      it('should call getCharacteristics', function () {
+        expect(storeInstanceFactory.getCountTypes).toHaveBeenCalled();
+      });
+
+      it('should call getCharacteristics', function () {
+        expect(storeInstanceFactory.getReasonCodeList).toHaveBeenCalled();
+      });
+
+      it('should call getStoreInstanceMenuItems with Regular and Inventory filters', function () {
+        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
+        var expectedPayload = {
+          itemTypeId: 1, // this is 1 because we are requesting regular items.
+          characteristicId: 1, // this is 1 for inventory items
+          date: formattedDate
+        };
+        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(storeId, expectedPayload);
+      });
+
+      it('should call getItemsMasterList', function () {
+        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
+        var expectedPayload = {
+          itemTypeId: 1,
+          characteristicId: 1,
+          startDate: formattedDate,
+          endDate: formattedDate
+        };
+        expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
       });
 
     });
@@ -243,12 +318,12 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
     it('should merge menuItems and emptyMenuItems', function () {
       var expectedLength = scope.menuItems.length + scope.emptyMenuItems.length;
-      var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
+      var result = StoreInstancePackingCtrl.createPayload();
       expect(result.response.length).toEqual(expectedLength);
     });
 
     it('should only keep id, itemMasterId, and quantity for menuItems', function () {
-      var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
+      var result = StoreInstancePackingCtrl.createPayload();
       var expectdItem = {
         id: 1,
         itemMasterId: 2,
@@ -257,7 +332,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       expect(result.response[0]).toEqual(expectdItem);
     });
     it('should only keep itemMasterId and quantity for emptyMenuItems', function () {
-      var result = StoreInstancePackingCtrl.formatStoreInstanceItemsPayload();
+      var result = StoreInstancePackingCtrl.createPayload();
       var expectdItem = {
         itemMasterId: 5,
         quantity: 9
@@ -335,6 +410,72 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       expect(canProceed).toBeFalsy();
     });
 
+  });
+
+  describe('checking an action state', function () {
+
+    it('should return true if the state passed matches the action state of the controller', function () {
+      initController();
+      var isDispatch = scope.isActionState('dispatch');
+      expect(isDispatch).toBeTruthy();
+    });
+
+    it('should return false if the state passed does not matches the action state of the controller', function () {
+      initController();
+      var isDispatch = scope.isActionState('replenish');
+      expect(isDispatch).toBeFalsy();
+    });
+
+    it('should return true if the state passed matches the action state of the controller', function () {
+      initController('replenish');
+      var isReplenish = scope.isActionState('replenish');
+      expect(isReplenish).toBeTruthy();
+    });
+
+    it('should return false if the state passed does not matches the action state of the controller', function () {
+      initController();
+      var isReplenish = scope.isActionState('replenish');
+      expect(isReplenish).toBeFalsy();
+    });
+
+  });
+
+  describe('variance calculation', function () {
+    beforeEach(function() {
+      initController();
+      scope.variance = 50;
+
+    });
+
+    it('should set warning class if threshold exceeds variance', function () {
+      var varianceClass = scope.setClassBasedOnVariance(10, 1000);
+      expect(varianceClass).toEqual('warning-row');
+    });
+    it('should not set warning class is threshold is equal to variance', function () {
+      var varianceClass = scope.setClassBasedOnVariance(10, 15);
+      expect(varianceClass).toEqual('');
+    });
+    it('should not set warning class is threshold is less than variance', function () {
+      var varianceClass = scope.setClassBasedOnVariance(10, 11);
+      expect(varianceClass).toEqual('');
+    });
+    it('should not set warning class if picked < required quantity', function () {
+      var varianceClass = scope.setClassBasedOnVariance(1000, 10);
+      expect(varianceClass).toEqual('');
+    });
+    it('should accept null or undefined values', function () {
+      var varianceClass = scope.setClassBasedOnVariance(null, null);
+      expect(varianceClass).toEqual('');
+    });
+    it('should accept undefined values', function () {
+      var undefinedVar;
+      var varianceClass = scope.setClassBasedOnVariance(undefinedVar, undefinedVar);
+      expect(varianceClass).toEqual('');
+    });
+    it('should accept string values', function () {
+      var varianceClass = scope.setClassBasedOnVariance('100', '10000');
+      expect(varianceClass).toEqual('warning-row');
+    });
   });
 
 

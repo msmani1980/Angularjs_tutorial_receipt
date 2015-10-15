@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Warehouse Open"
+  },
+  {
+    "id": 2,
+    "name": "FAClose"
+  },
+  {
+    "id": 3,
+    "name": "HandoverClose"
+  },
+  {
+    "id": 4,
+    "name": "HandoverOpen"
+  },
+  {
+    "id": 5,
+    "name": "Wastage"
+  },
+  {
+    "id": 7,
+    "name": "Ullage"
+  },
+  {
+    "id": 8,
+    "name": "FACrewUplift"
+  },
+  {
+    "id": 12,
+    "name": "FAOpen"
+  },
+  {
+    "id": 13,
+    "name": "Warehouse Close"
+  },
+  {
+    "id": 14,
+    "name": "Offload"
+  }
+]

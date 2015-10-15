@@ -137,5 +137,28 @@ describe('Service: commissionDataService', function () {
       });
     });
 
+    describe('getFeatures', function(){
+      it('should make GET request to API', function(){
+        var expectUri = /records\/features/;
+        httpBackend.expectGET(expectUri).respond(200, []);
+        recordsService.getFeatures().then(function (response) {
+          expect(response).toBeDefined();
+        });
+        httpBackend.flush();
+      });
+    });
+
+    describe('getCountTypes', function(){
+      it('should make GET request to API', function(){
+        var expectUri = /records\/count-types/;
+        httpBackend.expectGET(expectUri).respond(200, []);
+        recordsService.getCountTypes().then(function (response) {
+          expect(response).toBeDefined();
+        });
+        httpBackend.flush();
+      });
+    });
+
+
   });
 });

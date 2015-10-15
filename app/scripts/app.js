@@ -192,11 +192,19 @@ angular.module('ts5App', [
   }).when('/store-instance-seals/:action/:storeId', {
     templateUrl: 'views/store-instance-seals.html',
     controller: 'StoreInstanceSealsCtrl'
+  }).when('/store-instance-inbound-seals/:action/:storeId', {
+    templateUrl: 'views/store-instance-seals.html',
+    controller: 'StoreInstanceSealsCtrl'
   }).when('/retail-company-exchange-rate-setup', {
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'
   }).when('/store-instance-review/:action/:storeId?', {
-    templateUrl: 'views/store-instance-review.html',
+    templateUrl: function(routeParameters){
+      if (routeParameters.action === 'redispatch') {
+        return 'views/store-instance-redispatch-review.html';
+      }
+      return 'views/store-instance-review.html';
+    },
     controller: 'StoreInstanceReviewCtrl'
   }).when('/store-instance-dashboard', {
     templateUrl: 'views/store-instance-dashboard.html',

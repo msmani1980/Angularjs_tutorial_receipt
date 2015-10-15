@@ -37,16 +37,29 @@
   color: #3a87ad;
 }
 
-.store-instance-review-accordion .panel-title{
+.store-instance-review-accordion .panel-title {
   color: #3a87ad;
 }
 
 .accordion-cell-details {
-  color:#888;
+  color: #888;
   display: inline-block;
   margin: 1rem 2rem;
 }
 
 .accordion-cell-closed {
   display: none;
+}
+
+.accordion-wrapper {
+  display: table;
+  width: 100%;
+
+  .accordion-header {
+    display: table-header-group;
+  }
+
+  .accordion-footer {
+    display: table-footer-group;
+  }
 }
