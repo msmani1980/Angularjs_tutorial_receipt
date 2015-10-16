@@ -449,11 +449,27 @@ angular.module('ts5App')
         tampered: $scope.storeDetails.tampered,
         note: $scope.storeDetails.note
       };
-      return storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload);
+      return payload;
+    };
+
+    this.makeSealsPromises = function(stepObject, statusObject) {
+      var promises = [];
+      if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
+        var payload = $this.updateStoreInstanceTampered();
+        promises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload));
+      }
+      var prevInstance = $this.determineInstanceToUpdate();
+      if ($this.isInboundDuringRedispatch()) {
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), $this.prevInstanceNextStep));
+      }
+      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name));
+      $q.all(promises).then(function() {
+        $this.statusUpdateSuccessHandler(stepObject);
+      }, $this.assignSealsErrorHandler);
     };
 
     this.updateStatusToStep = function(stepObject) {
-      if ($routeParams.actions !== 'dispatch' && angular.isUndefined(stepObject.stepName)) {
+      if (angular.isUndefined(stepObject.stepName)) {
         $this.statusUpdateSuccessHandler(stepObject);
         return;
       }
@@ -461,18 +477,7 @@ angular.module('ts5App')
       if (!statusObject) {
         return;
       }
-      var promises = [];
-      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name));
-      if ($scope.storeDetails.tampered) {
-        promises.push($this.updateStoreInstanceTampered());
-      }
-      var prevInstance = $this.determineInstanceToUpdate();
-      if ($this.isInboundDuringRedispatch()) {
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), $this.prevInstanceNextStep));
-      }
-      $q.all(promises).then(function() {
-        $this.statusUpdateSuccessHandler(stepObject);
-      }, $this.assignSealsErrorHandler);
+      $this.makeSealsPromises(stepObject, statusObject);
     };
 
     this.assignSealsSuccessHandler = function() {
