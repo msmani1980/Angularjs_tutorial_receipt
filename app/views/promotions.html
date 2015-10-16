@@ -116,7 +116,7 @@
                   <input type="text" class="form-control"
                          name="spendLimitAmount{{ spendLimitAmountData.code }}"
                          custom-validity
-                         custom-pattern="currencyWithThreeDecimalPlace"
+                         custom-pattern="decimal"
                          ng-show="promotion.promotionType.name === 'Spend Limit'"
                          ng-model="spendLimitAmountData.amount"
                          ng-disabled="readOnly"
@@ -351,7 +351,7 @@
                     <input type="text" class="form-control"
                            name="benefitAmount{{ benefitAmountData.code }}"
                            custom-validity
-                           custom-pattern="currencyWithThreeDecimalPlace"
+                           custom-pattern="decimal"
                            ng-model="benefitAmountData.amount"
                            ng-disabled="readOnly">
                   </div>
