@@ -35,10 +35,7 @@
           <th ng-show="shouldDisplayQuantityField('ullage')" width="10%">Ullage Quantity</th>
           <th ng-show="shouldDisplayQuantityField('ullage')" width="15%">Ullage Reason</th>
           <th ng-show="shouldDisplayQuantityField('template')" width="10%">Template Quantity</th>
-          <th width="10%" ng-show="shouldDisplayQuantityField('packed')">
-            <span ng-show="isActionState('dispatch')">Packed Quantity</span>
-            <span ng-show="isActionState('replenish') || isActionState('redispatch')">Picked Quantity</span>
-          </th>
+          <th ng-show="shouldDisplayQuantityField('packed')" width="10%">Picked Quantity</th>
           <th ng-show="shouldDisplayQuantityField('dispatch')" width="10%">Dispatched Quantity</th>
           <th width="5%"></th>
         </tr>
