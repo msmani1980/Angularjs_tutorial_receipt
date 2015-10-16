@@ -44,7 +44,7 @@ angular.module('ts5App')
       currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
         $scope.companyBaseCurrency = $this.getCurrencyByBaseCurrencyId($scope.globalCurrencyList, companyDataFromAPI.baseCurrencyId);
       });
-    }
+    };
 
     this.deleteDetailedCompanyCurrency = function (currencyId) {
       currencyFactory.deleteDetailedCompanyCurrency(currencyId);
@@ -83,12 +83,12 @@ angular.module('ts5App')
     }
 
     this.showSaveSuccess = function () {
-      hideLoadingModal()
+      hideLoadingModal();
       $this.showToast('success', 'Currency', 'currency successfully saved!');
     };
 
     this.showSaveErrors = function (dataFromAPI) {
-      hideLoadingModal()
+      hideLoadingModal();
       $this.showToast('danger', 'Currency', 'error saving currency!');
 
       $scope.displayError = true;
@@ -106,7 +106,7 @@ angular.module('ts5App')
 
     $scope.deleteDetailedCompanyCurrency = function () {
       angular.element('.delete-warning-modal').modal('hide');
-      angular.element("#currency-" + $scope.currencyToDelete.rowIndex).remove();
+      angular.element('#currency-' + $scope.currencyToDelete.rowIndex).remove();
 
       $this.deleteDetailedCompanyCurrency($scope.currencyToDelete.id);
     };
@@ -134,7 +134,7 @@ angular.module('ts5App')
         dismissButton: true,
         content: '<strong>' + type + '</strong>: ' + message
       });
-    }
+    };
 
     $scope.isCurrencyReadOnly = function (currency) {
       if (!currency.startDate || currency.isNew) {
@@ -196,11 +196,11 @@ angular.module('ts5App')
       });
 
       return payload;
-    }
+    };
 
     this.isDenominationEasyPay = function (selectedEasyPayDenominations, denominationId) {
       return selectedEasyPayDenominations.map(function (denomination) {
-        return denomination.id
+        return denomination.id;
       })
       .indexOf(denominationId) > -1;
     };
