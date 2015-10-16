@@ -468,7 +468,8 @@ angular.module('ts5App')
       }
       var prevInstance = $this.determineInstanceToUpdate();
       if ($this.isInboundDuringRedispatch()) {
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), $this.prevInstanceNextStep));
+        var prevInstanceStep = stepObject.stepOne.stepName;
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), prevInstanceStep));
       }
       $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
@@ -535,9 +536,11 @@ angular.module('ts5App')
     };
 
     $scope.prevTrigger = function() {
-      if (!$this.isInboundDuringRedispatch()) {
-        $this.updateStatusToStep($this.prevStep);
+      var prevStep = $this.prevStep;
+      if($scope.wizardStepToIndex) {
+        prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       }
+      $this.updateStatusToStep(prevStep);
     };
 
     $scope.validateSeals = function(sealTypeObject) {
