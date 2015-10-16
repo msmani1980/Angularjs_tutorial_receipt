@@ -276,7 +276,7 @@ angular.module('ts5App')
         id: response.statusId
       }, true)[0];
       showUserCurrentStatus();
-      $location.url('/store-instance-dashboard');
+      $location.path('store-instance-dashboard');
     }
 
     function checkOnValidStatus() {
