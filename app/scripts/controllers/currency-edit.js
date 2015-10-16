@@ -20,7 +20,6 @@ angular.module('ts5App')
     $scope.currencyToDelete = {};
     $scope.currencyDenominations = {};
     $scope.addDetailedCompanyCurrenciesNumber = 1;
-    $scope.saving = {};
 
     this.getCompanyGlobalCurrencies = function () {
       currencyFactory.getCompanyGlobalCurrencies().then(function (globalCurrencyList) {
@@ -31,8 +30,8 @@ angular.module('ts5App')
       });
     };
 
-    this.getDenominations = function() {
-      angular.forEach($scope.globalCurrencyList, function(currency){
+    this.getDenominations = function () {
+      angular.forEach($scope.globalCurrencyList, function (currency){
           $scope.currencyDenominations[currency.id] = currency.currencyDenominations ;
       });
     };
@@ -47,7 +46,7 @@ angular.module('ts5App')
       });
     }
 
-    this.deleteDetailedCompanyCurrency = function(currencyId) {
+    this.deleteDetailedCompanyCurrency = function (currencyId) {
       currencyFactory.deleteDetailedCompanyCurrency(currencyId);
     };
 
@@ -63,20 +62,33 @@ angular.module('ts5App')
     };
 
     $scope.saveDetailedCompanyCurrency = function (index, currency) {
+      showLoadingModal('Loading Data');
+
       var payload = $this.denormalizeDetailedCompanyCurrency(index, currency);
       if (currency.isNew) {
-        currencyFactory.createDetailedCompanyCurrency(payload).then($this.showSaveSuccess(), $this.showSaveErrors);
+        currencyFactory.createDetailedCompanyCurrency(payload).then($this.showSaveSuccess, $this.showSaveErrors);
       }
       else {
-        currencyFactory.updateDetailedCompanyCurrency(payload).then($this.showSaveSuccess(), $this.showSaveErrors);
+        currencyFactory.updateDetailedCompanyCurrency(payload).then($this.showSaveSuccess, $this.showSaveErrors);
       }
     };
 
+    function showLoadingModal(message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
+    }
+
     this.showSaveSuccess = function () {
+      hideLoadingModal()
       $this.showToast('success', 'Currency', 'currency successfully saved!');
     };
 
     this.showSaveErrors = function (dataFromAPI) {
+      hideLoadingModal()
       $this.showToast('danger', 'Currency', 'error saving currency!');
 
       $scope.displayError = true;
@@ -104,14 +116,12 @@ angular.module('ts5App')
       $scope.searchDetailedCompanyCurrencies();
     };
 
-    $scope.addDetailedCompanyCurrencies = function() {
+    $scope.addDetailedCompanyCurrencies = function () {
       var totalRowsToAdd = $scope.addDetailedCompanyCurrenciesNumber || 1;
       for (var i = 0; i < totalRowsToAdd; i++) {
         $scope.companyCurrencyList.push({
           isNew: true,
           companyId: $this.companyId,
-          startDate: dateUtility.nowFormatted(),
-          endDate: dateUtility.nowFormatted(),
           selectedDenominations: [],
           selectedEasyPayDenominations: []
         });
@@ -127,38 +137,38 @@ angular.module('ts5App')
     }
 
     $scope.isCurrencyReadOnly = function (currency) {
-      if (!currency.startDate) {
+      if (!currency.startDate || currency.isNew) {
         return false;
       }
-      return !(currency.isNew || dateUtility.isAfterToday(currency.startDate));
+      return !(dateUtility.isAfterToday(currency.startDate));
     };
 
     $scope.isCurrencyPartialReadOnly = function (currency) {
-      if (!currency.endDate) {
+      if (!currency.endDate || currency.isNew) {
         return false;
       }
-      return !(currency.isNew || dateUtility.isToday(currency.endDate) || dateUtility.isAfterToday(currency.endDate));
+      return !(dateUtility.isToday(currency.endDate) || dateUtility.isAfterToday(currency.endDate));
     };
 
     this.attachDetailedCompanyCurrencyListToScope = function (companyCurrencyListFromAPI) {
       $scope.companyCurrencyList = $this.normalizeDetailedCompanyCurrencies(companyCurrencyListFromAPI.companyCurrencies);
     };
 
-    this.normalizeDetailedCompanyCurrencies = function(currencies) {
+    this.normalizeDetailedCompanyCurrencies = function (currencies) {
       var formattedCurrencies = angular.copy(currencies);
       angular.forEach(formattedCurrencies, function (currency) {
         currency.startDate = dateUtility.formatDateForApp(currency.startDate);
         currency.endDate = dateUtility.formatDateForApp(currency.endDate);
 
         // Populate select box with denominations
-        currency.selectedDenominations = currency.denominations.map(function(denomination){
+        currency.selectedDenominations = currency.denominations.map(function (denomination){
           return $this.getDenominationById($scope.currencyDenominations[currency.currencyId], denomination.currencyDenominationId);
         }).sort($this.sortDenominationByValue);
 
         // Populate select box with easy pay denominations
-        currency.selectedEasyPayDenominations = currency.denominations.filter(function(denomination) {
+        currency.selectedEasyPayDenominations = currency.denominations.filter(function (denomination) {
           return denomination.isEasyPay === 'true';
-        }).map(function(denomination){
+        }).map(function (denomination){
           return $this.getDenominationById($scope.currencyDenominations[currency.currencyId], denomination.currencyDenominationId);
         }).sort($this.sortDenominationByValue);
       });
@@ -172,14 +182,28 @@ angular.module('ts5App')
       payload.id = currency.id;
       payload.companyId = currency.companyId;
       payload.currencyId = currency.currencyId;
-      payload.startDate = dateUtility.formatDateForAPI(currency.startDate);
-      payload.endDate = dateUtility.formatDateForAPI(currency.endDate);
+      payload.startDate = (currency.startDate) ? dateUtility.formatDateForAPI(currency.startDate) : null;
+      payload.endDate = (currency.endDate) ? dateUtility.formatDateForAPI(currency.endDate) : null;
       payload.isOperatedCurrency = currency.isOperatedCurrency;
       payload.eposDisplayOrder = index + 1;
-      payload.denominations = [];
+      payload.denominations = currency.selectedDenominations.map(function (denomination) {
+        return {
+          id: null,
+          companyCurrencyId: denomination.currencyId,
+          currencyDenominationId: denomination.id,
+          isEasyPay: $this.isDenominationEasyPay(currency.selectedEasyPayDenominations, denomination.id)
+        };
+      });
 
       return payload;
     }
+
+    this.isDenominationEasyPay = function (selectedEasyPayDenominations, denominationId) {
+      return selectedEasyPayDenominations.map(function (denomination) {
+        return denomination.id
+      })
+      .indexOf(denominationId) > -1;
+    };
 
     this.getDenominationById = function (denominations, denominationId) {
       return denominations.filter(function (denomination) {
@@ -187,18 +211,18 @@ angular.module('ts5App')
       })[0];
     };
 
-    this.sortDenominationByValue = function(a, b) {
+    this.sortDenominationByValue = function (a, b) {
       return parseFloat(a.denomination) - parseFloat(b.denomination);
     };
 
-    $scope.clearDenominations = function(currency){
+    $scope.clearDenominations = function (currency){
       currency.selectedDenominations = [];
       currency.selectedEasyPayDenominations = [];
     };
 
-    $scope.removeInvalidEasyPayDenominations = function(currency){
-      currency.selectedEasyPayDenominations = currency.selectedEasyPayDenominations.filter( function( el ) {
-        return currency.selectedDenominations.indexOf( el ) > 0;
+    $scope.removeInvalidEasyPayDenominations = function (currency){
+      currency.selectedEasyPayDenominations = currency.selectedEasyPayDenominations.filter(function (el) {
+        return currency.selectedDenominations.indexOf(el) > 0;
       } );
     };
 
