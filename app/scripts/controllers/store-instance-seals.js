@@ -394,16 +394,23 @@ angular.module('ts5App')
       return deletePromises;
     };
 
-    this.makeAssignSealsPromises = function() {
+    this.makeDeleteSealsPromises = function() {
+      var promises = [];
+      angular.forEach($scope.sealTypesList, function(sealTypeObject) {
+        var deletePromises = $this.makeDeletePromise(sealTypeObject);
+        if (deletePromises) {
+          promises = promises.concat(deletePromises);
+        }
+      });
+      return promises;
+    };
+
+    this.makeCreateSealsPromises = function() {
       var promises = [];
       angular.forEach($scope.sealTypesList, function(sealTypeObject) {
         var createPromise = $this.makeCreatePromise(sealTypeObject);
         if (createPromise) {
           promises.push(createPromise);
-        }
-        var deletePromises = $this.makeDeletePromise(sealTypeObject);
-        if (deletePromises) {
-          promises = promises.concat(deletePromises);
         }
       });
       return promises;
@@ -491,9 +498,13 @@ angular.module('ts5App')
 
     this.assignSeals = function() {
       this.displayLoadingModal('Assigning seals to Store Instance');
-      var promises = this.makeAssignSealsPromises();
-      $q.all(promises).then(
-        $this.assignSealsSuccessHandler,
+      var deletePromises = this.makeDeleteSealsPromises();
+      var createPromises = this.makeCreateSealsPromises();
+      $q.all(deletePromises).then(
+        $q.all(createPromises).then(
+          $this.assignSealsSuccessHandler,
+          $this.assignSealsErrorHandler
+        ),
         $this.assignSealsErrorHandler
       );
     };
