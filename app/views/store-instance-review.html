@@ -24,9 +24,9 @@
 
     <div class="accordion-wrapper">
       <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
-        <accordion-group>
+        <accordion-group ng-init="status.items.open=false"  is-open="status.items.open">
           <accordion-heading class="accordion-heading">
-            {{getTitleFor('items')}} <i class="fa fa-chevron-down"></i>
+            {{getTitleFor('items')}} <i ng-class="{'fa-chevron-down': status.items.open, 'fa-chevron-right': !status.items.open}" class="fa"></i>
           </accordion-heading>
           <div class="row">
             <div class="col-xs-12 text-right">
@@ -83,9 +83,9 @@
       </accordion>
 
       <accordion class="store-instance-review-accordion">
-        <accordion-group>
+        <accordion-group ng-init="status.seals.open=false"  is-open="status.seals.open">
           <accordion-heading class="accordion-heading">
-            {{getTitleFor('seals')}} <i class="fa fa-chevron-down"></i>
+            {{getTitleFor('seals')}} <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}" class="fa"></i>
           </accordion-heading>
           <div class="row">
             <div class="col-xs-12 text-right">
