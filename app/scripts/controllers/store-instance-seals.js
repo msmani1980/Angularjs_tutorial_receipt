@@ -394,16 +394,23 @@ angular.module('ts5App')
       return deletePromises;
     };
 
-    this.makeAssignSealsPromises = function() {
+    this.makeDeleteSealsPromises = function() {
+      var promises = [];
+      angular.forEach($scope.sealTypesList, function(sealTypeObject) {
+        var deletePromises = $this.makeDeletePromise(sealTypeObject);
+        if (deletePromises) {
+          promises = promises.concat(deletePromises);
+        }
+      });
+      return promises;
+    };
+
+    this.makeCreateSealsPromises = function() {
       var promises = [];
       angular.forEach($scope.sealTypesList, function(sealTypeObject) {
         var createPromise = $this.makeCreatePromise(sealTypeObject);
         if (createPromise) {
           promises.push(createPromise);
-        }
-        var deletePromises = $this.makeDeletePromise(sealTypeObject);
-        if (deletePromises) {
-          promises = promises.concat(deletePromises);
         }
       });
       return promises;
@@ -442,11 +449,27 @@ angular.module('ts5App')
         tampered: $scope.storeDetails.tampered,
         note: $scope.storeDetails.note
       };
-      return storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload);
+      return payload;
+    };
+
+    this.makeSealsPromises = function(stepObject, statusObject) {
+      var promises = [];
+      if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
+        var payload = $this.updateStoreInstanceTampered();
+        promises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload));
+      }
+      var prevInstance = $this.determineInstanceToUpdate();
+      if ($this.isInboundDuringRedispatch()) {
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), $this.prevInstanceNextStep));
+      }
+      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name));
+      $q.all(promises).then(function() {
+        $this.statusUpdateSuccessHandler(stepObject);
+      }, $this.assignSealsErrorHandler);
     };
 
     this.updateStatusToStep = function(stepObject) {
-      if ($routeParams.actions !== 'dispatch' && angular.isUndefined(stepObject.stepName)) {
+      if (angular.isUndefined(stepObject.stepName)) {
         $this.statusUpdateSuccessHandler(stepObject);
         return;
       }
@@ -454,18 +477,7 @@ angular.module('ts5App')
       if (!statusObject) {
         return;
       }
-      var promises = [];
-      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name));
-      if ($scope.storeDetails.tampered) {
-        promises.push($this.updateStoreInstanceTampered());
-      }
-      var prevInstance = $this.determineInstanceToUpdate();
-      if ($this.isInboundDuringRedispatch()) {
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), $this.prevInstanceNextStep));
-      }
-      $q.all(promises).then(function() {
-        $this.statusUpdateSuccessHandler(stepObject);
-      }, $this.assignSealsErrorHandler);
+      $this.makeSealsPromises(stepObject, statusObject);
     };
 
     this.assignSealsSuccessHandler = function() {
@@ -491,9 +503,13 @@ angular.module('ts5App')
 
     this.assignSeals = function() {
       this.displayLoadingModal('Assigning seals to Store Instance');
-      var promises = this.makeAssignSealsPromises();
-      $q.all(promises).then(
-        $this.assignSealsSuccessHandler,
+      var deletePromises = this.makeDeleteSealsPromises();
+      var createPromises = this.makeCreateSealsPromises();
+      $q.all(deletePromises).then(
+        $q.all(createPromises).then(
+          $this.assignSealsSuccessHandler,
+          $this.assignSealsErrorHandler
+        ),
         $this.assignSealsErrorHandler
       );
     };
