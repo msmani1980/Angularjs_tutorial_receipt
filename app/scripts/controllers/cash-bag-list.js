@@ -91,7 +91,7 @@ angular.module('ts5App')
           });
         },
         getCashBagList: function () {
-          return cashBagFactory.getCashBagList(_companyId, {isDelete: 'false'}).then(getCashBagResponseHandler);
+          return cashBagFactory.getCashBagList(_companyId, {isDelete: 'false', isSubmitted: 'false'}).then(getCashBagResponseHandler);
         },
         getStationList: function () {
           return cashBagFactory.getStationList(_companyId).then(getStationListResponseHandler);
@@ -124,6 +124,7 @@ angular.module('ts5App')
         payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
         payload.endDate   = payload.startDate;
       }
+      payload.isSubmitted = false;
       cashBagFactory.getCashBagList(_companyId, payload).then(getCashBagResponseHandler);
     };
 
