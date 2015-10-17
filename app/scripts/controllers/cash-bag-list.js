@@ -124,7 +124,8 @@ angular.module('ts5App')
         payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
         payload.endDate   = payload.startDate;
       }
-      payload.isSubmitted = false;
+      payload.isSubmitted = 'false';
+      payload.isDelete = 'false';
       cashBagFactory.getCashBagList(_companyId, payload).then(getCashBagResponseHandler);
     };
 
