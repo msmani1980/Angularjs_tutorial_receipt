@@ -86,12 +86,12 @@ angular.module('ts5App')
       if ($this.isInboundDuringRedispatch()) {
         controllerName = 'InboundSeals';
       }
-      //$scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: controllerName
       });
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
+
       if ($this.isInboundDuringRedispatch()) {
         $this.prevInstanceNextStep = angular.copy(Math.abs(parseInt($scope.wizardSteps[currentStepIndex].storeOne.stepName) +
           1).toString());
@@ -452,18 +452,19 @@ angular.module('ts5App')
       return payload;
     };
 
-    this.makeSealsPromises = function(stepObject, statusObject) {
+    this.makeSealsPromises = function(stepObject) {
+      this.displayLoadingModal('Updating Status');
       var promises = [];
       if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
         var payload = $this.updateStoreInstanceTampered();
         promises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload));
       }
 
-      if($routeParams.actions === 'redispatch') {
+      if($routeParams.action === 'redispatch') {
         var prevInstanceStep = stepObject.storeOne.stepName;
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevInstanceId, prevInstanceStep));
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, prevInstanceStep));
       }
-      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name));
+      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
       $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
       }, $this.assignSealsErrorHandler);
@@ -474,11 +475,7 @@ angular.module('ts5App')
         $this.statusUpdateSuccessHandler(stepObject);
         return;
       }
-      var statusObject = this.findStatusObject(stepObject);
-      if (!statusObject) {
-        return;
-      }
-      $this.makeSealsPromises(stepObject, statusObject);
+      $this.makeSealsPromises(stepObject);
     };
 
     this.assignSealsSuccessHandler = function() {
@@ -546,8 +543,7 @@ angular.module('ts5App')
       if($scope.wizardStepToIndex) {
         prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       }
-      console.log(prevStep);
-      //$this.updateStatusToStep(prevStep);
+      $this.updateStatusToStep(prevStep);
     };
 
     $scope.validateSeals = function(sealTypeObject) {
