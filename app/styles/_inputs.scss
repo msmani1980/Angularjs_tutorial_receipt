@@ -20,6 +20,9 @@
 
 .store-instance-review-seals-table input {
   color: black;
+  &.text-white {
+    color: #ffffff;
+  }
 }
 
 .stations-multi-select ul {
