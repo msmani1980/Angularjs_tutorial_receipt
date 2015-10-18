@@ -86,7 +86,7 @@ angular.module('ts5App')
       if ($this.isInboundDuringRedispatch()) {
         controllerName = 'InboundSeals';
       }
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      //$scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: controllerName
       });
@@ -466,11 +466,12 @@ angular.module('ts5App')
       if ($scope.storeDetails.tampered) {
         promises.push($this.updateStoreInstanceTampered());
       }
-      var prevInstance = $this.determineInstanceToUpdate();
-      if ($this.isInboundDuringRedispatch()) {
-        var prevInstanceStep = stepObject.stepOne.stepName;
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), prevInstanceStep));
+
+      if($routeParams.actions === 'redispatch') {
+        var prevInstanceStep = stepObject.storeOne.stepName;
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevInstanceId, prevInstanceStep));
       }
+
       $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
       }, $this.assignSealsErrorHandler);
@@ -511,6 +512,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       this.displayLoadingModal('Loading Seals for Store Instance');
       this.getStoreDetails();
     };
@@ -540,7 +542,8 @@ angular.module('ts5App')
       if($scope.wizardStepToIndex) {
         prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       }
-      $this.updateStatusToStep(prevStep);
+      console.log(prevStep);
+      //$this.updateStatusToStep(prevStep);
     };
 
     $scope.validateSeals = function(sealTypeObject) {
