@@ -42,8 +42,8 @@ describe('the Store Instance Seals controller', function() {
   var controller;
 
   beforeEach(inject(function($injector, $rootScope, $controller, $q, $httpBackend, $location, ngToast, lodash,
-                             _servedSealTypes_, _servedSealColors_,
-                             _servedStoreInstanceSeals_, _servedStoreInstanceSealsCreated_, _servedStoreInstanceDetails_) {
+    _servedSealTypes_, _servedSealColors_,
+    _servedStoreInstanceSeals_, _servedStoreInstanceSealsCreated_, _servedStoreInstanceDetails_) {
 
     storeDetailsJSON = _servedStoreInstanceDetails_;
     sealTypesJSON = _servedSealTypes_;
