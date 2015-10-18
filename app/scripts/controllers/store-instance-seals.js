@@ -9,9 +9,9 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceWizardConfig,
-                                                 storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
-                                                 dateUtility,
-                                                 lodash) {
+    storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
+    dateUtility,
+    lodash) {
 
     var HANDOVER = 'Hand Over';
     var OUTBOUND = 'Outbound';
