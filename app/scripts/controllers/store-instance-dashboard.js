@@ -93,12 +93,20 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       }
     };
 
-    $scope.doesStoreInstanceContainAction = function(storeInstance, actionName) {
+    $scope.shouldShowReplenishAction = function(storeInstance, parentStoreInstance, actionName) {
       var statusNumber = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
-      var isReplenishment = storeInstance.replenishStoreInstanceId !== null;
-      var isReplenishmentAfterDispatch = isReplenishment && parseInt(statusNumber) >= 4;
+      var parentStatusNumber = getValueByIdInArray(parentStoreInstance.statusId, 'name', $scope.storeStatusList);
+      var isAfterDispatch = parseInt(statusNumber) >= 4;
+      var isParentOnFloor = parseInt(parentStatusNumber) >= 5;
 
-      if (!storeInstance.actionButtons || (isReplenishmentAfterDispatch && actionName !== 'Get Flight Docs')) {
+      if((isParentOnFloor  || isAfterDispatch) && (actionName !== 'Get Flight Docs')) {
+        return false;
+      }
+      return $scope.doesStoreInstanceContainAction(storeInstance, actionName);
+    };
+
+    $scope.doesStoreInstanceContainAction = function(storeInstance, actionName) {
+      if (!storeInstance.actionButtons) {
         return false;
       }
       return storeInstance.actionButtons.indexOf(actionName) >= 0;
