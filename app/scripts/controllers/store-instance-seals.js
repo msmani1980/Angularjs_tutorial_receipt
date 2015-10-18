@@ -9,9 +9,9 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceWizardConfig,
-    storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
-    dateUtility,
-    lodash) {
+                                                 storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
+                                                 dateUtility,
+                                                 lodash) {
 
     var HANDOVER = 'Hand Over';
     var OUTBOUND = 'Outbound';
@@ -460,8 +460,7 @@ angular.module('ts5App')
       }
       var prevInstance = $this.determineInstanceToUpdate();
       if ($this.isInboundDuringRedispatch()) {
-        var prevInstanceStep = stepObject.stepOne.stepName;
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), prevInstanceStep));
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), $this.prevInstanceNextStep));
       }
       promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name));
       $q.all(promises).then(function() {
@@ -541,11 +540,9 @@ angular.module('ts5App')
     };
 
     $scope.prevTrigger = function() {
-      var prevStep = $this.prevStep;
-      if($scope.wizardStepToIndex) {
-        prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
+      if (!$this.isInboundDuringRedispatch()) {
+        $this.updateStatusToStep($this.prevStep);
       }
-      $this.updateStatusToStep(prevStep);
     };
 
     $scope.validateSeals = function(sealTypeObject) {
