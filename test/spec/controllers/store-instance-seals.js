@@ -711,7 +711,7 @@ describe('the Store Instance Seals controller', function() {
 
     it('should have called updateStatusToStep', function() {
       $scope.prevTrigger();
-      expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalled();
+      expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalledWith(StoreInstanceSealsCtrl.prevStep);
     });
 
   });

@@ -292,21 +292,21 @@
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
           <a class="btn btn-primary btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Pack')"
+             ng-show="shouldShowReplenishAction(replenishment, store, 'Pack')"
              ng-click="navigateToAction(replenishment, 'Pack')">
             Start Packing
           </a>
           <a class="btn btn-warning btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Seal')"
+             ng-show="shouldShowReplenishAction(replenishment, store, 'Seal')"
              ng-click="navigateToAction(replenishment, 'Seal')">
             Start Seals
           </a>
           <a class="btn btn-success btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Dispatch')"
+             ng-show="shouldShowReplenishAction(replenishment, store, 'Dispatch')"
              ng-click="navigateToAction(replenishment, 'Dispatch')">Dispatch
           </a>
           <a class="btn btn-info btn-xs" tabindex="0"
-          ng-show="doesStoreInstanceContainAction(replenishment, 'Get Flight Docs')"
+          ng-show="shouldShowReplenishAction(replenishment, store, 'Get Flight Docs')"
              ng-href="{{replenishment.exportURL}}">
             Generate Doc
           </a>
