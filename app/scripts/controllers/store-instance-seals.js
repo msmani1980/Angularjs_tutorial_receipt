@@ -91,7 +91,6 @@ angular.module('ts5App')
       });
       $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
-
       if ($this.isInboundDuringRedispatch()) {
         $this.prevInstanceNextStep = angular.copy(Math.abs(parseInt($scope.wizardSteps[currentStepIndex].storeOne.stepName) +
           1).toString());
@@ -539,10 +538,7 @@ angular.module('ts5App')
     };
 
     $scope.prevTrigger = function() {
-      var prevStep = $this.prevStep;
-      if($scope.wizardStepToIndex) {
-        prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
-      }
+      var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       $this.updateStatusToStep(prevStep);
     };
 
