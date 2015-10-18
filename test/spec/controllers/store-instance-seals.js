@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('the Store Instance Seals controller', function() {
+describe('the Store Instance Seals controller', function() {
 
   beforeEach(module(
     'ts5App',
