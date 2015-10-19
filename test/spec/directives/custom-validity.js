@@ -19,29 +19,42 @@ describe('Directive: customValidity', function () {
     expect(element.attr('custom-validity')).toBe('');
   }));
 
-  it('should format the number with 4 decimal precision', inject(function ($compile) {
+  it('should check the patter of the element', inject(function ($compile) {
     var elementString = '<form name="form">';
-    elementString += '<input name="testElement" type="text" custom-pattern="currencyWithFourDecimalPlace" custom-validity ng-model="fakeModel"/>';
-    elementString += '</form>';
     scope.fakeModel = '20.00';
+    elementString += '<input name="testElement" type="text" custom-pattern="word" custom-validity ng-model="fakeModel"/>';
+    elementString += '</form>';
 
     element = angular.element(elementString);
     element = $compile(element)(scope);
     scope.$digest();
 
-    expect(scope.form.testElement.$viewValue).toBe('20.0000');
+    expect(scope.form.testElement.$error.pattern).toBe(true);
   }));
 
-  it('should format the number with 2 decimal precision', inject(function ($compile) {
+  it('should not check the pattern on the element if model is undefined or null', inject(function ($compile) {
     var elementString = '<form name="form">';
+    delete scope.fakeModel;
     elementString += '<input name="testElement" type="text" custom-pattern="currencyWithTwoDecimalPlace" custom-validity ng-model="fakeModel"/>';
     elementString += '</form>';
-    scope.fakeModel = '20.0000';
 
     element = angular.element(elementString);
     element = $compile(element)(scope);
     scope.$digest();
 
-    expect(scope.form.testElement.$viewValue).toBe('20.00');
+    expect(scope.form.testElement.$error).toEqual({});
+  }));
+
+  it('should check the pattern on the element if model is undefined or null and element is required', inject(function ($compile) {
+    var elementString = '<form name="form">';
+    delete scope.fakeModel;
+    elementString += '<input required name="testElement" type="text" custom-pattern="currencyWithTwoDecimalPlace" custom-validity ng-model="fakeModel"/>';
+    elementString += '</form>';
+
+    element = angular.element(elementString);
+    element = $compile(element)(scope);
+    scope.$digest();
+
+    expect(scope.form.testElement.$error.required).toEqual(true);
   }));
 });
