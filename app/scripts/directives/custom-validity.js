@@ -7,7 +7,7 @@
  * # inputField
  */
 angular.module('ts5App')
-  .directive('customValidity', function($filter) {
+  .directive('customValidity', function ($filter) {
     var patternsJSON = {
       word: [/^[\w\s]+$/, 'Error message for word'],
       bit: [/^(0|1)$/, 'Error message for bit'],
@@ -47,38 +47,46 @@ angular.module('ts5App')
       require: '^ngModel',
       scope: true,
       transclude: true,
-      link: function(scope, element, attrs, ngModel) {
+      link: function (scope, element, attrs, ngModel) {
         if (!ngModel) {
           return;
         }
-        var regexObj = patternsJSON[attrs.customPattern];
 
-        ngModel.$validators.pattern = function(value) {
-          return (typeof value === 'string' && regexObj[0].test(value));
-        };
-
-        if (attrs.customPattern.contains('currency')) {
-          ngModel.$formatters.push(function(value) {
-            return $filter('number')(value, regexObj[2]);
-          });
-        }
-
-        var customValidityMessage = {
-          pattern: regexObj[1],
-          required: 'Please fill out this field.'
-        };
-
-        var validate = function() {
-          var errorArray = Object.keys(ngModel.$error);
-          var errorMessage = '';
-          if (errorArray.length > 0) {
-            errorMessage = customValidityMessage[errorArray[0]];
+        ngModel.$render = function () {
+          if (angular.isUndefined(attrs.required) && angular.isUndefined(ngModel.$modelValue)) {
+            return;
           }
-          element[0].setCustomValidity(errorMessage);
+
+          var regexObj = patternsJSON[attrs.customPattern];
+
+          ngModel.$validators.pattern = function (value) {
+            return (typeof value === 'string' && regexObj[0].test(value));
+          };
+
+          if (attrs.customPattern.contains('currency')) {
+            ngModel.$formatters.push(function (value) {
+              return $filter('number')(value, regexObj[2]);
+            });
+          }
+
+          var customValidityMessage = {
+            pattern: regexObj[1],
+            required: 'Please fill out this field.'
+          };
+
+          var validate = function () {
+            var errorArray = Object.keys(ngModel.$error);
+            var errorMessage = '';
+            if (errorArray.length > 0) {
+              errorMessage = customValidityMessage[errorArray[0]];
+            }
+            element[0].setCustomValidity(errorMessage);
+          };
+
+          scope.$watch(attrs.ngModel, validate);
+          element[0].addEventListener('keyUp', validate);
         };
 
-        scope.$watch(attrs.ngModel, validate);
-        element[0].addEventListener('keyUp', validate);
       }
     };
   });

@@ -25,7 +25,10 @@
     </div>
 
     <div class="well">
-      <h3>Pick List</h3>
+      <h3>
+        <span ng-hide="isActionState('end-instance')">Pick List</span>
+        <span ng-show="isActionState('end-instance')">Offload List</span>
+      </h3>
 
       <table class="table pick-list">
         <thead>
@@ -42,8 +45,10 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
-            ng-class="setClassBasedOnVariance(item.menuQuantity, item.quantity)">
+        <!-- TODO: implement threshold warnings -->
+        <!--<tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"-->
+            <!--ng-class="setClassBasedOnVariance(item.menuQuantity, item.quantity)">-->
+        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -206,7 +211,8 @@
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"/>
+                   placeholder="0"
+                   required="true"/>
           </td>
           <td>
             <input type="text"
@@ -252,7 +258,7 @@
           </td>
           <td>
             <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.inboundQuantity"
-                   maxlength="5" placeholder="0"/>
+                   maxlength="5" placeholder="0" required="true" />
           </td>
           <td>
             <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.ullageQuantity"
