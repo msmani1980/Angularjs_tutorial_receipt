@@ -666,10 +666,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
 
       var characteristicForAction = {
-        'dispatch' : 'Inventory',
-        'replenish': 'Upliftable',
-        'end-instance': 'Inventory',
-        'redispatch': 'Inventory'
+        'replenish': 'Upliftable'
       };
       if (characteristicForAction[$routeParams.action]) {
         promises.push(this.getCharacteristicIdForName(characteristicForAction[$routeParams.action]));
