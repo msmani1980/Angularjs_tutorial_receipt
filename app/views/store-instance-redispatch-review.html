@@ -34,6 +34,11 @@
             </div>
           </div>
 
+          <div ng-if="storeDetails.tampered">
+            <input type="checkbox" ng-model="storeDetails.tampered" disabled/><span>Inbound Seals Tampered</span>
+            <p class="form-control" disabled>{{storeDetails.note}}</p>
+          </div>
+
           <table class="table store-instance-review-seals-table">
             <thead>
             <tr>
