@@ -1,23 +1,54 @@
 'use strict';
+/*global moment*/
 
-describe('Controller: CompanyCurrencyEditCtrl', function () {
+fdescribe('Controller: CurrencyEditCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
+  beforeEach(module(
+    'served/company.json',
+    'served/currencies.json',
+    'served/currency.json',
+    'served/company-currency-globals.json'
+  ));
 
-  var CompanyCurrencyEditCtrl,
-    scope;
+  var CurrencyEditCtrl,
+    scope,
+    currencyFactory,
+    companyJSON,
+    currenciesJSON,
+    currencyJSON,
+    masterCurrenciesJSON,
+    getCompanyGlobalCurrenciesDeferred,
+    getDetailedCompanyCurrenciesDeferred;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(inject(function ($q, $httpBackend, $controller, $rootScope, _currencyFactory_, _servedCompany_, _servedCurrencies_, _servedCurrency_, _servedCompanyCurrencyGlobals_) {
     scope = $rootScope.$new();
-    CompanyCurrencyEditCtrl = $controller('CompanyCurrencyEditCtrl', {
+
+    currencyFactory = _currencyFactory_;
+    companyJSON = _servedCompany_;
+    currenciesJSON = _servedCurrencies_;
+    currencyJSON = _servedCurrency_;
+    masterCurrenciesJSON = _servedCompanyCurrencyGlobals_;
+
+    getCompanyGlobalCurrenciesDeferred = $q.defer();
+    getCompanyGlobalCurrenciesDeferred.resolve(masterCurrenciesJSON);
+    getDetailedCompanyCurrenciesDeferred = $q.defer();
+    getDetailedCompanyCurrenciesDeferred.resolve(currenciesJSON);
+
+    spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
+    spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(getDetailedCompanyCurrenciesDeferred.promise);
+
+    $httpBackend.whenGET(/companies/).respond(companyJSON);
+
+    CurrencyEditCtrl = $controller('CurrencyEditCtrl', {
       $scope: scope
-      // place here mocked dependencies
     });
+    scope.$digest();
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(CompanyCurrencyEditCtrl.awesomeThings.length).toBe(3);
+  it('should attach a viewName to the scope', function () {
+    expect(scope.viewName).toBe('Retail Company Currency & Denomination Setup');
   });
 });

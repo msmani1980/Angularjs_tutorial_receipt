@@ -24,6 +24,10 @@ describe('Factory: currencyFactory', function () {
     spyOn(companyService, 'getCompany');
     spyOn(currenciesService, 'getCompanyGlobalCurrencies');
     spyOn(currenciesService, 'getCompanyCurrencies');
+    spyOn(currenciesService, 'getDetailedCompanyCurrencies');
+    spyOn(currenciesService, 'deleteDetailedCompanyCurrency');
+    spyOn(currenciesService, 'createDetailedCompanyCurrency');
+    spyOn(currenciesService, 'updateDetailedCompanyCurrency');
     spyOn(dailyExchangeRatesService, 'getPreviousExchangeRates');
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates');
     spyOn(dailyExchangeRatesService, 'saveDailyExchangeRates');
@@ -54,6 +58,26 @@ describe('Factory: currencyFactory', function () {
     it('should call currenciesService on getCompanyCurrencies', function () {
       currencyFactory.getCompanyCurrencies();
       expect(currenciesService.getCompanyCurrencies).toHaveBeenCalled();
+    });
+
+    it('should call currenciesService on getDetailedCompanyCurrencies', function () {
+      currencyFactory.getDetailedCompanyCurrencies();
+      expect(currenciesService.getDetailedCompanyCurrencies).toHaveBeenCalled();
+    });
+
+    it('should call currenciesService on deleteDetailedCompanyCurrency', function () {
+      currencyFactory.deleteDetailedCompanyCurrency();
+      expect(currenciesService.deleteDetailedCompanyCurrency).toHaveBeenCalled();
+    });
+
+    it('should call currenciesService on createDetailedCompanyCurrency', function () {
+      currencyFactory.createDetailedCompanyCurrency();
+      expect(currenciesService.createDetailedCompanyCurrency).toHaveBeenCalled();
+    });
+
+    it('should call currenciesService on updateDetailedCompanyCurrency', function () {
+      currencyFactory.updateDetailedCompanyCurrency();
+      expect(currenciesService.updateDetailedCompanyCurrency).toHaveBeenCalled();
     });
   });
 

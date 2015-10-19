@@ -30,7 +30,7 @@ angular.module('ts5App')
       updateDetailedCompanyCurrency: {
         method: 'PUT'
       },
-      getDetailedCompanyCurrency: {
+      getDetailedCompanyCurrencies: {
         method: 'GET'
       },
       deleteDetailedCompanyCurrency: {
@@ -51,7 +51,7 @@ angular.module('ts5App')
     };
 
     var getDetailedCompanyCurrencies = function (payload) {
-      return detailedCompanyCurrenciesResource.getDetailedCompanyCurrency(payload).$promise;
+      return detailedCompanyCurrenciesResource.getDetailedCompanyCurrencies(payload).$promise;
     };
 
     var deleteDetailedCompanyCurrency = function (currencyId) {

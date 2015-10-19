@@ -83,6 +83,7 @@ angular.module('ts5App')
     }
 
     this.showSaveSuccess = function () {
+      $this.getDetailedCompanyCurrencies();
       hideLoadingModal();
       $this.showToast('success', 'Currency', 'currency successfully saved!');
     };
