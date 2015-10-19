@@ -158,19 +158,21 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     };
 
-    $this.getItemType = function (item) {
+    $this.getItemType = function (item, storeInstanceId) {
       var inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
-      var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
+      var ulageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
+
+      var isFromPrevInstance = $routeParams.action === 'redispatch' && storeInstanceId === $scope.storeDetails.prevStoreInstanceId;
+      var isUlageQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ulageCountTypeId;
+      var isInboundQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === inboundCountTypeId;
+
       if (angular.isDefined(item.menuQuantity)) {
         return 'Template';
-      } else if (angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId ===
-        inboundCountTypeId) {
-        return 'Inbound';
-      } else if (angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId ===
-        ullageCountTypeId) {
+      } else if (isUlageQuantity) {
         return 'Ullage';
+      } else if (isInboundQuantity || isFromPrevInstance) {
+        return 'Inbound';
       }
-      return 'Packed';
     };
 
     $this.formatTemplateItem = function (item) {
@@ -210,7 +212,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
-        var itemType = $this.getItemType(item);
+        var itemType = $this.getItemType(item, item.storeInstanceId);
         var formatItemFunctionName = 'format' + itemType + 'Item';
         $this[formatItemFunctionName](item);
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
