@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig,
-                                                   storeInstanceFactory, $location, storeInstanceReviewFactory, $q, ngToast, $filter, dateUtility, lodash) {
+  .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig, $window,
+                                                   storeInstanceFactory, $location, storeInstanceReviewFactory, $q, ngToast, $filter, dateUtility, lodash, ENV) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -276,6 +276,10 @@ angular.module('ts5App')
         id: response.statusId
       }, true)[0];
       showUserCurrentStatus();
+
+      $window.open(ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
+        '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5', '_blank');
+
       $location.path('store-instance-dashboard');
     }
 
