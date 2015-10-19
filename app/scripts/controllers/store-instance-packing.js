@@ -165,9 +165,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var isFromNewInstance = storeInstanceId === parseInt($routeParams.storeId);
       var isUllageQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ullageCountTypeId;
       var isInboundQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === inboundCountTypeId;
-
-      console.log(storeInstanceId, item.id, inboundCountTypeId, ullageCountTypeId, isFromNewInstance, isUllageQuantity, isInboundQuantity);
-
+      
       if (angular.isDefined(item.menuQuantity)) {
         return 'Template';
       } else if (isUllageQuantity) {
