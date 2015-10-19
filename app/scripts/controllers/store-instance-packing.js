@@ -165,7 +165,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var isFromNewInstance = storeInstanceId === parseInt($routeParams.storeId);
       var isUllageQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ullageCountTypeId;
       var isInboundQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === inboundCountTypeId;
-      
+
       if (angular.isDefined(item.menuQuantity)) {
         return 'Template';
       } else if (isUllageQuantity) {
@@ -216,7 +216,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
         var itemType = $this.getItemType(item, item.storeInstanceId);
-        console.log(itemType, item);
         var formatItemFunctionName = 'format' + itemType + 'Item';
         if($this[formatItemFunctionName]) {
           $this[formatItemFunctionName](item);
