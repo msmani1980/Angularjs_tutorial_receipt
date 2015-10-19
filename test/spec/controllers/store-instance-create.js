@@ -1353,7 +1353,8 @@ describe('Store Instance Create Controller', function() {
             statusId: 11
           }
         ];
-        updateStoreInstanceStatusDeferred.resolve(response);
+        updateStoreInstanceDeferred.resolve(response[0]);
+        updateStoreInstanceStatusDeferred.resolve(response[1]);
         $scope.$digest();
       });
 
@@ -1362,12 +1363,12 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should display a success message if the response contains an id', function() {
-        var message = 'Store end-instance ' + response.id + ' created!';
+        var message = 'Store end-instance ' + response[0].id + ' created!';
         expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
       });
 
       it('should redirect the user to the packing page with the new store instance id', function() {
-        var url = '/store-instance-seals/' + 'end-instance' + '/' + response.id;
+        var url = '/store-instance-seals/' + 'end-instance' + '/' + response[0].id;
         expect(location.path()).toEqual(url);
       });
 
