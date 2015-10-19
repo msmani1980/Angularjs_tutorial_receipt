@@ -669,6 +669,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
 
       var characteristicForAction = {
+        'dispatch' : 'Inventory',
         'replenish': 'Upliftable',
         'end-instance': 'Inventory',
         'redispatch': 'Inventory'
