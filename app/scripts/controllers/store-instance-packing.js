@@ -1,4 +1,5 @@
 'use strict';
+// jshint maxcomplexity:6
 
 /**
  * @ngdoc function
