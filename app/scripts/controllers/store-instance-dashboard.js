@@ -121,7 +121,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         var storeInstanceIds = lodash.map(selectedStores, function(item) {
           return item.id;
         }).join('+');
-        $scope.exportBulkURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208?sessionToken=' +
+        $scope.exportBulkURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208.pdf?sessionToken=' +
           '9e85ffbb3b92134fbf39a0c366bd3f12f0f5&storeInstanceIds=' + storeInstanceIds; //$http.defaults.headers.common.sessionToken;
       } else {
         $scope.exportBulkURL = '';
@@ -196,9 +196,6 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
       storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) :
         '';
-      storeInstance.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/' + storeInstance.id +
-        '/documents/C208?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'; //$http.defaults.headers.common.sessionToken;
-
       // TODO: get timeConfig that has most recent startDate -- will be a new API
       var timeConfig = lodash.findWhere($scope.timeConfigList, {
         featureId: $scope.undispatchFeatureId
@@ -207,6 +204,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
       var statusName = getValueByIdInArray(storeInstance.statusId, 'name', $scope.storeStatusList);
       storeInstance.actionButtons = STATUS_TO_BUTTONS_MAP[statusName];
+      if (lodash.find(storeInstance.actionButtons, lodash.matches('Get Flight Docs'))) {
+        storeInstance.exportURL = ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + storeInstance.id +
+          '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'; //$http.defaults.headers.common.sessionToken;
+      }
+
       storeInstance.selected = false;
     }
 
