@@ -88,7 +88,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     $this.calculatePickedQtyFromTotal = function (item) {
-      var totalQuantity = angular.copy(item.totalQuantity);
+      var totalQuantity = angular.copy(item.totalQuantity) || 0;
       item.quantity = parseInt(totalQuantity);
       item.quantity += parseInt(item.ullageQuantity) || 0;
       item.quantity -= parseInt(item.inboundQuantity) || 0;
@@ -160,19 +160,24 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $this.getItemType = function (item, storeInstanceId) {
       var inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
-      var ulageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
+      var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
 
-      var isFromPrevInstance = $routeParams.action === 'redispatch' && storeInstanceId === $scope.storeDetails.prevStoreInstanceId;
-      var isUlageQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ulageCountTypeId;
+      var isFromNewInstance = storeInstanceId === parseInt($routeParams.storeId);
+      var isUllageQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ullageCountTypeId;
       var isInboundQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === inboundCountTypeId;
+
+      console.log(storeInstanceId, item.id, inboundCountTypeId, ullageCountTypeId, isFromNewInstance, isUllageQuantity, isInboundQuantity);
 
       if (angular.isDefined(item.menuQuantity)) {
         return 'Template';
-      } else if (isUlageQuantity) {
+      } else if (isUllageQuantity) {
         return 'Ullage';
-      } else if (isInboundQuantity || isFromPrevInstance) {
+      } else if (isInboundQuantity) {
         return 'Inbound';
+      } else if(isFromNewInstance) {
+        return 'Packed';
       }
+      return 'ignore';
     };
 
     $this.formatTemplateItem = function (item) {
@@ -213,8 +218,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
         var itemType = $this.getItemType(item, item.storeInstanceId);
+        console.log(itemType, item);
         var formatItemFunctionName = 'format' + itemType + 'Item';
-        $this[formatItemFunctionName](item);
+        if($this[formatItemFunctionName]) {
+          $this[formatItemFunctionName](item);
+        }
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
         if ($routeParams.action === 'redispatch' && item.storeInstanceId === $scope.storeDetails.prevStoreInstanceId) {
           item.isFromPrevInstance = true;
