@@ -561,7 +561,7 @@ describe('the Store Instance Seals controller', function() {
 
       });
 
-      describe('updateStatusToStep', function() {
+      describe('updateStoreInstanceTampered', function() {
         var nextStep;
         var mockTampered;
         beforeEach(function() {
@@ -594,13 +594,8 @@ describe('the Store Instance Seals controller', function() {
           $scope.$digest();
         });
 
-        it('should called updateStoreInstanceTampered', function() {
-          expect(StoreInstanceSealsCtrl.updateStoreInstanceTampered).toHaveBeenCalled();
-        });
-
-
-        it('should call the PUT with the tampered payload', function() {
-          expect(storeInstanceFactory.updateStoreInstance).toHaveBeenCalledWith(5, mockTampered);
+        it('should call updateStoreInstanceTampered', function() {
+          expect(StoreInstanceSealsCtrl.updateStoreInstanceTampered()[0]).toBe(mockTampered[0]);
         });
 
       });
@@ -716,7 +711,7 @@ describe('the Store Instance Seals controller', function() {
 
     it('should have called updateStatusToStep', function() {
       $scope.prevTrigger();
-      expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalled();
+      expect(StoreInstanceSealsCtrl.updateStatusToStep).toHaveBeenCalledWith(StoreInstanceSealsCtrl.prevStep);
     });
 
   });
@@ -909,7 +904,8 @@ describe('the Store Instance Seals controller', function() {
     it('should do a diff of existing seals', function() {
       var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(sealTypeObject.id);
       StoreInstanceSealsCtrl.makeCreateSealsPromises();
-      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(existingSeals, sealTypeObject.seals
+      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(existingSeals, sealTypeObject
+        .seals
         .numbers);
     });
 
@@ -1073,11 +1069,12 @@ describe('the Store Instance Seals controller', function() {
       expect(isDispatch).toBeTruthy();
     });
 
-    it('should return false if the state passed does not matches the action state of the controller', function() {
-      initController();
-      var isDispatch = $scope.isActionState('replenish');
-      expect(isDispatch).toBeFalsy();
-    });
+    it('should return false if the state passed does not matches the action state of the controller',
+      function() {
+        initController();
+        var isDispatch = $scope.isActionState('replenish');
+        expect(isDispatch).toBeFalsy();
+      });
 
     it('should return true if the state passed matches the action state of the controller', function() {
       initController('replenish');
@@ -1085,11 +1082,12 @@ describe('the Store Instance Seals controller', function() {
       expect(isReplenish).toBeTruthy();
     });
 
-    it('should return false if the state passed does not matches the action state of the controller', function() {
-      initController();
-      var isReplenish = $scope.isActionState('replenish');
-      expect(isReplenish).toBeFalsy();
-    });
+    it('should return false if the state passed does not matches the action state of the controller',
+      function() {
+        initController();
+        var isReplenish = $scope.isActionState('replenish');
+        expect(isReplenish).toBeFalsy();
+      });
 
   });
 

@@ -86,7 +86,6 @@ angular.module('ts5App')
       if ($this.isInboundDuringRedispatch()) {
         controllerName = 'InboundSeals';
       }
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
         controllerName: controllerName
       });
@@ -449,31 +448,34 @@ angular.module('ts5App')
         tampered: $scope.storeDetails.tampered,
         note: $scope.storeDetails.note
       };
-      return storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload);
+      return payload;
     };
 
-    this.updateStatusToStep = function(stepObject) {
-      if ($routeParams.actions !== 'dispatch' && angular.isUndefined(stepObject.stepName)) {
-        $this.statusUpdateSuccessHandler(stepObject);
-        return;
-      }
-      var statusObject = this.findStatusObject(stepObject);
-      if (!statusObject) {
-        return;
-      }
+    this.makeSealsPromises = function(stepObject) {
+      this.displayLoadingModal('Updating Status');
       var promises = [];
-      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, statusObject.name));
-      if ($scope.storeDetails.tampered) {
-        promises.push($this.updateStoreInstanceTampered());
+      if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
+        var payload = $this.updateStoreInstanceTampered();
+        promises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload));
       }
-      var prevInstance = $this.determineInstanceToUpdate();
-      if ($this.isInboundDuringRedispatch()) {
-        var prevInstanceStep = stepObject.stepOne.stepName;
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(prevInstance.toString(), prevInstanceStep));
+
+      if ($routeParams.action === 'redispatch') {
+        var prevInstanceStep = stepObject.storeOne.stepName;
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
+          prevInstanceStep));
       }
+      promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
       $q.all(promises).then(function() {
         $this.statusUpdateSuccessHandler(stepObject);
       }, $this.assignSealsErrorHandler);
+    };
+
+    this.updateStatusToStep = function(stepObject) {
+      if (angular.isUndefined(stepObject.stepName)) {
+        $this.statusUpdateSuccessHandler(stepObject);
+        return;
+      }
+      $this.makeSealsPromises(stepObject);
     };
 
     this.assignSealsSuccessHandler = function() {
@@ -511,6 +513,7 @@ angular.module('ts5App')
     };
 
     this.init = function() {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
       this.displayLoadingModal('Loading Seals for Store Instance');
       this.getStoreDetails();
     };
@@ -539,10 +542,7 @@ angular.module('ts5App')
       if ($this.isInboundDuringRedispatch()) {
         return;
       }
-      var prevStep = $this.prevStep;
-      if ($scope.wizardStepToIndex) {
-        prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
-      }
+      var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       $this.updateStatusToStep(prevStep);
     };
 

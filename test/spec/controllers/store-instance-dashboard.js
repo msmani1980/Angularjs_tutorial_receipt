@@ -446,44 +446,86 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     it('should exist on scope', function (){
       expect(scope.doesStoreInstanceContainAction).toBeDefined();
     });
-    it('should return direct mapping for all non replenishments', function () {
+
+    it('should return direct mapping of actionButtons', function () {
       var testStoreInstance = {
         actionButtons: ['Pack', 'Seal', 'Dispatch'],
-        statusId: 7,
-        replenishStoreInstanceId: null
+        statusId: 7
       };
       var doesContainAllActions = scope.doesStoreInstanceContainAction(testStoreInstance, 'Pack') &&
         scope.doesStoreInstanceContainAction(testStoreInstance, 'Seal') &&
         scope.doesStoreInstanceContainAction(testStoreInstance, 'Dispatch');
       expect(doesContainAllActions).toEqual(true);
     });
+
+    it('should return false if store instance has no actionButtons', function () {
+      var testStoreInstance = {
+        statusId: 7
+      };
+      var doesContainAction = scope.doesStoreInstanceContainAction(testStoreInstance, 'Pack');
+      expect(doesContainAction).toEqual(false);
+    });
+  });
+
+  describe('shouldShowReplenishAction', function () {
+    var parentStoreInstance;
+    beforeEach(function () {
+      scope.storeStatusList = statusListResponseJSON;
+      parentStoreInstance = {
+        statusId: 7
+      };
+    });
+
+    it('should exist on scope', function (){
+      expect(scope.shouldShowReplenishAction).toBeDefined();
+    });
+
     it('should return direct mapping for non dispatched replenishments', function () {
       var testStoreInstance = {
-        actionButtons: ['Pack', 'Seal', 'Dispatch', 'End Instance'],
-        statusId: 1,
-        replenishStoreInstanceId: 2
+        actionButtons: ['Pack', 'Seal', 'Dispatch'],
+        statusId: 1
       };
-      var doesContainAllActions = scope.doesStoreInstanceContainAction(testStoreInstance, 'Pack') &&
-        scope.doesStoreInstanceContainAction(testStoreInstance, 'Seal') &&
-        scope.doesStoreInstanceContainAction(testStoreInstance, 'Dispatch');
+      var doesContainAllActions = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Pack') &&
+        scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Seal') &&
+        scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Dispatch');
       expect(doesContainAllActions).toEqual(true);
     });
-    it('should allow get docs for replenishments', function () {
+
+    it('should allow get docs for replenishments after dispatch', function () {
       var testStoreInstance = {
         actionButtons: ['Get Flight Docs'],
-        statusId: 7,    // 7 to test with Dispatched status
-        replenishStoreInstanceId: 2
+        statusId: 7   // 7 to test with Dispatched status
       };
-      var doesContainAction = scope.doesStoreInstanceContainAction(testStoreInstance, 'Get Flight Docs');
+      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Get Flight Docs');
       expect(doesContainAction).toEqual(true);
     });
+
     it('should not allow actions after a replenishment has been dispatch', function () {
       var testStoreInstance = {
         actionButtons: ['End Instance'],
-        statusId: 7,    // 7 to test with Dispatched status
-        replenishStoreInstanceId: 2
+        statusId: 7    // 7 to test with Dispatched status
       };
-      var doesContainAction = scope.doesStoreInstanceContainAction(testStoreInstance, 'End Instance');
+      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'End Instance');
+      expect(doesContainAction).toEqual(false);
+    });
+
+    it('should allow get docs for replenishments with parents that are onfloor', function () {
+      parentStoreInstance.statusId = 10;  // 10 to test with onfloor status
+      var testStoreInstance = {
+        actionButtons: ['Get Flight Docs'],
+        statusId: 7    // 7 to test with Dispatched status
+      };
+      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Get Flight Docs');
+      expect(doesContainAction).toEqual(true);
+    });
+
+    it('should not allow other actions after a replenishment with parents that are onfloor', function () {
+      parentStoreInstance.statusId = 10;  // 10 to test with onfloor status
+      var testStoreInstance = {
+        actionButtons: ['End Instance'],
+        statusId: 7    // 7 to test with Dispatched status
+      };
+      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'End Instance');
       expect(doesContainAction).toEqual(false);
     });
   });
