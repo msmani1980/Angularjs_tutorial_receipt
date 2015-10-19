@@ -459,9 +459,10 @@ angular.module('ts5App')
         promises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload));
       }
 
-      if($routeParams.action === 'redispatch') {
+      if ($routeParams.action === 'redispatch') {
         var prevInstanceStep = stepObject.storeOne.stepName;
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, prevInstanceStep));
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
+          prevInstanceStep));
       }
       promises.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
       $q.all(promises).then(function() {
@@ -538,6 +539,9 @@ angular.module('ts5App')
     };
 
     $scope.prevTrigger = function() {
+      if ($this.isInboundDuringRedispatch()) {
+        return;
+      }
       var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       $this.updateStatusToStep(prevStep);
     };
