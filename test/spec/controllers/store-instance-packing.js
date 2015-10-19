@@ -259,14 +259,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should call getCharacteristics', function () {
-        expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
-      });
-
-      it('should call getCharacteristics', function () {
-        expect(storeInstanceFactory.getCountTypes).toHaveBeenCalled();
-      });
-
-      it('should call getCharacteristics', function () {
         expect(storeInstanceFactory.getReasonCodeList).toHaveBeenCalled();
       });
 
@@ -274,7 +266,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
         var expectedPayload = {
           itemTypeId: 1, // this is 1 because we are requesting regular items.
-          characteristicId: 1, // this is 1 for inventory items
           date: formattedDate
         };
         expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(storeId, expectedPayload);
@@ -284,7 +275,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
         var expectedPayload = {
           itemTypeId: 1,
-          characteristicId: 1,
           startDate: formattedDate,
           endDate: formattedDate
         };
