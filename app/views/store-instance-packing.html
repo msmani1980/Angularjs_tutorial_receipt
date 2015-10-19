@@ -45,8 +45,9 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
-            ng-class="setClassBasedOnVariance(item.menuQuantity, item.quantity)">
+        <!--<tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"-->
+            <!--ng-class="setClassBasedOnVariance(item.menuQuantity, item.quantity)">-->
+        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
