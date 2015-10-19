@@ -1,4 +1,5 @@
 'use strict';
+// jshint maxcomplexity:6
 
 /**
  * @ngdoc function
@@ -160,11 +161,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $this.getItemType = function (item, storeInstanceId) {
       var inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
+      var inboundClosedCountTypeId = $this.getIdByNameFromArray('Warehouse Close', $scope.countTypes);
       var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
 
       var isFromNewInstance = storeInstanceId === parseInt($routeParams.storeId);
       var isUllageQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ullageCountTypeId;
-      var isInboundQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === inboundCountTypeId;
+      var isInboundQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && (item.countTypeId === inboundCountTypeId || item.countTypeId === inboundClosedCountTypeId);
 
       if (angular.isDefined(item.menuQuantity)) {
         return 'Template';
@@ -480,10 +482,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.createInboundPayload = function (item) {
       var inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
+      var inboundClosedCountTypeId = $this.getIdByNameFromArray('Warehouse Close', $scope.countTypes);
+      var shouldUseInboundClosedCountType = !angular.isDefined(item.isInOffload) && !item.isInOffload && $routeParams.action === 'redispatch';
+      var countTypeIdToUse = shouldUseInboundClosedCountType ? inboundClosedCountTypeId : inboundCountTypeId;
+
+
       var inboundPayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
         quantity: parseInt(item.inboundQuantity),
-        countTypeId: inboundCountTypeId
+        countTypeId: countTypeIdToUse
       };
       if (item.inboundQuantityId) {
         inboundPayload.id = item.inboundQuantityId;
