@@ -824,6 +824,7 @@ describe('Store Instance Create Controller', function() {
       spyOn($scope, 'submitForm').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'exitOnSave').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'successMessage').and.callThrough();
       $scope.$digest();
       view = renderView();
       form = angular.element(view.find('form')[0]);
@@ -853,6 +854,10 @@ describe('Store Instance Create Controller', function() {
 
       it('should call change the location of the browser', function() {
         expect(location.path()).toEqual('/store-instance-dashboard/');
+      });
+
+      it('should display a success meassge', function() {
+        expect(StoreInstanceCreateCtrl.successMessage).toHaveBeenCalledWith(storeInstanceCreatedJSON,'saved');
       });
 
     });

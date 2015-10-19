@@ -151,11 +151,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.exitOnSave = function(response) {
-      $this.hideLoadingModal();
-      if (!$scope.isActionState('end-instance')) {
-        $this.showMessage('success', 'Store Instance created id: ' + response.id);
+      if (!$this.isActionState('end-instance')) {
+        response = response[0];
       }
-      $this.successMessage(response);
+      $this.hideLoadingModal();
+      $this.successMessage(response,'saved');
       $location.url('/store-instance-dashboard/');
     };
 
