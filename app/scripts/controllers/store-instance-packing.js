@@ -468,6 +468,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return ullageDataIncomplete;
     };
 
+    $scope.calculateTotalDispatchedQty = function (item) {
+      var total = parseInt(item.quantity) || 0;
+      total += parseInt(item.inboundQuantity) || 0;
+      total -= parseInt(item.ullageQuantity) || 0;
+      return total;
+    };
+
     this.dispatchAndReplenishCreatePayload = function (item, workingPayload) {
       var itemPayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
@@ -805,7 +812,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getDispatchedQuantityForVarianceCalculation = function (item) {
       var dispatchedQuantity;
       if($routeParams.action === 'redispatch') {
-        dispatchedQuantity = angular.copy(item.totalQuantity) || 0;
+        dispatchedQuantity = $scope.calculateTotalDispatchedQty(angular.copy(item));
       } else {
         dispatchedQuantity = angular.copy(item.quantity) || 0;
       }
@@ -914,13 +921,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.shouldDisplayInboundFields = function (item) {
       return ($scope.showInboundBasedOnAction($routeParams.action, item));
-    };
-
-    $scope.calculateTotalDispatchedQty = function (item) {
-      var total = parseInt(item.quantity) || 0;
-      total += parseInt(item.inboundQuantity) || 0;
-      total -= parseInt(item.ullageQuantity) || 0;
-      return total;
     };
 
     $scope.showVarianceWarningClass = function (item) {
