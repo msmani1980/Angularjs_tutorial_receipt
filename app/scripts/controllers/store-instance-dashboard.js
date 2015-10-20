@@ -99,7 +99,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       var isAfterDispatch = parseInt(statusNumber) >= 4;
       var isParentOnFloor = parseInt(parentStatusNumber) >= 5;
 
-      if((isParentOnFloor  || isAfterDispatch) && (actionName !== 'Get Flight Docs')) {
+      if ((isParentOnFloor || isAfterDispatch) && (actionName !== 'Get Flight Docs')) {
         return false;
       }
       return $scope.doesStoreInstanceContainAction(storeInstance, actionName);
@@ -296,7 +296,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       hideLoadingModal();
     }
 
-    function searchStoreInstanceDashboardData() {
+    function searchStoreInstanceDashboardData(startDate) {
       showLoadingModal('Loading Store Instance Dashboard');
       var payload = {};
       angular.forEach(SEARCH_TO_PAYLOAD_MAP, function(value, key) {
@@ -310,6 +310,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
           }
         }
       });
+      $scope.searchIsActive = true;
+      if (startDate) {
+        payload.startDate = startDate;
+        $scope.searchIsActive = false;
+      }
       storeInstanceDashboardFactory.getStoreInstanceList(payload).then(searchStoreInstanceDashboardDataSuccess);
     }
 
@@ -317,11 +322,13 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
 
     function clearSearchForm() {
       $scope.search = {};
-      searchStoreInstanceDashboardData();
+      $scope.search.scheduleStartDate = '';
+      $scope.search.scheduleEndDate = '';
+      var startDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
+      searchStoreInstanceDashboardData(startDate);
     }
 
     $scope.clearSearchForm = clearSearchForm;
-
 
     function init() {
       showLoadingModal('Loading Store Instance Dashboard');
@@ -452,5 +459,18 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     init();
+
+    $scope.showClearButton = function() {
+      angular.forEach($scope.search, function(search) {
+        $scope.searchLength = search;
+      });
+      if ($scope.searchLength && !$scope.searchIsActive) {
+        return true;
+      }
+      if ($scope.searchIsActive) {
+        return true;
+      }
+      return false;
+    };
 
   });
