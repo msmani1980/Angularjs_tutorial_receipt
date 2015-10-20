@@ -119,12 +119,12 @@
             </tbody>
           </table>
 
-          <div class="row">
+          <div ng-if="offloadItemList.length > 0" class="row">
             <div class="col-xs-12">
               <h5>Offload List</h5>
             </div>
           </div>
-          <table class="table table-striped pick-list">
+          <table ng-if="offloadItemList.length > 0" class="table table-striped pick-list">
             <thead>
             <tr>
               <th>Retail Item Details</th>
