@@ -22,7 +22,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.saveButtonName = 'Exit';
     this.itemsToDeleteArray = [];
     var dashboardURL = 'store-instance-dashboard';
-    var shouldShowVarianceWarning = true;
+    $scope.shouldUpdateStatusOnSave = false;
 
     function showToast(className, type, message) {
       ngToast.create({
@@ -625,6 +625,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         showToast('danger', 'Save Items', 'All items with an ullage quantity require an ullage reason');
         return false;
       }
+
       return true;
     };
 
@@ -673,7 +674,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
 
       var characteristicForAction = {
-        'replenish': 'Upliftable'
+        'replenish': 'Upliftable',
+        'dispatch': 'Inventory',
+        'end-instance': 'Inventory',
+        'redispatch': 'Inventory'
       };
       if (characteristicForAction[$routeParams.action]) {
         promises.push(this.getCharacteristicIdForName(characteristicForAction[$routeParams.action]));
@@ -775,6 +779,48 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.createPayloadAndSave(shouldUpdateStatus);
     }
 
+    this.getRequiredQuantityForVarianceCalculation = function (item) {
+      var requiredQuantity = angular.copy(item.menuQuantity) || 1;
+      requiredQuantity = (angular.isNumber(requiredQuantity)) ? requiredQuantity : parseInt(requiredQuantity);
+      return requiredQuantity;
+    };
+
+    this.getDispatchedQuantityForVarianceCalculation = function (item) {
+      var dispatchedQuantity;
+      if($routeParams.action === 'redispatch') {
+        dispatchedQuantity = angular.copy(item.totalQuantity) || 0;
+      } else {
+        dispatchedQuantity = angular.copy(item.quantity) || 0;
+      }
+      dispatchedQuantity = (angular.isNumber(dispatchedQuantity)) ? dispatchedQuantity : parseInt(dispatchedQuantity);
+      return dispatchedQuantity;
+    };
+
+    this.calculateVariance = function (item) {
+      var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item);
+      var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item);
+
+      var threshold;
+      threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
+      item.exceedsVariance = (threshold > $scope.variance);
+    };
+
+    this.checkForExceededVariance = function () {
+      if($routeParams.action === 'end-instance') {
+        return false;
+      }
+      var highVarianceExists = false;
+      angular.forEach($scope.menuItems, function (item) {
+        $this.calculateVariance(item);
+        highVarianceExists = highVarianceExists || item.exceedsVariance;
+      });
+      angular.forEach($scope.emptyMenuItems, function (item) {
+        $this.calculateVariance(item);
+        highVarianceExists = highVarianceExists || item.exceedsVariance;
+      });
+      return highVarianceExists;
+    };
+
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
       if ($scope.readOnly) {
         $location.path(dashboardURL);
@@ -789,11 +835,20 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    $scope.checkAndShowVarianceWarning = function () {
+      if($this.checkForExceededVariance()) {
+        angular.element('#varianceWarningModal').modal('show');
+      } else {
+        $scope.savePackingDataAndUpdateStatus($scope.shouldUpdateStatusOnSave);
+      }
+    };
+
     $scope.saveAndExit = function () {
+      $scope.shouldUpdateStatusOnSave = false;
       if ($scope.readOnly) {
         $location.path(dashboardURL);
       } else {
-        $scope.savePackingDataAndUpdateStatus(false);
+        $scope.checkAndShowVarianceWarning();
       }
     };
 
@@ -804,7 +859,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.goToNextStep = function () {
-      $scope.savePackingDataAndUpdateStatus(true);
+      $scope.shouldUpdateStatusOnSave = true;
+      $scope.checkAndShowVarianceWarning();
     };
 
     $scope.canProceed = function () {
@@ -846,25 +902,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return total;
     };
 
-    function displayVarianceWarning () {
-      if(shouldShowVarianceWarning) {
-        shouldShowVarianceWarning = false;
-        showToast('warning', 'Packing Warning', 'highlighted rows indicate that the template and picked quantity variance exceeds the set threshold variance');
-      }
-    }
-
-    $scope.setClassBasedOnVariance = function (requiredQuantity, pickedQuantity) {
-      var requiredQuantityNum = requiredQuantity || 1;
-      requiredQuantityNum = (angular.isNumber(requiredQuantity)) ? requiredQuantity : parseInt(requiredQuantity);
-      var pickedQuantityNum = (angular.isNumber(pickedQuantity)) ? pickedQuantity : parseInt(pickedQuantity);
-
-      var threshold = ((pickedQuantityNum / requiredQuantityNum) - 1) * 100;
-      if (threshold > $scope.variance && $routeParams.action !== 'end-instance') {
-        displayVarianceWarning();
+    $scope.showVarianceWarningClass = function (item) {
+      if(angular.isDefined(item.exceedsVariance) && item.exceedsVariance) {
         return 'warning-row';
+      } else {
+        return '';
       }
-      return '';
-
     };
 
   });
