@@ -98,8 +98,8 @@
           <ui-select ng-if="uiSelectTemplateReady" name="menus" required multiple ng-model="formData.menus" theme="bootstrap" ng-disabled="isActionState('end-instance') || isActionState('replenish')" style="min-height:34px;">
             <ui-select-match placeholder="{{ menuPlaceholderText() }}">{{ $item.menuCode }}
             </ui-select-match>
-            <ui-select-choices repeat="menu in filteredMenuList | filter: $select.search | orderBy:'menuCode' track by menu.id">
-              <div ng-bind-html="menu.menuCode | highlight: $select.search"></div>
+            <ui-select-choices repeat="menu in filteredMenuList | filter:omitSelectedMenus | filter: $select.search | orderBy:'menuCode' track by menu.id">
+              <div ng-bind-html="menu.menuCode | highlight: $select.search "></div>
             </ui-select-choices>
           </ui-select>
         </div>

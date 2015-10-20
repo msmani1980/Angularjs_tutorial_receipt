@@ -52,40 +52,37 @@ angular.module('ts5App')
           return;
         }
 
-        ngModel.$render = function () {
-          if (angular.isUndefined(attrs.required) && angular.isUndefined(ngModel.$modelValue)) {
-            return;
+        var regexObj = patternsJSON[attrs.customPattern];
+
+        ngModel.$validators.pattern = function (value) {
+          if (angular.isUndefined(value)) {
+            return true;
           }
-
-          var regexObj = patternsJSON[attrs.customPattern];
-
-          ngModel.$validators.pattern = function (value) {
-            return (typeof value === 'string' && regexObj[0].test(value));
-          };
-
-          if (attrs.customPattern.contains('currency')) {
-            ngModel.$formatters.push(function (value) {
-              return $filter('number')(value, regexObj[2]);
-            });
-          }
-
-          var customValidityMessage = {
-            pattern: regexObj[1],
-            required: 'Please fill out this field.'
-          };
-
-          var validate = function () {
-            var errorArray = Object.keys(ngModel.$error);
-            var errorMessage = '';
-            if (errorArray.length > 0) {
-              errorMessage = customValidityMessage[errorArray[0]];
-            }
-            element[0].setCustomValidity(errorMessage);
-          };
-
-          scope.$watch(attrs.ngModel, validate);
-          element[0].addEventListener('keyUp', validate);
+          return (typeof value === 'string' && regexObj[0].test(value));
         };
+
+        if (attrs.customPattern.contains('currency')) {
+          ngModel.$formatters.push(function (value) {
+            return $filter('number')(value, regexObj[2]);
+          });
+        }
+
+        var customValidityMessage = {
+          pattern: regexObj[1],
+          required: 'Please fill out this field.'
+        };
+
+        var validate = function () {
+          var errorArray = Object.keys(ngModel.$error);
+          var errorMessage = '';
+          if (errorArray.length > 0) {
+            errorMessage = customValidityMessage[errorArray[0]];
+          }
+          element[0].setCustomValidity(errorMessage);
+        };
+
+        scope.$watch(attrs.ngModel, validate);
+        element[0].addEventListener('keyUp', validate);
 
       }
     };

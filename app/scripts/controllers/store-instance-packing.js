@@ -17,6 +17,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
+    $scope.filteredOffloadMasterItemList = [];
     $scope.addItemsNumber = 1;
     $scope.readOnly = true;
     $scope.saveButtonName = 'Exit';
@@ -53,7 +54,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.addItemsToArray = function (array, itemNumber, isInOffload) {
-      if ($scope.filteredMasterItemList.length === 0) {
+      if (($scope.filteredMasterItemList.length === 0 && !isInOffload) || ($scope.filteredOffloadMasterItemList.length === 0 && isInOffload)) {
         showToast('warning', 'Add Item', 'There are no items available');
         return;
       }
@@ -330,16 +331,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
-      $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
-        var mergedMenuItems = angular.copy($scope.menuItems).concat(angular.copy($scope.offloadMenuItems));
-        return !(lodash.findWhere(mergedMenuItems, {
+        $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
+          return !(lodash.findWhere($scope.menuItems, {
+            itemMasterId: item.id
+          }));
+        });
+    });
+
+    $scope.$watchGroup(['masterItemsList', 'offloadMenuItems'], function () {
+      $scope.filteredOffloadMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
+        return !(lodash.findWhere($scope.offloadMenuItems, {
           itemMasterId: item.id
         }));
       });
     });
 
     this.getMasterItemsListSuccess = function (itemsListJSON) {
-      $scope.masterItemsList = itemsListJSON.masterItems;
+      $scope.masterItemsList = angular.copy(itemsListJSON.masterItems);
     };
 
     this.getMasterItemsList = function () {
@@ -396,15 +404,21 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       getItemsSuccessHandler(dataFromAPI);
     }
 
-    this.checkForDuplicate = function (item) {
-      var duplicates = lodash.filter($scope.emptyMenuItems, function (filteredItem) {
+    this.checkForDuplicate = function (item, isInOffload) {
+      var menuToCheck;
+      if(isInOffload) {
+        menuToCheck = angular.copy($scope.emptyOffloadMenuItems);
+      } else {
+        menuToCheck = angular.copy($scope.emptyMenuItems);
+      }
+      var duplicates = lodash.filter(menuToCheck, function (filteredItem) {
         return (item.masterItem && filteredItem.masterItem && filteredItem.masterItem.id === item.masterItem.id);
       });
       return duplicates.length > 1;
     };
 
-    $scope.warnForDuplicateSelection = function (selectedItem) {
-      var duplicatesExist = $this.checkForDuplicate(selectedItem);
+    $scope.warnForDuplicateSelection = function (selectedItem, isInOffload) {
+      var duplicatesExist = $this.checkForDuplicate(selectedItem, isInOffload);
       if (duplicatesExist) {
         showToast('warning', 'Add Item', 'The item ' + selectedItem.masterItem.itemName + ' has already been added');
       }
@@ -412,13 +426,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.checkForDuplicatesInPayload = function () {
       var duplicatesExist = false;
-      var mergedMenuItems = (angular.copy($scope.emptyMenuItems));
-      if ($routeParams.action === 'redispatch') {
-        mergedMenuItems = mergedMenuItems.concat(angular.copy($scope.emptyOffloadMenuItems));
-      }
-      angular.forEach(mergedMenuItems, function (item) {
-        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item);
+      angular.forEach(angular.copy($scope.emptyMenuItems), function (item) {
+        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item, false);
       });
+
+      if($routeParams.action === 'redispatch') {
+        angular.forEach(angular.copy($scope.emptyOffloadMenuItems), function(offloadItem) {
+          duplicatesExist = duplicatesExist || $this.checkForDuplicate(offloadItem, true);
+        });
+      }
+
       return duplicatesExist;
     };
 
@@ -449,6 +466,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         ullageDataIncomplete = ullageDataIncomplete || (item.ullageQuantity > 0 && !item.ullageReason);
       });
       return ullageDataIncomplete;
+    };
+
+    $scope.calculateTotalDispatchedQty = function (item) {
+      var total = parseInt(item.quantity) || 0;
+      total += parseInt(item.inboundQuantity) || 0;
+      total -= parseInt(item.ullageQuantity) || 0;
+      return total;
     };
 
     this.dispatchAndReplenishCreatePayload = function (item, workingPayload) {
@@ -588,7 +612,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         response: combinedPayload.prevStoreInstancePayload
       };
       var promises = [
-        storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, currentStorePayload),
+        storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, currentStorePayload)
       ];
       if (prevStorePayload.response.length > 0) {
         promises.push(storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeDetails.prevStoreInstanceId,
@@ -607,7 +631,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.checkFormValidity = function () {
       if ($scope.storeInstancePackingForm.$invalid) {
-        showToast('danger', 'Save Items', 'All Packed quantities must be a number');
+        showToast('danger', 'Save Items', 'All quantities must be a number');
         return false;
       }
       var duplicatesExist = $this.checkForDuplicatesInPayload();
@@ -788,7 +812,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getDispatchedQuantityForVarianceCalculation = function (item) {
       var dispatchedQuantity;
       if($routeParams.action === 'redispatch') {
-        dispatchedQuantity = angular.copy(item.totalQuantity) || 0;
+        dispatchedQuantity = $scope.calculateTotalDispatchedQty(angular.copy(item)) || 0;
       } else {
         dispatchedQuantity = angular.copy(item.quantity) || 0;
       }
@@ -797,8 +821,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.calculateVariance = function (item) {
-      var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item);
-      var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item);
+      // don't check variance on manually added items
+      if(!item.menuQuantity) {
+        item.exceedsVariance = false;
+        return false;
+      }
+      var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item) || 1;
+      var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item) || 0;
 
       var threshold;
       threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
@@ -806,7 +835,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.checkForExceededVariance = function () {
-      if($routeParams.action === 'end-instance') {
+      if($routeParams.action === 'end-instance' || $routeParams.action === 'replenish') {
         return false;
       }
       var highVarianceExists = false;
@@ -893,13 +922,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.shouldDisplayInboundFields = function (item) {
       return ($scope.showInboundBasedOnAction($routeParams.action, item));
-    };
-
-    $scope.calculateTotalDispatchedQty = function (item) {
-      var total = parseInt(item.quantity) || 0;
-      total += parseInt(item.inboundQuantity) || 0;
-      total -= parseInt(item.ullageQuantity) || 0;
-      return total;
     };
 
     $scope.showVarianceWarningClass = function (item) {

@@ -191,7 +191,7 @@ angular.module('ts5App')
       }
 
       $scope.pickListItems.map(function (item) {
-        item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - item.quantity;
+        item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - item.inboundQuantity;
       });
     }
 
@@ -310,6 +310,12 @@ angular.module('ts5App')
           }).id;
       });
 
+      var pickedInboundItemList = rawItemList.filter(function (item) {
+        return item.countTypeId === lodash.findWhere($this.countTypes, {
+            name: 'Warehouse Close'
+          }).id;
+      });
+
       var ullageItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
             name: 'Ullage'
@@ -321,7 +327,12 @@ angular.module('ts5App')
         delete item.quantity;
       });
 
-      return angular.merge(inboundItemList, ullageItemList);
+      pickedInboundItemList.map(function (item) {
+        item.inboundQuantity = item.quantity;
+        delete item.quantity;
+      });
+
+      return angular.merge(inboundItemList, ullageItemList, pickedInboundItemList);
     }
 
     function getDispatchedItemList(rawItemList, filteredItems) {
