@@ -36,3 +36,10 @@
 	}
 
 }
+
+.ui-select-toggle[disabled="disabled"],
+.ui-select-toggle[disabled="disabled"]:hover,
+.ui-select-toggle[disabled="disabled"]:focus{
+	background-color: #EEE;
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}

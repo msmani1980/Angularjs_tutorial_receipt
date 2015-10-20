@@ -95,7 +95,7 @@
 
           <div ng-if="storeDetails.tampered">
             <input type="checkbox" ng-model="storeDetails.tampered" disabled/><span>{{getTitleFor('seals')}} Tampered</span>
-            <p class="form-control" disabled>{{storeDetails.note}}</p>
+            <textarea class="form-control no-resize" disabled>{{storeDetails.note}}</textarea>
           </div>
 
 

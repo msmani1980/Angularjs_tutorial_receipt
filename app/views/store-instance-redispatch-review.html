@@ -36,7 +36,7 @@
 
           <div ng-if="storeDetails.tampered">
             <input type="checkbox" ng-model="storeDetails.tampered" disabled/><span>Inbound Seals Tampered</span>
-            <p class="form-control" disabled>{{storeDetails.note}}</p>
+            <textarea class="form-control no-resize" disabled>{{storeDetails.note}}</textarea>
           </div>
 
           <table class="table store-instance-review-seals-table">
@@ -93,7 +93,7 @@
               </td>
 
               <td>
-                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+                <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0" disabled>
               </td>
               <td>
                 <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
@@ -119,12 +119,12 @@
             </tbody>
           </table>
 
-          <div class="row">
+          <div ng-if="offloadItemList.length > 0" class="row">
             <div class="col-xs-12">
               <h5>Offload List</h5>
             </div>
           </div>
-          <table class="table table-striped pick-list">
+          <table ng-if="offloadItemList.length > 0" class="table table-striped pick-list">
             <thead>
             <tr>
               <th>Retail Item Details</th>

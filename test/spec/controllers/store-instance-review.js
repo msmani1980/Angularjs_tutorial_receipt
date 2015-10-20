@@ -45,7 +45,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     });
   }
 
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q,
+  beforeEach(inject(function ($controller, $rootScope, $injector, $q, $window,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
                               _servedSealColors_, _servedSealTypes_, $location, _servedStoreInstanceItemList_, _servedCompanyReasonCodes_, _servedCountTypes_,
                               _servedEndInstanceReviewStoreDetails_) {
@@ -101,6 +101,8 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
 
     spyOn(location, 'url').and.callThrough();
     spyOn(location, 'path').and.callThrough();
+
+    spyOn($window, 'open');
 
     controller = $controller;
     initController(controller);

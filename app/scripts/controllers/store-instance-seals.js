@@ -454,11 +454,6 @@ angular.module('ts5App')
     this.makeSealsPromises = function(stepObject) {
       this.displayLoadingModal('Updating Status');
       var promises = [];
-      if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
-        var payload = $this.updateStoreInstanceTampered();
-        promises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload));
-      }
-
       if ($routeParams.action === 'redispatch') {
         var prevInstanceStep = stepObject.storeOne.stepName;
         promises.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
@@ -503,12 +498,18 @@ angular.module('ts5App')
       this.displayLoadingModal('Assigning seals to Store Instance');
       var deletePromises = this.makeDeleteSealsPromises();
       var createPromises = this.makeCreateSealsPromises();
+      var tamperedPromises = [];
+      if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
+        var payload = $this.updateStoreInstanceTampered();
+        tamperedPromises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload));
+      }
       $q.all(deletePromises).then(
         $q.all(createPromises).then(
-          $this.assignSealsSuccessHandler,
-          $this.assignSealsErrorHandler
-        ),
-        $this.assignSealsErrorHandler
+          $q.all(tamperedPromises).then(
+            $this.assignSealsSuccessHandler,
+            $this.assignSealsErrorHandler
+          ), $this.assignSealsErrorHandler
+        ), $this.assignSealsErrorHandler
       );
     };
 
