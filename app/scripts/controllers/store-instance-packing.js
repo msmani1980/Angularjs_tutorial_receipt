@@ -17,6 +17,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
+    $scope.filteredOffloadMasterItemList = [];
     $scope.addItemsNumber = 1;
     $scope.readOnly = true;
     $scope.saveButtonName = 'Exit';
@@ -53,7 +54,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.addItemsToArray = function (array, itemNumber, isInOffload) {
-      if ($scope.filteredMasterItemList.length === 0) {
+      if (($scope.filteredMasterItemList.length === 0 && !isInOffload) || ($scope.filteredOffloadMasterItemList.length === 0 && isInOffload)) {
         showToast('warning', 'Add Item', 'There are no items available');
         return;
       }
@@ -330,16 +331,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
-      $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
-        var mergedMenuItems = angular.copy($scope.menuItems).concat(angular.copy($scope.offloadMenuItems));
-        return !(lodash.findWhere(mergedMenuItems, {
+        $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
+          return !(lodash.findWhere($scope.menuItems, {
+            itemMasterId: item.id
+          }));
+        });
+    });
+
+    $scope.$watchGroup(['masterItemsList', 'offloadMenuItems'], function () {
+      $scope.filteredOffloadMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
+        return !(lodash.findWhere($scope.offloadMenuItems, {
           itemMasterId: item.id
         }));
       });
     });
 
     this.getMasterItemsListSuccess = function (itemsListJSON) {
-      $scope.masterItemsList = itemsListJSON.masterItems;
+      $scope.masterItemsList = angular.copy(itemsListJSON.masterItems);
     };
 
     this.getMasterItemsList = function () {
@@ -396,15 +404,21 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       getItemsSuccessHandler(dataFromAPI);
     }
 
-    this.checkForDuplicate = function (item) {
-      var duplicates = lodash.filter($scope.emptyMenuItems, function (filteredItem) {
+    this.checkForDuplicate = function (item, isInOffload) {
+      var menuToCheck;
+      if(isInOffload) {
+        menuToCheck = angular.copy($scope.emptyOffloadMenuItems);
+      } else {
+        menuToCheck = angular.copy($scope.emptyMenuItems);
+      }
+      var duplicates = lodash.filter(menuToCheck, function (filteredItem) {
         return (item.masterItem && filteredItem.masterItem && filteredItem.masterItem.id === item.masterItem.id);
       });
       return duplicates.length > 1;
     };
 
-    $scope.warnForDuplicateSelection = function (selectedItem) {
-      var duplicatesExist = $this.checkForDuplicate(selectedItem);
+    $scope.warnForDuplicateSelection = function (selectedItem, isInOffload) {
+      var duplicatesExist = $this.checkForDuplicate(selectedItem, isInOffload);
       if (duplicatesExist) {
         showToast('warning', 'Add Item', 'The item ' + selectedItem.masterItem.itemName + ' has already been added');
       }
@@ -412,13 +426,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.checkForDuplicatesInPayload = function () {
       var duplicatesExist = false;
-      var mergedMenuItems = (angular.copy($scope.emptyMenuItems));
-      if ($routeParams.action === 'redispatch') {
-        mergedMenuItems = mergedMenuItems.concat(angular.copy($scope.emptyOffloadMenuItems));
-      }
-      angular.forEach(mergedMenuItems, function (item) {
-        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item);
+      angular.forEach(angular.copy($scope.emptyMenuItems), function (item) {
+        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item, false);
       });
+
+      if($routeParams.action === 'redispatch') {
+        angular.forEach(angular.copy($scope.emptyOffloadMenuItems), function(offloadItem) {
+          duplicatesExist = duplicatesExist || $this.checkForDuplicate(offloadItem, true);
+        });
+      }
+
       return duplicatesExist;
     };
 
