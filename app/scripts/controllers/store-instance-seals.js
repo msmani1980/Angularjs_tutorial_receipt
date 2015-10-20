@@ -456,7 +456,6 @@ angular.module('ts5App')
         tampered: $scope.storeDetails.tampered,
         note: $scope.storeDetails.note
       };
-      console.log(payload);
       return payload;
     };
 
