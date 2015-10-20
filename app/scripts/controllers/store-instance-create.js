@@ -78,6 +78,18 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.menuCatererList = angular.copy(dataFromAPI.companyMenuCatererStations);
     };
 
+    this.removeInvalidMenus = function() {
+      angular.forEach($scope.formData.menus, function(menu) {
+        var validMenu = $scope.filteredMenuList.filter(function(filteredMenu){
+          return filteredMenu.id === menu.id;
+        });
+        if(validMenu.length === 0){
+          var index = $scope.formData.menus.indexOf(menu);
+          $scope.formData.menus.splice(index,1);
+        }
+      });
+    };
+
     this.filterMenusList = function() {
       $scope.filteredMenuList = [];
       angular.forEach($scope.menuCatererList, function(menuCaterer) {
@@ -88,20 +100,28 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $scope.filteredMenuList.push(filteredMenu);
         }
       });
+      if($this.isActionState('redispatch') && angular.isDefined($scope.formData.cateringStationId) ) {
+        $this.removeInvalidMenus();
+      }
+    };
+
+    this.generateNewMenu = function(menu) {
+      var newMenu = {
+        id: menu.menuMasterId
+      };
+      var existingMenu = $scope.filteredMenuList.filter(function(menuMaster) {
+        return menuMaster.id === menu.menuMasterId;
+      })[0];
+      if (angular.isDefined(existingMenu)) {
+        newMenu.menuCode = existingMenu.menuCode;
+      }
+      return newMenu;
     };
 
     this.setStoreInstanceMenus = function() {
       var newMenus = [];
       angular.forEach($scope.formData.menus, function(menu) {
-        var newMenu = {
-          id: menu.menuMasterId
-        };
-        var existingMenu = $scope.menuMasterList.filter(function(menuMaster) {
-          return menuMaster.id === menu.menuMasterId;
-        })[0];
-        if (angular.isDefined(existingMenu)) {
-          newMenu.menuCode = existingMenu.menuCode;
-        }
+        var newMenu = $this.generateNewMenu(menu);
         newMenus.push(newMenu);
       });
       $scope.formData.menus = newMenus;
@@ -409,6 +429,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return false;
     };
 
+    $scope.omitSelectedMenus = function(menu) {
+      var selectedMenu = $scope.formData.menus.filter(function(existingMenu) {
+        return (existingMenu.id === menu.id);
+      });
+      return (selectedMenu.length === 0);
+    };
+
     $scope.validateInput = function(fieldName) {
       if ($scope.createStoreInstance[fieldName].$pristine && !$scope.createStoreInstance.$submitted) {
         return '';
@@ -468,9 +495,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.updateInstanceDependenciesSuccess = function() {
-      if( $this.isDispatchOrRedispatch() ) {
-        $scope.formData.menus = [];
-      }
       $this.filterMenusList();
     };
 

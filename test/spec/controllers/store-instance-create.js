@@ -1488,4 +1488,52 @@ describe('Store Instance Create Controller', function() {
 
   });
 
+  describe('when a user changes the cateringStationId during redispatch', function() {
+
+    beforeEach(function() {
+      initController('redispatch');
+      resolveAllDependencies();
+      spyOn(StoreInstanceCreateCtrl, 'removeInvalidMenus').and.callThrough();
+      mockLoadStoreInstance();
+      $scope.formData.cateringStationId = 3;
+      $scope.formData.menus = [{id:100, name:'BOGAN123'}];
+      $scope.$digest();
+    });
+
+    it('should call removeInvalidMenus', function() {
+      expect(StoreInstanceCreateCtrl.removeInvalidMenus).toHaveBeenCalled();
+    });
+
+    it('should remove an invalid menu', function() {
+      $scope.formData.cateringStationId = 13;
+      $scope.formData.menus = [{id:105, name:'BOGAN123'}];
+      $scope.$digest();
+      expect($scope.formData.menus.length).toEqual(0);
+
+    });
+
+  });
+
+  describe('omitting menus that have already been selected', function() {
+
+    beforeEach(function() {
+      initController('redispatch');
+      resolveAllDependencies();
+      mockLoadStoreInstance();
+    });
+
+    it('should return true if the menu is in the formData', function(){
+      var filterMenu = $scope.omitSelectedMenus({ id:100, name:'BOGAN123'});
+      expect(filterMenu).toBeTruthy();
+    });
+
+    it('should return false if the menu is not in the formData', function(){
+      $scope.formData.menus = [{id:105, name:'BOGAN123'}];
+      $scope.$digest();
+      var filterMenu = $scope.omitSelectedMenus({ id:105, name:'BOGAN123'});
+      expect(filterMenu).toBeFalsy();
+    });
+
+  });
+
 });
