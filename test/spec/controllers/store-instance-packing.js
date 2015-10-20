@@ -492,11 +492,12 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       StoreInstancePackingCtrl.calculateVariance(mockItem);
       expect(mockItem.exceedsVariance).toEqual(true);
     });
-    it('should use totalQuantity if state is redispatch', function () {
+    it('should use calculated totalQuantity if state is redispatch', function () {
       initController('redispatch');
       mockItem = {
         quantity: 3,
-        totalQuantity: 900,
+        inboundQuantity: 100,
+        ullageQuantity: 2,
         menuQuantity: 10
       };
       StoreInstancePackingCtrl.calculateVariance(mockItem);

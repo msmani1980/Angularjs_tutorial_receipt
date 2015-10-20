@@ -812,7 +812,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getDispatchedQuantityForVarianceCalculation = function (item) {
       var dispatchedQuantity;
       if($routeParams.action === 'redispatch') {
-        dispatchedQuantity = $scope.calculateTotalDispatchedQty(angular.copy(item));
+        dispatchedQuantity = $scope.calculateTotalDispatchedQty(angular.copy(item)) || 0;
       } else {
         dispatchedQuantity = angular.copy(item.quantity) || 0;
       }
@@ -823,10 +823,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.calculateVariance = function (item) {
       // don't check variance on manually added items
       if(!item.menuQuantity) {
+        item.exceedsVariance = false;
         return false;
       }
-      var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item);
-      var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item);
+      var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item) || 1;
+      var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item) || 0;
 
       var threshold;
       threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
