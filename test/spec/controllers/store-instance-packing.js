@@ -501,8 +501,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       };
       StoreInstancePackingCtrl.calculateVariance(mockItem);
       expect(mockItem.exceedsVariance).toEqual(true);
-
-    })
+    });
   });
 
 
