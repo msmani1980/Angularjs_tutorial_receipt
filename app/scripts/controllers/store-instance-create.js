@@ -100,7 +100,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $scope.filteredMenuList.push(filteredMenu);
         }
       });
-      if($this.isActionState('redispatch') && angular.isDefined($scope.formData.cateringStationId) ) {
+      if($this.isDispatchOrRedispatch() && angular.isDefined($scope.formData.cateringStationId) ) {
         $this.removeInvalidMenus();
       }
     };
