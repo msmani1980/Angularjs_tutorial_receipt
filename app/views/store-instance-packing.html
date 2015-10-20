@@ -69,7 +69,6 @@
         <!-- TODO: implement threshold warnings -->
         <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
             ng-class="showVarianceWarningClass(item)">
-        <!--<tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">-->
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -84,7 +83,8 @@
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"/>
+                   placeholder="0"
+                   required="true"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text"
@@ -150,7 +150,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.inboundQuantity" placeholder="0"
-                   ng-if="shouldDisplayInboundFields(item)" maxlength="5"/>
+                   ng-if="shouldDisplayInboundFields(item)" maxlength="5" required="true"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.ullageQuantity" placeholder="0"
