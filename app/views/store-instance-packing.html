@@ -272,7 +272,7 @@
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                repeat="masterItem in filteredOffloadMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>

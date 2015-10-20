@@ -17,6 +17,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
+    $scope.filteredOffloadMasterItemList = [];
     $scope.addItemsNumber = 1;
     $scope.readOnly = true;
     $scope.saveButtonName = 'Exit';
@@ -53,7 +54,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.addItemsToArray = function (array, itemNumber, isInOffload) {
-      if ($scope.filteredMasterItemList.length === 0) {
+      if (($scope.filteredMasterItemList.length === 0 && !isInOffload) || ($scope.filteredOffloadMasterItemList.length === 0 && isInOffload)) {
         showToast('warning', 'Add Item', 'There are no items available');
         return;
       }
@@ -330,7 +331,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
-      $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
+        $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
+          var mergedMenuItems = angular.copy($scope.menuItems).concat(angular.copy($scope.offloadMenuItems));
+          return !(lodash.findWhere(mergedMenuItems, {
+            itemMasterId: item.id
+          }));
+        });
+    });
+
+    $scope.$watchGroup(['masterItemsList', 'offloadMenuItems'], function () {
+      $scope.filteredOffloadMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
         var mergedMenuItems = angular.copy($scope.menuItems).concat(angular.copy($scope.offloadMenuItems));
         return !(lodash.findWhere(mergedMenuItems, {
           itemMasterId: item.id
@@ -339,7 +349,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     });
 
     this.getMasterItemsListSuccess = function (itemsListJSON) {
-      $scope.masterItemsList = itemsListJSON.masterItems;
+      $scope.masterItemsList = angular.copy(itemsListJSON.masterItems);
     };
 
     this.getMasterItemsList = function () {
