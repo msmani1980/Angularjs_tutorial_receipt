@@ -10,6 +10,27 @@
     <!-- INFORMATION BAR -->
     <store-instance-header></store-instance-header>
 
+    <div class="modal fade" id="varianceWarningModal" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title"><span class="fa fa-exclamation-triangle"></span> Variance Threshold Warning</h3>
+          </div>
+
+          <div class="modal-body">
+            <p>The Dispatch Quantity for the following items varies from the Required Quantity.
+              Are you sure you want to continue?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="savePackingDataAndUpdateStatus(shouldUpdateStatusOnSave)">Yes</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
     <div class="well">
       <div class="form-group">
         <p class="input-group">
@@ -46,9 +67,9 @@
 
         <tbody>
         <!-- TODO: implement threshold warnings -->
-        <!--<tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"-->
-            <!--ng-class="setClassBasedOnVariance(item.menuQuantity, item.quantity)">-->
-        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
+        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+            ng-class="showVarianceWarningClass(item)">
+        <!--<tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">-->
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
