@@ -22,7 +22,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.saveButtonName = 'Exit';
     this.itemsToDeleteArray = [];
     var dashboardURL = 'store-instance-dashboard';
-    var shouldShowVarianceWarning = true;
     $scope.shouldUpdateStatusOnSave = false;
 
     function showToast(className, type, message) {
@@ -780,21 +779,29 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.createPayloadAndSave(shouldUpdateStatus);
     }
 
-    this.calculateVariance = function (item) {
+    this.getRequiredQuantityForVarianceCalculation = function (item) {
       var requiredQuantity = angular.copy(item.menuQuantity) || 1;
       requiredQuantity = (angular.isNumber(requiredQuantity)) ? requiredQuantity : parseInt(requiredQuantity);
-      var pickedQuantity = angular.copy(item.quantity) || 0;
-      pickedQuantity = (angular.isNumber(pickedQuantity)) ? pickedQuantity : parseInt(pickedQuantity);
-      var totalQuantity = angular.copy(item.totalQuantity) || 0;
-      totalQuantity = (angular.isNumber(totalQuantity)) ? totalQuantity : parseInt(totalQuantity);
+      return requiredQuantity;
+    };
+
+    this.getDispatchedQuantityForVarianceCalculation = function (item) {
+      var dispatchedQuantity;
+      if($routeParams.action === 'redispatch') {
+        dispatchedQuantity = angular.copy(item.totalQuantity) || 0;
+      } else {
+        dispatchedQuantity = angular.copy(item.quantity) || 0;
+      }
+      dispatchedQuantity = (angular.isNumber(dispatchedQuantity)) ? dispatchedQuantity : parseInt(dispatchedQuantity);
+      return dispatchedQuantity;
+    };
+
+    this.calculateVariance = function (item) {
+      var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item);
+      var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item);
 
       var threshold;
-      if($routeParams.action === 'redispatch') {
-        threshold = ((totalQuantity / requiredQuantity) - 1) * 100;
-      } else {
-        threshold = ((pickedQuantity / requiredQuantity) - 1) * 100;
-      }
-
+      threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
       item.exceedsVariance = (threshold > $scope.variance);
     };
 
@@ -894,13 +901,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       total -= parseInt(item.ullageQuantity) || 0;
       return total;
     };
-
-    function displayVarianceWarning () {
-      if(shouldShowVarianceWarning) {
-        shouldShowVarianceWarning = false;
-        showToast('warning', 'Packing Warning', 'highlighted rows indicate that the template and picked quantity variance exceeds the set threshold variance');
-      }
-    }
 
     $scope.showVarianceWarningClass = function (item) {
       if(angular.isDefined(item.exceedsVariance) && item.exceedsVariance) {
