@@ -96,16 +96,12 @@ describe('Directive: errorDialog', function() {
       expect(element.find('li').length).toBe(1);
     });
 
-    it('should contain 1 item in errorPattern', function() {
-      expect(isolatedScope.errorPattern).toEqual(['deliveryNote']);
+    it('should contain 0 items in errorPattern', function() {
+      expect(isolatedScope.errorPattern).toEqual([]);
     });
 
     it('should contain 1 list item', function() {
       expect(element.find('li').length).toBe(1);
-    });
-
-    it('should contain 1 item in errorPattern', function() {
-      expect(isolatedScope.errorPattern).toEqual(['deliveryNote']);
     });
 
   });
