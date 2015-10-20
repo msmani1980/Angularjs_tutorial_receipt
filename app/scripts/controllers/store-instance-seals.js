@@ -10,8 +10,7 @@
 angular.module('ts5App')
   .controller('StoreInstanceSealsCtrl', function($scope, $routeParams, $q, storeInstanceWizardConfig,
     storeInstanceFactory, sealTypesService, sealColorsService, ngToast, $location, storeInstanceAssignSealsFactory,
-    dateUtility,
-    lodash) {
+    dateUtility, $sanitize, lodash) {
 
     var HANDOVER = 'Hand Over';
     var OUTBOUND = 'Outbound';
@@ -446,7 +445,7 @@ angular.module('ts5App')
         storeId: $scope.storeDetails.storeId,
         menus: $this.formatMenus($scope.storeDetails.menuList),
         tampered: $scope.storeDetails.tampered,
-        note: $scope.storeDetails.note
+        note: $scope.storeDetails.note.replace(/'/g, '')
       };
       return payload;
     };
