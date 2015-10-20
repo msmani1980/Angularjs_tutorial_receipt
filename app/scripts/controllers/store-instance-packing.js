@@ -468,6 +468,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return ullageDataIncomplete;
     };
 
+    $scope.calculateTotalDispatchedQty = function (item) {
+      var total = parseInt(item.quantity) || 0;
+      total += parseInt(item.inboundQuantity) || 0;
+      total -= parseInt(item.ullageQuantity) || 0;
+      return total;
+    };
+
     this.dispatchAndReplenishCreatePayload = function (item, workingPayload) {
       var itemPayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
@@ -805,7 +812,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getDispatchedQuantityForVarianceCalculation = function (item) {
       var dispatchedQuantity;
       if($routeParams.action === 'redispatch') {
-        dispatchedQuantity = angular.copy(item.totalQuantity) || 0;
+        dispatchedQuantity = $scope.calculateTotalDispatchedQty(angular.copy(item)) || 0;
       } else {
         dispatchedQuantity = angular.copy(item.quantity) || 0;
       }
@@ -814,8 +821,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.calculateVariance = function (item) {
-      var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item);
-      var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item);
+      // don't check variance on manually added items
+      if(!item.menuQuantity) {
+        item.exceedsVariance = false;
+        return false;
+      }
+      var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item) || 1;
+      var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item) || 0;
 
       var threshold;
       threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
@@ -823,7 +835,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.checkForExceededVariance = function () {
-      if($routeParams.action === 'end-instance') {
+      if($routeParams.action === 'end-instance' || $routeParams.action === 'replenish') {
         return false;
       }
       var highVarianceExists = false;
@@ -910,13 +922,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.shouldDisplayInboundFields = function (item) {
       return ($scope.showInboundBasedOnAction($routeParams.action, item));
-    };
-
-    $scope.calculateTotalDispatchedQty = function (item) {
-      var total = parseInt(item.quantity) || 0;
-      total += parseInt(item.inboundQuantity) || 0;
-      total -= parseInt(item.ullageQuantity) || 0;
-      return total;
     };
 
     $scope.showVarianceWarningClass = function (item) {
