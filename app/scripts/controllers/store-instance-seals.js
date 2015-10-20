@@ -438,6 +438,14 @@ angular.module('ts5App')
       return newMenus;
     };
 
+    this.storeInstanceIdForTamperedSeals = function() {
+      if ($scope.storeDetails.prevStoreInstanceId) {
+        return $scope.storeDetails.prevStoreInstanceId;
+      } else {
+        return $routeParams.storeId;
+      }
+    };
+
     this.updateStoreInstanceTampered = function() {
       var payload = {
         cateringStationId: $scope.storeDetails.cateringStationId,
@@ -448,6 +456,7 @@ angular.module('ts5App')
         tampered: $scope.storeDetails.tampered,
         note: $scope.storeDetails.note
       };
+      console.log(payload);
       return payload;
     };
 
@@ -501,7 +510,8 @@ angular.module('ts5App')
       var tamperedPromises = [];
       if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
         var payload = $this.updateStoreInstanceTampered();
-        tamperedPromises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload));
+        tamperedPromises.push(storeInstanceFactory.updateStoreInstance(this.storeInstanceIdForTamperedSeals(),
+          payload));
       }
       $q.all(deletePromises).then(
         $q.all(createPromises).then(
