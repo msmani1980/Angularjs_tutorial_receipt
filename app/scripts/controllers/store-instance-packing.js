@@ -814,6 +814,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.calculateVariance = function (item) {
+      // don't check variance on manually added items
+      if(!item.menuQuantity) {
+        return false;
+      }
       var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item);
       var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item);
 
@@ -823,7 +827,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.checkForExceededVariance = function () {
-      if($routeParams.action === 'end-instance') {
+      if($routeParams.action === 'end-instance' || $routeParams.action === 'replenish') {
         return false;
       }
       var highVarianceExists = false;
