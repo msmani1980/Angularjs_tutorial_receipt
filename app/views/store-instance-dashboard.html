@@ -123,7 +123,7 @@
         <div class="panel-footer text-right">
           <button class="btn btn-default btn-search-clear"
             ng-click="clearSearchForm()"
-            ng-show="search.dispatchLMPStation.length || search.inboundLMPStation.length || search.storeNumber.length || search.scheduleStartDate.length || search.scheduleEndDate.length || search.departureStations.length || search.arrivalStations.length || search.storeInstance.length || search.storeStatusId.length">
+            ng-show="showClearButton()">
             <span class="btn-label">Clear</span>
           </button>
           <button ng-click="searchStoreInstanceDashboardData()" class="btn btn-primary btn-search">

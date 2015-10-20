@@ -44,7 +44,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location) {
     inject(function(_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_,
-      _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_, _servedFeatures_, _servedStoreInstance_) {
+      _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_, _servedFeatures_,
+      _servedStoreInstance_) {
       cateringStationResponseJSON = _servedCateringStations_;
       stationResponseJSON = _servedStations_;
       storeInstanceListResponseJSON = _servedStoreInstanceList_;
@@ -230,11 +231,11 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       });
     });
 
-    describe('getUndispatchFeatureid', function () {
-      it('should get featureList', function () {
+    describe('getUndispatchFeatureid', function() {
+      it('should get featureList', function() {
         expect(storeInstanceDashboardFactory.getFeaturesList).toHaveBeenCalled();
       });
-      it('should set undispatchFeatureid', function () {
+      it('should set undispatchFeatureid', function() {
         expect(scope.undispatchFeatureId).toBeDefined();
       });
     });
@@ -387,39 +388,45 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       }];
     });
 
-    it('should return true if current time is within set hours of updatedTime', function () {
-      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
+    it('should return true if current time is within set hours of updatedTime', function() {
+      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(1, 'hour').format(
+        'YYYY-MM-DD HH:mm:ss.SSSSSS');
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(true);
     });
 
-    it('should return false if current time is within set hours of updatedTime', function () {
-      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
+    it('should return false if current time is within set hours of updatedTime', function() {
+      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format(
+        'YYYY-MM-DD HH:mm:ss.SSSSSS');
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
     });
 
-    it('should return false if updatedOn is null', function () {
+    it('should return false if updatedOn is null', function() {
       scope.storeInstanceList[0].updatedOn = null;
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
     });
 
-    it('should return false if the store instance has replenishments', function () {
-      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
-      scope.storeInstanceList[0].replenishments = [{id: 3}];
+    it('should return false if the store instance has replenishments', function() {
+      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(1, 'hour').format(
+        'YYYY-MM-DD HH:mm:ss.SSSSSS');
+      scope.storeInstanceList[0].replenishments = [{
+        id: 3
+      }];
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(false);
     });
 
-    it('should return true if hours equal -1 (the default hours)', function () {
-      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format('YYYY-MM-DD HH:mm:ss.SSSSSS');
+    it('should return true if hours equal -1 (the default hours)', function() {
+      scope.storeInstanceList[0].updatedOn = moment.utc().subtract(50, 'hour').format(
+        'YYYY-MM-DD HH:mm:ss.SSSSSS');
       scope.storeInstanceList[0].hours = -1;
       expect(scope.isUndispatchPossible(scope.storeInstanceList[0])).toEqual(true);
     });
   });
 
-  describe('undispatch', function () {
-    beforeEach(function () {
+  describe('undispatch', function() {
+    beforeEach(function() {
       scope.undispatch(2);
     });
-    it('should update status to 1', function () {
+    it('should update status to 1', function() {
       expect(storeInstanceDashboardFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(2, 1);
     });
   });
@@ -437,17 +444,17 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
   });
 
-  describe('doesStoreInstanceContainAction', function () {
+  describe('doesStoreInstanceContainAction', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
       scope.storeStatusList = statusListResponseJSON;
     });
 
-    it('should exist on scope', function (){
+    it('should exist on scope', function() {
       expect(scope.doesStoreInstanceContainAction).toBeDefined();
     });
 
-    it('should return direct mapping of actionButtons', function () {
+    it('should return direct mapping of actionButtons', function() {
       var testStoreInstance = {
         actionButtons: ['Pack', 'Seal', 'Dispatch'],
         statusId: 7
@@ -458,7 +465,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       expect(doesContainAllActions).toEqual(true);
     });
 
-    it('should return false if store instance has no actionButtons', function () {
+    it('should return false if store instance has no actionButtons', function() {
       var testStoreInstance = {
         statusId: 7
       };
@@ -467,72 +474,77 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
   });
 
-  describe('shouldShowReplenishAction', function () {
+  describe('shouldShowReplenishAction', function() {
     var parentStoreInstance;
-    beforeEach(function () {
+    beforeEach(function() {
       scope.storeStatusList = statusListResponseJSON;
       parentStoreInstance = {
         statusId: 7
       };
     });
 
-    it('should exist on scope', function (){
+    it('should exist on scope', function() {
       expect(scope.shouldShowReplenishAction).toBeDefined();
     });
 
-    it('should return direct mapping for non dispatched replenishments', function () {
+    it('should return direct mapping for non dispatched replenishments', function() {
       var testStoreInstance = {
         actionButtons: ['Pack', 'Seal', 'Dispatch'],
         statusId: 1
       };
-      var doesContainAllActions = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Pack') &&
+      var doesContainAllActions = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance,
+          'Pack') &&
         scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Seal') &&
         scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Dispatch');
       expect(doesContainAllActions).toEqual(true);
     });
 
-    it('should allow get docs for replenishments after dispatch', function () {
+    it('should allow get docs for replenishments after dispatch', function() {
       var testStoreInstance = {
         actionButtons: ['Get Flight Docs'],
-        statusId: 7   // 7 to test with Dispatched status
+        statusId: 7 // 7 to test with Dispatched status
       };
-      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Get Flight Docs');
+      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance,
+        'Get Flight Docs');
       expect(doesContainAction).toEqual(true);
     });
 
-    it('should not allow actions after a replenishment has been dispatch', function () {
+    it('should not allow actions after a replenishment has been dispatch', function() {
       var testStoreInstance = {
         actionButtons: ['End Instance'],
-        statusId: 7    // 7 to test with Dispatched status
+        statusId: 7 // 7 to test with Dispatched status
       };
-      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'End Instance');
+      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance,
+        'End Instance');
       expect(doesContainAction).toEqual(false);
     });
 
-    it('should allow get docs for replenishments with parents that are onfloor', function () {
-      parentStoreInstance.statusId = 10;  // 10 to test with onfloor status
+    it('should allow get docs for replenishments with parents that are onfloor', function() {
+      parentStoreInstance.statusId = 10; // 10 to test with onfloor status
       var testStoreInstance = {
         actionButtons: ['Get Flight Docs'],
-        statusId: 7    // 7 to test with Dispatched status
+        statusId: 7 // 7 to test with Dispatched status
       };
-      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'Get Flight Docs');
+      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance,
+        'Get Flight Docs');
       expect(doesContainAction).toEqual(true);
     });
 
-    it('should not allow other actions after a replenishment with parents that are onfloor', function () {
-      parentStoreInstance.statusId = 10;  // 10 to test with onfloor status
+    it('should not allow other actions after a replenishment with parents that are onfloor', function() {
+      parentStoreInstance.statusId = 10; // 10 to test with onfloor status
       var testStoreInstance = {
         actionButtons: ['End Instance'],
-        statusId: 7    // 7 to test with Dispatched status
+        statusId: 7 // 7 to test with Dispatched status
       };
-      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance, 'End Instance');
+      var doesContainAction = scope.shouldShowReplenishAction(testStoreInstance, parentStoreInstance,
+        'End Instance');
       expect(doesContainAction).toEqual(false);
     });
   });
 
-  describe('navigateToAction', function () {
+  describe('navigateToAction', function() {
     var testStoreInstance;
-    beforeEach(function () {
+    beforeEach(function() {
       scope.$digest();
       testStoreInstance = {
         id: 1,
@@ -541,46 +553,78 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       };
     });
 
-    it('should navigate to dispatch wizard if replenishId and prevId is null for packing/seals/dispatch', function () {
-      scope.navigateToAction(testStoreInstance, 'Seal');
-      expect(location.path).toHaveBeenCalledWith('store-instance-seals/dispatch/1');
-      scope.navigateToAction(testStoreInstance, 'Pack');
-      expect(location.path).toHaveBeenCalledWith('store-instance-packing/dispatch/1');
-      scope.navigateToAction(testStoreInstance, 'Dispatch');
-      expect(location.path).toHaveBeenCalledWith('store-instance-review/dispatch/1');
-    });
-    it('should navigate to replenish wizard if replenishID is not null for packing/seals', function () {
+    it('should navigate to dispatch wizard if replenishId and prevId is null for packing/seals/dispatch',
+      function() {
+        scope.navigateToAction(testStoreInstance, 'Seal');
+        expect(location.path).toHaveBeenCalledWith('store-instance-seals/dispatch/1');
+        scope.navigateToAction(testStoreInstance, 'Pack');
+        expect(location.path).toHaveBeenCalledWith('store-instance-packing/dispatch/1');
+        scope.navigateToAction(testStoreInstance, 'Dispatch');
+        expect(location.path).toHaveBeenCalledWith('store-instance-review/dispatch/1');
+      });
+    it('should navigate to replenish wizard if replenishID is not null for packing/seals', function() {
       testStoreInstance.replenishStoreInstanceId = 2;
       scope.navigateToAction(testStoreInstance, 'Seal');
       expect(location.path).toHaveBeenCalledWith('store-instance-seals/replenish/1');
       scope.navigateToAction(testStoreInstance, 'Pack');
       expect(location.path).toHaveBeenCalledWith('store-instance-packing/replenish/1');
     });
-    it('should navigate to redispatch wizard if prevId is not null for seals/dispatch', function () {
+    it('should navigate to redispatch wizard if prevId is not null for seals/dispatch', function() {
       testStoreInstance.prevStoreInstanceId = 5;
       scope.navigateToAction(testStoreInstance, 'Seal');
       expect(location.path).toHaveBeenCalledWith('store-instance-seals/redispatch/1');
       scope.navigateToAction(testStoreInstance, 'Dispatch');
       expect(location.path).toHaveBeenCalledWith('store-instance-review/redispatch/1');
     });
-    it('should call get store instance to find parent instance for pack', function () {
+    it('should call get store instance to find parent instance for pack', function() {
       testStoreInstance.prevStoreInstanceId = 5;
       scope.navigateToAction(testStoreInstance, 'Pack');
       expect(storeInstanceDashboardFactory.getStoreInstance).toHaveBeenCalledWith(5);
     });
-    it('should call get store instances to find a redispatched child store instance for offload/inbound seals', function () {
-      scope.navigateToAction(testStoreInstance, 'Offload');
-      expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({prevStoreInstanceId: 1, limit: 1});
-      scope.navigateToAction(testStoreInstance, 'Inbound Seals');
-      expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({prevStoreInstanceId: 1, limit: 1});
-    });
-    it('should navigate to create for replenish/redispatch/end-instance actions', function () {
+    it('should call get store instances to find a redispatched child store instance for offload/inbound seals',
+      function() {
+        scope.navigateToAction(testStoreInstance, 'Offload');
+        expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({
+          prevStoreInstanceId: 1,
+          limit: 1
+        });
+        scope.navigateToAction(testStoreInstance, 'Inbound Seals');
+        expect(storeInstanceDashboardFactory.getStoreInstanceList).toHaveBeenCalledWith({
+          prevStoreInstanceId: 1,
+          limit: 1
+        });
+      });
+    it('should navigate to create for replenish/redispatch/end-instance actions', function() {
       scope.navigateToAction(testStoreInstance, 'Replenish');
       expect(location.path).toHaveBeenCalledWith('store-instance-create/replenish/1');
       scope.navigateToAction(testStoreInstance, 'Redispatch');
       expect(location.path).toHaveBeenCalledWith('store-instance-create/redispatch/1');
       scope.navigateToAction(testStoreInstance, 'End Instance');
       expect(location.path).toHaveBeenCalledWith('store-instance-create/end-instance/1');
+    });
+  });
+
+  describe('showClearButton', function() {
+    it('should return true when search has input', function() {
+      scope.search.scheduleStartDate = '2012-02-02';
+      scope.$digest();
+      scope.showClearButton();
+      expect(scope.showClearButton()).toBeTruthy();
+    });
+
+    it('should return false when search is clear', function() {
+      scope.search.scheduleStartDate = '';
+      scope.$digest();
+      scope.showClearButton();
+      expect(scope.showClearButton()).toBeFalsy();
+    });
+
+    it('should return true when searchIsActive and search is clear', function() {
+      scope.search.scheduleStartDate = '';
+      scope.searchIsActive = true;
+      scope.$digest();
+      scope.showClearButton();
+      expect(scope.showClearButton()).toBeTruthy();
     });
   });
 
