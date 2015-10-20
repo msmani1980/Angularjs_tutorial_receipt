@@ -407,7 +407,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.checkForDuplicate = function (item, isInOffload) {
       var menuToCheck;
       if(isInOffload) {
-        menuToCheck = angular.copy($scope.emptyOffloadMenuItems)
+        menuToCheck = angular.copy($scope.emptyOffloadMenuItems);
       } else {
         menuToCheck = angular.copy($scope.emptyMenuItems);
       }

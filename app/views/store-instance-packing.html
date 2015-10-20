@@ -117,7 +117,7 @@
             <input type="text"
                    custom-validity
                    custom-pattern="number"
-                   required="true"
+                   ng-required="!isActionState('replenish')"
                    class="form-control"
                    ng-model="item.quantity"
                    ng-disabled="readOnly"
