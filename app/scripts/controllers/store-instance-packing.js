@@ -605,7 +605,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         response: combinedPayload.prevStoreInstancePayload
       };
       var promises = [
-        storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, currentStorePayload),
+        storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, currentStorePayload)
       ];
       if (prevStorePayload.response.length > 0) {
         promises.push(storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeDetails.prevStoreInstanceId,
@@ -624,7 +624,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.checkFormValidity = function () {
       if ($scope.storeInstancePackingForm.$invalid) {
-        showToast('danger', 'Save Items', 'All Packed quantities must be a number');
+        showToast('danger', 'Save Items', 'All quantities must be a number');
         return false;
       }
       var duplicatesExist = $this.checkForDuplicatesInPayload();
