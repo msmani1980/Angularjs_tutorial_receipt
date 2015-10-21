@@ -86,13 +86,13 @@ angular.module('ts5App')
 
     this.getCommissionPayableTypes = function () {
       commissionFactory.getCommissionPayableTypes().then(function(dataFromAPI) {
-        $scope.commissionPayableTypes = angular.copy(dataFromAPI)
+        $scope.commissionPayableTypes = angular.copy(dataFromAPI);
       });
     };
 
     this.getDiscountTypes = function () {
       commissionFactory.getDiscountTypes().then(function(dataFromAPI) {
-        $scope.discountTypes = angular.copy(dataFromAPI)
+        $scope.discountTypes = angular.copy(dataFromAPI);
       });
     };
 
