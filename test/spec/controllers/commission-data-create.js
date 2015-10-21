@@ -1,14 +1,44 @@
 'use strict';
 
 describe('Controller: CommissionDataCtrl', function () {
-  beforeEach(module('ts5App', 'template-module'));
-  var CommissionDataCtrl,
-    location,
-    scope;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $location) {
+  beforeEach(module('ts5App', 'template-module'));
+  beforeEach(module('served/crew-base-types.json'));
+  beforeEach(module('served/commission-payable-types.json'));
+  beforeEach(module('served/discount-types.json'));
+
+  var CommissionDataCtrl;
+  var location;
+  var scope;
+  var commissionFactory;
+  var crewBaseDeferred;
+  var crewBaseResponseJSON;
+  var commissionPayableDeferred;
+  var commissionPayableResponseJSON;
+  var discountTypesDeferred;
+  var discountTypesResponseJSON;
+
+  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
+    inject(function (_servedCrewBaseTypes_, _servedCommissionPayableTypes_, _servedDiscountTypes_) {
+      crewBaseResponseJSON = _servedCrewBaseTypes_;
+      commissionPayableResponseJSON = _servedCommissionPayableTypes_;
+      discountTypesResponseJSON = _servedDiscountTypes_;
+    });
     location = $location;
     scope = $rootScope.$new();
+    commissionFactory = $injector.get('commissionFactory');
+
+    crewBaseDeferred = $q.defer();
+    crewBaseDeferred.resolve(crewBaseResponseJSON);
+    commissionPayableDeferred = $q.defer();
+    commissionPayableDeferred.resolve(commissionPayableResponseJSON);
+    discountTypesDeferred = $q.defer();
+    discountTypesDeferred.resolve(discountTypesResponseJSON);
+
+    spyOn(commissionFactory, 'getCrewBaseTypes').and.returnValue(crewBaseDeferred.promise);
+    spyOn(commissionFactory, 'getCommissionPayableTypes').and.returnValue(commissionPayableDeferred.promise);
+    spyOn(commissionFactory, 'getDiscountTypes').and.returnValue(discountTypesDeferred.promise);
+
 
     CommissionDataCtrl = $controller('CommissionDataCtrl', {
       $scope: scope
@@ -103,17 +133,23 @@ describe('Controller: CommissionDataCtrl', function () {
   });
 
   describe('init', function () {
-
-    // TODO: fill in empty tests for API integration
     describe('API Calls', function () {
       it('should get crew base', function () {
-
+        expect(commissionFactory.getCrewBaseTypes).toHaveBeenCalled();
+        scope.$digest();
+        expect(scope.crewBaseList).toEqual(crewBaseResponseJSON);
       });
-      it('should attach crew base to scope', function () {
 
+      it('should get commission payable types', function () {
+        expect(commissionFactory.getCommissionPayableTypes).toHaveBeenCalled();
+        scope.$digest();
+        expect(scope.commissionPayableTypes).toEqual(commissionPayableResponseJSON);
       });
-      it('should get crew base list', function () {
 
+      it('should get discount types', function () {
+        expect(commissionFactory.getDiscountTypes).toHaveBeenCalled();
+        scope.$digest();
+        expect(scope.discountTypes).toEqual(discountTypesResponseJSON);
       });
 
       it('should call getCommissionData if id is defined', function () {

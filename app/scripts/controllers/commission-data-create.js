@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataCtrl', function ($scope, $routeParams) {
+  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory) {
     var $this             = this;
     $scope.viewName       = 'Creating Commission Data';
     $scope.commissionData = {};
@@ -61,10 +61,39 @@ angular.module('ts5App')
       $scope.commissionData = data;
       $scope.updateManualBars();
       $scope.updateIncentiveIncrement();
+
+      //var mockPayload = {
+      //  "crewBaseTypeId": 1,
+      //  "commissionPayableTypeId" : 2,
+      //  "commissionPercentage" : "10.123",
+      //  "manualBarsCommissionValueTypeId" : 1,
+      //  "manualBarsCommissionValue" : "100.000",
+      //  "discrepancyDeductionsCashPercentage" : "1.123",
+      //  "discrepancyDeductionsStockPercentage" : "2",
+      //  "commissionValueTypeId": 2,
+      //  "commissionValue": "1234567.123",
+      //  "startDate" : "20150101",
+      //  "endDate": "20160101"
+      //};
+
     };
 
-    this.setCrewBase = function (data) {
-      $scope.crewBaseList = data;
+    this.getCrewBaseList = function () {
+      commissionFactory.getCrewBaseTypes().then(function(dataFromAPI) {
+        $scope.crewBaseList = angular.copy(dataFromAPI);
+      });
+    };
+
+    this.getCommissionPayableTypes = function () {
+      commissionFactory.getCommissionPayableTypes().then(function(dataFromAPI) {
+        $scope.commissionPayableTypes = angular.copy(dataFromAPI)
+      });
+    };
+
+    this.getDiscountTypes = function () {
+      commissionFactory.getDiscountTypes().then(function(dataFromAPI) {
+        $scope.discountTypes = angular.copy(dataFromAPI)
+      });
     };
 
     this.setViewName = function () {
@@ -81,11 +110,12 @@ angular.module('ts5App')
     this.init = function () {
       $scope.readOnly = $routeParams.state === 'view';
       $this.setViewName();
-      $this.setCrewBase([{crewName: 'CREW'}, {crewName: 'CREW2'}]);
+      $this.getCrewBaseList();
+      $this.getCommissionPayableTypes();
+      $this.getDiscountTypes();
 
       // TODO: API calls to make:
       // commissionFactory.getBaseCurrency();
-      // commissionFactory.getCrewBaseList().then(setCrewBase, showError);
       // commissionFactory.getCommissionData(recordId).then(setCommissionData, showError);
 
       if ($routeParams.id) {

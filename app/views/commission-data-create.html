@@ -27,10 +27,10 @@
               <select class="form-control"
                       id="crewBase"
                       ng-model="commissionData.crewBase"
-                      ng-options="crewBase.crewName as crewBase.crewName for crewBase in crewBaseList"
+                      ng-options="crewBase.name as crewBase.name for crewBase in crewBaseList"
                       ng-disabled="readOnly"
                       required="true">
-                <option selected="selected" value>Select a Schedule Number</option>
+                <option selected="selected" value>Select a Crew Base</option>
               </select>
             </div>
           </div>
@@ -66,11 +66,9 @@
                       required="true"
                       ng-model="commissionData.commissionPayable"
                       ng-change="updateCommissionPercent()"
-                      ng-disabled="readOnly">
-                <option selected="selected" value>Select a Departure Station</option>
-                <option>Retail Item</option>
-                <option>ePOS Sales</option>
-                <option>Cash Banked</option>
+                      ng-disabled="readOnly"
+                      ng-options="commissionType.name as commissionType.name for commissionType in commissionPayableTypes">
+                <option selected="selected" value>Select a Commission Payable Type</option>
               </select>
             </div>
           </div>
@@ -96,6 +94,7 @@
                       required="true"
                       ng-model="commissionData.manualBarsType"
                       ng-change="updateManualBars()"
+                      ng-options="discountType.name as discountType.name for discountType in discountTypes"
                       ng-disabled="readOnly">
                 <option selected value="">Select a Commission Type</option>
                 <option>Percentage</option>
@@ -165,10 +164,9 @@
                       required="true"
                       ng-model="commissionData.commissionType"
                       ng-change="updateIncentiveIncrement()"
+                      ng-options="discountType.name as discountType.name for discountType in discountTypes"
                       ng-disabled="readOnly">
                 <option selected value="">Select a Commission Type</option>
-                <option>Percentage</option>
-                <option>Amount</option>
               </select>
             </div>
           </div>
