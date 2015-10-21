@@ -64,12 +64,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           isNewItem: true,
           isInOffload: isInOffload
         };
-        if (isInOffload) {
-          newItem.ullageQuantity = '0';
-          newItem.inboundQuantity = '0';
-        } else {
-          newItem.quantity = '0';
-        }
         array.push(newItem);
 
       }
@@ -930,6 +924,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       } else {
         return '';
       }
+    };
+
+    $scope.shouldShowDeleteButton = function (item) {
+      return (!angular.isDefined(item.menuQuantity) || item.menuQuantity === null);
     };
 
   });
