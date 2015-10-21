@@ -45,7 +45,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     });
   }
 
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q,
+  beforeEach(inject(function ($controller, $rootScope, $injector, $q, $window,
                               _servedStoreInstanceMenuItems_, _servedStoreInstanceSeals_,
                               _servedSealColors_, _servedSealTypes_, $location, _servedStoreInstanceItemList_, _servedCompanyReasonCodes_, _servedCountTypes_,
                               _servedEndInstanceReviewStoreDetails_) {
@@ -100,6 +100,9 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
     endInstanceStoreDetailsJSON = _servedEndInstanceReviewStoreDetails_;
 
     spyOn(location, 'url').and.callThrough();
+    spyOn(location, 'path').and.callThrough();
+
+    spyOn($window, 'open');
 
     controller = $controller;
     initController(controller);
@@ -244,7 +247,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '4');
         scope.$digest();
-        expect(location.url).toHaveBeenCalledWith('/store-instance-dashboard');
+        expect(location.path).toHaveBeenCalledWith('store-instance-dashboard');
       });
 
       it('should set the store instance status to the proper status when action is replenish', function () {
@@ -252,7 +255,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '4');
         scope.$digest();
-        expect(location.url).toHaveBeenCalledWith('/store-instance-dashboard');
+        expect(location.path).toHaveBeenCalledWith('store-instance-dashboard');
       });
 
       it('should set the store instance status to the proper status when action is end-instance', function () {
@@ -260,7 +263,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         scope.submit();
         expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(routeParams.storeId, '6');
         scope.$digest();
-        expect(location.url).toHaveBeenCalledWith('/store-instance-dashboard');
+        expect(location.path).toHaveBeenCalledWith('store-instance-dashboard');
       });
 
       it('should not make a call if action is not in allowed state', function () {

@@ -259,14 +259,6 @@ describe('Controller: StoreInstancePackingCtrl', function () {
       });
 
       it('should call getCharacteristics', function () {
-        expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
-      });
-
-      it('should call getCharacteristics', function () {
-        expect(storeInstanceFactory.getCountTypes).toHaveBeenCalled();
-      });
-
-      it('should call getCharacteristics', function () {
         expect(storeInstanceFactory.getReasonCodeList).toHaveBeenCalled();
       });
 
@@ -284,7 +276,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
         var expectedPayload = {
           itemTypeId: 1,
-          characteristicId: 1,
+          characteristicId: 1, // this is 1 for inventory items
           startDate: formattedDate,
           endDate: formattedDate
         };
@@ -441,40 +433,75 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   });
 
   describe('variance calculation', function () {
+    var mockItem;
     beforeEach(function() {
       initController();
       scope.variance = 50;
-
+      mockItem = {
+        quantity: 1000,
+        menuQuantity: 10
+      };
     });
 
-    it('should set warning class if threshold exceeds variance', function () {
-      var varianceClass = scope.setClassBasedOnVariance(10, 1000);
-      expect(varianceClass).toEqual('warning-row');
+    it('should set item.exceedsVariance to true if threshold exceeds variance', function () {
+      StoreInstancePackingCtrl.calculateVariance(mockItem);
+      expect(mockItem.exceedsVariance).toEqual(true);
     });
-    it('should not set warning class is threshold is equal to variance', function () {
-      var varianceClass = scope.setClassBasedOnVariance(10, 15);
-      expect(varianceClass).toEqual('');
+    it('should set item.exceedsVariance to false if threshold is equal to variance', function () {
+      mockItem = {
+        quantity: 10,
+        menuQuantity: 10
+      };
+      StoreInstancePackingCtrl.calculateVariance(mockItem);
+      expect(mockItem.exceedsVariance).toEqual(false);
     });
-    it('should not set warning class is threshold is less than variance', function () {
-      var varianceClass = scope.setClassBasedOnVariance(10, 11);
-      expect(varianceClass).toEqual('');
+    it('should set item.exceedsVariance to false if threshold is less than variance', function () {
+      mockItem = {
+        quantity: 11,
+        menuQuantity: 10
+      };
+      StoreInstancePackingCtrl.calculateVariance(mockItem);
+      expect(mockItem.exceedsVariance).toEqual(false);
     });
-    it('should not set warning class if picked < required quantity', function () {
-      var varianceClass = scope.setClassBasedOnVariance(1000, 10);
-      expect(varianceClass).toEqual('');
+    it('should item.exceedsVariance to false if picked < required quantity', function () {
+      mockItem = {
+        quantity: 9,
+        menuQuantity: 10
+      };
+      StoreInstancePackingCtrl.calculateVariance(mockItem);
+      expect(mockItem.exceedsVariance).toEqual(false);
     });
     it('should accept null or undefined values', function () {
-      var varianceClass = scope.setClassBasedOnVariance(null, null);
-      expect(varianceClass).toEqual('');
+      mockItem = {
+        quantity: null,
+        menuQuantity: null
+      };
+      StoreInstancePackingCtrl.calculateVariance(mockItem);
+      expect(mockItem.exceedsVariance).toEqual(false);
     });
     it('should accept undefined values', function () {
-      var undefinedVar;
-      var varianceClass = scope.setClassBasedOnVariance(undefinedVar, undefinedVar);
-      expect(varianceClass).toEqual('');
+      mockItem = {};
+      StoreInstancePackingCtrl.calculateVariance(mockItem);
+      expect(mockItem.exceedsVariance).toEqual(false);
     });
     it('should accept string values', function () {
-      var varianceClass = scope.setClassBasedOnVariance('100', '10000');
-      expect(varianceClass).toEqual('warning-row');
+      mockItem = {
+        quantity: '900',
+        menuQuantity: '10'
+      };
+      StoreInstancePackingCtrl.calculateVariance(mockItem);
+      expect(mockItem.exceedsVariance).toEqual(true);
+    });
+    it('should use calculated totalQuantity if state is redispatch', function () {
+      initController('redispatch');
+      mockItem = {
+        quantity: 3,
+        inboundQuantity: 100,
+        ullageQuantity: 2,
+        menuQuantity: 10
+      };
+      StoreInstancePackingCtrl.calculateVariance(mockItem);
+      expect(mockItem.exceedsVariance).toEqual(true);
     });
   });
 

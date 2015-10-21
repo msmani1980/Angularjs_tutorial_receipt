@@ -10,6 +10,27 @@
     <!-- INFORMATION BAR -->
     <store-instance-header></store-instance-header>
 
+    <div class="modal fade" id="varianceWarningModal" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title"><span class="fa fa-exclamation-triangle"></span> Variance Threshold Warning</h3>
+          </div>
+
+          <div class="modal-body">
+            <p>The Dispatch Quantity for the following items varies from the Required Quantity.
+              Are you sure you want to continue?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="savePackingDataAndUpdateStatus(shouldUpdateStatusOnSave)" data-dismiss="modal">Yes</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
     <div class="well">
       <div class="form-group">
         <p class="input-group">
@@ -25,7 +46,10 @@
     </div>
 
     <div class="well">
-      <h3>Pick List</h3>
+      <h3>
+        <span ng-hide="isActionState('end-instance')">Pick List</span>
+        <span ng-show="isActionState('end-instance')">Offload List</span>
+      </h3>
 
       <table class="table pick-list">
         <thead>
@@ -35,18 +59,16 @@
           <th ng-show="shouldDisplayQuantityField('ullage')" width="10%">Ullage Quantity</th>
           <th ng-show="shouldDisplayQuantityField('ullage')" width="15%">Ullage Reason</th>
           <th ng-show="shouldDisplayQuantityField('template')" width="10%">Template Quantity</th>
-          <th width="10%" ng-show="shouldDisplayQuantityField('packed')">
-            <span ng-show="isActionState('dispatch')">Packed Quantity</span>
-            <span ng-show="isActionState('replenish') || isActionState('redispatch')">Picked Quantity</span>
-          </th>
+          <th ng-show="shouldDisplayQuantityField('packed')" width="10%">Picked Quantity</th>
           <th ng-show="shouldDisplayQuantityField('dispatch')" width="10%">Dispatched Quantity</th>
           <th width="5%"></th>
         </tr>
         </thead>
 
         <tbody>
+        <!-- TODO: implement threshold warnings -->
         <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
-            ng-class="setClassBasedOnVariance(item.menuQuantity, item.quantity)">
+            ng-class="showVarianceWarningClass(item)">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -61,7 +83,8 @@
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"/>
+                   placeholder="0"
+                   required="true"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text"
@@ -94,7 +117,7 @@
             <input type="text"
                    custom-validity
                    custom-pattern="number"
-                   required="true"
+                   ng-required="!isActionState('replenish')"
                    class="form-control"
                    ng-model="item.quantity"
                    ng-disabled="readOnly"
@@ -115,7 +138,7 @@
 
         <tr ng-repeat="item in emptyMenuItems track by $index" ng-hide="readOnly">
           <td>
-            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item, false)">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
@@ -127,7 +150,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.inboundQuantity" placeholder="0"
-                   ng-if="shouldDisplayInboundFields(item)" maxlength="5"/>
+                   ng-if="shouldDisplayInboundFields(item)" maxlength="5" required="true"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.ullageQuantity" placeholder="0"
@@ -209,7 +232,8 @@
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"/>
+                   placeholder="0"
+                   required="true"/>
           </td>
           <td>
             <input type="text"
@@ -243,19 +267,19 @@
 
         <tr ng-repeat="item in emptyOffloadMenuItems track by $index" ng-hide="readOnly">
           <td>
-            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item, true)">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                repeat="masterItem in filteredOffloadMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </td>
           <td>
             <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.inboundQuantity"
-                   maxlength="5" placeholder="0"/>
+                   maxlength="5" placeholder="0" required="true" />
           </td>
           <td>
             <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.ullageQuantity"

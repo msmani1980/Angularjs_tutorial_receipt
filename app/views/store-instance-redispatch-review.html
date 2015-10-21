@@ -23,16 +23,20 @@
     </div>
 
     <div class="accordion-wrapper">
-
       <accordion class="store-instance-review-accordion">
-        <accordion-group>
+        <accordion-group ng-init="status.inboundSeals.open=true" is-open="status.inboundSeals.open">
           <accordion-heading class="accordion-heading">
-            Inbound Seals <i class="fa fa-chevron-down"></i>
+            Inbound Seals <i ng-class="{'fa-chevron-down': status.inboundSeals.open, 'fa-chevron-right': !status.inboundSeals.open}" class="fa"></i>
           </accordion-heading>
           <div class="row">
             <div class="col-xs-12 text-right">
               <button type="button" class="btn btn-info" ng-click="redirectTo('InboundSeals')">Edit</button>
             </div>
+          </div>
+
+          <div ng-if="storeDetails.tampered">
+            <input type="checkbox" ng-model="storeDetails.tampered" disabled/><span>Inbound Seals Tampered</span>
+            <textarea class="form-control no-resize" disabled>{{storeDetails.note}}</textarea>
           </div>
 
           <table class="table store-instance-review-seals-table">
@@ -45,7 +49,7 @@
             <tbody>
             <tr ng-repeat="sealObj in storeOneSeals | filter:removeSealsForStoreOne">
               <td>
-                <input type="text" class="form-control" placeholder="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
+                <input type="text" class="form-control text-white" value="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
               </td>
               <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
             </tr>
@@ -55,9 +59,9 @@
       </accordion>
 
       <accordion class="store-instance-review-accordion">
-        <accordion-group>
+        <accordion-group ng-init="status.packing.open=true"  is-open="status.packing.open">
           <accordion-heading class="accordion-heading">
-            Packing <i class="fa fa-chevron-down"></i>
+            Packing <i ng-class="{'fa-chevron-down': status.packing.open, 'fa-chevron-right': !status.packing.open}" class="fa"></i>
           </accordion-heading>
 
           <div class="row">
@@ -72,12 +76,12 @@
             <thead>
             <tr>
               <th>Retail Item Details</th>
-              <th width="15%">Inbound Quantity</th>
-              <th width="15%">Required Quantity</th>
-              <th width="15%">Picked Quantity</th>
-              <th width="15%">Ullage</th>
+              <th width="10%">Inbound Quantity</th>
+              <th width="10%">Required Quantity</th>
+              <th width="10%">Picked Quantity</th>
+              <th width="10%">Ullage</th>
               <th>Ullage Reason</th>
-              <th width="15%">Dispatched Quantity</th>
+              <th width="10%">Dispatched Quantity</th>
 
             </tr>
             </thead>
@@ -89,7 +93,7 @@
               </td>
 
               <td>
-                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+                <input type="text" class="form-control" ng-model="item.inboundQuantity" placeholder="0" disabled>
               </td>
               <td>
                 <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
@@ -115,12 +119,12 @@
             </tbody>
           </table>
 
-          <div class="row">
+          <div ng-if="offloadItemList.length > 0" class="row">
             <div class="col-xs-12">
               <h5>Offload List</h5>
             </div>
           </div>
-          <table class="table table-striped pick-list">
+          <table ng-if="offloadItemList.length > 0" class="table table-striped pick-list">
             <thead>
             <tr>
               <th>Retail Item Details</th>
@@ -157,9 +161,9 @@
       </accordion>
 
       <accordion class="store-instance-review-accordion">
-        <accordion-group>
+        <accordion-group ng-init="status.sealNumber.open=false"  is-open="status.sealNumber.open">
           <accordion-heading class="accordion-heading">
-            Seal Number assignment <i class="fa fa-chevron-down"></i>
+            Seal Number assignment <i ng-class="{'fa-chevron-down': status.sealNumber.open, 'fa-chevron-right': !status.sealNumber.open}" class="fa"></i>
           </accordion-heading>
           <div class="row">
             <div class="col-xs-12 text-right">
@@ -177,7 +181,7 @@
             <tbody>
             <tr ng-repeat="sealObj in seals">
               <td>
-                <input type="text" class="form-control" placeholder="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
+                <input type="text" class="form-control text-white" value="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
               </td>
               <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
             </tr>

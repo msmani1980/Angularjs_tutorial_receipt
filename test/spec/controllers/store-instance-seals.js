@@ -496,9 +496,10 @@ describe('the Store Instance Seals controller', function() {
       spyOn(StoreInstanceSealsCtrl, 'addSealTypeActions').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceSealsCtrl, 'formatPayload').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl, 'makeAssignSealsPromises').and.callThrough();
-      spyOn(StoreInstanceSealsCtrl, 'makeCreatePromise').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'makeDeleteSealsPromises').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'makeCreateSealsPromises').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'makeDeletePromise').and.callThrough();
+      spyOn(StoreInstanceSealsCtrl, 'makeCreatePromise').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'assignSealsSuccessHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'assignSealsErrorHandler').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'showMessage');
@@ -516,8 +517,12 @@ describe('the Store Instance Seals controller', function() {
         'Assigning seals to Store Instance');
     });
 
-    it('should call the makeAssignSealsPromises', function() {
-      expect(StoreInstanceSealsCtrl.makeAssignSealsPromises).toHaveBeenCalled();
+    it('should call the makeDeleteSealsPromises', function() {
+      expect(StoreInstanceSealsCtrl.makeDeleteSealsPromises).toHaveBeenCalled();
+    });
+
+    it('should call the makeCreateSealsPromises', function() {
+      expect(StoreInstanceSealsCtrl.makeCreateSealsPromises).toHaveBeenCalled();
     });
 
     describe('success handler', function() {
@@ -556,7 +561,7 @@ describe('the Store Instance Seals controller', function() {
 
       });
 
-      describe('updateStatusToStep', function() {
+      describe('updateStoreInstanceTampered', function() {
         var nextStep;
         var mockTampered;
         beforeEach(function() {
@@ -589,13 +594,8 @@ describe('the Store Instance Seals controller', function() {
           $scope.$digest();
         });
 
-        it('should called updateStoreInstanceTampered', function() {
-          expect(StoreInstanceSealsCtrl.updateStoreInstanceTampered).toHaveBeenCalled();
-        });
-
-
-        it('should call the PUT with the tampered payload', function() {
-          expect(storeInstanceFactory.updateStoreInstance).toHaveBeenCalledWith(5, mockTampered);
+        it('should call updateStoreInstanceTampered', function() {
+          expect(StoreInstanceSealsCtrl.updateStoreInstanceTampered()[0]).toBe(mockTampered[0]);
         });
 
       });
@@ -823,7 +823,7 @@ describe('the Store Instance Seals controller', function() {
     beforeEach(function() {
       initController();
       resolveAllDependencies();
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      StoreInstanceSealsCtrl.makeCreateSealsPromises();
       spyOn(StoreInstanceSealsCtrl, 'makeCreatePromise').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'determineSealsToCreate').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'getExistingSealsByType').and.callThrough();
@@ -833,18 +833,18 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should determine what seals to be created', function() {
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      StoreInstanceSealsCtrl.makeCreateSealsPromises();
       expect(StoreInstanceSealsCtrl.determineSealsToCreate).toHaveBeenCalledWith(sealTypeObject);
     });
 
     it('should find a list of existing seals by type', function() {
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      StoreInstanceSealsCtrl.makeCreateSealsPromises();
       expect(StoreInstanceSealsCtrl.getExistingSealsByType).toHaveBeenCalledWith(sealTypeObject.id);
     });
 
     it('should do a diff of existing seals', function() {
       var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(sealTypeObject.id);
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      StoreInstanceSealsCtrl.makeCreateSealsPromises();
       expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(sealTypeObject.seals.numbers,
         existingSeals);
     });
@@ -858,7 +858,7 @@ describe('the Store Instance Seals controller', function() {
 
     it('should call makeCreatePromise', function() {
       sealTypeObject.seals.numbers.push('123');
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      StoreInstanceSealsCtrl.makeCreateSealsPromises();
       expect(StoreInstanceSealsCtrl.makeCreatePromise).toHaveBeenCalledWith(sealTypeObject);
     });
 
@@ -881,7 +881,7 @@ describe('the Store Instance Seals controller', function() {
     beforeEach(function() {
       initController();
       resolveAllDependencies();
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      StoreInstanceSealsCtrl.makeCreateSealsPromises();
       spyOn(StoreInstanceSealsCtrl, 'makeDeletePromise').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'determineSealsToDelete').and.callThrough();
       spyOn(StoreInstanceSealsCtrl, 'getExistingSealsByType').and.callThrough();
@@ -891,19 +891,21 @@ describe('the Store Instance Seals controller', function() {
     });
 
     it('should determine what seals to be created', function() {
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      StoreInstanceSealsCtrl.makeCreateSealsPromises();
+      StoreInstanceSealsCtrl.makeDeleteSealsPromises();
       expect(StoreInstanceSealsCtrl.determineSealsToDelete).toHaveBeenCalledWith(sealTypeObject);
     });
 
     it('should find a list of existing seals by type', function() {
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      StoreInstanceSealsCtrl.makeCreateSealsPromises();
       expect(StoreInstanceSealsCtrl.getExistingSealsByType).toHaveBeenCalledWith(sealTypeObject.id);
     });
 
     it('should do a diff of existing seals', function() {
       var existingSeals = StoreInstanceSealsCtrl.getExistingSealsByType(sealTypeObject.id);
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
-      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(existingSeals, sealTypeObject.seals
+      StoreInstanceSealsCtrl.makeCreateSealsPromises();
+      expect(StoreInstanceSealsCtrl.diffExistingSeals).toHaveBeenCalledWith(existingSeals, sealTypeObject
+        .seals
         .numbers);
     });
 
@@ -916,7 +918,7 @@ describe('the Store Instance Seals controller', function() {
 
     it('should call makeDeletePromise', function() {
       sealTypeObject.seals.numbers = ['4567'];
-      StoreInstanceSealsCtrl.makeAssignSealsPromises();
+      StoreInstanceSealsCtrl.makeDeleteSealsPromises();
       expect(StoreInstanceSealsCtrl.makeDeletePromise).toHaveBeenCalledWith(sealTypeObject);
     });
 
@@ -1067,11 +1069,12 @@ describe('the Store Instance Seals controller', function() {
       expect(isDispatch).toBeTruthy();
     });
 
-    it('should return false if the state passed does not matches the action state of the controller', function() {
-      initController();
-      var isDispatch = $scope.isActionState('replenish');
-      expect(isDispatch).toBeFalsy();
-    });
+    it('should return false if the state passed does not matches the action state of the controller',
+      function() {
+        initController();
+        var isDispatch = $scope.isActionState('replenish');
+        expect(isDispatch).toBeFalsy();
+      });
 
     it('should return true if the state passed matches the action state of the controller', function() {
       initController('replenish');
@@ -1079,11 +1082,12 @@ describe('the Store Instance Seals controller', function() {
       expect(isReplenish).toBeTruthy();
     });
 
-    it('should return false if the state passed does not matches the action state of the controller', function() {
-      initController();
-      var isReplenish = $scope.isActionState('replenish');
-      expect(isReplenish).toBeFalsy();
-    });
+    it('should return false if the state passed does not matches the action state of the controller',
+      function() {
+        initController();
+        var isReplenish = $scope.isActionState('replenish');
+        expect(isReplenish).toBeFalsy();
+      });
 
   });
 

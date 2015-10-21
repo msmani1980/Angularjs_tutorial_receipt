@@ -1,4 +1,5 @@
 'use strict';
+// jshint maxcomplexity:6
 
 /**
  * @ngdoc function
@@ -16,11 +17,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.emptyMenuItems = [];
     $scope.filteredMasterItemList = [];
+    $scope.filteredOffloadMasterItemList = [];
     $scope.addItemsNumber = 1;
     $scope.readOnly = true;
     $scope.saveButtonName = 'Exit';
     this.itemsToDeleteArray = [];
     var dashboardURL = 'store-instance-dashboard';
+    $scope.shouldUpdateStatusOnSave = false;
 
     function showToast(className, type, message) {
       ngToast.create({
@@ -51,7 +54,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.addItemsToArray = function (array, itemNumber, isInOffload) {
-      if ($scope.filteredMasterItemList.length === 0) {
+      if (($scope.filteredMasterItemList.length === 0 && !isInOffload) || ($scope.filteredOffloadMasterItemList.length === 0 && isInOffload)) {
         showToast('warning', 'Add Item', 'There are no items available');
         return;
       }
@@ -87,7 +90,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     $this.calculatePickedQtyFromTotal = function (item) {
-      var totalQuantity = angular.copy(item.totalQuantity);
+      var totalQuantity = angular.copy(item.totalQuantity) || 0;
       item.quantity = parseInt(totalQuantity);
       item.quantity += parseInt(item.ullageQuantity) || 0;
       item.quantity -= parseInt(item.inboundQuantity) || 0;
@@ -157,19 +160,25 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       hideLoadingModal();
     };
 
-    $this.getItemType = function (item) {
+    $this.getItemType = function (item, storeInstanceId) {
       var inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
+      var inboundClosedCountTypeId = $this.getIdByNameFromArray('Warehouse Close', $scope.countTypes);
       var ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
+
+      var isFromNewInstance = storeInstanceId === parseInt($routeParams.storeId);
+      var isUllageQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId === ullageCountTypeId;
+      var isInboundQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && (item.countTypeId === inboundCountTypeId || item.countTypeId === inboundClosedCountTypeId);
+
       if (angular.isDefined(item.menuQuantity)) {
         return 'Template';
-      } else if (angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId ===
-        inboundCountTypeId) {
-        return 'Inbound';
-      } else if (angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId ===
-        ullageCountTypeId) {
+      } else if (isUllageQuantity) {
         return 'Ullage';
+      } else if (isInboundQuantity) {
+        return 'Inbound';
+      } else if(isFromNewInstance) {
+        return 'Packed';
       }
-      return 'Packed';
+      return 'ignore';
     };
 
     $this.formatTemplateItem = function (item) {
@@ -209,9 +218,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
       var menuItems = angular.copy(dataFromAPI.response);
       angular.forEach(menuItems, function (item) {
-        var itemType = $this.getItemType(item);
+        var itemType = $this.getItemType(item, item.storeInstanceId);
         var formatItemFunctionName = 'format' + itemType + 'Item';
-        $this[formatItemFunctionName](item);
+        if($this[formatItemFunctionName]) {
+          $this[formatItemFunctionName](item);
+        }
         item.itemDescription = item.itemCode + ' - ' + item.itemName;
         if ($routeParams.action === 'redispatch' && item.storeInstanceId === $scope.storeDetails.prevStoreInstanceId) {
           item.isFromPrevInstance = true;
@@ -320,16 +331,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.$watchGroup(['masterItemsList', 'menuItems'], function () {
-      $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
-        var mergedMenuItems = angular.copy($scope.menuItems).concat(angular.copy($scope.offloadMenuItems));
-        return !(lodash.findWhere(mergedMenuItems, {
+        $scope.filteredMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
+          return !(lodash.findWhere($scope.menuItems, {
+            itemMasterId: item.id
+          }));
+        });
+    });
+
+    $scope.$watchGroup(['masterItemsList', 'offloadMenuItems'], function () {
+      $scope.filteredOffloadMasterItemList = lodash.filter($scope.masterItemsList, function (item) {
+        return !(lodash.findWhere($scope.offloadMenuItems, {
           itemMasterId: item.id
         }));
       });
     });
 
     this.getMasterItemsListSuccess = function (itemsListJSON) {
-      $scope.masterItemsList = itemsListJSON.masterItems;
+      $scope.masterItemsList = angular.copy(itemsListJSON.masterItems);
     };
 
     this.getMasterItemsList = function () {
@@ -386,15 +404,21 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       getItemsSuccessHandler(dataFromAPI);
     }
 
-    this.checkForDuplicate = function (item) {
-      var duplicates = lodash.filter($scope.emptyMenuItems, function (filteredItem) {
+    this.checkForDuplicate = function (item, isInOffload) {
+      var menuToCheck;
+      if(isInOffload) {
+        menuToCheck = angular.copy($scope.emptyOffloadMenuItems);
+      } else {
+        menuToCheck = angular.copy($scope.emptyMenuItems);
+      }
+      var duplicates = lodash.filter(menuToCheck, function (filteredItem) {
         return (item.masterItem && filteredItem.masterItem && filteredItem.masterItem.id === item.masterItem.id);
       });
       return duplicates.length > 1;
     };
 
-    $scope.warnForDuplicateSelection = function (selectedItem) {
-      var duplicatesExist = $this.checkForDuplicate(selectedItem);
+    $scope.warnForDuplicateSelection = function (selectedItem, isInOffload) {
+      var duplicatesExist = $this.checkForDuplicate(selectedItem, isInOffload);
       if (duplicatesExist) {
         showToast('warning', 'Add Item', 'The item ' + selectedItem.masterItem.itemName + ' has already been added');
       }
@@ -402,13 +426,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.checkForDuplicatesInPayload = function () {
       var duplicatesExist = false;
-      var mergedMenuItems = (angular.copy($scope.emptyMenuItems));
-      if ($routeParams.action === 'redispatch') {
-        mergedMenuItems = mergedMenuItems.concat(angular.copy($scope.emptyOffloadMenuItems));
-      }
-      angular.forEach(mergedMenuItems, function (item) {
-        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item);
+      angular.forEach(angular.copy($scope.emptyMenuItems), function (item) {
+        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item, false);
       });
+
+      if($routeParams.action === 'redispatch') {
+        angular.forEach(angular.copy($scope.emptyOffloadMenuItems), function(offloadItem) {
+          duplicatesExist = duplicatesExist || $this.checkForDuplicate(offloadItem, true);
+        });
+      }
+
       return duplicatesExist;
     };
 
@@ -439,6 +466,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         ullageDataIncomplete = ullageDataIncomplete || (item.ullageQuantity > 0 && !item.ullageReason);
       });
       return ullageDataIncomplete;
+    };
+
+    $scope.calculateTotalDispatchedQty = function (item) {
+      var total = parseInt(item.quantity) || 0;
+      total += parseInt(item.inboundQuantity) || 0;
+      total -= parseInt(item.ullageQuantity) || 0;
+      return total;
     };
 
     this.dispatchAndReplenishCreatePayload = function (item, workingPayload) {
@@ -472,10 +506,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.createInboundPayload = function (item) {
       var inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
+      var inboundClosedCountTypeId = $this.getIdByNameFromArray('Warehouse Close', $scope.countTypes);
+      var shouldUseInboundClosedCountType = !angular.isDefined(item.isInOffload) && !item.isInOffload && $routeParams.action === 'redispatch';
+      var countTypeIdToUse = shouldUseInboundClosedCountType ? inboundClosedCountTypeId : inboundCountTypeId;
+
+
       var inboundPayload = {
         itemMasterId: item.itemMasterId || item.masterItem.id,
         quantity: parseInt(item.inboundQuantity),
-        countTypeId: inboundCountTypeId
+        countTypeId: countTypeIdToUse
       };
       if (item.inboundQuantityId) {
         inboundPayload.id = item.inboundQuantityId;
@@ -573,7 +612,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         response: combinedPayload.prevStoreInstancePayload
       };
       var promises = [
-        storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, currentStorePayload),
+        storeInstanceFactory.updateStoreInstanceItemsBulk($routeParams.storeId, currentStorePayload)
       ];
       if (prevStorePayload.response.length > 0) {
         promises.push(storeInstanceFactory.updateStoreInstanceItemsBulk($scope.storeDetails.prevStoreInstanceId,
@@ -592,7 +631,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.checkFormValidity = function () {
       if ($scope.storeInstancePackingForm.$invalid) {
-        showToast('danger', 'Save Items', 'All Packed quantities must be a number');
+        showToast('danger', 'Save Items', 'All quantities must be a number');
         return false;
       }
       var duplicatesExist = $this.checkForDuplicatesInPayload();
@@ -610,6 +649,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         showToast('danger', 'Save Items', 'All items with an ullage quantity require an ullage reason');
         return false;
       }
+
       return true;
     };
 
@@ -659,6 +699,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       var characteristicForAction = {
         'replenish': 'Upliftable',
+        'dispatch': 'Inventory',
         'end-instance': 'Inventory',
         'redispatch': 'Inventory'
       };
@@ -762,6 +803,53 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.createPayloadAndSave(shouldUpdateStatus);
     }
 
+    this.getRequiredQuantityForVarianceCalculation = function (item) {
+      var requiredQuantity = angular.copy(item.menuQuantity) || 1;
+      requiredQuantity = (angular.isNumber(requiredQuantity)) ? requiredQuantity : parseInt(requiredQuantity);
+      return requiredQuantity;
+    };
+
+    this.getDispatchedQuantityForVarianceCalculation = function (item) {
+      var dispatchedQuantity;
+      if($routeParams.action === 'redispatch') {
+        dispatchedQuantity = $scope.calculateTotalDispatchedQty(angular.copy(item)) || 0;
+      } else {
+        dispatchedQuantity = angular.copy(item.quantity) || 0;
+      }
+      dispatchedQuantity = (angular.isNumber(dispatchedQuantity)) ? dispatchedQuantity : parseInt(dispatchedQuantity);
+      return dispatchedQuantity;
+    };
+
+    this.calculateVariance = function (item) {
+      // don't check variance on manually added items
+      if(!item.menuQuantity) {
+        item.exceedsVariance = false;
+        return false;
+      }
+      var requiredQuantity = $this.getRequiredQuantityForVarianceCalculation(item) || 1;
+      var dispatchedQuantity = $this.getDispatchedQuantityForVarianceCalculation(item) || 0;
+
+      var threshold;
+      threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
+      item.exceedsVariance = (threshold > $scope.variance);
+    };
+
+    this.checkForExceededVariance = function () {
+      if($routeParams.action === 'end-instance' || $routeParams.action === 'replenish') {
+        return false;
+      }
+      var highVarianceExists = false;
+      angular.forEach($scope.menuItems, function (item) {
+        $this.calculateVariance(item);
+        highVarianceExists = highVarianceExists || item.exceedsVariance;
+      });
+      angular.forEach($scope.emptyMenuItems, function (item) {
+        $this.calculateVariance(item);
+        highVarianceExists = highVarianceExists || item.exceedsVariance;
+      });
+      return highVarianceExists;
+    };
+
     $scope.savePackingDataAndUpdateStatus = function (shouldUpdateStatus) {
       if ($scope.readOnly) {
         $location.path(dashboardURL);
@@ -776,11 +864,20 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    $scope.checkAndShowVarianceWarning = function () {
+      if($this.checkForExceededVariance()) {
+        angular.element('#varianceWarningModal').modal('show');
+      } else {
+        $scope.savePackingDataAndUpdateStatus($scope.shouldUpdateStatusOnSave);
+      }
+    };
+
     $scope.saveAndExit = function () {
+      $scope.shouldUpdateStatusOnSave = false;
       if ($scope.readOnly) {
         $location.path(dashboardURL);
       } else {
-        $scope.savePackingDataAndUpdateStatus(false);
+        $scope.checkAndShowVarianceWarning();
       }
     };
 
@@ -791,7 +888,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.goToNextStep = function () {
-      $scope.savePackingDataAndUpdateStatus(true);
+      $scope.shouldUpdateStatusOnSave = true;
+      $scope.checkAndShowVarianceWarning();
     };
 
     $scope.canProceed = function () {
@@ -826,24 +924,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return ($scope.showInboundBasedOnAction($routeParams.action, item));
     };
 
-    $scope.calculateTotalDispatchedQty = function (item) {
-      var total = parseInt(item.quantity) || 0;
-      total += parseInt(item.inboundQuantity) || 0;
-      total -= parseInt(item.ullageQuantity) || 0;
-      return total;
-    };
-
-    $scope.setClassBasedOnVariance = function (requiredQuantity, pickedQuantity) {
-      var requiredQuantityNum = requiredQuantity || 1;
-      requiredQuantityNum = (angular.isNumber(requiredQuantity)) ? requiredQuantity : parseInt(requiredQuantity);
-      var pickedQuantityNum = (angular.isNumber(pickedQuantity)) ? pickedQuantity : parseInt(pickedQuantity);
-
-      var threshold = ((pickedQuantityNum / requiredQuantityNum) - 1) * 100;
-      if (threshold > $scope.variance) {
+    $scope.showVarianceWarningClass = function (item) {
+      if(angular.isDefined(item.exceedsVariance) && item.exceedsVariance) {
         return 'warning-row';
+      } else {
+        return '';
       }
-      return '';
-
     };
 
   });

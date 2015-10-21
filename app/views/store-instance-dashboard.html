@@ -12,7 +12,7 @@
 
           <div class="col-xs-6 text-right">
 
-            <a ng-href="{{exportURL}}" class="btn btn-info" ng-disabled="!hasSelectedStore" >
+            <a ng-href="{{exportBulkURL}}" class="btn btn-info" ng-disabled="!hasSelectedStore" >
               <span class="glyphicon glyphicon-export" aria-hidden="true"></span>
               <span class="hidden-xs">Generate Docs</span>
             </a>
@@ -123,7 +123,7 @@
         <div class="panel-footer text-right">
           <button class="btn btn-default btn-search-clear"
             ng-click="clearSearchForm()"
-            ng-show="search.dispatchLMPStation.length || search.inboundLMPStation.length || search.storeNumber.length || search.scheduleStartDate.length || search.scheduleEndDate.length || search.departureStations.length || search.arrivalStations.length || search.storeInstance.length || search.storeStatusId.length">
+            ng-show="showClearButton()">
             <span class="btn-label">Clear</span>
           </button>
           <button ng-click="searchStoreInstanceDashboardData()" class="btn btn-primary btn-search">
@@ -230,10 +230,9 @@
              ng-click="navigateToAction(store, 'Redispatch')">
             Redispatch
           </a>
-          <!-- TODO: Generate Doc Download Link -->
           <a class="btn btn-info btn-xs btn-block" tabindex="0"
              ng-show="doesStoreInstanceContainAction(store, 'Get Flight Docs')"
-             href="#/{{store.id}}">
+             ng-href="{{store.exportURL}}">
             Generate Doc
           </a>
           <a class="btn btn-default btn-xs btn-block" tabindex="0"
@@ -293,23 +292,23 @@
         <td><!-- TODO: add user, which requires user accounts --></td>
         <td class="col-xs-1">
           <a class="btn btn-primary btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Pack')"
+             ng-show="shouldShowReplenishAction(replenishment, store, 'Pack')"
              ng-click="navigateToAction(replenishment, 'Pack')">
             Start Packing
           </a>
           <a class="btn btn-warning btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Seal')"
+             ng-show="shouldShowReplenishAction(replenishment, store, 'Seal')"
              ng-click="navigateToAction(replenishment, 'Seal')">
             Start Seals
           </a>
           <a class="btn btn-success btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Dispatch')"
+             ng-show="shouldShowReplenishAction(replenishment, store, 'Dispatch')"
              ng-click="navigateToAction(replenishment, 'Dispatch')">Dispatch
           </a>
-          <!-- TODO: Generate Doc Download Link -->
           <a class="btn btn-info btn-xs" tabindex="0"
-             ng-show="doesStoreInstanceContainAction(replenishment, 'Get Flight Docs')"
-             href="#/{{replenishment.id}}">Generate Doc
+          ng-show="shouldShowReplenishAction(replenishment, store, 'Get Flight Docs')"
+             ng-href="{{replenishment.exportURL}}">
+            Generate Doc
           </a>
         </td>
       </tr>

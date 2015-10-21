@@ -8,8 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig,
-                                                   storeInstanceFactory, $location, storeInstanceReviewFactory, $q, ngToast, $filter, dateUtility, lodash) {
+  .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig, $window,
+                                                   storeInstanceFactory, $location, storeInstanceReviewFactory, $q, ngToast, $filter, dateUtility, lodash, ENV) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -169,11 +169,13 @@ angular.module('ts5App')
     function setPackingSection() {
       $scope.pickListItems = [];
       $scope.offloadItemList = [];
+
       angular.forEach($scope.storeOneItemList, function (item) {
         var storeTwoItem = lodash.findWhere($scope.items, {
           itemMasterId: item.itemMasterId
         });
         if (storeTwoItem) {
+          delete storeTwoItem.ullageReasonCode;
           $scope.pickListItems.push(angular.merge(item, storeTwoItem));
           lodash.remove($scope.items, storeTwoItem);
         } else {
@@ -189,7 +191,7 @@ angular.module('ts5App')
       }
 
       $scope.pickListItems.map(function (item) {
-        item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - item.quantity;
+        item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - item.inboundQuantity;
       });
     }
 
@@ -274,7 +276,11 @@ angular.module('ts5App')
         id: response.statusId
       }, true)[0];
       showUserCurrentStatus();
-      $location.url('/store-instance-dashboard');
+
+      $window.open(ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
+        '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5', '_blank');
+
+      $location.path('store-instance-dashboard');
     }
 
     function checkOnValidStatus() {
@@ -304,6 +310,12 @@ angular.module('ts5App')
           }).id;
       });
 
+      var pickedInboundItemList = rawItemList.filter(function (item) {
+        return item.countTypeId === lodash.findWhere($this.countTypes, {
+            name: 'Warehouse Close'
+          }).id;
+      });
+
       var ullageItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
             name: 'Ullage'
@@ -315,7 +327,12 @@ angular.module('ts5App')
         delete item.quantity;
       });
 
-      return angular.merge(inboundItemList, ullageItemList);
+      pickedInboundItemList.map(function (item) {
+        item.inboundQuantity = item.quantity;
+        delete item.quantity;
+      });
+
+      return angular.merge(inboundItemList, ullageItemList, pickedInboundItemList);
     }
 
     function getDispatchedItemList(rawItemList, filteredItems) {
@@ -500,10 +517,15 @@ angular.module('ts5App')
     };
 
     $scope.hasDiscrepancy = function (item) {
-      if ($routeParams.action !== 'dispatch') {
+      var pickedQuantity = item.quantity;
+      if (!$routeParams.action.contains('dispatch')) {
         return '';
       }
-      return (item.menuQuantity !== item.quantity) ? 'danger' : '';
+
+      if ($routeParams.action === 'redispatch') {
+        pickedQuantity = item.pickedQuantity;
+      }
+      return (item.menuQuantity !== pickedQuantity) ? 'danger' : '';
     };
 
     $scope.getTitleFor = function (section) {
