@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, ngToast, dateUtility, GlobalMenuService,
-    storeInstanceWizardConfig, $location, schedulesService, menuCatererStationsService, lodash) {
+    storeInstanceWizardConfig, $location, schedulesService, menuCatererStationsService, lodash, $route) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -36,6 +36,18 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.isEndInstanceOrRedispatch = function() {
       return (this.isActionState('end-instance') || this.isActionState('redispatch'));
+    };
+
+    this.setStoreInstancesOnFloor = function(dataFromAPI) {
+      $scope.storeInstancesOnFloor = angular.copy(dataFromAPI.response);
+    };
+
+    this.getInstancesOnFloor = function(){
+      var query = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()),
+        statusId:10
+      };
+      return storeInstanceFactory.getStoreInstancesList(query).then($this.setStoreInstancesOnFloor);
     };
 
     this.setReplenishInstance = function(storeDetailsJSON) {
@@ -379,7 +391,27 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return promises;
     };
 
+    this.checkIfRedispatch = function() {
+      var onFloorInstance = $scope.storeInstancesOnFloor.filter(function(instance){
+        return (instance.storeId === parseInt($scope.formData.storeId));
+      });
+      return onFloorInstance[0];
+    };
+
+
+    this.displayConfirmDialog = function() {
+      //$route.updateParams({action:'redispatch',storeId:onFloorInstance.id});
+      window.confirm('Are you sure you want to redispatch?');
+    };
+
     this.createStoreInstance = function(saveAndExit) {
+      if($this.isActionState('dispatch')) {
+        var onFloorInstance = $this.checkIfRedispatch();
+        if(onFloorInstance.id){
+          $this.displayConfirmDialog();
+          return;
+        }
+      }
       this.displayLoadingModal('Creating new Store Instance');
       var payload = this.formatPayload();
       var promises = [];
@@ -558,7 +590,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.getCatererStationList(),
         $this.getStoresList(),
         $this.getCarrierNumbers(),
-        $this.getScheduleNumbers()
+        $this.getScheduleNumbers(),
+        $this.getInstancesOnFloor()
       ];
       if ($routeParams.storeId) {
         promises.push($this.getStoreDetails());
