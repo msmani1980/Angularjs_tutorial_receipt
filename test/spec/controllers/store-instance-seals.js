@@ -1151,4 +1151,23 @@ describe('the Store Instance Seals controller', function() {
 
   });
 
+  describe('storeInstanceIdForTamperedSeals method', function() {
+
+    it('if dependancies are resolved, the seals should be the storeId', function() {
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
+      expect(StoreInstanceSealsCtrl.storeInstanceIdForTamperedSeals()).toBe(5);
+    });
+
+    it('if dependancies are resolved and prevStoreInstanceId is set, it should be the prevStoreInstanceId',
+      function() {
+        initController();
+        resolveAllDependencies();
+        $scope.$digest();
+        $scope.storeDetails.prevStoreInstanceId = 1;
+        expect(StoreInstanceSealsCtrl.storeInstanceIdForTamperedSeals()).toBe(1);
+      });
+  });
+
 });
