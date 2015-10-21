@@ -118,7 +118,7 @@ angular.module('ts5App')
     };
 
     this.makePromises = function() {
-      return [
+      var promises = [
         this.getSealColors(),
         this.getSealTypes(),
         this.getStoreInstanceSeals()
