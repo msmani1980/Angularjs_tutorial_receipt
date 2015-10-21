@@ -74,6 +74,14 @@ angular.module('ts5App')
       $this.getSealTypesDependencies();
       $this.setWizardSteps();
       $this.isInstanceReadOnly();
+      $scope.formData.note = $scope.storeDetails.note;
+      $scope.formData.tampered = $scope.storeDetails.tampered;
+    };
+
+    this.setPrevStoreDetails = function(prevStoreDetailsJSON) {
+      $scope.prevStoreDetails = prevStoreDetailsJSON;
+      $scope.formData.note = $scope.prevStoreDetails.note;
+      $scope.formData.tampered = $scope.prevStoreDetails.tampered;
     };
 
     this.setSealTypes = function(sealTypesJSON) {
@@ -104,6 +112,10 @@ angular.module('ts5App')
       storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
     };
 
+    this.getPrevStoreDetails = function() {
+      storeInstanceFactory.getStoreDetails($scope.storeDetails.prevStoreInstanceId).then($this.setPrevStoreDetails);
+    };
+
     this.getSealTypes = function() {
       return sealTypesService.getSealTypes().then($this.setSealTypes);
     };
@@ -123,8 +135,8 @@ angular.module('ts5App')
         this.getSealTypes(),
         this.getStoreInstanceSeals()
       ];
-      if ($this.isActionState('redispatch') && $scope.storeDetails.prevStoreInstanceId) {
-        promises.push($this.getPrevStoreDetails());
+      if ($this.isInboundDuringRedispatch() || $this.isInboundDuringEndInstance()) {
+        promises.push(this.getPrevStoreDetails());
       }
       return promises;
     };
@@ -442,11 +454,17 @@ angular.module('ts5App')
     };
 
     this.storeInstanceIdForTamperedSeals = function() {
-      if ($scope.storeDetails.prevStoreInstanceId) {
+      if ($scope.storeDetails.prevStoreInstanceId && $routeParams.action === 'redispatch') {
         return $scope.storeDetails.prevStoreInstanceId;
-      } else {
-        return $routeParams.storeId;
       }
+      return $routeParams.storeId;
+    };
+
+    this.makeNotePayload = function() {
+      if ($scope.formData.tampered && $scope.formData.note) {
+        return $scope.formData.note.replace(/'/g, '');
+      }
+      return '';
     };
 
     this.updateStoreInstanceTampered = function() {
@@ -456,8 +474,8 @@ angular.module('ts5App')
         scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
         storeId: $scope.storeDetails.storeId,
         menus: $this.formatMenus($scope.storeDetails.menuList),
-        tampered: $scope.storeDetails.tampered,
-        note: $scope.storeDetails.note.replace(/'/g, '')
+        tampered: $scope.formData.tampered,
+        note: $this.makeNotePayload()
       };
       return payload;
     };
