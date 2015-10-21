@@ -178,6 +178,8 @@ angular.module('ts5App')
           delete storeTwoItem.ullageReasonCode;
           delete storeTwoItem.inboundQuantity;
           delete storeTwoItem.ullageQuantity;
+          item.inboundQuantity = item.inboundQuantity || item.offloadInboundQuantity;
+
           $scope.pickListItems.push(angular.merge(item, storeTwoItem));
           lodash.remove($scope.storeTwoItemList, storeTwoItem);
         } else {
