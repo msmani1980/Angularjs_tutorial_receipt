@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: dynamicLeftNav', function() {
+fdescribe('Directive: dynamicLeftNav', function() {
 
   // load the directive's module
   beforeEach(module('ts5App', 'template-module'));
@@ -62,7 +62,7 @@ describe('Directive: dynamicLeftNav', function() {
       expect(isolatedScope.menuItems).toBeDefined();
     });
     it('should have 3 items in the menuItems array scope variable', function() {
-      expect(isolatedScope.menuItems.length).toEqual(3);
+      expect(isolatedScope.menuItems.length).toEqual(4);
     });
   });
 
@@ -79,7 +79,7 @@ describe('Directive: dynamicLeftNav', function() {
       expect(isolatedScope.menuItems).toBeDefined();
     });
     it('should have 3 items in the menuItems array scope variable', function() {
-      expect(isolatedScope.menuItems.length).toEqual(3);
+      expect(isolatedScope.menuItems.length).toEqual(4);
     });
   });
 
