@@ -1162,7 +1162,7 @@ describe('the Store Instance Seals controller', function() {
 
     it('if dependancies are resolved and prevStoreInstanceId is set, it should be the prevStoreInstanceId',
       function() {
-        initController();
+        initController('redispatch');
         resolveAllDependencies();
         $scope.$digest();
         $scope.storeDetails.prevStoreInstanceId = 1;
