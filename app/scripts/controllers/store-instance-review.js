@@ -171,27 +171,29 @@ angular.module('ts5App')
       $scope.offloadItemList = [];
 
       angular.forEach($scope.storeOneItemList, function (item) {
-        var storeTwoItem = lodash.findWhere($scope.items, {
+        var storeTwoItem = lodash.findWhere($scope.storeTwoItemList, {
           itemMasterId: item.itemMasterId
         });
         if (storeTwoItem) {
           delete storeTwoItem.ullageReasonCode;
+          delete storeTwoItem.inboundQuantity;
+          delete storeTwoItem.ullageQuantity;
           $scope.pickListItems.push(angular.merge(item, storeTwoItem));
-          lodash.remove($scope.items, storeTwoItem);
+          lodash.remove($scope.storeTwoItemList, storeTwoItem);
         } else {
           $scope.offloadItemList.push(item);
         }
       });
-
-      if (angular.isArray($scope.items)) {
-        $scope.items.map(function (item) {
+      if (angular.isArray($scope.storeTwoItemList)) {
+        $scope.storeTwoItemList.map(function (item) {
+          console.log(item);
           item.quantity = 0;
         });
-        $scope.pickListItems = $scope.pickListItems.concat($scope.items);
+        $scope.pickListItems = $scope.pickListItems.concat($scope.storeTwoItemList);
       }
 
       $scope.pickListItems.map(function (item) {
-        item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - item.inboundQuantity;
+        item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - (item.inboundQuantity || 0);
       });
     }
 
@@ -302,7 +304,7 @@ angular.module('ts5App')
         return $scope.storeDetails.currentStatus.statusName === STATUS_END_INSTANCE;
       }
     };
-
+// TODO on redispatch, show ullageReason and offload list is missing
     function mergeInboundUllageItems(rawItemList) {
       var inboundItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
@@ -322,32 +324,18 @@ angular.module('ts5App')
           }).id;
       });
 
-      ullageItemList.map(function (item) {
-        item.ullageQuantity = item.quantity;
-        delete item.quantity;
-      });
-
       pickedInboundItemList.map(function (item) {
         item.inboundQuantity = item.quantity;
         delete item.quantity;
       });
 
-      return angular.merge(inboundItemList, ullageItemList, pickedInboundItemList);
-    }
-
-    function getDispatchedItemList(rawItemList, filteredItems) {
-      var dispatchedItemList = rawItemList.filter(function (item) {
-        return item.countTypeId === lodash.findWhere($this.countTypes, {
-            name: 'Warehouse Open'
-          }).id;
-      });
-
-      dispatchedItemList.map(function (item) {
-        item.dispatchedQuantity = item.quantity;
+      ullageItemList.map(function (item) {
+        item.ullageQuantity = item.quantity;
+        item.ullageCode = item.ullageReasonCode;
         delete item.quantity;
       });
 
-      return angular.merge(dispatchedItemList, filteredItems);
+      return angular.merge(inboundItemList, ullageItemList, pickedInboundItemList);
     }
 
     function formatItems(itemArray, excludeMenuQty) {
@@ -362,21 +350,111 @@ angular.module('ts5App')
       return itemArray;
     }
 
+    /*
+     store 1 - pick list, inbound quantity --> warehouse close
+     store 1 - pick list, ullage quantity --> ullage
+     store 2 - pick list, dispatched quantity -->  warehouse Open
+
+     store 1 - offload list, inbound quantity --> offload
+     store 1 - offload list, ullage quantity --> ullage
+     */
+    function formatStoreTwoItems(rawItemList) {
+      var dispatchedCountTypeId = lodash.findWhere($this.countTypes, {
+        name: 'Warehouse Open'
+      }).id;
+
+      var inboundCountTypeId = lodash.findWhere($this.countTypes, {
+        name: 'Offload'
+      }).id;
+
+      var ullageCountTypeId = lodash.findWhere($this.countTypes, {
+        name: 'Ullage'
+      }).id;
+
+
+      var cleanItemList = [];
+      var uniqueStoreTwoItems = lodash.uniq(rawItemList, 'itemMasterId');
+      uniqueStoreTwoItems.map(function (item) {
+        var newItem = {
+          itemMasterId: item.itemMasterId,
+          itemDescription: item.itemCode + ' -  ' + item.itemName,
+          disabled: true,
+          menuQuantity: getMenuQuantity(item.itemMasterId)
+        };
+
+        var dispatchedItem = lodash.findWhere(rawItemList, {itemMasterId: item.itemMasterId, countTypeId: dispatchedCountTypeId});
+        if (dispatchedItem) {
+          newItem.dispatchedQuantity = dispatchedItem.quantity;
+        }
+
+        var inboundItem = lodash.findWhere(rawItemList, {itemMasterId: item.itemMasterId, countTypeId: inboundCountTypeId});
+        if (inboundItem) {
+          newItem.inboundQuantity = inboundItem.quantity;
+        }
+
+        var ullageItem = lodash.findWhere(rawItemList, {itemMasterId: item.itemMasterId, countTypeId: ullageCountTypeId});
+        if (ullageItem) {
+          newItem.ullageQuantity = ullageItem.quantity;
+          newItem.ullageReasonCode = ullageItem.ullageReasonCode;
+        }
+
+        cleanItemList.push(newItem);
+      });
+      return cleanItemList;
+    }
+
+    function formatStoreOneItems(rawItemList) {
+      var inboundCountTypeId = lodash.findWhere($this.countTypes, {
+        name: 'Warehouse Close'
+      }).id;
+      var ullageCountTypeId = lodash.findWhere($this.countTypes, {
+        name: 'Ullage'
+      }).id;
+      var offloadInboundCountTypeId = lodash.findWhere($this.countTypes, {
+        name: 'Offload'
+      }).id;
+
+      var cleanItemList = [];
+      var uniqueStoreOneItems = lodash.uniq(rawItemList, 'itemMasterId');
+      uniqueStoreOneItems.map(function (item) {
+        var newItem = {
+          itemMasterId: item.itemMasterId,
+          itemDescription: item.itemCode + ' -  ' + item.itemName,
+          disabled: true
+        };
+
+        var inboundItem = lodash.findWhere(rawItemList, {itemMasterId: item.itemMasterId, countTypeId: inboundCountTypeId});
+        if (inboundItem) {
+          newItem.inboundQuantity = inboundItem.quantity;
+        }
+
+        var ullageItem = lodash.findWhere(rawItemList, {itemMasterId: item.itemMasterId, countTypeId: ullageCountTypeId});
+        if (ullageItem) {
+          newItem.ullageQuantity = ullageItem.quantity;
+          newItem.ullageReasonCode = ullageItem.ullageReasonCode;
+        }
+
+        var offloadInboundItem = lodash.findWhere(rawItemList, {itemMasterId: item.itemMasterId, countTypeId: offloadInboundCountTypeId});
+        if (offloadInboundItem) {
+          newItem.offloadInboundQuantity = offloadInboundItem.quantity;
+        }
+
+        cleanItemList.push(newItem);
+      });
+      return cleanItemList;
+    }
+
     function setStoreInstanceItems(dataFromAPI) {
       var rawItemList = angular.copy(dataFromAPI.response);
       var mergedItems = ($scope.isEndInstance() ? mergeInboundUllageItems(rawItemList) : rawItemList);
       if (isRedispatch()) {
-        mergedItems = getDispatchedItemList(rawItemList, mergedItems);
+        $scope.storeTwoItemList = formatStoreTwoItems(rawItemList);
       }
       $scope.items = formatItems(mergedItems);
     }
 
     function setStoreOneItemList(dataFromAPI) {
-      var mergedItems = mergeInboundUllageItems(angular.copy(dataFromAPI.response));
-      mergedItems.map(function (item) {
-        item.itemDescription = item.itemCode + ' -  ' + item.itemName;
-      });
-      $scope.storeOneItemList = formatItems(mergedItems, true);
+      $scope.storeOneItemList = formatStoreOneItems(angular.copy(dataFromAPI.response));
     }
 
     function getStoreInstanceItems() {
