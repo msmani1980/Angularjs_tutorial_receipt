@@ -123,6 +123,10 @@ angular.module('ts5App')
         this.getSealTypes(),
         this.getStoreInstanceSeals()
       ];
+      if ($this.isActionState('redispatch') && $scope.storeDetails.prevStoreInstanceId) {
+        promises.push($this.getPrevStoreDetails());
+      }
+      return promises;
     };
 
     this.createHandoverActions = function() {
