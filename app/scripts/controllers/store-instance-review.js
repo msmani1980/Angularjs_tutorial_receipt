@@ -100,7 +100,9 @@ angular.module('ts5App')
           sealNumbers.push(sealNumber);
         }
       }
-      return sealNumbers;
+      return sealNumbers.sort(function (a, b) {
+        return a - b;
+      });
     }
 
     function getSealColorByTypeId(sealTypeId) {
@@ -188,7 +190,6 @@ angular.module('ts5App')
       });
       if (angular.isArray($scope.storeTwoItemList)) {
         $scope.storeTwoItemList.map(function (item) {
-          console.log(item);
           item.quantity = 0;
         });
         $scope.pickListItems = $scope.pickListItems.concat($scope.storeTwoItemList);
