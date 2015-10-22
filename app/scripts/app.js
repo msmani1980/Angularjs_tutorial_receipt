@@ -222,6 +222,10 @@ angular.module('ts5App', [
     templateUrl: 'views/discount-list.html',
     controller: 'DiscountListCtrl',
     controllerAs: 'discountList'
+  }).when('/currency-edit', {
+    templateUrl: 'views/currency-edit.html',
+    controller: 'CurrencyEditCtrl',
+    controllerAs: 'CurrencyEdit'
   })
   .otherwise({
     redirectTo: '/'

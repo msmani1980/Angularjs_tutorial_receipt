@@ -19,6 +19,32 @@
           "currencyId": 67,
           "currencyCode": "IN"
         }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 67,
+          "denomination": "0.500",
+          "id": 78,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 67,
+          "denomination": "1.000",
+          "id": 79,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 67,
+          "denomination": "5.000",
+          "id": 80,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 67,
+          "denomination": "10.000",
+          "id": 81,
+          "isDeleted": null
+        }
       ]
     },
     {
@@ -39,6 +65,14 @@
           "countryId": 112,
           "currencyId": 66,
           "currencyCode": "INR"
+        }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 66,
+          "denomination": "0.200",
+          "id": 51,
+          "isDeleted": null
         }
       ]
     },
@@ -61,6 +95,14 @@
           "currencyId": 65,
           "currencyCode": "NOS"
         }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 65,
+          "denomination": "0.200",
+          "id": 50,
+          "isDeleted": null
+        }
       ]
     },
     {
@@ -81,6 +123,14 @@
           "countryId": 84,
           "currencyId": 63,
           "currencyCode": "NOK"
+        }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 63,
+          "denomination": "0.200",
+          "id": 49,
+          "isDeleted": null
         }
       ]
     },
@@ -103,6 +153,14 @@
           "currencyId": 58,
           "currencyCode": "EUR"
         }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 58,
+          "denomination": "0.200",
+          "id": 48,
+          "isDeleted": null
+        }
       ]
     },
     {
@@ -123,6 +181,88 @@
           "countryId": 84,
           "currencyId": 57,
           "currencyCode": "GBP"
+        },
+      {
+        "countryCurrencyId": 4,
+        "countryCode": "GB",
+        "countryName": "United Kingdom",
+        "countryId": 84,
+        "currencyId": 8,
+        "currencyCode": "GBP"
+      }
+        ],
+      "currencyDenominations": [
+        {
+          "currencyId": 57,
+          "denomination": "1.000",
+          "id": 7,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "2.000",
+          "id": 8,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "5.000",
+          "id": 9,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "10.000",
+          "id": 10,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "20.000",
+          "id": 11,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "50.000",
+          "id": 12,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "0.010",
+          "id": 67,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "0.020",
+          "id": 68,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "0.050",
+          "id": 69,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "0.100",
+          "id": 70,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "0.200",
+          "id": 71,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 57,
+          "denomination": "0.500",
+          "id": 72,
+          "isDeleted": null
         }
       ]
     },
@@ -145,6 +285,14 @@
           "currencyId": 56,
           "currencyCode": "TEb"
         }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 56,
+          "denomination": "2.000",
+          "id": 6,
+          "isDeleted": null
+        }
       ]
     },
     {
@@ -157,7 +305,21 @@
       "createdOn": "2014-09-12",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 3,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 55,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 54,
@@ -177,6 +339,20 @@
           "countryId": 239,
           "currencyId": 54,
           "currencyCode": "TEn"
+        }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 54,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 54,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
         }
       ]
     },
@@ -207,6 +383,20 @@
           "currencyId": 53,
           "currencyCode": "TEl"
         }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 53,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 53,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
       ]
     },
     {
@@ -219,7 +409,21 @@
       "createdOn": "2014-09-12",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 52,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 52,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 51,
@@ -231,7 +435,21 @@
       "createdOn": "2014-09-12",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 51,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 51,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 49,
@@ -243,7 +461,21 @@
       "createdOn": "2014-09-12",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 49,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 49,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 46,
@@ -255,7 +487,21 @@
       "createdOn": "2014-09-12",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 46,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 46,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 43,
@@ -276,6 +522,20 @@
           "currencyId": 43,
           "currencyCode": "TEG"
         }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 43,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 43,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
       ]
     },
     {
@@ -288,7 +548,21 @@
       "createdOn": "2014-09-11",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 40,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 40,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 37,
@@ -300,7 +574,21 @@
       "createdOn": "2014-09-11",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 37,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 37,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 35,
@@ -312,7 +600,21 @@
       "createdOn": "2014-09-11",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 35,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 35,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 34,
@@ -324,7 +626,21 @@
       "createdOn": "2014-09-11",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 34,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 34,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 18,
@@ -336,7 +652,21 @@
       "createdOn": "2014-08-20",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 18,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 18,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 17,
@@ -348,7 +678,21 @@
       "createdOn": "2014-08-20",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 17,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 17,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     },
     {
       "id": 1,
@@ -369,6 +713,20 @@
           "currencyId": 1,
           "currencyCode": "USD"
         }
+      ],
+      "currencyDenominations": [
+        {
+          "currencyId": 1,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 1,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
       ]
     },
     {
@@ -381,7 +739,21 @@
       "createdOn": "2014-08-20",
       "updatedBy": null,
       "updatedOn": null,
-      "currencyCountryViews": []
+      "currencyCountryViews": [],
+      "currencyDenominations": [
+        {
+          "currencyId": 0,
+          "denomination": "12.000",
+          "id": 3,
+          "isDeleted": null
+        },
+        {
+          "currencyId": 0,
+          "denomination": "15.000",
+          "id": 4,
+          "isDeleted": null
+        }
+      ]
     }
   ],
   "meta": {
