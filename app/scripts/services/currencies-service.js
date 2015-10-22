@@ -9,7 +9,10 @@
  */
 angular.module('ts5App')
   .service('currenciesService', function ($q, $resource, GlobalMenuService, ENV) {
-    var companyId = GlobalMenuService.company.get();
+
+    var getCompanyId = function () {
+      return GlobalMenuService.company.get();
+    };
 
     var masterCurrenciesURL = ENV.apiUrl + '/api/currencies';
     var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
@@ -17,7 +20,7 @@ angular.module('ts5App')
 
     var requestParameters = {
       id: '@id',
-      companyId: companyId
+      companyId: '@companyId'
     };
 
     var actions = {
@@ -51,18 +54,28 @@ angular.module('ts5App')
     };
 
     var getDetailedCompanyCurrencies = function (payload) {
+      payload = payload || {};
+      payload.companyId = getCompanyId();
       return detailedCompanyCurrenciesResource.getDetailedCompanyCurrencies(payload).$promise;
     };
 
     var deleteDetailedCompanyCurrency = function (currencyId) {
-      return detailedCompanyCurrenciesResource.deleteDetailedCompanyCurrency({id: currencyId}).$promise;
+      var payload = {
+        id: currencyId,
+        companyId: getCompanyId()
+      };
+      return detailedCompanyCurrenciesResource.deleteDetailedCompanyCurrency(payload).$promise;
     };
 
     var createDetailedCompanyCurrency = function (payload) {
+      payload = payload || {};
+      payload.companyId = getCompanyId();
       return detailedCompanyCurrenciesResource.createDetailedCompanyCurrency(payload).$promise;
     };
 
     var updateDetailedCompanyCurrency = function (payload) {
+      payload = payload || {};
+      payload.companyId = getCompanyId();
       return detailedCompanyCurrenciesResource.updateDetailedCompanyCurrency(payload).$promise;
     };
 
