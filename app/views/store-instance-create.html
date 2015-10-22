@@ -129,12 +129,12 @@
 
   </form>
 
-</div>
+  <confirmation-modal
+   title="The Store you selected is already associated to another Instance"
+   body="Currently, Instance {{ onFloorInstance.id }} is in the 'On Floor' status. You can either Redispatch this Instance or press Cancel to select a different Store."
+   confirmation-callback="goToRedispatch()"
+   confirmation-label="Start Redispatch"
+   cancel-label="Cancel"
+   ></confirmation-modal>
 
-<confirmation-modal
- title="The Store you selected is already associated to another Instance"
- body="Currently, Instance {{ onFloorInstance.id }} is in the 'On Floor' status. You can either Redispatch this Instance or press Cancel to select a different Store."
- confirmation-callback="goToRedispatch()"
- confirmation-label="Start Redispatch"
- cancel-label="Cancel"
- ></confirmation-modal>
+</div>
