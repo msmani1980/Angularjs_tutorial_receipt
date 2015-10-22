@@ -9,7 +9,7 @@
  */
 
 angular.module('ts5App').controller('StockDashboardCtrl',
-  function ($scope, $http, GlobalMenuService, stockDashboardService, catererStationService, companyReasonCodesService,
+  function ($scope, $http, GlobalMenuService, stockManagementStationItemsService, catererStationService, companyReasonCodesService,
             dateUtility, $filter,ENV, stockTakeFactory) {
 
     $scope.viewName = 'Stock Dashboard';
@@ -45,7 +45,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
         return false;
       }
       $this.displayLoadingModal('Loading items from ' + $scope.selectedCateringStation.name);
-      stockDashboardService.getStockDashboardItems($scope.selectedCateringStation.id).then($this.getStockDashboardItemsSuccessHandler);
+      stockManagementStationItemsService.getStockManagementStationItems($scope.selectedCateringStation.id).then($this.getStockDashboardItemsSuccessHandler);
     };
 
     this.init = function () {

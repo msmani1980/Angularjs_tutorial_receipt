@@ -8,27 +8,28 @@ describe('Directive: stockTakeReason', function() {
   var element;
   var controller;
   var scope;
-  var stockAdjustmentsService;
-  var adjustStockDeferred;
+  var stockManagementStationItemsService;
+  var updateStockManagementStationItemsDeferred;
   var mockStockItem;
 
   beforeEach(inject(function($rootScope, $compile, $injector, $q) {
     scope = $rootScope;
-    stockAdjustmentsService = $injector.get('stockAdjustmentsService');
+    stockManagementStationItemsService = $injector.get('stockManagementStationItemsService');
     element = angular.element('<stock-take-reason></stock-take-reason>');
     element = $compile(element)(scope);
     scope.$digest();
     controller = element.controller('stockTakeReason');
-    adjustStockDeferred = $q.defer();
-    adjustStockDeferred.resolve({
+    updateStockManagementStationItemsDeferred = $q.defer();
+    updateStockManagementStationItemsDeferred.resolve({
       response: 200
     });
-    spyOn(stockAdjustmentsService, 'adjustStock').and.returnValue(adjustStockDeferred.promise);
+    spyOn(stockManagementStationItemsService, 'updateStockManagementStationItems').and.returnValue(updateStockManagementStationItemsDeferred.promise);
     mockStockItem = {
       id: 1,
-      currentCountQuantity: 900,
-      masterItemId: 2,
-      catererStationId: 4
+      currentQuantity: 900,
+      ullageQuantity: 901,
+      itemMasterId: 2,
+      stationId: 4
     };
     scope.stockTakeReasonOpen(mockStockItem);
     scope.$digest();
@@ -82,15 +83,15 @@ describe('Directive: stockTakeReason', function() {
       });
 
       it('should set scope.currentCountQuantity equal to mockStockItem.currentCountQuantity', function() {
-        expect(scope.currentCountQuantityQuantity).toEqual(mockStockItem.currentCountQuantityQuantity);
+        expect(scope.currentCountQuantity).toEqual(mockStockItem.currentQuantity);
       });
 
       it('should set scope.masterItemId equal to mockStockItem.masterItemId', function() {
-        expect(scope.masterItemId).toEqual(mockStockItem.masterItemId);
+        expect(scope.masterItemId).toEqual(mockStockItem.itemMasterId);
       });
 
       it('should set scope.catererStationId equal to mockStockItem.catererStationId', function() {
-        expect(scope.catererStationId).toEqual(mockStockItem.catererStationId);
+        expect(scope.catererStationId).toEqual(mockStockItem.stationId);
       });
 
     });
@@ -165,6 +166,7 @@ describe('Directive: stockTakeReason', function() {
         scope.stockAdjustmentReason = mockStockAdjustmentReason;
         scope.comment = mockComment;
         scope.newCount = mockNewCount;
+        scope.currentUllageQuantity = mockStockItem.ullageQuantity;
         scope.stockTakeReasonSave();
       });
 
@@ -172,15 +174,16 @@ describe('Directive: stockTakeReason', function() {
         expect(scope.clearScopeVars).toHaveBeenCalled();
       });
 
-      it('should call stockAdjustmentsService.adjustStock API with mocked payload', function() {
+      it('should call stockManagementStationItemsService.updateStockManagementStationItems API with mocked payload', function() {
         var mockPayload = {
-          catererStationId: mockStockItem.catererStationId,
-          masterItemId: mockStockItem.masterItemId,
-          quantity: parseInt(mockNewCount),
+          stationId: mockStockItem.stationId,
+          itemMasterId: mockStockItem.itemMasterId,
+          currentQuantity: parseInt(mockNewCount),
+          ullageQuantity: mockStockItem.ullageQuantity,
           companyReasonCodeId: mockStockAdjustmentReason.id,
           note: mockComment
         };
-        expect(stockAdjustmentsService.adjustStock).toHaveBeenCalledWith(mockPayload);
+        expect(stockManagementStationItemsService.updateStockManagementStationItems).toHaveBeenCalledWith(1, mockPayload);
       });
 
     });

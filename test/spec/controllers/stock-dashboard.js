@@ -13,10 +13,10 @@ describe('Controller: StockDashboardCtrl', function() {
   ));
 
   var StockDashboardCtrl,
-    stockDashboardService,
+    stockManagementStationItemsService,
     catererStationService,
     companyReasonCodesService,
-    getStockDashboardItemsDeferred,
+    getStockManagementStationItemsDeferred,
     getCatererStationListDeferred,
     getCompanyReasonCodesDeferred,
     stockManagementDashboardJSON,
@@ -34,7 +34,7 @@ describe('Controller: StockDashboardCtrl', function() {
     scope = $rootScope.$new();
     http = $injector.get('$http');
     ENV = $injector.get('ENV');
-    stockDashboardService = $injector.get('stockDashboardService');
+    stockManagementStationItemsService = $injector.get('stockManagementStationItemsService');
     catererStationService = $injector.get('catererStationService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
     stockTakeService = $injector.get('stockTakeService');
@@ -52,8 +52,8 @@ describe('Controller: StockDashboardCtrl', function() {
     spyOn(stockTakeService, 'getStockTakeList').and.returnValue(
       getStockTakeListDeferred.promise);
 
-    getStockDashboardItemsDeferred = $q.defer();
-    getStockDashboardItemsDeferred.resolve(stockManagementDashboardJSON);
+    getStockManagementStationItemsDeferred = $q.defer();
+    getStockManagementStationItemsDeferred.resolve(stockManagementDashboardJSON);
 
     getCatererStationListDeferred = $q.defer();
     getCatererStationListDeferred.resolve(cateringStationsJSON);
@@ -61,7 +61,7 @@ describe('Controller: StockDashboardCtrl', function() {
     getCompanyReasonCodesDeferred = $q.defer();
     getCompanyReasonCodesDeferred.resolve(companyReasonCodesJSON);
 
-    spyOn(stockDashboardService, 'getStockDashboardItems').and.returnValue(getStockDashboardItemsDeferred.promise);
+    spyOn(stockManagementStationItemsService, 'getStockManagementStationItems').and.returnValue(getStockManagementStationItemsDeferred.promise);
     spyOn(catererStationService, 'getCatererStationList').and.returnValue(getCatererStationListDeferred.promise);
     spyOn(companyReasonCodesService, 'getAll').and.returnValue(getCompanyReasonCodesDeferred.promise);
 
@@ -93,7 +93,7 @@ describe('Controller: StockDashboardCtrl', function() {
           name:'fakeCateringStation'
         };
         scope.$digest();
-        expect(stockDashboardService.getStockDashboardItems).toHaveBeenCalled();
+        expect(stockManagementStationItemsService.getStockManagementStationItems).toHaveBeenCalled();
       });
 
       it('should attach the stock dashboard list to the scope', function() {
