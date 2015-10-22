@@ -11,10 +11,21 @@ angular.module('ts5App')
 
     var controller = function ($scope) {
 
-      $scope.confirmation = function () {
+      var $this = this;
+
+      this.hideModal = function() {
         var modal = angular.element('#confirmation-modal');
         modal.modal('hide');
+      };
+
+      $scope.confirmation = function () {
+        $this.hideModal();
         $scope.confirmationCallback();
+      };
+
+      $scope.alternative = function () {
+        $this.hideModal();
+        $scope.alternativeCallback();
       };
 
     };
@@ -27,6 +38,8 @@ angular.module('ts5App')
         body: '@',
         confirmationLabel: '@',
         confirmationCallback: '&',
+        alternativeLabel: '@',
+        alternativeCallback: '&',
         cancelLabel: '@',
       },
       controller: controller

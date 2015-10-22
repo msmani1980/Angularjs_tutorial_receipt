@@ -13,10 +13,13 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-default btn-cancel" data-dismiss="modal">
+        <button ng-if="cancelLabel" class="btn btn-default btn-cancel" data-dismiss="modal">
             <i class="fa fa-close"></i> {{ cancelLabel }}
         </button>
-        <button class="btn btn-success btn-create" ng-click="confirmation()">
+        <button ng-if="alternativeLabel" class="btn btn-primary btn-create" ng-click="alternative()">
+          <i class="fa fa-check"></i> {{ alternativeLabel }}
+        </button>
+        <button class="btn btn-success btn-primary" ng-click="confirmation()">
           <i class="fa fa-check"></i> {{ confirmationLabel }}
         </button>
       </div>

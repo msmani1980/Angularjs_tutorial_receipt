@@ -2,7 +2,6 @@
 
 describe('The confirmation modal directive', function () {
 
-  // load the directive's module and template module
   beforeEach(module('ts5App', 'template-module'));
 
   var scope,
@@ -14,9 +13,6 @@ describe('The confirmation modal directive', function () {
 
   function generateDirectiveTemplate(config) {
     var template = '<confirmation-modal ';
-    if(config.confirmationLabel) {
-      template += 'confirmation-label="'+config.confirmationLabel+'" ';
-    }
     if(config.cancelLabel) {
       template += 'cancel-label="'+config.cancelLabel+'" ';
     }
@@ -28,6 +24,15 @@ describe('The confirmation modal directive', function () {
     }
     if(config.confirmationCallback) {
       template += 'confirmation-call-back="'+config.confirmationCallback+'" ';
+    }
+    if(config.confirmationLabel) {
+      template += 'confirmation-label="'+config.confirmationLabel+'" ';
+    }
+    if(config.alternativeCallback) {
+      template += 'alternative-call-back="'+config.alternativeCallback+'" ';
+    }
+    if(config.alternativeLabel) {
+      template += 'alternative-label="'+config.alternativeLabel+'" ';
     }
     template += '></confirmation-modal>';
     return template;
@@ -73,7 +78,7 @@ describe('The confirmation modal directive', function () {
       expect(element.find('.modal-footer')[0]).toBeDefined();
     });
 
-    it('should have two buttons in the footer', function () {
+    it('should have three buttons in the footer', function () {
       expect(element.find('.modal-footer .btn').length).toEqual(2);
     });
 
@@ -81,8 +86,12 @@ describe('The confirmation modal directive', function () {
       expect(element.find('.modal-footer .btn-cancel').length).toEqual(1);
     });
 
-    it('should have a button to remove the item', function () {
-      expect(element.find('.modal-footer .btn-create').length).toEqual(1);
+    it('should have a confirmation button', function () {
+      expect(element.find('.modal-footer .btn-success').length).toEqual(1);
+    });
+
+    it('should have a alternative button', function () {
+      expect(element.find('.modal-footer .btn-primary').length).toEqual(1);
     });
 
   });

@@ -579,7 +579,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'formatDispatchPayload').and.callThrough();
       spyOn(storeInstanceFactory, 'createStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
-      spyOn(StoreInstanceCreateCtrl, 'checkIfRedispatch').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'checkForOnFloorInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage');
@@ -591,8 +591,8 @@ describe('Store Instance Create Controller', function() {
         'Creating new Store Instance');
     });
 
-    it('should check if we are trying to perform a redispatch', function() {
-      expect(StoreInstanceCreateCtrl.checkIfRedispatch).toHaveBeenCalled();
+    it('should check if we are trying to perform a redispatch or end instance', function() {
+      expect(StoreInstanceCreateCtrl.checkForOnFloorInstance).toHaveBeenCalled();
     });
 
     it('should format the payload', function() {

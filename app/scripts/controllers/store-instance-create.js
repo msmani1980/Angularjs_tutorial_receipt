@@ -391,18 +391,21 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return promises;
     };
 
-    this.checkIfRedispatch = function() {
+    this.checkForOnFloorInstance = function() {
       var onFloorInstance = $scope.storeInstancesOnFloor.filter(function(instance){
         return (instance.storeId === parseInt($scope.formData.storeId));
       });
       return onFloorInstance[0];
     };
 
-    $scope.goToRedispatch = function() {
-      $route.updateParams({
-        action:'redispatch',
-        storeId:$scope.onFloorInstance.id
-      });
+    $scope.goToActionState = function(actionState) {
+      if(actionState) {
+        $route.updateParams({
+          action: actionState,
+          storeId:$scope.onFloorInstance.id
+        });
+      }
+      return;
     };
 
     this.displayConfirmDialog = function() {
@@ -411,7 +414,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.createStoreInstance = function(saveAndExit) {
       if($this.isActionState('dispatch')) {
-        $scope.onFloorInstance = $this.checkIfRedispatch();
+        $scope.onFloorInstance = $this.checkForOnFloorInstance();
         if(angular.isDefined($scope.onFloorInstance) && $scope.onFloorInstance.id){
           $this.displayConfirmDialog();
           return;
