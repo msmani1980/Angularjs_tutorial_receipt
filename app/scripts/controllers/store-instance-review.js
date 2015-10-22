@@ -71,6 +71,10 @@ angular.module('ts5App')
         .then(getItemsSuccessHandler)
       );
     }
+    
+    function isRedispatch() {
+      return $routeParams.action === 'redispatch';
+    }
 
     function setTamperedData() {
       if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
@@ -79,13 +83,13 @@ angular.module('ts5App')
       }
     }
 
-    function getPrevStoreDetails(storeId) {
-      _initPromises.push(storeInstanceFactory.getStoreDetails(storeId).then(setPrevStoreDetails));
-    }
-
     function setPrevStoreDetails(dataFromAPI) {
       $scope.prevStoreDetails = angular.copy(dataFromAPI);
       setTamperedData();
+    }
+
+    function getPrevStoreDetails(storeId) {
+      _initPromises.push(storeInstanceFactory.getStoreDetails(storeId).then(setPrevStoreDetails));
     }
 
     function setStoreInstanceSeals(dataFromAPI) {
@@ -141,10 +145,6 @@ angular.module('ts5App')
         return 0;
       }
       return masterItem[0].menuQuantity;
-    }
-
-    function isRedispatch() {
-      return $routeParams.action === 'redispatch';
     }
 
     function addSealToScope(sealType) {
