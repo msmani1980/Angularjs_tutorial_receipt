@@ -221,6 +221,11 @@ angular.module('ts5App')
           route: emberURL + 'cash-bag-submission',
           icon: 'icon-manage-retail-category',
           className: 'dashboard-cashBagSubmission'
+        }, {
+          name: 'Currency Setup',
+          route: '/#/currency-edit',
+          icon: 'icon-manage-retail-category',
+          className: 'dashboard-currencySetup'
         }]
       }, {
         title: 'Post Trip Data',
