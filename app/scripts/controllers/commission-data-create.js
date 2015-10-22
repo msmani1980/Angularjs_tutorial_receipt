@@ -106,7 +106,6 @@ angular.module('ts5App')
       }
     };
 
-
     this.init = function () {
       $scope.readOnly = $routeParams.state === 'view';
       $this.setViewName();
@@ -114,24 +113,13 @@ angular.module('ts5App')
       $this.getCommissionPayableTypes();
       $this.getDiscountTypes();
 
-      // TODO: API calls to make:
+      // TODO: resolve business logic -- which base currency to use if there are multiple?
       // commissionFactory.getBaseCurrency();
-      // commissionFactory.getCommissionData(recordId).then(setCommissionData, showError);
 
       if ($routeParams.id) {
-        $this.setCommissionData({
-          crewBase: 'CREW',
-          startDate: '08/20/2020',
-          endDate: '09/20/2020',
-          commissionPayable: 'ePOS Sales',
-          commissionPercent: 100.0,
-          manualBarsType: 'Percentage',
-          manualBarsValue: 100,
-          cashPercent: 100,
-          stockPercent: 50,
-          commissionType: 'Percentage',
-          commissionValue: 100
-        });
+        // commissionFactory.getCommissionData($routeParams.id).then(setCommissionData, showError);
+
+        // get commission data from API
       }
     };
     this.init();

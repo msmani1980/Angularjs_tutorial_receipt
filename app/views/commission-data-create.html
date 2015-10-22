@@ -26,8 +26,8 @@
               <label>Crew Base *</label>
               <select class="form-control"
                       id="crewBase"
-                      ng-model="commissionData.crewBase"
-                      ng-options="crewBase.name as crewBase.name for crewBase in crewBaseList"
+                      ng-model="commissionData.crewBaseTypeId"
+                      ng-options="crewBase.id as crewBase.name for crewBase in crewBaseList"
                       ng-disabled="readOnly"
                       required="true">
                 <option selected="selected" value>Select a Crew Base</option>
@@ -64,10 +64,10 @@
               <label>Commission Payable On *</label>
               <select class="form-control"
                       required="true"
-                      ng-model="commissionData.commissionPayable"
+                      ng-model="commissionData.commissionPayableTypeId"
                       ng-change="updateCommissionPercent()"
                       ng-disabled="readOnly"
-                      ng-options="commissionType.name as commissionType.name for commissionType in commissionPayableTypes">
+                      ng-options="commissionType.id as commissionType.name for commissionType in commissionPayableTypes">
                 <option selected="selected" value>Select a Commission Payable Type</option>
               </select>
             </div>
@@ -75,7 +75,7 @@
 
           <div class="col-xs-12 col-sm-6">
             <label>Commission Percent</label>
-            <input ng-model="commissionData.commissionPercent"
+            <input ng-model="commissionData.commissionPercentage"
                    type="text"
                    class="form-control"
                    placeholder="57.5"
@@ -92,9 +92,9 @@
               <label>Manual Bars Commission Type</label>
               <select class="form-control"
                       required="true"
-                      ng-model="commissionData.manualBarsType"
+                      ng-model="commissionData.manualBarsCommissionValueTypeId"
                       ng-change="updateManualBars()"
-                      ng-options="discountType.name as discountType.name for discountType in discountTypes"
+                      ng-options="discountType.id as discountType.name for discountType in discountTypes"
                       ng-disabled="readOnly">
                 <option selected value="">Select a Commission Type</option>
                 <option>Percentage</option>
@@ -107,7 +107,7 @@
             <div class="form-group">
               <label>Manual Bars Commisssion Value</label>
               <!-- TODO: fix ng-maxlength -->
-              <input ng-model="commissionData.manualBarsValue"
+              <input ng-model="commissionData.manualBarsCommissionValue"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
@@ -118,7 +118,7 @@
           <div class="col-xs-2 col-sm-1">
             <div class="form-group">
               <label>Unit</label>
-              <input ng-model="manualBarsUnit"
+              <input ng-model="manualBarsCommissionUnit"
                      type="text"
                      class="form-control"
                      disabled>
@@ -132,7 +132,7 @@
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
               <label>Cash Percent</label>
-              <input ng-model="commissionData.cashPercent"
+              <input ng-model="commissionData.discrepancyDeductionsCashPercentage"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
@@ -144,7 +144,7 @@
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
               <label>Stock Percent</label>
-              <input ng-model="commissionData.stockPercent"
+              <input ng-model="commissionData.discrepancyDeductionsStockPercentage"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
@@ -162,9 +162,9 @@
               <label>Commission Type</label>
               <select class="form-control"
                       required="true"
-                      ng-model="commissionData.commissionType"
+                      ng-model="commissionData.commissionValueTypeId"
                       ng-change="updateIncentiveIncrement()"
-                      ng-options="discountType.name as discountType.name for discountType in discountTypes"
+                      ng-options="discountType.id as discountType.name for discountType in discountTypes"
                       ng-disabled="readOnly">
                 <option selected value="">Select a Commission Type</option>
               </select>
@@ -186,7 +186,7 @@
           <div class="col-xs-2 col-sm-1">
             <div class="form-group">
               <label>Unit</label>
-              <input ng-model="incentiveIncrementUnit"
+              <input ng-model="commissionValueUnit"
                      type="text"
                      class="form-control departure-time"
                      ng-readonly="readOnly"
