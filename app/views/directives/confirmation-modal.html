@@ -1,0 +1,31 @@
+<div class="modal" id="confirmation-modal" data-backdrop="static" data-keyboard="false">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header" ng-if="title">
+        <strong class="modal-title">{{ title }}</strong>
+      </div>
+
+      <div class="modal-body" ng-if="body">
+        <p>{{ body }}</h2>
+      </div>
+
+      <div class="modal-footer">
+        <button ng-if="cancelLabel" class="btn btn-default btn-cancel" data-dismiss="modal">
+            <i class="fa fa-close"></i> {{ cancelLabel }}
+        </button>
+        <button ng-if="alternativeLabel" class="btn btn-primary btn-create" ng-click="alternative()">
+          <i class="fa fa-check"></i> {{ alternativeLabel }}
+        </button>
+        <button class="btn btn-success btn-primary" ng-click="confirmation()">
+          <i class="fa fa-check"></i> {{ confirmationLabel }}
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

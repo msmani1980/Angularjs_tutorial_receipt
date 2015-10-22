@@ -12,7 +12,8 @@ describe('Store Instance Create Controller', function() {
     'served/store-instance-created.json',
     'served/schedules-date-range.json',
     'served/company-menu-caterer-stations.json',
-    'served/store-instance-details.json'
+    'served/store-instance-details.json',
+    'served/store-instances-list-onfloor.json'
   ));
 
   var StoreInstanceCreateCtrl;
@@ -53,13 +54,15 @@ describe('Store Instance Create Controller', function() {
   var getStoreDetailsDeferred;
   var updateStoreInstanceDeferred;
   var storeDetailsJSON;
+  var getOnFloorInstancesDeferred;
+  var onFloorInstanceJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedCateringStations_,
     _servedMenuMasterList_,
     _servedCarrierNumbers_, _servedStoresList_, _servedStoreInstanceCreated_,
     _servedSchedulesDateRange_, _servedCompanyMenuCatererStations_,
-    _servedStoreInstanceDetails_) {
+    _servedStoreInstanceDetails_,_servedStoreInstancesListOnfloor_) {
 
     cateringStationsJSON = _servedCateringStations_;
     menuMasterListJSON = _servedMenuMasterList_;
@@ -69,6 +72,7 @@ describe('Store Instance Create Controller', function() {
     schedulesDateRangeJSON = _servedSchedulesDateRange_;
     companyMenuCatererStationsJSON = _servedCompanyMenuCatererStations_;
     storeDetailsJSON = _servedStoreInstanceDetails_;
+    onFloorInstanceJSON = _servedStoreInstancesListOnfloor_;
 
     httpBackend = $injector.get('$httpBackend');
     location = $injector.get('$location');
@@ -122,6 +126,11 @@ describe('Store Instance Create Controller', function() {
     updateStoreInstanceDeferred = $q.defer();
     spyOn(storeInstanceFactory, 'updateStoreInstance').and.returnValue(updateStoreInstanceDeferred.promise);
 
+    getOnFloorInstancesDeferred = $q.defer();
+    spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getOnFloorInstancesDeferred.promise);
+
+    httpBackend.expectGET(/views\/./).respond(200,'');
+
     storeInstanceId = 13;
 
     postPayloadControl = {
@@ -141,6 +150,7 @@ describe('Store Instance Create Controller', function() {
   }));
 
   afterEach(function() {
+    httpBackend.flush();
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
   });
@@ -153,6 +163,7 @@ describe('Store Instance Create Controller', function() {
     getSchedulesInDateRangeDeferred.resolve(schedulesDateRangeJSON);
     getRelationshipListDeferred.resolve(companyMenuCatererStationsJSON);
     getStoreDetailsDeferred.resolve(storeDetailsJSON);
+    getOnFloorInstancesDeferred.resolve(onFloorInstanceJSON);
   }
 
   function initController(action) {
@@ -331,6 +342,19 @@ describe('Store Instance Create Controller', function() {
       });
       it('should be set to same lenght as API response', function() {
         expect($scope.scheduleNumbers.length).toBe(schedulesDateRangeJSON.meta.count);
+      });
+
+    });
+
+    describe('The get the onFloorInstance list', function() {
+
+      beforeEach(function() {
+        resolveAllDependencies();
+        $scope.$digest();
+      });
+
+      it('should set the onFloor list from the stations API Respone', function() {
+        expect($scope.storeInstancesOnFloor).toEqual(onFloorInstanceJSON.response);
       });
 
     });
@@ -555,6 +579,7 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'formatDispatchPayload').and.callThrough();
       spyOn(storeInstanceFactory, 'createStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'checkForOnFloorInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceErrorHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage');
@@ -564,6 +589,10 @@ describe('Store Instance Create Controller', function() {
     it('should display the loading modal', function() {
       expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
         'Creating new Store Instance');
+    });
+
+    it('should check if we are trying to perform a redispatch or end instance', function() {
+      expect(StoreInstanceCreateCtrl.checkForOnFloorInstance).toHaveBeenCalled();
     });
 
     it('should format the payload', function() {
@@ -809,6 +838,7 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       initController();
+      resolveAllDependencies();
       $scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
