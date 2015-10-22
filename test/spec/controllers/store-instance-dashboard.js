@@ -40,9 +40,10 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   var featuresListDeferred;
   var featuresListResponseJSON;
   var location;
+  var _lodash;
 
 
-  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location) {
+  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, lodash) {
     inject(function(_servedCateringStations_, _servedStations_, _servedStoreInstanceList_, _servedStoresList_,
       _servedStoreStatus_, _servedStoreStatusResponse_, _servedStoreTimeConfig_, _servedFeatures_,
       _servedStoreInstance_) {
@@ -59,6 +60,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     });
     scope = $rootScope.$new();
     location = $location;
+    _lodash = lodash;
 
     storeInstanceDashboardFactory = $injector.get('storeInstanceDashboardFactory');
     storeTimeConfig = $injector.get('storeTimeConfig');
@@ -625,6 +627,28 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       scope.$digest();
       scope.showClearButton();
       expect(scope.showClearButton()).toBeTruthy();
+    });
+  });
+
+  describe('storeSelectionToggled', function() {
+    it('should set hasSelectedStore to false and exportBulkURL to empty string', function() {
+      scope.$digest();
+      scope.storeSelectionToggled();
+      expect(scope.hasSelectedStore).toBeFalsy();
+      expect(scope.exportBulkURL).toEqual('');
+    });
+
+    it('should set hasSelectedStore to true and exportBulkURL to valid values', function() {
+      scope.$digest();
+      var store = _lodash.findWhere(scope.storeInstanceList, function(s) { return s.id === 53; });
+      expect(store.id).toEqual(53);
+      store.selected = true;
+      store.actionButtons = ['Get Flight Docs'];
+      store.replenishments[0].selected = true;
+      store.replenishments[0].actionButtons = ['Get Flight Docs'];
+      scope.storeSelectionToggled();
+      expect(scope.hasSelectedStore).toBeTruthy();
+      expect(scope.exportBulkURL).toEqual('https://ts5-dev.egatesoln.com/api/dispatch/store-instances/documents/C208.pdf?sessionToken=9e85ffbb3b92134fbf39a0c366bd3f12f0f5&storeInstanceIds=53+1038');
     });
   });
 
