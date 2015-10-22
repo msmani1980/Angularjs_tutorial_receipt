@@ -1,0 +1,168 @@
+<div class="fluid-container">
+    <div class="list-controls">
+        <div class="row item-list-row">
+            <div class="col-xs-8">
+                <h2 class="view-name">{{viewName}}</h2>
+            </div>
+
+            <div class="col-xs-4 text-right">
+                <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                        aria-controls="search-collapse">
+                    <span class="fa fa-filter" aria-hidden="true"></span>
+                    <span class="hidden-sm hidden-xs">Filter</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="panel panel-default collapse no-transition" id="search-collapse">
+            <form name="currencySearchForm" ng-submit="searchDetailedCompanyCurrencies()">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3 col-sm-6">
+                            <div class="form-group">
+                                <label for="search-currency">Currency</label>
+                                <select class="form-control" id="search-currency" ng-model="search.currencyId">
+                                    <option value="">Select Currency</option>
+                                    <option ng-repeat="globalCurreny in globalCurrencyList | unique: 'id'" value="{{globalCurreny.id}}">{{ globalCurreny.currencyCode }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <date-picker
+                                class="col-xs-12 col-md-6 col-sm-12"
+                                element-class="col-xs-6 col-sm-6"
+                                start-date-model="search.startDate"
+                                end-date-model="search.endDate"
+                                label-from="Effective From *"
+                                label-to="Effective To *"
+                                is-search-field="true">
+                        </date-picker>
+                    </div>
+                </div>
+                <div class="panel-footer text-right">
+                    <button type="button" class="btn btn-default" ng-click="clearForm()">Clear</button>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <form-error-dialog></form-error-dialog>
+
+    <div class="panel panel-default">
+        <div class="panel-heading text-right">Base currency: {{companyBaseCurrency.currencyCode}}</div>
+        <div class="panel-body">
+            <div class="well" id="currency-{{$index}}" ng-repeat="currency in companyCurrencyList track by $index">
+                <div class="row">
+                    <div class="col-xs-12 col-md-1 col-sm-12">
+                        <div class="form-group">
+                            <label for="currencyId-{{$index}}">Currency* </label>
+                            <select name="mySelect" id="currencyId-{{$index}}" class="form-control" required="required"
+                                    ng-options="selectCurrency.id as selectCurrency.currencyCode for selectCurrency in globalCurrencyList"
+                                    ng-model="currency.currencyId"
+                                    ng-disabled="isCurrencyReadOnly(currency)"
+                                    ng-change="clearDenominations(currency)">
+                                <option value="">Select Currency</option>
+                            </select>
+                         </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-2 col-sm-12">
+                        <div class="form-group">
+                            <strong>Operating Currency</strong>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-model="currency.isOperatedCurrency" ng-disabled="isCurrencyReadOnly(currency)">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-sm-12">
+                        <div class="form-group">
+                            <label for="denomination-{{$index}}">Denomination*</label>
+                            <ui-select id="denomination-{{$index}}" multiple ng-model="currency.selectedDenominations " ng-change="removeInvalidEasyPayDenominations(currency)" ng-disabled="isCurrencyReadOnly(currency)" theme="bootstrap" style="min-height: 30px;">
+                                <ui-select-match placeholder="Select denomination...">{{$item.denomination}}</ui-select-match>
+                                <ui-select-choices repeat="denomination in currencyDenominations[currency.currencyId] | filter:{denomination: $select.search}">
+                                    <div ng-bind-html="denomination.denomination | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-2 col-sm-12">
+                        <div class="form-group">
+                            <label for="easypay-denomination-{{$index}}">EasyPay Denomination</label>
+                            <ui-select id="easypay-denomination-{{$index}}" multiple ng-model="currency.selectedEasyPayDenominations" ng-disabled="isCurrencyReadOnly(currency)" theme="bootstrap" style="min-height: 30px;">
+                                <ui-select-match placeholder="Select denomination...">{{$item.denomination}}</ui-select-match>
+                                <ui-select-choices repeat="denomination in currency.selectedDenominations | filter:{denomination: $select.search}">
+                                    <div ng-bind-html="denomination.denomination | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <date-picker
+                            class="col-xs-12 col-md-3 col-sm-12"
+                            element-class="col-xs-6 col-sm-6"
+                            start-date-model="currency.startDate"
+                            end-date-model="currency.endDate"
+                            label-from="Start Date *"
+                            label-to="End Date *"
+                            required="true"
+                            is-search-field="false"
+                            disable-past="true"
+                            disable-start-date="isCurrencyReadOnly(currency)"
+                            disable-end-date="isCurrencyPartialReadOnly(currency)">
+                    </date-picker>
+
+                    <div class="col-xs-12 col-sm-12 col-md-1 text-right">
+                        <button type="button" class="btn btn-sm btn-primary glyphicon glyphicon-check" ng-click="saveDetailedCompanyCurrency($index, currency)" ng-hide="isCurrencyPartialReadOnly(currency)" />
+                        <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteConfirmation($index, currency)" ng-hide="isCurrencyReadOnly(currency)">
+                            <i class="fa fa-close"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row" ng-hide="readOnly">
+                <div class="col-xs-8 col-md-9"></div>
+                <div class="col-xs-4 col-md-3 text-right">
+                    <div class="input-group">
+                        <input type="number" min="1" max="100" class="form-control" ng-model="addDetailedCompanyCurrenciesNumber">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" ng-click="addDetailedCompanyCurrencies()"><i class="fa fa-plus"></i> Add Currencies</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade delete-warning-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Are you sure?</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to permanently delete <strong>{{currencyToDelete.currencyCode}}</strong></p>
+            </div>
+
+            <ul>
+                <li><strong>Operating Currency: </strong>{{ currencyToDelete.isOperatedCurrency }}</li>
+                <li><strong>Start Date: </strong>{{ currencyToDelete.startDate }}</li>
+                <li><strong>End Date: </strong>{{ currencyToDelete.endDate }}</li>
+            </ul>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="deleteDetailedCompanyCurrency()">Continue</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
