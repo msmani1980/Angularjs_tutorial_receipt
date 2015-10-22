@@ -146,7 +146,7 @@ describe('Directive: stockTakeReason', function() {
 
     });
 
-    fdescribe('stockTakeReasonSave', function() {
+    describe('stockTakeReasonSave', function() {
 
       var mockComment = 'My test comment';
       var mockNewCount = '902';
