@@ -398,16 +398,21 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return onFloorInstance[0];
     };
 
+    $scope.goToRedispatch = function() {
+      $route.updateParams({
+        action:'redispatch',
+        storeId:$scope.onFloorInstance.id
+      });
+    };
 
     this.displayConfirmDialog = function() {
-      //$route.updateParams({action:'redispatch',storeId:onFloorInstance.id});
-      window.confirm('Are you sure you want to redispatch?');
+      angular.element('#confirmation-modal').modal('show');
     };
 
     this.createStoreInstance = function(saveAndExit) {
       if($this.isActionState('dispatch')) {
-        var onFloorInstance = $this.checkIfRedispatch();
-        if(onFloorInstance.id){
+        $scope.onFloorInstance = $this.checkIfRedispatch();
+        if(angular.isDefined($scope.onFloorInstance) && $scope.onFloorInstance.id){
           $this.displayConfirmDialog();
           return;
         }
