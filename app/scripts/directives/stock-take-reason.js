@@ -7,7 +7,7 @@
  * # stockTakeReason
  */
 angular.module('ts5App').directive('stockTakeReason', function() {
-  var stockTakeReasonController = function($scope, stockAdjustmentsService, ngToast) {
+  var stockTakeReasonController = function($scope, stockManagementStationItemsService, ngToast) {
 
     function displayStockReasonModal() {
       angular.element('#stock-take-reason').modal('show');
@@ -36,10 +36,12 @@ angular.module('ts5App').directive('stockTakeReason', function() {
 
     $scope.stockTakeReasonOpen = function(stockitem) {
       $scope.id = stockitem.id;
-      $scope.currentCountQuantity = stockitem.currentCountQuantity;
+      $scope.currentCountQuantity = stockitem.currentQuantity;
+      $scope.currentUllageQuantity = stockitem.ullageQuantity;
       $scope.newCount = null;
-      $scope.masterItemId = stockitem.masterItemId;
-      $scope.catererStationId = stockitem.catererStationId;
+      $scope.newUllage = null;
+      $scope.masterItemId = stockitem.itemMasterId;
+      $scope.catererStationId = stockitem.stationId;
       $scope.comment = null;
       displayStockReasonModal();
     };
@@ -48,7 +50,9 @@ angular.module('ts5App').directive('stockTakeReason', function() {
       $scope.id = null;
       $scope.comment = null;
       $scope.currentCountQuantity = null;
+      $scope.ullageQuantity = null;
       $scope.newCount = null;
+      $scope.newUllage = null;
       $scope.masterItemId = null;
       $scope.catererStationId = null;
       $scope.stockAdjustmentReason = null;
@@ -67,9 +71,10 @@ angular.module('ts5App').directive('stockTakeReason', function() {
 
     function createPayload() {
       return {
-        catererStationId: $scope.catererStationId,
-        masterItemId: $scope.masterItemId,
-        quantity: parseInt($scope.newCount),
+        stationId: $scope.catererStationId,
+        itemMasterId: $scope.masterItemId,
+        currentQuantity: parseInt($scope.newCount),
+        ullageQuantity: $scope.currentUllageQuantity,
         companyReasonCodeId: $scope.stockAdjustmentReason.id,
         note: $scope.comment
       };
@@ -77,10 +82,11 @@ angular.module('ts5App').directive('stockTakeReason', function() {
 
     $scope.stockTakeReasonSave = function() {
       var payload = createPayload();
+      var _id = $scope.id;
       $scope.clearScopeVars();
       hideStockReasonModal();
       displayLoadingModal('Updating item count');
-      stockAdjustmentsService.adjustStock(payload).then(adjustStockResponse);
+      stockManagementStationItemsService.updateStockManagementStationItems(_id, payload).then(adjustStockResponse);
     };
 
   };
