@@ -28,6 +28,7 @@ angular.module('ts5App')
       ],
       zip: [/^(([0-9]{5})|([0-9]{5}[-][0-9]{4}))$/, 'Error message for zip'],
       decimal: [/^\d+\.\d{0,4}$/, 'Error message for decimal'],
+      decimalWithTwoDecimalPlaces: [/^\d+\.\d{0,2}$/, 'This field should be a decimal with up to two decimal places'],
       currencyWithFourDecimalPlace: [/^\d+\.\d{4}$/, 'This field should use format 0.0000', 4],
       currencyWithThreeDecimalPlace: [/^\d+\.?\d{0,3}$/, 'This field should use format 0.000', 3],
       currencyWithTwoDecimalPlace: [/^\d+\.\d{2}$/, 'This field should use format 0.00', 2],
