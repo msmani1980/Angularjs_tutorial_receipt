@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CommissionDataTableCtrl', function() {
+describe('Controller: CommissionDataTableCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
@@ -26,10 +26,10 @@ describe('Controller: CommissionDataTableCtrl', function() {
   var dateUtility;
   var scope;
 
-  beforeEach(inject(function($q, $controller, $rootScope, $location, $injector) {
+  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
 
-    inject(function(_servedCommissionPayableList_, _servedCrewBaseTypes_, _servedDiscountTypes_,
-      _servedCommissionPayableTypes_) {
+    inject(function (_servedCommissionPayableList_, _servedCrewBaseTypes_, _servedDiscountTypes_,
+                     _servedCommissionPayableTypes_) {
       commissionPayableListResponseJSON = _servedCommissionPayableList_;
       crewBaseListJSON = _servedCrewBaseTypes_;
       discountTypesResponseJSON = _servedDiscountTypes_;
@@ -67,37 +67,37 @@ describe('Controller: CommissionDataTableCtrl', function() {
   }));
 
 
-  describe('init', function() {
-    it('should get crew base types', function() {
+  describe('init', function () {
+    it('should get crew base types', function () {
       expect(commissionFactory.getCrewBaseTypes).toHaveBeenCalled();
     });
 
-    it('should get Commission Payable types', function() {
+    it('should get Commission Payable types', function () {
       expect(commissionFactory.getCommissionPayableTypes).toHaveBeenCalled();
     });
 
-    it('should get Discount Types', function() {
+    it('should get Discount Types', function () {
       expect(commissionFactory.getDiscountTypes).toHaveBeenCalled();
     });
   });
 
-  describe('scope vars', function() {
-    it('should have viewName defined', function() {
+  describe('scope vars', function () {
+    it('should have viewName defined', function () {
       expect(scope.viewName).toBeDefined();
     });
-    it('should have commissionData defined', function() {
+    it('should have commissionData defined', function () {
       expect(scope.commissionData).toBeDefined();
     });
   });
 
-  describe('scope functions', function() {
-    describe('canDelete', function() {
-      it('should return true if start date is in the future', function() {
+  describe('scope functions', function () {
+    describe('canDelete', function () {
+      it('should return true if start date is in the future', function () {
         expect(scope.canDelete({
           startDate: '08/20/2050'
         })).toEqual(true);
       });
-      it('should return false if start date is not in the future', function() {
+      it('should return false if start date is not in the future', function () {
         expect(scope.canDelete({
           startDate: '08/20/1990',
           endDate: '08/20/2050'
@@ -105,12 +105,12 @@ describe('Controller: CommissionDataTableCtrl', function() {
       });
     });
 
-    describe('searchCommissionData', function() {
-      beforeEach(function() {
+    describe('searchCommissionData', function () {
+      beforeEach(function () {
         scope.search = {};
       });
 
-      it('should call getCommissionData with crewBaseTypeId', function() {
+      it('should call getCommissionData with crewBaseTypeId', function () {
         scope.search = {
           crewBaseType: {
             id: 'fakeId'
@@ -123,7 +123,7 @@ describe('Controller: CommissionDataTableCtrl', function() {
         });
       });
 
-      it('should call getCommissionData with dates', function() {
+      it('should call getCommissionData with dates', function () {
         scope.search = {
           startDate: '01/01/2015',
           endDate: '01/01/2015'
@@ -138,48 +138,73 @@ describe('Controller: CommissionDataTableCtrl', function() {
         expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith(expectedPayload);
       });
 
-      it('should set commissionData with new response', function() {
+      it('should set commissionData with new response', function () {
         delete scope.commissionData;
         scope.searchCommissionData();
         scope.$digest();
         expect(angular.isArray(scope.commissionData)).toEqual(true);
       });
 
-      describe('clearSearch', function() {
-        beforeEach(function() {
+      describe('clearSearch', function () {
+        beforeEach(function () {
           scope.search.startDate = '01/01/2017';
         });
 
-        it('should clear search query', function() {
+        it('should clear search query', function () {
           scope.clearSearchForm();
           expect(scope.search).toEqual({});
         });
 
-        it('should call getCommissionData with empty search query', function() {
+        it('should call getCommissionData with empty search query', function () {
           scope.clearSearchForm();
           expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith({});
         });
       });
     });
 
-
-    describe('delete', function() {
-      it('should call delete API with record id', function() {
+    describe('delete', function () {
+      it('should call delete API with record id', function () {
         var fakeData = {id: 1};
         scope.removeRecord(fakeData);
         expect(commissionFactory.deleteCommissionData).toHaveBeenCalledWith(1);
       });
     });
 
-  });
+    describe('get commission data', function () {
+      it('should call commissionData factory', function () {
+        expect(commissionFactory.getCommissionPayableList).toHaveBeenCalled();
+      });
+    });
 
-  describe('get commission data', function() {
-    it('should call commissionData factory', function() {
-      expect(commissionFactory.getCommissionPayableList).toHaveBeenCalled();
+    describe('getCrewBaseName helper', function () {
+      it('should match crew id to crew base name', function () {
+        scope.crewBaseTypes = [{id: 1, name: 'test1'}];
+        scope.$digest();
+        var crewName = scope.getCrewBaseName(1);  // 1 for BFS, from JSON mock
+        expect(crewName).toEqual('test1');
+      });
     });
-    it('should populate scope variable', function() {
-      //expect(scope.commissionData).toEqual(mock);
+
+    describe('getCommissionTypeName helper', function () {
+      it('should match commission type id to name', function () {
+        scope.commissionTypes = [{id: 1, name: 'test1'}, {id: 2, name: 'test2'}];
+        var crewName = scope.getCommissionTypeName(2);  // 2 for Epos sales, from JSON mock
+        expect(crewName).toEqual('test2');
+      });
+
     });
+
+    describe('getUnitById helper', function () {
+      it('should match percentage to % unit, and amount to company base unit', function () {
+        scope.discountTypes = [{id: 1, name: 'Percentage'}, {id: 2, name: 'Amount'}];
+        scope.$digest();
+        var unit = scope.getUnitById(1);
+        expect(unit).toEqual('%');
+        unit = scope.getUnitById(2);
+        expect(unit).toEqual('GBP');
+      });
+    });
+
   });
 
 });
