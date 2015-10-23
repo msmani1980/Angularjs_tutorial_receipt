@@ -133,6 +133,13 @@ angular.module('ts5App')
       $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies = [];
     }
 
+    function cleanPayloadData() {
+      delete $scope.payload.dailyExchangeRate.createdBy;
+      delete $scope.payload.dailyExchangeRate.createdOn;
+      delete $scope.payload.dailyExchangeRate.updatedBy;
+      delete $scope.payload.dailyExchangeRate.updatedOn;
+    }
+
     function serializeExchangeRateForAPI(currency) {
       var coinExchangeRate = '1.0000',
         paperExchangeRate = '1.0000',
@@ -171,6 +178,7 @@ angular.module('ts5App')
           })
       };
       resolvePayloadDependencies();
+      cleanPayloadData();
     }
 
     function showErrors(dataFromAPI) {
@@ -269,16 +277,16 @@ angular.module('ts5App')
     }
 
     currencyFactory.getCompanyPreferences().then(function (companyPreferencesData) {
-      $scope.companyPreferences = companyPreferencesData.preferences;
+      $scope.companyPreferences = angular.copy(companyPreferencesData.preferences);
     });
 
     currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
-      getCompanyBaseCurrency(companyDataFromAPI.baseCurrencyId);
-      $scope.company = companyDataFromAPI;
+      getCompanyBaseCurrency(angular.copy(companyDataFromAPI.baseCurrencyId));
+      $scope.company = angular.copy(companyDataFromAPI);
     });
 
     currencyFactory.getCompany(362).then(function (companyDataFromAPI) {
-      $scope.cashHandlerCompany = companyDataFromAPI;
+      $scope.cashHandlerCompany = angular.copy(companyDataFromAPI);
     });
 
   });
