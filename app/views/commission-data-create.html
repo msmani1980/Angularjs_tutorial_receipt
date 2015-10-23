@@ -42,11 +42,12 @@
                 element-class="col-xs-6"
                 start-date-model="commissionData.startDate"
                 end-date-model="commissionData.endDate"
-                label-from="Effective From"
-                label-to="Effective To"
+                label-from="Effective From *"
+                label-to="Effective To *"
                 is-search-field="true"
                 disable-start-date="readOnly"
-                disable-end-date="readOnly">
+                disable-end-date="readOnly"
+                ng-required="true">
               </date-picker>
             </div>
           </div>
@@ -67,6 +68,7 @@
                       ng-model="commissionData.commissionPayableTypeId"
                       ng-change="updateCommissionPercent()"
                       ng-disabled="readOnly"
+                      required="true"
                       ng-options="commissionType.id as commissionType.name for commissionType in commissionPayableTypes">
                 <option selected="selected" value>Select a Commission Payable Type</option>
               </select>
@@ -74,12 +76,13 @@
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <label>Commission Percent</label>
+            <label>Commission Percent *</label>
             <input ng-model="commissionData.commissionPercentage"
                    type="text"
                    class="form-control"
                    placeholder="57.5"
-                   maxlength="6"
+                   maxlength="5"
+                   ng-required="requireCommissionPercent"
                    ng-disabled="commissionPercentDisabled || readOnly">
           </div>
         </div>
@@ -89,13 +92,14 @@
         <div class="row">
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
-              <label>Manual Bars Commission Type</label>
+              <label>Manual Bars Commission Type *</label>
               <select class="form-control"
                       required="true"
                       ng-model="commissionData.manualBarsCommissionValueTypeId"
                       ng-change="updateManualBars()"
                       ng-options="discountType.id as discountType.name for discountType in discountTypes"
-                      ng-disabled="readOnly">
+                      ng-disabled="readOnly"
+                      required="true">
                 <option selected value="">Select a Commission Type</option>
                 <option>Percentage</option>
                 <option>Amount</option>
@@ -105,14 +109,15 @@
 
           <div class="col-xs-10 col-sm-5">
             <div class="form-group">
-              <label>Manual Bars Commisssion Value</label>
+              <label>Manual Bars Commisssion Value *</label>
               <!-- TODO: fix ng-maxlength -->
               <input ng-model="commissionData.manualBarsCommissionValue"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
                      ng-readonly="readOnly"
-                     ng-maxlength="manualBarsCharLimit">
+                     ng-maxlength="manualBarsCharLimit"
+                     required="true">
             </div>
           </div>
           <div class="col-xs-2 col-sm-1">
@@ -131,24 +136,26 @@
         <div class="row">
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
-              <label>Cash Percent</label>
+              <label>Cash Percent *</label>
               <input ng-model="commissionData.discrepancyDeductionsCashPercentage"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
-                     maxlength="6"
+                     maxlength="5"
+                     required="true"
                      ng-readonly="readOnly">
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
-              <label>Stock Percent</label>
+              <label>Stock Percent *</label>
               <input ng-model="commissionData.discrepancyDeductionsStockPercentage"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
-                     maxlength="6"
+                     maxlength="5"
+                     required="true"
                      ng-readonly="readOnly">
             </div>
           </div>
@@ -159,13 +166,14 @@
         <div class="row">
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
-              <label>Commission Type</label>
+              <label>Commission Type *</label>
               <select class="form-control"
                       required="true"
                       ng-model="commissionData.commissionValueTypeId"
                       ng-change="updateIncentiveIncrement()"
                       ng-options="discountType.id as discountType.name for discountType in discountTypes"
-                      ng-disabled="readOnly">
+                      ng-disabled="readOnly"
+                      required="true">
                 <option selected value="">Select a Commission Type</option>
               </select>
             </div>
@@ -173,13 +181,14 @@
 
           <div class="col-xs-10 col-sm-5">
             <div class="form-group">
-              <label>Commisssion Value</label>
+              <label>Commisssion Value *</label>
               <input ng-model="commissionData.commissionValue"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
                      ng-maxlength="commissionValueChar"
-                     ng-readonly="readOnly">
+                     ng-readonly="readOnly"
+                     required="true">
             </div>
           </div>
 
@@ -201,7 +210,7 @@
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
-        <a href="#/post-trip-data-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
+        <a href="#/commission-data-table" class="btn btn-default" ng-hide="readOnly">Cancel</a>
 
       </div>
     </div>

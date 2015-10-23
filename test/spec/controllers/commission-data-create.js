@@ -49,6 +49,8 @@ describe('Controller: CommissionDataCtrl', function () {
     spyOn(commissionFactory, 'getCommissionPayableData').and.returnValue(commissionDataDeferred.promise);
     spyOn(commissionFactory, 'updateCommissionData').and.returnValue(commissionDataDeferred.promise);
     spyOn(commissionFactory, 'createCommissionData').and.returnValue(commissionDataDeferred.promise);
+    spyOn(location, 'path').and.callThrough();
+
   }));
 
   function initController(action, id) {
@@ -320,6 +322,11 @@ describe('Controller: CommissionDataCtrl', function () {
         var payload = CommissionDataCtrl.createPayload();
         expect(commissionFactory.createCommissionData).toHaveBeenCalledWith(payload);
       });
+
+      it('should redirect to commission data table', function () {
+        CommissionDataCtrl.createSuccess();
+        expect(location.path).toHaveBeenCalledWith('commission-data-table');
+      });
     });
 
     describe('edit data', function () {
@@ -335,7 +342,7 @@ describe('Controller: CommissionDataCtrl', function () {
 
       it('should call createCommissionData with payload', function () {
         var payload = CommissionDataCtrl.createPayload();
-        expect(commissionFactory.updateCommissionData).toHaveBeenCalledWith(payload);
+        expect(commissionFactory.updateCommissionData).toHaveBeenCalledWith(1, payload);
       });
     });
   });

@@ -9,11 +9,12 @@
  */
 angular.module('ts5App')
   .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast, $location) {
-    var $this             = this;
-    $scope.viewName       = 'Creating Commission Data';
+    var $this = this;
+    $scope.viewName = 'Creating Commission Data';
     $scope.commissionData = {};
-    $scope.baseCurrency   = 'GBP'; // TODO: get from API
-    $scope.readOnly     = true;
+    $scope.baseCurrency = 'GBP'; // TODO: get from API
+    $scope.readOnly = true;
+    $scope.requireCommissionPercent = true;
     var percentTypeName = 'Percentage';
     var percentTypeUnit = '%';
 
@@ -25,13 +26,14 @@ angular.module('ts5App')
       });
     };
 
-    this.showErrors = function (dataFromAPI) {
+    function showErrors (dataFromAPI) {
+      $this.hideLoadingModal();
       $this.showToast('warning', 'Store Instance Packing', 'error saving items!');
       $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
       }
-    };
+    }
 
     this.showLoadingModal = function (text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -53,9 +55,12 @@ angular.module('ts5App')
       var commissionPayableType = $this.getNameByIdInArray($scope.commissionData.commissionPayableTypeId, $scope.commissionPayableTypes);
       if(commissionPayableType === 'Retail item') {
         $scope.commissionPercentDisabled = true;
-        $scope.commissionData.commissionPercentage = '0';
+        $scope.commissionData.commissionPercentage = null;
+        $scope.requireCommissionPercent = false;
       } else {
         $scope.commissionPercentDisabled = false;
+        $scope.requireCommissionPercent = true;
+
       }
     };
 
@@ -111,22 +116,24 @@ angular.module('ts5App')
 
     this.createCommissionData = function (payload) {
       $this.showLoadingModal('creating commission data');
-      commissionFactory.createCommissionData(payload).then($this.createSuccess, $this.showErrors);
+      commissionFactory.createCommissionData(payload).then($this.createSuccess, showErrors);
     };
 
     this.editCommissionDataSuccess = function () {
-      // TODO: use a 'success - continue editing modal instead?'
       $this.showToast('success', 'Edit Commission Data', 'data successfully saved');
       $this.hideLoadingModal();
+      $location.path('commission-data-table');
     };
 
     this.editCommissionData = function (payload) {
       $this.showLoadingModal('updating commission data');
-      commissionFactory.updateCommissionData(payload).then($this.editCommissionDataSuccess, $this.showErrors);
+      commissionFactory.updateCommissionData($routeParams.id, payload).then($this.editCommissionDataSuccess, showErrors);
     };
 
     this.getCommissionDataSuccess = function (dataFromAPI) {
       $scope.commissionData = angular.copy(dataFromAPI);
+      $scope.commissionData.startDate = dateUtility.formatDateForApp($scope.commissionData.startDate);
+      $scope.commissionData.endDate = dateUtility.formatDateForApp($scope.commissionData.endDate);
       $scope.updateManualBars();
       $scope.updateIncentiveIncrement();
       $this.hideLoadingModal();
@@ -134,10 +141,14 @@ angular.module('ts5App')
 
     this.getCommissionData = function () {
       $this.showLoadingModal('retrieving data');
-      commissionFactory.getCommissionPayableData($routeParams.id).then($this.getCommissionDataSuccess, $this.showErrors);
+      commissionFactory.getCommissionPayableData($routeParams.id).then($this.getCommissionDataSuccess, showErrors);
     };
 
     $scope.saveData = function () {
+      if ($scope.commissionDataForm.$invalid) {
+        $this.showToast('danger', 'Save Items', 'Please check that all fields are completed');
+        return false;
+      }
       var payload = $this.createPayload();
       var initFunctionName = ($routeParams.state + 'CommissionData');
       if ($this[initFunctionName]) {
