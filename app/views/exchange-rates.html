@@ -78,7 +78,7 @@
           <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred()">Paper Exchange Rate</label>
           <label class="col-xs-5 control-label" ng-if="!isBankExchangePreferred()">Coin Exchange Rate</label>
         </div>
-        <div class="row" ng-repeat="currency in companyCurrencies">
+        <div class="row" ng-repeat="currency in companyCurrencies | orderBy:'code'">
           <div class="col-xs-2">{{currency.code}}</div>
 
           <div class="col-xs-3" ng-if="isBankExchangePreferred()">
