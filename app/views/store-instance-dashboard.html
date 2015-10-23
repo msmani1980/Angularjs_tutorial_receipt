@@ -262,7 +262,7 @@
         <td></td>
         <td>
           <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="replenishment.selected"
-                 type="checkbox">
+                 type="checkbox" ng-click="storeSelectionToggled()">
           </input>
         </td>
         <td>{{ replenishment.dispatchStationCode }}</td>

@@ -113,8 +113,14 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.storeSelectionToggled = function() {
-      var selectedStores = lodash.filter($scope.storeInstanceList, function(store) {
-        return store.selected && $scope.doesStoreInstanceContainAction(store, 'Get Flight Docs');
+      var selectedStores = [];
+      lodash.forEach($scope.storeInstanceList, function(store) {
+        if (store.selected && $scope.doesStoreInstanceContainAction(store, 'Get Flight Docs')) {
+          selectedStores.push(store);
+        }
+        selectedStores = selectedStores.concat(lodash.filter(store.replenishments, function(replenish) {
+          return replenish.selected && $scope.doesStoreInstanceContainAction(replenish, 'Get Flight Docs');
+        }));
       });
       $scope.hasSelectedStore = (selectedStores.length !== 0);
       if ($scope.hasSelectedStore) {
