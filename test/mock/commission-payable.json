@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "crewBaseTypeId": 3,
+  "commissionPayableTypeId": 3,
+  "commissionPercentage": "12.20",
+  "manualBarsCommissionValueTypeId": 1,
+  "manualBarsCommissionValue": "13.300",
+  "discrepancyDeductionsCashPercentage": "14.40",
+  "discrepancyDeductionsStockPercentage": "15.50",
+  "commissionValueTypeId": 1,
+  "commissionValue": "16.600",
+  "startDate": "2015-10-31",
+  "endDate": "2015-10-31"
+}

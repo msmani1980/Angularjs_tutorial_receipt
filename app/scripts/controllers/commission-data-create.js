@@ -26,7 +26,7 @@ angular.module('ts5App')
     };
 
     this.showErrors = function (dataFromAPI) {
-      showToast('warning', 'Store Instance Packing', 'error saving items!');
+      $this.showToast('warning', 'Store Instance Packing', 'error saving items!');
       $scope.displayError = true;
       if ('data' in dataFromAPI) {
         $scope.formErrors = dataFromAPI.data;
@@ -54,6 +54,8 @@ angular.module('ts5App')
       if(commissionPayableType === 'Retail item') {
         $scope.commissionPercentDisabled = true;
         $scope.commissionData.commissionPercentage = '0';
+      } else {
+        $scope.commissionPercentDisabled = false;
       }
     };
 
@@ -120,7 +122,7 @@ angular.module('ts5App')
 
     this.editCommissionData = function (payload) {
       $this.showLoadingModal('updating commission data');
-      commissionFactory.editCommissionData(payload).then($this.editCommissionDataSuccess, $this.showErrors);
+      commissionFactory.updateCommissionData(payload).then($this.editCommissionDataSuccess, $this.showErrors);
     };
 
     this.getCommissionDataSuccess = function (dataFromAPI) {
@@ -164,7 +166,8 @@ angular.module('ts5App')
     this.setViewName = function () {
       var nameObject = {
         view: 'Viewing Commission Data',
-        edit: 'Editing Commission Data'
+        edit: 'Editing Commission Data',
+        create: 'Creating Commission Data'
       };
       if (nameObject[$routeParams.state]) {
         $scope.viewName = nameObject[$routeParams.state];
