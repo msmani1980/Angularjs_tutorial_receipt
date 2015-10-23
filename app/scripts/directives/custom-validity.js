@@ -15,6 +15,7 @@ angular.module('ts5App')
       numberUpToFiveChars: [/^-?([0-9]{0,5})$/, 'This field can only contain numbers with up to 5 digits'],
       alpha: [/^[a-zA-z]+$/, 'Error message for alpha'],
       alphanumeric: [/^[a-zA-Z0-9]+$/, 'Error message for alphanumeric'],
+      password: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,8}$/, 'Password requires one lower case, one upper case, one digit, 6-13 length, and no spaces'],
       alphanumericUpToTenChars: [/^[a-zA-Z0-9]{1,10}$/,
         'Must be 1 to 10 characters long, number and letters only. Spaces are not allowed.'
       ],
