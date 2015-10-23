@@ -58,6 +58,7 @@ describe('Controller: CommissionDataTableCtrl', function() {
     spyOn(commissionFactory, 'getCrewBaseTypes').and.returnValue(crewBaseListDeferred.promise);
     spyOn(commissionFactory, 'getDiscountTypes').and.returnValue(discountTypesDeferred.promise);
     spyOn(commissionFactory, 'getCommissionPayableTypes').and.returnValue(commissionPayableTypesDeferred.promise);
+    spyOn(commissionFactory, 'deleteCommissionData');
 
     CommissionDataTableCtrl = $controller('CommissionDataTableCtrl', {
       $scope: scope
@@ -164,7 +165,9 @@ describe('Controller: CommissionDataTableCtrl', function() {
 
     describe('delete', function() {
       it('should call delete API with record id', function() {
-        //expect(commissionFactory.deleteCommissionData).toHaveBeenCalledWith(id);
+        var fakeData = {id: 1};
+        scope.removeRecord(fakeData);
+        expect(commissionFactory.deleteCommissionData).toHaveBeenCalledWith(1);
       });
     });
 

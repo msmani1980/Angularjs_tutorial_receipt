@@ -61,6 +61,7 @@ describe('Controller: CommissionDataCtrl', function () {
         state: ( action ? action : 'create')
       }
     });
+    scope.commissionDataForm = { $invalid: false};
   }
 
   describe('scope variables and functions', function () {
@@ -99,7 +100,7 @@ describe('Controller: CommissionDataCtrl', function () {
           commissionPercentage: 100
         };
         scope.updateCommissionPercent();
-        expect(scope.commissionData.commissionPercentage).toEqual('0');
+        expect(scope.commissionData.commissionPercentage).toEqual(null);
       });
       it('should not be disabled when commission payable is ePos sales', function () {
         scope.commissionData = {
@@ -149,7 +150,7 @@ describe('Controller: CommissionDataCtrl', function () {
       it('should set char limit to 5 when type is percent', function () {
         scope.commissionData = {manualBarsCommissionValueTypeId: 1}; // 1 for percentage
         scope.updateManualBars();
-        expect(scope.manualBarsCharLimit).toEqual(5);
+        expect(scope.manualBarsCharLimit).toEqual(6);
       });
       it('should set unit to company base currency when type is amount', function () {
         scope.commissionData = {manualBarsCommissionValueTypeId: 2}; // 1 for amount
@@ -162,7 +163,7 @@ describe('Controller: CommissionDataCtrl', function () {
         scope.commissionData = {manualBarsCommissionValueTypeId: 2}; // 1 for amount
         scope.baseCurrency = 'GBP';
         scope.updateManualBars();
-        expect(scope.manualBarsCharLimit).toEqual(10);
+        expect(scope.manualBarsCharLimit).toEqual(11);
       });
     });
 
@@ -180,7 +181,7 @@ describe('Controller: CommissionDataCtrl', function () {
       it('should set char limit to 5 when type is percent', function () {
         scope.commissionData = {commissionValueTypeId: 1};  // 1 for percentage
         scope.updateIncentiveIncrement();
-        expect(scope.commissionValueCharLimit).toEqual(5);
+        expect(scope.commissionValueCharLimit).toEqual(6);
       });
       it('should set unit to company base currency when type is amount', function () {
         scope.commissionData = {commissionValueTypeId: 2};  // 1 for amount
@@ -193,7 +194,7 @@ describe('Controller: CommissionDataCtrl', function () {
         scope.commissionData = {commissionValueTypeId: 2};  // 1 for amount
         scope.baseCurrency = 'GBP';
         scope.updateIncentiveIncrement();
-        expect(scope.commissionValueCharLimit).toEqual(10);
+        expect(scope.commissionValueCharLimit).toEqual(11);
       });
     });
   });
