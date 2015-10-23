@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash) {
+  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast, $location) {
     var $this             = this;
     $scope.viewName       = 'Creating Commission Data';
     $scope.commissionData = {};
@@ -16,6 +16,30 @@ angular.module('ts5App')
     $scope.readOnly     = true;
     var percentTypeName = 'Percentage';
     var percentTypeUnit = '%';
+
+    this.showToast = function (className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    };
+
+    this.showErrors = function (dataFromAPI) {
+      showToast('warning', 'Store Instance Packing', 'error saving items!');
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+    };
+
+    this.showLoadingModal = function (text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+    };
 
     this.getNameByIdInArray = function (id, array) {
       var match = lodash.findWhere(array, {id: id});
@@ -26,8 +50,11 @@ angular.module('ts5App')
     };
 
     $scope.updateCommissionPercent = function () {
-      $scope.commissionPercentDisabled = ($scope.commissionData.commissionPayable === 'Retail Item');
-      $scope.commissionData.commissionPercent = 0;
+      var commissionPayableType = $this.getNameByIdInArray($scope.commissionData.commissionPayableTypeId, $scope.commissionPayableTypes);
+      if(commissionPayableType === 'Retail item') {
+        $scope.commissionPercentDisabled = true;
+        $scope.commissionData.commissionPercentage = '0';
+      }
     };
 
     $scope.updateManualBars = function () {
@@ -53,11 +80,10 @@ angular.module('ts5App')
     };
 
     $this.createPayload = function () {
+      // TODO: don't send in null fields?
       var payload = angular.copy($scope.commissionData);
-      console.log($scope.commissionData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
-      console.log(payload);
       return payload;
 
       //var mockPayload = {
@@ -75,27 +101,46 @@ angular.module('ts5App')
       //};
     };
 
-    $scope.createCommissionData = function () {
-      // commissionFactory.createCommissionData($scope.commissionData).then(saveSuccess, showErrors);
+    this.createSuccess = function () {
+      $this.showToast('success', 'Create Commission Data', 'data successfully created');
+      $this.hideLoadingModal();
+      $location.path('commission-data-table');
     };
 
-    $scope.editCommissionData = function () {
-      // commissionFactory.editCommissionData($scope.commissionData).then(saveSuccess, showErrors);
+    this.createCommissionData = function (payload) {
+      $this.showLoadingModal('creating commission data');
+      commissionFactory.createCommissionData(payload).then($this.createSuccess, $this.showErrors);
+    };
+
+    this.editCommissionDataSuccess = function () {
+      // TODO: use a 'success - continue editing modal instead?'
+      $this.showToast('success', 'Edit Commission Data', 'data successfully saved');
+      $this.hideLoadingModal();
+    };
+
+    this.editCommissionData = function (payload) {
+      $this.showLoadingModal('updating commission data');
+      commissionFactory.editCommissionData(payload).then($this.editCommissionDataSuccess, $this.showErrors);
+    };
+
+    this.getCommissionDataSuccess = function (dataFromAPI) {
+      $scope.commissionData = angular.copy(dataFromAPI);
+      $scope.updateManualBars();
+      $scope.updateIncentiveIncrement();
+      $this.hideLoadingModal();
+    };
+
+    this.getCommissionData = function () {
+      $this.showLoadingModal('retrieving data');
+      commissionFactory.getCommissionPayableData($routeParams.id).then($this.getCommissionDataSuccess, $this.showErrors);
     };
 
     $scope.saveData = function () {
-      $this.createPayload();
+      var payload = $this.createPayload();
       var initFunctionName = ($routeParams.state + 'CommissionData');
       if ($this[initFunctionName]) {
-        $this[initFunctionName]();
+        $this[initFunctionName](payload);
       }
-    };
-
-    this.setCommissionData = function (data) {
-      $scope.commissionData = data;
-      $scope.updateManualBars();
-      $scope.updateIncentiveIncrement();
-
     };
 
     this.getCrewBaseList = function () {
@@ -137,9 +182,7 @@ angular.module('ts5App')
       // commissionFactory.getBaseCurrency();
 
       if ($routeParams.id) {
-        // commissionFactory.getCommissionData($routeParams.id).then(setCommissionData, showError);
-
-        // get commission data from API
+        $this.getCommissionData();
       }
     };
     this.init();
