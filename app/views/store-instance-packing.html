@@ -29,8 +29,6 @@
       </div>
     </div>
 
-
-
     <div class="well">
       <div class="form-group">
         <p class="input-group">
@@ -100,7 +98,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
-              <ui-select-match placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
+              <ui-select-match allow-clear placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
@@ -138,7 +136,7 @@
 
         <tr ng-repeat="item in emptyMenuItems track by $index" ng-hide="readOnly">
           <td>
-            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item, false)">
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
@@ -267,7 +265,7 @@
 
         <tr ng-repeat="item in emptyOffloadMenuItems track by $index" ng-hide="readOnly">
           <td>
-            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item, true)">
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>

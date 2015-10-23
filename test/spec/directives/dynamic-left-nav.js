@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Directive: dynamicLeftNav', function() {
+describe('Directive: dynamicLeftNav', function() {
 
   // load the directive's module
   beforeEach(module('ts5App', 'template-module'));

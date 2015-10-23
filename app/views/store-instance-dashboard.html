@@ -92,7 +92,7 @@
               <div class="form-group">
                 <label>Arrival Station</label>
                   <ui-select multiple ng-model="search.arrivalStations" theme="bootstrap">
-                    <ui-select-match placeholder="Select Departure Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
+                    <ui-select-match placeholder="Select Arrival Station...">{{$item.name + ' - ' + $item.code}}</ui-select-match>
                       <ui-select-choices repeat="station in stationList | filter: $select.search">
                         {{station.name}}
                       </ui-select-choices>
@@ -121,7 +121,7 @@
           </div>
         </div>
         <div class="panel-footer text-right">
-          <button class="btn btn-default btn-search-clear"
+          <button type="button" class="btn btn-default btn-search-clear"
             ng-click="clearSearchForm()"
             ng-show="showClearButton()">
             <span class="btn-label">Clear</span>
@@ -186,9 +186,9 @@
           <div class="scheduleDetails-{{store.id}} accordion-cell-details accordion-cell-closed">
             <strong>Schedule Number:</strong> {{ store.scheduleNumber }}<br>
             <strong>Departure Station:</strong> {{ store.departureStationCode }}<br>
-            <strong>Departure Time:</strong> {{ store.arrivalTime }} <br>
+            <strong>Departure Time:</strong> {{ store.departureTime }} <br>
             <strong>Arrival Station:</strong> {{ store.arrivalStationCode }}<br>
-            <strong>Arrival Time:</strong> {{ store.departureTime }} <br>
+            <strong>Arrival Time:</strong> {{ store.arrivalTime }} <br>
           </div>
         </td>
         <td>
@@ -262,7 +262,7 @@
         <td></td>
         <td>
           <input ng-show="doesStoreInstanceContainAction(store, 'Checkbox')" ng-model="replenishment.selected"
-                 type="checkbox">
+                 type="checkbox" ng-click="storeSelectionToggled()">
           </input>
         </td>
         <td>{{ replenishment.dispatchStationCode }}</td>
@@ -277,9 +277,9 @@
           <div class="scheduleDetails-{{replenishment.id}} accordion-cell-details accordion-cell-closed">
             <strong>Schedule Number:</strong> {{ replenishment.scheduleNumber }}<br>
             <strong>Departure Station:</strong> {{ replenishment.departureStationCode }}<br>
-            <strong>Departure Time:</strong> {{ replenishment.arrivalTime }} <br>
+            <strong>Departure Time:</strong> {{ replenishment.departureTime }} <br>
             <strong>Arrival Station:</strong> {{ replenishment.arrivalStationCode }}<br>
-            <strong>Arrival Time:</strong> {{ replenishment.departureTime }} <br>
+            <strong>Arrival Time:</strong> {{ replenishment.arrivalTime }} <br>
           </div>
         </td>
         <td>

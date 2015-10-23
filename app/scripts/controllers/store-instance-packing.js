@@ -398,21 +398,20 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       getItemsSuccessHandler(dataFromAPI);
     }
 
-    this.checkForDuplicate = function (item, isInOffload) {
-      var menuToCheck;
-      if(isInOffload) {
-        menuToCheck = angular.copy($scope.emptyOffloadMenuItems);
-      } else {
-        menuToCheck = angular.copy($scope.emptyMenuItems);
+    this.checkForDuplicate = function (item) {
+      var menuToCheck = angular.copy($scope.emptyMenuItems);
+      if($routeParams.action === 'redispatch') {
+        menuToCheck = menuToCheck.concat(angular.copy($scope.emptyOffloadMenuItems));
       }
+
       var duplicates = lodash.filter(menuToCheck, function (filteredItem) {
         return (item.masterItem && filteredItem.masterItem && filteredItem.masterItem.id === item.masterItem.id);
       });
       return duplicates.length > 1;
     };
 
-    $scope.warnForDuplicateSelection = function (selectedItem, isInOffload) {
-      var duplicatesExist = $this.checkForDuplicate(selectedItem, isInOffload);
+    $scope.warnForDuplicateSelection = function (selectedItem) {
+      var duplicatesExist = $this.checkForDuplicate(selectedItem);
       if (duplicatesExist) {
         showToast('warning', 'Add Item', 'The item ' + selectedItem.masterItem.itemName + ' has already been added');
       }
@@ -420,16 +419,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.checkForDuplicatesInPayload = function () {
       var duplicatesExist = false;
-      angular.forEach(angular.copy($scope.emptyMenuItems), function (item) {
-        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item, false);
-      });
-
+      var mergedEmptyItems = angular.copy($scope.emptyMenuItems);
       if($routeParams.action === 'redispatch') {
-        angular.forEach(angular.copy($scope.emptyOffloadMenuItems), function(offloadItem) {
-          duplicatesExist = duplicatesExist || $this.checkForDuplicate(offloadItem, true);
-        });
+        mergedEmptyItems = mergedEmptyItems.concat(angular.copy($scope.emptyOffloadMenuItems));
       }
 
+      angular.forEach(mergedEmptyItems, function (item) {
+        duplicatesExist = duplicatesExist || $this.checkForDuplicate(item, false);
+      });
       return duplicatesExist;
     };
 
