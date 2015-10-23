@@ -17,6 +17,9 @@ angular.module('ts5App')
     $scope.requireCommissionPercent = true;
     var percentTypeName = 'Percentage';
     var percentTypeUnit = '%';
+    $scope.manualBarsCharLimit = 10;
+    $scope.commissionValueCharLimit = 10;
+
 
     this.showToast = function (className, type, message) {
       ngToast.create({
@@ -68,10 +71,10 @@ angular.module('ts5App')
       var manualBarsType = $this.getNameByIdInArray($scope.commissionData.manualBarsCommissionValueTypeId, $scope.discountTypes);
       if (manualBarsType === percentTypeName) {
         $scope.manualBarsCommissionUnit = percentTypeUnit;
-        $scope.manualBarsCharLimit = 5;
+        $scope.manualBarsCharLimit = 6;
       } else {
         $scope.manualBarsCommissionUnit = $scope.baseCurrency;
-        $scope.manualBarsCharLimit = 10;
+        $scope.manualBarsCharLimit = 11;
       }
     };
 
@@ -79,33 +82,18 @@ angular.module('ts5App')
       var commissionType = $this.getNameByIdInArray($scope.commissionData.commissionValueTypeId, $scope.discountTypes);
       if (commissionType === percentTypeName) {
           $scope.commissionValueUnit = percentTypeUnit;
-        $scope.commissionValueCharLimit = 5;
+        $scope.commissionValueCharLimit = 6;
       } else {
         $scope.commissionValueUnit = $scope.baseCurrency;
-        $scope.commissionValueCharLimit = 10;
+        $scope.commissionValueCharLimit = 11;
       }
     };
 
     $this.createPayload = function () {
-      // TODO: don't send in null fields?
       var payload = angular.copy($scope.commissionData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
       return payload;
-
-      //var mockPayload = {
-      //  "crewBaseTypeId": 1,
-      //  "commissionPayableTypeId" : 2,
-      //  "commissionPercentage" : "10.123",
-      //  "manualBarsCommissionValueTypeId" : 1,
-      //  "manualBarsCommissionValue" : "100.000",
-      //  "discrepancyDeductionsCashPercentage" : "1.123",
-      //  "discrepancyDeductionsStockPercentage" : "2",
-      //  "commissionValueTypeId": 2,
-      //  "commissionValue": "1234567.123",
-      //  "startDate" : "20150101",
-      //  "endDate": "20160101"
-      //};
     };
 
     this.createSuccess = function () {

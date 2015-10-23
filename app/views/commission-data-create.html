@@ -81,8 +81,10 @@
                    type="text"
                    class="form-control"
                    placeholder="57.5"
-                   maxlength="5"
-                   ng-required="requireCommissionPercent"
+                   maxlength="6"
+                   custom-validity
+                   custom-pattern="currencyWithTwoDecimalPlace"
+                   required="true"
                    ng-disabled="commissionPercentDisabled || readOnly">
           </div>
         </div>
@@ -110,13 +112,14 @@
           <div class="col-xs-10 col-sm-5">
             <div class="form-group">
               <label>Manual Bars Commisssion Value *</label>
-              <!-- TODO: fix ng-maxlength -->
               <input ng-model="commissionData.manualBarsCommissionValue"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
                      ng-readonly="readOnly"
-                     ng-maxlength="manualBarsCharLimit"
+                     maxlength="{{ manualBarsCharLimit }}"
+                     custom-validity
+                     custom-pattern="currencyWithTwoDecimalPlace"
                      required="true">
             </div>
           </div>
@@ -141,7 +144,9 @@
                      type="text"
                      class="form-control"
                      placeholder="57.5"
-                     maxlength="5"
+                     maxlength="6"
+                     custom-validity
+                     custom-pattern="currencyWithTwoDecimalPlace"
                      required="true"
                      ng-readonly="readOnly">
             </div>
@@ -154,7 +159,9 @@
                      type="text"
                      class="form-control"
                      placeholder="57.5"
-                     maxlength="5"
+                     maxlength="6"
+                     custom-validity
+                     custom-pattern="currencyWithTwoDecimalPlace"
                      required="true"
                      ng-readonly="readOnly">
             </div>
@@ -186,8 +193,10 @@
                      type="text"
                      class="form-control"
                      placeholder="57.5"
-                     ng-maxlength="commissionValueChar"
+                     maxlength="{{commissionValueCharLimit}}"
                      ng-readonly="readOnly"
+                     custom-validity
+                     custom-pattern="currencyWithTwoDecimalPlace"
                      required="true">
             </div>
           </div>
