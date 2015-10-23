@@ -178,7 +178,7 @@
                      type="text"
                      class="form-control"
                      placeholder="57.5"
-                     ng-maxlength="incentiveIncrementCharLimit"
+                     ng-maxlength="commissionValueChar"
                      ng-readonly="readOnly">
             </div>
           </div>
@@ -197,7 +197,7 @@
 
       </div>
       <div class="panel-footer text-right">
-        <button class="btn btn-primary" ng-click="formSave()" ng-hide="readOnly">
+        <button class="btn btn-primary" ng-click="saveData()" ng-hide="readOnly">
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>

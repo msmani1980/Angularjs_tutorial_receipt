@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory) {
+  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash) {
     var $this             = this;
     $scope.viewName       = 'Creating Commission Data';
     $scope.commissionData = {};
@@ -17,50 +17,48 @@ angular.module('ts5App')
     var percentTypeName = 'Percentage';
     var percentTypeUnit = '%';
 
+    this.getNameByIdInArray = function (id, array) {
+      var match = lodash.findWhere(array, {id: id});
+      if(match) {
+        return match.name;
+      }
+      return '';
+    };
+
     $scope.updateCommissionPercent = function () {
-      $scope.commissionPercentDisabled        = ($scope.commissionData.commissionPayable === 'Retail Item');
+      $scope.commissionPercentDisabled = ($scope.commissionData.commissionPayable === 'Retail Item');
       $scope.commissionData.commissionPercent = 0;
     };
 
     $scope.updateManualBars = function () {
-      if ($scope.commissionData.manualBarsType === percentTypeName) {
-        $scope.manualBarsUnit      = percentTypeUnit;
+      var manualBarsType = $this.getNameByIdInArray($scope.commissionData.manualBarsCommissionValueTypeId, $scope.discountTypes);
+      if (manualBarsType === percentTypeName) {
+        $scope.manualBarsCommissionUnit = percentTypeUnit;
         $scope.manualBarsCharLimit = 5;
       } else {
-        $scope.manualBarsUnit      = $scope.baseCurrency;
+        $scope.manualBarsCommissionUnit = $scope.baseCurrency;
         $scope.manualBarsCharLimit = 10;
       }
     };
 
     $scope.updateIncentiveIncrement = function () {
-      if ($scope.commissionData.commissionType === percentTypeName) {
-        $scope.incentiveIncrementUnit      = percentTypeUnit;
-        $scope.incentiveIncrementCharLimit = 5;
+      var commissionType = $this.getNameByIdInArray($scope.commissionData.commissionValueTypeId, $scope.discountTypes);
+      if (commissionType === percentTypeName) {
+          $scope.commissionValueUnit = percentTypeUnit;
+        $scope.commissionValueCharLimit = 5;
       } else {
-        $scope.incentiveIncrementUnit      = $scope.baseCurrency;
-        $scope.incentiveIncrementCharLimit = 10;
+        $scope.commissionValueUnit = $scope.baseCurrency;
+        $scope.commissionValueCharLimit = 10;
       }
     };
 
-    $scope.createCommissionData = function () {
-      // commissionFactory.createCommissionData($scope.commissionData).then(saveSuccess, showErrors);
-    };
-
-    $scope.editCommissionData = function () {
-      // commissionFactory.editCommissionData($scope.commissionData).then(saveSuccess, showErrors);
-    };
-
-    $scope.submitForm = function () {
-      var initFunctionName = ($routeParams.state + 'CommissionData');
-      if ($this[initFunctionName]) {
-        $this[initFunctionName]();
-      }
-    };
-
-    this.setCommissionData = function (data) {
-      $scope.commissionData = data;
-      $scope.updateManualBars();
-      $scope.updateIncentiveIncrement();
+    $this.createPayload = function () {
+      var payload = angular.copy($scope.commissionData);
+      console.log($scope.commissionData);
+      payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
+      payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+      console.log(payload);
+      return payload;
 
       //var mockPayload = {
       //  "crewBaseTypeId": 1,
@@ -75,6 +73,28 @@ angular.module('ts5App')
       //  "startDate" : "20150101",
       //  "endDate": "20160101"
       //};
+    };
+
+    $scope.createCommissionData = function () {
+      // commissionFactory.createCommissionData($scope.commissionData).then(saveSuccess, showErrors);
+    };
+
+    $scope.editCommissionData = function () {
+      // commissionFactory.editCommissionData($scope.commissionData).then(saveSuccess, showErrors);
+    };
+
+    $scope.saveData = function () {
+      $this.createPayload();
+      var initFunctionName = ($routeParams.state + 'CommissionData');
+      if ($this[initFunctionName]) {
+        $this[initFunctionName]();
+      }
+    };
+
+    this.setCommissionData = function (data) {
+      $scope.commissionData = data;
+      $scope.updateManualBars();
+      $scope.updateIncentiveIncrement();
 
     };
 
