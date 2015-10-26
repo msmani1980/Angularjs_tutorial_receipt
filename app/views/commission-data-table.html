@@ -79,7 +79,7 @@
         <td>{{ data.manualBarsCommissionValue | number: 2 }} {{ getUnitById(data.manualBarsCommissionValueTypeId) }}</td>
         <td>{{ data.discrepancyDeductionsCashPercentage | number: 2}} %</td>
         <td>{{ data.discrepancyDeductionsStockPercentage | number: 2 }} %</td>
-        <td>{{ data.commissionValue | number: 2 }} {{ getUnitById(data.manualBarsCommissionValueTypeId) }}</td>
+        <td>{{ data.commissionValue | number: 2 }} {{ getUnitById(data.commissionValueTypeId) }}</td>
         <td>
           <button class="btn btn-info btn-xs" ng-click="redirectToDetailPage(data.id, 'view')" tabindex="0">
             <i class="fa fa-file"></i>
@@ -88,7 +88,7 @@
             <i class="fa fa-pencil"></i>
           </button>
           <button class="btn btn-danger btn-xs"
-                  ng-click="deleteRecordDialog(commissionDataList[$index], ['crewBase', 'startDate', 'endDate'])"
+                  ng-click="deleteRecordDialog(data)"
                   tabindex="0"
                   ng-show="canDelete(data)">
             <i class="fa fa-trash"></i>
