@@ -61,11 +61,11 @@ describe('The Item Create Controller', function () {
     });
 
     it('should have a startDate property', function () {
-      expect($scope.formData.startDate).toBeDefined();
+      expect($scope.formData.startDate).toEqual(dateUtility.tomorrowFormatted());
     });
 
     it('should have an endDate property', function () {
-      expect($scope.formData.endDate).toBeDefined();
+      expect($scope.formData.endDate).toEqual(dateUtility.tomorrowFormatted());
     });
 
     it('should have an qrCodeValue property', function () {
@@ -791,6 +791,29 @@ describe('The Item Create Controller', function () {
         it('should expect the UI ready flag to be true after promises are resovled', function () {
           $scope.$digest();
           expect($scope.uiSelectTemplateReady).toBeTruthy();
+        });
+
+      });
+
+      describe('the determine minimum date functionality', function () {
+
+        beforeEach(function () {
+          spyOn(ItemCreateCtrl,'determineMinDate').and.callThrough();
+          $scope.$digest();
+        });
+
+        it('should determine the minimum date on success', function() {
+          expect(ItemCreateCtrl.determineMinDate).toHaveBeenCalled();
+        });
+
+        it('should set the minDate in the scope', function() {
+          expect($scope.minDate).toEqual(ItemCreateCtrl.determineMinDate());
+        });
+
+        it('should return a formatted string', function() {
+          var dateStringControl = '+1d';
+          var dateStringTest = ItemCreateCtrl.determineMinDate();
+          expect(dateStringTest).toEqual(dateStringControl);
         });
 
       });
