@@ -242,6 +242,10 @@ angular.module('ts5App', [
   '$http',
   function ($rootScope, regexp, GlobalMenuService, $http) {
 
+    $rootScope.$on("$locationChangeStart", function(event, next, current) {
+      console.log(event, next, current);
+    });
+
     var user = GlobalMenuService.user.get();
     var companyId = GlobalMenuService.company.get();
     // set regexp object into root scope for use in any template
@@ -250,32 +254,5 @@ angular.module('ts5App', [
     $http.defaults.headers.common.companyId = companyId;
 
     $rootScope.regexp = regexp;
-
-    $rootScope.sideMenu = [
-      {
-        'title': 'Stock Owner Item Management',
-        menuItems: [
-          {
-            name: 'Manage SO Items',
-            route: '/#/stock-owner-item-list',
-            icon: 'icon-manage-retail-item',
-            className: 'dashboard-managemenuItems'
-          },
-          {
-            name: 'Create SO Item',
-            route: '/#/stock-owner-item-create',
-            icon: 'icon-create-retail-item',
-            className: 'dashboard-createItem'
-          },
-          {
-            name: 'Manage SO Categories',
-            route: 'retail-items/categories',
-            icon: 'icon-manage-retail-category',
-            className: 'dashboard-manageItemCategories'
-          }
-        ]
-      }
-    ];
-
   }
 ]);
