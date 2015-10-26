@@ -132,6 +132,8 @@ describe('The Item Price Type directive', function () {
           var datePickerRow;
 
           beforeEach(function () {
+            $scope.$parent.minDate = '10/16/2015';
+            $scope.$digest();
             datePickerRow = angular.element(priceDetailsColumn.find(' > .row')[0]);
           });
 
