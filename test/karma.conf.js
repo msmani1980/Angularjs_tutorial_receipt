@@ -73,10 +73,10 @@ module.exports = function(config) {
       'bower_components/ng-file-upload/ng-file-upload.js',
       'bower_components/ng-lodash/build/ng-lodash.js',
       'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
-      'bower_components/ngstorage/ngStorage.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/ngtoast/dist/ngToast.js',
       'bower_components/select2/select2.js',
+      'bower_components/ngstorage/ngStorage.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

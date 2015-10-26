@@ -59,10 +59,12 @@ angular.module('ts5App', [
   ],
   price: /^\$?\s?[0-9\,]+(\.\d{0,4})?$/,
   url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
-}).config(function ($routeProvider, $httpProvider) {
+}).config(['$localStorageProvider', function($localStorageProvider){
+  $localStorageProvider.setKeyPrefix('TS5-');
+}]).config(function ($routeProvider, $httpProvider) {
   $httpProvider.interceptors.push('defaultData');
   $httpProvider.interceptors.push('httpSessionInterceptor');
-    $routeProvider.when('/', {
+  $routeProvider.when('/', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl'
   }).when('/item-list', {
@@ -199,7 +201,7 @@ angular.module('ts5App', [
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'
   }).when('/store-instance-review/:action/:storeId?', {
-    templateUrl: function(routeParameters){
+    templateUrl: function (routeParameters) {
       if (routeParameters.action === 'redispatch') {
         return 'views/store-instance-redispatch-review.html';
       }
@@ -227,13 +229,13 @@ angular.module('ts5App', [
     controller: 'CurrencyEditCtrl',
     controllerAs: 'CurrencyEdit'
   })
-  .when('/login', {
-    templateUrl: 'views/login.html',
-    controller: 'LoginCtrl'
-  })
-  .otherwise({
-    redirectTo: '/'
-  });
+    .when('/login', {
+      templateUrl: 'views/login.html',
+      controller: 'LoginCtrl'
+    })
+    .otherwise({
+      redirectTo: '/'
+    });
 
 }).run([
   '$rootScope',
@@ -242,13 +244,8 @@ angular.module('ts5App', [
   '$http',
   function ($rootScope, regexp, GlobalMenuService, $http) {
 
-    $rootScope.$on("$locationChangeStart", function(event, next, current) {
-      console.log(event, next, current);
-    });
-
     var user = GlobalMenuService.user.get();
     var companyId = GlobalMenuService.company.get();
-    // set regexp object into root scope for use in any template
 
     $http.defaults.headers.common.userId = user.id;
     $http.defaults.headers.common.companyId = companyId;

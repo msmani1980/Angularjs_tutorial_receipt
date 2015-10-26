@@ -8,7 +8,16 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('GlobalMenuService', function ($localStorage, $rootScope) {
+  .service('GlobalMenuService', function ($localStorage, $rootScope, $location) {
+
+    //console.log('here');
+    $rootScope.$on("$locationChangeStart", function (event, next, current) {
+      //console.log(next, current);
+      if (!next.contains('login')) {
+        //event.preventDefault();
+      }
+      //$location.path('/login');
+    });
 
     var userModel = {
       '1': {
