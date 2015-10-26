@@ -31,7 +31,7 @@ describe('Directive: stockTakeReason', function() {
       itemMasterId: 2,
       stationId: 4
     };
-    scope.stockTakeReasonOpen(mockStockItem);
+    scope.stockTakeReasonOpen(mockStockItem, 'Count');
     scope.$digest();
   }));
 
@@ -78,20 +78,8 @@ describe('Directive: stockTakeReason', function() {
         expect(scope.stockTakeReasonOpen).toBeDefined();
       });
 
-      it('should set scope.id equal to mockStockItem.id', function() {
-        expect(scope.id).toEqual(mockStockItem.id);
-      });
-
-      it('should set scope.currentCountQuantity equal to mockStockItem.currentCountQuantity', function() {
-        expect(scope.currentCountQuantity).toEqual(mockStockItem.currentQuantity);
-      });
-
-      it('should set scope.masterItemId equal to mockStockItem.masterItemId', function() {
-        expect(scope.masterItemId).toEqual(mockStockItem.itemMasterId);
-      });
-
-      it('should set scope.catererStationId equal to mockStockItem.catererStationId', function() {
-        expect(scope.catererStationId).toEqual(mockStockItem.stationId);
+      it('should set scope.currentStockItem equal to mockStockItem', function() {
+        expect(scope.currentStockItem).toEqual(mockStockItem);
       });
 
     });
@@ -117,7 +105,7 @@ describe('Directive: stockTakeReason', function() {
       });
 
       it('should set scope.id to null', function() {
-        expect(scope.id).toBe(null);
+        expect(scope.currentStockItem).toBe(null);
       });
 
       it('should set scope.comment to null', function() {
@@ -125,19 +113,11 @@ describe('Directive: stockTakeReason', function() {
       });
 
       it('should set scope.currentCountQuantity to null', function() {
-        expect(scope.currentCountQuantity).toBe(null);
+        expect(scope.quantityType).toBe(null);
       });
 
       it('should set scope.newCount to null', function() {
         expect(scope.newCount).toBe(null);
-      });
-
-      it('should set scope.masterItemId to null', function() {
-        expect(scope.masterItemId).toBe(null);
-      });
-
-      it('should set scope.catererStationId to null', function() {
-        expect(scope.catererStationId).toBe(null);
       });
 
       it('should set scope.stockAdjustmentReason to null', function() {
@@ -176,6 +156,7 @@ describe('Directive: stockTakeReason', function() {
 
       it('should call stockManagementStationItemsService.updateStockManagementStationItems API with mocked payload', function() {
         var mockPayload = {
+          id: mockStockItem.id,
           stationId: mockStockItem.stationId,
           itemMasterId: mockStockItem.itemMasterId,
           currentQuantity: parseInt(mockNewCount),
