@@ -1,0 +1,114 @@
+<div class="container">
+
+  <form-error-dialog></form-error-dialog>
+
+  <form name="createStoreInstance" ng-submit="submitForm()">
+
+    <div class="accordion-wrapper">
+      <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
+        <accordion-group ng-init="status.items.open=false" is-open="status.items.open">
+          <accordion-heading class="accordion-heading">
+            Stock Discrepancy <i ng-class="{'fa-chevron-down': status.items.open, 'fa-chevron-right': !status.items.open}" class="fa"></i>
+          </accordion-heading>
+          <div class="row">
+            <div class="col-xs-12 text-right">
+              <button type="button" class="btn btn-info" ng-click="redirectTo('Packing')">Edit</button>
+            </div>
+          </div>
+          <table class="table table-striped pick-list">
+            <thead>
+            <tr ng-switch on="action">
+              <th>Retail Item Details</th>
+              <th ng-switch-when="dispatch" width="15%">Template Quantity</th>
+              <th ng-switch-when="dispatch" width="15%">Picked Quantity</th>
+
+              <th ng-switch-when="replenish" width="15%">Picked Quantity</th>
+
+              <th ng-switch-when="end-instance" width="15%">Inbound Qty</th>
+              <th ng-switch-when="end-instance" width="15%">Ullage</th>
+              <th ng-switch-when="end-instance">Ullage Reason</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in items | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+                ng-class="hasDiscrepancy(item)" ng-switch on="action">
+              <td>
+                <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
+              </td>
+
+              <td ng-switch-when="dispatch">
+                <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0" disabled>
+              </td>
+              <td ng-switch-when="dispatch">
+                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+              </td>
+
+              <td ng-switch-when="replenish">
+                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+              </td>
+
+              <td ng-switch-when="end-instance">
+                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+              </td>
+              <td ng-switch-when="end-instance">
+                <input type="text" class="form-control" ng-model="item.ullageQuantity" placeholder="0" disabled>
+              </td>
+              <td ng-switch-when="end-instance">
+                <input type="text" class="form-control" value="{{getUllageReason(item.ullageReasonCode)}}" disabled>
+              </td>
+
+            </tr>
+            </tbody>
+          </table>
+        </accordion-group>
+      </accordion>
+
+      <accordion class="store-instance-review-accordion">
+        <accordion-group ng-init="status.seals.open=false" is-open="status.seals.open">
+          <accordion-heading class="accordion-heading">
+            {{getTitleFor('seals')}} <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}" class="fa"></i>
+          </accordion-heading>
+          <div class="row">
+            <div class="col-xs-12 text-right">
+              <button type="button" class="btn btn-info" ng-click="redirectTo('Seals')">Edit</button>
+            </div>
+          </div>
+
+          <div ng-if="storeDetails.tampered">
+            <input type="checkbox" ng-model="storeDetails.tampered" disabled/><span>{{getTitleFor('seals')}} Tampered</span>
+            <textarea class="form-control no-resize" disabled>{{storeDetails.note}}</textarea>
+          </div>
+
+
+          <table class="table store-instance-review-seals-table">
+            <thead>
+            <tr>
+              <th class="col-xs-3">Seal Type</th>
+              <th class="col-xs-9">Seal Numbers</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="sealObj in seals">
+              <td>
+                <input type="text" class="form-control text-white" value="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
+              </td>
+              <td><span ng-repeat="sealNumber in sealObj.sealNumbers">{{sealNumber}}{{$last ? '' : ', '}}</span></td>
+            </tr>
+            </tbody>
+          </table>
+        </accordion-group>
+      </accordion>
+    </div>
+
+    <footer class="text-right" ng-hide="actionNotAllowed">
+      <button type="button" class="btn btn-default btn-prev" ng-click="stepWizardPrevTrigger()">
+        <span class="fa fa-arrow-left"></span>
+        <span class="hidden-xs">Prev</span>
+      </button>
+      <button type="button" class="btn btn-default btn-success btn-next" ng-click="submit()">{{getTitleFor('dispatch')}}</button>
+    </footer>
+
+  </form>
+
+</div>

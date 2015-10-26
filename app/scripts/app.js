@@ -62,7 +62,7 @@ angular.module('ts5App', [
 }).config(function ($routeProvider, $httpProvider) {
   $httpProvider.interceptors.push('defaultData');
   $httpProvider.interceptors.push('httpSessionInterceptor');
-    $routeProvider.when('/', {
+  $routeProvider.when('/', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl'
   }).when('/item-list', {
@@ -199,7 +199,7 @@ angular.module('ts5App', [
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'
   }).when('/store-instance-review/:action/:storeId?', {
-    templateUrl: function(routeParameters){
+    templateUrl: function (routeParameters) {
       if (routeParameters.action === 'redispatch') {
         return 'views/store-instance-redispatch-review.html';
       }
@@ -226,12 +226,13 @@ angular.module('ts5App', [
     templateUrl: 'views/currency-edit.html',
     controller: 'CurrencyEditCtrl',
     controllerAs: 'CurrencyEdit'
-  })
-  .when('/login', {
+  }).when('/reconciliation-discrepancy-detail', {
+    templateUrl: 'views/reconciliation-discrepancy-detail.html',
+    controller: 'ReconciliationDiscrepancyDetail'
+  }).when('/login', {
     templateUrl: 'views/login.html',
     controller: 'LoginCtrl'
-  })
-  .otherwise({
+  }).otherwise({
     redirectTo: '/'
   });
 
