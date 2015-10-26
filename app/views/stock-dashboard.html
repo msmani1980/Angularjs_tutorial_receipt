@@ -127,13 +127,13 @@
         <td>
           <input type="text" class="form-control text-right" value="{{stockItem.offloadQuantity}}" ng-disabled="true"/>
         </td>
-        <td id="currentCountQuantity-{{id}}" ng-model="stockItem.currentCountQuantity[stockItem.index]"
-            ng-click="stockTakeReasonOpen(stockItem)">
-          <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentCountQuantity}}"
+        <td id="currentCountQuantity-{{id}}" ng-click="stockTakeReasonOpen(stockItem, 'Count')">
+          <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentQuantity}}"
                  ng-readonly="true"/>
         </td>
-        <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.ullageQuantity}}"/>
+        <td  id="currentUllageQuantity-{{id}}" ng-click="stockTakeReasonOpen(stockItem, 'Ullage')">
+          <input type="text" class="showAsActive form-control text-right" value="{{stockItem.ullageQuantity}}"
+                ng-readonly="true"/>
         </td>
       </tr>
 

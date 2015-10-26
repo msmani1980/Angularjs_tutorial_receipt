@@ -5,19 +5,19 @@
       <div class="modal-body text-center">
 
         <div class="modal-header">
-          <h3 class="modal-title">Adjustment to Count</h3>
+          <h3 class="modal-title">Adjustment to {{quantityType}}</h3>
         </div>
 
         <div class="modal-body">
 
-          <p>To Update Item Count, first provide a reason below.</p>
+          <p>To Update Item {{quantityType}}, first provide a reason below.</p>
 
           <div class="form-group">
             <div class="row">
 
               <div class="col-xs-12 col-sm-2">
                 <label>Current</label>
-                {{ currentCountQuantity }}
+                {{ currentQuantity }}
               </div>
 
               <div class="col-xs-12 col-sm-8">
