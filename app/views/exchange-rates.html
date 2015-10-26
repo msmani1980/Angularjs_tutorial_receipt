@@ -53,9 +53,11 @@
       <div class="panel-heading">
         <div class="row">
           <h3 class="col-xs-8">{{company.companyName}}</h3>
-
+          <div class="col-xs-4 text-right">Cash Handler's Base Currency: <span>{{cashHandlerBaseCurrency.currencyCode}}</span></div>
+        </div>
+        <div class="row">
           <date-picker
-            class="col-xs-4 text-right pull-right"
+            class="col-xs-4 col-xs-offset-8 text-right pull-right"
             disable-date-range="true"
             element-class="col-xs-12 col-lg-12 pull-right"
             start-date-model="cashiersDateField"
