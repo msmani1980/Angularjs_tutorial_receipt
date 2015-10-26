@@ -34,27 +34,23 @@ angular.module('ts5App').directive('stockTakeReason', function() {
       });
     }
 
-    $scope.stockTakeReasonOpen = function(stockitem) {
-      $scope.id = stockitem.id;
-      $scope.currentCountQuantity = stockitem.currentQuantity;
-      $scope.currentUllageQuantity = stockitem.ullageQuantity;
+    $scope.stockTakeReasonOpen = function(stockItem, quantityType) {
+      $scope.currentStockItem = angular.copy(stockItem);
+      $scope.quantityType = quantityType;
+      $scope.currentQuantity = ($scope.quantityType === 'Count' ? $scope.currentStockItem.currentQuantity : $scope.currentStockItem.ullageQuantity);
       $scope.newCount = null;
       $scope.newUllage = null;
-      $scope.masterItemId = stockitem.itemMasterId;
-      $scope.catererStationId = stockitem.stationId;
       $scope.comment = null;
+      $scope.stockAdjustmentReason = null;
       displayStockReasonModal();
     };
 
     $scope.clearScopeVars = function() {
-      $scope.id = null;
+      $scope.currentStockItem = null;
+      $scope.quantityType = null;
       $scope.comment = null;
-      $scope.currentCountQuantity = null;
-      $scope.ullageQuantity = null;
       $scope.newCount = null;
       $scope.newUllage = null;
-      $scope.masterItemId = null;
-      $scope.catererStationId = null;
       $scope.stockAdjustmentReason = null;
     };
 
@@ -71,10 +67,11 @@ angular.module('ts5App').directive('stockTakeReason', function() {
 
     function createPayload() {
       return {
-        stationId: $scope.catererStationId,
-        itemMasterId: $scope.masterItemId,
-        currentQuantity: parseInt($scope.newCount),
-        ullageQuantity: $scope.currentUllageQuantity,
+        id: $scope.currentStockItem.id,
+        stationId: $scope.currentStockItem.stationId,
+        itemMasterId: $scope.currentStockItem.itemMasterId,
+        currentQuantity: ($scope.quantityType === 'Count' ? parseInt($scope.newCount) : $scope.currentStockItem.currentQuantity),
+        ullageQuantity: ($scope.quantityType === 'Ullage' ? parseInt($scope.newCount) : $scope.currentStockItem.ullageQuantity),
         companyReasonCodeId: $scope.stockAdjustmentReason.id,
         note: $scope.comment
       };
@@ -82,7 +79,7 @@ angular.module('ts5App').directive('stockTakeReason', function() {
 
     $scope.stockTakeReasonSave = function() {
       var payload = createPayload();
-      var _id = $scope.id;
+      var _id = $scope.currentStockItem.id;
       $scope.clearScopeVars();
       hideStockReasonModal();
       displayLoadingModal('Updating item count');
