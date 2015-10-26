@@ -10,7 +10,7 @@ angular.module('ts5App')
   .directive('menuDropdown', function () {
     return {
       restrict: 'E',
-      templateUrl: 'views/directives/menu-dropdown.html',
+      templateUrl: '/views/directives/menu-dropdown.html',
       scope: {
         title: '@',
         ngModel: '=',
