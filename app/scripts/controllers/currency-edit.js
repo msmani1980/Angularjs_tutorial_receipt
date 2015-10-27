@@ -134,7 +134,7 @@ angular.module('ts5App')
       return selectedEasyPayDenominations.map(function (denomination) {
         return denomination.id;
       })
-        .indexOf(denominationId) > -1;
+      .indexOf(denominationId) > -1;
     };
 
     this.denormalizeDetailedCompanyCurrency = function (index, currency) {
@@ -224,7 +224,7 @@ angular.module('ts5App')
     $scope.removeInvalidEasyPayDenominations = function (currency){
       currency.selectedEasyPayDenominations = currency.selectedEasyPayDenominations.filter(function (el) {
         return currency.selectedDenominations.indexOf(el) > 0;
-      } );
+      });
     };
 
     this.init = function () {

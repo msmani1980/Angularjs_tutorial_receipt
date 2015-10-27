@@ -21,4 +21,14 @@ angular.module('ts5App')
       return formattedPayload;
     };
 
+    this.deserializeDates = function (responseFromAPI) {
+      var formattedResponseFromAPI = angular.copy(responseFromAPI);
+      angular.forEach(formattedResponseFromAPI, function (item) {
+        item.startDate = dateUtility.formatDateForApp(item.startDate);
+        item.endDate = dateUtility.formatDateForApp(item.endDate);
+      });
+
+      return formattedResponseFromAPI;
+    };
+
   });

@@ -227,6 +227,11 @@ angular.module('ts5App', [
     controller: 'CurrencyEditCtrl',
     controllerAs: 'CurrencyEdit'
   })
+  .when('/company-exchange-rate-edit', {
+    templateUrl: 'views/company-exchange-rate-edit.html',
+    controller: 'CompanyExchangeRateEditCtrl',
+    controllerAs: 'companyExchangeRateEdit'
+  })
   .otherwise({
     redirectTo: '/'
   });
