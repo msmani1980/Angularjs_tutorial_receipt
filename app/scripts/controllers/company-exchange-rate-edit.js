@@ -240,6 +240,16 @@ angular.module('ts5App')
       $this.deleteCompanyExchangeRate($scope.exchangeRateToDelete.id);
     };
 
+    $scope.duplicateExchangeRate = function (index, exchangeRate) {
+      var newExchangeRate = angular.copy(exchangeRate);
+      newExchangeRate.id = null;
+      newExchangeRate.startDate = dateUtility.nowFormatted();
+      newExchangeRate.endDate = dateUtility.nowFormatted();
+      newExchangeRate.exchangeRate = "1.0000";
+
+      $scope.companyExchangeRates.splice(index, 0, newExchangeRate);
+    };
+
     this.init = function () {
       $this.getCompanyGlobalCurrencies();
       $this.getDetailedCompanyCurrenciesForSearch();
