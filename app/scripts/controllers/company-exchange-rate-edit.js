@@ -47,6 +47,9 @@ angular.module('ts5App')
     this.sortDenominationByValue = function (a, b) {
       return parseFloat(a) - parseFloat(b);
     };
+    this.sortExchangeRatesByCurrencyCode = function (a, b) {
+      return a.acceptedCurrencyCode.localeCompare(b.acceptedCurrencyCode);
+    };
 
     this.getDetailedCompanyCurrenciesForSearch = function () {
       currencyFactory.getDetailedCompanyCurrencies().then(function (companyCurrencyListFromAPI) {
@@ -87,7 +90,7 @@ angular.module('ts5App')
 
         // Add exchange rate rows which are not defined yet
 
-        $scope.companyExchangeRates = companyExchangeRates;
+        $scope.companyExchangeRates = companyExchangeRates.sort($this.sortExchangeRatesByCurrencyCode);
         $this.hideLoadingModal();
       });
     };
@@ -97,7 +100,7 @@ angular.module('ts5App')
 
       payload.id = exchangeRate.id;
       payload.acceptedCurrencyCode = exchangeRate.acceptedCurrencyCode;
-      payload.operatingCurrencyCode = exchangeRate.operatingCurrencyCode;
+      payload.operatingCurrencyCode = $scope.search.operatingCurrencyCode;
       payload.companyId = $this.companyId;
       payload.exchangeRate = exchangeRate.exchangeRate;
       payload.exchangeRateType = 1;
@@ -241,13 +244,15 @@ angular.module('ts5App')
     };
 
     $scope.duplicateExchangeRate = function (index, exchangeRate) {
-      var newExchangeRate = angular.copy(exchangeRate);
-      newExchangeRate.id = null;
-      newExchangeRate.startDate = dateUtility.nowFormatted();
-      newExchangeRate.endDate = dateUtility.nowFormatted();
+      var newExchangeRate = {};
+      newExchangeRate.acceptedCurrencyCode = exchangeRate.acceptedCurrencyCode;
+      newExchangeRate.denominations = exchangeRate.denominations;
+      newExchangeRate.easyPayDenominations = exchangeRate.easyPayDenominations;
       newExchangeRate.exchangeRate = "1.0000";
+      newExchangeRate.startDate = dateUtility.tomorrowFormatted();
+      newExchangeRate.endDate = dateUtility.tomorrowFormatted();
 
-      $scope.companyExchangeRates.splice(index, 0, newExchangeRate);
+      $scope.companyExchangeRates.push(newExchangeRate);
     };
 
     this.init = function () {

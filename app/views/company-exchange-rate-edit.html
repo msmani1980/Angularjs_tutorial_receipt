@@ -81,7 +81,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr id="exchange-rate-{{$index}}" ng-repeat="exchangeRate in companyExchangeRates | filter: companyExchangeRateFilter | orderBy: 'acceptedCurrencyCode' track by $index">
+                        <tr id="exchange-rate-{{$index}}" ng-repeat="exchangeRate in companyExchangeRates | filter: companyExchangeRateFilter  track by $index">
                             <td>
                                 <input type="text" class="form-control" placeholder="CHF" disabled="disabled" value="{{exchangeRate.acceptedCurrencyCode}}">
                             </td>
@@ -109,7 +109,9 @@
                                         start-date-model="exchangeRate.startDate"
                                         end-date-model="exchangeRate.endDate"
                                         required="true"
-                                        disable-past="true" >
+                                        disable-past="true"
+                                        disable-start-date="isExchangeRateReadOnly(exchangeRate)"
+                                        disable-end-date="isExchangeRatePartialReadOnly(exchangeRate)">
                                 </date-picker>
                             </td>
                             <td>
@@ -119,7 +121,7 @@
                                 <button class="btn btn-primary btn-xs" ng-hide="isExchangeRateNewOne(exchangeRate) || isExchangeRatePartialReadOnly(exchangeRate)" ng-click="saveCompanyExchangeRate($index, exchangeRate)">
                                     <i class="fa fa-pencil"></i>
                                 </button>
-                                <button class="btn btn-info btn-xs" ng-show="isExchangeRateNewOne(exchangeRate)" ng-click="saveDetailedCompanyCurrency($index, exchangeRate)">
+                                <button class="btn btn-info btn-xs" ng-show="isExchangeRateNewOne(exchangeRate)" ng-click="saveCompanyExchangeRate($index, exchangeRate)">
                                     <i class="fa fa-check-square-o"></i>
                                 </button>
                                 <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, exchangeRate)" ng-hide="isExchangeRateReadOnly(exchangeRate)">
