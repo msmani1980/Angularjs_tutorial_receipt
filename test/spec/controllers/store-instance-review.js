@@ -175,7 +175,7 @@ describe('Controller: StoreInstanceReviewCtrl dispatch', function () {
         {
           name: 'Outbound',
           bgColor: '#000000',
-          sealNumbers: ['4567', '1']
+          sealNumbers: ['1', '4567']
         },
         {
           name: 'Inbound',

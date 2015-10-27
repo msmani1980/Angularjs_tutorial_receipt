@@ -86,7 +86,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+            <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemDescription'"
                 ng-class="hasDiscrepancy(item)">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
@@ -135,14 +135,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in offloadItemList | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+            <tr ng-repeat="item in offloadItemList | filter:{itemDescription: filterItemDetails} | orderBy:'itemDescription'"
                 ng-class="hasDiscrepancy(item)">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
               </td>
 
               <td>
-                <input type="text" class="form-control" ng-model="item.quantity" placeholder="0" disabled>
+                <input type="text" class="form-control" ng-model="item.offloadInboundQuantity" placeholder="0" disabled>
               </td>
 
               <td>
@@ -179,7 +179,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="sealObj in seals">
+            <tr ng-repeat="sealObj in seals ">
               <td>
                 <input type="text" class="form-control text-white" value="{{ sealObj.name }}" ng-style="{'background':'{{ sealObj.bgColor }}'}" disabled="disabled">
               </td>

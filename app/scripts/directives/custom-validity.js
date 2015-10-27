@@ -15,6 +15,7 @@ angular.module('ts5App')
       numberUpToFiveChars: [/^-?([0-9]{0,5})$/, 'This field can only contain numbers with up to 5 digits'],
       alpha: [/^[a-zA-z]+$/, 'Error message for alpha'],
       alphanumeric: [/^[a-zA-Z0-9]+$/, 'Error message for alphanumeric'],
+      password: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,8}$/, 'Password requires one lower case, one upper case, one digit, 6-13 length, and no spaces'],
       alphanumericUpToTenChars: [/^[a-zA-Z0-9]{1,10}$/,
         'Must be 1 to 10 characters long, number and letters only. Spaces are not allowed.'
       ],
@@ -28,6 +29,7 @@ angular.module('ts5App')
       ],
       zip: [/^(([0-9]{5})|([0-9]{5}[-][0-9]{4}))$/, 'Error message for zip'],
       decimal: [/^\d+\.\d{0,4}$/, 'Error message for decimal'],
+      decimalWithTwoDecimalPlaces: [/^\d+\.\d{0,2}$/, 'This field should be a decimal with up to two decimal places'],
       currencyWithFourDecimalPlace: [/^\d+\.\d{4}$/, 'This field should use format 0.0000', 4],
       currencyWithThreeDecimalPlace: [/^\d+\.?\d{0,3}$/, 'This field should use format 0.000', 3],
       currencyWithTwoDecimalPlace: [/^\d+\.\d{2}$/, 'This field should use format 0.00', 2],

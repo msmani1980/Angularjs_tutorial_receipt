@@ -232,6 +232,10 @@ angular.module('ts5App', [
     controller: 'CompanyExchangeRateEditCtrl',
     controllerAs: 'companyExchangeRateEdit'
   })
+  .when('/login', {
+    templateUrl: 'views/login.html',
+    controller: 'LoginCtrl'
+  })
   .otherwise({
     redirectTo: '/'
   });

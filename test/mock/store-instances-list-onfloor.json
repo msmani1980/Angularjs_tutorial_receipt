@@ -1,0 +1,81 @@
+{
+   "meta":{
+      "count":2,
+      "limit":2,
+      "start":0
+   },
+   "response":[
+      {
+         "id":885,
+         "companyId":403,
+         "storeId":539,
+         "storeNumber":"569898",
+         "cateringStationId":3,
+         "inboundStationId":null,
+         "scheduleDate":"2015-10-23",
+         "scheduleNumber":"092",
+         "carrierId":44,
+         "statusId":10,
+         "isEcb":null,
+         "createdBy":1,
+         "createdOn":"2015-10-16 17:03:06.296351",
+         "updatedBy":1,
+         "updatedOn":"2015-10-16 17:04:04.161287",
+         "prevStoreInstanceId":null,
+         "tampered":null,
+         "note":null,
+         "replenishStoreInstanceId":null,
+         "scheduleId":366,
+         "departureStationCode":"ORD",
+         "arrivalStationCode":"LAX",
+         "departureTime":"09:00:00",
+         "arrivalTime":"12:00:00",
+         "menus":[
+            {
+               "id":848,
+               "storeInstanceId":885,
+               "menuMasterId":182
+            }
+         ],
+         "replenishments":[
+
+         ]
+      },
+      {
+         "id":1087,
+         "companyId":403,
+         "storeId":620,
+         "storeNumber":"54345989",
+         "cateringStationId":26,
+         "inboundStationId":null,
+         "scheduleDate":"2015-10-22",
+         "scheduleNumber":"092",
+         "carrierId":null,
+         "statusId":10,
+         "isEcb":null,
+         "createdBy":1,
+         "createdOn":"2015-10-22 15:05:57.234465",
+         "updatedBy":1,
+         "updatedOn":"2015-10-22 15:30:05.729032",
+         "prevStoreInstanceId":null,
+         "tampered":null,
+         "note":null,
+         "replenishStoreInstanceId":null,
+         "scheduleId":366,
+         "departureStationCode":"ORD",
+         "arrivalStationCode":"LAX",
+         "departureTime":"09:00:00",
+         "arrivalTime":"12:00:00",
+         "menus":[
+            {
+               "id":1084,
+               "storeInstanceId":1087,
+               "menuMasterId":32
+            }
+         ],
+         "replenishments":[
+
+         ]
+      }
+   ]
+}
