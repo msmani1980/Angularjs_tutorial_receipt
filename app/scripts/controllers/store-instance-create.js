@@ -258,6 +258,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.formatDispatchPayload = function(payload) {
       payload.menus = this.formatMenus(payload.menus);
+      if ($routeParams.storeId) {
+        delete payload.dispatchedCateringStationId;
+      }
     };
 
     this.formatRedispatchPayload = function(payload) {
@@ -486,22 +489,49 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       );
     };
 
+    this.editDispatchedStoreInstance = function(saveAndExit) {
+      this.displayLoadingModal('Updating Store Instance ' + $routeParams.storeId);
+      if (saveAndExit) {
+        this.exitToDashboard();
+        return;
+      }
+      var payload = this.formatPayload('dispatch');
+      var promises = [
+        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload),
+        storeInstanceFactory.updateStoreInstanceStatus(
+          $routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId
+        )
+      ];
+      $q.all(promises).then(
+        (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
+        $this.createStoreInstanceErrorHandler
+      );
+    };
+
+    this.submitFormConditions = function(saveAndExit) {
+      if ($scope.isActionState('end-instance')) {
+        $this.endStoreInstance(saveAndExit);
+        return;
+      }
+      if ($this.isActionState('replenish') && $scope.formData.replenishStoreInstanceId) {
+        $this.updateStoreInstance(saveAndExit);
+        return;
+      }
+      if ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) {
+        $this.editRedispatchedStoreInstance(saveAndExit);
+        return;
+      }
+      if ($this.isActionState('dispatch') && $routeParams.storeId) {
+        this.editDispatchedStoreInstance(saveAndExit);
+        return;
+      }
+      $this.createStoreInstance(saveAndExit);
+    };
+
     $scope.submitForm = function(saveAndExit) {
       $scope.createStoreInstance.$setSubmitted(true);
       if ($this.validateForm()) {
-        if ($scope.isActionState('end-instance')) {
-          $this.endStoreInstance(saveAndExit);
-          return;
-        }
-        if ($this.isActionState('replenish') && $scope.formData.replenishStoreInstanceId) {
-          $this.updateStoreInstance(saveAndExit);
-          return;
-        }
-        if ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) {
-          $this.editRedispatchedStoreInstance(saveAndExit);
-          return;
-        }
-        $this.createStoreInstance(saveAndExit);
+        $this.submitFormConditions(saveAndExit);
       }
       return false;
     };
