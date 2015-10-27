@@ -81,7 +81,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="exchangeRate in companyExchangeRates | filter: companyExchangeRateFilter | orderBy: 'acceptedCurrencyCode'">
+                        <tr id="exchange-rate-{{$index}}" ng-repeat="exchangeRate in companyExchangeRates | filter: companyExchangeRateFilter | orderBy: 'acceptedCurrencyCode' track by $index">
                             <td>
                                 <input type="text" class="form-control" placeholder="CHF" disabled="disabled" value="{{exchangeRate.acceptedCurrencyCode}}">
                             </td>
@@ -116,13 +116,13 @@
                                 <button class="btn btn-warning btn-xs">
                                     <i class="fa fa-copy"></i>
                                 </button>
-                                <button class="btn btn-primary btn-xs" ng-hide="isExchangeRateNewOne(exchangeRate)">
+                                <button class="btn btn-primary btn-xs" ng-hide="isExchangeRateNewOne(exchangeRate) || isExchangeRatePartialReadOnly(exchangeRate)" ng-click="saveCompanyExchangeRate($index, exchangeRate)">
                                     <i class="fa fa-pencil"></i>
                                 </button>
-                                <button class="btn btn-info btn-xs" ng-show="isExchangeRateNewOne(exchangeRate)">
+                                <button class="btn btn-info btn-xs" ng-show="isExchangeRateNewOne(exchangeRate)" ng-click="saveDetailedCompanyCurrency($index, exchangeRate)">
                                     <i class="fa fa-check-square-o"></i>
                                 </button>
-                                <button class="btn btn-danger btn-xs" ng-hide="isExchangeRateReadOnly(exchangeRate)">
+                                <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, exchangeRate)" ng-hide="isExchangeRateReadOnly(exchangeRate)">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </td>
@@ -132,4 +132,29 @@
             </div>
         </div>
     </form>
+</div>
+
+<div class="modal fade delete-warning-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Are you sure?</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to permanently delete <strong>{{exchangeRateToDelete.acceptedCurrencyCode}}</strong></p>
+            </div>
+
+            <ul>
+                <li><strong>Start Date: </strong>{{ exchangeRateToDelete.startDate }}</li>
+                <li><strong>End Date: </strong>{{ exchangeRateToDelete.endDate }}</li>
+            </ul>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="deleteCompanyExchangeRate()">Continue</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>

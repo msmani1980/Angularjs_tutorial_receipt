@@ -97,11 +97,11 @@ angular.module('ts5App')
                      .then($this.attachDetailedCompanyCurrencyListToScope);
     };
 
-    function showLoadingModal(message) {
+    this.showLoadingModal = function (message) {
       angular.element('#loading').modal('show').find('p').text(message);
     }
 
-    function hideLoadingModal() {
+    this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
       angular.element('.modal-backdrop').remove();
     }
@@ -116,12 +116,12 @@ angular.module('ts5App')
 
     this.showSaveSuccess = function () {
       $this.getDetailedCompanyCurrencies();
-      hideLoadingModal();
+      $this.hideLoadingModal();
       $this.showToast('success', 'Currency', 'currency successfully saved!');
     };
 
     this.showSaveErrors = function (dataFromAPI) {
-      hideLoadingModal();
+      $this.hideLoadingModal();
       $this.showToast('danger', 'Currency', 'error saving currency!');
 
       $scope.displayError = true;
@@ -160,7 +160,7 @@ angular.module('ts5App')
     };
 
     $scope.saveDetailedCompanyCurrency = function (index, currency) {
-      showLoadingModal('Loading Data');
+      $this.showLoadingModal('Loading Data');
 
       var payload = $this.denormalizeDetailedCompanyCurrency(index, currency);
       if (currency.isNew) {

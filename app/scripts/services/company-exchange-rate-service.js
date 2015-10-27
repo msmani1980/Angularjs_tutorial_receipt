@@ -10,7 +10,7 @@
 angular.module('ts5App')
   .service('companyExchangeRateService', function ($q, $resource, GlobalMenuService, ENV) {
     var companyId = GlobalMenuService.company.get();
-    var companyExchangeRatesURL = ENV.apiUrl + '/api/companies/:companyId/exchange-rates:id';
+    var companyExchangeRatesURL = ENV.apiUrl + '/api/companies/:companyId/exchange-rates/:id';
 
     var requestParameters = {
       id: '@id',
@@ -22,13 +22,13 @@ angular.module('ts5App')
       getCompanyExchangeRates: {
         method: 'GET'
       },
-      createCompanyExchangeRates: {
+      createCompanyExchangeRate: {
         method: 'POST'
       },
-      updateCompanyExchangeRates: {
+      updateCompanyExchangeRate: {
         method: 'PUT'
       },
-      deleteCompanyExchangeRates: {
+      deleteCompanyExchangeRate: {
         method: 'DELETE'
       }
     };
@@ -39,7 +39,21 @@ angular.module('ts5App')
       return companyExchangeRatesResource.getCompanyExchangeRates(payload).$promise;
     };
 
+    var createCompanyExchangeRate = function (payload) {
+      return companyExchangeRatesResource.createCompanyExchangeRate(payload).$promise;
+    };
+    var updateCompanyExchangeRate = function (payload) {
+      return companyExchangeRatesResource.updateCompanyExchangeRate(payload).$promise;
+    };
+
+    var deleteCompanyExchangeRate = function (exchangeRate) {
+      return companyExchangeRatesResource.deleteCompanyExchangeRate({id: exchangeRate}).$promise;
+    };
+
     return {
-      getCompanyExchangeRates: getCompanyExchangeRates
+      getCompanyExchangeRates: getCompanyExchangeRates,
+      deleteCompanyExchangeRate: deleteCompanyExchangeRate,
+      createCompanyExchangeRate: createCompanyExchangeRate,
+      updateCompanyExchangeRate: updateCompanyExchangeRate
     };
   });

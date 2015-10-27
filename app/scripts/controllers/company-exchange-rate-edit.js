@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CompanyExchangeRateEditCtrl', function ($scope, GlobalMenuService, currencyFactory, dateUtility, payloadUtility) {
+  .controller('CompanyExchangeRateEditCtrl', function ($scope, GlobalMenuService, currencyFactory, dateUtility, payloadUtility, ngToast) {
     var companyId = GlobalMenuService.company.get();
 
     var $this = this;
@@ -17,6 +17,7 @@ angular.module('ts5App')
     $scope.globalCurrencies = [];
     $scope.currencyDenominations = {};
     $scope.companyBaseCurrency = {};
+    $scope.exchangeRateToDelete = {};
     $scope.companyExchangeRates = [];
     $scope.detailedCompanyCurrenciesForSearch = [];
 
@@ -53,7 +54,7 @@ angular.module('ts5App')
       });
     };
 
-    this.createFinalCompanyExchangeRatesList = function (companyExchangeRatesFromAPI) {
+    this.normalizeCompanyExchangeRatesList = function (companyExchangeRatesFromAPI) {
       var companyExchangeRates = payloadUtility.deserializeDates(companyExchangeRatesFromAPI);
       var companyCurrencies = {};
 
@@ -87,7 +88,67 @@ angular.module('ts5App')
         // Add exchange rate rows which are not defined yet
 
         $scope.companyExchangeRates = companyExchangeRates;
+        $this.hideLoadingModal();
       });
+    };
+
+    this.denormalizeCompanyExchangeRate = function (index, exchangeRate) {
+      var payload = {};
+
+      payload.id = exchangeRate.id;
+      payload.acceptedCurrencyCode = exchangeRate.acceptedCurrencyCode;
+      payload.operatingCurrencyCode = exchangeRate.operatingCurrencyCode;
+      payload.companyId = $this.companyId;
+      payload.exchangeRate = exchangeRate.exchangeRate;
+      payload.exchangeRateType = 1;
+      payload.startDate = (exchangeRate.startDate) ? dateUtility.formatDateForAPI(exchangeRate.startDate) : null;
+      payload.endDate = (exchangeRate.endDate) ? dateUtility.formatDateForAPI(exchangeRate.endDate) : null;
+
+      return payload;
+    };
+
+    this.showLoadingModal = function (message) {
+      angular.element('#loading').modal('show').find('p').text(message);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+      angular.element('.modal-backdrop').remove();
+    };
+
+    this.showToast = function (className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    };
+
+    this.showSaveSuccess = function () {
+      $scope.searchCompanyExchangeRates();
+      $this.showToast('success', 'Company Exchange Rate', 'exchange rate successfully saved!');
+    };
+
+    this.showSaveErrors = function (dataFromAPI) {
+      $this.hideLoadingModal();
+      $this.showToast('danger', 'Company Exchange Rate', 'error saving exchange rate!');
+
+      $scope.displayError = true;
+      if ('data' in dataFromAPI) {
+        $scope.formErrors = dataFromAPI.data;
+      }
+    };
+
+    $scope.saveCompanyExchangeRate = function (index, exchangeRate) {
+      $this.showLoadingModal('Loading Data');
+
+      var payload = $this.denormalizeCompanyExchangeRate(index, exchangeRate);
+      if (exchangeRate.id) {
+        currencyFactory.updateCompanyExchangeRate(payload).then($this.showSaveSuccess, $this.showSaveErrors);
+      }
+      else {
+        currencyFactory.createCompanyExchangeRate(payload).then($this.showSaveSuccess, $this.showSaveErrors);
+      }
     };
 
     $scope.isExchangeRateDisabled = function (exchangeRate) {
@@ -121,9 +182,10 @@ angular.module('ts5App')
     };
 
     $scope.searchCompanyExchangeRates = function () {
+      $this.showLoadingModal('Loading Data');
       $scope.companyExchangeRates = [];
       currencyFactory.getCompanyExchangeRates(payloadUtility.serializeDates($scope.search)).then(function (companyExchangeRatesFromAPI) {
-        $this.createFinalCompanyExchangeRatesList(companyExchangeRatesFromAPI.response)
+        $this.normalizeCompanyExchangeRatesList(companyExchangeRatesFromAPI.response)
       });
     };
 
@@ -158,6 +220,24 @@ angular.module('ts5App')
       currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
         $scope.companyBaseCurrency = $this.getCurrencyByBaseCurrencyId($scope.globalCurrencies, companyDataFromAPI.baseCurrencyId);
       });
+    };
+
+    this.deleteCompanyExchangeRate = function (exchangeRateId) {
+      currencyFactory.deleteCompanyExchangeRate(exchangeRateId);
+    };
+
+    $scope.showDeleteConfirmation = function (index, exchangeRate) {
+      $scope.exchangeRateToDelete = exchangeRate;
+      $scope.exchangeRateToDelete.rowIndex = index;
+
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.deleteCompanyExchangeRate = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+      angular.element('#exchange-rate-' + $scope.exchangeRateToDelete.rowIndex).remove();
+
+      $this.deleteCompanyExchangeRate($scope.exchangeRateToDelete.id);
     };
 
     this.init = function () {
