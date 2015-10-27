@@ -102,9 +102,6 @@ angular.module('ts5App')
           if (prevIndex < 0) {
             return false;
           }
-          if (prevIndex === 0) {
-            $scope.stepOneFromStepTwo = true;
-          }
           return $scope.goToStepURI(prevIndex);
         };
 

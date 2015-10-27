@@ -28,6 +28,7 @@ describe('The Step Wizard directive', function() {
 
   describe('location without trailing slash', function() {
     beforeEach(inject(function() {
+
       scope.wizardSteps = [{
         label: 'Test label 1',
         uri: '/test-uri-1'
@@ -124,7 +125,6 @@ describe('The Step Wizard directive', function() {
       expect(directiveScope.goToStepURI).toHaveBeenCalledWith(0);
       expect(scope.mockPrevTrigger1).toHaveBeenCalledWith(scope.param1);
       expect(location.url).toHaveBeenCalledWith('/test-uri-1');
-      expect(directiveScope.stepOneFromStepTwo).toBeTruthy();
     });
 
     it('should step forward to /test-uri-3 when wizardNext is triggered', function() {
@@ -153,6 +153,7 @@ describe('The Step Wizard directive', function() {
   });
 
   describe('wizardPrev directive scope function', function() {
+
     beforeEach(inject(function() {
       scope.wizardSteps = [{
         label: 'Test label 1',
@@ -334,7 +335,6 @@ describe('The Step Wizard directive', function() {
       spyOn(directiveScope, 'nextTrigger').and.returnValue(undefined);
       spyOn(directiveScope, 'prevTrigger').and.returnValue(undefined);
     }));
-
     it('should not step forward', function() {
       expect(directiveScope.wizardNext()).toBe(false);
     });
@@ -364,14 +364,12 @@ describe('The Step Wizard directive', function() {
       compileDirective();
       expect(directiveScope.saveButtonText).toEqual('Save & Exit');
     });
-
     it('should be set to save-button-text attribute', function() {
       scope.mockButtonText = 'fakeButtonText';
       template = '<step-wizard steps="wizardSteps" save-button-text="mockButtonText"></step-wizard>';
       compileDirective();
       expect(directiveScope.saveButtonText).toEqual(scope.mockButtonText);
     });
-
   });
 
 
