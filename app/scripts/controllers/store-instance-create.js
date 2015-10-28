@@ -385,7 +385,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.makeRedispatchPromises = function() {
       var prevInstanceStatus = Math.abs(parseInt($this.prevInstanceNextStep.storeOne.stepName) + 1).toString();
       var payload = this.formatPayload('end-instance');
-      return [storeInstanceFactory.updateStoreInstance($routeParams.storeId,payload),
+      return [
+        storeInstanceFactory.updateStoreInstance($routeParams.storeId,payload),
         storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, prevInstanceStatus)];
     };
 
@@ -432,6 +433,18 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       );
     };
 
+    this.u = function() {
+      $q.all([storeInstanceFactory.updateStoreInstanceStatus(
+                $routeParams.storeId,
+                $this.nextStep.stepName,
+                $scope.formData.cateringStationId
+              )])
+              .then(
+                (saveAndExit ? $this.exitOnSave : $this.createStoreInstanceSuccessHandler),
+                $this.createStoreInstanceErrorHandler
+              );
+    }
+
     this.endStoreInstance = function(saveAndExit) {
       this.displayLoadingModal('Starting the End Instance process');
       if (saveAndExit) {
@@ -439,17 +452,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       var payload = this.formatPayload();
-      $q.all([storeInstanceFactory.updateStoreInstance($routeParams.storeId,payload)]).then(function() {
-        $q.all([storeInstanceFactory.updateStoreInstanceStatus(
-                  $routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId
-                )])
-                .then(
-                  (saveAndExit ? $this.exitOnSave : $this.createStoreInstanceSuccessHandler),
-                  $this.createStoreInstanceErrorHandler
-                );
-              },
-              $this.createStoreInstanceErrorHandler
-          );
+      $q.all([storeInstanceFactory.updateStoreInstance($routeParams.storeId,payload)]).then(
+        function() { $this.updateStoreInstanceSuccessHandler(saveAndExit); },
+        $this.createStoreInstanceErrorHandler
+      );
     };
 
     $scope.submitForm = function(saveAndExit) {
