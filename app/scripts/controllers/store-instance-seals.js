@@ -570,9 +570,6 @@ angular.module('ts5App')
     };
 
     $scope.prevTrigger = function() {
-      if ($this.isInboundDuringRedispatch()) {
-        return;
-      }
       var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       $this.updateStatusToStep(prevStep);
     };
