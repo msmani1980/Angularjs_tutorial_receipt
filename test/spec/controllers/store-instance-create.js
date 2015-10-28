@@ -215,9 +215,9 @@ describe('Store Instance Create Controller', function() {
     StoreInstanceCreateCtrl.endStoreInstance(exitOnSave);
   }
 
-  function mockRedispatchStoreInstance() {
+  function mockRedispatchStoreInstance(exitOnSave) {
     $scope.$digest();
-    StoreInstanceCreateCtrl.createStoreInstance();
+    StoreInstanceCreateCtrl.redispatchStoreInstance(exitOnSave);
   }
 
   function mockEditDispatchedStoreInstance(saveAndExit) {
@@ -942,6 +942,16 @@ describe('Store Instance Create Controller', function() {
       expect(StoreInstanceCreateCtrl.editRedispatchedStoreInstance).toHaveBeenCalled();
     });
 
+    it('should call editRedispatchedStoreInstance if action state is redispatch', function() {
+      initController('redispatch');
+      $scope.stepOneFromStepTwo = false;
+      $scope.$digest();
+      spyOn(StoreInstanceCreateCtrl, 'submitFormConditions').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'redispatchStoreInstance');
+      StoreInstanceCreateCtrl.submitFormConditions(true);
+      expect(StoreInstanceCreateCtrl.redispatchStoreInstance).toHaveBeenCalled();
+    });
+
     it('should call editDispatchedStoreInstance if action state is dispatch', function() {
       initController('dispatch', true);
       $scope.stepOneFromStepTwo = true;
@@ -1503,8 +1513,10 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'exitToDashboard');
       spyOn(StoreInstanceCreateCtrl, 'updateStatusToStep').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'createStoreInstance').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'makeCreatePromises').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'makeRedispatchPromises').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();
       $scope.formData = {
@@ -1525,11 +1537,20 @@ describe('Store Instance Create Controller', function() {
 
     it('should display the loading modal', function() {
       expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
-        'Creating new Store Instance');
+        'Redispatching Store Instance ' + $scope.formData.cateringStationId);
     });
 
-    it('should call the createStoreInstance method on the controller', function() {
-      expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalled();
+    it('should call the makeCreatePromises method on the controller', function() {
+      expect(StoreInstanceCreateCtrl.makeCreatePromises).toHaveBeenCalled();
+    });
+
+    it('should call the makeRedispatchPromises method on the controller', function() {
+      expect(StoreInstanceCreateCtrl.makeRedispatchPromises).toHaveBeenCalled();
+    });
+
+    it('should call the saveAndExit method on the controller', function() {
+      mockRedispatchStoreInstance(true);
+      expect(StoreInstanceCreateCtrl.exitToDashboard).toHaveBeenCalled();
     });
 
   });
