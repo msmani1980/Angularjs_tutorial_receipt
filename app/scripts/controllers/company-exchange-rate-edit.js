@@ -47,6 +47,7 @@ angular.module('ts5App')
     this.sortDenominationByValue = function (a, b) {
       return parseFloat(a) - parseFloat(b);
     };
+
     this.sortExchangeRatesByCurrencyCode = function (a, b) {
       return a.acceptedCurrencyCode.localeCompare(b.acceptedCurrencyCode);
     };
@@ -57,6 +58,16 @@ angular.module('ts5App')
       });
     };
 
+    this.makeFlatDenominations = function (denominations) {
+      if(!denominations) {
+        denominations = [];
+      }
+
+      return denominations.map(function (denomination) { return parseFloat($this.getDenominationById(denomination.currencyDenominationId).denomination); })
+                          .sort($this.sortDenominationByValue)
+                          .join(', ');
+    };
+
     this.normalizeCompanyExchangeRatesList = function (companyExchangeRatesFromAPI) {
       var companyExchangeRates = payloadUtility.deserializeDates(companyExchangeRatesFromAPI);
       var companyCurrencies = {};
@@ -64,31 +75,43 @@ angular.module('ts5App')
       currencyFactory.getDetailedCompanyCurrencies(payloadUtility.serializeDates($scope.search)).then(function (companyCurrenciesFromAPI) {
         // Create company currencies map
         angular.forEach(companyCurrenciesFromAPI.companyCurrencies, function (companyCurrency) {
+          companyCurrency.flatDenominations = $this.makeFlatDenominations(companyCurrency.denominations);
+
+          var easyPayDenominations = companyCurrency.denominations.filter(function (denomination) {
+            return denomination.isEasyPay === 'true';
+          });
+          companyCurrency.flatEasyPayDenominations = $this.makeFlatDenominations(easyPayDenominations);
+
           companyCurrencies[companyCurrency.currencyCode] = companyCurrency;
         });
 
         // Populate company exchange rates with denomination info
         angular.forEach(companyExchangeRates, function (exchangeRate) {
-          exchangeRate.denominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].denominations
-            .map(function (denomination) {
-              return parseFloat($this.getDenominationById(denomination.currencyDenominationId).denomination);
-            })
-            .sort($this.sortDenominationByValue)
-            .join(", ");
-
-
-          exchangeRate.easyPayDenominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].denominations
-            .filter(function (denomination) {
-              return denomination.isEasyPay === 'true';
-            })
-            .map(function (denomination) {
-              return parseFloat($this.getDenominationById(denomination.currencyDenominationId).denomination);
-            })
-            .sort($this.sortDenominationByValue)
-            .join(", ");
+          exchangeRate.denominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatDenominations;
+          exchangeRate.easyPayDenominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatEasyPayDenominations;
         });
 
         // Add exchange rate rows which are not defined yet
+        angular.forEach(companyCurrencies, function (currency) {
+          var isFound = companyExchangeRates.filter(function (exchangeRate) {
+            return exchangeRate.acceptedCurrencyCode === currency.currencyCode;
+          }).length > 0;
+
+          if(!isFound)
+          {
+            companyExchangeRates.push( {
+              companyId: $this.companyId,
+              acceptedCurrencyCode: currency.currencyCode,
+              operatingCurrencyCode: $scope.search.operatingCurrencyCode,
+              denominations: currency.flatDenominations,
+              easyPayDenominations: currency.flatEasyPayDenominations,
+              exchangeRate: '1.0000',
+              exchangeRateType: 1,
+              startDate: dateUtility.tomorrowFormatted(),
+              endDate: dateUtility.tomorrowFormatted()
+            });
+          }
+        });
 
         $scope.companyExchangeRates = companyExchangeRates.sort($this.sortExchangeRatesByCurrencyCode);
         $this.hideLoadingModal();
@@ -188,7 +211,7 @@ angular.module('ts5App')
       $this.showLoadingModal('Loading Data');
       $scope.companyExchangeRates = [];
       currencyFactory.getCompanyExchangeRates(payloadUtility.serializeDates($scope.search)).then(function (companyExchangeRatesFromAPI) {
-        $this.normalizeCompanyExchangeRatesList(companyExchangeRatesFromAPI.response)
+        $this.normalizeCompanyExchangeRatesList(companyExchangeRatesFromAPI.response);
       });
     };
 
@@ -197,8 +220,7 @@ angular.module('ts5App')
         return true;
       }
       return false;
-    }
-
+    };
 
     $scope.clearSearchForm = function () {
       $scope.search = {};
@@ -245,14 +267,20 @@ angular.module('ts5App')
 
     $scope.duplicateExchangeRate = function (index, exchangeRate) {
       var newExchangeRate = {};
+      newExchangeRate.companyId = exchangeRate.companyId;
       newExchangeRate.acceptedCurrencyCode = exchangeRate.acceptedCurrencyCode;
+      newExchangeRate.operatingCurrencyCode = exchangeRate.operatingCurrencyCode;
       newExchangeRate.denominations = exchangeRate.denominations;
       newExchangeRate.easyPayDenominations = exchangeRate.easyPayDenominations;
-      newExchangeRate.exchangeRate = "1.0000";
+      newExchangeRate.exchangeRate = '1.0000';
+      newExchangeRate.exchangeRateType = exchangeRate.exchangeRateType;
       newExchangeRate.startDate = dateUtility.tomorrowFormatted();
       newExchangeRate.endDate = dateUtility.tomorrowFormatted();
 
-      $scope.companyExchangeRates.push(newExchangeRate);
+      var newExchangeRates = angular.copy($scope.companyExchangeRates);
+
+      newExchangeRates.splice(index + 1, 0, newExchangeRate);
+      $scope.companyExchangeRates = newExchangeRates;
     };
 
     this.init = function () {

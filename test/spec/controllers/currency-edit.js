@@ -102,7 +102,11 @@ describe('Controller: CurrencyEditCtrl', function () {
     };
     scope.clearForm();
     expect(scope.search.startDate).toBe(undefined);
-    expect(currencyFactory.getDetailedCompanyCurrencies).toHaveBeenCalledWith({});
+    expect(currencyFactory.getDetailedCompanyCurrencies).toHaveBeenCalledWith({
+      currencyId: null,
+      startDate: null,
+      endDate: null
+    });
   });
 
   it('should clear search model and make get detailed company currencies', function () {
@@ -111,7 +115,9 @@ describe('Controller: CurrencyEditCtrl', function () {
     };
     scope.searchDetailedCompanyCurrencies();
     expect(currencyFactory.getDetailedCompanyCurrencies).toHaveBeenCalledWith({
-      startDate: '19791005'
+      currencyId: null,
+      startDate: '19791005',
+      endDate: null
     });
   });
 

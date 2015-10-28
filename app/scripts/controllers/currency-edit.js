@@ -61,6 +61,7 @@ angular.module('ts5App')
 
     this.attachDetailedCompanyCurrencyListToScope = function (companyCurrencyListFromAPI) {
       $scope.companyCurrencyList = $this.normalizeDetailedCompanyCurrencies(companyCurrencyListFromAPI.companyCurrencies);
+      $this.hideLoadingModal();
     };
 
     this.getDetailedCompanyCurrencies = function () {
@@ -80,6 +81,7 @@ angular.module('ts5App')
     };
 
     this.getCompanyGlobalCurrencies = function () {
+      $this.showLoadingModal('Loading Data');
       currencyFactory.getCompanyGlobalCurrencies().then(function (globalCurrencyList) {
         $scope.globalCurrencyList = globalCurrencyList.response;
         $this.getDenominations();
@@ -93,18 +95,24 @@ angular.module('ts5App')
     };
 
     $scope.searchDetailedCompanyCurrencies = function () {
+      $this.showLoadingModal('Loading Data');
+
+      if (!$scope.search.currencyId) {
+        $scope.search.currencyId = null;
+      }
+
       currencyFactory.getDetailedCompanyCurrencies(payloadUtility.serializeDates($scope.search))
                      .then($this.attachDetailedCompanyCurrencyListToScope);
     };
 
     this.showLoadingModal = function (message) {
       angular.element('#loading').modal('show').find('p').text(message);
-    }
+    };
 
     this.hideLoadingModal = function () {
       angular.element('#loading').modal('hide');
       angular.element('.modal-backdrop').remove();
-    }
+    };
 
     this.showToast = function (className, type, message) {
       ngToast.create({
@@ -115,8 +123,8 @@ angular.module('ts5App')
     };
 
     this.showSaveSuccess = function () {
+      $scope.displayError = false;
       $this.getDetailedCompanyCurrencies();
-      $this.hideLoadingModal();
       $this.showToast('success', 'Currency', 'currency successfully saved!');
     };
 
@@ -180,9 +188,11 @@ angular.module('ts5App')
 
     $scope.deleteDetailedCompanyCurrency = function () {
       angular.element('.delete-warning-modal').modal('hide');
-      angular.element('#currency-' + $scope.currencyToDelete.rowIndex).remove();
+      $scope.companyCurrencyList.splice($scope.currencyToDelete.rowIndex, 1);
 
-      $this.deleteDetailedCompanyCurrency($scope.currencyToDelete.id);
+      if ($scope.currencyToDelete.id) {
+        $this.deleteDetailedCompanyCurrency($scope.currencyToDelete.id);
+      }
     };
 
     $scope.clearForm = function () {
@@ -196,6 +206,8 @@ angular.module('ts5App')
         $scope.companyCurrencyList.push({
           isNew: true,
           companyId: $this.companyId,
+          startDate: dateUtility.tomorrowFormatted(),
+          endDate: dateUtility.tomorrowFormatted(),
           selectedDenominations: [],
           selectedEasyPayDenominations: []
         });

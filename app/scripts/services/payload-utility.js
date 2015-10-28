@@ -12,12 +12,10 @@ angular.module('ts5App')
 
     this.serializeDates = function(payload) {
       var formattedPayload = angular.copy(payload);
-      if (formattedPayload.startDate) {
-        formattedPayload.startDate = dateUtility.formatDateForAPI(formattedPayload.startDate);
-      }
-      if (formattedPayload.endDate) {
-        formattedPayload.endDate = dateUtility.formatDateForAPI(formattedPayload.endDate);
-      }
+
+      formattedPayload.startDate = (formattedPayload.startDate) ? dateUtility.formatDateForAPI(formattedPayload.startDate) : null;
+      formattedPayload.endDate = (formattedPayload.endDate) ?  dateUtility.formatDateForAPI(formattedPayload.endDate) : null;
+
       return formattedPayload;
     };
 

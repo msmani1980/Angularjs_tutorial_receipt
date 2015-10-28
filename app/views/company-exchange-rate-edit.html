@@ -81,15 +81,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr id="exchange-rate-{{$index}}" ng-repeat="exchangeRate in companyExchangeRates | filter: companyExchangeRateFilter  track by $index">
+                        <tr id="exchange-rate-{{$index}}" ng-repeat="exchangeRate in companyExchangeRates | filter: companyExchangeRateFilter track by $index">
                             <td>
                                 <input type="text" class="form-control" placeholder="CHF" disabled="disabled" value="{{exchangeRate.acceptedCurrencyCode}}">
                             </td>
                             <td>
-                                <input type="text" class="form-control" placeholder="0.5, 1, 2, 5, 10, 20, 50, 100" disabled="disabled" value="{{exchangeRate.denominations}}">
+                                <input type="text" class="form-control" disabled="disabled" value="{{exchangeRate.denominations}}">
                             </td>
                             <td>
-                                <input type="text" class="form-control" placeholder="1, 2, 5, 10" disabled="disabled" value="{{exchangeRate.easyPayDenominations}}">
+                                <input type="text" class="form-control"  disabled="disabled" value="{{exchangeRate.easyPayDenominations}}">
                             </td>
                             <td>
                                 <div>
@@ -108,7 +108,6 @@
                                         element-class="col-xs-6 col-sm-6"
                                         start-date-model="exchangeRate.startDate"
                                         end-date-model="exchangeRate.endDate"
-                                        required="true"
                                         disable-past="true"
                                         disable-start-date="isExchangeRateReadOnly(exchangeRate)"
                                         disable-end-date="isExchangeRatePartialReadOnly(exchangeRate)">
@@ -124,7 +123,7 @@
                                 <button class="btn btn-info btn-xs" ng-show="isExchangeRateNewOne(exchangeRate)" ng-click="saveCompanyExchangeRate($index, exchangeRate)">
                                     <i class="fa fa-check-square-o"></i>
                                 </button>
-                                <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, exchangeRate)" ng-hide="isExchangeRateReadOnly(exchangeRate)">
+                                <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, exchangeRate)" ng-hide="isExchangeRateReadOnly(exchangeRate) || isExchangeRateNewOne(exchangeRate)">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </td>
