@@ -509,7 +509,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.submitFormConditions = function(saveAndExit) {
-      if ($scope.isActionState('end-instance')) {
+      if ($this.isActionState('end-instance')) {
         $this.endStoreInstance(saveAndExit);
         return;
       }
@@ -522,7 +522,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       if ($this.isActionState('dispatch') && $routeParams.storeId) {
-        this.editDispatchedStoreInstance(saveAndExit);
+        $this.editDispatchedStoreInstance(saveAndExit);
         return;
       }
       $this.createStoreInstance(saveAndExit);

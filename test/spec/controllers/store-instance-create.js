@@ -62,7 +62,7 @@ describe('Store Instance Create Controller', function() {
     _servedMenuMasterList_,
     _servedCarrierNumbers_, _servedStoresList_, _servedStoreInstanceCreated_,
     _servedSchedulesDateRange_, _servedCompanyMenuCatererStations_,
-    _servedStoreInstanceDetails_,_servedStoreInstancesListOnfloor_) {
+    _servedStoreInstanceDetails_, _servedStoreInstancesListOnfloor_) {
 
     cateringStationsJSON = _servedCateringStations_;
     menuMasterListJSON = _servedMenuMasterList_;
@@ -129,7 +129,7 @@ describe('Store Instance Create Controller', function() {
     getOnFloorInstancesDeferred = $q.defer();
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getOnFloorInstancesDeferred.promise);
 
-    httpBackend.expectGET(/views\/./).respond(200,'');
+    httpBackend.expectGET(/views\/./).respond(200, '');
 
     storeInstanceId = 13;
 
@@ -224,7 +224,7 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       initController();
-      spyOn(StoreInstanceCreateCtrl,'determineMinDate').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'determineMinDate').and.callThrough();
     });
 
     it('should set wizardSteps', function() {
@@ -367,8 +367,8 @@ describe('Store Instance Create Controller', function() {
       initController('redispatch');
       resolveAllDependencies();
       $scope.$digest();
-      spyOn(StoreInstanceCreateCtrl,'determineMinDate').and.callThrough();
-      spyOn(dateUtility,'diff').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'determineMinDate').and.callThrough();
+      spyOn(dateUtility, 'diff').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
       $scope.$digest();
     });
@@ -871,7 +871,6 @@ describe('Store Instance Create Controller', function() {
     });
 
     describe('exitOnSave success handler', function() {
-
       beforeEach(function() {
         $scope.saveAndExit();
         createStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
@@ -887,9 +886,50 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should display a success meassge', function() {
-        expect(StoreInstanceCreateCtrl.successMessage).toHaveBeenCalledWith(storeInstanceCreatedJSON,'saved');
+        expect(StoreInstanceCreateCtrl.successMessage).toHaveBeenCalledWith(storeInstanceCreatedJSON,
+          'saved');
       });
 
+    });
+
+  });
+
+  describe('submitFormConditions method', function() {
+
+    it('should call createStoreInstance if action state is default', function() {
+      initController('dispatch');
+      spyOn(StoreInstanceCreateCtrl, 'submitFormConditions').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'createStoreInstance');
+      StoreInstanceCreateCtrl.submitFormConditions(true);
+      expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalled();
+    });
+
+    it('should call endStoreInstance if action state is end-instance', function() {
+      initController('end-instance');
+      spyOn(StoreInstanceCreateCtrl, 'submitFormConditions').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'endStoreInstance');
+      StoreInstanceCreateCtrl.submitFormConditions(true);
+      expect(StoreInstanceCreateCtrl.endStoreInstance).toHaveBeenCalled();
+    });
+
+    it('should call updateStoreInstance if action state is replenish', function() {
+      initController('replenish');
+      $scope.formData.replenishStoreInstanceId = 102;
+      $scope.$digest();
+      spyOn(StoreInstanceCreateCtrl, 'submitFormConditions').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'updateStoreInstance');
+      StoreInstanceCreateCtrl.submitFormConditions(true);
+      expect(StoreInstanceCreateCtrl.updateStoreInstance).toHaveBeenCalled();
+    });
+
+    it('should call editRedispatchedStoreInstance if action state is redispatch', function() {
+      initController('redispatch');
+      $scope.stepOneFromStepTwo = true;
+      $scope.$digest();
+      spyOn(StoreInstanceCreateCtrl, 'submitFormConditions').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'editRedispatchedStoreInstance');
+      StoreInstanceCreateCtrl.submitFormConditions(true);
+      expect(StoreInstanceCreateCtrl.editRedispatchedStoreInstance).toHaveBeenCalled();
     });
 
   });
@@ -1186,7 +1226,10 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should set the menus ID the formData object', function() {
-      var menuControl = [{id:100,menuCode:'SortTest'}];
+      var menuControl = [{
+        id: 100,
+        menuCode: 'SortTest'
+      }];
       expect($scope.formData.menus).toEqual(menuControl);
     });
 
@@ -1222,7 +1265,7 @@ describe('Store Instance Create Controller', function() {
 
       beforeEach(function() {
         initController();
-        spyOn(StoreInstanceCreateCtrl,'isActionState');
+        spyOn(StoreInstanceCreateCtrl, 'isActionState');
         $scope.$digest();
       });
 
@@ -1281,7 +1324,7 @@ describe('Store Instance Create Controller', function() {
 
       beforeEach(function() {
         initController('end-instance');
-        spyOn(StoreInstanceCreateCtrl,'isEndInstanceOrRedispatch');
+        spyOn(StoreInstanceCreateCtrl, 'isEndInstanceOrRedispatch');
         $scope.$digest();
       });
 
@@ -1302,7 +1345,7 @@ describe('Store Instance Create Controller', function() {
 
   describe('findStatusObject functionality', function() {
 
-    beforeEach(function(){
+    beforeEach(function() {
       initController('redispatch');
       mockLoadStoreInstance();
       resolveAllDependencies();
@@ -1318,10 +1361,10 @@ describe('Store Instance Create Controller', function() {
 
   describe('updateStatusToStep functionality', function() {
 
-    beforeEach(function(){
+    beforeEach(function() {
       initController('redispatch');
-      spyOn(storeInstanceFactory,'updateStoreInstanceStatus')();
-      spyOn(StoreInstanceCreateCtrl,'findStatusObject').and.callThrough();
+      spyOn(storeInstanceFactory, 'updateStoreInstanceStatus')();
+      spyOn(StoreInstanceCreateCtrl, 'findStatusObject').and.callThrough();
       mockLoadStoreInstance();
       resolveAllDependencies();
       $scope.$digest();
@@ -1334,7 +1377,8 @@ describe('Store Instance Create Controller', function() {
 
     it('should call the update status factore call', function() {
       var statusObject = StoreInstanceCreateCtrl.findStatusObject(StoreInstanceCreateCtrl.nextStep);
-      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(storeInstanceId,statusObject.name);
+      expect(storeInstanceFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(storeInstanceId,
+        statusObject.name);
     });
 
   });
@@ -1526,7 +1570,10 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'removeInvalidMenus').and.callThrough();
       mockLoadStoreInstance();
       $scope.formData.cateringStationId = 3;
-      $scope.formData.menus = [{id:100, name:'BOGAN123'}];
+      $scope.formData.menus = [{
+        id: 100,
+        name: 'BOGAN123'
+      }];
       $scope.$digest();
     });
 
@@ -1536,7 +1583,10 @@ describe('Store Instance Create Controller', function() {
 
     it('should remove an invalid menu', function() {
       $scope.formData.cateringStationId = 13;
-      $scope.formData.menus = [{id:105, name:'BOGAN123'}];
+      $scope.formData.menus = [{
+        id: 105,
+        name: 'BOGAN123'
+      }];
       $scope.$digest();
       expect($scope.formData.menus.length).toEqual(0);
 
@@ -1552,15 +1602,24 @@ describe('Store Instance Create Controller', function() {
       mockLoadStoreInstance();
     });
 
-    it('should return true if the menu is in the formData', function(){
-      var filterMenu = $scope.omitSelectedMenus({ id:100, name:'BOGAN123'});
+    it('should return true if the menu is in the formData', function() {
+      var filterMenu = $scope.omitSelectedMenus({
+        id: 100,
+        name: 'BOGAN123'
+      });
       expect(filterMenu).toBeTruthy();
     });
 
-    it('should return false if the menu is not in the formData', function(){
-      $scope.formData.menus = [{id:105, name:'BOGAN123'}];
+    it('should return false if the menu is not in the formData', function() {
+      $scope.formData.menus = [{
+        id: 105,
+        name: 'BOGAN123'
+      }];
       $scope.$digest();
-      var filterMenu = $scope.omitSelectedMenus({ id:105, name:'BOGAN123'});
+      var filterMenu = $scope.omitSelectedMenus({
+        id: 105,
+        name: 'BOGAN123'
+      });
       expect(filterMenu).toBeFalsy();
     });
 
