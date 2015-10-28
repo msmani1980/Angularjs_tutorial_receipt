@@ -1594,7 +1594,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should call the updateStoreInstance method on the controller', function() {
-      expect(storeInstanceFactory.updateStoreInstance).toHaveBeenCalled();
+      expect(storeInstanceService.updateStoreInstance).toHaveBeenCalled();
     });
 
     it('should call the saveAndExit method on the controller', function() {
@@ -1642,7 +1642,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should call the updateStoreInstance method on the controller', function() {
-      expect(storeInstanceFactory.updateStoreInstance).toHaveBeenCalled();
+      expect(storeInstanceService.updateStoreInstance).toHaveBeenCalled();
     });
 
     it('should call the saveAndExit method on the controller', function() {

@@ -448,7 +448,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       );
     };
 
-    this.createStoreInstanceSuccessHandler = function(updateInstanceStatusPromises, saveAndExit) {
+    this.invokeStoreInstanceStatusPromises = function(updateInstanceStatusPromises, saveAndExit) {
       $q.all(updateInstanceStatusPromises).then(
         (saveAndExit ? $this.exitOnSave : $this.createStoreInstanceSuccessHandler),
         $this.createStoreInstanceErrorHandler
@@ -493,7 +493,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       var promises = $this.makeEditPromises('end-instance', 'redispatch');
       $q.all(promises.updateInstancePromises).then(function() {
-          $this.createStoreInstanceSuccessHandler(promises.updateInstanceStatusPromises, saveAndExit);
+          $this.invokeStoreInstanceStatusPromises(promises.updateInstanceStatusPromises, saveAndExit);
         },
         $this.createStoreInstanceErrorHandler
       );
@@ -522,7 +522,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       var promises = $this.makeEditPromises('end-instance', 'redispatch');
       $q.all(promises.updateInstancePromises).then(function() {
-          $this.createStoreInstanceSuccessHandler(promises.updateInstanceStatusPromises, saveAndExit);
+          $this.invokeStoreInstanceStatusPromises(promises.updateInstanceStatusPromises, saveAndExit);
         },
         $this.createStoreInstanceErrorHandler
       );
@@ -536,7 +536,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       var promises = $this.makeEditPromises('dispatch');
       $q.all(promises.updateInstancePromises).then(function() {
-          $this.createStoreInstanceSuccessHandler(promises.updateInstanceStatusPromises, saveAndExit);
+          $this.invokeStoreInstanceStatusPromises(promises.updateInstanceStatusPromises, saveAndExit);
         },
         $this.createStoreInstanceErrorHandler
       );
