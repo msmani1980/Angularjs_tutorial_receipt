@@ -425,6 +425,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       angular.element('#confirmation-modal').modal('show');
     };
 
+    this.makeCreatePromises = function() {
+      var payload = this.formatPayload();
+      var promises = [];
+      promises.push(storeInstanceFactory.createStoreInstance(payload));
+      return promises;
+    };
+
     this.createStoreInstance = function(saveAndExit) {
       if ($this.isActionState('dispatch')) {
         $scope.onFloorInstance = $this.checkForOnFloorInstance();
@@ -434,17 +441,38 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         }
       }
       this.displayLoadingModal('Creating new Store Instance');
-      var payload = this.formatPayload();
-      var promises = [];
-      promises.push(storeInstanceFactory.createStoreInstance(payload));
-      if ($this.isActionState('redispatch')) {
-        var redispatchPromises = this.makeRedispatchPromises();
-        promises = promises.concat(redispatchPromises);
-      }
+      var promises = $this.makeCreatePromises();
       $q.all(promises).then(
         (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
         $this.createStoreInstanceErrorHandler
       );
+    };
+
+    this.makeEditPromises = function(actionOne, actionTwo) {
+      var payload;
+      var prevPayload;
+      if (!actionOne && !actionTwo) {
+        payload = this.formatPayload();
+      }
+      if (actionOne) {
+        payload = this.formatPayload(actionOne);
+      }
+      if (actionTwo) {
+        prevPayload = this.formatPayload(actionTwo);
+      }
+      var promises = [
+        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload),
+        storeInstanceFactory.updateStoreInstanceStatus(
+          $routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId
+        )
+      ];
+      if ($scope.prevStoreInstanceId && actionTwo) {
+        promises.push(
+          storeInstanceFactory.updateStoreInstance($scope.prevStoreInstanceId, prevPayload),
+          storeInstanceFactory.updateStoreInstanceStatus($scope.prevStoreInstanceId, $this.nextStep.storeOne.stepName)
+        );
+      }
+      return promises;
     };
 
     this.endStoreInstance = function(saveAndExit) {
@@ -453,13 +481,21 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
         return;
       }
-      var payload = this.formatPayload();
-      var promises = [
-        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload),
-        storeInstanceFactory.updateStoreInstanceStatus(
-          $routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId
-        )
-      ];
+      var promises = $this.makeEditPromises('end-instance', 'redispatch');
+      $q.all(promises).then(
+        (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
+        $this.createStoreInstanceErrorHandler
+      );
+    };
+
+    this.redispatchStoreInstance = function(saveAndExit) {
+      this.displayLoadingModal('Redispatching Store Instance ' + $routeParams.storeId);
+      if (saveAndExit) {
+        this.exitToDashboard();
+        return;
+      }
+      var promises = $this.makeCreatePromises();
+      promises.concat($this.makeRedispatchPromises());
       $q.all(promises).then(
         (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
         $this.createStoreInstanceErrorHandler
@@ -473,16 +509,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
         return;
       }
-      var payload = this.formatPayload('end-instance');
-      var prevPayload = this.formatPayload('redispatch');
-      var promises = [
-        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload),
-        storeInstanceFactory.updateStoreInstanceStatus(
-          $routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId
-        ),
-        storeInstanceFactory.updateStoreInstance($scope.prevStoreInstanceId, prevPayload),
-        storeInstanceFactory.updateStoreInstanceStatus($scope.prevStoreInstanceId, $this.nextStep.storeOne.stepName)
-      ];
+      var promises = $this.makeEditPromises('end-instance', 'redispatch');
       $q.all(promises).then(
         (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
         $this.createStoreInstanceErrorHandler
@@ -495,17 +522,22 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
         return;
       }
-      var payload = this.formatPayload('dispatch');
-      var promises = [
-        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload),
-        storeInstanceFactory.updateStoreInstanceStatus(
-          $routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId
-        )
-      ];
+      var promises = $this.makeEditPromises('dispatch');
       $q.all(promises).then(
         (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
         $this.createStoreInstanceErrorHandler
       );
+    };
+
+    this.redispatchConditions = function(saveAndExit) {
+      if ($scope.stepOneFromStepTwo) {
+        $this.editRedispatchedStoreInstance(saveAndExit);
+        return;
+      }
+      if (!$scope.stepOneFromStepTwo) {
+        $this.redispatchStoreInstance(saveAndExit);
+        return;
+      }
     };
 
     this.submitFormConditions = function(saveAndExit) {
@@ -517,9 +549,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.updateStoreInstance(saveAndExit);
         return;
       }
-      if ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) {
-        $this.editRedispatchedStoreInstance(saveAndExit);
-        return;
+      if ($this.isActionState('redispatch')) {
+        return $this.redispatchConditions(saveAndExit);
       }
       if ($this.isActionState('dispatch') && $routeParams.storeId) {
         $this.editDispatchedStoreInstance(saveAndExit);
