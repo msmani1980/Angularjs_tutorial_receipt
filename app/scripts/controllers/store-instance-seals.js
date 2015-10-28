@@ -76,6 +76,9 @@ angular.module('ts5App')
       $this.isInstanceReadOnly();
       $scope.formData.note = $scope.storeDetails.note;
       $scope.formData.tampered = $scope.storeDetails.tampered;
+      if ( $routeParams.action === 'end-instance') {
+        $scope.storeDetails.displayLMPStation = $scope.storeDetails.inboundLMPStation;  
+      }
     };
 
     this.setPrevStoreDetails = function(prevStoreDetailsJSON) {
