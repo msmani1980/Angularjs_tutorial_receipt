@@ -166,11 +166,11 @@ describe('Store Instance Create Controller', function() {
     getOnFloorInstancesDeferred.resolve(onFloorInstanceJSON);
   }
 
-  function initController(action) {
+  function initController(action, edit) {
     var params = {
       action: (action ? action : 'dispatch')
     };
-    if (params.action !== 'dispatch') {
+    if (params.action !== 'dispatch' || edit) {
       params.storeId = storeInstanceId;
     }
     StoreInstanceCreateCtrl = controller('StoreInstanceCreateCtrl', {
@@ -218,6 +218,16 @@ describe('Store Instance Create Controller', function() {
   function mockRedispatchStoreInstance() {
     $scope.$digest();
     StoreInstanceCreateCtrl.createStoreInstance();
+  }
+
+  function mockEditDispatchedStoreInstance(saveAndExit) {
+    $scope.$digest();
+    StoreInstanceCreateCtrl.editDispatchedStoreInstance(saveAndExit);
+  }
+
+  function mockEditRedispatchedStoreInstance(saveAndExit) {
+    $scope.$digest();
+    StoreInstanceCreateCtrl.editRedispatchedStoreInstance(saveAndExit);
   }
 
   describe('when the Dispatch controller loads', function() {
@@ -932,6 +942,16 @@ describe('Store Instance Create Controller', function() {
       expect(StoreInstanceCreateCtrl.editRedispatchedStoreInstance).toHaveBeenCalled();
     });
 
+    it('should call editDispatchedStoreInstance if action state is dispatch', function() {
+      initController('dispatch', true);
+      $scope.stepOneFromStepTwo = true;
+      $scope.$digest();
+      spyOn(StoreInstanceCreateCtrl, 'submitFormConditions').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'editDispatchedStoreInstance');
+      StoreInstanceCreateCtrl.submitFormConditions(true);
+      expect(StoreInstanceCreateCtrl.editDispatchedStoreInstance).toHaveBeenCalled();
+    });
+
   });
 
   describe('setting the validation classes on the input', function() {
@@ -1363,7 +1383,7 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       initController('redispatch');
-      spyOn(storeInstanceFactory, 'updateStoreInstanceStatus')();
+      spyOn(storeInstanceFactory, 'updateStoreInstanceStatus');
       spyOn(StoreInstanceCreateCtrl, 'findStatusObject').and.callThrough();
       mockLoadStoreInstance();
       resolveAllDependencies();
@@ -1510,6 +1530,99 @@ describe('Store Instance Create Controller', function() {
 
     it('should call the createStoreInstance method on the controller', function() {
       expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('The editDispatchedStoreInstance functionality', function() {
+
+    beforeEach(function() {
+      initController('dispatch', true);
+      resolveAllDependencies();
+      mockLoadStoreInstance();
+      spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'exitToDashboard');
+      spyOn(StoreInstanceCreateCtrl, 'updateStatusToStep').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();
+      $scope.formData = {
+        scheduleDate: dateUtility.nowFormatted(),
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: {
+          scheduleNumber: 'SCH1241411'
+        },
+        storeId: storeInstanceId
+      };
+      $scope.$digest();
+      mockEditDispatchedStoreInstance();
+    });
+
+    it('should display the loading modal', function() {
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+        'Updating Store Instance ' + storeInstanceId);
+    });
+
+    it('should call the updateStoreInstance method on the controller', function() {
+      expect(storeInstanceFactory.updateStoreInstance).toHaveBeenCalled();
+    });
+
+    it('should call the saveAndExit method on the controller', function() {
+      mockEditDispatchedStoreInstance(true);
+      expect(StoreInstanceCreateCtrl.exitToDashboard).toHaveBeenCalled();
+    });
+
+  });
+
+  describe('The editRedispatchedStoreInstance functionality', function() {
+
+    beforeEach(function() {
+      initController('redispatch', true);
+      resolveAllDependencies();
+      mockLoadStoreInstance();
+      spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'exitToDashboard');
+      spyOn(StoreInstanceCreateCtrl, 'updateStatusToStep').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();
+      $scope.formData = {
+        scheduleDate: dateUtility.nowFormatted(),
+        menus: [{
+          id: 100,
+          name: 'ABC43124'
+        }],
+        cateringStationId: 13,
+        scheduleNumber: {
+          scheduleNumber: 'SCH1241411'
+        },
+        storeId: storeInstanceId
+      };
+      $scope.prevStoreInstanceId = 12;
+      $scope.$digest();
+      mockEditRedispatchedStoreInstance();
+    });
+
+    it('should display the loading modal', function() {
+      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+        'Updating Current Store Instance ' + storeInstanceId + ' and Previous Store Instance ' +
+        $scope.prevStoreInstanceId
+      );
+    });
+
+    it('should call the updateStoreInstance method on the controller', function() {
+      expect(storeInstanceFactory.updateStoreInstance).toHaveBeenCalled();
+    });
+
+    it('should call the saveAndExit method on the controller', function() {
+      mockEditRedispatchedStoreInstance(true);
+      expect(StoreInstanceCreateCtrl.exitToDashboard).toHaveBeenCalled();
     });
 
   });
