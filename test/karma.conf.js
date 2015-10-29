@@ -77,6 +77,9 @@ module.exports = function(config) {
       'bower_components/ngtoast/dist/ngToast.js',
       'bower_components/select2/select2.js',
       'bower_components/ngstorage/ngStorage.js',
+      'bower_components/sha256/index.js',
+      'bower_components/enc-base64-min/index.js',
+      'bower_components/aes/index.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
