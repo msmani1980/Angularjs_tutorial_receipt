@@ -8,16 +8,17 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('httpSessionInterceptor', function ($rootScope, $location) {
+  .factory('httpSessionInterceptor', function ($rootScope) {
 
-    function request(config) {
-      config.headers.sessionToken = '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
-      config.headers.timeout = 1200000;
-      return config;
+    function responseError(response) {
+      if (response.status === 401) {
+        $rootScope.$broadcast('unauthorized');
+      }
+      return response;
     }
 
     return {
-      request: request
+      responseError: responseError
     };
 
   });
