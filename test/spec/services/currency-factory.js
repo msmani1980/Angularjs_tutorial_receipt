@@ -12,14 +12,17 @@ describe('Factory: currencyFactory', function () {
     dailyExchangeRatesService,
     companyService,
     companyPreferencesService,
+    companyExchangeRateService,
     rootScope,
     scope;
-  beforeEach(inject(function ($rootScope, _currencyFactory_, _currenciesService_, _dailyExchangeRatesService_, _companyService_, _companyPreferencesService_) {
+
+  beforeEach(inject(function ($rootScope, _currencyFactory_, _currenciesService_, _dailyExchangeRatesService_, _companyService_, _companyPreferencesService_, _companyExchangeRateService_) {
 
     companyService = _companyService_;
     currenciesService = _currenciesService_;
     dailyExchangeRatesService = _dailyExchangeRatesService_;
     companyPreferencesService = _companyPreferencesService_;
+    companyExchangeRateService = _companyExchangeRateService_;
 
     spyOn(companyService, 'getCompany');
     spyOn(currenciesService, 'getCompanyGlobalCurrencies');
@@ -32,6 +35,10 @@ describe('Factory: currencyFactory', function () {
     spyOn(dailyExchangeRatesService, 'getDailyExchangeRates');
     spyOn(dailyExchangeRatesService, 'saveDailyExchangeRates');
     spyOn(companyPreferencesService, 'getCompanyPreferences');
+    spyOn(companyExchangeRateService, 'getCompanyExchangeRates');
+    spyOn(companyExchangeRateService, 'deleteCompanyExchangeRate');
+    spyOn(companyExchangeRateService, 'createCompanyExchangeRate');
+    spyOn(companyExchangeRateService, 'updateCompanyExchangeRate');
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
@@ -82,7 +89,7 @@ describe('Factory: currencyFactory', function () {
   });
 
 
-  describe('currenciesService API', function () {
+  describe('dailyExchangeRatesService API', function () {
     it('should call dailyExchangeRatesService on getPreviousExchangeRates', function () {
       currencyFactory.getPreviousExchangeRates();
       expect(dailyExchangeRatesService.getPreviousExchangeRates).toHaveBeenCalled();
@@ -105,5 +112,26 @@ describe('Factory: currencyFactory', function () {
       expect(companyPreferencesService.getCompanyPreferences).toHaveBeenCalled();
     });
   });
+
+  describe('companyExchangeRateService API', function () {
+    it('should call companyExchangeRateService on getCompanyExchangeRates', function () {
+      currencyFactory.getCompanyExchangeRates();
+      expect(companyExchangeRateService.getCompanyExchangeRates).toHaveBeenCalled();
+    });
+    it('should call companyExchangeRateService on deleteCompanyExchangeRate', function () {
+      currencyFactory.deleteCompanyExchangeRate();
+      expect(companyExchangeRateService.deleteCompanyExchangeRate).toHaveBeenCalled();
+    });
+    it('should call createCompanyExchangeRate on getCompanyExchangeRates', function () {
+      currencyFactory.createCompanyExchangeRate();
+      expect(companyExchangeRateService.createCompanyExchangeRate).toHaveBeenCalled();
+    });
+    it('should call companyExchangeRateService on updateCompanyExchangeRate', function () {
+      currencyFactory.updateCompanyExchangeRate();
+      expect(companyExchangeRateService.updateCompanyExchangeRate).toHaveBeenCalled();
+    });
+  });
+
+
 });
 

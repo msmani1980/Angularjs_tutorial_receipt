@@ -66,7 +66,6 @@ describe('Service: currenciesService', function () {
       currenciesService.getCompanyGlobalCurrencies().then(function (companyCurrencies) {
         expect(companyCurrencies.response.length).toBeGreaterThan(0);
       });
-
     });
 
     it('should return USD as currencyCode', function () {

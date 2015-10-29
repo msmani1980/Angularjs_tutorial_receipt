@@ -63,7 +63,10 @@ angular.module('ts5App')
         denominations = [];
       }
 
-      return denominations.map(function (denomination) { return parseFloat($this.getDenominationById(denomination.currencyDenominationId).denomination); })
+      return denominations.map(function (denomination) {
+        console.log(denomination);
+                            return parseFloat($this.getDenominationById(denomination.currencyDenominationId).denomination);
+                           })
                           .sort($this.sortDenominationByValue)
                           .join(', ');
     };
@@ -216,10 +219,7 @@ angular.module('ts5App')
     };
 
     $scope.isSearchFormValid = function () {
-      if($scope.search && $scope.search.operatingCurrencyCode) {
-        return true;
-      }
-      return false;
+      return ($scope.search && $scope.search.operatingCurrencyCode) ? true : false;
     };
 
     $scope.clearSearchForm = function () {
