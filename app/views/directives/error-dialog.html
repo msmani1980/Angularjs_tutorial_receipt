@@ -1,33 +1,35 @@
-<div class="panel panel-danger" ng-if="$parent.displayError">
+<div class="panel panel-danger" ng-show="display">
 
   <div class="panel-heading">
-
-		<i class="fa fa fa-exclamation-circle"></i>
-
 		<span ng-if="showValidationErrors()">There are some issues with the fields below. Please update and try again.</span>
     <span ng-if="$parent.response500">A server side error (500) has occured. </span>
     <span ng-if="errorResponse && !showValidationErrors()">There was an issue with your request. Please update and try again.</span>
-
 	</div>
 
 	<ul class="list-group">
 
 		<li class="list-group-item" ng-repeat="error in errorRequired">
-			<span class="label label-info">Required</span> -
+			<span class="label label-warning">
+        <i class="fa fa-asterisk"></i>
+      </span>
 			<span class="error">
         The <strong>{{ error }}</strong> is a required field
       </span>
 		</li>
 
 		<li class="list-group-item" ng-repeat="error in errorPattern">
-			<span class="label label-warning">Invalid</span> -
+      <span class="label label-warning">
+        <i class="fa fa-minus"></i>
+      </span>
       <span class="error">
   			The <strong>{{ error }}</strong> field contains invalid characters
       </span>
 		</li>
 
     <li class="list-group-item" ng-repeat="error in $parent.errorCustom">
-			<span class="label label-warning">Invalid</span> -
+      <span class="label label-warning">
+        <i class="fa fa-minus"></i>
+      </span>
       <span class="error">
   			The <strong>{{ error.field }}</strong> {{ error.value }}
       </span>
@@ -41,11 +43,13 @@
 
     <li class="list-group-item" ng-repeat="error in errorResponse.data" ng-switch on="error.code">
 
-      <span class="label label-danger">{{ errorResponse.statusText}}</span> -
+      <span class="label label-danger">
+        <i class="fa fa-ban"></i>
+      </span>
 
       <span class="error">
 
-        The <strong>{{ error.field }}</strong>
+        {{ errorResponse.statusText}}: The <strong>{{ error.field }}</strong>
         <span ng-switch-default> {{ error.value }} </span>
         <span ng-switch-when="000">Field can't be empty.</span>
         <span ng-switch-when="001">Data format is invalid.</span>

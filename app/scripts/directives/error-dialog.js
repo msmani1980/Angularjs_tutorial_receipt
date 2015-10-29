@@ -75,7 +75,8 @@ angular.module('ts5App')
       controller: errorDialogController,
       scope: {
         formObject: '=',
-        errorResponse: '='
+        errorResponse: '=',
+        display: '='
       }
     };
   });
