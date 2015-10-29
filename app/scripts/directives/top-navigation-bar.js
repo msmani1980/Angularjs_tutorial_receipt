@@ -7,34 +7,42 @@
  * # topNavigationBar
  */
 angular.module('ts5App')
-  .directive('topNavigationBar', function (GlobalMenuService) {
+  .directive('topNavigationBar', function (identityAccessFactory) {
 
     function link($scope) {
-      $scope.settingsModel = GlobalMenuService.settings;
-      $scope.userModel = GlobalMenuService.user;
-      $scope.companyModel = GlobalMenuService.company;
+
+      function hideNavBar() {
+        $scope.isAuthorized = false;
+      }
+
+      function showNavBar() {
+        $scope.isAuthorized = true;
+      }
+
+      function callback() {
+        $scope.$emit('logout');
+      }
+
+      $scope.settingsModel = [];
+      $scope.userModel = [{
+        id: 1,
+        callback: callback,
+        class: 'login-btn',
+        label: 'logout'
+      }];
+      $scope.companyModel = [];
+      $scope.isAuthorized = identityAccessFactory.isAuthorized();
+
+      $scope.$on('unauthorized', hideNavBar);
+      $scope.$on('logout', hideNavBar);
+      $scope.$on('authorized', showNavBar);
+
     }
 
     return {
       templateUrl: '/views/directives/top-navigation-bar.html',
       restrict: 'E',
-      scope: {
-        elementClass: '@',
-        labelFrom: '@',
-        labelTo: '@',
-        nameFrom: '@',
-        nameTo: '@',
-        disablePast: '@',
-        disableStartDate: '=',
-        disableEndDate: '=',
-        disableDateRange: '@',
-        isSearchField: '@',
-        minDate: '=',
-        maxDate: '=',
-        startDateModel: '=',
-        endDateModel: '=',
-        required: '@'
-      },
+      scope: true,
       link: link
     };
   });
