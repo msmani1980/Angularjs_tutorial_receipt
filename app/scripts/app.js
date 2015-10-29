@@ -59,11 +59,18 @@ angular.module('ts5App', [
   ],
   price: /^\$?\s?[0-9\,]+(\.\d{0,4})?$/,
   url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
-}).config(['$localStorageProvider', function($localStorageProvider){
+}).config(['$localStorageProvider', function ($localStorageProvider) {
   $localStorageProvider.setKeyPrefix('TS5-');
-}]).config(function ($routeProvider, $httpProvider) {
+}]).config(function ($routeProvider, $httpProvider, $locationProvider) {
   $httpProvider.interceptors.push('defaultData');
   $httpProvider.interceptors.push('httpSessionInterceptor');
+
+  // TODO: uncomment to remove # from url to make Rohit happy
+  //$locationProvider.html5Mode({
+  //  enabled: true,
+  //  requireBase: false
+  //});
+
   $routeProvider.when('/', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl'
@@ -241,15 +248,8 @@ angular.module('ts5App', [
   '$rootScope',
   'regexp',
   'GlobalMenuService',
-  '$http',
-  function ($rootScope, regexp, GlobalMenuService, $http) {
-
-    var user = GlobalMenuService.user.get();
-    var companyId = GlobalMenuService.company.get();
-
-    $http.defaults.headers.common.userId = user.id;
-    $http.defaults.headers.common.companyId = companyId;
-
+  'identityAccessFactory',
+  function ($rootScope, regexp) {
     $rootScope.regexp = regexp;
   }
 ]);
