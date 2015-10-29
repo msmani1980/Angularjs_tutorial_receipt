@@ -129,7 +129,7 @@ describe('Store Instance Create Controller', function() {
     getOnFloorInstancesDeferred = $q.defer();
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getOnFloorInstancesDeferred.promise);
 
-    httpBackend.expectGET(/views\/./).respond(200, '');
+    httpBackend.whenGET(/views\/./).respond(200, '');
 
     storeInstanceId = 13;
 
@@ -150,7 +150,6 @@ describe('Store Instance Create Controller', function() {
   }));
 
   afterEach(function() {
-    httpBackend.flush();
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
   });
