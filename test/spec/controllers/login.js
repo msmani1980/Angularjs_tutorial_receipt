@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: LoginCtrl', function () {
+fdescribe('Controller: LoginCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
@@ -16,9 +16,9 @@ describe('Controller: LoginCtrl', function () {
     identityAccessFactory = $injector.get('identityAccessFactory');
 
     loginDeferred = $q.defer();
-    loginDeferred.resolve({});
 
     spyOn(identityAccessFactory, 'login').and.returnValue(loginDeferred.promise);
+    spyOn(identityAccessFactory, 'setSessionData');
 
     LoginCtrl = $controller('LoginCtrl', {
       $scope: scope
@@ -45,18 +45,38 @@ describe('Controller: LoginCtrl', function () {
       expect(scope.login()).toBeUndefined();
     });
 
-    it('should not do anything if form is invalid', function () {
-      scope.credentials = {
-        username: 'fakeUser',
-        password: 'fakePass'
-      };
+    describe('Authentication', function () {
+      beforeEach(function () {
+        scope.credentials = {
+          username: 'fakeUser',
+          password: 'fakePass'
+        };
 
-      scope.loginForm = {
-        $invalid: false
-      };
+        scope.loginForm = {
+          $invalid: false
+        };
 
-      scope.login();
+        scope.login();
+      });
+
+      it('should call login API', function () {
+        loginDeferred.resolve({});
+        expect(identityAccessFactory.login).toHaveBeenCalledWith(scope.credentials);
+      });
+
+      it('should set the session Object', function () {
+        loginDeferred.resolve({fakeSessionToken: 'someRandomTextHere'});
+        scope.$digest();
+        expect(identityAccessFactory.setSessionData).toHaveBeenCalledWith({fakeSessionToken: 'someRandomTextHere'});
+      });
+
+      it('should show errors in bad request', function () {
+        loginDeferred.reject(400);
+        scope.$digest();
+        expect(scope.displayError).toBeTruthy();
+      });
     });
+
 
   });
 
