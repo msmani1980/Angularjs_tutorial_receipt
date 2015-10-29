@@ -235,30 +235,17 @@ angular.module('ts5App', [
     templateUrl: 'views/currency-edit.html',
     controller: 'CurrencyEditCtrl',
     controllerAs: 'CurrencyEdit'
-  })
-<<<<<<< HEAD
-    .when('/login', {
-      templateUrl: 'views/login.html',
-      controller: 'LoginCtrl'
-    })
-    .otherwise({
-      redirectTo: '/'
-    });
-=======
-  .when('/company-exchange-rate-edit', {
+  }).when('/company-exchange-rate-edit', {
     templateUrl: 'views/company-exchange-rate-edit.html',
     controller: 'CompanyExchangeRateEditCtrl',
     controllerAs: 'companyExchangeRateEdit'
-  })
-  .when('/login', {
+  }).when('/login', {
     templateUrl: 'views/login.html',
     controller: 'LoginCtrl'
   })
   .otherwise({
     redirectTo: '/'
   });
->>>>>>> master
-
 }).run([
   '$rootScope',
   'regexp',
