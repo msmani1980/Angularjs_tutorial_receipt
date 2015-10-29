@@ -25,7 +25,6 @@ describe('Service: companyExchangeRateService', function () {
       companyExchangeRateJSON = _servedCompanyExchangeRate_;
     });
 
-    companyExchangeRateService = _companyExchangeRateService_;
 
     GlobalMenuService = $injector.get('GlobalMenuService');
     $httpBackend = $injector.get('$httpBackend');
@@ -36,6 +35,8 @@ describe('Service: companyExchangeRateService', function () {
     companyExchangeRateDeleteRequestHandler = $httpBackend.whenDELETE(/api\/companies\/403\/exchange-rates/).respond(companyExchangeRatesJSON);
     companyExchangeRatePostRequestHandler = $httpBackend.whenPOST(/api\/companies\/403\/exchange-rates/).respond(companyExchangeRatesJSON);
     companyExchangeRatePutRequestHandler = $httpBackend.whenPUT(/api\/companies\/403\/exchange-rates/).respond(companyExchangeRatesJSON);
+
+    companyExchangeRateService = _companyExchangeRateService_;
   }));
 
   afterEach(function () {
