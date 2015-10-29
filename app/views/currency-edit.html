@@ -23,7 +23,7 @@
                                 <label for="search-currency">Currency</label>
                                 <select class="form-control" id="search-currency" ng-model="search.currencyId">
                                     <option value="">Select Currency</option>
-                                    <option ng-repeat="globalCurreny in globalCurrencyList | unique: 'id'" value="{{globalCurreny.id}}">{{ globalCurreny.currencyCode }}</option>
+                                    <option ng-repeat="globalCurrency in globalCurrencyList | unique: 'id'" value="{{globalCurrency.id}}">{{ globalCurrency.currencyCode }}</option>
                                 </select>
                             </div>
                         </div>
@@ -109,7 +109,6 @@
                             label-from="Start Date *"
                             label-to="End Date *"
                             required="true"
-                            is-search-field="false"
                             disable-past="true"
                             disable-start-date="isCurrencyReadOnly(currency)"
                             disable-end-date="isCurrencyPartialReadOnly(currency)">

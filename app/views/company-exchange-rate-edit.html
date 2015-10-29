@@ -1,0 +1,161 @@
+<div class="fluid-container">
+    <div class="list-controls">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="view-name">{{viewName}}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-xs">Search</span>
+            </button>
+        </div>
+    </div>
+    <div class="panel panel-default no-transition" id="search-collapse">
+        <form name="menuSearchForm" ng-submit="searchCompanyExchangeRates()">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3">
+                        <div class="form-group">
+                            <label>Operating Currency*</label>
+                            <select class="form-control" id="search-operating-currency" ng-model="search.operatingCurrencyCode">
+                                <option value="">Select Currency</option>
+                                <option ng-repeat="currency in detailedCompanyCurrenciesForSearch | filter:{isOperatedCurrency: true} | unique: 'currencyCode' | orderBy: 'currencyCode'" value="{{currency.currencyCode}}">{{ currency.currencyCode }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <div class="form-group">
+                            <label>Accepted Currency</label>
+                            <ui-select id="search-accepted-currencies" multiple ng-model="search.acceptedCurrencies" theme="bootstrap">
+                                <ui-select-match placeholder="Select Currencies...">{{$item.currencyCode}}</ui-select-match>
+                                <ui-select-choices repeat="currency in detailedCompanyCurrenciesForSearch | unique: 'currencyCode' | orderBy: 'currencyCode'">
+                                    <div ng-bind-html="currency.currencyCode | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-5">
+                        <date-picker
+                            element-class="col-xs-6"
+                            start-date-model="search.startDate"
+                            end-date-model="search.endDate"
+                            label-from="Start Date"
+                            label-to="End Date"
+                            is-search-field="true">
+                        </date-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer text-right">
+                <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+                <button type="submit" class="btn btn-primary" ng-disabled="!isSearchFormValid()">Search</button>
+            </div>
+        </form>
+    </div>
+    <form class="form edit-form retail-company-exchange-rate-setup-form" name="form" ng-show="companyExchangeRates.length > 0">
+        <error-dialog form-object="form"></error-dialog>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-12 text-right">
+                        <p>Base Currency: <span>{{companyBaseCurrency.currencyCode}}</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-hover ng-scope">
+                    <thead>
+                        <tr>
+                            <th>Accepted Currency</th>
+                            <th width="20%">Denomination</th>
+                            <th width="20%">EasyPay Denomination</th>
+                            <th>Exchange Rate*</th>
+                            <th colspan="2">Start/End Date*</th>
+                            <th width="8%">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="exchange-rate-{{$index}}" ng-repeat="exchangeRate in companyExchangeRates | filter: companyExchangeRateFilter track by $index">
+                            <td>
+                                <input type="text" class="form-control" placeholder="CHF" disabled="disabled" value="{{exchangeRate.acceptedCurrencyCode}}">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" disabled="disabled" value="{{exchangeRate.denominations}}">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"  disabled="disabled" value="{{exchangeRate.easyPayDenominations}}">
+                            </td>
+                            <td>
+                                <div>
+                                    <input custom-validity
+                                        custom-pattern="currencyWithFourDecimalPlace"
+                                        ng-model="exchangeRate.exchangeRate"
+                                        ng-required="true"
+                                        ng-disabled="isExchangeRateDisabled(exchangeRate)"
+                                        currencyType="paperExchangeRate" placeholder="1.0000"
+                                        class="form-control"
+                                        aria-label="Amount (to the nearest dollar)" />
+                                </div>
+                            </td>
+                            <td colspan="2">
+                                <date-picker
+                                        element-class="col-xs-6 col-sm-6"
+                                        start-date-model="exchangeRate.startDate"
+                                        end-date-model="exchangeRate.endDate"
+                                        disable-past="true"
+                                        disable-start-date="isExchangeRateReadOnly(exchangeRate)"
+                                        disable-end-date="isExchangeRatePartialReadOnly(exchangeRate)">
+                                </date-picker>
+                            </td>
+                            <td>
+                                <button class="btn btn-warning btn-xs" ng-click="duplicateExchangeRate($index, exchangeRate)">
+                                    <i class="fa fa-copy"></i>
+                                </button>
+                                <button class="btn btn-primary btn-xs" ng-hide="isExchangeRateNewOne(exchangeRate) || isExchangeRatePartialReadOnly(exchangeRate)" ng-click="saveCompanyExchangeRate($index, exchangeRate)">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="btn btn-info btn-xs" ng-show="isExchangeRateNewOne(exchangeRate)" ng-click="saveCompanyExchangeRate($index, exchangeRate)">
+                                    <i class="fa fa-check-square-o"></i>
+                                </button>
+                                <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, exchangeRate)" ng-hide="isExchangeRateReadOnly(exchangeRate) || isExchangeRateNewOne(exchangeRate)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade delete-warning-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Are you sure?</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to permanently delete <strong>{{exchangeRateToDelete.acceptedCurrencyCode}}</strong></p>
+            </div>
+
+            <ul>
+                <li><strong>Start Date: </strong>{{ exchangeRateToDelete.startDate }}</li>
+                <li><strong>End Date: </strong>{{ exchangeRateToDelete.endDate }}</li>
+            </ul>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="deleteCompanyExchangeRate()">Continue</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('currencyFactory', function ($resource, currenciesService, dailyExchangeRatesService, companyService, companyPreferencesService) {
+  .factory('currencyFactory', function ($resource, currenciesService, dailyExchangeRatesService, companyExchangeRateService, companyService, companyPreferencesService) {
 
     var getCompany = function (companyId) {
       return companyService.getCompany(companyId);
@@ -54,6 +54,23 @@ angular.module('ts5App')
       return companyPreferencesService.getCompanyPreferences(payload);
     };
 
+    var getCompanyExchangeRates = function (payload) {
+      return companyExchangeRateService.getCompanyExchangeRates(payload);
+    };
+
+    var deleteCompanyExchangeRate = function (currencyId) {
+      return companyExchangeRateService.deleteCompanyExchangeRate(currencyId);
+    };
+
+    var createCompanyExchangeRate = function (payload) {
+      return companyExchangeRateService.createCompanyExchangeRate(payload);
+    };
+
+    var updateCompanyExchangeRate = function (payload) {
+      return companyExchangeRateService.updateCompanyExchangeRate(payload);
+    };
+
+
     return {
       getCompany: getCompany,
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
@@ -65,7 +82,11 @@ angular.module('ts5App')
       getDailyExchangeRates: getDailyExchangeRates,
       getPreviousExchangeRates: getPreviousExchangeRates,
       saveDailyExchangeRates: saveDailyExchangeRates,
-      getCompanyPreferences:getCompanyPreferences
+      getCompanyPreferences: getCompanyPreferences,
+      getCompanyExchangeRates: getCompanyExchangeRates,
+      deleteCompanyExchangeRate: deleteCompanyExchangeRate,
+      createCompanyExchangeRate: createCompanyExchangeRate,
+      updateCompanyExchangeRate: updateCompanyExchangeRate
     };
 
   });
