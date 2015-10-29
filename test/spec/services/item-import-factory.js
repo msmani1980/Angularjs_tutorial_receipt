@@ -19,7 +19,7 @@ describe('Factor: itemImportFactory', function () {
     itemsService = _itemsService_;
     itemImportService = _itemImportService_;
 
-    spyOn(GlobalMenuService.company, 'get');
+    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
     spyOn(companyService, 'getCompanyList');
     spyOn(itemsService, 'getItemsList');
     spyOn(itemImportService, 'importItems');

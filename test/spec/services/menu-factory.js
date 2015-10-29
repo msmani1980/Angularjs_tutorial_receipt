@@ -23,7 +23,7 @@ describe('Service: menuFactory', function () {
     spyOn(menuService, 'updateMenu').and.stub();
     spyOn(menuService, 'createMenu').and.stub();
     spyOn(itemsService, 'getItemsList').and.stub();
-    spyOn(GlobalMenuService.company, 'get').and.stub();
+    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
     spyOn(salesCategoriesService, 'getSalesCategoriesList').and.stub();
 
     menuFactory = _menuFactory_;

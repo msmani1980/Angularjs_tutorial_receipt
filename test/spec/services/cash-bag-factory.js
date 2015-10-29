@@ -33,7 +33,7 @@ describe('Factory: cashBagFactory', function () {
     storeInstanceService      = $injector.get('storeInstanceService');
 
     spyOn(cashBagService, 'getCashBagList');
-    spyOn(GlobalMenuService.company, 'get');
+    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
     spyOn(stationsService, 'getStationList');
     spyOn(schedulesService, 'getSchedules');
     spyOn(schedulesService, 'getDailySchedules');
