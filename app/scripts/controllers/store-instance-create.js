@@ -372,6 +372,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.validateForm = function() {
       this.resetErrors();
+      if ($scope.showDataLossWarning) {
+        return $this.showWarningModal();
+      }
       if ($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
         return true;
       }
@@ -654,6 +657,24 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       });
     };
 
+    this.registerMenusScopeWatchers = function() {
+      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState('dispatch') &&
+        $routeParams.storeId);
+    };
+
+    this.checkIfMenusHaveChanged = function(newMenus) {
+      angular.forEach($scope.storeDetails.menuList, function(originalMenu) {
+        var menu = newMenus.filter(function(menu) {
+          return menu.id === originalMenu.id;
+        })[0];
+        if (angular.isUndefined(menu)) {
+          $scope.showDataLossWarning = true;
+        } else {
+          $scope.showDataLossWarning = false;
+        }
+      });
+    };
+
     this.registerScopeWatchers = function() {
       $scope.$watch('formData.scheduleDate', function(newDate, oldDate) {
         if (newDate && newDate !== oldDate) {
@@ -674,6 +695,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           }
         });
       }
+      if ($this.registerMenusScopeWatchers()) {
+        $scope.$watch('formData.menus', function(newMenus, oldMenus) {
+          if (newMenus && newMenus !== oldMenus) {
+            $this.checkIfMenusHaveChanged(newMenus);
+          }
+        });
+      }
     };
 
     this.showLoadingModal = function(text) {
@@ -682,6 +710,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.hideLoadingModal = function() {
       angular.element('#loading').modal('hide');
+    };
+
+    this.showWarningModal = function() {
+      angular.element('#warning').modal('show');
+    };
+
+    this.hideWarningModal = function() {
+      angular.element('#warning').modal('hide');
     };
 
     this.setUIReady = function() {
@@ -717,7 +753,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       $this.setUIReady();
       $this.registerScopeWatchers();
-
     };
 
     this.init = function() {
