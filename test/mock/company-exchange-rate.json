@@ -1,0 +1,14 @@
+{
+  "id": 72,
+  "acceptedCurrencyCode": "GBP",
+  "operatingCurrencyCode": "GBP",
+  "companyId": 403,
+  "endDate": "2015-10-01",
+  "startDate": "2015-08-25",
+  "exchangeRate": "2.0000",
+  "exchangeRateType": 2,
+  "createdOn": "2015-08-25",
+  "createdBy": null,
+  "updatedOn": null,
+  "updatedBy": null
+}

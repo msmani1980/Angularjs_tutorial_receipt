@@ -236,6 +236,7 @@ angular.module('ts5App', [
     controller: 'CurrencyEditCtrl',
     controllerAs: 'CurrencyEdit'
   })
+<<<<<<< HEAD
     .when('/login', {
       templateUrl: 'views/login.html',
       controller: 'LoginCtrl'
@@ -243,6 +244,20 @@ angular.module('ts5App', [
     .otherwise({
       redirectTo: '/'
     });
+=======
+  .when('/company-exchange-rate-edit', {
+    templateUrl: 'views/company-exchange-rate-edit.html',
+    controller: 'CompanyExchangeRateEditCtrl',
+    controllerAs: 'companyExchangeRateEdit'
+  })
+  .when('/login', {
+    templateUrl: 'views/login.html',
+    controller: 'LoginCtrl'
+  })
+  .otherwise({
+    redirectTo: '/'
+  });
+>>>>>>> master
 
 }).run([
   '$rootScope',
