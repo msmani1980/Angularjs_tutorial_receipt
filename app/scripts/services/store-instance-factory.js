@@ -133,6 +133,8 @@ angular.module('ts5App').service('storeInstanceFactory',
     function formatResponseCollection(responseCollection, storeInstanceAPIResponse, parentStoreInstanceAPIResponse) {
       var storeDetails = {};
       storeDetails.LMPStation = responseCollection[1].code;
+      storeDetails.inboundLMPStation = responseCollection[responseCollection.length - 1].code;
+      storeDetails.displayLMPStation = storeDetails.LMPStation;
       storeDetails.storeNumber = responseCollection[0].storeNumber;
       storeDetails.scheduleDate = dateUtility.formatDateForApp(storeInstanceAPIResponse.scheduleDate);
       storeDetails.scheduleNumber = storeInstanceAPIResponse.scheduleNumber;
@@ -188,6 +190,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       if (responseData.carrierId) {
         dependenciesArray.push(getCarrierNumber(getCompanyId(), responseData.carrierId));
       }
+      dependenciesArray.push(getStation(responseData.inboundStationId));
 
       return dependenciesArray;
     }
