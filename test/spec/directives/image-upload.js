@@ -77,7 +77,6 @@ describe('Image Upload Directive |', function () {
     }));
 
     it('should have the click event defined', function () {
-      angular.element(element[0]).trigger('click');
       expect(element.click).toBeDefined();
     });
 
