@@ -1,6 +1,6 @@
 <nav class="navbar navbar-default navbar-fixed-top ts5-logo">
   <div class="container-fluid">
-    <div class="navbar-header">
+    <div ng-if="isAuthorized" class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
               aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -10,16 +10,10 @@
         <i class="fa fa-home"></i><span class="hidden-xs"> TS5 Dashboard</span>
       </a>
     </div>
-    <div id="navbar" class="navbar-collapse collapse">
+    <div ng-if="isAuthorized" id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <li>
-          <menu-dropdown title="Settings" ng-model="settingsModel" icon="fa fa-cog"></menu-dropdown>
-        </li>
-        <li>
           <menu-dropdown title="User Picker" ng-model="userModel" icon="fa fa-user"></menu-dropdown>
-        </li>
-        <li>
-          <menu-dropdown title="Company Picker" ng-model="companyModel" icon="fa fa-plane"></menu-dropdown>
         </li>
       </ul>
     </div>
