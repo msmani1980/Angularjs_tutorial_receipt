@@ -124,7 +124,7 @@ describe('Store Instance Create Controller', function() {
     spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
 
     updateStoreInstanceDeferred = $q.defer();
-    spyOn(storeInstanceFactory, 'updateStoreInstance').and.returnValue(updateStoreInstanceDeferred.promise);
+    spyOn(storeInstanceService, 'updateStoreInstance').and.returnValue(updateStoreInstanceDeferred.promise);
 
     getOnFloorInstancesDeferred = $q.defer();
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getOnFloorInstancesDeferred.promise);
@@ -740,6 +740,10 @@ describe('Store Instance Create Controller', function() {
       beforeEach(function() {
         mockStoreInstanceCreate();
         updateStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
+        updateStoreInstanceStatusDeferred.resolve({
+          id: 13,
+          statusId: 11
+        });
         $scope.$digest();
       });
 
@@ -1441,7 +1445,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should call the updateStoreInstance method on the factory', function() {
-      expect(storeInstanceService.updateStoreInstanceStatus).toHaveBeenCalled();
+      expect(storeInstanceService.updateStoreInstance).toHaveBeenCalled();
     });
 
     it('should call the endStoreInstance method on the controller', function() {
@@ -1467,12 +1471,12 @@ describe('Store Instance Create Controller', function() {
       });
 
       it('should display a success message if the response contains an id', function() {
-        var message = 'Store end-instance ' + response[0].id + ' created!';
+        var message = 'Store end-instance ' + response[response.length - 1].id + ' created!';
         expect(StoreInstanceCreateCtrl.showMessage).toHaveBeenCalledWith('success', message);
       });
 
       it('should redirect the user to the packing page with the new store instance id', function() {
-        var url = '/store-instance-seals/' + 'end-instance' + '/' + response[0].id;
+        var url = '/store-instance-seals/' + 'end-instance' + '/' + response[response.length - 1].id;
         expect(location.path()).toEqual(url);
       });
 
@@ -1487,7 +1491,7 @@ describe('Store Instance Create Controller', function() {
           id: 13,
           statusId: 11
         };
-        updateStoreInstanceStatusDeferred.reject(errorResponse);
+        updateStoreInstanceDeferred.reject(errorResponse);
         $scope.$digest();
       });
 
@@ -1590,7 +1594,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should call the updateStoreInstance method on the controller', function() {
-      expect(storeInstanceFactory.updateStoreInstance).toHaveBeenCalled();
+      expect(storeInstanceService.updateStoreInstance).toHaveBeenCalled();
     });
 
     it('should call the saveAndExit method on the controller', function() {
@@ -1638,7 +1642,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should call the updateStoreInstance method on the controller', function() {
-      expect(storeInstanceFactory.updateStoreInstance).toHaveBeenCalled();
+      expect(storeInstanceService.updateStoreInstance).toHaveBeenCalled();
     });
 
     it('should call the saveAndExit method on the controller', function() {
