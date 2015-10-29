@@ -1,244 +1,425 @@
-<div class="container">
+<div class="container-fluid">
 
   <form-error-dialog></form-error-dialog>
 
-  <header>
-    <div class="row">
-      <div class="col-xs-5 pull-left">
-        <h3>Discrepancy Detail</h3>
+  <div class="modal fade" id="t6Modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4>Virtual Product Revenue: 123.00</h4>
+          <br>
+          <table class="table table-bordered">
+            <tr class="active">
+              <td>Virtual Product Name</td>
+              <td>Quantity</td>
+              <td>Total</td>
+            </tr>
+            <tr>
+              <td>Test name</td>
+              <td>5</td>
+              <td>10.00</td>
+            </tr>
+            <tr>
+              <td>Test name 2</td>
+              <td>6</td>
+              <td>11.00</td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
-    <br>
+  </div>
 
-    <div class="panel panel-default col-xs-12">
-      <div class="col-xs-4 text-left pull-left">
-        <h4>
-          <strong>Store # 123</strong><br>
-          <small>10/25/2015</small>
-        </h4>
-      </div>
-      <div class="col-xs-4 text-center">
-        <h4><br>
-          <small>Store Instance: 123</small>
-        </h4>
-      </div>
-
-      <div class="col-xs-4 text-right">
-        <h4><br>
-          <small>Warehouse: Melborne</small>
-        </h4>
-      </div>
-    </div>
-    <br>
-  </header>
-
-  <div class="accordion-wrapper">
-    <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
-      <accordion-group ng-init="status.items.open=true" is-open="status.items.open">
-        <accordion-heading class="accordion-heading">
-          <i ng-class="{'fa-chevron-down': status.items.open, 'fa-chevron-right': !status.items.open}"
-             class="fa"></i>
-          Discrepancy Summary
-        </accordion-heading>
-        <div clas="row">
-          <div class="col-xs-4">
-            <table class="table table-striped table-bordered">
-              <tr>
-                <th colspan="2">Warehouse Stock</th>
-              </tr>
-              <tr>
-                <td>Gross Value</td>
-                <td>10.3</td>
-              </tr>
-              <tr>
-                <td>Virtual Value</td>
-                <td>+1.3</td>
-              </tr>
-              <tr>
-                <td>Discount Value</td>
-                <td>-10.3</td>
-              </tr>
-              <tr>
-                <td>Net Value</td>
-                <td>10.3</td>
-              </tr>
-            </table>
+  <div class="row">
+    <div class="col-xs-8 main">
+      <header>
+        <div class="row item-list-row">
+          <div class="col-xs-8">
+            <h3 class="view-name">Discrepancy Detail</h3>
           </div>
-          <div class="col-xs-4">
-            <table class="table table-striped table-bordered">
-              <tr>
-                <th colspan="2">EPOS Sales</th>
-              </tr>
-              <tr>
-                <td>Gross Value</td>
-                <td>10.3</td>
-              </tr>
-              <tr>
-                <td>Virtual Value</td>
-                <td>+1.3</td>
-              </tr>
-              <tr>
-                <td>Discount Value</td>
-                <td>-10.3</td>
-              </tr>
-              <tr>
-                <td>Net Value</td>
-                <td>10.3</td>
-              </tr>
-            </table>
-          </div>
-          <div class="col-xs-4">
-            <table class="table table-striped table-bordered">
-              <tr>
-                <th colspan="2">Total Revenue</th>
-              </tr>
-              <tr>
-                <td>Total @CH Rate</td>
-                <td>10.3</td>
-              </tr>
-              <tr>
-                <td>Total @PAX Rate</td>
-                <td>10.3</td>
-              </tr>
-            </table>
+          <div class="col-xs-4 text-right">
+            <button class="btn btn-warning">
+              Hide Payment Reports
+            </button>
           </div>
         </div>
-        <div clas="row">
-          <div class="col-xs-12">
-            <table class="table table-striped table-bordered">
-              <tr class="info">
-                <th>Discrepancy Sum</th>
-                <th>Value</th>
-                <th>%</th>
-              </tr>
-              <tr>
-                <td>Stock Discrepancy</td>
-                <td>10.3</td>
-                <td>0.09</td>
-              </tr>
-              <tr>
-                <td>Cash Discrepancy</td>
-                <td>10.3</td>
-                <td>0.09</td>
-              </tr>
-              <tr>
-                <td>FX Discrepancy</td>
-                <td>10.3</td>
-                <td>0.09</td>
-              </tr>
-              <tr>
-                <th>Total</th>
-                <th>10.3</th>
-                <th>0.09</th>
-              </tr>
-            </table>
+        <br>
+
+        <div class="panel panel-default col-xs-12">
+          <div class="col-xs-4 text-left pull-left">
+            <h4>
+              <strong>Store # 123</strong><br>
+              <small>10/25/2015</small>
+            </h4>
+          </div>
+          <div class="col-xs-4 text-center">
+            <h4><br>
+              <small>Store Instance: 123</small>
+            </h4>
+          </div>
+
+          <div class="col-xs-4 text-right">
+            <h4><br>
+              <small>Warehouse: Melborne</small>
+            </h4>
           </div>
         </div>
-      </accordion-group>
-    </accordion>
-
-    <form name="createStoreInstance" ng-submit="submitForm()">
+        <br>
+      </header>
 
       <div class="accordion-wrapper">
         <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
-          <accordion-group ng-init="status.items.open=false" is-open="status.items.open">
+          <accordion-group ng-init="status.items.open=true" is-open="status.items.open">
             <accordion-heading class="accordion-heading">
               <i ng-class="{'fa-chevron-down': status.items.open, 'fa-chevron-right': !status.items.open}"
                  class="fa"></i>
-              Stock Discrepancy
+              Discrepancy Summary
             </accordion-heading>
-
-            <div class="row">
-              <div class="col-xs-6">
-                <label>Filter by Groups</label>
-                <select class="form-control">
-                  <option selected="selected" value>Items With Discrepancies</option>
-                </select>
+            <div clas="row">
+              <div class="col-xs-4">
+                <table class="table table-bordered">
+                  <tr>
+                    <td colspan="2" class="active">LMP Station Stock</td>
+                  </tr>
+                  <tr>
+                    <td>Gross Value</td>
+                    <td>10.3</td>
+                  </tr>
+                  <tr>
+                    <td><a ng-click="showModal()">Virtual Retail Items</a></td>
+                    <td>+1.3</td>
+                  </tr>
+                  <tr>
+                    <td><a ng-click="showModal()">Voucher Items</a></td>
+                    <td>+1.3</td>
+                  </tr>
+                  <tr>
+                    <td>Promotion</td>
+                    <td>-10.3</td>
+                  </tr>
+                  <tr class="active">
+                    <td>Net Value</td>
+                    <td>10.3</td>
+                  </tr>
+                </table>
               </div>
-              <div class="col-xs-6">
-                <label>Filter Items</label>
-                <input type="text" class="form-control" placeholder="Type an item code or name"/>
+              <div class="col-xs-4">
+                <table class="table table-bordered">
+                  <tr class="active">
+                    <td colspan="2">EPOS Sales</td>
+                  </tr>
+                  <tr>
+                    <td>Gross Value</td>
+                    <td>10.3</td>
+                  </tr>
+                  <tr>
+                    <td>Virtual Value</td>
+                    <td>+1.3</td>
+                  </tr>
+                  <tr>
+                    <td>Discount Value</td>
+                    <td>-10.3</td>
+                  </tr>
+                  <tr class="active">
+                    <td>Net Value</td>
+                    <td>10.3</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-xs-4">
+                <table class="table table-bordered">
+                  <tr>
+                    <td class="active" colspan="2">Total Revenue</td>
+                  </tr>
+                  <tr>
+                    <td>Total @CH Rate</td>
+                    <td>10.3</td>
+                  </tr>
+                  <tr>
+                    <td>Total @PAX Rate</td>
+                    <td>10.3</td>
+                  </tr>
+                </table>
               </div>
             </div>
-            <br>
-            <table class="table table-striped table-bordered">
-              <tr>
-                <th>Retail Item</th>
-                <th>Dispatched Count</th>
-                <th>Inbound Count</th>
-                <th>EPOS Sales</th>
-                <th>Variance Quantity</th>
-                <th>Retail Value [GBP]</th>
-                <th>Variance Value [GBP]</th>
-              </tr>
-              <tr>
-                <td>Chocolate</td>
-                <td>50</td>
-                <td>20</td>
-                <td>0</td>
-                <td>-5</td>
-                <td>7.00</td>
-                <td>-35.00</td>
-              </tr>
-            </table>
+            <div class="col-xs-12">
+              <table class="table table-bordered">
+                <tr class="info">
+                  <th>Discrepancy Sum</th>
+                  <th>Value</th>
+                  <th>%</th>
+                </tr>
+                <tr>
+                  <td>LMP Stock vs EPOS Sales</td>
+                  <td>10.3</td>
+                  <td>0.09</td>
+                </tr>
+                <tr>
+                  <td>EPOS Sales vs Total Cash Handler Revenue</td>
+                  <td>10.3</td>
+                  <td>0.09</td>
+                </tr>
+                <tr>
+                  <td>FX Discrepancy</td>
+                  <td>10.3</td>
+                  <td>0.09</td>
+                </tr>
+                <tr class="active">
+                  <th>Total</th>
+                  <th>10.3</th>
+                  <th>0.09</th>
+                </tr>
+              </table>
+            </div>
           </accordion-group>
         </accordion>
 
-        <accordion class="store-instance-review-accordion">
-          <accordion-group ng-init="status.seals.open=false" is-open="status.seals.open">
-            <accordion-heading class="accordion-heading">
-              <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}"
-                 class="fa"></i>
-              Cash Discrepancy
-            </accordion-heading>
-            <div class="row">
-              <div class="col-xs-6">
-                <label>Filter by Product Groups</label>
-                <select class="form-control">
-                  <option selected="selected" value>Products With Discrepencies</option>
-                  <option>All Products</option>
-                </select>
-              </div>
-              <div class="col-xs-6">
-                <label>Filter Products</label>
-                <select class="form-control">
-                  <option selected="selected">Select a Cash Bag...</option>
-                  <option>123</option>
-                  <option>345</option>
-                </select>
-              </div>
-            </div>
-            <br>
+        <form name="createStoreInstance" ng-submit="submitForm()">
 
-            <table class="table table-striped table-bordered">
-              <tr>
-                <th>Cash Bag</th>
-                <th>Currency</th>
-                <th>Exchange Amount</th>
-                <th>Crew Amount</th>
-                <th>Cash Handler Paper Amount</th>
-                <th>Cash Handler Coin Amount</th>
-                <th>Variance Value</th>
-                <th>Bank Exchange Rate</th>
-                <th>Total Band [GBP]</th>
-              </tr>
-              <tr>
-                <td>12345</td>
-                <td>AUD</td>
-                <td>141.00</td>
-                <td>148.00</td>
-                <td>120.00</td>
-                <td>18.00</td>
-                <td>-3.00</td>
-                <td>1.0000</td>
-                <td>138.00</td>
-              </tr>
+          <div class="accordion-wrapper">
+            <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
+              <accordion-group ng-init="status.items.open=false" is-open="status.items.open">
+                <accordion-heading class="accordion-heading">
+                  <i ng-class="{'fa-chevron-down': status.items.open, 'fa-chevron-right': !status.items.open}"
+                     class="fa"></i>
+                  Stock Discrepancy
+                </accordion-heading>
 
-            </table>
-          </accordion-group>
-        </accordion>
+                <div class="row">
+                  <div class="col-xs-6">
+                    <label>Filter by Groups</label>
+                    <select class="form-control">
+                      <option selected="selected" value>Items With Discrepancies</option>
+                    </select>
+                  </div>
+                  <div class="col-xs-6">
+                    <label>Filter Items</label>
+                    <input type="text" class="form-control" placeholder="Type an item code or name"/>
+                  </div>
+                </div>
+                <br>
+                <table class="table table-striped table-bordered">
+                  <tr>
+                    <th>Retail Item</th>
+                    <th>Dispatched Count</th>
+                    <th>Inbound Count</th>
+                    <th>EPOS Sales</th>
+                    <th>Variance Quantity</th>
+                    <th>Retail Value [GBP]</th>
+                    <th>Variance Value [GBP]</th>
+                  </tr>
+                  <tr>
+                    <td>Chocolate</td>
+                    <td>50</td>
+                    <td>20</td>
+                    <td>0</td>
+                    <td>-5</td>
+                    <td>7.00</td>
+                    <td>-35.00</td>
+                  </tr>
+                </table>
+              </accordion-group>
+            </accordion>
+
+            <accordion class="store-instance-review-accordion">
+              <accordion-group ng-init="status.seals.open=false" is-open="status.seals.open">
+                <accordion-heading class="accordion-heading">
+                  <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}"
+                     class="fa"></i>
+                  Cash Discrepancy
+                </accordion-heading>
+                <div class="row">
+                  <div class="col-xs-6">
+                    <label>Filter by Product Groups</label>
+                    <select class="form-control">
+                      <option selected="selected" value>Products With Discrepencies</option>
+                      <option>All Products</option>
+                    </select>
+                  </div>
+                  <div class="col-xs-6">
+                    <label>Filter Products</label>
+                    <select class="form-control">
+                      <option selected="selected">Select a Cash Bag...</option>
+                      <option>123</option>
+                      <option>345</option>
+                    </select>
+                  </div>
+                </div>
+                <br>
+
+                <table class="table table-striped table-bordered">
+                  <tr>
+                    <th>Cash Bag</th>
+                    <th>Currency</th>
+                    <th>Exchange Amount</th>
+                    <th>Crew Amount</th>
+                    <th>Cash Handler Paper Amount</th>
+                    <th>Cash Handler Coin Amount</th>
+                    <th>Variance Value</th>
+                    <th>Bank Exchange Rate</th>
+                    <th>Total Band [GBP]</th>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>12345</td>
+                    <td>AUD</td>
+                    <td>141.00</td>
+                    <td>148.00</td>
+                    <td>120.00</td>
+                    <td>18.00</td>
+                    <td>-3.00</td>
+                    <td>1.0000</td>
+                    <td>138.00</td>
+                    <td><a class="btn btn-info btn-xs" tabindex="0">
+                      <span class="fa fa-file-text"></span>
+                    </a></td>
+                  </tr>
+
+                </table>
+              </accordion-group>
+            </accordion>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="col-xs-4 fixed sidebar"
+         style="margin-top: 55px; padding-top: 20px; position: fixed; top: 0; right: 0; max-height: 100%; background-color: #eee; overflow-y: auto; outline: 1px solid #ddd">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="col-xs-10 view-name">
+            <h4><span class="fa fa-file-text" aria-hidden="true"></span> Payment Reports</h4>
+          </div>
+          <div class="col-xs-2 text-right view-name">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <div class="panel col-xs-12">
+        <div class="panel-body">
+          <p>Flight Date: 10/20/2015</p>
+
+          <p>Flight Number: 10/20/2015</p>
+
+          <p>Flight Date: 10/20/2015</p>
+
+          <p>Flight Date: 10/20/2015</p>
+
+          <p>Flight Number: 10/20/2015</p>
+
+          <p>Flight Date: 10/20/2015</p>
+
+          <table class="table table-bordered col-xs-12">
+            <tr class="active">
+              <td>Crew ID</td>
+              <td>Last Name</td>
+            </tr>
+            <tr>
+              <td>123</td>
+              <td>somename</Td>
+            </tr>
+            <tr>
+              <td>123</td>
+              <td>somename</Td>
+            </tr>
+            <tr>
+              <td>123</td>
+              <td>somename</Td>
+            </tr>
+          </table>
+          <table class="table col-xs-12">
+            <tr>
+              <td>Expected Cash Total</td>
+              <td>141.00</td>
+            </tr>
+            <tr>
+              <td>Card Total</td>
+              <td>196.00</Td>
+            </tr>
+            <tr>
+              <td>Voucher Total</td>
+              <td>15.00</Td>
+            </tr>
+            <tr>
+              <td>Complimentary Total</td>
+              <td>39.00</Td>
+            </tr>
+            <tr>
+              <td>Expected Total</td>
+              <td>391.00</Td>
+            </tr>
+          </table>
+        </div>
       </div>
 
-    </form>
+      <div class="panel col-xs-12">
+        <div class="panel-body">
+          <p>Flight Date: 10/20/2015</p>
 
+          <p>Flight Number: 10/20/2015</p>
+
+          <p>Flight Date: 10/20/2015</p>
+
+          <p>Flight Date: 10/20/2015</p>
+
+          <p>Flight Number: 10/20/2015</p>
+
+          <p>Flight Date: 10/20/2015</p>
+
+          <table class="table table-bordered col-xs-12">
+            <tr class="active">
+              <td>Crew ID</td>
+              <td>Last Name</td>
+            </tr>
+            <tr>
+              <td>123</td>
+              <td>somename</Td>
+            </tr>
+            <tr>
+              <td>123</td>
+              <td>somename</Td>
+            </tr>
+            <tr>
+              <td>123</td>
+              <td>somename</Td>
+            </tr>
+          </table>
+          <table class="table col-xs-12">
+            <tr>
+              <td>Expected Cash Total</td>
+              <td>141.00</td>
+            </tr>
+            <tr>
+              <td>Card Total</td>
+              <td>196.00</Td>
+            </tr>
+            <tr>
+              <td>Voucher Total</td>
+              <td>15.00</Td>
+            </tr>
+            <tr>
+              <td>Complimentary Total</td>
+              <td>39.00</Td>
+            </tr>
+            <tr>
+              <td>Expected Total</td>
+              <td>391.00</Td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
+
+
+</div>
+
+
+</div>
+</div>

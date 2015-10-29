@@ -10,4 +10,8 @@
 angular.module('ts5App')
   .controller('ReconciliationDiscrepancyDetail', function ($scope, $routeParams, ngToast, $location) {
 
+    $scope.showModal = function () {
+      angular.element("#t6Modal").modal('show');
+    };
+
   });
