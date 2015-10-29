@@ -22,7 +22,12 @@ describe('Service: httpSessionInterceptor', function () {
 
     it('should broadcast if status is unauthorized 401', function () {
       httpSessionInterceptor.responseError({status: 401});
-      expect(rootScope.$broadcast).toHaveBeenCalledWith();
+      expect(rootScope.$broadcast).toHaveBeenCalledWith('unauthorized');
+    });
+
+    it('should broadcast if status is unauthorized 401', function () {
+      httpSessionInterceptor.responseError({status: 200});
+      expect(rootScope.$broadcast).not.toHaveBeenCalled();
     });
 
   });

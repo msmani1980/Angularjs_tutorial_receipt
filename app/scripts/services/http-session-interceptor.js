@@ -8,13 +8,13 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('httpSessionInterceptor', function ($rootScope) {
+  .factory('httpSessionInterceptor', function ($rootScope, $q) {
 
     function responseError(response) {
       if (response.status === 401) {
         $rootScope.$broadcast('unauthorized');
       }
-      return response;
+      return $q.reject(response);
     }
 
     return {
