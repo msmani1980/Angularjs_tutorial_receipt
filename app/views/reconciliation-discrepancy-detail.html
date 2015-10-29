@@ -82,10 +82,10 @@
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr>
-                    <td colspan="2" class="active">LMP Station Stock</td>
+                    <td colspan="2" class="active">LMP Station Stock [GBP]</td>
                   </tr>
                   <tr>
-                    <td>Gross Value</td>
+                    <td><a ng-click="showModal()">Gross Value of LMP Stock</a></td>
                     <td>10.3</td>
                   </tr>
                   <tr>
@@ -97,11 +97,11 @@
                     <td>+1.3</td>
                   </tr>
                   <tr>
-                    <td>Promotion</td>
+                    <td>Promotion Discounts</td>
                     <td>-10.3</td>
                   </tr>
                   <tr class="active">
-                    <td>Net Value</td>
+                    <td>Net Value of LMP Stock</td>
                     <td>10.3</td>
                   </tr>
                 </table>
@@ -109,22 +109,26 @@
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr class="active">
-                    <td colspan="2">EPOS Sales</td>
+                    <td colspan="2">ePOS Sales</td>
                   </tr>
                   <tr>
-                    <td>Gross Value</td>
+                    <td>Gross Value of ePOS Sales</td>
                     <td>10.3</td>
                   </tr>
                   <tr>
-                    <td>Virtual Value</td>
+                    <td>Virtual Retail Items</td>
                     <td>+1.3</td>
                   </tr>
                   <tr>
-                    <td>Discount Value</td>
+                    <td>Voucher Items</td>
+                    <td>+1.3</td>
+                  </tr>
+                  <tr>
+                    <td>Promotion Discount</td>
                     <td>-10.3</td>
                   </tr>
                   <tr class="active">
-                    <td>Net Value</td>
+                    <td>Net Value of ePOS Sales</td>
                     <td>10.3</td>
                   </tr>
                 </table>
@@ -135,11 +139,11 @@
                     <td class="active" colspan="2">Total Revenue</td>
                   </tr>
                   <tr>
-                    <td>Total @CH Rate</td>
+                    <td>Total Revenue in Cash Handler Exchange Rate</td>
                     <td>10.3</td>
                   </tr>
                   <tr>
-                    <td>Total @PAX Rate</td>
+                    <td>Total Revenue in ePOS Exchange Rate </td>
                     <td>10.3</td>
                   </tr>
                 </table>
@@ -153,12 +157,12 @@
                   <th>%</th>
                 </tr>
                 <tr>
-                  <td>LMP Stock vs EPOS Sales</td>
+                  <td>LMP Stock vs ePOS Sales</td>
                   <td>10.3</td>
                   <td>0.09</td>
                 </tr>
                 <tr>
-                  <td>EPOS Sales vs Total Cash Handler Revenue</td>
+                  <td>ePOS Sales vs Total Cash Handler Revenue</td>
                   <td>10.3</td>
                   <td>0.09</td>
                 </tr>
@@ -206,7 +210,7 @@
                     <th>Retail Item</th>
                     <th>Dispatched Count</th>
                     <th>Inbound Count</th>
-                    <th>EPOS Sales</th>
+                    <th>ePOS Sales</th>
                     <th>Variance Quantity</th>
                     <th>Retail Value [GBP]</th>
                     <th>Variance Value [GBP]</th>
