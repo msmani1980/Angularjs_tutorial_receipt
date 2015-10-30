@@ -28,10 +28,12 @@ describe('Controller: CompanyExchangeRateEditCtrl', function () {
     masterCurrenciesJSON,
     companyExchangeRatesJSON,
     companyExchangeRateJSON,
+    GlobalMenuService,
     payloadUtility;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $httpBackend, $controller, $rootScope, _dateUtility_, _currencyFactory_, _servedCompany_, _servedCurrencies_, _servedCurrency_, _servedCompanyCurrencyGlobals_, _servedCompanyExchangeRates_, _servedCompanyExchangeRate_, _payloadUtility_) {
+  beforeEach(inject(function ($q, $httpBackend, $controller, $rootScope, _GlobalMenuService_, _dateUtility_, _currencyFactory_, _servedCompany_, _servedCurrencies_, _servedCurrency_,
+                              _servedCompanyCurrencyGlobals_, _servedCompanyExchangeRates_, _servedCompanyExchangeRate_, _payloadUtility_) {
     scope = $rootScope.$new();
 
     dateUtility = _dateUtility_;
@@ -43,6 +45,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function () {
     companyExchangeRatesJSON = _servedCompanyExchangeRates_;
     companyExchangeRateJSON = _servedCompanyExchangeRate_;
     payloadUtility = _payloadUtility_;
+    GlobalMenuService = _GlobalMenuService_;
 
     getCompanyGlobalCurrenciesDeferred = $q.defer();
     getCompanyGlobalCurrenciesDeferred.resolve(masterCurrenciesJSON);
@@ -53,13 +56,18 @@ describe('Controller: CompanyExchangeRateEditCtrl', function () {
     getCompanyExchangeRatesDeferred = $q.defer();
     getCompanyExchangeRatesDeferred.resolve(companyExchangeRatesJSON);
 
+    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
     spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(getDetailedCompanyCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
     spyOn(currencyFactory, 'getCompanyExchangeRates').and.returnValue();
     spyOn(currencyFactory, 'deleteCompanyExchangeRate').and.returnValue();
-    spyOn(currencyFactory, 'createCompanyExchangeRate').and.callFake(function () { return $.Deferred().resolve(companyExchangeRateJSON);});
-    spyOn(currencyFactory, 'updateCompanyExchangeRate').and.callFake(function () { return $.Deferred().resolve(companyExchangeRateJSON);});
+    spyOn(currencyFactory, 'createCompanyExchangeRate').and.callFake(function () {
+      return $.Deferred().resolve(companyExchangeRateJSON);
+    });
+    spyOn(currencyFactory, 'updateCompanyExchangeRate').and.callFake(function () {
+      return $.Deferred().resolve(companyExchangeRateJSON);
+    });
 
     $httpBackend.whenGET(/companies/).respond(companyJSON);
 
