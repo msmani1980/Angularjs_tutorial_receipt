@@ -29,8 +29,6 @@ describe('Service: companyExchangeRateService', function () {
     GlobalMenuService = $injector.get('GlobalMenuService');
     $httpBackend = $injector.get('$httpBackend');
 
-    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
-
     companyExchangeRateGetRequestHandler = $httpBackend.whenGET(/api\/companies\/403\/exchange-rates/).respond(companyExchangeRatesJSON);
     companyExchangeRateDeleteRequestHandler = $httpBackend.whenDELETE(/api\/companies\/403\/exchange-rates/).respond(companyExchangeRatesJSON);
     companyExchangeRatePostRequestHandler = $httpBackend.whenPOST(/api\/companies\/403\/exchange-rates/).respond(companyExchangeRatesJSON);
@@ -57,14 +55,19 @@ describe('Service: companyExchangeRateService', function () {
 
     it('should fetch exchange rates from services', function () {
       $httpBackend.expectGET(/api\/companies\/403\/exchange-rates/);
-      companyExchangeRateService.getCompanyExchangeRates().then(function (companyExchangeRates) {
+      companyExchangeRateService.getCompanyExchangeRates({companyId:403}).then(function (companyExchangeRates) {
         expect(companyExchangeRates.response.length).toBeGreaterThan(0);
       });
     });
 
     it('should delete exchange rates by id', function () {
       $httpBackend.expectDELETE(/api\/companies\/403\/exchange-rates/);
-      companyExchangeRateService.deleteCompanyExchangeRate(1);
+      var payload = {
+        companyId: 403,
+        exchangeRateType: 1,
+        id: 2
+      };
+      companyExchangeRateService.deleteCompanyExchangeRate(payload);
     });
 
     it('should create exchange rate', function () {
