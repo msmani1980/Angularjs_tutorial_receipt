@@ -9,9 +9,9 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function ($scope, GlobalMenuService, currencyFactory, dateUtility, payloadUtility, ngToast) {
-    var companyId = GlobalMenuService.company.get();
-
     var $this = this;
+
+    this.companyId = GlobalMenuService.company.get();
     $scope.viewName = 'Manage Retail Company Exchange Rate';
     $scope.search = {};
     $scope.globalCurrencies = [];
@@ -242,7 +242,7 @@ angular.module('ts5App')
     };
 
     this.getCompanyBaseCurrency = function () {
-      currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
+      currencyFactory.getCompany($this.companyId).then(function (companyDataFromAPI) {
         $scope.companyBaseCurrency = $this.getCurrencyByBaseCurrencyId($scope.globalCurrencies, companyDataFromAPI.baseCurrencyId);
       });
     };

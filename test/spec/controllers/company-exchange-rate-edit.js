@@ -150,7 +150,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function () {
         id: 72,
         acceptedCurrencyCode: 'GBP',
         operatingCurrencyCode: 'GBP',
-        companyId: undefined,
+        companyId: 403,
         exchangeRate: '2.0000',
         exchangeRateType: 1,
         startDate: '20151001',
