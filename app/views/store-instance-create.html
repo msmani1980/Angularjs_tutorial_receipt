@@ -2,7 +2,8 @@
 
   <step-wizard ng-if="wizardSteps" steps="wizardSteps" save-trigger="saveAndExit()"></step-wizard>
 
-  <error-dialog form-object="createStoreInstance"></error-dialog>
+  <error-dialog form-object="createStoreInstance" error-response="errorResponse" display="displayError">
+  </error-dialog>
 
   <form name="createStoreInstance" class="well" ng-submit="submitForm()" ng-show="uiSelectTemplateReady">
 

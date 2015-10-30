@@ -1,125 +1,101 @@
-<div ng-show="$parent.displayError" class="alert alert-danger alert-dismissible ng-hide" role="alert">
+<div class="panel panel-danger" ng-show="display">
 
-	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+  <div class="panel-heading">
+		<span ng-if="showValidationErrors()">There are some issues with the fields below. Please update and try again.</span>
+    <span ng-if="$parent.response500">A server side error (500) has occured. </span>
+    <span ng-if="errorResponse && !showValidationErrors()">There was an issue with your request. Please update and try again.</span>
+	</div>
 
-	<h4 id="oh-snap!-you-got-an-error!">
-		Oh no! Something went wrong...
-		<a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
-	</h4>
+	<ul class="list-group">
 
-	<ul>
-
-		<li ng-if="response500">
-
-			<strong>A server side error (500) has occured</strong> - please contact your system's adminstrator.
-
+		<li class="list-group-item" ng-repeat="error in errorRequired">
+			<span class="label label-warning">
+        <i class="fa fa-asterisk"></i>
+      </span>
+			<span class="error">
+        The <strong>{{ error }}</strong> is a required field
+      </span>
 		</li>
 
-		<li ng-repeat="error in errorRequired">
-
-			<strong>{{ error }}</strong> - is a required field.
-
+		<li class="list-group-item" ng-repeat="error in errorPattern">
+      <span class="label label-warning">
+        <i class="fa fa-minus"></i>
+      </span>
+      <span class="error">
+  			The <strong>{{ error }}</strong> field contains invalid characters
+      </span>
 		</li>
 
-		<li ng-repeat="error in errorPattern">
-
-			<strong>{{ error }}</strong> - is invalid, recheck your input.
-
+    <li class="list-group-item" ng-repeat="error in $parent.errorCustom">
+      <span class="label label-warning">
+        <i class="fa fa-minus"></i>
+      </span>
+      <span class="error">
+  			The <strong>{{ error.field }}</strong> {{ error.value }}
+      </span>
 		</li>
 
-		<li ng-repeat="error in $parent.errorCustom">
+    <li ng-if="$parent.response500" class="list-group-item">
+			<span class="error">
+        Please contact your system's adminstrator.
+      </span>
+    </li>
 
-			<strong>{{ error.field}}</strong> - {{ error.value }}
+    <li class="list-group-item" ng-repeat="error in errorResponse.data" ng-switch on="error.code">
 
-		</li>
+      <span class="label label-danger">
+        <i class="fa fa-ban"></i>
+      </span>
 
-		<li ng-repeat="error in $parent.formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> -
+      <span class="error">
 
-			<span ng-switch-when="000">Field can't be empty.</span>
+        {{ errorResponse.statusText}}: The <strong>{{ error.field }}</strong>
+        <span ng-switch-default> {{ error.value }} </span>
+        <span ng-switch-when="000">Field can't be empty.</span>
+        <span ng-switch-when="001">Data format is invalid.</span>
+        <span ng-switch-when="002">Minimum length not reached.</span>
+        <span ng-switch-when="003">Allowable maximum length exceeded.</span>
+        <span ng-switch-when="004">Duplicate values are not allowed.</span>
+        <span ng-switch-when="005">Date must be within the allowed date range.</span>
+        <span ng-switch-when="006">Date range overlaps an existing record.</span>
+        <span ng-switch-when="007">Predefined value expected.</span>
+        <span ng-switch-when="008">Allowable file size exceeded.</span>
+        <span ng-switch-when="009">Allowable list size exceeded.</span>
+        <span ng-switch-when="010">Data format is invalid.</span>
+        <span ng-switch-when="011">Resolve Name to Id error.</span>
+        <span ng-switch-when="012">Wrong date format.</span>
+        <span ng-switch-when="014">From date cannot be earlier than current date.</span>
+        <span ng-switch-when="015">Duplicate values are not allowed.</span>
+        <span ng-switch-when="016">From date should be earlier than or equal to To date.</span>
+        <span ng-switch-when="017">Parent entry cannot delete without deleting a child.</span>
+        <span ng-switch-when="018">At least one value must be selected.</span>
+        <span ng-switch-when="019">At least one field is required.</span>
+        <span ng-switch-when="020">Value must be greater than zero.</span>
+        <span ng-switch-when="021">To date should be later than or equal to From date.</span>
+        <span ng-switch-when="022">Effective Date is later than Start Date and earlier than End Date.</span>
+        <span ng-switch-when="023">Object is locked and can not be updated/deleted.</span>
+        <span ng-switch-when="024">Item Qty Limit Per Shop should be greater than Item Qty Limit Per Transaction which should be greater than item Qty Limit Per Seat. Amount Limit per Shop should be greater than Amount Limit Per Transaction.</span>
+        <span ng-switch-when="025">Invalid Value.</span>
+        <span ng-switch-when="026">This field is not allowed for the given request and should be set to null</span>
+        <span ng-switch-when="201">Date is not in the correct format.</span>
+        <span ng-switch-when="202">Price is not in the correct format.</span>
+        <span ng-switch-when="203">Numeric value is expected.</span>
+        <span ng-switch-when="204">A decimal numeric value is expected.</span>
+        <span ng-switch-when="205">Mix of character and/or numeric value is expected, no spaces or special characters.</span>
+        <span ng-switch-when="206">Mix of character and/or numeric value is expected, space is permitted but no special characters.</span>
+        <span ng-switch-when="207">Mix of character and/or numeric value is expected, spaces and special characters permitted.</span>
+        <span ng-switch-when="208">Time is required in military format i.e. 13:00 for 1 PM.</span>
+        <span ng-switch-when="209">Only alphabetic characters are permitted.</span>
+        <span ng-switch-when="210">Exchange rate value is expected.</span>
+        <span ng-switch-when="211">Decimal numeric amount value is expected.</span>
+        <span ng-switch-when="212">Percentage numeric value is expected with or without decimal.</span>
+        <span ng-switch-when="213">Decimal numeric amount value is expected, up to 9 digits.</span>
+        <span ng-switch-when="214">Numeric value is expected, up to 6 digits.</span>
+        <span ng-switch-when="215">Email required in correct format e.g. @,.com,etc.</span>
 
-			<span ng-switch-when="001">Data format is invalid.</span>
+      </span>
 
-			<span ng-switch-when="002">Minimum length not reached.</span>
-
-			<span ng-switch-when="003">Allowable maximum length exceeded.</span>
-
-			<span ng-switch-when="004">Duplicate values are not allowed.</span>
-
-			<span ng-switch-when="005">Date must be within the allowed date range.</span>
-
-			<span ng-switch-when="006">Date range overlaps an existing record.</span>
-
-			<span ng-switch-when="007">Predefined value expected.</span>
-
-			<span ng-switch-when="008">Allowable file size exceeded.</span>
-
-			<span ng-switch-when="009">Allowable list size exceeded.</span>
-
-			<span ng-switch-when="010">Data format is invalid.</span>
-
-			<span ng-switch-when="011">Resolve Name to Id error.</span>
-
-			<span ng-switch-when="012">Wrong date format.</span>
-
-			<span ng-switch-when="014">From date cannot be earlier than current date.</span>
-
-			<span ng-switch-when="015">Duplicate values are not allowed.</span>
-
-			<span ng-switch-when="016">From date should be earlier than or equal to To date.</span>
-
-			<span ng-switch-when="017">Parent entry cannot delete without deleting a child.</span>
-
-			<span ng-switch-when="018">At least one value must be selected.</span>
-
-			<span ng-switch-when="019">At least one field is required.</span>
-
-			<span ng-switch-when="020">Value must be greater than zero.</span>
-
-			<span ng-switch-when="021">To date should be later than or equal to From date.</span>
-
-			<span ng-switch-when="022">Effective Date is later than Start Date and earlier than End Date.</span>
-
-			<span ng-switch-when="023">Object is locked and can not be updated/deleted.</span>
-
-			<span ng-switch-when="024">Item Qty Limit Per Shop should be greater than Item Qty Limit Per Transaction which should be greater than item Qty Limit Per Seat. Amount Limit per Shop should be greater than Amount Limit Per Transaction.</span>
-
-			<span ng-switch-when="025">Invalid Value.</span>
-
-			<span ng-switch-when="026">This field is not allowed for the given request and should be set to null</span>
-
-			<span ng-switch-when="201">Date is not in the correct format.</span>
-
-			<span ng-switch-when="202">Price is not in the correct format.</span>
-
-			<span ng-switch-when="203">Numeric value is expected.</span>
-
-			<span ng-switch-when="204">A decimal numeric value is expected.</span>
-
-			<span ng-switch-when="205">Mix of character and/or numeric value is expected, no spaces or special characters.</span>
-
-			<span ng-switch-when="206">Mix of character and/or numeric value is expected, space is permitted but no special characters.</span>
-
-			<span ng-switch-when="207">Mix of character and/or numeric value is expected, spaces and special characters permitted.</span>
-
-			<span ng-switch-when="208">Time is required in military format i.e. 13:00 for 1 PM.</span>
-
-			<span ng-switch-when="209">Only alphabetic characters are permitted.</span>
-
-			<span ng-switch-when="210">Exchange rate value is expected.</span>
-
-			<span ng-switch-when="211">Decimal numeric amount value is expected.</span>
-
-			<span ng-switch-when="212">Percentage numeric value is expected with or without decimal.</span>
-
-			<span ng-switch-when="213">Decimal numeric amount value is expected, up to 9 digits.</span>
-
-			<span ng-switch-when="214">Numeric value is expected, up to 6 digits.</span>
-
-			<span ng-switch-when="215">Email required in correct format e.g. @,.com,etc.</span>
-
-			<span ng-switch-default> {{ error.value }} </span>
-
-		</li>
+    </li>
 
 	</ul>
 
