@@ -2,7 +2,8 @@
 
   <step-wizard ng-if="wizardSteps" steps="wizardSteps" save-trigger="saveAndExit()"></step-wizard>
 
-  <error-dialog form-object="createStoreInstance"></error-dialog>
+  <error-dialog form-object="createStoreInstance" error-response="errorResponse" display="displayError">
+  </error-dialog>
 
   <form name="createStoreInstance" class="well" ng-submit="submitForm()" ng-show="uiSelectTemplateReady">
 
@@ -22,11 +23,11 @@
 
     <div class="row" ng-if="isEndInstanceOrRedispatch()">
       <div class="col-xs-12 col-sm-4 text-xs-left text-sm-right">
-        <label>Store Number <span ng-show="!isEndInstanceOrRedispatch()">*</span></label>
+        <label>Store Number <span ng-show="stepOneFromStepTwo">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
         <div class="form-group" ng-class="validateInput('StoreNumber')">
-          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber" ng-disabled="true">
+          <select class="form-control" ng-model="formData.storeId" required name="StoreNumber" ng-disabled="!stepOneFromStepTwo">
             <option ng-disabled="true" selected="selected" value>Select Store</option>
             <option ng-repeat="store in storesList | orderBy:'storeNumber' track by store.id" value="{{ store.id }}">{{ store.storeNumber }}</option>
           </select>

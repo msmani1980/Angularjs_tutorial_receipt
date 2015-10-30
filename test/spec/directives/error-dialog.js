@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: errorDialog', function() {
+describe('The Error Dialog directive', function() {
 
   // load the directive's module
   beforeEach(module('ts5App'));
@@ -22,7 +22,7 @@ describe('Directive: errorDialog', function() {
   function compileDirective() {
     form = angular.element('<form name="myTestForm">' +
       '<input type="text" ng-model="deliveryNote" name="deliveryNote" required="true" custom-validity custom-pattern="alphanumeric"/>' +
-      '<error-dialog form-object="myTestForm"></error-dialog>' +
+      '<error-dialog form-object="myTestForm" error-response="errorResponse" display="true"></error-dialog>' +
       '</form>');
     form = compile(form)(scope);
     scope.$digest();
@@ -42,12 +42,12 @@ describe('Directive: errorDialog', function() {
       expect(element).toBeDefined();
     });
 
-    it('should contain an alert element', function() {
-      expect(element.find('.alert')).toBeDefined();
+    it('should contain an panel element', function() {
+      expect(element.find('.panel')[0]).toBeDefined();
     });
 
-    it('should contain a ul', function() {
-      expect(element.find('ul')).toBeDefined();
+    it('should contain a list-group', function() {
+      expect(element.find('.list-group')[0]).toBeDefined();
     });
 
     it('should have a form-object attribute', function() {
@@ -72,15 +72,7 @@ describe('Directive: errorDialog', function() {
     });
 
     it('should contain 1 item in errorRequired', function() {
-      expect(isolatedScope.errorRequired).toEqual(['deliveryNote']);
-    });
-
-    it('should contain 1 list item', function() {
-      expect(element.find('li').length).toBe(1);
-    });
-
-    it('should contain 1 item in errorRequired', function() {
-      expect(isolatedScope.errorRequired).toEqual(['deliveryNote']);
+      expect(isolatedScope.errorRequired).toEqual(['delivery Note']);
     });
 
   });
@@ -89,19 +81,21 @@ describe('Directive: errorDialog', function() {
 
     beforeEach(inject(function() {
       compileDirective();
-      testForm.deliveryNote.$setViewValue('@@');
+      testForm.deliveryNote.$setViewValue('bgoan');
+      testForm.deliveryNote.$setViewValue('BOGAN!');
+      scope.$digest();
     }));
 
     it('should contain 1 list item', function() {
       expect(element.find('li').length).toBe(1);
     });
 
-    it('should contain 0 items in errorPattern', function() {
-      expect(isolatedScope.errorPattern).toEqual([]);
+    it('should contain 0 items in errorRequired', function() {
+      expect(isolatedScope.errorRequired).toEqual([]);
     });
 
-    it('should contain 1 list item', function() {
-      expect(element.find('li').length).toBe(1);
+    it('should contain 1 item in errorPattern', function() {
+      expect(isolatedScope.errorPattern).toEqual(['delivery Note']);
     });
 
   });
@@ -121,17 +115,10 @@ describe('Directive: errorDialog', function() {
       expect(isolatedScope.errorPattern).toEqual([]);
     });
 
-    describe('displayError', function() {
-
-      it('should be defined', function() {
-        expect(scope.displayError).toBeDefined();
-      });
-
-      it('should be false', function() {
-        expect(scope.displayError).toBeFalsy();
-      });
-
+    it('should be expect displayError to be false', function() {
+      expect(scope.displayError).toBeFalsy();
     });
+
   });
 
 });

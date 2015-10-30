@@ -19,8 +19,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     var $this = this;
 
     $scope.formData = {
-      startDate: '',
-      endDate: '',
+      startDate: dateUtility.tomorrowFormatted(),
+      endDate: dateUtility.tomorrowFormatted(),
       qrCodeValue: '',
       qrCodeImgUrl: null,
       images: [],
@@ -455,9 +455,25 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.setUIReady = function() {
+      $scope.minDate = $this.determineMinDate();
       $scope.uiSelectTemplateReady = true;
       this.hideLoadingModal();
       this.watchItemInfoOnClonePage();
+    };
+
+    this.determineMinDate = function() {
+      var diff = 1;
+      if($scope.editingItem) {
+        diff = dateUtility.diff(
+          dateUtility.nowFormatted(),
+          $scope.formData.startDate
+        );
+      }
+      var dateString = diff.toString() + 'd';
+      if (diff >= 0) {
+        dateString = '+' + dateString;
+      }
+      return dateString;
     };
 
     this.watchItemInfoOnClonePage = function() {

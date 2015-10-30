@@ -52,7 +52,10 @@ describe('Controller: DiscountListCtrl', function () {
     };
     scope.clearForm();
     expect(scope.search.startDate).toBe(undefined);
-    expect(discountFactory.getDiscountList).toHaveBeenCalledWith({});
+    expect(discountFactory.getDiscountList).toHaveBeenCalledWith({
+      startDate: null,
+      endDate: null
+    });
   });
 
   it('should clear search model and make a API call', function () {
@@ -61,7 +64,8 @@ describe('Controller: DiscountListCtrl', function () {
     };
     scope.searchDiscounts();
     expect(discountFactory.getDiscountList).toHaveBeenCalledWith({
-      startDate: '19791005'
+      startDate: '19791005',
+      endDate: null
     });
   });
 

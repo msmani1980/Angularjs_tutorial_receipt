@@ -80,6 +80,13 @@ angular.module('ts5App')
       return tomorrow;
     };
 
+    this.tomorrowFormatted = function (formatTo) {
+      var formatFrom = 'x';
+      formatTo = formatTo || _dateFormatForApp;
+      var tomorrow = this.tomorrow();
+      return this.formatDate(tomorrow, formatFrom, formatTo);
+    };
+
     this.yesterday = function () {
       var today = new Date();
       var yesterday = today.setDate(today.getDate() - 1);

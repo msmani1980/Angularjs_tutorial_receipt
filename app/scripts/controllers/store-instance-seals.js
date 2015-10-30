@@ -76,6 +76,9 @@ angular.module('ts5App')
       $this.isInstanceReadOnly();
       $scope.formData.note = $scope.storeDetails.note;
       $scope.formData.tampered = $scope.storeDetails.tampered;
+      if ( $this.isActionState('end-instance')) {
+        $scope.storeDetails.displayLMPStation = $scope.storeDetails.inboundLMPStation;
+      }
     };
 
     this.setPrevStoreDetails = function(prevStoreDetailsJSON) {
@@ -570,9 +573,6 @@ angular.module('ts5App')
     };
 
     $scope.prevTrigger = function() {
-      if ($this.isInboundDuringRedispatch()) {
-        return;
-      }
       var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
       $this.updateStatusToStep(prevStep);
     };

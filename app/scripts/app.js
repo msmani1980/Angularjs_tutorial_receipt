@@ -227,6 +227,10 @@ angular.module('ts5App', [
     templateUrl: 'views/currency-edit.html',
     controller: 'CurrencyEditCtrl',
     controllerAs: 'CurrencyEdit'
+  }).when('/company-exchange-rate-edit', {
+    templateUrl: 'views/company-exchange-rate-edit.html',
+    controller: 'CompanyExchangeRateEditCtrl',
+    controllerAs: 'companyExchangeRateEdit'
   }).when('/reconciliation-discrepancy-detail', {
     templateUrl: 'views/reconciliation-discrepancy-detail.html',
     controller: 'ReconciliationDiscrepancyDetail'

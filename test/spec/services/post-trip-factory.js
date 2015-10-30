@@ -30,7 +30,7 @@ describe('Factory: postTripFactory', function () {
     spyOn(postTripService, 'deletePostTrip');
     spyOn(postTripService, 'getPostTrip');
     spyOn(postTripService, 'importFromExcel');
-    spyOn(GlobalMenuService.company, 'get');
+    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
     spyOn(stationsService, 'getStationList');
     spyOn(carrierService, 'getCarrierTypes');
     spyOn(carrierService, 'getCarrierNumbers');
