@@ -9,9 +9,9 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function ($scope, GlobalMenuService, currencyFactory, dateUtility, payloadUtility, ngToast) {
-    var companyId = GlobalMenuService.company.get();
-
     var $this = this;
+
+    this.companyId = GlobalMenuService.company.get();
     $scope.viewName = 'Manage Retail Company Exchange Rate';
     $scope.search = {};
     $scope.globalCurrencies = [];
@@ -27,15 +27,15 @@ angular.module('ts5App')
       }
 
       return $scope.search.acceptedCurrencies.filter(function (acceptedCurrency) {
-        return acceptedCurrency.currencyCode === exchangeRate.acceptedCurrencyCode;
-      })
-      .length > 0;
+          return acceptedCurrency.currencyCode === exchangeRate.acceptedCurrencyCode;
+        })
+          .length > 0;
     };
 
     this.getDenominations = function () {
-      angular.forEach($scope.globalCurrencies, function (currency){
+      angular.forEach($scope.globalCurrencies, function (currency) {
         angular.forEach(currency.currencyDenominations, function (denomination) {
-          $scope.currencyDenominations[denomination.id] = denomination ;
+          $scope.currencyDenominations[denomination.id] = denomination;
         });
       });
     };
@@ -59,16 +59,16 @@ angular.module('ts5App')
     };
 
     this.makeFlatDenominations = function (denominations) {
-      if(!denominations) {
+      if (!denominations) {
         denominations = [];
       }
 
       return denominations.map(function (denomination) {
         console.log(denomination);
-                            return parseFloat($this.getDenominationById(denomination.currencyDenominationId).denomination);
-                           })
-                          .sort($this.sortDenominationByValue)
-                          .join(', ');
+        return parseFloat($this.getDenominationById(denomination.currencyDenominationId).denomination);
+      })
+        .sort($this.sortDenominationByValue)
+        .join(', ');
     };
 
     this.normalizeCompanyExchangeRatesList = function (companyExchangeRatesFromAPI) {
@@ -97,12 +97,11 @@ angular.module('ts5App')
         // Add exchange rate rows which are not defined yet
         angular.forEach(companyCurrencies, function (currency) {
           var isFound = companyExchangeRates.filter(function (exchangeRate) {
-            return exchangeRate.acceptedCurrencyCode === currency.currencyCode;
-          }).length > 0;
+              return exchangeRate.acceptedCurrencyCode === currency.currencyCode;
+            }).length > 0;
 
-          if(!isFound)
-          {
-            companyExchangeRates.push( {
+          if (!isFound) {
+            companyExchangeRates.push({
               companyId: $this.companyId,
               acceptedCurrencyCode: currency.currencyCode,
               operatingCurrencyCode: $scope.search.operatingCurrencyCode,
@@ -181,12 +180,10 @@ angular.module('ts5App')
     };
 
     $scope.isExchangeRateDisabled = function (exchangeRate) {
-      if ($scope.isExchangeRateReadOnly(exchangeRate))
-      {
+      if ($scope.isExchangeRateReadOnly(exchangeRate)) {
         return true;
       }
-      if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode)
-      {
+      if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
         exchangeRate.exchangeRate = '1.0000';
         return true;
       }
@@ -242,13 +239,18 @@ angular.module('ts5App')
     };
 
     this.getCompanyBaseCurrency = function () {
-      currencyFactory.getCompany(companyId).then(function (companyDataFromAPI) {
+      currencyFactory.getCompany($this.companyId).then(function (companyDataFromAPI) {
         $scope.companyBaseCurrency = $this.getCurrencyByBaseCurrencyId($scope.globalCurrencies, companyDataFromAPI.baseCurrencyId);
       });
     };
 
     this.deleteCompanyExchangeRate = function (exchangeRateId) {
-      currencyFactory.deleteCompanyExchangeRate(exchangeRateId);
+      var payload = {
+        companyId: $this.companyId,
+        exchangeRateType: 1,
+        id: exchangeRateId
+      };
+      currencyFactory.deleteCompanyExchangeRate(payload);
     };
 
     $scope.showDeleteConfirmation = function (index, exchangeRate) {

@@ -8,14 +8,13 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companyExchangeRateService', function ($q, $resource, GlobalMenuService, ENV) {
-    var companyId = GlobalMenuService.company.get();
+  .service('companyExchangeRateService', function ($q, $resource, ENV) {
     var companyExchangeRatesURL = ENV.apiUrl + '/api/companies/:companyId/exchange-rates/:id';
 
     var requestParameters = {
       id: '@id',
-      companyId: companyId,
-      exchangeRateType: 1
+      companyId: '@companyId',
+      exchangeRateType: '@exchangeRateType'
     };
 
     var actions = {
@@ -46,8 +45,8 @@ angular.module('ts5App')
       return companyExchangeRatesResource.updateCompanyExchangeRate(payload).$promise;
     };
 
-    var deleteCompanyExchangeRate = function (exchangeRate) {
-      return companyExchangeRatesResource.deleteCompanyExchangeRate({id: exchangeRate}).$promise;
+    var deleteCompanyExchangeRate = function (payload) {
+      return companyExchangeRatesResource.deleteCompanyExchangeRate(payload).$promise;
     };
 
     return {
