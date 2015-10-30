@@ -14,4 +14,9 @@ angular.module('ts5App')
       angular.element("#t6Modal").modal('show');
     };
 
+    $scope.switchModel = true;
+
+    angular.element("#checkbox").bootstrapSwitch();
+
+
   });

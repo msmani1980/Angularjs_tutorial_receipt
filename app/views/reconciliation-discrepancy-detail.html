@@ -44,6 +44,9 @@
             <button class="btn btn-warning">
               Hide Payment Reports
             </button>
+            <!--<button class="btn btn-info">-->
+              <!--<span class="fa fa-file-text" aria-hidden="true"></span> Show Payment Reports-->
+            <!--</button>-->
           </div>
         </div>
         <br>
@@ -76,7 +79,7 @@
             <accordion-heading class="accordion-heading">
               <i ng-class="{'fa-chevron-down': status.items.open, 'fa-chevron-right': !status.items.open}"
                  class="fa"></i>
-              Discrepancy Summary
+              Discrepancy
             </accordion-heading>
             <div clas="row">
               <div class="col-xs-4">
@@ -109,7 +112,7 @@
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr class="active">
-                    <td colspan="2">ePOS Sales</td>
+                    <td colspan="2">ePOS Sales [GBP]</td>
                   </tr>
                   <tr>
                     <td>Gross Value of ePOS Sales</td>
@@ -136,14 +139,14 @@
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr>
-                    <td class="active" colspan="2">Total Revenue</td>
+                    <td class="active" colspan="2">Total Revenue [GBP]</td>
                   </tr>
                   <tr>
                     <td>Total Revenue in Cash Handler Exchange Rate</td>
                     <td>10.3</td>
                   </tr>
                   <tr>
-                    <td>Total Revenue in ePOS Exchange Rate </td>
+                    <td>Total Revenue in ePOS Exchange Rate</td>
                     <td>10.3</td>
                   </tr>
                 </table>
@@ -152,27 +155,27 @@
             <div class="col-xs-12">
               <table class="table table-bordered">
                 <tr class="info">
-                  <th>Discrepancy Sum</th>
+                  <th>Discrepancy</th>
                   <th>Value</th>
                   <th>%</th>
                 </tr>
                 <tr>
-                  <td>LMP Stock vs ePOS Sales</td>
+                  <td>Net LMP vs Net ePOS Discrepancy Values</td>
                   <td>10.3</td>
                   <td>0.09</td>
                 </tr>
                 <tr>
-                  <td>ePOS Sales vs Total Cash Handler Revenue</td>
+                  <td>Revenue vs Net ePOS Discrepancy Value</td>
                   <td>10.3</td>
                   <td>0.09</td>
                 </tr>
                 <tr>
-                  <td>FX Discrepancy</td>
+                  <td>Foreign Exchange Discrepancy Value</td>
                   <td>10.3</td>
                   <td>0.09</td>
                 </tr>
                 <tr class="active">
-                  <th>Total</th>
+                  <th>Discrepancy Value</th>
                   <th>10.3</th>
                   <th>0.09</th>
                 </tr>
@@ -193,38 +196,61 @@
                 </accordion-heading>
 
                 <div class="row">
-                  <div class="col-xs-6">
-                    <label>Filter by Groups</label>
-                    <select class="form-control">
-                      <option selected="selected" value>Items With Discrepancies</option>
-                    </select>
+                  <div class="col-xs-8">
+                    <label>Filter by Item Name or Category</label>
+                    <input type="text" class="form-control" placeholder="Type an item name or category"/>
                   </div>
-                  <div class="col-xs-6">
-                    <label>Filter Items</label>
-                    <input type="text" class="form-control" placeholder="Type an item code or name"/>
+                  <div class="col-xs-4">
+                    <label>Show Only Discrepancies</label>
+                    <br>
+                    <input bs-switch ng-model="switchModel" type="checkbox" switch-size="small" switch-on-color="info">
                   </div>
                 </div>
                 <br>
                 <table class="table table-striped table-bordered">
                   <tr>
-                    <th>Retail Item</th>
-                    <th>Dispatched Count</th>
-                    <th>Inbound Count</th>
-                    <th>ePOS Sales</th>
-                    <th>Variance Quantity</th>
-                    <th>Retail Value [GBP]</th>
-                    <th>Variance Value [GBP]</th>
+                    <th><span class="fa fa-sort-asc active"></span> Retail Item</th>
+                    <th><span class="fa fa-sort active text-muted-light"></span> Dispatched Count</th>
+                    <th><span class="fa fa-sort active text-muted-light"></span> Inbound Count</th>
+                    <th><span class="fa fa-sort active text-muted-light"></span> ePOS Sales</th>
+                    <th><span class="fa fa-sort active text-muted-light"></span> Variance Quantity</th>
+                    <th><span class="fa fa-sort active text-muted-light"></span> Retail Value [GBP]</th>
+                    <th><span class="fa fa-sort active text-muted-light"></span> Variance Value [GBP]</th>
+                    <th></th>
                   </tr>
                   <tr>
-                    <td>Chocolate</td>
+                    <td><input type="text" class="form-control"></td>
                     <td>50</td>
                     <td>20</td>
                     <td>0</td>
                     <td>-5</td>
                     <td>7.00</td>
                     <td>-35.00</td>
+                    <td><a class="btn btn-primary btn-xs" tabindex="0">
+                      <span class="fa fa-pencil"></span>
+                    </a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="form-control"></td>
+                    <td>50</td>
+                    <td>20</td>
+                    <td>0</td>
+                    <td>-5</td>
+                    <td>7.00</td>
+                    <td>-35.00</td>
+                    <td><a class="btn btn-primary btn-xs" tabindex="0">
+                      <span class="fa fa-pencil"></span>
+                    </a></td>
                   </tr>
                 </table>
+
+                <div class="row">
+                  <div class="col-xs-12 text-right">
+                    <button class="btn btn-primary"><span class="fa fa-pencil active"></span> Edit Table</button>
+                    <!--<button class="btn btn-success"><span class="fa fa-check active"></span> Save</button>-->
+                    <!--<button class="btn btn-default">Cancel</button>-->
+                  </div>
+                </div>
               </accordion-group>
             </accordion>
 
@@ -236,19 +262,18 @@
                   Cash Discrepancy
                 </accordion-heading>
                 <div class="row">
-                  <div class="col-xs-6">
-                    <label>Filter by Product Groups</label>
-                    <select class="form-control">
-                      <option selected="selected" value>Products With Discrepencies</option>
-                      <option>All Products</option>
-                    </select>
-                  </div>
-                  <div class="col-xs-6">
-                    <label>Filter Products</label>
+                  <div class="col-xs-8">
+                    <label>Filter by Cash Bag</label>
                     <select class="form-control">
                       <option selected="selected">Select a Cash Bag...</option>
                       <option>123</option>
                       <option>345</option>
+                    </select>
+                  </div>
+                  <div class="col-xs-4">
+                    <label>Show Only Discrepancies</label>
+                    <br>
+                    <input bs-switch ng-model="switchModel" type="checkbox" switch-size="small" switch-on-color="info">
                     </select>
                   </div>
                 </div>
@@ -256,15 +281,15 @@
 
                 <table class="table table-striped table-bordered">
                   <tr>
-                    <th>Cash Bag</th>
-                    <th>Currency</th>
-                    <th>Exchange Amount</th>
-                    <th>Crew Amount</th>
-                    <th>Cash Handler Paper Amount</th>
-                    <th>Cash Handler Coin Amount</th>
-                    <th>Variance Value</th>
-                    <th>Bank Exchange Rate</th>
-                    <th>Total Band [GBP]</th>
+                    <th><span class="fa fa-sort-asc active"></span> Cash Bag</th>
+                    <th><span class="fa fa-sort text-muted-light"></span> Currency</th>
+                    <th><span class="fa fa-sort text-muted-light"></span> Exchange Amount</th>
+                    <th><span class="fa fa-sort text-muted-light"></span> Crew Amount</th>
+                    <th><span class="fa fa-sort text-muted-light"></span> Cash Handler Paper Amount</th>
+                    <th><span class="fa fa-sort text-muted-light"></span> Cash Handler Coin Amount</th>
+                    <th><span class="fa fa-sort text-muted-light"></span> Variance Value</th>
+                    <th><span class="fa fa-sort text-muted-light"></span> Bank Exchange Rate</th>
+                    <th><span class="fa fa-sort text-muted-light"></span> Total Band [GBP]</th>
                     <td></td>
                   </tr>
                   <tr>
@@ -281,8 +306,15 @@
                       <span class="fa fa-file-text"></span>
                     </a></td>
                   </tr>
-
                 </table>
+
+                <div class="row">
+                  <div class="col-xs-12 text-right">
+                    <button class="btn btn-primary"><span class="fa fa-pencil active"></span> Edit Table</button>
+                    <!--<button class="btn btn-success"><span class="fa fa-check active"></span> Save</button>-->
+                    <!--<button class="btn btn-default">Cancel</button>-->
+                  </div>
+                </div>
               </accordion-group>
             </accordion>
           </div>
@@ -291,15 +323,15 @@
       </div>
     </div>
 
-    <div class="col-xs-4 fixed sidebar"
-         style="margin-top: 55px; padding-top: 20px; position: fixed; top: 0; right: 0; max-height: 100%; background-color: #eee; overflow-y: auto; outline: 1px solid #ddd">
+    <div class="col-xs-4 fixed-sidebar">
       <div class="row">
         <div class="col-xs-12">
           <div class="col-xs-10 view-name">
             <h4><span class="fa fa-file-text" aria-hidden="true"></span> Payment Reports</h4>
           </div>
           <div class="col-xs-2 text-right view-name">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
           </div>
         </div>
       </div>

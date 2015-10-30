@@ -26,7 +26,8 @@ angular.module('ts5App', [
   'ngToast',
   'ang-drag-drop',
   'infinite-scroll',
-  'ngLodash'
+  'ngLodash',
+  'frapontillo.bootstrap-switch'
 ]).factory('defaultData', [
   function () {
     var defaultData = {
