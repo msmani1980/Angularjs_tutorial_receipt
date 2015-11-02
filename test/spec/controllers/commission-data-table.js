@@ -16,6 +16,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
   var commissionPayableTypesDeferred;
   var discountTypesDeferred;
   var crewBaseListDeferred;
+  var deleteCommissionDataDeferred;
   var employeesDeferred;
 
   var commissionPayableListResponseJSON;
@@ -60,6 +61,9 @@ describe('Controller: CommissionDataTableCtrl', function () {
     commissionPayableTypesDeferred = $q.defer();
     commissionPayableTypesDeferred.resolve(commissionPayableTypesResponseJSON);
 
+    deleteCommissionDataDeferred = $q.defer();
+    deleteCommissionDataDeferred.resolve();
+
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesResponseJSON);
 
@@ -67,7 +71,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
     spyOn(commissionFactory, 'getCommissionPayableList').and.returnValue(commissionPayableListDeferred.promise);
     spyOn(commissionFactory, 'getDiscountTypes').and.returnValue(discountTypesDeferred.promise);
     spyOn(commissionFactory, 'getCommissionPayableTypes').and.returnValue(commissionPayableTypesDeferred.promise);
-    spyOn(commissionFactory, 'deleteCommissionData');
+    spyOn(commissionFactory, 'deleteCommissionData').and.returnValue(deleteCommissionDataDeferred.promise);
 
     CommissionDataTableCtrl = $controller('CommissionDataTableCtrl', {
       $scope: scope

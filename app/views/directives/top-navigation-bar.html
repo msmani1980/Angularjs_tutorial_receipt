@@ -1,0 +1,21 @@
+<nav class="navbar navbar-default navbar-fixed-top ts5-logo">
+  <div class="container-fluid">
+    <div ng-if="isAuthorized" class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+              aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="fa fa-bars"></span>
+      </button>
+      <a class="navbar-brand" ng-href="/#/">
+        <i class="fa fa-home"></i><span class="hidden-xs"> TS5 Dashboard</span>
+      </a>
+    </div>
+    <div ng-if="isAuthorized" id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <menu-dropdown title="User Picker" ng-model="userModel" icon="fa fa-user"></menu-dropdown>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

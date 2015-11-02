@@ -1,41 +1,40 @@
 <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in ng-hide" role="alert">
 
-	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
 
-	<h4 id="oh-snap!-you-got-an-error!">
-		Oh no! Something went wrong...
-		<a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
-	</h4>
+  <h4 id="oh-snap!-you-got-an-error!">
+    Oh no! Something went wrong...
+    <a class="anchorjs-link" href="#oh-snap!-you-got-an-error!"><span class="anchorjs-icon"></span></a>
+  </h4>
 
-	<ul>
+  <ul>
 
-		<li ng-if="response500">
+    <li ng-switch on="formErrors.status">
+      <span ng-switch-when="500"><strong>A server side error (500) has occurred</strong> - please contact your system's adminstrator</span>
+      <span ng-switch-when="401"><strong>Wrong credentials</strong> - please check username or password</span>
+    </li>
 
-			<strong>A server side error (500) has occured</strong> - please contact your system's adminstrator
+    <li ng-repeat="error in form.$error.required">
 
-		</li>
+      <strong>{{ error.$name }}</strong> is a required field.
 
-		<li ng-repeat="error in form.$error.required">
+    </li>
 
-			<strong>{{ error.$name }}</strong> is a required field.
+    <li ng-repeat="error in form.$error.pattern">
 
-		</li>
+      <strong>{{ error.$name }}</strong> is invalid, recheck your input.
 
-		<li ng-repeat="error in form.$error.pattern">
+    </li>
 
-			<strong>{{ error.$name }}</strong> is invalid, recheck your input.
+    <li ng-show="formErrors" ng-repeat="error in formErrors" ng-switch on="error.code"><strong>{{ error.field }}</strong> -
 
-		</li>
+      <span ng-switch-when="000">Field can't be empty</span>
 
-		<li ng-show="formErrors" ng-repeat="error in formErrors" ng-switch on="error.code"> <strong>{{ error.field }}</strong> -
+      <span ng-switch-when="001">Data format is invalid</span>
 
-			<span ng-switch-when="000">Field can't be empty</span>
+      <span ng-switch-when="003">Allowable maximum length exceeded</span>
 
-			<span ng-switch-when="001">Data format is invalid</span>
-
-			<span ng-switch-when="003">Allowable maximum length exceeded</span>
-
-			<span ng-switch-when="004">Duplicate values are not allowed</span>
+      <span ng-switch-when="004">Duplicate values are not allowed</span>
 
       <span ng-switch-when="005">Date must be within the allowed date range</span>
 
@@ -47,12 +46,12 @@
 
       <span ng-switch-when="021">To date should be later than or equal to From date</span>
 
-			<span ng-switch-when="023">Object is locked and can not be updated/deleted</span> 
+      <span ng-switch-when="023">Object is locked and can not be updated/deleted</span>
 
       <span ng-switch-default> {{ error.value }} </span>
 
-		</li>
+    </li>
 
-	</ul>
+  </ul>
 
 </div>
