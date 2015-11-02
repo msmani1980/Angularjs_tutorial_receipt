@@ -220,47 +220,47 @@
                   </tr>
                   <tr ng-repeat="item in LMPStock">
                     <td>
-                      <input ng-show="shouldAllowEditingForItem(item, true)" type="text" class="form-control" ng-model="item.itemName">
-                      <span ng-hide="shouldAllowEditingForItem(item, true)">{{ item.itemName }}</span>
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].itemName">
+                      <span ng-hide="showEditViewForItem(item, true)">{{ item.itemName }}</span>
                     </td>
                     <td>
-                      <input ng-show="shouldAllowEditingForItem(item, true)" type="text" class="form-control" ng-model="item.dispatchedCount">
-                      <span ng-hide="shouldAllowEditingForItem(item, true)">{{ item.dispatchedCount }}</span>
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].dispatchedCount">
+                      <span ng-hide="showEditViewForItem(item, true)">{{ item.dispatchedCount }}</span>
                     </td>
                     <td>
-                      <input ng-show="shouldAllowEditingForItem(item, true)" type="text" class="form-control" ng-model="item.inboundCount">
-                      <span ng-hide="shouldAllowEditingForItem(item, true)">{{ item.inboundCount }}</span>
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].inboundCount">
+                      <span ng-hide="showEditViewForItem(item, true)">{{ item.inboundCount }}</span>
                     </td>
                     <td>
-                      <input ng-show="shouldAllowEditingForItem(item, true)" type="text" class="form-control" ng-model="item.ePOSSales">
-                      <span ng-hide="shouldAllowEditingForItem(item, true)">{{ item.ePOSSales }}</span>
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].ePOSSales">
+                      <span ng-hide="showEditViewForItem(item, true)">{{ item.ePOSSales }}</span>
                     </td>
                     <td>
-                      <input ng-show="shouldAllowEditingForItem(item, true)" type="text" class="form-control" ng-model="item.varianceQuantity">
-                      <span ng-hide="shouldAllowEditingForItem(item, true)">{{ item.varianceQuantity }}</span>
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].varianceQuantity">
+                      <span ng-hide="showEditViewForItem(item, true)">{{ item.varianceQuantity }}</span>
                     </td>
                     <td>
-                      <input ng-show="shouldAllowEditingForItem(item, true)" type="text" class="form-control" ng-model="item.retailValue">
-                      <span ng-hide="shouldAllowEditingForItem(item, true)">{{ item.retailValue }}</span>
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].retailValue">
+                      <span ng-hide="showEditViewForItem(item, true)">{{ item.retailValue }}</span>
                     </td>
                     <td>
-                      <input ng-show="shouldAllowEditingForItem(item, true)" type="text" class="form-control" ng-model="item.varianceValue">
-                      <span ng-hide="shouldAllowEditingForItem(item, true)">{{ item.varianceValue }}</span>
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].varianceValue">
+                      <span ng-hide="showEditViewForItem(item, true)">{{ item.varianceValue }}</span>
                     </td>
                     <td>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-show="editLMPStockTable"><span class="fa fa-refresh"></span></a>
-                      <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="allowEditingForItem(item)" ng-hide="shouldAllowEditingForItem(item, true)"><span class="fa fa-pencil"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="allowEditingForItem(item)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
-                      <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="allowEditingForItem(item)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
+                      <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editLMPStockItem($index)" ng-hide="showEditViewForItem(item, true)"><span class="fa fa-pencil"></span></a>
+                      <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveLMPStockItem($index)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
+                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditingLMPStockItem($index)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
+                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertLMPStockItem($index)" ng-show="editLMPStockTable"><span class="fa fa-undo"></span></a>
                     </td>
                   </tr>
                 </table>
 
                 <div class="row">
                   <div class="col-xs-12 text-right">
-                    <button ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="toggleEditLMPStockTable()"><span class="fa fa-pencil active"></span> Edit Table</button>
-                    <button ng-show="editLMPStockTable" class="btn btn-success"><span class="fa fa-check active"></span> Save All</button>
-                    <button ng-show="editLMPStockTable" class="btn btn-default" ng-click="toggleEditLMPStockTable()">Cancel</button>
+                    <button ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="enableEditLMPStockTable()"><span class="fa fa-pencil active"></span> Edit Table</button>
+                    <button ng-show="editLMPStockTable" class="btn btn-success" ng-click="saveLMPStockTable()"><span class="fa fa-check active"></span> Save All</button>
+                    <button ng-show="editLMPStockTable" class="btn btn-default" ng-click="cancelEditingLMPStockTable()">Cancel</button>
                   </div>
                 </div>
               </accordion-group>
