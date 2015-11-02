@@ -7,6 +7,10 @@ module.exports = function(config) {
   'use strict';
 
   config.set({
+    // to avoid DISCONNECTED messages
+    browserDisconnectTimeout: 10000, // default 2000
+    browserDisconnectTolerance: 1, // default 0
+    browserNoActivityTimeout: 60000, //default 10000
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
@@ -38,8 +42,8 @@ module.exports = function(config) {
     },
 
     ngHtml2JsPreprocessor: {
-      stripPrefix: "app",
-      moduleName: "template-module"
+      stripPrefix: 'app',
+      moduleName: 'template-module'
     },
 
     ngJson2JsPreprocessor: {
