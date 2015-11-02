@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: LoginCtrl', function () {
+describe('Controller: LoginCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));

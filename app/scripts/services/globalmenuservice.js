@@ -8,10 +8,10 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('GlobalMenuService', function () {
+  .service('GlobalMenuService', function ($localStorage) {
 
     function getCompany() {
-      return 403;
+      return $localStorage.company || 0;
     }
 
     return {

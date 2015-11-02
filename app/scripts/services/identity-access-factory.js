@@ -21,6 +21,7 @@ angular.module('ts5App')
 
     function logout() {
       delete $localStorage.sessionObject;
+      delete $localStorage.company;
       delete $http.defaults.headers.common.userId;
       delete $http.defaults.headers.common.companyId;
       delete $http.defaults.headers.common.sessionToken;
@@ -49,6 +50,7 @@ angular.module('ts5App')
         timeout: 60000
       };
       $localStorage.sessionObject = CryptoJS.AES.encrypt(JSON.stringify(sessionObject), 'aes@56').toString();
+      $localStorage.company = dataFromAPI.companyId;
       setSessionHeaders();
       $rootScope.$broadcast('authorized');
       $location.path('/');
