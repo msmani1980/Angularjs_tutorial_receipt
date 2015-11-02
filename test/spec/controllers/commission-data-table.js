@@ -8,6 +8,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
   beforeEach(module('served/crew-base-types.json'));
   beforeEach(module('served/discount-types.json'));
   beforeEach(module('served/commission-payable-types.json'));
+  beforeEach(module('served/employees.json'));
 
   var CommissionDataTableCtrl;
 
@@ -15,13 +16,16 @@ describe('Controller: CommissionDataTableCtrl', function () {
   var commissionPayableTypesDeferred;
   var discountTypesDeferred;
   var crewBaseListDeferred;
+  var employeesDeferred;
 
   var commissionPayableListResponseJSON;
   var commissionPayableTypesResponseJSON;
   var discountTypesResponseJSON;
   var crewBaseListJSON;
+  var employeesResponseJSON;
 
   var commissionFactory;
+  var employeesService;
   var location;
   var dateUtility;
   var scope;
@@ -29,17 +33,19 @@ describe('Controller: CommissionDataTableCtrl', function () {
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
 
     inject(function (_servedCommissionPayableList_, _servedCrewBaseTypes_, _servedDiscountTypes_,
-                     _servedCommissionPayableTypes_) {
+                     _servedCommissionPayableTypes_, _servedEmployees_) {
       commissionPayableListResponseJSON = _servedCommissionPayableList_;
       crewBaseListJSON = _servedCrewBaseTypes_;
       discountTypesResponseJSON = _servedDiscountTypes_;
       commissionPayableTypesResponseJSON = _servedCommissionPayableTypes_;
+      employeesResponseJSON = _servedEmployees_;
     });
 
     location = $location;
     dateUtility = $injector.get('dateUtility');
     scope = $rootScope.$new();
     commissionFactory = $injector.get('commissionFactory');
+    employeesService = $injector.get('employeesService');
 
 
     commissionPayableListDeferred = $q.defer();
@@ -54,8 +60,11 @@ describe('Controller: CommissionDataTableCtrl', function () {
     commissionPayableTypesDeferred = $q.defer();
     commissionPayableTypesDeferred.resolve(commissionPayableTypesResponseJSON);
 
+    employeesDeferred = $q.defer();
+    employeesDeferred.resolve(employeesResponseJSON);
+
+    spyOn(employeesService,  'getEmployees').and.returnValue(employeesDeferred.promise);
     spyOn(commissionFactory, 'getCommissionPayableList').and.returnValue(commissionPayableListDeferred.promise);
-    spyOn(commissionFactory, 'getCrewBaseTypes').and.returnValue(crewBaseListDeferred.promise);
     spyOn(commissionFactory, 'getDiscountTypes').and.returnValue(discountTypesDeferred.promise);
     spyOn(commissionFactory, 'getCommissionPayableTypes').and.returnValue(commissionPayableTypesDeferred.promise);
     spyOn(commissionFactory, 'deleteCommissionData');
@@ -69,7 +78,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
   describe('init', function () {
     it('should get crew base types', function () {
-      expect(commissionFactory.getCrewBaseTypes).toHaveBeenCalled();
+      expect(employeesService.getEmployees).toHaveBeenCalled();
     });
 
     it('should get Commission Payable types', function () {

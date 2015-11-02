@@ -31,7 +31,7 @@
                   <ui-select-match
                     placeholder="Select crew base">{{ $select.selected.name}}
                   </ui-select-match>
-                  <ui-select-choices repeat="crewBase in crewBaseTypes">
+                  <ui-select-choices repeat="crewBase in crewBaseTypes | orderBy:'name'">
                     <div ng-bind-html="crewBase.name | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>

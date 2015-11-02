@@ -27,7 +27,7 @@
               <select class="form-control"
                       id="crewBase"
                       ng-model="commissionData.crewBaseTypeId"
-                      ng-options="crewBase.id as crewBase.name for crewBase in crewBaseList"
+                      ng-options="crewBase.id as crewBase.name for crewBase in crewBaseList | orderBy: 'name'"
                       ng-disabled="readOnly"
                       required="true">
                 <option selected="selected" value>Select a Crew Base</option>
@@ -69,7 +69,7 @@
                       ng-change="updateCommissionPercent()"
                       ng-disabled="readOnly"
                       required="true"
-                      ng-options="commissionType.id as commissionType.name for commissionType in commissionPayableTypes">
+                      ng-options="commissionType.id as commissionType.name for commissionType in commissionPayableTypes | orderBy:'name'">
                 <option selected="selected" value>Select a Commission Payable Type</option>
               </select>
             </div>
