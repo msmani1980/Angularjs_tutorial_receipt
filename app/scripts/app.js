@@ -61,16 +61,9 @@ angular.module('ts5App', [
   url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
 }).config(['$localStorageProvider', function ($localStorageProvider) {
   $localStorageProvider.setKeyPrefix('TS5-');
-}]).config(function ($routeProvider, $httpProvider, $locationProvider) {
+}]).config(function ($routeProvider, $httpProvider) {
   $httpProvider.interceptors.push('defaultData');
   $httpProvider.interceptors.push('httpSessionInterceptor');
-
-  // TODO: uncomment to remove # from url to make Rohit happy
-  //$locationProvider.html5Mode({
-  //  enabled: true,
-  //  requireBase: false
-  //});
-
   $routeProvider.when('/', {
     templateUrl: 'views/main.html',
     controller: 'MainCtrl'
