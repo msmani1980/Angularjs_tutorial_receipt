@@ -10,9 +10,14 @@
 angular.module('ts5App')
   .factory('httpSessionInterceptor', function ($rootScope, $q) {
 
+    var errorCodeMap = {
+      401: 'unauthorized',
+      500: 'internal-server-error'
+    };
+
     function responseError(response) {
-      if (response.status === 401) {
-        $rootScope.$broadcast('unauthorized');
+      if (errorCodeMap[response.status]) {
+        $rootScope.$broadcast(errorCodeMap[response.status]);
       }
       return $q.reject(response);
     }
