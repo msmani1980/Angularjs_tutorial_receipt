@@ -8,10 +8,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataTableCtrl', function ($scope, dateUtility, commissionFactory, $location) {
+  .controller('CommissionDataTableCtrl', function ($scope, dateUtility, commissionFactory, $location, GlobalMenuService, employeesService) {
+    var companyId = GlobalMenuService.company.get();
     $scope.viewName       = 'Commission Data Table';
     $scope.search         = {};
     $scope.commissionData = [];
+    $scope.crewBaseTypes  = [];
 
     function setDataList(dataFromAPI) {
       $scope.commissionData = dataFromAPI.response;
@@ -84,9 +86,18 @@ angular.module('ts5App')
       $location.path('commission-data/' + state + '/' + id).search();
     };
 
-    function getCrewBaseTypes() {
-      commissionFactory.getCrewBaseTypes().then(function (response) {
-        $scope.crewBaseTypes = angular.copy(response);
+    function getCrewBaseTypes () {
+      var uniqueCrewBaseTypes = {};
+      employeesService.getEmployees(companyId).then(function(dataFromAPI) {
+        angular.forEach(dataFromAPI.companyEmployees, function (employee) {
+          if (!(employee.baseStationId in uniqueCrewBaseTypes)) {
+            uniqueCrewBaseTypes[employee.baseStationId] = {};
+            $scope.crewBaseTypes.push({
+              id: employee.baseStationId,
+              name: employee.stationCode
+            });
+          }
+        });
       });
     }
 
