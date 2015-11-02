@@ -8,8 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast, $location) {
+  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast, $location, employeesService, GlobalMenuService) {
     var $this = this;
+    var companyId = GlobalMenuService.company.get();
+
     $scope.viewName = 'Creating Commission Data';
     $scope.commissionData = {};
     $scope.baseCurrency = 'GBP'; // TODO: get from API
@@ -19,6 +21,7 @@ angular.module('ts5App')
     var percentTypeUnit = '%';
     $scope.manualBarsCharLimit = 10;
     $scope.commissionValueCharLimit = 10;
+    $scope.crewBaseList = [];
 
 
     this.showToast = function (className, type, message) {
@@ -145,8 +148,17 @@ angular.module('ts5App')
     };
 
     this.getCrewBaseList = function () {
-      commissionFactory.getCrewBaseTypes().then(function(dataFromAPI) {
-        $scope.crewBaseList = angular.copy(dataFromAPI);
+      var uniqueCrewBaseTypes = {};
+      employeesService.getEmployees(companyId).then(function(dataFromAPI) {
+        angular.forEach(dataFromAPI.companyEmployees, function (employee) {
+          if (!(employee.baseStationId in uniqueCrewBaseTypes)) {
+            uniqueCrewBaseTypes[employee.baseStationId] = {};
+            $scope.crewBaseList.push({
+              id: employee.baseStationId,
+              name: employee.stationCode
+            });
+          }
+        });
       });
     };
 

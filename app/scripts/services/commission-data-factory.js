@@ -34,10 +34,6 @@ angular.module('ts5App')
       return commissionDataService.deleteCommissionData(id);
     };
 
-    var getCrewBaseTypes = function () {
-      return recordsService.getCrewBaseTypes();
-    };
-
     var getCommissionPayableTypes = function () {
       return recordsService.getCommissionPayableTypes();
     };
@@ -52,7 +48,6 @@ angular.module('ts5App')
       createCommissionData: createCommissionData,
       updateCommissionData: updateCommissionData,
       deleteCommissionData: deleteCommissionData,
-      getCrewBaseTypes: getCrewBaseTypes,
       getCommissionPayableTypes: getCommissionPayableTypes,
       getDiscountTypes: getDiscountTypes
     };
