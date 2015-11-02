@@ -14,9 +14,65 @@ angular.module('ts5App')
       angular.element("#t6Modal").modal('show');
     };
 
-    $scope.switchModel = true;
+    $scope.shouldAllowEditingForItem = function (item, isLMPStockItem) {
+      if(isLMPStockItem) {
+        return item.isEditing || $scope.editLMPStockTable;
+      } else {
+        return item.isEditing || $scope.editEposSalesTable;
+      }
+    };
 
-    angular.element("#checkbox").bootstrapSwitch();
+    $scope.toggleEditLMPStockTable = function () {
+      $scope.editLMPStockTable = !$scope.editLMPStockTable;
+      angular.forEach($scope.LMPStock, function (item) {
+        item.isEditing = false;
+      });
+    };
+
+    $scope.editItem = function (item) {
+      item.isEditing = true;
+    };
+
+    function init() {
+      $scope.switchModel = true;
+      angular.element("#checkbox").bootstrapSwitch();
+
+      $scope.editLMPStockTable = false;
+      $scope.editEposSalesTable = false;
+
+
+      $scope.LMPStock = [{
+        itemName: 'Chocolate',
+        dispatchedCount: 50,
+        inboundCount: 50,
+        ePOSSales: 20,
+        varianceQuantity: 0,
+        retailValue: 5,
+        varianceValue: 7.0,
+        isEditing: false
+      }, {
+        itemName: 'Coke',
+        dispatchedCount: 20,
+        inboundCount: 35,
+        ePOSSales: 12,
+        varianceQuantity: 0,
+        retailValue: 5,
+        varianceValue: 14.0,
+        isEditing: false
+      }, {
+        itemName: 'Pepsi',
+        dispatchedCount: 150,
+        inboundCount: 30,
+        ePOSSales: 25,
+        varianceQuantity: 11,
+        retailValue: 6,
+        varianceValue: 12.0,
+        isEditing: false
+      }];
+    }
+    init();
+
+
 
 
   });
