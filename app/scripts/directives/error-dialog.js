@@ -34,7 +34,11 @@ angular.module('ts5App')
       };
 
       $scope.showValidationErrors = function() {
-        return ($this.form.$error.pattern || $this.form.$error.required);
+        return ( Array.isArray($this.form.$error.pattern) || Array.isArray($this.form.$error.required) );
+      };
+
+      $scope.showFailedRequest = function() {
+        return ( $scope.errorResponse && !$scope.showValidationErrors() && !$scope.showInternalServerError() );
       };
 
       $scope.validateRequiredFields = function() {

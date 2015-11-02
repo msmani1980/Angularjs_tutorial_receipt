@@ -2,8 +2,8 @@
 
   <div class="panel-heading">
 		<span ng-if="showValidationErrors()">There are some issues with the fields below. Please update and try again.</span>
-    <span ng-if="showInternalServerError()">A server side error (500) has occured. </span>
-    <span ng-if="errorResponse && !showValidationErrors()">{{ errorResponse.statusText}} - Please update and try again.</span>
+    <span ng-if="showInternalServerError()">A server side error has occured and your request was not processed.</span>
+    <span ng-if="showFailedRequest()">{{ errorResponse.statusText}} - Please update and try again.</span>
 	</div>
 
 	<ul class="list-group">
