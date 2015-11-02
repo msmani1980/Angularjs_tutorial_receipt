@@ -9,7 +9,7 @@
 angular.module('ts5App')
   .directive('topNavigationBar', function (identityAccessFactory) {
 
-    function link($scope) {
+    function controller($scope) {
 
       function hideNavBar() {
         $scope.isAuthorized = false;
@@ -43,6 +43,6 @@ angular.module('ts5App')
       templateUrl: '/views/directives/top-navigation-bar.html',
       restrict: 'E',
       scope: true,
-      link: link
+      controller: controller
     };
   });
