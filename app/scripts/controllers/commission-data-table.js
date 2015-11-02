@@ -46,8 +46,12 @@ angular.module('ts5App')
       return dateUtility.isAfterToday(data.startDate);
     };
 
+    function deleteCommissionDataSuccessHandler() {
+      $scope.searchCommissionData();
+    }
+
     $scope.removeRecord = function (data) {
-      commissionFactory.deleteCommissionData(data.id);
+      commissionFactory.deleteCommissionData(data.id).then(deleteCommissionDataSuccessHandler);
     };
 
     function getNameForId(id, array) {
