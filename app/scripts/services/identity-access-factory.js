@@ -39,6 +39,7 @@ angular.module('ts5App')
 
     function setSessionHeaders() {
       var sessionObject = getSessionObject();
+      $localStorage.company = sessionObject.companyId;
       angular.extend($http.defaults.headers.common, sessionObject);
     }
 
@@ -50,7 +51,6 @@ angular.module('ts5App')
         timeout: 60000
       };
       $localStorage.sessionObject = CryptoJS.AES.encrypt(JSON.stringify(sessionObject), 'aes@56').toString();
-      $localStorage.company = dataFromAPI.companyId;
       setSessionHeaders();
       $rootScope.$broadcast('authorized');
       $location.path('/');
