@@ -65,7 +65,7 @@ angular.module('ts5App')
 
     function init() {
       angular.element("#checkbox").bootstrapSwitch();
-      $scope.switchModel = true;
+      $scope.showLMPDiscrepancies = true;
       $scope.editLMPStockTable = false;
       $scope.editEposSalesTable = false;
 
@@ -100,7 +100,7 @@ angular.module('ts5App')
         varianceQuantity: 11,
         retailValue: 6,
         varianceValue: 12.0,
-        isDiscrepancy: true,
+        isDiscrepancy: false,
         isEditing: false
       }];
     }

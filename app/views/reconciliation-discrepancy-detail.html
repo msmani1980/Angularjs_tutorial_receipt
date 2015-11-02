@@ -203,7 +203,7 @@
                   <div class="col-xs-4">
                     <label>Show Only Discrepancies</label>
                     <br>
-                    <input bs-switch ng-model="switchModel" type="checkbox" switch-size="small" switch-on-color="info">
+                    <input bs-switch ng-model="showLMPDiscrepancies" type="checkbox" switch-size="small" switch-on-color="info">
                   </div>
                 </div>
                 <br>
@@ -218,7 +218,7 @@
                     <th><span class="fa fa-sort active text-muted-light"></span> Variance Value [GBP]</th>
                     <th></th>
                   </tr>
-                  <tr ng-repeat="item in LMPStock">
+                  <tr ng-repeat="item in LMPStock" ng-show="showLMPDiscrepancies ? item.isDiscrepancy : true">
                     <td>
                       <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].itemName">
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.itemName }}</span>
