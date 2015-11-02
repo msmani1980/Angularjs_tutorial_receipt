@@ -8,6 +8,7 @@
  */
 angular.module('ts5App')
   .directive('errorDialog', function() {
+
     var errorDialogController = function($scope) {
 
       var $this = this;
@@ -17,12 +18,27 @@ angular.module('ts5App')
         return text.split(/(?=[A-Z])/).join(' ');
       };
 
-      $scope.errorPattern = [];
-      $scope.errorRequired = [];
-      $scope.$parent.displayError = false;
+      this.internalServerErrorHandler = function() {
+        $this.internalServerError = true;
+      };
+
+      this.init = function() {
+        $scope.errorPattern = [];
+        $scope.errorRequired = [];
+        $scope.$on('internal-server-error', this.internalServerErrorHandler);
+        $scope.watchForm();
+      };
+
+      $scope.showInternalServerError = function() {
+        return $this.internalServerError;
+      };
 
       $scope.showValidationErrors = function() {
-        return ($this.form.$error.pattern || $this.form.$error.required);
+        return ( Array.isArray($this.form.$error.pattern) || Array.isArray($this.form.$error.required) );
+      };
+
+      $scope.showFailedRequest = function() {
+        return ( $scope.errorResponse && !$scope.showValidationErrors() && !$scope.showInternalServerError() );
       };
 
       $scope.validateRequiredFields = function() {
@@ -66,7 +82,7 @@ angular.module('ts5App')
         }
       };
 
-      $scope.watchForm();
+      this.init();
 
     };
     return {

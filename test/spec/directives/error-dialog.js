@@ -13,8 +13,11 @@ describe('The Error Dialog directive', function() {
   var input;
   var testForm;
   var isolatedScope;
+  var httpSessionInterceptor;
+  var controller;
 
-  beforeEach(inject(function($rootScope, $compile) {
+  beforeEach(inject(function($rootScope, $compile,_httpSessionInterceptor_) {
+    httpSessionInterceptor = _httpSessionInterceptor_;
     scope = $rootScope.$new();
     compile = $compile;
   }));
@@ -28,6 +31,7 @@ describe('The Error Dialog directive', function() {
     scope.$digest();
     element = angular.element(form.find('error-dialog')[0]);
     input = angular.element(form.find('input')[0]);
+    controller = element.controller('errorDialog');
     isolatedScope = element.isolateScope();
     testForm = scope.myTestForm;
   }
@@ -117,6 +121,35 @@ describe('The Error Dialog directive', function() {
 
     it('should be expect displayError to be false', function() {
       expect(scope.displayError).toBeFalsy();
+    });
+
+  });
+
+  describe('When the server returns a 500', function() {
+
+    beforeEach(inject(function() {
+      compileDirective();
+    }));
+
+    it('should set the internal server error flag to true', function() {
+      httpSessionInterceptor.responseError({status: 500});
+      expect(controller.internalServerError).toBeTruthy();
+    });
+
+  });
+
+  describe('When checking to see if we need to display failed requests', function() {
+
+    beforeEach(inject(function() {
+      compileDirective();
+      testForm.deliveryNote.$setViewValue('ABC123');
+      scope.errorResponse = {field:'storeId',reason: 'Thou hath displeased bogan'};
+      httpSessionInterceptor.responseError({status: 400});
+      scope.$digest();
+    }));
+
+    it('should return true', function() {
+      expect(isolatedScope.showFailedRequest()).toBeTruthy();
     });
 
   });
