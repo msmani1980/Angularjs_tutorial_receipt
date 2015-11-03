@@ -171,7 +171,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
           scope.initEditTable(false);
           expect(scope.editCashBagTable).toEqual(true);
           expect(scope.cashBags[0].revision).toEqual(expectedRevisionObject);
-        })
+        });
       });
 
       describe('save', function () {
