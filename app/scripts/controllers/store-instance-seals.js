@@ -76,7 +76,7 @@ angular.module('ts5App')
       $this.isInstanceReadOnly();
       $scope.formData.note = $scope.storeDetails.note;
       $scope.formData.tampered = $scope.storeDetails.tampered;
-      if ( $this.isActionState('end-instance')) {
+      if ($this.isActionState('end-instance')) {
         $scope.storeDetails.displayLMPStation = $scope.storeDetails.inboundLMPStation;
       }
     };
@@ -537,8 +537,8 @@ angular.module('ts5App')
           payload));
       }
       $q.all(deletePromises).then(
-        $q.all(createPromises).then(
-          $q.all(tamperedPromises).then(
+        $q.all(tamperedPromises).then(
+          $q.all(createPromises).then(
             $this.assignSealsSuccessHandler,
             $this.assignSealsErrorHandler
           ), $this.assignSealsErrorHandler
