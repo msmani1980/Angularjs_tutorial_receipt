@@ -57,10 +57,6 @@ describe('Factory: commissionFactory', function () {
   });
 
   describe('recordsService API', function () {
-    it('should call recordsService on getCrewBaseTypes', function () {
-      commissionFactory.getCrewBaseTypes();
-      expect(recordsService.getCrewBaseTypes).toHaveBeenCalled();
-    });
     it('should call recordsService on getCommissionPayableTypes', function () {
       commissionFactory.getCommissionPayableTypes();
       expect(recordsService.getCommissionPayableTypes).toHaveBeenCalled();

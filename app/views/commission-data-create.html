@@ -11,7 +11,7 @@
 
   <br>
 
-  <form name="commissionDataForm" class="edit-form">
+  <form name="commissionDataForm" class="edit-form" ng-submit="saveData()">
 
     <form-error-dialog></form-error-dialog>
     <!--/TopHeader -->
@@ -27,7 +27,7 @@
               <select class="form-control"
                       id="crewBase"
                       ng-model="commissionData.crewBaseTypeId"
-                      ng-options="crewBase.id as crewBase.name for crewBase in crewBaseList"
+                      ng-options="crewBase.id as crewBase.name for crewBase in crewBaseList | orderBy: 'name'"
                       ng-disabled="readOnly"
                       required="true">
                 <option selected="selected" value>Select a Crew Base</option>
@@ -69,7 +69,7 @@
                       ng-change="updateCommissionPercent()"
                       ng-disabled="readOnly"
                       required="true"
-                      ng-options="commissionType.id as commissionType.name for commissionType in commissionPayableTypes">
+                      ng-options="commissionType.id as commissionType.name for commissionType in commissionPayableTypes | orderBy:'name'">
                 <option selected="selected" value>Select a Commission Payable Type</option>
               </select>
             </div>
@@ -84,7 +84,7 @@
                    maxlength="6"
                    custom-validity
                    custom-pattern="decimalWithTwoDecimalPlaces"
-                   required="true"
+                   ng-required="commissionPercentRequired"
                    ng-disabled="commissionPercentDisabled || readOnly">
           </div>
         </div>
@@ -215,12 +215,11 @@
 
       </div>
       <div class="panel-footer text-right">
-        <button class="btn btn-primary" ng-click="saveData()" ng-hide="readOnly">
+        <button type="submit" class="btn btn-primary" ng-hide="readOnly">
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
         <a href="#/commission-data-table" class="btn btn-default" ng-hide="readOnly">Cancel</a>
-
       </div>
     </div>
   </form>

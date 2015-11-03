@@ -1,11 +1,18 @@
 <div class="container">
-  <form class="form-horizontal" ng-submit="login()">
+
+  <form class="form-horizontal" ng-submit="login()" name="loginForm">
+
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h1><strong>TS5</strong> Login</h1>
         </div>
+
         <div class="modal-body">
+
+          <error-dialog form-object="loginForm" error-response="errorResponse" display="displayError">
+          </error-dialog>
+
           <h3>Login to our site</h3>
 
           <p>Enter your username and password to log in:</p>
@@ -14,14 +21,14 @@
             <label for="username" class="col-sm-2 control-label">Username</label>
 
             <div class="col-sm-10">
-              <input custom-validity custom-pattern="word" type="text" class="form-control" id="username" placeholder="username" ng-model="credentials.username" />
+              <input name="username" required="true" custom-validity custom-pattern="word" type="text" class="form-control" id="username" placeholder="username" ng-model="credentials.username" />
             </div>
           </div>
           <div class="form-group">
             <label for="password" class="col-sm-2 control-label">Password</label>
 
             <div class="col-sm-10">
-              <input custom-validity custom-pattern="password"  type="password" class="form-control" id="password" placeholder="Password"  ng-model="credentials.password" />
+              <input name="password" required="true" custom-validity custom-pattern="alpha"  type="password" class="form-control" id="password" placeholder="Password"  ng-model="credentials.password" />
             </div>
           </div>
           <div class="form-group">
@@ -35,7 +42,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Log in!</button>
+          <button type="submit" class="btn btn-primary">Login!</button>
         </div>
       </div>
     </div>

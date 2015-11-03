@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('StoreInstanceReviewCtrl', function($scope, $routeParams, storeInstanceWizardConfig, $window,
-    storeInstanceFactory, $location, storeInstanceReviewFactory, $q, ngToast, $filter, dateUtility, lodash, ENV) {
+    storeInstanceFactory, $location, storeInstanceReviewFactory, $q, ngToast, $filter, dateUtility, lodash, ENV, identityAccessFactory) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -71,7 +71,7 @@ angular.module('ts5App')
         .then(getItemsSuccessHandler)
       );
     }
-    
+
     function isRedispatch() {
       return $routeParams.action === 'redispatch';
     }
@@ -297,9 +297,9 @@ angular.module('ts5App')
         id: response.statusId
       }, true)[0];
       showUserCurrentStatus();
-
+      var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
       $window.open(ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
-        '.pdf?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5', '_blank');
+        '.pdf?sessionToken=' + sessionToken, '_blank');
 
       $location.path('store-instance-dashboard');
     }

@@ -464,19 +464,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.createStoreInstanceErrorHandler = function(response) {
       $this.hideLoadingModal();
       $scope.displayError = true;
-      if (response.data) {
-        $scope.formErrors = response.data;
-        return false;
-      }
-      $scope.response500 = true;
+      $scope.errorResponse = response;
       return false;
     };
 
     this.resetErrors = function() {
-      $scope.formErrors = [];
-      $scope.errorCustom = [];
       $scope.displayError = false;
-      $scope.response500 = false;
+      $scope.errorResponse = null;
     };
 
     this.formatMenus = function(menus) {

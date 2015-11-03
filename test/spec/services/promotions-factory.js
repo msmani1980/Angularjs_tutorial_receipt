@@ -36,7 +36,7 @@ describe('Service: promotionsFactory', function () {
     spyOn(itemsService, 'getItemsList');
     spyOn(recordsService, 'getBenefitTypes');
     spyOn(recordsService, 'getDiscountTypes');
-    spyOn(GlobalMenuService.company, 'get');
+    spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
     spyOn(recordsService, 'getPromotionTypes');
     spyOn(companyDiscountService, 'getDiscountList');
     spyOn(salesCategoriesService, 'getSalesCategoriesList');

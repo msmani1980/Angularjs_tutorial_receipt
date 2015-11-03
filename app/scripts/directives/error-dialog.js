@@ -8,47 +8,76 @@
  */
 angular.module('ts5App')
   .directive('errorDialog', function() {
-    var errorDialogController = function($scope) {
 
-      var form = $scope.$parent[$scope.formObject.$name];
-      $scope.errorPattern = [];
-      $scope.errorRequired = [];
-      $scope.$parent.displayError = false;
+    var errorDialogController = function($scope,$document) {
 
-      $scope.validateRequiredFields = function() {
+      var $this = this;
+      this.form = $scope.$parent[$scope.formObject.$name];
+
+      this.formatErrorText = function(text) {
+        return text.split(/(?=[A-Z])/).join(' ');
+      };
+
+      this.internalServerErrorHandler = function() {
+        $this.internalServerError = true;
+      };
+
+      this.scrollToDialog = function() {
+        var top = 25;
+        var duration = 2000;
+        $document.scrollTop(top, duration);
+      };
+
+      this.setScrollWatch = function() {
+        $scope.$watch('display',function(currentFlag){
+          if(currentFlag === true) {
+            $this.scrollToDialog();
+          }
+        });
+      };
+
+      this.init = function() {
+        $scope.errorPattern = [];
         $scope.errorRequired = [];
-        angular.forEach(form.$error.required, function(field) {
+        $scope.$on('internal-server-error', this.internalServerErrorHandler);
+        this.setScrollWatch();
+        this.watchForm();
+      };
+
+      this.validateRequiredFields = function() {
+        $scope.errorRequired = [];
+        angular.forEach(this.form.$error.required, function(field) {
           if (field.$invalid) {
-            var fieldName = field.$name;
+            var fieldName = $this.formatErrorText(field.$name);
             $scope.errorRequired.push(fieldName);
           }
         });
       };
 
-      $scope.validatePatternFields = function() {
+      this.validatePatternFields = function() {
         $scope.errorPattern = [];
-        angular.forEach(form.$error.pattern, function(field) {
+        angular.forEach(this.form.$error.pattern, function(field) {
           if (field.$invalid && field.$viewValue) {
-            var fieldName = field.$name;
+            var fieldName = $this.formatErrorText(field.$name);
             $scope.errorPattern.push(fieldName);
           }
         });
       };
 
-      $scope.checkForErrors = function() {
-        $scope.validateRequiredFields();
-        $scope.validatePatternFields();
+      this.checkForErrors = function() {
+        this.validateRequiredFields();
+        this.validatePatternFields();
       };
 
-      $scope.watchForm = function() {
-        if (form && form.$error) {
+      this.watchForm = function() {
+        if (this.form && this.form.$error) {
           var formName = $scope.formObject.$name;
           var watchGroup = formName + '.$error.pattern + ' + formName + '.$error.required';
           $scope.$parent.$watchCollection(watchGroup, function() {
-            $scope.checkForErrors();
+            $this.checkForErrors();
           });
           $scope.$parent.$watchCollection(formName + '.$error', function() {
-            var error = form.$error;
+            var error = $this.form.$error;
             if (!error.pattern && !error.required) {
               $scope.$parent.displayError = false;
             }
@@ -56,7 +85,19 @@ angular.module('ts5App')
         }
       };
 
-      $scope.watchForm();
+      this.init();
+
+      $scope.showInternalServerError = function() {
+        return $this.internalServerError;
+      };
+
+      $scope.showValidationErrors = function() {
+        return ( Array.isArray($this.form.$error.pattern) || Array.isArray($this.form.$error.required) );
+      };
+
+      $scope.showFailedRequest = function() {
+        return ( $scope.errorResponse && !$scope.showValidationErrors() && !$scope.showInternalServerError() );
+      };
 
     };
     return {
@@ -64,7 +105,9 @@ angular.module('ts5App')
       restrict: 'E',
       controller: errorDialogController,
       scope: {
-        formObject: '='
+        formObject: '=',
+        errorResponse: '=',
+        display: '='
       }
     };
   });

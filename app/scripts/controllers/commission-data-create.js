@@ -8,8 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast, $location) {
+  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast, $location, employeesService, GlobalMenuService) {
     var $this = this;
+    var companyId = GlobalMenuService.company.get();
+
     $scope.viewName = 'Creating Commission Data';
     $scope.commissionData = {};
     $scope.baseCurrency = 'GBP'; // TODO: get from API
@@ -19,6 +21,7 @@ angular.module('ts5App')
     var percentTypeUnit = '%';
     $scope.manualBarsCharLimit = 10;
     $scope.commissionValueCharLimit = 10;
+    $scope.crewBaseList = [];
 
 
     this.showToast = function (className, type, message) {
@@ -58,10 +61,12 @@ angular.module('ts5App')
       var commissionPayableType = $this.getNameByIdInArray($scope.commissionData.commissionPayableTypeId, $scope.commissionPayableTypes);
       if(commissionPayableType === 'Retail item') {
         $scope.commissionPercentDisabled = true;
+        $scope.commissionPercentRequired = false;
         $scope.commissionData.commissionPercentage = null;
         $scope.requireCommissionPercent = false;
       } else {
         $scope.commissionPercentDisabled = false;
+        $scope.commissionPercentRequired = true;
         $scope.requireCommissionPercent = true;
 
       }
@@ -133,10 +138,6 @@ angular.module('ts5App')
     };
 
     $scope.saveData = function () {
-      if ($scope.commissionDataForm.$invalid) {
-        $this.showToast('danger', 'Save Items', 'Please check that all fields are completed');
-        return false;
-      }
       var payload = $this.createPayload();
       var initFunctionName = ($routeParams.state + 'CommissionData');
       if ($this[initFunctionName]) {
@@ -145,8 +146,17 @@ angular.module('ts5App')
     };
 
     this.getCrewBaseList = function () {
-      commissionFactory.getCrewBaseTypes().then(function(dataFromAPI) {
-        $scope.crewBaseList = angular.copy(dataFromAPI);
+      var uniqueCrewBaseTypes = {};
+      employeesService.getEmployees(companyId).then(function(dataFromAPI) {
+        angular.forEach(dataFromAPI.companyEmployees, function (employee) {
+          if (!(employee.baseStationId in uniqueCrewBaseTypes)) {
+            uniqueCrewBaseTypes[employee.baseStationId] = {};
+            $scope.crewBaseList.push({
+              id: employee.baseStationId,
+              name: employee.stationCode
+            });
+          }
+        });
       });
     };
 

@@ -53,6 +53,17 @@
   }
 }
 
+.ts5-logo {
+  background-image: url(/images/logo.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  a.navbar-brand {
+    span {
+      font-size: 20px;
+    }
+  }
+}
+
 .panel-blue {
   background-color: #BCE4F0;
   border-color: #29A1DB;
