@@ -99,8 +99,22 @@ angular.module('ts5App')
       initCashBagRevisions();
     }
 
-    $scope.showModal = function () {
+    $scope.showModal = function (modalName) {
       angular.element('#t6Modal').modal('show');
+      var modalNameToHeaderMap = {
+        'Virtual': 'Virtual Product Revenue',
+        'Voucher': 'Voucher Product Revenue',
+        'Promotion': 'ePOS Discount'
+      };
+      var modalNamToTableHeaderMap = {
+        'Virtual': 'Virtual Product Name',
+        'Voucher': 'Voucher Product Name',
+        'Promotion': 'Promotion Name'
+      };
+      if(modalNameToHeaderMap[modalName] && modalNamToTableHeaderMap[modalName]) {
+        $scope.modalMainTitle = modalNameToHeaderMap[modalName];
+        $scope.modalTableHeader = modalNamToTableHeaderMap[modalName];
+      }
     };
 
     $scope.showEditViewForItem = function (item, isLMPStockItem) {
