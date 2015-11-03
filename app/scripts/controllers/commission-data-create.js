@@ -61,10 +61,12 @@ angular.module('ts5App')
       var commissionPayableType = $this.getNameByIdInArray($scope.commissionData.commissionPayableTypeId, $scope.commissionPayableTypes);
       if(commissionPayableType === 'Retail item') {
         $scope.commissionPercentDisabled = true;
+        $scope.commissionPercentRequired = false;
         $scope.commissionData.commissionPercentage = null;
         $scope.requireCommissionPercent = false;
       } else {
         $scope.commissionPercentDisabled = false;
+        $scope.commissionPercentRequired = true;
         $scope.requireCommissionPercent = true;
 
       }
@@ -136,10 +138,6 @@ angular.module('ts5App')
     };
 
     $scope.saveData = function () {
-      if ($scope.commissionDataForm.$invalid) {
-        $this.showToast('danger', 'Save Items', 'Please check that all fields are completed');
-        return false;
-      }
       var payload = $this.createPayload();
       var initFunctionName = ($routeParams.state + 'CommissionData');
       if ($this[initFunctionName]) {
