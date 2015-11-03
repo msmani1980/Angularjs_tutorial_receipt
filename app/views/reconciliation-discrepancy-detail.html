@@ -209,46 +209,46 @@
                 <br>
                 <table class="table table-bordered">
                   <tr class="active">
-                    <th ng-click="updateLMPStockOrderBy('itemName')">
-                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('itemName') === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('itemName') === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('itemName') === 'none'"></span>
+                    <th ng-click="updateOrderBy('itemName', true)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('itemName', true) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('itemName', true) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('itemName', true) === 'none'"></span>
                       Retail Item
                     </th>
-                    <th ng-click="updateLMPStockOrderBy('dispatchedCount')">
-                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('dispatchedCount') === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('dispatchedCount') === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('dispatchedCount') === 'none'"></span>
+                    <th ng-click="updateOrderBy('dispatchedCount', true)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('dispatchedCount', true) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('dispatchedCount', true) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('dispatchedCount', true) === 'none'"></span>
                       Dispatched Count
                     </th>
-                    <th ng-click="updateLMPStockOrderBy('inboundCount')">
-                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('inboundCount') === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('inboundCount') === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('inboundCount') === 'none'"></span>
+                    <th ng-click="updateOrderBy('inboundCount', true)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('inboundCount', true) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('inboundCount', true) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('inboundCount', true) === 'none'"></span>
                       Inbound Count
                     </th>
-                    <th ng-click="updateLMPStockOrderBy('ePOSSales')">
-                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('ePOSSales') === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('ePOSSales') === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('ePOSSales') === 'none'"></span>
+                    <th ng-click="updateOrderBy('ePOSSales', true)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('ePOSSales', true) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('ePOSSales', true) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('ePOSSales', true) === 'none'"></span>
                       ePOS Count
                     </th>
-                    <th ng-click="updateLMPStockOrderBy('varianceQuantity')">
-                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('varianceQuantity') === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('varianceQuantity') === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('varianceQuantity') === 'none'"></span>
+                    <th ng-click="updateOrderBy('varianceQuantity', true)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('varianceQuantity', true) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('varianceQuantity', true) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('varianceQuantity', true) === 'none'"></span>
                       Variance Quantity
                     </th>
-                    <th ng-click="updateLMPStockOrderBy('retailValue')">
-                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('retailValue') === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('retailValue') === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('retailValue') === 'none'"></span>
+                    <th ng-click="updateOrderBy('retailValue', true)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('retailValue', true) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('retailValue', true) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('retailValue', true) === 'none'"></span>
                       Retail Value [GBP]
                     </th>
-                    <th ng-click="updateLMPStockOrderBy('varianceValue')">
-                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('varianceValue') === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('varianceValue') === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('varianceValue') === 'none'"></span>
+                    <th ng-click="updateOrderBy('varianceValue', true)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('varianceValue', true) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('varianceValue', true) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('varianceValue', true) === 'none'"></span>
                       Variance Value [GBP]
                     </th>
                     <th></th>
@@ -320,7 +320,7 @@
                   <div class="col-xs-4">
                     <label>Show Only Discrepancies</label>
                     <br>
-                    <input bs-switch ng-model="switchModel" type="checkbox" switch-size="small" switch-on-color="info">
+                    <input bs-switch ng-model="showCashBagDiscrepancies" type="checkbox" switch-size="small" switch-on-color="info">
                     </select>
                   </div>
                 </div>
@@ -328,58 +328,104 @@
 
                 <table class="table table-striped table-bordered">
                   <tr>
-                    <th><span class="fa fa-sort-asc active"></span> Cash Bag</th>
-                    <th><span class="fa fa-sort text-muted-light"></span> Currency</th>
-                    <th><span class="fa fa-sort text-muted-light"></span> Exchange Amount</th>
-                    <th><span class="fa fa-sort text-muted-light"></span> Crew Amount</th>
-                    <th><span class="fa fa-sort text-muted-light"></span> Cash Handler Paper Amount</th>
-                    <th><span class="fa fa-sort text-muted-light"></span> Cash Handler Coin Amount</th>
-                    <th><span class="fa fa-sort text-muted-light"></span> Variance Value</th>
-                    <th><span class="fa fa-sort text-muted-light"></span> Bank Exchange Rate</th>
-                    <th><span class="fa fa-sort text-muted-light"></span> Total Band [GBP]</th>
+                    <th ng-click="updateOrderBy('cashBag', false)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('cashBag', false) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('cashBag', false) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('cashBag', false) === 'none'"></span>
+                      Cash Bag
+                    </th>
+                    <th ng-click="updateOrderBy('currency', false)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('currency', false) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('currency', false) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('currency', false) === 'none'"></span>
+                      Currency
+                    </th>
+                    <th ng-click="updateOrderBy('exchangeAmount', false)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('exchangeAmount', false) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('exchangeAmount', false) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('exchangeAmount', false) === 'none'"></span>
+                      Exchange Amount
+                    </th>
+                    <th ng-click="updateOrderBy('crewAmount', false)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('crewAmount', false) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('crewAmount', false) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('crewAmount', false) === 'none'"></span>
+                      Crew Amount
+                    </th>
+                    <th ng-click="updateOrderBy('paperAmount', false)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('paperAmount', false) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('paperAmount', false) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('paperAmount', false) === 'none'"></span>
+                      Cash Handler Paper Amount
+                    </th>
+                    <th ng-click="updateOrderBy('coinAmount', false)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('coinAmount', false) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('coinAmount', false) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('coinAmount', false) === 'none'"></span>
+                      Cash Handler Coin Amount
+                    </th>
+                    <th ng-click="updateOrderBy('varianceValue', false)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('varianceValue', false) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('varianceValue', false) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('varianceValue', false) === 'none'"></span>
+                      Variance Value
+                    </th>
+                    <th ng-click="updateOrderBy('bankExchangeRate', false)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('bankExchangeRate', false) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('bankExchangeRate', false) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('bankExchangeRate', false) === 'none'"></span>
+                      Bank Exchange Rate
+                    </th>
+                    <th ng-click="updateOrderBy('totalBand', false)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('totalBand', false) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('totalBand', false) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('totalBand', false) === 'none'"></span>
+                      Total Band [GBP]
+                    </th>
                     <td></td>
                   </tr>
-                  <tr>
+                  <tr ng-repeat="item in cashBags | orderBy: cashBagSortTitle" ng-show="showCashBagDiscrepancies ? item.isDiscrepancy : true">
                     <td>
-                      <!--<input type="text" class="form-control">-->
-                      <span>12345</span>
+                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.cashBag">
+                      <span ng-hide="showEditViewForItem(item, false)">{{ item.cashBag }}</span>
                     </td>
                     <td>
-                      <!--<input type="text" class="form-control">-->
-                      <span>AUD</span>
+                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.currency">
+                      <span ng-hide="showEditViewForItem(item, false)">{{ item.currency }}</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control">
-                      <!--<span>141.00</span>-->
+                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.exchangeAmount">
+                      <span ng-hide="showEditViewForItem(item, false)">{{ item.exchangeAmount }}</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control">
-                      <!--<span>148.00</span>-->
+                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.crewAmount">
+                      <span ng-hide="showEditViewForItem(item, false)">{{ item.crewAmount }}</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control">
-                      <!--<span>120.00</span>-->
+                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.paperAmount">
+                      <span ng-hide="showEditViewForItem(item, false)">{{ item.paperAmount }}</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control">
-                      <!--<span>18.00</span>-->
+                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.coinAmount">
+                      <span ng-hide="showEditViewForItem(item, false)">{{ item.coinAmount }}</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control">
-                      <!--<span>-3.00</span>-->
+                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.varianceValue">
+                      <span ng-hide="showEditViewForItem(item, false)">{{ item.varianceValue }}</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control">
-                      <!--<span>1.0000</span>-->
+                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.bankExchangeRate">
+                      <span ng-hide="showEditViewForItem(item, false)">{{ item.bankExchangeRate }}</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control">
-                      <!--<span>138.00</span>-->
+                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.totalBand">
+                      <span ng-hide="showEditViewForItem(item, false)">{{ item.totalBand }}</span>
                     </td>
                     <td>
-                      <a class="btn btn-success btn-xs btn-block" tabindex="0"><span class="fa fa-check"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0"><span class="fa fa-times"></span></a>
-                      <a class="btn btn-info btn-xs btn-block" tabindex="0"><span class="fa fa-file-text"></span></a>
+                      <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="showEditViewForItem(item, true)"><span class="fa fa-pencil"></span></a>
+                      <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveItem(item)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
+                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
+                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="editLMPStockTable"><span class="fa fa-undo"></span></a>
                     </td>
                   </tr>
                 </table>

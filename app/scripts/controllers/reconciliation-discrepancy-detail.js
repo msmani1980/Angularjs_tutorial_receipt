@@ -57,7 +57,7 @@ angular.module('ts5App')
       initLMPStockRevisions();
     };
 
-    $scope.editCashBagTable = function () {
+    $scope.initEditCashBagTable = function () {
       $scope.editCashBagTable = true;
       initCashBagRevisions();
     };
@@ -84,18 +84,22 @@ angular.module('ts5App')
     $scope.cancelEditingCashBagTable  =function () {
     };
 
-    $scope.updateLMPStockOrderBy = function (orderName) {
-      if($scope.LMPSortTitle === orderName) {
-        $scope.LMPSortTitle = '-' + $scope.LMPSortTitle;
+    $scope.updateOrderBy = function (orderName, isLMPStock) {
+      var currentTitle = isLMPStock ? $scope.LMPSortTitle : $scope.cashBagSortTitle;
+      var titleToSet = (currentTitle === orderName) ? ('-' + currentTitle) : (orderName);
+
+      if(isLMPStock) {
+        $scope.LMPSortTitle = titleToSet;
       } else {
-        $scope.LMPSortTitle = orderName;
+        $scope.cashBagSortTitle = titleToSet;
       }
     };
 
-    $scope.getArrowType = function (orderName, tableName) {
-      if($scope.LMPSortTitle === orderName) {
+    $scope.getArrowType = function (orderName, isLMPStock) {
+      var currentTitle = isLMPStock ? $scope.LMPSortTitle : $scope.cashBagSortTitle;
+      if(currentTitle === orderName) {
         return 'ascending';
-      } else if($scope.LMPSortTitle === '-' + orderName) {
+      } else if(currentTitle === '-' + orderName) {
         return 'descending'
       }
       return 'none';
@@ -109,7 +113,10 @@ angular.module('ts5App')
     }
 
     function initCashBagRevisions () {
-
+      angular.forEach($scope.cashBags, function (item) {
+        item.revision = angular.copy(item);
+        item.isEditing = false;
+      });
     }
 
     function initData() {
@@ -144,6 +151,29 @@ angular.module('ts5App')
         varianceValue: 14.0,
         isDiscrepancy: false
       }];
+      $scope.cashBags = [{
+        cashBag: 'CB123',
+        currency: 'GBP',
+        exchangeAmount: 12,
+        crewAmount: 14,
+        paperAmount: 34,
+        coinAmount: 12.00,
+        varianceValue: 5,
+        bankExchangeRate: 7.0,
+        totalBand: 100,
+        isDiscrepancy: true
+      }, {
+        cashBag: 'CB345',
+        currency: 'GBP',
+        exchangeAmount: 15,
+        crewAmount: 34,
+        paperAmount: 23,
+        coinAmount: 15.00,
+        varianceValue: 12,
+        bankExchangeRate: 16.0,
+        totalBand: 200,
+        isDiscrepancy: false
+      }];
     }
 
     function initTableDefaults () {
@@ -152,7 +182,7 @@ angular.module('ts5App')
       $scope.editLMPStockTable = false;
       $scope.editCashBagTable = false;
       $scope.LMPSortTitle = 'itemName';
-      $scope.stockSortTitle = 'cashBag';
+      $scope.cashBagSortTitle = 'cashBag';
     }
 
     function init() {
