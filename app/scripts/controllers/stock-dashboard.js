@@ -10,7 +10,7 @@
 
 angular.module('ts5App').controller('StockDashboardCtrl',
   function ($scope, $http, GlobalMenuService, stockManagementStationItemsService, catererStationService, companyReasonCodesService,
-            dateUtility, $filter,ENV, stockTakeFactory) {
+            dateUtility, $filter,ENV, stockTakeFactory, identityAccessFactory) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
@@ -62,8 +62,8 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     this.setExportURL = function(cateringStation) {
       $scope.exportURL = ENV.apiUrl + '/api/stock-management/dashboard/' + cateringStation.id;
-      // TODO: get sessionToken from the request headers from server
-      $scope.exportURL += '/file/export?sessionToken=' + '9e85ffbb3b92134fbf39a0c366bd3f12f0f5';//$http.defaults.headers.common.sessionToken;
+      var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
+      $scope.exportURL += '/file/export?sessionToken=' + sessionToken;
     };
 
     this.generateStockTakeQuery = function () {

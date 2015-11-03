@@ -27,7 +27,8 @@ describe('Controller: StockDashboardCtrl', function() {
     getStockTakeListDeferred,
     scope,
     http,
-    ENV;
+    ENV,
+    identityAccessFactory;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q) {
@@ -38,6 +39,7 @@ describe('Controller: StockDashboardCtrl', function() {
     catererStationService = $injector.get('catererStationService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
     stockTakeService = $injector.get('stockTakeService');
+    identityAccessFactory = $injector.get('identityAccessFactory');
 
     inject(function(_servedStockManagementDashboard_, _servedCateringStations_,
       _servedStockTakeList_, _servedCompanyReasonCodes_) {
@@ -64,6 +66,9 @@ describe('Controller: StockDashboardCtrl', function() {
     spyOn(stockManagementStationItemsService, 'getStockManagementStationItems').and.returnValue(getStockManagementStationItemsDeferred.promise);
     spyOn(catererStationService, 'getCatererStationList').and.returnValue(getCatererStationListDeferred.promise);
     spyOn(companyReasonCodesService, 'getAll').and.returnValue(getCompanyReasonCodesDeferred.promise);
+    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
+      sessionToken: 'fakeSessionToken'
+    });
 
     StockDashboardCtrl = $controller('StockDashboardCtrl', {
       $scope: scope
@@ -238,7 +243,7 @@ describe('Controller: StockDashboardCtrl', function() {
       beforeEach(function() {
         scope.selectedCateringStation = cateringStationsJSON.response[0];
         urlControl = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
-        urlControl += '/file/export?sessionToken=9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
+        urlControl += '/file/export?sessionToken=fakeSessionToken';
       });
 
       it('set the exportURL when the catering station is selected', function() {
@@ -257,7 +262,7 @@ describe('Controller: StockDashboardCtrl', function() {
         scope.$digest();
         expect(scope.exportURL).not.toEqual(urlControl);
         var newURL = ENV.apiUrl + '/api/stock-management/dashboard/' + scope.selectedCateringStation.id;
-        newURL += '/file/export?sessionToken=9e85ffbb3b92134fbf39a0c366bd3f12f0f5';
+        newURL += '/file/export?sessionToken=fakeSessionToken';
         expect(scope.exportURL).toEqual(newURL);
       });
 
