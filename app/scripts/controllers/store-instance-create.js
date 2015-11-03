@@ -230,10 +230,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.resetErrors = function() {
-      $scope.formErrors = [];
-      $scope.errorCustom = [];
       $scope.displayError = false;
-      $scope.response500 = false;
+      $scope.errorResponse = null;
     };
 
     this.formatMenus = function(menus) {

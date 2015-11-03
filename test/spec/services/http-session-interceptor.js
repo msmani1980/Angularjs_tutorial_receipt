@@ -7,34 +7,29 @@ describe('Service: httpSessionInterceptor', function () {
 
   // instantiate service
   var httpSessionInterceptor;
-  beforeEach(inject(function (_httpSessionInterceptor_) {
+  var rootScope;
+  beforeEach(inject(function (_httpSessionInterceptor_, $rootScope) {
     httpSessionInterceptor = _httpSessionInterceptor_;
+    rootScope = $rootScope;
+    spyOn(rootScope, '$broadcast');
   }));
 
   it('should exist', function () {
     expect(!!httpSessionInterceptor).toBe(true);
   });
 
-  describe('request function', function () {
-    var actualConfig;
+  describe('responseError function', function () {
 
-    beforeEach(function () {
-      var config = {
-        headers: {
-          key: 'fakeValue'
-        }
-      };
-
-      actualConfig = httpSessionInterceptor.request(config);
+    it('should broadcast if status is unauthorized 401', function () {
+      httpSessionInterceptor.responseError({status: 401});
+      expect(rootScope.$broadcast).toHaveBeenCalledWith('unauthorized');
     });
 
-    it('should add a session token header', function () {
-      expect(angular.isDefined(actualConfig.headers.sessionToken)).toBe(true);
+    it('should broadcast if status is unauthorized 401', function () {
+      httpSessionInterceptor.responseError({status: 200});
+      expect(rootScope.$broadcast).not.toHaveBeenCalled();
     });
 
-    it('should add a timeout header', function () {
-      expect(angular.isDefined(actualConfig.headers.timeout)).toBe(true);
-    });
   });
 
 });

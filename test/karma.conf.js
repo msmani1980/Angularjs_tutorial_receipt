@@ -7,6 +7,10 @@ module.exports = function(config) {
   'use strict';
 
   config.set({
+    // to avoid DISCONNECTED messages
+    browserDisconnectTimeout: 10000, // default 2000
+    browserDisconnectTolerance: 1, // default 0
+    browserNoActivityTimeout: 60000, //default 10000
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
@@ -73,10 +77,13 @@ module.exports = function(config) {
       'bower_components/ng-file-upload/ng-file-upload.js',
       'bower_components/ng-lodash/build/ng-lodash.js',
       'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
-      'bower_components/ngstorage/ngStorage.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/ngtoast/dist/ngToast.js',
       'bower_components/select2/select2.js',
+      'bower_components/ngstorage/ngStorage.js',
+      'bower_components/sha256/index.js',
+      'bower_components/enc-base64-min/index.js',
+      'bower_components/aes/index.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
