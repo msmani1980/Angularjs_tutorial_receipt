@@ -198,7 +198,7 @@
                 <div class="row">
                   <div class="col-xs-8">
                     <label>Filter by Item Name or Category</label>
-                    <input type="text" class="form-control" placeholder="Type an item name or category"/>
+                    <input type="text" class="form-control" ng-model="filterItemDetails" placeholder="Type an item name or category"/>
                   </div>
                   <div class="col-xs-4">
                     <label>Show Only Discrepancies</label>
@@ -209,49 +209,84 @@
                 <br>
                 <table class="table table-bordered">
                   <tr class="active">
-                    <th><span class="fa fa-sort-asc active"></span> Retail Item</th>
-                    <th><span class="fa fa-sort active text-muted-light"></span> Dispatched Count</th>
-                    <th><span class="fa fa-sort active text-muted-light"></span> Inbound Count</th>
-                    <th><span class="fa fa-sort active text-muted-light"></span> ePOS Sales</th>
-                    <th><span class="fa fa-sort active text-muted-light"></span> Variance Quantity</th>
-                    <th><span class="fa fa-sort active text-muted-light"></span> Retail Value [GBP]</th>
-                    <th><span class="fa fa-sort active text-muted-light"></span> Variance Value [GBP]</th>
+                    <th ng-click="updateLMPStockOrderBy('itemName')">
+                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('itemName') === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('itemName') === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('itemName') === 'none'"></span>
+                      Retail Item
+                    </th>
+                    <th ng-click="updateLMPStockOrderBy('dispatchedCount')">
+                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('dispatchedCount') === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('dispatchedCount') === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('dispatchedCount') === 'none'"></span>
+                      Dispatched Count
+                    </th>
+                    <th ng-click="updateLMPStockOrderBy('inboundCount')">
+                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('inboundCount') === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('inboundCount') === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('inboundCount') === 'none'"></span>
+                      Inbound Count
+                    </th>
+                    <th ng-click="updateLMPStockOrderBy('ePOSSales')">
+                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('ePOSSales') === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('ePOSSales') === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('ePOSSales') === 'none'"></span>
+                      ePOS Count
+                    </th>
+                    <th ng-click="updateLMPStockOrderBy('varianceQuantity')">
+                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('varianceQuantity') === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('varianceQuantity') === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('varianceQuantity') === 'none'"></span>
+                      Variance Quantity
+                    </th>
+                    <th ng-click="updateLMPStockOrderBy('retailValue')">
+                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('retailValue') === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('retailValue') === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('retailValue') === 'none'"></span>
+                      Retail Value [GBP]
+                    </th>
+                    <th ng-click="updateLMPStockOrderBy('varianceValue')">
+                      <span class="fa fa-sort-asc active" ng-show="getLMPStockSortArrowType('varianceValue') === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getLMPStockSortArrowType('varianceValue') === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getLMPStockSortArrowType('varianceValue') === 'none'"></span>
+                      Variance Value [GBP]
+                    </th>
                     <th></th>
                   </tr>
-                  <tr ng-repeat="item in LMPStock" ng-show="showLMPDiscrepancies ? item.isDiscrepancy : true">
+                  <tr ng-repeat="item in LMPStock | filter:{itemDescription: filterItemDetails} | orderBy: LMPSortTitle" ng-show="showLMPDiscrepancies ? item.isDiscrepancy : true">
                     <td>
-                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].itemName">
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.itemName">
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.itemName }}</span>
                     </td>
                     <td>
-                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].dispatchedCount">
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.dispatchedCount">
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.dispatchedCount }}</span>
                     </td>
                     <td>
-                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].inboundCount">
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.inboundCount">
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.inboundCount }}</span>
                     </td>
                     <td>
-                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].ePOSSales">
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.ePOSSales">
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.ePOSSales }}</span>
                     </td>
                     <td>
-                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].varianceQuantity">
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.varianceQuantity">
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.varianceQuantity }}</span>
                     </td>
                     <td>
-                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].retailValue">
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.retailValue">
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.retailValue }}</span>
                     </td>
                     <td>
-                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="LMPStockRevisions[$index].varianceValue">
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.varianceValue">
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.varianceValue }}</span>
                     </td>
                     <td>
-                      <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editLMPStockItem($index)" ng-hide="showEditViewForItem(item, true)"><span class="fa fa-pencil"></span></a>
-                      <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveLMPStockItem($index)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditingLMPStockItem($index)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertLMPStockItem($index)" ng-show="editLMPStockTable"><span class="fa fa-undo"></span></a>
+                      <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editLMPStockItem(item)" ng-hide="showEditViewForItem(item, true)"><span class="fa fa-pencil"></span></a>
+                      <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveLMPStockItem(item)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
+                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditingLMPStockItem(item)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
+                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertLMPStockItem(item)" ng-show="editLMPStockTable"><span class="fa fa-undo"></span></a>
                     </td>
                   </tr>
                 </table>

@@ -22,91 +22,119 @@ angular.module('ts5App')
       }
     };
 
-    $scope.editLMPStockItem = function (index) {
+    $scope.editLMPStockItem = function (item) {
       $scope.LMPStockRevisions = angular.copy($scope.LMPStock);
-      $scope.LMPStock[index].isEditing = true;
+      item.isEditing = true;
+      var duplicateItem = angular.copy(item);
+      delete duplicateItem.revision;
+      delete duplicateItem.isEditing;
+      item.revision = duplicateItem;
     };
 
-    $scope.saveLMPStockItem = function (index) {
-      $scope.LMPStock[index].isEditing = false;
-      $scope.LMPStock[index] = angular.copy($scope.LMPStockRevisions[index]);
+    $scope.saveLMPStockItem = function (item) {
+      item.itemName = item.revision.itemName;
+      item.dispatchedCount = item.revision.dispatchedCount;
+      item.inboundCount = item.revision.inboundCount;
+      item.ePOSSales = item.revision.ePOSSales;
+      item.varianceQuantity = item.revision.varianceQuantity;
+      item.retailValue = item.revision.varianceQuantity;
+      item.varianceValue = item.revision.varianceValue;
+      item.revision = {};
+      item.isEditing = false;
     };
 
-    $scope.revertLMPStockItem = function (index) {
-      $scope.LMPStockRevisions[index] = angular.copy($scope.LMPStock[index]);
+    $scope.revertLMPStockItem = function (item) {
+      var duplicateItem = angular.copy(item);
+      delete duplicateItem.revision;
+      delete duplicateItem.isEditing;
+      item.revision = duplicateItem;
     };
 
-    $scope.cancelEditingLMPStockItem = function (index) {
-      $scope.LMPStock[index].isEditing = false;
-      $scope.revertLMPStockItem(index);
+    $scope.cancelEditingLMPStockItem = function (item) {
+      item.isEditing = false;
+      $scope.revertLMPStockItem(item);
     };
 
     $scope.enableEditLMPStockTable = function () {
       $scope.editLMPStockTable = true;
-
-      angular.forEach($scope.LMPStock, function (item) {
-        item.isEditing = false;
-      });
-      $scope.LMPStockRevisions = angular.copy($scope.LMPStock);
+      initRevisions();
     };
 
     $scope.saveLMPStockTable = function () {
       $scope.editLMPStockTable = false;
-      $scope.LMPStock = angular.copy($scope.LMPStockRevisions);
+      angular.forEach($scope.LMPStock, function(item) {
+        $scope.saveLMPStockItem(item);
+      });
     };
 
     $scope.cancelEditingLMPStockTable = function () {
       $scope.editLMPStockTable = false;
     };
 
-    $scope.initLMPStockRevisionsForEditing = function () {
-      $scope.LMPStockRevisions = angular.copy($scope.LMPStock);
+    $scope.updateLMPStockOrderBy = function (orderName) {
+      if($scope.LMPSortTitle === orderName) {
+        $scope.LMPSortTitle = '-' + $scope.LMPSortTitle;
+      } else {
+        $scope.LMPSortTitle = orderName;
+      }
     };
+
+    $scope.getLMPStockSortArrowType = function (orderName) {
+      if($scope.LMPSortTitle === orderName) {
+        return 'ascending';
+      } else if($scope.LMPSortTitle === '-' + orderName) {
+        return 'descending'
+      }
+      return 'none';
+    };
+
+    function initRevisions () {
+      angular.forEach($scope.LMPStock, function (item) {
+        item.revision = angular.copy(item);
+        item.isEditing = false;
+      });
+    }
 
     function init() {
       angular.element("#checkbox").bootstrapSwitch();
       $scope.showLMPDiscrepancies = true;
       $scope.editLMPStockTable = false;
       $scope.editEposSalesTable = false;
+      $scope.LMPSortTitle = 'itemName';
 
       $scope.LMPStock = [{
-        id: 1,
         itemName: 'Chocolate',
+        itemDescription: 'Food: Chocolate',
         dispatchedCount: 50,
         inboundCount: 50,
         ePOSSales: 20,
         varianceQuantity: 0,
         retailValue: 5,
         varianceValue: 7.0,
-        isDiscrepancy: true,
-        isEditing: false
+        isDiscrepancy: true
       }, {
-        id: 2,
-        itemName: 'Coke',
-        dispatchedCount: 20,
-        inboundCount: 35,
-        ePOSSales: 12,
-        varianceQuantity: 0,
-        retailValue: 5,
-        varianceValue: 14.0,
-        isDiscrepancy: false,
-        isEditing: false
-      }, {
-        id: 3,
         itemName: 'Pepsi',
+        itemDescription: 'Drink: Pepsi',
         dispatchedCount: 150,
         inboundCount: 30,
         ePOSSales: 25,
         varianceQuantity: 11,
         retailValue: 6,
         varianceValue: 12.0,
-        isDiscrepancy: false,
-        isEditing: false
+        isDiscrepancy: false
+      }, {
+        itemName: 'Coke',
+        itemDescription: 'Drink: Coke',
+        dispatchedCount: 20,
+        inboundCount: 35,
+        ePOSSales: 12,
+        varianceQuantity: 0,
+        retailValue: 5,
+        varianceValue: 14.0,
+        isDiscrepancy: false
       }];
+      initRevisions();
     }
     init();
-
-
-
 
   });
