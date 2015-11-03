@@ -146,7 +146,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       });
     });
 
-    describe('enable table editing', function () {
+    describe('table editing', function () {
       describe('edit init', function () {
         beforeEach(function () {
           scope.LMPStock = [{
@@ -161,12 +161,17 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
           scope.initEditTable(true);
           expect(scope.editLMPStockTable).toEqual(true);
         });
-
         it('should init revisions to equal current data', function () {
           var expectedRevisionObject = angular.copy(scope.LMPStock[0]);
           scope.initEditTable(true);
           expect(scope.LMPStock[0].revision).toEqual(expectedRevisionObject);
         });
+        it('should make changes to cash bag table if isLMPTable is false', function () {
+          var expectedRevisionObject = angular.copy(scope.cashBags[0]);
+          scope.initEditTable(false);
+          expect(scope.editCashBagTable).toEqual(true);
+          expect(scope.cashBags[0].revision).toEqual(expectedRevisionObject);
+        })
       });
 
       describe('save', function () {
@@ -186,16 +191,31 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
               quantity: 4
             }
           }];
-          scope.saveTable(true);
+          scope.cashBags = [{
+            itemName: 'item1',
+            quantity: 1,
+            revision: {
+              itemName: 'newItem1',
+              quantity: 3
+            }
+          }];
         });
         it('should set all data to revision data', function () {
+          scope.saveTable(true);
           expect(scope.LMPStock[0].itemName).toEqual('newItem1');
           expect(scope.LMPStock[0].quantity).toEqual(3);
           expect(scope.LMPStock[1].itemName).toEqual('newItem2');
           expect(scope.LMPStock[1].quantity).toEqual(4);
         });
         it('should revert table to not be in edit mode', function () {
+          scope.saveTable(true);
           expect(scope.editLMPStockTable).toEqual(false);
+        });
+        it('should make expected changes to cashBags object if isLMPTable is false', function () {
+          scope.saveTable(false);
+          expect(scope.editCashBagTable).toEqual(false);
+          expect(scope.cashBags[0].itemName).toEqual('newItem1');
+          expect(scope.cashBags[0].quantity).toEqual(3);
         });
       });
       describe('cancel editing table', function () {
@@ -215,15 +235,31 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
               quantity: 4
             }
           }];
-          scope.cancelEditingTable(true);
+          scope.cashBags = [{
+            itemName: 'item1',
+            quantity: 1,
+            revision: {
+              itemName: 'newItem1',
+              quantity: 3
+            }
+          }];
         });
         it('should clear revision data', function () {
+          scope.cancelEditingTable(true);
           expect(scope.LMPStock[0].itemName).toEqual('item1');
           expect(scope.LMPStock[0].quantity).toEqual(1);
           expect(scope.LMPStock[0].revision).toEqual({});
         });
         it('should revert table to not be in edit mode', function () {
+          scope.cancelEditingTable(true);
           expect(scope.editLMPStockTable).toEqual(false);
+        });
+        it('should make expected changes to cashBags object if isLMPTable is false', function () {
+          scope.cancelEditingTable(false);
+          expect(scope.editCashBagTable).toEqual(false);
+          expect(scope.cashBags[0].itemName).toEqual('item1');
+          expect(scope.cashBags[0].quantity).toEqual(1);
+          expect(scope.cashBags[0].revision).toEqual({});
         });
       });
     });
