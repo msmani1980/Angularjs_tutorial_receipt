@@ -75,6 +75,22 @@ describe('Controller: LoginCtrl', function () {
         scope.$digest();
         expect(scope.displayError).toBeTruthy();
       });
+
+      it('should set the error response', function () {
+        var errorMock = {
+          status: 400,
+          data: [
+            {
+              field: 'Username or Password',
+              value: 'does not match our records.'
+            }
+          ]
+        };
+        loginDeferred.reject(errorMock);
+        scope.$digest();
+        expect(scope.errorResponse).toEqual(errorMock);
+      });
+
     });
 
 

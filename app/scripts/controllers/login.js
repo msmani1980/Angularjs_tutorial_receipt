@@ -26,10 +26,13 @@ angular.module('ts5App')
 
     function handleResponseError(responseFromAPI) {
       hideLoadingModal();
-      $scope.formErrors = {
-        status: responseFromAPI.status,
-        statusText: responseFromAPI.statusText
-      };
+      responseFromAPI.data = [
+        {
+          field: 'Username or Password',
+          value: 'does not match our records.'
+        }
+      ];
+      $scope.errorResponse = responseFromAPI;
       $scope.displayError = true;
     }
 
