@@ -24,14 +24,14 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
-    //function handleResponseError(responseFromAPI) {
-    //  hideLoadingModal();
-    //  $scope.formErrors = {
-    //    status: responseFromAPI.status,
-    //    statusText: responseFromAPI.statusText
-    //  };
-    //  $scope.displayError = true;
-    //}
+    function handleResponseError(responseFromAPI) {
+      hideLoadingModal();
+      $scope.formErrors = {
+        status: responseFromAPI.status,
+        statusText: responseFromAPI.statusText
+      };
+      $scope.displayError = true;
+    }
 
     function handleSuccessResponse(responseFromAPI) {
       hideLoadingModal();
@@ -42,21 +42,7 @@ angular.module('ts5App')
       if ($scope.loginForm.$invalid) {
         return;
       }
-      var fakeResponse = {
-        id: 1,
-        companyId: 403,
-        currentSession: {
-          sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
-        }
-      };
       showLoadingModal('Authenticating');
-      //identityAccessFactory.login($scope.credentials).then(handleSuccessResponse, handleResponseError);
-      identityAccessFactory.login($scope.credentials).then(
-        function () {
-          handleSuccessResponse(fakeResponse);
-        },
-        function () {
-          handleSuccessResponse(fakeResponse);
-        });
+      identityAccessFactory.login($scope.credentials).then(handleSuccessResponse, handleResponseError);
     };
   });
