@@ -42,17 +42,21 @@ angular.module('ts5App')
       if ($scope.loginForm.$invalid) {
         return;
       }
+      var fakeResponse = {
+        id: 1,
+        companyId: 403,
+        currentSession: {
+          sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
+        }
+      };
       showLoadingModal('Authenticating');
       //identityAccessFactory.login($scope.credentials).then(handleSuccessResponse, handleResponseError);
-      identityAccessFactory.login($scope.credentials).then(function () {
-        var fakeResponse = {
-          id: 1,
-          companyId: 403,
-          currentSession: {
-            sessionToken: '9e85ffbb3b92134fbf39a0c366bd3f12f0f5'
-          }
-        };
-        handleSuccessResponse(fakeResponse);
-      });
+      identityAccessFactory.login($scope.credentials).then(
+        function () {
+          handleSuccessResponse(fakeResponse);
+        },
+        function () {
+          handleSuccessResponse(fakeResponse);
+        });
     };
   });
