@@ -283,17 +283,17 @@
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.varianceValue }}</span>
                     </td>
                     <td>
-                      <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editLMPStockItem(item)" ng-hide="showEditViewForItem(item, true)"><span class="fa fa-pencil"></span></a>
-                      <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveLMPStockItem(item)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditingLMPStockItem(item)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertLMPStockItem(item)" ng-show="editLMPStockTable"><span class="fa fa-undo"></span></a>
+                      <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="showEditViewForItem(item, true)"><span class="fa fa-pencil"></span></a>
+                      <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveItem(item)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
+                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
+                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="editLMPStockTable"><span class="fa fa-undo"></span></a>
                     </td>
                   </tr>
                 </table>
 
                 <div class="row">
                   <div class="col-xs-12 text-right">
-                    <button ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="enableEditLMPStockTable()"><span class="fa fa-pencil active"></span> Edit Table</button>
+                    <button ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="initEditLMPStockTable()"><span class="fa fa-pencil active"></span> Edit Table</button>
                     <button ng-show="editLMPStockTable" class="btn btn-success" ng-click="saveLMPStockTable()"><span class="fa fa-check active"></span> Save All</button>
                     <button ng-show="editLMPStockTable" class="btn btn-default" ng-click="cancelEditingLMPStockTable()">Cancel</button>
                   </div>
