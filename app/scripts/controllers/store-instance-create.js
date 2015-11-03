@@ -73,16 +73,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setPrevStoreDetails = function(storeDetailsJSON) {
       $scope.prevStoreDetails = storeDetailsJSON;
-      console.log($scope.prevStoreDetails);
     };
 
     this.getStoreDetails = function() {
-      console.log($routeParams.storeId);
       return storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
     };
 
     this.getPrevStoreDetails = function() {
-      console.log($scope.storeDetails.prevStoreInstanceId);
       return storeInstanceFactory.getStoreDetails($scope.storeDetails.prevStoreInstanceId).then($this.setPrevStoreDetails);
     };
 
@@ -393,7 +390,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.createPromiseToDeleteItems = function() {
       var deleteItemsPromiseArray = [];
       angular.forEach($scope.itemsToDelete, function(item) {
-        console.log(item);
         var storeInstance = $routeParams.storeId;
         deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(storeInstance, item.id));
       });
@@ -782,9 +778,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       var promises = $this.makeEditPromises('dispatch');
-      console.log($scope.existingSeals, $scope.userConfirmedDataLoss);
       if (($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss) {
-        console.log('removing seals');
+        console.log('removing seals/items');
         promises.updateInstancePromises.push($this.makeDeleteSealsPromises());
         promises.updateInstancePromises.push($this.createPromiseToDeleteItems());
       }

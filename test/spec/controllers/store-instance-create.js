@@ -13,7 +13,10 @@ describe('Store Instance Create Controller', function() {
     'served/schedules-date-range.json',
     'served/company-menu-caterer-stations.json',
     'served/store-instance-details.json',
-    'served/store-instances-list-onfloor.json'
+    'served/store-instances-list-onfloor.json',
+    'served/seal-types.json',
+    'served/store-instance-seals.json',
+    'served/store-instance-item-list.json'
   ));
 
   var StoreInstanceCreateCtrl;
@@ -56,13 +59,22 @@ describe('Store Instance Create Controller', function() {
   var storeDetailsJSON;
   var getOnFloorInstancesDeferred;
   var onFloorInstanceJSON;
+  var sealTypesService;
+  var sealTypesJSON;
+  var getSealTypesDeferred;
+  var storeInstanceSealService;
+  var storeInstanceAssignSealsFactory;
+  var getStoreInstanceSealsDeferred;
+  var servedStoreInstanceItemsJSON;
+  var getStoreInstanceItemsDeferred;
+  var storeInstanceSealsJSON;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedCateringStations_,
-    _servedMenuMasterList_,
-    _servedCarrierNumbers_, _servedStoresList_, _servedStoreInstanceCreated_,
-    _servedSchedulesDateRange_, _servedCompanyMenuCatererStations_,
-    _servedStoreInstanceDetails_, _servedStoreInstancesListOnfloor_) {
+    _servedMenuMasterList_, _servedCarrierNumbers_, _servedStoresList_, _servedStoreInstanceCreated_,
+    _servedSchedulesDateRange_, _servedCompanyMenuCatererStations_, _servedStoreInstanceDetails_,
+    _servedStoreInstancesListOnfloor_, _servedSealTypes_, _servedStoreInstanceItemList_,
+    _servedStoreInstanceSeals_) {
 
     cateringStationsJSON = _servedCateringStations_;
     menuMasterListJSON = _servedMenuMasterList_;
@@ -73,6 +85,9 @@ describe('Store Instance Create Controller', function() {
     companyMenuCatererStationsJSON = _servedCompanyMenuCatererStations_;
     storeDetailsJSON = _servedStoreInstanceDetails_;
     onFloorInstanceJSON = _servedStoreInstancesListOnfloor_;
+    sealTypesJSON = _servedSealTypes_;
+    storeInstanceSealsJSON = _servedStoreInstanceSeals_;
+    servedStoreInstanceItemsJSON = _servedStoreInstanceItemList_;
 
     httpBackend = $injector.get('$httpBackend');
     location = $injector.get('$location');
@@ -91,6 +106,9 @@ describe('Store Instance Create Controller', function() {
     compile = $injector.get('$compile');
     storeInstanceWizardConfig = $injector.get('storeInstanceWizardConfig');
     schedulesService = $injector.get('schedulesService');
+    sealTypesService = $injector.get('sealTypesService');
+    storeInstanceSealService = $injector.get('storeInstanceSealService');
+    storeInstanceAssignSealsFactory = $injector.get('storeInstanceAssignSealsFactory');
 
     getMenuMasterListDeferred = $q.defer();
     spyOn(menuMasterService, 'getMenuMasterList').and.returnValue(getMenuMasterListDeferred.promise);
@@ -129,6 +147,16 @@ describe('Store Instance Create Controller', function() {
     getOnFloorInstancesDeferred = $q.defer();
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getOnFloorInstancesDeferred.promise);
 
+    getSealTypesDeferred = $q.defer();
+    spyOn(sealTypesService, 'getSealTypes').and.returnValue(getSealTypesDeferred.promise);
+
+    getStoreInstanceSealsDeferred = $q.defer();
+    spyOn(storeInstanceAssignSealsFactory, 'getStoreInstanceSeals').and.returnValue(
+      getStoreInstanceSealsDeferred.promise);
+
+    getStoreInstanceItemsDeferred = $q.defer();
+    spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
+
     httpBackend.expectGET(/views\/./).respond(200, '');
 
     storeInstanceId = 13;
@@ -164,6 +192,9 @@ describe('Store Instance Create Controller', function() {
     getRelationshipListDeferred.resolve(companyMenuCatererStationsJSON);
     getStoreDetailsDeferred.resolve(storeDetailsJSON);
     getOnFloorInstancesDeferred.resolve(onFloorInstanceJSON);
+    getSealTypesDeferred.resolve(sealTypesJSON);
+    getStoreInstanceSealsDeferred.resolve(storeInstanceSealsJSON);
+    getStoreInstanceItemsDeferred.resolve(servedStoreInstanceItemsJSON);
   }
 
   function initController(action, edit) {
