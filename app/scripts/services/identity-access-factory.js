@@ -75,6 +75,7 @@ angular.module('ts5App')
     return {
       login: login,
       setSessionData: setSessionData,
-      isAuthorized: isAuthorized
+      isAuthorized: isAuthorized,
+      getSessionObject: getSessionObject
     };
   });
