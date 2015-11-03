@@ -311,11 +311,12 @@
                 <div class="row">
                   <div class="col-xs-8">
                     <label>Filter by Cash Bag</label>
-                    <select class="form-control">
-                      <option selected="selected">Select a Cash Bag...</option>
-                      <option>123</option>
-                      <option>345</option>
-                    </select>
+                    <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
+                      <ui-select-match placeholder="Select Cash Bags...">{{ $item.cashBag }}</ui-select-match>
+                      <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
+                        {{ cashBag.cashBag }}
+                      </ui-select-choices>
+                    </ui-select>
                   </div>
                   <div class="col-xs-4">
                     <label>Show Only Discrepancies</label>

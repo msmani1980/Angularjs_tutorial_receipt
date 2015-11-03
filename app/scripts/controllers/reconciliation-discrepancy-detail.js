@@ -10,6 +10,95 @@
 angular.module('ts5App')
   .controller('ReconciliationDiscrepancyDetail', function ($scope, $routeParams, ngToast, $location, lodash) {
 
+    function initLMPStockRevisions() {
+      angular.forEach($scope.LMPStock, function (item) {
+        item.revision = angular.copy(item);
+        item.isEditing = false;
+      });
+    }
+
+    function initCashBagRevisions() {
+      angular.forEach($scope.cashBags, function (item) {
+        item.revision = angular.copy(item);
+        item.isEditing = false;
+      });
+    }
+
+    function initData() {
+      $scope.LMPStock = [{
+        itemName: 'Chocolate',
+        itemDescription: 'Food: Chocolate',
+        dispatchedCount: 50,
+        inboundCount: 50,
+        ePOSSales: 20,
+        varianceQuantity: 0,
+        retailValue: 5,
+        varianceValue: 7.0,
+        isDiscrepancy: true
+      }, {
+        itemName: 'Pepsi',
+        itemDescription: 'Drink: Pepsi',
+        dispatchedCount: 150,
+        inboundCount: 30,
+        ePOSSales: 25,
+        varianceQuantity: 11,
+        retailValue: 6,
+        varianceValue: 12.0,
+        isDiscrepancy: false
+      }, {
+        itemName: 'Coke',
+        itemDescription: 'Drink: Coke',
+        dispatchedCount: 20,
+        inboundCount: 35,
+        ePOSSales: 12,
+        varianceQuantity: 0,
+        retailValue: 5,
+        varianceValue: 14.0,
+        isDiscrepancy: false
+      }];
+      $scope.cashBags = [{
+        cashBag: 'CB123',
+        currency: 'GBP',
+        exchangeAmount: 12,
+        crewAmount: 14,
+        paperAmount: 34,
+        coinAmount: 12.00,
+        varianceValue: 5,
+        bankExchangeRate: 7.0,
+        totalBand: 100,
+        isDiscrepancy: true
+      }, {
+        cashBag: 'CB345',
+        currency: 'GBP',
+        exchangeAmount: 15,
+        crewAmount: 34,
+        paperAmount: 23,
+        coinAmount: 15.00,
+        varianceValue: 12,
+        bankExchangeRate: 16.0,
+        totalBand: 200,
+        isDiscrepancy: false
+      }];
+    }
+
+    function initTableDefaults() {
+      $scope.showLMPDiscrepancies = true;
+      $scope.showCashBagDiscrepancies = true;
+      $scope.editLMPStockTable = false;
+      $scope.editCashBagTable = false;
+      $scope.LMPSortTitle = 'itemName';
+      $scope.cashBagSortTitle = 'cashBag';
+      $scope.cashBagFilter = {};
+    }
+
+    function init() {
+      angular.element("#checkbox").bootstrapSwitch();
+      initTableDefaults();
+      initData();
+      initLMPStockRevisions();
+      initCashBagRevisions();
+    }
+
     $scope.showModal = function () {
       angular.element("#t6Modal").modal('show');
     };
@@ -112,94 +201,6 @@ angular.module('ts5App')
       }
       return 'none';
     };
-
-    function initLMPStockRevisions() {
-      angular.forEach($scope.LMPStock, function (item) {
-        item.revision = angular.copy(item);
-        item.isEditing = false;
-      });
-    }
-
-    function initCashBagRevisions() {
-      angular.forEach($scope.cashBags, function (item) {
-        item.revision = angular.copy(item);
-        item.isEditing = false;
-      });
-    }
-
-    function initData() {
-      $scope.LMPStock = [{
-        itemName: 'Chocolate',
-        itemDescription: 'Food: Chocolate',
-        dispatchedCount: 50,
-        inboundCount: 50,
-        ePOSSales: 20,
-        varianceQuantity: 0,
-        retailValue: 5,
-        varianceValue: 7.0,
-        isDiscrepancy: true
-      }, {
-        itemName: 'Pepsi',
-        itemDescription: 'Drink: Pepsi',
-        dispatchedCount: 150,
-        inboundCount: 30,
-        ePOSSales: 25,
-        varianceQuantity: 11,
-        retailValue: 6,
-        varianceValue: 12.0,
-        isDiscrepancy: false
-      }, {
-        itemName: 'Coke',
-        itemDescription: 'Drink: Coke',
-        dispatchedCount: 20,
-        inboundCount: 35,
-        ePOSSales: 12,
-        varianceQuantity: 0,
-        retailValue: 5,
-        varianceValue: 14.0,
-        isDiscrepancy: false
-      }];
-      $scope.cashBags = [{
-        cashBag: 'CB123',
-        currency: 'GBP',
-        exchangeAmount: 12,
-        crewAmount: 14,
-        paperAmount: 34,
-        coinAmount: 12.00,
-        varianceValue: 5,
-        bankExchangeRate: 7.0,
-        totalBand: 100,
-        isDiscrepancy: true
-      }, {
-        cashBag: 'CB345',
-        currency: 'GBP',
-        exchangeAmount: 15,
-        crewAmount: 34,
-        paperAmount: 23,
-        coinAmount: 15.00,
-        varianceValue: 12,
-        bankExchangeRate: 16.0,
-        totalBand: 200,
-        isDiscrepancy: false
-      }];
-    }
-
-    function initTableDefaults() {
-      $scope.showLMPDiscrepancies = true;
-      $scope.showCashBagDiscrepancies = true;
-      $scope.editLMPStockTable = false;
-      $scope.editCashBagTable = false;
-      $scope.LMPSortTitle = 'itemName';
-      $scope.cashBagSortTitle = 'cashBag';
-    }
-
-    function init() {
-      angular.element("#checkbox").bootstrapSwitch();
-      initTableDefaults();
-      initData();
-      initLMPStockRevisions();
-      initCashBagRevisions();
-    }
 
     init();
 
