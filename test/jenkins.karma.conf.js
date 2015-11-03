@@ -84,6 +84,7 @@ module.exports = function(config) {
       'bower_components/sha256/index.js',
       'bower_components/enc-base64-min/index.js',
       'bower_components/aes/index.js',
+      'bower_components/angular-scroll/angular-scroll.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
