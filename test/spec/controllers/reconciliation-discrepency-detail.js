@@ -97,7 +97,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         });
         it('should clear revision object', function () {
           expect(mockItem.revision).toEqual({});
-        })
+        });
       });
 
       describe('revertItem', function () {

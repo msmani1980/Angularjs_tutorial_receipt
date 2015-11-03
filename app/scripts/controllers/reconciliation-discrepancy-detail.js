@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDiscrepancyDetail', function ($scope, $routeParams, ngToast, $location, lodash) {
+  .controller('ReconciliationDiscrepancyDetail', function ($scope) {
 
     function initLMPStockRevisions() {
       angular.forEach($scope.LMPStock, function (item) {
@@ -92,7 +92,7 @@ angular.module('ts5App')
     }
 
     function init() {
-      angular.element("#checkbox").bootstrapSwitch();
+      angular.element('#checkbox').bootstrapSwitch();
       initTableDefaults();
       initData();
       initLMPStockRevisions();
@@ -100,7 +100,7 @@ angular.module('ts5App')
     }
 
     $scope.showModal = function () {
-      angular.element("#t6Modal").modal('show');
+      angular.element('#t6Modal').modal('show');
     };
 
     $scope.showEditViewForItem = function (item, isLMPStockItem) {
@@ -197,7 +197,7 @@ angular.module('ts5App')
       if (currentTitle === orderName) {
         return 'ascending';
       } else if (currentTitle === '-' + orderName) {
-        return 'descending'
+        return 'descending';
       }
       return 'none';
     };
