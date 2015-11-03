@@ -35,6 +35,7 @@ describe('Controller: DiscountListCtrl', function () {
 
     spyOn(discountFactory, 'getDiscountList').and.returnValue(getDiscountListDeferred.promise);
     spyOn(discountFactory, 'getDiscountTypesList').and.returnValue(getDiscountTypesListDeferred.promise);
+    spyOn(discountFactory, 'deleteDiscount').and.stub();
 
     DiscountListCtrl = $controller('DiscountListCtrl', {
       $scope: scope
@@ -131,6 +132,12 @@ describe('Controller: DiscountListCtrl', function () {
           'L').toString();
         expect(scope.isDiscountEditable(fakeDiscountItem)).toBe(false);
       });
+    });
+
+    it('should delete discount be called', function () {
+      DiscountListCtrl.deleteDiscount(1);
+
+      expect(discountFactory.deleteDiscount).toHaveBeenCalledWith(1);
     });
   });
 });
