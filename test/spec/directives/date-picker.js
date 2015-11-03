@@ -6,8 +6,8 @@ describe('Directive: datePicker', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
 
-  var element,
-    scope;
+  var element;
+  var scope;
 
   beforeEach(inject(function ($rootScope) {
     scope = $rootScope.$new();

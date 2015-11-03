@@ -41,6 +41,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
   var featuresListResponseJSON;
   var location;
   var _lodash;
+  var identityAccessFactory;
+  var ENV;
 
 
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, lodash) {
@@ -65,6 +67,8 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     storeInstanceDashboardFactory = $injector.get('storeInstanceDashboardFactory');
     storeTimeConfig = $injector.get('storeTimeConfig');
     storeInstanceService = $injector.get('storeInstanceService');
+    identityAccessFactory = $injector.get('identityAccessFactory');
+    ENV = $injector.get('ENV');
 
     cateringStationDeferred = $q.defer();
     cateringStationDeferred.resolve(cateringStationResponseJSON);
@@ -97,6 +101,9 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
     spyOn(storeTimeConfig, 'getTimeConfig').and.returnValue(storeTimeConfigDeferred.promise);
     spyOn(storeInstanceDashboardFactory, 'getFeaturesList').and.returnValue(featuresListDeferred.promise);
     spyOn(location, 'path').and.callThrough();
+    spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
+      sessionToken: 'fakeSessionToken'
+    });
 
     StoreInstanceDashboardCtrl = $controller('StoreInstanceDashboardCtrl', {
       $scope: scope
@@ -648,7 +655,7 @@ describe('Controller: StoreInstanceDashboardCtrl', function() {
       store.replenishments[0].actionButtons = ['Get Flight Docs'];
       scope.storeSelectionToggled();
       expect(scope.hasSelectedStore).toBeTruthy();
-      expect(scope.exportBulkURL).toEqual('https://ts5-dev.egatesoln.com/api/dispatch/store-instances/documents/C208.pdf?sessionToken=9e85ffbb3b92134fbf39a0c366bd3f12f0f5&storeInstanceIds=53+1038');
+      expect(scope.exportBulkURL).toEqual(ENV.apiUrl + '/api/dispatch/store-instances/documents/C208.pdf?sessionToken=fakeSessionToken&storeInstanceIds=53+1038');
     });
   });
 

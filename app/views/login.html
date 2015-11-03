@@ -1,5 +1,6 @@
 <div class="container">
-  <form class="form-horizontal" ng-submit="login()">
+  <form-error-dialog></form-error-dialog>
+  <form class="form-horizontal" ng-submit="login()" name="loginForm">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -21,7 +22,7 @@
             <label for="password" class="col-sm-2 control-label">Password</label>
 
             <div class="col-sm-10">
-              <input custom-validity custom-pattern="password"  type="password" class="form-control" id="password" placeholder="Password"  ng-model="credentials.password" />
+              <input custom-validity custom-pattern="alpha"  type="password" class="form-control" id="password" placeholder="Password"  ng-model="credentials.password" />
             </div>
           </div>
           <div class="form-group">
@@ -35,7 +36,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Log in!</button>
+          <button type="submit" class="btn btn-primary">Login!</button>
         </div>
       </div>
     </div>

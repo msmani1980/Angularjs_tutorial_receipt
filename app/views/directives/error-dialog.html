@@ -1,9 +1,9 @@
-<div class="panel panel-danger" ng-show="display">
+<div class="panel panel-danger" ng-show="display" id="error-dialog">
 
   <div class="panel-heading">
 		<span ng-if="showValidationErrors()">There are some issues with the fields below. Please update and try again.</span>
-    <span ng-if="$parent.response500">A server side error (500) has occured. </span>
-    <span ng-if="errorResponse && !showValidationErrors()">There was an issue with your request. Please update and try again.</span>
+    <span ng-if="showInternalServerError()">A server side error has occured and your request was not processed.</span>
+    <span ng-if="showFailedRequest()">{{ errorResponse.statusText}} - Please update and try again.</span>
 	</div>
 
 	<ul class="list-group">
@@ -35,7 +35,10 @@
       </span>
 		</li>
 
-    <li ng-if="$parent.response500" class="list-group-item">
+    <li ng-if="showInternalServerError()" class="list-group-item">
+      <span class="label label-danger">
+        <i class="fa fa-ban"></i>
+      </span>
 			<span class="error">
         Please contact your system's adminstrator.
       </span>
@@ -49,7 +52,7 @@
 
       <span class="error">
 
-        {{ errorResponse.statusText}}: The <strong>{{ error.field }}</strong>
+        The <strong>{{ error.field }}</strong>
         <span ng-switch-default> {{ error.value }} </span>
         <span ng-switch-when="000">Field can't be empty.</span>
         <span ng-switch-when="001">Data format is invalid.</span>

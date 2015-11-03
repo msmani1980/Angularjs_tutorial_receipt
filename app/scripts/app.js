@@ -60,7 +60,9 @@ angular.module('ts5App', [
   ],
   price: /^\$?\s?[0-9\,]+(\.\d{0,4})?$/,
   url: /(http|ftp|https):\/\/[\w-]+(\.[\w-]*)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
-}).config(function ($routeProvider, $httpProvider) {
+}).config(['$localStorageProvider', function ($localStorageProvider) {
+  $localStorageProvider.setKeyPrefix('TS5-');
+}]).config(function ($routeProvider, $httpProvider) {
   $httpProvider.interceptors.push('defaultData');
   $httpProvider.interceptors.push('httpSessionInterceptor');
   $routeProvider.when('/', {
@@ -240,48 +242,12 @@ angular.module('ts5App', [
   }).otherwise({
     redirectTo: '/'
   });
-
 }).run([
   '$rootScope',
   'regexp',
   'GlobalMenuService',
-  '$http',
-  function ($rootScope, regexp, GlobalMenuService, $http) {
-
-    var user = GlobalMenuService.user.get();
-    var companyId = GlobalMenuService.company.get();
-    // set regexp object into root scope for use in any template
-
-    $http.defaults.headers.common.userId = user.id;
-    $http.defaults.headers.common.companyId = companyId;
-
+  'identityAccessFactory',
+  function ($rootScope, regexp) {
     $rootScope.regexp = regexp;
-
-    $rootScope.sideMenu = [
-      {
-        'title': 'Stock Owner Item Management',
-        menuItems: [
-          {
-            name: 'Manage SO Items',
-            route: '/#/stock-owner-item-list',
-            icon: 'icon-manage-retail-item',
-            className: 'dashboard-managemenuItems'
-          },
-          {
-            name: 'Create SO Item',
-            route: '/#/stock-owner-item-create',
-            icon: 'icon-create-retail-item',
-            className: 'dashboard-createItem'
-          },
-          {
-            name: 'Manage SO Categories',
-            route: 'retail-items/categories',
-            icon: 'icon-manage-retail-category',
-            className: 'dashboard-manageItemCategories'
-          }
-        ]
-      }
-    ];
-
   }
 ]);
