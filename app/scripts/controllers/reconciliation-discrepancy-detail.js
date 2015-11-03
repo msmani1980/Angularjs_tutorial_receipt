@@ -15,10 +15,10 @@ angular.module('ts5App')
     };
 
     $scope.showEditViewForItem = function (item, isLMPStockItem) {
-      if(isLMPStockItem) {
+      if (isLMPStockItem) {
         return item.isEditing || $scope.editLMPStockTable;
       } else {
-        return item.isEditing || $scope.editEposSalesTable;
+        return item.isEditing || $scope.editCashBagTable;
       }
     };
 
@@ -44,7 +44,7 @@ angular.module('ts5App')
 
     $scope.saveItem = function (item) {
       angular.forEach(item, function (value, key) {
-        if(key !== 'revision' && key !== 'isEditing') {
+        if (key !== 'revision' && key !== 'isEditing') {
           item[key] = item.revision[key];
         }
       });
@@ -52,43 +52,51 @@ angular.module('ts5App')
       item.isEditing = false;
     };
 
-    $scope.initEditLMPStockTable = function () {
-      $scope.editLMPStockTable = true;
-      initLMPStockRevisions();
+    $scope.initEditTable = function (isLMPTable) {
+      if(isLMPTable) {
+        $scope.editLMPStockTable = true;
+        initLMPStockRevisions();
+      } else {
+        $scope.editCashBagTable = true;
+        initCashBagRevisions();
+      }
     };
 
-    $scope.initEditCashBagTable = function () {
-      $scope.editCashBagTable = true;
-      initCashBagRevisions();
-    };
-
-    $scope.saveLMPStockTable = function () {
-      $scope.editLMPStockTable = false;
-      angular.forEach($scope.LMPStock, function(item) {
+    $scope.saveTable = function (isLMPTable) {
+      var dataList;
+      if(isLMPTable) {
+        $scope.editLMPStockTable = false;
+        dataList = $scope.LMPStock;
+      } else {
+        $scope.editCashBagTable = false;
+        dataList = $scope.cashBags;
+      }
+      angular.forEach(dataList, function (item) {
         $scope.saveItem(item);
       });
     };
 
-    $scope.saveCashBagTable = function () {
-
-    };
-
-    $scope.cancelEditingLMPStockTable = function () {
-      $scope.editLMPStockTable = false;
-      angular.forEach($scope.LMPStock, function(item) {
+    $scope.cancelEditingTable = function (isLMPTable) {
+      var dataList;
+      if(isLMPTable) {
+        $scope.editLMPStockTable = false;
+        dataList = $scope.LMPStock;
+      } else {
+        $scope.editCashBagTable = false;
+        dataList = $scope.cashBags;
+      }
+      angular.forEach(dataList, function (item) {
         item.revision = {};
         item.isEditing = false;
       });
     };
 
-    $scope.cancelEditingCashBagTable  =function () {
-    };
 
     $scope.updateOrderBy = function (orderName, isLMPStock) {
       var currentTitle = isLMPStock ? $scope.LMPSortTitle : $scope.cashBagSortTitle;
       var titleToSet = (currentTitle === orderName) ? ('-' + currentTitle) : (orderName);
 
-      if(isLMPStock) {
+      if (isLMPStock) {
         $scope.LMPSortTitle = titleToSet;
       } else {
         $scope.cashBagSortTitle = titleToSet;
@@ -97,22 +105,22 @@ angular.module('ts5App')
 
     $scope.getArrowType = function (orderName, isLMPStock) {
       var currentTitle = isLMPStock ? $scope.LMPSortTitle : $scope.cashBagSortTitle;
-      if(currentTitle === orderName) {
+      if (currentTitle === orderName) {
         return 'ascending';
-      } else if(currentTitle === '-' + orderName) {
+      } else if (currentTitle === '-' + orderName) {
         return 'descending'
       }
       return 'none';
     };
 
-    function initLMPStockRevisions () {
+    function initLMPStockRevisions() {
       angular.forEach($scope.LMPStock, function (item) {
         item.revision = angular.copy(item);
         item.isEditing = false;
       });
     }
 
-    function initCashBagRevisions () {
+    function initCashBagRevisions() {
       angular.forEach($scope.cashBags, function (item) {
         item.revision = angular.copy(item);
         item.isEditing = false;
@@ -176,7 +184,7 @@ angular.module('ts5App')
       }];
     }
 
-    function initTableDefaults () {
+    function initTableDefaults() {
       $scope.showLMPDiscrepancies = true;
       $scope.showCashBagDiscrepancies = true;
       $scope.editLMPStockTable = false;
@@ -192,6 +200,7 @@ angular.module('ts5App')
       initLMPStockRevisions();
       initCashBagRevisions();
     }
+
     init();
 
   });
