@@ -34,7 +34,6 @@ describe('Store Instance Create Controller', function() {
   var storesListJSON;
   var getStoresListDeferred;
   var location;
-  //var httpBackend;
   var postPayloadControl;
   var dateUtility;
   var storeInstanceCreatedJSON;
@@ -74,7 +73,6 @@ describe('Store Instance Create Controller', function() {
     storeDetailsJSON = _servedStoreInstanceDetails_;
     onFloorInstanceJSON = _servedStoreInstancesListOnfloor_;
 
-    //httpBackend = $injector.get('$httpBackend');
     location = $injector.get('$location');
     $scope = $rootScope.$new();
     dateUtility = $injector.get('dateUtility');
@@ -129,8 +127,6 @@ describe('Store Instance Create Controller', function() {
     getOnFloorInstancesDeferred = $q.defer();
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getOnFloorInstancesDeferred.promise);
 
-    //httpBackend.whenGET(/views\/./).respond(200, '');
-
     storeInstanceId = 13;
 
     postPayloadControl = {
@@ -148,11 +144,6 @@ describe('Store Instance Create Controller', function() {
     };
 
   }));
-
-  //afterEach(function() {
-  //  httpBackend.verifyNoOutstandingExpectation();
-  //  httpBackend.verifyNoOutstandingRequest();
-  //});
 
   function resolveAllDependencies() {
     getMenuMasterListDeferred.resolve(menuMasterListJSON);
@@ -176,20 +167,6 @@ describe('Store Instance Create Controller', function() {
       $scope: $scope,
       $routeParams: params
     });
-  }
-
-  function renderView() {
-    var html = templateCache.get('/views/store-instance-create.html');
-    var compiled = compile(angular.element(html))($scope);
-    var view = angular.element(compiled[0]);
-    $scope.$digest();
-    return view;
-  }
-
-  function mockFormSubmission(form, saveAndExit) {
-    form.triggerHandler('submit');
-    $scope.submitForm((saveAndExit ? saveAndExit : false));
-    $scope.$digest();
   }
 
   function mockStoreInstanceCreate() {
@@ -760,153 +737,6 @@ describe('Store Instance Create Controller', function() {
 
   });
 
-  describe('The submit form method', function() {
-
-    var view;
-    var form;
-
-    beforeEach(function() {
-      initController();
-      spyOn(StoreInstanceCreateCtrl, 'validateForm').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'resetErrors');
-      spyOn(StoreInstanceCreateCtrl, 'createStoreInstance');
-      $scope.$digest();
-      view = renderView();
-      form = angular.element(view.find('form')[0]);
-      $scope.$digest();
-    });
-
-    it('should call the validateForm method', function() {
-      mockFormSubmission(form);
-      expect(StoreInstanceCreateCtrl.validateForm).toHaveBeenCalled();
-    });
-
-    it('should reset all the form errors', function() {
-      mockFormSubmission(form);
-      expect(StoreInstanceCreateCtrl.resetErrors).toHaveBeenCalled();
-    });
-
-    describe('the form validation method', function() {
-
-      it('should return false if the form is not valid', function() {
-        $scope.formData = {
-          menus: []
-        };
-        $scope.$digest();
-        var formIsValid = StoreInstanceCreateCtrl.validateForm();
-        expect(formIsValid).toBeFalsy();
-      });
-
-      it('should return false no menus are passed', function() {
-        $scope.formData.menus = [];
-        $scope.$digest();
-        var formIsValid = StoreInstanceCreateCtrl.validateForm();
-        expect(formIsValid).toBeFalsy();
-      });
-
-      it('should return true if all the correct data is passed', function() {
-        $scope.formData = {
-          scheduleDate: dateUtility.nowFormatted(),
-          menus: [{
-            id: 100,
-            name: 'ABC43124'
-          }],
-          cateringStationId: 13,
-          scheduleNumber: {
-            scheduleNumber: 'SCH1241411'
-          },
-          storeId: storeInstanceId
-        };
-        $scope.$digest();
-        var formIsValid = StoreInstanceCreateCtrl.validateForm();
-        expect(formIsValid).toBeTruthy();
-      });
-
-    });
-
-    it('should call createStoreInstance if the form does validate', function() {
-      $scope.formData = {
-        scheduleDate: dateUtility.nowFormatted(),
-        menus: [{
-          id: 100,
-          name: 'ABC43124'
-        }],
-        cateringStationId: 13,
-        scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
-        },
-        storeId: storeInstanceId
-      };
-      $scope.$digest();
-      mockFormSubmission(form);
-      expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalled();
-    });
-
-  });
-
-  describe('The save and exit functionality', function() {
-
-    var view;
-    var form;
-
-    beforeEach(function() {
-      initController();
-      resolveAllDependencies();
-      $scope.formData = {
-        scheduleDate: dateUtility.nowFormatted(),
-        menus: [{
-          id: 100,
-          name: 'ABC43124'
-        }],
-        cateringStationId: 13,
-        scheduleNumber: {
-          scheduleNumber: 'SCH1241411'
-        },
-        storeId: storeInstanceId
-      };
-      spyOn($scope, 'submitForm').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'createStoreInstance').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'exitOnSave').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'successMessage').and.callThrough();
-      $scope.$digest();
-      view = renderView();
-      form = angular.element(view.find('form')[0]);
-    });
-
-    it('should call the submitForm method with the saveAndExit flag set as true', function() {
-      $scope.saveAndExit();
-      expect($scope.submitForm).toHaveBeenCalledWith(true);
-    });
-
-    it('should call the createStoreInstance method and pass the saveAndExit flag ', function() {
-      $scope.saveAndExit();
-      expect(StoreInstanceCreateCtrl.createStoreInstance).toHaveBeenCalledWith(true);
-    });
-
-    describe('exitOnSave success handler', function() {
-      beforeEach(function() {
-        $scope.saveAndExit();
-        createStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
-        $scope.$digest();
-      });
-
-      it('should call exitOnSave', function() {
-        expect(StoreInstanceCreateCtrl.exitOnSave).toHaveBeenCalledWith([storeInstanceCreatedJSON]);
-      });
-
-      it('should call change the location of the browser', function() {
-        expect(location.path()).toEqual('/store-instance-dashboard/');
-      });
-
-      it('should display a success meassge', function() {
-        expect(StoreInstanceCreateCtrl.successMessage).toHaveBeenCalledWith(storeInstanceCreatedJSON,
-          'saved');
-      });
-
-    });
-
-  });
-
   describe('submitFormConditions method', function() {
 
     it('should call createStoreInstance if action state is default', function() {
@@ -963,82 +793,6 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'editDispatchedStoreInstance');
       StoreInstanceCreateCtrl.submitFormConditions(true);
       expect(StoreInstanceCreateCtrl.editDispatchedStoreInstance).toHaveBeenCalled();
-    });
-
-  });
-
-  describe('setting the validation classes on the input', function() {
-
-    var view;
-    var form;
-
-    beforeEach(function() {
-      initController();
-      resolveAllDependencies();
-      view = renderView();
-      form = angular.element(view.find('form')[0]);
-    });
-
-    it('should return nothing if the field is pristine', function() {
-      var className = $scope.validateInput('scheduleNumber');
-      expect(className).toEqual('');
-    });
-
-    it('should return .has-error if the field is invalid', function() {
-      $scope.createStoreInstance.scheduleNumber.$setViewValue('');
-      mockFormSubmission(form);
-      var className = $scope.validateInput('scheduleNumber');
-      expect(className).toEqual('has-error');
-    });
-
-    it('should return .has-success if the field is not invalid', function() {
-      $scope.createStoreInstance.scheduleNumber.$setViewValue('SCHED12345');
-      mockFormSubmission(form);
-      var className = $scope.validateInput('scheduleNumber');
-      expect(className).toEqual('has-success');
-    });
-
-  });
-
-  describe('setting the validation classes on the menus', function() {
-
-    var view;
-    var form;
-    var menuSelect;
-
-    beforeEach(function() {
-      initController();
-      resolveAllDependencies();
-      $scope.$digest();
-      view = renderView();
-      form = angular.element(view.find('form')[0]);
-      menuSelect = angular.element(form.find('ui-select')[0]);
-      $scope.$digest();
-    });
-
-    it('should return nothing if the form has not been submitted', function() {
-      var className = $scope.validateMenus();
-      expect(className).toEqual('');
-    });
-
-    it('should return .has-error if there are no menus', function() {
-      $scope.formData.menus = [];
-      $scope.$digest();
-      mockFormSubmission(form);
-      var className = $scope.validateMenus();
-      expect(className).toEqual('has-error');
-    });
-
-    it('should return .has-success if there are menus', function() {
-      var menus = [{
-        id: 100,
-        name: 'ABC43124'
-      }];
-      $scope.createStoreInstance.menus.$setViewValue($scope.formData.menus);
-      $scope.formData.menus = menus;
-
-      var className = $scope.validateMenus();
-      expect(className).toEqual('has-success');
     });
 
   });
