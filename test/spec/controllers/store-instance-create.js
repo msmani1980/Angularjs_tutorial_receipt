@@ -34,7 +34,7 @@ describe('Store Instance Create Controller', function() {
   var storesListJSON;
   var getStoresListDeferred;
   var location;
-  var httpBackend;
+  //var httpBackend;
   var postPayloadControl;
   var dateUtility;
   var storeInstanceCreatedJSON;
@@ -74,7 +74,7 @@ describe('Store Instance Create Controller', function() {
     storeDetailsJSON = _servedStoreInstanceDetails_;
     onFloorInstanceJSON = _servedStoreInstancesListOnfloor_;
 
-    httpBackend = $injector.get('$httpBackend');
+    //httpBackend = $injector.get('$httpBackend');
     location = $injector.get('$location');
     $scope = $rootScope.$new();
     dateUtility = $injector.get('dateUtility');
@@ -129,7 +129,7 @@ describe('Store Instance Create Controller', function() {
     getOnFloorInstancesDeferred = $q.defer();
     spyOn(storeInstanceFactory, 'getStoreInstancesList').and.returnValue(getOnFloorInstancesDeferred.promise);
 
-    httpBackend.whenGET(/views\/./).respond(200, '');
+    //httpBackend.whenGET(/views\/./).respond(200, '');
 
     storeInstanceId = 13;
 
@@ -149,10 +149,10 @@ describe('Store Instance Create Controller', function() {
 
   }));
 
-  afterEach(function() {
-    httpBackend.verifyNoOutstandingExpectation();
-    httpBackend.verifyNoOutstandingRequest();
-  });
+  //afterEach(function() {
+  //  httpBackend.verifyNoOutstandingExpectation();
+  //  httpBackend.verifyNoOutstandingRequest();
+  //});
 
   function resolveAllDependencies() {
     getMenuMasterListDeferred.resolve(menuMasterListJSON);
@@ -234,7 +234,6 @@ describe('Store Instance Create Controller', function() {
     beforeEach(function() {
       initController();
       spyOn(StoreInstanceCreateCtrl, 'determineMinDate').and.callThrough();
-      $scope.$digest();
     });
 
     it('should set wizardSteps', function() {
