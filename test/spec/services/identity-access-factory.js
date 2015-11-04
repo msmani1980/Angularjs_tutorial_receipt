@@ -88,11 +88,6 @@ describe('Service: identityAccessFactory', function () {
       expect(identityAccessFactory.isAuthorized()).toBe(true);
     });
 
-    it('should not redirect to login when location changes', function () {
-      scope.$broadcast('$locationChangeStart', 'fakeRoute');
-      expect(location.path).not.toHaveBeenCalledWith('/login');
-    });
-
     it('should delete sessionObject on LS', function () {
       scope.$broadcast('logout');
       scope.$digest();
