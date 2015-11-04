@@ -1,0 +1,222 @@
+<div class="module-container">
+
+  <div class="edit-controls">
+    <div class="row">
+
+      <div class="col-xs-12">
+        <h2 class="view-name">{{ viewName }}</h2>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="reconciliation-dashboard">
+    <div class="row">
+      <div class="col-xs-12">
+
+        <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
+                aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-search" aria-hidden="true"></span>
+          <span class="hidden-xs">Search</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="menuSearchForm" ng-submit="searchPostTripData()">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Dispatched Station</label>
+                <select required class="form-control">
+                  <option selected="selected" value>Select Dispatched Station</option>
+                  <option>{{ station.name }} - {{ station.code }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Received Station</label>
+                <select required class="form-control">
+                  <option selected="selected" value>Select Received Station</option>
+                  <option>{{ station.name }} - {{ station.code }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Store Number</label>
+                <input type="text" class="form-control" placeholder="1234">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Store Instance</label>
+                <input type="text" class="form-control" placeholder="1234567">
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-6">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.scheduleStartDate"
+                end-date-model="search.scheduleEndDate"
+                label-from="Schedule Date From"
+                label-to="Schedule Date To"
+                is-search-field="true">
+              </date-picker>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Status</label>
+                <select required class="form-control">
+                  <option selected="selected" value>Select Status</option>
+                  <option>{{ station.name }} - {{ station.code }}</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+
+    <table class="table table-bordered table-hover ng-scope">
+      <thead>
+      <tr>
+        <th>Dispatched Station</th>
+        <th>Received Station</th>
+        <th>Store Number</th>
+        <th>Store Instance</th>
+        <th>Schedule Date</th>
+        <th>ePOS Data</th>
+        <th>Post Trip Data</th>
+        <th>Cash Handler Data</th>
+        <th>ePOS Created Store</th>
+        <th>Status</th>
+        <th>Updated Date/Time</th>
+        <th>Updated By</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>LGW</td>
+        <td>LTN</td>
+        <td>7321</td>
+        <td>1121355</td>
+        <td>08/07/15</td>
+        <td>No</td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td>Inbounded</td>
+        <td>08/08/15 10:00</td>
+        <td>rabraham</td>
+        <td>
+          <button class="btn btn-orange btn-xs" tabindex="0">Validate</button>
+          <button class="btn btn-info btn-xs" tabindex="0"><i class="fa fa-file-text-o"></i></button>
+        </td>
+      </tr>
+      <tr>
+        <td>LTN</td>
+        <td>LGW</td>
+        <td>7321</td>
+        <td>1121356</td>
+        <td>08/07/15</td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td>No</td>
+        <td>Confirmed</td>
+        <td>08/06/15 10:00</td>
+        <td>tgunderson</td>
+        <td>
+          <button class="btn btn-warning btn-xs" tabindex="0">Review</button>
+          <button class="btn btn-success btn-xs" tabindex="0">Pay Commission</button>
+          <button class="btn btn-danger btn-xs" tabindex="0">Unconfirm</button>
+          <button class="btn btn-info btn-xs" tabindex="0"><i class="fa fa-file-text-o"></i></button>
+        </td>
+      </tr>
+      <tr>
+        <td>STN</td>
+        <td>ORD</td>
+        <td>7453</td>
+        <td>1121357</td>
+        <td>08/07/15</td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td>Discrepancies</td>
+        <td>08/06/15 10:00</td>
+        <td>tgunderson</td>
+        <td>
+          <button class="btn btn-warning btn-xs" tabindex="0">Review</button>
+          <button class="btn btn-primary btn-xs" tabindex="0">Confirm</button>
+          <button class="btn btn-info btn-xs" tabindex="0"><i class="fa fa-file-text-o"></i></button>
+        </td>
+      </tr>
+      <tr>
+        <td>LHR</td>
+        <td>GVA</td>
+        <td>7555</td>
+        <td>1132456</td>
+        <td>08/07/15</td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
+        <td>No</td>
+        <td>Commission Paid</td>
+        <td>08/06/15 10:00</td>
+        <td>tgunderson</td>
+        <td>
+          <button class="btn btn-info btn-xs" tabindex="0"><i class="fa fa-file-text-o"></i></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- Reconciliation modal -->
+<div class="modal fade" id="reconciliationModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Reconciliation</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam purus lectus, malesuada sed consequat vitae, ultricies non felis. Morbi ut lacinia dolor, ornare gravida libero. Phasellus sit amet risus blandit, commodo lectus sit amet, vehicula nulla. Aenean iaculis tincidunt lacus, non volutpat mauris porta ac. Etiam aliquam tempus eros a varius. Donec sagittis iaculis leo in volutpat. Aenean rhoncus egestas massa, vitae varius turpis mollis at. Aenean nisl dui, euismod rutrum purus sit amet, ultricies ultricies dolor. Duis interdum neque felis. Nam non quam ex. Nulla ornare fermentum tortor a bibendum.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>
