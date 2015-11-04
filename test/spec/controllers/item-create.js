@@ -802,7 +802,7 @@ describe('The Item Create Controller', function () {
           $scope.$digest();
         });
 
-        it('should determine the minimum date on success', function() {
+        it('should determine the min date on success', function() {
           expect(ItemCreateCtrl.determineMinDate).toHaveBeenCalled();
         });
 
