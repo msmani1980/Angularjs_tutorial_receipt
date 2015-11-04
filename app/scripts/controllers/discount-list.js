@@ -70,16 +70,16 @@ angular.module('ts5App')
       discountFactory.deleteDiscount(discountId);
     };
 
-    $scope.showDeleteConfirmation = function (index, exchangeRate) {
-      $scope.exchangeRateToDelete = exchangeRate;
-      $scope.exchangeRateToDelete.rowIndex = index;
+    $scope.showDeleteConfirmation = function (index, discount) {
+      $scope.discountToDelete = discount;
+      $scope.discountToDelete.rowIndex = index;
 
       angular.element('.delete-warning-modal').modal('show');
     };
 
     $scope.deleteDiscount = function () {
       angular.element('.delete-warning-modal').modal('hide');
-      angular.element('#exchange-rate-' + $scope.discountToDelete.rowIndex).remove();
+      angular.element('#discount-' + $scope.discountToDelete.rowIndex).remove();
 
       $this.deleteDiscount($scope.discountToDelete.id);
     };
