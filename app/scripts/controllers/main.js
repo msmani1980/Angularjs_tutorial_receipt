@@ -7,14 +7,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MainCtrl', function ($scope, companiesFactory, GlobalMenuService, mainMenuService) {
-    var companyId = GlobalMenuService.company.get();
-    $scope.viewName = 'TS5 Dashboard';
+  .controller('MainCtrl', function ($rootScope, $scope, companiesFactory, GlobalMenuService, mainMenuService) {
 
+    $scope.viewName = 'TS5 Dashboard';
     function updateNavigationPerCompanyType() {
-      companiesFactory.getCompany(companyId).then(function (response) {
-        $scope.dashboardMenu = mainMenuService.getMenu(response.companyTypeId);
-      });
+      var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
+      $scope.dashboardMenu = mainMenuService.getMenu(companyTypeId);
     }
 
     updateNavigationPerCompanyType();

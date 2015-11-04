@@ -3,22 +3,37 @@
 describe('Service: identityAccessFactory', function () {
 
   beforeEach(module('ts5App'));
+  beforeEach(module('served/company.json'));
 
   var identityAccessFactory;
   var localStorage;
   var identityAccessService;
+  var companiesFactory;
+  var getCompanyDeferred;
+  var companyResponseJSON;
   var scope;
   var location;
   var timeout;
 
-  beforeEach(inject(function (_identityAccessFactory_, $injector, $rootScope, $location, $timeout) {
+  beforeEach(inject(function (_identityAccessFactory_, $injector, $rootScope, $location, $timeout, $q) {
+    inject(function (_servedCompany_) {
+      companyResponseJSON = _servedCompany_;
+    });
+
     localStorage = $injector.get('$localStorage');
     identityAccessService = $injector.get('identityAccessService');
+    companiesFactory = $injector.get('companiesFactory');
+
     scope = $rootScope;
     location = $location;
     timeout = $timeout;
 
     spyOn(identityAccessService, 'authorizeUser');
+
+    getCompanyDeferred = $q.defer();
+    getCompanyDeferred.resolve(companyResponseJSON);
+    spyOn(companiesFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
+
     spyOn(location, 'path');
 
     identityAccessFactory = _identityAccessFactory_;

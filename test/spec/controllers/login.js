@@ -9,6 +9,7 @@ describe('Controller: LoginCtrl', function () {
   var scope;
   var identityAccessFactory;
   var loginDeferred;
+  var getCompanyDataDeferred;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
@@ -16,8 +17,11 @@ describe('Controller: LoginCtrl', function () {
     identityAccessFactory = $injector.get('identityAccessFactory');
 
     loginDeferred = $q.defer();
-
     spyOn(identityAccessFactory, 'login').and.returnValue(loginDeferred.promise);
+
+    getCompanyDataDeferred = $q.defer();
+    spyOn(identityAccessFactory, 'getCompanyData').and.returnValue(getCompanyDataDeferred.promise);
+
     spyOn(identityAccessFactory, 'setSessionData');
 
     LoginCtrl = $controller('LoginCtrl', {
@@ -65,9 +69,18 @@ describe('Controller: LoginCtrl', function () {
       });
 
       it('should set the session Object', function () {
-        loginDeferred.resolve({fakeSessionToken: 'someRandomTextHere'});
+        var mockSessionJSON = {fakeSessionToken: 'someRandomTextHere'};
+        var mockCompanyJSON = {companyData: 'fakeCompany'};
+
+        loginDeferred.resolve(mockSessionJSON);
+        getCompanyDataDeferred.resolve(mockCompanyJSON);
+
+
+        var expectedPayload = angular.copy(mockSessionJSON);
+        expectedPayload.companyData = mockCompanyJSON;
+
         scope.$digest();
-        expect(identityAccessFactory.setSessionData).toHaveBeenCalledWith({fakeSessionToken: 'someRandomTextHere'});
+        expect(identityAccessFactory.setSessionData).toHaveBeenCalledWith(expectedPayload);
       });
 
       it('should show errors in bad request', function () {
@@ -92,8 +105,5 @@ describe('Controller: LoginCtrl', function () {
       });
 
     });
-
-
   });
-
 });

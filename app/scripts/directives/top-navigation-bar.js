@@ -23,6 +23,10 @@ angular.module('ts5App')
         $scope.$emit('logout');
       }
 
+      function showCompanyInfo(event, companyData) {
+        $scope.companyName = companyData.companyName;
+      }
+
       $scope.settingsModel = [];
       $scope.userModel = [{
         id: 1,
@@ -36,7 +40,7 @@ angular.module('ts5App')
       $scope.$on('unauthorized', hideNavBar);
       $scope.$on('logout', hideNavBar);
       $scope.$on('authorized', showNavBar);
-
+      $scope.$on('company-fetched', showCompanyInfo);
     }
 
     return {
