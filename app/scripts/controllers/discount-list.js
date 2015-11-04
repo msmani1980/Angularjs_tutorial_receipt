@@ -13,6 +13,7 @@ angular.module('ts5App')
     $scope.viewName = 'Discount';
     $scope.search = {};
     $scope.discountList = [];
+    $scope.discountToDelete = {};
 
     this.getDiscountList = function () {
       discountFactory.getDiscountList().then($this.attachDiscountListToScope);
@@ -56,6 +57,31 @@ angular.module('ts5App')
         return false;
       }
       return dateUtility.isAfterToday(discount.endDate);
+    };
+
+    $scope.isDiscountReadOnly = function (exchangeRate) {
+      if (!exchangeRate.startDate) {
+        return false;
+      }
+      return !(dateUtility.isAfterToday(exchangeRate.startDate));
+    };
+
+    this.deleteDiscount = function (discountId) {
+      discountFactory.deleteDiscount(discountId);
+    };
+
+    $scope.showDeleteConfirmation = function (index, discount) {
+      $scope.discountToDelete = discount;
+      $scope.discountToDelete.rowIndex = index;
+
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.deleteDiscount = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+      angular.element('#discount-' + $scope.discountToDelete.rowIndex).remove();
+
+      $this.deleteDiscount($scope.discountToDelete.id);
     };
 
     this.init = function () {

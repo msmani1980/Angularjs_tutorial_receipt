@@ -19,6 +19,9 @@ angular.module('ts5App')
     var actions = {
       getDiscountList: {
         method: 'GET'
+      },
+      deleteDiscount: {
+        method: 'DELETE'
       }
     };
 
@@ -28,7 +31,12 @@ angular.module('ts5App')
       return requestResource.getDiscountList(payload).$promise;
     };
 
+    var deleteDiscount = function (discountId) {
+      return requestResource.deleteDiscount({id: discountId}).$promise;
+    };
+
     return {
-      getDiscountList: getDiscountList
+      getDiscountList: getDiscountList,
+      deleteDiscount: deleteDiscount
     };
   });
