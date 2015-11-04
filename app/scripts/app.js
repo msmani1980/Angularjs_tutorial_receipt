@@ -26,7 +26,8 @@ angular.module('ts5App', [
   'ngToast',
   'ang-drag-drop',
   'infinite-scroll',
-  'ngLodash'
+  'ngLodash',
+  'frapontillo.bootstrap-switch'
 ]).factory('defaultData', [
   function () {
     var defaultData = {
@@ -232,11 +233,13 @@ angular.module('ts5App', [
     templateUrl: 'views/company-exchange-rate-edit.html',
     controller: 'CompanyExchangeRateEditCtrl',
     controllerAs: 'companyExchangeRateEdit'
+  }).when('/reconciliation-discrepancy-detail', {
+    templateUrl: 'views/reconciliation-discrepancy-detail.html',
+    controller: 'ReconciliationDiscrepancyDetail'
   }).when('/login', {
     templateUrl: 'views/login.html',
     controller: 'LoginCtrl'
-  })
-  .otherwise({
+  }).otherwise({
     redirectTo: '/'
   });
 }).run([

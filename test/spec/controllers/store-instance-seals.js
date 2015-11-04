@@ -372,10 +372,8 @@ describe('the Store Instance Seals controller', function() {
     describe('the resetErrors method', function() {
 
       beforeEach(function() {
-        $scope.formErrors = ['error'];
-        $scope.errorCustom = ['error'];
+        $scope.errorResponse = ['error'];
         $scope.displayError = true;
-        $scope.response500 = true;
         spyOn(StoreInstanceSealsCtrl, 'resetErrors').and.callThrough();
         StoreInstanceSealsCtrl.resetErrors();
       });
@@ -384,20 +382,12 @@ describe('the Store Instance Seals controller', function() {
         expect(StoreInstanceSealsCtrl.resetErrors).toHaveBeenCalled();
       });
 
-      it('should clear formErrors', function() {
-        expect($scope.formErrors.length).toBe(0);
-      });
-
-      it('should clear errorCustom', function() {
-        expect($scope.errorCustom.length).toBe(0);
+      it('should clear errorResponse', function() {
+        expect($scope.errorResponse).toEqual(null);
       });
 
       it('should set displayError to false', function() {
         expect($scope.displayError).toBeFalsy();
-      });
-
-      it('should set response500 to false', function() {
-        expect($scope.response500).toBeFalsy();
       });
 
     });
