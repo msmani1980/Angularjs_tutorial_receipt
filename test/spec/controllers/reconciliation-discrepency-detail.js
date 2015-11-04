@@ -8,13 +8,30 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var ReconciliationDiscrepancyDetail;
   var controller;
   var location;
-  //var reconciliationFactory;
+  var reconciliationFactory;
+  var lmpStockDeferred;
+  var lmpStockResponseJSON;
+  var cashBagsDeferred;
+  var cashBagsResponseJSON;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, $location) {
+
+  beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
     location = $location;
     scope = $rootScope.$new();
-    //reconciliationFactory = $injector.get('reconciliationFactory');
+    reconciliationFactory = $injector.get('reconciliationFactory');
     controller = $controller;
+
+    lmpStockResponseJSON = [{id: 1}]; // stub for now until API is complete
+    lmpStockDeferred = $q.defer();
+    lmpStockDeferred.resolve(lmpStockResponseJSON);
+    cashBagsResponseJSON = [{id: 2}]; // stub for now until API is complete
+    cashBagsDeferred = $q.defer();
+    cashBagsDeferred.resolve(cashBagsResponseJSON);
+    spyOn(reconciliationFactory,  'getLMPStockMockData').and.returnValue(lmpStockDeferred.promise);
+    spyOn(reconciliationFactory,  'getCashBagMockData').and.returnValue(cashBagsDeferred.promise);
+
+
+
     ReconciliationDiscrepancyDetail = controller('ReconciliationDiscrepancyDetail', {
       $scope: scope,
       $routeParams: {
@@ -26,11 +43,15 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   describe('init', function () {
     it('should call get LMP stock data', function () {
-      // expect(reconciliationFactory.getLMPSTockData).toHaveBeenCalled();
+      expect(reconciliationFactory.getLMPStockMockData).toHaveBeenCalled();
+      scope.$digest();
+      expect(scope.LMPStock).toBeDefined();
     });
 
     it('should call get cash bag data', function () {
-      // expect(reconciliationFactory.getCashBagData).toHaveBeenCalled();
+      expect(reconciliationFactory.getCashBagMockData).toHaveBeenCalled();
+      scope.$digest();
+      expect(scope.cashBags).toBeDefined();
     });
 
     it('should init tables to only show discrepancies', function () {
@@ -44,6 +65,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     });
 
     it('should init each object with a revision object for editing', function () {
+      scope.$digest();
       expect(scope.LMPStock[0].revision).toBeDefined();
       expect(scope.LMPStock[0].revision.itemName).toEqual(scope.LMPStock[0].itemName);
       expect(scope.LMPStock[0].revision).toBeDefined();
@@ -156,6 +178,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
             itemName: 'item2',
             quantity: 2
           }];
+          scope.cashBags = angular.copy(scope.LMPStock);
         });
         it('should put table in edit mode', function () {
           scope.initEditTable(true);
