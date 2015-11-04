@@ -234,6 +234,7 @@ describe('Store Instance Create Controller', function() {
     beforeEach(function() {
       initController();
       spyOn(StoreInstanceCreateCtrl, 'determineMinDate').and.callThrough();
+      $scope.$digest();
     });
 
     it('should set wizardSteps', function() {
