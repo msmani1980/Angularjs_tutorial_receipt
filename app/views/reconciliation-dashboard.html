@@ -1,39 +1,70 @@
 <div class="module-container">
-
-  <div class="edit-controls">
-    <div class="row">
-
-      <div class="col-xs-12">
-        <h2 class="view-name">{{ viewName }}</h2>
-      </div>
-
-    </div>
-  </div>
-
   <div class="reconciliation-dashboard">
-    <div class="row">
-      <div class="col-xs-12">
 
-        <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
-                aria-expanded="false"
-                aria-controls="search-collapse">
-          <span class="fa fa-search" aria-hidden="true"></span>
-          <span class="hidden-xs">Search</span>
-        </button>
+    <div class="edit-controls">
+      <div class="list-controls">
+
+        <div class="row item-list-row">
+          <div class="col-xs-6">
+            <h2 class="view-name">{{ viewName }}</h2>
+          </div>
+
+          <div class="col-xs-6 text-right">
+            <div class="btn-group" dropdown>
+              <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
+                      data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-cog"></i>
+                Hide / Show Columns
+                <i class="fa fa-caret-down"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li ng-click="$event.stopPropagation();">
+                  <a ng-click="toggleColumnView('storeInstanceId')">
+                    <input ng-click="$event.stopPropagation();" type="checkbox"
+                           ng-model="displayColumns.storeInstanceId">
+                    Store Instance</a>
+                </li>
+                <li ng-click="$event.stopPropagation();">
+                  <a ng-click="toggleColumnView('receivedStation')">
+                    <input ng-click="$event.stopPropagation();" type="checkbox"
+                           ng-model="displayColumns.receivedStation">
+                    Received Station</a>
+                </li>
+                <li ng-click="$event.stopPropagation();">
+                  <a ng-click="toggleColumnView('updatedDate')">
+                    <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.updatedDate">
+                    Updated Date / TIme</a>
+                </li>
+                <li ng-click="$event.stopPropagation();">
+                  <a ng-click="toggleColumnView('updatedBy')">
+                    <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.updatedBy">
+                    Updated By</a>
+                </li>
+              </ul>
+            </div>
+
+            <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                    aria-controls="search-collapse">
+              <span class="fa fa-search" aria-hidden="true"></span>
+              <span class="hidden-sm hidden-xs">Search</span>
+            </button>
+          </div>
+
+        </div>
       </div>
     </div>
 
-    <div class="panel panel-default no-transition" id="search-collapse">
-      <form name="menuSearchForm" ng-submit="searchPostTripData()">
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form name="reconciliationSearchForm">
         <div class="panel-body">
           <div class="row">
-
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Dispatched Station</label>
                 <select required class="form-control">
                   <option selected="selected" value>Select Dispatched Station</option>
-                  <option>{{ station.name }} - {{ station.code }}</option>
+                  <option>ORD - O'Hare</option>
                 </select>
               </div>
             </div>
@@ -43,7 +74,7 @@
                 <label>Received Station</label>
                 <select required class="form-control">
                   <option selected="selected" value>Select Received Station</option>
-                  <option>{{ station.name }} - {{ station.code }}</option>
+                  <option>ORD - O'hare</option>
                 </select>
               </div>
             </div>
@@ -61,7 +92,6 @@
                 <input type="text" class="form-control" placeholder="1234567">
               </div>
             </div>
-
           </div>
           <div class="row">
 
@@ -96,100 +126,48 @@
       </form>
     </div>
 
+
     <table class="table table-bordered table-hover ng-scope">
       <thead>
       <tr>
-        <th>Dispatched Station</th>
-        <th>Received Station</th>
-        <th>Store Number</th>
-        <th>Store Instance</th>
         <th>Schedule Date</th>
+        <th>Store Number</th>
+        <th>Dispatched Station</th>
+        <th ng-show="displayColumns.receivedStation">Received Station</th>
         <th>ePOS Data</th>
         <th>Post Trip Data</th>
         <th>Cash Handler Data</th>
         <th>ePOS Created Store</th>
+        <th ng-show="displayColumns.storeInstanceId">Store Instance</th>
         <th>Status</th>
-        <th>Updated Date/Time</th>
-        <th>Updated By</th>
+        <th ng-show="displayColumns.updatedDate">Updated Date/Time</th>
+        <th ng-show="displayColumns.updatedBy" >Updated By</th>
         <th>Actions</th>
       </tr>
       </thead>
+      <tr ng-repeat="instance in reconciliationList">
+        <td> {{ instance.scheduleDate }}</td>
+        <td> {{ instance.storeNumber }}</td>
+        <td> {{ instance.dispatchedStation }}</td>
+        <td ng-show="displayColumns.receivedStation"> {{ instance.receivedStation }}</td>
+        <td> {{ instance.ePOSStatus }}</td>
+        <td> {{ instance.postTripStatus }}</td>
+        <td> {{ instance.cashHandlerStatus }}</td>
+        <td> {{ instance.ePOSCreatedStore }}</td>
+        <td ng-show="displayColumns.storeInstanceId"> {{ instance.storeInstanceId }}</td>
+        <td> {{ instance.status }}</td>
+        <td ng-show="displayColumns.updatedDate"> {{ instance.updatedDate }}</td>
+        <td ng-show="displayColumns.updatedBy"> {{ instance.updatedBy }}</td>
+        <td>
+          <button class="btn btn-warning btn-xs btn-block" tabindex="0">Review</button>
+          <button class="btn btn-primary btn-xs btn-block" tabindex="0">Confirm</button>
+          <button class="btn btn-success btn-xs btn-block" tabindex="0">Pay Commission</button>
+          <button class="btn btn-danger btn-xs btn-block" tabindex="0">Unconfirm</button>
+          <button class="btn btn-orange btn-xs btn-block" tabindex="0">Validate</button>
+          <button class="btn btn-info btn-xs btn-block" tabindex="0"><i class="fa fa-file-text-o"></i></button>
+        </td>
+      </tr>
       <tbody>
-      <tr>
-        <td>LGW</td>
-        <td>LTN</td>
-        <td>7321</td>
-        <td>1121355</td>
-        <td>08/07/15</td>
-        <td>No</td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td>Inbounded</td>
-        <td>08/08/15 10:00</td>
-        <td>rabraham</td>
-        <td>
-          <button class="btn btn-orange btn-xs" tabindex="0">Validate</button>
-          <button class="btn btn-info btn-xs" tabindex="0"><i class="fa fa-file-text-o"></i></button>
-        </td>
-      </tr>
-      <tr>
-        <td>LTN</td>
-        <td>LGW</td>
-        <td>7321</td>
-        <td>1121356</td>
-        <td>08/07/15</td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td>No</td>
-        <td>Confirmed</td>
-        <td>08/06/15 10:00</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-warning btn-xs" tabindex="0">Review</button>
-          <button class="btn btn-success btn-xs" tabindex="0">Pay Commission</button>
-          <button class="btn btn-danger btn-xs" tabindex="0">Unconfirm</button>
-          <button class="btn btn-info btn-xs" tabindex="0"><i class="fa fa-file-text-o"></i></button>
-        </td>
-      </tr>
-      <tr>
-        <td>STN</td>
-        <td>ORD</td>
-        <td>7453</td>
-        <td>1121357</td>
-        <td>08/07/15</td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td>Discrepancies</td>
-        <td>08/06/15 10:00</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-warning btn-xs" tabindex="0">Review</button>
-          <button class="btn btn-primary btn-xs" tabindex="0">Confirm</button>
-          <button class="btn btn-info btn-xs" tabindex="0"><i class="fa fa-file-text-o"></i></button>
-        </td>
-      </tr>
-      <tr>
-        <td>LHR</td>
-        <td>GVA</td>
-        <td>7555</td>
-        <td>1132456</td>
-        <td>08/07/15</td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td><a ng-click="showCreatePopup()">Yes <i class="fa fa-info-circle"></i></a></td>
-        <td>No</td>
-        <td>Commission Paid</td>
-        <td>08/06/15 10:00</td>
-        <td>tgunderson</td>
-        <td>
-          <button class="btn btn-info btn-xs" tabindex="0"><i class="fa fa-file-text-o"></i></button>
-        </td>
-      </tr>
-      </tbody>
     </table>
   </div>
 
@@ -205,7 +183,12 @@
       </div>
 
       <div class="modal-body">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam purus lectus, malesuada sed consequat vitae, ultricies non felis. Morbi ut lacinia dolor, ornare gravida libero. Phasellus sit amet risus blandit, commodo lectus sit amet, vehicula nulla. Aenean iaculis tincidunt lacus, non volutpat mauris porta ac. Etiam aliquam tempus eros a varius. Donec sagittis iaculis leo in volutpat. Aenean rhoncus egestas massa, vitae varius turpis mollis at. Aenean nisl dui, euismod rutrum purus sit amet, ultricies ultricies dolor. Duis interdum neque felis. Nam non quam ex. Nulla ornare fermentum tortor a bibendum.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam purus lectus, malesuada sed consequat vitae,
+          ultricies non felis. Morbi ut lacinia dolor, ornare gravida libero. Phasellus sit amet risus blandit, commodo
+          lectus sit amet, vehicula nulla. Aenean iaculis tincidunt lacus, non volutpat mauris porta ac. Etiam aliquam
+          tempus eros a varius. Donec sagittis iaculis leo in volutpat. Aenean rhoncus egestas massa, vitae varius
+          turpis mollis at. Aenean nisl dui, euismod rutrum purus sit amet, ultricies ultricies dolor. Duis interdum
+          neque felis. Nam non quam ex. Nulla ornare fermentum tortor a bibendum.</p>
       </div>
     </div>
   </div>
