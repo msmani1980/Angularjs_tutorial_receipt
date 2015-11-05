@@ -1,59 +1,58 @@
 <div class="module-container">
   <div class="reconciliation-dashboard">
 
-    <div class="edit-controls">
-      <div class="list-controls">
+    <div class="list-controls">
 
-        <div class="row item-list-row">
-          <div class="col-xs-6">
-            <h2 class="view-name">{{ viewName }}</h2>
-          </div>
-
-          <div class="col-xs-6 text-right">
-            <div class="btn-group" dropdown>
-              <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
-                      data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-cog"></i>
-                Hide / Show Columns
-                <i class="fa fa-caret-down"></i>
-              </button>
-              <ul class="dropdown-menu">
-                <li ng-click="$event.stopPropagation();">
-                  <a ng-click="toggleColumnView('storeInstanceId')">
-                    <input ng-click="$event.stopPropagation();" type="checkbox"
-                           ng-model="displayColumns.storeInstanceId">
-                    Store Instance</a>
-                </li>
-                <li ng-click="$event.stopPropagation();">
-                  <a ng-click="toggleColumnView('receivedStation')">
-                    <input ng-click="$event.stopPropagation();" type="checkbox"
-                           ng-model="displayColumns.receivedStation">
-                    Received Station</a>
-                </li>
-                <li ng-click="$event.stopPropagation();">
-                  <a ng-click="toggleColumnView('updatedDate')">
-                    <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.updatedDate">
-                    Updated Date / TIme</a>
-                </li>
-                <li ng-click="$event.stopPropagation();">
-                  <a ng-click="toggleColumnView('updatedBy')">
-                    <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.updatedBy">
-                    Updated By</a>
-                </li>
-              </ul>
-            </div>
-
-            <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
-                    aria-controls="search-collapse">
-              <span class="fa fa-search" aria-hidden="true"></span>
-              <span class="hidden-sm hidden-xs">Search</span>
-            </button>
-          </div>
-
+      <div class="row item-list-row">
+        <div class="col-xs-6">
+          <h2 class="view-name">{{ viewName }}</h2>
         </div>
+
+        <div class="col-xs-6 text-right">
+          <div class="btn-group" dropdown>
+            <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-cog"></i>
+              Hide / Show Columns
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li ng-click="$event.stopPropagation();">
+                <a ng-click="toggleColumnView('storeInstanceId')">
+                  <input ng-click="$event.stopPropagation();" type="checkbox"
+                         ng-model="displayColumns.storeInstanceId">
+                  Store Instance</a>
+              </li>
+              <li ng-click="$event.stopPropagation();">
+                <a ng-click="toggleColumnView('receivedStation')">
+                  <input ng-click="$event.stopPropagation();" type="checkbox"
+                         ng-model="displayColumns.receivedStation">
+                  Received Station</a>
+              </li>
+              <li ng-click="$event.stopPropagation();">
+                <a ng-click="toggleColumnView('updatedDate')">
+                  <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.updatedDate">
+                  Updated Date / TIme</a>
+              </li>
+              <li ng-click="$event.stopPropagation();">
+                <a ng-click="toggleColumnView('updatedBy')">
+                  <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.updatedBy">
+                  Updated By</a>
+              </li>
+            </ul>
+          </div>
+
+          <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                  aria-controls="search-collapse">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Search</span>
+          </button>
+        </div>
+
       </div>
     </div>
+
 
     <div class="panel panel-default collapse no-transition" id="search-collapse">
       <form name="reconciliationSearchForm">
@@ -195,12 +194,23 @@
         <td ng-show="displayColumns.updatedDate"> {{ instance.updatedDate }}</td>
         <td ng-show="displayColumns.updatedBy"> {{ instance.updatedBy }}</td>
         <td>
-          <button class="btn btn-warning btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Review')">Review</button>
-          <button class="btn btn-primary btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Confirm')">Confirm</button>
-          <button class="btn btn-success btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Pay Commission')">Pay Commission</button>
-          <button class="btn btn-danger btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Unconfirm')">Unconfirm</button>
-          <button class="btn btn-default btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Validate')">Validate</button>
-          <button class="btn btn-info btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Report')"><i class="fa fa-file-text-o"></i></button>
+          <button class="btn btn-warning btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Review')">Review
+          </button>
+          <button class="btn btn-primary btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Confirm')">Confirm
+          </button>
+          <button class="btn btn-success btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Pay Commission')">Pay Commission
+          </button>
+          <button class="btn btn-danger btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Unconfirm')">Unconfirm
+          </button>
+          <button class="btn btn-default btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Validate')">Validate
+          </button>
+          <button class="btn btn-info btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Report')"><i class="fa fa-file-text-o"></i></button>
         </td>
       </tr>
       <tbody>
