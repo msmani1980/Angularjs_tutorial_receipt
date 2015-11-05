@@ -860,19 +860,17 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       var promises = $this.makeEditPromises('dispatch');
+      var deletePromises = [];
       if (($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss) {
-        promises.updateInstancePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));
-        promises.updateInstancePromises.push($this.createPromiseToDeleteItems());
+        deletePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));
+        deletePromises.push($this.createPromiseToDeleteItems());
       }
-      $q.all(promises.updateInstancePromises).then(function() {
-        $this.invokeStoreInstanceStatusPromises(promises.updateInstanceStatusPromises, saveAndExit);
-        $q.all($this.startPromise(promises.updateInstancePromises)).then(function() {
-            $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises),
-              saveAndExit);
-          },
-          $this.createStoreInstanceErrorHandler
-        );
-      });
+      $q.all(deletePromises.concat($this.startPromise(promises.updateInstancePromises))).then(function() {
+          $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises),
+            saveAndExit);
+        },
+        $this.createStoreInstanceErrorHandler
+      );
     };
 
     this.redispatchConditions = function(saveAndExit) {
