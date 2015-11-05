@@ -130,51 +130,51 @@
       <thead>
       <tr>
         <th ng-click="updateOrderBy('scheduleDate')">
-          <span class="{{ getArrowIconAndClassForSorting('scheduleDate') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('scheduleDate')"></span>
           Schedule Date
         </th>
         <th ng-click="updateOrderBy('storeNumber')">
-          <span class="{{ getArrowIconAndClassForSorting('storeNumber') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('storeNumber')"></span>
           Store Number
         </th>
         <th ng-click="updateOrderBy('dispatchedStation')">
-          <span class="{{ getArrowIconAndClassForSorting('dispatchedStation') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('dispatchedStation')"></span>
           Dispatched Station
         </th>
         <th ng-show="displayColumns.receivedStation" ng-click="updateOrderBy('receivedStation')">
-          <span class="{{ getArrowIconAndClassForSorting('receivedStation') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('receivedStation')"></span>
           Received Station
         </th>
         <th ng-click="updateOrderBy('ePOSStatus')">
-          <span class="{{ getArrowIconAndClassForSorting('ePOSStatus') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('ePOSStatus')"></span>
           ePOS Data
         </th>
         <th ng-click="updateOrderBy('postTripStatus')">
-          <span class="{{ getArrowIconAndClassForSorting('postTripStatus') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('postTripStatus')"></span>
           Post Trip Data
         </th>
         <th ng-click="updateOrderBy('cashHandlerStatus')">
-          <span class="{{ getArrowIconAndClassForSorting('cashHandlerStatus') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('cashHandlerStatus')"></span>
           Cash Handler Data
         </th>
         <th ng-click="updateOrderBy('ePOSCreatedStore')">
-          <span class="{{ getArrowIconAndClassForSorting('ePOSCreatedStore') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('ePOSCreatedStore')"></span>
           ePOS Created Store
         </th>
         <th ng-show="displayColumns.storeInstanceId" ng-click="updateOrderBy('storeInstanceId')">
-          <span class="{{ getArrowIconAndClassForSorting('storeInstanceId') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('storeInstanceId')"></span>
           Store Instance
         </th>
         <th ng-click="updateOrderBy('status')">
-          <span class="{{ getArrowIconAndClassForSorting('status') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('status')"></span>
           Status
         </th>
         <th ng-show="displayColumns.updatedDate" ng-click="updateOrderBy('updatedDate')">
-          <span class="{{ getArrowIconAndClassForSorting('updatedDate') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('updatedDate')"></span>
           Updated Date/Time
         </th>
         <th ng-show="displayColumns.updatedBy" ng-click="updateOrderBy('updatedBy')">
-          <span class="{{ getArrowIconAndClassForSorting('updatedBy') }}"></span>
+          <span ng-class="getArrowIconAndClassForSorting('updatedBy')"></span>
           Updated By
         </th>
         <th class="col-xs-2">Actions</th>
