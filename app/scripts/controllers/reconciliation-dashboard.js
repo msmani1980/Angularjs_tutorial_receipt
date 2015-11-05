@@ -33,6 +33,13 @@ angular.module('ts5App')
       $scope.tableSortTitle = titleToSet;
     };
 
+    $scope.doesInstanceContainAction = function (instance, actionName) {
+      if (!instance.actions) {
+        return false;
+      }
+      return instance.actions.indexOf(actionName) >= 0;
+    };
+
     $scope.getArrowType = function (orderName) {
       if ( $scope.tableSortTitle === orderName) {
         return 'ascending';

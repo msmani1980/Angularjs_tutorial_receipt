@@ -219,12 +219,12 @@
         <td ng-show="displayColumns.updatedDate"> {{ instance.updatedDate }}</td>
         <td ng-show="displayColumns.updatedBy"> {{ instance.updatedBy }}</td>
         <td>
-          <button class="btn btn-warning btn-xs btn-block" tabindex="0">Review</button>
-          <button class="btn btn-primary btn-xs btn-block" tabindex="0">Confirm</button>
-          <button class="btn btn-success btn-xs btn-block" tabindex="0">Pay Commission</button>
-          <button class="btn btn-danger btn-xs btn-block" tabindex="0">Unconfirm</button>
-          <button class="btn btn-orange btn-xs btn-block" tabindex="0">Validate</button>
-          <button class="btn btn-info btn-xs btn-block" tabindex="0"><i class="fa fa-file-text-o"></i></button>
+          <button class="btn btn-warning btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Review')">Review</button>
+          <button class="btn btn-primary btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Confirm')">Confirm</button>
+          <button class="btn btn-success btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Pay Commission')">Pay Commission</button>
+          <button class="btn btn-danger btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Unconfirm')">Unconfirm</button>
+          <button class="btn btn-default btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Validate')">Validate</button>
+          <button class="btn btn-info btn-xs btn-block" tabindex="0" ng-show="doesInstanceContainAction(instance, 'Report')"><i class="fa fa-file-text-o"></i></button>
         </td>
       </tr>
       <tbody>
