@@ -64,7 +64,6 @@ angular.module('ts5App')
       }
 
       return denominations.map(function (denomination) {
-        console.log(denomination);
         return parseFloat($this.getDenominationById(denomination.currencyDenominationId).denomination);
       })
         .sort($this.sortDenominationByValue)
@@ -159,12 +158,8 @@ angular.module('ts5App')
 
     this.showSaveErrors = function (dataFromAPI) {
       $this.hideLoadingModal();
-      $this.showToast('danger', 'Company Exchange Rate', 'error saving exchange rate!');
-
       $scope.displayError = true;
-      if ('data' in dataFromAPI) {
-        $scope.formErrors = dataFromAPI.data;
-      }
+      $scope.errorResponse = dataFromAPI;
     };
 
     $scope.saveCompanyExchangeRate = function (index, exchangeRate) {
