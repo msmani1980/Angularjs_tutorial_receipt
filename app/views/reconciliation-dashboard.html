@@ -1,0 +1,251 @@
+<div class="module-container">
+  <div class="reconciliation-dashboard">
+
+    <div class="list-controls">
+
+      <div class="row item-list-row">
+        <div class="col-xs-6">
+          <h2 class="view-name">{{ viewName }}</h2>
+        </div>
+
+        <div class="col-xs-6 text-right">
+          <div class="btn-group" dropdown>
+            <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-cog"></i>
+              Hide / Show Columns
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li ng-click="$event.stopPropagation();">
+                <a ng-click="toggleColumnView('storeInstanceId')">
+                  <input ng-click="$event.stopPropagation();" type="checkbox"
+                         ng-model="displayColumns.storeInstanceId">
+                  Store Instance</a>
+              </li>
+              <li ng-click="$event.stopPropagation();">
+                <a ng-click="toggleColumnView('receivedStation')">
+                  <input ng-click="$event.stopPropagation();" type="checkbox"
+                         ng-model="displayColumns.receivedStation">
+                  Received Station</a>
+              </li>
+              <li ng-click="$event.stopPropagation();">
+                <a ng-click="toggleColumnView('updatedDate')">
+                  <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.updatedDate">
+                  Updated Date / TIme</a>
+              </li>
+              <li ng-click="$event.stopPropagation();">
+                <a ng-click="toggleColumnView('updatedBy')">
+                  <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.updatedBy">
+                  Updated By</a>
+              </li>
+            </ul>
+          </div>
+
+          <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                  aria-controls="search-collapse">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs">Search</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form name="reconciliationSearchForm">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Dispatched Station</label>
+                <select required class="form-control">
+                  <option selected="selected" value>Select Dispatched Station</option>
+                  <option>ORD - O'Hare</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Received Station</label>
+                <select required class="form-control">
+                  <option selected="selected" value>Select Received Station</option>
+                  <option>ORD - O'hare</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Store Number</label>
+                <input type="text" class="form-control" placeholder="1234">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Store Instance</label>
+                <input type="text" class="form-control" placeholder="1234567">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-6">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.scheduleStartDate"
+                end-date-model="search.scheduleEndDate"
+                label-from="Schedule Date From"
+                label-to="Schedule Date To"
+                is-search-field="true">
+              </date-picker>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label>Status</label>
+                <select required class="form-control">
+                  <option selected="selected" value>Select Status</option>
+                  <option>{{ station.name }} - {{ station.code }}</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+    </div>
+
+
+    <table class="table table-bordered table-hover ng-scope">
+      <thead>
+      <tr>
+        <th ng-click="updateOrderBy('scheduleDate')">
+          <span ng-class="getArrowIconAndClassForSorting('scheduleDate')"></span>
+          Schedule Date
+        </th>
+        <th ng-click="updateOrderBy('storeNumber')">
+          <span ng-class="getArrowIconAndClassForSorting('storeNumber')"></span>
+          Store Number
+        </th>
+        <th ng-click="updateOrderBy('dispatchedStation')">
+          <span ng-class="getArrowIconAndClassForSorting('dispatchedStation')"></span>
+          Dispatched Station
+        </th>
+        <th ng-show="displayColumns.receivedStation" ng-click="updateOrderBy('receivedStation')">
+          <span ng-class="getArrowIconAndClassForSorting('receivedStation')"></span>
+          Received Station
+        </th>
+        <th ng-click="updateOrderBy('ePOSStatus')">
+          <span ng-class="getArrowIconAndClassForSorting('ePOSStatus')"></span>
+          ePOS Data
+        </th>
+        <th ng-click="updateOrderBy('postTripStatus')">
+          <span ng-class="getArrowIconAndClassForSorting('postTripStatus')"></span>
+          Post Trip Data
+        </th>
+        <th ng-click="updateOrderBy('cashHandlerStatus')">
+          <span ng-class="getArrowIconAndClassForSorting('cashHandlerStatus')"></span>
+          Cash Handler Data
+        </th>
+        <th ng-click="updateOrderBy('ePOSCreatedStore')">
+          <span ng-class="getArrowIconAndClassForSorting('ePOSCreatedStore')"></span>
+          ePOS Created Store
+        </th>
+        <th ng-show="displayColumns.storeInstanceId" ng-click="updateOrderBy('storeInstanceId')">
+          <span ng-class="getArrowIconAndClassForSorting('storeInstanceId')"></span>
+          Store Instance
+        </th>
+        <th ng-click="updateOrderBy('status')">
+          <span ng-class="getArrowIconAndClassForSorting('status')"></span>
+          Status
+        </th>
+        <th ng-show="displayColumns.updatedDate" ng-click="updateOrderBy('updatedDate')">
+          <span ng-class="getArrowIconAndClassForSorting('updatedDate')"></span>
+          Updated Date/Time
+        </th>
+        <th ng-show="displayColumns.updatedBy" ng-click="updateOrderBy('updatedBy')">
+          <span ng-class="getArrowIconAndClassForSorting('updatedBy')"></span>
+          Updated By
+        </th>
+        <th class="col-xs-2">Actions</th>
+      </tr>
+      </thead>
+      <tr ng-repeat="instance in reconciliationList | orderBy: tableSortTitle">
+        <td> {{ instance.scheduleDate }}</td>
+        <td> {{ instance.storeNumber }}</td>
+        <td> {{ instance.dispatchedStation }}</td>
+        <td ng-show="displayColumns.receivedStation"> {{ instance.receivedStation }}</td>
+        <td> {{ instance.ePOSStatus }}</td>
+        <td> {{ instance.postTripStatus }}</td>
+        <td> {{ instance.cashHandlerStatus }}</td>
+        <td> {{ instance.ePOSCreatedStore }}</td>
+        <td ng-show="displayColumns.storeInstanceId"> {{ instance.storeInstanceId }}</td>
+        <td> {{ instance.status }}</td>
+        <td ng-show="displayColumns.updatedDate"> {{ instance.updatedDate }}</td>
+        <td ng-show="displayColumns.updatedBy"> {{ instance.updatedBy }}</td>
+        <td>
+          <button class="btn btn-warning btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Review')">Review
+          </button>
+          <button class="btn btn-primary btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Confirm')">Confirm
+          </button>
+          <button class="btn btn-success btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Pay Commission')">Pay Commission
+          </button>
+          <button class="btn btn-danger btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Unconfirm')">Unconfirm
+          </button>
+          <button class="btn btn-default btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Validate')">Validate
+          </button>
+          <button class="btn btn-info btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Report')"><i class="fa fa-file-text-o"></i></button>
+        </td>
+      </tr>
+      <tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- Reconciliation modal -->
+<div class="modal fade" id="reconciliationModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Reconciliation</h4>
+      </div>
+
+      <div class="modal-body">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam purus lectus, malesuada sed consequat vitae,
+          ultricies non felis. Morbi ut lacinia dolor, ornare gravida libero. Phasellus sit amet risus blandit, commodo
+          lectus sit amet, vehicula nulla. Aenean iaculis tincidunt lacus, non volutpat mauris porta ac. Etiam aliquam
+          tempus eros a varius. Donec sagittis iaculis leo in volutpat. Aenean rhoncus egestas massa, vitae varius
+          turpis mollis at. Aenean nisl dui, euismod rutrum purus sit amet, ultricies ultricies dolor. Duis interdum
+          neque felis. Nam non quam ex. Nulla ornare fermentum tortor a bibendum.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>
