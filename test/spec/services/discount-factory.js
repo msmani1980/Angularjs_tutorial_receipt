@@ -16,6 +16,7 @@ describe('Service: discountFactory', function () {
 
     spyOn(discountService, 'getDiscountList').and.stub();
     spyOn(discountTypesService, 'getDiscountTypesList').and.stub();
+    spyOn(discountService, 'deleteDiscount').and.stub();
 
     discountFactory = _discountFactory_;
   }));
@@ -40,6 +41,11 @@ describe('Service: discountFactory', function () {
       };
       discountFactory.getDiscountTypesList(payload);
       expect(discountTypesService.getDiscountTypesList).toHaveBeenCalledWith(payload);
+    });
+
+    it('should call discountService.deleteDiscount with a discount id', function () {
+      discountFactory.deleteDiscount(1);
+      expect(discountService.deleteDiscount).toHaveBeenCalledWith(1);
     });
 
   });

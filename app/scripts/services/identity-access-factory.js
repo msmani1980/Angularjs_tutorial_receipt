@@ -9,7 +9,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout) {
+  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, companiesFactory) {
 
     function login(credentials) {
       var payload = {
@@ -19,8 +19,13 @@ angular.module('ts5App')
       return identityAccessService.authorizeUser(payload);
     }
 
+    function getCompanyData(companyId) {
+      return companiesFactory.getCompany(companyId);
+    }
+
     function logout() {
       delete $localStorage.sessionObject;
+      delete $localStorage.companyObject;
       delete $localStorage.company;
       delete $http.defaults.headers.common.userId;
       delete $http.defaults.headers.common.companyId;
@@ -40,19 +45,33 @@ angular.module('ts5App')
     function setSessionHeaders() {
       var sessionObject = getSessionObject();
       $localStorage.company = sessionObject.companyId;
+      // TODO: Get this dynamically
+      $localStorage.companyObject = {
+        companyTypeId:1
+      };
       angular.extend($http.defaults.headers.common, sessionObject);
     }
 
-    function setSessionData(dataFromAPI) {
+    function encryptDataInLS(dataFromAPI) {
       var sessionObject = {
         userId: dataFromAPI.id,
         companyId: dataFromAPI.companyId,
+        companyData: dataFromAPI.companyData,
         sessionToken: dataFromAPI.currentSession.sessionToken,
         timeout: 60000
       };
       $localStorage.sessionObject = CryptoJS.AES.encrypt(JSON.stringify(sessionObject), 'aes@56').toString();
-      setSessionHeaders();
+    }
+
+    function broadcastSuccess(companyData) {
       $rootScope.$broadcast('authorized');
+      $rootScope.$broadcast('company-fetched', companyData);
+    }
+
+    function setSessionData(dataFromAPI) {
+      encryptDataInLS(dataFromAPI);
+      setSessionHeaders();
+      broadcastSuccess(dataFromAPI.companyData);
       $location.path('/');
     }
 
@@ -73,9 +92,10 @@ angular.module('ts5App')
     setSessionHeaders();
 
     return {
+      getCompanyData: getCompanyData,
       login: login,
+      getSessionObject: getSessionObject,
       setSessionData: setSessionData,
-      isAuthorized: isAuthorized,
-      getSessionObject: getSessionObject
+      isAuthorized: isAuthorized
     };
   });

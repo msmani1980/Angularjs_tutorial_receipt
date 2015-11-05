@@ -10,11 +10,16 @@
 angular.module('ts5App')
   .service('GlobalMenuService', function ($localStorage) {
 
+    function getCompanyData() {
+      return $localStorage.companyObject || {};
+    }
+
     function getCompany() {
-      return $localStorage.company || 0;
+      return getCompanyData().companyId || 0;
     }
 
     return {
+      getCompanyData: getCompanyData,
       company: {
         get: getCompany
       }

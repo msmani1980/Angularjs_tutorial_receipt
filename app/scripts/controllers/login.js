@@ -15,6 +15,8 @@ angular.module('ts5App')
       password: ''
     };
 
+    var rawSessionData = {};
+
     function showLoadingModal(text) {
       $scope.displayError = false;
       angular.element('#loading').modal('show').find('p').text(text);
@@ -36,9 +38,15 @@ angular.module('ts5App')
       $scope.displayError = true;
     }
 
-    function handleSuccessResponse(responseFromAPI) {
+    function handleCompanyResponse(companyDataFromAPI) {
       hideLoadingModal();
-      identityAccessFactory.setSessionData(angular.copy(responseFromAPI));
+      rawSessionData.companyData = angular.copy(companyDataFromAPI);
+      identityAccessFactory.setSessionData(rawSessionData);
+    }
+
+    function handleSuccessResponse(sessionDataFromAPI) {
+      rawSessionData = angular.copy(sessionDataFromAPI);
+      identityAccessFactory.getCompanyData(rawSessionData.companyId).then(handleCompanyResponse, handleResponseError);
     }
 
     $scope.login = function () {

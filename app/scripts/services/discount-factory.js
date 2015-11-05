@@ -17,8 +17,13 @@ angular.module('ts5App')
       return discountTypesService.getDiscountTypesList(payload);
     };
 
+    var deleteDiscount = function (discountId) {
+      return discountService.deleteDiscount(discountId);
+    };
+
     return {
       getDiscountList: getDiscountList,
-      getDiscountTypesList: getDiscountTypesList
+      getDiscountTypesList: getDiscountTypesList,
+      deleteDiscount: deleteDiscount
     };
   });

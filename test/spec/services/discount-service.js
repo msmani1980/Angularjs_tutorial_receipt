@@ -17,6 +17,7 @@ describe('Service: discountService', function () {
     });
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET(/company-discounts/).respond(discountResponseJSON);
+    $httpBackend.whenDELETE(/company-discounts/).respond(201);
     discountService = _discountService_;
   }));
 
@@ -77,6 +78,12 @@ describe('Service: discountService', function () {
         $httpBackend.flush();
         expect(discountService.getDiscountList).toHaveBeenCalledWith(payload);
       });
+    });
+
+    it('should delete discount by discount id', function () {
+      $httpBackend.expectDELETE(/company-discounts/);
+      discountService.deleteDiscount(1);
+      $httpBackend.flush();
     });
 
   });
