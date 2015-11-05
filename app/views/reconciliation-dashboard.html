@@ -131,75 +131,51 @@
       <thead>
       <tr>
         <th ng-click="updateOrderBy('scheduleDate')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('scheduleDate') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('scheduleDate') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('scheduleDate') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('scheduleDate') }}"></span>
           Schedule Date
         </th>
         <th ng-click="updateOrderBy('storeNumber')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('storeNumber') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('storeNumber') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('storeNumber') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('storeNumber') }}"></span>
           Store Number
         </th>
         <th ng-click="updateOrderBy('dispatchedStation')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('dispatchedStation') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('dispatchedStation') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('dispatchedStation') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('dispatchedStation') }}"></span>
           Dispatched Station
         </th>
         <th ng-show="displayColumns.receivedStation" ng-click="updateOrderBy('receivedStation')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('receivedStation') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('receivedStation') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('receivedStation') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('receivedStation') }}"></span>
           Received Station
         </th>
         <th ng-click="updateOrderBy('ePOSStatus')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('ePOSStatus') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('ePOSStatus') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('ePOSStatus') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('ePOSStatus') }}"></span>
           ePOS Data
         </th>
         <th ng-click="updateOrderBy('postTripStatus')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('postTripStatus') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('postTripStatus') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('postTripStatus') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('postTripStatus') }}"></span>
           Post Trip Data
         </th>
         <th ng-click="updateOrderBy('cashHandlerStatus')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('cashHandlerStatus') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('cashHandlerStatus') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('cashHandlerStatus') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('cashHandlerStatus') }}"></span>
           Cash Handler Data
         </th>
         <th ng-click="updateOrderBy('ePOSCreatedStore')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('ePOSCreatedStore') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('ePOSCreatedStore') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('ePOSCreatedStore') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('ePOSCreatedStore') }}"></span>
           ePOS Created Store
         </th>
         <th ng-show="displayColumns.storeInstanceId" ng-click="updateOrderBy('storeInstanceId')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('storeInstanceId') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('storeInstanceId') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('storeInstanceId') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('storeInstanceId') }}"></span>
           Store Instance
         </th>
         <th ng-click="updateOrderBy('status')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('status') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('status') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('status') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('status') }}"></span>
           Status
         </th>
         <th ng-show="displayColumns.updatedDate" ng-click="updateOrderBy('updatedDate')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('updatedDate') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('updatedDate') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('updatedDate') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('updatedDate') }}"></span>
           Updated Date/Time
         </th>
         <th ng-show="displayColumns.updatedBy" ng-click="updateOrderBy('updatedBy')">
-          <span class="fa fa-sort-asc active" ng-show="getArrowType('updatedBy') === 'ascending'"></span>
-          <span class="fa fa-sort-desc active" ng-show="getArrowType('updatedBy') === 'descending'"></span>
-          <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('updatedBy') === 'none'"></span>
+          <span class="{{ getArrowIconAndClassForSorting('updatedBy') }}"></span>
           Updated By
         </th>
         <th class="col-xs-2">Actions</th>

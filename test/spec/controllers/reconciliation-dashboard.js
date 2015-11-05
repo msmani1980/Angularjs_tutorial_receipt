@@ -65,21 +65,39 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
       });
     });
 
-    describe('getArrowType', function () {
+    describe('getSortingType', function () {
       it('should return descending if sort title is negative', function () {
         scope.tableSortTitle = '-sortName';
-        var arrowType = scope.getArrowType('sortName');
+        var arrowType = scope.getSortingType('sortName');
         expect(arrowType).toEqual('descending');
       });
       it('should return ascending if sort title is not negative', function () {
         scope.tableSortTitle = 'sortName';
-        var arrowType = scope.getArrowType('sortName');
+        var arrowType = scope.getSortingType('sortName');
         expect(arrowType).toEqual('ascending');
       });
       it('should return none if sort title is not the given name', function () {
         scope.tableSortTitle = 'sortName';
-        var arrowType = scope.getArrowType('otherName');
+        var arrowType = scope.getSortingType('otherName');
         expect(arrowType).toEqual('none');
+      });
+    });
+
+    describe('getArrowIconAndClassForSorting', function () {
+      it('should return black ascending arrow for ascending sort type', function () {
+        scope.tableSortTitle = 'sortName';
+        var arrowClass = scope.getArrowIconAndClassForSorting('sortName');
+        expect(arrowClass).toEqual('fa fa-sort-asc active');
+      });
+      it('should return black descending arrow for descending sort type', function () {
+        scope.tableSortTitle = '-sortName';
+        var arrowClass = scope.getArrowIconAndClassForSorting('sortName');
+        expect(arrowClass).toEqual('fa fa-sort-desc active');
+      });
+      it('should return muted arrows for no sort type', function () {
+        scope.tableSortTitle = 'sortName';
+        var arrowClass = scope.getArrowIconAndClassForSorting('otherName');
+        expect(arrowClass).toEqual('fa fa-sort text-muted-light');
       });
     });
 

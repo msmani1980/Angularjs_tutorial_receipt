@@ -30,13 +30,23 @@ angular.module('ts5App')
       return instance.actions.indexOf(actionName) >= 0;
     };
 
-    $scope.getArrowType = function (orderName) {
+    $scope.getSortingType = function (orderName) {
       if ($scope.tableSortTitle === orderName) {
         return 'ascending';
       } else if ($scope.tableSortTitle === '-' + orderName) {
         return 'descending';
       }
       return 'none';
+    };
+
+    $scope.getArrowIconAndClassForSorting = function (orderName) {
+      var sortTypeToArrowTypeMap = {
+        ascending: 'fa fa-sort-asc active',
+        descending: 'fa fa-sort-desc active',
+        none: 'fa fa-sort text-muted-light'
+      };
+      var sortType = $scope.getSortingType(orderName);
+      return sortTypeToArrowTypeMap[sortType];
     };
 
     function getReconciliationList() {
