@@ -19,15 +19,19 @@ describe('Service: companyExchangeRateService', function () {
     createCompanyExchangeRateResult,
     updateCompanyExchangeRateResult;
 
-  beforeEach(inject(function (_companyExchangeRateService_, $injector) {
+  beforeEach(inject(function (_companyExchangeRateService_, $injector,$localStorage) {
+
     inject(function (_servedCompanyExchangeRates_, _servedCompanyExchangeRate_) {
       companyExchangeRatesJSON = _servedCompanyExchangeRates_;
       companyExchangeRateJSON = _servedCompanyExchangeRate_;
     });
 
-
     GlobalMenuService = $injector.get('GlobalMenuService');
     $httpBackend = $injector.get('$httpBackend');
+
+    $localStorage.companyObject = {
+      companyId:403
+    };
 
     companyExchangeRateGetRequestHandler = $httpBackend.whenGET(/api\/companies\/403\/exchange-rates/).respond(companyExchangeRatesJSON);
     companyExchangeRateDeleteRequestHandler = $httpBackend.whenDELETE(/api\/companies\/403\/exchange-rates/).respond(companyExchangeRatesJSON);
