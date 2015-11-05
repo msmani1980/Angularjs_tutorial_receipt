@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDashboardCtrl', function ($scope) {
+  .controller('ReconciliationDashboardCtrl', function ($scope, dateUtility) {
 
     $scope.viewName = 'Reconciliation Dashboard';
     $scope.search = {};
@@ -28,6 +28,20 @@ angular.module('ts5App')
       }
     };
 
+    $scope.updateOrderBy = function (orderName) {
+      var titleToSet = ($scope.tableSortTitle === orderName) ? ('-' + $scope.tableSortTitle) : (orderName);
+      $scope.tableSortTitle = titleToSet;
+    };
+
+    $scope.getArrowType = function (orderName) {
+      if ( $scope.tableSortTitle === orderName) {
+        return 'ascending';
+      } else if ( $scope.tableSortTitle === '-' + orderName) {
+        return 'descending';
+      }
+      return 'none';
+    };
+
     function initColumns () {
       $scope.displayColumns = {
         receivedStation: false,
@@ -38,7 +52,14 @@ angular.module('ts5App')
     }
 
     function init() {
+      $scope.tableSortTitle = 'dispatchedStation';
       initColumns();
+
+      $scope.search = {
+        scheduleStartDate: dateUtility.nowFormatted(),
+        scheduleEndDate: dateUtility.nowFormatted()
+      };
+
       $scope.reconciliationList = [
         {
           dispatchedStation: 'LGW',
