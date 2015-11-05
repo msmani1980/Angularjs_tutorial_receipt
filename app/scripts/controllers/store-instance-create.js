@@ -449,6 +449,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       );
     };
 
+    this.startPromise = function(preparedPromises) {
+      return lodash.map(preparedPromises, function(promise) {
+        return promise.f.apply(promise.obj, promise.args);
+      });
+    };
 
     this.makeEditPromises = function(actionOne, actionTwo) {
       var payload;
@@ -466,15 +471,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         updateInstancePromises: [],
         updateInstanceStatusPromises: []
       };
-      promises.updateInstancePromises.push(storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload));
-      promises.updateInstanceStatusPromises.push(storeInstanceFactory.updateStoreInstanceStatus(
-        $routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId
-      ));
+      promises.updateInstancePromises.push({ f: storeInstanceFactory.updateStoreInstance, obj: storeInstanceFactory, args: [$routeParams.storeId, payload] });
+      promises.updateInstanceStatusPromises.push({ f: storeInstanceFactory.updateStoreInstanceStatus, obj: storeInstanceFactory,
+        args : [$routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId]
+      });
       if ($scope.prevStoreInstanceId && actionTwo) {
-        promises.updateInstancePromises.push(storeInstanceFactory.updateStoreInstance($scope.prevStoreInstanceId, prevPayload));
-        promises.updateInstanceStatusPromises.push(storeInstanceFactory.updateStoreInstanceStatus(
-          $scope.prevStoreInstanceId, $this.nextStep.storeOne.stepName
-        ));
+        promises.updateInstancePromises.push({ f: storeInstanceFactory.updateStoreInstance, obj: storeInstanceFactory, args: [$scope.prevStoreInstanceId, prevPayload] });
+        promises.updateInstanceStatusPromises.push({ f: storeInstanceFactory.updateStoreInstanceStatus, obj: storeInstanceFactory,
+          args: [$scope.prevStoreInstanceId, $this.nextStep.storeOne.stepName]
+        });
       }
       return promises;
     };
@@ -486,8 +491,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       var promises = $this.makeEditPromises('end-instance', 'redispatch');
-      $q.all(promises.updateInstancePromises).then(function() {
-          $this.invokeStoreInstanceStatusPromises(promises.updateInstanceStatusPromises, saveAndExit);
+      $q.all($this.startPromise(promises.updateInstancePromises)).then(function() {
+          $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises), saveAndExit);
         },
         $this.createStoreInstanceErrorHandler
       );
@@ -515,8 +520,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       var promises = $this.makeEditPromises('end-instance', 'redispatch');
-      $q.all(promises.updateInstancePromises).then(function() {
-          $this.invokeStoreInstanceStatusPromises(promises.updateInstanceStatusPromises, saveAndExit);
+      $q.all($this.startPromise(promises.updateInstancePromises)).then(function() {
+          $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises), saveAndExit);
         },
         $this.createStoreInstanceErrorHandler
       );
@@ -529,8 +534,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       var promises = $this.makeEditPromises('dispatch');
-      $q.all(promises.updateInstancePromises).then(function() {
-          $this.invokeStoreInstanceStatusPromises(promises.updateInstanceStatusPromises, saveAndExit);
+      $q.all($this.startPromise(promises.updateInstancePromises)).then(function() {
+          $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises), saveAndExit);
         },
         $this.createStoreInstanceErrorHandler
       );
