@@ -96,6 +96,20 @@ angular.module('ts5App')
     this.isToday = function (date) {
       return Date.parse(moment().format('MM/DD/YYYY')) === Date.parse(date);
     };
+
+    this.dateNumDaysBeforeToday = function (numDays) {
+      var today = new Date();
+      var newDate = today.setDate(today.getDate() - numDays);
+      return newDate;
+    };
+
+    this.dateNumDaysBeforeTodayFormatted = function (numDays, formatTo) {
+      var formatFrom = 'x';
+      formatTo = formatTo || _dateFormatForApp;
+      var newDate = this.dateNumDaysBeforeToday(numDays);
+      return this.formatDate(newDate, formatFrom, formatTo);
+    };
+
     this.isTodayOrEarlier = function (date) {
       return this.now() >= Date.parse(date);
     };

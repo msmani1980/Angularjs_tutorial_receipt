@@ -316,4 +316,39 @@ describe('Date Utility service', function () {
 
   });
 
+
+  describe('dateNumDaysBeforeToday', function () {
+    it('should be defined', function () {
+      expect(dateUtility.dateNumDaysBeforeToday).toBeDefined();
+    });
+
+    it('should return three days from today timestamp when 3 is passed in', function () {
+      var today = new Date();
+      var threeDaysAgoControl = today.setDate(today.getDate() - 3);
+      var tomorrow = dateUtility.dateNumDaysBeforeToday(3);
+      expect(tomorrow).toEqual(threeDaysAgoControl);
+    });
+  });
+
+  describe('dateNumDaysBeforeTodayFormatted method', function () {
+
+    it('should return a formatted date in MM/DD/YYYY when no format is passed',
+      function () {
+        var newDate = dateUtility.dateNumDaysBeforeToday(3);
+        var formattedTimeStamp = dateUtility.dateNumDaysBeforeTodayFormatted(3);
+        var formatControl = dateUtility.formatDate(newDate, 'x','MM/DD/YYYY');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+    it('should return a formatted date in YYYYMMDD when YYYYMMDD format is passed',
+      function () {
+        var newDate = dateUtility.dateNumDaysBeforeToday(3);
+        var formattedTimeStamp = dateUtility.dateNumDaysBeforeTodayFormatted(3, 'YYYYMMDD');
+        var formatControl = dateUtility.formatDate(newDate, 'x','YYYYMMDD');
+        expect(formattedTimeStamp).toEqual(formatControl);
+      });
+
+  });
+
+
 });

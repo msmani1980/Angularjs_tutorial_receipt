@@ -63,8 +63,8 @@ angular.module('ts5App')
       initColumns();
 
       $scope.search = {
-        scheduleStartDate: dateUtility.nowFormatted(),
-        scheduleEndDate: dateUtility.nowFormatted()
+        scheduleStartDate: dateUtility.dateNumDaysBeforeTodayFormatted(10),
+        scheduleEndDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
       };
 
       $scope.reconciliationList = [
