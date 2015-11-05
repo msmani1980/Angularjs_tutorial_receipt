@@ -100,5 +100,20 @@ describe('Service: identityAccessFactory', function () {
     });
   });
 
+  describe('LocalStorage companyObject', function () {
+    var companyObject;
+    beforeEach(function () {
+      companyObject = {
+        companyTypeId: 1
+      };
+      localStorage.companyObject = companyObject;
+    });
+
+    it('should set the company object', function () {
+      expect(localStorage.companyObject).toEqual(companyObject);
+    });
+
+  });
+
 
 });
