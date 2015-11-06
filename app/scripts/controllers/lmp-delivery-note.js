@@ -48,11 +48,7 @@ angular.module('ts5App')
     }
 
     function showResponseErrors(response) {
-      if ('data' in response) {
-        angular.forEach(response.data, function(error) {
-          this.push(error);
-        }, $scope.errorCustom);
-      }
+      $scope.errorResponse = response;
       $scope.displayError = true;
       hideLoadingModal();
     }
