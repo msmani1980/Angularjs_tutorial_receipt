@@ -409,9 +409,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return sealsToDelete;
     };
 
-    this.getExistingSealByNumber = function(sealNumber, sealType) {
+    this.getExistingSealByNumber = function(sealNumber, sealType, storeId) {
       return $scope.existingSeals.filter(function(existingSeal) {
-        return (existingSeal.sealNumbers[0] === sealNumber && existingSeal.type === parseInt(sealType));
+        return (existingSeal.sealNumbers[0] === sealNumber && existingSeal.type === parseInt(sealType) &&
+          existingSeal.storeInstanceId === storeId);
       })[0];
     };
 
@@ -423,7 +424,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var deletePromises = [];
       for (var key in sealsToDelete) {
         var sealNumber = sealsToDelete[key];
-        var existingSeal = this.getExistingSealByNumber(sealNumber, sealTypeObject.id);
+        var existingSeal = this.getExistingSealByNumber(sealNumber, sealTypeObject.id, storeId);
         deletePromises.push(storeInstanceAssignSealsFactory.deleteStoreInstanceSeal(
           existingSeal.id,
           existingSeal.storeInstanceId
@@ -561,6 +562,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       payload.prevStoreInstanceId = $routeParams.storeId;
       payload.menus = this.formatMenus(payload.menus);
       delete payload.dispatchedCateringStationId;
+      if ($scope.existingSeals && $scope.userConfirmedDataLoss) {
+        payload.note = '';
+        payload.tampered = false;
+      }
     };
 
     this.formatReplenishPayload = function(payload) {
@@ -837,13 +842,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       var promises = $this.makeEditPromises('end-instance', 'redispatch');
       var deletePromises = [];
-      var payload = $this.updateStoreInstanceTampered();
       if (($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss) {
         deletePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));
         deletePromises.push($this.makeDeleteSealsPromises($scope.prevStoreInstanceId));
         deletePromises.push($this.createPromiseToDeleteItems());
-        deletePromises.push(storeInstanceFactory.updateStoreInstance($this.storeInstanceIdForTamperedSeals(),
-          payload));
       }
       $q.all(deletePromises.concat($this.startPromise(promises.updateInstancePromises))).then(function() {
           $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises),
