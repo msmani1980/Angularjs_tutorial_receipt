@@ -188,17 +188,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
 
-    this.setGetItemTypeData = function(item, storeInstanceId) {
-      this.inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
-      this.inboundClosedCountTypeId = $this.getIdByNameFromArray('Warehouse Close', $scope.countTypes);
-      this.ullageCountTypeId = $this.getIdByNameFromArray('Ullage', $scope.countTypes);
-      this.isFromNewInstance = storeInstanceId === parseInt($routeParams.storeId);
-      this.isUllageQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && item.countTypeId ===
-        this.ullageCountTypeId;
-      this.isInboundQuantity = angular.isDefined(item.quantity) && angular.isDefined(item.countTypeId) && (item.countTypeId ===
-        this.inboundCountTypeId || item.countTypeId === this.inboundClosedCountTypeId);
-    };
-
     this.getItemsSuccessHandler = function(dataFromAPI) {
       var menuItems = dataFromAPI.response;
       $scope.itemsToDelete = [];
