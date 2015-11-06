@@ -188,73 +188,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
 
-    this.formatTemplateItem = function(item) {
-      delete item.id;
-    };
-
-    this.formatPackedItem = function(item) {
-      if ($routeParams.action === 'redispatch') {
-        item.totalQuantity = item.quantity;
-        $this.calculatePickedQtyFromTotal(item);
-      }
-      item.quantity = item.quantity.toString();
-    };
-
-    this.formatInboundItem = function(item) {
-      item.inboundQuantity = angular.copy(item.quantity.toString());
-      item.inboundQuantityId = angular.copy(item.id);
-      delete item.quantity;
-      delete item.id;
-    };
-
-    this.formatUllageItem = function(item) {
-      item.ullageQuantity = angular.copy(item.quantity.toString());
-      item.ullageId = angular.copy(item.id);
-      var itemUllageReasonObject = lodash.findWhere($scope.ullageReasonCodes, {
-        id: item.ullageReasonCode
-      });
-      item.ullageReason = itemUllageReasonObject || null;
-      delete item.quantity;
-      delete item.id;
-    };
-
-    this.getIdByNameFromArray = function(name, array) {
-      var matchedObject = lodash.findWhere(array, {
-        name: name
-      });
-      if (matchedObject) {
-        return matchedObject.id;
-      }
-      return '';
-    };
-
-    this.mergeMenuItems = function(menuItemsFromAPI) {
-      $scope.menuItems = [];
-      angular.forEach(menuItemsFromAPI, function(item) {
-        var itemMatch = lodash.findWhere($scope.menuItems, {
-          itemMasterId: item.itemMasterId
-        });
-        if (itemMatch) {
-          lodash.extend(itemMatch, item);
-        } else {
-          $scope.menuItems.push(item);
-        }
-      });
-    };
-
-    this.menuQuantitySwitch = function(menuQuantity) {
-      if (angular.isDefined(menuQuantity)) {
-        return 'Template';
-      } else if ($this.isUllageQuantity) {
-        return 'Ullage';
-      } else if ($this.isInboundQuantity) {
-        return 'Inbound';
-      } else if ($this.isFromNewInstance) {
-        return 'Packed';
-      }
-      return 'ignore';
-    };
-
     this.setGetItemTypeData = function(item, storeInstanceId) {
       this.inboundCountTypeId = $this.getIdByNameFromArray('Offload', $scope.countTypes);
       this.inboundClosedCountTypeId = $this.getIdByNameFromArray('Warehouse Close', $scope.countTypes);
@@ -266,39 +199,20 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.inboundCountTypeId || item.countTypeId === this.inboundClosedCountTypeId);
     };
 
-    this.getItemType = function(item, storeInstanceId) {
-      $this.setGetItemTypeData(item, storeInstanceId);
-      $this.menuQuantitySwitch(item.menuQuantity);
-    };
-
     this.getItemsSuccessHandler = function(dataFromAPI) {
       var menuItems = dataFromAPI.response;
       $scope.itemsToDelete = [];
       angular.forEach(menuItems, function(item) {
-        var itemType = $this.getItemType(item, item.storeInstanceId);
-        var formatItemFunctionName = 'format' + itemType + 'Item';
-        if ($this[formatItemFunctionName]) {
-          $this[formatItemFunctionName](item);
-        }
-        item.itemDescription = item.itemCode + ' - ' + item.itemName;
         $scope.itemsToDelete.push(item);
       });
-      $this.mergeMenuItems(menuItems);
     };
 
     this.getPrevStoreItemsSuccessHandler = function(dataFromAPI) {
       var menuItems = dataFromAPI.response;
       $scope.prevStoreItemsToDelete = [];
       angular.forEach(menuItems, function(item) {
-        var itemType = $this.getItemType(item, item.storeInstanceId);
-        var formatItemFunctionName = 'format' + itemType + 'Item';
-        if ($this[formatItemFunctionName]) {
-          $this[formatItemFunctionName](item);
-        }
-        item.itemDescription = item.itemCode + ' - ' + item.itemName;
         $scope.prevStoreItemsToDelete.push(item);
       });
-      $this.mergeMenuItems(menuItems);
     };
 
     this.getStoreInstanceItems = function(storeInstanceId) {
@@ -306,7 +220,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getPrevStoreInstanceItems = function(storeInstanceId) {
-      storeInstanceFactory.getStoreInstanceItemList(storeInstanceId).then($this.getPrevStoreInstanceItemsSuccessHandler);
+      storeInstanceFactory.getStoreInstanceItemList(storeInstanceId).then($this.getPrevStoreItemsSuccessHandler);
     };
 
     this.setSealTypes = function(sealTypesJSON) {
@@ -416,7 +330,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       })[0];
     };
 
-    this.makeDeletePromise = function(sealTypeObject, storeId) {
+    this.makeDeleteSealsPromise = function(sealTypeObject, storeId) {
       var sealsToDelete = $this.determineSealsToDelete(sealTypeObject, storeId);
       if (sealsToDelete.length === 0) {
         return;
@@ -436,7 +350,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.makeDeleteSealsPromises = function(storeId) {
       var promises = [];
       angular.forEach($scope.sealTypesList, function(sealTypeObject) {
-        var deletePromises = $this.makeDeletePromise(sealTypeObject, storeId);
+        var deletePromises = $this.makeDeleteSealsPromise(sealTypeObject, storeId);
         if (deletePromises) {
           promises = promises.concat(deletePromises);
         }
@@ -444,16 +358,21 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return promises;
     };
 
+    this.createPromiseToDeletePrevStoreItems = function() {
+      var deleteItemsPromiseArray = [];
+      if ($scope.prevStoreItemsToDelete) {
+        angular.forEach($scope.prevStoreItemsToDelete, function(item) {
+          deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId, item.id));
+        });
+        return deleteItemsPromiseArray;
+      }
+    };
+
     this.createPromiseToDeleteItems = function() {
       var deleteItemsPromiseArray = [];
       angular.forEach($scope.itemsToDelete, function(item) {
         deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId, item.id));
       });
-      if ($scope.prevStoreItemsToDelete) {
-        angular.forEach($scope.prevStoreItemsToDelete, function(item) {
-          deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId, item.id));
-        });
-      }
       return deleteItemsPromiseArray;
     };
 
@@ -830,6 +749,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         deletePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));
         deletePromises.push($this.makeDeleteSealsPromises($scope.prevStoreInstanceId));
         deletePromises.push($this.createPromiseToDeleteItems());
+        deletePromises.push($this.createPromiseToDeletePrevStoreItems());
       }
       $q.all(deletePromises.concat($this.startPromise(promises.updateInstancePromises))).then(function() {
           $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises),
