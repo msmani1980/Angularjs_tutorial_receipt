@@ -444,26 +444,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       return promises;
     };
 
-    this.storeInstanceIdForTamperedSeals = function() {
-      if ($scope.prevStoreInstanceId && $routeParams.action === 'redispatch') {
-        return $scope.prevStoreInstanceId;
-      }
-      return $routeParams.storeId;
-    };
-
-    this.updateStoreInstanceTampered = function() {
-      var payload = {
-        cateringStationId: $scope.storeDetails.cateringStationId,
-        scheduleNumber: $scope.storeDetails.scheduleNumber,
-        scheduleDate: dateUtility.formatDateForAPI($scope.storeDetails.scheduleDate),
-        storeId: $scope.storeDetails.storeId,
-        menus: $this.formatMenus($scope.storeDetails.menuList),
-        tampered: false,
-        note: ''
-      };
-      return payload;
-    };
-
     this.createPromiseToDeleteItems = function() {
       var deleteItemsPromiseArray = [];
       angular.forEach($scope.itemsToDelete, function(item) {
@@ -810,7 +790,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         this.exitToDashboard();
         return;
       }
-      var promises = $this.makeEditPromises('end-instance', 'redispatch');
+      var promises = $this.makeEditPromises('end-instance');
       $q.all($this.startPromise(promises.updateInstancePromises)).then(function() {
           $this.invokeStoreInstanceStatusPromises($this.startPromise(promises.updateInstanceStatusPromises),
             saveAndExit);
@@ -833,6 +813,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       );
     };
 
+    this.removeAllDataForInstances = function() {
+      return ($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss;
+    };
+
     this.editRedispatchedStoreInstance = function(saveAndExit) {
       this.displayLoadingModal('Updating Current Store Instance ' + $routeParams.storeId +
         ' and Previous Store Instance ' + $scope.prevStoreInstanceId);
@@ -842,7 +826,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       var promises = $this.makeEditPromises('end-instance', 'redispatch');
       var deletePromises = [];
-      if (($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss) {
+      if ($this.removeAllDataForInstances()) {
         deletePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));
         deletePromises.push($this.makeDeleteSealsPromises($scope.prevStoreInstanceId));
         deletePromises.push($this.createPromiseToDeleteItems());
@@ -863,7 +847,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
       var promises = $this.makeEditPromises('dispatch');
       var deletePromises = [];
-      if (($scope.existingSeals || $scope.itemsToDelete) && $scope.userConfirmedDataLoss) {
+      if ($this.removeAllDataForInstances()) {
         deletePromises.push($this.makeDeleteSealsPromises(parseInt($routeParams.storeId)));
         deletePromises.push($this.createPromiseToDeleteItems());
       }
