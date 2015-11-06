@@ -239,6 +239,9 @@ angular.module('ts5App', [
   }).when('/login', {
     templateUrl: 'views/login.html',
     controller: 'LoginCtrl'
+  }).when('/reconciliation-dashboard', {
+    templateUrl: 'views/reconciliation-dashboard.html',
+    controller: 'ReconciliationDashboardCtrl'
   }).otherwise({
     redirectTo: '/'
   });

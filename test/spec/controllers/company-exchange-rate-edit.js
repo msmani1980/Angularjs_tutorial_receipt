@@ -55,7 +55,6 @@ describe('Controller: CompanyExchangeRateEditCtrl', function () {
     getCompanyDeferred.resolve(companyJSON);
     getCompanyExchangeRatesDeferred = $q.defer();
     getCompanyExchangeRatesDeferred.resolve(companyExchangeRatesJSON);
-
     spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
     spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(getDetailedCompanyCurrenciesDeferred.promise);
@@ -76,6 +75,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function () {
       // place here mocked dependencies
     });
     scope.$digest();
+
   }));
 
   it('should attach a viewName to the scope', function () {

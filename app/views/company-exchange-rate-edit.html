@@ -58,8 +58,12 @@
             </div>
         </form>
     </div>
+
+    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    </error-dialog>
+
     <form class="form edit-form retail-company-exchange-rate-setup-form" name="form" ng-show="companyExchangeRates.length > 0">
-        <error-dialog form-object="form"></error-dialog>
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="row">
@@ -93,7 +97,7 @@
                             </td>
                             <td>
                                 <div>
-                                    <input custom-validity
+                                    <input custom-validity name="ExchangeRate"
                                         custom-pattern="currencyWithFourDecimalPlace"
                                         ng-model="exchangeRate.exchangeRate"
                                         ng-required="true"

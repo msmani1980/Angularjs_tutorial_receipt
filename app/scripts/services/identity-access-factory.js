@@ -44,10 +44,9 @@ angular.module('ts5App')
 
     function setSessionHeaders() {
       var sessionObject = getSessionObject();
-      $localStorage.company = sessionObject.companyId;
-      // TODO: Get this dynamically
       $localStorage.companyObject = {
-        companyTypeId:1
+        companyId: sessionObject.companyId,
+        companyTypeId: 1                             // TODO: Get companyTypeId dynamically
       };
       angular.extend($http.defaults.headers.common, sessionObject);
     }

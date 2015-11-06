@@ -121,11 +121,11 @@
           <input type="text" class="form-control text-right" value="{{stockItem.receivedQuantity}}" ng-disabled="true"/>
         </td>
         <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.dispatchedQuantity}}"
+          <input type="text" class="form-control text-right" value="{{stockItem.dispatchQuantity}}"
                  ng-disabled="true"/>
         </td>
         <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.offloadQuantity}}" ng-disabled="true"/>
+          <input type="text" class="form-control text-right" value="{{stockItem.inboundQuantity}}" ng-disabled="true"/>
         </td>
         <td id="currentCountQuantity-{{id}}" ng-click="stockTakeReasonOpen(stockItem, 'Count')">
           <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentQuantity}}"

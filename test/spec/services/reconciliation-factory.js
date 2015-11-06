@@ -22,6 +22,7 @@ describe('Factory: reconciliationFactory', function () {
     it('should be accessible in the service', function () {
       expect(!!reconciliationFactory.getCashBagMockData).toBe(true);
       expect(!!reconciliationFactory.getLMPStockMockData).toBe(true);
+      expect(!!reconciliationFactory.getMockReconciliationDataList).toBe(true);
     });
   });
 

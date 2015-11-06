@@ -104,13 +104,22 @@ describe('Service: identityAccessFactory', function () {
     var companyObject;
     beforeEach(function () {
       companyObject = {
-        companyTypeId: 1
+        companyTypeId: 1,
+        companyId: 403
       };
       localStorage.companyObject = companyObject;
     });
 
     it('should set the company object', function () {
       expect(localStorage.companyObject).toEqual(companyObject);
+    });
+
+    it('should have a company type id', function () {
+      expect(localStorage.companyObject.companyTypeId).toEqual(companyObject.companyTypeId);
+    });
+
+    it('should have a companyId ', function () {
+      expect(localStorage.companyObject.companyId).toEqual(companyObject.companyId);
     });
 
   });
