@@ -862,6 +862,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.submitForm();
     };
 
+    $scope.reloadRoute = function() {
+      $this.hideWarningModal();
+      $route.reload();
+    };
+
     this.setScheduleNumbers = function(apiData) {
       $scope.scheduleNumbers = angular.copy(apiData.schedules);
     };
