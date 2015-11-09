@@ -226,6 +226,11 @@ angular.module('ts5App')
           route: '/#/currency-edit',
           icon: 'icon-manage-retail-category',
           className: 'dashboard-currencySetup'
+        }, {
+          name: 'Retail Company Exchange Rate',
+          route: '/#/company-exchange-rate-edit',
+          icon: 'icon-manage-transactions',
+          className: 'dashboard-companyExchangeRateEdit'
         }]
       }, {
         title: 'Post Trip Data',
