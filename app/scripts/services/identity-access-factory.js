@@ -44,7 +44,7 @@ angular.module('ts5App')
 
     function setSessionHeaders() {
       var sessionObject = getSessionObject();
-      if (sessionObject.companyId) {
+      if (sessionObject.companyData) {
         $localStorage.companyObject = {
           companyId: sessionObject.companyId,
           companyTypeId: sessionObject.companyData.companyTypeId
