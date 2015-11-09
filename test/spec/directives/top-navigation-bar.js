@@ -88,7 +88,7 @@ describe('Directive: topNavigationBar', function () {
 
       it('should call logout API', function () {
         element.find('.login-btn').trigger('click');
-        expect(identityAccessFactory, 'logout').toHaveBeenCalled();
+        expect(identityAccessFactory.logout).toHaveBeenCalled();
       });
     });
 
