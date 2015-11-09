@@ -224,16 +224,17 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.currentStoreExistingSeals = dataFromAPI.response;
     };
 
-    this.getStoreInstanceSeals = function(storeInstanceId) {
-      return storeInstanceAssignSealsFactory.getStoreInstanceSeals(storeInstanceId).then($this.setStoreInstanceSeals);
-    };
-
     this.setPrevStoreInstanceSeals = function(dataFromAPI) {
       $scope.prevStoreExistingSeals = dataFromAPI.response;
     };
 
-    this.getPrevStoreInstanceSeals = function(storeInstanceId) {
-      return storeInstanceAssignSealsFactory.getStoreInstanceSeals(storeInstanceId).then($this.setPrevStoreInstanceSeals);
+    this.getStoreInstanceSeals = function(storeInstanceId) {
+      if (storeInstanceId === $routeParams.storeId) {
+        return storeInstanceAssignSealsFactory.getStoreInstanceSeals(storeInstanceId).then($this.setStoreInstanceSeals);
+      }
+      if (storeInstanceId === $scope.prevStoreInstanceId) {
+        return storeInstanceAssignSealsFactory.getStoreInstanceSeals(storeInstanceId).then($this.setPrevStoreInstanceSeals);
+      }
     };
 
     this.setExistingSeals = function() {
@@ -541,14 +542,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       storeInstanceFactory.getStoreInstance($routeParams.storeId).then($this.setStoreInstance);
     };
 
-    this.displayLoadingModal = function(loadingText) {
-      angular.element('#loading').modal('show').find('p').text(loadingText);
-    };
-
-    this.hideLoadingModal = function() {
-      angular.element('#loading').modal('hide');
-    };
-
     this.showMessage = function(type, message) {
       ngToast.create({
         className: type,
@@ -570,12 +563,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.exitToDashboard = function() {
-      this.displayLoadingModal('Loading Store Instance Dashboard');
+      this.showLoadingModal('Loading Store Instance Dashboard');
       $location.url('/store-instance-dashboard/');
     };
 
     this.updateStoreInstance = function(saveAndExit) {
-      this.displayLoadingModal('Updating Store Instance ' + $routeParams.storeId);
+      this.showLoadingModal('Updating Store Instance ' + $routeParams.storeId);
       var payload = this.formatPayload();
       return storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload).then(
         (saveAndExit ? this.exitOnSave : this.updateStoreInstanceSuccessHandler),
@@ -630,7 +623,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           return;
         }
       }
-      this.displayLoadingModal('Creating new Store Instance');
+      this.showLoadingModal('Creating new Store Instance');
       var promises = $this.makeCreatePromises();
       $q.all(promises).then(
         (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
@@ -693,7 +686,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.endStoreInstance = function(saveAndExit) {
-      this.displayLoadingModal('Starting the End Instance process');
+      this.showLoadingModal('Starting the End Instance process');
       if (saveAndExit) {
         this.exitToDashboard();
         return;
@@ -708,7 +701,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.redispatchStoreInstance = function(saveAndExit) {
-      this.displayLoadingModal('Redispatching Store Instance ' + $routeParams.storeId);
+      this.showLoadingModal('Redispatching Store Instance ' + $routeParams.storeId);
       if (saveAndExit) {
         this.exitToDashboard();
         return;
@@ -726,7 +719,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.editRedispatchedStoreInstance = function(saveAndExit) {
-      this.displayLoadingModal('Updating Current Store Instance ' + $routeParams.storeId +
+      this.showLoadingModal('Updating Current Store Instance ' + $routeParams.storeId +
         ' and Previous Store Instance ' + $scope.prevStoreInstanceId);
       if (saveAndExit) {
         this.exitToDashboard();
@@ -749,7 +742,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.editDispatchedStoreInstance = function(saveAndExit) {
-      this.displayLoadingModal('Updating Store Instance ' + $routeParams.storeId);
+      this.showLoadingModal('Updating Store Instance ' + $routeParams.storeId);
       if (saveAndExit) {
         this.exitToDashboard();
         return;
@@ -902,8 +895,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.registerMenusScopeWatchers = function() {
-      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState(
-          'dispatch') &&
+      return ($this.isActionState('redispatch') && $scope.stepOneFromStepTwo) || ($this.isActionState('dispatch') &&
         $routeParams.storeId);
     };
 
@@ -989,7 +981,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       promises.push($this.getStoreInstanceSeals($routeParams.storeId));
       promises.push($this.getStoreInstanceItems($routeParams.storeId));
       if ($scope.prevStoreInstanceId) {
-        promises.push($this.getPrevStoreInstanceSeals($scope.prevStoreInstanceId));
+        promises.push($this.getStoreInstanceSeals($scope.prevStoreInstanceId));
         promises.push($this.getPrevStoreInstanceItems($scope.prevStoreInstanceId));
       }
       return promises;
@@ -1012,12 +1004,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.setStoreInstanceMenus();
       }
       $this.setWizardSteps();
-      if ($routeParams.action === 'redispatch') {
+      if ($this.isActionState('redispatch')) {
         $this.setPrevInstanceWizardSteps();
       }
       $this.setUIReady();
       $this.registerScopeWatchers();
-      if ($routeParams.storeId) {
+      if ($routeParams.storeId && ($this.isActionState('redispatch') || $this.isActionState('dispatch'))) {
         $this.setExistingSeals();
         $this.generateSealTypesList();
       }

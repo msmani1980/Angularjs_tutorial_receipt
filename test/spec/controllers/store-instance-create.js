@@ -591,7 +591,7 @@ describe('Store Instance Create Controller', function() {
         },
         storeId: storeInstanceId
       };
-      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'showLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'formatDispatchPayload').and.callThrough();
       spyOn(storeInstanceFactory, 'createStoreInstance').and.callThrough();
@@ -604,7 +604,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal', function() {
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+      expect(StoreInstanceCreateCtrl.showLoadingModal).toHaveBeenCalledWith(
         'Creating new Store Instance');
     });
 
@@ -688,7 +688,7 @@ describe('Store Instance Create Controller', function() {
       resolveAllDependencies();
       getStoreInstanceDeferred.resolve(storeInstanceCreatedJSON);
       spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'showLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
       spyOn(storeInstanceFactory, 'createStoreInstance').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
@@ -806,7 +806,7 @@ describe('Store Instance Create Controller', function() {
       expect(StoreInstanceCreateCtrl.editRedispatchedStoreInstance).toHaveBeenCalled();
     });
 
-    it('should call editRedispatchedStoreInstance if action state is redispatch', function() {
+    it('should call redispatchStoreInstance if action state is redispatch', function() {
       initController('redispatch');
       $scope.stepOneFromStepTwo = false;
       $scope.$digest();
@@ -1207,7 +1207,7 @@ describe('Store Instance Create Controller', function() {
       initController('end-instance');
       resolveAllDependencies();
       mockLoadStoreInstance();
-      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'showLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'setWizardSteps').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'endStoreInstance').and.callThrough();
@@ -1218,13 +1218,13 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal', function() {
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+      expect(StoreInstanceCreateCtrl.showLoadingModal).toHaveBeenCalledWith(
         'Starting the End Instance process');
     });
 
     it('should display the loading modal, when saveAndExit is passed', function() {
       mockEndStoreInstance(true);
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+      expect(StoreInstanceCreateCtrl.showLoadingModal).toHaveBeenCalledWith(
         'Loading Store Instance Dashboard');
     });
 
@@ -1299,7 +1299,7 @@ describe('Store Instance Create Controller', function() {
       resolveAllDependencies();
       mockLoadStoreInstance();
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'showLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'exitToDashboard');
       spyOn(StoreInstanceCreateCtrl, 'updateStatusToStep').and.callThrough();
@@ -1324,7 +1324,7 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal', function() {
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+      expect(StoreInstanceCreateCtrl.showLoadingModal).toHaveBeenCalledWith(
         'Redispatching Store Instance ' + $scope.formData.cateringStationId);
     });
 
@@ -1350,7 +1350,7 @@ describe('Store Instance Create Controller', function() {
       resolveAllDependencies();
       mockLoadStoreInstance();
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'showLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'exitToDashboard');
       spyOn(StoreInstanceCreateCtrl, 'updateStatusToStep').and.callThrough();
@@ -1373,11 +1373,12 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal', function() {
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+      expect(StoreInstanceCreateCtrl.showLoadingModal).toHaveBeenCalledWith(
         'Updating Store Instance ' + storeInstanceId);
     });
 
     it('should call the updateStoreInstance method on the controller', function() {
+      spyOn(StoreInstanceCreateCtrl, 'removeAllDataForInstances').and.returnValue(true);
       mockEditDispatchedStoreInstance();
       expect(storeInstanceService.updateStoreInstance).toHaveBeenCalled();
     });
@@ -1393,15 +1394,28 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       initController('redispatch', true);
+      $scope.stepOneFromStepTwo = true;
       resolveAllDependencies();
       mockLoadStoreInstance();
       spyOn(StoreInstanceCreateCtrl, 'formatPayload').and.callThrough();
-      spyOn(StoreInstanceCreateCtrl, 'displayLoadingModal');
+      spyOn(StoreInstanceCreateCtrl, 'showLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'hideLoadingModal');
       spyOn(StoreInstanceCreateCtrl, 'exitToDashboard');
+      spyOn(StoreInstanceCreateCtrl, 'showWarningModal');
+      spyOn(StoreInstanceCreateCtrl, 'hideWarningModal');
       spyOn(StoreInstanceCreateCtrl, 'updateStatusToStep').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'createStoreInstanceSuccessHandler').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'showMessage').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'isActionState').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'registerScopeWatchers').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'registerMenusScopeWatchers').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'checkIfMenusHaveChanged').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreDetails').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'validateForm').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'submitFormConditions');
+      spyOn($scope, 'submitForm');
+
+
       $scope.formData = {
         scheduleDate: dateUtility.nowFormatted(),
         menus: [{
@@ -1420,13 +1434,14 @@ describe('Store Instance Create Controller', function() {
     });
 
     it('should display the loading modal', function() {
-      expect(StoreInstanceCreateCtrl.displayLoadingModal).toHaveBeenCalledWith(
+      expect(StoreInstanceCreateCtrl.showLoadingModal).toHaveBeenCalledWith(
         'Updating Current Store Instance ' + storeInstanceId + ' and Previous Store Instance ' +
         $scope.prevStoreInstanceId
       );
     });
 
     it('should call the updateStoreInstance method on the controller', function() {
+      spyOn(StoreInstanceCreateCtrl, 'removeAllDataForInstances').and.returnValue(true);
       mockEditRedispatchedStoreInstance();
       expect(storeInstanceService.updateStoreInstance).toHaveBeenCalled();
     });
@@ -1434,6 +1449,48 @@ describe('Store Instance Create Controller', function() {
     it('should call the saveAndExit method on the controller', function() {
       mockEditRedispatchedStoreInstance(true);
       expect(StoreInstanceCreateCtrl.exitToDashboard).toHaveBeenCalled();
+    });
+
+    it('should set showDataLossWarning to true, if the menus have changed', function() {
+      $scope.formData.menus = [{
+        id: 112,
+        name: 'ABC43122'
+      }];
+      $scope.storeDetails.menuList = [{
+        id: 101,
+        name: 'ABC43125'
+      }];
+      $scope.$digest();
+      expect($scope.showDataLossWarning).toBeTruthy();
+    });
+
+    it('should set showDataLossWarning to false, if the menus have not changed', function() {
+      $scope.formData.menus = [{
+        id: 100,
+        name: 'ABC43124'
+      }];
+      $scope.storeDetails.menuList = [{
+        id: 100,
+        name: 'ABC43124'
+      }];
+      $scope.$digest();
+      expect($scope.showDataLossWarning).toBeFalsy();
+    });
+
+    it('should showWarningModal if showDataLossWarning is true', function() {
+      $scope.showDataLossWarning = true;
+      StoreInstanceCreateCtrl.validateForm();
+      expect(StoreInstanceCreateCtrl.showWarningModal).toHaveBeenCalled();
+    });
+
+    it('should hideWarningModal if the user proceedsToStepTwo', function() {
+      $scope.proceedToStepTwo();
+      expect(StoreInstanceCreateCtrl.hideWarningModal).toHaveBeenCalled();
+    });
+
+    it('on saveAndExit, submit form should be called with true', function() {
+      $scope.saveAndExit();
+      expect($scope.submitForm).toHaveBeenCalledWith(true);
     });
 
   });
@@ -1545,6 +1602,53 @@ describe('Store Instance Create Controller', function() {
         name: 'BOGAN123'
       });
       expect(filterMenu).toBeFalsy();
+    });
+
+  });
+
+  describe('when an existing seal is deleted', function() {
+
+    var sealTypeObject;
+    var storeId;
+
+    beforeEach(function() {
+      initController();
+      resolveAllDependencies();
+      $scope.$digest();
+      sealTypeObject = {
+        id: 1,
+        name: 'Outbound',
+        color: '#00B200',
+        seals: {
+          numbers: ['21']
+        },
+        actions: undefined,
+        required: true,
+        order: 1
+      };
+      storeId = 1;
+      spyOn(StoreInstanceCreateCtrl, 'determineSealsToDelete').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'getExistingSealsByType').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'getExistingSealByNumber').and.callThrough();
+    });
+
+    it('should determine what seals to be created', function() {
+      spyOn(StoreInstanceCreateCtrl, 'makeDeleteSealsPromise').and.callThrough();
+      StoreInstanceCreateCtrl.makeDeleteSealsPromise(sealTypeObject, storeId);
+      expect(StoreInstanceCreateCtrl.determineSealsToDelete).toHaveBeenCalledWith(sealTypeObject, storeId);
+    });
+
+    it('should find a list of existing seals by type', function() {
+      StoreInstanceCreateCtrl.determineSealsToDelete(sealTypeObject, storeId);
+      expect(StoreInstanceCreateCtrl.getExistingSealsByType).toHaveBeenCalledWith(sealTypeObject.id,
+        storeId);
+    });
+
+    it('should call makeDeleteSealsPromise', function() {
+      spyOn(StoreInstanceCreateCtrl, 'makeDeleteSealsPromise');
+      $scope.sealTypesList = sealTypeObject;
+      StoreInstanceCreateCtrl.makeDeleteSealsPromises(storeId);
+      expect(StoreInstanceCreateCtrl.makeDeleteSealsPromise).toHaveBeenCalled();
     });
 
   });
