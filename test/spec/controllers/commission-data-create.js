@@ -47,7 +47,7 @@ describe('Controller: CommissionDataCtrl', function () {
     discountTypesDeferred = $q.defer();
     discountTypesDeferred.resolve(discountTypesResponseJSON);
     commissionDataDeferred = $q.defer();
-    commissionDataDeferred.resolve(commissionDataResponseJSON);
+
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesResponseJSON);
 
@@ -252,6 +252,7 @@ describe('Controller: CommissionDataCtrl', function () {
       describe('edit init', function () {
         beforeEach(function () {
           initController('edit', 1);
+          commissionDataDeferred.resolve(commissionDataResponseJSON);
           scope.$digest();
         });
 
@@ -273,6 +274,7 @@ describe('Controller: CommissionDataCtrl', function () {
       describe('view init', function () {
         beforeEach(function () {
           initController('view', 1);
+          commissionDataDeferred.resolve(commissionDataResponseJSON);
           scope.$digest();
         });
 
@@ -326,14 +328,30 @@ describe('Controller: CommissionDataCtrl', function () {
       });
 
       it('should call createCommissionData with payload', function () {
+        commissionDataDeferred.resolve(commissionDataResponseJSON);
         var payload = CommissionDataCtrl.createPayload();
         expect(commissionFactory.createCommissionData).toHaveBeenCalledWith(payload);
       });
 
       it('should redirect to commission data table', function () {
+        commissionDataDeferred.resolve(commissionDataResponseJSON);
         CommissionDataCtrl.createSuccess();
         expect(location.path).toHaveBeenCalledWith('commission-data-table');
       });
+
+      it('should show errors if there is a promise that fails', function () {
+        commissionDataDeferred.reject({status:400,statusText:'Bad Request'});
+        scope.$apply();
+        expect(scope.displayError).toBeTruthy();
+      });
+
+      it('should set the error response in controller', function () {
+        commissionDataDeferred.reject({status:400,statusText:'Bad Request'});
+        scope.$apply();
+        expect(scope.errorResponse).toEqual({status:400,statusText:'Bad Request'});
+      });
+
+
     });
 
     describe('edit data', function () {
