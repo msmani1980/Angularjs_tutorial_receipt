@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .service('deliveryNoteFactory', function (deliveryNotesService, catererStationService,
-                                            companyReasonCodesService, itemsService) {
+                                            companyReasonCodesService, itemsService, stockManagementStationItemsService) {
 
     function getDeliveryNote(deliveryNoteId) {
       return deliveryNotesService.getDeliveryNote(deliveryNoteId);
@@ -20,7 +20,7 @@ angular.module('ts5App')
     }
 
     function getItemsByCateringStationId(_catererStationId){
-      return catererStationService.getAllMenuItems(_catererStationId, null);
+      return stockManagementStationItemsService.getStockManagementStationItems(_catererStationId);
     }
 
     function getCompanyReasonCodes(){
