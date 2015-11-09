@@ -34,11 +34,8 @@ angular.module('ts5App')
 
     function showErrors (dataFromAPI) {
       $this.hideLoadingModal();
-      $this.showToast('warning', 'Store Instance Packing', 'error saving items!');
       $scope.displayError = true;
-      if ('data' in dataFromAPI) {
-        $scope.formErrors = dataFromAPI.data;
-      }
+      $scope.errorResponse = dataFromAPI;
     }
 
     this.showLoadingModal = function (text) {

@@ -61,8 +61,8 @@ describe('Directive: dynamicLeftNav', function() {
     it('should have a menuItems variable in scope', function() {
       expect(isolatedScope.menuItems).toBeDefined();
     });
-    it('should have 3 items in the menuItems array scope variable', function() {
-      expect(isolatedScope.menuItems.length).toEqual(4);
+    it('should have 5 items in the menuItems array scope variable', function() {
+      expect(isolatedScope.menuItems.length).toEqual(5);
     });
   });
 
@@ -78,8 +78,8 @@ describe('Directive: dynamicLeftNav', function() {
     it('should have a menuItems variable in scope', function() {
       expect(isolatedScope.menuItems).toBeDefined();
     });
-    it('should have 3 items in the menuItems array scope variable', function() {
-      expect(isolatedScope.menuItems.length).toEqual(4);
+    it('should have 5 items in the menuItems array scope variable', function() {
+      expect(isolatedScope.menuItems.length).toEqual(5);
     });
   });
 

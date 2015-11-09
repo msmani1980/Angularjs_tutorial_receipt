@@ -48,11 +48,7 @@ angular.module('ts5App')
     }
 
     function showResponseErrors(response) {
-      if ('data' in response) {
-        angular.forEach(response.data, function(error) {
-          this.push(error);
-        }, $scope.errorCustom);
-      }
+      $scope.errorResponse = response;
       $scope.displayError = true;
       hideLoadingModal();
     }
@@ -150,17 +146,17 @@ angular.module('ts5App')
           'warning');
         return;
       }
-      var items = $filter('unique')(response.response, 'itemId');
+      var items = $filter('unique')(response.response, 'itemMasterId');
       var devlieryNoteItemIds = $scope.deliveryNote.items.map(function(item) {
         return item.masterItemId;
       });
       var filteredResponseMasterItems = items.filter(function(item) {
-        return devlieryNoteItemIds.indexOf(item.itemId) === -1;
+        return devlieryNoteItemIds.indexOf(item.itemMasterId) === -1;
       });
 
       var newMasterItems = filteredResponseMasterItems.map(function(item) {
         return {
-          masterItemId: item.itemId,
+          masterItemId: item.itemMasterId,
           itemName: item.itemName,
           itemCode: item.itemCode
         };
