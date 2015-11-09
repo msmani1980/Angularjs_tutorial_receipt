@@ -20,6 +20,7 @@ angular.module('ts5App')
       }
 
       function callback() {
+        identityAccessFactory.logout();
         $scope.$emit('logout');
       }
 
