@@ -1,22 +1,21 @@
 <div class="module-container">
 
-  <form name="form" class="form edit-form company-reason-code-form">
+  <error-dialog form-object="companyReasonCodeFrom" error-response="errorResponse" display="displayError">
+  </error-dialog>
 
-    <form-error-dialog></form-error-dialog>
+  <form name="companyReasonCodeFrom" class="form edit-form" ng-submit="submitForm()">
 
     <div class="edit-controls">
       <div class="row">
 
         <div class="col-xs-6 col-sm-8">
-          <h2 class="view-name">{{ viewName }}</h2>
+          <h2 class="view-name">Company Reason Code</h2>
         </div>
 
         <div class="col-xs-6 col-sm-4">
           <div class="header-buttons pull-right">
-<!--               <button type="button" class="btn button-additional" {{action "cancel"}}>{{t "menus.form.button.secondary.cancel"}}</button> -->
             <button type="button" class="btn btn-default">Cancel</button>
-<!--               <button type="button" class="btn button-primary" {{action "save"}}>{{t "menus.form.button.primary.create"}}</button> -->
-            <button type="button" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary">Create</button>
             <button type="button" class="btn btn-default">
                 <i class="fa fa-question-circle"></i>
             </button>
@@ -31,21 +30,21 @@
 
       <div class="col-xs-12 col-sm-6">
         <div class="form-group">
-          <label for="refundCodeType">Code Type</label>
-          <select class="form-control" id="refundReason">
-            <option>Damaged</option>
-            <option>Foreign Material</option>
-            <option>Product Missing</option>
+          <label for="refundCodeType">Refund Code Type</label>
+          <select class="form-control" name="refundCodeType" ng-model="refundCodeType" required>
+            <option value="1">Damaged</option>
+            <option value="2">Foreign Material</option>
+            <option value="3">Product Missing</option>
           </select>
         </div>
       </div>
 
       <div class="col-xs-12 col-sm-6">
         <div class="form-group">
-          <label for="refundReason">Reason</label>
-          <select class="form-control" id="refundReason">
-            <option>Damaged</option>
-            <option>Customer Changed Mind</option>
+          <label for="refundReason">Refund Reason</label>
+          <select class="form-control" name="refundReason" ng-model="refundReason" required>
+            <option value="1">Damaged</option>
+            <option value="2">Customer Changed Mind</option>
           </select>
         </div>
       </div>
