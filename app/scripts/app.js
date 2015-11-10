@@ -233,7 +233,7 @@ angular.module('ts5App', [
     templateUrl: 'views/company-exchange-rate-edit.html',
     controller: 'CompanyExchangeRateEditCtrl',
     controllerAs: 'companyExchangeRateEdit'
-  }).when('/reconciliation-discrepancy-detail', {
+  }).when('/reconciliation-discrepancy-detail/:storeInstanceId', {
     templateUrl: 'views/reconciliation-discrepancy-detail.html',
     controller: 'ReconciliationDiscrepancyDetail'
   }).when('/login', {
