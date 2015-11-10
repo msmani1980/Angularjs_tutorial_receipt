@@ -279,8 +279,16 @@ describe('Store Instance Create Controller', function() {
         expect($scope.cateringStationList.length).toBeGreaterThan(0);
       });
 
-      it('should be match the stations list from the stations API Respone', function() {
-        expect($scope.cateringStationList).toEqual(cateringStationsJSON.response);
+      it('should be match the stations list from the stations API Response', function() {
+        var response;
+        var makeResponsePayload = function() {
+          var cateringStations = cateringStationsJSON.response;
+          delete cateringStations[0].$$hashKey;
+          delete cateringStations[1].$$hashKey;
+          response = cateringStations;
+        };
+        makeResponsePayload();
+        expect($scope.cateringStationList).toEqual(response);
       });
 
     });
