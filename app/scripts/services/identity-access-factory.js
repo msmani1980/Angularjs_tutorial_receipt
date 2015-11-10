@@ -19,6 +19,10 @@ angular.module('ts5App')
       return identityAccessService.authorizeUser(payload);
     }
 
+    function logoutFromSystem() {
+      identityAccessService.logout();
+    }
+
     function getCompanyData(companyId) {
       return companiesFactory.getCompany(companyId);
     }
@@ -44,10 +48,12 @@ angular.module('ts5App')
 
     function setSessionHeaders() {
       var sessionObject = getSessionObject();
-      $localStorage.companyObject = {
-        companyId: sessionObject.companyId,
-        companyTypeId: 1                             // TODO: Get companyTypeId dynamically
-      };
+      if (sessionObject.companyData) {
+        $localStorage.companyObject = {
+          companyId: sessionObject.companyId,
+          companyTypeId: sessionObject.companyData.companyTypeId
+        };
+      }
       angular.extend($http.defaults.headers.common, sessionObject);
     }
 
@@ -93,6 +99,7 @@ angular.module('ts5App')
     return {
       getCompanyData: getCompanyData,
       login: login,
+      logout: logoutFromSystem,
       getSessionObject: getSessionObject,
       setSessionData: setSessionData,
       isAuthorized: isAuthorized
