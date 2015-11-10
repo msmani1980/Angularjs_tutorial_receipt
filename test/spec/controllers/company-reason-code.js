@@ -20,19 +20,38 @@ describe('Company Reason Code Controller', function() {
     compile = $compile;
   }));
 
-  function renderView() {
-    var html = templateCache.get('/views/company-reason-code.html');
-    var compiled = compile(angular.element(html))(scope);
-    var view = angular.element(compiled[0]);
-    scope.$digest();
-    return view;
+  function createFormObject() {
+    scope.companyReasonCodeFrom = {
+      $valid: false,
+      $invalid: false,
+      $submitted: false,
+      $name:'companyReasonCodeFrom',
+      refundCodeType: {
+        $name: 'refundCodeType',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      },
+      refundReason: {
+        $name: 'refundReason',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      }
+    };
   }
 
   function initController() {
     CompanyReasonCodeCtrl = controller('CompanyReasonCodeCtrl', {
       $scope: scope
     });
-    renderView();
+    createFormObject();
   }
 
   describe('when the controller loads', function() {
@@ -83,6 +102,7 @@ describe('Company Reason Code Controller', function() {
       beforeEach(function() {
         scope.companyReasonCodeFrom.refundCodeType.$setViewValue(1);
         scope.companyReasonCodeFrom.refundReason.$setViewValue(1);
+        scope.companyReasonCodeFrom.$valid = true;
         scope.submitForm();
       });
 
