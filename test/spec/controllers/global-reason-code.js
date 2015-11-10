@@ -10,29 +10,44 @@ describe('Global Reason Code Controller', function() {
   var scope;
   var controller;
   var GlobalReasonCodeCtrl;
-  var templateCache;
-  var compile;
 
-  beforeEach(inject(function($controller, $rootScope,$templateCache,$compile) {
+  beforeEach(inject(function($controller, $rootScope) {
     scope = $rootScope.$new();
     controller = $controller;
-    templateCache = $templateCache;
-    compile = $compile;
   }));
 
-  function renderView() {
-    var html = templateCache.get('/views/global-reason-code.html');
-    var compiled = compile(angular.element(html))(scope);
-    var view = angular.element(compiled[0]);
-    scope.$digest();
-    return view;
+  function createFormObject() {
+    scope.globalReasonCodeForm = {
+      $valid: false,
+      $invalid: false,
+      $submitted: false,
+      $name:'globalReasonCodeForm',
+      refundCodeType: {
+        $name: 'refundCodeType',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      },
+      refundReason: {
+        $name: 'refundReason',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      }
+    };
   }
 
   function initController() {
     GlobalReasonCodeCtrl = controller('GlobalReasonCodeCtrl', {
       $scope: scope
     });
-    renderView();
+    createFormObject();
   }
 
   describe('when the controller loads', function() {
@@ -83,6 +98,7 @@ describe('Global Reason Code Controller', function() {
       beforeEach(function() {
         scope.globalReasonCodeForm.refundCodeType.$setViewValue(1);
         scope.globalReasonCodeForm.refundReason.$setViewValue(1);
+        scope.globalReasonCodeForm.$valid = true;
         scope.submitForm();
       });
 
