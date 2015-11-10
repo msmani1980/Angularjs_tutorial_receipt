@@ -91,7 +91,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setCatererStationList = function(dataFromAPI) {
-      $scope.cateringStationList = dataFromAPI.response;
+      $scope.cateringStationList = angular.copy(dataFromAPI.response);
     };
 
     this.getCatererStationList = function() {
@@ -171,7 +171,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setCarrierNumbers = function(dataFromAPI) {
-      $scope.carrierNumbers = dataFromAPI.response;
+      $scope.carrierNumbers = angular.copy(dataFromAPI.response);
     };
 
     this.getCarrierNumbers = function() {
@@ -179,7 +179,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setStoresList = function(dataFromAPI) {
-      $scope.storesList = dataFromAPI.response;
+      $scope.storesList = angular.copy(dataFromAPI.response);
     };
 
     this.getStoresList = function() {
@@ -189,7 +189,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getItemsSuccessHandler = function(dataFromAPI) {
-      var menuItems = dataFromAPI.response;
+      var menuItems = angular.copy(dataFromAPI.response);
       $scope.itemsToDelete = [];
       angular.forEach(menuItems, function(item) {
         $scope.itemsToDelete.push(item);
@@ -197,7 +197,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.getPrevStoreItemsSuccessHandler = function(dataFromAPI) {
-      var menuItems = dataFromAPI.response;
+      var menuItems = angular.copy(dataFromAPI.response);
       $scope.prevStoreItemsToDelete = [];
       angular.forEach(menuItems, function(item) {
         $scope.prevStoreItemsToDelete.push(item);
@@ -221,11 +221,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setStoreInstanceSeals = function(dataFromAPI) {
-      $scope.currentStoreExistingSeals = dataFromAPI.response;
+      $scope.currentStoreExistingSeals = angular.copy(dataFromAPI.response);
     };
 
     this.setPrevStoreInstanceSeals = function(dataFromAPI) {
-      $scope.prevStoreExistingSeals = dataFromAPI.response;
+      $scope.prevStoreExistingSeals = angular.copy(dataFromAPI.response);
     };
 
     this.getStoreInstanceSeals = function(storeInstanceId) {
