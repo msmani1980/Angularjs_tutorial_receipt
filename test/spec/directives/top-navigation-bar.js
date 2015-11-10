@@ -12,6 +12,7 @@ describe('Directive: topNavigationBar', function () {
   beforeEach(inject(function ($rootScope, $injector) {
     identityAccessFactory = $injector.get('identityAccessFactory');
     spyOn(identityAccessFactory, 'isAuthorized').and.returnValue(false);
+    spyOn(identityAccessFactory, 'logout').and.returnValue(202);
 
     scope = $rootScope.$new();
   }));
@@ -74,14 +75,21 @@ describe('Directive: topNavigationBar', function () {
       expect(element.find('menu-dropdown').length).toBe(0);
     });
 
-    it('should have logout button', function () {
-      expect(element.find('.login-btn').length).toBe(1);
-    });
+    describe('logout', function(){
+      it('should have logout button', function () {
+        expect(element.find('.login-btn').length).toBe(1);
+      });
 
-    it('should emit on click', function () {
-      spyOn(scope, '$emit');
-      element.find('.login-btn').trigger('click');
-      expect(scope.$emit).toHaveBeenCalledWith('logout');
+      it('should emit on click', function () {
+        spyOn(scope, '$emit');
+        element.find('.login-btn').trigger('click');
+        expect(scope.$emit).toHaveBeenCalledWith('logout');
+      });
+
+      it('should call logout API', function () {
+        element.find('.login-btn').trigger('click');
+        expect(identityAccessFactory.logout).toHaveBeenCalled();
+      });
     });
 
   });
