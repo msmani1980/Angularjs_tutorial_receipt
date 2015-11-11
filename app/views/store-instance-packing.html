@@ -53,8 +53,8 @@
         <thead>
         <tr>
           <th>Retail Item Details</th>
-          <th width="10%">Template Quantity</th>
-          <th width="10%">Picked Quantity</th>
+          <th width="10%" ng-show="shouldDisplayQuantityField('template')">Template Quantity</th>
+          <th width="10%" ng-show="shouldDisplayQuantityField('picked')">Picked Quantity</th>
           <!--<th ng-show="shouldDisplayQuantityField('inbound')" width="10%">Inbound Quantity</th>-->
           <!--<th ng-show="shouldDisplayQuantityField('ullage')" width="10%">Ullage Quantity</th>-->
           <!--<th ng-show="shouldDisplayQuantityField('ullage')" width="15%">Ullage Reason</th>-->
@@ -73,7 +73,7 @@
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
           </td>
-          <td>
+          <td ng-if="shouldDisplayQuantityField('template')">
             <input type="text"
                    name="templateQuantity-{{$index}}"
                    custom-validity
@@ -84,7 +84,7 @@
                    maxlength="5"
                    required="true"/>
           </td>
-          <td>
+          <td ng-if="shouldDisplayQuantityField('picked')">
             <input type="text"
                    name="pickedQuantity-{{$index}}"
                    custom-validity
@@ -151,7 +151,7 @@
                    <!--disabled ng-value="calculateTotalDispatchedQty(item)"/>-->
           <!--</td>-->
           <td>
-            <button type="button" ng-if="shouldShowDeleteButton(item)" class="btn btn-sm btn-danger"
+            <button type="button" ng-if="isNewItem(item)" class="btn btn-sm btn-danger"
                     ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
             </button>

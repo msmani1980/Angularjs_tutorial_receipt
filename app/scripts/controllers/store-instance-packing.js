@@ -34,6 +34,20 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return (matchedObject) ? matchedObject.id : '';
     };
 
+    $scope.isNewItem = function (item) {
+      return item.isNewItem;
+    };
+
+    $scope.shouldDisplayQuantityField = function (fieldName) {
+      var actionToFieldMap = {
+        'dispatch': ['template', 'picked'],
+        'replenish': ['picked'],
+        'end-instance': ['ullage', 'inbound'],
+        'redispatch': ['inbound', 'ullage', 'template', 'picked', 'dispatch']
+      };
+      return (actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0);
+    };
+
     this.getThresholdVariance = function () {
       // TODO: update getThresholdList API, also check if 'dispatch' feature exists first
       $scope.variance = 10; // mock until API is done
