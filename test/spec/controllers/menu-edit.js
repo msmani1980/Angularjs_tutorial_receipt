@@ -2,7 +2,7 @@
 
 /*global moment*/
 
-describe('Controller: MenuEditCtrl', function () {
+fdescribe('Controller: MenuEditCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/menu.json', 'served/master-item-list.json', 'served/sales-categories.json'));
@@ -15,7 +15,8 @@ describe('Controller: MenuEditCtrl', function () {
     getMenuDeferred,
     getItemsListDeferred,
     salesCategoriesResponseJSON,
-    salesCategoriesDeferred;
+    salesCategoriesDeferred,
+    createMenuDeffered;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
@@ -36,13 +37,14 @@ describe('Controller: MenuEditCtrl', function () {
     salesCategoriesDeferred = $q.defer();
     salesCategoriesDeferred.resolve(salesCategoriesResponseJSON);
 
+    createMenuDeffered = $q.defer();
+
     spyOn(menuFactory, 'getMenu').and.returnValue(getMenuDeferred.promise);
-    spyOn(menuFactory, 'updateMenu').and.returnValue(getMenuDeferred.promise);
-    spyOn(menuFactory, 'createMenu').and.returnValue(getMenuDeferred.promise);
+    spyOn(menuFactory, 'updateMenu').and.returnValue(createMenuDeffered.promise);
+    spyOn(menuFactory, 'createMenu').and.returnValue(createMenuDeffered.promise);
     spyOn(menuFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
     spyOn(menuFactory, 'getSalesCategoriesList').and.returnValue(salesCategoriesDeferred.promise);
     spyOn(menuFactory, 'getCompanyId');
-
 
     var routeParams = {
       id: 1,
@@ -234,6 +236,33 @@ describe('Controller: MenuEditCtrl', function () {
       it('should submit if form is valid', function () {
         scope.submitForm();
         expect(menuFactory.updateMenu).toHaveBeenCalled();
+      });
+
+      describe('the error handler', function () {
+
+        var mockError = {
+          status:400,
+          statusText: 'Bad Request',
+          response: {
+            field:'menu date',
+            code: '024'
+          }
+        };
+
+        beforeEach(function() {
+          scope.submitForm();
+          createMenuDeffered.reject(mockError);
+          scope.$apply();
+        });
+
+        it('should set the displayError flag to true', function() {
+          expect(scope.displayError).toBeTruthy();
+        });
+
+        it('should set the errorResponse variable to API response', function() {
+          expect(scope.errorResponse).toEqual(mockError);
+        });
+
       });
 
       describe('new Items', function () {
