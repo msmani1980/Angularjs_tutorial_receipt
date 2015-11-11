@@ -11,10 +11,12 @@ angular.module('ts5App')
   .service('identityAccessService', function ($resource, ENV) {
     var authorizeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser';
     var logoutURL = ENV.apiUrl + '/IdentityAccess/logout';
+    var featuresInRoleURL = ENV.apiUrl + '/IdentityAccess/featuresInRole';
 
     var authParameters = {
     };
     var logoutParameters = {};
+    var featuresInRoleParameters = {};
 
     var actions = {
       authorizeUser: {
@@ -29,6 +31,12 @@ angular.module('ts5App')
           'Content-Type': 'application/json'
         }
       },
+      featuresInRole: {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
       logout: {
         method: 'PUT'
       }
@@ -36,6 +44,7 @@ angular.module('ts5App')
 
     var authResource = $resource(authorizeURL, authParameters, actions);
     var logoutResource = $resource(logoutURL, logoutParameters, actions);
+    var featuresInRoleResource = $resource(featuresInRoleURL, featuresInRoleParameters, actions);
 
     var authorizeUser = function (payload) {
       return authResource.authorizeUser(payload).$promise;
@@ -45,6 +54,10 @@ angular.module('ts5App')
       return authResource.checkAuth(payload).$promise;
     };
 
+    var featuresInRole = function (payload) {
+      return featuresInRoleResource.featuresInRole(payload).$promise;
+    };
+
     var logout = function (payload) {
       return logoutResource.logout(payload).$promise;
     };
@@ -52,6 +65,7 @@ angular.module('ts5App')
     return {
       authorizeUser: authorizeUser,
       checkAuth: checkAuth,
+      featuresInRole: featuresInRole,
       logout: logout
     };
   });
