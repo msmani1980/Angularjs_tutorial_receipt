@@ -167,6 +167,18 @@
 
     </ng-form>
 
+    <div class="row" ng-hide="readOnly">
+      <div class="col-xs-8 col-md-9"></div>
+      <div class="col-xs-4 col-md-3 text-right">
+        <div class="input-group">
+          <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Items</button>
+          </span>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
