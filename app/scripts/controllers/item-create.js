@@ -948,7 +948,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.errorHandler = function(dataFromAPI) {
       angular.element('#loading').modal('hide');
       $scope.displayError = true;
-      $scope.errorResponse = dataFromAPI;
+      $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
     this.updateItem = function(itemData) {
