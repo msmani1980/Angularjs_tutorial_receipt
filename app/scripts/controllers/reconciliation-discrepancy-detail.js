@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDiscrepancyDetail', function ($scope, reconciliationFactory) {
+  .controller('ReconciliationDiscrepancyDetail', function ($scope, $routeParams, reconciliationFactory) {
 
     function initLMPStockRevisions() {
       angular.forEach($scope.LMPStock, function (item) {
@@ -24,23 +24,42 @@ angular.module('ts5App')
       });
     }
 
-    function getStockData () {
+    function getStockData() {
       reconciliationFactory.getLMPStockMockData().then(function (dataFromAPI) {
         $scope.LMPStock = angular.copy(dataFromAPI);
         initLMPStockRevisions();
       });
     }
 
-    function getCashBagData () {
+    function getCashBagData() {
       reconciliationFactory.getCashBagMockData().then(function (dataFromAPI) {
         $scope.cashBags = angular.copy(dataFromAPI);
         initCashBagRevisions();
       });
     }
 
+    function showLoadingModal(text) {
+      $scope.displayError = false;
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
+    function handleResponseError(responseFromAPI) {
+      hideLoadingModal();
+      $scope.errorResponse = angular.copy(responseFromAPI);
+      $scope.displayError = true;
+    }
+
     function initData() {
       getStockData();
       getCashBagData();
+    }
+
+    function getStoreInstanceSuccessHandler(dataFromAPI) {
+      initData();
     }
 
     function initTableDefaults() {
@@ -54,9 +73,10 @@ angular.module('ts5App')
     }
 
     function init() {
+      showLoadingModal('Loading Reconciliation Discrepancy Details');
+      reconciliationFactory.getStoreInstance($routeParams.storeInstanceId).then(getStoreInstanceSuccessHandler, handleResponseError);
       angular.element('#checkbox').bootstrapSwitch();
       initTableDefaults();
-      initData();
     }
 
     $scope.showModal = function (modalName) {
@@ -71,7 +91,7 @@ angular.module('ts5App')
         'Voucher': 'Voucher Product Name',
         'Promotion': 'Promotion Name'
       };
-      if(modalNameToHeaderMap[modalName] && modalNamToTableHeaderMap[modalName]) {
+      if (modalNameToHeaderMap[modalName] && modalNamToTableHeaderMap[modalName]) {
         $scope.modalMainTitle = modalNameToHeaderMap[modalName];
         $scope.modalTableHeader = modalNamToTableHeaderMap[modalName];
       }
@@ -116,7 +136,7 @@ angular.module('ts5App')
     };
 
     $scope.initEditTable = function (isLMPTable) {
-      if(isLMPTable) {
+      if (isLMPTable) {
         $scope.editLMPStockTable = true;
         initLMPStockRevisions();
       } else {
@@ -127,7 +147,7 @@ angular.module('ts5App')
 
     $scope.saveTable = function (isLMPTable) {
       var dataList;
-      if(isLMPTable) {
+      if (isLMPTable) {
         $scope.editLMPStockTable = false;
         dataList = $scope.LMPStock;
       } else {
@@ -141,7 +161,7 @@ angular.module('ts5App')
 
     $scope.cancelEditingTable = function (isLMPTable) {
       var dataList;
-      if(isLMPTable) {
+      if (isLMPTable) {
         $scope.editLMPStockTable = false;
         dataList = $scope.LMPStock;
       } else {

@@ -3,6 +3,7 @@
 describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   beforeEach(module('ts5App'));
+  beforeEach(module('served/store-instance.json'));
 
   var scope;
   var ReconciliationDiscrepancyDetail;
@@ -13,6 +14,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var lmpStockResponseJSON;
   var cashBagsDeferred;
   var cashBagsResponseJSON;
+  var getStoreInstanceDeferred;
+  var storeInstanceJSON;
+  var routeParams;
 
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
@@ -21,56 +25,69 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     reconciliationFactory = $injector.get('reconciliationFactory');
     controller = $controller;
 
+    getStoreInstanceDeferred = $q.defer();
+    getStoreInstanceDeferred.resolve(storeInstanceJSON);
+    spyOn(reconciliationFactory, 'getStoreInstance').and.returnValue(getStoreInstanceDeferred.promise);
+
     lmpStockResponseJSON = [{id: 1}]; // stub for now until API is complete
     lmpStockDeferred = $q.defer();
     lmpStockDeferred.resolve(lmpStockResponseJSON);
+    spyOn(reconciliationFactory, 'getLMPStockMockData').and.returnValue(lmpStockDeferred.promise);
+
     cashBagsResponseJSON = [{id: 2}]; // stub for now until API is complete
     cashBagsDeferred = $q.defer();
     cashBagsDeferred.resolve(cashBagsResponseJSON);
-    spyOn(reconciliationFactory,  'getLMPStockMockData').and.returnValue(lmpStockDeferred.promise);
-    spyOn(reconciliationFactory,  'getCashBagMockData').and.returnValue(cashBagsDeferred.promise);
+    spyOn(reconciliationFactory, 'getCashBagMockData').and.returnValue(cashBagsDeferred.promise);
 
-
-
+    routeParams = {
+      storeInstanceId: 'fakeStoreInstanceId'
+    };
     ReconciliationDiscrepancyDetail = controller('ReconciliationDiscrepancyDetail', {
       $scope: scope,
-      $routeParams: {
-        id: 2
-      }
+      $routeParams: routeParams
     });
   }));
 
 
   describe('init', function () {
-    it('should call get LMP stock data', function () {
-      expect(reconciliationFactory.getLMPStockMockData).toHaveBeenCalled();
-      scope.$digest();
-      expect(scope.LMPStock).toBeDefined();
+
+    it('should call getStoreInstance', function () {
+      expect(reconciliationFactory.getStoreInstance).toHaveBeenCalledWith(routeParams.storeInstanceId);
     });
 
-    it('should call get cash bag data', function () {
-      expect(reconciliationFactory.getCashBagMockData).toHaveBeenCalled();
-      scope.$digest();
-      expect(scope.cashBags).toBeDefined();
+    describe('init', function () {
+      beforeEach(function () {
+        scope.$digest();
+      });
+
+      it('should call get LMP stock data', function () {
+        expect(reconciliationFactory.getLMPStockMockData).toHaveBeenCalled();
+        expect(scope.LMPStock).toBeDefined();
+      });
+
+      it('should call get cash bag data', function () {
+        expect(reconciliationFactory.getCashBagMockData).toHaveBeenCalled();
+        expect(scope.cashBags).toBeDefined();
+      });
+
+      it('should init tables to only show discrepancies', function () {
+        expect(scope.showLMPDiscrepancies).toEqual(true);
+        expect(scope.showCashBagDiscrepancies).toEqual(true);
+      });
+
+      it('should init tables to not be in edit mode', function () {
+        expect(scope.editLMPStockTable).toEqual(false);
+        expect(scope.editCashBagTable).toEqual(false);
+      });
+
+      it('should init each object with a revision object for editing', function () {
+        expect(scope.LMPStock[0].revision).toBeDefined();
+        expect(scope.LMPStock[0].revision.itemName).toEqual(scope.LMPStock[0].itemName);
+        expect(scope.LMPStock[0].revision).toBeDefined();
+        expect(scope.LMPStock[0].revision.cashBagName).toEqual(scope.LMPStock[0].cashBagName);
+      });
     });
 
-    it('should init tables to only show discrepancies', function () {
-      expect(scope.showLMPDiscrepancies).toEqual(true);
-      expect(scope.showCashBagDiscrepancies).toEqual(true);
-    });
-
-    it('should init tables to not be in edit mode', function () {
-      expect(scope.editLMPStockTable).toEqual(false);
-      expect(scope.editCashBagTable).toEqual(false);
-    });
-
-    it('should init each object with a revision object for editing', function () {
-      scope.$digest();
-      expect(scope.LMPStock[0].revision).toBeDefined();
-      expect(scope.LMPStock[0].revision.itemName).toEqual(scope.LMPStock[0].itemName);
-      expect(scope.LMPStock[0].revision).toBeDefined();
-      expect(scope.LMPStock[0].revision.cashBagName).toEqual(scope.LMPStock[0].cashBagName);
-    });
   });
 
   describe('edit table functions', function () {

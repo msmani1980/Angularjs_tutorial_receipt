@@ -34,7 +34,7 @@ angular.module('ts5App')
           value: 'does not match our records.'
         }
       ];
-      $scope.errorResponse = responseFromAPI;
+      $scope.errorResponse = angular.copy(responseFromAPI);
       $scope.displayError = true;
     }
 

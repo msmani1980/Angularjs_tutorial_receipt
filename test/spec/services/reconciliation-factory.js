@@ -1,10 +1,9 @@
 'use strict';
 
-fdescribe('Factory: reconciliationFactory', function () {
+describe('Factory: reconciliationFactory', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance.json'));
-
 
   var reconciliationFactory;
   var storeInstanceService;
