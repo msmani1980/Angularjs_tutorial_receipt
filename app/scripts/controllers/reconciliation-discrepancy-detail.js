@@ -58,7 +58,8 @@ angular.module('ts5App')
       getCashBagData();
     }
 
-    function getStoreInstanceSuccessHandler(dataFromAPI) {
+    function getStoreInstanceSuccessHandler(storeInstanceDataFromAPI) {
+      $scope.storeInstance = angular.copy(storeInstanceDataFromAPI);
       initData();
     }
 
