@@ -7,13 +7,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MainCtrl', function ($rootScope, $scope, companiesFactory, GlobalMenuService, mainMenuService, identityAccessService, lodash) {
+  .controller('MainCtrl', function ($rootScope, $scope, companiesFactory, mainMenuService, identityAccessService, lodash) {
 
     $scope.viewName = 'TS5 Dashboard';
     $scope.features = [];
     function updateNavigationPerCompanyType() {
-      var companyTypeId = GlobalMenuService.getCompanyData().companyTypeId;
-      $scope.dashboardMenu = mainMenuService.getMenu(companyTypeId);
+      $scope.dashboardMenu = mainMenuService.getMenu();
       identityAccessService.featuresInRole().then(function(response) {
         $scope.features = lodash.flatten(
           lodash.map(lodash.values(response), function(pkg) {

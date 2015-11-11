@@ -7,7 +7,6 @@ describe('Controller: MainCtrl', function () {
   beforeEach(module('served/features-in-role.json'));
 
   var MainCtrl;
-  var GlobalMenuService;
   var identityAccessService;
   var featuresInRoleJSON;
   var featuresInRoleDeferred;
@@ -23,9 +22,7 @@ describe('Controller: MainCtrl', function () {
     featuresInRoleDeferred = $q.defer();
     featuresInRoleDeferred.resolve(featuresInRoleJSON);
 
-    GlobalMenuService = $injector.get('GlobalMenuService');
     identityAccessService = $injector.get('identityAccessService');
-    spyOn(GlobalMenuService, 'getCompanyData').and.returnValue({companyId: 'fake'});
     spyOn(identityAccessService, 'featuresInRole').and.returnValue(featuresInRoleDeferred.promise);
     MainCtrl = $controller('MainCtrl', {
       $scope: scope
@@ -33,9 +30,6 @@ describe('Controller: MainCtrl', function () {
   }));
 
   describe('controller init', function () {
-    it('should call getCompany', function () {
-      expect(GlobalMenuService.getCompanyData).toHaveBeenCalled();
-    });
     it('should call featuresInRole', function () {
       expect(identityAccessService.featuresInRole).toHaveBeenCalled();
     });

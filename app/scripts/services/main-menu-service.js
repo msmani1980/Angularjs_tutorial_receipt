@@ -12,53 +12,8 @@ angular.module('ts5App')
     var $this = this;
     var emberURL = '/ember/#/';
 
-    this.getMenu = function (companyTypeId) {
-      switch (companyTypeId) {
-        case 2:
-          return $this.getStockOwnerMenu();
-        case 1:
-          return $this.getRetailMenu();
-      }
-    };
-
-    this.getAll = function () {
-      return angular.copy($this.getRetailMenu()).concat($this.getStockOwnerMenu());
-    };
-
-    var stockOwnerMenu = null;
-    this.getStockOwnerMenu = function () {
-      if (stockOwnerMenu === null) {
-        stockOwnerMenu = [{
-        'title': 'Stock Owner Item Management',
-        menuItems: [{
-          name: 'Manage SO Items',
-          route: '/#/stock-owner-item-list',
-          icon: 'icon-manage-retail-item',
-          className: 'dashboard-managemenuItems',
-          role: 'RETAILITEM'
-        }, {
-          name: 'Create SO Item',
-          route: '/#/stock-owner-item-create',
-          icon: 'icon-create-retail-item',
-          className: 'dashboard-createItem',
-          role: 'RETAILITEM'
-        }, {
-          name: 'Manage SO Categories',
-          route: emberURL + 'retail-items/categories',
-          icon: 'icon-manage-retail-category',
-          className: 'dashboard-manageItemCategories',
-          role: 'RETAILITEMCATEGORY'
-        }]
-      }];
-      lodash.forEach(stockOwnerMenu, function(item) {
-        item.roles = lodash.map(item.menuItems, function(menuItem) { return menuItem.role; });
-      });
-     }
-     return stockOwnerMenu;
-    };
-
     var retailMenu = null;
-    this.getRetailMenu = function () {
+    this.getMenu = function () {
       if (retailMenu === null) {
        retailMenu = [{
         'title': 'Retail Item Management',
