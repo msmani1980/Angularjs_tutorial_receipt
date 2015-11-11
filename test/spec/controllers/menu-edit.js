@@ -2,7 +2,7 @@
 
 /*global moment*/
 
-fdescribe('Controller: MenuEditCtrl', function () {
+describe('Controller: MenuEditCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/menu.json', 'served/master-item-list.json', 'served/sales-categories.json'));
