@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('The MenuRelationshipCreateCtrl', function () {
+describe('The MenuRelationshipCreateCtrl', function () {
 
   var $scope,
     MenuRelationshipCreateCtrl,
