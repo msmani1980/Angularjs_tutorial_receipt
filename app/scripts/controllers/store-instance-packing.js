@@ -14,6 +14,19 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     var $this = this;
 
+    this.errorHandler = function () {
+      hideLoadingModal();
+    };
+
+
+    this.showLoadingModal = function (text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+    };
+
     this.getIdByNameFromArray = function (name, array) {
       var matchedObject = lodash.findWhere(array, {
         name: name
@@ -34,49 +47,62 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       //}, showErrors);
     };
 
-
-  this.getMasterItemsList = function () {
-    var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
-    var filterPayload = {
-      itemTypeId: $scope.regularItemTypeId,
-      startDate: payloadDate,
-      endDate: payloadDate,
-      characteristicId: $scope.characteristicFilterId
+    this.getStoreInstanceMenuItems = function (storeInstanceId) {
+      var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
+      var payload = {
+        itemTypeId: $scope.regularItemTypeId,
+        characteristicId: $scope.characteristicFilterId,
+        date: payloadDate
+      };
+      return storeInstanceFactory.getStoreInstanceMenuItems(storeInstanceId, payload);
     };
-    storeInstanceFactory.getItemsMasterList(filterPayload).then(function (response) {
-      $scope.masterItemsList = angular.copy(response.masterItems);
-    }, showErrors);
-  };
+
+    this.getStoreInstanceItems = function (storeInstanceId) {
+      return storeInstanceFactory.getStoreInstanceItemList(storeInstanceId);
+    };
+
+    this.getMasterItemsList = function () {
+      var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
+      var filterPayload = {
+        itemTypeId: $scope.regularItemTypeId,
+        startDate: payloadDate,
+        endDate: payloadDate,
+        characteristicId: $scope.characteristicFilterId
+      };
+      storeInstanceFactory.getItemsMasterList(filterPayload).then(function (response) {
+        $scope.masterItemsList = angular.copy(response.masterItems);
+      }, this.errorHandler);
+    };
 
     this.getUllageReasonCodes = function () {
       storeInstanceFactory.getReasonCodeList().then(function (response) {
         $scope.ullageReasonCodes = lodash.filter(angular.copy(dataFromAPI.companyReasonCodes), {description: 'Ullage'});
-      }, showErrors);
+      }, this.errorHandler);
     };
 
     this.getCharacteristicIdForName = function (characteristicName) {
       return storeInstanceFactory.getCharacteristics().then(function (response) {
         $scope.characteristicFilterId = $this.getIdByNameFromArray(characteristicName, response);
-      }, showErrors);
+      }, this.errorHandler);
     };
 
     this.getRegularItemTypeId = function () {
       return storeInstanceFactory.getItemTypes().then(function (response) {
-        $scope.regularItemTypeId = $this.getIdByNameFromArray('Regular', dataFromAPI);
-      }, errorHandler);
+        $scope.regularItemTypeId = $this.getIdByNameFromArray('Regular', response);
+      }, this.errorHandler);
     };
 
     this.getCountTypes = function () {
       storeInstanceFactory.getCountTypes().then(function (response) {
         $scope.countTypes = angular.copy(response);
-      }, showErrors);
+      }, this.errorHandler);
     };
 
 
     this.getStoreDetails = function () {
       return storeInstanceFactory.getStoreDetails($routeParams.storeId).then(function (response) {
         $scope.storeDetails = angular.copy(response);
-      }, errorHandler);
+      }, this.errorHandler);
     };
 
     this.setInstanceReadOnly = function () {
@@ -91,17 +117,58 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
-    this.completeInitializeAfterDependencies = function () {
-      $this.setInstanceReadOnly();
-      $this.getMasterItemsList();
-      $this.getStoreInstanceItems($routeParams.storeId);
+    this.mergeStoreInstanceMenuItems = function (items) {
+      angular.forEach(items, function (item) {
+        var newItem = {
+          itemDescription: item.itemCode + ' - ' + item.itemName,
+          menuQuantity: item.menuQuantity,
+          pickedQuantity: 0,
+          itemMasterId: item.itemMasterId,
+          isNewItem: false
+        };
+        $scope.pickListItems.push(newItem);
+      });
+    };
+
+    this.mergeStoreInstanceItems = function (items) {
+      angular.forEach(items, function (item) {
+        var itemMatch = lodash.findWhere($scope.pickListItems, {itemMasterId: item.itemMasterId});
+        if(!itemMatch) {
+          var newItem = {
+            itemDescription: item.itemCode + ' - ' + item.itemName,
+            menuQuantity: 0,
+            itemMasterId: item.itemMasterId,
+            isNewItem: true
+          };
+          $scope.pickListItems.push(newItem);
+          itemMatch = newItem;
+        }
+        itemMatch.pickedQuantity = item.quantity;
+        itemMatch.countTypeId = item.countTypeId;
+        itemMatch.id = item.id;
+      });
+    };
+
+    this.mergeAllItems = function (responseCollection) {
+      console.log('hi! ', responseCollection);
+      $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[0].response));
+      $this.mergeStoreInstanceItems(angular.copy(responseCollection[1].response));
+
+      $this.hideLoadingModal();
+    };
+
+    this.getAllStoreInstanceItems = function () {
       var storeInstanceForMenuItems = ($routeParams.action === 'replenish') ? $scope.storeDetails.replenishStoreInstanceId :
         $routeParams.storeId;
-      $this.getStoreInstanceMenuItems(storeInstanceForMenuItems);
-
+      var getItemsPromises = [
+        $this.getStoreInstanceMenuItems(storeInstanceForMenuItems),
+        $this.getStoreInstanceItems($routeParams.storeId)
+      ];
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
-        $this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId);
+        getItemsPromises.push($this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId));
       }
+
+      $q.all(getItemsPromises).then($this.mergeAllItems, $this.showErrors);
     };
 
     this.makeInitializePromises = function () {
@@ -129,21 +196,32 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.prevStep = angular.copy($scope.wizardSteps[currentStepIndex - 1]);
     };
 
-    this.init = function () {
-      showLoadingModal('Loading Store Detail for Packing...');
-
-      $this.initWizardSteps();
+    this.initControllerVars = function () {
       $this.itemsToDeleteArray = [];
-      $this.pickListItems = [];
-      $this.newPickListItems = [];
+      $scope.pickListItems = [];
+      $scope.newPickListItems = [];
 
       if ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') {
-        $this.offloadListItems = [];
-        $this.newOffloadListItems = [];
+        $scope.offloadListItems = [];
+        $scope.newOffloadListItems = [];
       }
+    };
+
+    this.completeInitializeAfterDependencies = function () {
+      $this.setInstanceReadOnly();
+      $this.getMasterItemsList();
+      $this.getAllStoreInstanceItems();
+    };
+
+    this.init = function () {
+      $this.showLoadingModal('Loading Store Detail for Packing...');
+      $this.initWizardSteps();
+      $this.initControllerVars();
       var promises = $this.makeInitializePromises();
       $q.all(promises).then($this.completeInitializeAfterDependencies);
     };
+
+    $this.init();
   });
 
 //  this.actions = {};

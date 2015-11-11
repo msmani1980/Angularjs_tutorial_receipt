@@ -53,79 +53,103 @@
         <thead>
         <tr>
           <th>Retail Item Details</th>
-          <th ng-show="shouldDisplayQuantityField('inbound')" width="10%">Inbound Quantity</th>
-          <th ng-show="shouldDisplayQuantityField('ullage')" width="10%">Ullage Quantity</th>
-          <th ng-show="shouldDisplayQuantityField('ullage')" width="15%">Ullage Reason</th>
-          <th ng-show="shouldDisplayQuantityField('template')" width="10%">Template Quantity</th>
-          <th ng-show="shouldDisplayQuantityField('packed')" width="10%">Picked Quantity</th>
-          <th ng-show="shouldDisplayQuantityField('dispatch')" width="10%">Dispatched Quantity</th>
+          <th width="10%">Template Quantity</th>
+          <th width="10%">Picked Quantity</th>
+          <!--<th ng-show="shouldDisplayQuantityField('inbound')" width="10%">Inbound Quantity</th>-->
+          <!--<th ng-show="shouldDisplayQuantityField('ullage')" width="10%">Ullage Quantity</th>-->
+          <!--<th ng-show="shouldDisplayQuantityField('ullage')" width="15%">Ullage Reason</th>-->
+          <!--<th ng-show="shouldDisplayQuantityField('template')" width="10%">Template Quantity</th>-->
+          <!--<th ng-show="shouldDisplayQuantityField('packed')" width="10%">Picked Quantity</th>-->
+          <!--<th ng-show="shouldDisplayQuantityField('dispatch')" width="10%">Dispatched Quantity</th>-->
           <th width="5%"></th>
         </tr>
         </thead>
 
         <tbody>
         <!-- TODO: implement threshold warnings -->
-        <tr ng-repeat="item in menuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
+        <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
             ng-class="showVarianceWarningClass(item)">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
           </td>
-          <td ng-if="shouldDisplayQuantityField('inbound')">
+          <td>
             <input type="text"
-                   ng-if="shouldDisplayInboundFields(item)"
-                   name="inboundQuantity-{{$index}}"
+                   name="templateQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
-                   ng-model="item.inboundQuantity"
-                   ng-disabled="readOnly"
+                   ng-model="item.menuQuantity"
+                   disabled
                    maxlength="5"
-                   placeholder="0"
                    required="true"/>
           </td>
-          <td ng-if="shouldDisplayQuantityField('ullage')">
+          <td>
             <input type="text"
-                   ng-if="shouldDisplayInboundFields(item)"
+                   name="pickedQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
-                   name="ullageQuantity-{{$index}}"
                    class="form-control"
-                   ng-model="item.ullageQuantity"
+                   ng-model="item.pickedQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"/>
+                   required="true"/>
           </td>
-          <td ng-if="shouldDisplayQuantityField('ullage')">
-            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
-              <ui-select-match allow-clear placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
-              </ui-select-match>
-              <ui-select-choices
-                repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
-                <div
-                  ng-bind-html="ullageReason.companyReasonCodeName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </td>
-          <td ng-if="shouldDisplayQuantityField('template')">
-            <input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"
-                   disabled/>
-          </td>
-          <td ng-if="shouldDisplayQuantityField('packed')">
-            <input type="text"
-                   custom-validity
-                   custom-pattern="number"
-                   ng-required="!isActionState('replenish')"
-                   class="form-control"
-                   ng-model="item.quantity"
-                   ng-disabled="readOnly"
-                   maxlength="5"
-                   placeholder="0"/>
-          </td>
-          <td ng-if="shouldDisplayQuantityField('dispatch')">
-            <input type="text" class="form-control" placeholder="0"
-                   disabled ng-value="calculateTotalDispatchedQty(item)"/>
-          </td>
+          <!--<td ng-if="shouldDisplayQuantityField('inbound')">-->
+            <!--<input type="text"-->
+                   <!--ng-if="shouldDisplayInboundFields(item)"-->
+                   <!--name="inboundQuantity-{{$index}}"-->
+                   <!--custom-validity-->
+                   <!--custom-pattern="number"-->
+                   <!--class="form-control"-->
+                   <!--ng-model="item.inboundQuantity"-->
+                   <!--ng-disabled="readOnly"-->
+                   <!--maxlength="5"-->
+                   <!--placeholder="0"-->
+                   <!--required="true"/>-->
+          <!--</td>-->
+          <!--<td ng-if="shouldDisplayQuantityField('ullage')">-->
+            <!--<input type="text"-->
+                   <!--ng-if="shouldDisplayInboundFields(item)"-->
+                   <!--custom-validity-->
+                   <!--custom-pattern="number"-->
+                   <!--name="ullageQuantity-{{$index}}"-->
+                   <!--class="form-control"-->
+                   <!--ng-model="item.ullageQuantity"-->
+                   <!--ng-disabled="readOnly"-->
+                   <!--maxlength="5"-->
+                   <!--placeholder="0"/>-->
+          <!--</td>-->
+          <!--<td ng-if="shouldDisplayQuantityField('ullage')">-->
+            <!--<ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">-->
+              <!--<ui-select-match allow-clear placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}-->
+              <!--</ui-select-match>-->
+              <!--<ui-select-choices-->
+                <!--repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">-->
+                <!--<div-->
+                  <!--ng-bind-html="ullageReason.companyReasonCodeName | highlight: $select.search"></div>-->
+              <!--</ui-select-choices>-->
+            <!--</ui-select>-->
+          <!--</td>-->
+          <!--<td ng-if="shouldDisplayQuantityField('template')">-->
+            <!--<input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"-->
+                   <!--disabled/>-->
+          <!--</td>-->
+          <!--<td ng-if="shouldDisplayQuantityField('packed')">-->
+            <!--<input type="text"-->
+                   <!--custom-validity-->
+                   <!--custom-pattern="number"-->
+                   <!--ng-required="!isActionState('replenish')"-->
+                   <!--class="form-control"-->
+                   <!--ng-model="item.quantity"-->
+                   <!--ng-disabled="readOnly"-->
+                   <!--maxlength="5"-->
+                   <!--placeholder="0"/>-->
+          <!--</td>-->
+          <!--<td ng-if="shouldDisplayQuantityField('dispatch')">-->
+            <!--<input type="text" class="form-control" placeholder="0"-->
+                   <!--disabled ng-value="calculateTotalDispatchedQty(item)"/>-->
+          <!--</td>-->
           <td>
             <button type="button" ng-if="shouldShowDeleteButton(item)" class="btn btn-sm btn-danger"
                     ng-click="showDeleteWarning(item)" ng-hide="readOnly">
