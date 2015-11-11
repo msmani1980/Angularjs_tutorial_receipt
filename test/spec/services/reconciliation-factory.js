@@ -10,11 +10,14 @@ describe('Factory: reconciliationFactory', function () {
   var storeInstanceService;
   var getStoreInstanceDeferred;
   var storeInstanceJSON;
+
   var storesService;
   var getStoreDeferred;
   var getStoreJSON;
 
-  beforeEach(inject(function (_reconciliationFactory_, $injector, $q) {
+  var scope;
+
+  beforeEach(inject(function (_reconciliationFactory_, $injector, $q, $rootScope) {
     inject(function (_servedStoreInstance_,_servedStore_) {
       storeInstanceJSON = _servedStoreInstance_;
       getStoreJSON = _servedStore_;
@@ -31,6 +34,7 @@ describe('Factory: reconciliationFactory', function () {
     getStoreDeferred.resolve(getStoreJSON);
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
 
+    scope = $rootScope.$new();
     reconciliationFactory = _reconciliationFactory_;
   }));
 
@@ -41,14 +45,15 @@ describe('Factory: reconciliationFactory', function () {
   describe('API calls', function () {
     it('should call storeInstanceService on getStoreInstance', function () {
       var storeInstanceId = 'fakeStoreInstanceId';
-      reconciliationFactory.getStoreInstance(storeInstanceId);
+      reconciliationFactory.getStoreInstanceDetails(storeInstanceId);
       expect(storeInstanceService.getStoreInstance).toHaveBeenCalledWith(storeInstanceId);
     });
 
     it('should call storesService on getStore', function () {
-      var storeId = 'fakeStoreId';
-      reconciliationFactory.getStore(storeId);
-      expect(storesService.getStore).toHaveBeenCalledWith(storeId);
+      var storeInstanceId = 'fakeStoreInstanceId';
+      reconciliationFactory.getStoreInstanceDetails(storeInstanceId);
+      scope.$digest();
+      expect(storesService.getStore).toHaveBeenCalledWith(storeInstanceJSON.storeId);
     });
   });
 

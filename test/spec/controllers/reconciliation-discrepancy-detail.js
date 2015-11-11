@@ -14,7 +14,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var lmpStockResponseJSON;
   var cashBagsDeferred;
   var cashBagsResponseJSON;
-  var getStoreInstanceDeferred;
+  var getStoreInstanceDetailsDeferred;
   var storeInstanceJSON;
   var routeParams;
 
@@ -25,9 +25,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     reconciliationFactory = $injector.get('reconciliationFactory');
     controller = $controller;
 
-    getStoreInstanceDeferred = $q.defer();
-    getStoreInstanceDeferred.resolve(storeInstanceJSON);
-    spyOn(reconciliationFactory, 'getStoreInstance').and.returnValue(getStoreInstanceDeferred.promise);
+    getStoreInstanceDetailsDeferred = $q.defer();
+    getStoreInstanceDetailsDeferred.resolve(storeInstanceJSON);
+    spyOn(reconciliationFactory, 'getStoreInstanceDetails').and.returnValue(getStoreInstanceDetailsDeferred.promise);
 
     lmpStockResponseJSON = [{id: 1}]; // stub for now until API is complete
     lmpStockDeferred = $q.defer();
@@ -51,8 +51,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   describe('init', function () {
 
-    it('should call getStoreInstance', function () {
-      expect(reconciliationFactory.getStoreInstance).toHaveBeenCalledWith(routeParams.storeInstanceId);
+    it('should call getStoreInstanceDetails', function () {
+      expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalledWith(routeParams.storeInstanceId);
     });
 
     describe('init', function () {

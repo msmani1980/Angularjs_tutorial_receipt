@@ -58,7 +58,7 @@ angular.module('ts5App')
       getCashBagData();
     }
 
-    function getStoreInstanceSuccessHandler(storeInstanceDataFromAPI) {
+    function getStoreInstanceDetailsSuccessHandler(storeInstanceDataFromAPI) {
       $scope.storeInstance = angular.copy(storeInstanceDataFromAPI);
       initData();
     }
@@ -75,7 +75,7 @@ angular.module('ts5App')
 
     function init() {
       showLoadingModal('Loading Reconciliation Discrepancy Details');
-      reconciliationFactory.getStoreInstance($routeParams.storeInstanceId).then(getStoreInstanceSuccessHandler, handleResponseError);
+      reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId).then(getStoreInstanceDetailsSuccessHandler, handleResponseError);
       angular.element('#checkbox').bootstrapSwitch();
       initTableDefaults();
     }

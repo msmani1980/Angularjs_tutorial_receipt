@@ -149,17 +149,32 @@ angular.module('ts5App')
       return reconciliationListMockResponseDeferred.promise;
     };
 
-    function getStore(storeId) {
-      return storesService.getStore(storeId);
+    function formatResponseCollection(responseCollection) {
+      var storeDetails = angular.copy(responseCollection[0]);
+      storeDetails.storeDetails = angular.copy(responseCollection[1]);
+      return storeDetails;
     }
 
-    function getStoreInstance(storeInstanceId) {
-      return storeInstanceService.getStoreInstance(storeInstanceId);
+    function getStoreData(storeInstanceDeferred, storeInstanceDataFromAPI) {
+      var promiseArray = [];
+      promiseArray.push(storesService.getStore(storeInstanceDataFromAPI.storeId));
+
+      $q.all(promiseArray).then(function (responseCollection) {
+        responseCollection.unshift(storeInstanceDataFromAPI);
+        storeInstanceDeferred.resolve(formatResponseCollection(responseCollection));
+      }, storeInstanceDeferred.reject);
+    }
+
+    function getStoreInstanceDetails(storeInstanceId) {
+      var storeInstanceDeferred = $q.defer();
+      storeInstanceService.getStoreInstance(storeInstanceId).then(function (storeInstanceDataFromAPI) {
+        getStoreData(storeInstanceDeferred, storeInstanceDataFromAPI);
+      }, storeInstanceDeferred.reject);
+      return storeInstanceDeferred.promise;
     }
 
     return {
-      getStore: getStore,
-      getStoreInstance: getStoreInstance,
+      getStoreInstanceDetails: getStoreInstanceDetails,
       getLMPStockMockData: getLMPStockMockData,
       getCashBagMockData: getCashBagMockData,
       getMockReconciliationDataList: getMockReconciliationDataList
