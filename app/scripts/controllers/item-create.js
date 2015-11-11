@@ -945,6 +945,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     };
 
+    this.errorHandler = function(dataFromAPI) {
+      angular.element('#loading').modal('hide');
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
     this.updateItem = function(itemData) {
       var $this = this;
       angular.element('#loading').modal('show').find('p').text('We are updating your item');
@@ -955,11 +961,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $this.updateFormData(response.retailItem);
         angular.element('#loading').modal('hide');
         angular.element('#update-success').modal('show');
-      }, function(response) {
-        angular.element('#loading').modal('hide');
-        $scope.displayError = true;
-        $scope.formErrors = response.data;
-      });
+      }, $this.errorHandler );
     };
 
     this.createItem = function(itemData) {
@@ -971,12 +973,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         angular.element('#loading').modal('hide');
         angular.element('#create-success').modal('show');
         return true;
-      }, function(error) {
-        angular.element('#loading').modal('hide');
-        $scope.displayError = true;
-        $scope.formErrors = error.data;
-        return false;
-      });
+      }, $this.errorHandler );
     };
 
     $scope.submitForm = function(formData) {
