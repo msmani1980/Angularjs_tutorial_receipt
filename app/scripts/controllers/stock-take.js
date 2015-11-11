@@ -12,6 +12,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Stock Take';
     $scope.itemQuantities = [];
+    $scope.addItemsNumber = 1;
     $scope.stockTake = {
       catererStationId: null
     };
@@ -348,6 +349,17 @@ angular.module('ts5App')
       $scope.stockTake.isSubmitted = _submit;
       generateSavePayload();
       saveStockTake();
+    };
+
+    $scope.addItems = function() {
+      $scope.addedItems = [];
+      for (var i = 0; i < $scope.numberOfItems; i++) {
+        var item = {
+          key: i
+        };
+        $scope.addedItems.push(item);
+      }
+      console.log($scope.addedItems);
     };
 
     // create state actions

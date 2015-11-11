@@ -165,13 +165,47 @@
         </div>
       </div>
 
+      <div class="well" ng-repeat="item in addedItems track by $index" ng-show="addedItems">
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="item-name-{{ $index }}">Select Item Code</label>
+              <select class="form-control"
+                     ng-model="item.itemCode"
+                     required>
+                <option selected="selected" value disabled>Select Item</option>
+                <option ng-repeat="filteredItem in filteredItems | orderBy:'itemName' track by $index" value="{{ filteredItem.itemCode }}">
+                  {{ filteredItem.itemName }} - {{ filteredItem.itemCode }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-5">
+            <div class="form-group">
+              <label for="item-name-{{ $index }}">Item Name</label>
+               <input ng-model="item.itemName" type="text" class="form-control" id="item-name-{{ $index }}" readonly disabled>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-3">
+            <div class="form-group">
+              <label for="item-quantity-{{ $index }}">Quantity</label>
+              <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" id="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </ng-form>
 
     <div class="row" ng-hide="readOnly">
       <div class="col-xs-8 col-md-9"></div>
       <div class="col-xs-4 col-md-3 text-right">
         <div class="input-group">
-          <input type="number" min="1" max="100" class="form-control" ng-model="addItemsNumber">
+          <input type="number" min="1" max="100" class="form-control" ng-model="numberOfItems">
           <span class="input-group-btn">
             <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Items</button>
           </span>
