@@ -23,9 +23,8 @@ angular.module('ts5App')
               return lodash.includes(features, menuItem.role);
             });
             return true;
-          } else {
-            return false;
           }
+          return false;
         });
       });
     }
