@@ -15,15 +15,22 @@ This is important so that you can access the fields and check their validity. Re
 
 ### Naming the form inputs
 
-In order for the form object to know about the inputs, each input will need a name attribute. This will add the input object to the form object and it will be extended in the angular scope
+In order for the form object to know about the inputs, each input will need a *name* and *ng-model* attribute. This will add the input object to the form object and it will be extended in the angular scope
 
-    <input type="text" name="username" />
+    <input type="text" ng-model="username" name="username" />
 
 Turns into
 
     $scope.myForm.username
 
-Using the Error Dialog
+**Best Practice: Use the same identifier for both the name and ng-model.** If you don't name / model the inputs, you will receive an error similar to the one below:
+
+    Error: [ngRepeat:dupes] Duplicates in a repeater are not allowed. Use 'track by' expression to
+    specify unique keys. Repeater: error in errorRequired, Duplicate key: string:, Duplicate value:
+
+This is because the *name* attribute on two or more fields are blank. Make each input has an unique *name* attribute per *<form>* element.
+
+### Using the Error Dialog
 
 To use the Error Dialog directive, add the following markup to your view:
 
@@ -43,4 +50,3 @@ Front end validation is taken care of automatically if you follow the convention
        $scope.errorResponse = responseFromAPI;
        $scope.displayError = true;
     }
-    

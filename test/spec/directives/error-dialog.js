@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The Error Dialog directive', function() {
+fdescribe('The Error Dialog directive', function() {
 
   // load the directive's module
   beforeEach(module('ts5App'));
@@ -134,6 +134,20 @@ describe('The Error Dialog directive', function() {
     it('should set the internal server error flag to true', function() {
       httpSessionInterceptor.responseError({status: 500});
       expect(controller.internalServerError).toBeTruthy();
+    });
+
+    it('should set the internal server error flag to true', function() {
+      testForm.deliveryNote.$setViewValue('!$1');
+      httpSessionInterceptor.responseError({status: 500});
+      var showError = isolatedScope.showInternalServerError();
+      expect(showError).toBeFalsy();
+    });
+
+    it('should set the internal server error flag to true', function() {
+      testForm.deliveryNote.$setViewValue('BOGAN123');
+      httpSessionInterceptor.responseError({status: 500});
+      var showError = isolatedScope.showInternalServerError();
+      expect(showError).toBeTruthy();
     });
 
   });
