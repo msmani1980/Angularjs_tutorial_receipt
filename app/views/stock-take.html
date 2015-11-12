@@ -165,14 +165,14 @@
         </div>
       </div>
 
-      <div class="well" ng-repeat="item in addedItems track by $index" ng-show="addedItems">
+      <div class="well" ng-repeat="item in addedItems | index track by item.id" ng-show="addedItems">
         <div class="row">
 
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
               <label for="item-name-{{ $index }}">Select Item</label>
               <select class="form-control"
-                     ng-model="item.itemName"
+                     ng-model="item[$index].itemName"
                      required>
                 <option selected="selected" value disabled>Select Item</option>
                 <option ng-repeat="filteredItem in filteredItems | orderBy:'itemName' track by $index" value="{{ filteredItem.itemName }}">
@@ -190,7 +190,7 @@
           </div>
 
           <div class="col-xs-12 col-sm-2">
-            <span class="pull-right btn btn-danger" ng-click="removeAddedItem(item.$index)">
+            <span class="pull-right btn btn-danger" ng-click="removeAddedItem(item.index)">
               <i class="fa fa-close"></i>
             </span>
           </div>

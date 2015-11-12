@@ -352,14 +352,21 @@ angular.module('ts5App')
     };
 
     $scope.addItems = function() {
-      $scope.addedItems = [];
+      if (!$scope.addedItems) {
+        $scope.newItemId = 0;
+        $scope.addedItems = [];
+      }
       for (var i = 0; i < $scope.numberOfItems; i++) {
+        $scope.newItemId++;
         var item = {
-          key: i
+          id: $scope.newItemId
         };
         $scope.addedItems.push(item);
       }
-      console.log($scope.addedItems);
+    };
+
+    $scope.removeAddedItem = function(key) {
+      $scope.addedItems.splice(key, 1);
     };
 
     // create state actions
