@@ -1,19 +1,23 @@
 <div class="module-container">
-  <div class="row">
-    <div class="col-xs-6">
-      <h2 class="view-name">{{viewName}}</h2>
+
+  <div class="edit-controls">
+
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/post-trip-data-list" class="btn" ng-show="readOnly">Back</a>
+      </div>
     </div>
 
-    <div class="col-xs-6 text-right">
-      <a class="btn btn-default" ng-href="#/post-trip-data-list" class="btn" ng-show="readOnly">Back</a>
-    </div>
   </div>
 
-  <br>
+  <error-dialog form-object="postTripDataForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
 
   <form name="postTripDataForm">
-
-    <form-error-dialog></form-error-dialog>
     <!--/TopHeader -->
 
     <div class="panel panel-default">
@@ -24,7 +28,7 @@
             <div class="form-group">
               <label>Schedule Number *</label>
               <select class="form-control"
-                      id="scheduleNumber"
+                      name="scheduleNumber"
                       ng-model="postTrip.scheduleNumber"
                       ng-options="schedule.scheduleNumber as schedule.scheduleNumber for schedule in schedules"
                       ng-disabled="readOnly"
@@ -57,7 +61,7 @@
             <div class="form-group">
               <label for="departureStation">Departure Station *</label>
               <select class="form-control"
-                      id="departureStation"
+                      name="departureStation"
                       ng-change="updateDepartureTimeZone()"
                       ng-model="postTrip.depStationId"
                       ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
@@ -72,10 +76,11 @@
             <label for="departure-time">Departure Time *</label>
             <input custom-validity
                    custom-pattern="time"
+                   required
                    ng-model="postTrip.depTime"
                    type="text"
                    class="form-control departure-time"
-                   id="departure-time"
+                   name="departureTime"
                    placeholder="21:34"
                    ng-readonly="readOnly">
           </div>
@@ -85,7 +90,7 @@
               <label for="departure-time-zone">Departure Time Zone *</label>
               <input type="text"
                      class="form-control"
-                     id="departure-time-zone"
+                     name="departureTimeZone"
                      placeholder=""
                      ng-model="departureTimezone"
                      disabled>
@@ -98,7 +103,7 @@
             <div class="form-group">
               <label for="arrival-station">Arrival Station *</label>
               <select class="form-control"
-                      id="arrival-station"
+                      name="arrivalStation"
                       ng-change="updateArrivalTimeZone()"
                       ng-model="postTrip.arrStationId"
                       ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList"
@@ -114,10 +119,11 @@
               <label>Arrival Time *</label>
               <input custom-validity
                      custom-pattern="time"
+                     required
                      ng-model="postTrip.arrTime"
                      type="text"
                      class="form-control departure-time"
-                     id="departure-time"
+                     name="arrivalTime"
                      placeholder="23:34"
                      ng-readonly="readOnly">
             </div>
@@ -127,7 +133,7 @@
             <div class="form-group">
               <label>Arrival Time Zone *</label>
               <input type="text" class="form-control"
-                     id="arrivalTimeZone"
+                     name="arrivalTimeZone"
                      placeholder=""
                      ng-model="arrivalTimezone"
                      disabled>
@@ -147,7 +153,8 @@
                      type="text"
                      class="form-control passenger-count"
                      placeholder="123"
-                     ng-readonly="readOnly">
+                     ng-readonly="readOnly"
+                     name="passengerCount" />
             </div>
           </div>
 
@@ -155,7 +162,7 @@
             <div class="form-group">
               <label for="tailNumber">Tail Number *</label>
               <select class="form-control"
-                      id="tailNumber"
+                      name="tailNumber"
                       ng-model="postTrip.tailNumber"
                       ng-options="number.carrierNumber as number.carrierNumber for number in carrierNumbers"
                       ng-disabled="readOnly"
@@ -168,7 +175,7 @@
           <div class="col-xs-12 col-sm-4 employee-id">
             <div class="form-group">
               <label>Employee ID's *</label>
-              <ui-select multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly">
+              <ui-select required name="employeeIds" multiple ng-model="selectedEmployees.employeeIds" theme="bootstrap" ng-disabled="readOnly">
                 <ui-select-match placeholder="Select Employee IDs from list">{{ $item.employeeIdentifier }}</ui-select-match>
                 <ui-select-choices repeat="employee in employees | filter: $select.search">
                   {{employee.employeeIdentifier}} ({{ employee.lastName }}, {{ employee.firstName }})
