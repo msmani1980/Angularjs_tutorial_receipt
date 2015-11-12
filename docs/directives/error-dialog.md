@@ -50,3 +50,22 @@ Front end validation is taken care of automatically if you follow the convention
        $scope.errorResponse = responseFromAPI;
        $scope.displayError = true;
     }
+
+
+### Manually validating fields
+
+In some cases, fields will use directives that impact the form object from validating the field. A developer can manually validate a field by using angular's *$setValidity* method:
+
+    // Set the username field in the loginForm to be marked as required and valid
+    $scope.loginForm.username.$setValidity('required', false);
+
+    // Set the username field in the loginForm to be marked as required and invalid (will show in error-dialog)
+    $scope.loginForm.username.$setValidity('required', true);
+
+    // Set the username field in the loginForm to check the pattern of the field and is valid
+    $scope.loginForm.username.$setValidity('pattern', false);
+
+    // Set the username field in the loginForm to check the pattern of the field and is invalid (will show in error-dialog)
+    $scope.loginForm.username.$setValidity('pattern', false);
+
+https://docs.angularjs.org/api/ng/type/ngModel.NgModelController#$setValidity
