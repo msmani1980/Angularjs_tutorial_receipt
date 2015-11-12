@@ -22,7 +22,9 @@
               Are you sure you want to continue?</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" ng-click="savePackingDataAndUpdateStatus(shouldUpdateStatusOnSave)" data-dismiss="modal">Yes</button>
+            <button type="button" class="btn btn-default"
+                    ng-click="savePackingDataAndUpdateStatus(shouldUpdateStatusOnSave)" data-dismiss="modal">Yes
+            </button>
             <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
           </div>
         </div>
@@ -43,10 +45,9 @@
       </div>
     </div>
 
-    <div class="well">
+    <div class="well" ng-hide="isActionState('end-instance')">
       <h3>
-        <span ng-hide="isActionState('end-instance')">Pick List</span>
-        <span ng-show="isActionState('end-instance')">Offload List</span>
+        <span>Pick List</span>
       </h3>
 
       <table class="table pick-list">
@@ -96,59 +97,59 @@
                    required="true"/>
           </td>
           <!--<td ng-if="shouldDisplayQuantityField('inbound')">-->
-            <!--<input type="text"-->
-                   <!--ng-if="shouldDisplayInboundFields(item)"-->
-                   <!--name="inboundQuantity-{{$index}}"-->
-                   <!--custom-validity-->
-                   <!--custom-pattern="number"-->
-                   <!--class="form-control"-->
-                   <!--ng-model="item.inboundQuantity"-->
-                   <!--ng-disabled="readOnly"-->
-                   <!--maxlength="5"-->
-                   <!--placeholder="0"-->
-                   <!--required="true"/>-->
+          <!--<input type="text"-->
+          <!--ng-if="shouldDisplayInboundFields(item)"-->
+          <!--name="inboundQuantity-{{$index}}"-->
+          <!--custom-validity-->
+          <!--custom-pattern="number"-->
+          <!--class="form-control"-->
+          <!--ng-model="item.inboundQuantity"-->
+          <!--ng-disabled="readOnly"-->
+          <!--maxlength="5"-->
+          <!--placeholder="0"-->
+          <!--required="true"/>-->
           <!--</td>-->
           <!--<td ng-if="shouldDisplayQuantityField('ullage')">-->
-            <!--<input type="text"-->
-                   <!--ng-if="shouldDisplayInboundFields(item)"-->
-                   <!--custom-validity-->
-                   <!--custom-pattern="number"-->
-                   <!--name="ullageQuantity-{{$index}}"-->
-                   <!--class="form-control"-->
-                   <!--ng-model="item.ullageQuantity"-->
-                   <!--ng-disabled="readOnly"-->
-                   <!--maxlength="5"-->
-                   <!--placeholder="0"/>-->
+          <!--<input type="text"-->
+          <!--ng-if="shouldDisplayInboundFields(item)"-->
+          <!--custom-validity-->
+          <!--custom-pattern="number"-->
+          <!--name="ullageQuantity-{{$index}}"-->
+          <!--class="form-control"-->
+          <!--ng-model="item.ullageQuantity"-->
+          <!--ng-disabled="readOnly"-->
+          <!--maxlength="5"-->
+          <!--placeholder="0"/>-->
           <!--</td>-->
           <!--<td ng-if="shouldDisplayQuantityField('ullage')">-->
-            <!--<ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">-->
-              <!--<ui-select-match allow-clear placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}-->
-              <!--</ui-select-match>-->
-              <!--<ui-select-choices-->
-                <!--repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">-->
-                <!--<div-->
-                  <!--ng-bind-html="ullageReason.companyReasonCodeName | highlight: $select.search"></div>-->
-              <!--</ui-select-choices>-->
-            <!--</ui-select>-->
+          <!--<ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">-->
+          <!--<ui-select-match allow-clear placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}-->
+          <!--</ui-select-match>-->
+          <!--<ui-select-choices-->
+          <!--repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">-->
+          <!--<div-->
+          <!--ng-bind-html="ullageReason.companyReasonCodeName | highlight: $select.search"></div>-->
+          <!--</ui-select-choices>-->
+          <!--</ui-select>-->
           <!--</td>-->
           <!--<td ng-if="shouldDisplayQuantityField('template')">-->
-            <!--<input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"-->
-                   <!--disabled/>-->
+          <!--<input type="text" class="form-control" ng-model="item.menuQuantity" placeholder="0"-->
+          <!--disabled/>-->
           <!--</td>-->
           <!--<td ng-if="shouldDisplayQuantityField('packed')">-->
-            <!--<input type="text"-->
-                   <!--custom-validity-->
-                   <!--custom-pattern="number"-->
-                   <!--ng-required="!isActionState('replenish')"-->
-                   <!--class="form-control"-->
-                   <!--ng-model="item.quantity"-->
-                   <!--ng-disabled="readOnly"-->
-                   <!--maxlength="5"-->
-                   <!--placeholder="0"/>-->
+          <!--<input type="text"-->
+          <!--custom-validity-->
+          <!--custom-pattern="number"-->
+          <!--ng-required="!isActionState('replenish')"-->
+          <!--class="form-control"-->
+          <!--ng-model="item.quantity"-->
+          <!--ng-disabled="readOnly"-->
+          <!--maxlength="5"-->
+          <!--placeholder="0"/>-->
           <!--</td>-->
           <!--<td ng-if="shouldDisplayQuantityField('dispatch')">-->
-            <!--<input type="text" class="form-control" placeholder="0"-->
-                   <!--disabled ng-value="calculateTotalDispatchedQty(item)"/>-->
+          <!--<input type="text" class="form-control" placeholder="0"-->
+          <!--disabled ng-value="calculateTotalDispatchedQty(item)"/>-->
           <!--</td>-->
           <td>
             <button type="button" ng-if="isNewItem(item)" class="btn btn-sm btn-danger"
@@ -171,11 +172,13 @@
             </ui-select>
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
-            <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.inboundQuantity" placeholder="0"
+            <input type="text" custom-validity custom-pattern="number" class="form-control"
+                   ng-model="item.inboundQuantity" placeholder="0"
                    ng-if="shouldDisplayInboundFields(item)" maxlength="5" required="true"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
-            <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.ullageQuantity" placeholder="0"
+            <input type="text" custom-validity custom-pattern="number" class="form-control"
+                   ng-model="item.ullageQuantity" placeholder="0"
                    ng-if="shouldDisplayInboundFields(item)" maxlength="5"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
@@ -226,9 +229,9 @@
       </div>
     </div>
 
-    <div class="well" ng-show="isActionState('redispatch')">
+    <div class="well" ng-show="isActionState('redispatch') || isActionState('end-instance')">
       <h3>Offload List</h3>
-      <table class="table table-striped pick-list" ng-if="isActionState('redispatch')">
+      <table class="table table-striped pick-list">
         <thead>
         <tr>
           <th>Retail Item Details</th>
@@ -240,7 +243,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in offloadMenuItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
+        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -280,7 +283,7 @@
             </ui-select>
           </td>
           <td>
-            <button type="button" ng-if="shouldShowDeleteButton(item)" class="btn btn-sm btn-danger"
+            <button type="button" ng-if="item.isNewItem" class="btn btn-sm btn-danger"
                     ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
             </button>
@@ -300,11 +303,13 @@
             </ui-select>
           </td>
           <td>
-            <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.inboundQuantity"
-                   maxlength="5" placeholder="0" required="true" />
+            <input custom-validity custom-pattern="number" type="text" class="form-control"
+                   ng-model="item.inboundQuantity"
+                   maxlength="5" placeholder="0" required="true"/>
           </td>
           <td>
-            <input custom-validity custom-pattern="number" type="text" class="form-control" ng-model="item.ullageQuantity"
+            <input custom-validity custom-pattern="number" type="text" class="form-control"
+                   ng-model="item.ullageQuantity"
                    maxlength="5" placeholder="0"/>
           </td>
           <td>
@@ -334,7 +339,8 @@
           <div class="input-group pull-right">
             <input type="number" min="1" max="100" class="form-control" placeholder="1" ng-model="addOffloadItemsQty"/>
                   <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="addOffloadItems()"><i class="fa fa-plus"></i> Add Items
+                    <button class="btn btn-primary" type="button" ng-click="addOffloadItems()"><i
+                      class="fa fa-plus"></i> Add Items
                     </button>
                   </span>
           </div>

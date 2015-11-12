@@ -14,9 +14,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     var $this = this;
 
-    this.errorHandler = function () {
-      hideLoadingModal();
-    };
+    function showToast(className, type, message) {
+      ngToast.create({
+        className: className,
+        dismissButton: true,
+        content: '<strong>' + type + '</strong>: ' + message
+      });
+    }
 
 
     this.showLoadingModal = function (text) {
@@ -27,12 +31,24 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       angular.element('#loading').modal('hide');
     };
 
+    this.errorHandler = function () {
+      $this.hideLoadingModal();
+    };
+
     this.getIdByNameFromArray = function (name, array) {
       var matchedObject = lodash.findWhere(array, {
         name: name
       });
       return (matchedObject) ? matchedObject.id : '';
     };
+
+    this.getNameByIdFromArray = function (id, array) {
+      var matchedObject = lodash.findWhere(array, {
+        id: id
+      });
+      return (matchedObject) ? matchedObject.name : '';
+    };
+
 
     $scope.isNewItem = function (item) {
       return item.isNewItem;
@@ -46,6 +62,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         'redispatch': ['inbound', 'ullage', 'template', 'picked', 'dispatch']
       };
       return (actionToFieldMap[$routeParams.action].indexOf(fieldName) >= 0);
+    };
+
+    $scope.isActionState = function (actionState) {
+      return $routeParams.action === actionState;
     };
 
     this.getThresholdVariance = function () {
@@ -90,7 +110,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.getUllageReasonCodes = function () {
       storeInstanceFactory.getReasonCodeList().then(function (response) {
-        $scope.ullageReasonCodes = lodash.filter(angular.copy(dataFromAPI.companyReasonCodes), {description: 'Ullage'});
+        $scope.ullageReasonCodes = lodash.filter(angular.copy(response.companyReasonCodes), {description: 'Ullage'});
       }, this.errorHandler);
     };
 
@@ -131,35 +151,76 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    this.createFreshItem = function (itemFromAPI, isFromMenu) {
+      var newItem = {
+        itemDescription: itemFromAPI.itemCode + ' - ' + itemFromAPI.itemName,
+        itemName: itemFromAPI.itemName,
+        menuQuantity: (isFromMenu) ? itemFromAPI.menuQuantity : 0,
+        pickedQuantity: 0,
+        inboundQuantity: 0,
+        ullageQuantity: 0,
+        itemMasterId: itemFromAPI.itemMasterId,
+        isNewItem: !isFromMenu
+      };
+      if(!isFromMenu) {
+        newItem.id = itemFromAPI.id;
+      }
+      return newItem;
+    };
+
     this.mergeStoreInstanceMenuItems = function (items) {
       angular.forEach(items, function (item) {
-        var newItem = {
-          itemDescription: item.itemCode + ' - ' + item.itemName,
-          menuQuantity: item.menuQuantity,
-          pickedQuantity: 0,
-          itemMasterId: item.itemMasterId,
-          isNewItem: false
-        };
-        $scope.pickListItems.push(newItem);
+        var newItem = $this.createFreshItem(item, true);
+        if($routeParams.action === 'end-instance') {
+          $scope.offloadListItems.push(newItem);
+        } else {
+          $scope.pickListItems.push(newItem);
+        }
+      });
+    };
+
+    this.setQuantityByType = function (itemFromAPI, itemToSet) {
+      var countType = $this.getNameByIdFromArray(itemFromAPI.countTypeId, $scope.countTypes);
+      if(countType === 'Warehouse Open') {
+        itemToSet.pickedQuantity = itemFromAPI.quantity;
+      } else if(countType === 'Offload') {
+        itemToSet.inboundQuantity = itemFromAPI.quantity;
+      } else if(countType === 'Ullage') {
+        itemToSet.ullageQuantity = itemFromAPI.quantity;
+        var ullageReason = lodash.findWhere($scope.ullageReasonCodes, {id: itemFromAPI.ullageReasonCode});
+        itemToSet.ullageReason = ullageReason || null;
+      }
+      itemToSet.countTypeId = itemFromAPI.countTypeId;
+    };
+
+    this.mergeStoreInstanceRedispatchItems = function (items) {
+      angular.forEach(items, function (item) {
+        var itemMatch = lodash.findWhere($scope.pickListItems, {itemMasterId: item.itemMasterId});
+        var offloadItemMatch = lodash.findWhere($scope.offloadListItems, {itemMasterId: item.itemMasterId});
+        itemMatch = itemMatch || offloadItemMatch;
+        if(itemMatch) {
+          $this.setQuantityByType(item, itemMatch);
+        } else {
+          var newItem = $this.createFreshItem(item, false);
+          $scope.offloadListItems.push(newItem);
+        }
       });
     };
 
     this.mergeStoreInstanceItems = function (items) {
+      var listToCheck = ($routeParams.action === 'end-instance') ? $scope.offloadListItems : $scope.pickListItems;
       angular.forEach(items, function (item) {
-        var itemMatch = lodash.findWhere($scope.pickListItems, {itemMasterId: item.itemMasterId});
+        var itemMatch = lodash.findWhere(listToCheck, {itemMasterId: item.itemMasterId});
         if(!itemMatch) {
-          var newItem = {
-            itemDescription: item.itemCode + ' - ' + item.itemName,
-            menuQuantity: 0,
-            itemMasterId: item.itemMasterId,
-            isNewItem: true
-          };
-          $scope.pickListItems.push(newItem);
+          var newItem = $this.createFreshItem(item, false);
+          if($routeParams.action === 'end-instance') {
+            $scope.offloadListItems.push(newItem);
+          } else {
+            $scope.pickListItems.push(newItem);
+          }
           itemMatch = newItem;
         }
-        itemMatch.pickedQuantity = item.quantity;
-        itemMatch.countTypeId = item.countTypeId;
-        itemMatch.id = item.id;
+        $this.setQuantityByType(item, itemMatch);
       });
     };
 
@@ -167,7 +228,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       console.log('hi! ', responseCollection);
       $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[0].response));
       $this.mergeStoreInstanceItems(angular.copy(responseCollection[1].response));
-
+      if(responseCollection[2]) {
+        $this.mergeStoreInstanceRedispatchItems(angular.copy(responseCollection[2].response));
+      }
       $this.hideLoadingModal();
     };
 
