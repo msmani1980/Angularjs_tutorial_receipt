@@ -1,8 +1,8 @@
-<div class="menu-container col-sm-6 col-lg-4" ng-repeat="item in dashboardMenu" ng-show="hasUserFeature(item.roles)">
+<div class="menu-container col-sm-6 col-lg-4" ng-repeat="item in dashboardMenu" >
     <div class="add-shadow">
         <h3>{{item.title}}</h3>
 
-        <div class="menu-items-container col-sm-6" ng-repeat="menu in item.menuItems" ng-show="hasUserFeature([menu.role])">
+        <div class="menu-items-container col-sm-6" ng-repeat="menu in item.menuItems" >
             <a class="" ng-href="{{menu.route}}">
                 <i class="menu-icon {{menu.icon}}"></i>
 

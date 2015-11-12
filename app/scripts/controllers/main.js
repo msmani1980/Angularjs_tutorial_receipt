@@ -10,19 +10,27 @@ angular.module('ts5App')
   .controller('MainCtrl', function ($rootScope, $scope, companiesFactory, mainMenuService, identityAccessService, lodash) {
 
     $scope.viewName = 'TS5 Dashboard';
-    $scope.features = [];
-    function updateNavigationPerCompanyType() {
-      $scope.dashboardMenu = mainMenuService.getMenu();
+    function updateNavigationPerUserFeatures() {
       identityAccessService.featuresInRole().then(function(response) {
-        $scope.features = lodash.flatten(
+        var features = lodash.flatten(
           lodash.map(lodash.values(response), function(pkg) {
             return lodash.keys(pkg);
           })
         );
+        $scope.dashboardMenu = lodash.filter(mainMenuService.getMenu(), function(item) {
+          if (lodash.intersection(features, item.roles).length !== 0) {
+            item.menuItems = lodash.filter(item.menuItems, function(menuItem) {
+              return lodash.includes(features, menuItem.role);
+            });
+            return true;
+          } else {
+            return false;
+          }
+        });
       });
     }
 
-    updateNavigationPerCompanyType();
+    updateNavigationPerUserFeatures();
 
     $scope.hasUserFeature = function(features) {
       return lodash.intersection(features, $scope.features).length !== 0;

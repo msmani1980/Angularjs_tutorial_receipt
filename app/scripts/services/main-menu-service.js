@@ -9,7 +9,6 @@
  */
 angular.module('ts5App')
   .service('mainMenuService', function (lodash) {
-    var $this = this;
     var emberURL = '/ember/#/';
 
     var retailMenu = null;
@@ -326,7 +325,7 @@ angular.module('ts5App')
         }]
       }];
       lodash.forEach(retailMenu, function(item) {
-        item.roles = lodash.map(item.menuItems, function(menuItem) { return menuItem.role; });
+        item.roles = lodash.uniq(lodash.map(item.menuItems, function(menuItem) { return menuItem.role; }));
       });
      }
      return retailMenu;
