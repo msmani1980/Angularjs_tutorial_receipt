@@ -17,6 +17,10 @@ describe('Factory: reconciliationFactory', function () {
   var getStoreDeferred;
   var getStoreJSON;
 
+  var reconciliationService;
+  var getStockTotalsDeferred;
+  var getStockTotalsJSON;
+
   var stationsService;
   var getStationDeferred;
   var getStationJSON;
@@ -24,10 +28,11 @@ describe('Factory: reconciliationFactory', function () {
   var scope;
 
   beforeEach(inject(function (_reconciliationFactory_, $injector, $q, $rootScope) {
-    inject(function (_servedStoreInstance_,_servedStore_, _servedStation_) {
+    inject(function (_servedStoreInstance_, _servedStore_, _servedStation_) {
       storeInstanceJSON = _servedStoreInstance_;
       getStoreJSON = _servedStore_;
       getStationJSON = _servedStation_;
+      getStockTotalsJSON = {};
     });
 
     storeInstanceService = $injector.get('storeInstanceService');
@@ -45,6 +50,10 @@ describe('Factory: reconciliationFactory', function () {
     getStationDeferred = $q.defer();
     getStationDeferred.resolve(getStationJSON);
     spyOn(stationsService, 'getStation').and.returnValue(getStationDeferred.promise);
+
+    getStockTotalsDeferred = $q.defer();
+    getStockTotalsDeferred.resolve(getStockTotalsJSON);
+    spyOn(reconciliationService, 'getStockTotals').and.returnValue(getStockTotalsDeferred.promise);
 
     scope = $rootScope.$new();
     reconciliationFactory = _reconciliationFactory_;
