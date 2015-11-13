@@ -59,6 +59,7 @@ angular.module('ts5App')
     }
 
     function getStoreInstanceDetailsSuccessHandler(storeInstanceDataFromAPI) {
+      hideLoadingModal();
       $scope.storeInstance = angular.copy(storeInstanceDataFromAPI);
       initData();
     }

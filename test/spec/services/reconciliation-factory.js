@@ -5,8 +5,10 @@ describe('Factory: reconciliationFactory', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance.json'));
   beforeEach(module('served/store.json'));
+  beforeEach(module('served/station.json'));
 
   var reconciliationFactory;
+
   var storeInstanceService;
   var getStoreInstanceDeferred;
   var storeInstanceJSON;
@@ -15,16 +17,22 @@ describe('Factory: reconciliationFactory', function () {
   var getStoreDeferred;
   var getStoreJSON;
 
+  var stationsService;
+  var getStationDeferred;
+  var getStationJSON;
+
   var scope;
 
   beforeEach(inject(function (_reconciliationFactory_, $injector, $q, $rootScope) {
-    inject(function (_servedStoreInstance_,_servedStore_) {
+    inject(function (_servedStoreInstance_,_servedStore_, _servedStation_) {
       storeInstanceJSON = _servedStoreInstance_;
       getStoreJSON = _servedStore_;
+      getStationJSON = _servedStation_;
     });
 
     storeInstanceService = $injector.get('storeInstanceService');
     storesService = $injector.get('storesService');
+    stationsService = $injector.get('stationsService');
 
     getStoreInstanceDeferred = $q.defer();
     getStoreInstanceDeferred.resolve(storeInstanceJSON);
@@ -33,6 +41,10 @@ describe('Factory: reconciliationFactory', function () {
     getStoreDeferred = $q.defer();
     getStoreDeferred.resolve(getStoreJSON);
     spyOn(storesService, 'getStore').and.returnValue(getStoreDeferred.promise);
+
+    getStationDeferred = $q.defer();
+    getStationDeferred.resolve(getStationJSON);
+    spyOn(stationsService, 'getStation').and.returnValue(getStationDeferred.promise);
 
     scope = $rootScope.$new();
     reconciliationFactory = _reconciliationFactory_;
@@ -54,6 +66,13 @@ describe('Factory: reconciliationFactory', function () {
       reconciliationFactory.getStoreInstanceDetails(storeInstanceId);
       scope.$digest();
       expect(storesService.getStore).toHaveBeenCalledWith(storeInstanceJSON.storeId);
+    });
+
+    it('should call stationsService on getStation', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      reconciliationFactory.getStoreInstanceDetails(storeInstanceId);
+      scope.$digest();
+      expect(stationsService.getStation).toHaveBeenCalledWith(storeInstanceJSON.cateringStationId);
     });
   });
 
