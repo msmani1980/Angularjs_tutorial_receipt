@@ -49,6 +49,24 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return (matchedObject) ? matchedObject.name : '';
     };
 
+    this.addItemsToArray = function (array, itemNumber, isInOffload) {
+      //if (($scope.filteredMasterItemList.length === 0 && !isInOffload) || ($scope.filteredOffloadMasterItemList.length === 0 && isInOffload)) {
+      //  showToast('warning', 'Add Item', 'There are no items available');
+      //  return;
+      //}
+      for (var i = 0; i < itemNumber; i++) {
+        var newItem = {
+          isNewItem: true,
+          isInOffload: isInOffload
+        };
+        array.push(newItem);
+      }
+    };
+
+    $scope.addItems = function () {
+      var isEndInstance = $routeParams.action === 'end-instance';
+      $this.addItemsToArray($scope.newPickListItems, $scope.addPickListNum, isEndInstance);
+    };
 
     $scope.isNewItem = function (item) {
       return item.isNewItem;
@@ -132,7 +150,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }, this.errorHandler);
     };
 
-
     this.getStoreDetails = function () {
       return storeInstanceFactory.getStoreDetails($routeParams.storeId).then(function (response) {
         $scope.storeDetails = angular.copy(response);
@@ -194,14 +211,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
-    this.sortItemsByCountType = function (items) {
-      angular.forEach(items, function (item) {
-        item.countTypeName = $this.getNameByIdFromArray(item.countTypeId, $scope.countTypes);
-      });
-      items = lodash.sortBy(items, 'countTypeName');
-      return items;
-    };
-
     this.findItemMatch = function (itemFromAPI) {
       var itemMatch;
       if($routeParams.action === 'redispatch') {
@@ -216,7 +225,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.mergeStoreInstanceItems = function (items, isRedispatchInstance) {
-      items = $this.sortItemsByCountType(items);
+      // sort items by count type, so offload items will always be merged first
+      angular.forEach(items, function (item) {
+        item.countTypeName = $this.getNameByIdFromArray(item.countTypeId, $scope.countTypes);
+      });
+      items = lodash.sortBy(items, 'countTypeName');
+
       angular.forEach(items, function (item) {
         var itemMatch = $this.findItemMatch(item);
         if (!itemMatch) {
@@ -233,7 +247,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.mergeAllItems = function (responseCollection) {
-      console.log('hi! ', responseCollection);
       $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[0].response));
       $this.mergeStoreInstanceItems(angular.copy(responseCollection[1].response), false);
       if (responseCollection[2]) {
@@ -285,10 +298,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.itemsToDeleteArray = [];
       $scope.pickListItems = [];
       $scope.newPickListItems = [];
+      $scope.addPickListNum = 1;
 
       if ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') {
         $scope.offloadListItems = [];
         $scope.newOffloadListItems = [];
+        $scope.addOffloadNum = 1;
       }
     };
 
