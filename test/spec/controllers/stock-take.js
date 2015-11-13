@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: StockTakeCtrl', function () {
+describe('Controller: StockTakeCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App',
