@@ -36,7 +36,6 @@ describe('Controller: StockTakeCtrl', function () {
     spyOn(stockTakeFactory, 'getStockTake').and.returnValue(getCatererStationListDeferred.promise);
 
     saveDeferred = $q.defer();
-    saveDeferred.resolve({id:3});
     spyOn(stockTakeFactory, 'createStockTake').and.returnValue(saveDeferred.promise);
     spyOn(stockTakeFactory, 'updateStockTake').and.returnValue(saveDeferred.promise);
 
@@ -292,6 +291,46 @@ describe('Controller: StockTakeCtrl', function () {
         expect(scope.save()).toBeUndefined();
       });
     });
+  });
+
+  describe('error handler', function(){
+
+    var mockError;
+
+    beforeEach(inject(function($controller){
+      mockError = {
+        status:400,
+        statusText:'Bad Request'
+      };
+      StockTakeCtrl = $controller('StockTakeCtrl', {
+        $scope: scope,
+        $routeParams: routeParams = {
+          state: 'create',
+          id: 3
+        }
+      });
+      scope.stockTake = {
+        catererStationId: 3,
+        id: 60
+      };
+      scope.itemQuantities = [];
+      scope.itemQuantities[1] = 10;
+      scope.itemQuantities[2] = '';
+      scope.itemQuantities[4] = 11;
+      scope.save(true);
+      scope.$digest();
+      saveDeferred.reject(mockError);
+      scope.$apply();
+    }));
+
+    it('should set the displayError flag to true', function(){
+      expect(scope.displayError).toBeTruthy();
+    });
+
+    it('should set the error response as a copy the API response', function(){
+      expect(scope.errorResponse).toEqual(mockError);
+    });
+
   });
 
 });
