@@ -29,7 +29,7 @@ describe('Controller: MainCtrl', function () {
     });
   }));
 
-  fdescribe('controller init', function () {
+  describe('controller init', function () {
     it('should call featuresInRole', function () {
       expect(identityAccessService.featuresInRole).toHaveBeenCalled();
     });

@@ -3,9 +3,10 @@
   <step-wizard steps="wizardSteps" prev-trigger="stepWizardPrevTrigger()" save-trigger="exit()" disabled="actionNotAllowed" save-button-text="saveButtonText"></step-wizard>
   <lose-data-alert show-alert="showLoseDataAlert" confirm-trigger="loseDataAlertConfirmTrigger()"></lose-data-alert>
 
-  <form-error-dialog></form-error-dialog>
+  <error-dialog form-object="reviewStoreInstanceForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
 
-  <form name="createStoreInstance" ng-submit="submitForm()">
+  <form name="reviewStoreInstanceForm" ng-submit="submitForm()">
 
     <store-instance-header></store-instance-header>
 
