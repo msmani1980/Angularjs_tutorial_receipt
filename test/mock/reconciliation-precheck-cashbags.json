@@ -1,0 +1,15 @@
+{
+  "companyId": 403,
+  "storeInstanceId": 123,
+  "eposCashbagCount": 1,
+  "cashHandlerCashbagCount": 1,
+  "totalCashbagCount": 1,
+  "cashbags": [
+    {
+      "cashbagNumber": "12345",
+      "isSubmitted": true,
+      "hasEposCounts": true,
+      "hasCashHandlerCounts": true
+    }
+  ]
+}

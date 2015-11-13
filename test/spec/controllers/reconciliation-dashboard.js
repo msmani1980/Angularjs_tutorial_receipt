@@ -4,28 +4,52 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
   // load the controller's module
   beforeEach(module('ts5App'));
+  beforeEach(module(
+    'served/store-status.json',
+    'served/global-stations.json',
+    'served/store-instance.json'
+  ));
 
   var ReconciliationDashboardCtrl;
   var scope;
   var location;
   var reconciliationFactory;
+  var stationsService;
   var controller;
   var reconciliationListDeferred;
+  var storeStatusDeferred;
+  var globalStationsDeferred;
   var reconciliationListResponseJSON;
+  var storeStatusResponseJSON;
+  var globalStationsResponseJSON;
+  var storeInstanceJSON;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, $location, $injector) {
+  beforeEach(inject(function ($controller, $rootScope, $q, $location, $injector, _servedStoreStatus_, _servedGlobalStations_, _servedStoreInstance_) {
     location = $location;
     scope = $rootScope.$new();
 
     reconciliationFactory = $injector.get('reconciliationFactory');
+    stationsService = $injector.get('stationsService');
     controller = $controller;
 
     reconciliationListResponseJSON = [{id: 1}]; // stub for now until API is complete
     reconciliationListDeferred = $q.defer();
     reconciliationListDeferred.resolve(reconciliationListResponseJSON);
-    spyOn(reconciliationFactory,  'getMockReconciliationDataList').and.returnValue(reconciliationListDeferred.promise);
 
+    storeStatusResponseJSON = _servedStoreStatus_;
+    storeStatusDeferred = $q.defer();
+    storeStatusDeferred.resolve(storeStatusResponseJSON);
+
+    globalStationsResponseJSON = _servedGlobalStations_;
+    globalStationsDeferred = $q.defer();
+    globalStationsDeferred.resolve(globalStationsResponseJSON);
+
+    storeInstanceJSON = angular.copy(_servedStoreInstance_);
+
+    spyOn(reconciliationFactory, 'getReconciliationDataList').and.returnValue(reconciliationListDeferred.promise);
+    spyOn(reconciliationFactory, 'getStoreStatusList').and.returnValue(storeStatusDeferred.promise);
+    spyOn(stationsService, 'getGlobalStationList').and.returnValue(reconciliationListDeferred.promise);
 
     ReconciliationDashboardCtrl = $controller('ReconciliationDashboardCtrl', {
       $scope: scope
@@ -35,7 +59,8 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
   describe('init', function () {
     it('should call get LMP stock data', function () {
-      expect(reconciliationFactory.getMockReconciliationDataList).toHaveBeenCalled();
+      expect(stationsService.getGlobalStationList).toHaveBeenCalled();
+      expect(reconciliationFactory.getStoreStatusList).toHaveBeenCalled();
       scope.$digest();
       expect(scope.reconciliationList).toBeDefined();
     });
@@ -125,6 +150,79 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
         expect(scope.doesInstanceContainAction(testInstance, 'testAction')).toEqual(false);
       });
     });
+  });
+
+  it('filterReconciliationList should filter items in unsupported status', function () {
+    expect(scope.filterReconciliationList({statusName: 'Inbounded'})).toEqual(true);
+    expect(scope.filterReconciliationList({statusName: 'Confirmed'})).toEqual(true);
+    expect(scope.filterReconciliationList({statusName: 'Discrepancies'})).toEqual(true);
+    expect(scope.filterReconciliationList({statusName: 'Commission Paid'})).toEqual(true);
+    expect(scope.filterReconciliationList({statusName: 'Something else'})).toEqual(false);
+  });
+
+  it('getStoreStatusNameById should return status name from status id', function () {
+    scope.allowedStoreStatusMap[8] = {id: 8, statusName: 'Inbounded'};
+
+    expect(ReconciliationDashboardCtrl.getStoreStatusNameById(8)).toEqual('Inbounded');
+    expect(ReconciliationDashboardCtrl.getStoreStatusNameById(10)).toEqual(null);
+  });
+
+  it('normalizeReconciliationDataList should normalize reconciliation list', function () {
+    ReconciliationDashboardCtrl.normalizeReconciliationDataList([storeInstanceJSON]);
+
+    expect(storeInstanceJSON.scheduleDate).toEqual('09/30/2015');
+    expect(storeInstanceJSON.updatedOn).toEqual('09/01/2015 15:57');
+    expect(storeInstanceJSON.isEcb).toEqual('No');
+    expect(storeInstanceJSON.eposData).toEqual('Loading...');
+    expect(storeInstanceJSON.postTripData).toEqual('Loading...');
+    expect(storeInstanceJSON.cashHandlerData).toEqual('Loading...');
+  });
+
+  it('recalculateActionsColumn should calculate action column', function () {
+    var item = {};
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports']);
+
+    item = {statusName: 'Inbounded', eposData: '1/3', postTripData: '2/3', cashHandlerData: '3/3'};
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Validate']);
+
+    item = {statusName: 'Inbounded', eposData: 'No'};
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Add ePOS Data']);
+
+    item = {statusName: 'Inbounded', postTripData: 'No'};
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Add Post Trip Data']);
+
+    item = {statusName: 'Inbounded', cashHandlerData: 'No'};
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Add Cash Handler Data']);
+
+    item = {statusName: 'Confirmed'};
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Review', 'Pay Commission', 'Unconfirm']);
+
+    item = {statusName: 'Discrepancies'};
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Review', 'Confirm']);
+  });
+
+  it('fixSearchDropdowns should reset dropdown value if empty value is selected', function () {
+    var search = {
+      departureStationCode: '',
+      arrivalStationCode: '',
+      statusId: ''
+    };
+
+    var expected = {
+      departureStationCode: null,
+      arrivalStationCode: null,
+      statusId: null
+    };
+
+    ReconciliationDashboardCtrl.fixSearchDropdowns(search);
+    expect(search).toEqual(expected);
   });
 
 });

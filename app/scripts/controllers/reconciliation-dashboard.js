@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6 */
 
 /**
  * @ngdoc function
@@ -56,7 +57,7 @@ angular.module('ts5App')
     };
 
     $scope.filterReconciliationList = function (item) {
-      return !$.inArray(item.statusName, $scope.allowedStoreStatusList);
+      return $scope.allowedStoreStatusList.indexOf(item.statusName) > -1;
     };
 
     this.getStoreStatusNameById = function (storeStatusId) {
@@ -69,45 +70,105 @@ angular.module('ts5App')
       }
 
       return dataFromAPI.map(function (item) {
-        item.scheduleDate = dateUtility.formatDateForApp(item.scheduleDate)
+        item.scheduleDate = dateUtility.formatDateForApp(item.scheduleDate);
         item.updatedOn = (item.updatedOn) ? dateUtility.formatTimestampForApp(item.updatedOn) : null;
         item.statusName = $this.getStoreStatusNameById(item.statusId);
         item.isEcb = (item.isEcb === 'true') ? 'Yes' : 'No';
         item.eposData = 'Loading...';
+        item.postTripData = 'Loading...';
+        item.cashHandlerData = 'Loading...';
 
         return item;
       });
     };
 
-    this.populateEposDataColumn = function () {
+    this.recalculateActionsColumn = function (item) {
+      var actions = [];
+
+      actions.push('Reports');
+
+      $this.recalculateActionsForInboundStatus(item, actions);
+      $this.recalculateActionsForConfirmedStatus(item, actions);
+      $this.recalculateActionsForDiscrepanciesStatus(item, actions);
+
+      item.actions = actions;
+    };
+
+    $this.recalculateActionsForInboundStatus = function (item, actions) {
+      if (item.statusName === 'Inbounded') {
+        if (item.eposData !== 'No' && item.postTripData !== 'No' && item.cashHandlerData !== 'No') {
+          actions.push('Validate');
+        }
+        if (item.eposData === 'No') {
+          actions.push('Add ePOS Data');
+        }
+        if (item.postTripData === 'No') {
+          actions.push('Add Post Trip Data');
+        }
+        if (item.cashHandlerData === 'No') {
+          actions.push('Add Cash Handler Data');
+        }
+      }
+    };
+
+    $this.recalculateActionsForConfirmedStatus = function (item, actions) {
+      if (item.statusName === 'Confirmed') {
+        actions.push('Review');
+        actions.push('Pay Commission');
+        actions.push('Unconfirm');
+      }
+    };
+
+    $this.recalculateActionsForDiscrepanciesStatus = function (item, actions) {
+      if (item.statusName === 'Discrepancies') {
+        actions.push('Review');
+        actions.push('Confirm');
+      }
+    };
+
+    this.populateLazyColumns = function () {
       angular.forEach($scope.reconciliationList, function (item) {
         reconciliationFactory.getReconciliationPrecheckDevices({storeInstanceId: item.id}).then(function (dataFromAPI) {
           item.eposData = (dataFromAPI.devicesSynced && dataFromAPI.totalDevies) ? dataFromAPI.devicesSynced + '/' + dataFromAPI.totalDevies : 'No';
+          $this.recalculateActionsColumn(item);
+        });
+
+        reconciliationFactory.getReconciliationPrecheckSchedules({storeInstanceId: item.id}).then(function (dataFromAPI) {
+          item.postTripData = (dataFromAPI.postTripScheduleCount && dataFromAPI.eposScheduleCount) ? dataFromAPI.postTripScheduleCount + '/' + dataFromAPI.eposScheduleCount : 'No';
+          $this.recalculateActionsColumn(item);
+        });
+
+        reconciliationFactory.getReconciliationPrecheckCashbags({storeInstanceId: item.id}).then(function (dataFromAPI) {
+          item.cashHandlerData = (dataFromAPI.cashHandlerCashbagCount && dataFromAPI.totalCashbagCount) ? dataFromAPI.cashHandlerCashbagCount + '/' + dataFromAPI.totalCashbagCount : 'No';
+          $this.recalculateActionsColumn(item);
         });
       });
     };
 
+    this.attachReconciliationDataListToScope = function (dataFromAPI) {
+      $scope.reconciliationList = $this.normalizeReconciliationDataList(dataFromAPI.response);
+      $this.populateLazyColumns();
+      $this.hideLoadingModal();
+    };
+
     this.getReconciliationDataList = function () {
       reconciliationFactory.getReconciliationDataList().then(function (dataFromAPI) {
-        $scope.reconciliationList = $this.normalizeReconciliationDataList(dataFromAPI.response);
-        $this.populateEposDataColumn();
-        $this.hideLoadingModal();
+        $this.attachReconciliationDataListToScope(dataFromAPI);
       });
     };
 
     this.getStationList = function () {
       stationsService.getGlobalStationList().then(function (dataFromAPI) {
-        $scope.stationList = dataFromAPI.response
-      })
+        $scope.stationList = dataFromAPI.response;
+      });
     };
 
-    this.filterAvailableStoreStatus = function (item)
-    {
-      return $.inArray(item.statusName, $scope.allowedStoreStatusList) > -1
+    this.filterAvailableStoreStatus = function (item) {
+      return $scope.allowedStoreStatusList.indexOf(item.statusName) > -1;
     };
 
     this.getStoreStatusList = function () {
-      $this.showLoadingModal("Loading Data");
+      $this.showLoadingModal('Loading Data');
       reconciliationFactory.getStoreStatusList().then(function (dataFromAPI) {
         dataFromAPI.filter($this.filterAvailableStoreStatus)
                    .forEach(function (item) {
@@ -118,10 +179,16 @@ angular.module('ts5App')
       });
     };
 
-    $this.fixSearchDropdowns = function (search) {
-      if (search.departureStationCode === '') search.departureStationCode = null;
-      if (search.arrivalStationCode === '') search.arrivalStationCode = null;
-      if (search.statusId === '') search.statusId = null;
+    this.fixSearchDropdowns = function (search) {
+      if (search.departureStationCode === '') {
+        search.departureStationCode = null;
+      }
+      if (search.arrivalStationCode === '') {
+        search.arrivalStationCode = null;
+      }
+      if (search.statusId === '') {
+        search.statusId = null;
+      }
     };
 
     $scope.searchReconciliationDataList = function () {
@@ -130,8 +197,7 @@ angular.module('ts5App')
 
       $scope.reconciliationList = [];
       reconciliationFactory.getReconciliationDataList(payloadUtility.serializeDates($scope.search)).then(function (dataFromAPI) {
-        $scope.reconciliationList = $this.normalizeReconciliationDataList(dataFromAPI.response);
-        $this.hideLoadingModal();
+        $this.attachReconciliationDataListToScope(dataFromAPI);
       });
     };
 
@@ -149,7 +215,7 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     };
 
-    function init() {
+    this.init = function () {
       // Schedule Date ascending, then Store Number ascending, then Store Instance ascending, then Dispatched Station ascending, and then Received Station.
       $scope.tableSortTitle = '[scheduleDate, storeNumber, storeInstanceId, dispatchedStation, receivedStation]';
       $scope.displayColumns = {
@@ -166,8 +232,8 @@ angular.module('ts5App')
 
       $this.getStationList();
       $this.getStoreStatusList();
-    }
+    };
 
-    init();
+    $this.init();
 
   });
