@@ -183,7 +183,7 @@ angular.module('ts5App')
     }
 
     function canReview() {
-      if ($scope.state === 'create' && !$scope.itemQuantities.length) {
+      if ($scope.state === 'create' && !$scope.itemQuantities.length && angular.isUndefined($scope.addedItems)) {
         return false;
       }
       if (!$scope.displayError && $scope.stockTake.isSubmitted) {
@@ -209,8 +209,24 @@ angular.module('ts5App')
       $q.all(_initPromises).then(initPromisesResolved, showResponseErrors);
     }
 
+    function generateAddedPayloadItems() {
+      var items = [];
+      angular.forEach($scope.addedItems, function(item) {
+        if (item.masterItemId && item.itemQuantity) {
+          items.push({
+            masterItemId: parseInt(item.masterItemId),
+            quantity: parseInt(item.itemQuantity)
+          });
+        }
+      });
+      return items;
+    }
+
     function generatePayloadItems() {
       var items = [];
+      if (angular.isDefined($scope.addedItems)) {
+        items = generateAddedPayloadItems();
+      }
       for (var masterItemId in $scope.itemQuantities) {
         if ($scope.itemQuantities[masterItemId]) {
           items.push({
@@ -379,7 +395,7 @@ angular.module('ts5App')
         getItemsListByCompanyId()
       );
       $scope.$watch('stockTake.catererStationId', catererStationIdWatcher);
-      $scope.$watch('itemQuantities', itemQuantitiesWatcher, true);
+      $scope.$watch('itemQuantities + addedItems', itemQuantitiesWatcher, true);
       resolveInitPromises();
     };
 
@@ -397,7 +413,7 @@ angular.module('ts5App')
         getItemsListByCompanyId()
       );
       $scope.$watch('stockTake.catererStationId', catererStationIdWatcher);
-      $scope.$watch('itemQuantities', itemQuantitiesWatcher, true);
+      $scope.$watch('itemQuantities + addedItems', itemQuantitiesWatcher, true);
       resolveInitPromises();
     };
 
