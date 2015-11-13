@@ -134,9 +134,10 @@
 
     </div>
 
-    <ng-form name="form" class="form edit-form delivery-note-form">
+    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    </error-dialog>
 
-      <form-error-dialog></form-error-dialog>
+    <ng-form name="form" class="form edit-form delivery-note-form">
 
       <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by $index" ng-hide="!itemQuantities[item.masterItemId] && ( state == 'review' || state == 'view' )">
         <div class="row">

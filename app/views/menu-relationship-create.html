@@ -32,9 +32,10 @@
 
   </div>
 
-  <ng-form name="form" class="form">
+  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  </error-dialog>
 
-			<form-error-dialog></form-error-dialog>
+  <ng-form name="form" class="form">
 
 			<div class="row">
 

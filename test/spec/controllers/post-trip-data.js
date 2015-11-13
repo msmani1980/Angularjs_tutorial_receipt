@@ -25,6 +25,31 @@ describe('Controller: PostTripDataCtrl', function () {
     postTripFactory,
     companyId;
 
+    function createFormObject() {
+      scope.postTripDataForm = {
+        $name:'postTripDataForm',
+        $valid: false,
+        $invalid: false,
+        $submitted: false,
+        $setSubmitted: function(submitted) {
+          this.$submitted = submitted;
+        },
+        employeeIds: {
+          $name: 'employeeIds',
+          $invalid: false,
+          $valid: true,
+          $viewValue: '',
+          $error: [],
+          $setViewValue: function(value) {
+            this.$viewValue = value;
+          },
+          $setValidity: function(key,value) {
+            this.$error[key] = value;
+          }
+        }
+      };
+    }
+
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     inject(function (_servedStations_, _servedCarrierTypes_, _servedCarrierNumbers_, _servedPostTripData_, _servedEmployees_, _servedSchedules_) {
@@ -71,6 +96,9 @@ describe('Controller: PostTripDataCtrl', function () {
       $scope: scope,
       companyId: companyId
     });
+
+    createFormObject();
+
   }));
 
 
@@ -152,9 +180,7 @@ describe('Controller: PostTripDataCtrl', function () {
     });
     describe('form save helper function', function () {
       it('should format employeeIdentifiers into array of employee objects', function () {
-        scope.postTripDataForm = {
-          $valid: true
-        };
+        scope.postTripDataForm.$valid = true;
         scope.selectedEmployees = {
           employeeIds: [
             {id: 62, name: 'employee1'},
@@ -169,9 +195,7 @@ describe('Controller: PostTripDataCtrl', function () {
       });
 
       it('should immediately return is form is invalid', function () {
-        scope.postTripDataForm = {
-          $valid: false
-        };
+        scope.postTripDataForm.$valid = false;
         scope.postTrip = {};
         scope.formSave();
         expect(scope.postTrip.postTripEmployeeIdentifiers).not.toBeDefined();
@@ -207,9 +231,7 @@ describe('Controller: PostTripDataCtrl', function () {
 
     describe('save form', function () {
       it('should call updatePostTrip', function () {
-        scope.postTripDataForm = {
-          $valid: true
-        };
+        scope.postTripDataForm.$valid = true;
         scope.employees = [];
         scope.formSave();
         expect(postTripFactory.updatePostTrip).toHaveBeenCalled();
@@ -239,9 +261,7 @@ describe('Controller: PostTripDataCtrl', function () {
 
     describe('save form', function () {
       it('should call getPostTripDataList to search for duplicates', function () {
-        scope.postTripDataForm = {
-          $valid: true
-        };
+        scope.postTripDataForm.$valid = true;
         scope.employees = [];
         scope.postTrip = {};
         scope.formSave();
@@ -276,4 +296,31 @@ describe('Controller: PostTripDataCtrl', function () {
       expect(scope.postTrip).toBeDefined();
     });
   });
+
+  describe('the error handler', function () {
+
+    var mockError;
+
+    beforeEach(function() {
+      mockError = {
+        status: 400,
+        statusText: 'Bad Request',
+        response: {
+          field: 'bogan',
+          code: '000'
+        }
+      };
+      PostTripDataCtrl.saveFormFailure(mockError);
+    });
+
+    it('should set error data ', function () {
+      expect(scope.errorResponse).toEqual(mockError);
+    });
+
+    it('should display the error', function () {
+      expect(scope.displayError).toBeTruthy();
+    });
+
+  });
+
 });

@@ -88,7 +88,7 @@ angular.module('ts5App')
       this.init();
 
       $scope.showInternalServerError = function() {
-        return $this.internalServerError;
+        return ( $this.internalServerError  && !$scope.showValidationErrors() );
       };
 
       $scope.showValidationErrors = function() {
