@@ -8,7 +8,21 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('reconciliationFactory', function ($q) {
+  .factory('reconciliationFactory', function ($q, recordsService, storeInstanceService, reconciliationService) {
+
+    var getStoreStatusList = function getStoreStatusList(payload) {
+      return recordsService.getStoreStatusList(payload);
+    };
+
+    var getReconciliationDataList = function (payload) {
+      return storeInstanceService.getStoreInstancesList(payload);
+    };
+
+    var getReconciliationPrecheckDevices = function (payload) {
+      return reconciliationService.getReconciliationPrecheckDevices(payload);
+    };
+
+
 
     var getLMPStockMockData = function () {
       var mockLMPData = [{
@@ -150,6 +164,9 @@ angular.module('ts5App')
     return {
       getLMPStockMockData: getLMPStockMockData,
       getCashBagMockData: getCashBagMockData,
-      getMockReconciliationDataList: getMockReconciliationDataList
+      getMockReconciliationDataList: getMockReconciliationDataList,
+      getStoreStatusList: getStoreStatusList,
+      getReconciliationDataList: getReconciliationDataList,
+      getReconciliationPrecheckDevices: getReconciliationPrecheckDevices
     };
   });
