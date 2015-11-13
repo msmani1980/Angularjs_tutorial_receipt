@@ -445,12 +445,6 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
 
     this.init();
 
-    $scope.$watch('form.$valid', function (validity) {
-      if (validity) {
-        $scope.displayError = false;
-      }
-    });
-
     $scope.removeQRCode = function () {
       $scope.formData.qrCodeImgUrl = '';
       $scope.formData.qrCodeValue = '';
@@ -587,6 +581,12 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       this.formatPricePayloadDates(itemData);
     };
 
+    this.errorHandler = function(dataFromAPI) {
+      angular.element('#loading').modal('hide');
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
     this.updateItem = function (itemData) {
       $this.showLoadingModal('We are updating your item');
       var updateItemPayload = {
@@ -596,11 +596,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         $this.updateFormData(response.retailItem);
         $this.hideLoadingModal();
         angular.element('#update-success').modal('show');
-      }, function (response) {
-        $this.hideLoadingModal();
-        $scope.displayError = true;
-        $scope.formErrors = response.data;
-      });
+      }, $this.errorHandler );
     };
 
     this.createItem = function (itemData) {
@@ -612,12 +608,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         $this.hideLoadingModal();
         angular.element('#create-success').modal('show');
         return true;
-      }, function (error) {
-        $this.hideLoadingModal();
-        $scope.displayError = true;
-        $scope.formErrors = error.data;
-        return false;
-      });
+      }, $this.errorHandler );
     };
 
     $scope.submitForm = function (formData) {
