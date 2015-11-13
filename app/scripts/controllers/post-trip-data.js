@@ -83,10 +83,10 @@ angular.module('ts5App')
       }
     };
 
-    this.saveFormFailure = function () {
-      // TODO: add displayError dialog once API is fixed and returns error codes
+    this.saveFormFailure = function (dataFromAPI) {
       $this.hideLoadingModal();
-      $this.showToastMessage('danger', 'Post Trips', 'error');
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
     this.populateSelectedEmployeesFromPostTrip = function () {
@@ -215,23 +215,28 @@ angular.module('ts5App')
       });
     };
 
-    $scope.formSave = function () {
-      if (!$scope.postTripDataForm.$valid) {
-        $this.showToastMessage('danger', 'Post Trips', 'Please complete all fields');
-        return;
-      }
-      // TODO: move employeeId data validation to HTML (currently open bug https://github.com/angular-ui/ui-select/issues/258)
+    this.validateEmployees = function() {
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
-      if (shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
-        $this.showToastMessage('danger', 'Post Trips', 'Please complete employee ID field');
+      if(shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
+        $scope.postTripDataForm.employeeIds.$setValidity('pattern',true);
         return;
       }
-      $this.formatEmployeeIdentifiersForAPI();
+      $scope.postTripDataForm.employeeIds.$setValidity('pattern',false);
+    };
 
-      var saveFunctionName = ($routeParams.state + 'PostTrip');
-      if ($this[saveFunctionName]) {
-        $this[saveFunctionName]();
+    this.validateForm = function() {
+      $this.validateEmployees();
+      return $scope.postTripDataForm.$valid;
+    };
+
+    $scope.formSave = function () {
+      if( $this.validateForm() ) {
+        $this.formatEmployeeIdentifiersForAPI();
+        var saveFunctionName = ($routeParams.state + 'PostTrip');
+        if ($this[saveFunctionName]) {
+          $this[saveFunctionName]();
+        }
       }
     };
 

@@ -9,5 +9,28 @@
  */
 angular.module('ts5App')
   .controller('GlobalReasonCodeCtrl', function ($scope) {
-    $scope.viewName = 'Global Reason Code';
+
+    var $this = this;
+
+    this.validateForm = function() {
+      $scope.displayError = $scope.globalReasonCodeForm.$invalid;
+      return $scope.globalReasonCodeForm.$valid;
+    };
+
+    this.createGlobalReasonCode = function() {
+      // make service call here
+    };
+
+    this.submitForm = function() {
+      if( $this.validateForm() ) {
+        $this.createGlobalReasonCode();
+      }
+    };
+
+    $scope.displayError = false;
+
+    $scope.submitForm = function() {
+      return $this.submitForm();
+    };
+
   });

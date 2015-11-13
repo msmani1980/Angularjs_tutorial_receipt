@@ -100,12 +100,8 @@ angular.module('ts5App')
     }
 
     function showErrors(dataFromAPI) {
-      showToast('warning', 'Menu', 'error updating menu!');
-
       $scope.displayError = true;
-      if ('data' in dataFromAPI) {
-        $scope.formErrors = dataFromAPI.data;
-      }
+      $scope.errorResponse = angular.copy(dataFromAPI);
       $scope.menuItemList = [];
       setupMenuModelAndFetchItems($scope.menuFromAPI);
     }

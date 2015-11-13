@@ -1488,4 +1488,30 @@ describe('The Item Create Controller', function () {
 
   });
 
+  describe('the error handler', function () {
+
+    var mockError;
+
+    beforeEach(function() {
+      mockError = {
+        status: 400,
+        statusText: 'Bad Request',
+        response: {
+          field: 'bogan',
+          code: '000'
+        }
+      };
+      ItemCreateCtrl.errorHandler(mockError);
+    });
+
+    it('should set error data ', function () {
+      expect($scope.errorResponse).toEqual(mockError);
+    });
+
+    it('should return false', function () {
+      expect($scope.displayError).toBeTruthy();
+    });
+
+  });
+
 });
