@@ -172,7 +172,7 @@
             <div class="form-group">
               <label for="item-name-{{ $index }}">Select Item</label>
               <select class="form-control"
-                     ng-model="item[$index].itemName"
+                     ng-model="item[index].itemName"
                      required>
                 <option selected="selected" value disabled>Select Item</option>
                 <option ng-repeat="filteredItem in filteredItems | orderBy:'itemName' track by $index" value="{{ filteredItem.itemName }}">
