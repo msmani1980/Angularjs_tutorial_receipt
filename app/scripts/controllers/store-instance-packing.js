@@ -159,33 +159,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         pickedQuantity: 0,
         inboundQuantity: 0,
         ullageQuantity: 0,
+        dispatchQuantity: 0,
         itemMasterId: itemFromAPI.itemMasterId,
         isNewItem: !isFromMenu
       };
-      if(!isFromMenu) {
+      if (!isFromMenu) {
         newItem.id = itemFromAPI.id;
       }
       return newItem;
     };
 
-    this.mergeStoreInstanceMenuItems = function (items) {
-      angular.forEach(items, function (item) {
-        var newItem = $this.createFreshItem(item, true);
-        if($routeParams.action === 'end-instance') {
-          $scope.offloadListItems.push(newItem);
-        } else {
-          $scope.pickListItems.push(newItem);
-        }
-      });
-    };
-
-    this.setQuantityByType = function (itemFromAPI, itemToSet) {
+    this.setQuantityByType = function (itemFromAPI, itemToSet, isFromRedispatchInstance) {
       var countType = $this.getNameByIdFromArray(itemFromAPI.countTypeId, $scope.countTypes);
-      if(countType === 'Warehouse Open') {
+      if (countType === 'Warehouse Open' && !isFromRedispatchInstance) {
         itemToSet.pickedQuantity = itemFromAPI.quantity;
-      } else if(countType === 'Offload') {
+      } else if (countType === 'Offload' || countType === 'Warehouse Close') {
         itemToSet.inboundQuantity = itemFromAPI.quantity;
-      } else if(countType === 'Ullage') {
+      } else if (countType === 'Ullage') {
         itemToSet.ullageQuantity = itemFromAPI.quantity;
         var ullageReason = lodash.findWhere($scope.ullageReasonCodes, {id: itemFromAPI.ullageReasonCode});
         itemToSet.ullageReason = ullageReason || null;
@@ -193,43 +183,61 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       itemToSet.countTypeId = itemFromAPI.countTypeId;
     };
 
-    this.mergeStoreInstanceRedispatchItems = function (items) {
+    this.mergeStoreInstanceMenuItems = function (items) {
       angular.forEach(items, function (item) {
-        var itemMatch = lodash.findWhere($scope.pickListItems, {itemMasterId: item.itemMasterId});
-        var offloadItemMatch = lodash.findWhere($scope.offloadListItems, {itemMasterId: item.itemMasterId});
-        itemMatch = itemMatch || offloadItemMatch;
-        if(itemMatch) {
-          $this.setQuantityByType(item, itemMatch);
-        } else {
-          var newItem = $this.createFreshItem(item, false);
+        var newItem = $this.createFreshItem(item, true);
+        if ($routeParams.action === 'end-instance') {
           $scope.offloadListItems.push(newItem);
+        } else {
+          $scope.pickListItems.push(newItem);
         }
       });
     };
 
-    this.mergeStoreInstanceItems = function (items) {
-      var listToCheck = ($routeParams.action === 'end-instance') ? $scope.offloadListItems : $scope.pickListItems;
+    this.sortItemsByCountType = function (items) {
       angular.forEach(items, function (item) {
-        var itemMatch = lodash.findWhere(listToCheck, {itemMasterId: item.itemMasterId});
-        if(!itemMatch) {
+        item.countTypeName = $this.getNameByIdFromArray(item.countTypeId, $scope.countTypes);
+      });
+      items = lodash.sortBy(items, 'countTypeName');
+      return items;
+    };
+
+    this.findItemMatch = function (itemFromAPI) {
+      var itemMatch;
+      if($routeParams.action === 'redispatch') {
+        // offloadList match should be returned before pickList match. match in pickList and offloadList should not be merged
+        itemMatch = lodash.findWhere($scope.offloadListItems, {itemMasterId: itemFromAPI.itemMasterId}) || lodash.findWhere($scope.pickListItems, {itemMasterId: itemFromAPI.itemMasterId});
+      } else if($routeParams.action === 'end-instance') {
+        itemMatch = lodash.findWhere($scope.offloadListItems, {itemMasterId: itemFromAPI.itemMasterId});
+      } else {
+        itemMatch = lodash.findWhere($scope.pickListItems, {itemMasterId: itemFromAPI.itemMasterId});
+      }
+      return itemMatch;
+    };
+
+    this.mergeStoreInstanceItems = function (items, isRedispatchInstance) {
+      items = $this.sortItemsByCountType(items);
+      angular.forEach(items, function (item) {
+        var itemMatch = $this.findItemMatch(item);
+        if (!itemMatch) {
           var newItem = $this.createFreshItem(item, false);
-          if($routeParams.action === 'end-instance') {
+          if ($routeParams.action === 'end-instance' || isRedispatchInstance) {
             $scope.offloadListItems.push(newItem);
           } else {
             $scope.pickListItems.push(newItem);
           }
           itemMatch = newItem;
         }
-        $this.setQuantityByType(item, itemMatch);
+        $this.setQuantityByType(item, itemMatch, false);
       });
     };
 
     this.mergeAllItems = function (responseCollection) {
       console.log('hi! ', responseCollection);
       $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[0].response));
-      $this.mergeStoreInstanceItems(angular.copy(responseCollection[1].response));
-      if(responseCollection[2]) {
-        $this.mergeStoreInstanceRedispatchItems(angular.copy(responseCollection[2].response));
+      $this.mergeStoreInstanceItems(angular.copy(responseCollection[1].response), false);
+      if (responseCollection[2]) {
+        $this.mergeStoreInstanceItems(angular.copy(responseCollection[2].response), true);
       }
       $this.hideLoadingModal();
     };
