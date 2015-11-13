@@ -17,12 +17,18 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var getStoreInstanceDetailsDeferred;
   var storeInstanceJSON;
   var routeParams;
+  var dateUtility;
 
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
+    inject(function (_servedStoreInstance_) {
+      storeInstanceJSON = _servedStoreInstance_;
+    });
+
     location = $location;
     scope = $rootScope.$new();
     reconciliationFactory = $injector.get('reconciliationFactory');
+    dateUtility = $injector.get('dateUtility');
     controller = $controller;
 
     getStoreInstanceDetailsDeferred = $q.defer();
@@ -55,9 +61,13 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       expect(reconciliationFactory.getStoreInstanceDetails).toHaveBeenCalledWith(routeParams.storeInstanceId);
     });
 
-    describe('init', function () {
+    describe('dependencies', function () {
       beforeEach(function () {
         scope.$digest();
+      });
+
+      it('should localize date to mm/dd/yyy', function () {
+        expect(scope.storeInstance.scheduleDate).toBe(dateUtility.formatDateForApp(storeInstanceJSON.scheduleDate));
       });
 
       it('should call get LMP stock data', function () {

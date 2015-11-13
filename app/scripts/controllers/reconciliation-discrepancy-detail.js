@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDiscrepancyDetail', function ($scope, $routeParams, reconciliationFactory) {
+  .controller('ReconciliationDiscrepancyDetail', function ($scope, $routeParams, reconciliationFactory, dateUtility) {
 
     function initLMPStockRevisions() {
       angular.forEach($scope.LMPStock, function (item) {
@@ -58,9 +58,14 @@ angular.module('ts5App')
       getCashBagData();
     }
 
+    function formatDates(storeInstanceData){
+      storeInstanceData.scheduleDate = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
+      return storeInstanceData;
+    }
+
     function getStoreInstanceDetailsSuccessHandler(storeInstanceDataFromAPI) {
       hideLoadingModal();
-      $scope.storeInstance = angular.copy(storeInstanceDataFromAPI);
+      $scope.storeInstance = formatDates(angular.copy(storeInstanceDataFromAPI));
       initData();
     }
 
