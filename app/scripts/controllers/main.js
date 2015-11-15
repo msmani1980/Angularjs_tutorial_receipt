@@ -12,19 +12,22 @@ angular.module('ts5App')
     $scope.viewName = 'TS5 Dashboard';
     function updateNavigationPerUserFeatures() {
       identityAccessService.featuresInRole().then(function(response) {
-        var features = lodash.flatten(
-          lodash.map(lodash.values(response), function(pkg) {
-            return lodash.keys(pkg);
-          })
-        );
         $scope.dashboardMenu = lodash.filter(mainMenuService.getMenu(), function(item) {
-          if (lodash.intersection(features, item.roles).length !== 0) {
-            item.menuItems = lodash.filter(item.menuItems, function(menuItem) {
-              return lodash.includes(features, menuItem.role);
-            });
-            return true;
-          }
-          return false;
+          item.menuItems = lodash.filter(item.menuItems, function(menuItem) {
+            if (response[menuItem.package] && response[menuItem.package][menuItem.role]) {
+              if (menuItem.permissions) {
+                return lodash.find(response[menuItem.package][menuItem.role], function (featurePermission) {
+                  return lodash.find(menuItem.permissions, function (menuItemPermission) {
+                    return featurePermission.resource.apiName === menuItemPermission.apiName &&
+                    lodash.intersection(featurePermission.permissionCode, menuItemPermission.permissionCodes).length === menuItemPermission.permissionCodes.length;
+                  });
+                });
+              }
+              return true;
+            }
+            return false;
+          });
+          return item.menuItems.length !== 0;
         });
       });
     }
