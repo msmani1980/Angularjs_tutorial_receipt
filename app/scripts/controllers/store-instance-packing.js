@@ -56,11 +56,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       //}
       for (var i = 0; i < itemNumber; i++) {
         var newItem = {
+          menuQuantity: 0,
           isNewItem: true,
           isInOffload: isInOffload
         };
         array.push(newItem);
       }
+    };
+
+    $scope.addOffloadItems = function () {
+      console.log('hi');
+      var isEndInstance = $routeParams.action === 'end-instance';
+      $this.addItemsToArray($scope.newOffloadListItems, $scope.addOffloadNum, isEndInstance);
     };
 
     $scope.addItems = function () {
@@ -98,6 +105,22 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       //  }
       //}, showErrors);
     };
+
+    $scope.$watchGroup(['masterItemsList', 'pickListItems'], function () {
+      $scope.filteredItemsList = lodash.filter($scope.masterItemsList, function (item) {
+        return !(lodash.findWhere($scope.pickListItems, {
+          itemMasterId: item.id
+        }));
+      });
+    });
+
+    $scope.$watchGroup(['masterItemsList', 'offloadListItems'], function () {
+      $scope.filteredOffloadItemsList = lodash.filter($scope.masterItemsList, function (item) {
+        return !(lodash.findWhere($scope.offloadListItems, {
+          itemMasterId: item.id
+        }));
+      });
+    });
 
     this.getStoreInstanceMenuItems = function (storeInstanceId) {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
@@ -151,9 +174,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getStoreDetails = function () {
-      return storeInstanceFactory.getStoreDetails($routeParams.storeId).then(function (response) {
-        $scope.storeDetails = angular.copy(response);
-      }, this.errorHandler);
+      $scope.storeDetails = {
+        "LMPStation": "ORD",
+        "currentStatus": {
+          "id": 9,
+          "statusName": "Inbounded",
+          "name": "6"
+        },
+        "storeId": 13,
+        "scheduleDate": "08/13/2015",
+        "scheduleNumber": "SCHED123",
+        "storeInstanceNumber": 19,
+        "storeNumber": "894523"
+      };
+
+      //return storeInstanceFactory.getStoreDetails($routeParams.storeId).then(function (response) {
+      //  $scope.storeDetails = angular.copy(response);
+      //}, this.errorHandler);
     };
 
     this.setInstanceReadOnly = function () {
@@ -213,10 +250,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.findItemMatch = function (itemFromAPI) {
       var itemMatch;
-      if($routeParams.action === 'redispatch') {
+      if ($routeParams.action === 'redispatch') {
         // offloadList match should be returned before pickList match. match in pickList and offloadList should not be merged
         itemMatch = lodash.findWhere($scope.offloadListItems, {itemMasterId: itemFromAPI.itemMasterId}) || lodash.findWhere($scope.pickListItems, {itemMasterId: itemFromAPI.itemMasterId});
-      } else if($routeParams.action === 'end-instance') {
+      } else if ($routeParams.action === 'end-instance') {
         itemMatch = lodash.findWhere($scope.offloadListItems, {itemMasterId: itemFromAPI.itemMasterId});
       } else {
         itemMatch = lodash.findWhere($scope.pickListItems, {itemMasterId: itemFromAPI.itemMasterId});
@@ -299,16 +336,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.pickListItems = [];
       $scope.newPickListItems = [];
       $scope.addPickListNum = 1;
+      $scope.filteredItemsList = [];
 
       if ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') {
         $scope.offloadListItems = [];
         $scope.newOffloadListItems = [];
         $scope.addOffloadNum = 1;
+        $scope.filteredOffloadItemsList = [];
       }
     };
 
     this.completeInitializeAfterDependencies = function () {
-      $this.setInstanceReadOnly();
+      //$this.setInstanceReadOnly();
       $this.getMasterItemsList();
       $this.getAllStoreInstanceItems();
     };

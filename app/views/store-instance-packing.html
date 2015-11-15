@@ -154,42 +154,43 @@
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                repeat="masterItem in filteredItemsList | filter: {itemName:$select.search} | orderBy:'itemName'">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </td>
-          <td ng-if="shouldDisplayQuantityField('inbound')">
-            <input type="text" custom-validity custom-pattern="number" class="form-control"
-                   ng-model="item.inboundQuantity" placeholder="0"
-                   ng-if="shouldDisplayInboundFields(item)" maxlength="5" required="true"/>
-          </td>
-          <td ng-if="shouldDisplayQuantityField('ullage')">
-            <input type="text" custom-validity custom-pattern="number" class="form-control"
-                   ng-model="item.ullageQuantity" placeholder="0"
-                   ng-if="shouldDisplayInboundFields(item)" maxlength="5"/>
-          </td>
-          <td ng-if="shouldDisplayQuantityField('ullage')">
-            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="shouldDisplayInboundFields(item)">
-              <ui-select-match placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
-              </ui-select-match>
-              <ui-select-choices
-                repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
-                <div
-                  ng-bind-html="ullageReason.companyReasonCodeName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </td>
+          <td colspan="3" ng-if="isActionState('redispatch')"></td>
           <td ng-if="shouldDisplayQuantityField('template')">
-            <input type="text" class="form-control" ng-model="item.menuQuantity" disabled/>
+            <input type="text"
+                   name="pickedQuantity-{{$index}}"
+                   custom-validity
+                   custom-pattern="number"
+                   class="form-control"
+                   ng-model="item.menuQuantity"
+                   disabled="true"
+                   maxlength="5"/>
           </td>
-          <td ng-if="shouldDisplayQuantityField('packed')">
-            <input type="text" custom-validity custom-pattern="number" class="form-control" ng-model="item.quantity"
-                   maxlength="5" required="true" placeholder="0">
+          <td ng-if="shouldDisplayQuantityField('picked')">
+            <input type="text"
+                   name="pickedQuantity-{{$index}}"
+                   custom-validity
+                   custom-pattern="number"
+                   class="form-control"
+                   ng-model="item.pickedQuantity"
+                   ng-disabled="readOnly"
+                   maxlength="5"
+                   required="true"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('dispatch')">
-            <input type="text" class="form-control" placeholder="0"
-                   disabled ng-value="calculateTotalDispatchedQty(item)" required="true"/>
+            <input type="text"
+                   name="pickedQuantity-{{$index}}"
+                   custom-validity
+                   custom-pattern="number"
+                   class="form-control"
+                   ng-model="item.dispatchQuantity"
+                   ng-disabled="readOnly"
+                   maxlength="5"
+                   required="true"/>
           </td>
           <td ng-init="item.index = $index">
             <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
@@ -278,27 +279,39 @@
           </td>
         </tr>
 
-        <tr ng-repeat="item in emptyOffloadMenuItems track by $index" ng-hide="readOnly">
+        <tr ng-repeat="item in newOffloadListItems track by $index" ng-hide="readOnly">
           <td>
             <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
-                repeat="masterItem in filteredOffloadMasterItemList | filter: {itemName:$select.search} | orderBy:'itemName'">
+                repeat="masterItem in filteredOffloadItemsList | filter: {itemName:$select.search} | orderBy:'itemName'">
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </td>
           <td>
-            <input custom-validity custom-pattern="number" type="text" class="form-control"
+            <input type="text"
+                   name="newInboundQuantity-{{$index}}"
+                   custom-validity
+                   custom-pattern="number"
+                   class="form-control"
                    ng-model="item.inboundQuantity"
-                   maxlength="5" placeholder="0" required="true"/>
+                   ng-disabled="readOnly"
+                   maxlength="5"
+                   required="true"/>
           </td>
           <td>
-            <input custom-validity custom-pattern="number" type="text" class="form-control"
+            <input type="text"
+                   name="newUllageQuntity-{{$index}}"
+                   custom-validity
+                   custom-pattern="number"
+                   class="form-control"
                    ng-model="item.ullageQuantity"
-                   maxlength="5" placeholder="0"/>
+                   ng-disabled="readOnly"
+                   maxlength="5"
+                   required="true"/>
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
