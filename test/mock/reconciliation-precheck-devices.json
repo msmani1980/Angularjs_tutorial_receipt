@@ -1,0 +1,20 @@
+{
+  "companyId": 403,
+  "storeInstanceId": 123,
+  "devicesSynced": 2,
+  "totalDevies": 3,
+  "devices": [
+    {
+      "deviceId": "8224M83J4J82J84J8",
+      "isSynced": true
+    },
+    {
+      "deviceId": "92J284J828C4J8224",
+      "isSynced": true
+    },
+    {
+      "deviceId": "30J40J80J8CJ89C4J",
+      "isSynced": false
+    }
+  ]
+}
