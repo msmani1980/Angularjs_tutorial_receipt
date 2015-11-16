@@ -61,9 +61,11 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Dispatched Station</label>
-                <select required class="form-control">
-                  <option selected="selected" value>Select Dispatched Station</option>
-                  <option>ORD - O'Hare</option>
+                <select class="form-control" ng-model="search.departureStationCode">
+                  <option value="">Select station</option>
+                  <option ng-repeat="station in stationList | orderBy:'code'" value="{{station.code}}">
+                    {{station.code}} - {{station.name}}
+                  </option>
                 </select>
               </div>
             </div>
@@ -71,9 +73,11 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Received Station</label>
-                <select required class="form-control">
-                  <option selected="selected" value>Select Received Station</option>
-                  <option>ORD - O'hare</option>
+                <select class="form-control" ng-model="search.arrivalStationCode">
+                  <option value="">Select station</option>
+                  <option ng-repeat="station in stationList | orderBy:'code'" value="{{station.code}}">
+                    {{station.code}} - {{station.name}}
+                  </option>
                 </select>
               </div>
             </div>
@@ -81,14 +85,14 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Store Number</label>
-                <input type="text" class="form-control" placeholder="1234">
+                <input type="text" class="form-control" placeholder="1234" ng-model="search.storeNumber">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Store Instance</label>
-                <input type="text" class="form-control" placeholder="1234567">
+                <input type="text" class="form-control" placeholder="1234567" ng-model="search.storeInstanceId">
               </div>
             </div>
           </div>
@@ -98,8 +102,8 @@
               <date-picker
                 class="form-group"
                 element-class="col-xs-6"
-                start-date-model="search.scheduleStartDate"
-                end-date-model="search.scheduleEndDate"
+                start-date-model="search.startDate"
+                end-date-model="search.endDate"
                 label-from="Schedule Date From"
                 label-to="Schedule Date To"
                 is-search-field="true">
@@ -109,9 +113,11 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Status</label>
-                <select required class="form-control">
+                <select class="form-control" ng-model="search.statusId">
                   <option selected="selected" value>Select Status</option>
-                  <option>{{ station.name }} - {{ station.code }}</option>
+                    <option ng-repeat="storeStatus in allowedStoreStatusMap" value="{{storeStatus.id}}">
+                        {{storeStatus.statusName}}
+                    </option>
                 </select>
               </div>
             </div>
@@ -120,7 +126,7 @@
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-          <button type="submit" class="btn btn-primary">Search</button>
+          <button type="submit" class="btn btn-primary" ng-click="searchReconciliationDataList()">Search</button>
         </div>
       </form>
     </div>
@@ -180,20 +186,29 @@
         <th class="col-xs-2">Actions</th>
       </tr>
       </thead>
-      <tr ng-repeat="instance in reconciliationList | orderBy: tableSortTitle">
+      <tr ng-repeat="instance in reconciliationList | filter: filterReconciliationList | orderBy: tableSortTitle">
         <td> {{ instance.scheduleDate }}</td>
         <td> {{ instance.storeNumber }}</td>
-        <td> {{ instance.dispatchedStation }}</td>
-        <td ng-show="displayColumns.receivedStation"> {{ instance.receivedStation }}</td>
-        <td> {{ instance.ePOSStatus }}</td>
-        <td> {{ instance.postTripStatus }}</td>
-        <td> {{ instance.cashHandlerStatus }}</td>
-        <td> {{ instance.ePOSCreatedStore }}</td>
-        <td ng-show="displayColumns.storeInstanceId"> {{ instance.storeInstanceId }}</td>
-        <td> {{ instance.status }}</td>
-        <td ng-show="displayColumns.updatedDate"> {{ instance.updatedDate }}</td>
+        <td> {{ instance.departureStationCode }}</td>
+        <td ng-show="displayColumns.receivedStation"> {{ instance.arrivalStationCode }}</td>
+        <td> {{ instance.eposData }}</td>
+        <td> {{ instance.postTripData }}</td>
+        <td> {{ instance.cashHandlerData }}</td>
+        <td> {{ instance.isEcb }}</td>
+        <td ng-show="displayColumns.storeInstanceId"> {{ instance.id }}</td>
+        <td> {{ instance.statusName }}</td>
+        <td ng-show="displayColumns.updatedDate"> {{ instance.updatedOn}}</td>
         <td ng-show="displayColumns.updatedBy"> {{ instance.updatedBy }}</td>
         <td>
+          <button class="btn btn-warning btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Add ePOS Data')">Add ePOS Data
+          </button>
+          <button class="btn btn-warning btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Add Post Trip Data')">Add Post Trip Data
+          </button>
+          <button class="btn btn-warning btn-xs btn-block" tabindex="0"
+                  ng-show="doesInstanceContainAction(instance, 'Add Cash Handler Data')">Add Cash Handler Data
+          </button>
           <button class="btn btn-warning btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'Review')">Review
           </button>
@@ -210,7 +225,8 @@
                   ng-show="doesInstanceContainAction(instance, 'Validate')">Validate
           </button>
           <button class="btn btn-info btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Report')"><i class="fa fa-file-text-o"></i></button>
+                  ng-show="doesInstanceContainAction(instance, 'Reports')"><i class="fa fa-file-text-o"></i>
+          </button>
         </td>
       </tr>
       <tbody>
