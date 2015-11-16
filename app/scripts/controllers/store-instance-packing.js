@@ -49,15 +49,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.saveStoreInstanceItem = function (storeInstanceId, item) {
-      if(item.id) {
-        // POST
+      if (item.id) {
+        return storeInstanceFactory.updateStoreInstanceItem(storeInstanceId, item.id, item);
       } else {
-        // PUT
+        return storeInstanceFactory.createStoreInstanceItem(storeInstanceId, item);
       }
     };
 
     this.deleteStoreInstanceItem = function (storeInstanceId, itemId) {
-      // DELETE
+      return storeInstanceFactory.deleteStoreInstanceItem(storeInstanceId, itemId);
     };
 
     this.getThresholdVariance = function () {
@@ -220,13 +220,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         countTypeId: countTypeId,
         quantity: quantity
       };
-      if(countTypeName === 'Ullage') {
+      if (countTypeName === 'Ullage') {
         payloadItem.ullageReasonCode = item.ullageReason.id;
       }
-      if(item.id && !isForRedispatch) {
+      if (item.id && !isForRedispatch) {
         payloadItem.id = item.id;
-      } else if(item.prevInstanceId && isForRedispatch) {
-        payloadItem.id = item.prevInstanceId;
+      } else if (item.prevId && isForRedispatch) {
+        payloadItem.id = item.prevId;
       }
       return payloadItem;
     };
@@ -235,23 +235,22 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.addPickListItemsToPayload = function (promiseArray) {
       var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
       angular.forEach(mergedItems, function (item) {
-        if(item.pickedQuantity > 0) {
+        if (item.pickedQuantity > 0) {
           var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open', false);
           promiseArray.push($this.saveStoreInstanceItem($routeParams.storeId, payloadItem));
         }
       });
-      return payload;
     };
 
     this.addOffloadItemsToPayload = function (promiseArray, isRedispatch) {
-      var storeInstanceToUse = (isRedispatch) ?  $scope.storeDetails.prevStoreInstanceId : $routeParams.storeId;
+      var storeInstanceToUse = ($routeParams.action === 'end-instance') ? $routeParams.storeId : $scope.storeDetails.prevStoreInstanceId;
       var itemsArray = (isRedispatch) ? $scope.pickListItems : ($scope.offloadListItems.concat($scope.newOffloadListItems));
       angular.forEach(itemsArray, function (item) {
-        if(item.ullageQuantity > 0) {
+        if (item.ullageQuantity > 0) {
           var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage', isRedispatch);
           promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
         }
-        if(item.inboundQuantity > 0) {
+        if (item.inboundQuantity > 0) {
           var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
           var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName, isRedispatch);
           promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
@@ -265,20 +264,22 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var promiseArray = [];
       $this.addItemsToDeleteToPayload(promiseArray);
 
-      if($routeParams.action !== 'end-instance') {
+      if ($routeParams.action !== 'end-instance') {
         $this.addPickListItemsToPayload(promiseArray);
       }
-      if($routeParams.action === 'end-instance' || 'redispatch') {
+      if ($routeParams.action === 'end-instance' || 'redispatch') {
         $this.addOffloadItemsToPayload(promiseArray, false);
       }
-      if($routeParams.action === 'redispatch') {
+      if ($routeParams.action === 'redispatch') {
         $this.addOffloadItemsToPayload(promiseArray, true);
       }
       $q.all(promiseArray).then(function () {
-        if(shouldUpdateStatus) {
+        if (shouldUpdateStatus) {
+          console.log('UPDATE STATUS');
           // update Status To Next
           // redirect to home page
         } else {
+          console.log('EXIT');
           // redirect to dashboard
         }
       });
@@ -380,6 +381,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           }
           itemMatch = newItem;
         }
+        itemMatch.id = item.id;
         $this.setQuantityByType(item, itemMatch, false);
       });
     };
@@ -395,15 +397,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         var pickListMatch = lodash.findWhere($scope.pickListItems, {itemMasterId: item.itemMasterId});
         var offloadListMatch = lodash.findWhere($scope.offloadListItems, {itemMasterId: item.itemMasterId});
         var itemMatch;
-        if(!pickListMatch && !offloadListMatch) {
+        if (!pickListMatch && !offloadListMatch) {
           var newItem = $this.createFreshItem(item, false);
           newItem.isInOffload = true;
           $scope.offloadListItems.push(newItem);
           itemMatch = newItem;
-        } else if(offloadListMatch) {
+        } else if (offloadListMatch) {
           itemMatch = offloadListMatch;
         } else {
-          pickListMatch.prevInstanceId = item.id;
+          pickListMatch.prevId = item.id;
           pickListMatch.shouldDisplayOffloadData = true;
           itemMatch = pickListMatch;
         }
