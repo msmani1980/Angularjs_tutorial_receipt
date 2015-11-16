@@ -31,6 +31,7 @@
       </div>
     </div>
 
+    <!-- Search Filter -->
     <div class="well">
       <div class="form-group">
         <p class="input-group">
@@ -45,11 +46,13 @@
       </div>
     </div>
 
+    <!-- Pick List -->
     <div class="well" ng-hide="isActionState('end-instance')">
       <h3>
         <span>Pick List</span>
       </h3>
 
+      {{ pickListItems }}
       <table class="table pick-list">
         <thead>
         <tr>
@@ -65,7 +68,6 @@
         </thead>
 
         <tbody>
-        <!-- TODO: implement threshold warnings -->
         <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:'itemName'"
             ng-class="showVarianceWarningClass(item)">
           <td>
@@ -147,6 +149,7 @@
           </td>
         </tr>
 
+        <!-- New Pick List Items-->
         <tr ng-repeat="item in newPickListItems track by $index" ng-hide="readOnly">
           <td>
             <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
@@ -218,6 +221,7 @@
       </div>
     </div>
 
+    <!-- Offload List -->
     <div class="well" ng-show="isActionState('redispatch') || isActionState('end-instance')">
       <h3>Offload List</h3>
       <table class="table table-striped pick-list">
@@ -279,6 +283,7 @@
           </td>
         </tr>
 
+        <!-- New Offload List Items-->
         <tr ng-repeat="item in newOffloadListItems track by $index" ng-hide="readOnly">
           <td>
             <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">

@@ -49,30 +49,111 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return (matchedObject) ? matchedObject.name : '';
     };
 
-    this.addItemsToArray = function (array, itemNumber, isInOffload) {
-      //if (($scope.filteredMasterItemList.length === 0 && !isInOffload) || ($scope.filteredOffloadMasterItemList.length === 0 && isInOffload)) {
-      //  showToast('warning', 'Add Item', 'There are no items available');
-      //  return;
-      //}
+    this.addItemsToArray = function (array, itemNumber) {
       for (var i = 0; i < itemNumber; i++) {
         var newItem = {
           menuQuantity: 0,
-          isNewItem: true,
-          isInOffload: isInOffload
+          isNewItem: true
         };
         array.push(newItem);
       }
     };
 
+    this.saveStoreInstanceItem = function (storeInstanceId, item) {
+      if(item.id) {
+        // POST
+      } else {
+        // PUT
+      }
+    };
+
+    this.deleteStoreInstanceItem = function (storeInstanceId, itemId) {
+      // DELETE
+    };
+
+    this.addItemsToDeleteToPayload = function (promiseArray) {
+      angular.forEach($scope.deleteArray, function (item) {
+        promiseArray.push($this.deleteStoreInstanceItem(item.storeInstanceId, item.id));
+      });
+    };
+
+    this.constructPayloadItem = function (item, quantity, countTypeName, isForRedispatch) {
+      var countTypeId = $this.getIdByNameFromArray(countTypeName, $scope.countTypes);
+      var payloadItem = {
+        itemMasterId: item.itemMasterId,
+        countTypeId: countTypeId,
+        quantity: quantity
+      };
+      if(countTypeName === 'Ullage') {
+        payloadItem.ullageReasonCode = item.ullageReason.id;
+      }
+      if(item.id && !isForRedispatch) {
+        payloadItem.id = item.id;
+      } else if(item.prevInstanceId && isForRedispatch) {
+        payloadItem.id = item.prevInstanceId;
+      }
+      return payloadItem;
+    };
+
+
+    this.addPickListItemsToPayload = function (promiseArray) {
+      var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
+      angular.forEach(mergedItems, function (item) {
+        if(item.pickedQuantity > 0) {
+          var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open', false);
+          promiseArray.push($this.saveStoreInstanceItem($routeParams.storeId, payloadItem));
+        }
+      });
+      return payload;
+    };
+
+    this.addOffloadItemsToPayload = function (promiseArray, isRedispatch) {
+      var storeInstanceToUse = (isRedispatch) ?  $scope.storeDetails.prevStoreInstanceId : $routeParams.storeId;
+      var itemsArray = (isRedispatch) ? $scope.pickListItems : ($scope.offloadListItems.concat($scope.newOffloadListItems));
+      angular.forEach(itemsArray, function (item) {
+        if(item.ullageQuantity > 0) {
+          var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage', isRedispatch);
+          promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
+        }
+        if(item.inboundQuantity > 0) {
+          var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
+          var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, 'Offload', isRedispatch);
+          promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
+        }
+      });
+    };
+
+    $scope.save = function (shouldUpdateStatus) {
+      // TODO: check for duplicate items, check for ullage quantities, check that form is valid
+
+      var promiseArray = [];
+      $this.addItemsToDeleteToPayload(promiseArray);
+
+      if($routeParams.action !== 'end-instance') {
+        $this.addPickListItemsToPayload(promiseArray);
+      }
+      if($routeParams.action === 'end-instance' || 'redispatch') {
+        $this.addOffloadItemsToPayload(promiseArray, false);
+      }
+      if($routeParams.action === 'redispatch') {
+        $this.addOffloadItemsToPayload(promiseArray, true);
+      }
+      $q.all(promiseArray).then(function () {
+        if(shouldUpdateStatus) {
+          // update Status To Next
+          // redirect to home page
+        } else {
+          // redirect to dashboard
+        }
+      });
+    };
+
     $scope.addOffloadItems = function () {
-      console.log('hi');
-      var isEndInstance = $routeParams.action === 'end-instance';
-      $this.addItemsToArray($scope.newOffloadListItems, $scope.addOffloadNum, isEndInstance);
+      $this.addItemsToArray($scope.newOffloadListItems, $scope.addOffloadNum);
     };
 
     $scope.addItems = function () {
-      var isEndInstance = $routeParams.action === 'end-instance';
-      $this.addItemsToArray($scope.newPickListItems, $scope.addPickListNum, isEndInstance);
+      $this.addItemsToArray($scope.newPickListItems, $scope.addPickListNum);
     };
 
     $scope.isNewItem = function (item) {
@@ -237,17 +318,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       itemToSet.countTypeId = itemFromAPI.countTypeId;
     };
 
-    this.mergeStoreInstanceMenuItems = function (items) {
-      angular.forEach(items, function (item) {
-        var newItem = $this.createFreshItem(item, true);
-        if ($routeParams.action === 'end-instance') {
-          $scope.offloadListItems.push(newItem);
-        } else {
-          $scope.pickListItems.push(newItem);
-        }
-      });
-    };
-
     this.findItemMatch = function (itemFromAPI) {
       var itemMatch;
       if ($routeParams.action === 'redispatch') {
@@ -261,18 +331,23 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return itemMatch;
     };
 
-    this.mergeStoreInstanceItems = function (items, isRedispatchInstance) {
-      // sort items by count type, so offload items will always be merged first
+    this.mergeStoreInstanceMenuItems = function (items) {
       angular.forEach(items, function (item) {
-        item.countTypeName = $this.getNameByIdFromArray(item.countTypeId, $scope.countTypes);
+        var newItem = $this.createFreshItem(item, true);
+        if ($routeParams.action === 'end-instance') {
+          $scope.offloadListItems.push(newItem);
+        } else {
+          $scope.pickListItems.push(newItem);
+        }
       });
-      items = lodash.sortBy(items, 'countTypeName');
+    };
 
+    this.mergeStoreInstanceItems = function (items) {
       angular.forEach(items, function (item) {
         var itemMatch = $this.findItemMatch(item);
         if (!itemMatch) {
           var newItem = $this.createFreshItem(item, false);
-          if ($routeParams.action === 'end-instance' || isRedispatchInstance) {
+          if ($routeParams.action === 'end-instance') {
             $scope.offloadListItems.push(newItem);
           } else {
             $scope.pickListItems.push(newItem);
@@ -283,11 +358,36 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
+    // merge offload quantities fisrt to populate entire offload list, then fill in ullage and warehouse close values next.
+    this.mergeRedispatchItems = function (items) {
+      // sort items so all offload count types are processed first
+      angular.forEach(items, function (item) {
+        item.countTypeName = $this.getNameByIdFromArray(item.countTypeId, $scope.countTypes);
+      });
+      items = lodash.sortBy(items, 'countTypeName');
+      angular.forEach(items, function (item) {
+        var pickListMatch = lodash.findWhere($scope.pickListItems, {itemMasterId: item.itemMasterId});
+        var offloadListMatch = lodash.findWhere($scope.offloadListItems, {itemMasterId: item.itemMasterId});
+        var itemMatch;
+        if(!pickListMatch && !offloadListMatch) {
+          var newItem = $this.createFreshItem(item, false);
+          $scope.offloadListItems.push(newItem);
+          itemMatch = newItem;
+        } else if(offloadListMatch) {
+          itemMatch = offloadListMatch;
+        } else {
+          pickListMatch.prevInstanceId = item.id;
+          itemMatch = pickListMatch;
+        }
+        $this.setQuantityByType(item, itemMatch, false);
+      });
+    };
+
     this.mergeAllItems = function (responseCollection) {
       $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[0].response));
-      $this.mergeStoreInstanceItems(angular.copy(responseCollection[1].response), false);
+      $this.mergeStoreInstanceItems(angular.copy(responseCollection[1].response));
       if (responseCollection[2]) {
-        $this.mergeStoreInstanceItems(angular.copy(responseCollection[2].response), true);
+        $this.mergeRedispatchItems(angular.copy(responseCollection[2].response));
       }
       $this.hideLoadingModal();
     };
