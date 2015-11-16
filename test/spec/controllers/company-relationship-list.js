@@ -23,15 +23,17 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     createCompanyRelationship,
     updateCompanyRelationship,
     deleteCompanyRelationship,
-    routeParams;
+    routeParams,
+    httpBackend;
 
-  beforeEach(inject(function ($q, $controller, $rootScope, _companyRelationshipFactory_, $location) {
+  beforeEach(inject(function ($q, $controller, $rootScope, _companyRelationshipFactory_, $location, $httpBackend) {
     inject(function (_servedCompanyList_, _servedCompanyRelationshipList_, _servedCompanyRelationshipTypeList_) {
       companyListJSON = _servedCompanyList_;
       companyRelationshipListByCompanyJSON = _servedCompanyRelationshipList_;
       companyRelationshipTypeListJSON = _servedCompanyRelationshipTypeList_;
     });
 
+    httpBackend = $httpBackend;
     location = $location;
     scope = $rootScope.$new();
     routeParams = {id: 765};
@@ -72,6 +74,7 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
   }));
 
   function resolveDependencies() {
+    httpBackend.expectGET(/./).respond(200);
     getCompanyListDeferred.resolve(companyListJSON);
     getCompanyRelationshipListByCompanyDeferred.resolve(companyRelationshipListByCompanyJSON);
     getCompanyRelationshipTypeListDeferred.resolve(companyRelationshipTypeListJSON);
