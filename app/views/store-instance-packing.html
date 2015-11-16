@@ -52,7 +52,6 @@
         <span>Pick List</span>
       </h3>
 
-      {{ pickListItems }}
       <table class="table pick-list">
         <thead>
         <tr>
@@ -86,7 +85,8 @@
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   required="true"/>
+                   required="true"
+                   ng-show="item.shouldDisplayOffloadData"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text"
@@ -97,12 +97,13 @@
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   required="true"/>
+                   required="true"
+                   ng-show="item.shouldDisplayOffloadData"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
-            <ui-select ng-model="item.ullageReason" theme="bootstrap">
-              <ui-select-match allow-clear placeholder="Select an Ullage Reason">{{
-                $select.selected.companyReasonCodeName }}
+            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-show="item.shouldDisplayOffloadData">
+              <ui-select-match allow-clear placeholder="Select an Ullage Reason">
+                {{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
