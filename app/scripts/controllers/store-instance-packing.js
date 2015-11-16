@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function ($scope, storeInstanceFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q,
+  function ($scope, storeInstancePackingFactory, $routeParams, lodash, ngToast, storeInstanceWizardConfig, $location, $q,
             dateUtility) {
 
     var $this = this;
@@ -50,21 +50,21 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.saveStoreInstanceItem = function (storeInstanceId, item) {
       if (item.id) {
-        return storeInstanceFactory.updateStoreInstanceItem(storeInstanceId, item.id, item);
+        return storeInstancePackingFactory.updateStoreInstanceItem(storeInstanceId, item.id, item);
       } else {
-        return storeInstanceFactory.createStoreInstanceItem(storeInstanceId, item);
+        return storeInstancePackingFactory.createStoreInstanceItem(storeInstanceId, item);
       }
     };
 
     this.deleteStoreInstanceItem = function (storeInstanceId, itemId) {
-      return storeInstanceFactory.deleteStoreInstanceItem(storeInstanceId, itemId);
+      return storeInstancePackingFactory.deleteStoreInstanceItem(storeInstanceId, itemId);
     };
 
     this.getThresholdVariance = function () {
       // TODO: update getThresholdList API, also check if 'dispatch' feature exists first
       $scope.variance = 10; // mock until API is done
 
-      //storeInstanceFactory.getThresholdList('dispatch').then(function (dataFromAPI) {
+      //storeInstancePackingFactory.getThresholdList('dispatch').then(function (dataFromAPI) {
       //  if (dataFromAPI.response) {
       //    $scope.variance = angular.copy(dataFromAPI.response[0].percentage);
       //  } else {
@@ -96,11 +96,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         characteristicId: $scope.characteristicFilterId,
         date: payloadDate
       };
-      return storeInstanceFactory.getStoreInstanceMenuItems(storeInstanceId, payload);
+      return storeInstancePackingFactory.getStoreInstanceMenuItems(storeInstanceId, payload);
     };
 
     this.getStoreInstanceItems = function (storeInstanceId) {
-      return storeInstanceFactory.getStoreInstanceItemList(storeInstanceId);
+      return storeInstancePackingFactory.getStoreInstanceItemList(storeInstanceId);
     };
 
     this.getMasterItemsList = function () {
@@ -111,37 +111,37 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         endDate: payloadDate,
         characteristicId: $scope.characteristicFilterId
       };
-      storeInstanceFactory.getItemsMasterList(filterPayload).then(function (response) {
+      storeInstancePackingFactory.getItemsMasterList(filterPayload).then(function (response) {
         $scope.masterItemsList = angular.copy(response.masterItems);
       }, this.errorHandler);
     };
 
     this.getUllageReasonCodes = function () {
-      storeInstanceFactory.getReasonCodeList().then(function (response) {
+      storeInstancePackingFactory.getReasonCodeList().then(function (response) {
         $scope.ullageReasonCodes = lodash.filter(angular.copy(response.companyReasonCodes), {description: 'Ullage'});
       }, this.errorHandler);
     };
 
     this.getCharacteristicIdForName = function (characteristicName) {
-      return storeInstanceFactory.getCharacteristics().then(function (response) {
+      return storeInstancePackingFactory.getCharacteristics().then(function (response) {
         $scope.characteristicFilterId = $this.getIdByNameFromArray(characteristicName, response);
       }, this.errorHandler);
     };
 
     this.getRegularItemTypeId = function () {
-      return storeInstanceFactory.getItemTypes().then(function (response) {
+      return storeInstancePackingFactory.getItemTypes().then(function (response) {
         $scope.regularItemTypeId = $this.getIdByNameFromArray('Regular', response);
       }, this.errorHandler);
     };
 
     this.getCountTypes = function () {
-      storeInstanceFactory.getCountTypes().then(function (response) {
+      storeInstancePackingFactory.getCountTypes().then(function (response) {
         $scope.countTypes = angular.copy(response);
       }, this.errorHandler);
     };
 
     this.getStoreDetails = function () {
-      return storeInstanceFactory.getStoreDetails($routeParams.storeId).then(function (response) {
+      return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then(function (response) {
         $scope.storeDetails = angular.copy(response);
       }, this.errorHandler);
     };
