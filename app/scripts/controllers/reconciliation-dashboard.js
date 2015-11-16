@@ -113,35 +113,49 @@ angular.module('ts5App')
 
     $this.recalculateActionsForConfirmedStatus = function (item, actions) {
       if (item.statusName === 'Confirmed') {
-        actions.push('Review');
-        actions.push('Pay Commission');
-        actions.push('Unconfirm');
+        actions.push(
+          'Review',
+          'Pay Commission',
+          'Unconfirm'
+        );
       }
     };
 
     $this.recalculateActionsForDiscrepanciesStatus = function (item, actions) {
       if (item.statusName === 'Discrepancies') {
-        actions.push('Review');
-        actions.push('Confirm');
+        actions.push(
+          'Review',
+          'Confirm'
+        );
       }
+    };
+
+    this.getReconciliationPrecheckDevices = function (item) {
+      reconciliationFactory.getReconciliationPrecheckDevices({storeInstanceId: item.id}).then(function (dataFromAPI) {
+        item.eposData = (dataFromAPI.devicesSynced && dataFromAPI.totalDevies) ? dataFromAPI.devicesSynced + '/' + dataFromAPI.totalDevies : 'No';
+        $this.recalculateActionsColumn(item);
+      });
+    };
+
+    this.getReconciliationPrecheckSchedules = function (item) {
+      reconciliationFactory.getReconciliationPrecheckSchedules({storeInstanceId: item.id}).then(function (dataFromAPI) {
+        item.postTripData = (dataFromAPI.postTripScheduleCount && dataFromAPI.eposScheduleCount) ? dataFromAPI.postTripScheduleCount + '/' + dataFromAPI.eposScheduleCount : 'No';
+        $this.recalculateActionsColumn(item);
+      });
+    };
+
+    this.getReconciliationPrecheckCashbags = function (item) {
+      reconciliationFactory.getReconciliationPrecheckCashbags({storeInstanceId: item.id}).then(function (dataFromAPI) {
+        item.cashHandlerData = (dataFromAPI.cashHandlerCashbagCount && dataFromAPI.totalCashbagCount) ? dataFromAPI.cashHandlerCashbagCount + '/' + dataFromAPI.totalCashbagCount : 'No';
+        $this.recalculateActionsColumn(item);
+      });
     };
 
     this.populateLazyColumns = function () {
       angular.forEach($scope.reconciliationList, function (item) {
-        reconciliationFactory.getReconciliationPrecheckDevices({storeInstanceId: item.id}).then(function (dataFromAPI) {
-          item.eposData = (dataFromAPI.devicesSynced && dataFromAPI.totalDevies) ? dataFromAPI.devicesSynced + '/' + dataFromAPI.totalDevies : 'No';
-          $this.recalculateActionsColumn(item);
-        });
-
-        reconciliationFactory.getReconciliationPrecheckSchedules({storeInstanceId: item.id}).then(function (dataFromAPI) {
-          item.postTripData = (dataFromAPI.postTripScheduleCount && dataFromAPI.eposScheduleCount) ? dataFromAPI.postTripScheduleCount + '/' + dataFromAPI.eposScheduleCount : 'No';
-          $this.recalculateActionsColumn(item);
-        });
-
-        reconciliationFactory.getReconciliationPrecheckCashbags({storeInstanceId: item.id}).then(function (dataFromAPI) {
-          item.cashHandlerData = (dataFromAPI.cashHandlerCashbagCount && dataFromAPI.totalCashbagCount) ? dataFromAPI.cashHandlerCashbagCount + '/' + dataFromAPI.totalCashbagCount : 'No';
-          $this.recalculateActionsColumn(item);
-        });
+        $this.getReconciliationPrecheckDevices(item);
+        $this.getReconciliationPrecheckSchedules(item);
+        $this.getReconciliationPrecheckCashbags(item);
       });
     };
 
@@ -216,7 +230,6 @@ angular.module('ts5App')
     };
 
     this.init = function () {
-      // Schedule Date ascending, then Store Number ascending, then Store Instance ascending, then Dispatched Station ascending, and then Received Station.
       $scope.tableSortTitle = '[scheduleDate, storeNumber, storeInstanceId, dispatchedStation, receivedStation]';
       $scope.displayColumns = {
         receivedStation: false,
