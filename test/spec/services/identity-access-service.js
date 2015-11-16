@@ -40,6 +40,17 @@ describe('Service: identityAccessService', function () {
     });
   });
 
+  describe('featuresInRole', function () {
+    it('should make GET request to API', function () {
+      var expectedURL = /IdentityAccess\/featuresInRole$/;
+      httpBackend.expectGET(expectedURL).respond(200, {});
+      identityAccessService.featuresInRole().then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+  });
+
   describe('logout', function () {
     it('should make PUT request to API', function () {
       var expectedURL = /IdentityAccess\/logout/;

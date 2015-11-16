@@ -25,14 +25,54 @@ describe('The MenuRelationshipCreateCtrl', function () {
     'served/menu-catering-stations.json'
   ));
 
-  function renderView($templateCache, $compile) {
-    var html = $templateCache.get(
-      '/views/menu-relationship-create.html');
-    var compiled = $compile(angular.element(html))($scope);
-    var view = angular.element(compiled[0]);
-    $scope.$digest();
-    return view;
+  function createFormObject() {
+    $scope.form = {
+      $name:'form',
+      $valid: false,
+      $invalid: false,
+      $submitted: false,
+      $setSubmitted: function(submitted) {
+        this.$submitted = submitted;
+      },
+      startDate: {
+        $name: 'startDate',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      },
+      endDate: {
+        $name: 'endDate',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      },
+      menuId: {
+        $name: 'menuId',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      },
+      catererStationId: {
+        $name: 'catererStationId',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      }
+    };
   }
+
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
     $location, $httpBackend, _catererStationService_,
@@ -80,6 +120,8 @@ describe('The MenuRelationshipCreateCtrl', function () {
       'MenuRelationshipCreateCtrl', {
         $scope: $scope
       });
+
+    createFormObject();
 
   }));
 
@@ -244,10 +286,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
 
   describe('submitting the form', function () {
 
-    var view;
-    var form;
-
-    beforeEach(inject(function (_$templateCache_, _$compile_) {
+    beforeEach(inject(function () {
       $scope.formData = {
         startDate: '07/21/2015',
         endDate: '07/25/2015',
@@ -255,13 +294,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
         catererStationIds: ['3']
       };
       $scope.$digest();
-      view = renderView(_$templateCache_, _$compile_);
-      form = angular.element(view.find('form')[0]);
     }));
-
-    it('should have a submitForm() method attached to the scope', function () {
-      expect($scope.submitForm).toBeDefined();
-    });
 
     it('should return false if formData is not passed to it', function () {
       var result = $scope.submitForm();
@@ -287,6 +320,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
       });
 
       it('should set the displayError to false flag if the form is valid', function () {
+        $scope.form.$valid = true;
         expect($scope.displayError).toBeFalsy();
         $scope.submitForm($scope.formData);
         expect($scope.displayError).toBeFalsy();
@@ -306,6 +340,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
     });
 
     it('should call the service method createRelationship ', function () {
+      $scope.form.$valid = true;
       $scope.submitForm($scope.formData);
       expect(menuCatererStationsService.createRelationship).toHaveBeenCalled();
     });
@@ -323,6 +358,7 @@ describe('The MenuRelationshipCreateCtrl', function () {
             code: '000'
           }
         };
+        $scope.form.$valid = true;
         spyOn(MenuRelationshipCreateCtrl, 'errorHandler').and.callThrough();
         $scope.$digest();
         $scope.submitForm($scope.formData);

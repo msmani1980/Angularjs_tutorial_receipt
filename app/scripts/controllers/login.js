@@ -46,6 +46,7 @@ angular.module('ts5App')
 
     function handleSuccessResponse(sessionDataFromAPI) {
       rawSessionData = angular.copy(sessionDataFromAPI);
+      identityAccessFactory.setSessionData(rawSessionData);
       identityAccessFactory.getCompanyData(rawSessionData.companyId).then(handleCompanyResponse, handleResponseError);
     }
 

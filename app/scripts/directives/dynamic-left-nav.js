@@ -10,7 +10,7 @@ angular.module('ts5App')
   .directive('dynamicLeftNav', function() {
 
     var dynamicLeftNavController = function($scope, $location, $window, $filter, mainMenuService) {
-      var menu = mainMenuService.getAll();
+      var menu = mainMenuService.getMenu();
       var menuItems = [];
       if ($scope.title) {
         menuItems = $filter('filter')(menu, {

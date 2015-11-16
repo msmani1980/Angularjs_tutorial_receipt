@@ -1,0 +1,76 @@
+{
+  "RETAIL": {
+      "RETAILITEM": [
+          {
+              "id": 1,
+              "featureCode": "RETAILITEM",
+              "resource": {
+                  "id": 43,
+                  "apiName": "/api/retail-items",
+                  "resourceName": null,
+                  "stationCheck": null,
+                  "companyIdUrl": "HEADER"
+              },
+              "permissionCode": [
+                  "R",
+                  "U",
+                  "C",
+                  "D"
+              ]
+          }],
+      "RETAILITEMCATEGORY": [
+          {
+              "id": 25,
+              "featureCode": "RETAILITEMCATEGORY",
+              "resource": {
+                  "id": 80,
+                  "apiName": "/api/companies",
+                  "resourceName": ".*/sales-categories",
+                  "stationCheck": null,
+                  "companyIdUrl": "PATH"
+              },
+              "permissionCode": [
+                  "R",
+                  "U",
+                  "C",
+                  "D"
+              ]
+          },
+          {
+              "id": 26,
+              "featureCode": "RETAILITEMCATEGORY",
+              "resource": {
+                  "id": 133,
+                  "apiName": "/api/companies",
+                  "resourceName": ".*/sales-categories/\\d+",
+                  "stationCheck": null,
+                  "companyIdUrl": "PATH"
+              },
+              "permissionCode": [
+                  "R",
+                  "U",
+                  "C",
+                  "D"
+              ]
+          }
+      ]
+  },
+  "POSTTRIP": {
+      "POSTTRIP": [
+          {
+              "id": 239,
+              "featureCode": "POSTTRIP",
+              "resource": {
+                  "id": 132,
+                  "apiName": "/api/posttrips",
+                  "resourceName": ".*/posttrips/\\d+",
+                  "stationCheck": null,
+                  "companyIdUrl": "PATH"
+              },
+              "permissionCode": [
+                  "R"
+              ]
+          }
+      ]
+  }
+}
