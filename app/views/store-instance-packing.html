@@ -52,6 +52,7 @@
         <span>Pick List</span>
       </h3>
 
+      {{ pickListItems }}
       <table class="table pick-list">
         <thead>
         <tr>
@@ -146,7 +147,7 @@
                    required="true"/>
           </td>
           <td>
-            <button type="button" ng-if="isNewItem(item)" class="btn btn-sm btn-danger"
+            <button type="button" ng-if="canDeleteItem(item)" class="btn btn-sm btn-danger"
                     ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
             </button>
@@ -280,7 +281,7 @@
             </ui-select>
           </td>
           <td>
-            <button type="button" ng-if="item.isNewItem" class="btn btn-sm btn-danger"
+            <button type="button" ng-if="item.canDeleteItem" class="btn btn-sm btn-danger"
                     ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
             </button>

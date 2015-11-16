@@ -187,6 +187,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       for (var i = 0; i < itemNumber; i++) {
         var newItem = {
           menuQuantity: 0,
+          isMenuItem: false,
           isNewItem: true,
           isInOffload: isInOffload
         };
@@ -202,8 +203,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.addItemsToArray($scope.newPickListItems, $scope.addPickListNum, false);
     };
 
-    $scope.isNewItem = function (item) {
-      return item.isNewItem;
+    $scope.canDeleteItem = function (item) {
+      return item.isNewItem || (!item.isMenuItem);
     };
 
 
@@ -216,10 +217,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.constructPayloadItem = function (item, quantity, countTypeName, isForRedispatch) {
       var countTypeId = $this.getIdByNameFromArray(countTypeName, $scope.countTypes);
       var payloadItem = {
-        itemMasterId: item.itemMasterId,
         countTypeId: countTypeId,
-        quantity: quantity
+        quantity: parseInt(angular.copy(quantity))
       };
+      payloadItem.itemMasterId = (!item.isNewItem) ? item.itemMasterId : item.masterItem.id;
+
+
       if (countTypeName === 'Ullage') {
         payloadItem.ullageReasonCode = item.ullageReason.id;
       }
@@ -267,7 +270,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($routeParams.action !== 'end-instance') {
         $this.addPickListItemsToPayload(promiseArray);
       }
-      if ($routeParams.action === 'end-instance' || 'redispatch') {
+      if ($routeParams.action === 'end-instance' || $routeParams.action === 'redispatch') {
         $this.addOffloadItemsToPayload(promiseArray, false);
       }
       if ($routeParams.action === 'redispatch') {
@@ -322,7 +325,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         ullageQuantity: 0,
         dispatchQuantity: 0,
         itemMasterId: itemFromAPI.itemMasterId,
-        isNewItem: !isFromMenu,
+        isMenuItem: isFromMenu,
+        isNewItem: false,
         isInOffload: ($routeParams.action === 'end-instance')
       };
       if (!isFromMenu) {
