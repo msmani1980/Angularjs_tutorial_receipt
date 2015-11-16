@@ -145,28 +145,28 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="item-code-{{ $index }}">Item Code</label>
-              <input ng-model="item.itemCode" type="text" class="form-control" id="item-code-{{ $index }}" readonly disabled>
+              <input ng-model="item.itemCode" type="text" class="form-control" name="item-code-{{ $index }}" readonly disabled>
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-5">
             <div class="form-group">
               <label for="item-name-{{ $index }}">Item Name</label>
-               <input ng-model="item.itemName" type="text" class="form-control" id="item-name-{{ $index }}" readonly disabled>
+               <input ng-model="item.itemName" type="text" class="form-control" name="item-name-{{ $index }}" readonly disabled>
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
               <label for="item-quantity-{{ $index }}">Quantity</label>
-              <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" id="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
+              <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" name="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
             </div>
           </div>
 
         </div>
       </div>
 
-      <div class="well" ng-repeat="item in addedItems | index track by item.id" ng-show="addedItems">
+      <div class="well" ng-repeat="item in addedItems | index track by $index" ng-show="addedItems">
               {{item|json}}
         <div class="row">
 
@@ -175,6 +175,7 @@
               <label for="item-name-{{ $index }}">Select Item</label>
               <select class="form-control"
                      ng-model="item.masterItemId"
+                     name="item-name-{{$index}}"
                      required>
                 <option selected="selected" value disabled>Select Item</option>
                 <option ng-repeat="filteredItem in filteredItems | orderBy:'itemName' track by $index" value="{{ filteredItem.id }}">
@@ -187,7 +188,7 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="item-quantity-{{ $index }}">Quantity</label>
-              <input ng-model="item.itemQuantity" type="number" class="form-control" id="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
+              <input ng-model="item.itemQuantity" type="number" class="form-control" name="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
             </div>
           </div>
 
