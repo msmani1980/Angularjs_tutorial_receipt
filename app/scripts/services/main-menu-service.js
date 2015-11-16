@@ -283,6 +283,11 @@ angular.module('ts5App')
           route: '/#/store-instance-dashboard',
           icon: 'icon-manage-schedule',
           className: 'dashboard-storeInstanceDashboard'
+        }, {
+          name: 'Reconciliation Dashboard',
+          route: '/#/reconciliation-dashboard',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-reconciliationDashboard'
         }]
       }, {
         title: 'Stock Manager',
