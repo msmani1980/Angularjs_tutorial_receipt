@@ -1,0 +1,18 @@
+{
+  "companyId": 403,
+  "storeInstanceId": 123,
+  "postTripScheduleCount": 1,
+  "eposScheduleCount": 2,
+  "schedules": [
+    {
+      "scheduleNumber": "SCH123",
+      "scheduleDate": "20160101",
+      "postTripId": 32
+    },
+    {
+      "scheduleNumber": "SCH124",
+      "scheduleDate": "20160102",
+      "postTripId": null
+    }
+  ]
+}
