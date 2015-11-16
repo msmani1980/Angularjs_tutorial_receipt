@@ -32,5 +32,5 @@ angular.module('ts5App')
 
     return {
       getStockTotals: getStockTotals
-    }
+    };
   });
