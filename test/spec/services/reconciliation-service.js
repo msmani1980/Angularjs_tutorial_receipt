@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: reconciliationService', function () {
+describe('Service: reconciliationService', function () {
 
   beforeEach(module('ts5App'));
 

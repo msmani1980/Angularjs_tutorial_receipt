@@ -54,6 +54,7 @@ angular.module('ts5App')
     }
 
     function initData() {
+      reconciliationFactory.getStockTotals($routeParams.storeInstanceId).then(function (dataFromAPI) {});
       getStockData();
       getCashBagData();
     }

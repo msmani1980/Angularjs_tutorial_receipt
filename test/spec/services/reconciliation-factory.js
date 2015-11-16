@@ -38,6 +38,7 @@ describe('Factory: reconciliationFactory', function () {
     storeInstanceService = $injector.get('storeInstanceService');
     storesService = $injector.get('storesService');
     stationsService = $injector.get('stationsService');
+    reconciliationService = $injector.get('reconciliationService');
 
     getStoreInstanceDeferred = $q.defer();
     getStoreInstanceDeferred.resolve(storeInstanceJSON);
@@ -82,6 +83,13 @@ describe('Factory: reconciliationFactory', function () {
       reconciliationFactory.getStoreInstanceDetails(storeInstanceId);
       scope.$digest();
       expect(stationsService.getStation).toHaveBeenCalledWith(storeInstanceJSON.cateringStationId);
+    });
+
+    it('should call reconciliationService on getStockTotals', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      reconciliationFactory.getStockTotals(storeInstanceId);
+      scope.$digest();
+      expect(reconciliationService.getStockTotals).toHaveBeenCalledWith(storeInstanceId);
     });
   });
 

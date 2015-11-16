@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('reconciliationFactory', function ($q, storeInstanceService, storesService, stationsService) {
+  .factory('reconciliationFactory', function ($q, storeInstanceService, storesService, stationsService, reconciliationService) {
 
     var getLMPStockMockData = function () {
       var mockLMPData = [
@@ -175,8 +175,13 @@ angular.module('ts5App')
       return storeInstanceDeferred.promise;
     }
 
+    function getStockTotals(storeInstanceId) {
+      return reconciliationService.getStockTotals(storeInstanceId);
+    }
+
     return {
       getStoreInstanceDetails: getStoreInstanceDetails,
+      getStockTotals: getStockTotals,
       getLMPStockMockData: getLMPStockMockData,
       getCashBagMockData: getCashBagMockData,
       getMockReconciliationDataList: getMockReconciliationDataList
