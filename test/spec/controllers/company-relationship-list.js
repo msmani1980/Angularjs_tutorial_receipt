@@ -189,7 +189,7 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     var mockError;
 
     beforeEach(function() {
-
+      httpBackend.expectGET(/./).respond(200);
       mockError = {
         status: 400,
         statusText: 'Bad Request',
