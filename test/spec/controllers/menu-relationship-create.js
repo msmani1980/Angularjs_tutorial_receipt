@@ -15,7 +15,8 @@ describe('The MenuRelationshipCreateCtrl', function () {
     menuCatererStationsService,
     location,
     httpBackend,
-    authRequestHandler;
+    authRequestHandler,
+    createMenuRelationshipDeffered;
 
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module(
@@ -24,14 +25,54 @@ describe('The MenuRelationshipCreateCtrl', function () {
     'served/menu-catering-stations.json'
   ));
 
-  function renderView($templateCache, $compile) {
-    var html = $templateCache.get(
-      '/views/menu-relationship-create.html');
-    var compiled = $compile(angular.element(html))($scope);
-    var view = angular.element(compiled[0]);
-    $scope.$digest();
-    return view;
+  function createFormObject() {
+    $scope.form = {
+      $name:'form',
+      $valid: false,
+      $invalid: false,
+      $submitted: false,
+      $setSubmitted: function(submitted) {
+        this.$submitted = submitted;
+      },
+      startDate: {
+        $name: 'startDate',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      },
+      endDate: {
+        $name: 'endDate',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      },
+      menuId: {
+        $name: 'menuId',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      },
+      catererStationId: {
+        $name: 'catererStationId',
+        $invalid: false,
+        $valid: true,
+        $viewValue: '',
+        $setViewValue: function(value) {
+          this.$viewValue = value;
+        }
+      }
+    };
   }
+
 
   beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
     $location, $httpBackend, _catererStationService_,
@@ -71,10 +112,16 @@ describe('The MenuRelationshipCreateCtrl', function () {
     spyOn(menuCatererStationsService, 'getRelationship').and.returnValue(
       getRelationshipDeffered.promise);
 
+    createMenuRelationshipDeffered = $q.defer();
+    spyOn(menuCatererStationsService, 'createRelationship').and.returnValue(
+      createMenuRelationshipDeffered.promise);
+
     MenuRelationshipCreateCtrl = $controller(
       'MenuRelationshipCreateCtrl', {
         $scope: $scope
       });
+
+    createFormObject();
 
   }));
 
@@ -238,217 +285,101 @@ describe('The MenuRelationshipCreateCtrl', function () {
   });
 
   describe('submitting the form', function () {
-    var formData,
-      view,
-      form;
-    beforeEach(inject(function (_$templateCache_, _$compile_) {
-      formData = {
+
+    beforeEach(inject(function () {
+      $scope.formData = {
         startDate: '07/21/2015',
         endDate: '07/25/2015',
         menuId: '68',
         catererStationIds: ['3']
       };
-      view = renderView(_$templateCache_, _$compile_);
-      form = angular.element(view.find('form')[0]);
+      $scope.$digest();
     }));
 
-    function mockFormSubmission(formData) {
-      $scope.formData = formData;
-      $scope.submitForm(formData);
-      $scope.$digest();
-      form.triggerHandler('submit');
-    }
+    it('should return false if formData is not passed to it', function () {
+      var result = $scope.submitForm();
+      expect(result).toBeFalsy();
+    });
 
-    it('should have a submitForm() method attached to the scope',
-      function () {
-        expect($scope.submitForm).toBeDefined();
-      });
-
-    it('should return false if formData is not passed to it',
-      function () {
-        var result = mockFormSubmission();
-        expect(result).toBeFalsy();
-      });
-
-    it('should set the form submitted flag when called',
-      function () {
-        expect($scope.form.$submitted).toBeFalsy();
-        mockFormSubmission(formData);
-        expect($scope.form.$submitted).toBeTruthy();
-      });
+    it('should set the form submitted flag when called', function () {
+      expect($scope.form.$submitted).toBeFalsy();
+      $scope.submitForm($scope.formData);
+      expect($scope.form.$submitted).toBeTruthy();
+    });
 
     describe('validating the form', function () {
-      var badFormData;
+
       beforeEach(function () {
-        badFormData = {
+        spyOn(MenuRelationshipCreateCtrl, 'validateForm').and.callThrough();
+        spyOn(MenuRelationshipCreateCtrl, 'formatPayloadDates').and.callThrough();
+      });
+
+      it('should be called during the submission',function () {
+        $scope.submitForm($scope.formData);
+        expect(MenuRelationshipCreateCtrl.validateForm).toHaveBeenCalled();
+      });
+
+      it('should set the displayError to false flag if the form is valid', function () {
+        $scope.form.$valid = true;
+        expect($scope.displayError).toBeFalsy();
+        $scope.submitForm($scope.formData);
+        expect($scope.displayError).toBeFalsy();
+      });
+
+      it('should set the displayError to true if the form is invalid',function () {
+        $scope.formData = {
           startDate: '20150717',
           menuId: '68'
         };
-        spyOn(MenuRelationshipCreateCtrl, 'validateForm');
+        $scope.$digest();
+        expect($scope.displayError).toBeFalsy();
+        $scope.submitForm($scope.formData);
+        expect($scope.displayError).toBeTruthy();
       });
 
-      it('should have a method attached to the controller',
-        function () {
-          expect(MenuRelationshipCreateCtrl.validateForm).toBeDefined();
-        });
+    });
 
-      it('should be called during the submission',
-        function () {
-          mockFormSubmission(formData);
-          expect(MenuRelationshipCreateCtrl.validateForm).toHaveBeenCalled();
-        });
+    it('should call the service method createRelationship ', function () {
+      $scope.form.$valid = true;
+      $scope.submitForm($scope.formData);
+      expect(menuCatererStationsService.createRelationship).toHaveBeenCalled();
+    });
 
-      it(
-        'should set the displayError to true if the form is invalid',
-        function () {
-          expect($scope.displayError).toBeFalsy();
-          mockFormSubmission(badFormData);
-          expect($scope.displayError).toBeTruthy();
-        });
+    describe('error handling when creating a relationship', function () {
 
-      it(
-        'should set the displayError to false flag if the form is valid',
-        function () {
-          expect($scope.displayError).toBeFalsy();
-          mockFormSubmission(formData);
-          expect($scope.displayError).toBeFalsy();
-        });
+      var mockError;
+
+      beforeEach(function () {
+        mockError = {
+          status: 400,
+          statusText: 'Bad Request',
+          response: {
+            field: 'catererStationId',
+            code: '000'
+          }
+        };
+        $scope.form.$valid = true;
+        spyOn(MenuRelationshipCreateCtrl, 'errorHandler').and.callThrough();
+        $scope.$digest();
+        $scope.submitForm($scope.formData);
+        createMenuRelationshipDeffered.reject(mockError);
+        $scope.$apply();
+      });
+
+      it('should call the error handler', function() {
+        expect(MenuRelationshipCreateCtrl.errorHandler).toHaveBeenCalledWith(mockError);
+      });
+
+      it('should set the displayError flag to true', function() {
+        expect($scope.displayError).toBeTruthy();
+      });
+
+      it('should set the errorResponse as the API ', function() {
+        expect($scope.errorResponse).toEqual(mockError);
+      });
 
     });
 
   });
 
-  /* E2E Tests */
-
-  describe('view', function () {
-
-    var view;
-
-    beforeEach(inject(function (_$templateCache_, _$compile_) {
-      view = renderView(_$templateCache_, _$compile_);
-    }));
-
-    it('should be defined', function () {
-      expect(view[0]).toBeDefined();
-    });
-
-    describe('container', function () {
-      var container;
-      beforeEach(function () {
-        container = angular.element(view.find(
-          '.container')[0]);
-      });
-      it('should be defined', function () {
-        expect(container).toBeDefined();
-      });
-    });
-
-    describe('edit controls', function () {
-      var controls;
-      beforeEach(function () {
-        controls = angular.element(view.find(
-          '.edit-controls')[0]);
-      });
-      it('should be defined', function () {
-        expect(controls).toBeDefined();
-      });
-      it('should have a row', function () {
-        expect(controls.find('.row')[0]).toBeDefined();
-      });
-      it('should have (2) columns inside of the row', function () {
-        expect(controls.find('.row .col-xs-6').length).toEqual(
-          2);
-      });
-      it('should have a View Name', function () {
-        expect(controls.find('.view-name')[0]).toBeDefined();
-      });
-      it('should have a View Name that contains text', function () {
-        expect(controls.find('.view-name').text().trim()).toEqual(
-          'Create Relationship');
-      });
-      it('should have (2) buttons inside the controls', function () {
-        expect(controls.find('.btn').length).toEqual(2);
-      });
-
-      describe('save button', function () {
-        var saveButton;
-        beforeEach(function () {
-          saveButton = angular.element(controls.find(
-            '.btn-success')[0]);
-        });
-        it('should be defined', function () {
-          expect(saveButton[0]).toBeDefined();
-        });
-        it('should contain a check square icon', function () {
-          expect(saveButton.find('span.fa-check-square-o')[
-            0]).toBeDefined();
-        });
-        it('should contain the correct text', function () {
-          expect(saveButton.find('.btn-label').text().trim())
-            .toEqual('Create');
-        });
-      });
-
-      describe('cancel button', function () {
-        var cancelButton;
-        beforeEach(function () {
-          cancelButton = angular.element(controls.find(
-            '.btn-default')[0]);
-        });
-        it('should be defined', function () {
-          expect(cancelButton[0]).toBeDefined();
-        });
-        it('should contain a close icon', function () {
-          expect(cancelButton.find('span.fa-close')).toBeDefined();
-        });
-        it('should contain the correct text', function () {
-          expect(cancelButton.find('.btn-label').text().trim())
-            .toEqual('Back');
-        });
-      });
-    });
-
-    describe('form', function () {
-      var form;
-      beforeEach(function () {
-        form = angular.element(view.find('ng-form')[0]);
-      });
-      it('should be defined', function () {
-        expect(form[0]).toBeDefined();
-      });
-      it('should have a name attribute', function () {
-        expect(form.attr('name')).toEqual('form');
-      });
-      it('should have a .form class', function () {
-        expect(form.hasClass('form')).toBeTruthy();
-      });
-      it('should inject the form-error-dialog directive',
-        function () {
-          expect(form.find('form-error-dialog')[0]).toBeDefined();
-        });
-
-      describe('fieldset', function () {
-        var fieldSet;
-        beforeEach(function () {
-          fieldSet = angular.element(form.find(
-            '.row fieldset')[
-            0]);
-        });
-        it('should be defined', function () {
-          expect(fieldSet[0]).toBeDefined();
-        });
-        it(
-          'should contain ng-disabled with specific expression',
-          function () {
-            expect(fieldSet.attr('ng-disabled')).toContain(
-              'viewOnly || isRelationshipActive()');
-          });
-        it('should contain a form-group', function () {
-          var fieldSetRow = fieldSet.find('.form-group')[
-            0];
-          expect(fieldSetRow).toBeDefined();
-        });
-      });
-    });
-  });
 });

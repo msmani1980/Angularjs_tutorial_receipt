@@ -568,6 +568,7 @@ describe('The Stock Owner Item Create Controller', function () {
     }));
 
     function mockFormSubmission(formData) {
+      $scope.formData = angular.copy(formData);
       form.triggerHandler('submit');
       $scope.submitForm(formData);
       $scope.$digest();
@@ -599,7 +600,6 @@ describe('The Stock Owner Item Create Controller', function () {
       });
 
       it('should set the displayError to false flag if the form is valid', function () {
-        expect($scope.displayError).toBeFalsy();
         $scope.form.itemTypeId.$setViewValue(2);
         $scope.form.categoryId.$setViewValue(109);
         mockFormSubmission(formData);
@@ -707,6 +707,32 @@ describe('The Stock Owner Item Create Controller', function () {
 
       });
 
+    });
+
+  });
+
+  describe('the error handler', function () {
+
+    var mockError;
+
+    beforeEach(function() {
+      mockError = {
+        status: 400,
+        statusText: 'Bad Request',
+        response: {
+          field: 'bogan',
+          code: '000'
+        }
+      };
+      StockOwnerItemCreateCtrl.errorHandler(mockError);
+    });
+
+    it('should set error data ', function () {
+      expect($scope.errorResponse).toEqual(mockError);
+    });
+
+    it('should return false', function () {
+      expect($scope.displayError).toBeTruthy();
     });
 
   });

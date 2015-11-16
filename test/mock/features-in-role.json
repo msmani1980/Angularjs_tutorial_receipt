@@ -1,0 +1,10 @@
+{
+  "CASH": {
+    "CASHBAG": {},
+    "CASHBAGSUBMIT": {}
+  },
+  "RETAIL": {
+    "RETAILITEM": {},
+    "RETAILITEMCATEGORY": {}
+  }
+}

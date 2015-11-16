@@ -61,9 +61,10 @@
 
 	<div class="create-form-container" ng-show="uiSelectTemplateReady">
 
-	<form name="form" class="form edit-form create-item-form">
+	<error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  </error-dialog>
 
-			<form-error-dialog></form-error-dialog>
+	<form name="form" class="form edit-form create-item-form">
 
 			<h3 id="item-information">Item Information</h3>
 

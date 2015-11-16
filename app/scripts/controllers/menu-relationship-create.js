@@ -203,6 +203,12 @@ angular.module('ts5App')
       });
     };
 
+    this.errorHandler = function(apiResponse) {
+      $this.hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(apiResponse);
+    };
+
     this.updateRelationship = function (relationshipData) {
       var $this = this;
       this.displayLoadingModal('We are updating menu relationship');
@@ -213,26 +219,17 @@ angular.module('ts5App')
           $this.initSelectUI();
           $this.hideLoadingModal();
           $this.showSuccessMessage('Relationship updated!');
-        },
-        function (response) {
-          $this.hideLoadingModal();
-          $scope.displayError = true;
-          $scope.formErrors = response.data;
-        });
+        }, this.errorHandler );
     };
 
     this.createRelationship = function (relationshipData) {
       $this.displayLoadingModal('We are creating your menu relationship');
       menuCatererStationsService.createRelationship(relationshipData).then(
         function () {
+          console.log('success');
           $this.showSuccessMessage('Relationship created!');
           $location.path('/menu-relationship-list');
-        },
-        function (error) {
-          $this.hideLoadingModal();
-          $scope.displayError = true;
-          $scope.formErrors = error.data;
-        });
+        }, this.errorHandler );
     };
 
     $scope.submitForm = function (formData) {
@@ -295,12 +292,6 @@ angular.module('ts5App')
       }
       return '';
     };
-
-    $scope.$watchCollection('form', function (form) {
-      if (form && form.$submitted) {
-        $scope.displayError = form.$invalid;
-      }
-    });
 
     this.init();
 

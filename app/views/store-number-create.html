@@ -1,4 +1,5 @@
-<form class="form edit-form create-store-number-form" ng-submit="submitForm()">
+<form name="storeNumberCreatForm" class="form edit-form create-store-number-form" ng-submit="submitForm()">
+
   <div class="edit-controls">
     <div class="row">
       <div class="col-xs-6">
@@ -16,7 +17,10 @@
     </div>
     <p>All required fields are marked with a *.</p>
   </div>
-  <form-error-dialog></form-error-dialog>
+
+  <error-dialog form-object="storeNumberCreatForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
   <div class="row">
     <div class="col-xs-12 col-sm-6">
       <label class="control-label" for="storeNumber">Store Number *</label>
@@ -27,7 +31,7 @@
          required="true"
          type="text"
          class="form-control"
-         id="storeNumber"
+         name="storeNumber"
          ng-model="formData.storeNumber"
          ng-disabled="fieldDisabled(formData)"
          placeholder="store12345"/>

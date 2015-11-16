@@ -136,6 +136,20 @@ describe('The Error Dialog directive', function() {
       expect(controller.internalServerError).toBeTruthy();
     });
 
+    it('should set the internal server error flag to true', function() {
+      testForm.deliveryNote.$setViewValue('!$1');
+      httpSessionInterceptor.responseError({status: 500});
+      var showError = isolatedScope.showInternalServerError();
+      expect(showError).toBeFalsy();
+    });
+
+    it('should set the internal server error flag to true', function() {
+      testForm.deliveryNote.$setViewValue('BOGAN123');
+      httpSessionInterceptor.responseError({status: 500});
+      var showError = isolatedScope.showInternalServerError();
+      expect(showError).toBeTruthy();
+    });
+
   });
 
   describe('When checking to see if we need to display failed requests', function() {
