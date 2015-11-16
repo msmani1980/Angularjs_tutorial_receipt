@@ -52,7 +52,6 @@
         <span>Pick List</span>
       </h3>
 
-      {{ pickListItems }}
       <table class="table pick-list">
         <thead>
         <tr>
@@ -178,7 +177,7 @@
                    disabled="true"
                    maxlength="5"/>
           </td>
-          <td ng-if="shouldDisplayQuantityField('picked')">
+          <td ng-if="shouldDisplayQuantityField('picked') || shouldDisplayQuantityField('dispatch')">
             <input type="text"
                    name="pickedQuantity-{{$index}}"
                    custom-validity
@@ -189,14 +188,14 @@
                    maxlength="5"
                    required="true"/>
           </td>
-          <td ng-if="shouldDisplayQuantityField('dispatch')">
+          <td ng-if="shouldDisplayQuantityField('calcPicked')">
             <input type="text"
                    name="pickedQuantity-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
-                   ng-model="item.dispatchQuantity"
-                   ng-disabled="readOnly"
+                   ng-model="item.calculatedPicked"
+                   disabled
                    maxlength="5"
                    required="true"/>
           </td>
@@ -229,6 +228,7 @@
     <!-- Offload List -->
     <div class="well" ng-show="isActionState('redispatch') || isActionState('end-instance')">
       <h3>Offload List</h3>
+
       <table class="table table-striped pick-list">
         <thead>
         <tr>

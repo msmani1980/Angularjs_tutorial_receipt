@@ -214,22 +214,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
-    this.constructPayloadItem = function (item, quantity, countTypeName, isForRedispatch) {
+    this.constructPayloadItem = function (item, quantity, countTypeName) {
       var countTypeId = $this.getIdByNameFromArray(countTypeName, $scope.countTypes);
       var payloadItem = {
         countTypeId: countTypeId,
         quantity: parseInt(angular.copy(quantity))
       };
       payloadItem.itemMasterId = (!item.isNewItem) ? item.itemMasterId : item.masterItem.id;
-
-
       if (countTypeName === 'Ullage') {
         payloadItem.ullageReasonCode = item.ullageReason.id;
-      }
-      if (item.id && !isForRedispatch) {
-        payloadItem.id = item.id;
-      } else if (item.prevId && isForRedispatch) {
-        payloadItem.id = item.prevId;
       }
       return payloadItem;
     };
@@ -239,7 +232,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
       angular.forEach(mergedItems, function (item) {
         if (item.pickedQuantity > 0) {
-          var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open', false);
+          var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
+          if(item.pickedId) {
+            payloadItem.id = item.pickedId;
+          }
           promiseArray.push($this.saveStoreInstanceItem($routeParams.storeId, payloadItem));
         }
       });
@@ -250,12 +246,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var itemsArray = (isRedispatch) ? $scope.pickListItems : ($scope.offloadListItems.concat($scope.newOffloadListItems));
       angular.forEach(itemsArray, function (item) {
         if (item.ullageQuantity > 0) {
-          var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage', isRedispatch);
+          var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage');
+          if(item.ullageId) {
+            ullagePayloadItem.id = item.ullageId;
+          }
           promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
         }
         if (item.inboundQuantity > 0) {
           var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
-          var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName, isRedispatch);
+          var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName);
+          if(item.inboundId) {
+            offloadPayloadItem.id = item.inboundId;
+          }
           promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
         }
       });
@@ -329,9 +331,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         isNewItem: false,
         isInOffload: ($routeParams.action === 'end-instance')
       };
-      if (!isFromMenu) {
-        newItem.id = itemFromAPI.id;
-      }
       return newItem;
     };
 
@@ -339,12 +338,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var countType = $this.getNameByIdFromArray(itemFromAPI.countTypeId, $scope.countTypes);
       if (countType === 'Warehouse Open' && !isFromRedispatchInstance) {
         itemToSet.pickedQuantity = itemFromAPI.quantity;
+        itemToSet.pickedId = itemFromAPI.id;
       } else if (countType === 'Offload' || countType === 'Warehouse Close') {
         itemToSet.inboundQuantity = itemFromAPI.quantity;
+        itemToSet.inboundId = itemFromAPI.id;
       } else if (countType === 'Ullage') {
         itemToSet.ullageQuantity = itemFromAPI.quantity;
         var ullageReason = lodash.findWhere($scope.ullageReasonCodes, {id: itemFromAPI.ullageReasonCode});
         itemToSet.ullageReason = ullageReason || null;
+        itemToSet.ullageId = itemFromAPI.id;
       }
       itemToSet.countTypeId = itemFromAPI.countTypeId;
     };
@@ -385,7 +387,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           }
           itemMatch = newItem;
         }
-        itemMatch.id = item.id;
         $this.setQuantityByType(item, itemMatch, false);
       });
     };
@@ -413,7 +414,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           pickListMatch.shouldDisplayOffloadData = true;
           itemMatch = pickListMatch;
         }
-        $this.setQuantityByType(item, itemMatch, false);
+        $this.setQuantityByType(item, itemMatch, true);
       });
     };
 
