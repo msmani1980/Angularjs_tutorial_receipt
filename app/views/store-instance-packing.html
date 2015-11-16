@@ -61,8 +61,11 @@
           <th ng-show="shouldDisplayQuantityField('ullage')" width="10%">Ullage Quantity</th>
           <th ng-show="shouldDisplayQuantityField('ullage')" width="15%">Ullage Reason</th>
           <th width="10%" ng-show="shouldDisplayQuantityField('template')">Template Quantity</th>
-          <th width="10%" ng-show="shouldDisplayQuantityField('dispatch')">Dispatched Quantity</th>
-          <th width="10%" ng-show="shouldDisplayQuantityField('picked')">Picked Quantity</th>
+          <th width="10%" ng-show="shouldDisplayQuantityField('picked') || shouldDisplayQuantityField('dispatch')">
+            <span ng-show="shouldDisplayQuantityField('dispatch')">Dispatched Quantity</span>
+            <span ng-show="shouldDisplayQuantityField('picked')">Picked Quantity</span>
+          </th>
+          <th width="10%" ng-show="shouldDisplayQuantityField('calcPicked')">Picked Quantity</th>
           <th width="5%"></th>
         </tr>
         </thead>
@@ -119,18 +122,7 @@
                    maxlength="5"
                    required="true"/>
           </td>
-          <td ng-if="shouldDisplayQuantityField('dispatch')">
-            <input type="text"
-                   name="pickedQuantity-{{$index}}"
-                   custom-validity
-                   custom-pattern="number"
-                   class="form-control"
-                   ng-model="item.dispatchQuantity"
-                   ng-disabled="readOnly"
-                   maxlength="5"
-                   required="true"/>
-          </td>
-          <td ng-if="shouldDisplayQuantityField('picked')">
+          <td ng-if="shouldDisplayQuantityField('picked') || shouldDisplayQuantityField('dispatch')">
             <input type="text"
                    name="pickedQuantity-{{$index}}"
                    custom-validity
@@ -138,6 +130,17 @@
                    class="form-control"
                    ng-model="item.pickedQuantity"
                    ng-disabled="readOnly"
+                   maxlength="5"
+                   required="true"/>
+          </td>
+          <td ng-if="shouldDisplayQuantityField('calcPicked')">
+            <input type="text"
+                   name="pickedQuantity-{{$index}}"
+                   custom-validity
+                   custom-pattern="number"
+                   class="form-control"
+                   ng-model="item.calculatedPickQuantity"
+                   disabled
                    maxlength="5"
                    required="true"/>
           </td>
