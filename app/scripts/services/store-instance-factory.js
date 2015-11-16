@@ -252,7 +252,6 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreInstanceMenuItems: getStoreInstanceMenuItems,
       getStoreInstanceItemList: getStoreInstanceItemList,
       getStoreInstanceItem: getStoreInstanceItem,
-      createStoreInstanceItem: createStoreInstanceItem,
       updateStoreInstanceItem: updateStoreInstanceItem,
       updateStoreInstanceItemsBulk: updateStoreInstanceItemsBulk,
       deleteStoreInstanceItem: deleteStoreInstanceItem,
@@ -262,12 +261,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreDetails: getStoreDetails,
       getStoreStatusList: getStoreStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
-      getItemTypes: getItemTypes,
-      getCharacteristics: getCharacteristics,
       getReasonCodeList: getReasonCodeList,
-      getCountTypes: getCountTypes,
-      getThresholdList: getThresholdList,
-      getFeaturesList: getFeaturesList
+      getCountTypes: getCountTypes
     };
 
   });
