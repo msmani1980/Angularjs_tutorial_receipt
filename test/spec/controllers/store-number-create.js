@@ -21,7 +21,7 @@ describe('Controller: StoreNumberCreateCtrl', function () {
     companyStoresService = _companyStoresService_;
 
     createStoreDeferred = $q.defer();
-    createStoreDeferred.resolve({response:200});
+
     spyOn(companyStoresService, 'createStore').and.returnValue(createStoreDeferred.promise);
     spyOn(companyStoresService, 'saveStore').and.returnValue(createStoreDeferred.promise);
     spyOn(companyStoresService, 'getStore').and.returnValue(createStoreDeferred.promise);
@@ -166,6 +166,34 @@ describe('Controller: StoreNumberCreateCtrl', function () {
       scope.editStoreNumber(store);
       expect(companyStoresService.getStore).toHaveBeenCalledWith(store.id);
     });
+
+
+    describe('error handler', function(){
+
+      var mockError;
+      beforeEach(function(){
+        mockError = {
+          status:400,
+          statusText:'Bad Request'
+        };
+        var store = {id:1,endDate: '12/30/2050'};
+        scope.storeNumbersList = [];
+        scope.$digest();
+        scope.editStoreNumber(store);
+        createStoreDeferred.reject(mockError);
+        scope.$apply();
+      });
+
+      it('should set the displayError flag to true', function(){
+        expect(scope.displayError).toBeTruthy();
+      });
+
+      it('should set the error response as a copy the API response', function(){
+        expect(scope.errorResponse).toEqual(mockError);
+      });
+
+    });
+
   });
 
 });
