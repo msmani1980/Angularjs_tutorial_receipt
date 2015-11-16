@@ -37,11 +37,9 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     routeParams = {id: 765};
 
     getCompanyListDeferred = $q.defer();
-    getCompanyListDeferred.resolve(companyListJSON);
     getCompanyRelationshipListByCompanyDeferred = $q.defer();
-    getCompanyRelationshipListByCompanyDeferred.resolve(companyRelationshipListByCompanyJSON);
     getCompanyRelationshipTypeListDeferred = $q.defer();
-    getCompanyRelationshipTypeListDeferred.resolve(companyRelationshipTypeListJSON);
+
     createCompanyRelationship = $q.defer();
     createCompanyRelationship.resolve({});
     updateCompanyRelationship = $q.defer();
@@ -73,11 +71,23 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
 
   }));
 
+  function resolveDependencies() {
+    getCompanyListDeferred.resolve(companyListJSON);
+    getCompanyRelationshipListByCompanyDeferred.resolve(companyRelationshipListByCompanyJSON);
+    getCompanyRelationshipTypeListDeferred.resolve(companyRelationshipTypeListJSON);
+    scope.$apply();
+  }
+
   it('should attach a viewName to the scope', function () {
     expect(scope.viewName).toBe('Company Relationships');
   });
 
   describe('companyRelationshipListData object in scope', function () {
+
+    beforeEach(function() {
+      resolveDependencies();
+    });
+
     it('should resolve getCompanyListPromise', function () {
       expect(companyRelationshipFactory.getCompanyList).toHaveBeenCalled();
     });
@@ -115,12 +125,22 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
   });
 
   describe('Edit companyRelationship', function () {
+
+    beforeEach(function() {
+      resolveDependencies();
+    });
+
     it('should have a edit function', function () {
       expect(!!scope.editCompanyRelationship).toBe(true);
     });
   });
 
   describe('Delete companyRelationship', function () {
+
+    beforeEach(function() {
+      resolveDependencies();
+    });
+
     it('should have a confirmDelete function', function () {
       expect(!!scope.showDeleteConfirmation).toBe(true);
     });
@@ -134,6 +154,7 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
   describe('Submit scope function', function () {
     var companyRelationship;
     beforeEach(function () {
+      resolveDependencies();
       companyRelationship = {
         'relativeCompanyId': 366,
         'startDate': '20150717',
@@ -159,4 +180,34 @@ describe('Controller: CompanyRelationshipListCtrl', function () {
     });
 
   });
+
+  describe('the error handler', function () {
+
+    var mockError;
+
+    beforeEach(function() {
+
+      mockError = {
+        status: 400,
+        statusText: 'Bad Request',
+        response: {
+          field: 'bogan',
+          code: '000'
+        }
+      };
+      getCompanyListDeferred.reject(mockError);
+      scope.$apply();
+    });
+
+    it('should set error data ', function () {
+      expect(scope.errorResponse).toEqual(mockError);
+    });
+
+    it('should set the display flag to true', function () {
+      expect(scope.displayError).toBeTruthy();
+    });
+
+  });
+
+
 });
