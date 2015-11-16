@@ -12,7 +12,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Stock Take';
     $scope.itemQuantities = [];
-    $scope.addItemsNumber = 1;
+    $scope.numberOfItems = 1;
     $scope.stockTake = {
       catererStationId: null
     };
@@ -120,6 +120,7 @@ angular.module('ts5App')
           $scope.filteredItems.push(item);
         }
       });
+      $scope.uiSelectReady = true;
     }
 
     function getItemsListByCompanyId() {
@@ -178,11 +179,13 @@ angular.module('ts5App')
       }
     }
 
-    function checkNewItemsForQuantity() {
+    function watchForAddItems() {
       var items = [];
       angular.forEach($scope.addedItems, function(item) {
-        if (item.itemQuantity) {
+        if (item.itemQuantity && item.itemObject) {
           items.push(item);
+          item.itemCode = item.itemObject.itemCode;
+          item.itemName = item.itemObject.itemName;
         }
       });
       if (items.length) {
@@ -205,7 +208,7 @@ angular.module('ts5App')
     }
 
     function canReview() {
-      if ($scope.state === 'create' && !checkItemQuantities() && !checkNewItemsForQuantity()) {
+      if ($scope.state === 'create' && !checkItemQuantities() && !watchForAddItems()) {
         return false;
       }
       if (!$scope.displayError && $scope.stockTake.isSubmitted) {
@@ -234,9 +237,9 @@ angular.module('ts5App')
     function generateAddedPayloadItems() {
       var items = [];
       angular.forEach($scope.addedItems, function(item) {
-        if (item.masterItemId && item.itemQuantity) {
+        if (angular.isDefined(item.itemObject && item.itemQuantity)) {
           items.push({
-            masterItemId: parseInt(item.masterItemId),
+            masterItemId: parseInt(item.itemObject.id),
             quantity: parseInt(item.itemQuantity)
           });
         }
@@ -405,6 +408,25 @@ angular.module('ts5App')
 
     $scope.removeAddedItem = function(key) {
       $scope.addedItems.splice(key, 1);
+    };
+
+    $scope.showAddedItem = function(item, state) {
+      if (state !== 'review' && $scope.addedItems) {
+        return true;
+      }
+      if (state === 'review' && (item.itemQuantity > 0) && item.itemObject.itemName) {
+        return true;
+      }
+      return false;
+    };
+
+    $scope.omitSelectedItems = function(item) {
+      var selectedItem = $scope.addedItems.filter(function(addedItem) {
+        if (addedItem.itemObject) {
+          return (addedItem.itemObject.id === item.id);
+        }
+      });
+      return (selectedItem.length === 0);
     };
 
     // create state actions
