@@ -5,7 +5,7 @@
 
   <form-error-dialog></form-error-dialog>
 
-  <form name="storeInstancePackingForm" ng-submit="goToNextStep()">
+  <form name="storeInstancePackingForm" class="form" ng-submit="save(true)">
 
     <!-- INFORMATION BAR -->
     <store-instance-header></store-instance-header>
@@ -78,7 +78,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('inbound')">
             <input type="text"
-                   name="inboundQuantity-{{$index}}"
+                   name="pick-list-inbound-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
@@ -86,22 +86,21 @@
                    ng-disabled="readOnly"
                    maxlength="5"
                    required="true"
-                   ng-show="item.shouldDisplayOffloadData"/>
+                   ng-if="item.shouldDisplayOffloadData"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
             <input type="text"
-                   name="ullage-{{$index}}"
+                   name="pick-list-ullage-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   required="true"
-                   ng-show="item.shouldDisplayOffloadData"/>
+                   ng-if="item.shouldDisplayOffloadData"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
-            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-show="item.shouldDisplayOffloadData">
+            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="item.shouldDisplayOffloadData">
               <ui-select-match allow-clear placeholder="Select an Ullage Reason">
                 {{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
@@ -114,9 +113,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('template')">
             <input type="text"
-                   name="templateQuantity-{{$index}}"
-                   custom-validity
-                   custom-pattern="number"
+                   name="pick-list-template-{{$index}}"
                    class="form-control"
                    ng-model="item.menuQuantity"
                    disabled
@@ -125,7 +122,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('picked') || shouldDisplayQuantityField('dispatch')">
             <input type="text"
-                   name="pickedQuantity-{{$index}}"
+                   name="pick-list-picked-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
@@ -136,14 +133,10 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('calcPicked')">
             <input type="text"
-                   name="pickedQuantity-{{$index}}"
-                   custom-validity
-                   custom-pattern="number"
+                   name="pick-list-calc-picked-{{$index}}"
                    class="form-control"
                    ng-model="item.calculatedPickQuantity"
-                   disabled
-                   maxlength="5"
-                   required="true"/>
+                   disabled/>
           </td>
           <td>
             <button type="button" ng-if="canDeleteItem(item)" class="btn btn-sm btn-danger"
@@ -157,7 +150,7 @@
         <tr ng-repeat="item in newPickListItems track by $index" ng-hide="readOnly">
           <td>
             <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterPickListItems()">
-              <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
+              <ui-select-match placeholder="Select item from list" allow-clear>{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
@@ -169,7 +162,7 @@
           <td colspan="3" ng-if="isActionState('redispatch')"></td>
           <td ng-if="shouldDisplayQuantityField('template')">
             <input type="text"
-                   name="pickedQuantity-{{$index}}"
+                   name="new-pick-list-template-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
@@ -179,7 +172,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('picked') || shouldDisplayQuantityField('dispatch')">
             <input type="text"
-                   name="pickedQuantity-{{$index}}"
+                   name="new-pick-list-picked-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
@@ -190,7 +183,7 @@
           </td>
           <td ng-if="shouldDisplayQuantityField('calcPicked')">
             <input type="text"
-                   name="pickedQuantity-{{$index}}"
+                   name="new-pick-list-calc-picked-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
@@ -255,7 +248,6 @@
                    ng-model="item.inboundQuantity"
                    ng-disabled="readOnly"
                    maxlength="5"
-                   placeholder="0"
                    required="true"/>
           </td>
           <td>
@@ -266,12 +258,11 @@
                    class="form-control"
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
-                   maxlength="5"
-                   placeholder="0"/>
+                   maxlength="5"/>
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
-              <ui-select-match placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
+              <ui-select-match placeholder="Select an Ullage Reason" allow-clear>{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
@@ -281,7 +272,7 @@
             </ui-select>
           </td>
           <td>
-            <button type="button" ng-if="item.canDeleteItem" class="btn btn-sm btn-danger"
+            <button type="button" ng-if="canDeleteItem(item) || isActionState('redispatch')" class="btn btn-sm btn-danger"
                     ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
             </button>
@@ -292,7 +283,7 @@
         <tr ng-repeat="item in newOffloadListItems track by $index" ng-hide="readOnly">
           <td>
             <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterOffloadListItems()">
-              <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
+              <ui-select-match placeholder="Select item from list" allow-clear>{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
@@ -325,7 +316,7 @@
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
-              <ui-select-match placeholder="Select an Ullage Reason">{{ $select.selected.companyReasonCodeName }}
+              <ui-select-match placeholder="Select an Ullage Reason" allow-clear>{{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
@@ -366,7 +357,7 @@
         <i class="fa fa-arrow-left"></i>
         <span class="btn-label">Prev</span>
       </button>
-      <button type="button" class="btn btn-success" ng-click="save(true)" ng-show="canProceed()">
+      <button type="submit" class="btn btn-success" ng-show="canProceed()">
         <span class="btn-label">Next</span>
         <i class="fa fa-arrow-right"></i>
       </button>

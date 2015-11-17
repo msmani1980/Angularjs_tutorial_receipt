@@ -50,14 +50,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.saveStoreInstanceItem = function (storeInstanceId, item) {
       if (item.id) {
-        return storeInstancePackingFactory.updateStoreInstanceItem(storeInstanceId, item.id, item);
+        //return storeInstancePackingFactory.updateStoreInstanceItem(storeInstanceId, item.id, item);
       } else {
-        return storeInstancePackingFactory.createStoreInstanceItem(storeInstanceId, item);
+        //return storeInstancePackingFactory.createStoreInstanceItem(storeInstanceId, item);
       }
     };
 
     this.deleteStoreInstanceItem = function (storeInstanceId, itemId) {
-      return storeInstancePackingFactory.deleteStoreInstanceItem(storeInstanceId, itemId);
+      //return storeInstancePackingFactory.deleteStoreInstanceItem(storeInstanceId, itemId);
     };
 
     this.getThresholdVariance = function () {
@@ -127,6 +127,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then(function (response) {
         $scope.storeDetails = angular.copy(response);
       }, this.errorHandler);
+    };
+
+    $scope.canProceed = function () {
+      if($routeParams.action === 'end-instance') {
+        return ($scope.offloadListItems.length > 0 || $scope.newOffloadListItems.length > 0);
+      }
+      return ($scope.pickListItems.length > 0 || $scope.newPickListItems.length > 0);
     };
 
     $scope.filterPickListItems = function () {
@@ -343,13 +350,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.setQuantityByType = function (itemFromAPI, itemToSet, isFromRedispatchInstance) {
       var countType = $this.getNameByIdFromArray(itemFromAPI.countTypeId, $scope.countTypes);
       if (countType === 'Warehouse Open' && !isFromRedispatchInstance) {
-        itemToSet.pickedQuantity = itemFromAPI.quantity;
+        itemToSet.pickedQuantity = itemFromAPI.quantity.toString();
         itemToSet.pickedId = itemFromAPI.id;
       } else if (countType === 'Offload' || countType === 'Warehouse Close') {
-        itemToSet.inboundQuantity = itemFromAPI.quantity;
+        itemToSet.inboundQuantity = itemFromAPI.quantity.toString();
         itemToSet.inboundId = itemFromAPI.id;
       } else if (countType === 'Ullage') {
-        itemToSet.ullageQuantity = itemFromAPI.quantity;
+        itemToSet.ullageQuantity = itemFromAPI.quantity.toString();
         var ullageReason = lodash.findWhere($scope.ullageReasonCodes, {id: itemFromAPI.ullageReasonCode});
         itemToSet.ullageReason = ullageReason || null;
         itemToSet.ullageId = itemFromAPI.id;
