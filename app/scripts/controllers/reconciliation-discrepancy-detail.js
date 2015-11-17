@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDiscrepancyDetail', function ($scope, $routeParams, reconciliationFactory, dateUtility) {
+  .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, reconciliationFactory, dateUtility, lodash) {
 
     function initLMPStockRevisions() {
       angular.forEach($scope.LMPStock, function (item) {
@@ -53,13 +53,85 @@ angular.module('ts5App')
       $scope.displayError = true;
     }
 
+    function getTotalsFor(stockTotals, itemTypeName) {
+      var stockItem = $filter('filter')(stockTotals, {itemTypeName: itemTypeName});
+      var totalLMP = 0;
+      var totalEPOS = 0;
+      angular.forEach(stockItem, function (item) {
+        totalLMP += item.lmpTotal || 0;
+        totalEPOS += item.eposTotal || 0;
+      });
+
+      return {
+        totalLMP: $filter('currency')(totalLMP, ''),
+        totalEPOS: $filter('currency')(totalEPOS, '')
+      };
+    }
+
+    function getTotalsForPromotions(promotionTotals) {
+      var total = 0;
+      promotionTotals.map(function (promotionItem) {
+        total += promotionItem.convertedAmount;
+      });
+
+      return {
+        totalLMP: $filter('currency')(total, ''),
+        totalEPOS: $filter('currency')(total, '')
+      };
+    }
+
+    function setNetTotals(stockData) {
+      var stockTotals = angular.copy(stockData);
+      angular.forEach(stockTotals, function (stockItem) {
+        stockItem.parsedLMP = parseFloat(stockItem.totalLMP);
+        stockItem.parsedEPOS = parseFloat(stockItem.totalEPOS);
+      });
+
+      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedLMP + stockTotals.totalVoucher.parsedLMP - stockTotals.totalPromotion.parsedLMP;
+      var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
+
+      var netTotals = {
+        netLMP: $filter('currency')(netLMP, ''),
+        netEPOS: $filter('currency')(netEPOS, '')
+      };
+      $scope.stockTotals = angular.extend(stockTotals, {totalNet: netTotals});
+    }
+
+    function setupData(responseCollection) {
+      var itemTypes = angular.copy(responseCollection[0]);
+      var stockTotals = angular.copy(responseCollection[1].response);
+      var promotionTotals = angular.copy(responseCollection[2].response);
+
+      stockTotals.map(function (stockItem) {
+        stockItem.itemTypeName = lodash.findWhere(itemTypes, {id: stockItem.itemTypeId}).name;
+      });
+
+      var totalItems = getTotalsFor(stockTotals, 'Regular');
+      var totalVirtual = getTotalsFor(stockTotals, 'Virtual');
+      var totalVoucher = getTotalsFor(stockTotals, 'Voucher');
+      var totalPromotion = getTotalsForPromotions(promotionTotals);
+
+      var stockObject = {
+        totalRetail: totalItems,
+        totalVirtual: totalVirtual,
+        totalVoucher: totalVoucher,
+        totalPromotion: totalPromotion
+      };
+
+      setNetTotals(stockObject);
+    }
+
     function initData() {
-      reconciliationFactory.getStockTotals($routeParams.storeInstanceId).then(function (dataFromAPI) {});
+      var promiseArray = [];
+      promiseArray.push(reconciliationFactory.getItemTypesList());
+      promiseArray.push(reconciliationFactory.getStockTotals($routeParams.storeInstanceId));
+      promiseArray.push(reconciliationFactory.getPromotionTotals($routeParams.storeInstanceId));
+      $q.all(promiseArray).then(setupData);
       getStockData();
       getCashBagData();
     }
 
-    function formatDates(storeInstanceData){
+    function formatDates(storeInstanceData) {
       storeInstanceData.scheduleDate = dateUtility.formatDateForApp(storeInstanceData.scheduleDate);
       return storeInstanceData;
     }

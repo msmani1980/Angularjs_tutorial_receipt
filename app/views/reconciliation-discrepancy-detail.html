@@ -89,23 +89,23 @@
                   </tr>
                   <tr>
                     <td>Gross Value of LMP Stock</td>
-                    <td>10.3</td>
+                    <td>{{stockTotals.totalRetail.totalLMP}}</td>
                   </tr>
                   <tr>
                     <td>Virtual Items</td>
-                    <td>+1.3</td>
+                    <td>+{{stockTotals.totalVirtual.totalLMP}}</td>
                   </tr>
                   <tr>
                     <td>Voucher Items</td>
-                    <td>+1.3</td>
+                    <td>+{{stockTotals.totalVoucher.totalLMP}}</td>
                   </tr>
                   <tr>
                     <td>Promotion Discounts</td>
-                    <td>-10.3</td>
+                    <td>-{{stockTotals.totalPromotion.totalLMP}}</td>
                   </tr>
                   <tr class="active">
                     <td>Net Value of LMP Stock</td>
-                    <td>10.3</td>
+                    <td>{{stockTotals.totalNet.netLMP}}</td>
                   </tr>
                 </table>
               </div>
@@ -116,23 +116,23 @@
                   </tr>
                   <tr>
                     <td>Gross Value of ePOS Sales</td>
-                    <td>10.3</td>
+                    <td>{{stockTotals.totalRetail.totalEPOS}}</td>
                   </tr>
                   <tr>
                     <td><a ng-click="showModal('Virtual')">Virtual Items</a></td>
-                    <td>+1.3</td>
+                    <td>+{{stockTotals.totalVirtual.totalEPOS}}</td>
                   </tr>
                   <tr>
                     <td><a ng-click="showModal('Voucher')">Voucher Items</a></td>
-                    <td>+1.3</td>
+                    <td>+{{stockTotals.totalVoucher.totalEPOS}}</td>
                   </tr>
                   <tr>
                     <td><a ng-click="showModal('Promotion')">Promotion Discount</a></td>
-                    <td>-10.3</td>
+                    <td>-{{stockTotals.totalPromotion.totalEPOS}}</td>
                   </tr>
                   <tr class="active">
                     <td>Net Value of ePOS Sales</td>
-                    <td>10.3</td>
+                    <td>{{stockTotals.totalNet.netEPOS}}</td>
                   </tr>
                 </table>
               </div>

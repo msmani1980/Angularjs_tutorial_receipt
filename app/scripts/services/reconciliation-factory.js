@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('reconciliationFactory', function ($q, storeInstanceService, storesService, stationsService, reconciliationService) {
+  .factory('reconciliationFactory', function ($q, storeInstanceService, storesService, stationsService, reconciliationService, itemTypesService) {
 
     var getLMPStockMockData = function () {
       var mockLMPData = [
@@ -179,9 +179,44 @@ angular.module('ts5App')
       return reconciliationService.getStockTotals(storeInstanceId);
     }
 
+    function getPromotionTotals(storeInstanceId) {
+      return reconciliationService.getPromotionTotals(storeInstanceId);
+    }
+
+    function getItemTypesList() {
+      return itemTypesService.getItemTypesList();
+    }
+
+    function getCHRevenue(storeInstanceId) {
+      var getCHRevenueDeferred = $q.defer();
+      var promiseArray = [
+        reconciliationService.getCHCashBagRevenue(storeInstanceId),
+        reconciliationService.getCHCreditCardRevenue(storeInstanceId),
+        reconciliationService.getCHDiscountRevenue(storeInstanceId)
+      ];
+      $q.all(promiseArray).then(getCHRevenueDeferred.resolve, getCHRevenueDeferred.reject);
+      return getCHRevenueDeferred.promise;
+    }
+
+    function getEPOSRevenue(storeInstanceId) {
+      var getEPOSRevenueDeferred = $q.defer();
+      var promiseArray = [
+        reconciliationService.getEPOSCashBagRevenue(storeInstanceId),
+        reconciliationService.getEPOSCreditCardRevenue(storeInstanceId),
+        reconciliationService.getEPOSDiscountRevenue(storeInstanceId)
+      ];
+      $q.all(promiseArray).then(getEPOSRevenueDeferred.resolve, getEPOSRevenueDeferred.reject);
+      return getEPOSRevenueDeferred.promise;
+    }
+
     return {
       getStoreInstanceDetails: getStoreInstanceDetails,
       getStockTotals: getStockTotals,
+      getPromotionTotals: getPromotionTotals,
+      getItemTypesList: getItemTypesList,
+      getCHRevenue: getCHRevenue,
+      getEPOSRevenue: getEPOSRevenue,
+
       getLMPStockMockData: getLMPStockMockData,
       getCashBagMockData: getCashBagMockData,
       getMockReconciliationDataList: getMockReconciliationDataList

@@ -4,25 +4,45 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('served/store-instance.json'));
+  beforeEach(module('served/stock-totals.json'));
+  beforeEach(module('served/promotion-totals.json'));
+  beforeEach(module('served/item-types.json'));
 
   var scope;
   var ReconciliationDiscrepancyDetail;
   var controller;
   var location;
   var reconciliationFactory;
+
   var lmpStockDeferred;
   var lmpStockResponseJSON;
+
   var cashBagsDeferred;
   var cashBagsResponseJSON;
+
   var getStoreInstanceDetailsDeferred;
   var storeInstanceJSON;
+
+  var getStockTotalsDeferred;
+  var getStockTotalsJSON;
+
+  var getPromotionTotalsDeferred;
+  var getPromotionTotalsJSON;
+
+  var getItemTypesListDeferred;
+  var getItemTypesListJSON;
+
+
   var routeParams;
   var dateUtility;
 
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
-    inject(function (_servedStoreInstance_) {
+    inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_) {
       storeInstanceJSON = _servedStoreInstance_;
+      getPromotionTotalsJSON = _servedPromotionTotals_;
+      getStockTotalsJSON = _servedStockTotals_;
+      getItemTypesListJSON = _servedItemTypes_;
     });
 
     location = $location;
@@ -34,6 +54,18 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     getStoreInstanceDetailsDeferred = $q.defer();
     getStoreInstanceDetailsDeferred.resolve(storeInstanceJSON);
     spyOn(reconciliationFactory, 'getStoreInstanceDetails').and.returnValue(getStoreInstanceDetailsDeferred.promise);
+
+    getStockTotalsDeferred = $q.defer();
+    getStockTotalsDeferred.resolve(getStockTotalsJSON);
+    spyOn(reconciliationFactory, 'getStockTotals').and.returnValue(getStockTotalsDeferred.promise);
+
+    getPromotionTotalsDeferred = $q.defer();
+    getPromotionTotalsDeferred.resolve(getPromotionTotalsJSON);
+    spyOn(reconciliationFactory, 'getPromotionTotals').and.returnValue(getPromotionTotalsDeferred.promise);
+
+    getItemTypesListDeferred = $q.defer();
+    getItemTypesListDeferred.resolve(getItemTypesListJSON);
+    spyOn(reconciliationFactory, 'getItemTypesList').and.returnValue(getItemTypesListDeferred.promise);
 
     lmpStockResponseJSON = [{id: 1}]; // stub for now until API is complete
     lmpStockDeferred = $q.defer();
@@ -70,9 +102,16 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(scope.storeInstance.scheduleDate).toBe(dateUtility.formatDateForApp(storeInstanceJSON.scheduleDate));
       });
 
-      it('should call get LMP stock data', function () {
-        expect(reconciliationFactory.getLMPStockMockData).toHaveBeenCalled();
-        expect(scope.LMPStock).toBeDefined();
+      it('should call getStockTotals', function () {
+        expect(reconciliationFactory.getStockTotals).toHaveBeenCalled();
+      });
+
+      it('should call getPromotionTotals', function () {
+        expect(reconciliationFactory.getPromotionTotals).toHaveBeenCalled();
+      });
+
+      it('should call getItemTypesList', function () {
+        expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
       });
 
       it('should call get cash bag data', function () {
