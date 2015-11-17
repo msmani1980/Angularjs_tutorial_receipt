@@ -48,6 +48,26 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return (matchedObject) ? matchedObject.name : '';
     };
 
+    this.updateInstanceStatusAndRedirect = function (stepObject) {
+      if (!stepObject) {
+        $location.url('/store-instance-dashboard');
+        return;
+      }
+
+      $this.showLoadingModal('Updating Status...');
+      var statusUpdatePromiseArray = [];
+      statusUpdatePromiseArray.push(storeInstancePackingFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
+      if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
+        statusUpdatePromiseArray.push(storeInstancePackingFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, stepObject.storeOne.stepName));
+      }
+
+      $q.all(statusUpdatePromiseArray).then(function () {
+        $this.hideLoadingModal();
+        $location.url(stepObject.uri);
+      }, $this.showErrors);
+
+    };
+
     this.saveStoreInstanceItem = function (storeInstanceId, item) {
       if (item.id) {
         return storeInstancePackingFactory.updateStoreInstanceItem(storeInstanceId, item.id, item);
@@ -280,6 +300,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
+    $scope.goToPreviousStep = function () {
+      $this.showLoadingModal('Updating Status...');
+      var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
+      $this.updateInstanceStatusAndRedirect(prevStep);
+    };
+
     $scope.setUpdateStatusFlag = function (shouldUpdateStatus) {
       $scope.shouldUpdateStatus = shouldUpdateStatus;
     };
@@ -301,9 +327,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $this.addOffloadItemsToPayload(promiseArray, true);
       }
       $q.all(promiseArray).then(function () {
+        $this.hideLoadingModal();
         if ($scope.shouldUpdateStatus) {
-          console.log('UPDATE STATUS');
-          $this.hideLoadingModal();
+          $scope.updateInstanceStatusAndRedirect($scope.nextStep);
           // update Status To Next
           // redirect to home page
         } else {
