@@ -72,5 +72,66 @@
               ]
           }
       ]
+  },
+  "STOCKMANAGER": {
+    "STOCKDASHBOARD": [
+        {
+            "id": 285,
+            "featureCode": "STOCKDASHBOARD",
+            "resource": {
+                "id": 48,
+                "apiName": "/api/caterer-stations",
+                "resourceName": null,
+                "stationCheck": null,
+                "companyIdUrl": "HEADER"
+            },
+            "permissionCode": [
+                "R",
+                "U",
+                "C",
+                "D"
+            ]
+        }
+      ],
+      "STOCKREPORT": [
+          {
+              "id": 277,
+              "featureCode": "STOCKREPORT",
+              "resource": {
+                  "id": 48,
+                  "apiName": "/api/caterer-stations",
+                  "resourceName": null,
+                  "stationCheck": null,
+                  "companyIdUrl": "HEADER"
+              },
+              "permissionCode": [
+                  "R",
+                  "U",
+                  "C",
+                  "D"
+              ]
+          }
+      ],
+  },
+  "STATIONOPERATIONS": {
+    "RECEIVE": [
+        {
+            "id": 424,
+            "featureCode": "RECEIVE",
+            "resource": {
+                "id": 146,
+                "apiName": "/api/dispatch",
+                "resourceName": "/store-instances/\\d+/status/\\d+",
+                "stationCheck": null,
+                "companyIdUrl": "HEADER"
+            },
+            "permissionCode": [
+                "R",
+                "U",
+                "C",
+                "D"
+            ]
+        }
+    ],
   }
 }
