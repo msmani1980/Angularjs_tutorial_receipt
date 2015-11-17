@@ -65,7 +65,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $this.hideLoadingModal();
         $location.url(stepObject.uri);
       }, $this.showErrors);
-
     };
 
     this.saveStoreInstanceItem = function (storeInstanceId, item) {
@@ -329,13 +328,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $q.all(promiseArray).then(function () {
         $this.hideLoadingModal();
         if ($scope.shouldUpdateStatus) {
-          $scope.updateInstanceStatusAndRedirect($scope.nextStep);
-          // update Status To Next
-          // redirect to home page
+          $this.updateInstanceStatusAndRedirect($this.nextStep);
         } else {
-          console.log('EXIT');
-          $this.hideLoadingModal();
-          // redirect to dashboard
+          $location.url('/store-instance-dashboard');
         }
       });
     };
