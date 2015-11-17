@@ -156,7 +156,7 @@
         <!-- New Pick List Items-->
         <tr ng-repeat="item in newPickListItems track by $index" ng-hide="readOnly">
           <td>
-            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterPickListItems()">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
@@ -291,7 +291,7 @@
         <!-- New Offload List Items-->
         <tr ng-repeat="item in newOffloadListItems track by $index" ng-hide="readOnly">
           <td>
-            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="warnForDuplicateSelection(item)">
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterOffloadListItems()">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>

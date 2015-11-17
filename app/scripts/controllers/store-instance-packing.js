@@ -129,6 +129,27 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }, this.errorHandler);
     };
 
+    $scope.filterPickListItems = function () {
+      $scope.filteredItemsList = lodash.filter($scope.masterItemsList, function (item) {
+        var pickListMatch = (lodash.findWhere($scope.pickListItems, {itemMasterId: item.id}));
+        var newPickListMatch = (lodash.findWhere($scope.newPickListItems, {masterItem: item}));
+        return !pickListMatch && !newPickListMatch;
+      });
+    };
+
+    $scope.filterOffloadListItems = function () {
+      $scope.filteredOffloadItemsList = lodash.filter($scope.masterItemsList, function (item) {
+        var offloadMatch = (lodash.findWhere($scope.offloadListItems, {itemMasterId: item.id}));
+        var newOffloadMatch = (lodash.findWhere($scope.newOffloadListItems, {masterItem: item}));
+        var redispatchMatch = ($routeParams.action === 'redispatch') ? (lodash.findWhere($scope.pickListItems, {
+          itemMasterId: item.id,
+          isInOffload: false,
+          shouldDisplayOffloadData: true
+        })) : false;
+        return !offloadMatch && !newOffloadMatch && !redispatchMatch;
+      });
+    };
+
     this.removeNewItem = function (itemToDelete) {
       var workingArray = (itemToDelete.isInOffload) ? $scope.newOffloadListItems : $scope.newPickListItems;
       var index = workingArray.indexOf(itemToDelete);
@@ -156,6 +177,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       } else {
         $this.removeNewItem(itemToDelete);
       }
+      $scope.filterPickListItems();
+      $scope.filterOffloadListItems();
     };
 
     $scope.showDeleteWarning = function (item) {
@@ -216,7 +239,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       angular.forEach(mergedItems, function (item) {
         if (item.pickedQuantity > 0) {
           var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
-          if(item.pickedId) {
+          if (item.pickedId) {
             payloadItem.id = item.pickedId;
           }
           promiseArray.push($this.saveStoreInstanceItem($routeParams.storeId, payloadItem));
@@ -230,7 +253,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       angular.forEach(itemsArray, function (item) {
         if (item.ullageQuantity > 0) {
           var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage');
-          if(item.ullageId) {
+          if (item.ullageId) {
             ullagePayloadItem.id = item.ullageId;
           }
           promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
@@ -238,7 +261,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         if (item.inboundQuantity > 0) {
           var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
           var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName);
-          if(item.inboundId) {
+          if (item.inboundId) {
             offloadPayloadItem.id = item.inboundId;
           }
           promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
@@ -298,20 +321,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $scope.saveButtonName = 'Exit';
         showToast('warning', 'Store Instance Status', 'This store instance is not ready for packing');  // TODO
       }
-    };
-
-    this.filterAvailableMasterItems = function () {
-      $scope.filteredItemsList = lodash.filter($scope.masterItemsList, function (item) {
-        return !(lodash.findWhere($scope.pickListItems, {
-          itemMasterId: item.id
-        }));
-      });
-
-      $scope.filteredOffloadItemsList = lodash.filter($scope.masterItemsList, function (item) {
-        var isInOffloadList = (lodash.findWhere($scope.offloadListItems, {itemMasterId: item.id}));
-        var isRedispatchInPickList = ($routeParams.action === 'redispatch') ? (lodash.findWhere($scope.pickListItems, {itemMasterId: item.id, isInOffload: false, shouldDisplayOffloadData: true})) : false;
-        return !angular.isDefined(isInOffloadList) && !angular.isDefined(isRedispatchInPickList);
-      });
     };
 
     this.createFreshItem = function (itemFromAPI, isFromMenu) {
@@ -421,7 +430,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if (responseCollection[3]) {
         $this.mergeRedispatchItems(angular.copy(responseCollection[3].response));
       }
-      $this.filterAvailableMasterItems();
+      $scope.filterOffloadListItems();
+      $scope.filterPickListItems();
       $this.hideLoadingModal();
     };
 
@@ -430,7 +440,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $routeParams.storeId;
       var getItemsPromises = [
         $this.getMasterItemsList(),
-      $this.getStoreInstanceMenuItems(storeInstanceForMenuItems),
+        $this.getStoreInstanceMenuItems(storeInstanceForMenuItems),
         $this.getStoreInstanceItems($routeParams.storeId)
       ];
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
