@@ -345,4 +345,115 @@ describe('Controller: StockTakeCtrl', function() {
 
   });
 
+  describe('The scope.addItems method', function() {
+    beforeEach(inject(function($controller) {
+      StockTakeCtrl = $controller('StockTakeCtrl', {
+        $scope: scope,
+        $routeParams: routeParams = {
+          state: 'create',
+          id: 3
+        }
+      });
+      scope.$digest();
+    }));
+
+    it('scope.addedItems should add 3 items', function() {
+      scope.numberOfItems = 3;
+      scope.addItems();
+      expect(scope.addedItems.length).toBe(3);
+    });
+
+    it('after removing 1 item, the length should be 2', function() {
+      scope.numberOfItems = 3;
+      scope.addItems();
+      scope.removeAddedItem(0);
+      expect(scope.addedItems.length).toBe(2);
+    });
+
+    it('if addedItems exists, dont create it, test branch', function() {
+      scope.numberOfItems = 3;
+      scope.addedItems = [];
+      scope.addItems();
+      expect(scope.addedItems.length).toBe(3);
+    });
+
+  });
+
+  describe('The scope.showAddedItem method', function() {
+    beforeEach(inject(function($controller) {
+      StockTakeCtrl = $controller('StockTakeCtrl', {
+        $scope: scope,
+        $routeParams: routeParams = {
+          state: 'create',
+          id: 3
+        }
+      });
+      scope.$digest();
+    }));
+
+    it('with 3 addedItems, scope.showAddedItems should return true', function() {
+      scope.numberOfItems = 3;
+      scope.addItems();
+      expect(scope.showAddedItem()).toBeTruthy();
+    });
+
+    it('with no addedItems, scope.showAddedItem should return false', function() {
+      expect(scope.showAddedItem()).toBeFalsy();
+    });
+
+    it('if state is review, scope.showAddedItem should return true', function() {
+      spyOn(scope, 'showAddedItem').and.callThrough();
+      scope.$digest();
+      var item = {
+        id: 1,
+        index: 0,
+        itemCode: '7up123',
+        itemName: '7up',
+        itemObject: {
+          itemName: '7up',
+          itemCode: '7up123'
+        },
+        itemQuantity: 3
+      };
+      scope.showAddedItem(item, 'review');
+      scope.$digest();
+      expect(scope.showAddedItem).toHaveBeenCalled();
+      expect(scope.showAddedItem(item, 'review')).toBeTruthy();
+    });
+
+  });
+
+  describe('The scope.omitSelectedItems method', function() {
+    beforeEach(inject(function($controller) {
+      StockTakeCtrl = $controller('StockTakeCtrl', {
+        $scope: scope,
+        $routeParams: routeParams = {
+          state: 'create',
+          id: 3
+        }
+      });
+      scope.$digest();
+    }));
+
+    it('scope.addedItems should add 3 items', function() {
+      spyOn(scope, 'omitSelectedItems').and.callThrough();
+      var item = {
+        id: 1,
+        index: 0,
+        itemCode: '7up123',
+        itemName: '7up',
+        itemObject: {
+          itemName: '7up',
+          itemCode: '7up123'
+        },
+        itemQuantity: 3
+      };
+      scope.addedItems = [];
+      scope.addedItems.push(item);
+      scope.omitSelectedItems(item);
+      expect(scope.omitSelectedItems).toBeTruthy();
+    });
+
+  });
+
 });
