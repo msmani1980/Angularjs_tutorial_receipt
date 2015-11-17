@@ -12,6 +12,7 @@ describe('Service: storeInstancePackingFactory', function () {
   var itemsService;
   var recordsService;
   var companyReasonCodesService;
+  var featureThresholdsService;
 
   beforeEach(inject(function (_storeInstancePackingFactory_, $injector) {
     storeInstancePackingFactory = _storeInstancePackingFactory_;
@@ -21,6 +22,7 @@ describe('Service: storeInstancePackingFactory', function () {
     itemsService = $injector.get('itemsService');
     recordsService = $injector.get('recordsService');
     companyReasonCodesService = $injector.get('companyReasonCodesService');
+    featureThresholdsService = $injector.get('featureThresholdsService');
 
 
     spyOn(storeInstanceFactory, 'getStoreDetails');
@@ -36,6 +38,7 @@ describe('Service: storeInstancePackingFactory', function () {
     spyOn(storeInstanceService, 'getStoreInstanceItemList');
     spyOn(companyReasonCodesService, 'getAll');
     spyOn(itemsService, 'getItemsList');
+    spyOn(featureThresholdsService, 'getThresholdList');
   }));
 
   describe('storeInstanceService calls', function () {
@@ -83,10 +86,17 @@ describe('Service: storeInstancePackingFactory', function () {
     });
   });
 
-  describe('itemsService calls', function () {
+  describe('storeInstanceFactory calls', function () {
     it('should call getStoreDetails', function () {
       storeInstancePackingFactory.getStoreDetails();
       expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalled();
+    });
+  });
+
+  describe('featureThresholdsService calls', function () {
+    it('should call getStoreDetails', function () {
+      storeInstancePackingFactory.getThresholdList();
+      expect(featureThresholdsService.getThresholdList).toHaveBeenCalled();
     });
   });
 

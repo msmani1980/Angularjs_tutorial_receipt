@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: featureThresholdsService', function() {
+fdescribe('Service: featureThresholdsService', function() {
 
   // load the service's module
   beforeEach(module('ts5App'));
@@ -28,10 +28,9 @@ describe('Service: featureThresholdsService', function() {
     });
 
     it('should make GET request to API', function () {
-      var expectedURL = /api\/\d+\/thresholds$/;
+      var expectedURL = /api\/feature\/STOREDISPATCH\/thresholds$/;
       httpBackend.expectGET(expectedURL).respond(200, {});
-      var fakeFeatureId = 3;
-      featureThresholdsService.getThresholdList(fakeFeatureId).then(function (response) {
+      featureThresholdsService.getThresholdList('STOREDISPATCH').then(function (response) {
         expect(response).toBeDefined();
       });
       httpBackend.flush();
@@ -44,11 +43,9 @@ describe('Service: featureThresholdsService', function() {
     });
 
     it('should make GET request to API', function () {
-      var expectedURL = /api\/3\/thresholds\/1$/;
+      var expectedURL = /api\/feature\/FAKECODE\/thresholds\/1$/;
       httpBackend.expectGET(expectedURL).respond(200, {});
-      var fakeFeatureId = 3;
-      var fakeThresholdId = 1;
-      featureThresholdsService.getThreshold(fakeFeatureId, fakeThresholdId).then(function (response) {
+      featureThresholdsService.getThreshold('FAKECODE', 1).then(function (response) {
         expect(response).toBeDefined();
       });
       httpBackend.flush();

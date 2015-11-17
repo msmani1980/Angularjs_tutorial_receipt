@@ -80,16 +80,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.getThresholdVariance = function () {
-      // TODO: update getThresholdList API, also check if 'dispatch' feature exists first
-      $scope.variance = 10; // mock until API is done
-
-      //storeInstancePackingFactory.getThresholdList('dispatch').then(function (dataFromAPI) {
-      //  if (dataFromAPI.response) {
-      //    $scope.variance = angular.copy(dataFromAPI.response[0].percentage);
-      //  } else {
-      //    $scope.variance = 99999999;
-      //  }
-      //}, showErrors);
+      // TODO: getThreshold for current date only
+      storeInstancePackingFactory.getThresholdList('STOREDISPATCH').then(function (dataFromAPI) {
+        if (dataFromAPI.response) {
+          $scope.variance = angular.copy(dataFromAPI.response[0].percentage);
+        } else {
+          $scope.variance = 99999999;
+        }
+      }, $this.showErrors);
     };
 
 
@@ -146,6 +144,41 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then(function (response) {
         $scope.storeDetails = angular.copy(response);
       }, this.errorHandler);
+    };
+
+    $scope.showVarianceWarningClass = function (item) {
+      return (item.exceedsVariance) ? 'danger' : '';
+    };
+
+    this.calculateVariance = function (item) {
+      if(!item.isMenuItem) {
+        item.exceedsVariance = false;
+        return false;
+      }
+      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 1;
+      var dispatchedQuantity = parseInt(angular.copy(item.pickedQuantity)) || 0;
+
+      var threshold;
+      threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
+      item.exceedsVariance = (threshold > $scope.variance);
+    };
+
+    this.checkVarianceOnAllItems = function () {
+      if($routeParams.action === 'end-instance' || $routeParams.action === 'replenish') {
+        return true;
+      }
+      var highVarianceExists = false;
+      var allPickListItems = $scope.pickListItems.concat($scope.newPickListItems);
+      angular.forEach(allPickListItems, function (item) {
+        $this.calculateVariance(item);
+        highVarianceExists = highVarianceExists || item.exceedsVariance;
+      });
+
+      if(highVarianceExists) {
+        angular.element('#varianceWarningModal').modal('show');
+        return false;
+      }
+      return true;
     };
 
     $scope.canProceed = function () {
@@ -342,6 +375,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
+    $scope.checkFormBeforeSave = function () {
+      // TODO: check ullage quantities
+      var isVarianceOk = $this.checkVarianceOnAllItems();
+      if(isVarianceOk) {
+        $scope.save();
+      }
+    };
+
     $scope.shouldDisplayQuantityField = function (fieldName) {
       var actionToFieldMap = {
         'dispatch': ['template', 'picked'],
@@ -390,14 +431,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var countType = $this.getNameByIdFromArray(itemFromAPI.countTypeId, $scope.countTypes);
       if (countType === 'Warehouse Open' && !isFromRedispatchInstance) {
         itemToSet.pickedQuantity = itemFromAPI.quantity.toString();
+        itemToSet.oldPickedQuantity = itemFromAPI.quantity;
         itemToSet.pickedId = itemFromAPI.id;
       } else if (countType === 'Offload' || countType === 'Warehouse Close') {
         itemToSet.inboundQuantity = itemFromAPI.quantity.toString();
+        itemToSet.oldInboundQuantity = itemFromAPI.quantity;
         itemToSet.inboundId = itemFromAPI.id;
       } else if (countType === 'Ullage') {
         itemToSet.ullageQuantity = itemFromAPI.quantity.toString();
+        itemToSet.oldUllageQuantity = itemFromAPI.quantity;
         var ullageReason = lodash.findWhere($scope.ullageReasonCodes, {id: itemFromAPI.ullageReasonCode});
         itemToSet.ullageReason = ullageReason || null;
+        itemToSet.oldUllageReason = itemFromAPI.ullageReasonCode;
         itemToSet.ullageId = itemFromAPI.id;
       }
       itemToSet.countTypeId = itemFromAPI.countTypeId;

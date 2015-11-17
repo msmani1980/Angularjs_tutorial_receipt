@@ -1,6 +1,6 @@
 <div class="container">
 
-  <form name="storeInstancePackingForm" class="form" ng-submit="save()">
+  <form name="storeInstancePackingForm" class="form" ng-submit="checkFormBeforeSave()">
 
     <step-wizard steps="wizardSteps" save-trigger="setUpdateStatusFlag(false)" prev-trigger="goToPreviousStep()"
                  save-button-text="saveButtonName"></step-wizard>
@@ -24,7 +24,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default"
-                    ng-click="savePackingDataAndUpdateStatus(shouldUpdateStatusOnSave)" data-dismiss="modal">Yes
+                    ng-click="save()" data-dismiss="modal">Yes
             </button>
             <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
           </div>
