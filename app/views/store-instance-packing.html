@@ -1,11 +1,12 @@
 <div class="container">
 
-  <step-wizard steps="wizardSteps" save-trigger="save(false)" prev-trigger="goToPreviousStep()"
-               save-button-text="saveButtonName"></step-wizard>
+  <form name="storeInstancePackingForm" class="form" ng-submit="save()">
 
-  <form-error-dialog></form-error-dialog>
+    <step-wizard steps="wizardSteps" save-trigger="setUpdateStatusFlag(false)" prev-trigger="goToPreviousStep()"
+                 save-button-text="saveButtonName"></step-wizard>
 
-  <form name="storeInstancePackingForm" class="form" ng-submit="save(true)">
+    <form-error-dialog></form-error-dialog>
+
 
     <!-- INFORMATION BAR -->
     <store-instance-header></store-instance-header>
@@ -262,7 +263,8 @@
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
-              <ui-select-match placeholder="Select an Ullage Reason" allow-clear>{{ $select.selected.companyReasonCodeName }}
+              <ui-select-match placeholder="Select an Ullage Reason" allow-clear>{{
+                $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
@@ -272,7 +274,8 @@
             </ui-select>
           </td>
           <td>
-            <button type="button" ng-if="canDeleteItem(item) || isActionState('redispatch')" class="btn btn-sm btn-danger"
+            <button type="button" ng-if="canDeleteItem(item) || isActionState('redispatch')"
+                    class="btn btn-sm btn-danger"
                     ng-click="showDeleteWarning(item)" ng-hide="readOnly">
               <i class="fa fa-close"></i>
             </button>
@@ -316,7 +319,8 @@
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">
-              <ui-select-match placeholder="Select an Ullage Reason" allow-clear>{{ $select.selected.companyReasonCodeName }}
+              <ui-select-match placeholder="Select an Ullage Reason" allow-clear>{{
+                $select.selected.companyReasonCodeName }}
               </ui-select-match>
               <ui-select-choices
                 repeat="ullageReason in ullageReasonCodes | filter: {companyReasonCodeName:$select.search} | orderBy:'companyReasonCodeName'">
@@ -357,7 +361,7 @@
         <i class="fa fa-arrow-left"></i>
         <span class="btn-label">Prev</span>
       </button>
-      <button type="submit" class="btn btn-success" ng-show="canProceed()">
+      <button type="submit" class="btn btn-success" ng-click="setUpdateStatusFlag(true)" ng-show="canProceed()">
         <span class="btn-label">Next</span>
         <i class="fa fa-arrow-right"></i>
       </button>

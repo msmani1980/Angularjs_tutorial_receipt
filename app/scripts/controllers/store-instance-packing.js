@@ -276,9 +276,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
-    $scope.save = function (shouldUpdateStatus) {
-      // TODO: check for duplicate items, check for ullage quantities, check that form is valid
+    $scope.setUpdateStatusFlag = function (shouldUpdateStatus) {
+      $scope.shouldUpdateStatus = shouldUpdateStatus;
+    };
 
+    $scope.save = function () {
+      // TODO: check for ullage quantities
       var promiseArray = [];
       $this.addItemsToDeleteToPayload(promiseArray);
 
@@ -292,7 +295,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $this.addOffloadItemsToPayload(promiseArray, true);
       }
       $q.all(promiseArray).then(function () {
-        if (shouldUpdateStatus) {
+        if ($scope.shouldUpdateStatus) {
           console.log('UPDATE STATUS');
           // update Status To Next
           // redirect to home page
