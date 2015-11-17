@@ -105,7 +105,7 @@ describe('Service: reconciliationService', function () {
     it('should fetch reconciliation pre-check devices', function () {
       httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/devices/).respond(200, {});
       reconciliationService.getReconciliationPrecheckDevices({storeInstanceId: 123}).then(function (dataFromAPI) {
-        expect(dataFromAPI.storeInstanceId).toBeDefined();
+        expect(dataFromAPI).toBeDefined();
       });
       httpBackend.flush();
 
@@ -122,7 +122,7 @@ describe('Service: reconciliationService', function () {
     it('should fetch reconciliation pre-check cashbags', function () {
       httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/cashbags/).respond(200, {});
       reconciliationService.getReconciliationPrecheckCashbags({storeInstanceId: 123}).then(function (dataFromAPI) {
-        expect(dataFromAPI.storeInstanceId).toBeDefined();
+        expect(dataFromAPI).toBeDefined();
       });
       httpBackend.flush();
     });
