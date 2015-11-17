@@ -184,9 +184,7 @@ angular.module('ts5App')
     }
 
     function showErrors(dataFromAPI) {
-      if ('data' in dataFromAPI) {
-        $scope.formErrors = dataFromAPI.data;
-      }
+      $scope.errorResponse = dataFromAPI;
       $scope.displayError = true;
       setupModels();
     }
