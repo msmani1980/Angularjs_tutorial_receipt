@@ -422,11 +422,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         item.countTypeName = $this.getNameByIdFromArray(item.countTypeId, $scope.countTypes);
       });
       items = lodash.sortBy(items, 'countTypeName');
+
       angular.forEach(items, function (item) {
         var pickListMatch = lodash.findWhere($scope.pickListItems, {itemMasterId: item.itemMasterId});
         var offloadListMatch = lodash.findWhere($scope.offloadListItems, {itemMasterId: item.itemMasterId});
         var itemMatch;
-        if (!pickListMatch && !offloadListMatch) {
+        if ((!pickListMatch && !offloadListMatch) || (!offloadListMatch && item.countTypeName === 'Offload')) {
           var newItem = $this.createFreshItem(item, false);
           newItem.isInOffload = true;
           $scope.offloadListItems.push(newItem);
