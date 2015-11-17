@@ -12,6 +12,9 @@ angular.module('ts5App')
 
     var stockURL = ENV.apiUrl + '/api/reconciliation/stock-totals';
     var promotionURL = ENV.apiUrl + '/api/reconciliation/promotion-totals';
+    var reconciliationPrecheckDevicesURL = ENV.apiUrl + '/api/reconciliation/pre-check/:storeInstanceId/devices';
+    var reconciliationPrecheckSchedulesResourceURL = ENV.apiUrl + '/api/reconciliation/pre-check/:storeInstanceId/schedules';
+    var reconciliationPrecheckCashbagsResourceURL = ENV.apiUrl + '/api/reconciliation/pre-check/:storeInstanceId/cashbags';
 
     var revenueURL = {
       basePath: ENV.apiUrl + '/api/reconciliation/revenue-totals/',
@@ -33,11 +36,23 @@ angular.module('ts5App')
       },
       getRevenue: {
         method: 'GET'
+      },
+      getReconciliationPrecheckDevices: {
+        method: 'GET'
+      },
+      getReconciliationPrecheckSchedules: {
+        method: 'GET'
+      },
+      getReconciliationPrecheckCashbags: {
+        method: 'GET'
       }
     };
 
     var stockResource = $resource(stockURL, requestParameters, actions);
     var promotionResource = $resource(promotionURL, requestParameters, actions);
+    var reconciliationPrecheckDevicesResource = $resource(reconciliationPrecheckDevicesURL, requestParameters, actions);
+    var getReconciliationPrecheckSchedulesResource = $resource(reconciliationPrecheckSchedulesResourceURL, requestParameters, actions);
+    var getReconciliationPrecheckCashbagsResource = $resource(reconciliationPrecheckCashbagsResourceURL, requestParameters, actions);
 
     function getStockTotals(storeInstanceId) {
       var payload = {
@@ -88,6 +103,18 @@ angular.module('ts5App')
       return getResource(storeInstanceId, 'discount', 'epos');
     }
 
+    var getReconciliationPrecheckDevices = function (payload) {
+      return reconciliationPrecheckDevicesResource.getReconciliationPrecheckDevices(payload).$promise;
+    };
+
+    var getReconciliationPrecheckSchedules = function (payload) {
+      return getReconciliationPrecheckSchedulesResource.getReconciliationPrecheckSchedules(payload).$promise;
+    };
+
+    var getReconciliationPrecheckCashbags = function (payload) {
+      return getReconciliationPrecheckCashbagsResource.getReconciliationPrecheckCashbags(payload).$promise;
+    };
+
     return {
       getStockTotals: getStockTotals,
       getPromotionTotals: getPromotionTotals,
@@ -96,6 +123,9 @@ angular.module('ts5App')
       getCHDiscountRevenue: getCHDiscountRevenue,
       getEPOSCashBagRevenue: getEPOSCashBagRevenue,
       getEPOSCreditCardRevenue: getEPOSCreditCardRevenue,
-      getEPOSDiscountRevenue: getEPOSDiscountRevenue
+      getEPOSDiscountRevenue: getEPOSDiscountRevenue,
+      getReconciliationPrecheckDevices: getReconciliationPrecheckDevices,
+      getReconciliationPrecheckSchedules: getReconciliationPrecheckSchedules,
+      getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags
     };
   });

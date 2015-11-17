@@ -102,6 +102,27 @@ describe('Service: reconciliationService', function () {
       httpBackend.flush();
     });
 
+    it('should fetch reconciliation pre-check devices', function () {
+      httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/devices/).respond(200, {});
+      reconciliationService.getReconciliationPrecheckDevices({storeInstanceId: 123}).then(function (dataFromAPI) {
+        expect(dataFromAPI.storeInstanceId).toBeDefined();
+      });
+    });
+
+    it('should fetch reconciliation pre-check schedules', function () {
+      httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/schedules/).respond(200, {});
+      reconciliationService.getReconciliationPrecheckSchedules({storeInstanceId: 123}).then(function (dataFromAPI) {
+        expect(dataFromAPI).toBeDefined();
+      });
+    });
+
+    it('should fetch reconciliation pre-check cashbags', function () {
+      httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/cashbags/).respond(200, {});
+      reconciliationService.getReconciliationPrecheckCashbags({storeInstanceId: 123}).then(function (dataFromAPI) {
+        expect(dataFromAPI.storeInstanceId).toBeDefined();
+      });
+    });
+
   });
 
 });

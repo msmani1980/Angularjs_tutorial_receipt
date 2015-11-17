@@ -12,7 +12,7 @@ angular.module('ts5App')
     var $this = this;
     $scope.viewName = 'Company Relationships';
     $scope.isLoading = true;
-    $scope.isRejected = false;
+
     $scope.companyRelationshipListData = [];
     $scope.company = {};
     $scope.companyList = [];
@@ -23,11 +23,11 @@ angular.module('ts5App')
     };
 
     $scope.isPending = function () {
-      return $scope.isLoading && !$scope.isRejected;
+      return $scope.isLoading;
     };
 
     $scope.isFulfilled = function () {
-      return !$scope.isLoading && !$scope.isRejected;
+      return !$scope.isLoading;
     };
 
     function showToast(className, type, message) {
@@ -41,6 +41,11 @@ angular.module('ts5App')
     this.parseDate = function (date) {
       return Date.parse(date);
     };
+
+    function errorHandler(dataFromAPI) {
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
+    }
 
     function removeCompanyFromLocalList(company) {
       var index = $scope.companyRelationshipListData.indexOf(company);
@@ -57,12 +62,6 @@ angular.module('ts5App')
       companyRelationship.isEditing = false;
 
       showToast('success', 'Company Relationship', 'Successfully ' + messageAction);
-    }
-
-    function failCompanyRelationship(error/*, companyRelationship*/) {
-      showToast('warning', 'Company Relationship', 'Error submitting ' + error.companyName + '!');
-      $scope.displayError = true;
-      $scope.formErrors = error.data;
     }
 
     $scope.isActive = function (date) {
@@ -101,7 +100,7 @@ angular.module('ts5App')
           $scope.companyRelationshipListData.splice(index, 1);
         }
       }, function (error) {
-        failCompanyRelationship(error, $scope.companyRelationshipToDelete);
+        errorHandler(error, $scope.companyRelationshipToDelete);
       });
     };
 
@@ -133,7 +132,7 @@ angular.module('ts5App')
 
           successCompanyRelationship(response, companyRelationship, messageAction);
         }, function (error) {
-          failCompanyRelationship(error, companyRelationship);
+          errorHandler(error, companyRelationship);
         });
       } else {
         companyRelationshipFactory.createCompanyRelationship(companyRelationship).then(function (response) {
@@ -141,7 +140,7 @@ angular.module('ts5App')
 
           successCompanyRelationship(response, companyRelationship, messageAction);
         }, function (error) {
-          failCompanyRelationship(error, companyRelationship);
+          errorHandler(error, companyRelationship);
         });
       }
     };
@@ -210,13 +209,6 @@ angular.module('ts5App')
       setupCompanyAndCompanyListScope(response);
       var promises = generateCompanyRelationshipPromises();
       return $q.all(promises);
-    };
-
-    var errorHandler = function (/*error*/) {
-      $scope.isLoading = false;
-      $scope.isRejected = true;
-      showToast('warning', $scope.viewName, 'API unavailable');
-      return;
     };
 
     var getCompanyRelationshipListByCompanyAndTypeSuccessHandler = function (response) {
