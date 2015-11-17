@@ -5,15 +5,17 @@
 describe('Controller: ExchangeRatesCtrl', function() {
   // load the controller's module
 
-  var ExchangeRatesCtrl,
-    scope,
-    $httpBackend,
-    companyJSON,
-    currenciesJSON,
-    companyCurrencyGlobalsJSON,
-    companyPreferencesJSON,
-    dailyExchangeRatesJSON,
-    previousExchangeRatesJSON;
+  var ExchangeRatesCtrl;
+  var scope;
+  var $httpBackend;
+  var companyJSON;
+  var currenciesJSON;
+  var companyCurrencyGlobalsJSON;
+  var companyPreferencesJSON;
+  var dailyExchangeRatesJSON;
+  var previousExchangeRatesJSON;
+  var saveDailyExchangeRatesDefferred;
+  var currencyFactory;
 
   beforeEach(module('ts5App'));
   beforeEach(module(
@@ -27,7 +29,7 @@ describe('Controller: ExchangeRatesCtrl', function() {
 
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function($controller, $rootScope, $injector) {
+  beforeEach(inject(function($controller, $rootScope, $injector,$q) {
     inject(function(_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_,
       _servedDailyExchangeRates_, _servedPreviousExchangeRate_, _servedCompanyPreferences_) {
       companyJSON = _servedCompany_;
@@ -39,6 +41,10 @@ describe('Controller: ExchangeRatesCtrl', function() {
     });
 
     $httpBackend = $injector.get('$httpBackend');
+    currencyFactory = $injector.get('currencyFactory');
+
+    saveDailyExchangeRatesDefferred = $q.defer();
+    spyOn(currencyFactory, 'saveDailyExchangeRates').and.returnValue(saveDailyExchangeRatesDefferred.promise);
 
     $httpBackend.whenGET(/company-preferences/).respond(companyPreferencesJSON);
     $httpBackend.whenGET(/companies/).respond(companyJSON);
@@ -128,7 +134,6 @@ describe('Controller: ExchangeRatesCtrl', function() {
 
     it('should create payload with today date', function() {
       scope.checkVarianceAndSave(false);
-      $httpBackend.flush();
       expect(scope.payload.dailyExchangeRate.exchangeRateDate).toBe(moment().format('YYYYMMDD').toString());
     });
 
@@ -140,15 +145,11 @@ describe('Controller: ExchangeRatesCtrl', function() {
         bankExchangeRate: '0.1234'
       };
       scope.checkVarianceAndSave(false);
-      $httpBackend.flush();
-
       expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies[0]).toEqual(expectedCurrencyObject);
     });
 
     it('should not alert of variance', function() {
       scope.checkVarianceAndSave(false);
-      $httpBackend.flush();
-
       expect(scope.varianceObject).toEqual([]);
     });
 
@@ -160,6 +161,34 @@ describe('Controller: ExchangeRatesCtrl', function() {
         code: 'USD',
         percentage: 13
       });
+    });
+
+    describe('the error handler', function () {
+
+      var mockError = {
+        status:400,
+        statusText: 'Bad Request',
+        response: {
+          field:'menu date',
+          code: '024'
+        }
+      };
+
+      beforeEach(function() {
+        scope.$digest();
+        scope.saveDailyExchangeRates(true);
+        saveDailyExchangeRatesDefferred.reject(mockError);
+        scope.$apply();
+      });
+
+      it('should set the displayError flag to true', function() {
+        expect(scope.displayError).toBeTruthy();
+      });
+
+      it('should set the errorResponse variable to API response', function() {
+        expect(scope.errorResponse).toEqual(mockError);
+      });
+
     });
 
   });
