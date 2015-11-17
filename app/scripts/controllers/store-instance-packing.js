@@ -73,21 +73,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       //}, showErrors);
     };
 
-    $scope.$watchGroup(['masterItemsList', 'pickListItems'], function () {
-      $scope.filteredItemsList = lodash.filter($scope.masterItemsList, function (item) {
-        return !(lodash.findWhere($scope.pickListItems, {
-          itemMasterId: item.id
-        }));
-      });
-    });
-
-    $scope.$watchGroup(['masterItemsList', 'offloadListItems'], function () {
-      $scope.filteredOffloadItemsList = lodash.filter($scope.masterItemsList, function (item) {
-        return !(lodash.findWhere($scope.offloadListItems, {
-          itemMasterId: item.id
-        }));
-      });
-    });
 
     this.getStoreInstanceMenuItems = function (storeInstanceId) {
       var payloadDate = dateUtility.formatDateForAPI(angular.copy($scope.storeDetails.scheduleDate));
@@ -111,9 +96,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         endDate: payloadDate,
         characteristicId: $scope.characteristicFilterId
       };
-      storeInstancePackingFactory.getItemsMasterList(filterPayload).then(function (response) {
-        $scope.masterItemsList = angular.copy(response.masterItems);
-      }, this.errorHandler);
+      return storeInstancePackingFactory.getItemsMasterList(filterPayload);
     };
 
     this.getUllageReasonCodes = function () {
@@ -317,6 +300,20 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    this.filterAvailableMasterItems = function () {
+      $scope.filteredItemsList = lodash.filter($scope.masterItemsList, function (item) {
+        return !(lodash.findWhere($scope.pickListItems, {
+          itemMasterId: item.id
+        }));
+      });
+
+      $scope.filteredOffloadItemsList = lodash.filter($scope.masterItemsList, function (item) {
+        var isInOffloadList = (lodash.findWhere($scope.offloadListItems, {itemMasterId: item.id}));
+        var isRedispatchInPickList = ($routeParams.action === 'redispatch') ? (lodash.findWhere($scope.pickListItems, {itemMasterId: item.id, isInOffload: false, shouldDisplayOffloadData: true})) : false;
+        return !angular.isDefined(isInOffloadList) && !angular.isDefined(isRedispatchInPickList);
+      });
+    };
+
     this.createFreshItem = function (itemFromAPI, isFromMenu) {
       var newItem = {
         itemDescription: itemFromAPI.itemCode + ' - ' + itemFromAPI.itemName,
@@ -410,7 +407,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else if (offloadListMatch) {
           itemMatch = offloadListMatch;
         } else {
-          pickListMatch.prevId = item.id;
           pickListMatch.shouldDisplayOffloadData = true;
           itemMatch = pickListMatch;
         }
@@ -419,19 +415,22 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.mergeAllItems = function (responseCollection) {
-      $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[0].response));
-      $this.mergeStoreInstanceItems(angular.copy(responseCollection[1].response));
-      if (responseCollection[2]) {
-        $this.mergeRedispatchItems(angular.copy(responseCollection[2].response));
+      $scope.masterItemsList = angular.copy(responseCollection[0].masterItems);
+      $this.mergeStoreInstanceMenuItems(angular.copy(responseCollection[1].response));
+      $this.mergeStoreInstanceItems(angular.copy(responseCollection[2].response));
+      if (responseCollection[3]) {
+        $this.mergeRedispatchItems(angular.copy(responseCollection[3].response));
       }
+      $this.filterAvailableMasterItems();
       $this.hideLoadingModal();
     };
 
-    this.getAllStoreInstanceItems = function () {
+    this.getAllItems = function () {
       var storeInstanceForMenuItems = ($routeParams.action === 'replenish') ? $scope.storeDetails.replenishStoreInstanceId :
         $routeParams.storeId;
       var getItemsPromises = [
-        $this.getStoreInstanceMenuItems(storeInstanceForMenuItems),
+        $this.getMasterItemsList(),
+      $this.getStoreInstanceMenuItems(storeInstanceForMenuItems),
         $this.getStoreInstanceItems($routeParams.storeId)
       ];
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
@@ -483,8 +482,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.completeInitializeAfterDependencies = function () {
       $this.setInstanceReadOnly();
-      $this.getMasterItemsList();
-      $this.getAllStoreInstanceItems();
+      $this.getAllItems();
     };
 
     this.init = function () {
