@@ -1,3 +1,6 @@
+<error-dialog form-object="employeeCommissionForm" error-response="errorResponse" display="displayError">
+</error-dialog>
+
 <form name="employeeCommissionForm" class="form edit-form" ng-submit="submitForm()">
 
   <div class="edit-controls">
@@ -35,7 +38,7 @@
       <label class="control-label" for="itemName">Item Name *</label>
       <select
         class="form-control"
-        id="itemName"
+        name="itemName"
         required="true"
         ng-disabled="isCommissionReadOnly()"
         ng-options="item.itemName for item in itemList | orderBy:'itemName' track by item.id"
@@ -50,7 +53,7 @@
       <label class="control-label" for="saleType">Sale Type *</label>
       <select
         class="form-control"
-        id="saleType"
+        name="saleType"
         required="true"
         ng-disabled="isCommissionReadOnly()"
         ng-options="priceType.name for priceType in priceTypeList | orderBy:'name' track by priceType.id"
@@ -65,7 +68,7 @@
       <label class="control-label" for="rateType">Rate Type *</label>
       <select
         class="form-control"
-        id="rateType"
+        name="rateType"
         required="true"
         ng-disabled="isCommissionReadOnly()"
         ng-options="taxRate.taxRateType for taxRate in taxRateTypes | orderBy:'taxRateType' track by taxRate.id"
@@ -89,7 +92,7 @@
                required="true"
                ng-readonly="isCommissionReadOnly()"
                type="text"
-               name="percentage"
+               name="ratePercentage"
                placeholder="0.00"
                class="form-control"
                aria-label="Amount (to the nearest dollar)"/>

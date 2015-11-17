@@ -4,11 +4,30 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
 
   beforeEach(module('ts5App'));
   beforeEach(module('template-module'));
-  beforeEach(module('served/master-item-list.json', 'served/price-types.json', 'served/tax-rate-types.json',
-    'served/company-currency-globals.json', 'served/employee-commission.json'));
+  beforeEach(module(
+    'served/master-item-list.json',
+    'served/price-types.json',
+    'served/tax-rate-types.json',
+    'served/company-currency-globals.json',
+    'served/employee-commission.json'
+  ));
 
-
-  var EmployeeCommissionEditCtrl, employeeCommissionFactory, getItemsListDeferred, getPriceTypesListDeferred, getTaxRateTypesDeferred, getCompanyCurrenciesDeferred, getCommissionDeferred, masterItemsListJSON, priceTypeListJSON, taxRateTypesJSON, companyCurrencyJSON, employeeCommissionJSON, routeParams, scope;
+  var EmployeeCommissionEditCtrl;
+  var employeeCommissionFactory;
+  var getItemsListDeferred;
+  var getPriceTypesListDeferred;
+  var getTaxRateTypesDeferred;
+  var getCompanyCurrenciesDeferred;
+  var getCommissionDeferred;
+  var masterItemsListJSON;
+  var priceTypeListJSON;
+  var taxRateTypesJSON;
+  var companyCurrencyJSON;
+  var employeeCommissionJSON;
+  var routeParams;
+  var scope;
+  var createEmployeeCommissionDeffered;
+  var httpBackend;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $injector) {
     inject(function (_servedMasterItemList_, _servedPriceTypes_, _servedTaxRateTypes_, _servedCompanyCurrencyGlobals_,
@@ -18,6 +37,7 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
       taxRateTypesJSON = _servedTaxRateTypes_;
       companyCurrencyJSON = _servedCompanyCurrencyGlobals_;
       employeeCommissionJSON = _servedEmployeeCommission_;
+      httpBackend = $injector.get('$httpBackend');
     });
 
     getItemsListDeferred = $q.defer();
@@ -35,13 +55,15 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
     getCommissionDeferred = $q.defer();
     getCommissionDeferred.resolve(employeeCommissionJSON);
 
+    createEmployeeCommissionDeffered = $q.defer();
+
     employeeCommissionFactory = $injector.get('employeeCommissionFactory');
     spyOn(employeeCommissionFactory, 'getItemsList').and.returnValue(getItemsListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getPriceTypesList').and.returnValue(getPriceTypesListDeferred.promise);
     spyOn(employeeCommissionFactory, 'getTaxRateTypes').and.returnValue(getTaxRateTypesDeferred.promise);
     spyOn(employeeCommissionFactory, 'getCompanyCurrencies').and.returnValue(getCompanyCurrenciesDeferred.promise);
-    spyOn(employeeCommissionFactory, 'createCommission').and.returnValue(getCommissionDeferred.promise);
-    spyOn(employeeCommissionFactory, 'updateCommission').and.returnValue(getCommissionDeferred.promise);
+    spyOn(employeeCommissionFactory, 'createCommission').and.returnValue(createEmployeeCommissionDeffered.promise);
+    spyOn(employeeCommissionFactory, 'updateCommission').and.returnValue(createEmployeeCommissionDeffered.promise);
     spyOn(employeeCommissionFactory, 'getCommission').and.returnValue(getCommissionDeferred.promise);
 
     routeParams = {};
@@ -170,6 +192,48 @@ describe('Controller: EmployeeCommissionEditCtrl', function () {
       scope.$digest();
 
       expect(employeeCommissionFactory.createCommission).toHaveBeenCalledWith(expectedPayload);
+    });
+
+    describe('the error handler', function() {
+
+      var mockError;
+
+      beforeEach(function() {
+        httpBackend.expectGET(/./).respond(200);
+        mockError = {
+          status: 400,
+          statusText: 'Bad Request',
+          response: {
+            field: 'bogan',
+            code: '000'
+          }
+        };
+        scope.commission.selectedRateType = {taxRateType: 'Amount'};
+        expectedPayload.employeeCommission.fixeds = [];
+
+        angular.forEach(scope.companyCurrencies, function (currency) {
+          var currencyValue = 10.05;
+          expectedPayload.employeeCommission.fixeds.push({
+            fixedValue: currencyValue,
+            currencyId: currency.id
+          });
+          scope.commission.currenciesFields[currency.code] = currencyValue;
+        });
+
+        scope.submitForm();
+        scope.$digest();
+        createEmployeeCommissionDeffered.reject(mockError);
+        scope.$apply();
+      });
+
+      it('should set error data ', function () {
+        expect(scope.errorResponse).toEqual(mockError);
+      });
+
+      it('should return false', function () {
+        expect(scope.displayError).toBeTruthy();
+      });
+
     });
 
   });

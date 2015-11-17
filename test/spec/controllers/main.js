@@ -76,7 +76,31 @@ describe('Controller: MainCtrl', function () {
            package: 'POSTTRIP',
            role: 'POSTTRIP'
          }]
-       }
+       },{
+         title: 'Stock Manager',
+         menuItems: [{
+           name: 'Stock Dashboard',
+           route: '/#/stock-dashboard',
+           icon: 'icon-manage-schedule',
+           className: 'dashboard-stockDashboard',
+           package: 'STOCKMANAGER',
+           role: 'STOCKDASHBOARD'
+         }, {
+           name: 'Stock Take Report',
+           route: '/#/stock-take-report',
+           icon: 'icon-manage-schedule',
+           className: 'dashboard-stockTakeReport',
+           package: 'STOCKMANAGER',
+           role: 'STOCKREPORT'
+         }, {
+           name: 'Manage Goods Received',
+           route: '/#/manage-goods-receican you ved',
+           icon: 'icon-manage-schedule',
+           className: 'dashboard-manageGoodsReceived',
+           package: 'STATIONOPERATIONS',
+           role: 'RECEIVE'
+         }
+       ]}
       ]);
     });
   });
