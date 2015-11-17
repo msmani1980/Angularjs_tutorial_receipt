@@ -1,6 +1,7 @@
 <div class="panel panel-danger" ng-show="display" id="error-dialog">
 
   <div class="panel-heading">
+    <span ng-if="showCustomErrors()">Please Review the Error Below</span>
 		<span ng-if="showValidationErrors()">There are some issues with the fields below. Please update and try again.</span>
     <span ng-if="showInternalServerError()">A server side error has occured and your request was not processed.</span>
     <span ng-if="showFailedRequest()">{{ errorResponse.statusText}} - Please update and try again.</span>
@@ -8,7 +9,7 @@
 
 	<ul class="list-group">
 
-		<li class="list-group-item" ng-repeat="error in errorRequired">
+		<li class="list-group-item" ng-repeat="error in errorRequired" ng-show="showValidationErrors()">
 			<span class="label label-warning">
         <i class="fa fa-asterisk"></i>
       </span>
@@ -17,7 +18,7 @@
       </span>
 		</li>
 
-		<li class="list-group-item" ng-repeat="error in errorPattern">
+		<li class="list-group-item" ng-repeat="error in errorPattern"  ng-show="showValidationErrors()">
       <span class="label label-warning">
         <i class="fa fa-minus"></i>
       </span>
@@ -31,7 +32,7 @@
         <i class="fa fa-minus"></i>
       </span>
       <span class="error">
-  			The <strong>{{ error.field }}</strong> {{ error.value }}
+  			<strong>{{ error.field }}</strong> {{ error.value }}
       </span>
 		</li>
 
