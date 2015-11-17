@@ -57,15 +57,15 @@
         <thead>
         <tr>
           <th>Retail Item Details</th>
-          <th ng-show="shouldDisplayQuantityField('inbound')" width="10%">Inbound Quantity</th>
-          <th ng-show="shouldDisplayQuantityField('ullage')" width="10%">Ullage Quantity</th>
-          <th ng-show="shouldDisplayQuantityField('ullage')" width="15%">Ullage Reason</th>
-          <th width="10%" ng-show="shouldDisplayQuantityField('template')">Template Quantity</th>
-          <th width="10%" ng-show="shouldDisplayQuantityField('picked') || shouldDisplayQuantityField('dispatch')">
+          <th ng-show="shouldDisplayQuantityField('inbound')" width="5%">Inbound Quantity</th>
+          <th ng-show="shouldDisplayQuantityField('ullage')" width="5%">Ullage Quantity</th>
+          <th ng-show="shouldDisplayQuantityField('ullage')" width="25%">Ullage Reason</th>
+          <th width="5%" ng-show="shouldDisplayQuantityField('template')">Template Quantity</th>
+          <th width="5%" ng-show="shouldDisplayQuantityField('picked') || shouldDisplayQuantityField('dispatch')">
             <span ng-show="shouldDisplayQuantityField('dispatch')">Dispatched Quantity</span>
             <span ng-show="shouldDisplayQuantityField('picked')">Picked Quantity</span>
           </th>
-          <th width="10%" ng-show="shouldDisplayQuantityField('calcPicked')">Picked Quantity</th>
+          <th width="5%" ng-show="shouldDisplayQuantityField('calcPicked')">Picked Quantity</th>
           <th width="5%"></th>
         </tr>
         </thead>
@@ -151,7 +151,7 @@
         <tr ng-repeat="item in newPickListItems track by $index" ng-hide="readOnly">
           <td>
             <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterPickListItems()">
-              <ui-select-match placeholder="Select item from list" allow-clear>{{$select.selected.itemCode }} - {{
+              <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
@@ -286,7 +286,7 @@
         <tr ng-repeat="item in newOffloadListItems track by $index" ng-hide="readOnly">
           <td>
             <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterOffloadListItems()">
-              <ui-select-match placeholder="Select item from list" allow-clear>{{$select.selected.itemCode }} - {{
+              <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
               <ui-select-choices
