@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Service: featureThresholdsService', function() {
+describe('Service: featureThresholdsService', function() {
 
   // load the service's module
   beforeEach(module('ts5App'));
