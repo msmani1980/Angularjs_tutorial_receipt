@@ -50,14 +50,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.saveStoreInstanceItem = function (storeInstanceId, item) {
       if (item.id) {
-        //return storeInstancePackingFactory.updateStoreInstanceItem(storeInstanceId, item.id, item);
+        return storeInstancePackingFactory.updateStoreInstanceItem(storeInstanceId, item.id, item);
       } else {
-        //return storeInstancePackingFactory.createStoreInstanceItem(storeInstanceId, item);
+        return storeInstancePackingFactory.createStoreInstanceItem(storeInstanceId, item);
       }
     };
 
     this.deleteStoreInstanceItem = function (storeInstanceId, itemId) {
-      //return storeInstancePackingFactory.deleteStoreInstanceItem(storeInstanceId, itemId);
+      return storeInstancePackingFactory.deleteStoreInstanceItem(storeInstanceId, itemId);
     };
 
     this.getThresholdVariance = function () {
@@ -130,7 +130,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.canProceed = function () {
-      if($routeParams.action === 'end-instance') {
+      if ($routeParams.action === 'end-instance') {
         return ($scope.offloadListItems.length > 0 || $scope.newOffloadListItems.length > 0);
       }
       return ($scope.pickListItems.length > 0 || $scope.newPickListItems.length > 0);
@@ -166,20 +166,24 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.removeExistingItemFromArray = function (itemToDelete) {
       var storeInstance = (itemToDelete.isInOffload && $routeParams.action === 'redispatch') ? $scope.storeDetails.prevStoreInstanceId : $routeParams.storeId;
       var itemArray = (itemToDelete.isInOffload) ? $scope.offloadListItems : $scope.pickListItems;
-      var deleteData = {
-        id: itemToDelete.id,
-        storeInstanceId: storeInstance
-      };
 
+      angular.forEach(['picked', 'inbound', 'ullage'], function (quantity) {
+        if (itemToDelete[quantity + 'Quantity'] && itemToDelete[quantity + 'Id']) {
+          var deleteData = {
+            id: itemToDelete[quantity + 'Id'],
+            storeInstanceId: storeInstance
+          };
+          $this.itemsToDeleteArray.push(deleteData);
+        }
+      });
       var itemMatch = lodash.findWhere(itemArray, {itemMasterId: itemToDelete.itemMasterId});
       if (itemMatch) {
         lodash.remove(itemArray, itemMatch);
-        $this.itemsToDeleteArray.push(deleteData);
       }
     };
 
     $scope.removeRecord = function (itemToDelete) {
-      if (itemToDelete.id) {
+      if (!itemToDelete.isNewItem) {
         $this.removeExistingItemFromArray(itemToDelete);
       } else {
         $this.removeNewItem(itemToDelete);
@@ -222,7 +226,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
 
     this.addItemsToDeleteToPayload = function (promiseArray) {
-      angular.forEach($scope.itemsToDeleteArray, function (item) {
+      angular.forEach($this.itemsToDeleteArray, function (item) {
         promiseArray.push($this.deleteStoreInstanceItem(item.storeInstanceId, item.id));
       });
     };
@@ -282,6 +286,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.save = function () {
       // TODO: check for ullage quantities
+
+      $this.showLoadingModal();
       var promiseArray = [];
       $this.addItemsToDeleteToPayload(promiseArray);
 
@@ -297,10 +303,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $q.all(promiseArray).then(function () {
         if ($scope.shouldUpdateStatus) {
           console.log('UPDATE STATUS');
+          $this.hideLoadingModal();
           // update Status To Next
           // redirect to home page
         } else {
           console.log('EXIT');
+          $this.hideLoadingModal();
           // redirect to dashboard
         }
       });
