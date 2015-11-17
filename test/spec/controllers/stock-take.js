@@ -1,12 +1,13 @@
 'use strict';
 
-describe('Controller: StockTakeCtrl', function () {
+describe('Controller: StockTakeCtrl', function() {
 
   // load the controller's module
   beforeEach(module('ts5App',
     'served/catering-stations.json',
     'served/stock-take.json',
-    'served/stock-management-dashboard.json'
+    'served/stock-management-dashboard.json',
+    'served/items-list.json'
   ));
 
   var StockTakeCtrl;
@@ -16,13 +17,13 @@ describe('Controller: StockTakeCtrl', function () {
   var getCatererStationListDeferred;
   var getStockTakeDeferred;
   var getItemsByCateringStationIdDeferred;
+  var getItemsMasterListDeferred;
   var saveDeferred;
   var routeParams;
 
-
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $q, $location,
-  _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_) {
+  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, lodash,
+    _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedItemsList_) {
     scope = $rootScope.$new();
     location = $location;
     stockTakeFactory = $injector.get('stockTakeFactory');
@@ -36,16 +37,22 @@ describe('Controller: StockTakeCtrl', function () {
     spyOn(stockTakeFactory, 'getStockTake').and.returnValue(getCatererStationListDeferred.promise);
 
     saveDeferred = $q.defer();
+
     spyOn(stockTakeFactory, 'createStockTake').and.returnValue(saveDeferred.promise);
     spyOn(stockTakeFactory, 'updateStockTake').and.returnValue(saveDeferred.promise);
 
     getItemsByCateringStationIdDeferred = $q.defer();
     getItemsByCateringStationIdDeferred.resolve(_servedStockManagementDashboard_);
-    spyOn(stockTakeFactory, 'getItemsByCateringStationId').and.returnValue(getItemsByCateringStationIdDeferred.promise);
+    spyOn(stockTakeFactory, 'getItemsByCateringStationId').and.returnValue(
+      getItemsByCateringStationIdDeferred.promise);
+
+    getItemsMasterListDeferred = $q.defer();
+    getItemsMasterListDeferred.resolve(_servedItemsList_);
+    spyOn(stockTakeFactory, 'getItemsMasterList').and.returnValue(getItemsMasterListDeferred.promise);
   }));
 
-  describe('invalid state passed to route', function(){
-    beforeEach(inject(function($controller){
+  describe('invalid state passed to route', function() {
+    beforeEach(inject(function($controller) {
       routeParams = {
         state: 'invalid'
       };
@@ -55,13 +62,13 @@ describe('Controller: StockTakeCtrl', function () {
       });
       scope.$digest();
     }));
-    it('should redirect to /', function(){
+    it('should redirect to /', function() {
       expect(location.path()).toBe('/');
     });
   });
 
-  describe('View controller action', function(){
-    beforeEach(inject(function($controller){
+  describe('View controller action', function() {
+    beforeEach(inject(function($controller) {
       routeParams = {
         state: 'view',
         id: 60
@@ -72,47 +79,47 @@ describe('Controller: StockTakeCtrl', function () {
       });
       scope.$digest();
     }));
-    it('should have a state scope var set to view', function(){
+    it('should have a state scope var set to view', function() {
       expect(scope.state).toBe('view');
     });
     // Api call #1
-    it('should call stockTakeFactory.getCatererStationList', function(){
+    it('should call stockTakeFactory.getCatererStationList', function() {
       expect(stockTakeFactory.getCatererStationList).toHaveBeenCalled();
     });
-    it('should set catererStationList scope var', function(){
+    it('should set catererStationList scope var', function() {
       expect(scope.catererStationList).toBeDefined();
       expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
     });
     // API call #2
-    it('should call stockTakeFactory.getStockTake with routeParams.id', function(){
+    it('should call stockTakeFactory.getStockTake with routeParams.id', function() {
       expect(stockTakeFactory.getStockTake).toHaveBeenCalledWith(routeParams.id);
     });
-    it('should set stockTake scope var', function(){
+    it('should set stockTake scope var', function() {
       expect(scope.stockTake).toBeDefined();
     });
     // Scope globals
-    describe('global scope functions and vars', function(){
-      it('should have a cancel scope function', function(){
+    describe('global scope functions and vars', function() {
+      it('should have a cancel scope function', function() {
         expect(scope.cancel).toBeDefined();
         expect(Object.prototype.toString.call(scope.cancel)).toBe('[object Function]');
       });
-      it('should have a toggleReview scope function', function(){
+      it('should have a toggleReview scope function', function() {
         expect(scope.toggleReview).toBeDefined();
         expect(Object.prototype.toString.call(scope.toggleReview)).toBe('[object Function]');
       });
-      it('should have a clearFilter scope function', function(){
+      it('should have a clearFilter scope function', function() {
         expect(scope.clearFilter).toBeDefined();
         expect(Object.prototype.toString.call(scope.clearFilter)).toBe('[object Function]');
       });
-      it('should have a save scope function', function(){
+      it('should have a save scope function', function() {
         expect(scope.save).toBeDefined();
         expect(Object.prototype.toString.call(scope.save)).toBe('[object Function]');
       });
     });
   });
 
-  describe('Create controller action', function(){
-    beforeEach(inject(function($controller){
+  describe('Create controller action', function() {
+    beforeEach(inject(function($controller) {
       routeParams = {
         state: 'create',
         id: 3
@@ -123,22 +130,28 @@ describe('Controller: StockTakeCtrl', function () {
       });
       scope.$digest();
     }));
-    it('shouldset stockTake.catererStationId scope var to routeParams.id', function(){
+    it('shouldset stockTake.catererStationId scope var to routeParams.id', function() {
       expect(scope.stockTake.catererStationId).toBe(3);
     });
-    it('should have a state scope var set to create', function(){
+    it('should have a state scope var set to create', function() {
       expect(scope.state).toBe('create');
     });
     // Api call #1
-    it('should call stockTakeFactory.getCatererStationList', function(){
+    it('should call stockTakeFactory.getCatererStationList', function() {
       expect(stockTakeFactory.getCatererStationList).toHaveBeenCalled();
     });
-    it('should redirect to /stock-take-report when cancel button is clicked', function(){
+    it('should call stockTakeFactory.getItemsMasterList', function() {
+      expect(stockTakeFactory.getItemsMasterList).toHaveBeenCalled();
+    });
+    it('should call stockTakeCtrl.filterAvailableItems and set filteredItems in the scope', function() {
+      expect(scope.filteredItems).toBeDefined();
+    });
+    it('should redirect to /stock-take-report when cancel button is clicked', function() {
       scope.cancel();
       expect(location.path()).toBe('/stock-take-report');
     });
-    describe('change LMP station', function(){
-      it('should call stockTakeFactory.getItemsByCateringStationId', function(){
+    describe('change LMP station', function() {
+      it('should call stockTakeFactory.getItemsByCateringStationId', function() {
         var csid = 5;
         scope.stockTake.catererStationId = csid;
         scope.$digest();
@@ -146,7 +159,7 @@ describe('Controller: StockTakeCtrl', function () {
       });
     });
     describe('save scope function, only save', function() {
-      beforeEach(function(){
+      beforeEach(function() {
         scope.stockTake = {
           catererStationId: 3
         };
@@ -156,23 +169,20 @@ describe('Controller: StockTakeCtrl', function () {
         scope.itemQuantities[4] = 11;
         scope.save(false);
       });
-      it('should set delivery note is accepted to whatever is passed in', function () {
+      it('should set delivery note is accepted to whatever is passed in', function() {
         expect(scope.stockTake.isSubmitted).toBe(false);
       });
-      it('should call createStockTake', function(){
+      it('should call createStockTake', function() {
         var mockedPayload = {
           catererStationId: 3,
           isSubmitted: false,
-          items: [
-            {
-              masterItemId: 1,
-              quantity: 10
-            },
-            {
-              masterItemId: 4,
-              quantity: 11
-            }
-          ]
+          items: [{
+            masterItemId: 1,
+            quantity: 10
+          }, {
+            masterItemId: 4,
+            quantity: 11
+          }]
         };
         expect(stockTakeFactory.createStockTake).toHaveBeenCalledWith(mockedPayload);
       });
@@ -180,8 +190,8 @@ describe('Controller: StockTakeCtrl', function () {
 
   });
 
-  describe('Edit controller action', function(){
-    beforeEach(inject(function($controller){
+  describe('Edit controller action', function() {
+    beforeEach(inject(function($controller) {
       routeParams = {
         state: 'edit',
         id: 60
@@ -192,34 +202,34 @@ describe('Controller: StockTakeCtrl', function () {
       });
       scope.$digest();
     }));
-    it('should have a state scope var set to create', function(){
+    it('should have a state scope var set to create', function() {
       expect(scope.state).toBe('edit');
     });
     // Api call #1
-    it('should call stockTakeFactory.getCatererStationList', function(){
+    it('should call stockTakeFactory.getCatererStationList', function() {
       expect(stockTakeFactory.getCatererStationList).toHaveBeenCalled();
     });
-    it('should set catererStationList scope var', function(){
+    it('should set catererStationList scope var', function() {
       expect(scope.catererStationList).toBeDefined();
       expect(Object.prototype.toString.call(scope.catererStationList)).toBe('[object Array]');
     });
     // API call #2
-    it('should call stockTakeFactory.getStockTake with routeParams.id', function(){
+    it('should call stockTakeFactory.getStockTake with routeParams.id', function() {
       expect(stockTakeFactory.getStockTake).toHaveBeenCalledWith(routeParams.id);
     });
-    it('should set stockTake scope var', function(){
+    it('should set stockTake scope var', function() {
       expect(scope.stockTake).toBeDefined();
     });
-    it('should switch the state to review when review button is clicked', function(){
+    it('should switch the state to review when review button is clicked', function() {
       scope.toggleReview();
       expect(scope.state).toBe('review');
     });
-    it('should switch the state back to edit when the cancel button is clicked', function(){
+    it('should switch the state back to edit when the cancel button is clicked', function() {
       scope.cancel();
       expect(scope.state).toBe('edit');
     });
-    describe('clearFilter scope function', function(){
-      it('should set all filters to empty string when called', function(){
+    describe('clearFilter scope function', function() {
+      it('should set all filters to empty string when called', function() {
         scope.filterInput = {};
         scope.filterInput.itemCode = 's';
         scope.filterInput.itemName = 's';
@@ -229,8 +239,8 @@ describe('Controller: StockTakeCtrl', function () {
         expect(scope.filterInput.itemName).toBeUndefined();
       });
     });
-    describe('save scope function submit stock take', function(){
-      beforeEach(function(){
+    describe('save scope function submit stock take', function() {
+      beforeEach(function() {
         scope.stockTake = {
           catererStationId: 3,
           id: 60
@@ -241,37 +251,37 @@ describe('Controller: StockTakeCtrl', function () {
         scope.itemQuantities[4] = 11;
         scope.save(true);
       });
-      it('should set delivery note is accepted to whatever is passed in', function(){
+      it('should set delivery note is accepted to whatever is passed in', function() {
         expect(scope.stockTake.isSubmitted).toBe(true);
       });
-      it('should call saveDeliveryNote', function(){
+      it('should call saveDeliveryNote', function() {
         expect(stockTakeFactory.updateStockTake).toHaveBeenCalled();
       });
     });
-    describe('quantityDisabled scope function', function(){
-      it('should return true if state is not create and edit', function(){
+    describe('quantityDisabled scope function', function() {
+      it('should return true if state is not create and edit', function() {
         scope.state = 'review';
         expect(scope.quantityDisabled()).toBe(true);
       });
-      it('should return true if stock take is sbumitted', function(){
+      it('should return true if stock take is sbumitted', function() {
         scope.state = 'edit';
         scope.stockTake.isSubmitted = true;
         expect(scope.quantityDisabled()).toBe(true);
       });
-      it('should return false otherwise...', function(){
+      it('should return false otherwise...', function() {
         scope.state = 'edit';
         scope.stockTake.isSubmitted = false;
         expect(scope.quantityDisabled()).toBe(false);
       });
     });
-    describe('toggleReview first click', function(){
-      it('should set prev state to edit', function(){
+    describe('toggleReview first click', function() {
+      it('should set prev state to edit', function() {
         scope.state = 'edit';
         scope.toggleReview();
         expect(scope.state).toBe('review');
         expect(scope.prevState).toBe('edit');
       });
-      it('should flip them back if toggled again', function(){
+      it('should flip them back if toggled again', function() {
         scope.state = 'review';
         scope.prevState = 'edit';
         scope.toggleReview();
@@ -279,28 +289,30 @@ describe('Controller: StockTakeCtrl', function () {
         expect(scope.prevState).toBeNull();
       });
     });
-    describe('cancel in review state', function(){
-      it('should return if prevState is set', function(){
+    describe('cancel in review state', function() {
+      it('should return if prevState is set', function() {
         scope.prevState = 'edit';
         expect(scope.cancel()).toBeUndefined();
       });
     });
-    describe('save scope function if stockTake is submitted', function(){
-      it('should return', function(){
-        scope.stockTake = {isSubmitted:true};
+    describe('save scope function if stockTake is submitted', function() {
+      it('should return', function() {
+        scope.stockTake = {
+          isSubmitted: true
+        };
         expect(scope.save()).toBeUndefined();
       });
     });
   });
 
-  describe('error handler', function(){
+  describe('error handler', function() {
 
     var mockError;
 
-    beforeEach(inject(function($controller){
+    beforeEach(inject(function($controller) {
       mockError = {
-        status:400,
-        statusText:'Bad Request'
+        status: 400,
+        statusText: 'Bad Request'
       };
       StockTakeCtrl = $controller('StockTakeCtrl', {
         $scope: scope,
@@ -323,12 +335,123 @@ describe('Controller: StockTakeCtrl', function () {
       scope.$apply();
     }));
 
-    it('should set the displayError flag to true', function(){
+    it('should set the displayError flag to true', function() {
       expect(scope.displayError).toBeTruthy();
     });
 
-    it('should set the error response as a copy the API response', function(){
+    it('should set the error response as a copy the API response', function() {
       expect(scope.errorResponse).toEqual(mockError);
+    });
+
+  });
+
+  describe('The scope.addItems method', function() {
+    beforeEach(inject(function($controller) {
+      StockTakeCtrl = $controller('StockTakeCtrl', {
+        $scope: scope,
+        $routeParams: routeParams = {
+          state: 'create',
+          id: 3
+        }
+      });
+      scope.$digest();
+    }));
+
+    it('scope.addedItems should add 3 items', function() {
+      scope.numberOfItems = 3;
+      scope.addItems();
+      expect(scope.addedItems.length).toBe(3);
+    });
+
+    it('after removing 1 item, the length should be 2', function() {
+      scope.numberOfItems = 3;
+      scope.addItems();
+      scope.removeAddedItem(0);
+      expect(scope.addedItems.length).toBe(2);
+    });
+
+    it('if addedItems exists, dont create it, test branch', function() {
+      scope.numberOfItems = 3;
+      scope.addedItems = [];
+      scope.addItems();
+      expect(scope.addedItems.length).toBe(3);
+    });
+
+  });
+
+  describe('The scope.showAddedItem method', function() {
+    beforeEach(inject(function($controller) {
+      StockTakeCtrl = $controller('StockTakeCtrl', {
+        $scope: scope,
+        $routeParams: routeParams = {
+          state: 'create',
+          id: 3
+        }
+      });
+      scope.$digest();
+    }));
+
+    it('with 3 addedItems, scope.showAddedItems should return true', function() {
+      scope.numberOfItems = 3;
+      scope.addItems();
+      expect(scope.showAddedItem()).toBeTruthy();
+    });
+
+    it('with no addedItems, scope.showAddedItem should return false', function() {
+      expect(scope.showAddedItem()).toBeFalsy();
+    });
+
+    it('if state is review, scope.showAddedItem should return true', function() {
+      spyOn(scope, 'showAddedItem').and.callThrough();
+      scope.$digest();
+      var item = {
+        id: 1,
+        index: 0,
+        itemCode: '7up123',
+        itemName: '7up',
+        itemObject: {
+          itemName: '7up',
+          itemCode: '7up123'
+        },
+        itemQuantity: 3
+      };
+      scope.showAddedItem(item, 'review');
+      scope.$digest();
+      expect(scope.showAddedItem).toHaveBeenCalled();
+      expect(scope.showAddedItem(item, 'review')).toBeTruthy();
+    });
+
+  });
+
+  describe('The scope.omitSelectedItems method', function() {
+    beforeEach(inject(function($controller) {
+      StockTakeCtrl = $controller('StockTakeCtrl', {
+        $scope: scope,
+        $routeParams: routeParams = {
+          state: 'create',
+          id: 3
+        }
+      });
+      scope.$digest();
+    }));
+
+    it('scope.addedItems should add 3 items', function() {
+      spyOn(scope, 'omitSelectedItems').and.callThrough();
+      var item = {
+        id: 1,
+        index: 0,
+        itemCode: '7up123',
+        itemName: '7up',
+        itemObject: {
+          itemName: '7up',
+          itemCode: '7up123'
+        },
+        itemQuantity: 3
+      };
+      scope.addedItems = [];
+      scope.addedItems.push(item);
+      scope.omitSelectedItems(item);
+      expect(scope.omitSelectedItems).toBeTruthy();
     });
 
   });

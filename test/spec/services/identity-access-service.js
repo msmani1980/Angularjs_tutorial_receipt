@@ -29,6 +29,17 @@ describe('Service: identityAccessService', function () {
     });
   });
 
+  describe('changePassword', function () {
+    it('should make POST request to API', function () {
+      var expectedURL = /IdentityAccess\/chpwd$/;
+      httpBackend.expectPOST(expectedURL).respond(201, {});
+      identityAccessService.changePassword().then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+  });
+
   describe('checkAuth', function () {
     it('should make GET request to API', function () {
       var expectedURL = /IdentityAccess\/authorizeUser$/;

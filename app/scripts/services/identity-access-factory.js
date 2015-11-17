@@ -19,6 +19,15 @@ angular.module('ts5App')
       return identityAccessService.authorizeUser(payload);
     }
 
+    function changePassword(credentials) {
+      var payload = {
+        username: credentials.username,
+        password: CryptoJS.SHA256(credentials.username + credentials.password).toString(CryptoJS.enc.Base64)
+      };
+      return identityAccessService.changePassword(payload);
+
+    }
+
     function logoutFromSystem() {
       identityAccessService.logout();
     }
@@ -61,6 +70,7 @@ angular.module('ts5App')
     function encryptDataInLS(dataFromAPI) {
       var sessionObject = {
         userId: dataFromAPI.id,
+        username: dataFromAPI.userName,
         companyId: dataFromAPI.companyId,
         companyData: dataFromAPI.companyData,
         sessionToken: dataFromAPI.currentSession.sessionToken,
@@ -100,6 +110,7 @@ angular.module('ts5App')
     return {
       getCompanyData: getCompanyData,
       login: login,
+      changePassword: changePassword,
       logout: logoutFromSystem,
       getSessionObject: getSessionObject,
       setSessionData: setSessionData,

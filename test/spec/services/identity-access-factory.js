@@ -73,6 +73,7 @@ describe('Service: identityAccessFactory', function () {
       var sessionObject = {
         id: 'fakeId',
         companyId: 'fakeCompanyId',
+        username: 'fakeUser',
         companyData: {
           companyTypeId: 1,
           companyName: 'fakeCompanyName'
