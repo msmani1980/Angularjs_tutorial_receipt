@@ -137,7 +137,6 @@ angular.module('ts5App')
       if (angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])) {
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
-      //console.log(response);
       if (!response.response) {
         if ($scope.routeParamState === 'edit' && _firstTime) {
           _firstTime = false;
