@@ -10,6 +10,8 @@
 angular.module('ts5App')
   .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, reconciliationFactory, dateUtility, lodash) {
 
+    var $this = this;
+
     function initLMPStockRevisions() {
       angular.forEach($scope.LMPStock, function (item) {
         item.revision = angular.copy(item);
@@ -24,11 +26,77 @@ angular.module('ts5App')
       });
     }
 
-    function getStockData() {
-      reconciliationFactory.getLMPStockMockData().then(function (dataFromAPI) {
-        $scope.LMPStock = angular.copy(dataFromAPI);
-        initLMPStockRevisions();
+    function setStockItem(stockItem) {
+      var newItem;
+      var varianceQuantity = (stockItem.eposTotal || 0) - ( (stockItem.dispatchedQuantity + 1) - ((stockItem.inboundQuantity || 0) / (stockItem.offloadQuantity || 0)) ); // calculated as {ePOS Sales - [(LMP Dispatched Count + LMP Replenish Count) - LMP Incoming/Offload Count]}
+      var retailValue = stockItem.price;
+      var varianceValue = varianceQuantity * stockItem.price;
+      var isDiscrepancy = (varianceQuantity !== 0);
+      newItem = {
+        itemName: stockItem.itemName,
+        dispatchedCount: stockItem.dispatchedQuantity,
+        replenishCount: 1,
+        inboundCount: stockItem.inboundQuantity,
+        offloadCount: stockItem.offloadQuantity,
+        ePOSSales: $filter('currency')(stockItem.eposQuantity || 0, ''),
+        varianceQuantity: $filter('currency')(varianceQuantity, ''),
+        retailValue: $filter('currency')(retailValue, ''),
+        varianceValue: $filter('currency')(varianceValue, ''),
+        isDiscrepancy: isDiscrepancy
+      };
+      return newItem;
+    }
+
+    function mergeItems(rawItemList) {
+      var inboundItemList = rawItemList.filter(function(item) {
+        return item.countTypeId === lodash.findWhere($this.countTypes, {
+            name: 'Warehouse Close'
+          }).id;
       });
+
+      var dispatchedItemList = rawItemList.filter(function(item) {
+        return item.countTypeId === lodash.findWhere($this.countTypes, {
+            name: 'Warehouse Open'
+          }).id;
+      });
+
+      var offloadItemList = rawItemList.filter(function(item) {
+        return item.countTypeId === lodash.findWhere($this.countTypes, {
+            name: 'Offload'
+          }).id;
+      });
+
+      inboundItemList.map(function(item) {
+        item.inboundQuantity = item.quantity || 0;
+        delete item.quantity;
+      });
+
+      dispatchedItemList.map(function(item) {
+        item.dispatchedQuantity = item.quantity || 0;
+        delete item.quantity;
+      });
+
+      offloadItemList.map(function(item) {
+        item.offloadQuantity = item.quantity || 0;
+        delete item.quantity;
+      });
+
+      return angular.merge(inboundItemList, dispatchedItemList, offloadItemList);
+    }
+
+    function setStockData(stockData) {
+      var rawLMPStockData = angular.copy(stockData);
+      var stockItemList = [];
+
+      reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId).then(function (storeInstanceItemList) {
+        var filteredItems = mergeItems(storeInstanceItemList.response);
+          var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
+        angular.forEach(mergedItemList, function (stockItem) {
+          stockItemList.push(setStockItem(stockItem));
+        });
+      });
+      $scope.stockItemList = stockItemList;
+      initLMPStockRevisions();
     }
 
     function getCashBagData() {
@@ -97,13 +165,85 @@ angular.module('ts5App')
       $scope.stockTotals = angular.extend(stockTotals, {totalNet: netTotals});
     }
 
+    function getEPOSRevenue(eposRevenue) {
+      var eposCashBag = eposRevenue[0].response;
+      var eposCreditCard = eposRevenue[1].response;
+      var eposDiscount = eposRevenue[2].response;
+      var total = 0;
+
+      angular.forEach(eposCashBag, function (cashBag) {
+        if (cashBag.bankAmount) {
+          total += cashBag.bankAmount;
+        } else if (cashBag.coinAmountManual && cashBag.paperAmountManual) {
+          total += cashBag.coinAmountManual;
+          total += cashBag.paperAmountManual;
+        }
+      });
+
+      angular.forEach(eposCreditCard, function (creditCard) {
+        if (creditCard.bankAmountFinal) {
+          total += creditCard.bankAmountFinal;
+        }
+      });
+
+      angular.forEach(eposDiscount, function (discount) {
+        if (discount.bankAmountFinal) {
+          total += discount.bankAmountFinal;
+        }
+      });
+      return total;
+    }
+
+    function getCHRevenue(chRevenue) {
+      var chCashBag = chRevenue[0].response;
+      var chCreditCard = chRevenue[1].response;
+      var chDiscount = chRevenue[2].response;
+      var total = 0;
+
+      angular.forEach(chCashBag, function (cashBag) {
+        if (cashBag.bankAmountCh) {
+          total += cashBag.bankAmountCh;
+        } else if (cashBag.coinAmountManualCh && cashBag.paperAmountManualCh) {
+          total += cashBag.coinAmountManualCh;
+          total += cashBag.paperAmountManualCh;
+        }
+      });
+
+      angular.forEach(chCreditCard, function (creditCard) {
+        if (creditCard.bankAmountFinal) {
+          total += creditCard.bankAmountFinal;
+        } else if (creditCard.coinAmountManualCc && creditCard.paperAmountManualCc) {
+          total += creditCard.coinAmountManualCc;
+          total += creditCard.paperAmountManualCc;
+        }
+      });
+
+      angular.forEach(chDiscount, function (discount) {
+        if (discount.bankAmountFinal) {
+          total += discount.bankAmountFinal;
+        } else if (discount.coinAmountManualCc && discount.paperAmountManualCc) {
+          total += discount.coinAmountManualCc;
+          total += discount.paperAmountManualCc;
+        }
+      });
+      return total;
+    }
+
     function setupData(responseCollection) {
-      var itemTypes = angular.copy(responseCollection[0]);
-      var stockTotals = angular.copy(responseCollection[1].response);
-      var promotionTotals = angular.copy(responseCollection[2].response);
+      $this.itemTypes = angular.copy(responseCollection[0]);
+      $this.countTypes = angular.copy(responseCollection[1]);
+      var stockTotals = angular.copy(responseCollection[2].response);
+      var promotionTotals = angular.copy(responseCollection[3].response);
+      var chRevenue = angular.copy(responseCollection[4]);
+      var eposRevenue = angular.copy(responseCollection[5]);
+
+      $scope.totalRevenue = {
+        cashHandler: $filter('currency')(getCHRevenue(chRevenue), ''),
+        epos: $filter('currency')(getEPOSRevenue(eposRevenue), '')
+      };
 
       stockTotals.map(function (stockItem) {
-        stockItem.itemTypeName = lodash.findWhere(itemTypes, {id: stockItem.itemTypeId}).name;
+        stockItem.itemTypeName = lodash.findWhere($this.itemTypes, {id: stockItem.itemTypeId}).name;
       });
 
       var totalItems = getTotalsFor(stockTotals, 'Regular');
@@ -119,15 +259,18 @@ angular.module('ts5App')
       };
 
       setNetTotals(stockObject);
+      setStockData(stockTotals);
     }
 
     function initData() {
       var promiseArray = [];
       promiseArray.push(reconciliationFactory.getItemTypesList());
+      promiseArray.push(reconciliationFactory.getCountTypes());
       promiseArray.push(reconciliationFactory.getStockTotals($routeParams.storeInstanceId));
       promiseArray.push(reconciliationFactory.getPromotionTotals($routeParams.storeInstanceId));
+      promiseArray.push(reconciliationFactory.getCHRevenue($routeParams.storeInstanceId));
+      promiseArray.push(reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId));
       $q.all(promiseArray).then(setupData);
-      getStockData();
       getCashBagData();
     }
 

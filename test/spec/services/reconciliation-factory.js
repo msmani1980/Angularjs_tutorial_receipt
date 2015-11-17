@@ -30,6 +30,14 @@ describe('Factory: reconciliationFactory', function () {
   var getItemTypesListDeferred;
   var getItemTypesListJSON;
 
+  var getCHCashBagRevenueDeferred;
+  var getCHCreditCardRevenueDeferred;
+  var getCHDiscountRevenueDeferred;
+
+  var getEPOSCashBagRevenueDeferred;
+  var getEPOSCreditCardRevenueDeferred;
+  var getEPOSDiscountRevenueDeferred;
+
   var scope;
 
   beforeEach(inject(function (_reconciliationFactory_, $injector, $q, $rootScope) {
@@ -67,6 +75,32 @@ describe('Factory: reconciliationFactory', function () {
     getItemTypesListDeferred = $q.defer();
     getItemTypesListDeferred.resolve(getItemTypesListJSON);
     spyOn(itemTypesService, 'getItemTypesList').and.returnValue(getItemTypesListDeferred.promise);
+
+    getCHCashBagRevenueDeferred = $q.defer();
+    getCHCashBagRevenueDeferred.resolve(200, {});
+    spyOn(reconciliationService, 'getCHCashBagRevenue').and.returnValue(getCHCashBagRevenueDeferred.promise);
+
+    getCHCreditCardRevenueDeferred = $q.defer();
+    getCHCreditCardRevenueDeferred.resolve(200, {});
+    spyOn(reconciliationService, 'getCHCreditCardRevenue').and.returnValue(getCHCreditCardRevenueDeferred.promise);
+
+    getCHDiscountRevenueDeferred = $q.defer();
+    getCHDiscountRevenueDeferred.resolve(200, {});
+    spyOn(reconciliationService, 'getCHDiscountRevenue').and.returnValue(getCHDiscountRevenueDeferred.promise);
+
+
+    getEPOSCashBagRevenueDeferred = $q.defer();
+    getEPOSCashBagRevenueDeferred.resolve(200, {});
+    spyOn(reconciliationService, 'getEPOSCashBagRevenue').and.returnValue(getEPOSCashBagRevenueDeferred.promise);
+
+    getEPOSCreditCardRevenueDeferred = $q.defer();
+    getEPOSCreditCardRevenueDeferred.resolve(200, {});
+    spyOn(reconciliationService, 'getEPOSCreditCardRevenue').and.returnValue(getEPOSCreditCardRevenueDeferred.promise);
+
+    getEPOSDiscountRevenueDeferred = $q.defer();
+    getEPOSDiscountRevenueDeferred.resolve(200, {});
+    spyOn(reconciliationService, 'getEPOSDiscountRevenue').and.returnValue(getEPOSDiscountRevenueDeferred.promise);
+
 
     scope = $rootScope.$new();
     reconciliationFactory = _reconciliationFactory_;
@@ -115,6 +149,43 @@ describe('Factory: reconciliationFactory', function () {
       scope.$digest();
       expect(reconciliationService.getPromotionTotals).toHaveBeenCalledWith(storeInstanceId);
     });
+
+    describe('getCHRevenue', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      beforeEach(function () {
+        reconciliationFactory.getCHRevenue(storeInstanceId);
+      });
+
+      it('should call getCHCashBagRevenue on getCHRevenue', function () {
+        expect(reconciliationService.getCHCashBagRevenue).toHaveBeenCalledWith(storeInstanceId);
+      });
+      it('should call getCHCreditCardRevenue on getCHRevenue', function () {
+        expect(reconciliationService.getCHCreditCardRevenue).toHaveBeenCalledWith(storeInstanceId);
+      });
+      it('should call getCHDiscountRevenue on getCHRevenue', function () {
+        expect(reconciliationService.getCHDiscountRevenue).toHaveBeenCalledWith(storeInstanceId);
+      });
+
+    });
+
+    describe('getEPOSRevenue', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      beforeEach(function () {
+        reconciliationFactory.getEPOSRevenue(storeInstanceId);
+      });
+
+      it('should call getEPOSCashBagRevenue on getEPOSRevenue', function () {
+        expect(reconciliationService.getEPOSCashBagRevenue).toHaveBeenCalledWith(storeInstanceId);
+      });
+      it('should call getEPOSCreditCardRevenue on getEPOSRevenue', function () {
+        expect(reconciliationService.getEPOSCreditCardRevenue).toHaveBeenCalledWith(storeInstanceId);
+      });
+      it('should call getEPOSDiscountRevenue on getEPOSRevenue', function () {
+        expect(reconciliationService.getEPOSDiscountRevenue).toHaveBeenCalledWith(storeInstanceId);
+      });
+
+    });
+
   });
 
   describe('mock API calls', function () {

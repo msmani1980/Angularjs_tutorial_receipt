@@ -143,11 +143,11 @@
                   </tr>
                   <tr>
                     <td>@ Cash Handler Exchange Rate</td>
-                    <td>10.3</td>
+                    <td>{{totalRevenue.cashHandler}}</td>
                   </tr>
                   <tr>
                     <td>@ ePOS Exchange Rate</td>
-                    <td>10.3</td>
+                    <td>{{totalRevenue.epos}}</td>
                   </tr>
                 </table>
               </div>
@@ -219,13 +219,25 @@
                       <span class="fa fa-sort-asc active" ng-show="getArrowType('dispatchedCount', true) === 'ascending'"></span>
                       <span class="fa fa-sort-desc active" ng-show="getArrowType('dispatchedCount', true) === 'descending'"></span>
                       <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('dispatchedCount', true) === 'none'"></span>
-                      Dispatched & Replenish Count
+                      Dispatched Count
+                    </th>
+                    <th ng-click="updateOrderBy('replenishCount', true)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('dispatchedCount', true) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('dispatchedCount', true) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('dispatchedCount', true) === 'none'"></span>
+                      Replenish Count
                     </th>
                     <th ng-click="updateOrderBy('inboundCount', true)">
                       <span class="fa fa-sort-asc active" ng-show="getArrowType('inboundCount', true) === 'ascending'"></span>
                       <span class="fa fa-sort-desc active" ng-show="getArrowType('inboundCount', true) === 'descending'"></span>
                       <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('inboundCount', true) === 'none'"></span>
-                      Incoming / Offload Count
+                      Incoming Count
+                    </th>
+                    <th ng-click="updateOrderBy('offloadCount', true)">
+                      <span class="fa fa-sort-asc active" ng-show="getArrowType('inboundCount', true) === 'ascending'"></span>
+                      <span class="fa fa-sort-desc active" ng-show="getArrowType('inboundCount', true) === 'descending'"></span>
+                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('inboundCount', true) === 'none'"></span>
+                      Offload Count
                     </th>
                     <th ng-click="updateOrderBy('ePOSSales', true)">
                       <span class="fa fa-sort-asc active" ng-show="getArrowType('ePOSSales', true) === 'ascending'"></span>
@@ -253,7 +265,7 @@
                     </th>
                     <th></th>
                   </tr>
-                  <tr ng-repeat="item in filteredLMPStock = (LMPStock | filter:{itemDescription: filterItemDetails} | orderBy: LMPSortTitle)"
+                  <tr ng-repeat="item in filteredLMPStock = (stockItemList | filter:{itemDescription: filterItemDetails} | orderBy: LMPSortTitle)"
                       ng-show="showLMPDiscrepancies ? item.isDiscrepancy : true">
                     <td>
                       <span>{{ item.itemName }}</span>
@@ -263,8 +275,16 @@
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.dispatchedCount }}</span>
                     </td>
                     <td>
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.replenishCount">
+                      <span ng-hide="showEditViewForItem(item, true)">{{ item.replenishCount }}</span>
+                    </td>
+                    <td>
                       <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.inboundCount">
                       <span ng-hide="showEditViewForItem(item, true)">{{ item.inboundCount }}</span>
+                    </td>
+                    <td>
+                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.offloadCount">
+                      <span ng-hide="showEditViewForItem(item, true)">{{ item.offloadCount }}</span>
                     </td>
                     <td>
                       <span>{{ item.ePOSSales }}</span>
