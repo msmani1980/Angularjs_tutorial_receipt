@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The Error Dialog directive', function() {
+fdescribe('The Error Dialog directive', function() {
 
   // load the directive's module
   beforeEach(module('ts5App'));
@@ -164,6 +164,20 @@ describe('The Error Dialog directive', function() {
 
     it('should return true', function() {
       expect(isolatedScope.showFailedRequest()).toBeTruthy();
+    });
+
+  });
+
+  describe('When checking to see if we need to display custom errors', function() {
+
+    beforeEach(inject(function() {
+      compileDirective();
+      scope.errorCustom = [{field:'bogan',reason: 'Nice work jared'}];
+      scope.$digest();
+    }));
+
+    it('should return true', function() {
+      expect(isolatedScope.showCustomErrors()).toBeTruthy();
     });
 
   });

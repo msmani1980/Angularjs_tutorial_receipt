@@ -131,19 +131,23 @@ angular.module('ts5App')
     }
 
     function addNewMasterItemsFromCatererStationMasterItemsResponse(response) {
+      $scope.deliveryNote.items = [];
       hideLoadingModal();
       // Set cached results instead of hitting API again
       if (angular.isUndefined(_cateringStationItems[$scope.deliveryNote.catererStationId])) {
         _cateringStationItems[$scope.deliveryNote.catererStationId] = response;
       }
+      //console.log(response);
       if (!response.response) {
         if ($scope.routeParamState === 'edit' && _firstTime) {
           _firstTime = false;
           return;
         }
-        showMessage(
-          'No items can be auto-loaded for this LMP Station because none exist. You must add them manually with the "+Add Items" button below.',
-          'warning');
+        $scope.errorCustom = [{
+          field: 'Items cannot be prepopulated',
+          value: 'for this LMP Station because none exist. You must add them manually with the Add Items button below.'
+        }];
+        showResponseErrors();
         return;
       }
       var items = $filter('unique')(response.response, 'itemMasterId');
@@ -222,16 +226,12 @@ angular.module('ts5App')
     }
 
     function showFormErrors() {
-      $scope.displayError = true;
-      $scope.errorCustom = [];
       if ($scope.form && $scope.form.$valid && !deliveryNoteHasItems()) {
-        var error = {
-          data: [{
-            field: 'Items',
-            value: 'At least one item must have a "Delivered" amount.'
-          }]
-        };
-        showResponseErrors(error);
+        $scope.errorCustom = [{
+          field: 'Items Required',
+          value: 'There must be at least one Item attached to this Delivery Note'
+        }];
+        showResponseErrors();
       }
     }
 
@@ -392,7 +392,6 @@ angular.module('ts5App')
     };
 
     function saveDeliveryNoteFailed(response) {
-      $scope.displayError = true;
       $scope.toggleReview();
       showResponseErrors(response);
     }
@@ -466,6 +465,8 @@ angular.module('ts5App')
     };
 
     function addRows() {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
       setAllowedMasterItems();
       var totalDeliveryNoteToAdd = $scope.addItemsNumber || 1;
       for (var i = 0; i < totalDeliveryNoteToAdd; i++) {
