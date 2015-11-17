@@ -299,6 +299,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
+    $scope.calculatePickedQtyFromTotal = function (item) {
+      var calculatedQuantity = angular.copy(parseInt(item.pickedQuantity)) || 0;
+      calculatedQuantity += parseInt(item.ullageQuantity) || 0;
+      calculatedQuantity -= parseInt(item.inboundQuantity) || 0;
+      return calculatedQuantity;
+    };
+
     $scope.goToPreviousStep = function () {
       $this.showLoadingModal('Updating Status...');
       var prevStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;

@@ -137,6 +137,7 @@
                    name="pick-list-calc-picked-{{$index}}"
                    class="form-control"
                    ng-model="item.calculatedPickQuantity"
+                   ng-value="calculatePickedQtyFromTotal(item)"
                    disabled/>
           </td>
           <td>
@@ -185,13 +186,10 @@
           <td ng-if="shouldDisplayQuantityField('calcPicked')">
             <input type="text"
                    name="new-pick-list-calc-picked-{{$index}}"
-                   custom-validity
-                   custom-pattern="number"
                    class="form-control"
                    ng-model="item.calculatedPicked"
                    disabled
-                   maxlength="5"
-                   required="true"/>
+                   ng-value="calculatePickedQtyFromTotal(item)"/>
           </td>
           <td ng-init="item.index = $index">
             <button type="button" class="btn btn-sm btn-danger" ng-click="showDeleteWarning(item)">
