@@ -107,6 +107,8 @@ describe('Service: reconciliationService', function () {
       reconciliationService.getReconciliationPrecheckDevices({storeInstanceId: 123}).then(function (dataFromAPI) {
         expect(dataFromAPI.storeInstanceId).toBeDefined();
       });
+      httpBackend.flush();
+
     });
 
     it('should fetch reconciliation pre-check schedules', function () {
@@ -114,6 +116,7 @@ describe('Service: reconciliationService', function () {
       reconciliationService.getReconciliationPrecheckSchedules({storeInstanceId: 123}).then(function (dataFromAPI) {
         expect(dataFromAPI).toBeDefined();
       });
+      httpBackend.flush();
     });
 
     it('should fetch reconciliation pre-check cashbags', function () {
@@ -121,6 +124,7 @@ describe('Service: reconciliationService', function () {
       reconciliationService.getReconciliationPrecheckCashbags({storeInstanceId: 123}).then(function (dataFromAPI) {
         expect(dataFromAPI.storeInstanceId).toBeDefined();
       });
+      httpBackend.flush();
     });
 
   });
