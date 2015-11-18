@@ -189,7 +189,7 @@ angular.module('ts5App')
           package: 'PROMOTION',
           role: 'PROMOTIONCATALOG',
           permissions: [{
-            apiName: '/api/promotions',
+            apiName: '/api/company-promotion-catalogs',
             permissionCodes: ['C']
           }]
 

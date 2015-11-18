@@ -63,8 +63,4 @@ angular.module('ts5App')
 
     updateNavigationPerUserFeatures();
 
-    $scope.hasUserFeature = function(features) {
-      return lodash.intersection(features, $scope.features).length !== 0;
-    };
-
   });
