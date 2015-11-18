@@ -9,15 +9,16 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/item-types.json'));
   beforeEach(module('served/count-types.json'));
   beforeEach(module('served/store-instance-item-list.json'));
+  beforeEach(module('served/currencies.json'));
+  beforeEach(module('served/company.json'));
 
   var scope;
   var ReconciliationDiscrepancyDetail;
   var controller;
   var location;
   var reconciliationFactory;
-
-  var lmpStockDeferred;
-  var lmpStockResponseJSON;
+  var currencyFactory;
+  var GlobalMenuService;
 
   var cashBagsDeferred;
   var cashBagsResponseJSON;
@@ -43,6 +44,12 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var getStoreInstanceItemListDeferred;
   var getStoreInstanceItemListJSON;
 
+  var getCompanyGlobalCurrenciesDeferred;
+  var getCompanyGlobalCurrenciesJSON;
+
+  var getCompanyDeferred;
+  var getCompanyJSON;
+
   var routeParams;
   var dateUtility;
 
@@ -57,9 +64,16 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       getStoreInstanceItemListJSON = _servedStoreInstanceItemList_;
     });
 
+    inject(function (_servedCurrencies_, _servedCompany_) {
+      getCompanyGlobalCurrenciesJSON = _servedCurrencies_;
+      getCompanyJSON = _servedCompany_;
+    });
+
     location = $location;
     scope = $rootScope.$new();
     reconciliationFactory = $injector.get('reconciliationFactory');
+    currencyFactory = $injector.get('currencyFactory');
+    GlobalMenuService = $injector.get('GlobalMenuService');
     dateUtility = $injector.get('dateUtility');
     controller = $controller;
 
@@ -95,10 +109,15 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     getStoreInstanceItemListDeferred.resolve(getStoreInstanceItemListJSON);
     spyOn(reconciliationFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemListDeferred.promise);
 
-    lmpStockResponseJSON = [{id: 1}]; // stub for now until API is complete
-    lmpStockDeferred = $q.defer();
-    lmpStockDeferred.resolve(lmpStockResponseJSON);
-    spyOn(reconciliationFactory, 'getLMPStockMockData').and.returnValue(lmpStockDeferred.promise);
+    getCompanyGlobalCurrenciesDeferred = $q.defer();
+    getCompanyGlobalCurrenciesDeferred.resolve(getCompanyGlobalCurrenciesJSON);
+    spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
+
+    getCompanyDeferred = $q.defer();
+    getCompanyDeferred.resolve(getCompanyJSON);
+    spyOn(currencyFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
+
+    spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
 
     cashBagsResponseJSON = [{id: 2}]; // stub for now until API is complete
     cashBagsDeferred = $q.defer();
@@ -130,14 +149,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(scope.storeInstance.scheduleDate).toBe(dateUtility.formatDateForApp(storeInstanceJSON.scheduleDate));
       });
 
-      it('should call getStockTotals', function () {
-        expect(reconciliationFactory.getStockTotals).toHaveBeenCalled();
-      });
-
-      it('should call getPromotionTotals', function () {
-        expect(reconciliationFactory.getPromotionTotals).toHaveBeenCalled();
-      });
-
       it('should call getItemTypesList', function () {
         expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
       });
@@ -146,12 +157,28 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(reconciliationFactory.getCountTypes).toHaveBeenCalled();
       });
 
+      it('should call getStockTotals', function () {
+        expect(reconciliationFactory.getStockTotals).toHaveBeenCalled();
+      });
+
+      it('should call getPromotionTotals', function () {
+        expect(reconciliationFactory.getPromotionTotals).toHaveBeenCalled();
+      });
+
       it('should call getCHRevenue', function () {
         expect(reconciliationFactory.getCHRevenue).toHaveBeenCalled();
       });
 
       it('should call getEPOSRevenue', function () {
         expect(reconciliationFactory.getEPOSRevenue).toHaveBeenCalled();
+      });
+
+      it('should call getCompanyGlobalCurrencies', function () {
+        expect(currencyFactory.getCompanyGlobalCurrencies).toHaveBeenCalled();
+      });
+
+      it('should call getCompany', function () {
+        expect(currencyFactory.getCompany).toHaveBeenCalled();
       });
 
       it('should call getStoreInstanceItemList', function () {
@@ -379,7 +406,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
           scope.cancelEditingTable(true);
           expect(scope.stockItemList[0].itemName).toEqual('item1');
           expect(scope.stockItemList[0].quantity).toEqual(1);
-          expect(scope.stockItemList[0].revision).toEqual({ itemName: 'newItem1', quantity: 3 });
+          expect(scope.stockItemList[0].revision).toEqual({itemName: 'newItem1', quantity: 3});
         });
         it('should revert table to not be in edit mode', function () {
           scope.cancelEditingTable(true);

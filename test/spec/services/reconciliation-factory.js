@@ -191,7 +191,6 @@ describe('Factory: reconciliationFactory', function () {
   describe('mock API calls', function () {
     it('should be accessible in the service', function () {
       expect(!!reconciliationFactory.getCashBagMockData).toBe(true);
-      expect(!!reconciliationFactory.getLMPStockMockData).toBe(true);
     });
   });
 

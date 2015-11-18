@@ -10,7 +10,6 @@
 angular.module('ts5App')
   .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, reconciliationFactory, currencyFactory, GlobalMenuService, dateUtility, lodash) {
     var $this = this;
-    this.companyId = GlobalMenuService.company.get();
 
     function initLMPStockRevisions() {
       angular.forEach($scope.stockItemList, function (item) {
@@ -251,7 +250,7 @@ angular.module('ts5App')
       return total;
     }
 
-    function getCurrencyByBaseCurrencyId (currenciesArray, baseCurrencyId) {
+    function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
       return currenciesArray.filter(function (currencyItem) {
         return currencyItem.id === baseCurrencyId;
       })[0];
@@ -294,6 +293,7 @@ angular.module('ts5App')
     }
 
     function initData() {
+      var companyId = GlobalMenuService.company.get();
       var promiseArray = [
         reconciliationFactory.getItemTypesList(),
         reconciliationFactory.getCountTypes(),
@@ -302,7 +302,7 @@ angular.module('ts5App')
         reconciliationFactory.getCHRevenue($routeParams.storeInstanceId),
         reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId),
         currencyFactory.getCompanyGlobalCurrencies(),
-        currencyFactory.getCompany($this.companyId)
+        currencyFactory.getCompany(companyId)
       ];
 
       $q.all(promiseArray).then(setupData);
