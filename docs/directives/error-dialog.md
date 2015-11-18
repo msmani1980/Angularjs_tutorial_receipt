@@ -1,5 +1,13 @@
 Error Dialog
 ===
+The Error Dialog is a directive that handles errors. It currently support the following scenarios:
+
+ - Client side input validation
+ - Failed API requests
+ - 500 Error
+
+
+## Client Side Input Validation
 
 ### Using the form object
 
@@ -43,7 +51,52 @@ Please take note of the 3 required attributes of the directive:
  - *error-response* - Array of response from the API if there is a failed request
  - *display* - A boolean flag to control display of the dialog
 
-Front end validation is taken care of automatically if you follow the conventions mentioned above. For back end errors, use a snippet of code like this in your API error response handler:
+### Manually validating fields
+
+In some cases, fields will use directives that impact the form object from validating the field. A developer can manually validate a field by using angular's *$setValidity* method:
+
+     // Set the username field in the loginForm to be marked as required and valid
+     $scope.loginForm.username.$setValidity('required', false);
+
+     // Set the username field in the loginForm to be marked as required and invalid (will show in error-dialog)
+     $scope.loginForm.username.$setValidity('required', true);
+
+     // Set the username field in the loginForm to check the pattern of the field and is valid
+     $scope.loginForm.username.$setValidity('pattern', false);
+
+     // Set the username field in the loginForm to check the pattern of the field and is invalid (will show in error-dialog)
+     $scope.loginForm.username.$setValidity('pattern', false);
+
+ https://docs.angularjs.org/api/ng/type/ngModel.NgModelController#$setValidity
+
+### Custom Validation Example
+
+In this example, we will cover custom validation and form submission. Please assume this is a form with a single UI Select input that requires a user to select at least one item.
+
+
+    this.validateItems = function() {
+      if($scope.itemsForm.itemsList.length === 0) {
+        $scope.itemsForm.itemsList.$setValidity('required',true);
+        return;
+      }
+      $scope.itemsForm.itemsList.$setValidity('required',false);
+    }
+
+    this.validateItems = function() {
+      this.validateItems();
+      return $scope.itemsForm.$valid
+    }
+
+    $scope.submit = function() {
+      if( $this.validateForm() ) {
+        // make API call
+      }
+    };
+
+
+## API errors
+
+For back end errors, use a snippet of code like this in your API error response handler:
 
     function handleResponseError(responseFromAPI) {
        hideLoadingModal();
@@ -51,21 +104,4 @@ Front end validation is taken care of automatically if you follow the convention
        $scope.displayError = true;
     }
 
-
-### Manually validating fields
-
-In some cases, fields will use directives that impact the form object from validating the field. A developer can manually validate a field by using angular's *$setValidity* method:
-
-    // Set the username field in the loginForm to be marked as required and valid
-    $scope.loginForm.username.$setValidity('required', false);
-
-    // Set the username field in the loginForm to be marked as required and invalid (will show in error-dialog)
-    $scope.loginForm.username.$setValidity('required', true);
-
-    // Set the username field in the loginForm to check the pattern of the field and is valid
-    $scope.loginForm.username.$setValidity('pattern', false);
-
-    // Set the username field in the loginForm to check the pattern of the field and is invalid (will show in error-dialog)
-    $scope.loginForm.username.$setValidity('pattern', false);
-
-https://docs.angularjs.org/api/ng/type/ngModel.NgModelController#$setValidity
+This will automatically read the data from the API and display the Error Dialog.
