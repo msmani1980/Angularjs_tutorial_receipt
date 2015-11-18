@@ -1,10 +1,137 @@
 {
-  "CASH": {
-    "CASHBAG": {},
-    "CASHBAGSUBMIT": {}
-  },
   "RETAIL": {
-    "RETAILITEM": {},
-    "RETAILITEMCATEGORY": {}
+      "RETAILITEM": [
+          {
+              "id": 1,
+              "featureCode": "RETAILITEM",
+              "resource": {
+                  "id": 43,
+                  "apiName": "/api/retail-items",
+                  "resourceName": null,
+                  "stationCheck": null,
+                  "companyIdUrl": "HEADER"
+              },
+              "permissionCode": [
+                  "R",
+                  "U",
+                  "C",
+                  "D"
+              ]
+          }],
+      "RETAILITEMCATEGORY": [
+          {
+              "id": 25,
+              "featureCode": "RETAILITEMCATEGORY",
+              "resource": {
+                  "id": 80,
+                  "apiName": "/api/companies",
+                  "resourceName": ".*/sales-categories",
+                  "stationCheck": null,
+                  "companyIdUrl": "PATH"
+              },
+              "permissionCode": [
+                  "R",
+                  "U",
+                  "C",
+                  "D"
+              ]
+          },
+          {
+              "id": 26,
+              "featureCode": "RETAILITEMCATEGORY",
+              "resource": {
+                  "id": 133,
+                  "apiName": "/api/companies",
+                  "resourceName": ".*/sales-categories/\\d+",
+                  "stationCheck": null,
+                  "companyIdUrl": "PATH"
+              },
+              "permissionCode": [
+                  "R",
+                  "U",
+                  "C",
+                  "D"
+              ]
+          }
+      ]
+  },
+  "POSTTRIP": {
+      "POSTTRIP": [
+          {
+              "id": 239,
+              "featureCode": "POSTTRIP",
+              "resource": {
+                  "id": 132,
+                  "apiName": "/api/posttrips",
+                  "resourceName": ".*/posttrips/\\d+",
+                  "stationCheck": null,
+                  "companyIdUrl": "PATH"
+              },
+              "permissionCode": [
+                  "R"
+              ]
+          }
+      ]
+  },
+  "STOCKMANAGER": {
+    "STOCKDASHBOARD": [
+        {
+            "id": 285,
+            "featureCode": "STOCKDASHBOARD",
+            "resource": {
+                "id": 48,
+                "apiName": "/api/caterer-stations",
+                "resourceName": null,
+                "stationCheck": null,
+                "companyIdUrl": "HEADER"
+            },
+            "permissionCode": [
+                "R",
+                "U",
+                "C",
+                "D"
+            ]
+        }
+      ],
+      "STOCKREPORT": [
+          {
+              "id": 277,
+              "featureCode": "STOCKREPORT",
+              "resource": {
+                  "id": 48,
+                  "apiName": "/api/caterer-stations",
+                  "resourceName": null,
+                  "stationCheck": null,
+                  "companyIdUrl": "HEADER"
+              },
+              "permissionCode": [
+                  "R",
+                  "U",
+                  "C",
+                  "D"
+              ]
+          }
+      ],
+  },
+  "STATIONOPERATIONS": {
+    "RECEIVE": [
+        {
+            "id": 424,
+            "featureCode": "RECEIVE",
+            "resource": {
+                "id": 146,
+                "apiName": "/api/dispatch",
+                "resourceName": "/store-instances/\\d+/status/\\d+",
+                "stationCheck": null,
+                "companyIdUrl": "HEADER"
+            },
+            "permissionCode": [
+                "R",
+                "U",
+                "C",
+                "D"
+            ]
+        }
+    ],
   }
 }

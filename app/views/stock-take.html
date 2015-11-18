@@ -47,16 +47,16 @@
         <div class="col-xs-12 col-sm-6 col-md-4">
           <div class="form-group">
             <label>LMP Station*</label>
-                <select class="form-control"
-                       ng-model="stockTake.catererStationId"
-                       ng-disabled="readOnly || catererStationList.length == 1 || state != 'create'"
-                       ng-show="catererStationList.length"
-                       required>
-                  <option selected="selected" value disabled>Select Catering Station</option>
-                  <option ng-disabled="disabledCatererStationIds[station.id]" ng-selected="station.id==stockTake.catererStationId" ng-repeat="station in catererStationList | orderBy:'name' track by station.id" value="{{ station.id }}">
-                    {{ station.name }} - {{ station.code }}
-                  </option>
-                </select>
+              <select class="form-control"
+                     ng-model="stockTake.catererStationId"
+                     ng-disabled="readOnly || catererStationList.length == 1 || state != 'create'"
+                     ng-show="catererStationList.length"
+                     required>
+                <option selected="selected" value disabled>Select Catering Station</option>
+                <option ng-disabled="disabledCatererStationIds[station.id]" ng-selected="station.id==stockTake.catererStationId" ng-repeat="station in catererStationList | orderBy:'name' track by station.id" value="{{ station.id }}">
+                  {{ station.name }} - {{ station.code }}
+                </option>
+              </select>
           </div>
         </div>
         <div class="col-xs-12 col-sm-8" ng-show="cateringStationItems.length && state !== 'review'">
@@ -145,28 +145,96 @@
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="item-code-{{ $index }}">Item Code</label>
-              <input ng-model="item.itemCode" type="text" class="form-control" id="item-code-{{ $index }}" readonly disabled>
+              <input ng-model="item.itemCode" type="text" class="form-control" name="item-code-{{ $index }}" readonly disabled>
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-5">
             <div class="form-group">
               <label for="item-name-{{ $index }}">Item Name</label>
-               <input ng-model="item.itemName" type="text" class="form-control" id="item-name-{{ $index }}" readonly disabled>
+               <input ng-model="item.itemName" type="text" class="form-control" name="item-name-{{ $index }}" readonly disabled>
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-3">
             <div class="form-group">
               <label for="item-quantity-{{ $index }}">Quantity</label>
-              <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" id="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
+              <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" name="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
             </div>
           </div>
 
         </div>
       </div>
 
+      <div class="well" ng-repeat="item in addedItems | index track by $index" ng-show="showAddedItem(item, state) && uiSelectReady">
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-6" ng-hide="state === 'review'">
+            <div class="form-group">
+              <label for="item-name-{{ $index }}">Select Item</label>
+              <ui-select name="item-name-{{ $index }}"
+                         ng-model="item.itemObject"
+                         ng-disabled="readOnly || addedItems.length < 0 || state != 'create'"
+                         reset-search-input="false">
+
+                <ui-select-match placeholder="Select New Item..." allow-clear>{{$select.selected.itemCode}} - {{$select.selected.itemName}}</ui-select-match>
+                <ui-select-choices repeat="filteredItem in filteredItems | filter:omitSelectedItems | filter: $select.search | orderBy:'itemName' track by $index">
+                  <div ng-bind-html="filteredItem.itemCode  + ' - ' + filteredItem.itemName | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-4" ng-show="state === 'review'">
+            <div class="form-group">
+              <label for="item-code-{{ $index }}">Item Code</label>
+              <input ng-model="item.itemObject.itemCode" type="text" class="form-control" name="item-code-{{ $index }}" readonly disabled>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-5" ng-show="state === 'review'">
+            <div class="form-group">
+              <label for="item-name-{{ $index }}" >Item Name</label>
+               <input ng-model="item.itemObject.itemName" type="text" class="form-control" name="item-name-{{ $index }}" readonly disabled>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-3" ng-show="state === 'review'">
+            <div class="form-group">
+              <label for="item-quantity-{{ $index }}">Quantity</label>
+              <input ng-model="item.itemQuantity" type="number" class="form-control" name="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-4" ng-hide="state === 'review'">
+            <div class="form-group">
+              <label for="item-quantity-{{ $index }}">Quantity</label>
+              <input ng-model="item.itemQuantity" type="number" class="form-control" name="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-sm-2" ng-hide="state === 'review'">
+            <span class="pull-right btn btn-danger" ng-click="removeAddedItem(item.index)">
+              <i class="fa fa-close"></i>
+            </span>
+          </div>
+
+        </div>
+      </div>
+
     </ng-form>
+
+    <div class="row" ng-hide="readOnly">
+      <div class="col-xs-8 col-md-9"></div>
+      <div class="col-xs-4 col-md-3 text-right">
+        <div class="input-group">
+          <input type="number" min="1" max="100" class="form-control" ng-model="numberOfItems">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" ng-click="addItems()"><i class="fa fa-plus"></i> Add Items</button>
+          </span>
+        </div>
+      </div>
+    </div>
 
   </div>
 

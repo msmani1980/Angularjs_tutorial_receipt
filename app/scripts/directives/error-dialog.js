@@ -87,17 +87,23 @@ angular.module('ts5App')
 
       this.init();
 
+      $scope.showCustomErrors = function() {
+        return ( Array.isArray($scope.$parent.errorCustom) && $scope.$parent.errorCustom.length > 0 );
+      };
+
       $scope.showInternalServerError = function() {
         return ( $this.internalServerError  && !$scope.showValidationErrors() );
       };
 
       $scope.showValidationErrors = function() {
-        return ( Array.isArray($this.form.$error.pattern) || Array.isArray($this.form.$error.required) );
+        return !$scope.showCustomErrors() &&
+           ( (Array.isArray($this.form.$error.pattern) || Array.isArray($this.form.$error.required) ));
       };
 
       $scope.showFailedRequest = function() {
         return ( $scope.errorResponse && !$scope.showValidationErrors() && !$scope.showInternalServerError() );
       };
+
 
     };
     return {

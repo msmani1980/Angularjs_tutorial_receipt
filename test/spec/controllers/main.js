@@ -45,44 +45,62 @@ describe('Controller: MainCtrl', function () {
            route: '/#/item-list',
            icon: 'icon-manage-retail-item',
            className: 'dashboard-managemenuItems',
+           package: 'RETAIL',
            role: 'RETAILITEM'
          }, {
            name: 'Create Item',
            route: '/#/item-create',
            icon: 'icon-create-retail-item',
            className: 'dashboard-createItem',
-           role: 'RETAILITEM'
+           package: 'RETAIL',
+           role: 'RETAILITEM',
+           permissions: [{
+             apiName: '/api/retail-items',
+             permissionCodes: ['C']
+           }]
          }, {
            name: 'Manage Categories',
            route: emberURL + 'retail-items/categories',
            icon: 'icon-manage-retail-category',
            className: 'dashboard-manageItemCategories',
+           package: 'RETAIL',
            role: 'RETAILITEMCATEGORY'
-         }],
-         roles: [ 'RETAILITEM', 'RETAILITEMCATEGORY' ]
+         }]
        },{
-         title: 'Cash Management',
+         title: 'Post Trip Data',
          menuItems: [{
-           name: 'Manage Cash Bag',
-           route: '/#/cash-bag-list',
-           icon: 'icon-create-receipt-rules',
-           className: 'dashboard-manageCashBag',
-           role: 'CASHBAG'
+           name: 'Manage Post Trip Data',
+           route: '/#/post-trip-data-list',
+           icon: 'icon-manage-menu',
+           className: 'dashboard-postTripDataList',
+           package: 'POSTTRIP',
+           role: 'POSTTRIP'
+         }]
+       },{
+         title: 'Stock Manager',
+         menuItems: [{
+           name: 'Stock Dashboard',
+           route: '/#/stock-dashboard',
+           icon: 'icon-manage-schedule',
+           className: 'dashboard-stockDashboard',
+           package: 'STOCKMANAGER',
+           role: 'STOCKDASHBOARD'
          }, {
-           name: 'Cash Bag Submission',
-           route: emberURL + 'cash-bag-submission',
-           icon: 'icon-manage-retail-category',
-           className: 'dashboard-cashBagSubmission',
-           role: 'CASHBAGSUBMIT'
+           name: 'Stock Take Report',
+           route: '/#/stock-take-report',
+           icon: 'icon-manage-schedule',
+           className: 'dashboard-stockTakeReport',
+           package: 'STOCKMANAGER',
+           role: 'STOCKREPORT'
          }, {
-           name: 'Currency Setup',
-           route: '/#/currency-edit',
-           icon: 'icon-manage-retail-category',
-           className: 'dashboard-currencySetup',
-           role: 'CASHBAGSUBMIT'
-         }],
-         roles: [ 'EXCHANGERATE', 'CASHBAG', 'CASHBAGSUBMIT' ]
-       }
+           name: 'Manage Goods Received',
+           route: '/#/manage-goods-receican you ved',
+           icon: 'icon-manage-schedule',
+           className: 'dashboard-manageGoodsReceived',
+           package: 'STATIONOPERATIONS',
+           role: 'RECEIVE'
+         }
+       ]}
       ]);
     });
   });
