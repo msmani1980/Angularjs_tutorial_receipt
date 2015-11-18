@@ -156,13 +156,8 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         expect(scope.masterItemsList).toEqual(masterItemsListResponseJSON.masterItems);
       });
 
-      it('should get store instance menu items for current store instance', function () {
-        var expectedPayload = {
-          itemTypeId: 1,
-          characteristicId: 1,
-          date: '20150813'
-        };
-        expect(storeInstancePackingFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(mockStoreInstanceId, expectedPayload);
+      it('should get store instance menu items', function () {
+        expect(storeInstancePackingFactory.getStoreInstanceMenuItems).toHaveBeenCalled();
       });
 
       it('should get store instance items for current store instance', function () {
