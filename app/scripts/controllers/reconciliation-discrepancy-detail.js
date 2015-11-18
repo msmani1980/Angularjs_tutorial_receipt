@@ -25,19 +25,23 @@ angular.module('ts5App')
       });
     }
 
-    function setStockItem(stockItem) {
-      var newItem;
+    function getVarianceQuantity(stockItem) {
+      // calculated as {ePOS Sales - [(LMP Dispatched Count + LMP Replenish Count) - LMP Incoming/Offload Count]}
       var eposSales = stockItem.eposTotal;
       var lmpDispatchedCount = stockItem.dispatchedQuantity;
       var lmpReplenishCount = 0;
       var lmpIncomingCount = stockItem.inboundQuantity;
       var offloadCount = stockItem.offloadQuantity;
-      var varianceQuantity = eposSales - ((lmpDispatchedCount + lmpReplenishCount) - lmpIncomingCount / offloadCount); // calculated as {ePOS Sales - [(LMP Dispatched Count + LMP Replenish Count) - LMP Incoming/Offload Count]}
+      return eposSales - ((lmpDispatchedCount + lmpReplenishCount) - lmpIncomingCount / offloadCount);
+    }
+
+    function setStockItem(stockItem) {
+      var varianceQuantity = getVarianceQuantity(stockItem);
       var retailValue = stockItem.price;
       var varianceValue = varianceQuantity * stockItem.price;
       var isDiscrepancy = (varianceQuantity !== 0);
 
-      newItem = {
+      return {
         itemName: stockItem.itemName,
         dispatchedCount: stockItem.dispatchedQuantity,
         replenishCount: 0,
@@ -49,7 +53,6 @@ angular.module('ts5App')
         varianceValue: $filter('currency')(varianceValue, ''),
         isDiscrepancy: isDiscrepancy
       };
-      return newItem;
     }
 
     function mergeItems(rawItemList) {
