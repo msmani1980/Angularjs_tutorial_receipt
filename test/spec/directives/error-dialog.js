@@ -168,4 +168,18 @@ describe('The Error Dialog directive', function() {
 
   });
 
+  describe('When checking to see if we need to display custom errors', function() {
+
+    beforeEach(inject(function() {
+      compileDirective();
+      scope.errorCustom = [{field:'bogan',reason: 'Nice work jared'}];
+      scope.$digest();
+    }));
+
+    it('should return true', function() {
+      expect(isolatedScope.showCustomErrors()).toBeTruthy();
+    });
+
+  });
+
 });

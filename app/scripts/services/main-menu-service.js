@@ -368,6 +368,12 @@ angular.module('ts5App')
           className: 'dashboard-storeInstanceDashboard',
           package: 'STATIONOPERATIONS',
           role: 'STOREINSTANCEDASHBOARD'
+        }, {
+          name: 'Reconciliation Dashboard',
+          route: '/#/reconciliation-dashboard',
+          icon: 'icon-manage-schedule',
+          className: 'dashboard-reconciliationDashboard',
+          role: 'RECONCILIATIONDASHBOARD'
         }]
       }, {
         title: 'Stock Manager',
@@ -377,20 +383,20 @@ angular.module('ts5App')
           icon: 'icon-manage-schedule',
           className: 'dashboard-stockDashboard',
           package: 'STOCKMANAGER',
-          role: 'STOCKITEM'
+          role: 'STOCKDASHBOARD'
         }, {
           name: 'Stock Take Report',
           route: '/#/stock-take-report',
           icon: 'icon-manage-schedule',
           className: 'dashboard-stockTakeReport',
           package: 'STOCKMANAGER',
-          role: 'STOCKDASHBOARD'
+          role: 'STOCKREPORT'
         }, {
           name: 'Manage Goods Received',
           route: '/#/manage-goods-receican you ved',
           icon: 'icon-manage-schedule',
           className: 'dashboard-manageGoodsReceived',
-          package: 'STOCKMANAGER',
+          package: 'STATIONOPERATIONS',
           role: 'RECEIVE'
         }, {
           name: 'Create Delivery Note',

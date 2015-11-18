@@ -213,8 +213,10 @@ angular.module('ts5App')
       $location.path('/employee-commission-list');
     }
 
-    function requestErrorHandler() {
-      showToastMessage('warning', 'Employee Commission', 'Error on API call');
+    function requestErrorHandler(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
     }
 
     $scope.submitForm = function () {

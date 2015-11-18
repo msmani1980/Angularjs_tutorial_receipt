@@ -8,25 +8,36 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('stockTakeFactory', function (catererStationService, stockDashboardService, stockTakeService) {
+  .service('stockTakeFactory', function(catererStationService, stockDashboardService, stockTakeService, itemsService,
+    GlobalMenuService) {
 
-    function getCatererStationList(){
-      return catererStationService.getCatererStationList({limit:null});
+    function getCompanyId() {
+      return GlobalMenuService.company.get();
     }
 
-    function getItemsByCateringStationId(_catererStationId){
+    function getCatererStationList() {
+      return catererStationService.getCatererStationList({
+        limit: null
+      });
+    }
+
+    function getItemsByCateringStationId(_catererStationId) {
       return stockDashboardService.getStockDashboardItems(_catererStationId);
     }
 
-    function getStockTake(_id){
+    function getItemsMasterList(payload) {
+      return itemsService.getItemsList(payload, true);
+    }
+
+    function getStockTake(_id) {
       return stockTakeService.getStockTake(_id);
     }
 
-    function createStockTake(payload){
+    function createStockTake(payload) {
       return stockTakeService.createStockTake(payload);
     }
 
-    function updateStockTake(id, payload){
+    function updateStockTake(id, payload) {
       return stockTakeService.updateStockTake(id, payload);
     }
 
@@ -55,7 +66,9 @@ angular.module('ts5App')
       deleteStockTake: deleteStockTake,
       getStockTakeList: getStockTakeList,
       importFromExcel: importFromExcel,
-      getStockDashboardItems: getStockDashboardItems
+      getStockDashboardItems: getStockDashboardItems,
+      getCompanyId: getCompanyId,
+      getItemsMasterList: getItemsMasterList
     };
 
   });

@@ -25,15 +25,16 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
   var saveDeferred;
   var getAllMasterItemsDeferred;
   var getAllMasterItemsResponseJSON;
+  var httpBackend;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $q, _deliveryNoteFactory_,
+  beforeEach(inject(function ($controller, $httpBackend, $rootScope, $q, _deliveryNoteFactory_,
                               _servedLmpDeliveryNote_, $location, _servedCateringStations_,
                               _servedMasterItemList_,
                               _servedCompanyReasonCodes_, _servedItemsByCatererStationId_) {
 
     companyId = 403;
-
+    httpBackend = $httpBackend;
     scope = $rootScope.$new();
     location = $location;
     deliveryNoteFactory = _deliveryNoteFactory_;
@@ -48,7 +49,6 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
     spyOn(deliveryNoteFactory, 'getDeliveryNote').and.returnValue(getDeliveryNoteDeferred.promise);
 
     getCatererStationMasterItemsDeferred = $q.defer();
-    getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
     spyOn(deliveryNoteFactory, 'getItemsByCateringStationId').and.returnValue(getCatererStationMasterItemsDeferred.promise);
 
     getCompanyReasonCodesDeferred = $q.defer();
@@ -305,13 +305,32 @@ describe('Controller: LmpDeliveryNoteCtrl', function () {
         expect(Object.prototype.toString.call(scope.ullageReasons)).toBe('[object Array]');
       });
       describe('changing LMP station', function(){
+
+        beforeEach(function() {
+          httpBackend.expectGET(/./).respond(200);
+        });
+
         it('should call retail item master API', function(){
-          var csid = 3;
+          getCatererStationMasterItemsDeferred.resolve(getCatererStationMasterItemsResponseJSON);
+          var csid = 5;
           scope.deliveryNote.catererStationId = csid;
           scope.$digest();
           expect(deliveryNoteFactory.getItemsByCateringStationId).toHaveBeenCalledWith(csid);
-          expect(scope.deliveryNote.items.length).toEqual(11);
+          expect(scope.deliveryNote.items.length).toEqual(29);
         });
+
+        it('should display an error if there are no items', function(){
+          getCatererStationMasterItemsDeferred.resolve({});
+          var csid = 3;
+          scope.deliveryNote.catererStationId = csid;
+          scope.$digest();
+          expect(scope.displayError).toBeTruthy();
+          expect(scope.errorCustom).toEqual([{
+            field: 'Items cannot be prepopulated',
+            value: 'for this LMP Station because none exist. You must add them manually with the Add Items button below.'
+          }]);
+        });
+
       });
       describe('removeItemByIndex scope function', function(){
         it('should have a removeItemByIndex scope function defined', function(){

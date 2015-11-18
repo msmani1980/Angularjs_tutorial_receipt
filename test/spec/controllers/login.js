@@ -42,13 +42,6 @@ describe('Controller: LoginCtrl', function () {
       expect(scope.login()).toBeUndefined();
     });
 
-    it('should not do anything if form is invalid', function () {
-      scope.loginForm = {
-        $invalid: true
-      };
-      expect(scope.login()).toBeUndefined();
-    });
-
     describe('Authentication', function () {
       beforeEach(function () {
         scope.credentials = {
