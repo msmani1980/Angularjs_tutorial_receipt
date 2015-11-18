@@ -52,7 +52,7 @@
              type="text"
              maxlength="20"
              class="form-control"
-             id="menuCode"
+             name="menuCode"
              ng-model="menu.menuCode"
              placeholder="ITM001"
              ng-readonly="isMenuReadOnly()"/>
@@ -66,7 +66,7 @@
              type="text"
              maxlength="25"
              class="form-control"
-             id="menuName"
+             name="menuName"
              ng-model="menu.menuName"
              placeholder="iPad Mini Retina"
              ng-readonly="isMenuReadOnly()"/>
@@ -90,7 +90,7 @@
       <input type="text"
              maxlength="50"
              class="form-control"
-             id="menuDescription"
+             name="menuDescription"
              ng-model="menu.description"
              placeholder="ITM001"
              ng-readonly="isMenuReadOnly()"/>
@@ -115,6 +115,7 @@
       <tr ng-repeat="blankItem in menuItemList track by $index">
         <td ng-show="isMenuEditable()">
           <ui-select
+            name="selectedCategories[$index]"
             ng-model="selectedCategories[$index]"
             on-select="updateItemsList($index)"
             theme="bootstrap"
@@ -130,6 +131,7 @@
         </td>
         <td>
           <ui-select
+            name="menuItem"
             required="true"
             ng-model="menuItemList[$index]"
             theme="bootstrap"
@@ -150,6 +152,7 @@
                  required
                  maxlength="5"
                  class="form-control"
+                 name="menuItemQuantity"
                  ng-model="menuItemList[$index].itemQty"
                  placeholder="{{$index}}"
                  ng-disabled="!isMenuEditable()"/>
