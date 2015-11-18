@@ -310,8 +310,8 @@ angular.module('ts5App')
         reconciliationFactory.getPromotionTotals($routeParams.storeInstanceId),
         reconciliationFactory.getCHRevenue($routeParams.storeInstanceId),
         reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId),
-        currencyFactory.getCompanyGlobalCurrencies(),
-        currencyFactory.getCompany(companyId)
+        reconciliationFactory.getCompanyGlobalCurrencies(),
+        reconciliationFactory.getCompany(companyId)
       ];
 
       $q.all(promiseArray).then(setupData);

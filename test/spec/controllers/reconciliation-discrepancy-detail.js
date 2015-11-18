@@ -17,7 +17,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var controller;
   var location;
   var reconciliationFactory;
-  var currencyFactory;
   var GlobalMenuService;
 
   var cashBagsDeferred;
@@ -72,7 +71,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     location = $location;
     scope = $rootScope.$new();
     reconciliationFactory = $injector.get('reconciliationFactory');
-    currencyFactory = $injector.get('currencyFactory');
     GlobalMenuService = $injector.get('GlobalMenuService');
     dateUtility = $injector.get('dateUtility');
     controller = $controller;
@@ -111,11 +109,11 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
     getCompanyGlobalCurrenciesDeferred = $q.defer();
     getCompanyGlobalCurrenciesDeferred.resolve(getCompanyGlobalCurrenciesJSON);
-    spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
+    spyOn(reconciliationFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
 
     getCompanyDeferred = $q.defer();
     getCompanyDeferred.resolve(getCompanyJSON);
-    spyOn(currencyFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
+    spyOn(reconciliationFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
 
     spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
 
@@ -174,11 +172,11 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       });
 
       it('should call getCompanyGlobalCurrencies', function () {
-        expect(currencyFactory.getCompanyGlobalCurrencies).toHaveBeenCalled();
+        expect(reconciliationFactory.getCompanyGlobalCurrencies).toHaveBeenCalled();
       });
 
       it('should call getCompany', function () {
-        expect(currencyFactory.getCompany).toHaveBeenCalled();
+        expect(reconciliationFactory.getCompany).toHaveBeenCalled();
       });
 
       it('should call getStoreInstanceItemList', function () {
