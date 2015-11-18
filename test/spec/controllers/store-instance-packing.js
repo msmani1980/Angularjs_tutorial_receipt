@@ -2,508 +2,718 @@
 
 describe('Controller: StoreInstancePackingCtrl', function () {
 
-  // load the controller's module
   beforeEach(module('ts5App'));
-  beforeEach(module('served/store-instance-menu-items.json'));
   beforeEach(module('served/store-instance-details.json'));
-  beforeEach(module('served/store-instance-item-list.json'));
-  beforeEach(module('served/master-item-list.json'));
-  beforeEach(module('served/store-status-response.json'));
   beforeEach(module('served/item-types.json'));
+  beforeEach(module('served/threshold-list.json'));
+  beforeEach(module('served/count-types.json'));
+  beforeEach(module('served/master-item-list.json'));
+  beforeEach(module('served/store-instance-menu-items.json'));
+  beforeEach(module('served/store-instance-item-list.json'));
   beforeEach(module('served/characteristics.json'));
   beforeEach(module('served/company-reason-codes.json'));
-  beforeEach(module('served/count-types.json'));
-  beforeEach(module('served/features.json'));
-  beforeEach(module('served/threshold-list.json'));
-
 
   var StoreInstancePackingCtrl;
   var scope;
-  var storeInstanceFactory;
-  var getUpdatedStoreStatusDeferred;
-  var servedStoreStatusJSON;
-  var getStoreDetailsDeferred;
-  var servedStoreInstanceDetailsJSON;
-  var getStoreInstanceMenuItemsDeferred;
-  var servedStoreInstanceMenuItemsJSON;
-  var getStoreInstanceItemsDeferred;
-  var servedStoreInstanceItemsJSON;
-  var getMasterItemsDeferred;
-  var servedMasterItemsJSON;
-  var getItemTypesDeferred;
-  var servedItemTypesJSON;
-  var getCharacteristicsDeferred;
-  var servedCharacteristicsJSON;
-  var getCountTypesDeferred;
-  var servedCountTypesJSON;
-  var getCompanyReasonCodesDeferred;
-  var servedCompanyReasonCodesJSON;
-  var getFeaturesDeferred;
-  var getFeaturesJSON;
-  var getThresholdDeferred;
-  var getThresholdJSON;
-  var dateUtility;
-  var storeId;
   var controller;
+  var storeInstancePackingFactory;
+  var mockStoreInstanceId;
 
-  // Initialize the controller and a mock scope
+  var storeDetailsDeferred;
+  var itemTypesDeferred;
+  var thresholdListDeferred;
+  var countTypesDeferred;
+  var masterItemsListDeferred;
+  var menuItemsListDeferred;
+  var instanceItemsListDeferred;
+  var characteristicsDeferred;
+  var reasonCodesDeferred;
+  var saveItemDeferred;
+
+
+  var storeDetailsResponseJSON;
+  var itemTypesResponseJSON;
+  var thresholdListResponseJSON;
+  var countTypesResponseJSON;
+  var masterItemsListResponseJSON;
+  var menuItemsListResponseJSON;
+  var instanceItemsListResponseJSON;
+  var characteristicsResponseJSON;
+  var reasonCodesResponseJSON;
+  //var dateUtility;
+
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
-    inject(function (_servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedMasterItemList_,
-                     _servedStoreInstanceDetails_, _servedStoreStatusResponse_, _servedCharacteristics_,
-                     _servedItemTypes_, _servedCompanyReasonCodes_, _servedCountTypes_, _servedFeatures_, _servedThresholdList_) {
-      servedStoreInstanceMenuItemsJSON = _servedStoreInstanceMenuItems_;
-      servedStoreInstanceItemsJSON = _servedStoreInstanceItemList_;
-      servedMasterItemsJSON = _servedMasterItemList_;
-      servedStoreInstanceDetailsJSON = _servedStoreInstanceDetails_;
-      servedStoreStatusJSON = _servedStoreStatusResponse_;
-      servedItemTypesJSON = _servedItemTypes_;
-      servedCharacteristicsJSON = _servedCharacteristics_;
-      servedCountTypesJSON = _servedCountTypes_;
-      servedCompanyReasonCodesJSON = _servedCompanyReasonCodes_;
-      getFeaturesJSON = _servedFeatures_;
-      getThresholdJSON = _servedThresholdList_;
+    inject(function (_servedStoreInstanceDetails_, _servedItemTypes_, _servedThresholdList_, _servedCountTypes_,
+                     _servedMasterItemList_, _servedStoreInstanceMenuItems_, _servedStoreInstanceItemList_, _servedCharacteristics_, _servedCompanyReasonCodes_) {
+      storeDetailsResponseJSON = _servedStoreInstanceDetails_;
+      itemTypesResponseJSON = _servedItemTypes_;
+      thresholdListResponseJSON = _servedThresholdList_;
+      countTypesResponseJSON = _servedCountTypes_;
+      masterItemsListResponseJSON = _servedMasterItemList_;
+      menuItemsListResponseJSON = _servedStoreInstanceMenuItems_;
+      instanceItemsListResponseJSON = _servedStoreInstanceItemList_;
+      characteristicsResponseJSON = _servedCharacteristics_;
+      reasonCodesResponseJSON = _servedCompanyReasonCodes_;
     });
-    storeId = 5;
+
     scope = $rootScope.$new();
     controller = $controller;
+    mockStoreInstanceId = 123;
+    storeInstancePackingFactory = $injector.get('storeInstancePackingFactory');
 
-    storeInstanceFactory = $injector.get('storeInstanceFactory');
+    storeDetailsDeferred = $q.defer();
+    storeDetailsDeferred.resolve(storeDetailsResponseJSON);
 
-    getUpdatedStoreStatusDeferred = $q.defer();
-    getUpdatedStoreStatusDeferred.resolve(servedStoreStatusJSON);
+    itemTypesDeferred = $q.defer();
+    itemTypesDeferred.resolve(itemTypesResponseJSON);
 
-    getStoreDetailsDeferred = $q.defer();
+    thresholdListDeferred = $q.defer();
+    thresholdListDeferred.resolve(thresholdListResponseJSON);
 
-    getStoreInstanceMenuItemsDeferred = $q.defer();
-    getStoreInstanceMenuItemsDeferred.resolve(servedStoreInstanceMenuItemsJSON);
+    countTypesDeferred = $q.defer();
+    countTypesDeferred.resolve(countTypesResponseJSON);
 
-    getStoreInstanceItemsDeferred = $q.defer();
-    getStoreInstanceItemsDeferred.resolve(servedStoreInstanceItemsJSON);
+    masterItemsListDeferred = $q.defer();
+    masterItemsListDeferred.resolve(masterItemsListResponseJSON);
 
-    getMasterItemsDeferred = $q.defer();
-    getMasterItemsDeferred.resolve(servedMasterItemsJSON);
+    menuItemsListDeferred = $q.defer();
+    menuItemsListDeferred.resolve(menuItemsListResponseJSON);
 
-    getItemTypesDeferred = $q.defer();
-    getItemTypesDeferred.resolve(servedItemTypesJSON);
+    instanceItemsListDeferred = $q.defer();
+    instanceItemsListDeferred.resolve(instanceItemsListResponseJSON);
 
-    getCharacteristicsDeferred = $q.defer();
-    getCharacteristicsDeferred.resolve(servedCharacteristicsJSON);
+    characteristicsDeferred = $q.defer();
+    characteristicsDeferred.resolve(characteristicsResponseJSON);
 
-    getCountTypesDeferred = $q.defer();
-    getCountTypesDeferred.resolve(servedCountTypesJSON);
+    reasonCodesDeferred = $q.defer();
+    reasonCodesDeferred.resolve(reasonCodesResponseJSON);
 
-    getCompanyReasonCodesDeferred = $q.defer();
-    getCompanyReasonCodesDeferred.resolve(servedCompanyReasonCodesJSON);
+    saveItemDeferred = $q.defer();
+    saveItemDeferred.resolve({});
 
-    getFeaturesDeferred = $q.defer();
-    getFeaturesDeferred.resolve(getFeaturesJSON);
-
-    getThresholdDeferred = $q.defer();
-    getThresholdDeferred.resolve(getThresholdJSON);
-
-    dateUtility = $injector.get('dateUtility');
-
-    spyOn(storeInstanceFactory, 'getStoreDetails').and.returnValue(getStoreDetailsDeferred.promise);
-    spyOn(storeInstanceFactory, 'getStoreInstanceMenuItems').and.returnValue(getStoreInstanceMenuItemsDeferred.promise);
-    spyOn(storeInstanceFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemsDeferred.promise);
-    spyOn(storeInstanceFactory, 'getItemsMasterList').and.returnValue(getMasterItemsDeferred.promise);
-    spyOn(storeInstanceFactory, 'updateStoreInstanceStatus').and.returnValue(getUpdatedStoreStatusDeferred.promise);
-    spyOn(storeInstanceFactory, 'getItemTypes').and.returnValue(getItemTypesDeferred.promise);
-    spyOn(storeInstanceFactory, 'getCharacteristics').and.returnValue(getCharacteristicsDeferred.promise);
-    spyOn(storeInstanceFactory, 'getCountTypes').and.returnValue(getCountTypesDeferred.promise);
-    spyOn(storeInstanceFactory, 'getReasonCodeList').and.returnValue(getCompanyReasonCodesDeferred.promise);
-    spyOn(storeInstanceFactory, 'getFeaturesList').and.returnValue(getFeaturesDeferred.promise);
-    spyOn(storeInstanceFactory, 'getThresholdList').and.returnValue(getThresholdDeferred.promise);
-
+    //  dateUtility = $injector.get('dateUtility');
+    spyOn(storeInstancePackingFactory, 'getStoreDetails').and.returnValue(storeDetailsDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'getItemTypes').and.returnValue(itemTypesDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'getThresholdList').and.returnValue(thresholdListDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'getCountTypes').and.returnValue(countTypesDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'getItemsMasterList').and.returnValue(masterItemsListDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'getStoreInstanceMenuItems').and.returnValue(menuItemsListDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'getStoreInstanceItemList').and.returnValue(instanceItemsListDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'getCharacteristics').and.returnValue(characteristicsDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'getReasonCodeList').and.returnValue(reasonCodesDeferred.promise);
+    spyOn(storeInstancePackingFactory, 'updateStoreInstanceItem').and.returnValue(saveItemDeferred);
+    spyOn(storeInstancePackingFactory, 'createStoreInstanceItem').and.returnValue(saveItemDeferred);
+    spyOn(storeInstancePackingFactory, 'deleteStoreInstanceItem').and.returnValue(saveItemDeferred);
+    spyOn(storeInstancePackingFactory, 'updateStoreInstanceStatus');
   }));
 
   function initController(action) {
     StoreInstancePackingCtrl = controller('StoreInstancePackingCtrl', {
       $scope: scope,
       $routeParams: {
-        storeId: storeId,
+        storeId: mockStoreInstanceId,
         action: ( action ? action : 'dispatch')
       }
     });
   }
 
-  describe('when the controller initializes', function () {
+  describe('initialization', function () {
 
-    describe('during the dispatch process', function () {
-
+    describe('init all shared and dispatch API calls', function () {
       beforeEach(function () {
         initController();
-        getStoreDetailsDeferred.resolve(servedStoreInstanceDetailsJSON);
         scope.$digest();
       });
 
-      it('should get the store details', function () {
-        expect(storeInstanceFactory.getStoreDetails).toHaveBeenCalledWith(storeId);
+      it('should getStoreDetails and attach it to scope', function () {
+        expect(storeInstancePackingFactory.getStoreDetails).toHaveBeenCalledWith(mockStoreInstanceId);
       });
 
-      it('should attach all properties of JSON to scope', function () {
-        expect(scope.storeDetails).toEqual(servedStoreInstanceDetailsJSON);
+      it('should get regular item type ID', function () {
+        expect(storeInstancePackingFactory.getItemTypes).toHaveBeenCalled();
+        expect(scope.regularItemTypeId).toBeDefined();
+        expect(scope.regularItemTypeId).toEqual(1); // Regular item from mock JSON
       });
 
-      it('should call getItemTypes', function () {
-        expect(storeInstanceFactory.getItemTypes).toHaveBeenCalled();
+      it('should get inventory characteristic Id', function () {
+        expect(storeInstancePackingFactory.getCharacteristics).toHaveBeenCalled();
+        expect(scope.characteristicFilterId).toBeDefined();
+        expect(scope.characteristicFilterId).toEqual(1); // Inventory characteristic from mock JSON
       });
 
-      it('should call getStoreInstanceItems', function () {
-        expect(storeInstanceFactory.getStoreInstanceItemList).toHaveBeenCalledWith(storeId);
+      it('should get a threshold variance', function () {
+        expect(storeInstancePackingFactory.getThresholdList).toHaveBeenCalledWith('STOREDISPATCH');
+        expect(scope.variance).toBeDefined();
       });
 
-      it('should call getFeatures', function () {
-        expect(storeInstanceFactory.getFeaturesList).toHaveBeenCalled();
+      it('should get a list of count types', function () {
+        expect(storeInstancePackingFactory.getCountTypes).toHaveBeenCalled();
+        expect(scope.countTypes).toEqual(countTypesResponseJSON);
       });
 
-      it('should cal getThresholdList', function () {
-        expect(storeInstanceFactory.getThresholdList).toHaveBeenCalled();
+      it('should get items master list', function () {
+        expect(storeInstancePackingFactory.getItemsMasterList).toHaveBeenCalled();
+        expect(scope.masterItemsList).toEqual(masterItemsListResponseJSON.masterItems);
       });
 
-      it('should remove the id of the instance items', function () {
-        scope.menuItems = [];
-        StoreInstancePackingCtrl.getStoreInstanceMenuItems();
-        scope.$digest();
-        expect(scope.menuItems[0].id).toBeUndefined();
+      it('should get store instance menu items', function () {
+        expect(storeInstancePackingFactory.getStoreInstanceMenuItems).toHaveBeenCalled();
       });
 
-      it('should not remove the id of the items', function () {
-        scope.menuItems = [];
-        StoreInstancePackingCtrl.getStoreInstanceItems();
-        scope.$digest();
-        expect(scope.menuItems[0].id).toBeDefined();
-      });
-
-      it('should update store details status objects', function () {
-        scope.$digest();
-        var expectedCurrentId = servedStoreStatusJSON.statusId;
-        expect(scope.storeDetails.currentStatus.id).toEqual(expectedCurrentId);
-      });
-
-      describe('mergeMenuItems', function () {
-        var newItems;
-        beforeEach(function () {
-          scope.menuItems = [{
-            itemMasterId: 1,
-            fakeKey: 1
-          }, {
-            itemMasterId: 2,
-            fakeKey: 2
-          }];
-          newItems = [{
-            itemMasterId: 2,
-            newKey: 3
-          }];
-        });
-
-        it('should merge duplicate items', function () {
-          StoreInstancePackingCtrl.mergeMenuItems(newItems);
-          expect(scope.menuItems.length).toBe(2);
-        });
-
-        it('should keep properties on duplicate items', function () {
-          var expectedObject = {
-            itemMasterId: 2,
-            fakeKey: 2,
-            newKey: 3
-          };
-          StoreInstancePackingCtrl.mergeMenuItems(newItems);
-          expect(scope.menuItems[1]).toEqual(expectedObject);
-        });
+      it('should get store instance items for current store instance', function () {
+        expect(storeInstancePackingFactory.getStoreInstanceItemList).toHaveBeenCalledWith(mockStoreInstanceId);
       });
 
     });
 
-    describe('during the replenish process', function () {
-
+    describe('replenish init API calls', function () {
       beforeEach(function () {
         initController('replenish');
-        getStoreDetailsDeferred.resolve(servedStoreInstanceDetailsJSON);
         scope.$digest();
       });
 
-      it('should call getCharacteristics', function () {
-        expect(storeInstanceFactory.getCharacteristics).toHaveBeenCalled();
+      it('should get upliftable characteristic Id', function () {
+        expect(storeInstancePackingFactory.getCharacteristics).toHaveBeenCalled();
+        expect(scope.characteristicFilterId).toBeDefined();
+        expect(scope.characteristicFilterId).toEqual(2); // Upliftable characteristic from mock JSON
+      });
+    });
+
+    describe('redispatch init API calls', function () {
+      beforeEach(function () {
+        initController('redispatch');
+        scope.$digest();
       });
 
-      it('should call getStoreInstanceMenuItems with Regular and Uplifted filters', function () {
-        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
-        var expectedPayload = {
-          itemTypeId: 1, // this is 1 because we are requesting regular items.
-          characteristicId: 2, // this is 2 for upliftable items
-          date: formattedDate
-        };
-        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(scope.storeDetails.replenishStoreInstanceId, expectedPayload);
+      it('should get a list of ullage reason codes', function () {
+        expect(storeInstancePackingFactory.getReasonCodeList).toHaveBeenCalled();
+        expect(scope.ullageReasonCodes).toBeDefined();
       });
 
-      it('should call getItemsMasterList', function () {
-        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
-        var expectedPayload = {
-          itemTypeId: 1,
-          characteristicId: 2,
-          startDate: formattedDate,
-          endDate: formattedDate
+      it('should get store instance items for previous store instance', function () {
+        var prevInstanceId = 18; // from mock JSON
+        expect(storeInstancePackingFactory.getStoreInstanceItemList).toHaveBeenCalledWith(prevInstanceId);
+      });
+    });
+  });
+
+  describe('items merging', function () {
+
+    describe('merge items for dispatch / replenish', function () {
+      var mockItemsResponseFromAPI;
+      var menuItems;
+      var storeInstanceItems;
+      beforeEach(function () {
+        initController();
+        scope.$digest();
+
+        menuItems = {
+          response: [
+            {
+              itemName: 'item1',
+              itemCode: 'ITM1',
+              menuQuantity: 1,
+              itemMasterId: 1
+            },
+            {
+              itemName: 'item2',
+              itemCode: 'ITM2',
+              menuQuantity: 2,
+              itemMasterId: 2
+            }
+          ]
         };
-        expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
+        storeInstanceItems = {
+          response: [
+            {
+              itemCode: 'ITM3',
+              menuQuantity: 3,
+              quantity: 3,
+              countTypeId: 1
+            },
+            {
+              itemName: 'item2',
+              itemCode: 'ITM2',
+              quantity: 4,
+              itemMasterId: 2,
+              countTypeId: 1
+            }
+          ]
+        };
+
+        scope.pickListItems = [];
+      });
+
+      it('should add all menu items to pick list', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, {}];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.pickListItems.length).toEqual(2);
+        expect(scope.pickListItems[0].menuQuantity).toEqual(1);
+        expect(scope.pickListItems[1].menuQuantity).toEqual(2);
+      });
+
+      it('should add all store instance items to pick list', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, {}, storeInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.pickListItems.length).toEqual(2);
+        expect(scope.pickListItems[0].pickedQuantity).toEqual('3');
+        expect(scope.pickListItems[1].pickedQuantity).toEqual('4');
+      });
+
+      it('should merge store instance items that are in common with menu items', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, storeInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.pickListItems.length).toEqual(3);
+        expect(scope.pickListItems[1].menuQuantity).toEqual(2);
+        expect(scope.pickListItems[1].pickedQuantity).toEqual('4');
       });
 
     });
 
-    describe('during the end-instance process', function () {
-
+    describe('merge items for end-instance', function () {
+      var mockItemsResponseFromAPI;
+      var menuItems;
+      var storeInstanceItems;
       beforeEach(function () {
         initController('end-instance');
-        getStoreDetailsDeferred.resolve(servedStoreInstanceDetailsJSON);
         scope.$digest();
-      });
-
-      it('should call getCharacteristics', function () {
-        expect(storeInstanceFactory.getReasonCodeList).toHaveBeenCalled();
-      });
-
-      it('should call getStoreInstanceMenuItems with Regular and Inventory filters', function () {
-        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
-        var expectedPayload = {
-          itemTypeId: 1, // this is 1 because we are requesting regular items.
-          characteristicId: 1, // this is 1 for inventory items
-          date: formattedDate
+        menuItems = {
+          response: [
+            {
+              itemName: 'item1',
+              itemCode: 'ITM1',
+              menuQuantity: 1,
+              itemMasterId: 1
+            },
+            {
+              itemName: 'item2',
+              itemCode: 'ITM2',
+              menuQuantity: 2,
+              itemMasterId: 2
+            }
+          ]
         };
-        expect(storeInstanceFactory.getStoreInstanceMenuItems).toHaveBeenCalledWith(storeId, expectedPayload);
+        storeInstanceItems = {
+          response: [
+            {
+              itemName: 'item1',
+              itemCode: 'ITM1',
+              quantity: 3,
+              itemMasterId: 1,
+              countTypeId: 14
+            },
+            {
+              itemName: 'item1',
+              itemCode: 'ITM1',
+              quantity: 4,
+              ullageReasonCode: 48,
+              itemMasterId: 1,
+              countTypeId: 7
+            }
+          ]
+        };
+
+        scope.pickListItems = [];
+        scope.offloadListItems = [];
       });
 
-      it('should call getItemsMasterList', function () {
-        var formattedDate = dateUtility.formatDateForAPI(servedStoreInstanceDetailsJSON.scheduleDate);
-        var expectedPayload = {
-          itemTypeId: 1,
-          characteristicId: 1, // this is 1 for inventory items
-          startDate: formattedDate,
-          endDate: formattedDate
+      it('should add items to offload list', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, {}];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.pickListItems.length).toEqual(0);
+        expect(scope.offloadListItems.length).toEqual(2);
+      });
+
+      it('should merge offload quantities', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, storeInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems.length).toEqual(2);
+        expect(scope.offloadListItems[0].inboundQuantity).toEqual('3');
+      });
+
+      it('should merge ullage quantities', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, storeInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems.length).toEqual(2);
+        expect(scope.offloadListItems[0].ullageQuantity).toBeDefined();
+      });
+    });
+
+    describe('merge items for redispatch', function () {
+      var mockItemsResponseFromAPI;
+      var menuItems;
+      var storeInstanceItems;
+      var prevInstanceItems;
+      beforeEach(function () {
+        initController('redispatch');
+        scope.$digest();
+        menuItems = {
+          response: [
+            {
+              itemName: 'item1',
+              itemCode: 'ITM1',
+              menuQuantity: 1,
+              itemMasterId: 1
+            },
+            {
+              itemName: 'item2',
+              itemCode: 'ITM2',
+              menuQuantity: 2,
+              itemMasterId: 2
+            }
+          ]
         };
-        expect(storeInstanceFactory.getItemsMasterList).toHaveBeenCalledWith(expectedPayload);
+        storeInstanceItems = {
+          response: [
+            {
+              itemName: 'item1',
+              itemCode: 'ITM1',
+              quantity: 3,
+              itemMasterId: 1,
+              countTypeId: 1
+            },
+            {
+              itemName: 'item2',
+              itemCode: 'ITM2',
+              quantity: 4,
+              itemMasterId: 2,
+              countTypeId: 3 // warehouse close
+            }
+          ]
+        };
+        prevInstanceItems = {
+          response: [
+            {
+              itemName: 'item1',
+              itemCode: 'ITM1',
+              quantity: 5,
+              itemMasterId: 1,
+              countTypeId: 14 // offload
+            },
+            {
+              itemName: 'item1',
+              itemCode: 'ITM1',
+              quantity: 6,
+              ullageReasonCode: 48,
+              itemMasterId: 1,
+              countTypeId: 7 // ullage
+            },
+            {
+              itemName: 'item2',
+              itemCode: 'ITM2',
+              quantity: 7,
+              itemMasterId: 2,
+              countTypeId: 13 // warehouse close
+            }
+          ]
+        };
+        scope.pickListItems = [];
+        scope.offloadListItems = [];
+      });
+
+      it('should add all menu items to pick list', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, [], []];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.pickListItems.length).toEqual(2);
+        expect(scope.offloadListItems.length).toEqual(0);
+      });
+
+      it('should add all current store instance items to pick list', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, [], storeInstanceItems, []];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.pickListItems.length).toEqual(2);
+        expect(scope.offloadListItems.length).toEqual(0);
+      });
+
+      it('should only add all offload items to offload list', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, [], prevInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.offloadListItems.length).toEqual(1);
+      });
+
+      it('should add all warehouse close items to pick list', function () {
+        mockItemsResponseFromAPI = [{masterItems: []}, menuItems, [], prevInstanceItems];
+        StoreInstancePackingCtrl.mergeAllItems(mockItemsResponseFromAPI);
+        expect(scope.pickListItems.length).toEqual(2);
+        expect(scope.offloadListItems.length).toEqual(1);
+        expect(scope.pickListItems[1].inboundQuantity).toEqual('7');
+      });
+    });
+  });
+
+  describe('save packing data', function () {
+
+    describe('save for dispatch/replenish', function () {
+      beforeEach(function () {
+        initController();
+        scope.$digest();
+
+        scope.pickListItems = [{
+          itemMasterId: 1,
+          pickedQuantity: 1,
+          pickedId: 1
+        }, {
+          itemMasterId: 2,
+          pickedQuantity: 2
+        }, {
+          itemMasterId: 2,
+          pickedQuantity: 0
+        }];
+
+        StoreInstancePackingCtrl.itemsToDeleteArray = [{
+          id: 3,
+          storeInstanceId: 4
+        }];
+      });
+
+      it('should call DELETE for items in delete list', function () {
+        scope.save();
+        expect(storeInstancePackingFactory.deleteStoreInstanceItem).toHaveBeenCalledWith(4, 3);
+      });
+
+
+      it('should call CREATE for new items', function () {
+        scope.save();
+        var expectedPayload = {
+          itemMasterId: 2,
+          quantity: 2,
+          countTypeId: 1
+        };
+        expect(storeInstancePackingFactory.createStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, expectedPayload);
+      });
+
+      it('should call UPDATE for existing items', function () {
+        scope.save();
+        var expectedPayload = {
+          itemMasterId: 1,
+          quantity: 1,
+          countTypeId: 1,
+          id: 1
+        };
+        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 1, expectedPayload);
+      });
+
+      it('should update status after save', function () {
+        var expectedNextStep = '2'; // ready for seals
+        scope.shouldUpdateStatus = true;
+        scope.save();
+        scope.$digest();
+        expect(storeInstancePackingFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(mockStoreInstanceId, expectedNextStep);
+      });
+
+    });
+
+    describe('save for end-instance', function () {
+      beforeEach(function () {
+        initController('end-instance');
+        scope.$digest();
+
+        scope.pickListItems = [{
+          itemMasterId: 1,
+          pickedQuantity: 1,
+          pickedId: 1
+        }];
+        scope.offloadListItems = [{
+          itemMasterId: 4,
+          inboundQuantity: 2,
+          ullageQuantity: 3,
+          ullageReason: {id:48},
+          inboundId: 2,
+          ullageId: 3
+        }];
+      });
+
+      it('should save ullage and inbound quantities separately', function () {
+        scope.save();
+        var expectedUllagePayload = {
+          itemMasterId: 4,
+          quantity: 3,
+          ullageReasonCode: 48,
+          countTypeId: 7, // ullage
+          id: 3
+        };
+        var expectedInboundPayload = {
+          itemMasterId: 4,
+          quantity: 2,
+          countTypeId: 14, // offload
+          id: 2
+        };
+        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 2, expectedInboundPayload);
+        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 3, expectedUllagePayload);
+
+      });
+    });
+
+    describe('save for redispatch', function () {
+      var prevStoreInstance = 18; // froms tore details mock
+      beforeEach(function () {
+        initController('redispatch');
+        scope.$digest();
+        scope.pickListItems = [{
+          itemMasterId: 1,
+          pickedQuantity: 1,
+          oldPickedQuantity: 2,
+          inboundQuantity: 2,
+          oldInboundQuantity: 3,
+          pickedId: 1,
+          inboundId: 2,
+          isNewItem: false
+        }];
+        scope.offloadListItems = [{
+          itemMasterId: 3,
+          inboundQuantity: 3,
+          oldInboundQuantity: 0,
+          inboundId: 3,
+          isNewItem: false
+        }];
+      });
+      it('should save offload items to prev instance', function () {
+        scope.save();
+        var expectedPayload = {
+          itemMasterId: 3,
+          quantity: 3,
+          countTypeId: 14, // offload
+          id: 3
+        };
+        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(prevStoreInstance, 3, expectedPayload);
+      });
+
+      it('should save pick list items to current instance', function () {
+        scope.save();
+        var expectedPayload = {
+          itemMasterId: 1,
+          quantity: 1,
+          countTypeId: 1, // warehouse open
+          id: 1
+        };
+        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(mockStoreInstanceId, 1, expectedPayload);
+      });
+
+      it('should save warehouse close items to prev instance', function () {
+        scope.save();
+        var expectedPayload = {
+          itemMasterId: 1,
+          quantity: 2,
+          countTypeId: 13, // warehouse close
+          id: 2
+        };
+        expect(storeInstancePackingFactory.updateStoreInstanceItem).toHaveBeenCalledWith(prevStoreInstance, 2, expectedPayload);
+      });
+
+      it('should update status for current instance and prev instance', function () {
+        it('should update status after save', function () {
+          var expectedNextStep = '2'; // ready for seals
+          var expectedNextStepForPrevInstance = '7'; // ready for seals
+          scope.shouldUpdateStatus = true;
+          scope.save();
+          scope.$digest();
+          expect(storeInstancePackingFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(mockStoreInstanceId, expectedNextStep);
+          expect(storeInstancePackingFactory.updateStoreInstanceStatus).toHaveBeenCalledWith(prevStoreInstance, expectedNextStepForPrevInstance);
+        });
+      });
+    });
+  });
+
+  describe('Items List Array Manipulations', function () {
+
+    beforeEach(function () {
+      initController('redispatch');
+      scope.$digest();
+      scope.newPickListItems = [];
+      scope.newOffloadListItems = [];
+    });
+
+    describe('adding items', function () {
+      it('should add multiple empty item to pick/offload list for given number', function () {
+        scope.addPickListNum = 3;
+        scope.addItems();
+        expect(scope.newPickListItems.length).toEqual(3);
+
+        scope.addOffloadNum = 5;
+        scope.addOffloadItems();
+        expect(scope.newOffloadListItems.length).toEqual(5);
+      });
+    });
+
+   describe('removing items', function () {
+      it('should remove new items from newPickListItems', function () {
+        scope.newPickListItems = [{id:1, isNewItem: true}, {id: 2, isNewItem: true}];
+        scope.removeRecord(scope.newPickListItems[0]);
+        expect(scope.newPickListItems.length).toEqual(1);
+        expect(scope.newPickListItems[0].id).toEqual(2);
+      });
+
+      it('should remove existing items and add them to itemsToDelete array', function () {
+        scope.itemsToDeleteArray = [];
+        scope.pickListItems = [{
+          itemMasterId: 1,
+          pickedQuantity: 1,
+          pickedId: 1,
+          isNewItem: false
+        }, {
+          itemMasterId: 2,
+          pickedQuantity: 2,
+          pickedId: 4,
+          isNewItem: false
+        }];
+        scope.removeRecord(scope.pickListItems[1]);
+        expect(scope.pickListItems.length).toEqual(1);
+        expect(StoreInstancePackingCtrl.itemsToDeleteArray.length).toEqual(1);
+      });
+
+      it('should remove existing items and separate quantities in itemsToDelete array', function () {
+        scope.itemsToDeleteArray = [];
+        scope.pickListItems = [{
+          itemMasterId: 2,
+          pickedQuantity: 2,
+          ullageQuantity: 3,
+          pickedId: 4,
+          ullageId: 6,
+          isNewItem: false
+        }];
+        scope.removeRecord(scope.pickListItems[0]);
+        expect(scope.pickListItems.length).toEqual(0);
+        expect(StoreInstancePackingCtrl.itemsToDeleteArray.length).toEqual(2);
       });
 
     });
 
   });
 
-  describe('formatStoreInstanceItemsPayload', function () {
+  describe('variance helper functions', function () {
+    var mockItem;
     beforeEach(function () {
       initController();
-      scope.menuItems = [{
-        id: 1,
-        itemMasterId: 2,
-        quantity: 3,
-        fakeKey: 4
-      }, {
-        id: 2,
-        itemMasterId: 4,
-        quantity: 5,
-        fooKey: 44
-      }];
-      scope.emptyMenuItems = [{
-        quantity: 9,
-        nonsenseKey: 4,
-        masterItem: {id: 5}
-      }];
-    });
-
-    it('should merge menuItems and emptyMenuItems', function () {
-      var expectedLength = scope.menuItems.length + scope.emptyMenuItems.length;
-      var result = StoreInstancePackingCtrl.createPayload();
-      expect(result.response.length).toEqual(expectedLength);
-    });
-
-    it('should only keep id, itemMasterId, and quantity for menuItems', function () {
-      var result = StoreInstancePackingCtrl.createPayload();
-      var expectdItem = {
-        id: 1,
-        itemMasterId: 2,
-        quantity: 3
-      };
-      expect(result.response[0]).toEqual(expectdItem);
-    });
-    it('should only keep itemMasterId and quantity for emptyMenuItems', function () {
-      var result = StoreInstancePackingCtrl.createPayload();
-      var expectdItem = {
-        itemMasterId: 5,
-        quantity: 9
-      };
-      expect(result.response[2]).toEqual(expectdItem);
-    });
-  });
-
-  describe('filtered master menu items', function () {
-
-    beforeEach(function() {
-      initController();
-    });
-
-    it('should not allow to add items that are already in the store items', function () {
-      scope.menuItems = [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}];
-      scope.masterItemsList = [{id: 1}, {id: 2}, {id: 5}];
-      scope.$apply();
-      expect(scope.filteredMasterItemList.length).toBe(1);
-    });
-
-    describe('add new items to store instance', function () {
-      beforeEach(function(){
-        scope.emptyMenuItems = [];
-        scope.menuItems = [{itemMasterId: 1}, {itemMasterId: 2}];
-        scope.masterItemsList = [{id: 1}, {id: 2}, {id: 3}];
-        scope.$apply();
-      });
-
-      it('should add X number if items based on addItemsNumber variable', function () {
-        scope.addItemsNumber = 10;
-        scope.addItems();
-        expect(scope.emptyMenuItems.length).toBe(10);
-      });
-      it('should not let the user add items if there is no available items', function () {
-        scope.masterItemsList = [{id: 1}, {id: 2}];
-        scope.addItemsNumber = 10;
-        scope.$apply();
-        scope.addItems();
-        expect(scope.emptyMenuItems.length).toBe(0);
-      });
-    });
-
-  });
-
-  describe('if a user can proceed', function () {
-
-    beforeEach(function() {
-      initController();
-    });
-
-    it('should allow the user to proceed if there are menu items in the view', function () {
-      scope.menuItems = [{itemMasterId: 1}, {itemMasterId: 2}, {itemMasterId: 3}];
       scope.$digest();
-      var canProceed = scope.canProceed();
-      expect(canProceed).toBeTruthy();
-    });
-
-    it('should allow the user to proceed if there are menu items in the view', function () {
-      scope.emptyMenuItems = [{
-        quantity: 9,
-        nonsenseKey: 4,
-        masterItem: {id: 5}
-      }];
-      scope.$digest();
-      var canProceed = scope.canProceed();
-      expect(canProceed).toBeTruthy();
-    });
-
-    it('should not allow the user to proceed if there are no items in the view', function () {
-      scope.emptyMenuItems = [];
-      scope.menuItems = [];
-      scope.$digest();
-      var canProceed = scope.canProceed();
-      expect(canProceed).toBeFalsy();
-    });
-
-  });
-
-  describe('checking an action state', function () {
-
-    it('should return true if the state passed matches the action state of the controller', function () {
-      initController();
-      var isDispatch = scope.isActionState('dispatch');
-      expect(isDispatch).toBeTruthy();
-    });
-
-    it('should return false if the state passed does not matches the action state of the controller', function () {
-      initController();
-      var isDispatch = scope.isActionState('replenish');
-      expect(isDispatch).toBeFalsy();
-    });
-
-    it('should return true if the state passed matches the action state of the controller', function () {
-      initController('replenish');
-      var isReplenish = scope.isActionState('replenish');
-      expect(isReplenish).toBeTruthy();
-    });
-
-    it('should return false if the state passed does not matches the action state of the controller', function () {
-      initController();
-      var isReplenish = scope.isActionState('replenish');
-      expect(isReplenish).toBeFalsy();
-    });
-
-  });
-
-  describe('variance calculation', function () {
-    var mockItem;
-    beforeEach(function() {
-      initController();
-      scope.variance = 50;
+      scope.variance = 20;
       mockItem = {
-        quantity: 1000,
-        menuQuantity: 10
+        menuQuantity: 10,
+        pickedQuantity: 10,
+        isMenuItem: true
       };
     });
+    it('should not mark items with pickedQuantity == menuQuantity', function () {
+      StoreInstancePackingCtrl.calculateVariance(mockItem);
+      expect(mockItem.exceedsVariance).toEqual(false);
+    });
 
-    it('should set item.exceedsVariance to true if threshold exceeds variance', function () {
+    it('should mark items with pickedQuantity >> menuQuantity', function () {
+      mockItem.pickedQuantity = 1000;
       StoreInstancePackingCtrl.calculateVariance(mockItem);
       expect(mockItem.exceedsVariance).toEqual(true);
     });
-    it('should set item.exceedsVariance to false if threshold is equal to variance', function () {
-      mockItem = {
-        quantity: 10,
-        menuQuantity: 10
-      };
+
+    it('should not mark items with pickedQuantity < menuQuantity', function () {
+      mockItem.pickedQuantity = 9;
       StoreInstancePackingCtrl.calculateVariance(mockItem);
       expect(mockItem.exceedsVariance).toEqual(false);
     });
-    it('should set item.exceedsVariance to false if threshold is less than variance', function () {
-      mockItem = {
-        quantity: 11,
-        menuQuantity: 10
-      };
+
+    it('should not mark items with low variance', function () {
+      mockItem.pickedQuantity = 11;
       StoreInstancePackingCtrl.calculateVariance(mockItem);
       expect(mockItem.exceedsVariance).toEqual(false);
-    });
-    it('should item.exceedsVariance to false if picked < required quantity', function () {
-      mockItem = {
-        quantity: 9,
-        menuQuantity: 10
-      };
-      StoreInstancePackingCtrl.calculateVariance(mockItem);
-      expect(mockItem.exceedsVariance).toEqual(false);
-    });
-    it('should accept null or undefined values', function () {
-      mockItem = {
-        quantity: null,
-        menuQuantity: null
-      };
-      StoreInstancePackingCtrl.calculateVariance(mockItem);
-      expect(mockItem.exceedsVariance).toEqual(false);
-    });
-    it('should accept undefined values', function () {
-      mockItem = {};
-      StoreInstancePackingCtrl.calculateVariance(mockItem);
-      expect(mockItem.exceedsVariance).toEqual(false);
-    });
-    it('should accept string values', function () {
-      mockItem = {
-        quantity: '900',
-        menuQuantity: '10'
-      };
-      StoreInstancePackingCtrl.calculateVariance(mockItem);
-      expect(mockItem.exceedsVariance).toEqual(true);
-    });
-    it('should use calculated totalQuantity if state is redispatch', function () {
-      initController('redispatch');
-      mockItem = {
-        quantity: 3,
-        inboundQuantity: 100,
-        ullageQuantity: 2,
-        menuQuantity: 10
-      };
-      StoreInstancePackingCtrl.calculateVariance(mockItem);
-      expect(mockItem.exceedsVariance).toEqual(true);
     });
   });
-
 
 });
