@@ -389,7 +389,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.validateUllageReasonFields = function () {
-      if($routeParams.action === 'redispatch' && item.shouldDisplayOffloadData) {
+      if($routeParams.action === 'redispatch') {
         $this.checkUllageReasonValidityInList($scope.pickList, 'pickUllageReason');
         $this.checkUllageReasonValidityInList($scope.newPickListItems, 'newPickListUllageReason');
       }
