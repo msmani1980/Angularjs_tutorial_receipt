@@ -300,7 +300,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.addPickListItemsToPayload = function (promiseArray) {
       var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
       angular.forEach(mergedItems, function (item) {
-        if (item.pickedQuantity > 0) {
+        var didQuantityChange = (angular.isDefined(item.oldPickedQuantity)) ? parseInt(item.pickedQuantity) !== item.oldPickedQuantity : true;
+        if (item.isNewItem || (parseInt(item.pickedQuantity) > 0 && didQuantityChange)) {
           var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
           if (item.pickedId) {
             payloadItem.id = item.pickedId;
@@ -314,14 +315,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var storeInstanceToUse = ($routeParams.action === 'end-instance') ? $routeParams.storeId : $scope.storeDetails.prevStoreInstanceId;
       var itemsArray = (isRedispatch) ? $scope.pickListItems : ($scope.offloadListItems.concat($scope.newOffloadListItems));
       angular.forEach(itemsArray, function (item) {
-        if (item.ullageQuantity > 0) {
+        var didUllageQuantityChange = (angular.isDefined(item.ullageQuantity)) ? parseInt(item.ullageQuantity) !== item.oldUllageQuantity : true;
+        if (item.isNewItem || (paseInt(item.ullageQuantity) > 0 && didUllageQuantityChange)) {
           var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage');
           if (item.ullageId) {
             ullagePayloadItem.id = item.ullageId;
           }
           promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
         }
-        if (item.inboundQuantity > 0) {
+        var didInboundQuantityChange = (angular.isDefined(item.inboundQuantity)) ? parseInt(item.inboundQuantity) !== item.oldInboundQuantity : true;
+        if (item.isNewItem || (parseInt(item.inboundQuantity) > 0 && didInboundQuantityChange)) {
           var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
           var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName);
           if (item.inboundId) {
@@ -415,10 +418,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         itemDescription: itemFromAPI.itemCode + ' - ' + itemFromAPI.itemName,
         itemName: itemFromAPI.itemName,
         menuQuantity: (isFromMenu) ? itemFromAPI.menuQuantity : 0,
-        pickedQuantity: 0,
-        inboundQuantity: 0,
-        ullageQuantity: 0,
-        dispatchQuantity: 0,
+        pickedQuantity: '0',
+        oldPickedQuantity: 0,
+        inboundQuantity: '0',
+        oldInboundQuantity: 0,
+        ullageQuantity: '0',
+        oldUllageQuantity: 0,
         itemMasterId: itemFromAPI.itemMasterId,
         isMenuItem: isFromMenu,
         isNewItem: false,
