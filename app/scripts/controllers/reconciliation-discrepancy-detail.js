@@ -13,7 +13,7 @@ angular.module('ts5App')
     var $this = this;
 
     function initLMPStockRevisions() {
-      angular.forEach($scope.LMPStock, function (item) {
+      angular.forEach($scope.stockItemList, function (item) {
         item.revision = angular.copy(item);
         item.isEditing = false;
       });
@@ -28,14 +28,14 @@ angular.module('ts5App')
 
     function setStockItem(stockItem) {
       var newItem;
-      var varianceQuantity = (stockItem.eposTotal || 0) - ( (stockItem.dispatchedQuantity + 1) - ((stockItem.inboundQuantity || 0) / (stockItem.offloadQuantity || 0)) ); // calculated as {ePOS Sales - [(LMP Dispatched Count + LMP Replenish Count) - LMP Incoming/Offload Count]}
+      var varianceQuantity = (stockItem.eposTotal || 0) - ( (stockItem.dispatchedQuantity + 0) - ((stockItem.inboundQuantity || 0) / (stockItem.offloadQuantity || 0)) ); // calculated as {ePOS Sales - [(LMP Dispatched Count + LMP Replenish Count) - LMP Incoming/Offload Count]}
       var retailValue = stockItem.price;
       var varianceValue = varianceQuantity * stockItem.price;
       var isDiscrepancy = (varianceQuantity !== 0);
       newItem = {
         itemName: stockItem.itemName,
         dispatchedCount: stockItem.dispatchedQuantity,
-        replenishCount: 1,
+        replenishCount: 0,
         inboundCount: stockItem.inboundQuantity,
         offloadCount: stockItem.offloadQuantity,
         ePOSSales: $filter('currency')(stockItem.eposQuantity || 0, ''),
@@ -48,35 +48,35 @@ angular.module('ts5App')
     }
 
     function mergeItems(rawItemList) {
-      var inboundItemList = rawItemList.filter(function(item) {
+      var inboundItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
             name: 'Warehouse Close'
           }).id;
       });
 
-      var dispatchedItemList = rawItemList.filter(function(item) {
+      var dispatchedItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
             name: 'Warehouse Open'
           }).id;
       });
 
-      var offloadItemList = rawItemList.filter(function(item) {
+      var offloadItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
             name: 'Offload'
           }).id;
       });
 
-      inboundItemList.map(function(item) {
+      inboundItemList.map(function (item) {
         item.inboundQuantity = item.quantity || 0;
         delete item.quantity;
       });
 
-      dispatchedItemList.map(function(item) {
+      dispatchedItemList.map(function (item) {
         item.dispatchedQuantity = item.quantity || 0;
         delete item.quantity;
       });
 
-      offloadItemList.map(function(item) {
+      offloadItemList.map(function (item) {
         item.offloadQuantity = item.quantity || 0;
         delete item.quantity;
       });
@@ -90,13 +90,13 @@ angular.module('ts5App')
 
       reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId).then(function (storeInstanceItemList) {
         var filteredItems = mergeItems(storeInstanceItemList.response);
-          var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
+        var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
         angular.forEach(mergedItemList, function (stockItem) {
           stockItemList.push(setStockItem(stockItem));
         });
+        $scope.stockItemList = stockItemList;
+        initLMPStockRevisions();
       });
-      $scope.stockItemList = stockItemList;
-      initLMPStockRevisions();
     }
 
     function getCashBagData() {
@@ -145,6 +145,31 @@ angular.module('ts5App')
       return {
         totalLMP: $filter('currency')(total, ''),
         totalEPOS: $filter('currency')(total, '')
+      };
+    }
+
+    function setDiscrepancy() {
+      var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
+      var netPercentage = netValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
+      var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
+      var revenuePercentage = revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
+      $scope.discrepancy = {
+        net: {
+          value: netValue,
+          percentage: netPercentage
+        },
+        revenue: {
+          value: revenueValue,
+          percentage: revenuePercentage
+        },
+        exchange: {
+          value: 0,
+          percentage: 0
+        },
+        total: {
+          value: 0,
+          percentage: 0
+        }
       };
     }
 
@@ -260,6 +285,7 @@ angular.module('ts5App')
 
       setNetTotals(stockObject);
       setStockData(stockTotals);
+      setDiscrepancy();
     }
 
     function initData() {

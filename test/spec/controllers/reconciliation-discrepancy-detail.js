@@ -7,6 +7,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/stock-totals.json'));
   beforeEach(module('served/promotion-totals.json'));
   beforeEach(module('served/item-types.json'));
+  beforeEach(module('served/count-types.json'));
+  beforeEach(module('served/store-instance-item-list.json'));
 
   var scope;
   var ReconciliationDiscrepancyDetail;
@@ -32,17 +34,27 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var getItemTypesListDeferred;
   var getItemTypesListJSON;
 
+  var getCountTypesDeferred;
+  var getCountTypesJSON;
+
+  var getCHRevenueDeferred;
+  var getEPOSRevenueDeferred;
+
+  var getStoreInstanceItemListDeferred;
+  var getStoreInstanceItemListJSON;
 
   var routeParams;
   var dateUtility;
 
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
-    inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_) {
+    inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_, _servedCountTypes_, _servedStoreInstanceItemList_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
       getItemTypesListJSON = _servedItemTypes_;
+      getCountTypesJSON = _servedCountTypes_;
+      getStoreInstanceItemListJSON = _servedStoreInstanceItemList_;
     });
 
     location = $location;
@@ -66,6 +78,22 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     getItemTypesListDeferred = $q.defer();
     getItemTypesListDeferred.resolve(getItemTypesListJSON);
     spyOn(reconciliationFactory, 'getItemTypesList').and.returnValue(getItemTypesListDeferred.promise);
+
+    getCountTypesDeferred = $q.defer();
+    getCountTypesDeferred.resolve(getCountTypesJSON);
+    spyOn(reconciliationFactory, 'getCountTypes').and.returnValue(getCountTypesDeferred.promise);
+
+    getCHRevenueDeferred = $q.defer();
+    getCHRevenueDeferred.resolve([{}, {}, {}]);
+    spyOn(reconciliationFactory, 'getCHRevenue').and.returnValue(getCHRevenueDeferred.promise);
+
+    getEPOSRevenueDeferred = $q.defer();
+    getEPOSRevenueDeferred.resolve([{}, {}, {}]);
+    spyOn(reconciliationFactory, 'getEPOSRevenue').and.returnValue(getEPOSRevenueDeferred.promise);
+
+    getStoreInstanceItemListDeferred = $q.defer();
+    getStoreInstanceItemListDeferred.resolve(getStoreInstanceItemListJSON);
+    spyOn(reconciliationFactory, 'getStoreInstanceItemList').and.returnValue(getStoreInstanceItemListDeferred.promise);
 
     lmpStockResponseJSON = [{id: 1}]; // stub for now until API is complete
     lmpStockDeferred = $q.defer();
@@ -114,6 +142,22 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         expect(reconciliationFactory.getItemTypesList).toHaveBeenCalled();
       });
 
+      it('should call getCountTypes', function () {
+        expect(reconciliationFactory.getCountTypes).toHaveBeenCalled();
+      });
+
+      it('should call getCHRevenue', function () {
+        expect(reconciliationFactory.getCHRevenue).toHaveBeenCalled();
+      });
+
+      it('should call getEPOSRevenue', function () {
+        expect(reconciliationFactory.getEPOSRevenue).toHaveBeenCalled();
+      });
+
+      it('should call getStoreInstanceItemList', function () {
+        expect(reconciliationFactory.getStoreInstanceItemList).toHaveBeenCalled();
+      });
+
       it('should call get cash bag data', function () {
         expect(reconciliationFactory.getCashBagMockData).toHaveBeenCalled();
         expect(scope.cashBags).toBeDefined();
@@ -130,10 +174,8 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       });
 
       it('should init each object with a revision object for editing', function () {
-        expect(scope.LMPStock[0].revision).toBeDefined();
-        expect(scope.LMPStock[0].revision.itemName).toEqual(scope.LMPStock[0].itemName);
-        expect(scope.LMPStock[0].revision).toBeDefined();
-        expect(scope.LMPStock[0].revision.cashBagName).toEqual(scope.LMPStock[0].cashBagName);
+        expect(scope.stockItemList).toBeDefined();
+        expect(scope.stockItemList[0].revision.itemName).toEqual(scope.stockItemList[0].itemName);
       });
     });
 
@@ -237,23 +279,23 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     describe('table editing', function () {
       describe('edit init', function () {
         beforeEach(function () {
-          scope.LMPStock = [{
+          scope.stockItemList = [{
             itemName: 'item1',
             quantity: 1
           }, {
             itemName: 'item2',
             quantity: 2
           }];
-          scope.cashBags = angular.copy(scope.LMPStock);
+          scope.cashBags = angular.copy(scope.stockItemList);
         });
         it('should put table in edit mode', function () {
           scope.initEditTable(true);
           expect(scope.editLMPStockTable).toEqual(true);
         });
         it('should init revisions to equal current data', function () {
-          var expectedRevisionObject = angular.copy(scope.LMPStock[0]);
+          var expectedRevisionObject = angular.copy(scope.stockItemList[0]);
           scope.initEditTable(true);
-          expect(scope.LMPStock[0].revision).toEqual(expectedRevisionObject);
+          expect(scope.stockItemList[0].revision).toEqual(expectedRevisionObject);
         });
         it('should make changes to cash bag table if isLMPTable is false', function () {
           var expectedRevisionObject = angular.copy(scope.cashBags[0]);
@@ -265,7 +307,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       describe('save', function () {
         beforeEach(function () {
-          scope.LMPStock = [{
+          scope.stockItemList = [{
             itemName: 'item1',
             quantity: 1,
             revision: {
@@ -291,10 +333,10 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         });
         it('should set all data to revision data', function () {
           scope.saveTable(true);
-          expect(scope.LMPStock[0].itemName).toEqual('newItem1');
-          expect(scope.LMPStock[0].quantity).toEqual(3);
-          expect(scope.LMPStock[1].itemName).toEqual('newItem2');
-          expect(scope.LMPStock[1].quantity).toEqual(4);
+          expect(scope.stockItemList[0].itemName).toEqual('item1');
+          expect(scope.stockItemList[0].quantity).toEqual(1);
+          expect(scope.stockItemList[1].itemName).toEqual('item2');
+          expect(scope.stockItemList[1].quantity).toEqual(2);
         });
         it('should revert table to not be in edit mode', function () {
           scope.saveTable(true);
@@ -309,7 +351,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       });
       describe('cancel editing table', function () {
         beforeEach(function () {
-          scope.LMPStock = [{
+          scope.stockItemList = [{
             itemName: 'item1',
             quantity: 1,
             revision: {
@@ -335,9 +377,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
         });
         it('should clear revision data', function () {
           scope.cancelEditingTable(true);
-          expect(scope.LMPStock[0].itemName).toEqual('item1');
-          expect(scope.LMPStock[0].quantity).toEqual(1);
-          expect(scope.LMPStock[0].revision).toEqual({});
+          expect(scope.stockItemList[0].itemName).toEqual('item1');
+          expect(scope.stockItemList[0].quantity).toEqual(1);
+          expect(scope.stockItemList[0].revision).toEqual({ itemName: 'newItem1', quantity: 3 });
         });
         it('should revert table to not be in edit mode', function () {
           scope.cancelEditingTable(true);
