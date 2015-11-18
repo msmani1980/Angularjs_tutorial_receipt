@@ -119,7 +119,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
     spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
 
-    cashBagsResponseJSON = [{id: 2}]; // stub for now until API is complete
+    cashBagsResponseJSON = [{id: 2}];
     cashBagsDeferred = $q.defer();
     cashBagsDeferred.resolve(cashBagsResponseJSON);
     spyOn(reconciliationFactory, 'getCashBagMockData').and.returnValue(cashBagsDeferred.promise);
