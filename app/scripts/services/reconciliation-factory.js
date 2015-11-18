@@ -98,44 +98,6 @@ angular.module('ts5App')
       return getEPOSRevenueDeferred.promise;
     }
 
-    var getLMPStockMockData = function () {
-      var mockLMPData = [{
-        itemName: 'Chocolate',
-        itemDescription: 'Food: Chocolate',
-        dispatchedCount: 50,
-        inboundCount: 50,
-        ePOSSales: 20,
-        varianceQuantity: 0,
-        retailValue: 5,
-        varianceValue: 7.0,
-        isDiscrepancy: true
-      }, {
-        itemName: 'Pepsi',
-        itemDescription: 'Drink: Pepsi',
-        dispatchedCount: 150,
-        inboundCount: 30,
-        ePOSSales: 25,
-        varianceQuantity: 11,
-        retailValue: 6,
-        varianceValue: 12.0,
-        isDiscrepancy: false
-      }, {
-        itemName: 'Coke',
-        itemDescription: 'Drink: Coke',
-        dispatchedCount: 20,
-        inboundCount: 35,
-        ePOSSales: 12,
-        varianceQuantity: 0,
-        retailValue: 5,
-        varianceValue: 14.0,
-        isDiscrepancy: false
-      }];
-
-      var LMPStockMockResponseDeferred = $q.defer();
-      LMPStockMockResponseDeferred.resolve(mockLMPData);
-      return LMPStockMockResponseDeferred.promise;
-    };
-
     var getCashBagMockData = function () {
       var mockCashBag = [{
         cashBag: 'CB123',
@@ -181,7 +143,6 @@ angular.module('ts5App')
       getReconciliationPrecheckSchedules: getReconciliationPrecheckSchedules,
       getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags,
 
-      getLMPStockMockData: getLMPStockMockData,
       getCashBagMockData: getCashBagMockData
     };
   });

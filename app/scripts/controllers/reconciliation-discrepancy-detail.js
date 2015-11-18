@@ -8,9 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, reconciliationFactory, dateUtility, lodash) {
-
+  .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, reconciliationFactory, currencyFactory, GlobalMenuService, dateUtility, lodash) {
     var $this = this;
+    this.companyId = GlobalMenuService.company.get();
 
     function initLMPStockRevisions() {
       angular.forEach($scope.stockItemList, function (item) {
@@ -251,6 +251,12 @@ angular.module('ts5App')
       return total;
     }
 
+    function getCurrencyByBaseCurrencyId (currenciesArray, baseCurrencyId) {
+      return currenciesArray.filter(function (currencyItem) {
+        return currencyItem.id === baseCurrencyId;
+      })[0];
+    }
+
     function setupData(responseCollection) {
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
@@ -258,6 +264,9 @@ angular.module('ts5App')
       var promotionTotals = angular.copy(responseCollection[3].response);
       var chRevenue = angular.copy(responseCollection[4]);
       var eposRevenue = angular.copy(responseCollection[5]);
+      $this.globalCurrencyList = angular.copy(responseCollection[6].response);
+      $scope.companyBaseCurrency = getCurrencyByBaseCurrencyId($this.globalCurrencyList, responseCollection[7].baseCurrencyId);
+      console.log($scope.companyBaseCurrency);
 
       $scope.totalRevenue = {
         cashHandler: $filter('currency')(getCHRevenue(chRevenue), ''),
@@ -292,7 +301,9 @@ angular.module('ts5App')
         reconciliationFactory.getStockTotals($routeParams.storeInstanceId),
         reconciliationFactory.getPromotionTotals($routeParams.storeInstanceId),
         reconciliationFactory.getCHRevenue($routeParams.storeInstanceId),
-        reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId)
+        reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId),
+        currencyFactory.getCompanyGlobalCurrencies(),
+        currencyFactory.getCompany($this.companyId)
       ];
 
       $q.all(promiseArray).then(setupData);
