@@ -200,10 +200,6 @@ describe('Service: storeInstanceFactory', function() {
       storeInstanceFactory.getStoreInstanceItem(id, itemId);
       expect(storeInstanceService.getStoreInstanceItem).toHaveBeenCalledWith(id, itemId);
     });
-    it('should call createStoreInstanceItem', function() {
-      storeInstanceFactory.createStoreInstanceItem(id, mockPayload);
-      expect(storeInstanceService.createStoreInstanceItem).toHaveBeenCalledWith(id, mockPayload);
-    });
     it('should call updateStoreInstanceItem', function() {
       storeInstanceFactory.updateStoreInstanceItem(id, itemId, mockPayload);
       expect(storeInstanceService.updateStoreInstanceItem).toHaveBeenCalledWith(id, itemId, mockPayload);
@@ -381,28 +377,9 @@ describe('Service: storeInstanceFactory', function() {
       storeInstanceFactory.getStoreStatusList();
       expect(recordsService.getStoreStatusList).toHaveBeenCalled();
     });
-    it('should call getItemTypes', function() {
-      storeInstanceFactory.getItemTypes();
-      expect(recordsService.getItemTypes).toHaveBeenCalled();
-    });
-    it('should call getCharacteristics', function() {
-      storeInstanceFactory.getCharacteristics();
-      expect(recordsService.getCharacteristics).toHaveBeenCalled();
-    });
     it('should call getCountTypes', function() {
       storeInstanceFactory.getCountTypes();
       expect(recordsService.getCountTypes).toHaveBeenCalled();
-    });
-    it('should call getThresholdForDispatchProcess', function() {
-      storeInstanceFactory.getFeaturesList();
-      expect(recordsService.getFeatures).toHaveBeenCalled();
-    });
-  });
-
-  describe('featureThresholdsService calls', function () {
-    it('should call getThresholdList ', function () {
-      storeInstanceFactory.getThresholdList();
-      expect(featureThresholdsService.getThresholdList).toHaveBeenCalled();
     });
   });
 
