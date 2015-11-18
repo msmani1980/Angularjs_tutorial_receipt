@@ -1,5 +1,4 @@
 'use strict';
-// jshint maxcomplexity:6
 
 /**
  * @ngdoc function
@@ -246,8 +245,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.filterOffloadListItems();
     };
 
+    this.doChangesExistInItem = function (item) {
+      return (item.pickedQuantity || item.ullageQuantity || item.ullageReason || item.inboundQuantity || item.masterItem);
+    };
+
     $scope.showDeleteWarning = function (item) {
-      if (item.pickedQuantity > 0 || item.ullageQuantity > 0 || item.ullageReason || item.inboundQuantity > 0 || item.masterItem) {
+      var changesExist = $this.doChangesExistInItem(item);
+      if (changesExist) {
         $scope.deleteRecordDialog(item, ['itemDescription']);
       } else {
         $scope.removeRecord(item);
@@ -450,17 +454,33 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return newItem;
     };
 
+    this.getItemQuantityType = function (item) {
+      var countType = $this.getNameByIdFromArray(item.countTypeId, $scope.countTypes);
+      var countTypeToQuantityTypeMap = {
+        'Warehouse Open': 'picked',
+        'Offload': 'inbound',
+        'Warehouse Close': 'inbound',
+        'Ullage': 'ullage'
+      };
+
+      if(countTypeToQuantityTypeMap[countType]) {
+        return countTypeToQuantityTypeMap[countType];
+      }
+      return '';
+    };
+
     this.setQuantityByType = function (itemFromAPI, itemToSet, isFromRedispatchInstance) {
-      var countType = $this.getNameByIdFromArray(itemFromAPI.countTypeId, $scope.countTypes);
-      if (countType === 'Warehouse Open' && !isFromRedispatchInstance) {
+      var quantityType = $this.getItemQuantityType(itemFromAPI);
+
+      if (quantityType === 'picked' && !isFromRedispatchInstance) {
         itemToSet.pickedQuantity = itemFromAPI.quantity.toString();
         itemToSet.oldPickedQuantity = itemFromAPI.quantity;
         itemToSet.pickedId = itemFromAPI.id;
-      } else if (countType === 'Offload' || countType === 'Warehouse Close') {
+      } else if (quantityType === 'inbound') {
         itemToSet.inboundQuantity = itemFromAPI.quantity.toString();
         itemToSet.oldInboundQuantity = itemFromAPI.quantity;
         itemToSet.inboundId = itemFromAPI.id;
-      } else if (countType === 'Ullage') {
+      } else if (quantityType === 'ullage') {
         itemToSet.ullageQuantity = itemFromAPI.quantity.toString();
         itemToSet.oldUllageQuantity = itemFromAPI.quantity;
         var ullageReason = lodash.findWhere($scope.ullageReasonCodes, {id: itemFromAPI.ullageReasonCode});
