@@ -30,9 +30,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       angular.element('#loading').modal('hide');
     };
 
-    this.errorHandler = function () {
+    function handleResponseError(responseFromAPI) {
       $this.hideLoadingModal();
-    };
+      $scope.errorResponse = responseFromAPI;
+      $scope.displayError = true;
+    }
 
     this.getIdByNameFromArray = function (name, array) {
       var matchedObject = lodash.findWhere(array, {
@@ -64,7 +66,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $q.all(statusUpdatePromiseArray).then(function () {
         $this.hideLoadingModal();
         $location.url(stepObject.uri);
-      }, $this.showErrors);
+      }, handleResponseError);
     };
 
     this.saveStoreInstanceItem = function (storeInstanceId, item) {
@@ -87,7 +89,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else {
           $scope.variance = 99999999;
         }
-      }, $this.showErrors);
+      }, handleResponseError);
     };
 
 
@@ -311,25 +313,41 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
     };
 
+    this.addUllageQuantityToPayload = function (item) {
+      var didUllageQuantityChange = (angular.isDefined(item.oldUllageQuantity)) ? parseInt(item.ullageQuantity) !== item.oldUllageQuantity : true;
+      if (item.isNewItem || (item.ullageQuantity && parseInt(item.ullageQuantity) > 0 && didUllageQuantityChange)) {
+        var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage');
+        if (item.ullageId) {
+          ullagePayloadItem.id = item.ullageId;
+        }
+        return ullagePayloadItem;
+      }
+      return false;
+    };
+
+    this.addInboundQuantityToPayload = function (item, isRedispatch) {
+      var didInboundQuantityChange = (angular.isDefined(item.inboundQuantity)) ? parseInt(item.inboundQuantity) !== item.oldInboundQuantity : true;
+      if (item.isNewItem || (parseInt(item.inboundQuantity) > 0 && didInboundQuantityChange)) {
+        var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
+        var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName);
+        if (item.inboundId) {
+          offloadPayloadItem.id = item.inboundId;
+        }
+        return offloadPayloadItem;
+      }
+      return false;
+    };
+
     this.addOffloadItemsToPayload = function (promiseArray, isRedispatch) {
       var storeInstanceToUse = ($routeParams.action === 'end-instance') ? $routeParams.storeId : $scope.storeDetails.prevStoreInstanceId;
       var itemsArray = (isRedispatch) ? $scope.pickListItems : ($scope.offloadListItems.concat($scope.newOffloadListItems));
       angular.forEach(itemsArray, function (item) {
-        var didUllageQuantityChange = (angular.isDefined(item.ullageQuantity)) ? parseInt(item.ullageQuantity) !== item.oldUllageQuantity : true;
-        if (item.isNewItem || (paseInt(item.ullageQuantity) > 0 && didUllageQuantityChange)) {
-          var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage');
-          if (item.ullageId) {
-            ullagePayloadItem.id = item.ullageId;
-          }
+        var ullagePayloadItem = $this.addUllageQuantityToPayload(item);
+        if(ullagePayloadItem) {
           promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, ullagePayloadItem));
         }
-        var didInboundQuantityChange = (angular.isDefined(item.inboundQuantity)) ? parseInt(item.inboundQuantity) !== item.oldInboundQuantity : true;
-        if (item.isNewItem || (parseInt(item.inboundQuantity) > 0 && didInboundQuantityChange)) {
-          var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
-          var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName);
-          if (item.inboundId) {
-            offloadPayloadItem.id = item.inboundId;
-          }
+        var offloadPayloadItem = $this.addInboundQuantityToPayload(item, isRedispatch);
+        if(offloadPayloadItem) {
           promiseArray.push($this.saveStoreInstanceItem(storeInstanceToUse, offloadPayloadItem));
         }
       });
@@ -532,6 +550,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $this.hideLoadingModal();
     };
 
+    this.finalizeAllInitialization = function (responseCollection) {
+      $this.setInstanceReadOnly();
+      $this.mergeAllItems(responseCollection);
+    };
+
     this.getAllItems = function () {
       var storeInstanceForMenuItems = ($routeParams.action === 'replenish') ? $scope.storeDetails.replenishStoreInstanceId :
         $routeParams.storeId;
@@ -544,7 +567,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         getItemsPromises.push($this.getStoreInstanceItems($scope.storeDetails.prevStoreInstanceId));
       }
 
-      $q.all(getItemsPromises).then($this.mergeAllItems, $this.showErrors);
+      $q.all(getItemsPromises).then($this.finalizeAllInitialization, handleResponseError);
     };
 
     this.makeInitializePromises = function () {
@@ -588,16 +611,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.completeInitializeAfterDependencies = function () {
-      $this.setInstanceReadOnly();
       $this.getAllItems();
     };
 
     this.init = function () {
+      $scope.readOnly = true;
       $this.showLoadingModal('Loading Store Detail for Packing...');
       $this.initWizardSteps();
       $this.initControllerVars();
       var promises = $this.makeInitializePromises();
-      $q.all(promises).then($this.completeInitializeAfterDependencies);
+      $q.all(promises).then($this.completeInitializeAfterDependencies, handleResponseError);
     };
 
     $this.init();

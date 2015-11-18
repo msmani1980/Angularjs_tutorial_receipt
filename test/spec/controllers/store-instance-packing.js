@@ -552,15 +552,19 @@ describe('Controller: StoreInstancePackingCtrl', function () {
         scope.pickListItems = [{
           itemMasterId: 1,
           pickedQuantity: 1,
+          oldPickedQuantity: 2,
           inboundQuantity: 2,
+          oldInboundQuantity: 3,
           pickedId: 1,
-          inboundId: 2
-
+          inboundId: 2,
+          isNewItem: false
         }];
         scope.offloadListItems = [{
           itemMasterId: 3,
           inboundQuantity: 3,
-          inboundId: 3
+          oldInboundQuantity: 0,
+          inboundId: 3,
+          isNewItem: false
         }];
       });
       it('should save offload items to prev instance', function () {

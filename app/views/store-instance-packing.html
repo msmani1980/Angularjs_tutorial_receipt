@@ -1,15 +1,17 @@
 <div class="container">
 
+  <error-dialog form-object="storeInstancePackingForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
   <form name="storeInstancePackingForm" class="form" ng-submit="checkFormBeforeSave()">
 
     <step-wizard steps="wizardSteps" save-trigger="setUpdateStatusFlag(false)" prev-trigger="goToPreviousStep()"
                  save-button-text="saveButtonName"></step-wizard>
 
-    <form-error-dialog></form-error-dialog>
-
 
     <!-- INFORMATION BAR -->
     <store-instance-header></store-instance-header>
+
 
     <div class="modal fade" id="varianceWarningModal" role="dialog">
       <div class="modal-dialog">
@@ -240,7 +242,7 @@
           </td>
           <td>
             <input type="text"
-                   name="inboundQuantity-{{$index}}"
+                   name="offload-inbound-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
@@ -251,7 +253,7 @@
           </td>
           <td>
             <input type="text"
-                   name="ullageQuantity-{{$index}}"
+                   name="offload-ullage-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
@@ -295,7 +297,7 @@
           </td>
           <td>
             <input type="text"
-                   name="newInboundQuantity-{{$index}}"
+                   name="new-offload-inbound-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
@@ -306,7 +308,7 @@
           </td>
           <td>
             <input type="text"
-                   name="newUllageQuntity-{{$index}}"
+                   name="new-offload-ullage-{{$index}}"
                    custom-validity
                    custom-pattern="number"
                    class="form-control"
