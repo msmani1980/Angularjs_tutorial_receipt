@@ -108,11 +108,46 @@ angular.module('ts5App')
       });
     }
 
+    /*
+    * chCashBag
+     bankAmount: 0.1287
+     bankAmountCh: 0.513513
+     bankAmountFinal: 0.513513
+     cashbagNumber: "223800765"
+     coinAmountEposCh: 8.894114
+     coinAmountManual: 1.6787
+     coinAmountManualCh: 5.006387
+     cointAmountEpos: 2.9823
+     id: 1562
+     paperAmountEpos: 3.99
+     paperAmountEposCh: 15.9201
+     paperAmountManual: 1.0011
+     paperAmountManualCh: 3.994389
+     retailBaseCurrencyId: 8
+     retailCompanyCurrency: 1
+     retailCompanyId: 403
+     storeInstanceId: 844
+    * */
+
+    /*
+    eposCashBag
+     bankAmount: 1
+     cashbagNumber: "223800765"
+     coinAmountManual: 1.3454
+     cointAmountEpos: 1
+     id: 1563
+     paperAmountEpos: 1
+     paperAmountManual: 1.2346
+     retailCompanyCurrency: 8
+     retailCompanyId: 403
+     storeInstanceId: 844
+    * */
+
     function getCashBagData() {
-      reconciliationFactory.getCashBagMockData().then(function (dataFromAPI) {
-        $scope.cashBags = angular.copy(dataFromAPI);
+// no ePos amount
+      //ePOS crew amount = coinAmountManual + paperAmountManual
+        $scope.cashBags = [];
         initCashBagRevisions();
-      });
     }
 
     function showLoadingModal(text) {
@@ -159,8 +194,16 @@ angular.module('ts5App')
     function setDiscrepancy() {
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
       var netPercentage = netValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
-      var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
+
+      var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalNet.epos);
       var revenuePercentage = revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
+
+      var exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
+      var exchangePercentage = exchangeValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
+
+      var totalValue = netValue + revenueValue + exchangeValue;
+      var totalPercentage = netPercentage + revenuePercentage + exchangePercentage;
+
       $scope.discrepancy = {
         net: {
           value: netValue,
@@ -171,12 +214,12 @@ angular.module('ts5App')
           percentage: revenuePercentage
         },
         exchange: {
-          value: 0,
-          percentage: 0
+          value: exchangeValue,
+          percentage: exchangePercentage
         },
         total: {
-          value: 0,
-          percentage: 0
+          value: totalValue,
+          percentage: totalPercentage
         }
       };
     }
@@ -199,12 +242,12 @@ angular.module('ts5App')
     }
 
     function getEPOSRevenue(eposRevenue) {
-      var eposCashBag = eposRevenue[0].response;
-      var eposCreditCard = eposRevenue[1].response;
-      var eposDiscount = eposRevenue[2].response;
+      $this.eposCashBag = angular.copy(eposRevenue[0].response);
+      var eposCreditCard = angular.copy(eposRevenue[1].response);
+      var eposDiscount = angular.copy(eposRevenue[2].response);
       var total = 0;
 
-      total += lodash.reduce(eposCashBag, function (total, cashBag) {
+      total += lodash.reduce($this.eposCashBag, function (total, cashBag) {
         if (cashBag.bankAmount) {
           return total + cashBag.bankAmount;
         } else if (cashBag.coinAmountManual && cashBag.paperAmountManual) {
@@ -228,12 +271,12 @@ angular.module('ts5App')
     }
 
     function getCHRevenue(chRevenue) {
-      var chCashBag = chRevenue[0].response;
-      var chCreditCard = chRevenue[1].response;
-      var chDiscount = chRevenue[2].response;
+      $this.chCashBag = angular.copy(chRevenue[0].response);
+      var chCreditCard = angular.copy(chRevenue[1].response);
+      var chDiscount = angular.copy(chRevenue[2].response);
       var total = 0;
 
-      total += lodash.reduce(chCashBag, function (total, cashBag) {
+      total += lodash.reduce($this.chCashBag, function (total, cashBag) {
         if (cashBag.bankAmountCh) {
           return total + cashBag.bankAmountCh;
         } else if (cashBag.coinAmountManualCh && cashBag.paperAmountManualCh) {
