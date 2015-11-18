@@ -27,22 +27,23 @@ angular.module('ts5App')
 
     function setStockItem(stockItem) {
       var newItem;
-      var eposSales = stockItem.eposTotal || 0;
-      var lmpDispatchedCount = stockItem.dispatchedQuantity || 0;
+      var eposSales = stockItem.eposTotal;
+      var lmpDispatchedCount = stockItem.dispatchedQuantity;
       var lmpReplenishCount = 0;
-      var lmpIncomingCount = stockItem.inboundQuantity || 0;
-      var offloadCount = stockItem.offloadQuantity || 0;
+      var lmpIncomingCount = stockItem.inboundQuantity;
+      var offloadCount = stockItem.offloadQuantity;
       var varianceQuantity = eposSales - ((lmpDispatchedCount + lmpReplenishCount) - lmpIncomingCount / offloadCount); // calculated as {ePOS Sales - [(LMP Dispatched Count + LMP Replenish Count) - LMP Incoming/Offload Count]}
       var retailValue = stockItem.price;
       var varianceValue = varianceQuantity * stockItem.price;
       var isDiscrepancy = (varianceQuantity !== 0);
+
       newItem = {
         itemName: stockItem.itemName,
         dispatchedCount: stockItem.dispatchedQuantity,
         replenishCount: 0,
         inboundCount: stockItem.inboundQuantity,
         offloadCount: stockItem.offloadQuantity,
-        ePOSSales: $filter('currency')(stockItem.eposQuantity || 0, ''),
+        ePOSSales: $filter('currency')(stockItem.eposQuantity, ''),
         varianceQuantity: $filter('currency')(varianceQuantity, ''),
         retailValue: $filter('currency')(retailValue, ''),
         varianceValue: $filter('currency')(varianceValue, ''),
