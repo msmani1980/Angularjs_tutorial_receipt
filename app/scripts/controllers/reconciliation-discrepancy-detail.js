@@ -55,7 +55,8 @@ angular.module('ts5App')
       };
     }
 
-    function mergeItems(rawItemList) {
+    function mergeItems(itemListFromAPI) {
+      var rawItemList = angular.copy(itemListFromAPI);
       var inboundItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
             name: 'Warehouse Close'

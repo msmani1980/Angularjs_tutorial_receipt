@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .factory('reconciliationFactory',
-    function ($q, storeInstanceService, storesService, stationsService, reconciliationService, itemTypesService, recordsService, currenciesService) {
+    function ($q, storeInstanceService, storesService, stationsService, reconciliationService, itemTypesService, recordsService, currenciesService, companyService) {
 
       function getStoreStatusList(payload) {
         return recordsService.getStoreStatusList(payload);
