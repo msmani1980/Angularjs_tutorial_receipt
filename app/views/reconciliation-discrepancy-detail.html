@@ -85,7 +85,7 @@
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr>
-                    <td colspan="2" class="active">LMP Station Stock [GBP]</td>
+                    <td colspan="2" class="active">LMP Station Stock [{{companyBaseCurrency.currencyCode}}]</td>
                   </tr>
                   <tr>
                     <td>Gross Value of LMP Stock</td>
@@ -112,7 +112,7 @@
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr class="active">
-                    <td colspan="2">ePOS Sales [GBP]</td>
+                    <td colspan="2">ePOS Sales [{{companyBaseCurrency.currencyCode}}]</td>
                   </tr>
                   <tr>
                     <td>Gross Value of ePOS Sales</td>
@@ -139,7 +139,7 @@
               <div class="col-xs-4">
                 <table class="table table-bordered">
                   <tr>
-                    <td class="active" colspan="2">Total Revenue [GBP]</td>
+                    <td class="active" colspan="2">Total Revenue [{{companyBaseCurrency.currencyCode}}]</td>
                   </tr>
                   <tr>
                     <td>@ Cash Handler Exchange Rate</td>
@@ -255,13 +255,13 @@
                       <span class="fa fa-sort-asc active" ng-show="getArrowType('retailValue', true) === 'ascending'"></span>
                       <span class="fa fa-sort-desc active" ng-show="getArrowType('retailValue', true) === 'descending'"></span>
                       <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('retailValue', true) === 'none'"></span>
-                      Retail Item Price [GBP]
+                      Retail Item Price [{{companyBaseCurrency.currencyCode}}]
                     </th>
                     <th ng-click="updateOrderBy('varianceValue', true)">
                       <span class="fa fa-sort-asc active" ng-show="getArrowType('varianceValue', true) === 'ascending'"></span>
                       <span class="fa fa-sort-desc active" ng-show="getArrowType('varianceValue', true) === 'descending'"></span>
                       <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('varianceValue', true) === 'none'"></span>
-                      Variance Value [GBP]
+                      Variance Value [{{companyBaseCurrency.currencyCode}}]
                     </th>
                     <th></th>
                   </tr>
@@ -403,7 +403,7 @@
                       <span class="fa fa-sort-asc active" ng-show="getArrowType('totalBand', false) === 'ascending'"></span>
                       <span class="fa fa-sort-desc active" ng-show="getArrowType('totalBand', false) === 'descending'"></span>
                       <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('totalBand', false) === 'none'"></span>
-                      Total Banked [GBP]
+                      Total Banked [{{companyBaseCurrency.currencyCode}}]
                     </th>
                     <td></td>
                   </tr>
