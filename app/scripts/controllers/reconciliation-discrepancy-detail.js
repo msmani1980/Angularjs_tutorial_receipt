@@ -27,7 +27,12 @@ angular.module('ts5App')
 
     function setStockItem(stockItem) {
       var newItem;
-      var varianceQuantity = (stockItem.eposTotal || 0) - ( (stockItem.dispatchedQuantity + 0) - ((stockItem.inboundQuantity || 0) / (stockItem.offloadQuantity || 0)) ); // calculated as {ePOS Sales - [(LMP Dispatched Count + LMP Replenish Count) - LMP Incoming/Offload Count]}
+      var eposSales = stockItem.eposTotal || 0;
+      var lmpDispatchedCount = stockItem.dispatchedQuantity || 0;
+      var lmpReplenishCount = 0;
+      var lmpIncomingCount = stockItem.inboundQuantity || 0;
+      var offloadCount = stockItem.offloadQuantity || 0;
+      var varianceQuantity = eposSales - ((lmpDispatchedCount + lmpReplenishCount) - lmpIncomingCount / offloadCount); // calculated as {ePOS Sales - [(LMP Dispatched Count + LMP Replenish Count) - LMP Incoming/Offload Count]}
       var retailValue = stockItem.price;
       var varianceValue = varianceQuantity * stockItem.price;
       var isDiscrepancy = (varianceQuantity !== 0);
@@ -136,7 +141,7 @@ angular.module('ts5App')
     }
 
     function getTotalsForPromotions(promotionTotals) {
-      var total = promotionTotals.reduce(function (total, promotionItem) {
+      var total = lodash.reduce(promotionTotals, function (total, promotionItem) {
         return total + promotionItem.convertedAmount;
       });
 
