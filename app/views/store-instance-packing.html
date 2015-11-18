@@ -3,7 +3,7 @@
   <error-dialog form-object="storeInstancePackingForm" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <form name="storeInstancePackingForm" class="form" ng-submit="checkFormBeforeSave()">
+  <form name="storeInstancePackingForm" class="form" ng-submit="submit()">
 
     <step-wizard steps="wizardSteps" save-trigger="setUpdateStatusFlag(false)" prev-trigger="goToPreviousStep()"
                  save-button-text="saveButtonName"></step-wizard>
@@ -103,7 +103,7 @@
                    ng-if="item.shouldDisplayOffloadData"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('ullage')">
-            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="item.shouldDisplayOffloadData">
+            <ui-select ng-model="item.ullageReason" theme="bootstrap" ng-if="item.shouldDisplayOffloadData" name="pickUllageReason{{ $index }}">
               <ui-select-match allow-clear placeholder="Select an Ullage Reason">
                 {{ $select.selected.companyReasonCodeName }}
               </ui-select-match>
@@ -153,7 +153,7 @@
         <!-- New Pick List Items-->
         <tr ng-repeat="item in newPickListItems track by $index" ng-hide="readOnly">
           <td>
-            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterPickListItems()">
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterPickListItems()" name="newPickUllageReason{{ $index }}">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
@@ -262,7 +262,7 @@
                    maxlength="5"/>
           </td>
           <td>
-            <ui-select ng-model="item.ullageReason" theme="bootstrap">
+            <ui-select ng-model="item.ullageReason" theme="bootstrap" name="offloadUllageReason{{ $index }}">
               <ui-select-match placeholder="Select an Ullage Reason" allow-clear>{{
                 $select.selected.companyReasonCodeName }}
               </ui-select-match>
@@ -285,7 +285,7 @@
         <!-- New Offload List Items-->
         <tr ng-repeat="item in newOffloadListItems track by $index" ng-hide="readOnly">
           <td>
-            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterOffloadListItems()">
+            <ui-select ng-model="item.masterItem" theme="bootstrap" on-select="filterOffloadListItems()" name="newOffloadUllageReason{{ $index }}">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
@@ -314,8 +314,7 @@
                    class="form-control"
                    ng-model="item.ullageQuantity"
                    ng-disabled="readOnly"
-                   maxlength="5"
-                   required="true"/>
+                   maxlength="5"/>
           </td>
           <td>
             <ui-select ng-model="item.ullageReason" theme="bootstrap">

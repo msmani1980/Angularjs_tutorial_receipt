@@ -262,6 +262,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       for (var i = 0; i < itemNumber; i++) {
         var newItem = {
           menuQuantity: 0,
+          pickedQuantity: '0',
+          oldPickedQuantity: -1,
+          ullageQuantity: '0',
+          oldUllageQuantity: -1,
+          inboundQuantity: '0',
+          oldInboundQuantity: -1,
           isMenuItem: false,
           isNewItem: true,
           isInOffload: isInOffload
@@ -296,7 +302,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         quantity: parseInt(angular.copy(quantity))
       };
       payloadItem.itemMasterId = (!item.isNewItem) ? item.itemMasterId : item.masterItem.id;
-      if (countTypeName === 'Ullage') {
+      if (countTypeName === 'Ullage' && item.ullageReason) {
         payloadItem.ullageReasonCode = item.ullageReason.id;
       }
       return payloadItem;
@@ -307,7 +313,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
       angular.forEach(mergedItems, function (item) {
         var didQuantityChange = (angular.isDefined(item.oldPickedQuantity)) ? parseInt(item.pickedQuantity) !== item.oldPickedQuantity : true;
-        if (parseInt(item.pickedQuantity) > 0 && didQuantityChange) {
+        if (didQuantityChange) {
           var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
           if (item.pickedId) {
             payloadItem.id = item.pickedId;
@@ -319,7 +325,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.addUllageQuantityToPayload = function (item) {
       var didUllageQuantityChange = (angular.isDefined(item.oldUllageQuantity)) ? parseInt(item.ullageQuantity) !== item.oldUllageQuantity : true;
-      if (parseInt(item.ullageQuantity) > 0 && didUllageQuantityChange) {
+      if (didUllageQuantityChange) {
         var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage');
         if (item.ullageId) {
           ullagePayloadItem.id = item.ullageId;
@@ -374,9 +380,36 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       $scope.shouldUpdateStatus = shouldUpdateStatus;
     };
 
+    this.checkUllageReasonValidityInList = function (itemList, fieldName) {
+      var listToCheck = lodash.sortBy(angular.copy(itemList), 'itemName');
+      angular.forEach(listToCheck, function (item, index) {
+        var isValid = (parseInt(item.ullageQuantity) > 0) ? (!!item.ullageReason) : true;
+        $scope.storeInstancePackingForm[fieldName + index].$setValidity('required', isValid);
+      });
+    };
+
+    this.validateUllageReasonFields = function () {
+      if($routeParams.action === 'redispatch' && item.shouldDisplayOffloadData) {
+        $this.checkUllageReasonValidityInList($scope.pickList, 'pickUllageReason');
+        $this.checkUllageReasonValidityInList($scope.newPickListItems, 'newPickListUllageReason');
+      }
+
+      if($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') {
+        $this.checkUllageReasonValidityInList($scope.offloadListItems, 'offloadUllageReason');
+        $this.checkUllageReasonValidityInList($scope.newOffloadListItems, 'newOffloadUllageReason');
+      }
+    };
+
+    $scope.submit = function() {
+      $this.validateUllageReasonFields();
+      $scope.displayError = $scope.storeInstancePackingForm.$invalid;
+      if($scope.storeInstancePackingForm.$valid) {
+        $scope.save();
+      }
+    };
+
     $scope.save = function () {
       // TODO: check for ullage quantities
-
       $this.showLoadingModal();
       var promiseArray = [];
       $this.addItemsToDeleteToPayload(promiseArray);
