@@ -303,7 +303,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
       angular.forEach(mergedItems, function (item) {
         var didQuantityChange = (angular.isDefined(item.oldPickedQuantity)) ? parseInt(item.pickedQuantity) !== item.oldPickedQuantity : true;
-        if (item.isNewItem || (parseInt(item.pickedQuantity) > 0 && didQuantityChange)) {
+        if (parseInt(item.pickedQuantity) > 0 && didQuantityChange) {
           var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
           if (item.pickedId) {
             payloadItem.id = item.pickedId;
@@ -315,7 +315,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.addUllageQuantityToPayload = function (item) {
       var didUllageQuantityChange = (angular.isDefined(item.oldUllageQuantity)) ? parseInt(item.ullageQuantity) !== item.oldUllageQuantity : true;
-      if (item.isNewItem || (item.ullageQuantity && parseInt(item.ullageQuantity) > 0 && didUllageQuantityChange)) {
+      if (parseInt(item.ullageQuantity) > 0 && didUllageQuantityChange) {
         var ullagePayloadItem = $this.constructPayloadItem(item, item.ullageQuantity, 'Ullage');
         if (item.ullageId) {
           ullagePayloadItem.id = item.ullageId;
@@ -327,7 +327,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.addInboundQuantityToPayload = function (item, isRedispatch) {
       var didInboundQuantityChange = (angular.isDefined(item.inboundQuantity)) ? parseInt(item.inboundQuantity) !== item.oldInboundQuantity : true;
-      if (item.isNewItem || (parseInt(item.inboundQuantity) > 0 && didInboundQuantityChange)) {
+      if (parseInt(item.inboundQuantity) > 0 && didInboundQuantityChange) {
         var countTypeName = (isRedispatch) ? 'Warehouse Close' : 'Offload';
         var offloadPayloadItem = $this.constructPayloadItem(item, item.inboundQuantity, countTypeName);
         if (item.inboundId) {
