@@ -59,14 +59,10 @@ angular.module('ts5App')
         content: '<strong>' + type + '</strong>: ' + message
       });
     }
-
-
+    
     function showErrors(dataFromAPI) {
-      if ('data' in dataFromAPI) {
-        $scope.formErrors = dataFromAPI.data;
-      }
+      $scope.errorResponse = dataFromAPI;
       $scope.displayError = true;
-      showToast('warning', 'Menu Management', 'error deleting menu!');
     }
 
     function successDeleteHandler() {

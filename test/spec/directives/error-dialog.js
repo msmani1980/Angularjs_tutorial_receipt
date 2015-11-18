@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The Error Dialog directive', function() {
+fdescribe('The Error Dialog directive', function() {
 
   // load the directive's module
   beforeEach(module('ts5App'));
@@ -22,10 +22,19 @@ describe('The Error Dialog directive', function() {
     compile = $compile;
   }));
 
-  function compileDirective() {
+  function generateDirective(formObject){
+    var template = '<error-dialog ';
+    if(formObject) {
+      template += 'form-object="'+ formObject + '" ';
+    }
+    template += 'error-response="errorResponse" display="true"></error-dialog>';
+    return template;
+  }
+
+  function compileDirective(formObject) {
     form = angular.element('<form name="myTestForm">' +
       '<input type="text" ng-model="deliveryNote" name="deliveryNote" required="true" custom-validity custom-pattern="alphanumeric"/>' +
-      '<error-dialog form-object="myTestForm" error-response="errorResponse" display="true"></error-dialog>' +
+      generateDirective(formObject) +
       '</form>');
     form = compile(form)(scope);
     scope.$digest();
@@ -39,7 +48,7 @@ describe('The Error Dialog directive', function() {
   describe('When the error-dialog directive is compiled, it', function() {
 
     beforeEach(inject(function() {
-      compileDirective();
+      compileDirective('myTestForm');
     }));
 
     it('should be defined', function() {
@@ -67,7 +76,7 @@ describe('The Error Dialog directive', function() {
   describe('When errorRequired has errors', function() {
 
     beforeEach(inject(function() {
-      compileDirective();
+      compileDirective('myTestForm');
       testForm.deliveryNote.$setViewValue('');
     }));
 
@@ -84,7 +93,7 @@ describe('The Error Dialog directive', function() {
   describe('When errorPattern has errors', function() {
 
     beforeEach(inject(function() {
-      compileDirective();
+      compileDirective('myTestForm');
       testForm.deliveryNote.$setViewValue('bgoan');
       testForm.deliveryNote.$setViewValue('BOGAN!');
       scope.$digest();
@@ -107,7 +116,7 @@ describe('The Error Dialog directive', function() {
   describe('When inputs are valid', function() {
 
     beforeEach(inject(function() {
-      compileDirective();
+      compileDirective('myTestForm');
       testForm.deliveryNote.$setViewValue('ABC123');
     }));
 
@@ -128,7 +137,7 @@ describe('The Error Dialog directive', function() {
   describe('When the server returns a 500', function() {
 
     beforeEach(inject(function() {
-      compileDirective();
+      compileDirective('myTestForm');
     }));
 
     it('should set the internal server error flag to true', function() {
@@ -155,7 +164,7 @@ describe('The Error Dialog directive', function() {
   describe('When checking to see if we need to display failed requests', function() {
 
     beforeEach(inject(function() {
-      compileDirective();
+      compileDirective('myTestForm');
       testForm.deliveryNote.$setViewValue('ABC123');
       scope.errorResponse = {field:'storeId',reason: 'Thou hath displeased bogan'};
       httpSessionInterceptor.responseError({status: 400});
@@ -171,13 +180,29 @@ describe('The Error Dialog directive', function() {
   describe('When checking to see if we need to display custom errors', function() {
 
     beforeEach(inject(function() {
-      compileDirective();
+      compileDirective('myTestForm');
       scope.errorCustom = [{field:'bogan',reason: 'Nice work jared'}];
       scope.$digest();
     }));
 
     it('should return true', function() {
       expect(isolatedScope.showCustomErrors()).toBeTruthy();
+    });
+
+  });
+
+  describe('When we dont pass a formObject but still have an error', function() {
+
+    beforeEach(inject(function() {
+      compileDirective(null);
+      testForm.deliveryNote.$setViewValue('ABC123');
+      scope.errorResponse = {field:'storeId',reason: 'Thou hath displeased bogan'};
+      httpSessionInterceptor.responseError({status: 400});
+      scope.$digest();
+    }));
+
+    it('should be expect display to be true', function() {
+      expect(isolatedScope.display).toBeTruthy();
     });
 
   });
