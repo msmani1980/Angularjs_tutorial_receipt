@@ -266,7 +266,6 @@ angular.module('ts5App')
       var eposRevenue = angular.copy(responseCollection[5]);
       $this.globalCurrencyList = angular.copy(responseCollection[6].response);
       $scope.companyBaseCurrency = getCurrencyByBaseCurrencyId($this.globalCurrencyList, responseCollection[7].baseCurrencyId);
-      console.log($scope.companyBaseCurrency);
 
       $scope.totalRevenue = {
         cashHandler: $filter('currency')(getCHRevenue(chRevenue), ''),
