@@ -66,17 +66,17 @@ angular.module('ts5App')
           }).id;
       });
 
-      inboundItemList.map(function (item) {
+      angular.forEach(inboundItemList, function (item) {
         item.inboundQuantity = item.quantity || 0;
         delete item.quantity;
       });
 
-      dispatchedItemList.map(function (item) {
+      angular.forEach(dispatchedItemList, function (item) {
         item.dispatchedQuantity = item.quantity || 0;
         delete item.quantity;
       });
 
-      offloadItemList.map(function (item) {
+      angular.forEach(offloadItemList, function (item) {
         item.offloadQuantity = item.quantity || 0;
         delete item.quantity;
       });
@@ -137,9 +137,8 @@ angular.module('ts5App')
     }
 
     function getTotalsForPromotions(promotionTotals) {
-      var total = 0;
-      promotionTotals.map(function (promotionItem) {
-        total += promotionItem.convertedAmount;
+      var total = promotionTotals.reduce(function (total, promotionItem) {
+        return total + promotionItem.convertedAmount;
       });
 
       return {
@@ -196,26 +195,26 @@ angular.module('ts5App')
       var eposDiscount = eposRevenue[2].response;
       var total = 0;
 
-      angular.forEach(eposCashBag, function (cashBag) {
+      total += lodash.reduce(eposCashBag, function (total, cashBag) {
         if (cashBag.bankAmount) {
-          total += cashBag.bankAmount;
+          return total + cashBag.bankAmount;
         } else if (cashBag.coinAmountManual && cashBag.paperAmountManual) {
-          total += cashBag.coinAmountManual;
-          total += cashBag.paperAmountManual;
+          return total + cashBag.coinAmountManual + cashBag.paperAmountManual;
         }
       });
 
-      angular.forEach(eposCreditCard, function (creditCard) {
+      total += lodash.reduce(eposCreditCard, function (total, creditCard) {
         if (creditCard.bankAmountFinal) {
-          total += creditCard.bankAmountFinal;
+          return total + creditCard.bankAmountFinal;
         }
       });
 
-      angular.forEach(eposDiscount, function (discount) {
+      total += lodash.reduce(eposDiscount, function (total, discount) {
         if (discount.bankAmountFinal) {
-          total += discount.bankAmountFinal;
+          return total + discount.bankAmountFinal;
         }
       });
+
       return total;
     }
 
@@ -225,32 +224,30 @@ angular.module('ts5App')
       var chDiscount = chRevenue[2].response;
       var total = 0;
 
-      angular.forEach(chCashBag, function (cashBag) {
+      total += lodash.reduce(chCashBag, function (total, cashBag) {
         if (cashBag.bankAmountCh) {
-          total += cashBag.bankAmountCh;
+          return total + cashBag.bankAmountCh;
         } else if (cashBag.coinAmountManualCh && cashBag.paperAmountManualCh) {
-          total += cashBag.coinAmountManualCh;
-          total += cashBag.paperAmountManualCh;
+          return total + cashBag.coinAmountManualCh + cashBag.paperAmountManualCh;
         }
       });
 
-      angular.forEach(chCreditCard, function (creditCard) {
+      total += lodash.reduce(chCreditCard, function (total, creditCard) {
         if (creditCard.bankAmountFinal) {
-          total += creditCard.bankAmountFinal;
+          return total + creditCard.bankAmountFinal;
         } else if (creditCard.coinAmountManualCc && creditCard.paperAmountManualCc) {
-          total += creditCard.coinAmountManualCc;
-          total += creditCard.paperAmountManualCc;
+          return total + creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
         }
       });
 
-      angular.forEach(chDiscount, function (discount) {
+      total += lodash.reduce(chDiscount, function (total, discount) {
         if (discount.bankAmountFinal) {
-          total += discount.bankAmountFinal;
+          return total + discount.bankAmountFinal;
         } else if (discount.coinAmountManualCc && discount.paperAmountManualCc) {
-          total += discount.coinAmountManualCc;
-          total += discount.paperAmountManualCc;
+          return total + discount.coinAmountManualCc + discount.paperAmountManualCc;
         }
       });
+
       return total;
     }
 
@@ -289,13 +286,15 @@ angular.module('ts5App')
     }
 
     function initData() {
-      var promiseArray = [];
-      promiseArray.push(reconciliationFactory.getItemTypesList());
-      promiseArray.push(reconciliationFactory.getCountTypes());
-      promiseArray.push(reconciliationFactory.getStockTotals($routeParams.storeInstanceId));
-      promiseArray.push(reconciliationFactory.getPromotionTotals($routeParams.storeInstanceId));
-      promiseArray.push(reconciliationFactory.getCHRevenue($routeParams.storeInstanceId));
-      promiseArray.push(reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId));
+      var promiseArray = [
+        reconciliationFactory.getItemTypesList(),
+        reconciliationFactory.getCountTypes(),
+        reconciliationFactory.getStockTotals($routeParams.storeInstanceId),
+        reconciliationFactory.getPromotionTotals($routeParams.storeInstanceId),
+        reconciliationFactory.getCHRevenue($routeParams.storeInstanceId),
+        reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId)
+      ];
+
       $q.all(promiseArray).then(setupData);
       getCashBagData();
     }

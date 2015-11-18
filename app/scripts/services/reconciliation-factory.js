@@ -46,10 +46,10 @@ angular.module('ts5App')
     }
 
     function getStoreData(storeInstanceDeferred, storeInstanceDataFromAPI) {
-      var promiseArray = [];
-      promiseArray.push(storesService.getStore(storeInstanceDataFromAPI.storeId));
-      promiseArray.push(stationsService.getStation(storeInstanceDataFromAPI.cateringStationId));
-
+      var promiseArray = [
+        storesService.getStore(storeInstanceDataFromAPI.storeId),
+        stationsService.getStation(storeInstanceDataFromAPI.cateringStationId)
+      ];
       $q.all(promiseArray).then(function (responseCollection) {
         responseCollection.unshift(storeInstanceDataFromAPI);
         storeInstanceDeferred.resolve(formatResponseCollection(responseCollection));
