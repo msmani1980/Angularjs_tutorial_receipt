@@ -148,7 +148,7 @@ describe('Controller: StoreInstancePackingCtrl', function () {
 
       it('should get a list of count types', function () {
         expect(storeInstancePackingFactory.getCountTypes).toHaveBeenCalled();
-        expect(scope.countTypes).toEqual(countTypesResponseJSON)
+        expect(scope.countTypes).toEqual(countTypesResponseJSON);
       });
 
       it('should get items master list', function () {
@@ -718,24 +718,3 @@ describe('Controller: StoreInstancePackingCtrl', function () {
   });
 
 });
-
-// TODO: left to test:
-// add new items
-// delete items
-// save items + payload
-// picked calculation
-// variance calculation
-//
-
-//describe('merging pick list items', function () {
-//
-//});
-//
-//describe('merging offload items', function () {
-//
-//});
-//
-//describe('merging all redispatch items', function () {
-//
-//});
-
