@@ -195,7 +195,7 @@ angular.module('ts5App')
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
       var netPercentage = netValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
 
-      var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalNet.epos);
+      var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.stockTotals.totalNet.epos);
       var revenuePercentage = revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
 
       var exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
