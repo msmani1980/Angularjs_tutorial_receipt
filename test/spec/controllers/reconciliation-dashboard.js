@@ -187,7 +187,8 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Validate']);
 
-    item = {statusName: 'Inbounded', eposData: 'No'};
+    // TODO: enable again once Roshen allows us to enable these actions
+    /*item = {statusName: 'Inbounded', eposData: 'No'};
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Add ePOS Data']);
 
@@ -197,7 +198,7 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
     item = {statusName: 'Inbounded', cashHandlerData: 'No'};
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
-    expect(item.actions).toEqual(['Reports', 'Add Cash Handler Data']);
+    expect(item.actions).toEqual(['Reports', 'Add Cash Handler Data']);*/
 
     item = {statusName: 'Confirmed'};
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
@@ -223,6 +224,54 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
     ReconciliationDashboardCtrl.fixSearchDropdowns(search);
     expect(search).toEqual(expected);
+  });
+
+  it('highlightSelected returns active in case instance is selected', function () {
+    expect(scope.highlightSelected({})).toEqual('');
+    expect(scope.highlightSelected({selected: false})).toEqual('');
+    expect(scope.highlightSelected({selected: true})).toEqual('active');
+  });
+
+  it('hasSelectedInstance returns true in case there are selected instances', function () {
+    scope.reconciliationList = [{}];
+    expect(scope.hasSelectedInstance()).toEqual(false);
+
+    scope.reconciliationList = [{selected: false}];
+    expect(scope.hasSelectedInstance()).toEqual(false);
+
+    scope.reconciliationList = [{selected: true}];
+    expect(scope.hasSelectedInstance()).toEqual(true);
+  });
+
+  it('canHaveInstanceCheckbox returns true for Validate and Pay Commission actions', function () {
+    expect(scope.canHaveInstanceCheckbox({actions: ['Validate']})).toEqual(true);
+    expect(scope.canHaveInstanceCheckbox({actions: ['Pay Commission']})).toEqual(true);
+    expect(scope.canHaveInstanceCheckbox({actions: ['Validate', 'Pay Commission']})).toEqual(true);
+    expect(scope.canHaveInstanceCheckbox({actions: ['Review']})).toEqual(false);
+  });
+
+  it('toggleAllCheckboxes toggles select for eligible instances', function () {
+    scope.allCheckboxesSelected = true;
+
+    scope.reconciliationList = [{actions: ['Validate']}];
+    scope.toggleAllCheckboxes();
+    expect(scope.reconciliationList[0].selected).toEqual(true);
+
+    scope.reconciliationList = [{actions: ['Pay Commission']}];
+    scope.toggleAllCheckboxes();
+    expect(scope.reconciliationList[0].selected).toEqual(true);
+
+    scope.reconciliationList = [{actions: ['Review']}];
+    scope.toggleAllCheckboxes();
+    expect(scope.reconciliationList[0].selected).toEqual(undefined);
+  });
+
+  it('findSelectedInstancesWithStatus finds selected instances with given status', function () {
+
+    scope.reconciliationList = [{statusName: 'Confirmed', selected: true}];
+
+    expect(ReconciliationDashboardCtrl.findSelectedInstancesWithStatus('Confirmed').length).toEqual(1);
+    expect(ReconciliationDashboardCtrl.findSelectedInstancesWithStatus('Discrepancies').length).toEqual(0);
   });
 
 });
