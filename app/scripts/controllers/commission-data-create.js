@@ -3,6 +3,7 @@
 /**
  * @ngdoc function
  * @name ts5App.controller:CommissionDataCtrl
+ *
  * @description
  * # CommissionDataCtrl
  * Controller of the ts5App

@@ -44,10 +44,6 @@ angular.module('ts5App')
       getDataList(payload);
     };
 
-    $scope.canDelete = function (data) {
-      return dateUtility.isAfterToday(data.startDate);
-    };
-
     function deleteCommissionDataSuccessHandler() {
       $scope.searchCommissionData();
     }
