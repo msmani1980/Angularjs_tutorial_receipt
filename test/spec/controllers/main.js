@@ -67,6 +67,20 @@ describe('Controller: MainCtrl', function () {
            role: 'RETAILITEMCATEGORY'
          }]
        },{
+         title: 'Promotion Management',
+         menuItems: [{
+           name: 'Promotion Catalog',
+           route: emberURL + 'promotion-catalogs',
+           icon: 'icon-create-catalog',
+           className: 'dashboard-createCatalog',
+           package: 'PROMOTION',
+           role: 'PROMOTIONCATALOG',
+           permissions: [{
+             apiName: '/api/company-promotion-catalogs',
+             permissionCodes: ['C']
+           }]
+         }]
+       },{
          title: 'Post Trip Data',
          menuItems: [{
            name: 'Manage Post Trip Data',

@@ -133,5 +133,26 @@
             ]
         }
     ],
+  },
+  "PROMOTION": {
+      "PROMOTIONCATALOG": [
+          {
+              "id": 80,
+              "featureCode": "PROMOTIONCATALOG",
+              "resource": {
+                  "id": 12,
+                  "apiName": "/api/company-promotion-catalogs",
+                  "resourceName": null,
+                  "stationCheck": null,
+                  "companyIdUrl": "HEADER"
+              },
+              "permissionCode": [
+                  "R",
+                  "U",
+                  "C",
+                  "D"
+              ]
+          }
+      ]
   }
 }

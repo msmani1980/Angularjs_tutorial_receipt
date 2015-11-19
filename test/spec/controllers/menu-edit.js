@@ -7,16 +7,17 @@ describe('Controller: MenuEditCtrl', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/menu.json', 'served/master-item-list.json', 'served/sales-categories.json'));
 
-  var MenuEditCtrl,
-    scope,
-    menuResponseJSON,
-    masterItemsResponseJSON,
-    menuFactory,
-    getMenuDeferred,
-    getItemsListDeferred,
-    salesCategoriesResponseJSON,
-    salesCategoriesDeferred,
-    createMenuDeffered;
+  var MenuEditCtrl;
+  var scope;
+  var menuResponseJSON;
+  var masterItemsResponseJSON;
+  var menuFactory;
+  var getMenuDeferred;
+  var getItemsListDeferred;
+  var salesCategoriesResponseJSON;
+  var salesCategoriesDeferred;
+  var createMenuDeffered;
+  var httpBackend;
 
   beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
     scope = $rootScope.$new();
@@ -26,17 +27,12 @@ describe('Controller: MenuEditCtrl', function () {
       salesCategoriesResponseJSON = _servedSalesCategories_;
     });
 
+    httpBackend = $injector.get('$httpBackend');
     menuFactory = $injector.get('menuFactory');
 
     getMenuDeferred = $q.defer();
-    getMenuDeferred.resolve(menuResponseJSON);
-
     getItemsListDeferred = $q.defer();
-    getItemsListDeferred.resolve(masterItemsResponseJSON);
-
     salesCategoriesDeferred = $q.defer();
-    salesCategoriesDeferred.resolve(salesCategoriesResponseJSON);
-
     createMenuDeffered = $q.defer();
 
     spyOn(menuFactory, 'getMenu').and.returnValue(getMenuDeferred.promise);
@@ -65,7 +61,19 @@ describe('Controller: MenuEditCtrl', function () {
     scope.$digest();
   }));
 
+  function resolveInitDependencies() {
+    httpBackend.expectGET(/./).respond(200);
+    getItemsListDeferred.resolve(masterItemsResponseJSON);
+    getMenuDeferred.resolve(menuResponseJSON);
+    salesCategoriesDeferred.resolve(salesCategoriesResponseJSON);
+    scope.$apply();
+  }
+
   describe('general edit page', function () {
+
+    beforeEach(function() {
+      resolveInitDependencies();
+    });
 
     it('should attach the view name', function () {
       expect(!!scope.viewName).toBe(true);
@@ -345,6 +353,7 @@ describe('Controller: MenuEditCtrl', function () {
         $routeParams: routeParams
       });
       scope.$digest();
+      resolveInitDependencies();
     }));
 
     describe('initialization', function () {
@@ -377,5 +386,4 @@ describe('Controller: MenuEditCtrl', function () {
     });
   });
 
-})
-;
+});

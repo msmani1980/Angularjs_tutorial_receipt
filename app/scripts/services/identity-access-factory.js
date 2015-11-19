@@ -9,7 +9,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, companiesFactory) {
+  .factory('identityAccessFactory', function (identityAccessService, $rootScope, $http, $localStorage, $location, $timeout, $window, companiesFactory) {
 
     function login(credentials) {
       var payload = {
@@ -37,6 +37,7 @@ angular.module('ts5App')
     }
 
     function logout() {
+      $window.localStorage.clear();
       delete $localStorage.sessionObject;
       delete $localStorage.companyObject;
       delete $localStorage.company;

@@ -2,74 +2,131 @@
 
 describe('Service: reconciliationService', function () {
 
-  // load the service's module
   beforeEach(module('ts5App'));
-  beforeEach(module(
-    'served/reconciliation-precheck-devices.json',
-    'served/reconciliation-precheck-schedules.json',
-    'served/reconciliation-precheck-cashbags.json'
-  ));
 
-  // instantiate service
   var reconciliationService;
-  var $httpBackend;
-  var reconciliationPrecheckDevicesRequestHandler;
-  var reconciliationPrecheckSchedulesRequestHandler;
-  var reconciliationPrecheckCashbagsRequestHandler;
-  var precheckDevicesJSON;
-  var precheckSchedulesJSON;
-  var precheckCashbagsJSON;
+  var httpBackend;
 
-  beforeEach(inject(function (_reconciliationService_, $injector) {
-    inject(function (_servedReconciliationPrecheckDevices_, _servedReconciliationPrecheckSchedules_, _servedReconciliationPrecheckCashbags_) {
-      precheckDevicesJSON = _servedReconciliationPrecheckDevices_;
-      precheckSchedulesJSON = _servedReconciliationPrecheckSchedules_;
-      precheckCashbagsJSON = _servedReconciliationPrecheckCashbags_;
-    });
-
+  beforeEach(inject(function (_reconciliationService_, $httpBackend) {
     reconciliationService = _reconciliationService_;
-
-    $httpBackend = $injector.get('$httpBackend');
-
-    reconciliationPrecheckDevicesRequestHandler = $httpBackend.whenGET(/api\/reconciliation\/pre-check\/123\/devices/).respond(precheckDevicesJSON);
-    reconciliationPrecheckSchedulesRequestHandler = $httpBackend.whenGET(/api\/reconciliation\/pre-check\/123\/schedules/).respond(precheckSchedulesJSON);
-    reconciliationPrecheckCashbagsRequestHandler = $httpBackend.whenGET(/api\/reconciliation\/pre-check\/123\/cashbags/).respond(precheckCashbagsJSON);
+    httpBackend = $httpBackend;
   }));
 
   afterEach(function () {
-    //$httpBackend.flush();
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
+    httpBackend.verifyNoOutstandingExpectation();
+    httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should exist', function () {
     expect(!!reconciliationService).toBe(true);
   });
 
-  describe('API calls', function () {
-    afterEach(function () {
-      $httpBackend.flush();
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
+  it('should GET the stock totals', function () {
+    var storeInstanceId = 'fakeStoreInstance';
+    httpBackend.expectGET(/reconciliation\/stock-totals\?storeInstanceId/).respond(200, {});
+
+    reconciliationService.getStockTotals(storeInstanceId).then(function (response) {
+      expect(response).toBeDefined();
+    });
+    httpBackend.flush();
+  });
+
+  it('should GET the promotion totals', function () {
+    var storeInstanceId = 'fakeStoreInstance';
+    httpBackend.expectGET(/reconciliation\/promotion-totals\?storeInstanceId/).respond(200, {});
+
+    reconciliationService.getPromotionTotals(storeInstanceId).then(function (response) {
+      expect(response).toBeDefined();
+    });
+    httpBackend.flush();
+  });
+
+  describe('revenue totals', function () {
+    it('should getCHCashBagRevenue', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      httpBackend.expectGET(/api\/reconciliation\/revenue-totals\/ch-cashbags\?storeInstanceId/).respond(200, {});
+
+      reconciliationService.getCHCashBagRevenue(storeInstanceId).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+
+    it('should getCHCreditCardRevenue', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      httpBackend.expectGET(/api\/reconciliation\/revenue-totals\/ch-credit-cards\?storeInstanceId/).respond(200, {});
+
+      reconciliationService.getCHCreditCardRevenue(storeInstanceId).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+
+    it('should getCHDiscountRevenue', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      httpBackend.expectGET(/api\/reconciliation\/revenue-totals\/ch-discounts\?storeInstanceId/).respond(200, {});
+
+      reconciliationService.getCHDiscountRevenue(storeInstanceId).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+
+    it('should getEPOSCashBagRevenue', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      httpBackend.expectGET(/api\/reconciliation\/revenue-totals\/epos-cashbags\?storeInstanceId/).respond(200, {});
+
+      reconciliationService.getEPOSCashBagRevenue(storeInstanceId).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+
+    it('should getEPOSCreditCardRevenue', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      httpBackend.expectGET(/api\/reconciliation\/revenue-totals\/epos-credit-cards\?storeInstanceId/).respond(200, {});
+
+      reconciliationService.getEPOSCreditCardRevenue(storeInstanceId).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+
+    it('should getEPOSDiscountRevenue', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      httpBackend.expectGET(/api\/reconciliation\/revenue-totals\/epos-discounts\?storeInstanceId/).respond(200, {});
+
+      reconciliationService.getEPOSDiscountRevenue(storeInstanceId).then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
     });
 
     it('should fetch reconciliation pre-check devices', function () {
+      httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/devices/).respond(200, {});
       reconciliationService.getReconciliationPrecheckDevices({storeInstanceId: 123}).then(function (dataFromAPI) {
-        expect(dataFromAPI.storeInstanceId).toEqual(123);
+        expect(dataFromAPI).toBeDefined();
       });
+      httpBackend.flush();
+
     });
 
     it('should fetch reconciliation pre-check schedules', function () {
+      httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/schedules/).respond(200, {});
       reconciliationService.getReconciliationPrecheckSchedules({storeInstanceId: 123}).then(function (dataFromAPI) {
-        expect(dataFromAPI.storeInstanceId).toEqual(123);
+        expect(dataFromAPI).toBeDefined();
       });
+      httpBackend.flush();
     });
 
     it('should fetch reconciliation pre-check cashbags', function () {
+      httpBackend.expectGET(/api\/reconciliation\/pre-check\/123\/cashbags/).respond(200, {});
       reconciliationService.getReconciliationPrecheckCashbags({storeInstanceId: 123}).then(function (dataFromAPI) {
-        expect(dataFromAPI.storeInstanceId).toEqual(123);
+        expect(dataFromAPI).toBeDefined();
       });
+      httpBackend.flush();
     });
+
   });
 
 });

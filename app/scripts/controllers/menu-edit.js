@@ -71,11 +71,12 @@ angular.module('ts5App')
 
     function setupMenuModelAndFetchItems(menuFromAPI) {
       $scope.menuFromAPI = angular.copy(menuFromAPI);
-
-      fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
-      $scope.menu = angular.copy(menuFromAPI);
-      deserializeMenuItems($scope.menu.menuItems);
-      $scope.menuEditForm.$setPristine();
+      if( angular.isDefined($scope.menuFromAPI) ) {
+        fetchMasterItemsList($scope.menuFromAPI.startDate, $scope.menuFromAPI.endDate);
+        $scope.menu = angular.copy(menuFromAPI);
+        deserializeMenuItems($scope.menu.menuItems);
+        $scope.menuEditForm.$setPristine();
+      }
       hideLoadingModal();
     }
 
@@ -104,10 +105,6 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
       $scope.menuItemList = [];
       setupMenuModelAndFetchItems($scope.menuFromAPI);
-    }
-
-    function showAPIErrors() {
-      showToast('warning', 'Menu', 'API unavailable');
     }
 
     $this.formatMenuItemsForAPI = function () {
@@ -176,7 +173,10 @@ angular.module('ts5App')
 
       if (duplicateExists && !dateIsInTheFuture) {
         hideLoadingModal();
-        showToast('danger', 'Create Menu Failure', 'a menu with this name and code already exist and cannot be overwritten');
+        $scope.errorCustom = [{
+          field: 'Menu Name Duplicate',
+          value: 'a menu with this name and code already exist and cannot be overwritten'
+        }];
       } else if (duplicateExists && dateIsInTheFuture) {
         hideLoadingModal();
         $scope.overwriteMenuId = response.menus[0].id;
@@ -282,7 +282,7 @@ angular.module('ts5App')
     function initializeMenu() {
       if ($routeParams.id) {
         showLoadingModal('Loading Data');
-        menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showAPIErrors);
+        menuFactory.getMenu($routeParams.id).then(setupMenuModelAndFetchItems, showErrors);
       } else {
         var companyId = menuFactory.getCompanyId();
         $scope.menu = {

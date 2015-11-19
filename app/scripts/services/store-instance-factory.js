@@ -78,10 +78,6 @@ angular.module('ts5App').service('storeInstanceFactory',
       return storeInstanceService.getStoreInstanceItem(id, itemId);
     }
 
-    function createStoreInstanceItem(id, payload) {
-      return storeInstanceService.createStoreInstanceItem(id, payload);
-    }
-
     function updateStoreInstanceItem(id, itemId, payload) {
       return storeInstanceService.updateStoreInstanceItem(id, itemId, payload);
     }
@@ -110,24 +106,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       return recordsService.getStoreStatusList();
     }
 
-    function getItemTypes() {
-      return recordsService.getItemTypes();
-    }
-
-    function getCharacteristics() {
-      return recordsService.getCharacteristics();
-    }
-
     function getCountTypes() {
       return recordsService.getCountTypes();
-    }
-
-    function getFeaturesList() {
-      return recordsService.getFeatures();
-    }
-
-    function getThresholdList(featureId) {
-      return featureThresholdsService.getThresholdList(featureId);
     }
 
     function formatResponseCollection(responseCollection, storeInstanceAPIResponse, parentStoreInstanceAPIResponse) {
@@ -252,7 +232,6 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreInstanceMenuItems: getStoreInstanceMenuItems,
       getStoreInstanceItemList: getStoreInstanceItemList,
       getStoreInstanceItem: getStoreInstanceItem,
-      createStoreInstanceItem: createStoreInstanceItem,
       updateStoreInstanceItem: updateStoreInstanceItem,
       updateStoreInstanceItemsBulk: updateStoreInstanceItemsBulk,
       deleteStoreInstanceItem: deleteStoreInstanceItem,
@@ -262,12 +241,8 @@ angular.module('ts5App').service('storeInstanceFactory',
       getStoreDetails: getStoreDetails,
       getStoreStatusList: getStoreStatusList,
       updateStoreInstanceStatus: updateStoreInstanceStatus,
-      getItemTypes: getItemTypes,
-      getCharacteristics: getCharacteristics,
       getReasonCodeList: getReasonCodeList,
-      getCountTypes: getCountTypes,
-      getThresholdList: getThresholdList,
-      getFeaturesList: getFeaturesList
+      getCountTypes: getCountTypes
     };
 
   });

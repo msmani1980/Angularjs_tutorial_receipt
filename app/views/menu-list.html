@@ -62,27 +62,8 @@
     </div>
   </div>
 
-  <div ng-show="displayError" class="alert alert-danger alert-dismissible fade in" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-    </button>
-    <h4>
-      We found errors :( !
-    </h4>
-
-    <ul>
-      <li ng-repeat="error in form.$error.required">
-        <strong>{{ error.$name }}</strong> is required
-      </li>
-      <li ng-repeat="error in form.$error.pattern">
-        <strong>{{ error.$name }}</strong> is invalid
-      </li>
-      <li ng-show="formErrors" ng-repeat="error in formErrors">
-        <strong>{{error.field}}</strong>
-        <span> {{ error.value }}</span>
-        <span> {{ error.code }}</span>
-      </li>
-    </ul>
-  </div>
+  <error-dialog form-object="menuListForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
 
   <table class="table table-responsive table-bordered table-hover">
     <thead>
