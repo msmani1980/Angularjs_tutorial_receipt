@@ -395,6 +395,13 @@ describe('Store Instance Create Controller', function() {
       spyOn(StoreInstanceCreateCtrl, 'determineMinDate').and.callThrough();
       spyOn(dateUtility, 'diff').and.callThrough();
       spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setCateringStationId').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setScheduleDate').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreId').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setCarrierId').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setMenus').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setStoreNumber').and.callThrough();
+      spyOn(StoreInstanceCreateCtrl, 'setPrevStoreInstanceId').and.callThrough();
       $scope.$digest();
     });
 
@@ -409,12 +416,24 @@ describe('Store Instance Create Controller', function() {
       expect($scope.storeDetails).toEqual(storeDetailsJSON);
     });
 
+    it('should should call all set dependancy methods, and return null or undefined', function() {
+      $scope.$digest();
+      expect(StoreInstanceCreateCtrl.setCateringStationId()).toEqual(null);
+      expect(StoreInstanceCreateCtrl.setScheduleDate()).toEqual(null);
+      expect(StoreInstanceCreateCtrl.setStoreId()).toEqual(null);
+      expect(StoreInstanceCreateCtrl.setCarrierId()).toEqual(null);
+      expect(StoreInstanceCreateCtrl.setMenus()).toEqual(null);
+      expect(StoreInstanceCreateCtrl.setStoreNumber()).toEqual(null);
+      expect(StoreInstanceCreateCtrl.setPrevStoreInstanceId()).toEqual(null);
+    });
+
     describe('determining the mininum date', function() {
 
-      it('should have been called the determineMinDate method when the store instance is loaded', function() {
-        mockLoadStoreInstance();
-        expect(StoreInstanceCreateCtrl.determineMinDate).toHaveBeenCalled();
-      });
+      it('should have been called the determineMinDate method when the store instance is loaded',
+        function() {
+          mockLoadStoreInstance();
+          expect(StoreInstanceCreateCtrl.determineMinDate).toHaveBeenCalled();
+        });
 
       it('should call the date utility diff method', function() {
         mockLoadStoreInstance();
@@ -1069,11 +1088,12 @@ describe('Store Instance Create Controller', function() {
       expect(isDispatch).toBeTruthy();
     });
 
-    it('should return false if the state passed does not matches the action state of the controller', function() {
-      initController();
-      var isDispatch = StoreInstanceCreateCtrl.isActionState('replenish');
-      expect(isDispatch).toBeFalsy();
-    });
+    it('should return false if the state passed does not matches the action state of the controller',
+      function() {
+        initController();
+        var isDispatch = StoreInstanceCreateCtrl.isActionState('replenish');
+        expect(isDispatch).toBeFalsy();
+      });
 
     it('should return true if the state passed matches the action state of the controller', function() {
       initController('replenish');
@@ -1081,11 +1101,12 @@ describe('Store Instance Create Controller', function() {
       expect(isReplenish).toBeTruthy();
     });
 
-    it('should return false if the state passed does not matches the action state of the controller', function() {
-      initController();
-      var isReplenish = StoreInstanceCreateCtrl.isActionState('replenish');
-      expect(isReplenish).toBeFalsy();
-    });
+    it('should return false if the state passed does not matches the action state of the controller',
+      function() {
+        initController();
+        var isReplenish = StoreInstanceCreateCtrl.isActionState('replenish');
+        expect(isReplenish).toBeFalsy();
+      });
 
     describe('when calling it from the $scope', function() {
       beforeEach(function() {
