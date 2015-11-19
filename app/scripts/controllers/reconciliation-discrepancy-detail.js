@@ -117,18 +117,6 @@ angular.module('ts5App')
       })[0];
     }
 
-    function prependProperties(cashBagList, prefix) {
-      var modifiedList = angular.copy(cashBagList);
-      angular.forEach(modifiedList, function (cashBag) {
-        cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
-        angular.forEach(cashBag, function (value, key) {
-          cashBag[prefix + key] = value;
-          delete cashBag[key];
-        });
-      });
-      return modifiedList;
-    }
-
     function formatCashBags(cashHandlerCashBagList) {
       var formattedCashBagList = [];
       angular.forEach(cashHandlerCashBagList, function (cashBag) {
