@@ -56,17 +56,28 @@ angular.module('ts5App')
       $scope.saveButtonName = 'Save & Exit';
     };
 
+    this.storeInstanceIsInvalid = function() {
+      if(this.getCurrentStepName() !== 2 || $routeParams.action === 'replenish' && !this.canReplenish()) {
+        $scope.errorCustom = [{
+          field:'Store Instance Invalid Status',
+          value: '- This Store Instance is not in the correct status'
+        }];
+        $scope.displayError = true;
+        return true;
+      }
+      return false;
+    };
+
     this.isInstanceReadOnly = function() {
+      if( this.storeInstanceIsInvalid() ){
+        return;
+      }
       if (this.isInboundDuringEndInstance() || this.isInboundDuringRedispatch()) {
         this.setAsEdit();
         return;
       }
-      if (this.getCurrentStepName() !== 2 || $routeParams.action === 'replenish' && !this.canReplenish()) {
-        this.showMessage('warning', 'This store instance is not ready for seals');
-      } else {
-        $scope.readOnly = false;
-        $scope.saveButtonName = 'Save & Exit';
-      }
+      $scope.readOnly = false;
+      $scope.saveButtonName = 'Save & Exit';
     };
 
     this.setStoreDetails = function(storeDetailsJSON) {

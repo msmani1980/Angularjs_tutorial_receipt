@@ -365,14 +365,6 @@ angular.module('ts5App')
       return itemArray;
     }
 
-    /*
-     store 1 - pick list, inbound quantity --> warehouse close
-     store 1 - pick list, ullage quantity --> ullage
-     store 2 - pick list, dispatched quantity -->  warehouse Open
-
-     store 1 - offload list, inbound quantity --> offload
-     store 1 - offload list, ullage quantity --> ullage
-     */
     function formatStoreTwoItems(rawItemList) {
       var dispatchedCountTypeId = lodash.findWhere($this.countTypes, {
         name: 'Warehouse Open'
