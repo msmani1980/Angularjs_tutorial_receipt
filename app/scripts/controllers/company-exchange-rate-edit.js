@@ -89,8 +89,17 @@ angular.module('ts5App')
 
         // Populate company exchange rates with denomination info
         angular.forEach(companyExchangeRates, function (exchangeRate) {
-          exchangeRate.denominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatDenominations;
-          exchangeRate.easyPayDenominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatEasyPayDenominations;
+          if (companyCurrencies[exchangeRate.acceptedCurrencyCode]) {
+            exchangeRate.denominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatDenominations;
+            exchangeRate.easyPayDenominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatEasyPayDenominations;
+          }
+          else {
+            exchangeRate.invalid = true;
+          }
+        });
+
+        companyExchangeRates = companyExchangeRates.filter(function (exchangeRate) {
+          return !exchangeRate.invalid;
         });
 
         // Add exchange rate rows which are not defined yet
