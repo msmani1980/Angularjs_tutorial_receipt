@@ -71,15 +71,19 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.formatCurrentStoreForStoreList = function() {
       if ($scope.storesList && $scope.storeDetails) {
-        var currentStore = {
-          companyId: companyId,
-          endDate: null,
-          id: $scope.storeDetails.storeId.toString(),
-          readyToUse: true,
-          startDate: $scope.storeDetails.scheduleDate,
-          storeNumber: $scope.storeDetails.storeNumber
-        };
-        $scope.storesList.push(currentStore);
+        angular.forEach($scope.storesList, function(store) {
+          if (store.id !== $scope.storeDetails.storeId) {
+            var currentStore = {
+              companyId: companyId,
+              endDate: null,
+              id: $scope.storeDetails.storeId,
+              readyToUse: true,
+              startDate: $scope.storeDetails.scheduleDate,
+              storeNumber: $scope.storeDetails.storeNumber
+            };
+            $scope.storesList.push(currentStore);
+          }
+        });
       }
     };
 
