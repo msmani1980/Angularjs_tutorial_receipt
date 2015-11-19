@@ -19,9 +19,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var reconciliationFactory;
   var GlobalMenuService;
 
-  var cashBagsDeferred;
-  var cashBagsResponseJSON;
-
   var getStoreInstanceDetailsDeferred;
   var storeInstanceJSON;
 
@@ -117,11 +114,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
     spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
 
-    cashBagsResponseJSON = [{id: 2}];
-    cashBagsDeferred = $q.defer();
-    cashBagsDeferred.resolve(cashBagsResponseJSON);
-    spyOn(reconciliationFactory, 'getCashBagMockData').and.returnValue(cashBagsDeferred.promise);
-
     routeParams = {
       storeInstanceId: 'fakeStoreInstanceId'
     };
@@ -181,11 +173,6 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
 
       it('should call getStoreInstanceItemList', function () {
         expect(reconciliationFactory.getStoreInstanceItemList).toHaveBeenCalled();
-      });
-
-      it('should call get cash bag data', function () {
-        expect(reconciliationFactory.getCashBagMockData).toHaveBeenCalled();
-        expect(scope.cashBags).toBeDefined();
       });
 
       it('should init tables to only show discrepancies', function () {
