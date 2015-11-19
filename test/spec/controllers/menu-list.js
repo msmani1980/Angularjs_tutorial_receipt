@@ -7,31 +7,31 @@ describe('Controller: MenuListCtrl', function () {
   beforeEach(module('ts5App'));
   beforeEach(module('served/menus.json'));
 
-  var MenuListCtrl,
-    scope,
-    getMenuListDeferred,
-    menuService,
-    menuListJSON,
-    location;
+  var MenuListCtrl;
+  var scope;
+  var getMenuListDeferred;
+  var menuService;
+  var menuListJSON;
+  var location;
+  var deleteMenuDeffered;
+  var httpBackend;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($q, $controller, $rootScope, _menuService_,
+  beforeEach(inject(function ($q, $controller, $rootScope, _menuService_, $httpBackend,
     $location) {
     inject(function (_servedMenus_) {
       menuListJSON = _servedMenus_;
     });
+    httpBackend = $httpBackend;
     location = $location;
     scope = $rootScope.$new();
     getMenuListDeferred = $q.defer();
+    deleteMenuDeffered = $q.defer();
     getMenuListDeferred.resolve(menuListJSON);
     menuService = _menuService_;
     spyOn(menuService, 'getMenuList').and.returnValue(
       getMenuListDeferred.promise);
-    spyOn(menuService, 'deleteMenu').and.returnValue({
-      then: function () {
-        return;
-      }
-    });
+    spyOn(menuService, 'deleteMenu').and.returnValue(deleteMenuDeffered.promise);
     MenuListCtrl = $controller('MenuListCtrl', {
       $scope: scope
     });
@@ -170,7 +170,38 @@ describe('Controller: MenuListCtrl', function () {
         });
         scope.deleteMenu();
         expect(menuService.deleteMenu).toHaveBeenCalled();
+    });
+
+    describe('the error handler', function () {
+
+      var mockError = {
+        status: 400,
+        statusText: 'Bad Request',
+        response: {
+          field: 'bogan',
+          code: '000'
+        }
+      };
+
+      beforeEach(function() {
+        httpBackend.expectGET(/./).respond(200);
+        scope.showDeleteConfirmation({
+          id: '10000000'
+        });
+        scope.deleteMenu();
+        deleteMenuDeffered.reject(mockError);
+        scope.$apply();
       });
+
+      it('should set error data ', function () {
+        expect(scope.errorResponse).toEqual(mockError);
+      });
+
+      it('should return false', function () {
+        expect(scope.displayError).toBeTruthy();
+      });
+
+    });
 
   });
 });

@@ -12,7 +12,12 @@ angular.module('ts5App')
     var errorDialogController = function($scope,$document) {
 
       var $this = this;
-      this.form = $scope.$parent[$scope.formObject.$name];
+
+      this.setFormObject = function() {
+        if($scope.formObject && $scope.formObject.$name) {
+          this.form = $scope.$parent[$scope.formObject.$name];
+        }
+      };
 
       this.formatErrorText = function(text) {
         return text.split(/(?=[A-Z])/).join(' ');
@@ -37,6 +42,7 @@ angular.module('ts5App')
       };
 
       this.init = function() {
+        this.setFormObject();
         $scope.errorPattern = [];
         $scope.errorRequired = [];
         $scope.$on('internal-server-error', this.internalServerErrorHandler);
@@ -46,22 +52,26 @@ angular.module('ts5App')
 
       this.validateRequiredFields = function() {
         $scope.errorRequired = [];
-        angular.forEach(this.form.$error.required, function(field) {
-          if (field.$invalid) {
-            var fieldName = $this.formatErrorText(field.$name);
-            $scope.errorRequired.push(fieldName);
-          }
-        });
+        if($this.form) {
+          angular.forEach(this.form.$error.required, function(field) {
+            if (field.$invalid) {
+              var fieldName = $this.formatErrorText(field.$name);
+              $scope.errorRequired.push(fieldName);
+            }
+          });
+        }
       };
 
       this.validatePatternFields = function() {
         $scope.errorPattern = [];
-        angular.forEach(this.form.$error.pattern, function(field) {
-          if (field.$invalid && field.$viewValue) {
-            var fieldName = $this.formatErrorText(field.$name);
-            $scope.errorPattern.push(fieldName);
-          }
-        });
+        if($this.form) {
+          angular.forEach(this.form.$error.pattern, function(field) {
+            if (field.$invalid && field.$viewValue) {
+              var fieldName = $this.formatErrorText(field.$name);
+              $scope.errorPattern.push(fieldName);
+            }
+          });
+        }
       };
 
       this.checkForErrors = function() {
@@ -96,6 +106,9 @@ angular.module('ts5App')
       };
 
       $scope.showValidationErrors = function() {
+        if(angular.isUndefined($this.form)) {
+          return false;
+        }
         return !$scope.showCustomErrors() &&
            ( (Array.isArray($this.form.$error.pattern) || Array.isArray($this.form.$error.required) ));
       };
