@@ -1004,7 +1004,7 @@ describe('Store Instance Create Controller', function() {
 
     beforeEach(function() {
       storeDetailsJSON.scheduleDate = '20150902';
-      initController('replenish');
+      initController('replenish', true);
       resolveAllDependencies();
       spyOn(StoreInstanceCreateCtrl, 'setStoreInstance').and.callThrough();
       mockLoadStoreInstance();
@@ -1088,7 +1088,6 @@ describe('Store Instance Create Controller', function() {
     });
 
     describe('when calling it from the $scope', function() {
-
       beforeEach(function() {
         initController();
         spyOn(StoreInstanceCreateCtrl, 'isActionState');

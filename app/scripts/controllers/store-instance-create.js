@@ -9,8 +9,8 @@
  */
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, sealTypesService, storeInstanceAssignSealsFactory, ngToast,
-    dateUtility, GlobalMenuService, storeInstanceWizardConfig, $location, schedulesService, lodash, $route,
-    menuCatererStationsService) {
+    dateUtility, GlobalMenuService, storeInstanceWizardConfig, $location, schedulesService,
+    menuCatererStationsService, lodash, $route) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -27,14 +27,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     var companyId = GlobalMenuService.company.get();
     var $this = this;
 
-    this.isEditingDispatch = function() {
-      return this.isActionState('dispatch') && angular.isDefined($routeParams.storeId);
-    };
-
-    this.isEditingRedispatch = function() {
-      return this.isActionState('redispatch') && angular.isDefined($routeParams.storeId);
-    };
-
     this.isActionState = function(action) {
       return $routeParams.action === action;
     };
@@ -45,6 +37,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.isEndInstanceOrRedispatch = function() {
       return (this.isActionState('end-instance') || this.isActionState('redispatch'));
+    };
+
+    this.isEditingDispatch = function() {
+      return this.isActionState('dispatch') && angular.isDefined($routeParams.storeId);
+    };
+
+    this.isEditingRedispatch = function() {
+      return this.isActionState('redispatch') && angular.isDefined($routeParams.storeId);
     };
 
     this.setStoreInstancesOnFloor = function(dataFromAPI) {
@@ -61,7 +61,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setReplenishInstance = function(storeDetailsJSON) {
       if (storeDetailsJSON.replenishStoreInstanceId) {
-        $scope.formData.replenishStoreInstanceId = $scope.storeDetails.replenishStoreInstanceId;
+        $scope.formData.replenishStoreInstanceId = storeDetailsJSON.replenishStoreInstanceId;
         $scope.formData.cateringStationId = storeDetailsJSON.cateringStationId.toString();
         $scope.formData.menus = storeDetailsJSON.parentStoreInstance.menus;
         return;
@@ -350,10 +350,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setScheduleNumber = function(apiData) {
-      if (apiData && apiData.scheduleNumber) {
-        return apiData.scheduleNumber;
+      var scheduleNumber = {};
+      if (apiData && apiData.scheduleNumber && !$this.isActionState('replenish')) {
+        scheduleNumber = {
+          scheduleNumber: apiData.scheduleNumber
+        };
+        return scheduleNumber;
       }
-      return null;
+      return undefined;
     };
 
     this.setStoreNumber = function(apiData) {
@@ -378,7 +382,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.setMenus = function(apiData) {
-      if (apiData && angular.isArray(apiData.menus)) {
+      if (apiData && apiData.menus) {
         return apiData.menus;
       }
       return null;
@@ -397,9 +401,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $scope.formData = {
           dispatchedCateringStationId: $this.setCateringStationId(data),
           scheduleDate: $this.setScheduleDate(data),
-          scheduleNumber: {
-            'scheduleNumber': $this.setScheduleNumber(data)
-          },
+          scheduleNumber: $this.setScheduleNumber(data),
           storeId: $this.setStoreId(data),
           carrierId: $this.setCarrierId(data),
           menus: $this.setMenus(data),
@@ -559,7 +561,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var deleteItemsPromiseArray = [];
       if ($scope.prevStoreItemsToDelete) {
         angular.forEach($scope.prevStoreItemsToDelete, function(item) {
-          deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId, item.id));
+          deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId,
+            item.id));
         });
         return deleteItemsPromiseArray;
       }
@@ -1103,6 +1106,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.makeInitPromises = function() {
       var promises = $this.createInitPromises();
+      if ($this.isActionState('replenish')) {
+        promises.push($this.getStoreDetails());
+      }
       if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
         promises.push($this.getStoreDetails());
         promises.concat($this.createEditInitPromises());
@@ -1114,11 +1120,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.minDate = $this.determineMinDate();
       $this.filterMenusList();
       $this.setWizardSteps();
+      if ($routeParams.storeId) {
+
+        $this.setStoreInstanceMenus();
+      }
       if ($this.isActionState('redispatch')) {
         $this.setPrevInstanceWizardSteps();
-      }
-      if ($routeParams.storeId) {
-        $this.setStoreInstanceMenus();
       }
       if ($routeParams.storeId && ($this.isActionState('redispatch') || $this.isActionState('dispatch'))) {
         $this.setExistingSeals();

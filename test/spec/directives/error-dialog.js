@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('The Error Dialog directive', function() {
+describe('The Error Dialog directive', function() {
 
   // load the directive's module
   beforeEach(module('ts5App'));
@@ -16,16 +16,16 @@ fdescribe('The Error Dialog directive', function() {
   var httpSessionInterceptor;
   var controller;
 
-  beforeEach(inject(function($rootScope, $compile,_httpSessionInterceptor_) {
+  beforeEach(inject(function($rootScope, $compile, _httpSessionInterceptor_) {
     httpSessionInterceptor = _httpSessionInterceptor_;
     scope = $rootScope.$new();
     compile = $compile;
   }));
 
-  function generateDirective(formObject){
+  function generateDirective(formObject) {
     var template = '<error-dialog ';
-    if(formObject) {
-      template += 'form-object="'+ formObject + '" ';
+    if (formObject) {
+      template += 'form-object="' + formObject + '" ';
     }
     template += 'error-response="errorResponse" display="true"></error-dialog>';
     return template;
@@ -141,20 +141,26 @@ fdescribe('The Error Dialog directive', function() {
     }));
 
     it('should set the internal server error flag to true', function() {
-      httpSessionInterceptor.responseError({status: 500});
+      httpSessionInterceptor.responseError({
+        status: 500
+      });
       expect(controller.internalServerError).toBeTruthy();
     });
 
     it('should set the internal server error flag to true', function() {
       testForm.deliveryNote.$setViewValue('!$1');
-      httpSessionInterceptor.responseError({status: 500});
+      httpSessionInterceptor.responseError({
+        status: 500
+      });
       var showError = isolatedScope.showInternalServerError();
       expect(showError).toBeFalsy();
     });
 
     it('should set the internal server error flag to true', function() {
       testForm.deliveryNote.$setViewValue('BOGAN123');
-      httpSessionInterceptor.responseError({status: 500});
+      httpSessionInterceptor.responseError({
+        status: 500
+      });
       var showError = isolatedScope.showInternalServerError();
       expect(showError).toBeTruthy();
     });
@@ -166,8 +172,13 @@ fdescribe('The Error Dialog directive', function() {
     beforeEach(inject(function() {
       compileDirective('myTestForm');
       testForm.deliveryNote.$setViewValue('ABC123');
-      scope.errorResponse = {field:'storeId',reason: 'Thou hath displeased bogan'};
-      httpSessionInterceptor.responseError({status: 400});
+      scope.errorResponse = {
+        field: 'storeId',
+        reason: 'Thou hath displeased bogan'
+      };
+      httpSessionInterceptor.responseError({
+        status: 400
+      });
       scope.$digest();
     }));
 
@@ -181,7 +192,10 @@ fdescribe('The Error Dialog directive', function() {
 
     beforeEach(inject(function() {
       compileDirective('myTestForm');
-      scope.errorCustom = [{field:'bogan',reason: 'Nice work jared'}];
+      scope.errorCustom = [{
+        field: 'bogan',
+        reason: 'Nice work jared'
+      }];
       scope.$digest();
     }));
 
@@ -196,8 +210,13 @@ fdescribe('The Error Dialog directive', function() {
     beforeEach(inject(function() {
       compileDirective(null);
       testForm.deliveryNote.$setViewValue('ABC123');
-      scope.errorResponse = {field:'storeId',reason: 'Thou hath displeased bogan'};
-      httpSessionInterceptor.responseError({status: 400});
+      scope.errorResponse = {
+        field: 'storeId',
+        reason: 'Thou hath displeased bogan'
+      };
+      httpSessionInterceptor.responseError({
+        status: 400
+      });
       scope.$digest();
     }));
 
