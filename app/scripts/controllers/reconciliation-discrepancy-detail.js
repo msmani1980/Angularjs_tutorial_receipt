@@ -96,19 +96,23 @@ angular.module('ts5App')
       return angular.merge(inboundItemList, dispatchedItemList, offloadItemList);
     }
 
+    function setStockItemList(storeInstanceItemList, rawLMPStockData) {
+      var filteredItems = mergeItems(storeInstanceItemList.response);
+      var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
+      var stockItemList = [];
+      angular.forEach(mergedItemList, function (stockItem) {
+        stockItemList.push(setStockItem(stockItem));
+      });
+      $scope.stockItemList = stockItemList;
+      initLMPStockRevisions();
+    }
+
     function setStockData(stockData) {
       var rawLMPStockData = angular.copy(stockData);
-      var stockItemList = [];
 
       reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId).then(function (storeInstanceItemList) {
-        var filteredItems = mergeItems(storeInstanceItemList.response);
-        var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
-        angular.forEach(mergedItemList, function (stockItem) {
-          stockItemList.push(setStockItem(stockItem));
-        });
-        $scope.stockItemList = stockItemList;
-        initLMPStockRevisions();
-      });
+        setStockItemList(storeInstanceItemList, rawLMPStockData);
+      }, handleResponseError);
     }
 
     function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
@@ -126,7 +130,7 @@ angular.module('ts5App')
         var varianceValue = (cashBag.paperAmountManual + cashBag.coinAmountManual) - crewAmount + (crewAmount - 0);
         var totalBank = cashBag.bankAmountCh || (cashBag.coinAmountManualCh + cashBag.paperAmountManualCh);
         var isDiscrepancy = varianceValue !== 0;
-          var cashBagItem = {
+        var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
           eposCalculatedAmount: '-',
@@ -352,7 +356,7 @@ angular.module('ts5App')
         reconciliationFactory.getPaymentReport($routeParams.storeInstanceId)
       ];
 
-      $q.all(promiseArray).then(setupData);
+      $q.all(promiseArray).then(setupData, handleResponseError);
     }
 
     function formatDates(storeInstanceData) {

@@ -1,6 +1,6 @@
 <div class="container-fluid">
 
-  <form-error-dialog></form-error-dialog>
+  <error-dialog form-object="reconciliationForm" error-response="errorResponse" display="displayError"></error-dialog>
 
   <div class="modal fade" id="t6Modal">
     <div class="modal-dialog">
@@ -34,6 +34,7 @@
   </div>
 
   <div class="row">
+
     <div class="col-xs-8 main">
       <header>
         <div class="row item-list-row">
@@ -184,7 +185,7 @@
           </accordion-group>
         </accordion>
 
-        <form name="createStoreInstance" ng-submit="submitForm()">
+        <form name="reconciliationForm" ng-submit="submitForm()">
 
           <div class="accordion-wrapper">
             <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
