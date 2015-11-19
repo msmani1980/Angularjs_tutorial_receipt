@@ -464,7 +464,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       } else {
         $scope.readOnly = true;
         $scope.saveButtonName = 'Exit';
-        showToast('warning', 'Store Instance Status', 'This store instance is not ready for packing');  // TODO: use correct erro dialog
+        var error = {
+          data: [{
+            field: 'Wrong Status',
+            value: ': Packing is not allowed'
+          }]
+        };
+        handleResponseError(error);
       }
     };
 
