@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('The Error Dialog directive', function() {
+describe('The Error Dialog directive', function() {
 
   // load the directive's module
   beforeEach(module('ts5App'));
