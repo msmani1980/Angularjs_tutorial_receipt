@@ -13,33 +13,31 @@
   "storeId": 13,
   "scheduleDate": "08/13/2015",
   "scheduleNumber": "SCHED123",
-  "statusList": [
-    {
-      "id": 9,
-      "statusName": "Inbounded",
-      "name": "6"
-    },
-    {
-      "id": 10,
-      "statusName": "On Floor",
-      "name": "7"
-    },
-    {
-      "id": 1,
-      "statusName": "Packing",
-      "name": "1"
-    },
-    {
-      "id": 2,
-      "statusName": "Packing",
-      "name": "2"
-    },
-    {
-      "id": 4,
-      "statusName": "Dispatched",
-      "name": "4"
-    }
-  ],
+  "carrierId": 3,
+  "menus": [{
+    id: 1
+  }],
+  "statusList": [{
+    "id": 9,
+    "statusName": "Inbounded",
+    "name": "6"
+  }, {
+    "id": 10,
+    "statusName": "On Floor",
+    "name": "7"
+  }, {
+    "id": 1,
+    "statusName": "Packing",
+    "name": "1"
+  }, {
+    "id": 2,
+    "statusName": "Packing",
+    "name": "2"
+  }, {
+    "id": 4,
+    "statusName": "Dispatched",
+    "name": "4"
+  }],
   "storeInstanceNumber": 19,
   "prevStoreInstanceId": 18,
   "storeNumber": "894523"
