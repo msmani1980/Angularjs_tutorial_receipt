@@ -266,12 +266,21 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     expect(scope.reconciliationList[0].selected).toEqual(undefined);
   });
 
-  it('findSelectedInstancesWithStatus finds selected instances with given status', function () {
+  it('findSelectedInstances finds selected instances with given status', function () {
 
-    scope.reconciliationList = [{statusName: 'Confirmed', selected: true}];
+    scope.reconciliationList = [{selected: true}];
+    expect(ReconciliationDashboardCtrl.findSelectedInstances().length).toEqual(1);
 
-    expect(ReconciliationDashboardCtrl.findSelectedInstancesWithStatus('Confirmed').length).toEqual(1);
-    expect(ReconciliationDashboardCtrl.findSelectedInstancesWithStatus('Discrepancies').length).toEqual(0);
+    scope.reconciliationList = [{selected: false}];
+    expect(ReconciliationDashboardCtrl.findSelectedInstances().length).toEqual(0);
+  });
+
+  it('findInstancesWithStatus finds selected instances with given status', function () {
+
+    scope.instancesForActionExecution = [{statusName: 'Confirmed'}];
+
+    expect(ReconciliationDashboardCtrl.findInstancesWithStatus('Confirmed').length).toEqual(1);
+    expect(ReconciliationDashboardCtrl.findInstancesWithStatus('Discrepancies').length).toEqual(0);
   });
 
 });

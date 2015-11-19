@@ -172,6 +172,8 @@ angular.module('ts5App')
     this.getReconciliationDataList = function () {
       reconciliationFactory.getReconciliationDataList().then(function (dataFromAPI) {
         $this.attachReconciliationDataListToScope(dataFromAPI);
+      }, function () {
+        $this.hideLoadingModal();
       });
     };
 
@@ -260,7 +262,7 @@ angular.module('ts5App')
     };
 
     $scope.showBulkExecuteActionModal = function (action) {
-      $scope.instancesForActionExecution = [];
+      $scope.instancesForActionExecution = $this.findSelectedInstances();
       $scope.actionToExecute = action;
 
       angular.element('.delete-warning-modal').modal('show');
@@ -270,18 +272,19 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('hide');
 
       var status = null;
+      var instancesToExecuteOn = [];
 
       switch ($scope.actionToExecute) {
          case 'Unconfirm':
-          $scope.instancesForActionExecution = $this.findSelectedInstancesWithStatus('Confirmed');
+           instancesToExecuteOn = $this.findInstancesWithStatus('Confirmed');
           status = 9;
           break;
         case 'Confirm':
-          $scope.instancesForActionExecution = $this.findSelectedInstancesWithStatus('Discrepancies');
+          instancesToExecuteOn = $this.findInstancesWithStatus('Discrepancies');
           status = 10;
           break;
         case 'Pay Commission':
-          $scope.instancesForActionExecution = $this.findSelectedInstancesWithStatus('Confirmed');
+          instancesToExecuteOn = $this.findInstancesWithStatus('Confirmed');
           status = 11;
           break;
       }
@@ -289,21 +292,26 @@ angular.module('ts5App')
       $this.showLoadingModal('Loading Data');
 
       var promises = [];
-      angular.forEach(function (instance) {
-        promises.push(storeInstanceFactory.updateStoreInstanceStatus(instance, status));
+      angular.forEach(instancesToExecuteOn, function (instance) {
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, status));
       });
 
       $q.all(promises).then(function () {
-        $scope.searchReconciliationDataList();
-        $this.hideLoadingModal();
+        $this.getReconciliationDataList();
       }, function () {
         $this.hideLoadingModal();
       });
     };
 
-    this.findSelectedInstancesWithStatus = function (status) {
+    this.findInstancesWithStatus = function (status) {
+      return $scope.instancesForActionExecution.filter(function (instance) {
+        return instance.statusName === status;
+      });
+    };
+
+    this.findSelectedInstances = function () {
       return $scope.reconciliationList.filter(function (instance) {
-        return instance.selected && instance.statusName === status;
+        return instance.selected === true;
       });
     };
 
