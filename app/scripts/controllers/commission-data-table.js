@@ -113,7 +113,10 @@ angular.module('ts5App')
       getCrewBaseTypes();
       getCommissionPayableTypes();
       getDiscountTypes();
-      getDataList({});
+      var getDataPayload = {
+        'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+      getDataList(getDataPayload);
     }
 
     init();
