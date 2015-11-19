@@ -409,13 +409,13 @@
                   </tr>
                   <tr ng-repeat="item in cashBags | orderBy: cashBagSortTitle" ng-show="showCashBagDiscrepancies ? item.isDiscrepancy : true">
                     <td>
-                      <span>{{ item.cashBag }}</span>
+                      <span>{{ item.cashBagNumber }}</span>
                     </td>
                     <td>
                       <span>{{ item.currency }}</span>
                     </td>
                     <td>
-                      <span>{{ item.exchangeAmount }}</span>
+                      <span>{{ item.eposCalculatedAmount }}</span>
                     </td>
                     <td>
                       <span>{{ item.crewAmount }}</span>
@@ -435,7 +435,7 @@
                       <span>{{ item.bankExchangeRate }}</span>
                     </td>
                     <td>
-                      <span>{{ item.totalBand }}</span>
+                      <span>{{ item.totalBank }}</span>
                     </td>
                     <td>
                       <a class="btn btn-info btn-xs btn-block" tabindex="0"><span class="fa fa-file-text"></span></a>

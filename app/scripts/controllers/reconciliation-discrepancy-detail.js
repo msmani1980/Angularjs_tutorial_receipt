@@ -11,6 +11,10 @@ angular.module('ts5App')
   .controller('ReconciliationDiscrepancyDetail', function ($q, $scope, $routeParams, $filter, reconciliationFactory, currencyFactory, GlobalMenuService, dateUtility, lodash) {
     var $this = this;
 
+    function formatAsCurrency(valueToFormat) {
+      return $filter('currency')(valueToFormat, '');
+    }
+
     function initLMPStockRevisions() {
       angular.forEach($scope.stockItemList, function (item) {
         item.revision = angular.copy(item);
@@ -26,7 +30,6 @@ angular.module('ts5App')
     }
 
     function getVarianceQuantity(stockItem) {
-      // calculated as {ePOS Sales - [(LMP Dispatched Count + LMP Replenish Count) - LMP Incoming/Offload Count]}
       var eposSales = stockItem.eposTotal;
       var lmpDispatchedCount = stockItem.dispatchedQuantity;
       var lmpReplenishCount = 0;
@@ -47,10 +50,10 @@ angular.module('ts5App')
         replenishCount: 0,
         inboundCount: stockItem.inboundQuantity,
         offloadCount: stockItem.offloadQuantity,
-        ePOSSales: $filter('currency')(stockItem.eposQuantity, ''),
-        varianceQuantity: $filter('currency')(varianceQuantity, ''),
-        retailValue: $filter('currency')(retailValue, ''),
-        varianceValue: $filter('currency')(varianceValue, ''),
+        ePOSSales: formatAsCurrency(stockItem.eposQuantity),
+        varianceQuantity: formatAsCurrency(varianceQuantity),
+        retailValue: formatAsCurrency(retailValue),
+        varianceValue: formatAsCurrency(varianceValue),
         isDiscrepancy: isDiscrepancy
       };
     }
@@ -108,46 +111,53 @@ angular.module('ts5App')
       });
     }
 
-    /*
-    * chCashBag
-     bankAmount: 0.1287
-     bankAmountCh: 0.513513
-     bankAmountFinal: 0.513513
-     cashbagNumber: "223800765"
-     coinAmountEposCh: 8.894114
-     coinAmountManual: 1.6787
-     coinAmountManualCh: 5.006387
-     cointAmountEpos: 2.9823
-     id: 1562
-     paperAmountEpos: 3.99
-     paperAmountEposCh: 15.9201
-     paperAmountManual: 1.0011
-     paperAmountManualCh: 3.994389
-     retailBaseCurrencyId: 8
-     retailCompanyCurrency: 1
-     retailCompanyId: 403
-     storeInstanceId: 844
-    * */
+    function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
+      return currenciesArray.filter(function (currencyItem) {
+        return currencyItem.id === baseCurrencyId;
+      })[0];
+    }
 
-    /*
-    eposCashBag
-     bankAmount: 1
-     cashbagNumber: "223800765"
-     coinAmountManual: 1.3454
-     cointAmountEpos: 1
-     id: 1563
-     paperAmountEpos: 1
-     paperAmountManual: 1.2346
-     retailCompanyCurrency: 8
-     retailCompanyId: 403
-     storeInstanceId: 844
-    * */
+    function prependProperties(cashBagList, prefix) {
+      var modifiedList = angular.copy(cashBagList);
+      angular.forEach(modifiedList, function (cashBag) {
+        cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
+        angular.forEach(cashBag, function (value, key) {
+          cashBag[prefix + key] = value;
+          delete cashBag[key];
+        });
+      });
+      return modifiedList;
+    }
+
+    function formatCashBags(cashHandlerCashBagList) {
+      var formattedCashBagList = [];
+      angular.forEach(cashHandlerCashBagList, function (cashBag) {
+        cashBag.currencyObject = getCurrencyByBaseCurrencyId($this.globalCurrencyList, cashBag.retailCompanyCurrency);
+
+        var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
+        var varianceValue = (cashBag.paperAmountManual + cashBag.coinAmountManual) - crewAmount + (crewAmount - 0);
+        var totalBank = cashBag.bankAmountCh || (cashBag.coinAmountManualCh + cashBag.paperAmountManualCh);
+        var isDiscrepancy = varianceValue !== 0;
+          var cashBagItem = {
+          cashBagNumber: cashBag.cashbagNumber,
+          currency: cashBag.currencyObject.currencyCode,
+          eposCalculatedAmount: '-',
+          crewAmount: formatAsCurrency(crewAmount),
+          paperAmount: formatAsCurrency(cashBag.paperAmountManual),
+          coinAmount: formatAsCurrency(cashBag.coinAmountManual),
+          varianceValue: formatAsCurrency(varianceValue),
+          bankExchangeRate: '-',
+          totalBank: formatAsCurrency(totalBank),
+          isDiscrepancy: isDiscrepancy
+        };
+        formattedCashBagList.push(cashBagItem);
+      });
+      $scope.cashBags = formattedCashBagList;
+    }
 
     function getCashBagData() {
-// no ePos amount
-      //ePOS crew amount = coinAmountManual + paperAmountManual
-        $scope.cashBags = [];
-        initCashBagRevisions();
+      formatCashBags($this.chCashBag);
+      initCashBagRevisions();
     }
 
     function showLoadingModal(text) {
@@ -175,8 +185,8 @@ angular.module('ts5App')
       });
 
       return {
-        totalLMP: $filter('currency')(totalLMP, ''),
-        totalEPOS: $filter('currency')(totalEPOS, '')
+        totalLMP: formatAsCurrency(totalLMP),
+        totalEPOS: formatAsCurrency(totalEPOS)
       };
     }
 
@@ -186,8 +196,8 @@ angular.module('ts5App')
       });
 
       return {
-        totalLMP: $filter('currency')(total, ''),
-        totalEPOS: $filter('currency')(total, '')
+        totalLMP: formatAsCurrency(total),
+        totalEPOS: formatAsCurrency(total)
       };
     }
 
@@ -235,8 +245,8 @@ angular.module('ts5App')
       var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
 
       var netTotals = {
-        netLMP: $filter('currency')(netLMP, ''),
-        netEPOS: $filter('currency')(netEPOS, '')
+        netLMP: formatAsCurrency(netLMP),
+        netEPOS: formatAsCurrency(netEPOS)
       };
       $scope.stockTotals = angular.extend(stockTotals, {totalNet: netTotals});
     }
@@ -303,12 +313,6 @@ angular.module('ts5App')
       return total;
     }
 
-    function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
-      return currenciesArray.filter(function (currencyItem) {
-        return currencyItem.id === baseCurrencyId;
-      })[0];
-    }
-
     function setupData(responseCollection) {
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
@@ -320,8 +324,8 @@ angular.module('ts5App')
       $scope.companyBaseCurrency = getCurrencyByBaseCurrencyId($this.globalCurrencyList, responseCollection[7].baseCurrencyId);
 
       $scope.totalRevenue = {
-        cashHandler: $filter('currency')(getCHRevenue(chRevenue), ''),
-        epos: $filter('currency')(getEPOSRevenue(eposRevenue), '')
+        cashHandler: formatAsCurrency(getCHRevenue(chRevenue)),
+        epos: formatAsCurrency(getEPOSRevenue(eposRevenue))
       };
 
       stockTotals.map(function (stockItem) {
@@ -340,6 +344,7 @@ angular.module('ts5App')
         totalPromotion: totalPromotion
       };
 
+      getCashBagData();
       setNetTotals(stockObject);
       setStockData(stockTotals);
       setDiscrepancy();
@@ -359,7 +364,6 @@ angular.module('ts5App')
       ];
 
       $q.all(promiseArray).then(setupData);
-      getCashBagData();
     }
 
     function formatDates(storeInstanceData) {
