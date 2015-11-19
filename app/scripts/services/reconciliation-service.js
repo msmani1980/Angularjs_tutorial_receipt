@@ -15,6 +15,7 @@ angular.module('ts5App')
     var reconciliationPrecheckDevicesURL = ENV.apiUrl + '/api/reconciliation/pre-check/:storeInstanceId/devices';
     var reconciliationPrecheckSchedulesResourceURL = ENV.apiUrl + '/api/reconciliation/pre-check/:storeInstanceId/schedules';
     var reconciliationPrecheckCashbagsResourceURL = ENV.apiUrl + '/api/reconciliation/pre-check/:storeInstanceId/cashbags';
+    var paymentReportURL = ENV.apiUrl + '/api/paymentReport';
 
     var revenueURL = {
       basePath: ENV.apiUrl + '/api/reconciliation/revenue-totals/',
@@ -45,11 +46,15 @@ angular.module('ts5App')
       },
       getReconciliationPrecheckCashbags: {
         method: 'GET'
+      },
+      getPaymentReport: {
+        method: 'GET'
       }
     };
 
     var stockResource = $resource(stockURL, requestParameters, actions);
     var promotionResource = $resource(promotionURL, requestParameters, actions);
+    var paymentReportResource = $resource(paymentReportURL, requestParameters, actions);
     var reconciliationPrecheckDevicesResource = $resource(reconciliationPrecheckDevicesURL, requestParameters, actions);
     var getReconciliationPrecheckSchedulesResource = $resource(reconciliationPrecheckSchedulesResourceURL, requestParameters, actions);
     var getReconciliationPrecheckCashbagsResource = $resource(reconciliationPrecheckCashbagsResourceURL, requestParameters, actions);
@@ -66,6 +71,13 @@ angular.module('ts5App')
         storeInstanceId: storeInstanceId
       };
       return promotionResource.getPromotionTotals(payload).$promise;
+    }
+
+    function getPaymentReport(storeInstanceId) {
+      var payload = {
+        storeInstanceId: storeInstanceId
+      };
+      return paymentReportResource.getPaymentReport(payload).$promise;
     }
 
     function getResource(storeInstanceId, revenueType, origin) {
@@ -117,6 +129,7 @@ angular.module('ts5App')
 
     return {
       getStockTotals: getStockTotals,
+      getPaymentReport: getPaymentReport,
       getPromotionTotals: getPromotionTotals,
       getCHCashBagRevenue: getCHCashBagRevenue,
       getCHCreditCardRevenue: getCHCreditCardRevenue,

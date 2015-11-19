@@ -19,6 +19,10 @@ angular.module('ts5App')
         return storeInstanceService.getStoreInstancesList(payload);
       }
 
+      function getPaymentReport(payload) {
+        return reconciliationService.getPaymentReport(payload);
+      }
+
       function getStoreInstanceItemList(storeInstanceId) {
         return storeInstanceService.getStoreInstanceItemList(storeInstanceId);
       }
@@ -114,6 +118,7 @@ angular.module('ts5App')
         getStockTotals: getStockTotals,
         getPromotionTotals: getPromotionTotals,
         getItemTypesList: getItemTypesList,
+        getPaymentReport: getPaymentReport,
         getCHRevenue: getCHRevenue,
         getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
         getCompany: getCompany,

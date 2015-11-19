@@ -348,7 +348,8 @@ angular.module('ts5App')
         reconciliationFactory.getCHRevenue($routeParams.storeInstanceId),
         reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId),
         reconciliationFactory.getCompanyGlobalCurrencies(),
-        reconciliationFactory.getCompany(companyId)
+        reconciliationFactory.getCompany(companyId),
+        reconciliationFactory.getPaymentReport($routeParams.storeInstanceId)
       ];
 
       $q.all(promiseArray).then(setupData);

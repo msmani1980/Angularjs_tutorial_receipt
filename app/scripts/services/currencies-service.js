@@ -88,4 +88,3 @@ angular.module('ts5App')
       updateDetailedCompanyCurrency: updateDetailedCompanyCurrency
     };
   });
-
