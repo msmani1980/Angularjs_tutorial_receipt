@@ -13,14 +13,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     var $this = this;
 
-    function showToast(className, type, message) {
-      ngToast.create({
-        className: className,
-        dismissButton: true,
-        content: '<strong>' + type + '</strong>: ' + message
-      });
-    }
-
     this.showLoadingModal = function (text) {
       angular.element('#loading').modal('show').find('p').text(text);
     };
