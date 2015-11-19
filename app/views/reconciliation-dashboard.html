@@ -9,6 +9,13 @@
         </div>
 
         <div class="col-xs-6 text-right">
+
+          <button class="btn btn-success" tabindex="0" ng-disabled="!hasSelectedInstance()">Validate
+          </button>
+
+          <button class="btn btn-primary" tabindex="0" ng-disabled="!hasSelectedInstance()" ng-click="showBulkExecuteActionModal('Pay Commission')">Pay Commission
+          </button>
+
           <div class="btn-group" dropdown>
             <button id="single-button" type="button" class="btn btn-default dropdown-toggle" dropdown-toggle
                     data-toggle="dropdown"
@@ -131,10 +138,12 @@
       </form>
     </div>
 
-
     <table class="table table-bordered table-hover ng-scope">
       <thead>
       <tr>
+        <th>
+          <input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()">
+        </th>
         <th ng-click="updateOrderBy('scheduleDate')">
           <span ng-class="getArrowIconAndClassForSorting('scheduleDate')"></span>
           Schedule Date
@@ -186,7 +195,12 @@
         <th class="col-xs-2">Actions</th>
       </tr>
       </thead>
-      <tr ng-repeat="instance in reconciliationList | filter: filterReconciliationList | orderBy: tableSortTitle">
+      <tr class="{{highlightSelected(instance)}}" ng-repeat="instance in reconciliationList | filter: filterReconciliationList | orderBy: tableSortTitle">
+        <td>
+          <input ng-show="canHaveInstanceCheckbox(instance)" ng-model="instance.selected"
+                 type="checkbox" ng-click="storeSelectionToggled()">
+          </input>
+        </td>
         <td> {{ instance.scheduleDate }}</td>
         <td> {{ instance.storeNumber }}</td>
         <td> {{ instance.departureStationCode }}</td>
@@ -201,7 +215,7 @@
         <td ng-show="displayColumns.updatedBy"> {{ instance.updatedBy }}</td>
         <td>
           <button class="btn btn-warning btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Add ePOS Data')">Add ePOS Data
+                  ng-show="doesInstanceContainAction(instance, 'Add ePOS Data')" >Add ePOS Data
           </button>
           <button class="btn btn-warning btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'Add Post Trip Data')">Add Post Trip Data
@@ -210,19 +224,13 @@
                   ng-show="doesInstanceContainAction(instance, 'Add Cash Handler Data')">Add Cash Handler Data
           </button>
           <button class="btn btn-warning btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Review')">Review
+                  ng-show="doesInstanceContainAction(instance, 'Review')" ng-click="viewReview(instance)">Review
           </button>
           <button class="btn btn-primary btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Confirm')">Confirm
-          </button>
-          <button class="btn btn-success btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Pay Commission')">Pay Commission
+                  ng-show="doesInstanceContainAction(instance, 'Confirm')" ng-click="showExecuteActionModal(instance, 'Confirm')">Confirm
           </button>
           <button class="btn btn-danger btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Unconfirm')">Unconfirm
-          </button>
-          <button class="btn btn-default btn-xs btn-block" tabindex="0"
-                  ng-show="doesInstanceContainAction(instance, 'Validate')">Validate
+                  ng-show="doesInstanceContainAction(instance, 'Unconfirm')" ng-click="showExecuteActionModal(instance, 'Unconfirm')">Unconfirm
           </button>
           <button class="btn btn-info btn-xs btn-block" tabindex="0"
                   ng-show="doesInstanceContainAction(instance, 'Reports')"><i class="fa fa-file-text-o"></i>
@@ -235,23 +243,23 @@
 
 </div>
 
-<!-- Reconciliation modal -->
-<div class="modal fade" id="reconciliationModal" role="dialog">
+<div class="modal fade delete-warning-modal">
   <div class="modal-dialog">
     <div class="modal-content">
+
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Reconciliation</h4>
+        <h4 class="modal-title">Are you sure?</h4>
       </div>
 
       <div class="modal-body">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam purus lectus, malesuada sed consequat vitae,
-          ultricies non felis. Morbi ut lacinia dolor, ornare gravida libero. Phasellus sit amet risus blandit, commodo
-          lectus sit amet, vehicula nulla. Aenean iaculis tincidunt lacus, non volutpat mauris porta ac. Etiam aliquam
-          tempus eros a varius. Donec sagittis iaculis leo in volutpat. Aenean rhoncus egestas massa, vitae varius
-          turpis mollis at. Aenean nisl dui, euismod rutrum purus sit amet, ultricies ultricies dolor. Duis interdum
-          neque felis. Nam non quam ex. Nulla ornare fermentum tortor a bibendum.</p>
+        <p>You are about to do a following action: <strong>{{actionToExecute}}</strong></p>
       </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="executeAction()">Continue</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+
     </div>
   </div>
 </div>
