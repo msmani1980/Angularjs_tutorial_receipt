@@ -23,7 +23,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       menus: []
     };
 
-    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+    // TODO: Refactor so the company object is returned, right now it's returning a number so ember will play nice
     var companyId = GlobalMenuService.company.get();
     var $this = this;
 
@@ -37,6 +37,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.isEndInstanceOrRedispatch = function() {
       return (this.isActionState('end-instance') || this.isActionState('redispatch'));
+    };
+
+    this.isEditingDispatch = function() {
+      return this.isActionState('dispatch') && angular.isDefined($routeParams.storeId);
+    };
+
+    this.isEditingRedispatch = function() {
+      return this.isActionState('redispatch') && angular.isDefined($routeParams.storeId);
     };
 
     this.setStoreInstancesOnFloor = function(dataFromAPI) {
@@ -53,7 +61,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setReplenishInstance = function(storeDetailsJSON) {
       if (storeDetailsJSON.replenishStoreInstanceId) {
-        $scope.formData.replenishStoreInstanceId = $scope.storeDetails.replenishStoreInstanceId;
+        $scope.formData.replenishStoreInstanceId = storeDetailsJSON.replenishStoreInstanceId;
         $scope.formData.cateringStationId = storeDetailsJSON.cateringStationId.toString();
         $scope.formData.menus = storeDetailsJSON.parentStoreInstance.menus;
         return;
@@ -61,13 +69,30 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       delete $scope.formData.scheduleNumber;
     };
 
+    this.formatCurrentStoreForStoreList = function() {
+      if ($scope.storesList && $scope.storeDetails) {
+        var currentStore = {
+          companyId: companyId,
+          endDate: null,
+          id: $scope.storeDetails.storeId.toString(),
+          readyToUse: true,
+          startDate: $scope.storeDetails.scheduleDate,
+          storeNumber: $scope.storeDetails.storeNumber
+        };
+        $scope.storesList.push(currentStore);
+      }
+    };
+
     this.setStoreDetails = function(storeDetailsJSON) {
-      $scope.storeDetails = storeDetailsJSON;
+      $scope.storeDetails = angular.copy(storeDetailsJSON);
       if ($this.isActionState('replenish')) {
         $this.setReplenishInstance(storeDetailsJSON);
       }
       if ($this.isActionState('redispatch')) {
         $this.getPrevStoreDetails();
+      }
+      if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
+        $this.formatCurrentStoreForStoreList();
       }
     };
 
@@ -124,9 +149,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $scope.filteredMenuList.push(filteredMenu);
         }
       });
-      if ($this.isDispatchOrRedispatch() && angular.isDefined($scope.formData.cateringStationId)) {
-        $this.removeInvalidMenus();
-      }
     };
 
     this.generateNewMenu = function(menu) {
@@ -182,9 +204,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.storesList = angular.copy(dataFromAPI.response);
     };
 
+    this.determineReadyToUse = function() {
+      return !this.isActionState('replenish');
+    };
+
     this.getStoresList = function() {
       var query = this.getFormattedDatesPayload();
-      query.readyToUse = ($routeParams.action !== 'replenish');
+      query.readyToUse = this.determineReadyToUse();
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
     };
 
@@ -210,6 +236,189 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.getPrevStoreInstanceItems = function(storeInstanceId) {
       storeInstanceFactory.getStoreInstanceItemList(storeInstanceId).then($this.getPrevStoreItemsSuccessHandler);
+    };
+
+    this.formatMenus = function(menus) {
+      var newMenus = [];
+      angular.forEach(menus, function(menu) {
+        newMenus.push({
+          menuMasterId: menu.id
+        });
+      });
+      return newMenus;
+    };
+
+    this.formatEndInstancePayload = function(payload) {
+      payload.menus = this.formatMenus(payload.menus);
+      payload.inboundStationId = angular.copy(payload.cateringStationId);
+      delete payload.dispatchedCateringStationId;
+    };
+
+    this.formatDispatchPayload = function(payload) {
+      payload.menus = this.formatMenus(payload.menus);
+      if ($routeParams.storeId) {
+        delete payload.dispatchedCateringStationId;
+      }
+    };
+
+    this.formatRedispatchPayload = function(payload) {
+      payload.prevStoreInstanceId = $routeParams.storeId;
+      payload.menus = this.formatMenus(payload.menus);
+      delete payload.dispatchedCateringStationId;
+      if ($scope.existingSeals && $scope.userConfirmedDataLoss) {
+        payload.note = '';
+        payload.tampered = false;
+      }
+    };
+
+    this.formatReplenishPayload = function(payload) {
+      if (!$scope.formData.replenishStoreInstanceId) {
+        payload.replenishStoreInstanceId = $routeParams.storeId;
+      }
+      delete payload.menus;
+      delete payload.dispatchedCateringStationId;
+    };
+
+    this.setWizardSteps = function() {
+      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
+        controllerName: 'Create'
+      });
+      $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
+    };
+
+    this.setPrevInstanceWizardSteps = function() {
+      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
+      var currentStepIndex = lodash.findIndex($scope.prevInstanceWizardSteps, {
+        controllerName: 'Create'
+      });
+      $this.prevInstanceNextStep = angular.copy($scope.prevInstanceWizardSteps[currentStepIndex]);
+    };
+
+    this.formatPayload = function(action) {
+      var payload = angular.copy($scope.formData);
+      payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
+      payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
+      var actionSwitch = (action ? action : $routeParams.action);
+      switch (actionSwitch) {
+        case 'replenish':
+          $this.formatReplenishPayload(payload);
+          break;
+        case 'redispatch':
+          $this.formatRedispatchPayload(payload);
+          break;
+        case 'end-instance':
+          $this.formatEndInstancePayload(payload);
+          break;
+        default:
+          $this.formatDispatchPayload(payload);
+          break;
+      }
+      return payload;
+    };
+
+    this.determineMinDate = function() {
+      var diff = dateUtility.diff(
+        dateUtility.nowFormatted(),
+        $scope.formData.scheduleDate
+      );
+      var dateString = diff.toString() + 'd';
+      if (diff >= 0) {
+        dateString = '+' + dateString;
+      }
+      return dateString;
+    };
+
+    this.isStepOneFromStepTwo = function(apiData) {
+      if (apiData && apiData.prevStoreInstanceId) {
+        return (angular.isNumber(apiData.prevStoreInstanceId));
+      }
+    };
+
+    this.setCateringStationId = function(apiData) {
+      if (apiData && apiData.cateringStationId) {
+        return apiData.cateringStationId.toString();
+      }
+      return null;
+    };
+
+    this.setScheduleDate = function(apiData) {
+      if (apiData && apiData.scheduleDate) {
+        return dateUtility.formatDate(apiData.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY');
+      }
+      return null;
+    };
+
+    this.setScheduleNumber = function(apiData) {
+      var scheduleNumber = {};
+      if (apiData && apiData.scheduleNumber && !$this.isActionState('replenish')) {
+        scheduleNumber = {
+          scheduleNumber: apiData.scheduleNumber
+        };
+        return scheduleNumber;
+      }
+      return undefined;
+    };
+
+    this.setStoreNumber = function(apiData) {
+      if (apiData && apiData.storeNumber) {
+        return apiData.storeNumber.toString();
+      }
+      return null;
+    };
+
+    this.setStoreId = function(apiData) {
+      if (apiData && apiData.storeId) {
+        return apiData.storeId.toString();
+      }
+      return null;
+    };
+
+    this.setCarrierId = function(apiData) {
+      if (apiData && apiData.carrierId) {
+        return apiData.carrierId.toString();
+      }
+      return null;
+    };
+
+    this.setMenus = function(apiData) {
+      if (apiData && apiData.menus) {
+        return apiData.menus;
+      }
+      return null;
+    };
+
+    this.setPrevStoreInstanceId = function(apiData) {
+      if (apiData && apiData.prevStoreInstanceId) {
+        return apiData.prevStoreInstanceId;
+      }
+      return null;
+    };
+
+    this.setStoreInstance = function(apiData) {
+      if (angular.isObject(apiData)) {
+        var data = angular.copy(apiData);
+        $scope.formData = {
+          dispatchedCateringStationId: $this.setCateringStationId(data),
+          scheduleDate: $this.setScheduleDate(data),
+          scheduleNumber: $this.setScheduleNumber(data),
+          storeId: $this.setStoreId(data),
+          carrierId: $this.setCarrierId(data),
+          menus: $this.setMenus(data),
+          cateringStationId: $this.setCateringStationId(data),
+          storeNumber: $this.setStoreNumber(data)
+        };
+        if ($this.isStepOneFromStepTwo(data)) {
+          $scope.stepOneFromStepTwo = true;
+          $scope.prevStoreInstanceId = $this.setPrevStoreInstanceId(data);
+        }
+      }
+      var promises = $this.makeInitPromises();
+      $q.all(promises).then($this.initSuccessHandler);
+    };
+
+    this.getStoreInstance = function() {
+      storeInstanceFactory.getStoreInstance($routeParams.storeId).then($this.setStoreInstance);
     };
 
     this.setSealTypes = function(sealTypesJSON) {
@@ -352,7 +561,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var deleteItemsPromiseArray = [];
       if ($scope.prevStoreItemsToDelete) {
         angular.forEach($scope.prevStoreItemsToDelete, function(item) {
-          deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId, item.id));
+          deleteItemsPromiseArray.push(storeInstanceFactory.deleteStoreInstanceItem(item.storeInstanceId,
+            item.id));
         });
         return deleteItemsPromiseArray;
       }
@@ -424,124 +634,6 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.errorResponse = null;
     };
 
-    this.formatMenus = function(menus) {
-      var newMenus = [];
-      angular.forEach(menus, function(menu) {
-        newMenus.push({
-          menuMasterId: menu.id
-        });
-      });
-      return newMenus;
-    };
-
-    this.formatEndInstancePayload = function(payload) {
-      payload.menus = this.formatMenus(payload.menus);
-      payload.inboundStationId = angular.copy(payload.cateringStationId);
-      delete payload.dispatchedCateringStationId;
-    };
-
-    this.formatDispatchPayload = function(payload) {
-      payload.menus = this.formatMenus(payload.menus);
-      if ($routeParams.storeId) {
-        delete payload.dispatchedCateringStationId;
-      }
-    };
-
-    this.formatRedispatchPayload = function(payload) {
-      payload.prevStoreInstanceId = $routeParams.storeId;
-      payload.menus = this.formatMenus(payload.menus);
-      delete payload.dispatchedCateringStationId;
-      if ($scope.existingSeals && $scope.userConfirmedDataLoss) {
-        payload.note = '';
-        payload.tampered = false;
-      }
-    };
-
-    this.formatReplenishPayload = function(payload) {
-      if (!$scope.formData.replenishStoreInstanceId) {
-        payload.replenishStoreInstanceId = $routeParams.storeId;
-      }
-      delete payload.menus;
-      delete payload.dispatchedCateringStationId;
-    };
-
-    this.setWizardSteps = function() {
-      $scope.wizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
-      var currentStepIndex = lodash.findIndex($scope.wizardSteps, {
-        controllerName: 'Create'
-      });
-      $this.nextStep = angular.copy($scope.wizardSteps[currentStepIndex + 1]);
-    };
-
-    this.setPrevInstanceWizardSteps = function() {
-      $scope.prevInstanceWizardSteps = storeInstanceWizardConfig.getSteps($routeParams.action, $routeParams.storeId);
-      var currentStepIndex = lodash.findIndex($scope.prevInstanceWizardSteps, {
-        controllerName: 'Create'
-      });
-      $this.prevInstanceNextStep = angular.copy($scope.prevInstanceWizardSteps[currentStepIndex]);
-    };
-
-    this.formatPayload = function(action) {
-      var payload = angular.copy($scope.formData);
-      payload.scheduleDate = dateUtility.formatDateForAPI(payload.scheduleDate);
-      payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
-      var actionSwitch = (action ? action : $routeParams.action);
-      switch (actionSwitch) {
-        case 'replenish':
-          $this.formatReplenishPayload(payload);
-          break;
-        case 'redispatch':
-          $this.formatRedispatchPayload(payload);
-          break;
-        case 'end-instance':
-          $this.formatEndInstancePayload(payload);
-          break;
-        default:
-          $this.formatDispatchPayload(payload);
-          break;
-      }
-      return payload;
-    };
-
-    this.determineMinDate = function() {
-      var diff = dateUtility.diff(
-        dateUtility.nowFormatted(),
-        $scope.formData.scheduleDate
-      );
-      var dateString = diff.toString() + 'd';
-      if (diff >= 0) {
-        dateString = '+' + dateString;
-      }
-      return dateString;
-    };
-
-    this.isStepOneFromStepTwo = function(apiData) {
-      return (angular.isNumber(apiData.prevStoreInstanceId));
-    };
-
-    this.setStoreInstance = function(apiData) {
-      $scope.formData = {
-        dispatchedCateringStationId: (apiData.cateringStationId ? apiData.cateringStationId.toString() : null),
-        scheduleDate: dateUtility.formatDate(apiData.scheduleDate, 'YYYY-MM-DD', 'MM/DD/YYYY'),
-        scheduleNumber: {
-          'scheduleNumber': angular.copy(apiData.scheduleNumber)
-        },
-        storeId: (apiData.storeId ? apiData.storeId.toString() : null),
-        carrierId: (apiData.carrierId ? apiData.carrierId.toString() : null),
-        menus: angular.copy(apiData.menus)
-      };
-      if ($this.isStepOneFromStepTwo(apiData)) {
-        $scope.stepOneFromStepTwo = true;
-        $scope.prevStoreInstanceId = (apiData.prevStoreInstanceId);
-      }
-      var promises = $this.makeInitPromises();
-      $q.all(promises).then($this.initSuccessHandler);
-    };
-
-    this.getStoreInstance = function() {
-      storeInstanceFactory.getStoreInstance($routeParams.storeId).then($this.setStoreInstance);
-    };
-
     this.showMessage = function(type, message) {
       ngToast.create({
         className: type,
@@ -576,8 +668,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       );
     };
 
+    this.parsePrevInstanceStatus = function() {
+      return Math.abs(parseInt($this.prevInstanceNextStep.storeOne.stepName) + 1).toString();
+    };
+
     this.makeRedispatchPromises = function() {
-      var prevInstanceStatus = Math.abs(parseInt($this.prevInstanceNextStep.storeOne.stepName) + 1).toString();
+      var prevInstanceStatus = this.parsePrevInstanceStatus();
       var payload = this.formatPayload('end-instance');
       return [
         storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload),
@@ -644,6 +740,36 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       });
     };
 
+    this.createEditPromises = function(actionPayloadObj) {
+      var promises = {
+        updateInstancePromises: [],
+        updateInstanceStatusPromises: []
+      };
+      promises.updateInstancePromises.push({
+        f: storeInstanceFactory.updateStoreInstance,
+        obj: storeInstanceFactory,
+        args: [$routeParams.storeId, actionPayloadObj.payload]
+      });
+      promises.updateInstanceStatusPromises.push({
+        f: storeInstanceFactory.updateStoreInstanceStatus,
+        obj: storeInstanceFactory,
+        args: [$routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId]
+      });
+      if ($scope.prevStoreInstanceId && actionPayloadObj.actionTwo) {
+        promises.updateInstancePromises.push({
+          f: storeInstanceFactory.updateStoreInstance,
+          obj: storeInstanceFactory,
+          args: [$scope.prevStoreInstanceId, actionPayloadObj.prevPayload]
+        });
+        promises.updateInstanceStatusPromises.push({
+          f: storeInstanceFactory.updateStoreInstanceStatus,
+          obj: storeInstanceFactory,
+          args: [$scope.prevStoreInstanceId, $this.nextStep.storeOne.stepName]
+        });
+      }
+      return promises;
+    };
+
     this.makeEditPromises = function(actionOne, actionTwo) {
       var payload;
       var prevPayload;
@@ -656,33 +782,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if (actionTwo) {
         prevPayload = this.formatPayload(actionTwo);
       }
-      var promises = {
-        updateInstancePromises: [],
-        updateInstanceStatusPromises: []
+      var actionPayloadObj = {
+        actionOne: actionOne,
+        actionTwo: actionTwo,
+        payload: payload,
+        prevPayload: prevPayload
       };
-      promises.updateInstancePromises.push({
-        f: storeInstanceFactory.updateStoreInstance,
-        obj: storeInstanceFactory,
-        args: [$routeParams.storeId, payload]
-      });
-      promises.updateInstanceStatusPromises.push({
-        f: storeInstanceFactory.updateStoreInstanceStatus,
-        obj: storeInstanceFactory,
-        args: [$routeParams.storeId, $this.nextStep.stepName, $scope.formData.cateringStationId]
-      });
-      if ($scope.prevStoreInstanceId && actionTwo) {
-        promises.updateInstancePromises.push({
-          f: storeInstanceFactory.updateStoreInstance,
-          obj: storeInstanceFactory,
-          args: [$scope.prevStoreInstanceId, prevPayload]
-        });
-        promises.updateInstanceStatusPromises.push({
-          f: storeInstanceFactory.updateStoreInstanceStatus,
-          obj: storeInstanceFactory,
-          args: [$scope.prevStoreInstanceId, $this.nextStep.storeOne.stepName]
-        });
-      }
-      return promises;
+      return $this.createEditPromises(actionPayloadObj);
     };
 
     this.endStoreInstance = function(saveAndExit) {
@@ -879,6 +985,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.updateInstanceDependenciesSuccess = function() {
       $this.filterMenusList();
+      if ($this.isDispatchOrRedispatch() && angular.isDefined($scope.formData.cateringStationId)) {
+        $this.removeInvalidMenus();
+      }
     };
 
     this.updateInstanceDependencies = function() {
@@ -981,58 +1090,67 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.createEditInitPromises = function() {
-      var promises = [];
-      promises.push($this.getSealTypes());
-      promises.push($this.getStoreInstanceSeals($routeParams.storeId));
-      promises.push($this.getStoreInstanceItems($routeParams.storeId));
+      var promises = [
+        $this.getSealTypes(),
+        $this.getStoreInstanceSeals($routeParams.storeId),
+        $this.getStoreInstanceItems($routeParams.storeId)
+      ];
       if ($scope.prevStoreInstanceId) {
-        promises.push($this.getStoreInstanceSeals($scope.prevStoreInstanceId));
-        promises.push($this.getPrevStoreInstanceItems($scope.prevStoreInstanceId));
+        promises.push(
+          $this.getStoreInstanceSeals($scope.prevStoreInstanceId),
+          $this.getPrevStoreInstanceItems($scope.prevStoreInstanceId)
+        );
       }
       return promises;
     };
 
     this.makeInitPromises = function() {
-      var promises = this.createInitPromises();
-      if ($routeParams.storeId) {
-        var editPromises = $this.createEditInitPromises();
+      var promises = $this.createInitPromises();
+      if ($this.isActionState('replenish')) {
         promises.push($this.getStoreDetails());
-        promises.concat(editPromises);
+      }
+      if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
+        promises.push($this.getStoreDetails());
+        promises.concat($this.createEditInitPromises());
       }
       return promises;
     };
 
-    this.initSuccessHandler = function() {
+    this.initSuccessHandlerMethods = function() {
       $scope.minDate = $this.determineMinDate();
       $this.filterMenusList();
+      $this.setWizardSteps();
       if ($routeParams.storeId) {
+
         $this.setStoreInstanceMenus();
       }
-      $this.setWizardSteps();
       if ($this.isActionState('redispatch')) {
         $this.setPrevInstanceWizardSteps();
       }
-      $this.setUIReady();
-      $this.registerScopeWatchers();
       if ($routeParams.storeId && ($this.isActionState('redispatch') || $this.isActionState('dispatch'))) {
         $this.setExistingSeals();
         $this.generateSealTypesList();
       }
     };
 
-    this.init = function() {
-      var loadingText = 'Hang tight, we are loading some data for you';
-      if ($routeParams.storeId) {
-        loadingText = 'We are loading Store Instance ' + $routeParams.storeId;
-      }
-      this.showLoadingModal(loadingText);
-      if ($routeParams.storeId) {
-        $this.getStoreInstance();
-        return;
-      }
-      var promises = this.makeInitPromises();
-      $q.all(promises).then($this.initSuccessHandler);
+    this.initSuccessHandler = function() {
+      $this.initSuccessHandlerMethods();
+      $this.setUIReady();
+      $this.registerScopeWatchers();
     };
+
+    this.init = function() {
+      if ($routeParams.storeId) {
+        $this.showLoadingModal('We are loading Store Instance ' + $routeParams.storeId + '.');
+        $this.getStoreInstance();
+      }
+      if (!$routeParams.storeId) {
+        $this.showLoadingModal('Hang tight, we are loading some data for you.');
+        var promises = this.makeInitPromises();
+        $q.all(promises).then($this.initSuccessHandler);
+      }
+    };
+
     this.init();
 
   });
