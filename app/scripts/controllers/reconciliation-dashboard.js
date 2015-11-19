@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDashboardCtrl', function ($scope, dateUtility, stationsService, reconciliationFactory, payloadUtility) {
+  .controller('ReconciliationDashboardCtrl', function ($q, $scope, dateUtility, stationsService, reconciliationFactory, payloadUtility, $location, storeInstanceFactory) {
 
     var $this = this;
 
@@ -19,6 +19,9 @@ angular.module('ts5App')
     $scope.allowedStoreStatusList = ['Inbounded', 'Confirmed', 'Discrepancies', 'Commission Paid'];
     $scope.allowedStoreStatusMap = {};
     $scope.reconciliationList = [];
+    $scope.allCheckboxesSelected = false;
+    $scope.actionToExecute = null;
+    $scope.instancesForActionExecution = {};
 
     $scope.toggleColumnView = function (columnName) {
       if (angular.isDefined($scope.displayColumns[columnName])) {
@@ -99,7 +102,8 @@ angular.module('ts5App')
         if (item.eposData !== 'No' && item.postTripData !== 'No' && item.cashHandlerData !== 'No') {
           actions.push('Validate');
         }
-        if (item.eposData === 'No') {
+        // TODO: Temporary disabled these buttons as per Roshen's request. Enable once Roshen gives a green light
+        /*if (item.eposData === 'No') {
           actions.push('Add ePOS Data');
         }
         if (item.postTripData === 'No') {
@@ -107,7 +111,7 @@ angular.module('ts5App')
         }
         if (item.cashHandlerData === 'No') {
           actions.push('Add Cash Handler Data');
-        }
+        }*/
       }
     };
 
@@ -168,6 +172,8 @@ angular.module('ts5App')
     this.getReconciliationDataList = function () {
       reconciliationFactory.getReconciliationDataList().then(function (dataFromAPI) {
         $this.attachReconciliationDataListToScope(dataFromAPI);
+      }, function () {
+        $this.hideLoadingModal();
       });
     };
 
@@ -218,6 +224,95 @@ angular.module('ts5App')
     $scope.clearSearchForm = function () {
       $scope.search = {};
       $scope.companyExchangeRates = [];
+    };
+
+    $scope.highlightSelected = function (item) {
+      return item.selected ? 'active' : '';
+    };
+
+    $scope.hasSelectedInstance = function () {
+      return $scope.reconciliationList.filter(function (item) {
+        return item.selected === true;
+      }).length > 0;
+    };
+
+    $scope.canHaveInstanceCheckbox = function (instance) {
+      return $scope.doesInstanceContainAction(instance, 'Validate') || $scope.doesInstanceContainAction(instance, 'Pay Commission');
+    };
+
+    $scope.toggleAllCheckboxes = function () {
+      angular.forEach($scope.reconciliationList, function (item) {
+        if ($scope.canHaveInstanceCheckbox(item)) {
+          item.selected = $scope.allCheckboxesSelected;
+        }
+      });
+    };
+
+    $scope.viewReview = function (instance) {
+      // TODO: add instance id once discrepancy screen is finished
+      instance = null;
+      $location.path('/reconciliation-discrepancy-detail');
+    };
+
+    $scope.showExecuteActionModal = function (instance, action) {
+      $scope.instancesForActionExecution = [instance];
+      $scope.actionToExecute = action;
+
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.showBulkExecuteActionModal = function (action) {
+      $scope.instancesForActionExecution = $this.findSelectedInstances();
+      $scope.actionToExecute = action;
+
+      angular.element('.delete-warning-modal').modal('show');
+    };
+
+    $scope.executeAction = function () {
+      angular.element('.delete-warning-modal').modal('hide');
+
+      var status = null;
+      var instancesToExecuteOn = [];
+
+      switch ($scope.actionToExecute) {
+         case 'Unconfirm':
+           instancesToExecuteOn = $this.findInstancesWithStatus('Confirmed');
+          status = 9;
+          break;
+        case 'Confirm':
+          instancesToExecuteOn = $this.findInstancesWithStatus('Discrepancies');
+          status = 10;
+          break;
+        case 'Pay Commission':
+          instancesToExecuteOn = $this.findInstancesWithStatus('Confirmed');
+          status = 11;
+          break;
+      }
+
+      $this.showLoadingModal('Loading Data');
+
+      var promises = [];
+      angular.forEach(instancesToExecuteOn, function (instance) {
+        promises.push(storeInstanceFactory.updateStoreInstanceStatus(instance.id, status));
+      });
+
+      $q.all(promises).then(function () {
+        $this.getReconciliationDataList();
+      }, function () {
+        $this.hideLoadingModal();
+      });
+    };
+
+    this.findInstancesWithStatus = function (status) {
+      return $scope.instancesForActionExecution.filter(function (instance) {
+        return instance.statusName === status;
+      });
+    };
+
+    this.findSelectedInstances = function () {
+      return $scope.reconciliationList.filter(function (instance) {
+        return instance.selected === true;
+      });
     };
 
     this.showLoadingModal = function (message) {
