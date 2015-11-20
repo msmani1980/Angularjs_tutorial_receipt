@@ -1,23 +1,45 @@
 'use strict';
 
-describe('Controller: StationListCtrl', function () {
+describe('The Stations List Controller', function () {
 
-  // load the controller's module
-  beforeEach(module('ts5App'));
+  beforeEach(module(
+    'ts5App',
+    'template-module'
+  ));
 
-  var StationListCtrl,
-    scope;
+  var scope;
+  var controller;
+  var StationListCtrl;
+  var templateCache;
+  var compile;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(inject(function($controller, $rootScope,$templateCache,$compile) {
     scope = $rootScope.$new();
-    StationListCtrl = $controller('StationListCtrl', {
-      $scope: scope
-      // place here mocked dependencies
-    });
+    controller = $controller;
+    templateCache = $templateCache;
+    compile = $compile;
   }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(StationListCtrl.awesomeThings.length).toBe(3);
+  function initController() {
+    StationListCtrl = controller('StationListCtrl', {
+      $scope: scope
+    });
+  }
+
+  describe('when the controller loads', function() {
+
+    beforeEach(function() {
+      initController();
+    });
+
+    it('should have displayError set to false', function() {
+      expect(scope.displayError).toBeFalsy();
+    });
+
+    it('should set the scope stations list', function() {
+      expect(scope.stationList).toEqual(jasmine.any(Array));
+    });
+
   });
+
 });
