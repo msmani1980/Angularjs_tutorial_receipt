@@ -1,52 +1,72 @@
-<div class="module-container">
-
-  <error-dialog form-object="companyReasonCodeFrom" error-response="errorResponse" display="displayError">
-  </error-dialog>
+<div class="container module-container">
 
   <form name="companyReasonCodeFrom" class="form edit-form" ng-submit="submitForm()">
 
     <div class="edit-controls">
+
       <div class="row">
 
-        <div class="col-xs-6 col-sm-8">
-          <h2 class="view-name">Company Reason Code</h2>
+        <div class="col-xs-6">
+          <h2 class="view-name">Company Reason Code </h2>
         </div>
 
-        <div class="col-xs-6 col-sm-4">
-          <div class="header-buttons pull-right">
-            <button type="button" class="btn btn-default">Cancel</button>
-            <button type="submit" class="btn btn-primary">Create</button>
-            <button type="button" class="btn btn-default">
-                <i class="fa fa-question-circle"></i>
+        <div class="col-xs-6 text-right">
+
+          <fieldset ng-hide="viewOnly">
+
+            <a class="btn btn-default" ng-href="/">
+              <span class="fa fa-remove" aria-hidden="true"></span>
+              <span class="hidden-xs">Cancel</span>
+            </a>
+
+            <button class="btn btn-primary" type="submit">
+              <span class="fa fa-check-square-o" aria-hidden="true"></span>
+              <span class="hidden-xs"> {{ buttonText }} </span>
             </button>
-          </div>
+
+          </fieldset>
+
         </div>
 
       </div>
+
     </div>
-    <!--/TopHeader -->
+
+    <error-dialog form-object="companyReasonCodeFrom" error-response="errorResponse" display="displayError">
+    </error-dialog>
 
     <div class="row">
 
       <div class="col-xs-12 col-sm-6">
+
         <div class="form-group">
-          <label for="refundCodeType">Refund Code Type</label>
-          <select class="form-control" name="refundCodeType" ng-model="refundCodeType" required>
-            <option value="1">Damaged</option>
-            <option value="2">Foreign Material</option>
-            <option value="3">Product Missing</option>
+
+          <label for="refundCodeType">Refund Type</label>
+
+          <select class="form-control" name="refundCodeType" ng-model="formData.refundCodeType" required>
+            <option value="{{ companyReasonType.id }}" ng-repeat="companyReasonType in companyReasonTypes track by companyReasonType.id">
+              {{ companyReasonType.reasonTypeName }}
+            </option>
           </select>
+
         </div>
+
       </div>
 
       <div class="col-xs-12 col-sm-6">
+
         <div class="form-group">
+
           <label for="refundReason">Refund Reason</label>
-          <select class="form-control" name="refundReason" ng-model="refundReason" required>
-            <option value="1">Damaged</option>
-            <option value="2">Customer Changed Mind</option>
+
+          <select class="form-control" name="refundReason" ng-model="formData.refundReason" required>
+            <option value="{{ companyReasonCode.id }}" ng-repeat="companyReasonCode in companyReasonCodes track by companyReasonCode.id">
+              {{ companyReasonCode.companyReasonCodeName }}
+            </option>
           </select>
+
         </div>
+
       </div>
 
     </div>
@@ -55,11 +75,5 @@
 
 </div>
 <!-- /Container -->
-
-<form-success-modal></form-success-modal>
-
-<form-update-modal></form-update-modal>
-
-<leave-view-modal></leave-view-modal>
 
 <dynamic-left-nav></dynamic-left-nav>

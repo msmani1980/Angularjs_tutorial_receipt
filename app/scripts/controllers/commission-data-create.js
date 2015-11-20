@@ -3,6 +3,7 @@
 /**
  * @ngdoc function
  * @name ts5App.controller:CommissionDataCtrl
+ *
  * @description
  * # CommissionDataCtrl
  * Controller of the ts5App
@@ -126,6 +127,7 @@ angular.module('ts5App')
       $scope.commissionData.endDate = dateUtility.formatDateForApp($scope.commissionData.endDate);
       $scope.updateManualBars();
       $scope.updateIncentiveIncrement();
+      $scope.updateCommissionPercent();
       $this.hideLoadingModal();
     };
 
