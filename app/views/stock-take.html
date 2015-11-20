@@ -168,13 +168,13 @@
 
       <div class="well" ng-repeat="item in addedItems | index track by $index" ng-show="showAddedItem(item, state) && uiSelectReady">
         <div class="row">
-
+          {{item}}
           <div class="col-xs-12 col-sm-6" ng-hide="state === 'review'">
             <div class="form-group">
               <label for="item-name-{{ $index }}">Select Item</label>
               <ui-select name="item-name-{{ $index }}"
                          ng-model="item.itemObject"
-                         ng-disabled="readOnly || addedItems.length < 0 || state != 'create'"
+                         ng-disabled="readOnly || addedItems.length < 0 || state === 'view'"
                          reset-search-input="false">
 
                 <ui-select-match placeholder="Select New Item..." allow-clear>{{$select.selected.itemCode}} - {{$select.selected.itemName}}</ui-select-match>
