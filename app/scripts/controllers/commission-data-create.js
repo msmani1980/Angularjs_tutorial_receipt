@@ -127,6 +127,7 @@ angular.module('ts5App')
       $scope.commissionData.endDate = dateUtility.formatDateForApp($scope.commissionData.endDate);
       $scope.updateManualBars();
       $scope.updateIncentiveIncrement();
+      $scope.updateCommissionPercent();
       $this.hideLoadingModal();
     };
 
