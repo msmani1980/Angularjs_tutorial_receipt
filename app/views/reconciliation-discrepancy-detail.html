@@ -1,7 +1,5 @@
 <div class="container-fluid">
 
-  <form-error-dialog></form-error-dialog>
-
   <div class="modal fade" id="t6Modal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -34,6 +32,7 @@
   </div>
 
   <div class="row">
+
     <div class="col-xs-8 main">
       <header>
         <div class="row item-list-row">
@@ -50,6 +49,7 @@
           </div>
         </div>
         <br>
+        <error-dialog form-object="reconciliationForm" error-response="errorResponse" display="displayError"></error-dialog>
 
         <div class="panel panel-default col-xs-12">
           <div class="col-xs-4 text-left pull-left">
@@ -74,6 +74,7 @@
       </header>
 
       <div class="accordion-wrapper">
+
         <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
           <accordion-group ng-init="status.items.open=true" is-open="status.items.open">
             <accordion-heading class="accordion-heading">
@@ -184,7 +185,7 @@
           </accordion-group>
         </accordion>
 
-        <form name="createStoreInstance" ng-submit="submitForm()">
+        <form name="reconciliationForm" ng-submit="submitForm()">
 
           <div class="accordion-wrapper">
             <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
@@ -477,119 +478,51 @@
       </div>
       <br>
 
-      <div class="panel col-xs-12">
+      <div class="panel col-xs-12" ng-repeat="report in paymentReport">
         <div class="panel-body">
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Number: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Number: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
+          <p>Flight Date: {{report.flightDate}}</p>
+          <p>Flight Number: {{report.flightDate}} (Pax {{report.pax}})</p>
+          <p>Sector: {{report.departureStation}} - {{report.arrivalStation}}</p>
+          <p>Store #: {{storeInstance.storeId}}</p>
+          <p>Aircraft Registration: {{report.carrierNumber}}</p>
+          <p>Cash Bag #: {{report.flightDate}}</p>
 
           <table class="table table-bordered col-xs-12">
             <tr class="active">
               <td>Crew ID</td>
               <td>Last Name</td>
             </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
+            <tr ng-repeat="crewMember in report.crew">
+              <td>{{crewMember.CrewId}}</td>
+              <td>{{crewMember.LastName}}</Td>
             </tr>
           </table>
           <table class="table col-xs-12">
             <tr>
               <td>Expected Cash Total</td>
-              <td>141.00</td>
+              <td>{{report.cashTotal}}</td>
             </tr>
             <tr>
               <td>Card Total</td>
-              <td>196.00</Td>
+              <td>{{report.creditTotal}}</Td>
             </tr>
             <tr>
               <td>Voucher Total</td>
-              <td>15.00</Td>
+              <td>-</Td>
             </tr>
             <tr>
               <td>Complimentary Total</td>
-              <td>39.00</Td>
+              <td>-</Td>
             </tr>
             <tr>
               <td>Expected Total</td>
-              <td>391.00</Td>
+              <td>{{report.total}}</Td>
             </tr>
           </table>
         </div>
       </div>
 
-      <div class="panel col-xs-12">
-        <div class="panel-body">
-          <p>Flight Date: 10/20/2015</p>
 
-          <p>Flight Number: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Number: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <table class="table table-bordered col-xs-12">
-            <tr class="active">
-              <td>Crew ID</td>
-              <td>Last Name</td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-          </table>
-          <table class="table col-xs-12">
-            <tr>
-              <td>Expected Cash Total</td>
-              <td>141.00</td>
-            </tr>
-            <tr>
-              <td>Card Total</td>
-              <td>196.00</Td>
-            </tr>
-            <tr>
-              <td>Voucher Total</td>
-              <td>15.00</Td>
-            </tr>
-            <tr>
-              <td>Complimentary Total</td>
-              <td>39.00</Td>
-            </tr>
-            <tr>
-              <td>Expected Total</td>
-              <td>391.00</Td>
-            </tr>
-          </table>
-        </div>
-      </div>
     </div>
   </div>
 

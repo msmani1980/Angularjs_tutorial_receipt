@@ -11,6 +11,7 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/store-instance-item-list.json'));
   beforeEach(module('served/currencies.json'));
   beforeEach(module('served/company.json'));
+  beforeEach(module('served/payment-report.json'));
 
   var scope;
   var ReconciliationDiscrepancyDetail;
@@ -46,6 +47,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var getCompanyDeferred;
   var getCompanyJSON;
 
+  var getPaymentReportDeferred;
+  var getPaymentReportJSON;
+
   var routeParams;
   var dateUtility;
 
@@ -60,9 +64,10 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
       getStoreInstanceItemListJSON = _servedStoreInstanceItemList_;
     });
 
-    inject(function (_servedCurrencies_, _servedCompany_) {
+    inject(function (_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
       getCompanyGlobalCurrenciesJSON = _servedCurrencies_;
       getCompanyJSON = _servedCompany_;
+      getPaymentReportJSON = _servedPaymentReport_;
     });
 
     location = $location;
@@ -111,6 +116,10 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     getCompanyDeferred = $q.defer();
     getCompanyDeferred.resolve(getCompanyJSON);
     spyOn(reconciliationFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
+
+    getPaymentReportDeferred = $q.defer();
+    getPaymentReportDeferred.resolve(getPaymentReportJSON);
+    spyOn(reconciliationFactory, 'getPaymentReport').and.returnValue(getPaymentReportDeferred.promise);
 
     spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
 

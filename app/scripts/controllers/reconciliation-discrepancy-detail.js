@@ -96,19 +96,23 @@ angular.module('ts5App')
       return angular.merge(inboundItemList, dispatchedItemList, offloadItemList);
     }
 
+    function setStockItemList(storeInstanceItemList, rawLMPStockData) {
+      var filteredItems = mergeItems(storeInstanceItemList.response);
+      var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
+      var stockItemList = [];
+      angular.forEach(mergedItemList, function (stockItem) {
+        stockItemList.push(setStockItem(stockItem));
+      });
+      $scope.stockItemList = stockItemList;
+      initLMPStockRevisions();
+    }
+
     function setStockData(stockData) {
       var rawLMPStockData = angular.copy(stockData);
-      var stockItemList = [];
 
       reconciliationFactory.getStoreInstanceItemList($routeParams.storeInstanceId).then(function (storeInstanceItemList) {
-        var filteredItems = mergeItems(storeInstanceItemList.response);
-        var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
-        angular.forEach(mergedItemList, function (stockItem) {
-          stockItemList.push(setStockItem(stockItem));
-        });
-        $scope.stockItemList = stockItemList;
-        initLMPStockRevisions();
-      });
+        setStockItemList(storeInstanceItemList, rawLMPStockData);
+      }, handleResponseError);
     }
 
     function getCurrencyByBaseCurrencyId(currenciesArray, baseCurrencyId) {
@@ -124,8 +128,9 @@ angular.module('ts5App')
 
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
         var varianceValue = (cashBag.paperAmountManual + cashBag.coinAmountManual) - crewAmount + (crewAmount - 0);
-        var totalBank = cashBag.bankAmountCh || (cashBag.coinAmountManualCh + cashBag.paperAmountManualCh);
         var isDiscrepancy = varianceValue !== 0;
+        var bankExchangeRate = cashBag.chBankExchangeRate || (cashBag.chPaperExchangeRate + '/' + cashBag.chCoinExchangeRate);
+        var totalBank = cashBag.bankAmountCh || (cashBag.coinAmountManualCh + cashBag.paperAmountManualCh);
           var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
@@ -134,7 +139,7 @@ angular.module('ts5App')
           paperAmount: formatAsCurrency(cashBag.paperAmountManual),
           coinAmount: formatAsCurrency(cashBag.coinAmountManual),
           varianceValue: formatAsCurrency(varianceValue),
-          bankExchangeRate: '-',
+          bankExchangeRate: bankExchangeRate,
           totalBank: formatAsCurrency(totalBank),
           isDiscrepancy: isDiscrepancy
         };
@@ -301,6 +306,16 @@ angular.module('ts5App')
       return total;
     }
 
+    function setupPaymentReport(reportList) {
+      var paymentReport = [];
+
+      angular.forEach(reportList, function(report) {
+        paymentReport.push(report);
+      });
+
+      $scope.paymentReport = paymentReport;
+    }
+
     function setupData(responseCollection) {
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
@@ -310,6 +325,7 @@ angular.module('ts5App')
       var eposRevenue = angular.copy(responseCollection[5]);
       $this.globalCurrencyList = angular.copy(responseCollection[6].response);
       $scope.companyBaseCurrency = getCurrencyByBaseCurrencyId($this.globalCurrencyList, responseCollection[7].baseCurrencyId);
+      setupPaymentReport(angular.copy(responseCollection[8]));
 
       $scope.totalRevenue = {
         cashHandler: formatAsCurrency(getCHRevenue(chRevenue)),
@@ -348,10 +364,11 @@ angular.module('ts5App')
         reconciliationFactory.getCHRevenue($routeParams.storeInstanceId),
         reconciliationFactory.getEPOSRevenue($routeParams.storeInstanceId),
         reconciliationFactory.getCompanyGlobalCurrencies(),
-        reconciliationFactory.getCompany(companyId)
+        reconciliationFactory.getCompany(companyId),
+        reconciliationFactory.getPaymentReport($routeParams.storeInstanceId)
       ];
 
-      $q.all(promiseArray).then(setupData);
+      $q.all(promiseArray).then(setupData, handleResponseError);
     }
 
     function formatDates(storeInstanceData) {

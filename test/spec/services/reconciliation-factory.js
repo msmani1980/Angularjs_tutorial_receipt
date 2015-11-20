@@ -7,6 +7,7 @@ describe('Factory: reconciliationFactory', function () {
   beforeEach(module('served/store.json'));
   beforeEach(module('served/station.json'));
   beforeEach(module('served/item-types.json'));
+  beforeEach(module('served/payment-report.json'));
 
   var reconciliationFactory;
 
@@ -21,6 +22,9 @@ describe('Factory: reconciliationFactory', function () {
   var reconciliationService;
   var getStockTotalsDeferred;
   var getStockTotalsJSON;
+
+  var getPaymentReportDeferred;
+  var getPaymentReportJSON;
 
   var stationsService;
   var getStationDeferred;
@@ -41,12 +45,13 @@ describe('Factory: reconciliationFactory', function () {
   var scope;
 
   beforeEach(inject(function (_reconciliationFactory_, $injector, $q, $rootScope) {
-    inject(function (_servedStoreInstance_, _servedStore_, _servedStation_, _servedItemTypes_) {
+    inject(function (_servedStoreInstance_, _servedStore_, _servedStation_, _servedItemTypes_, _servedPaymentReport_) {
       storeInstanceJSON = _servedStoreInstance_;
       getStoreJSON = _servedStore_;
       getStationJSON = _servedStation_;
       getStockTotalsJSON = {};
       getItemTypesListJSON = _servedItemTypes_;
+      getPaymentReportJSON = _servedPaymentReport_;
     });
 
     storeInstanceService = $injector.get('storeInstanceService');
@@ -70,6 +75,11 @@ describe('Factory: reconciliationFactory', function () {
     getStockTotalsDeferred = $q.defer();
     getStockTotalsDeferred.resolve(getStockTotalsJSON);
     spyOn(reconciliationService, 'getStockTotals').and.returnValue(getStockTotalsDeferred.promise);
+
+    getPaymentReportDeferred = $q.defer();
+    getPaymentReportDeferred.resolve(getPaymentReportJSON);
+    spyOn(reconciliationService, 'getPaymentReport').and.returnValue(getPaymentReportDeferred.promise);
+
     spyOn(reconciliationService, 'getPromotionTotals').and.returnValue(getStockTotalsDeferred.promise);
 
     getItemTypesListDeferred = $q.defer();
@@ -148,6 +158,13 @@ describe('Factory: reconciliationFactory', function () {
       reconciliationFactory.getPromotionTotals(storeInstanceId);
       scope.$digest();
       expect(reconciliationService.getPromotionTotals).toHaveBeenCalledWith(storeInstanceId);
+    });
+
+    it('should call reconciliationService on getStockTotals', function () {
+      var storeInstanceId = 'fakeStoreInstanceId';
+      reconciliationFactory.getStockTotals(storeInstanceId);
+      scope.$digest();
+      expect(reconciliationService.getStockTotals).toHaveBeenCalledWith(storeInstanceId);
     });
 
     describe('getCHRevenue', function () {

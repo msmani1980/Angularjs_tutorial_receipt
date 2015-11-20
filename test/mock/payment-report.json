@@ -1,0 +1,84 @@
+[
+  {
+    "reportTitle": "Payment",
+    "scheduleDateString": "Saturday Nov, 21st 2015",
+    "flightNumber": "115",
+    "departureStation": "ORD",
+    "arrivalStation": "LAX",
+    "carrierNumber": null,
+    "companyName": "British Airways",
+    "cash": [
+      {
+        "total": "0.00",
+        "currencyId": 8,
+        "currencyCode": "GBP",
+        "precision": 2,
+        "exchangeRate": 1,
+        "baseTotal": "0.00"
+      }
+    ],
+    "cashTotal": "NaN",
+    "credit": [],
+    "creditTotal": "NaN",
+    "crew": [
+      {
+        "CompanyId": 403,
+        "CrewId": "1002",
+        "FirstName": "Max",
+        "LastName": "Felker",
+        "StartDate": "2015-05-07T00:00:00",
+        "EndDate": "2050-01-01T00:00:00",
+        "Passcode": "ABC10",
+        "ID": 2,
+        "Selected": true,
+        "Name": "Max Felker"
+      }
+    ],
+    "pax": "100",
+    "operatingCurrency": "GBP Value",
+    "cashrefund": null,
+    "total": "NaN",
+    "spendPerPax": "NaN"
+  },
+  {
+    "reportTitle": "Payment",
+    "scheduleDateString": "Saturday Nov, 21st 2015",
+    "flightNumber": "115",
+    "departureStation": "ORD",
+    "arrivalStation": "LAX",
+    "carrierNumber": null,
+    "companyName": "British Airways",
+    "cash": [
+      {
+        "total": "0.00",
+        "currencyId": 8,
+        "currencyCode": "GBP",
+        "precision": 2,
+        "exchangeRate": 1,
+        "baseTotal": "0.00"
+      }
+    ],
+    "cashTotal": "NaN",
+    "credit": [],
+    "creditTotal": "NaN",
+    "crew": [
+      {
+        "CompanyId": 403,
+        "CrewId": "1002",
+        "FirstName": "Max",
+        "LastName": "Felker",
+        "StartDate": "2015-05-07T00:00:00",
+        "EndDate": "2050-01-01T00:00:00",
+        "Passcode": "ABC10",
+        "ID": 2,
+        "Selected": true,
+        "Name": "Max Felker"
+      }
+    ],
+    "pax": "100",
+    "operatingCurrency": "GBP Value",
+    "cashrefund": null,
+    "total": "NaN",
+    "spendPerPax": "NaN"
+  }
+]

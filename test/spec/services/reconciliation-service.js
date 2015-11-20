@@ -41,6 +41,16 @@ describe('Service: reconciliationService', function () {
     httpBackend.flush();
   });
 
+  it('should GET the Payment Report', function () {
+    var storeInstanceId = 'fakeStoreInstance';
+    httpBackend.expectGET(/api\/paymentReport\?storeInstanceId/).respond(200, [{}]);
+
+    reconciliationService.getPaymentReport(storeInstanceId).then(function (response) {
+      expect(response).toBeDefined();
+    });
+    httpBackend.flush();
+  });
+
   describe('revenue totals', function () {
     it('should getCHCashBagRevenue', function () {
       var storeInstanceId = 'fakeStoreInstanceId';
