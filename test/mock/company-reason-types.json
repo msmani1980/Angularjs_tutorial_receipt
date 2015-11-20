@@ -1,0 +1,57 @@
+{
+  "companyReasonTypes": [
+    {
+      "id": 17,
+      "companyId": 403,
+      "reasonTypeId": 13,
+      "isActive": true,
+      "description": "Closing Inventory",
+      "reasonTypeName": "Closing Inventory"
+    },
+    {
+      "id": 18,
+      "companyId": 403,
+      "reasonTypeId": 10,
+      "isActive": true,
+      "description": "Complimentary Management Reasons",
+      "reasonTypeName": "Complimentary"
+    },
+    {
+      "id": 26,
+      "companyId": 403,
+      "reasonTypeId": 16,
+      "isActive": true,
+      "description": "LMP Stock Adjustment",
+      "reasonTypeName": "LMP Stock Adjustment"
+    },
+    {
+      "id": 16,
+      "companyId": 403,
+      "reasonTypeId": 12,
+      "isActive": true,
+      "description": "Opening Inventory",
+      "reasonTypeName": "Opening Inventory"
+    },
+    {
+      "id": 20,
+      "companyId": 403,
+      "reasonTypeId": 11,
+      "isActive": true,
+      "description": "Refund Related Reasons ",
+      "reasonTypeName": "Refund"
+    },
+    {
+      "id": 19,
+      "companyId": 403,
+      "reasonTypeId": 15,
+      "isActive": true,
+      "description": "Ullage",
+      "reasonTypeName": "Ullage"
+    }
+  ],
+  "meta": {
+    "count": 6,
+    "limit": 6,
+    "start": 0
+  }
+}

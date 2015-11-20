@@ -47,9 +47,13 @@ describe('Company Reason Code Controller', function() {
     };
   }
 
-  function initController() {
+  function initController(action) {
+    var params = {
+      action: action || 'create'
+    };
     CompanyReasonCodeCtrl = controller('CompanyReasonCodeCtrl', {
-      $scope: scope
+      $scope: scope,
+      $routeParams: params
     });
     createFormObject();
   }
@@ -112,7 +116,49 @@ describe('Company Reason Code Controller', function() {
 
     });
 
+  });
+
+  describe('checking the action state', function() {
+
+    beforeEach(function() {
+      initController();
+    });
+
+    it('return true if the action state is create', function() {
+      expect(CompanyReasonCodeCtrl.isActionState('create')).toBeTruthy();
+    });
+
+    it('return false when we pass an incorrect action state', function() {
+      expect(CompanyReasonCodeCtrl.isActionState('bogan')).toBeFalsy();
+    });
 
   });
+
+  describe('the error handler', function () {
+
+    var mockError = {
+      status: 400,
+      statusText: 'Bad Request',
+      response: {
+        field: 'bogan',
+        code: '000'
+      }
+    };
+
+    beforeEach(function() {
+      initController();
+      CompanyReasonCodeCtrl.errorHandler(mockError);
+    });
+
+    it('should set error response ', function () {
+      expect(scope.errorResponse).toEqual(mockError);
+    });
+
+    it('should return false', function () {
+      expect(scope.displayError).toBeTruthy();
+    });
+
+  });
+
 
 });
