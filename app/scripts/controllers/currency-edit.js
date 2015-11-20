@@ -65,7 +65,8 @@ angular.module('ts5App')
     };
 
     this.getDetailedCompanyCurrencies = function () {
-      currencyFactory.getDetailedCompanyCurrencies().then($this.attachDetailedCompanyCurrencyListToScope);
+      var payload = { 'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+      currencyFactory.getDetailedCompanyCurrencies(payload).then($this.attachDetailedCompanyCurrencyListToScope);
     };
 
     this.getCurrencyByBaseCurrencyId = function (currenciesArray, baseCurrencyId) {
