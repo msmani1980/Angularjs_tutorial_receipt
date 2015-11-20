@@ -170,7 +170,8 @@ angular.module('ts5App')
     };
 
     this.getReconciliationDataList = function () {
-      reconciliationFactory.getReconciliationDataList().then(function (dataFromAPI) {
+      var payload = { 'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
+      reconciliationFactory.getReconciliationDataList(payload).then(function (dataFromAPI) {
         $this.attachReconciliationDataListToScope(dataFromAPI);
       }, function () {
         $this.hideLoadingModal();
