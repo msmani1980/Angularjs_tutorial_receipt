@@ -99,11 +99,7 @@ angular.module('ts5App')
     function setStockItemList(storeInstanceItemList, rawLMPStockData) {
       var filteredItems = mergeItems(storeInstanceItemList.response);
       var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
-      var stockItemList = [];
-      angular.forEach(mergedItemList, function (stockItem) {
-        stockItemList.push(setStockItem(stockItem));
-      });
-      $scope.stockItemList = stockItemList;
+      $scope.stockItemList = lodash.map(mergedItemList, setStockItem);
       initLMPStockRevisions();
     }
 
