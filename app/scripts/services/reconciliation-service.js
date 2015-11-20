@@ -48,7 +48,8 @@ angular.module('ts5App')
         method: 'GET'
       },
       getPaymentReport: {
-        method: 'GET'
+        method: 'GET',
+        isArray: true
       }
     };
 

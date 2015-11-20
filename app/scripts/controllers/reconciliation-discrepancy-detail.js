@@ -128,9 +128,10 @@ angular.module('ts5App')
 
         var crewAmount = cashBag.paperAmountEpos + cashBag.coinAmountEpos;
         var varianceValue = (cashBag.paperAmountManual + cashBag.coinAmountManual) - crewAmount + (crewAmount - 0);
-        var totalBank = cashBag.bankAmountCh || (cashBag.coinAmountManualCh + cashBag.paperAmountManualCh);
         var isDiscrepancy = varianceValue !== 0;
-        var cashBagItem = {
+        var bankExchangeRate = cashBag.chBankExchangeRate || (cashBag.chPaperExchangeRate + '/' + cashBag.chCoinExchangeRate);
+        var totalBank = cashBag.bankAmountCh || (cashBag.coinAmountManualCh + cashBag.paperAmountManualCh);
+          var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
           eposCalculatedAmount: '-',
@@ -138,7 +139,7 @@ angular.module('ts5App')
           paperAmount: formatAsCurrency(cashBag.paperAmountManual),
           coinAmount: formatAsCurrency(cashBag.coinAmountManual),
           varianceValue: formatAsCurrency(varianceValue),
-          bankExchangeRate: '-',
+          bankExchangeRate: bankExchangeRate,
           totalBank: formatAsCurrency(totalBank),
           isDiscrepancy: isDiscrepancy
         };
@@ -305,6 +306,16 @@ angular.module('ts5App')
       return total;
     }
 
+    function setupPaymentReport(reportList) {
+      var paymentReport = [];
+
+      angular.forEach(reportList, function(report) {
+        paymentReport.push(report);
+      });
+
+      $scope.paymentReport = paymentReport;
+    }
+
     function setupData(responseCollection) {
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
@@ -314,6 +325,7 @@ angular.module('ts5App')
       var eposRevenue = angular.copy(responseCollection[5]);
       $this.globalCurrencyList = angular.copy(responseCollection[6].response);
       $scope.companyBaseCurrency = getCurrencyByBaseCurrencyId($this.globalCurrencyList, responseCollection[7].baseCurrencyId);
+      setupPaymentReport(angular.copy(responseCollection[8]));
 
       $scope.totalRevenue = {
         cashHandler: formatAsCurrency(getCHRevenue(chRevenue)),
