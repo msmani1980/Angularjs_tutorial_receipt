@@ -192,9 +192,8 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
     };
 
-    this.createCompanyReasonCodeSuccess = function(dataFromAPI) {
+    this.createCompanyReasonCodeSuccess = function() {
       this.showSuccessMessage('Company Reason Code was created!');
-      console.table(dataFromAPI);
     };
 
     this.createCompanyReasonCode = function() {
