@@ -107,36 +107,6 @@ angular.module('ts5App')
         return getEPOSRevenueDeferred.promise;
       }
 
-      var getCashBagMockData = function () {
-        var mockCashBag = [{
-          cashBag: 'CB123',
-          currency: 'GBP',
-          exchangeAmount: 12,
-          crewAmount: 14,
-          paperAmount: 34,
-          coinAmount: 12.00,
-          varianceValue: 5,
-          bankExchangeRate: 7.0,
-          totalBand: 100,
-          isDiscrepancy: true
-        }, {
-          cashBag: 'CB345',
-          currency: 'GBP',
-          exchangeAmount: 15,
-          crewAmount: 34,
-          paperAmount: 23,
-          coinAmount: 15.00,
-          varianceValue: 12,
-          bankExchangeRate: 16.0,
-          totalBand: 200,
-          isDiscrepancy: false
-        }];
-
-        var cashBagMockResponseDeferred = $q.defer();
-        cashBagMockResponseDeferred.resolve(mockCashBag);
-        return cashBagMockResponseDeferred.promise;
-      };
-
       return {
         getStoreInstanceDetails: getStoreInstanceDetails,
         getStoreInstanceItemList: getStoreInstanceItemList,
@@ -152,8 +122,6 @@ angular.module('ts5App')
         getReconciliationDataList: getReconciliationDataList,
         getReconciliationPrecheckDevices: getReconciliationPrecheckDevices,
         getReconciliationPrecheckSchedules: getReconciliationPrecheckSchedules,
-        getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags,
-
-        getCashBagMockData: getCashBagMockData
+        getReconciliationPrecheckCashbags: getReconciliationPrecheckCashbags
       };
     });

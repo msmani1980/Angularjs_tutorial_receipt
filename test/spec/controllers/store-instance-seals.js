@@ -1160,4 +1160,20 @@ describe('the Store Instance Seals controller', function() {
       });
   });
 
+  describe('setAsEdit', function() {
+
+    beforeEach(function() {
+      initController();
+      StoreInstanceSealsCtrl.setAsEdit();
+    });
+    it('should set the readOnly flag to false', function() {
+      expect($scope.readOnly).toBeFalsy();
+    });
+
+    it('should set the button label to Save and Exit', function() {
+      expect($scope.saveButtonName).toEqual('Save & Exit');
+    });
+
+  });
+
 });
