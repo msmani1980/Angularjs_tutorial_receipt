@@ -96,6 +96,10 @@ angular.module('ts5App')
           else {
             exchangeRate.invalid = true;
           }
+
+          if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
+            exchangeRate.exchangeRate = '1.0000';
+          }
         });
 
         companyExchangeRates = companyExchangeRates.filter(function (exchangeRate) {
@@ -184,11 +188,10 @@ angular.module('ts5App')
     };
 
     $scope.isExchangeRateDisabled = function (exchangeRate) {
-      if ($scope.isExchangeRateReadOnly(exchangeRate)) {
+      if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
         return true;
       }
-      if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
-        exchangeRate.exchangeRate = '1.0000';
+      if ($scope.isExchangeRateReadOnly(exchangeRate)) {
         return true;
       }
     };
