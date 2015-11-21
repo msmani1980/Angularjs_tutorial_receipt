@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: CommissionDataCtrl', function () {
+describe('Controller: CommissionDataCtrl', function () {
 
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/crew-base-types.json'));
@@ -312,12 +312,11 @@ fdescribe('Controller: CommissionDataCtrl', function () {
         scope.commissionData = {
           startDate: '10/20/2015',
           endDate: '10/21/2015',
-          commissionPercentage: '123.00'
         };
         var expectedPayload = {
           startDate: '20151020',
           endDate: '20151021',
-          commissionPercentage: '123.00'
+          commissionPercentage: null
 
         };
         var payload = CommissionDataCtrl.createPayload();
