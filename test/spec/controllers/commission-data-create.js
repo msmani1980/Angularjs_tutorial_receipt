@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CommissionDataCtrl', function () {
+fdescribe('Controller: CommissionDataCtrl', function () {
 
   beforeEach(module('ts5App', 'template-module'));
   beforeEach(module('served/crew-base-types.json'));
@@ -269,6 +269,12 @@ describe('Controller: CommissionDataCtrl', function () {
           expect(scope.commissionData).toBeDefined();
           expect(scope.commissionData).not.toEqual({});
         });
+        it('should format decimal numbers', function () {
+          expect(scope.commissionData.commissionValue).toEqual('16.60');
+          expect(scope.commissionData.discrepancyDeductionsCashPercentage).toEqual('14.40');
+          expect(scope.commissionData.discrepancyDeductionsStockPercentage).toEqual('15.50');
+          expect(scope.commissionData.manualBarsCommissionValue).toEqual('13.30');
+        });
       });
 
       describe('view init', function () {
@@ -305,11 +311,14 @@ describe('Controller: CommissionDataCtrl', function () {
       it('should format date to YYYMMDD format', function () {
         scope.commissionData = {
           startDate: '10/20/2015',
-          endDate: '10/21/2015'
+          endDate: '10/21/2015',
+          commissionPercentage: '123.00'
         };
         var expectedPayload = {
           startDate: '20151020',
-          endDate: '20151021'
+          endDate: '20151021',
+          commissionPercentage: '123.00'
+
         };
         var payload = CommissionDataCtrl.createPayload();
         expect(payload).toEqual(expectedPayload);

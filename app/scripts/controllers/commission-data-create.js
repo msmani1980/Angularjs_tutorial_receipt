@@ -128,11 +128,11 @@ angular.module('ts5App')
       var newData = angular.copy(dataFromAPI);
       newData.startDate = dateUtility.formatDateForApp(newData.startDate);
       newData.endDate = dateUtility.formatDateForApp(newData.endDate);
-      newData.commissionPercentage = (newData.commissionPercentage) ? parseInt(newData.commissionPercentage).toFixed(2) : null;
-      newData.commissionValue = parseInt(newData.commissionValue).toFixed(2);
-      newData.discrepancyDeductionsCashPercentage = parseInt(newData.discrepancyDeductionsCashPercentage).toFixed(2);
-      newData.discrepancyDeductionsStockPercentage = parseInt(newData.discrepancyDeductionsStockPercentage).toFixed(2);
-      newData.manualBarsCommissionValue = parseInt(newData.manualBarsCommissionValue).toFixed(2);
+      newData.commissionPercentage = (newData.commissionPercentage) ? parseFloat(newData.commissionPercentage).toFixed(2) : null;
+      newData.commissionValue = parseFloat(newData.commissionValue).toFixed(2);
+      newData.discrepancyDeductionsCashPercentage = parseFloat(newData.discrepancyDeductionsCashPercentage).toFixed(2);
+      newData.discrepancyDeductionsStockPercentage = parseFloat(newData.discrepancyDeductionsStockPercentage).toFixed(2);
+      newData.manualBarsCommissionValue = parseFloat(newData.manualBarsCommissionValue).toFixed(2);
 
       $scope.commissionData = newData;
       $scope.updateManualBars();
