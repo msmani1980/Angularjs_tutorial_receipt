@@ -127,7 +127,7 @@ angular.module('ts5App')
         var isDiscrepancy = varianceValue !== 0;
         var bankExchangeRate = cashBag.chBankExchangeRate || (cashBag.chPaperExchangeRate + '/' + cashBag.chCoinExchangeRate);
         var totalBank = cashBag.bankAmountCh || (cashBag.coinAmountManualCh + cashBag.paperAmountManualCh);
-          var cashBagItem = {
+        var cashBagItem = {
           cashBagNumber: cashBag.cashbagNumber,
           currency: cashBag.currencyObject.currencyCode,
           eposCalculatedAmount: '-',
@@ -303,13 +303,7 @@ angular.module('ts5App')
     }
 
     function setupPaymentReport(reportList) {
-      var paymentReport = [];
-
-      angular.forEach(reportList, function(report) {
-        paymentReport.push(report);
-      });
-
-      $scope.paymentReport = paymentReport;
+      $scope.paymentReport = angular.copy(reportList);
     }
 
     function setupData(responseCollection) {
@@ -389,6 +383,7 @@ angular.module('ts5App')
     }
 
     function init() {
+      $scope.actionOnPaymentReport = 'Show';
       showLoadingModal('Loading Reconciliation Discrepancy Details');
       reconciliationFactory.getStoreInstanceDetails($routeParams.storeInstanceId).then(getStoreInstanceDetailsSuccessHandler, handleResponseError);
       angular.element('#checkbox').bootstrapSwitch();
@@ -510,6 +505,10 @@ angular.module('ts5App')
         return 'descending';
       }
       return 'none';
+    };
+
+    $scope.showPaymentReportPanel = function () {
+      angular.element('#paymentReportModal').modal('show');
     };
 
     init();
