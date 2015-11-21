@@ -44,10 +44,6 @@ angular.module('ts5App')
       getDataList(payload);
     };
 
-    $scope.canDelete = function (data) {
-      return dateUtility.isAfterToday(data.startDate);
-    };
-
     function deleteCommissionDataSuccessHandler() {
       $scope.searchCommissionData();
     }
@@ -117,7 +113,10 @@ angular.module('ts5App')
       getCrewBaseTypes();
       getCommissionPayableTypes();
       getDiscountTypes();
-      getDataList({});
+      var getDataPayload = {
+        'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+      getDataList(getDataPayload);
     }
 
     init();

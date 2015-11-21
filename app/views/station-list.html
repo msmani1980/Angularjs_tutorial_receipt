@@ -1,0 +1,130 @@
+<div class="fluid-container module-container">
+
+	<div class="list-controls">
+
+		<div class="row item-list-row">
+
+			<div class="col-xs-6">
+
+				<h2 class="view-name">Stations List</h2>
+
+			</div>
+
+      <div class="col-xs-6 text-right">
+
+
+				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+					<span class="hidden-sm hidden-xs">Filter</span>
+				</button>
+
+      </div>
+
+		</div>
+
+		<div class="panel panel-default collapse no-transition" id="search-collapse">
+
+			<form name="searchForm" class="form">
+
+				<div class="panel-body">
+
+					<div class="row">
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label>Station Name</label>
+                <input type="text" class="form-control" ng-model="search.stationName" />
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <date-picker-field name="EffectiveFrom" label="Effective From"
+                ng-model="dateRange.stationStartDate"></date-picker-field>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <date-picker-field  name="EffectiveTo" label="Effective To"
+                ng-model="dateRange.stationEndDate"></date-picker-field>
+            </div>
+
+					</div>
+
+				</div>
+
+				<div class="panel-footer text-right">
+
+						<button class="btn btn-default btn-search-clear"
+							ng-click="clearSearchFilters()"
+							ng-show="search.menuId.length || search.catererStationId.length || dateRange.startDate.length || dateRange.endDate.length">
+							<span class="btn-label">Clear</span>
+						</button>
+
+						<button ng-click="searchRecords()" class="btn btn-primary btn-search">
+							<span class="fa fa-search" aria-hidden="true"></span>
+							<span class="hidden-sm hidden-xs btn-label">Search</span>
+						</button>
+
+					</div>
+
+				</form>
+
+			</div>
+
+	</div>
+
+	<form name="stationListForm">
+
+	  <table class="table table-bordered table-responsive table-hover">
+
+	    <thead>
+
+	      <tr>
+	        <th>Station Name</th>
+	        <th>Start Date</th>
+	        <th>End Date</th>
+	        <th>Actions</th>
+	      </tr>
+
+	    </thead>
+
+	    <tbody>
+
+	      <tr ng-repeat="station in stationList">
+
+	        <td>{{ station.stationCode }}</td>
+
+	        <td>
+						<date-picker-field form="stationListForm" name="startDate" required="true"
+							ng-model="formData.stations[station.id].startDate"
+							disable="isActionState('end-instance')">
+						</date-picker-field>
+					</td>
+
+	        <td>
+						<date-picker-field form="stationListForm" name="startDate" required="true"
+							ng-model="formData.stations[station.id].endDate"
+							disable="isActionState('end-instance')">
+						</date-picker-field>
+					</td>
+
+	        <td>
+
+	          <button class="btn btn-success btn-xs" type="submit">
+	            <i class="fa fa-check-square-o"></i> Save
+	          </button>
+
+	        </td>
+
+	      </tr>
+
+	    </tbody>
+
+	  </table>
+
+	</form>
+
+</div>
+
+<dynamic-left-nav></dynamic-left-nav>
+
+<delete-record-dialog></delete-record-dialog>
