@@ -96,6 +96,9 @@ angular.module('ts5App')
       var payload = angular.copy($scope.commissionData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+      if(!$scope.commissionPercentRequired) {
+        payload.commissionPercentage = null;
+      }
       return payload;
     };
 
@@ -122,9 +125,16 @@ angular.module('ts5App')
     };
 
     this.getCommissionDataSuccess = function (dataFromAPI) {
-      $scope.commissionData = angular.copy(dataFromAPI);
-      $scope.commissionData.startDate = dateUtility.formatDateForApp($scope.commissionData.startDate);
-      $scope.commissionData.endDate = dateUtility.formatDateForApp($scope.commissionData.endDate);
+      var newData = angular.copy(dataFromAPI);
+      newData.startDate = dateUtility.formatDateForApp(newData.startDate);
+      newData.endDate = dateUtility.formatDateForApp(newData.endDate);
+      newData.commissionPercentage = (newData.commissionPercentage) ? parseInt(newData.commissionPercentage).toFixed(2) : null;
+      newData.commissionValue = parseInt(newData.commissionValue).toFixed(2);
+      newData.discrepancyDeductionsCashPercentage = parseInt(newData.discrepancyDeductionsCashPercentage).toFixed(2);
+      newData.discrepancyDeductionsStockPercentage = parseInt(newData.discrepancyDeductionsStockPercentage).toFixed(2);
+      newData.manualBarsCommissionValue = parseInt(newData.manualBarsCommissionValue).toFixed(2);
+
+      $scope.commissionData = newData;
       $scope.updateManualBars();
       $scope.updateIncentiveIncrement();
       $scope.updateCommissionPercent();
