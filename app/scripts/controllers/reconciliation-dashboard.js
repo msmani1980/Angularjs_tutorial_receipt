@@ -250,9 +250,7 @@ angular.module('ts5App')
     };
 
     $scope.viewReview = function (instance) {
-      // TODO: add instance id once discrepancy screen is finished
-      instance = null;
-      $location.path('/reconciliation-discrepancy-detail');
+      $location.path('/reconciliation-discrepancy-detail/' + instance.id);
     };
 
     $scope.showExecuteActionModal = function (instance, action) {
