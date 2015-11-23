@@ -395,7 +395,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.submit = function() {
       $this.validateUllageReasonFields();
       $scope.displayError = $scope.storeInstancePackingForm.$invalid;
-      if($scope.storeInstancePackingForm.$valid) {
+      var isVarianceOk = $this.checkVarianceOnAllItems();
+      if($scope.storeInstancePackingForm.$valid && isVarianceOk) {
         $scope.save();
       }
     };
@@ -423,14 +424,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $location.url('/store-instance-dashboard');
         }
       });
-    };
-
-    $scope.checkFormBeforeSave = function () {
-      // TODO: check ullage quantities
-      var isVarianceOk = $this.checkVarianceOnAllItems();
-      if(isVarianceOk) {
-        $scope.save();
-      }
     };
 
     $scope.shouldDisplayQuantityField = function (fieldName) {
