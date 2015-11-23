@@ -13,6 +13,9 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   beforeEach(module('served/company.json'));
   beforeEach(module('served/payment-report.json'));
 
+  beforeEach(module('served/promotion.json'));
+  beforeEach(module('served/item.json'));
+
   var scope;
   var ReconciliationDiscrepancyDetail;
   var controller;
@@ -50,18 +53,27 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
   var getPaymentReportDeferred;
   var getPaymentReportJSON;
 
+  var getPromotionDeferred;
+  var getPromotionJSON;
+
+  var getItemDeferred;
+  var getItemJSON;
+
   var routeParams;
   var dateUtility;
 
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
-    inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_, _servedCountTypes_, _servedStoreInstanceItemList_) {
+    inject(function (_servedStoreInstance_, _servedStockTotals_, _servedItemTypes_, _servedPromotionTotals_, _servedCountTypes_, _servedStoreInstanceItemList_, _servedPromotion_,
+                     _servedItem_) {
       storeInstanceJSON = _servedStoreInstance_;
       getPromotionTotalsJSON = _servedPromotionTotals_;
       getStockTotalsJSON = _servedStockTotals_;
       getItemTypesListJSON = _servedItemTypes_;
       getCountTypesJSON = _servedCountTypes_;
       getStoreInstanceItemListJSON = _servedStoreInstanceItemList_;
+      getPromotionJSON = _servedPromotion_;
+      getItemJSON = _servedItem_;
     });
 
     inject(function (_servedCurrencies_, _servedCompany_, _servedPaymentReport_) {
@@ -120,6 +132,14 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
     getPaymentReportDeferred = $q.defer();
     getPaymentReportDeferred.resolve(getPaymentReportJSON);
     spyOn(reconciliationFactory, 'getPaymentReport').and.returnValue(getPaymentReportDeferred.promise);
+
+    getPromotionDeferred = $q.defer();
+    getPromotionDeferred.resolve(getPromotionJSON);
+    spyOn(reconciliationFactory, 'getPromotion').and.returnValue(getPromotionDeferred.promise);
+
+    getItemDeferred = $q.defer();
+    getItemDeferred.resolve(getItemJSON);
+    spyOn(reconciliationFactory, 'getItem').and.returnValue(getItemDeferred.promise);
 
     spyOn(GlobalMenuService.company, 'get').and.returnValue(666);
 
@@ -414,6 +434,27 @@ describe('Controller: ReconciliationDiscrepancyDetail', function () {
           expect(scope.cashBags[0].revision).toEqual({});
         });
       });
+    });
+
+  });
+
+  describe('show modal', function(){
+    it('should show the modal', function(){
+      scope.$digest();
+      scope.showModal('Virtual');
+      expect(scope.modalTotal).toBe('0.00');
+    });
+
+    it('should not add modalMainTitle to scope', function(){
+      scope.$digest();
+      scope.showModal('nonExistingKey');
+      expect(scope.modalMainTitle).toBeUndefined();
+    });
+
+    it('should attach modalMainTitle to scope', function(){
+      scope.$digest();
+      scope.showModal('Virtual');
+      expect(scope.modalMainTitle).toBeDefined();
     });
 
   });
