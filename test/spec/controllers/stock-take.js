@@ -7,7 +7,7 @@ describe('Controller: StockTakeCtrl', function() {
     'served/catering-stations.json',
     'served/stock-take.json',
     'served/stock-management-dashboard.json',
-    'served/items-list.json'
+    'served/master-item-list.json'
   ));
 
   var StockTakeCtrl;
@@ -23,7 +23,7 @@ describe('Controller: StockTakeCtrl', function() {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, lodash,
-    _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedItemsList_) {
+    _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedMasterItemList_) {
     scope = $rootScope.$new();
     location = $location;
     stockTakeFactory = $injector.get('stockTakeFactory');
@@ -47,7 +47,7 @@ describe('Controller: StockTakeCtrl', function() {
       getItemsByCateringStationIdDeferred.promise);
 
     getItemsMasterListDeferred = $q.defer();
-    getItemsMasterListDeferred.resolve(_servedItemsList_);
+    getItemsMasterListDeferred.resolve(_servedMasterItemList_);
     spyOn(stockTakeFactory, 'getItemsMasterList').and.returnValue(getItemsMasterListDeferred.promise);
   }));
 
@@ -454,6 +454,62 @@ describe('Controller: StockTakeCtrl', function() {
       expect(scope.omitSelectedItems).toBeTruthy();
     });
 
+  });
+
+  describe('addSelectedItemToMasterList', function() {
+    beforeEach(inject(function($controller) {
+      routeParams = {
+        state: 'create',
+        id: 60
+      };
+      StockTakeCtrl = $controller('StockTakeCtrl', {
+        $scope: scope,
+        $routeParams: routeParams
+      });
+      scope.stockTake.items = [{
+        id: 603,
+        stockTakeId: 60,
+        masterItemId: 36,
+        quantity: 3
+      }];
+      scope.cateringStationItems = [{
+        catererStationId: 60,
+        currentCountQuantity: 5,
+        deliveryNoteId: null,
+        dispatchedQuantity: 0,
+        id: null,
+        itemCode: '71234',
+        itemName: '7UP Free',
+        lastUpdatedOn: '2015-11-20 19:00:26.090895',
+        masterItemId: 157,
+        offloadQuantity: 0,
+        openingQuantity: 5,
+        receivedQuantity: 0,
+        retailCompanyId: 403,
+        ullageQuantity: 0
+      }];
+      scope.$digest();
+    }));
+
+    it('getItemsMasterList should have been called', function() {
+      expect(stockTakeFactory.getItemsMasterList).toHaveBeenCalled();
+    });
+
+    it('should have defined cateringStationItems', function() {
+      expect(scope.cateringStationItems).toBeDefined();
+    });
+
+    it('should have defined stockTake', function() {
+      expect(scope.stockTake).toBeDefined();
+    });
+
+    it('should have defined masterItemList', function() {
+      expect(scope.masterItemsList).toBeDefined();
+    });
+
+    it('should add an item to cateringStationItems', function() {
+      expect(scope.cateringStationItems.length).toBe(4);
+    });
   });
 
 });
