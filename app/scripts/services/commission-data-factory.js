@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('commissionFactory', function (commissionDataService, recordsService) {
+  .factory('commissionFactory', function (commissionDataService, recordsService, GlobalMenuService) {
 
     var getCommissionPayableList = function (payload) {
       if(arguments.length > 0) {
@@ -42,6 +42,10 @@ angular.module('ts5App')
       return recordsService.getDiscountTypes();
     };
 
+    var getCompanyData = function () {
+      return GlobalMenuService.getCompanyData();
+    };
+
     return {
       getCommissionPayableList: getCommissionPayableList,
       getCommissionPayableData: getCommissionPayableData,
@@ -49,6 +53,7 @@ angular.module('ts5App')
       updateCommissionData: updateCommissionData,
       deleteCommissionData: deleteCommissionData,
       getCommissionPayableTypes: getCommissionPayableTypes,
-      getDiscountTypes: getDiscountTypes
+      getDiscountTypes: getDiscountTypes,
+      getCompanyData: getCompanyData
     };
   });

@@ -7,12 +7,15 @@ describe('Factory: commissionFactory', function () {
   var commissionFactory,
     commissionDataService,
     recordsService,
+    globalMenuService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _commissionFactory_, _commissionDataService_, _recordsService_) {
+  beforeEach(inject(function ($rootScope, _commissionFactory_, _commissionDataService_, _recordsService_, _GlobalMenuService_) {
     commissionDataService = _commissionDataService_;
     recordsService = _recordsService_;
+    globalMenuService = _GlobalMenuService_;
+
 
     spyOn(commissionDataService, 'getCommissionPayableData');
     spyOn(commissionDataService, 'getCommissionPayableList');
@@ -22,6 +25,7 @@ describe('Factory: commissionFactory', function () {
     spyOn(recordsService, 'getCrewBaseTypes');
     spyOn(recordsService, 'getCommissionPayableTypes');
     spyOn(recordsService, 'getDiscountTypes');
+    spyOn(globalMenuService, 'getCompanyData');
 
 
     rootScope = $rootScope;
@@ -64,6 +68,13 @@ describe('Factory: commissionFactory', function () {
     it('should call recordsService on getDiscountTypes', function () {
       commissionFactory.getDiscountTypes();
       expect(recordsService.getDiscountTypes).toHaveBeenCalled();
+    });
+  });
+
+  describe('globalMenuService API', function () {
+    it('should call getCompanyData', function () {
+      commissionFactory.getCompanyData();
+      expect(globalMenuService.getCompanyData).toHaveBeenCalled();
     });
   });
 
