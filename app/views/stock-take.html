@@ -20,7 +20,7 @@
                 <span class="hidden-xs">Review</span>
               </button>
 
-              <button type="button" class="btn btn-primary" ng-click="save(false)" ng-show="state == 'review'">
+              <button type="button" class="btn btn-primary" ng-click="save(false)" ng-show="state === 'review'">
                 <span class="fa fa-check-square-o" aria-hidden="true"></span>
                 <span class="hidden-xs">Save</span>
               </button>
@@ -30,7 +30,7 @@
                 <span class="hidden-xs">Cancel</span>
               </button>
 
-              <button class="btn btn-success" ng-click="save(true)" ng-show="state == 'review'">
+              <button class="btn btn-success" ng-click="save(true)" ng-show="state === 'review'">
                 <span class="fa fa-check-square-o" aria-hidden="true"></span>
                 <span class="hidden-xs">Submit</span>
               </button>
@@ -139,7 +139,7 @@
 
     <ng-form name="form" class="form edit-form delivery-note-form">
 
-      <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by $index" ng-hide="!itemQuantities[item.masterItemId] && ( state == 'review' || state == 'view' )">
+      <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by item.masterItemId" ng-hide="!itemQuantities[item.masterItemId] && ( state == 'review' || state == 'view' )">
         <div class="row">
 
           <div class="col-xs-12 col-sm-4">
@@ -174,7 +174,7 @@
               <label for="item-name-{{ $index }}">Select Item</label>
               <ui-select name="item-name-{{ $index }}"
                          ng-model="item.itemObject"
-                         ng-disabled="readOnly || addedItems.length < 0 || state != 'create'"
+                         ng-disabled="readOnly || addedItems.length < 0 || state === 'view'"
                          reset-search-input="false">
 
                 <ui-select-match placeholder="Select New Item..." allow-clear>{{$select.selected.itemCode}} - {{$select.selected.itemName}}</ui-select-match>
