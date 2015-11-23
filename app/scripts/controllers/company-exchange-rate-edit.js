@@ -89,8 +89,21 @@ angular.module('ts5App')
 
         // Populate company exchange rates with denomination info
         angular.forEach(companyExchangeRates, function (exchangeRate) {
-          exchangeRate.denominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatDenominations;
-          exchangeRate.easyPayDenominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatEasyPayDenominations;
+          if (companyCurrencies[exchangeRate.acceptedCurrencyCode]) {
+            exchangeRate.denominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatDenominations;
+            exchangeRate.easyPayDenominations = companyCurrencies[exchangeRate.acceptedCurrencyCode].flatEasyPayDenominations;
+          }
+          else {
+            exchangeRate.invalid = true;
+          }
+
+          if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
+            exchangeRate.exchangeRate = '1.0000';
+          }
+        });
+
+        companyExchangeRates = companyExchangeRates.filter(function (exchangeRate) {
+          return !exchangeRate.invalid;
         });
 
         // Add exchange rate rows which are not defined yet
@@ -175,11 +188,10 @@ angular.module('ts5App')
     };
 
     $scope.isExchangeRateDisabled = function (exchangeRate) {
-      if ($scope.isExchangeRateReadOnly(exchangeRate)) {
+      if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
         return true;
       }
-      if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
-        exchangeRate.exchangeRate = '1.0000';
+      if ($scope.isExchangeRateReadOnly(exchangeRate)) {
         return true;
       }
     };

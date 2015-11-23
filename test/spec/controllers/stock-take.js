@@ -22,7 +22,7 @@ describe('Controller: StockTakeCtrl', function() {
   var routeParams;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, lodash,
+  beforeEach(inject(function($controller, $rootScope, $injector, $q, $location, $filter, lodash,
     _servedCateringStations_, _servedStockTake_, _servedStockManagementDashboard_, _servedMasterItemList_) {
     scope = $rootScope.$new();
     location = $location;
@@ -37,7 +37,6 @@ describe('Controller: StockTakeCtrl', function() {
     spyOn(stockTakeFactory, 'getStockTake').and.returnValue(getCatererStationListDeferred.promise);
 
     saveDeferred = $q.defer();
-
     spyOn(stockTakeFactory, 'createStockTake').and.returnValue(saveDeferred.promise);
     spyOn(stockTakeFactory, 'updateStockTake').and.returnValue(saveDeferred.promise);
 
@@ -49,6 +48,7 @@ describe('Controller: StockTakeCtrl', function() {
     getItemsMasterListDeferred = $q.defer();
     getItemsMasterListDeferred.resolve(_servedMasterItemList_);
     spyOn(stockTakeFactory, 'getItemsMasterList').and.returnValue(getItemsMasterListDeferred.promise);
+    spyOn(stockTakeFactory, 'getCompanyId').and.returnValue(403);
   }));
 
   describe('invalid state passed to route', function() {

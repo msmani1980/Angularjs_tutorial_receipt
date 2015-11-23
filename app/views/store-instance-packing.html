@@ -167,12 +167,9 @@
           <td ng-if="shouldDisplayQuantityField('template')">
             <input type="text"
                    name="new-pick-list-template-{{$index}}"
-                   custom-validity
-                   custom-pattern="number"
                    class="form-control"
                    ng-model="item.menuQuantity"
-                   disabled="true"
-                   maxlength="5"/>
+                   disabled="true"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('picked') || shouldDisplayQuantityField('dispatch')">
             <input type="text"

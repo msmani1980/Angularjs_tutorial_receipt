@@ -5,7 +5,7 @@
     </div>
 
     <div class="col-xs-6 text-right">
-      <a class="btn btn-default" ng-href="#/post-trip-data-list" class="btn" ng-show="readOnly">Back</a>
+      <a class="btn btn-default" ng-href="#/commission-data-table" class="btn" ng-show="readOnly">Back</a>
     </div>
   </div>
 
@@ -50,7 +50,7 @@
                 is-search-field="true"
                 disable-start-date="readOnly"
                 disable-end-date="readOnly"
-                ng-required="true">
+                required="true">
               </date-picker>
             </div>
           </div>
@@ -83,7 +83,6 @@
             <input ng-model="commissionData.commissionPercentage"
                    type="text"
                    class="form-control"
-                   placeholder="57.5"
                    maxlength="6"
                    custom-validity
                    custom-pattern="decimalWithTwoDecimalPlaces"
@@ -236,4 +235,4 @@
 
 <leave-view-modal></leave-view-modal>
 
-<dynamic-left-nav title="Post Trip Data"></dynamic-left-nav>
+<dynamic-left-nav title="Employee Commission"></dynamic-left-nav>
