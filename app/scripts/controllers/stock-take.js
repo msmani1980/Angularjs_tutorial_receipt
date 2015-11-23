@@ -124,7 +124,7 @@ angular.module('ts5App')
       $scope.uiSelectReady = true;
     }
 
-    function addSelectedItemToMasterList() {
+    function diffAndCreatePayloadForNewItems() {
       var newItems = [];
       angular.forEach($scope.stockTake.items, function(item) {
         angular.forEach($scope.cateringStationItems, function(cateringItem) {
@@ -143,13 +143,16 @@ angular.module('ts5App')
           }
         });
       });
-      newItems = $filter('unique')(newItems, 'masterItemId');
+      return $filter('unique')(newItems, 'masterItemId');
+    }
+
+    function addSelectedItemToMasterList() {
+      var newItems = diffAndCreatePayloadForNewItems();
       angular.forEach(newItems, function(newItem) {
         $scope.cateringStationItems.push(newItem);
       });
       $scope.cateringStationItems = $filter('unique')($scope.cateringStationItems, 'masterItemId');
       $scope.cateringStationItems = $filter('orderBy')($scope.cateringStationItems, 'itemName');
-      $scope.cateringItemsReady = true;
     }
 
     function setMasterItemsList(response) {
@@ -316,12 +319,8 @@ angular.module('ts5App')
     function saveStockTakeResolution(response) {
       showMessage(_formSaveSuccessText, 'success');
       hideLoadingModal();
-      if ($scope.stockTake.isSubmitted) {
+      if (angular.isDefined(response.id)) {
         $location.path('/stock-take-report');
-        return;
-      }
-      if ($routeParams.state === 'create' && angular.isDefined(response.id)) {
-        $location.path(_path + 'edit/' + response.id);
         return;
       }
       init();
