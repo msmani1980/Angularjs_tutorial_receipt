@@ -204,6 +204,23 @@ describe('Controller: CommissionDataTableCtrl', function () {
       });
     });
 
+    describe('should commission percent value helper', function () {
+      it('should return false if percentType is retail item', function () {
+        var mockRecord = {
+          commissionPayableTypeId: 1
+        };
+        var shouldDisplay = scope.shouldShowCommissionPercent(mockRecord);
+        expect(shouldDisplay).toEqual(false);
+      });
+      it('should return true if percentType is not retail item', function () {
+        var mockRecord = {
+          commissionPayableTypeId: 2
+        };
+        var shouldDisplay = scope.shouldShowCommissionPercent(mockRecord);
+        expect(shouldDisplay).toEqual(true);
+      });
+    });
+
   });
 
 });
