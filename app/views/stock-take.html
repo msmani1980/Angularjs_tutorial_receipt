@@ -139,9 +139,9 @@
 
     <ng-form name="form" class="form edit-form delivery-note-form">
 
-      <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by $index" ng-hide="!itemQuantities[item.masterItemId] && ( state == 'review' || state == 'view' )">
+      <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by item.masterItemId" ng-show="cateringItemsReady" ng-hide="!itemQuantities[item.masterItemId] && ( state == 'review' || state == 'view' )">
         <div class="row">
-
+          masterItemId {{item.masterItemId}}
           <div class="col-xs-12 col-sm-4">
             <div class="form-group">
               <label for="item-code-{{ $index }}">Item Code</label>
@@ -168,7 +168,7 @@
 
       <div class="well" ng-repeat="item in addedItems | index track by $index" ng-show="showAddedItem(item, state) && uiSelectReady">
         <div class="row">
-          {{item}}
+
           <div class="col-xs-12 col-sm-6" ng-hide="state === 'review'">
             <div class="form-group">
               <label for="item-name-{{ $index }}">Select Item</label>

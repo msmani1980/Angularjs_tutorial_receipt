@@ -94,6 +94,7 @@ angular.module('ts5App')
         return;
       }
       $scope.cateringStationItems = items;
+      hideLoadingModal();
     }
 
     function diffItems(itemList) {
@@ -123,30 +124,38 @@ angular.module('ts5App')
       $scope.uiSelectReady = true;
     }
 
-    function addSelectedItemToMasterList(response) {
-      $scope.masterItemsList = angular.copy(response.masterItems);
-      var itemsToAdd;
+    function addSelectedItemToMasterList() {
+      var newItems = [];
       angular.forEach($scope.stockTake.items, function(item) {
-        var newItems = [];
-        var payload = {
-          id: item.id,
-          masterItemId: item.masterItemId,
-          quantity: item.quantity,
-          stockTakeId: item.stockTakeId,
-          itemName: setItemAttribute(item.masterItemId, 'itemName'),
-          itemCode: setItemAttribute(item.masterItemId, 'itemCode')
-        };
-        angular.forEach($scope.masterItemsList, function(responseItems) {
-          console.log(item.masterItemId, responseItems.id);
-          if (item.masterItemId !== responseItems.id) {
-            newItems.push(payload);
+        angular.forEach($scope.cateringStationItems, function(cateringItem) {
+          if (item.masterItemId !== cateringItem.masterItemId) {
+            angular.forEach($scope.masterItemsList, function(responseItem) {
+              var payload = {
+                id: item.id,
+                masterItemId: item.masterItemId,
+                quantity: item.quantity,
+                stockTakeId: item.stockTakeId,
+                itemName: responseItem.itemName,
+                itemCode: responseItem.itemCode
+              };
+              newItems.push(payload);
+            });
           }
-          itemsToAdd = $filter('unique')(newItems, 'masterItemId');
         });
       });
-      if (angular.isDefined(itemsToAdd) && itemsToAdd.length) {
-        console.log(itemsToAdd[0]);
-        $scope.cateringStationItems.push(itemsToAdd[0]);
+      newItems = $filter('unique')(newItems, 'masterItemId');
+      angular.forEach(newItems, function(newItem) {
+        $scope.cateringStationItems.push(newItem);
+      });
+      $scope.cateringStationItems = $filter('unique')($scope.cateringStationItems, 'masterItemId');
+      $scope.cateringStationItems = $filter('orderBy')($scope.cateringStationItems, 'itemName');
+      $scope.cateringItemsReady = true;
+    }
+
+    function setMasterItemsList(response) {
+      $scope.masterItemsList = angular.copy(response.masterItems);
+      if ($scope.stockTake.items && $scope.stockTake.items.length) {
+        addSelectedItemToMasterList();
       }
     }
 
@@ -160,7 +169,7 @@ angular.module('ts5App')
           if (angular.isObject(response)) {
             filterAvailableItems(response);
             if (response.masterItems) {
-              addSelectedItemToMasterList(response);
+              setMasterItemsList(response);
             }
             hideLoadingModal();
           }
@@ -168,30 +177,16 @@ angular.module('ts5App')
       }
     }
 
-    function setItemAttribute(id, attr) {
-      console.log(id, attr, $scope.masterItemsList);
-      if ($scope.masterItemsList) {
-        console.log('here');
-        var items = lodash.filter($scope.masterItemsList, function(item) {
-          return item.id === id;
-        });
-        console.log(items[0][attr]);
-        return items[0][attr];
-      }
-    }
-
     function setCateringStationItemsFromResponse(response) {
       var items = $filter('unique')(response.response, 'masterItemId');
       items = $filter('orderBy')(items, 'itemName');
       setCateringStationItems(items);
-      console.log(items);
     }
 
     function getItemsByCatererStationId(catererStationId) {
       if (!catererStationId) {
         return;
       }
-      console.log(catererStationId);
       displayLoadingModal();
       $scope.stockTake.catererStationId = catererStationId;
       // used cached results instead of hitting API again
@@ -357,7 +352,6 @@ angular.module('ts5App')
 
     function setStockTakeFromResponse(response) {
       $scope.stockTake = response;
-      console.log(response);
       if ($scope.stockTake.createdOn) {
         $scope.stockTake.createdOn = dateUtility.removeMilliseconds($scope.stockTake.createdOn);
       }
@@ -372,9 +366,7 @@ angular.module('ts5App')
 
     function setItemQuantitiesFromStockTake() {
       $scope.itemQuantities = [];
-      console.log($scope.stockTake);
       lodash.forIn($scope.stockTake.items, function(item) {
-        console.log(item);
         $scope.itemQuantities[item.masterItemId] = item.quantity;
       });
     }
