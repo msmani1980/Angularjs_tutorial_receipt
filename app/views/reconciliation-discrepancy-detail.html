@@ -68,7 +68,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
-          <h4>{{ modalMainTitle }}: 123.00</h4>
+          <h4>{{ modalMainTitle }}: {{modalTotal}}</h4>
           <br>
           <table class="table table-bordered">
             <tr class="active">
@@ -76,15 +76,10 @@
               <td>Quantity</td>
               <td>Total</td>
             </tr>
-            <tr>
-              <td>Test name</td>
-              <td>5</td>
-              <td>10.00</td>
-            </tr>
-            <tr>
-              <td>Test name 2</td>
-              <td>6</td>
-              <td>11.00</td>
+            <tr ng-repeat="stockItem in stockTotals.stockItems | filter:{itemTypeName:modalItemTypeName}">
+              <td>{{stockItem.itemName}}</td>
+              <td>{{stockItem.eposQuantity}}</td>
+              <td>{{stockItem.eposTotal}}</td>
             </tr>
           </table>
         </div>
@@ -129,7 +124,7 @@
           </h4>
         </div>
       </div>
-      <br>
+      <br/>
     </header>
 
     <div class="accordion-wrapper">

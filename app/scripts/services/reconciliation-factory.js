@@ -9,7 +9,8 @@
  */
 angular.module('ts5App')
   .factory('reconciliationFactory',
-    function ($q, storeInstanceService, storesService, stationsService, reconciliationService, itemTypesService, recordsService, currenciesService, companyService) {
+    function ($q, storeInstanceService, storesService, stationsService, reconciliationService, itemTypesService, recordsService, currenciesService, companyService, itemsService,
+              promotionsService) {
 
       function getStoreStatusList(payload) {
         return recordsService.getStoreStatusList(payload);
@@ -69,6 +70,14 @@ angular.module('ts5App')
         }, storeInstanceDeferred.reject);
       }
 
+      function getItem(itemId) {
+        return itemsService.getItem(itemId);
+      }
+
+      function getPromotion(promotionId) {
+        return promotionsService.getPromotion(promotionId);
+      }
+
       function getStoreInstanceDetails(storeInstanceId) {
         var storeInstanceDeferred = $q.defer();
         storeInstanceService.getStoreInstance(storeInstanceId).then(function (storeInstanceDataFromAPI) {
@@ -118,6 +127,8 @@ angular.module('ts5App')
         getStockTotals: getStockTotals,
         getPromotionTotals: getPromotionTotals,
         getItemTypesList: getItemTypesList,
+        getItem: getItem,
+        getPromotion: getPromotion,
         getPaymentReport: getPaymentReport,
         getCHRevenue: getCHRevenue,
         getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,

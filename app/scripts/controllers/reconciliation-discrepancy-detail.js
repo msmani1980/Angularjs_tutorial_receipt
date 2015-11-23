@@ -223,6 +223,27 @@ angular.module('ts5App')
       };
     }
 
+    function getStockItemData() {
+      $this.promotionTotals.map(function (promotion) {
+        reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
+          promotion.itemName = dataFromAPI.promotionCode;
+        });
+        promotion.itemTypeName = 'Promotion';
+      });
+
+      $filter('filter')($this.stockTotals, {itemTypeName: 'Virtual'}).map(function (item) {
+        reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
+          item.itemName = dataFromAPI.itemName;
+        });
+      });
+
+      $filter('filter')($this.stockTotals, {itemTypeName: 'Voucher'}).map(function (item) {
+        reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
+          item.itemName = dataFromAPI.itemName;
+        });
+      });
+    }
+
     function setNetTotals(stockData) {
       var stockTotals = angular.copy(stockData);
       angular.forEach(stockTotals, function (stockItem) {
@@ -237,7 +258,9 @@ angular.module('ts5App')
         netLMP: formatAsCurrency(netLMP),
         netEPOS: formatAsCurrency(netEPOS)
       };
-      $scope.stockTotals = angular.extend(stockTotals, {totalNet: netTotals});
+
+      var stockItems = angular.copy($this.stockTotals).concat($this.promotionTotals);
+      $scope.stockTotals = angular.extend(stockTotals, {totalNet: netTotals}, {stockItems: stockItems});
     }
 
     function getEPOSRevenue(eposRevenue) {
@@ -309,27 +332,27 @@ angular.module('ts5App')
     function setupData(responseCollection) {
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
-      var stockTotals = angular.copy(responseCollection[2].response);
-      var promotionTotals = angular.copy(responseCollection[3].response);
-      var chRevenue = angular.copy(responseCollection[4]);
-      var eposRevenue = angular.copy(responseCollection[5]);
+      $this.stockTotals = angular.copy(responseCollection[2].response);
+      $this.promotionTotals = angular.copy(responseCollection[3].response);
+      $this.chRevenue = angular.copy(responseCollection[4]);
+      $this.eposRevenue = angular.copy(responseCollection[5]);
       $this.globalCurrencyList = angular.copy(responseCollection[6].response);
       $scope.companyBaseCurrency = getCurrencyByBaseCurrencyId($this.globalCurrencyList, responseCollection[7].baseCurrencyId);
       setupPaymentReport(angular.copy(responseCollection[8]));
 
       $scope.totalRevenue = {
-        cashHandler: formatAsCurrency(getCHRevenue(chRevenue)),
-        epos: formatAsCurrency(getEPOSRevenue(eposRevenue))
+        cashHandler: formatAsCurrency(getCHRevenue($this.chRevenue)),
+        epos: formatAsCurrency(getEPOSRevenue($this.eposRevenue))
       };
 
-      stockTotals.map(function (stockItem) {
+      $this.stockTotals.map(function (stockItem) {
         stockItem.itemTypeName = lodash.findWhere($this.itemTypes, {id: stockItem.itemTypeId}).name;
       });
 
-      var totalItems = getTotalsFor(stockTotals, 'Regular');
-      var totalVirtual = getTotalsFor(stockTotals, 'Virtual');
-      var totalVoucher = getTotalsFor(stockTotals, 'Voucher');
-      var totalPromotion = getTotalsForPromotions(promotionTotals);
+      var totalItems = getTotalsFor($this.stockTotals, 'Regular');
+      var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
+      var totalVoucher = getTotalsFor($this.stockTotals, 'Voucher');
+      var totalPromotion = getTotalsForPromotions($this.promotionTotals);
 
       var stockObject = {
         totalRetail: totalItems,
@@ -340,7 +363,8 @@ angular.module('ts5App')
 
       getCashBagData();
       setNetTotals(stockObject);
-      setStockData(stockTotals);
+      setStockData($this.stockTotals);
+      getStockItemData();
       setDiscrepancy();
     }
 
@@ -391,7 +415,6 @@ angular.module('ts5App')
     }
 
     $scope.showModal = function (modalName) {
-      angular.element('#t6Modal').modal('show');
       var modalNameToHeaderMap = {
         'Virtual': 'Virtual Product Revenue',
         'Voucher': 'Voucher Product Revenue',
@@ -402,10 +425,18 @@ angular.module('ts5App')
         'Voucher': 'Voucher Product Name',
         'Promotion': 'Promotion Name'
       };
+      if (!$scope.stockTotals || !$scope.stockTotals['total' + modalName]) {
+        return;
+      }
+
+      $scope.modalTotal = $scope.stockTotals['total' + modalName].totalEPOS;
+      $scope.modalItemTypeName = modalName;
       if (modalNameToHeaderMap[modalName] && modalNamToTableHeaderMap[modalName]) {
         $scope.modalMainTitle = modalNameToHeaderMap[modalName];
         $scope.modalTableHeader = modalNamToTableHeaderMap[modalName];
       }
+
+      angular.element('#t6Modal').modal('show');
     };
 
     $scope.showEditViewForItem = function (item, isLMPStockItem) {
