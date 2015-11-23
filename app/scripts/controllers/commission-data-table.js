@@ -82,6 +82,11 @@ angular.module('ts5App')
       $location.path('commission-data/' + state + '/' + id).search();
     };
 
+    $scope.shouldShowCommissionPercent = function (record) {
+      var recordTypeName = getNameForId(record.commissionPayableTypeId, $scope.commissionTypes);
+      return (recordTypeName !== 'Retail item');
+    };
+
     function getCrewBaseTypes () {
       var uniqueCrewBaseTypes = {};
       employeesService.getEmployees(companyId).then(function(dataFromAPI) {
