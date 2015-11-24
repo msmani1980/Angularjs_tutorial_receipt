@@ -15,7 +15,6 @@ angular.module('ts5App')
 
     $scope.viewName = 'Creating Commission Data';
     $scope.commissionData = {};
-    $scope.baseCurrency = 'GBP'; // TODO: get from API
     $scope.readOnly = true;
     $scope.requireCommissionPercent = true;
     var percentTypeName = 'Percentage';
@@ -181,6 +180,29 @@ angular.module('ts5App')
       });
     };
 
+    this.completeInitializeAfterDependencies = function () {
+      if ($routeParams.id) {
+        $this.getCommissionData();
+      }
+    };
+
+    this.getCurrencyData = function (currencyId) {
+      commissionFactory.getCurrency(currencyId).then(function (response) {
+        if(response) {
+          $scope.baseCurrency = angular.copy(response.currencyCode);
+        }
+        $this.completeInitializeAfterDependencies();
+      });
+    };
+
+    this.getCompanyData = function () {
+      commissionFactory.getCompanyData(companyId).then(function (response) {
+        if(response) {
+          $this.getCurrencyData(angular.copy(response.baseCurrencyId));
+        }
+      });
+    };
+
     this.setViewName = function () {
       var nameObject = {
         view: 'Viewing Commission Data',
@@ -198,13 +220,7 @@ angular.module('ts5App')
       $this.getCrewBaseList();
       $this.getCommissionPayableTypes();
       $this.getDiscountTypes();
-
-      // TODO: resolve business logic -- which base currency to use if there are multiple?
-      // commissionFactory.getBaseCurrency();
-
-      if ($routeParams.id) {
-        $this.getCommissionData();
-      }
+      $this.getCompanyData();
     };
     this.init();
 

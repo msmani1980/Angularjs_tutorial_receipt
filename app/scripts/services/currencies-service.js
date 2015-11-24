@@ -14,7 +14,7 @@ angular.module('ts5App')
       return GlobalMenuService.company.get();
     };
 
-    var masterCurrenciesURL = ENV.apiUrl + '/api/currencies';
+    var masterCurrenciesURL = ENV.apiUrl + '/api/currencies/:id';
     var companyCurrenciesURL = ENV.apiUrl + '/api/company-currency-globals';
     var detailedCompanyCurrenciesURL = ENV.apiUrl + '/api/companies/:companyId/currencies/:id';
 
@@ -24,6 +24,9 @@ angular.module('ts5App')
     };
 
     var actions = {
+      getMasterCurrency: {
+        method: 'GET'
+      },
       getCurrencies: {
         method: 'GET'
       },
@@ -44,6 +47,11 @@ angular.module('ts5App')
     var masterCurrenciesResource = $resource(masterCurrenciesURL, requestParameters, actions);
     var companyCurrenciesResource = $resource(companyCurrenciesURL, requestParameters, actions);
     var detailedCompanyCurrenciesResource = $resource(detailedCompanyCurrenciesURL, requestParameters, actions);
+
+    var getMasterCurrency = function (id) {
+      requestParameters.id = id;
+      return masterCurrenciesResource.getMasterCurrency().$promise;
+    };
 
     var getCompanyGlobalCurrencies = function (payload) {
       return masterCurrenciesResource.getCurrencies(payload).$promise;
@@ -85,6 +93,7 @@ angular.module('ts5App')
       getDetailedCompanyCurrencies: getDetailedCompanyCurrencies,
       deleteDetailedCompanyCurrency: deleteDetailedCompanyCurrency,
       createDetailedCompanyCurrency: createDetailedCompanyCurrency,
-      updateDetailedCompanyCurrency: updateDetailedCompanyCurrency
+      updateDetailedCompanyCurrency: updateDetailedCompanyCurrency,
+      getMasterCurrency: getMasterCurrency
     };
   });
