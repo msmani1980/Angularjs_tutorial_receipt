@@ -114,7 +114,15 @@ angular.module('ts5App')
       });
     }
 
+    function getCompanyData() {
+      commissionFactory.getCompanyData(companyId).then(function (response) {
+        console.log(response);
+        $scope.companyData = angular.copy(response);
+      });
+    }
+
     function init() {
+      getCompanyData();
       getCrewBaseTypes();
       getCommissionPayableTypes();
       getDiscountTypes();

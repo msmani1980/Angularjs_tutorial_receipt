@@ -8,13 +8,15 @@ describe('Factory: commissionFactory', function () {
     commissionDataService,
     recordsService,
     companyService,
+    currenciesService,
     rootScope,
     scope;
 
-  beforeEach(inject(function ($rootScope, _commissionFactory_, _commissionDataService_, _recordsService_, _GlobalMenuService_, _companyService_) {
+  beforeEach(inject(function ($rootScope, _commissionFactory_, _commissionDataService_, _recordsService_, _GlobalMenuService_, _companyService_, _currenciesService_) {
     commissionDataService = _commissionDataService_;
     recordsService = _recordsService_;
     companyService = _companyService_;
+    currenciesService = _currenciesService_;
 
 
     spyOn(commissionDataService, 'getCommissionPayableData');
@@ -26,6 +28,7 @@ describe('Factory: commissionFactory', function () {
     spyOn(recordsService, 'getCommissionPayableTypes');
     spyOn(recordsService, 'getDiscountTypes');
     spyOn(companyService, 'getCompany');
+    spyOn(currenciesService, 'getDetailedCompanyCurrencies');
 
 
     rootScope = $rootScope;
@@ -71,11 +74,20 @@ describe('Factory: commissionFactory', function () {
     });
   });
 
-  describe('globalMenuService API', function () {
+  describe('companyService API', function () {
     it('should call getCompany', function () {
       var mockId = 1;
       commissionFactory.getCompanyData(mockId);
       expect(companyService.getCompany).toHaveBeenCalledWith(mockId);
+    });
+  });
+
+  describe('currenciesService API', function () {
+    it('should call getDetailedCompanyCurrencies', function () {
+      var mockId = 1;
+      var expectedPayload = {id: 1};
+      commissionFactory.getCurrency(mockId);
+      expect(currenciesService.getDetailedCompanyCurrencies).toHaveBeenCalledWith(expectedPayload);
     });
   });
 
