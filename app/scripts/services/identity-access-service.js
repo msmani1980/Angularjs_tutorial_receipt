@@ -11,7 +11,7 @@ angular.module('ts5App')
   .service('identityAccessService', function ($resource, ENV) {
     var authorizeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser';
     var chpwdURL = ENV.apiUrl + '/IdentityAccess/chpwd';
-    var sendEmailURL = ENV.apiUrl + '/IdentityAccess/sendEmail/email/';
+    var sendEmailURL = ENV.apiUrl + '/IdentityAccess/sendemail/email/';
     var logoutURL = ENV.apiUrl + '/IdentityAccess/logout';
     var featuresInRoleURL = ENV.apiUrl + '/IdentityAccess/featuresInRole';
 
@@ -71,7 +71,7 @@ angular.module('ts5App')
     };
 
     var sendEmail = function (emailAddress, emailContent) {
-      var sendEmailResource = $resource(sendEmailURL + emailAddress, sendEmailParameters, actions);
+      var sendEmailResource = $resource(sendEmailURL + emailAddress.toLowerCase(), sendEmailParameters, actions);
       return sendEmailResource.sendEmail(emailContent).$promise;
     };
 

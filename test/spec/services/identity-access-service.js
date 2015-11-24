@@ -42,7 +42,7 @@ describe('Service: identityAccessService', function () {
 
   describe('sendEmail', function () {
     it('should make POST request to API', function () {
-      var expectedURL = /IdentityAccess\/sendEmail\/email$/;
+      var expectedURL = /IdentityAccess\/sendemail\/email$/;
       httpBackend.expectPOST(expectedURL).respond(201, {});
       identityAccessService.sendEmail('').then(function (response) {
         expect(response).toBeDefined();

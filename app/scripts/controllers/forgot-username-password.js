@@ -39,6 +39,7 @@ angular.module('ts5App')
     }
 
     function handleSuccessResponse() {
+      hideLoadingModal();
       $scope.responseMessage = 'Success: An email containing your ' + $scope.forgot.field + ' has been sent.';
     }
 
