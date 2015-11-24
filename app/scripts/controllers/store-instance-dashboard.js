@@ -357,6 +357,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     }
 
     $scope.bulkDispatch = function () {
+      showLoadingModal('Dispatching...');
       var bulkDispatchDependencies = [];
       angular.forEach($scope.storeInstanceList, function (store) {
         if (store.selected && $scope.doesStoreInstanceContainAction(store, 'Dispatch')) {
@@ -364,7 +365,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         }
       });
 
-      $q.all(bulkDispatchDependencies).then(init());
+      $q.all(bulkDispatchDependencies).then(init, showErrors);
     };
 
     $scope.showMessage = function (type, message) {
