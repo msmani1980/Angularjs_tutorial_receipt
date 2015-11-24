@@ -428,7 +428,7 @@ angular.module('ts5App')
         }]
       }];
      }
-     return retailMenu;
+     return angular.copy(retailMenu);
     };
 
   });
