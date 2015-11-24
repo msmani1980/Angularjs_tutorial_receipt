@@ -18,6 +18,7 @@ describe('Service: currenciesService', function () {
     detailedCurrenciesDeleteRequestHandler,
     detailedCurrenciesCreateRequestHandler,
     detailedCurrenciesUpdateRequestHandler,
+    currencyDetailRequestHandler,
     GlobalMenuService;
 
   beforeEach(inject(function (_currenciesService_, $injector) {
@@ -37,6 +38,7 @@ describe('Service: currenciesService', function () {
     detailedCurrenciesDeleteRequestHandler = $httpBackend.whenDELETE(/api\/companies\/403\/currencies/).respond(202);
     detailedCurrenciesCreateRequestHandler = $httpBackend.whenPOST(/api\/companies\/403\/currencies/).respond(201, {'id':1});
     detailedCurrenciesUpdateRequestHandler = $httpBackend.whenPUT(/api\/companies\/403\/currencies/).respond(201, currencyJSON);
+    currencyDetailRequestHandler = $httpBackend.whenGET(/api\/currencies\/1/).respond(202, {'id': 1});
 
     currenciesService = _currenciesService_;
   }));
@@ -97,6 +99,14 @@ describe('Service: currenciesService', function () {
       $httpBackend.expectPUT(/api\/companies\/403\/currencies/);
       currenciesService.updateDetailedCompanyCurrency(currencyJSON).then(function (dataFromAPI) {
         updateDetailedCompanyCurrencyResult = dataFromAPI;
+      });
+    });
+
+    it('should get currency detail', function () {
+      var mockId = 1;
+      $httpBackend.expectGET(/api\/currencies\/1/);
+      currenciesService.getMasterCurrency(mockId).then(function (dataFromAPI) {
+        expect(dataFromAPI).toBeDefined();
       });
     });
 
