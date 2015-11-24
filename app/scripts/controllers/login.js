@@ -17,8 +17,6 @@ angular.module('ts5App')
 
     var rawSessionData = {};
 
-    $scope.sessionToken = identityAccessFactory.getSessionObject().sessionToken;
-
     function showLoadingModal(text) {
       $scope.displayError = false;
       angular.element('#loading').modal('show').find('p').text(text);

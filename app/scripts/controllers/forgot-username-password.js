@@ -31,7 +31,7 @@ angular.module('ts5App')
       responseFromAPI.data = [
         {
           field: 'Email',
-          value: 'EMAIL ADDRESS COULD NOT BE FOUND. PLEASE TRY AGAIN OR CONTACT YOUR SYSTEM ADMINISTRATOR.'
+          value: 'Email address could not be found. Please try again or contact your system administrator.'
         }
       ];
       $scope.errorResponse = responseFromAPI;
@@ -45,19 +45,19 @@ angular.module('ts5App')
 
     var emailContent = {
       'username' :
-      `TS5 Security - username recovery
-        <h3>Hi, </h3>
-        <p>You (or some else) have requested your username.</p>
-        <p>Your username is: <strong>{2}</strong></p>
-        <p>Click the link below to login to the system:</p>
-        <p><a href="{1}/#/login?sessionToken={0}">Click here to login.</a></p>
-        <br> eGate`,
+      'TS5 Security - username recovery\n' +
+        '<h3>Hi, </h3>' +
+        '<p>You (or some else) have requested your username.</p>' +
+        '<p>Your username is: <strong>{2}</strong></p>' +
+        '<p>Click the link below to login to the system:</p>' +
+        '<p><a href="{1}/#/login?sessionToken={0}">Click here to login.</a></p>' +
+        '<br> eGate',
 
         'password' :
-        `TS5 Security - password recovery
-        <h3>Hi, {2},</h3>
-        <p>Please, <a href="{1}/#/change-password?sessionToken={0}">click here</a> to change your password.
-        </p><br>eGate`
+        'TS5 Security - password recovery\n' +
+        '<h3>Hi, {2},</h3>' +
+        '<p>Please, <a href="{1}/#/change-password?sessionToken={0}">click here</a> to change your password.' +
+        '</p><br>eGate'
     };
 
     $scope.sendEmail = function () {
