@@ -100,7 +100,7 @@ angular.module('ts5App')
     }
 
     function locationChangeHandler(event, next) {
-      if (!isAuthorized() && !next.contains('login')) {
+      if (!isAuthorized() && ( !next.contains('login') && !next.contains('forgot') )) {
         event.preventDefault();
         logout();
       }
