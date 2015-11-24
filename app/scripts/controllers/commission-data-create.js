@@ -15,7 +15,6 @@ angular.module('ts5App')
 
     $scope.viewName = 'Creating Commission Data';
     $scope.commissionData = {};
-    $scope.baseCurrency = 'GBP'; // TODO: get from API
     $scope.readOnly = true;
     $scope.requireCommissionPercent = true;
     var percentTypeName = 'Percentage';

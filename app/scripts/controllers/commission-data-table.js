@@ -75,7 +75,7 @@ angular.module('ts5App')
       if (type === 'Percentage') {
         return '%';
       }
-      return $scope.baseCurrency; // TODO: get base currency
+      return $scope.baseCurrency;
     };
 
     $scope.redirectToDetailPage = function (id, state) {
