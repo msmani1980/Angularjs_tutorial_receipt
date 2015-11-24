@@ -8,6 +8,7 @@ describe('Controller: CommissionDataCtrl', function () {
   beforeEach(module('served/discount-types.json'));
   beforeEach(module('served/commission-payable.json'));
   beforeEach(module('served/employees.json'));
+  beforeEach(module('served/company.json'));
 
   var CommissionDataCtrl;
   var location;
@@ -25,14 +26,18 @@ describe('Controller: CommissionDataCtrl', function () {
   var commissionDataDeferred;
   var commissionDataResponseJSON;
   var employeesResponseJSON;
+  var companyDeferred;
+  var companyResponseJSON;
+  var currencyDeferred;
 
   beforeEach(inject(function ($q, $controller, $rootScope, $location, $injector) {
-    inject(function (_servedCrewBaseTypes_, _servedCommissionPayableTypes_, _servedDiscountTypes_, _servedCommissionPayable_, _servedEmployees_) {
+    inject(function (_servedCrewBaseTypes_, _servedCommissionPayableTypes_, _servedDiscountTypes_, _servedCommissionPayable_, _servedEmployees_, _servedCompany_) {
       crewBaseResponseJSON = _servedCrewBaseTypes_;
       commissionPayableResponseJSON = _servedCommissionPayableTypes_;
       discountTypesResponseJSON = _servedDiscountTypes_;
       commissionDataResponseJSON = _servedCommissionPayable_;
       employeesResponseJSON = _servedEmployees_;
+      companyResponseJSON = _servedCompany_;
     });
     location = $location;
     scope = $rootScope.$new();
@@ -47,6 +52,10 @@ describe('Controller: CommissionDataCtrl', function () {
     discountTypesDeferred = $q.defer();
     discountTypesDeferred.resolve(discountTypesResponseJSON);
     commissionDataDeferred = $q.defer();
+    companyDeferred = $q.defer();
+    companyDeferred.resolve(companyResponseJSON);
+    currencyDeferred = $q.defer();
+    currencyDeferred.resolve({id: 1, currencyCode: 'GBP'});
 
     employeesDeferred = $q.defer();
     employeesDeferred.resolve(employeesResponseJSON);
@@ -57,6 +66,8 @@ describe('Controller: CommissionDataCtrl', function () {
     spyOn(commissionFactory, 'getCommissionPayableData').and.returnValue(commissionDataDeferred.promise);
     spyOn(commissionFactory, 'updateCommissionData').and.returnValue(commissionDataDeferred.promise);
     spyOn(commissionFactory, 'createCommissionData').and.returnValue(commissionDataDeferred.promise);
+    spyOn(commissionFactory, 'getCompanyData').and.returnValue(companyDeferred.promise);
+    spyOn(commissionFactory, 'getCurrency').and.returnValue(currencyDeferred.promise);
     spyOn(location, 'path').and.callThrough();
 
   }));
@@ -228,6 +239,14 @@ describe('Controller: CommissionDataCtrl', function () {
           expect(commissionFactory.getDiscountTypes).toHaveBeenCalled();
           scope.$digest();
           expect(scope.discountTypes).toEqual(discountTypesResponseJSON);
+        });
+
+        it('should get company data', function () {
+          expect(commissionFactory.getCompanyData).toHaveBeenCalled();
+        });
+
+        it('should get base currency', function () {
+          expect(commissionFactory.getCurrency).toHaveBeenCalled();
         });
       });
 

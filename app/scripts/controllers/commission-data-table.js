@@ -126,7 +126,9 @@ angular.module('ts5App')
 
     function getCurrencyDataAndCompleteInit (currencyId) {
       commissionFactory.getCurrency(currencyId).then(function (response) {
-        $scope.baseCurrency = angular.copy(response.currencyCode);
+        if(response) {
+          $scope.baseCurrency = angular.copy(response.currencyCode);
+        }
         completeInit();
       });
     }
