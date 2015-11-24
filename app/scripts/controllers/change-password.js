@@ -18,6 +18,7 @@ angular.module('ts5App')
 
     var sessionObject = identityAccessFactory.getSessionObject();
 
+    $scope.hasSessionToken = angular.isDefined(sessionObject.sessionToken);
 
     function showLoadingModal(text) {
       $scope.displayError = false;
@@ -56,11 +57,15 @@ angular.module('ts5App')
       $scope.displayError = true;
     }
 
-    function handleAuthorizeUserSuccessResponse() {
+    function callChangePassword() {
       identityAccessFactory.changePassword({
         username: sessionObject.username,
         password: $scope.passwords.newPassword
       }).then(handleSuccessResponse, handleResponseError);
+    }
+
+    function handleAuthorizeUserSuccessResponse() {
+      callChangePassword() ;
     }
 
     $scope.changePassword = function () {
@@ -69,9 +74,13 @@ angular.module('ts5App')
       }
       showLoadingModal('Changing password');
 
-      identityAccessFactory.login({
-        username: sessionObject.username,
-        password: $scope.passwords.currentPassword
-      }).then(handleAuthorizeUserSuccessResponse, handleAuthorizeUserResponseError);
+      if (!$scope.hasSessionToken) {
+        identityAccessFactory.login({
+          username: sessionObject.username,
+          password: $scope.passwords.currentPassword
+        }).then(handleAuthorizeUserSuccessResponse, handleAuthorizeUserResponseError);
+      } else {
+        callChangePassword() ;
+      }
     };
   });

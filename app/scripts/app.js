@@ -242,6 +242,9 @@ angular.module('ts5App', [
   }).when('/change-password', {
     templateUrl: 'views/change-password.html',
     controller: 'ChangePasswordCtrl'
+  }).when('/forgot-username-password', {
+    templateUrl: 'views/forgot-username-password.html',
+    controller: 'ForgotUsernamePasswordCtrl'
   }).when('/reconciliation-dashboard', {
     templateUrl: 'views/reconciliation-dashboard.html',
     controller: 'ReconciliationDashboardCtrl'

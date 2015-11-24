@@ -28,6 +28,11 @@ angular.module('ts5App')
 
     }
 
+    function sendEmail(emailAddress, emailContent) {
+      return identityAccessService.sendEmail(emailAddress, emailContent);
+
+    }
+
     function logoutFromSystem() {
       identityAccessService.logout();
     }
@@ -96,7 +101,7 @@ angular.module('ts5App')
     }
 
     function locationChangeHandler(event, next) {
-      if (!isAuthorized() && !next.contains('login')) {
+      if (!isAuthorized() && ( !next.contains('login') && !next.contains('forgot') )) {
         event.preventDefault();
         logout();
       }
@@ -111,6 +116,7 @@ angular.module('ts5App')
       getCompanyData: getCompanyData,
       login: login,
       changePassword: changePassword,
+      sendEmail: sendEmail,
       logout: logoutFromSystem,
       getSessionObject: getSessionObject,
       setSessionData: setSessionData,

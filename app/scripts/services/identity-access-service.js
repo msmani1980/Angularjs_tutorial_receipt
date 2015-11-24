@@ -11,11 +11,13 @@ angular.module('ts5App')
   .service('identityAccessService', function ($resource, ENV) {
     var authorizeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser';
     var chpwdURL = ENV.apiUrl + '/IdentityAccess/chpwd';
+    var sendEmailURL = ENV.apiUrl + '/IdentityAccess/sendemail/email/';
     var logoutURL = ENV.apiUrl + '/IdentityAccess/logout';
     var featuresInRoleURL = ENV.apiUrl + '/IdentityAccess/featuresInRole';
 
     var authParameters = {};
     var chpwdParameters = {};
+    var sendEmailParameters = {};
     var logoutParameters = {};
     var featuresInRoleParameters = {};
 
@@ -27,6 +29,12 @@ angular.module('ts5App')
         }
       },
       changePassword: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
+      sendEmail: {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -62,6 +70,11 @@ angular.module('ts5App')
       return chpwdResource.changePassword(payload).$promise;
     };
 
+    var sendEmail = function (emailAddress, emailContent) {
+      var sendEmailResource = $resource(sendEmailURL + emailAddress.toLowerCase(), sendEmailParameters, actions);
+      return sendEmailResource.sendEmail(emailContent).$promise;
+    };
+
     var checkAuth = function (payload) {
       return authResource.checkAuth(payload).$promise;
     };
@@ -78,6 +91,7 @@ angular.module('ts5App')
       authorizeUser: authorizeUser,
       checkAuth: checkAuth,
       changePassword: changePassword,
+      sendEmail: sendEmail,
       featuresInRole: featuresInRole,
       logout: logout
     };
