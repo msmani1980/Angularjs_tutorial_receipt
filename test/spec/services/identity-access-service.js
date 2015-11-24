@@ -40,6 +40,17 @@ describe('Service: identityAccessService', function () {
     });
   });
 
+  describe('sendEmail', function () {
+    it('should make POST request to API', function () {
+      var expectedURL = /IdentityAccess\/sendEmail\/email$/;
+      httpBackend.expectPOST(expectedURL).respond(201, {});
+      identityAccessService.sendEmail('').then(function (response) {
+        expect(response).toBeDefined();
+      });
+      httpBackend.flush();
+    });
+  });
+
   describe('checkAuth', function () {
     it('should make GET request to API', function () {
       var expectedURL = /IdentityAccess\/authorizeUser$/;
