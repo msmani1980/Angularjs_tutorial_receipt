@@ -75,7 +75,7 @@ angular.module('ts5App')
       if (type === 'Percentage') {
         return '%';
       }
-      return 'GBP'; // TODO: get base currency
+      return $scope.baseCurrency; // TODO: get base currency
     };
 
     $scope.redirectToDetailPage = function (id, state) {
@@ -114,15 +114,7 @@ angular.module('ts5App')
       });
     }
 
-    function getCompanyData() {
-      commissionFactory.getCompanyData(companyId).then(function (response) {
-        console.log(response);
-        $scope.companyData = angular.copy(response);
-      });
-    }
-
-    function init() {
-      getCompanyData();
+    function completeInit() {
       getCrewBaseTypes();
       getCommissionPayableTypes();
       getDiscountTypes();
@@ -130,6 +122,25 @@ angular.module('ts5App')
         'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted())
       };
       getDataList(getDataPayload);
+    }
+
+    function getCurrencyDataAndCompleteInit (currencyId) {
+      commissionFactory.getCurrency(currencyId).then(function (response) {
+        $scope.baseCurrency = angular.copy(response.currencyCode);
+        completeInit();
+      });
+    }
+
+    function getCompanyData() {
+      commissionFactory.getCompanyData(companyId).then(function (response) {
+        if(response) {
+          getCurrencyDataAndCompleteInit(angular.copy(response.baseCurrencyId));
+        }
+      });
+    }
+
+    function init() {
+      getCompanyData();
     }
 
     init();

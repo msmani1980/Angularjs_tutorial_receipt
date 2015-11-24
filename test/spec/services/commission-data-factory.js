@@ -28,7 +28,7 @@ describe('Factory: commissionFactory', function () {
     spyOn(recordsService, 'getCommissionPayableTypes');
     spyOn(recordsService, 'getDiscountTypes');
     spyOn(companyService, 'getCompany');
-    spyOn(currenciesService, 'getDetailedCompanyCurrencies');
+    spyOn(currenciesService, 'getCompanyGlobalCurrencies');
 
 
     rootScope = $rootScope;
@@ -87,7 +87,7 @@ describe('Factory: commissionFactory', function () {
       var mockId = 1;
       var expectedPayload = {id: 1};
       commissionFactory.getCurrency(mockId);
-      expect(currenciesService.getDetailedCompanyCurrencies).toHaveBeenCalledWith(expectedPayload);
+      expect(currenciesService.getCompanyGlobalCurrencies).toHaveBeenCalledWith(expectedPayload);
     });
   });
 

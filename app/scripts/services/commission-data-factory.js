@@ -47,7 +47,7 @@ angular.module('ts5App')
     };
 
     var getCurrency = function (id) {
-      return currenciesService.getDetailedCompanyCurrencies({id: id});
+      return currenciesService.getCompanyGlobalCurrencies({id: id});
     };
 
     return {
