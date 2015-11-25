@@ -294,8 +294,10 @@ angular.module('ts5App')
       }, true)[0];
       showUserCurrentStatus();
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
-      $window.open(ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
-        '.pdf?sessionToken=' + sessionToken, '_blank');
+      if ($routeParams.action !== 'end-instance') {
+        $window.open(ENV.apiUrl + '/api/dispatch/store-instances/documents/C208-' + $routeParams.storeId +
+          '.pdf?sessionToken=' + sessionToken, '_blank');
+      }
 
       $location.path('store-instance-dashboard');
     }
