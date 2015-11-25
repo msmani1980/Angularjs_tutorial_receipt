@@ -679,10 +679,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.makeRedispatchPromises = function() {
       var prevInstanceStatus = this.parsePrevInstanceStatus();
       var payload = this.formatPayload('end-instance');
-      return [
-        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload),
-        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, prevInstanceStatus)
-      ];
+      return {
+        updateInstancePromises: [{ f: storeInstanceFactory.updateStoreInstance, obj: storeInstanceFactory, args: [$routeParams.storeId, payload] }],
+        updateInstanceStatusPromises: [{ f: storeInstanceFactory.updateStoreInstanceStatus, obj: storeInstanceFactory,
+          args : [$routeParams.storeId, prevInstanceStatus]
+        }]
+      };;
     };
 
     this.checkForOnFloorInstance = function() {
@@ -817,9 +819,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       var promises = $this.makeCreatePromises();
-      promises.concat($this.makeRedispatchPromises());
-      $q.all(promises).then(
-        (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
+      var redispatchPromises = $this.makeRedispatchPromises();
+      $q.all($this.startPromise(redispatchPromises.updateInstancePromises)).then(function() {
+          $this.invokeStoreInstanceStatusPromises(promises.concat($this.startPromise(redispatchPromises.updateInstanceStatusPromises)), saveAndExit);
+        },
         $this.createStoreInstanceErrorHandler
       );
     };
