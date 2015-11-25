@@ -264,6 +264,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.formatEndInstancePayload = function(payload) {
       payload.menus = this.formatMenus(payload.menus);
       payload.inboundStationId = angular.copy(payload.cateringStationId);
+      payload.cateringStationId = angular.copy(payload.dispatchedCateringStationId);
       delete payload.dispatchedCateringStationId;
     };
 
@@ -693,7 +694,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         updateInstanceStatusPromises: [{ f: storeInstanceFactory.updateStoreInstanceStatus, obj: storeInstanceFactory,
           args : [$routeParams.storeId, prevInstanceStatus]
         }]
-      };;
+      };
     };
 
     this.checkForOnFloorInstance = function() {
