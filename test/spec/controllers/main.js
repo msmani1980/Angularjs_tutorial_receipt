@@ -108,7 +108,7 @@ describe('Controller: MainCtrl', function () {
            role: 'STOCKREPORT'
          }, {
            name: 'Manage Goods Received',
-           route: '/#/manage-goods-receican you ved',
+           route: '/#/manage-goods-received',
            icon: 'icon-manage-schedule',
            className: 'dashboard-manageGoodsReceived',
            package: 'STATIONOPERATIONS',
