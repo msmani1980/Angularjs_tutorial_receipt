@@ -404,7 +404,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.save = function () {
-      // TODO: check for ullage quantities
       $this.showLoadingModal();
       var promiseArray = [];
       $this.addItemsToDeleteToPayload(promiseArray);
