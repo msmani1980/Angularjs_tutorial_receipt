@@ -177,7 +177,7 @@ describe('Controller: CommissionDataTableCtrl', function () {
 
         it('should call getCommissionData with empty search query', function () {
           scope.clearSearchForm();
-          expect(commissionFactory.getCommissionPayableList).toHaveBeenCalledWith({});
+          expect(commissionFactory.getCommissionPayableList).toHaveBeenCalled();
         });
       });
     });
