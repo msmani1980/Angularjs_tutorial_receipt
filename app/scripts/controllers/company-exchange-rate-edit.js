@@ -254,6 +254,8 @@ angular.module('ts5App')
     };
 
     this.deleteCompanyExchangeRate = function(exchangeRateId) {
+      $this.showLoadingModal('Loading Data');
+
       var payload = {
         companyId: $this.companyId,
         exchangeRateType: 1,
@@ -261,7 +263,11 @@ angular.module('ts5App')
       };
 
       if(exchangeRateId) {
-        currencyFactory.deleteCompanyExchangeRate(payload);
+        currencyFactory.deleteCompanyExchangeRate(payload).then(function () {
+          $this.hideLoadingModal();
+        }, function () {
+          $this.hideLoadingModal();
+        });
       }
     };
 
