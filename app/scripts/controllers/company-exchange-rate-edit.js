@@ -254,12 +254,21 @@ angular.module('ts5App')
     };
 
     this.deleteCompanyExchangeRate = function(exchangeRateId) {
+      $this.showLoadingModal('Loading Data');
+
       var payload = {
         companyId: $this.companyId,
         exchangeRateType: 1,
         id: exchangeRateId
       };
-      currencyFactory.deleteCompanyExchangeRate(payload);
+
+      if(exchangeRateId) {
+        currencyFactory.deleteCompanyExchangeRate(payload).then(function () {
+          $this.hideLoadingModal();
+        }, function () {
+          $this.hideLoadingModal();
+        });
+      }
     };
 
     $scope.showDeleteConfirmation = function(index, exchangeRate) {
@@ -283,7 +292,7 @@ angular.module('ts5App')
       newExchangeRate.operatingCurrencyCode = exchangeRate.operatingCurrencyCode;
       newExchangeRate.denominations = exchangeRate.denominations;
       newExchangeRate.easyPayDenominations = exchangeRate.easyPayDenominations;
-      newExchangeRate.exchangeRate = '1.0000';
+      newExchangeRate.exchangeRate = exchangeRate.exchangeRate;
       newExchangeRate.exchangeRateType = exchangeRate.exchangeRateType;
       newExchangeRate.startDate = dateUtility.tomorrowFormatted();
       newExchangeRate.endDate = dateUtility.tomorrowFormatted();

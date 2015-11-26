@@ -22,6 +22,7 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     getDetailedCompanyCurrenciesDeferred,
     getCompanyExchangeRatesDeferred,
     getCompanyDeferred,
+    getDeleteCompanyExchangeRateDeferred,
     companyJSON,
     currenciesJSON,
     currencyJSON,
@@ -57,13 +58,16 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
     getCompanyDeferred.resolve(companyJSON);
     getCompanyExchangeRatesDeferred = $q.defer();
     getCompanyExchangeRatesDeferred.resolve(companyExchangeRatesJSON);
+    getDeleteCompanyExchangeRateDeferred = $q.defer();
+
+
     spyOn(GlobalMenuService.company, 'get').and.returnValue(403);
     spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(
       getDetailedCompanyCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
     spyOn(currencyFactory, 'getCompanyExchangeRates').and.returnValue();
-    spyOn(currencyFactory, 'deleteCompanyExchangeRate').and.returnValue();
+    spyOn(currencyFactory, 'deleteCompanyExchangeRate').and.returnValue(getDeleteCompanyExchangeRateDeferred.promise);
     spyOn(currencyFactory, 'createCompanyExchangeRate').and.callFake(function() {
       return $.Deferred().resolve(companyExchangeRateJSON);
     });
