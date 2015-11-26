@@ -1,7 +1,7 @@
 'use strict';
 /*global $:false */
 
-fdescribe('Controller: CompanyExchangeRateEditCtrl', function() {
+describe('Controller: CompanyExchangeRateEditCtrl', function() {
 
   // load the controller's module
   beforeEach(module('ts5App'));
