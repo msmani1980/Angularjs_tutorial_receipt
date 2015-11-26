@@ -256,12 +256,8 @@ angular.module('ts5App')
     function saveDeliveryNoteResolution(response) {
       hideLoadingModal();
       showMessage(_formSaveSuccessText, 'success');
-      if ($scope.deliveryNote.isAccepted) {
+      if ($scope.deliveryNote.isAccepted || $routeParams.state === 'create' && angular.isDefined(response.id)) {
         $location.path('/manage-goods-received');
-        return;
-      }
-      if ($routeParams.state === 'create' && angular.isDefined(response.id)) {
-        $location.path(_path + 'edit/' + response.id);
         return;
       }
       init();
