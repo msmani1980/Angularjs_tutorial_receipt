@@ -137,12 +137,11 @@ angular.module('ts5App')
 
     function clearUnusedRates() {
       $scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies.map(function (rate) {
-        if ($scope.isBankExchangePreferred) {
-          delete rate.bankExchangeRate;
-        } else {
+        if ($scope.isBankExchangePreferred()) {
           delete rate.coinExchangeRate;
           delete rate.paperExchangeRate;
-
+        } else {
+          delete rate.bankExchangeRate;
         }
       });
     }
