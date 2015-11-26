@@ -259,7 +259,10 @@ angular.module('ts5App')
         exchangeRateType: 1,
         id: exchangeRateId
       };
-      currencyFactory.deleteCompanyExchangeRate(payload);
+
+      if(exchangeRateId) {
+        currencyFactory.deleteCompanyExchangeRate(payload);
+      }
     };
 
     $scope.showDeleteConfirmation = function(index, exchangeRate) {
