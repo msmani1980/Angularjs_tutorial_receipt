@@ -281,7 +281,7 @@ angular.module('ts5App')
       newExchangeRate.operatingCurrencyCode = exchangeRate.operatingCurrencyCode;
       newExchangeRate.denominations = exchangeRate.denominations;
       newExchangeRate.easyPayDenominations = exchangeRate.easyPayDenominations;
-      newExchangeRate.exchangeRate = '1.0000';
+      newExchangeRate.exchangeRate = exchangeRate.exchangeRate;
       newExchangeRate.exchangeRateType = exchangeRate.exchangeRateType;
       newExchangeRate.startDate = dateUtility.tomorrowFormatted();
       newExchangeRate.endDate = dateUtility.tomorrowFormatted();
