@@ -14,7 +14,7 @@
 
               <p>Sector: {{report.departureStation}} - {{report.arrivalStation}}</p>
 
-              <p>Store #: {{storeInstance.storeId}}</p>
+              <p>Store #: {{storeInstance.storeDetails.storeNumber}}</p>
 
               <p>Aircraft Registration: {{report.carrierNumber}}</p>
 
@@ -108,7 +108,7 @@
       <div class="panel panel-default col-xs-12">
         <div class="col-xs-4 text-left pull-left">
           <h4>
-            <strong>Store # {{storeInstance.storeId}}</strong><br>
+            <strong>Store # {{storeInstance.storeDetails.storeNumber}}</strong><br>
             <small>{{storeInstance.scheduleDate}}</small>
           </h4>
         </div>
