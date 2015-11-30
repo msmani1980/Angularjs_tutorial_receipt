@@ -96,7 +96,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr id="discount-{{$index}}" ng-repeat="discount in discountList | toArray:false |  filter:{discountTypeId: search.discountTypeId, name: search.name} track by $index">
+        <tr id="discount-{{$index}}" ng-repeat="discount in discountList | toArray:false |  filter:{discountTypeId: search.discountTypeId, name: search.name} | orderBy: 'startDate' track by $index">
             <td>{{ discount.discountTypeName }}</td>
             <td>{{ discount.name }}</td>
             <td>{{ discount.rateTypeName }}</td>
