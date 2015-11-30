@@ -2,7 +2,7 @@
 
 /*global moment:false */
 
-describe('Controller: ExchangeRatesCtrl', function() {
+describe('Controller: ExchangeRatesCtrl', function () {
   // load the controller's module
 
   var ExchangeRatesCtrl;
@@ -29,9 +29,9 @@ describe('Controller: ExchangeRatesCtrl', function() {
 
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function($controller, $rootScope, $injector,$q) {
-    inject(function(_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_,
-      _servedDailyExchangeRates_, _servedPreviousExchangeRate_, _servedCompanyPreferences_) {
+  beforeEach(inject(function ($controller, $rootScope, $injector, $q) {
+    inject(function (_servedCompany_, _servedCurrencies_, _servedCompanyCurrencyGlobals_,
+                     _servedDailyExchangeRates_, _servedPreviousExchangeRate_, _servedCompanyPreferences_) {
       companyJSON = _servedCompany_;
       currenciesJSON = _servedCurrencies_;
       companyCurrencyGlobalsJSON = _servedCompanyCurrencyGlobals_;
@@ -55,45 +55,47 @@ describe('Controller: ExchangeRatesCtrl', function() {
     $httpBackend.whenGET(/currencies/).respond(currenciesJSON);
 
     scope = $rootScope.$new();
+
     ExchangeRatesCtrl = $controller('ExchangeRatesCtrl', {
       $scope: scope
     });
+    spyOn(scope, 'isBankExchangePreferred').and.callThrough();
     scope.dailyExchangeRatesForm = {
       $valid: true
     };
     $httpBackend.flush();
   }));
 
-  afterEach(function() {
+  afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should have a viewName property', function() {
+  it('should have a viewName property', function () {
     expect(scope.viewName).toBeDefined();
   });
 
-  it('should get the company data from currencyFactory', function() {
+  it('should get the company data from currencyFactory', function () {
     expect(!!scope.company).toBe(true);
   });
 
-  it('should get the companyBaseCurrency from currencyFactory', function() {
+  it('should get the companyBaseCurrency from currencyFactory', function () {
     expect(scope.companyBaseCurrency.currencyCode).toBe('EUR');
   });
 
-  it('should get the cashHandlerBaseCurrency from currencyFactory', function() {
+  it('should get the cashHandlerBaseCurrency from currencyFactory', function () {
     expect(scope.cashHandlerBaseCurrency.currencyCode).toBe('EUR');
   });
 
-  it('should fetch the companyCurrencies array from API', function() {
+  it('should fetch the companyCurrencies array from API', function () {
     expect(scope.companyCurrencies.length).toBeGreaterThan(0);
   });
 
-  it('should fetch the daily exchange rate array from API', function() {
+  it('should fetch the daily exchange rate array from API', function () {
     expect(scope.dailyExchangeRates.dailyExchangeRateCurrencies.length).toBeGreaterThan(0);
   });
 
-  describe('company Preferences', function() {
+  describe('company Preferences', function () {
 
     var preferencesJSON = [{
       'featureCode': 'EXR',
@@ -104,56 +106,66 @@ describe('Controller: ExchangeRatesCtrl', function() {
       'choiceName': 'Bank'
     }];
 
-    it('should attach the company preferences to scope', function() {
+    it('should attach the company preferences to scope', function () {
       expect(!!scope.companyPreferences).toBe(true);
     });
 
-    it('should return true if BNK is found in Exchange Rate feature', function() {
+    it('should return true if BNK is found in Exchange Rate feature', function () {
       scope.companyPreferences = angular.extend(preferencesJSON);
       expect(scope.isBankExchangePreferred()).toBe(true);
     });
 
-    it('should return false if BNK is NOT found in Exchange Rate feature', function() {
+    it('should return false if BNK is NOT found in Exchange Rate feature', function () {
       scope.companyPreferences = angular.extend(preferencesJSON);
       scope.companyPreferences[0].choiceCode = 'Not BNK';
       expect(scope.isBankExchangePreferred()).toBe(false);
     });
 
-    it('should return false if no preferences are defined', function() {
+    it('should return false if no preferences are defined', function () {
       scope.companyPreferences = [];
       expect(scope.isBankExchangePreferred()).toBe(false);
     });
 
-    it('should return false if preferences is undefined or null', function() {
+    it('should return false if preferences is undefined or null', function () {
       scope.companyPreferences = null;
       expect(scope.isBankExchangePreferred()).toBe(false);
     });
   });
 
-  describe('saving exchange rates', function() {
+  describe('saving exchange rates', function () {
 
-    it('should create payload with today date', function() {
+    it('should create payload with today date', function () {
       scope.checkVarianceAndSave(false);
       expect(scope.payload.dailyExchangeRate.exchangeRateDate).toBe(moment().format('YYYYMMDD').toString());
     });
 
-    it('should add Exchange Rate Currencies', function() {
+    it('should only have bank Exchange Rate Currencies', function () {
       var expectedCurrencyObject = {
         retailCompanyCurrencyId: 1,
-        coinExchangeRate: null,
-        paperExchangeRate: null,
         bankExchangeRate: '0.1234'
       };
       scope.checkVarianceAndSave(false);
       expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies[0]).toEqual(expectedCurrencyObject);
     });
 
-    it('should not alert of variance', function() {
+    it('should only have paper and coin Exchange Rate Currencies', function () {
+      scope.isBankExchangePreferred.and.returnValue(false);
+
+      var expectedCurrencyObject = {
+        retailCompanyCurrencyId: 58,
+        coinExchangeRate: '1.0000',
+        paperExchangeRate: '1.0000'
+      };
+      scope.checkVarianceAndSave(false);
+      expect(scope.payload.dailyExchangeRate.dailyExchangeRateCurrencies[1]).toEqual(expectedCurrencyObject);
+    });
+
+    it('should not alert of variance', function () {
       scope.checkVarianceAndSave(false);
       expect(scope.varianceObject).toEqual([]);
     });
 
-    it('should alert of variance > 10%', function() {
+    it('should alert of variance > 10%', function () {
       scope.previousExchangeRates.dailyExchangeRateCurrencies[0].bankExchangeRate = '0.14191';
       scope.checkVarianceAndSave(false);
 
@@ -166,26 +178,26 @@ describe('Controller: ExchangeRatesCtrl', function() {
     describe('the error handler', function () {
 
       var mockError = {
-        status:400,
+        status: 400,
         statusText: 'Bad Request',
         response: {
-          field:'menu date',
+          field: 'menu date',
           code: '024'
         }
       };
 
-      beforeEach(function() {
+      beforeEach(function () {
         scope.$digest();
         scope.saveDailyExchangeRates(true);
         saveDailyExchangeRatesDefferred.reject(mockError);
         scope.$apply();
       });
 
-      it('should set the displayError flag to true', function() {
+      it('should set the displayError flag to true', function () {
         expect(scope.displayError).toBeTruthy();
       });
 
-      it('should set the errorResponse variable to API response', function() {
+      it('should set the errorResponse variable to API response', function () {
         expect(scope.errorResponse).toEqual(mockError);
       });
 
