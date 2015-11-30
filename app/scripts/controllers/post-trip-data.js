@@ -219,10 +219,10 @@ angular.module('ts5App')
       var shouldValidateEmployeeIds = ($scope.employees.length > 0);
       var isSelectedEmployeesInvalid = ($scope.selectedEmployees.employeeIds === undefined || $scope.selectedEmployees.employeeIds.length <= 0);
       if(shouldValidateEmployeeIds && isSelectedEmployeesInvalid) {
-        $scope.postTripDataForm.employeeIds.$setValidity('pattern',true);
+        $scope.postTripDataForm.employeeIds.$setValidity('pattern', false);
         return;
       }
-      $scope.postTripDataForm.employeeIds.$setValidity('pattern',false);
+      $scope.postTripDataForm.employeeIds.$setValidity('pattern', true);
     };
 
     this.validateForm = function() {
