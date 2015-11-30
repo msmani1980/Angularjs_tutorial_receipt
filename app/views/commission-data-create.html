@@ -28,6 +28,7 @@
               <label>Crew Base *</label>
               <select class="form-control"
                       id="crewBase"
+                      name="crewBase"
                       ng-model="commissionData.crewBaseTypeId"
                       ng-options="crewBase.id as crewBase.name for crewBase in crewBaseList | orderBy: 'name'"
                       ng-disabled="readOnly"
@@ -37,21 +38,34 @@
             </div>
           </div>
 
-          <div class="col-xs-12 col-sm-8">
+          <div class="col-xs-12 col-sm-4">
             <div class="form-group">
-              <date-picker
+              <date-picker-field
+                name="startDate"
                 class="form-group"
-                element-class="col-xs-6"
-                start-date-model="commissionData.startDate"
-                end-date-model="commissionData.endDate"
-                label-from="Effective From *"
-                label-to="Effective To *"
-                is-search-field="false"
-                disable-start-date="readOnly"
-                disable-end-date="readOnly"
+                form="commissionDataForm"
+                ng-model="commissionData.startDate"
+                label="Effective From"
+                disable="readOnly"
                 required="true">
-              </date-picker>
+              </date-picker-field>
             </div>
+
+          </div>
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group">
+                <date-picker-field
+                  name="endDate"
+                  class="form-group"
+                  form="commissionDataForm"
+                  ng-model="commissionData.endDate"
+                  label="Effective To"
+                  disable="readOnly"
+                  required="true">
+                </date-picker-field>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -66,6 +80,7 @@
             <div class="form-group">
               <label>Commission Payable On *</label>
               <select class="form-control"
+                      name="commissionType"
                       required="true"
                       ng-model="commissionData.commissionPayableTypeId"
                       ng-change="updateCommissionPercent()"
@@ -80,6 +95,7 @@
           <div class="col-xs-12 col-sm-6">
             <label>Commission Percent *</label>
             <input ng-model="commissionData.commissionPercentage"
+                   name="commissionPercent"
                    type="text"
                    class="form-control"
                    maxlength="6"
@@ -97,6 +113,7 @@
             <div class="form-group">
               <label>Manual Bars Commission Type *</label>
               <select class="form-control"
+                      name="manualBarsCommissionType"
                       required="true"
                       ng-model="commissionData.manualBarsCommissionValueTypeId"
                       ng-change="updateManualBars()"
@@ -115,6 +132,7 @@
               <label>Manual Bars Commisssion Value *</label>
               <input ng-model="commissionData.manualBarsCommissionValue"
                      type="text"
+                     name="manualBarsComissionValue"
                      class="form-control"
                      placeholder="57.5"
                      ng-readonly="readOnly"
@@ -128,6 +146,7 @@
             <div class="form-group">
               <label>Unit</label>
               <input ng-model="manualBarsCommissionUnit"
+                     name="manualBarsCommissionUnit"
                      type="text"
                      class="form-control"
                      disabled>
@@ -142,6 +161,7 @@
             <div class="form-group">
               <label>Cash Percent *</label>
               <input ng-model="commissionData.discrepancyDeductionsCashPercentage"
+                     name="discrepancyDeductionsCashPercentage"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
@@ -157,6 +177,7 @@
             <div class="form-group">
               <label>Stock Percent *</label>
               <input ng-model="commissionData.discrepancyDeductionsStockPercentage"
+                     name="discrepancyDeductionsStockPercentage"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
@@ -191,6 +212,7 @@
             <div class="form-group">
               <label>Commisssion Value *</label>
               <input ng-model="commissionData.commissionValue"
+                     name="commissionValue"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
@@ -206,6 +228,7 @@
             <div class="form-group">
               <label>Unit</label>
               <input ng-model="commissionValueUnit"
+                     name="commissionValueUnit"
                      type="text"
                      class="form-control departure-time"
                      ng-readonly="readOnly"
