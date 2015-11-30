@@ -85,8 +85,14 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.editing = false;
       $scope.storeNumbersList = [];
+
+      var payload = {
+        companyId: GlobalMenuService.company.get(),
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+
       displayLoadingModal();
-      companyStoresService.getStoreList(_companyId).then(getStoreNumbers,showApiErrors);
+      companyStoresService.getStoreList(payload).then(getStoreNumbers,showApiErrors);
     }
 
     function submitFormSuccess(){
