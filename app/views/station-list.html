@@ -12,7 +12,6 @@
 
       <div class="col-xs-6 text-right">
 
-
 				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
           <span class="fa fa-filter" aria-hidden="true"></span>
 					<span class="hidden-sm hidden-xs">Filter</span>
@@ -34,6 +33,34 @@
               <div class="form-group">
                 <label>Station Name</label>
                 <input type="text" class="form-control" ng-model="search.stationName" />
+              </div>
+            </div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label>Country</label>
+                <input type="text" class="form-control" ng-model="search.countryName" />
+              </div>
+            </div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" class="form-control" ng-model="search.cityName" />
+              </div>
+            </div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label>Region</label>
+                <input type="text" class="form-control" ng-model="search.regionName" />
+              </div>
+            </div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label>Timezone</label>
+                <input type="text" class="form-control" ng-model="search.timezone" />
               </div>
             </div>
 
@@ -72,7 +99,7 @@
 
 	</div>
 
-	<form name="stationListForm">
+	<form name="stationListForm" ng-submit="submitForm()">
 
 	  <table class="table table-bordered table-responsive table-hover">
 
@@ -80,6 +107,10 @@
 
 	      <tr>
 	        <th>Station Name</th>
+					<th>Country</th>
+					<th>City</th>
+					<th>Region</th>
+					<th>Timezone</th>
 	        <th>Start Date</th>
 	        <th>End Date</th>
 	        <th>Actions</th>
@@ -93,24 +124,40 @@
 
 	        <td>{{ station.stationCode }}</td>
 
-	        <td>
+					<td>{{ station.countryName }}</td>
+
+					<td>{{ station.cityName }}</td>
+
+					<td>{{ station.regionName }}</td>
+
+					<td>{{ station.timezone }} (UTC {{station.utcDstOffset}})</td>
+
+	        <td width="200px">
 						<date-picker-field form="stationListForm" name="startDate" required="true"
-							ng-model="formData.stations[station.id].startDate"
-							disable="isActionState('end-instance')">
+							ng-model="formData.stations[$index].startDate"
+							disable="canSubscribe(station)">
 						</date-picker-field>
 					</td>
 
-	        <td>
+	        <td width="200px">
 						<date-picker-field form="stationListForm" name="startDate" required="true"
 							ng-model="formData.stations[station.id].endDate"
-							disable="isActionState('end-instance')">
+							disable="canSubscribe(station)">
 						</date-picker-field>
 					</td>
 
 	        <td>
 
-	          <button class="btn btn-success btn-xs" type="submit">
+						<button class="btn btn-primary" type="submit" ng-show="canSubscribe(station)">
+	            <i class="fa fa-check"></i> Subscribe
+	          </button>
+
+	          <button class="btn btn-success" type="submit" ng-show="isSubscribed(station)">
 	            <i class="fa fa-check-square-o"></i> Save
+	          </button>
+
+						<button class="btn btn-danger" type="submit"  ng-show="isSubscribed(station)">
+	            <i class="fa fa-times"></i>
 	          </button>
 
 	        </td>

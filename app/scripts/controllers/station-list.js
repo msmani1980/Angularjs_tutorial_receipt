@@ -43,8 +43,8 @@ angular.module('ts5App')
           'countryName': 'Denmark',
           'description': 'Herning',
           'isCaterer': false,
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-02',
+          'endDate': '',
+          'startDate': '',
           'regionId': 8,
           'regionName': 'All',
           'stationCode': 'EKHG',
@@ -130,6 +130,13 @@ angular.module('ts5App')
       }
     };
 
+    this.isSubscribed = function(station) {
+      return station.startDate && station.endDate;
+    };
+
+    this.canSubscribe = function(station) {
+      return !this.isSubscribed(station);
+    };
 
     this.setStationList = function(dataFromAPI) {
       $scope.stationList = angular.copy(dataFromAPI.response);
@@ -142,16 +149,19 @@ angular.module('ts5App')
 
     this.setupFormDataObject = function() {
       $scope.formData = {
-        stations:[]
+        stations: []
       };
       angular.forEach($scope.stationList, function(station) {
-        $scope.formData.stations[station.id] = {
+        $scope.formData.stations.push({
           startDate: dateUtility.formatDateForApp(station.startDate),
           endDate: dateUtility.formatDateForApp(station.endDate)
-        };
+        });
       });
     };
 
+    this.submitForm = function() {
+      console.log($scope.formData);
+    };
 
     this.init = function() {
       this.getStationList();
@@ -159,5 +169,20 @@ angular.module('ts5App')
     };
 
     this.init();
+    var $this = this;
+
+    /* Scope */
+
+    $scope.submitForm = function() {
+      return $this.submitForm();
+    };
+
+    $scope.canSubscribe = function(station) {
+      return $this.canSubscribe(station);
+    };
+
+    $scope.isSubscribed = function(station) {
+      return $this.isSubscribed(station);
+    };
 
   });
