@@ -8,8 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StoreInstanceReviewCtrl', function($scope, $routeParams, storeInstanceWizardConfig, $window,
-    storeInstanceFactory, $location, storeInstanceReviewFactory, $q, ngToast, $filter, dateUtility, lodash, ENV, identityAccessFactory) {
+  .controller('StoreInstanceReviewCtrl', function ($scope, $routeParams, storeInstanceWizardConfig, $window,
+                                                   storeInstanceFactory, $location, storeInstanceReviewFactory, $q, ngToast, $filter, dateUtility, lodash, ENV,
+                                                   identityAccessFactory) {
 
     var _initPromises = [];
     var _sealTypes = [];
@@ -64,7 +65,7 @@ angular.module('ts5App')
       };
       _initPromises.push(
         storeInstanceFactory.getStoreInstanceMenuItems($routeParams.storeId, payload)
-        .then(getItemsSuccessHandler)
+          .then(getItemsSuccessHandler)
       );
     }
 
@@ -116,7 +117,7 @@ angular.module('ts5App')
           sealNumbers.push(sealNumber);
         }
       }
-      return sealNumbers.sort(function(a, b) {
+      return sealNumbers.sort(function (a, b) {
         return a - b;
       });
     }
@@ -160,12 +161,12 @@ angular.module('ts5App')
     }
 
     function removeSealNotUsed(sealsArray) {
-      return sealsArray.filter(function(sealType) {
+      return sealsArray.filter(function (sealType) {
         return sealsToRemove[$routeParams.action].indexOf(sealType.name) < 0;
       });
     }
 
-    $scope.removeSealsForStoreOne = function(seal) {
+    $scope.removeSealsForStoreOne = function (seal) {
       return sealsToRemove['end-instance'].indexOf(seal.name) < 0;
     };
 
@@ -174,7 +175,7 @@ angular.module('ts5App')
       $scope.storeOneSeals = [];
 
       _sealTypes = removeSealNotUsed(_sealTypes);
-      _sealTypes.map(function(sealType) {
+      _sealTypes.map(function (sealType) {
         addSealToScope(sealType);
         return _sealTypes;
       });
@@ -184,7 +185,7 @@ angular.module('ts5App')
       $scope.pickListItems = [];
       $scope.offloadItemList = [];
 
-      angular.forEach($scope.storeOneItemList, function(item) {
+      angular.forEach($scope.storeOneItemList, function (item) {
         var storeTwoItem = lodash.findWhere($scope.storeTwoItemList, {
           itemMasterId: item.itemMasterId
         });
@@ -201,13 +202,13 @@ angular.module('ts5App')
         }
       });
       if (angular.isArray($scope.storeTwoItemList)) {
-        $scope.storeTwoItemList.map(function(item) {
+        $scope.storeTwoItemList.map(function (item) {
           item.quantity = 0;
         });
         $scope.pickListItems = $scope.pickListItems.concat($scope.storeTwoItemList);
       }
 
-      $scope.pickListItems.map(function(item) {
+      $scope.pickListItems.map(function (item) {
         item.pickedQuantity = (item.dispatchedQuantity + (item.ullageQuantity || 0)) - (item.inboundQuantity || 0);
       });
     }
@@ -241,23 +242,23 @@ angular.module('ts5App')
     function getStoreInstanceSeals() {
       _initPromises.push(
         storeInstanceReviewFactory.getStoreInstanceSeals($routeParams.storeId)
-        .then(setStoreInstanceSeals)
+          .then(setStoreInstanceSeals)
       );
 
       if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
         _initPromises.push(
           storeInstanceReviewFactory.getStoreInstanceSeals($scope.storeDetails.prevStoreInstanceId)
-          .then(setStoreOneInstanceSeals)
+            .then(setStoreOneInstanceSeals)
         );
       }
 
       _initPromises.push(
         storeInstanceReviewFactory.getSealColors()
-        .then(setSealColors)
+          .then(setSealColors)
       );
       _initPromises.push(
         storeInstanceReviewFactory.getSealTypes()
-        .then(setSealTypes)
+          .then(setSealTypes)
       );
     }
 
@@ -316,37 +317,41 @@ angular.module('ts5App')
       }
     }
 
-    $scope.isEndInstance = function() {
+    $scope.isEndInstance = function () {
       if ($scope.storeDetails) {
         return $scope.storeDetails.currentStatus.statusName === STATUS_END_INSTANCE;
       }
     };
-    // TODO on redispatch, show ullageReason and offload list is missing
+
+    function sortById(a, b) {
+      return a.itemMasterId - b.itemMasterId;
+    }
+
     function mergeInboundUllageItems(rawItemList) {
-      var inboundItemList = rawItemList.filter(function(item) {
+      var inboundItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
-          name: 'Offload'
-        }).id;
-      });
+            name: 'Offload'
+          }).id;
+      }).sort(sortById);
 
-      var pickedInboundItemList = rawItemList.filter(function(item) {
+      var pickedInboundItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
-          name: 'Warehouse Close'
-        }).id;
-      });
+            name: 'Warehouse Close'
+          }).id;
+      }).sort(sortById);
 
-      var ullageItemList = rawItemList.filter(function(item) {
+      var ullageItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
-          name: 'Ullage'
-        }).id;
-      });
+            name: 'Ullage'
+          }).id;
+      }).sort(sortById);
 
-      pickedInboundItemList.map(function(item) {
+      pickedInboundItemList.map(function (item) {
         item.inboundQuantity = item.quantity;
         delete item.quantity;
       });
 
-      ullageItemList.map(function(item) {
+      ullageItemList.map(function (item) {
         item.ullageQuantity = item.quantity;
         item.ullageCode = item.ullageReasonCode;
         delete item.quantity;
@@ -356,7 +361,7 @@ angular.module('ts5App')
     }
 
     function formatItems(itemArray, excludeMenuQty) {
-      itemArray.map(function(item) {
+      itemArray.map(function (item) {
         item.itemDescription = item.itemCode + ' -  ' + item.itemName;
         item.disabled = true;
 
@@ -383,7 +388,7 @@ angular.module('ts5App')
 
       var cleanItemList = [];
       var uniqueStoreTwoItems = lodash.uniq(rawItemList, 'itemMasterId');
-      uniqueStoreTwoItems.map(function(item) {
+      uniqueStoreTwoItems.map(function (item) {
         var newItem = {
           itemMasterId: item.itemMasterId,
           itemDescription: item.itemCode + ' -  ' + item.itemName,
@@ -434,7 +439,7 @@ angular.module('ts5App')
 
       var cleanItemList = [];
       var uniqueStoreOneItems = lodash.uniq(rawItemList, 'itemMasterId');
-      uniqueStoreOneItems.map(function(item) {
+      uniqueStoreOneItems.map(function (item) {
         var newItem = {
           itemMasterId: item.itemMasterId,
           itemDescription: item.itemCode + ' -  ' + item.itemName,
@@ -506,7 +511,7 @@ angular.module('ts5App')
       $q.all(_initPromises).then(initLoadComplete, showResponseErrors);
     }
 
-    $scope.getUllageReason = function(ullageReasonCode) {
+    $scope.getUllageReason = function (ullageReasonCode) {
       if (ullageReasonCode) {
         return $filter('filter')($scope.ullageReasonList, {
           id: ullageReasonCode
@@ -567,7 +572,7 @@ angular.module('ts5App')
       $q.all(promiseArray).then(storeDetailsResponseHandler, showResponseErrors);
     }
 
-    this.updateInstanceToByStepName = function(stepObject) {
+    this.updateInstanceToByStepName = function (stepObject) {
       if (!stepObject) {
         $location.url('/store-instance-dashboard');
         return;
@@ -581,13 +586,13 @@ angular.module('ts5App')
           stepObject.storeOne.stepName));
       }
 
-      $q.all(statusUpdatePromiseArray).then(function() {
+      $q.all(statusUpdatePromiseArray).then(function () {
         $location.url(stepObject.uri);
       }, showResponseErrors);
 
     };
 
-    $scope.stepWizardPrevTrigger = function() {
+    $scope.stepWizardPrevTrigger = function () {
       displayLoadingModal();
       $scope.showLoseDataAlert = false;
       var wizardStep = $scope.wizardSteps[$scope.wizardStepToIndex] || $this.prevStep;
@@ -595,7 +600,7 @@ angular.module('ts5App')
       return false;
     };
 
-    $scope.redirectTo = function(controllerName) {
+    $scope.redirectTo = function (controllerName) {
       if (!controllerName) {
         return;
       }
@@ -605,12 +610,12 @@ angular.module('ts5App')
       $this.updateInstanceToByStepName(step);
     };
 
-    $scope.loseDataAlertConfirmTrigger = function() {
+    $scope.loseDataAlertConfirmTrigger = function () {
       var stepName = $scope.wizardSteps[$scope.wizardStepToIndex].stepName;
       $this.updateInstanceToByStepName(stepName);
     };
 
-    $scope.submit = function() {
+    $scope.submit = function () {
       var submitStatus = {
         'dispatch': 'Dispatched',
         'replenish': 'Dispatched',
@@ -623,11 +628,11 @@ angular.module('ts5App')
       }
     };
 
-    $scope.exit = function() {
+    $scope.exit = function () {
       $location.url('/store-instance-dashboard');
     };
 
-    $scope.hasDiscrepancy = function(item) {
+    $scope.hasDiscrepancy = function (item) {
       var pickedQuantity = item.quantity;
       if (!$routeParams.action.contains('dispatch')) {
         return '';
@@ -639,7 +644,7 @@ angular.module('ts5App')
       return (item.menuQuantity !== pickedQuantity) ? 'danger' : '';
     };
 
-    $scope.getTitleFor = function(section) {
+    $scope.getTitleFor = function (section) {
       var titles = {
         seals: {
           'dispatch': 'Seal Number Assignment',
