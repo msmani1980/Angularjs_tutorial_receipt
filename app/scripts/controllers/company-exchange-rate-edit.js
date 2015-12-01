@@ -188,9 +188,6 @@ angular.module('ts5App')
     };
 
     $scope.isExchangeRateDisabled = function(exchangeRate) {
-      if (exchangeRate.isCloned) {
-        return false;
-      }
       if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
         return true;
       }
