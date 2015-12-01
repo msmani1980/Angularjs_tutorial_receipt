@@ -34,19 +34,19 @@
   </div>
 
   <div class="row">
-    <div class="col-xs-8 main">
+    <div class="col-xs-12 main">
       <header>
         <div class="row item-list-row">
           <div class="col-xs-8">
-            <h3 class="view-name">Discrepancy Detail</h3>
+            <h3 class="view-name">Store Instance Amend</h3>
           </div>
           <div class="col-xs-4 text-right">
-            <button class="btn btn-warning">
-              Hide Payment Reports
-            </button>
-            <!--<button class="btn btn-info">-->
-            <!--<span class="fa fa-file-text" aria-hidden="true"></span> Show Payment Reports-->
+            <!--<button class="btn btn-warning">-->
+            <!--Hide Payment Reports-->
             <!--</button>-->
+            <button class="btn btn-info">
+              <span class="fa fa-file-text" aria-hidden="true"></span> Show Payment Reports
+            </button>
           </div>
         </div>
         <br>
@@ -74,12 +74,12 @@
       </header>
 
       <div class="accordion-wrapper">
-        <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
-          <accordion-group ng-init="status.items.open=true" is-open="status.items.open">
+        <accordion class="store-instance-review-accordion">
+          <accordion-group ng-init="status.items.open=false" is-open="status.items.open">
             <accordion-heading class="accordion-heading">
               <i ng-class="{'fa-chevron-down': status.items.open, 'fa-chevron-right': !status.items.open}"
                  class="fa"></i>
-              Discrepancy
+              Discrepancy Summary
             </accordion-heading>
             <div clas="row">
               <div class="col-xs-4">
@@ -88,22 +88,6 @@
                     <td colspan="2" class="active">LMP Station Stock [GBP]</td>
                   </tr>
                   <tr>
-                    <td>Gross Value of LMP Stock</td>
-                    <td>10.3</td>
-                  </tr>
-                  <tr>
-                    <td>Virtual Items</td>
-                    <td>+1.3</td>
-                  </tr>
-                  <tr>
-                    <td>Voucher Items</td>
-                    <td>+1.3</td>
-                  </tr>
-                  <tr>
-                    <td>Promotion Discounts</td>
-                    <td>-10.3</td>
-                  </tr>
-                  <tr class="active">
                     <td>Net Value of LMP Stock</td>
                     <td>10.3</td>
                   </tr>
@@ -115,22 +99,6 @@
                     <td colspan="2">ePOS Sales [GBP]</td>
                   </tr>
                   <tr>
-                    <td>Gross Value of ePOS Sales</td>
-                    <td>10.3</td>
-                  </tr>
-                  <tr>
-                    <td><a ng-click="showModal('Virtual')">Virtual Items</a></td>
-                    <td>+1.3</td>
-                  </tr>
-                  <tr>
-                    <td><a ng-click="showModal('Voucher')">Voucher Items</a></td>
-                    <td>+1.3</td>
-                  </tr>
-                  <tr>
-                    <td><a ng-click="showModal('Promotion')">Promotion Discount</a></td>
-                    <td>-10.3</td>
-                  </tr>
-                  <tr class="active">
                     <td>Net Value of ePOS Sales</td>
                     <td>10.3</td>
                   </tr>
@@ -184,390 +152,288 @@
           </accordion-group>
         </accordion>
 
+        <hr>
+        <br>
+
+
+        <div class="row">
+          <div class="col-xs-8">
+            <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
+              <ui-select-match placeholder="Filter by Cash Bag Number...">{{ $item.cashBag }}</ui-select-match>
+              <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
+                {{ cashBag.cashBag }}
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <div class="col-xs-4 text-right">
+            <button class="btn btn-default" ng-click="initEditTable(false)"><span
+              class="fa fa-link active"></span> Enable Sector Merging
+            </button>
+            <button class="btn btn-info" ng-click="initEditTable(false)"><span
+              class="fa fa-minus-circle active"></span> Collapse All Views
+            </button>
+            <!--<input bs-switch ng-model="showLMPDiscrepancies" type="checkbox" switch-size="medium" switch-on-color="info" switch-on-text="Show" switch-off-text="Hide">-->
+
+          </div>
+        </div>
+        <br>
+        <!--<div class="row">-->
+          <!--<div class="col-xs-12">-->
+            <!--<p><i><span class="fa fa-asterisk"></span> Indicates a manually added item</i></p>-->
+            <!--</div>-->
+        <!--</div>-->
+        <br>
+
         <form name="createStoreInstance" ng-submit="submitForm()">
+          <accordion class="store-instance-review-accordion">
+            <accordion-group ng-init="status.seals.open=true" is-open="status.seals.open">
+              <accordion-heading class="accordion-heading">
+                <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}"
+                   class="fa"></i>
+                Cash Bag 345 <span class="fa fa-asterisk"></span>
+              </accordion-heading>
+              <br>
 
-          <div class="accordion-wrapper">
-            <accordion class="store-instance-review-accordion" ng-class="{'accordion-footer':isEndInstance()}">
-              <accordion-group ng-init="status.items.open=false" is-open="status.items.open">
-                <accordion-heading class="accordion-heading">
-                  <i ng-class="{'fa-chevron-down': status.items.open, 'fa-chevron-right': !status.items.open}"
-                     class="fa"></i>
-                  Stock Discrepancy
-                </accordion-heading>
+              <div class="alert alert-success" role="alert"><span class="fa fa-check-circle"></span> Verified by areyes on 11/27/2015
+              </div>
 
-                <div class="row">
-                  <div class="col-xs-8">
-                    <label>Filter by Item Name or Category</label>
-                    <input type="text" class="form-control" ng-model="filterItemDetails" placeholder="Type an item name or category"/>
-                  </div>
-                  <div class="col-xs-4">
-                    <label>Show Only Discrepancies</label>
-                    <br>
-                    <input bs-switch ng-model="showLMPDiscrepancies" type="checkbox" switch-size="small" switch-on-color="info" switch-on-text="Yes" switch-off-text="No">
-                  </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <table class="table table-bordered">
+                    <tr>
+                      <td colspan="2" class="active">LMP Station Stock [GBP]</td>
+                    </tr>
+                    <tr>
+                      <td>Net Value of LMP Stock</td>
+                      <td>10.3</td>
+                    </tr>
+                  </table>
                 </div>
-                <br>
-                <table class="table table-bordered">
-                  <tr class="active">
-                    <th ng-click="updateOrderBy('itemName', true)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('itemName', true) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('itemName', true) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('itemName', true) === 'none'"></span>
-                      Retail Item
-                    </th>
-                    <th ng-click="updateOrderBy('dispatchedCount', true)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('dispatchedCount', true) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('dispatchedCount', true) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('dispatchedCount', true) === 'none'"></span>
-                      Dispatched & Replenish Count
-                    </th>
-                    <th ng-click="updateOrderBy('inboundCount', true)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('inboundCount', true) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('inboundCount', true) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('inboundCount', true) === 'none'"></span>
-                      Incoming / Offload Count
-                    </th>
-                    <th ng-click="updateOrderBy('ePOSSales', true)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('ePOSSales', true) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('ePOSSales', true) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('ePOSSales', true) === 'none'"></span>
-                      ePOS Sales
-                    </th>
-                    <th ng-click="updateOrderBy('varianceQuantity', true)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('varianceQuantity', true) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('varianceQuantity', true) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('varianceQuantity', true) === 'none'"></span>
-                      Variance Quantity
-                    </th>
-                    <th ng-click="updateOrderBy('retailValue', true)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('retailValue', true) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('retailValue', true) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('retailValue', true) === 'none'"></span>
-                      Retail Item Price [GBP]
-                    </th>
-                    <th ng-click="updateOrderBy('varianceValue', true)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('varianceValue', true) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('varianceValue', true) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('varianceValue', true) === 'none'"></span>
-                      Variance Value [GBP]
-                    </th>
-                    <th></th>
-                  </tr>
-                  <tr ng-repeat="item in filteredLMPStock = (LMPStock | filter:{itemDescription: filterItemDetails} | orderBy: LMPSortTitle)" ng-show="showLMPDiscrepancies ? item.isDiscrepancy : true">
-                    <td>
-                      <span>{{ item.itemName }}</span>
-                    </td>
-                    <td>
-                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.dispatchedCount">
-                      <span ng-hide="showEditViewForItem(item, true)">{{ item.dispatchedCount }}</span>
-                    </td>
-                    <td>
-                      <input ng-show="showEditViewForItem(item, true)" type="text" class="form-control" ng-model="item.revision.inboundCount">
-                      <span ng-hide="showEditViewForItem(item, true)">{{ item.inboundCount }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.ePOSSales }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.varianceQuantity }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.retailValue }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.varianceValue }}</span>
-                    </td>
-                    <td>
-                      <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="showEditViewForItem(item, true)"><span class="fa fa-pencil"></span></a>
-                      <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveItem(item)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="editLMPStockTable"><span class="fa fa-undo"></span></a>
-                    </td>
-                  </tr>
-                  <tr ng-show="filteredLMPStock.length === 0">
-                    <td colspan="8" class="text-center"><span class="fa fa-exclamation-circle text-danger"></span> We're sorry, there are no items that match the given criteria</td>
-                  </tr>
-                </table>
-
-                <div class="row">
-                  <div class="col-xs-12 text-right">
-                    <button ng-hide="editLMPStockTable" class="btn btn-primary" ng-click="initEditTable(true)"><span class="fa fa-pencil active"></span> Edit Table</button>
-                    <button ng-show="editLMPStockTable" class="btn btn-success" ng-click="saveTable(true)"><span class="fa fa-check active"></span> Save All</button>
-                    <button ng-show="editLMPStockTable" class="btn btn-default" ng-click="cancelEditingTable(true)">Cancel</button>
-                  </div>
+                <div class="col-xs-6">
+                  <table class="table table-bordered">
+                    <tr class="active">
+                      <td colspan="2">ePOS Sales [GBP]</td>
+                    </tr>
+                    <tr>
+                      <td>Net Value of ePOS Sales</td>
+                      <td>10.3</td>
+                    </tr>
+                  </table>
                 </div>
-              </accordion-group>
-            </accordion>
+              </div>
 
-            <accordion class="store-instance-review-accordion">
-              <accordion-group ng-init="status.seals.open=false" is-open="status.seals.open">
-                <accordion-heading class="accordion-heading">
-                  <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}"
-                     class="fa"></i>
-                  Cash Discrepancy
-                </accordion-heading>
-                <div class="row">
-                  <div class="col-xs-8">
-                    <label>Filter by Cash Bag</label>
-                    <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
-                      <ui-select-match placeholder="Select Cash Bags...">{{ $item.cashBag }}</ui-select-match>
-                      <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
-                        {{ cashBag.cashBag }}
-                      </ui-select-choices>
-                    </ui-select>
-                  </div>
-                  <div class="col-xs-4">
-                    <label>Show Only Discrepancies</label>
-                    <br>
-                    <input bs-switch ng-model="showCashBagDiscrepancies" type="checkbox" switch-size="small" switch-on-color="info" switch-on-text="Yes" switch-off-text="No">
-                    </select>
-                  </div>
+              <br>
+
+              <div class="row">
+                <div class="col-xs-6 text-left">
+                  <h4>Flight Sectors</h4>
                 </div>
-                <br>
-
-                <table class="table table-striped table-bordered">
-                  <tr>
-                    <th ng-click="updateOrderBy('cashBag', false)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('cashBag', false) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('cashBag', false) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('cashBag', false) === 'none'"></span>
-                      Cash Bag Number
-                    </th>
-                    <th ng-click="updateOrderBy('currency', false)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('currency', false) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('currency', false) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('currency', false) === 'none'"></span>
-                      Currency
-                    </th>
-                    <th ng-click="updateOrderBy('exchangeAmount', false)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('exchangeAmount', false) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('exchangeAmount', false) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('exchangeAmount', false) === 'none'"></span>
-                      ePOS Calculated Amount
-                    </th>
-                    <th ng-click="updateOrderBy('crewAmount', false)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('crewAmount', false) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('crewAmount', false) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('crewAmount', false) === 'none'"></span>
-                      ePOS Crew Amount
-                    </th>
-                    <th ng-click="updateOrderBy('paperAmount', false)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('paperAmount', false) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('paperAmount', false) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('paperAmount', false) === 'none'"></span>
-                      Cash Handler Paper Amount
-                    </th>
-                    <th ng-click="updateOrderBy('coinAmount', false)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('coinAmount', false) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('coinAmount', false) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('coinAmount', false) === 'none'"></span>
-                      Cash Handler Coin Amount
-                    </th>
-                    <th ng-click="updateOrderBy('varianceValue', false)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('varianceValue', false) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('varianceValue', false) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('varianceValue', false) === 'none'"></span>
-                      Variance Value
-                    </th>
-                    <th ng-click="updateOrderBy('bankExchangeRate', false)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('bankExchangeRate', false) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('bankExchangeRate', false) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('bankExchangeRate', false) === 'none'"></span>
-                      Bank Exchange Rate
-                      <!-- Paper & Coin Exchange Rate, as per Retail Company-->
-                    </th>
-                    <th ng-click="updateOrderBy('totalBand', false)">
-                      <span class="fa fa-sort-asc active" ng-show="getArrowType('totalBand', false) === 'ascending'"></span>
-                      <span class="fa fa-sort-desc active" ng-show="getArrowType('totalBand', false) === 'descending'"></span>
-                      <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('totalBand', false) === 'none'"></span>
-                      Total Banked [GBP]
-                    </th>
-                    <td></td>
-                  </tr>
-                  <tr ng-repeat="item in cashBags | orderBy: cashBagSortTitle" ng-show="showCashBagDiscrepancies ? item.isDiscrepancy : true">
-                    <td>
-                      <span>{{ item.cashBag }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.currency }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.exchangeAmount }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.crewAmount }}</span>
-                    </td>
-                    <td>
-                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.paperAmount">
-                      <span ng-hide="showEditViewForItem(item, false)">{{ item.paperAmount }}</span>
-                    </td>
-                    <td>
-                      <input ng-show="showEditViewForItem(item, false)" type="text" class="form-control" ng-model="item.revision.coinAmount">
-                      <span ng-hide="showEditViewForItem(item, false)">{{ item.coinAmount }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.varianceValue }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.bankExchangeRate }}</span>
-                    </td>
-                    <td>
-                      <span>{{ item.totalBand }}</span>
-                    </td>
-                    <td>
-                      <a class="btn btn-info btn-xs btn-block" tabindex="0"><span class="fa fa-file-text"></span></a>
-                      <a class="btn btn-primary btn-xs btn-block" tabindex="0" ng-click="editItem(item)" ng-hide="showEditViewForItem(item, false)"><span class="fa fa-pencil"></span></a>
-                      <a class="btn btn-success btn-xs btn-block" tabindex="0" ng-click="saveItem(item)" ng-show="item.isEditing"><span class="fa fa-check"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="cancelEditItem(item)" ng-show="item.isEditing"><span class="fa fa-times"></span></a>
-                      <a class="btn btn-default btn-xs btn-block" tabindex="0" ng-click="revertItem(item)" ng-show="editCashBagTable"><span class="fa fa-undo"></span></a>
-                    </td>
-                  </tr>
-                </table>
-
-                <div class="row">
-                  <div class="col-xs-12 text-right">
-                    <button ng-hide="editCashBagTable" class="btn btn-primary" ng-click="initEditTable(false)"><span class="fa fa-pencil active"></span> Edit Table</button>
-                    <button ng-show="editCashBagTable" class="btn btn-success" ng-click="saveTable(false)"><span class="fa fa-check active"></span> Save All</button>
-                    <button ng-show="editCashBagTable" class="btn btn-default" ng-click="cancelEditingTable(false)">Cancel</button>
-                  </div>
+                <div class="col-xs-6 text-right">
+                  <button class="btn btn-success" ng-click="initEditTable(false)"><span
+                    class="fa fa-plus active"></span> Add Flight Sector
+                  </button>
                 </div>
-              </accordion-group>
-            </accordion>
-          </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-xs-12">
+                  <table class="table table-bordered">
+                    <tr class="active">
+                      <th></th>
+                      <th></th>
+                      <th ng-click="updateOrderBy('currency', false)">
+                        Flight Date
+                      </th>
+                      <th ng-click="updateOrderBy('exchangeAmount', false)">
+                        Flight Number
+                      </th>
+                      <th ng-click="updateOrderBy('crewAmount', false)">
+                        Flight Route
+                      </th>
+                      <th ng-click="updateOrderBy('paperAmount', false)">
+                        PAX Count
+                      </th>
+                      <th ng-click="updateOrderBy('coinAmount', false)">
+                        AC Reg
+                      </th>
+                      <th ng-click="updateOrderBy('varianceValue', false)">
+                        Number of Transactions
+                      </th>
+                      <th ng-click="updateOrderBy('bankExchangeRate', false)">
+                        EPOS Sales
+                        <!-- Paper & Coin Exchange Rate, as per Retail Company-->
+                      </th>
+                      <th></th>
+                    </tr>
+                    <tr>
+                      <td><span class="fa fa-plus-square-o"></span></td>
+                      <td><span class="fa fa-asterisk"></span></td>
+                      <td> 10/23/2015</td>
+                      <td> 123</td>
+                      <td> ABC</td>
+                      <td>123</td>
+                      <td> DEF-123</td>
+                      <td> 123</td>
+                      <td> 456.00</td>
+                      <td>
+                        <button class="btn btn-primary btn-xs"><span class="fa fa-pencil active"></span></button>
+                        <button class="btn btn-danger btn-xs"><span class="fa fa-trash active"></span></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span class="fa fa-plus-square-o"></span></td>
+                      <td></td>
+                      <td> 10/23/2015</td>
+                      <td> 123</td>
+                      <td> ABC</td>
+                      <td>123</td>
+                      <td> DEF-123</td>
+                      <td> 123</td>
+                      <td> 456.00</td>
+                      <td>
+                        <button class="btn btn-primary btn-xs"><span class="fa fa-pencil active"></span></button>
+                        <button class="btn btn-danger btn-xs"><span class="fa fa-trash active"></span></button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
+              <hr>
+              <div class="row">
+                <div class="col-xs-12 text-right">
+                  <button class="btn btn-info" ng-click="initEditTable(false)"><span
+                    class="fa fa-file-text active"></span> View Payment Report
+                  </button>
+                  <button class="btn btn-primary" ng-click="initEditTable(false)"><span
+                    class="fa fa-pencil active"></span> Edit
+                  </button>
+                  <button class="btn btn-danger" ng-click="saveTable(false)"><span class="fa fa-trash active"></span>
+                    Delete
+                  </button>
+                  <button class="btn btn-warning" ng-click="initEditTable(false)"><span
+                    class="fa fa-share active"></span> Reallocate
+                  </button>
+                  <button class="btn btn-warning" ng-click="initEditTable(false)"><span
+                    class="fa fa-link active"></span> Merge
+                  </button>
+                  <button class="btn btn-default" ng-click="initEditTable(false)"><span
+                    class="fa fa-times active"></span> Unverify
+                  </button>
+                </div>
+              </div>
+            </accordion-group>
+          </accordion>
+
+          <accordion class="store-instance-review-accordion">
+            <accordion-group ng-init="status.seals.open=true" is-open="status.seals.open">
+              <accordion-heading class="accordion-heading">
+                <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}"
+                   class="fa"></i>
+                <strike>Cash Bag 789</strike>
+              </accordion-heading>
+              <br>
+
+              <div class="alert alert-danger" role="alert"><span class="fa fa-trash"></span> Deleted by areyes on 11/27/2015
+              </div>
+
+              <div class="row">
+                <div class="col-xs-6">
+                  <table class="table table-bordered">
+                    <tr>
+                      <td colspan="2" class="active">LMP Station Stock [GBP]</td>
+                    </tr>
+                    <tr>
+                      <td>Net Value of LMP Stock</td>
+                      <td>10.3</td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="col-xs-6">
+                  <table class="table table-bordered">
+                    <tr class="active">
+                      <td colspan="2">ePOS Sales [GBP]</td>
+                    </tr>
+                    <tr>
+                      <td>Net Value of ePOS Sales</td>
+                      <td>10.3</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
+              <br>
+
+              <div class="row">
+                <div class="col-xs-6 text-left">
+                  <h4>Flight Sectors</h4>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-xs-12">
+                  <table class="table table-bordered">
+                    <tr class="active">
+                      <th></th>
+                      <th></th>
+                      <th ng-click="updateOrderBy('currency', false)">
+                        Flight Date
+                      </th>
+                      <th ng-click="updateOrderBy('exchangeAmount', false)">
+                        Flight Number
+                      </th>
+                      <th ng-click="updateOrderBy('crewAmount', false)">
+                        Flight Route
+                      </th>
+                      <th ng-click="updateOrderBy('paperAmount', false)">
+                        PAX Count
+                      </th>
+                      <th ng-click="updateOrderBy('coinAmount', false)">
+                        AC Reg
+                      </th>
+                      <th ng-click="updateOrderBy('varianceValue', false)">
+                        Number of Transactions
+                      </th>
+                      <th ng-click="updateOrderBy('bankExchangeRate', false)">
+                        EPOS Sales
+                        <!-- Paper & Coin Exchange Rate, as per Retail Company-->
+                      </th>
+                    </tr>
+                    <tr>
+                      <td><span class="fa fa-plus-square-o"></span></td>
+                      <td><span class="fa fa-asterisk"></span></td>
+                      <td> 10/23/2015</td>
+                      <td> 123</td>
+                      <td> ABC</td>
+                      <td>123</td>
+                      <td> DEF-123</td>
+                      <td> 123</td>
+                      <td> 456.00</td>
+                    </tr>
+                    <tr>
+                      <td><span class="fa fa-plus-square-o"></span></td>
+                      <td></td>
+                      <td> 10/23/2015</td>
+                      <td> 123</td>
+                      <td> ABC</td>
+                      <td>123</td>
+                      <td> DEF-123</td>
+                      <td> 123</td>
+                      <td> 456.00</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </accordion-group>
+          </accordion>
         </form>
-
-      </div>
-    </div>
-
-    <div class="col-xs-4 fixed-sidebar">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="col-xs-10 view-name">
-            <h4><span class="fa fa-file-text" aria-hidden="true"></span> Payment Reports</h4>
-          </div>
-          <div class="col-xs-2 text-right view-name">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">&times;</span></button>
-          </div>
-        </div>
-      </div>
-      <br>
-
-      <div class="panel col-xs-12">
-        <div class="panel-body">
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Number: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Number: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <table class="table table-bordered col-xs-12">
-            <tr class="active">
-              <td>Crew ID</td>
-              <td>Last Name</td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-          </table>
-          <table class="table col-xs-12">
-            <tr>
-              <td>Expected Cash Total</td>
-              <td>141.00</td>
-            </tr>
-            <tr>
-              <td>Card Total</td>
-              <td>196.00</Td>
-            </tr>
-            <tr>
-              <td>Voucher Total</td>
-              <td>15.00</Td>
-            </tr>
-            <tr>
-              <td>Complimentary Total</td>
-              <td>39.00</Td>
-            </tr>
-            <tr>
-              <td>Expected Total</td>
-              <td>391.00</Td>
-            </tr>
-          </table>
-        </div>
       </div>
 
-      <div class="panel col-xs-12">
-        <div class="panel-body">
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Number: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <p>Flight Number: 10/20/2015</p>
-
-          <p>Flight Date: 10/20/2015</p>
-
-          <table class="table table-bordered col-xs-12">
-            <tr class="active">
-              <td>Crew ID</td>
-              <td>Last Name</td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-            <tr>
-              <td>123</td>
-              <td>somename</Td>
-            </tr>
-          </table>
-          <table class="table col-xs-12">
-            <tr>
-              <td>Expected Cash Total</td>
-              <td>141.00</td>
-            </tr>
-            <tr>
-              <td>Card Total</td>
-              <td>196.00</Td>
-            </tr>
-            <tr>
-              <td>Voucher Total</td>
-              <td>15.00</Td>
-            </tr>
-            <tr>
-              <td>Complimentary Total</td>
-              <td>39.00</Td>
-            </tr>
-            <tr>
-              <td>Expected Total</td>
-              <td>391.00</Td>
-            </tr>
-          </table>
-        </div>
-      </div>
     </div>
   </div>
+</div>
 
 
 </div>
