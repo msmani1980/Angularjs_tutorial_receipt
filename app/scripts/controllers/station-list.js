@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationListCtrl', function ($scope,dateUtility) {
+  .controller('StationListCtrl', function ($scope,dateUtility,ngToast) {
 
     var stationListJSON = {
       'response': [
@@ -43,8 +43,8 @@ angular.module('ts5App')
           'countryName': 'Denmark',
           'description': 'Herning',
           'isCaterer': false,
-          'endDate': '',
-          'startDate': '',
+          'endDate': '2050-01-01',
+          'startDate': '2015-05-02',
           'regionId': 8,
           'regionName': 'All',
           'stationCode': 'EKHG',
@@ -130,14 +130,6 @@ angular.module('ts5App')
       }
     };
 
-    this.isSubscribed = function(station) {
-      return station.startDate && station.endDate;
-    };
-
-    this.canSubscribe = function(station) {
-      return !this.isSubscribed(station);
-    };
-
     this.setStationList = function(dataFromAPI) {
       $scope.stationList = angular.copy(dataFromAPI.response);
     };
@@ -153,17 +145,65 @@ angular.module('ts5App')
       };
       angular.forEach($scope.stationList, function(station) {
         $scope.formData.stations.push({
+          id: station.id,
           startDate: dateUtility.formatDateForApp(station.startDate),
           endDate: dateUtility.formatDateForApp(station.endDate)
         });
       });
     };
 
+    this.getSelectedStations = function() {
+      return $scope.selectedStations.filter(function(selected,stationId){
+        if(selected === true)  {
+          return stationId;
+        }
+      });
+    };
+
+    this.canSave = function() {
+      if($scope.selectedStations.length > 0) {
+        var selected = this.getSelectedStations();
+        return selected.length > 0;
+      }
+      return $scope.selectedStations.length > 0;
+    };
+
+    this.showSuccessMessage = function(message) {
+      ngToast.create({
+        className: 'success',
+        dismissButton: true,
+        content: '<strong>Success</strong> - ' + message
+      });
+    };
+
+    this.getStationObject = function(stationId) {
+      var selectedStation = $scope.stationList.filter(function(station){
+        return station.id === stationId;
+      })[0];
+      return selectedStation;
+    };
+
+    this.generatePayload = function() {
+      var payload = [];
+      angular.forEach($scope.selectedStations, function(selected,stationId){
+        if(selected){
+          payload.push( $this.getStationObject(stationId) );
+        }
+      });
+      return payload;
+    };
+
     this.submitForm = function() {
-      console.log($scope.formData);
+      // TODO: Validation
+      var payload = this.generatePayload();
+      console.log(payload);
+      this.showSuccessMessage(payload.length + ' stations have been updated!');
     };
 
     this.init = function() {
+      // TODO: Get countries
+      // TODO: Get cities
+      // TODO: Get regions
       this.getStationList();
       this.setupFormDataObject();
     };
@@ -173,16 +213,30 @@ angular.module('ts5App')
 
     /* Scope */
 
+    $scope.selectedStations = [];
+
+    $scope.searchRecords = function() {
+      $scope.searched = true;
+    };
+
+    $scope.canSave = function() {
+      return $this.canSave();
+    };
+
     $scope.submitForm = function() {
       return $this.submitForm();
     };
 
-    $scope.canSubscribe = function(station) {
-      return $this.canSubscribe(station);
+    $scope.selectAllStations = function() {
+      angular.forEach($scope.stationList, function(station) {
+        $scope.selectedStations[station.id] = true;
+      });
     };
 
-    $scope.isSubscribed = function(station) {
-      return $this.isSubscribed(station);
+    $scope.deselectAllStations = function() {
+      angular.forEach($scope.stationList, function(station) {
+        $scope.selectedStations[station.id] = false;
+      });
     };
 
   });

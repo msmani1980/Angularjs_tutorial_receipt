@@ -1,4 +1,4 @@
-<div class="fluid-container module-container">
+<div class="container module-container">
 
 	<div class="list-controls">
 
@@ -21,7 +21,8 @@
 
 		</div>
 
-		<div class="panel panel-default collapse no-transition" id="search-collapse">
+		<!-- Search Panel -->
+		<div class="panel panel-default no-transition" id="search-collapse">
 
 			<form name="searchForm" class="form">
 
@@ -39,7 +40,9 @@
 						<div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
                 <label>Country</label>
-                <input type="text" class="form-control" ng-model="search.countryName" />
+								<select class="form-control" ng-model="search.countryName">
+									<option ng-repeat="station in stationList | groupBy: station.countryId ">{{ station.countryName }}</option>
+								</select>
               </div>
             </div>
 
@@ -54,13 +57,6 @@
               <div class="form-group">
                 <label>Region</label>
                 <input type="text" class="form-control" ng-model="search.regionName" />
-              </div>
-            </div>
-
-						<div class="col-xs-12 col-sm-6 col-md-4">
-              <div class="form-group">
-                <label>Timezone</label>
-                <input type="text" class="form-control" ng-model="search.timezone" />
               </div>
             </div>
 
@@ -97,15 +93,61 @@
 
 			</div>
 
+			<!-- Station Edit Controls Panel -->
+			<div class="panel panel-default" ng-show="canSave()">
+
+					<div class="panel-body">
+
+						<div class="row">
+
+							<div class="col-xs-12 col-sm-6 col-md-4">
+								<date-picker-field name="EffectiveFrom" label="Effective From"
+									ng-model="dateRange.stationStartDate"></date-picker-field>
+							</div>
+
+							<div class="col-xs-12 col-sm-6 col-md-4">
+								<date-picker-field  name="EffectiveTo" label="Effective To"
+									ng-model="dateRange.stationEndDate"></date-picker-field>
+							</div>
+
+						</div>
+
+						<p>
+							<i class="fa fa-info-circle"></i>
+							<em>Use the fields above to update all selected Stations. You may also update stations per row.</em>
+						</p>
+
+					</div>
+
+					<div class="panel-footer">
+
+						<button ng-show="canSave()" class="btn btn-success" type="button" ng-click="submitForm()">
+							<i class="fa fa-check-square-o"></i> Save Stations
+						</button>
+
+						<button class="btn btn-default" type="button" ng-click="selectAllStations()">
+							<i class="fa"></i> Select All Stations
+						</button>
+
+						<button class="btn btn-default" type="button" ng-click="deselectAllStations()">
+							<i class="fa"></i> Deselect Stations
+						</button>
+
+					</div>
+
+			</div>
+
 	</div>
 
-	<form name="stationListForm" ng-submit="submitForm()">
+
+	<form name="stationListForm" ng-show="stationList.length && searched">
 
 	  <table class="table table-bordered table-responsive table-hover">
 
 	    <thead>
 
 	      <tr>
+					<th>Selected</th>
 	        <th>Station Name</th>
 					<th>Country</th>
 					<th>City</th>
@@ -113,7 +155,7 @@
 					<th>Timezone</th>
 	        <th>Start Date</th>
 	        <th>End Date</th>
-	        <th>Actions</th>
+	        <!-- <th>Actions</th> -->
 	      </tr>
 
 	    </thead>
@@ -121,6 +163,10 @@
 	    <tbody>
 
 	      <tr ng-repeat="station in stationList">
+
+					<td>
+						<input type="checkbox" ng-model="selectedStations[station.id]" />
+					</td>
 
 	        <td>{{ station.stationCode }}</td>
 
@@ -134,23 +180,17 @@
 
 	        <td width="200px">
 						<date-picker-field form="stationListForm" name="startDate" required="true"
-							ng-model="formData.stations[$index].startDate"
-							disable="canSubscribe(station)">
+							ng-model="formData.stations[$index].startDate">
 						</date-picker-field>
 					</td>
 
 	        <td width="200px">
-						<date-picker-field form="stationListForm" name="startDate" required="true"
-							ng-model="formData.stations[station.id].endDate"
-							disable="canSubscribe(station)">
+						<date-picker-field form="stationListForm" name="endDate" required="true"
+							ng-model="formData.stations[$index].endDate">
 						</date-picker-field>
 					</td>
 
-	        <td>
-
-						<button class="btn btn-primary" type="submit" ng-show="canSubscribe(station)">
-	            <i class="fa fa-check"></i> Subscribe
-	          </button>
+	        <!--<td>
 
 	          <button class="btn btn-success" type="submit" ng-show="isSubscribed(station)">
 	            <i class="fa fa-check-square-o"></i> Save
@@ -160,7 +200,7 @@
 	            <i class="fa fa-times"></i>
 	          </button>
 
-	        </td>
+	        </td>-->
 
 	      </tr>
 
