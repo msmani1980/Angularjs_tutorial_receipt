@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function($scope, GlobalMenuService, currencyFactory, dateUtility,
-    payloadUtility, ngToast) {
+    payloadUtility, ngToast, $filter) {
     var $this = this;
 
     this.companyId = GlobalMenuService.company.get();
@@ -188,6 +188,9 @@ angular.module('ts5App')
     };
 
     $scope.isExchangeRateDisabled = function(exchangeRate) {
+      if (exchangeRate.isCloned) {
+        return false;
+      }
       if (exchangeRate.acceptedCurrencyCode === $scope.search.operatingCurrencyCode) {
         return true;
       }
@@ -207,7 +210,10 @@ angular.module('ts5App')
       if (!exchangeRate.endDate || $scope.isExchangeRateNewOne(exchangeRate) || exchangeRate.isCloned) {
         return false;
       }
-      return !(dateUtility.isToday(exchangeRate.endDate) || dateUtility.isAfterToday(exchangeRate.endDate));
+      if (dateUtility.isAfterToday(exchangeRate.endDate)) {
+        return false;
+      }
+      return true;
     };
 
     $scope.isExchangeRateNewOne = function(exchangeRate) {
@@ -262,10 +268,10 @@ angular.module('ts5App')
         id: exchangeRateId
       };
 
-      if(exchangeRateId) {
-        currencyFactory.deleteCompanyExchangeRate(payload).then(function () {
+      if (exchangeRateId) {
+        currencyFactory.deleteCompanyExchangeRate(payload).then(function() {
           $this.hideLoadingModal();
-        }, function () {
+        }, function() {
           $this.hideLoadingModal();
         });
       }
@@ -299,9 +305,8 @@ angular.module('ts5App')
       newExchangeRate.isCloned = true;
 
       var newExchangeRates = angular.copy($scope.companyExchangeRates);
-
-      newExchangeRates.splice(index + 1, 0, newExchangeRate);
-      $scope.companyExchangeRates = newExchangeRates;
+      newExchangeRates.push(newExchangeRate);
+      $scope.companyExchangeRates = $filter('orderBy')(newExchangeRates, 'acceptedCurrencyCode + startDate');
     };
 
     this.init = function() {
