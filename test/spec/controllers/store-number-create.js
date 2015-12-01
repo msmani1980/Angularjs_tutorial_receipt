@@ -54,7 +54,7 @@ describe('Controller: StoreNumberCreateCtrl', function () {
       expect(Object.prototype.toString.call(scope.formData)).toBe('[object Object]');
     });
     it('should call companyService.getStores', function(){
-      expect(companyStoresService.getStoreList).toHaveBeenCalledWith(companyId);
+      expect(companyStoresService.getStoreList).toHaveBeenCalled();
     });
     it('should set storeNumbersList in scope', function(){
       expect(scope.storeNumbersList).toBeDefined();

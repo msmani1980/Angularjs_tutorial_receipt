@@ -9,13 +9,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast, $location, employeesService, GlobalMenuService) {
+  .controller('CommissionDataCtrl', function ($scope, $routeParams, commissionFactory, dateUtility, lodash, ngToast, $location, employeesService, GlobalMenuService, $q) {
     var $this = this;
     var companyId = GlobalMenuService.company.get();
 
     $scope.viewName = 'Creating Commission Data';
     $scope.commissionData = {};
-    $scope.baseCurrency = 'GBP'; // TODO: get from API
     $scope.readOnly = true;
     $scope.requireCommissionPercent = true;
     var percentTypeName = 'Percentage';
@@ -33,7 +32,7 @@ angular.module('ts5App')
       });
     };
 
-    function showErrors (dataFromAPI) {
+    function showErrors(dataFromAPI) {
       $this.hideLoadingModal();
       $scope.displayError = true;
       $scope.errorResponse = dataFromAPI;
@@ -49,7 +48,7 @@ angular.module('ts5App')
 
     this.getNameByIdInArray = function (id, array) {
       var match = lodash.findWhere(array, {id: id});
-      if(match) {
+      if (match) {
         return match.name;
       }
       return '';
@@ -57,7 +56,7 @@ angular.module('ts5App')
 
     $scope.updateCommissionPercent = function () {
       var commissionPayableType = $this.getNameByIdInArray($scope.commissionData.commissionPayableTypeId, $scope.commissionPayableTypes);
-      if(commissionPayableType === 'Retail item') {
+      if (commissionPayableType === 'Retail item') {
         $scope.commissionPercentDisabled = true;
         $scope.commissionPercentRequired = false;
         $scope.commissionData.commissionPercentage = null;
@@ -84,7 +83,7 @@ angular.module('ts5App')
     $scope.updateIncentiveIncrement = function () {
       var commissionType = $this.getNameByIdInArray($scope.commissionData.commissionValueTypeId, $scope.discountTypes);
       if (commissionType === percentTypeName) {
-          $scope.commissionValueUnit = percentTypeUnit;
+        $scope.commissionValueUnit = percentTypeUnit;
         $scope.commissionValueCharLimit = 6;
       } else {
         $scope.commissionValueUnit = $scope.baseCurrency;
@@ -96,6 +95,9 @@ angular.module('ts5App')
       var payload = angular.copy($scope.commissionData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
       payload.endDate = dateUtility.formatDateForAPI(payload.endDate);
+      if (!$scope.commissionPercentRequired) {
+        payload.commissionPercentage = null;
+      }
       return payload;
     };
 
@@ -122,9 +124,16 @@ angular.module('ts5App')
     };
 
     this.getCommissionDataSuccess = function (dataFromAPI) {
-      $scope.commissionData = angular.copy(dataFromAPI);
-      $scope.commissionData.startDate = dateUtility.formatDateForApp($scope.commissionData.startDate);
-      $scope.commissionData.endDate = dateUtility.formatDateForApp($scope.commissionData.endDate);
+      var newData = angular.copy(dataFromAPI);
+      newData.startDate = dateUtility.formatDateForApp(newData.startDate);
+      newData.endDate = dateUtility.formatDateForApp(newData.endDate);
+      newData.commissionPercentage = (newData.commissionPercentage) ? parseFloat(newData.commissionPercentage).toFixed(2) : null;
+      newData.commissionValue = parseFloat(newData.commissionValue).toFixed(2);
+      newData.discrepancyDeductionsCashPercentage = parseFloat(newData.discrepancyDeductionsCashPercentage).toFixed(2);
+      newData.discrepancyDeductionsStockPercentage = parseFloat(newData.discrepancyDeductionsStockPercentage).toFixed(2);
+      newData.manualBarsCommissionValue = parseFloat(newData.manualBarsCommissionValue).toFixed(2);
+
+      $scope.commissionData = newData;
       $scope.updateManualBars();
       $scope.updateIncentiveIncrement();
       $scope.updateCommissionPercent();
@@ -146,7 +155,7 @@ angular.module('ts5App')
 
     this.getCrewBaseList = function () {
       var uniqueCrewBaseTypes = {};
-      employeesService.getEmployees(companyId).then(function(dataFromAPI) {
+      employeesService.getEmployees(companyId).then(function (dataFromAPI) {
         angular.forEach(dataFromAPI.companyEmployees, function (employee) {
           if (!(employee.baseStationId in uniqueCrewBaseTypes)) {
             uniqueCrewBaseTypes[employee.baseStationId] = {};
@@ -160,14 +169,30 @@ angular.module('ts5App')
     };
 
     this.getCommissionPayableTypes = function () {
-      commissionFactory.getCommissionPayableTypes().then(function(dataFromAPI) {
+      commissionFactory.getCommissionPayableTypes().then(function (dataFromAPI) {
         $scope.commissionPayableTypes = angular.copy(dataFromAPI);
       });
     };
 
     this.getDiscountTypes = function () {
-      commissionFactory.getDiscountTypes().then(function(dataFromAPI) {
+      commissionFactory.getDiscountTypes().then(function (dataFromAPI) {
         $scope.discountTypes = angular.copy(dataFromAPI);
+      });
+    };
+
+    this.getCurrencyData = function (currencyId) {
+      commissionFactory.getCurrency(currencyId).then(function (response) {
+        if (response) {
+          $scope.baseCurrency = angular.copy(response.currencyCode);
+        }
+      });
+    };
+
+    this.getCompanyData = function () {
+      commissionFactory.getCompanyData(companyId).then(function (response) {
+        if (response) {
+          $this.getCurrencyData(angular.copy(response.baseCurrencyId));
+        }
       });
     };
 
@@ -183,18 +208,21 @@ angular.module('ts5App')
     };
 
     this.init = function () {
+      $this.showLoadingModal();
       $scope.readOnly = $routeParams.state === 'view';
-      $this.setViewName();
-      $this.getCrewBaseList();
-      $this.getCommissionPayableTypes();
-      $this.getDiscountTypes();
-
-      // TODO: resolve business logic -- which base currency to use if there are multiple?
-      // commissionFactory.getBaseCurrency();
-
-      if ($routeParams.id) {
-        $this.getCommissionData();
-      }
+      var initPromises = [
+        $this.setViewName(),
+        $this.getCrewBaseList(),
+        $this.getCommissionPayableTypes(),
+        $this.getDiscountTypes(),
+        $this.getCompanyData()
+      ];
+      $q.all(initPromises).then(function () {
+        if ($routeParams.id) {
+          $this.getCommissionData();
+        }
+        $this.hideLoadingModal();
+      });
     };
     this.init();
 

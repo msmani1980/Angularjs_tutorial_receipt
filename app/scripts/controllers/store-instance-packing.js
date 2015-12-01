@@ -373,17 +373,19 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     this.checkUllageReasonValidityInList = function (itemList, fieldName) {
+      var isPickList = (itemList === $scope.pickListItems);
       var listToCheck = lodash.sortBy(angular.copy(itemList), 'itemName');
       angular.forEach(listToCheck, function (item, index) {
-        var isValid = (parseInt(item.ullageQuantity) > 0) ? (!!item.ullageReason) : true;
-        $scope.storeInstancePackingForm[fieldName + index].$setValidity('required', isValid);
+        if(item.shouldDisplayOffloadData || !isPickList) {
+          var isValid = (parseInt(item.ullageQuantity) > 0) ? (!!item.ullageReason) : true;
+          $scope.storeInstancePackingForm[fieldName + index].$setValidity('required', isValid);
+        }
       });
     };
 
     this.validateUllageReasonFields = function () {
       if($routeParams.action === 'redispatch') {
-        $this.checkUllageReasonValidityInList($scope.pickList, 'pickUllageReason');
-        $this.checkUllageReasonValidityInList($scope.newPickListItems, 'newPickListUllageReason');
+        $this.checkUllageReasonValidityInList($scope.pickListItems, 'pickUllageReason');
       }
 
       if($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') {
@@ -395,13 +397,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.submit = function() {
       $this.validateUllageReasonFields();
       $scope.displayError = $scope.storeInstancePackingForm.$invalid;
-      if($scope.storeInstancePackingForm.$valid) {
+      var isVarianceOk = $this.checkVarianceOnAllItems();
+      if($scope.storeInstancePackingForm.$valid && isVarianceOk) {
         $scope.save();
       }
     };
 
     $scope.save = function () {
-      // TODO: check for ullage quantities
       $this.showLoadingModal();
       var promiseArray = [];
       $this.addItemsToDeleteToPayload(promiseArray);
@@ -423,14 +425,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $location.url('/store-instance-dashboard');
         }
       });
-    };
-
-    $scope.checkFormBeforeSave = function () {
-      // TODO: check ullage quantities
-      var isVarianceOk = $this.checkVarianceOnAllItems();
-      if(isVarianceOk) {
-        $scope.save();
-      }
     };
 
     $scope.shouldDisplayQuantityField = function (fieldName) {

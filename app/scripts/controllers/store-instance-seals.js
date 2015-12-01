@@ -69,11 +69,11 @@ angular.module('ts5App')
     };
 
     this.isInstanceReadOnly = function() {
-      if( this.storeInstanceIsInvalid() ){
-        return;
-      }
       if (this.isInboundDuringEndInstance() || this.isInboundDuringRedispatch()) {
         this.setAsEdit();
+        return;
+      }
+      if( this.storeInstanceIsInvalid() ){
         return;
       }
       $scope.readOnly = false;

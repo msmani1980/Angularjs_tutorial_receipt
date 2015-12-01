@@ -8,24 +8,41 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CommissionDataTableCtrl', function ($scope, dateUtility, commissionFactory, $location, GlobalMenuService, employeesService) {
+  .controller('CommissionDataTableCtrl', function ($scope, dateUtility, commissionFactory, $location, GlobalMenuService, employeesService, $q) {
     var companyId = GlobalMenuService.company.get();
-    $scope.viewName       = 'Commission Data Table';
-    $scope.search         = {};
+    $scope.viewName = 'Commission Data Table';
+    $scope.search = {};
     $scope.commissionData = [];
-    $scope.crewBaseTypes  = [];
+    $scope.crewBaseTypes = [];
+
+    function showLoadingModal(text) {
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
 
     function setDataList(dataFromAPI) {
       $scope.commissionData = dataFromAPI.response;
+      hideLoadingModal();
     }
 
     function getDataList(query) {
+      showLoadingModal('fetching data');
       commissionFactory.getCommissionPayableList(query).then(setDataList);
+    }
+
+    function getDefaultDataList() {
+      var payload = {
+        'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+      getDataList(payload);
     }
 
     $scope.clearSearchForm = function () {
       $scope.search = {};
-      getDataList({});
+      getDefaultDataList();
     };
 
     $scope.searchCommissionData = function () {
@@ -45,7 +62,7 @@ angular.module('ts5App')
     };
 
     function deleteCommissionDataSuccessHandler() {
-      $scope.searchCommissionData();
+      getDefaultDataList();
     }
 
     $scope.removeRecord = function (data) {
@@ -75,16 +92,21 @@ angular.module('ts5App')
       if (type === 'Percentage') {
         return '%';
       }
-      return 'GBP'; // TODO: get base currency
+      return $scope.baseCurrency;
     };
 
     $scope.redirectToDetailPage = function (id, state) {
       $location.path('commission-data/' + state + '/' + id).search();
     };
 
-    function getCrewBaseTypes () {
+    $scope.shouldShowCommissionPercent = function (record) {
+      var recordTypeName = getNameForId(record.commissionPayableTypeId, $scope.commissionTypes);
+      return (recordTypeName !== 'Retail item');
+    };
+
+    function getCrewBaseTypes() {
       var uniqueCrewBaseTypes = {};
-      employeesService.getEmployees(companyId).then(function(dataFromAPI) {
+      employeesService.getEmployees(companyId).then(function (dataFromAPI) {
         angular.forEach(dataFromAPI.companyEmployees, function (employee) {
           if (!(employee.baseStationId in uniqueCrewBaseTypes)) {
             uniqueCrewBaseTypes[employee.baseStationId] = {};
@@ -109,14 +131,33 @@ angular.module('ts5App')
       });
     }
 
+    function getCurrencyData(currencyId) {
+      commissionFactory.getCurrency(currencyId).then(function (response) {
+        if (response) {
+          $scope.baseCurrency = angular.copy(response.currencyCode);
+        }
+      });
+    }
+
+    function getCompanyData() {
+      commissionFactory.getCompanyData(companyId).then(function (response) {
+        if (response) {
+          getCurrencyData(angular.copy(response.baseCurrencyId));
+        }
+      });
+    }
+
     function init() {
-      getCrewBaseTypes();
-      getCommissionPayableTypes();
-      getDiscountTypes();
-      var getDataPayload = {
-        'startDate': dateUtility.formatDateForAPI(dateUtility.nowFormatted())
-      };
-      getDataList(getDataPayload);
+      showLoadingModal('initializing data dependencies');
+      var initPromises = [
+        getCommissionPayableTypes(),
+        getCrewBaseTypes(),
+        getDiscountTypes(),
+        getCompanyData()
+      ];
+      $q.all(initPromises).then(function () {
+        getDefaultDataList();
+      });
     }
 
     init();

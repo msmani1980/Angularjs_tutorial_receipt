@@ -13,7 +13,7 @@
     <store-instance-header></store-instance-header>
 
 
-    <div class="modal fade" id="varianceWarningModal" role="dialog">
+    <div class="modal" id="varianceWarningModal" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -167,12 +167,9 @@
           <td ng-if="shouldDisplayQuantityField('template')">
             <input type="text"
                    name="new-pick-list-template-{{$index}}"
-                   custom-validity
-                   custom-pattern="number"
                    class="form-control"
                    ng-model="item.menuQuantity"
-                   disabled="true"
-                   maxlength="5"/>
+                   disabled="true"/>
           </td>
           <td ng-if="shouldDisplayQuantityField('picked') || shouldDisplayQuantityField('dispatch')">
             <input type="text"

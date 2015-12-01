@@ -94,6 +94,7 @@ angular.module('ts5App')
         return;
       }
       $scope.cateringStationItems = items;
+      hideLoadingModal();
     }
 
     function diffItems(itemList) {
@@ -123,6 +124,44 @@ angular.module('ts5App')
       $scope.uiSelectReady = true;
     }
 
+    function diffAndCreatePayloadForNewItems() {
+      var newItems = [];
+      angular.forEach($scope.stockTake.items, function(item) {
+        angular.forEach($scope.cateringStationItems, function(cateringItem) {
+          if (item.masterItemId !== cateringItem.masterItemId) {
+            angular.forEach($scope.masterItemsList, function(responseItem) {
+              var payload = {
+                id: item.id,
+                masterItemId: item.masterItemId,
+                quantity: item.quantity,
+                stockTakeId: item.stockTakeId,
+                itemName: responseItem.itemName,
+                itemCode: responseItem.itemCode
+              };
+              newItems.push(payload);
+            });
+          }
+        });
+      });
+      return $filter('unique')(newItems, 'masterItemId');
+    }
+
+    function addSelectedItemToMasterList() {
+      var newItems = diffAndCreatePayloadForNewItems();
+      angular.forEach(newItems, function(newItem) {
+        $scope.cateringStationItems.push(newItem);
+      });
+      $scope.cateringStationItems = $filter('unique')($scope.cateringStationItems, 'masterItemId');
+      $scope.cateringStationItems = $filter('orderBy')($scope.cateringStationItems, 'itemName');
+    }
+
+    function setMasterItemsList(response) {
+      $scope.masterItemsList = angular.copy(response.masterItems);
+      if ($scope.stockTake.items && $scope.stockTake.items.length) {
+        addSelectedItemToMasterList();
+      }
+    }
+
     function getItemsListByCompanyId() {
       var companyId = stockTakeFactory.getCompanyId();
       if (angular.isNumber(companyId)) {
@@ -132,13 +171,16 @@ angular.module('ts5App')
         stockTakeFactory.getItemsMasterList(payload).then(function(response) {
           if (angular.isObject(response)) {
             filterAvailableItems(response);
+            if (response.masterItems) {
+              setMasterItemsList(response);
+            }
+            hideLoadingModal();
           }
         });
       }
     }
 
     function setCateringStationItemsFromResponse(response) {
-      hideLoadingModal();
       var items = $filter('unique')(response.response, 'masterItemId');
       items = $filter('orderBy')(items, 'itemName');
       setCateringStationItems(items);
@@ -208,7 +250,7 @@ angular.module('ts5App')
     }
 
     function canReview() {
-      if ($scope.state === 'create' && !checkItemQuantities() && !watchForAddItems()) {
+      if (!checkItemQuantities() && !watchForAddItems()) {
         return false;
       }
       if (!$scope.displayError && $scope.stockTake.isSubmitted) {
@@ -277,12 +319,8 @@ angular.module('ts5App')
     function saveStockTakeResolution(response) {
       showMessage(_formSaveSuccessText, 'success');
       hideLoadingModal();
-      if ($scope.stockTake.isSubmitted) {
+      if (angular.isDefined(response.id)) {
         $location.path('/stock-take-report');
-        return;
-      }
-      if ($routeParams.state === 'create' && angular.isDefined(response.id)) {
-        $location.path(_path + 'edit/' + response.id);
         return;
       }
       init();
@@ -327,9 +365,9 @@ angular.module('ts5App')
 
     function setItemQuantitiesFromStockTake() {
       $scope.itemQuantities = [];
-      for (var i in $scope.stockTake.items) {
-        $scope.itemQuantities[$scope.stockTake.items[i].masterItemId] = $scope.stockTake.items[i].quantity;
-      }
+      lodash.forIn($scope.stockTake.items, function(item) {
+        $scope.itemQuantities[item.masterItemId] = item.quantity;
+      });
     }
 
     // Scope functions
@@ -435,8 +473,9 @@ angular.module('ts5App')
       $scope.viewName = 'Create Stock Take';
       displayLoadingModal();
       _initPromises.push(
-        getCatererStationList(),
-        getItemsListByCompanyId()
+        getItemsListByCompanyId(),
+        getCatererStationList()
+
       );
       $scope.$watch('stockTake.catererStationId', catererStationIdWatcher);
       $scope.$watch('itemQuantities', itemQuantitiesWatcher, true);
@@ -453,9 +492,9 @@ angular.module('ts5App')
       $scope.viewName = 'Edit Stock Take';
       displayLoadingModal();
       _initPromises.push(
+        getItemsListByCompanyId(),
         getCatererStationList(),
-        getStockTake(),
-        getItemsListByCompanyId()
+        getStockTake()
       );
       $scope.$watch('stockTake.catererStationId', catererStationIdWatcher);
       $scope.$watch('itemQuantities', itemQuantitiesWatcher, true);
@@ -477,9 +516,10 @@ angular.module('ts5App')
       $scope.viewName = 'View Stock Take';
       displayLoadingModal();
       _initPromises.push(
+        getItemsListByCompanyId(),
         getCatererStationList(),
-        getStockTake(),
-        getItemsListByCompanyId()
+        getStockTake()
+
       );
       $scope.$watch('stockTake.catererStationId', catererStationIdWatcher);
       resolveInitPromises();

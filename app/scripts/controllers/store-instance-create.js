@@ -10,7 +10,7 @@
 angular.module('ts5App').controller('StoreInstanceCreateCtrl',
   function($scope, $routeParams, $q, storeInstanceFactory, sealTypesService, storeInstanceAssignSealsFactory, ngToast,
     dateUtility, GlobalMenuService, storeInstanceWizardConfig, $location, schedulesService,
-    menuCatererStationsService, lodash, $route) {
+    menuCatererStationsService, lodash, $route, $filter) {
 
     $scope.cateringStationList = [];
     $scope.menuMasterList = [];
@@ -69,21 +69,30 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       delete $scope.formData.scheduleNumber;
     };
 
-    this.formatCurrentStoreForStoreList = function() {
+    this.formatCurrentStoreForStoreList = function(store) {
+      var currentStore = {
+        companyId: store.companyId,
+        endDate: null,
+        id: $scope.storeDetails.storeId,
+        readyToUse: true,
+        startDate: $scope.storeDetails.scheduleDate,
+        storeNumber: $scope.storeDetails.storeNumber
+      };
+      return currentStore;
+    };
+
+    this.addCurrentStoreToStoreList = function() {
       if ($scope.storesList && $scope.storeDetails) {
+        var currentStoreArray = [];
+        var filteredStore;
         angular.forEach($scope.storesList, function(store) {
           if (store.id !== $scope.storeDetails.storeId) {
-            var currentStore = {
-              companyId: companyId,
-              endDate: null,
-              id: $scope.storeDetails.storeId,
-              readyToUse: true,
-              startDate: $scope.storeDetails.scheduleDate,
-              storeNumber: $scope.storeDetails.storeNumber
-            };
-            $scope.storesList.push(currentStore);
+            var currentStore = $this.formatCurrentStoreForStoreList(store);
+            currentStoreArray.push(currentStore);
+            filteredStore = $filter('unique')(currentStoreArray, 'storeNumber');
           }
         });
+        $scope.storesList.push(filteredStore[0]);
       }
     };
 
@@ -96,7 +105,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.getPrevStoreDetails();
       }
       if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
-        $this.formatCurrentStoreForStoreList();
+        $this.addCurrentStoreToStoreList();
       }
     };
 
@@ -255,6 +264,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.formatEndInstancePayload = function(payload) {
       payload.menus = this.formatMenus(payload.menus);
       payload.inboundStationId = angular.copy(payload.cateringStationId);
+      payload.cateringStationId = angular.copy(payload.dispatchedCateringStationId);
       delete payload.dispatchedCateringStationId;
     };
 
@@ -679,10 +689,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.makeRedispatchPromises = function() {
       var prevInstanceStatus = this.parsePrevInstanceStatus();
       var payload = this.formatPayload('end-instance');
-      return [
-        storeInstanceFactory.updateStoreInstance($routeParams.storeId, payload),
-        storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, prevInstanceStatus)
-      ];
+      return {
+        updateInstancePromises: [{ f: storeInstanceFactory.updateStoreInstance, obj: storeInstanceFactory, args: [$routeParams.storeId, payload] }],
+        updateInstanceStatusPromises: [{ f: storeInstanceFactory.updateStoreInstanceStatus, obj: storeInstanceFactory,
+          args : [$routeParams.storeId, prevInstanceStatus]
+        }]
+      };
     };
 
     this.checkForOnFloorInstance = function() {
@@ -817,9 +829,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return;
       }
       var promises = $this.makeCreatePromises();
-      promises.concat($this.makeRedispatchPromises());
-      $q.all(promises).then(
-        (saveAndExit ? this.exitOnSave : this.createStoreInstanceSuccessHandler),
+      var redispatchPromises = $this.makeRedispatchPromises();
+      $q.all($this.startPromise(redispatchPromises.updateInstancePromises)).then(function() {
+          $this.invokeStoreInstanceStatusPromises(promises.concat($this.startPromise(redispatchPromises.updateInstanceStatusPromises)), saveAndExit);
+        },
         $this.createStoreInstanceErrorHandler
       );
     };
