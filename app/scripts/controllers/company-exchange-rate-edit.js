@@ -268,6 +268,8 @@ angular.module('ts5App')
         }, function () {
           $this.hideLoadingModal();
         });
+      } else {
+        $this.hideLoadingModal();
       }
     };
 
