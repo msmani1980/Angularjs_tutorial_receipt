@@ -253,9 +253,11 @@ angular.module('ts5App')
       });
     };
 
-    this.deleteCompanyExchangeRate = function(exchangeRateId) {
-      $this.showLoadingModal('Loading Data');
+    this.deleteExchangeRateSuccessHandler = function(){
+      $this.hideLoadingModal();
+    };
 
+    this.deleteCompanyExchangeRate = function(exchangeRateId) {
       var payload = {
         companyId: $this.companyId,
         exchangeRateType: 1,
@@ -263,11 +265,8 @@ angular.module('ts5App')
       };
 
       if(exchangeRateId) {
-        currencyFactory.deleteCompanyExchangeRate(payload).then(function () {
-          $this.hideLoadingModal();
-        }, function () {
-          $this.hideLoadingModal();
-        });
+        $this.showLoadingModal('Loading Data');
+        currencyFactory.deleteCompanyExchangeRate(payload).then($this.deleteExchangeRateSuccessHandler);
       }
     };
 
