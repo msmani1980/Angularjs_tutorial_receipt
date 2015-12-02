@@ -194,6 +194,7 @@ angular.module('ts5App')
       if ($scope.isExchangeRateReadOnly(exchangeRate)) {
         return true;
       }
+      return false;
     };
 
     $scope.isExchangeRateReadOnly = function(exchangeRate) {
@@ -207,10 +208,7 @@ angular.module('ts5App')
       if (!exchangeRate.endDate || $scope.isExchangeRateNewOne(exchangeRate) || exchangeRate.isCloned) {
         return false;
       }
-      if (dateUtility.isAfterToday(exchangeRate.endDate)) {
-        return false;
-      }
-      return true;
+      return !(dateUtility.isAfterToday(exchangeRate.endDate) || dateUtility.isToday(exchangeRate.endDate));
     };
 
     $scope.isExchangeRateNewOne = function(exchangeRate) {
