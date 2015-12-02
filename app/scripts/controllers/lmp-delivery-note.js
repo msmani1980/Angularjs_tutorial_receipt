@@ -85,7 +85,7 @@ angular.module('ts5App')
         return false;
       }
       var itemsSet = $scope.deliveryNote.items.filter(function(retailItem) {
-        return retailItem.deliveredQuantity;
+        return retailItem.deliveredQuantity >= 0;
       });
       if (!itemsSet.length) {
         return false;
@@ -126,7 +126,7 @@ angular.module('ts5App')
 
     function removeNullDeliveredItems() {
       $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item) {
-        return item.deliveredQuantity;
+        return item.deliveredQuantity >= 0;
       });
     }
 
