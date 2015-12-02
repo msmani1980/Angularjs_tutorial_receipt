@@ -59,10 +59,8 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
   describe('init', function () {
     it('should call get LMP stock data', function () {
-      expect(stationsService.getGlobalStationList).toHaveBeenCalled();
       expect(reconciliationFactory.getStoreStatusList).toHaveBeenCalled();
       scope.$digest();
-      expect(scope.reconciliationList).toBeDefined();
     });
 
     it('should init displayColumns with receivedStation, storeInstanceId, updatedDate, updatedBy columns to be hidden', function () {
@@ -211,13 +209,13 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
   it('fixSearchDropdowns should reset dropdown value if empty value is selected', function () {
     var search = {
-      departureStationCode: '',
+      cateringStationId: '',
       arrivalStationCode: '',
       statusId: ''
     };
 
     var expected = {
-      departureStationCode: null,
+      cateringStationId: null,
       arrivalStationCode: null,
       statusId: null
     };

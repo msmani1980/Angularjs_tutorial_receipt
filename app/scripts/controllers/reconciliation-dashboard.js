@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReconciliationDashboardCtrl', function ($q, $scope, dateUtility, stationsService, reconciliationFactory, payloadUtility, $location, storeInstanceFactory) {
+  .controller('ReconciliationDashboardCtrl', function ($q, $scope, dateUtility, stationsService, reconciliationFactory, payloadUtility, $location, storeInstanceFactory, lodash) {
 
     var $this = this;
 
@@ -67,12 +67,24 @@ angular.module('ts5App')
       return ($scope.allowedStoreStatusMap[storeStatusId]) ? $scope.allowedStoreStatusMap[storeStatusId].statusName : null;
     };
 
+    this.getValueByIdInArray = function (id, valueKey, array) {
+      var matchedObject = lodash.findWhere(array, {
+        id: id
+      });
+      if (matchedObject) {
+        return matchedObject[valueKey];
+      }
+      return '';
+    };
+
     this.normalizeReconciliationDataList = function (dataFromAPI) {
       if (!dataFromAPI) {
         return [];
       }
 
       return dataFromAPI.map(function (item) {
+        item.dispatchStationCode = $this.getValueByIdInArray(item.cateringStationId, 'code', $scope.stationList);
+        item.inboundStationCode = $this.getValueByIdInArray(item.inboundStationId, 'code', $scope.stationList);
         item.scheduleDate = dateUtility.formatDateForApp(item.scheduleDate);
         item.updatedOn = (item.updatedOn) ? dateUtility.formatTimestampForApp(item.updatedOn) : null;
         item.statusName = $this.getStoreStatusNameById(item.statusId);
@@ -178,31 +190,30 @@ angular.module('ts5App')
       });
     };
 
-    this.getStationList = function () {
-      stationsService.getGlobalStationList().then(function (dataFromAPI) {
-        $scope.stationList = dataFromAPI.response;
-      });
-    };
-
     this.filterAvailableStoreStatus = function (item) {
       return $scope.allowedStoreStatusList.indexOf(item.statusName) > -1;
     };
 
-    this.getStoreStatusList = function () {
-      $this.showLoadingModal('Loading Data');
-      reconciliationFactory.getStoreStatusList().then(function (dataFromAPI) {
-        dataFromAPI.filter($this.filterAvailableStoreStatus)
-                   .forEach(function (item) {
-                      $scope.allowedStoreStatusMap[item.id] = item;
-                   });
+    this.storeStatusListSuccess = function (dataFromAPI) {
+      dataFromAPI.filter($this.filterAvailableStoreStatus)
+        .forEach(function (item) {
+          $scope.allowedStoreStatusMap[item.id] = item;
+        });
 
+      stationsService.getGlobalStationList().then(function (dataFromAPI) {
+        $scope.stationList = dataFromAPI.response;
         $this.getReconciliationDataList();
       });
     };
 
+    this.getStoreStatusList = function () {
+      $this.showLoadingModal('Loading Data');
+      reconciliationFactory.getStoreStatusList().then($this.storeStatusListSuccess);
+    };
+
     this.fixSearchDropdowns = function (search) {
-      if (search.departureStationCode === '') {
-        search.departureStationCode = null;
+      if (search.cateringStationId === '') {
+        search.cateringStationId = null;
       }
       if (search.arrivalStationCode === '') {
         search.arrivalStationCode = null;
@@ -337,7 +348,6 @@ angular.module('ts5App')
         endDate: dateUtility.dateNumDaysBeforeTodayFormatted(2)
       };
 
-      $this.getStationList();
       $this.getStoreStatusList();
     };
 

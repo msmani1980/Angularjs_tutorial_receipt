@@ -68,9 +68,9 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Dispatched Station</label>
-                <select class="form-control" ng-model="search.departureStationCode">
+                <select class="form-control" ng-model="search.cateringStationId">
                   <option value="">Select station</option>
-                  <option ng-repeat="station in stationList | orderBy:'code'" value="{{station.code}}">
+                  <option ng-repeat="station in stationList | orderBy:'code'" value="{{station.id}}">
                     {{station.code}} - {{station.name}}
                   </option>
                 </select>
@@ -203,7 +203,7 @@
         </td>
         <td> {{ instance.scheduleDate }}</td>
         <td> {{ instance.storeNumber }}</td>
-        <td> {{ instance.departureStationCode }}</td>
+        <td> {{ instance.dispatchStationCode }}</td>
         <td ng-show="displayColumns.receivedStation"> {{ instance.arrivalStationCode }}</td>
         <td> {{ instance.eposData }}</td>
         <td> {{ instance.postTripData }}</td>
