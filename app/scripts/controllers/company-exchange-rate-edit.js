@@ -303,7 +303,8 @@ angular.module('ts5App')
 
       var newExchangeRates = angular.copy($scope.companyExchangeRates);
       newExchangeRates.push(newExchangeRate);
-      $scope.companyExchangeRates = $filter('orderBy')(newExchangeRates, 'acceptedCurrencyCode + startDate');
+      $scope.companyExchangeRates = $filter('orderBy')(newExchangeRates,
+        'acceptedCurrencyCode + exchangeRate + startDate');
     };
 
     this.init = function() {
