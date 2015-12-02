@@ -8,7 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationListCtrl', function ($scope,dateUtility,ngToast) {
+  .controller('StationListCtrl', function ($scope,dateUtility,ngToast,$q) {
+
+    var $this = this;
 
     var stationListJSON = {
       'response': [
@@ -77,50 +79,6 @@ angular.module('ts5App')
           'utcDstOffset': '+02:00',
           'utcOffset': '+01:00',
           'companyStationRelationships': []
-        },
-        {
-          'id': 117,
-          'cityId': 14,
-          'cityName': 'Alicante',
-          'companyId': 403,
-          'countryId': 75,
-          'countryName': 'Spain',
-          'description': 'Alicante',
-          'isCaterer': false,
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-02',
-          'regionId': 9,
-          'regionName': 'All',
-          'stationCode': 'ALC',
-          'stationId': 19,
-          'stationName': 'Alicante',
-          'timezone': 'Europe/Madrid',
-          'timezoneId': '86',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00',
-          'companyStationRelationships': []
-        },
-        {
-          'id': 118,
-          'cityId': 15,
-          'cityName': 'Barcelona',
-          'companyId': 403,
-          'countryId': 75,
-          'countryName': 'Spain',
-          'description': 'Barcelona',
-          'isCaterer': false,
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-02',
-          'regionId': 9,
-          'regionName': 'All',
-          'stationCode': 'BCN',
-          'stationId': 20,
-          'stationName': 'Barcelona',
-          'timezone': 'Europe/Madrid',
-          'timezoneId': '86',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00',
-          'companyStationRelationships': []
         }
       ],
       'meta': {
@@ -128,6 +86,193 @@ angular.module('ts5App')
         'limit': 5,
         'start': 0
       }
+    };
+
+    var countryListJSON = {
+      'meta': {
+        'count': 249,
+        'limit': 249,
+        'start': 0
+      },
+      'countries': [
+        {
+          'id': 66,
+          'countryName': 'Denmark'
+        },
+        {
+          'id': 10,
+          'countryName': 'Afghanistan'
+        },
+        {
+          'id': 22,
+          'countryName': 'Åland Islands'
+        },
+        {
+          'id': 13,
+          'countryName': 'Albania'
+        },
+        {
+          'id': 69,
+          'countryName': 'Algeria'
+        },
+        {
+          'id': 18,
+          'countryName': 'American Samoa'
+        },
+        {
+          'id': 8,
+          'countryName': 'Andorra'
+        }
+      ]
+    };
+
+    var cityListJSON = {
+      'meta': {
+        'count': 270,
+        'limit': 270,
+        'start': 0
+      },
+      'cities': [
+        {
+          'cityId': 11,
+          'cityName': 'Albany',
+          'countryId': 240,
+          'countryName': 'United States',
+          'regionId': 2,
+          'regionName': 'New York',
+          'timeZoneId': 440,
+          'timeZone': 'America/New_York',
+          'utcDstOffset': '-04:00',
+          'utcOffset': '-05:00'
+        },
+        {
+          'cityId': 14,
+          'cityName': 'Alicante',
+          'countryId': 75,
+          'countryName': 'Spain',
+          'regionId': 9,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 15,
+          'cityName': 'Barcelona',
+          'countryId': 75,
+          'countryName': 'Spain',
+          'regionId': 9,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 21,
+          'cityName': 'Basel',
+          'countryId': 50,
+          'countryName': 'Switzerland',
+          'regionId': 7,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 24,
+          'cityName': 'Bern',
+          'countryId': 50,
+          'countryName': 'Switzerland',
+          'regionId': 7,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 5,
+          'cityName': 'Chicago',
+          'countryId': 240,
+          'countryName': 'United States',
+          'regionId': 4,
+          'regionName': 'Illinois',
+          'timeZoneId': 459,
+          'timeZone': 'America/Chicago',
+          'utcDstOffset': '-05:00',
+          'utcOffset': '-06:00'
+        },
+        {
+          'cityId': 18,
+          'cityName': 'Copenhagen',
+          'countryId': 66,
+          'countryName': 'Denmark',
+          'regionId': 8,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 13,
+          'cityName': 'Detroit',
+          'countryId': 240,
+          'countryName': 'United States',
+          'regionId': 5,
+          'regionName': 'Michigan',
+          'timeZoneId': 440,
+          'timeZone': 'America/New_York',
+          'utcDstOffset': '-04:00',
+          'utcOffset': '-05:00'
+        },
+        {
+          'cityId': 26,
+          'cityName': 'Gatwick',
+          'countryId': 84,
+          'countryName': 'United Kingdom',
+          'regionId': 10,
+          'regionName': 'UK-REGION',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 22,
+          'cityName': 'Geneva',
+          'countryId': 50,
+          'countryName': 'Switzerland',
+          'regionId': 7,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        }
+      ]
+    };
+
+
+    this.setCityList = function(dataFromAPI) {
+      $scope.cityList = angular.copy(dataFromAPI.cities);
+    };
+
+    this.getCityList = function() {
+      // add factory API call here
+      this.setCityList(cityListJSON);
+    };
+
+    this.setCountryList = function(dataFromAPI) {
+      $scope.countryList = angular.copy(dataFromAPI.countries);
+    };
+
+    this.getCountryList = function() {
+      // add factory API call here
+      this.setCountryList(countryListJSON);
     };
 
     this.setStationList = function(dataFromAPI) {
@@ -200,23 +345,82 @@ angular.module('ts5App')
       this.showSuccessMessage(payload.length + ' stations have been updated!');
     };
 
+    this.updateSelectedStartDates = function(current) {
+      if(angular.isDefined(current) && current.startDate) {
+        angular.forEach($scope.selectedStations, function(selected,stationId){
+          if(selected){
+            var station = $scope.formData.stations.filter(function(station){
+              return stationId === station.id;
+            })[0];
+            if(station){
+              station.startDate = current.startDate;
+            }
+          }
+        });
+      }
+    };
+
+    this.updateSelectedEndDates = function(current) {
+      if(angular.isDefined(current) && current.endDate) {
+        angular.forEach($scope.selectedStations, function(selected,stationId){
+          if(selected){
+            var station = $scope.formData.stations.filter(function(station){
+              return stationId === station.id;
+            })[0];
+            if(station){
+              station.endDate = current.endDate;
+            }
+          }
+        });
+      }
+    };
+
+    this.selectAllStations = function() {
+      angular.forEach($scope.stationList, function(station) {
+        $scope.selectedStations[station.id] = true;
+      });
+    };
+
+    this.deselectAllStations = function() {
+      angular.forEach($scope.stationList, function(station) {
+        $scope.selectedStations[station.id] = false;
+      });
+    };
+
+    this.filterCityByCountry = function(city) {
+      if(angular.isUndefined($scope.search) || angular.isUndefined($scope.search.countryId)) {
+        return true;
+      }
+      return parseInt(city.countryId) === parseInt($scope.search.countryId);
+    };
+
+    this.makeInitPromises = function() {
+      return [
+        this.getCountryList(),
+        this.getCityList()
+      ];
+    };
+
+    this.initSuccessHandler = function() {
+      // TODO: hide loader
+    };
+
     this.init = function() {
-      // TODO: Get countries
-      // TODO: Get cities
-      // TODO: Get regions
-      this.getStationList();
-      this.setupFormDataObject();
+      // TODO: Add waiting
+      var promises = this.makeInitPromises();
+      $q.all(promises).then($this.initSuccessHandler);
     };
 
     this.init();
-    var $this = this;
 
     /* Scope */
 
     $scope.selectedStations = [];
 
     $scope.searchRecords = function() {
-      $scope.searched = true;
+      // TODO: Add waiting
+      $this.getStationList();
+      $this.setupFormDataObject();
     };
 
     $scope.canSave = function() {
@@ -228,15 +432,20 @@ angular.module('ts5App')
     };
 
     $scope.selectAllStations = function() {
-      angular.forEach($scope.stationList, function(station) {
-        $scope.selectedStations[station.id] = true;
-      });
+      return $this.selectAllStations();
     };
 
     $scope.deselectAllStations = function() {
-      angular.forEach($scope.stationList, function(station) {
-        $scope.selectedStations[station.id] = false;
-      });
+      return $this.deselectAllStations();
     };
+
+    $scope.filterCityByCountry = function(city) {
+      return $this.filterCityByCountry(city);
+    };
+
+    $scope.$watch('dateRange', function(current) {
+      $this.updateSelectedStartDates(current);
+      $this.updateSelectedEndDates(current);
+    },true);
 
   });
