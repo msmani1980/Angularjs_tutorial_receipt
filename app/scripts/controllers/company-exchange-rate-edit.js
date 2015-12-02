@@ -71,11 +71,21 @@ angular.module('ts5App')
         .join(', ');
     };
 
+    this.formatPayloadForSearch = function () {
+      var searchPayload = angular.copy($scope.search);
+      searchPayload = payloadUtility.serializeDates(searchPayload);
+      if(searchPayload.acceptedCurrencies) {
+        delete searchPayload.acceptedCurrencies;
+      }
+      return searchPayload;
+    };
+
     this.normalizeCompanyExchangeRatesList = function(companyExchangeRatesFromAPI) {
       var companyExchangeRates = payloadUtility.deserializeDates(companyExchangeRatesFromAPI);
       var companyCurrencies = {};
 
-      currencyFactory.getDetailedCompanyCurrencies(payloadUtility.serializeDates($scope.search)).then(function(
+      var searchPayload = $this.formatPayloadForSearch();
+      currencyFactory.getDetailedCompanyCurrencies(searchPayload).then(function(
         companyCurrenciesFromAPI) {
         // Create company currencies map
         angular.forEach(companyCurrenciesFromAPI.companyCurrencies, function(companyCurrency) {
@@ -218,7 +228,9 @@ angular.module('ts5App')
     $scope.searchCompanyExchangeRates = function() {
       $this.showLoadingModal('Loading Data');
       $scope.companyExchangeRates = [];
-      currencyFactory.getCompanyExchangeRates(payloadUtility.serializeDates($scope.search)).then(function(
+      var searchPayload = $this.formatPayloadForSearch();
+      console.log(searchPayload);
+      currencyFactory.getCompanyExchangeRates(searchPayload).then(function(
         companyExchangeRatesFromAPI) {
         $this.normalizeCompanyExchangeRatesList(companyExchangeRatesFromAPI.response);
       });
