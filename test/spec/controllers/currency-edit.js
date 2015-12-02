@@ -23,7 +23,8 @@ describe('Controller: CurrencyEditCtrl', function () {
     getCompanyGlobalCurrenciesDeferred,
     getDetailedCompanyCurrenciesDeferred,
     getCompanyDeferred,
-    createCompanyDeffered;
+    createCompanyDeffered,
+    deleteCompanyDeffered;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($q, $httpBackend, $controller, $rootScope, _dateUtility_, _currencyFactory_, _servedCompany_, _servedCurrencies_, _servedCurrency_, _servedCompanyCurrencyGlobals_) {
@@ -44,11 +45,13 @@ describe('Controller: CurrencyEditCtrl', function () {
     getCompanyDeferred.resolve(companyJSON);
     createCompanyDeffered = $q.defer();
     createCompanyDeffered.resolve({id:1});
+    deleteCompanyDeffered = $q.defer();
+    deleteCompanyDeffered.resolve({});
 
     spyOn(currencyFactory, 'getCompanyGlobalCurrencies').and.returnValue(getCompanyGlobalCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getDetailedCompanyCurrencies').and.returnValue(getDetailedCompanyCurrenciesDeferred.promise);
     spyOn(currencyFactory, 'getCompany').and.returnValue(getCompanyDeferred.promise);
-    spyOn(currencyFactory, 'deleteDetailedCompanyCurrency').and.returnValue();
+    spyOn(currencyFactory, 'deleteDetailedCompanyCurrency').and.returnValue(deleteCompanyDeffered.promise);
     spyOn(currencyFactory, 'createDetailedCompanyCurrency').and.callFake(function () { return $.Deferred().resolve(createCompanyDeffered);});
     spyOn(currencyFactory, 'updateDetailedCompanyCurrency').and.callFake(function () { return $.Deferred().resolve(currencyJSON);});
 
@@ -92,7 +95,10 @@ describe('Controller: CurrencyEditCtrl', function () {
   });
 
   it('should delete detailed currency be called', function () {
-    CurrencyEditCtrl.deleteDetailedCompanyCurrency(1);
+    scope.currencyToDelete = {id: 1};
+    scope.companyCurrencyList = [{id: 1}];
+
+    scope.deleteDetailedCompanyCurrency();
     expect(currencyFactory.deleteDetailedCompanyCurrency).toHaveBeenCalled();
   });
 
