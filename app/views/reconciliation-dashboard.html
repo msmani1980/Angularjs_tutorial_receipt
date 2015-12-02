@@ -105,16 +105,26 @@
           </div>
           <div class="row">
 
-            <div class="col-xs-12 col-sm-6">
-              <date-picker
-                class="form-group"
-                element-class="col-xs-6"
-                start-date-model="search.startDate"
-                end-date-model="search.endDate"
-                label-from="Schedule Date From"
-                label-to="Schedule Date To"
-                is-search-field="true">
-              </date-picker>
+            <div class="col-xs-12 col-sm-3">
+              <date-picker-field
+                form="reconciliationSearchForm"
+                ng-model="search.startDate"
+                name="startDate"
+                label="Schedule Date From"
+                is-search-field="true"
+                required="false">
+              </date-picker-field>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <date-picker-field
+                form="reconciliationSearchForm"
+                ng-model="search.endDate"
+                name="endDate"
+                label="Schedule Date To"
+                is-search-field="true"
+                required="false">
+              </date-picker-field>
             </div>
 
             <div class="col-xs-12 col-sm-3">
