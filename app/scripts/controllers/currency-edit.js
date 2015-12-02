@@ -189,6 +189,12 @@ angular.module('ts5App')
       }).indexOf(currencyId);
     };
 
+    this.errorHandler = function(dataFromAPI) {
+      angular.element('#loading').modal('hide');
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
     $scope.deleteDetailedCompanyCurrency = function () {
       angular.element('.delete-warning-modal').modal('hide');
       $this.showLoadingModal('Loading Data');
@@ -199,9 +205,7 @@ angular.module('ts5App')
         currencyFactory.deleteDetailedCompanyCurrency($scope.currencyToDelete.id).then(function () {
           $scope.companyCurrencyList.splice(index, 1);
           $this.hideLoadingModal();
-        }, function () {
-          $this.hideLoadingModal();
-        });
+        }, $this.errorHandler);
       }
     };
 
