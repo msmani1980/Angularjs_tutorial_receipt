@@ -4,7 +4,7 @@
 describe('Controller: StockDashboardCtrl', function() {
 
   // load the controller's module
-  beforeEach(module('ts5App','config'));
+  beforeEach(module('ts5App', 'config'));
   beforeEach(module(
     'served/stock-management-dashboard.json',
     'served/catering-stations.json',
@@ -63,7 +63,8 @@ describe('Controller: StockDashboardCtrl', function() {
     getCompanyReasonCodesDeferred = $q.defer();
     getCompanyReasonCodesDeferred.resolve(companyReasonCodesJSON);
 
-    spyOn(stockManagementStationItemsService, 'getStockManagementStationItems').and.returnValue(getStockManagementStationItemsDeferred.promise);
+    spyOn(stockManagementStationItemsService, 'getStockManagementStationItems').and.returnValue(
+      getStockManagementStationItemsDeferred.promise);
     spyOn(catererStationService, 'getCatererStationList').and.returnValue(getCatererStationListDeferred.promise);
     spyOn(companyReasonCodesService, 'getAll').and.returnValue(getCompanyReasonCodesDeferred.promise);
     spyOn(identityAccessFactory, 'getSessionObject').and.returnValue({
@@ -95,7 +96,7 @@ describe('Controller: StockDashboardCtrl', function() {
       it('should return a list of dashboard items', function() {
         scope.selectedCateringStation = {
           id: 1,
-          name:'fakeCateringStation'
+          name: 'fakeCateringStation'
         };
         scope.$digest();
         expect(stockManagementStationItemsService.getStockManagementStationItems).toHaveBeenCalled();
@@ -104,7 +105,7 @@ describe('Controller: StockDashboardCtrl', function() {
       it('should attach the stock dashboard list to the scope', function() {
         scope.selectedCateringStation = {
           id: 1,
-          name:'fakeCateringStation'
+          name: 'fakeCateringStation'
         };
         scope.$digest();
         expect(scope.stockDashboardItemsList).toBeDefined();
@@ -201,8 +202,8 @@ describe('Controller: StockDashboardCtrl', function() {
         var stockItemTrue = {
           openingQuantity: 5,
           receivedQuantity: 5,
-          dispatchedQuantity: 0,
-          currentCountQuantity: 11
+          dispatchQuantity: 0,
+          currentQuantity: 11
         };
         expect(scope.isCurrentCountMismatched(stockItemTrue)).toBeTruthy();
       });
@@ -211,8 +212,8 @@ describe('Controller: StockDashboardCtrl', function() {
         var stockItemFalse = {
           openingQuantity: 5,
           receivedQuantity: 5,
-          dispatchedQuantity: 0,
-          currentCountQuantity: 10
+          dispatchQuantity: 0,
+          currentQuantity: 10
         };
         expect(scope.isCurrentCountMismatched(stockItemFalse)).toBeFalsy();
       });
@@ -270,11 +271,11 @@ describe('Controller: StockDashboardCtrl', function() {
 
     describe('when a user selects a station', function() {
 
-      it('should have an empty stock take list before the scope is digested', function () {
+      it('should have an empty stock take list before the scope is digested', function() {
         expect(scope.stockTakeList).toEqual([]);
       });
 
-      describe('The stockTakeList array', function () {
+      describe('The stockTakeList array', function() {
 
         beforeEach(function() {
           spyOn(StockDashboardCtrl, 'getStockTakeList').and.callThrough();
@@ -283,19 +284,19 @@ describe('Controller: StockDashboardCtrl', function() {
           scope.$digest();
         });
 
-        it('should call the getStockTakeList method', function () {
+        it('should call the getStockTakeList method', function() {
           expect(StockDashboardCtrl.getStockTakeList).toHaveBeenCalled();
         });
 
-        it('should call the getStockTakeListSuccessHandler method', function () {
+        it('should call the getStockTakeListSuccessHandler method', function() {
           expect(StockDashboardCtrl.getStockTakeListSuccessHandler).toHaveBeenCalled();
         });
 
-        it('should have (1) or more stations in the stockTakeList', function () {
+        it('should have (1) or more stations in the stockTakeList', function() {
           expect(scope.stockTakeList.length).toBeGreaterThan(0);
         });
 
-        it('should be match the stock take list from the delivertNotes API Respone',function () {
+        it('should be match the stock take list from the delivertNotes API Respone', function() {
           expect(scope.stockTakeList).toEqual(stockTakeListJOSN.response);
         });
 
@@ -305,19 +306,19 @@ describe('Controller: StockDashboardCtrl', function() {
 
   });
 
-  describe('canCreateStockTake functionality', function () {
+  describe('canCreateStockTake functionality', function() {
 
-    it('should return false by default', function(){
+    it('should return false by default', function() {
       expect(scope.canCreateStockTake()).toBeFalsy();
     });
 
-    it('should return false even if the catering station is selected but there is an open stock take', function(){
+    it('should return false even if the catering station is selected but there is an open stock take', function() {
       scope.selectedCateringStation = cateringStationsJSON.response[0];
       scope.$digest();
       expect(scope.canCreateStockTake()).toBeFalsy();
     });
 
-    it('should return true if the catering station is selected and there is not open stock take', function(){
+    it('should return true if the catering station is selected and there is not open stock take', function() {
       scope.selectedCateringStation = cateringStationsJSON.response[0];
       scope.$digest();
       scope.stockTakeList[0].isSubmitted = true;
@@ -325,7 +326,7 @@ describe('Controller: StockDashboardCtrl', function() {
       expect(scope.canCreateStockTake()).toBeTruthy();
     });
 
-    it('should return true if no stock takes were returned', function(){
+    it('should return true if no stock takes were returned', function() {
       scope.selectedCateringStation = cateringStationsJSON.response[0];
       scope.$digest();
       scope.stockTakeList = [];
