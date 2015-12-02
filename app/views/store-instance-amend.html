@@ -158,12 +158,22 @@
 
         <div class="row">
           <div class="col-xs-8">
-            <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
-              <ui-select-match placeholder="Filter by Cash Bag Number...">{{ $item.cashBag }}</ui-select-match>
-              <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
-                {{ cashBag.cashBag }}
-              </ui-select-choices>
-            </ui-select>
+            <div class="form-group">
+              <p class="input-group">
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default btn-sm" disabled="true">
+                    <i class="fa fa-filter"></i> Filter
+                  </button>
+                </span>
+                <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
+                  <ui-select-match placeholder="Filter by Cash Bag Number...">{{ $item.cashBag }}</ui-select-match>
+                  <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
+                    {{ cashBag.cashBag }}
+                  </ui-select-choices>
+                </ui-select>
+              </p>
+            </div>
+
           </div>
           <div class="col-xs-4 text-right">
             <button class="btn btn-default" ng-click="initEditTable(false)"><span
@@ -178,9 +188,9 @@
         </div>
         <br>
         <!--<div class="row">-->
-          <!--<div class="col-xs-12">-->
-            <!--<p><i><span class="fa fa-asterisk"></span> Indicates a manually added item</i></p>-->
-            <!--</div>-->
+        <!--<div class="col-xs-12">-->
+        <!--<p><i><span class="fa fa-asterisk"></span> Indicates a manually added item</i></p>-->
+        <!--</div>-->
         <!--</div>-->
         <br>
 
@@ -194,7 +204,8 @@
               </accordion-heading>
               <br>
 
-              <div class="alert alert-success" role="alert"><span class="fa fa-check-circle"></span> Verified by areyes on 11/27/2015
+              <div class="alert alert-success" role="alert"><span class="fa fa-check-circle"></span> Verified by areyes
+                on 11/27/2015
               </div>
 
               <div class="row">
@@ -335,7 +346,8 @@
               </accordion-heading>
               <br>
 
-              <div class="alert alert-danger" role="alert"><span class="fa fa-trash"></span> Deleted by areyes on 11/27/2015
+              <div class="alert alert-danger" role="alert"><span class="fa fa-trash"></span> Deleted by areyes on
+                11/27/2015
               </div>
 
               <div class="row">
