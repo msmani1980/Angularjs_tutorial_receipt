@@ -252,8 +252,8 @@
 
               <div class="row">
                 <div class="col-xs-8">
-                  <label>Filter by Item Name or Category</label>
-                  <input type="text" class="form-control" ng-model="filterItemDetails" placeholder="Type an item name or category"/>
+                  <label>Filter by Item Name</label>
+                  <input type="text" class="form-control" ng-model="filterItemDetails.itemName" placeholder="Type an item name or category"/>
                 </div>
                 <div class="col-xs-4">
                   <label>Show Only Discrepancies</label>
@@ -320,7 +320,7 @@
                   </th>
                   <th></th>
                 </tr>
-                <tr ng-repeat="item in filteredLMPStock = (stockItemList | filter:{itemDescription: filterItemDetails} | orderBy: LMPSortTitle)"
+                <tr ng-repeat="item in filteredLMPStock = (stockItemList | filter:filterItemDetails | orderBy: LMPSortTitle)"
                     ng-show="showLMPDiscrepancies ? item.isDiscrepancy : true">
                   <td>
                     <span>{{ item.itemName }}</span>
@@ -454,10 +454,10 @@
                     Bank Exchange Rate
                     <!-- Paper & Coin Exchange Rate, as per Retail Company-->
                   </th>
-                  <th ng-click="updateOrderBy('totalBand', false)">
-                    <span class="fa fa-sort-asc active" ng-show="getArrowType('totalBand', false) === 'ascending'"></span>
-                    <span class="fa fa-sort-desc active" ng-show="getArrowType('totalBand', false) === 'descending'"></span>
-                    <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('totalBand', false) === 'none'"></span>
+                  <th ng-click="updateOrderBy('totalBank', false)">
+                    <span class="fa fa-sort-asc active" ng-show="getArrowType('totalBank', false) === 'ascending'"></span>
+                    <span class="fa fa-sort-desc active" ng-show="getArrowType('totalBank', false) === 'descending'"></span>
+                    <span class="fa fa-sort active text-muted-light" ng-show="getArrowType('totalBank', false) === 'none'"></span>
                     Total Banked [{{companyBaseCurrency.currencyCode}}]
                   </th>
                   <td></td>
