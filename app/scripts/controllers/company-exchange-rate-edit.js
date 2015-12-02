@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('CompanyExchangeRateEditCtrl', function($scope, GlobalMenuService, currencyFactory, dateUtility,
-    payloadUtility, ngToast) {
+    payloadUtility, ngToast, $filter) {
     var $this = this;
 
     this.companyId = GlobalMenuService.company.get();
@@ -194,6 +194,7 @@ angular.module('ts5App')
       if ($scope.isExchangeRateReadOnly(exchangeRate)) {
         return true;
       }
+      return false;
     };
 
     $scope.isExchangeRateReadOnly = function(exchangeRate) {
@@ -207,7 +208,7 @@ angular.module('ts5App')
       if (!exchangeRate.endDate || $scope.isExchangeRateNewOne(exchangeRate) || exchangeRate.isCloned) {
         return false;
       }
-      return !(dateUtility.isToday(exchangeRate.endDate) || dateUtility.isAfterToday(exchangeRate.endDate));
+      return !(dateUtility.isAfterToday(exchangeRate.endDate) || dateUtility.isToday(exchangeRate.endDate));
     };
 
     $scope.isExchangeRateNewOne = function(exchangeRate) {
@@ -253,7 +254,7 @@ angular.module('ts5App')
       });
     };
 
-    this.deleteExchangeRateSuccessHandler = function(){
+    this.deleteExchangeRateSuccessHandler = function() {
       $this.hideLoadingModal();
     };
 
@@ -263,8 +264,7 @@ angular.module('ts5App')
         exchangeRateType: 1,
         id: exchangeRateId
       };
-
-      if(exchangeRateId) {
+      if (exchangeRateId) {
         $this.showLoadingModal('Loading Data');
         currencyFactory.deleteCompanyExchangeRate(payload).then($this.deleteExchangeRateSuccessHandler);
       }
@@ -298,9 +298,9 @@ angular.module('ts5App')
       newExchangeRate.isCloned = true;
 
       var newExchangeRates = angular.copy($scope.companyExchangeRates);
-
-      newExchangeRates.splice(index + 1, 0, newExchangeRate);
-      $scope.companyExchangeRates = newExchangeRates;
+      newExchangeRates.push(newExchangeRate);
+      $scope.companyExchangeRates = $filter('orderBy')(newExchangeRates,
+        'acceptedCurrencyCode + exchangeRate + startDate');
     };
 
     this.init = function() {
