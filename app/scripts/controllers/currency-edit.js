@@ -91,10 +91,6 @@ angular.module('ts5App')
       });
     };
 
-    this.deleteDetailedCompanyCurrency = function (currencyId) {
-      currencyFactory.deleteDetailedCompanyCurrency(currencyId);
-    };
-
     $scope.searchDetailedCompanyCurrencies = function () {
       $this.showLoadingModal('Loading Data');
 
@@ -187,12 +183,29 @@ angular.module('ts5App')
       angular.element('.delete-warning-modal').modal('show');
     };
 
+    this.getCurrencyIndexById = function (currencyId) {
+      return $scope.companyCurrencyList.map(function (currency) {
+        return currency.id;
+      }).indexOf(currencyId);
+    };
+
+    this.errorHandler = function(dataFromAPI) {
+      angular.element('#loading').modal('hide');
+      $scope.displayError = true;
+      $scope.errorResponse = angular.copy(dataFromAPI);
+    };
+
     $scope.deleteDetailedCompanyCurrency = function () {
       angular.element('.delete-warning-modal').modal('hide');
-      $scope.companyCurrencyList.splice($scope.currencyToDelete.rowIndex, 1);
+      $this.showLoadingModal('Loading Data');
+
+      var index = $this.getCurrencyIndexById($scope.currencyToDelete.id);
 
       if ($scope.currencyToDelete.id) {
-        $this.deleteDetailedCompanyCurrency($scope.currencyToDelete.id);
+        currencyFactory.deleteDetailedCompanyCurrency($scope.currencyToDelete.id).then(function () {
+          $scope.companyCurrencyList.splice(index, 1);
+          $this.hideLoadingModal();
+        }, $this.errorHandler);
       }
     };
 
