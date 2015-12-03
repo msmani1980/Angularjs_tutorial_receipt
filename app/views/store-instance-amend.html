@@ -2,32 +2,62 @@
 
   <form-error-dialog></form-error-dialog>
 
-  <div class="modal fade" id="t6Modal">
+  <div class="modal fade" id="reallocateModal">
     <div class="modal-dialog">
       <div class="modal-content">
+        <div class="modal-header">
+          <h4>Reallocate Cash Bag to Store Instance</h4>
+        </div>
         <div class="modal-body">
-          <h4>{{ modalMainTitle }}: 123.00</h4>
-          <br>
+          <div class="row">
+            <div class="col-xs-6">
+              <label>Store Number</label>
+              <select class="form-control">
+                <option>Str456</option>
+                <option>Str890</option>
+              </select>
+            </div>
+            <div class="col-xs-6">
+              <label>Schedule Date</label>
+              <date-picker-field
+                class="form-group"
+                element-class="col-xs-6"
+                is-search-field="true">
+              </date-picker-field>
+            </div>
+          </div>
           <table class="table table-bordered">
-            <tr class="active">
-              <td>{{ modalTableHeader }}</td>
-              <td>Quantity</td>
-              <td>Total</td>
+            <tr>
+              <th>Store Instance Number</th>
+              <th>Store Number</th>
+              <th>Schedule Date</th>
+              <th>Warehouse</th>
+              <th></th>
+            </tr>
+            <tr class="bg-success">
+              <td>123</td>
+              <td>Str456</td>
+              <td>12/21/2015</td>
+              <td>ORD</td>
+              <td>
+                <button class="btn btn-success"><span class="fa fa-check-circle"></span></button>
+              </td>
             </tr>
             <tr>
-              <td>Test name</td>
-              <td>5</td>
-              <td>10.00</td>
-            </tr>
-            <tr>
-              <td>Test name 2</td>
-              <td>6</td>
-              <td>11.00</td>
+              <td>789</td>
+              <td>Str890</td>
+              <td>11/09/2016</td>
+              <td>ORD</td>
+              <td>
+                <button class="btn btn-default"><span class="fa fa-circle-thin"></span></button>
+              </td>
+
             </tr>
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal"><span class="fa fa-check"></span> Confirm</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
@@ -155,45 +185,50 @@
         <hr>
         <br>
 
-
-        <div class="row">
-          <div class="col-xs-8">
-            <div class="form-group">
-              <p class="input-group">
+        <div class="well">
+          <div class="row">
+            <div class="col-xs-8">
+              <div class="col-xs-6">
+                <div class="input-group">
                 <span class="input-group-btn">
                   <button type="button" class="btn btn-default btn-sm" disabled="true">
                     <i class="fa fa-filter"></i> Filter
                   </button>
                 </span>
-                <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
-                  <ui-select-match placeholder="Filter by Cash Bag Number...">{{ $item.cashBag }}</ui-select-match>
-                  <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
-                    {{ cashBag.cashBag }}
-                  </ui-select-choices>
-                </ui-select>
-              </p>
+                  <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
+                    <ui-select-match placeholder="Filter by Cash Bag Number...">{{ $item.cashBag }}</ui-select-match>
+                    <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
+                      {{ cashBag.cashBag }}
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                Show Deleted Cash Bags &nbsp; <input bs-switch ng-model="showLMPDiscrepancies" type="checkbox"
+                                                     switch-size="medium" switch-on-color="info" switch-on-text="Yes"
+                                                     switch-off-text="No">
+              </div>
             </div>
 
-          </div>
-          <div class="col-xs-4 text-right">
-            <button class="btn btn-default" ng-click="initEditTable(false)"><span
-              class="fa fa-link active"></span> Enable Sector Merging
-            </button>
-            <button class="btn btn-info" ng-click="initEditTable(false)"><span
-              class="fa fa-minus-circle active"></span> Collapse All Views
-            </button>
-            <!--<input bs-switch ng-model="showLMPDiscrepancies" type="checkbox" switch-size="medium" switch-on-color="info" switch-on-text="Show" switch-off-text="Hide">-->
-
+            <div class="col-xs-4 text-right">
+              <button class="btn btn-info" ng-click="initEditTable(false)"><span
+                class="fa fa-minus-circle active"></span> Collapse Cash Bag Views
+              </button>
+              <button class="btn btn-default" ng-click="initEditTable(false)"><span
+                class="fa fa-link active"></span> Enable Sector Merging
+              </button>
+            </div>
           </div>
         </div>
         <br>
-        <!--<div class="row">-->
-        <!--<div class="col-xs-12">-->
-        <!--<p><i><span class="fa fa-asterisk"></span> Indicates a manually added item</i></p>-->
-        <!--</div>-->
-        <!--</div>-->
-        <br>
 
+        <div class="row">
+          <div class="col-xs-12">
+            <h4>
+              <small><i><span class="fa fa-asterisk"></span> Indicates a manually added record</i></small>
+            </h4>
+          </div>
+        </div>
         <form name="createStoreInstance" ng-submit="submitForm()">
           <accordion class="store-instance-review-accordion">
             <accordion-group ng-init="status.seals.open=true" is-open="status.seals.open">
@@ -249,7 +284,8 @@
 
               <div class="row">
                 <div class="col-xs-12">
-                  <table class="table table-bordered">
+                  <table class="table">
+                    <tbody>
                     <tr class="active">
                       <th></th>
                       <th></th>
@@ -292,8 +328,8 @@
                         <button class="btn btn-danger btn-xs"><span class="fa fa-trash active"></span></button>
                       </td>
                     </tr>
-                    <tr>
-                      <td><span class="fa fa-plus-square-o"></span></td>
+                    <tr class="open-accordion">
+                      <td><span class="fa fa-minus-square"></span></td>
                       <td></td>
                       <td> 10/23/2015</td>
                       <td> 123</td>
@@ -306,6 +342,30 @@
                         <button class="btn btn-primary btn-xs"><span class="fa fa-pencil active"></span></button>
                         <button class="btn btn-danger btn-xs"><span class="fa fa-trash active"></span></button>
                       </td>
+                    </tr>
+                    <tr class="open-accordion">
+                      <td colspan="2"></td>
+                      <td colspan="7">
+                        <table class="table table-bordered">
+                          <tr class="active">
+                            <td>Crew ID</td>
+                            <td>First Name</td>
+                            <td>Last Name</td>
+                          </tr>
+                          <tr>
+                            <td>123</td>
+                            <td>John</td>
+                            <td>Smith</td>
+                          </tr>
+                          <tr>
+                            <td>234</td>
+                            <td>Mary</td>
+                            <td>Jane</td>
+                          </tr>
+
+                        </table>
+                      </td>
+                      <td></td>
                     </tr>
                   </table>
                 </div>
@@ -323,7 +383,7 @@
                   <button class="btn btn-danger" ng-click="saveTable(false)"><span class="fa fa-trash active"></span>
                     Delete
                   </button>
-                  <button class="btn btn-warning" ng-click="initEditTable(false)"><span
+                  <button class="btn btn-warning" ng-click="showModal()"><span
                     class="fa fa-share active"></span> Reallocate
                   </button>
                   <button class="btn btn-warning" ng-click="initEditTable(false)"><span

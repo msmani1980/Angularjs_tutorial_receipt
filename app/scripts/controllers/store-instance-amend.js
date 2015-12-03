@@ -544,6 +544,10 @@ angular.module('ts5App')
       angular.element('#paymentReportModal').modal('show');
     };
 
+    $scope.showModal = function () {
+      angular.element('#reallocateModal').modal('show');
+    };
+
     init();
 
   });
