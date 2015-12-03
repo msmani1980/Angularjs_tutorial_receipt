@@ -32,7 +32,7 @@ angular.module('ts5App')
     var stateActions = {};
 
     function isNumberGreaterThanOrEqualTo0(value) {
-      return angular.isDefined(value) && value !== null && parseInt(value) >= 0
+      return angular.isDefined(value) && value !== null && parseInt(value) >= 0;
     }
 
     function showMessage(message, messageType) {
