@@ -22,7 +22,7 @@ angular.module('ts5App')
           'countryId': 66,
           'countryName': 'Denmark',
           'description': 'Copenhagen',
-          'isCaterer': false,
+          'isCaterer': true,
           'endDate': '2050-01-01',
           'startDate': '2015-05-02',
           'regionId': 8,
@@ -87,6 +87,191 @@ angular.module('ts5App')
         'start': 0
       }
     };
+
+    var globalStationListJSON = {
+      'response': [
+        {
+          'id': 1,
+          'companyId': 403,
+          'code': 'ORD',
+          'name': 'Chicago O-hare'
+        },
+        {
+          'id': 2,
+          'companyId': 403,
+          'code': 'MDW',
+          'name': 'Chicago Midway'
+        },
+        {
+          'id': 3,
+          'companyId': 403,
+          'code': 'LON3',
+          'name': 'London'
+        },
+        {
+          'id': 4,
+          'companyId': 403,
+          'code': 'SAN',
+          'name': 'San Jose'
+        },
+        {
+          'id': 5,
+          'companyId': 403,
+          'code': 'DEL',
+          'name': 'Delhi'
+        },
+        {
+          'id': 6,
+          'companyId': 403,
+          'code': 'JFK',
+          'name': 'New York'
+        },
+        {
+          'id': 7,
+          'companyId': 403,
+          'code': 'EWR',
+          'name': 'Newark'
+        },
+        {
+          'id': 8,
+          'companyId': 403,
+          'code': 'LAX',
+          'name': 'Los Angeles'
+        },
+        {
+          'id': 9,
+          'companyId': 403,
+          'code': 'MIA',
+          'name': 'Miami'
+        },
+        {
+          'id': 10,
+          'companyId': 403,
+          'code': 'IAH',
+          'name': 'Houston'
+        },
+        {
+          'id': 11,
+          'companyId': 403,
+          'code': 'BOS',
+          'name': 'Boston'
+        },
+        {
+          'id': 13,
+          'companyId': 403,
+          'code': 'CD123',
+          'name': 'CHICAGO-NEW'
+        },
+        {
+          'id': 19,
+          'companyId': 403,
+          'code': 'ALC',
+          'name': 'Alicante'
+        },
+        {
+          'id': 20,
+          'companyId': 403,
+          'code': 'BCN',
+          'name': 'Barcelona'
+        },
+        {
+          'id': 21,
+          'companyId': 403,
+          'code': 'AGP',
+          'name': 'Malaga'
+        },
+        {
+          'id': 22,
+          'companyId': 403,
+          'code': 'VLC',
+          'name': 'Valencia'
+        },
+        {
+          'id': 23,
+          'companyId': 403,
+          'code': 'CPH',
+          'name': 'Copenhagen'
+        },
+        {
+          'id': 24,
+          'companyId': 403,
+          'code': 'SKS',
+          'name': 'Vojens'
+        },
+        {
+          'id': 25,
+          'companyId': 403,
+          'code': 'EKHG',
+          'name': 'Herning'
+        },
+        {
+          'id': 26,
+          'companyId': 403,
+          'code': 'BSL',
+          'name': 'Basel'
+        },
+        {
+          'id': 27,
+          'companyId': 403,
+          'code': 'GVA',
+          'name': 'Geneva'
+        },
+        {
+          'id': 28,
+          'companyId': 403,
+          'code': 'ZRH',
+          'name': 'Zurich'
+        },
+        {
+          'id': 29,
+          'companyId': 403,
+          'code': 'BRN',
+          'name': 'Bern'
+        },
+        {
+          'id': 30,
+          'companyId': 403,
+          'code': 'ZHI',
+          'name': 'Grenchen'
+        },
+        {
+          'id': 39,
+          'companyId': 403,
+          'code': 'LON',
+          'name': 'Heathrow Intl'
+        },
+        {
+          'id': 41,
+          'companyId': 403,
+          'code': 'LGW',
+          'name': 'Gatwick '
+        },
+        {
+          'id': 43,
+          'companyId': 403,
+          'code': 'LPL',
+          'name': 'Liverpool '
+        },
+        {
+          'id': 44,
+          'companyId': 403,
+          'code': 'LTN',
+          'name': 'Luton '
+        },
+        {
+          'id': 45,
+          'companyId': 403,
+          'code': 'MAD',
+          'name': 'Madrid '
+        }
+      ],
+      'meta': {
+        'count': 29,
+        'limit': 29,
+        'start': 0
+      }
+    };
+
 
     var countryListJSON = {
       'meta': {
@@ -284,6 +469,15 @@ angular.module('ts5App')
       this.setStationList(stationListJSON);
     };
 
+    this.setGlobalStationList = function(dataFromAPI) {
+      $scope.globalStationList = angular.copy(dataFromAPI.response);
+    };
+
+    this.getGlobalStationList = function() {
+      // add factory API call here
+      this.setGlobalStationList(globalStationListJSON);
+    };
+
     this.setupFormDataObject = function() {
       $scope.formData = {
         stations: []
@@ -291,6 +485,7 @@ angular.module('ts5App')
       angular.forEach($scope.stationList, function(station) {
         $scope.formData.stations.push({
           id: station.id,
+          isCaterer: station.isCaterer,
           startDate: dateUtility.formatDateForApp(station.startDate),
           endDate: dateUtility.formatDateForApp(station.endDate)
         });
@@ -387,15 +582,24 @@ angular.module('ts5App')
       });
     };
 
-    this.filterCityByCountry = function(city) {
+    this.toggleAllStations = function(selectAll) {
+      if(selectAll) {
+        this.selectAllStations();
+        return;
+      }
+      this.deselectAllStations();
+    };
+
+    this.filterByCountry = function(record) {
       if(angular.isUndefined($scope.search) || angular.isUndefined($scope.search.countryId)) {
         return true;
       }
-      return parseInt(city.countryId) === parseInt($scope.search.countryId);
+      return parseInt(record.countryId) === parseInt($scope.search.countryId);
     };
 
     this.makeInitPromises = function() {
       return [
+        this.getGlobalStationList(),
         this.getCountryList(),
         this.getCityList()
       ];
@@ -417,10 +621,18 @@ angular.module('ts5App')
 
     $scope.selectedStations = [];
 
+    $scope.hideSearch = function() {
+      var filterControls = angular.element(
+        angular.element.find('#filter-controls')[0]
+      );
+      filterControls.addClass('collapse').removeClass('in');
+    };
+
     $scope.searchRecords = function() {
       // TODO: Add waiting
       $this.getStationList();
       $this.setupFormDataObject();
+      $scope.hideSearch();
     };
 
     $scope.canSave = function() {
@@ -439,13 +651,17 @@ angular.module('ts5App')
       return $this.deselectAllStations();
     };
 
-    $scope.filterCityByCountry = function(city) {
-      return $this.filterCityByCountry(city);
+    $scope.filterByCountry = function(record) {
+      return $this.filterByCountry(record);
     };
 
     $scope.$watch('dateRange', function(current) {
       $this.updateSelectedStartDates(current);
       $this.updateSelectedEndDates(current);
     },true);
+
+    $scope.$watch('allStationsSelected', function(selectAll) {
+      $this.toggleAllStations(selectAll);
+    });
 
   });
