@@ -229,7 +229,6 @@ angular.module('ts5App')
       $this.showLoadingModal('Loading Data');
       $scope.companyExchangeRates = [];
       var searchPayload = $this.formatPayloadForSearch();
-      console.log(searchPayload);
       currencyFactory.getCompanyExchangeRates(searchPayload).then(function(
         companyExchangeRatesFromAPI) {
         $this.normalizeCompanyExchangeRatesList(companyExchangeRatesFromAPI.response);
@@ -268,6 +267,7 @@ angular.module('ts5App')
 
     this.deleteExchangeRateSuccessHandler = function() {
       $this.hideLoadingModal();
+      $scope.searchCompanyExchangeRates();
     };
 
     this.deleteCompanyExchangeRate = function(exchangeRateId) {
