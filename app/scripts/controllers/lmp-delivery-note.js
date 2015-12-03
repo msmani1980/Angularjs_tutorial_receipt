@@ -84,8 +84,8 @@ angular.module('ts5App')
       if (!$scope.deliveryNote.items.length) {
         return false;
       }
-      var itemsSet = $scope.deliveryNote.items.filter(function(retailItem) {
-        return retailItem.deliveredQuantity >= 0;
+      var itemsSet = $scope.deliveryNote.items.filter(function(item) {
+        return angular.isDefined(item.deliveredQuantity) && item.deliveredQuantity !== null && parseInt(item.deliveredQuantity) >= 0;
       });
       if (!itemsSet.length) {
         return false;
@@ -126,7 +126,7 @@ angular.module('ts5App')
 
     function removeNullDeliveredItems() {
       $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item) {
-        return item.deliveredQuantity >= 0;
+        return angular.isDefined(item.deliveredQuantity) && item.deliveredQuantity !== null && parseInt(item.deliveredQuantity) >= 0;
       });
     }
 
@@ -267,10 +267,10 @@ angular.module('ts5App')
       return $scope.deliveryNote.items.map(function(item) {
         return {
           masterItemId: parseInt(item.masterItemId),
-          expectedQuantity: item.expectedQuantity ? parseInt(item.expectedQuantity) : null,
-          deliveredQuantity: item.deliveredQuantity ? parseInt(item.deliveredQuantity) : null,
-          ullageQuantity: item.ullageQuantity ? parseInt(item.ullageQuantity) : null,
-          ullageReason: item.ullageReason ? parseInt(item.ullageReason) : null
+          expectedQuantity: angular.isDefined(item.expectedQuantity) && item.expectedQuantity !== null && parseInt(item.expectedQuantity) >= 0 ? parseInt(item.expectedQuantity) : null,
+          deliveredQuantity: angular.isDefined(item.deliveredQuantity) && item.deliveredQuantity !== null && parseInt(item.deliveredQuantity) >= 0 ? parseInt(item.deliveredQuantity) : null,
+          ullageQuantity: angular.isDefined(item.ullageQuantity) && item.ullageQuantity !== null && parseInt(item.ullageQuantity) >= 0 ? parseInt(item.ullageQuantity) : null,
+          ullageReason: angular.isDefined(item.ullageReason) && item.ullageReason !== null && parseInt(item.ullageReason) >= 0 ? parseInt(item.ullageReason) : null
         };
       });
     }
