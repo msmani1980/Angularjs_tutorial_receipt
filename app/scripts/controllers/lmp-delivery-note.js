@@ -31,6 +31,10 @@ angular.module('ts5App')
     var _firstTime = true;
     var stateActions = {};
 
+    function isNumberGreaterThanOrEqualTo0(value) {
+      return angular.isDefined(value) && value !== null && parseInt(value) >= 0
+    }
+
     function showMessage(message, messageType) {
       ngToast.create({
         className: messageType,
@@ -85,7 +89,7 @@ angular.module('ts5App')
         return false;
       }
       var itemsSet = $scope.deliveryNote.items.filter(function(item) {
-        return angular.isDefined(item.deliveredQuantity) && item.deliveredQuantity !== null && parseInt(item.deliveredQuantity) >= 0;
+        return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
       });
       if (!itemsSet.length) {
         return false;
@@ -126,7 +130,7 @@ angular.module('ts5App')
 
     function removeNullDeliveredItems() {
       $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item) {
-        return angular.isDefined(item.deliveredQuantity) && item.deliveredQuantity !== null && parseInt(item.deliveredQuantity) >= 0;
+        return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
       });
     }
 
@@ -267,10 +271,10 @@ angular.module('ts5App')
       return $scope.deliveryNote.items.map(function(item) {
         return {
           masterItemId: parseInt(item.masterItemId),
-          expectedQuantity: angular.isDefined(item.expectedQuantity) && item.expectedQuantity !== null && parseInt(item.expectedQuantity) >= 0 ? parseInt(item.expectedQuantity) : null,
-          deliveredQuantity: angular.isDefined(item.deliveredQuantity) && item.deliveredQuantity !== null && parseInt(item.deliveredQuantity) >= 0 ? parseInt(item.deliveredQuantity) : null,
-          ullageQuantity: angular.isDefined(item.ullageQuantity) && item.ullageQuantity !== null && parseInt(item.ullageQuantity) >= 0 ? parseInt(item.ullageQuantity) : null,
-          ullageReason: angular.isDefined(item.ullageReason) && item.ullageReason !== null && parseInt(item.ullageReason) >= 0 ? parseInt(item.ullageReason) : null
+          expectedQuantity: isNumberGreaterThanOrEqualTo0(item.expectedQuantity) ? parseInt(item.expectedQuantity) : null,
+          deliveredQuantity: isNumberGreaterThanOrEqualTo0(item.deliveredQuantity) ? parseInt(item.deliveredQuantity) : null,
+          ullageQuantity: isNumberGreaterThanOrEqualTo0(item.ullageQuantity) ? parseInt(item.ullageQuantity) : null,
+          ullageReason: isNumberGreaterThanOrEqualTo0(item.ullageReason) ? parseInt(item.ullageReason) : null
         };
       });
     }
