@@ -326,7 +326,7 @@ angular.module('ts5App')
     }
 
     function setupPaymentReport(reportList) {
-      $scope.paymentReport = angular.copy(reportList.response.paymentReports);
+      $scope.paymentReport = angular.copy(reportList.paymentReports);
     }
 
     function setupData(responseCollection) {
