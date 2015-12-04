@@ -10,6 +10,11 @@
 angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, reconciliationFactory, currencyFactory, GlobalMenuService, dateUtility, lodash) {
     var $this = this;
+    $scope.mergeMode = false;
+
+    $scope.toggleMergeMode = function () {
+      $scope.mergeMode = !$scope.mergeMode;
+    };
 
     function formatAsCurrency(valueToFormat) {
       return $filter('currency')(valueToFormat, '');
