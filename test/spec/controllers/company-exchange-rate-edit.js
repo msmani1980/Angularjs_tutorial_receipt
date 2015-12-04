@@ -250,4 +250,53 @@ describe('Controller: CompanyExchangeRateEditCtrl', function() {
 
   });
 
+  describe('deleteCompanyExchangeRate', function() {
+    var exchangeRateObj;
+    var exchangeRatesList = [];
+    beforeEach(function() {
+      exchangeRateObj = {
+        acceptedCurrencyCode: 'EUR',
+        companyId: 403,
+        createdBy: null,
+        createdOn: '2015-05-06',
+        denominations: '0.1, 0.5, 1, 2, 5, 10, 20, 50, 100',
+        easyPayDenominations: '1, 5, 10, 20, 50, 100',
+        endDate: '01/01/2050',
+        exchangeRate: '1.0000',
+        exchangeRateType: 1,
+        id: 67,
+        operatingCurrencyCode: 'EUR',
+        startDate: '05/06/2015',
+        updatedBy: null,
+        updatedOn: '2015-11-24',
+        $index: 0
+      };
+      spyOn(CompanyExchangeRateEditCtrl, 'deleteCompanyExchangeRate').and.callThrough();
+    });
+
+    it('should start with exchangeRatesList to be 1', function() {
+      exchangeRatesList.push(exchangeRateObj);
+      expect(exchangeRatesList.length).toBe(1);
+    });
+
+    it('should remove the Rate with the $index of 0', function() {
+      scope.companyExchangeRates = exchangeRatesList;
+      scope.exchangeRateToDelete = exchangeRateObj;
+      scope.exchangeRateToDelete.rowIndex = 0;
+      scope.deleteCompanyExchangeRate();
+      expect(scope.companyExchangeRates.length).toBe(0);
+    });
+
+    it('should should have called deleteCompanyExchangeRate with the exchangeRateObj id', function() {
+      exchangeRatesList.push(exchangeRateObj);
+      scope.companyExchangeRates = exchangeRatesList;
+      scope.exchangeRateToDelete = exchangeRateObj;
+      scope.exchangeRateToDelete.rowIndex = 0;
+      scope.deleteCompanyExchangeRate();
+      expect(CompanyExchangeRateEditCtrl.deleteCompanyExchangeRate).toHaveBeenCalledWith(exchangeRateObj.id);
+    });
+
+  });
+
+
 });
