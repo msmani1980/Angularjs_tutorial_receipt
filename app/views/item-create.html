@@ -129,12 +129,12 @@
             </div>
           </div>
 
-          <fieldset ng-disabled="isDisabled()" ng-if="uiSelectTemplateReady">
+          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
 
             <div class="form-group">
               <label>Sales Category *</label>
               <select name="categoryId" required ng-model="formData.categoryId" class="form-control">
-                <option ng-selected="formData.categoryId === category.id" ng-repeat="category in salesCategories"
+                <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
                         value="{{ category.id }}">{{ category.name }}
                 </option>
               </select>
@@ -143,7 +143,7 @@
             <div class="form-group">
               <label>Item Type *</label>
               <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
-                <option ng-selected="formData.itemTypeId === type.id" ng-repeat="type in itemTypes"
+                <option ng-selected="setSelected(formData.itemTypeId, type.id)" ng-repeat="type in itemTypes"
                         value="{{ type.id }}">{{ type.name }}
                 </option>
               </select>
@@ -197,7 +197,7 @@
 
         <div class="col-xs-12 col-sm-6">
 
-          <fieldset ng-disabled="isDisabled()" ng-if="uiSelectTemplateReady">
+          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
 
             <div class="form-group">
               <label>Item Tags</label>
