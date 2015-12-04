@@ -196,6 +196,193 @@ angular.module('ts5App')
       }
     };
 
+    var countryListJSON = {
+      'meta': {
+        'count': 249,
+        'limit': 249,
+        'start': 0
+      },
+      'countries': [
+        {
+          'id': 66,
+          'countryName': 'Denmark'
+        },
+        {
+          'id': 10,
+          'countryName': 'Afghanistan'
+        },
+        {
+          'id': 22,
+          'countryName': 'Åland Islands'
+        },
+        {
+          'id': 13,
+          'countryName': 'Albania'
+        },
+        {
+          'id': 69,
+          'countryName': 'Algeria'
+        },
+        {
+          'id': 18,
+          'countryName': 'American Samoa'
+        },
+        {
+          'id': 8,
+          'countryName': 'Andorra'
+        }
+      ]
+    };
+
+    var cityListJSON = {
+      'meta': {
+        'count': 270,
+        'limit': 270,
+        'start': 0
+      },
+      'cities': [
+        {
+          'cityId': 11,
+          'cityName': 'Albany',
+          'countryId': 240,
+          'countryName': 'United States',
+          'regionId': 2,
+          'regionName': 'New York',
+          'timeZoneId': 440,
+          'timeZone': 'America/New_York',
+          'utcDstOffset': '-04:00',
+          'utcOffset': '-05:00'
+        },
+        {
+          'cityId': 14,
+          'cityName': 'Alicante',
+          'countryId': 75,
+          'countryName': 'Spain',
+          'regionId': 9,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 15,
+          'cityName': 'Barcelona',
+          'countryId': 75,
+          'countryName': 'Spain',
+          'regionId': 9,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 21,
+          'cityName': 'Basel',
+          'countryId': 50,
+          'countryName': 'Switzerland',
+          'regionId': 7,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 24,
+          'cityName': 'Bern',
+          'countryId': 50,
+          'countryName': 'Switzerland',
+          'regionId': 7,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 5,
+          'cityName': 'Chicago',
+          'countryId': 240,
+          'countryName': 'United States',
+          'regionId': 4,
+          'regionName': 'Illinois',
+          'timeZoneId': 459,
+          'timeZone': 'America/Chicago',
+          'utcDstOffset': '-05:00',
+          'utcOffset': '-06:00'
+        },
+        {
+          'cityId': 18,
+          'cityName': 'Copenhagen',
+          'countryId': 66,
+          'countryName': 'Denmark',
+          'regionId': 8,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 13,
+          'cityName': 'Detroit',
+          'countryId': 240,
+          'countryName': 'United States',
+          'regionId': 5,
+          'regionName': 'Michigan',
+          'timeZoneId': 440,
+          'timeZone': 'America/New_York',
+          'utcDstOffset': '-04:00',
+          'utcOffset': '-05:00'
+        },
+        {
+          'cityId': 26,
+          'cityName': 'Gatwick',
+          'countryId': 84,
+          'countryName': 'United Kingdom',
+          'regionId': 10,
+          'regionName': 'UK-REGION',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        },
+        {
+          'cityId': 22,
+          'cityName': 'Geneva',
+          'countryId': 50,
+          'countryName': 'Switzerland',
+          'regionId': 7,
+          'regionName': 'All',
+          'timeZoneId': 86,
+          'timeZone': 'Europe/Madrid',
+          'utcDstOffset': '+02:00',
+          'utcOffset': '+01:00'
+        }
+      ]
+    };
+
+
+    this.setCityList = function(dataFromAPI) {
+      $scope.cityList = angular.copy(dataFromAPI.cities);
+    };
+
+    this.getCityList = function() {
+      // add factory API call here
+      this.setCityList(cityListJSON);
+    };
+
+    this.setCountryList = function(dataFromAPI) {
+      $scope.countryList = angular.copy(dataFromAPI.countries);
+    };
+
+    this.getCountryList = function() {
+      // add factory API call here
+      this.setCountryList(countryListJSON);
+    };
+
     this.setGlobalStationList = function(dataFromAPI) {
       $scope.globalStationList = angular.copy(dataFromAPI.response);
     };
@@ -213,6 +400,13 @@ angular.module('ts5App')
       });
     };
 
+    this.filterByCountry = function(record) {
+      if(angular.isUndefined($scope.formData) || angular.isUndefined($scope.formData.countryId)) {
+        return true;
+      }
+      return parseInt(record.countryId) === parseInt($scope.formData.countryId);
+    };
+
     this.submitForm = function() {
       this.showSuccessMessage('Station has been created!');
     };
@@ -224,9 +418,30 @@ angular.module('ts5App')
       }
     };
 
+    this.addRelationship = function() {
+      $scope.formData.catererRelationshipList.push({
+        catererId: '',
+        startDate: '',
+        endDate: ''
+      });
+    };
+
+    this.setUISelectValidationClass = function () {
+      /*if($scope.stationCreateForm[inputName].$touched && $scope.stationCreateForm[inputName].length < 1 ||
+        $scope.displayError && $scope.stationCreateForm[inputName].length < 1) {
+        return 'has-error';
+      }
+      if($scope.stationCreateForm[inputName].$touched && $scope.stationCreateForm[inputName].$valid) {
+        return 'has-success';
+      }*/
+      return 'has-success';
+    };
+
     this.makeInitPromises = function() {
       return [
         this.getGlobalStationList(),
+        this.getCountryList(),
+        this.getCityList()
       ];
     };
 
@@ -247,14 +462,30 @@ angular.module('ts5App')
     $scope.formData = {
       stationId: null,
       endDate: dateUtility.nowFormatted(),
-      startDate: dateUtility.nowFormatted()
+      startDate: dateUtility.nowFormatted(),
+      catererRelationshipList: [
+        { catererId: 123 },
+        { catererId: 124 }
+      ]
     };
     $scope.viewOnly = false;
     $scope.displayError = false;
-    $scope.buttonText = 'Create';
+    $scope.buttonText = 'Add';
 
     $scope.submitForm = function() {
       return $this.submitForm();
+    };
+
+    $scope.setUISelectValidationClass = function(inputName) {
+      return $this.setUISelectValidationClass(inputName);
+    };
+
+    $scope.filterByCountry = function(record) {
+      return $this.filterByCountry(record);
+    };
+
+    $scope.addRelationship = function() {
+      return $this.addRelationship();
     };
 
   });

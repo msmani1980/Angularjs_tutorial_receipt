@@ -14,7 +14,7 @@
 
         <fieldset ng-hide="viewOnly">
 
-          <a class="btn btn-default" ng-href="/#/menu-relationship-list">
+          <a class="btn btn-default" ng-href="/#/station-list">
             <span class="fa fa-arrow-left" aria-hidden="true"></span>
             <span class="hidden-xs btn-label">Back</span>
           </a>
@@ -39,68 +39,133 @@
 
 			<div class="row">
 
-				<div class="col-xs-12 col-sm-6">
+        <div class="col-xs-12 col-sm-6">
 
-          <div class="row">
+          <div class="form-group" ng-class="setUISelectValidationClass('Country')">
+            <label>Country *</label>
+            <ui-select name="Country" ng-model="search.countryId" theme="bootstrap" required>
+              <ui-select-match placeholder="Start typing to find a country">{{ $select.selected.countryName }}
+              </ui-select-match>
+              <ui-select-choices repeat="country in countryList | filter: $select.search | orderBy:'countryName'">
+                <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
 
-            <div class="col-xs-12 col-sm-6">
-              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-                <div class="form-group" ng-class="setInputValidClass('Station Code')">
-                  <label class="control-label">Station Code *</label>
-                  <select required name="Station Code" ng-model="formData.stationId" class="form-control">
-                    <option ng-selected="formData.stationId === station.id" ng-repeat="(key,station) in globalStationList" value="{{ station.id }}">
-                      {{ station.code }}
-                    </option>
-                  </select>
-                </div>
-              </fieldset>
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+
+            <div class="form-group" ng-class="setUISelectValidationClass('City')">
+            <label>City *</label>
+            <ui-select name="City"  ng-model="formData.cityId" theme="bootstrap" required>
+              <ui-select-match placeholder="Start typing to find a city">{{ $select.selected.cityName }}
+              </ui-select-match>
+              <ui-select-choices repeat="city in cityList | filter: $select.search | filter: filterByCountry | orderBy:'cityName'">
+                <div ng-bind-html="city.cityName | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+
+          <div class="form-group" ng-class="setUISelectValidationClass('Station Code')">
+            <label>Station Code *</label>
+            <ui-select name="Station Code" ng-model="formData.id" theme="bootstrap" required>
+              <ui-select-match placeholder="Start typing to find a station">{{ $select.selected.code }}
+              </ui-select-match>
+              <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
+                <div ng-bind-html="station.code | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+
+          <div class="form-group" ng-class="setInputValidClass('Station Code')">
+            <label class="control-label">Station Name *</label>
+            <select required name="Station Name" ng-disabled="true" ng-model="formData.stationId" class="form-control">
+              <option ng-selected="formData.stationId === station.id" ng-repeat="(key,station) in globalStationList" value="{{ station.id }}">
+                {{ station.name }}
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+
+          <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+            <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
+            min-date="'+1d'" required="true"></date-picker-field>
+          </fieldset>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+
+          <fieldset ng-disabled="viewOnly || isRelationshipInactive()">
+            <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
+            min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
+          </fieldset>
+
+        </div>
+
+      </div>
+
+      <div class="panel panel-default">
+
+        <div class="panel-heading">
+
+          <input type="checkbox" ng-model="formData.isCaterer" /> This is a Catering Station
+        </div>
+
+        <div class="panel-body" ng-show="formData.isCaterer">
+
+          <button ng-show="formData.isCaterer" class="btn btn-primary pull-right" ng-click="addRelationship()">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs btn-label">Add Relationship</span>
+          </button>
+
+          <h2 class="view-name">Station / Caterer Relationships</h2>
+          <p>Below are a list of relationships between this Station and Catering Companies.</p>
+
+          <div class="row" ng-repeat="relationship in formData.catererRelationshipList track by $index">
+
+            <div class="col-xs-12 col-sm-4">
+
+              <div class="form-group" ng-class="setUISelectValidationClass('Caterer')">
+                <label>Caterer Name *</label>
+                <ui-select name="Caterer" ng-model="relationship.catererId" theme="bootstrap" required>
+                  <ui-select-match placeholder="Start typing to find a Caterer">{{ $select.selected.code }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
+                    <div ng-bind-html="station.code | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+
             </div>
 
-            <div class="col-xs-12 col-sm-6">
-              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-                <div class="form-group" ng-class="setInputValidClass('Station Code')">
-                  <label class="control-label">Station Name *</label>
-                  <select required name="Station Name" ng-disabled="true" ng-model="formData.stationId" class="form-control">
-                    <option ng-selected="formData.stationId === station.id" ng-repeat="(key,station) in globalStationList" value="{{ station.id }}">
-                      {{ station.name }}
-                    </option>
-                  </select>
-                </div>
-              </fieldset>
+            <div class="col-xs-12 col-sm-4">
+              <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="relationship.startDate"
+              min-date="'+1d'" required="true"></date-picker-field>
             </div>
 
-            <div class="col-xs-12 col-sm-6">
-              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-                <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
-                min-date="'+1d'" required="true"></date-picker-field>
-              </fieldset>
-            </div>
-
-            <div class="col-xs-12 col-sm-6">
-              <fieldset ng-disabled="viewOnly || isRelationshipInactive()">
-                <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
-                min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
-              </fieldset>
+            <div class="col-xs-12 col-sm-4">
+              <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="relationship.endDate"
+              min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
             </div>
 
           </div>
 
         </div>
 
-        <!--<div class="col-xs-12 col-sm-6">
-
-          <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-            <div class="form-group" ng-class="setInputValidClass('CateringStations')">
-              <label class="control-label" for="CateringStations">Catering Stations *</label>
-              <select name="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
-                <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
-              </select>
-            </div>
-          </fieldset>
-
-        </div>
-
-      </div>-->
+      </div>
 
   </form>
 
