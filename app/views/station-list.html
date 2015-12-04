@@ -64,12 +64,25 @@
 
 						<div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label>Station Name</label>
-								<ui-select multiple ng-model="search.stationId" theme="bootstrap">
+                <label>Station Code</label>
+								<ui-select ng-disabled="search.stationName" multiple ng-model="search.stationId" theme="bootstrap">
 	                <ui-select-match placeholder="Start typing to find a Station">{{ $item.code }}
 	                </ui-select-match>
 	                <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
 	                  <div ng-bind-html="station.code | highlight: $select.search"></div>
+	                </ui-select-choices>
+	              </ui-select>
+              </div>
+            </div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label>Station Name</label>
+								<ui-select ng-disabled="search.stationId" multiple ng-model="search.stationName" theme="bootstrap">
+	                <ui-select-match placeholder="Start typing to find a Station">{{ $item.name }}
+	                </ui-select-match>
+	                <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'name'">
+	                  <div ng-bind-html="station.name | highlight: $select.search"></div>
 	                </ui-select-choices>
 	              </ui-select>
               </div>
@@ -157,7 +170,9 @@
 					<th>
 						<input type="checkbox" ng-model="allStationsSelected" />
 					</th>
+					<th>Station Code</th>
 	        <th>Station Name</th>
+					<th>Catering Station</th>
 					<th>Country</th>
 					<th>City</th>
 					<th>Timezone</th>
@@ -176,7 +191,14 @@
 						<input type="checkbox" ng-model="selectedStations[station.id]" />
 					</td>
 
-	        <td>{{ station.stationCode }}</td>
+					<td>{{ station.stationCode }}</td>
+
+	        <td>{{ station.stationName }}</td>
+
+					<td>
+						<span ng-show="station.isCaterer">Yes</span>
+						<span ng-show="!station.isCaterer">No</span>
+					</td>
 
 					<td>{{ station.countryName }}</td>
 

@@ -492,6 +492,10 @@ angular.module('ts5App')
       });
     };
 
+    this.dateActive = function(date) {
+      return dateUtility.isTodayOrEarlier(date);
+    };
+
     this.getSelectedStations = function() {
       return $scope.selectedStations.filter(function(selected,stationId){
         if(selected === true)  {
@@ -656,7 +660,7 @@ angular.module('ts5App')
     };
 
     $scope.isDateActive = function (date) {
-      return dateUtility.isTodayOrEarlier(date);
+      return $this.dateActive(date);
     };
 
     $scope.$watch('dateRange', function(current) {
