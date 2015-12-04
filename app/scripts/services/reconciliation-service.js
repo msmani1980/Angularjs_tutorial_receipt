@@ -10,15 +10,15 @@
 angular.module('ts5App')
   .service('reconciliationService', function ($resource, ENV) {
 
-    var stockURL = ENV.apiUrl + '/api/reconciliation/stock-totals';
-    var promotionURL = ENV.apiUrl + '/api/reconciliation/promotion-totals';
-    var reconciliationPrecheckDevicesURL = ENV.apiUrl + '/api/reconciliation/pre-check/:storeInstanceId/devices';
-    var reconciliationPrecheckSchedulesResourceURL = ENV.apiUrl + '/api/reconciliation/pre-check/:storeInstanceId/schedules';
-    var reconciliationPrecheckCashbagsResourceURL = ENV.apiUrl + '/api/reconciliation/pre-check/:storeInstanceId/cashbags';
-    var paymentReportURL = ENV.apiUrl + '/api/paymentReport';
+    var stockURL = ENV.apiUrl + '/rsvr/api/reconciliation/stock-totals';
+    var promotionURL = ENV.apiUrl + '/rsvr/api/reconciliation/promotion-totals';
+    var reconciliationPrecheckDevicesURL = ENV.apiUrl + '/rsvr/api/reconciliation/pre-check/:storeInstanceId/devices';
+    var reconciliationPrecheckSchedulesResourceURL = ENV.apiUrl + '/rsvr/api/reconciliation/pre-check/:storeInstanceId/schedules';
+    var reconciliationPrecheckCashbagsResourceURL = ENV.apiUrl + '/rsvr/api/reconciliation/pre-check/:storeInstanceId/cashbags';
+    var paymentReportURL = ENV.apiUrl + '/rsvr/api/paymentReport';
 
     var revenueURL = {
-      basePath: ENV.apiUrl + '/api/reconciliation/revenue-totals/',
+      basePath: ENV.apiUrl + '/rsvr/api/reconciliation/revenue-totals/',
       cashBag: '-cashbags',
       creditCard: '-credit-cards',
       discount: '-discounts'
@@ -48,8 +48,7 @@ angular.module('ts5App')
         method: 'GET'
       },
       getPaymentReport: {
-        method: 'GET',
-        isArray: true
+        method: 'GET'
       }
     };
 

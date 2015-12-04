@@ -68,9 +68,9 @@
             <div class="col-xs-12 col-sm-3">
               <div class="form-group">
                 <label>Dispatched Station</label>
-                <select class="form-control" ng-model="search.departureStationCode">
+                <select class="form-control" ng-model="search.cateringStationId">
                   <option value="">Select station</option>
-                  <option ng-repeat="station in stationList | orderBy:'code'" value="{{station.code}}">
+                  <option ng-repeat="station in stationList | orderBy:'code'" value="{{station.id}}">
                     {{station.code}} - {{station.name}}
                   </option>
                 </select>
@@ -105,16 +105,26 @@
           </div>
           <div class="row">
 
-            <div class="col-xs-12 col-sm-6">
-              <date-picker
-                class="form-group"
-                element-class="col-xs-6"
-                start-date-model="search.startDate"
-                end-date-model="search.endDate"
-                label-from="Schedule Date From"
-                label-to="Schedule Date To"
-                is-search-field="true">
-              </date-picker>
+            <div class="col-xs-12 col-sm-3">
+              <date-picker-field
+                form="reconciliationSearchForm"
+                ng-model="search.startDate"
+                name="startDate"
+                label="Schedule Date From"
+                is-search-field="true"
+                required="false">
+              </date-picker-field>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <date-picker-field
+                form="reconciliationSearchForm"
+                ng-model="search.endDate"
+                name="endDate"
+                label="Schedule Date To"
+                is-search-field="true"
+                required="false">
+              </date-picker-field>
             </div>
 
             <div class="col-xs-12 col-sm-3">
@@ -203,7 +213,7 @@
         </td>
         <td> {{ instance.scheduleDate }}</td>
         <td> {{ instance.storeNumber }}</td>
-        <td> {{ instance.departureStationCode }}</td>
+        <td> {{ instance.dispatchStationCode }}</td>
         <td ng-show="displayColumns.receivedStation"> {{ instance.arrivalStationCode }}</td>
         <td> {{ instance.eposData }}</td>
         <td> {{ instance.postTripData }}</td>

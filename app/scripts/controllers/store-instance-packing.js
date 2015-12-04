@@ -396,9 +396,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.submit = function() {
       $this.validateUllageReasonFields();
-      $scope.displayError = $scope.storeInstancePackingForm.$invalid;
-      var isVarianceOk = $this.checkVarianceOnAllItems();
-      if($scope.storeInstancePackingForm.$valid && isVarianceOk) {
+      var isFormInvalid = $scope.storeInstancePackingForm.$invalid;
+      $scope.displayError = isFormInvalid;
+
+      var isVarianceOk = false;
+      if(!isFormInvalid) {
+        isVarianceOk = $this.checkVarianceOnAllItems();
+      }
+      if(isVarianceOk) {
         $scope.save();
       }
     };
@@ -531,11 +536,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.mergeStoreInstanceMenuItems = function (items) {
       angular.forEach(items, function (item) {
-        var newItem = $this.createFreshItem(item, true);
-        if ($routeParams.action === 'end-instance') {
-          $scope.offloadListItems.push(newItem);
+        var itemMatch = $this.findItemMatch(item);
+        if(itemMatch) {
+          itemMatch.menuQuantity += item.menuQuantity;
         } else {
-          $scope.pickListItems.push(newItem);
+          var newItem = $this.createFreshItem(item, true);
+          if ($routeParams.action === 'end-instance') {
+            $scope.offloadListItems.push(newItem);
+          } else {
+            $scope.pickListItems.push(newItem);
+          }
         }
       });
     };

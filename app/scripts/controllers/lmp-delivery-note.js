@@ -31,6 +31,10 @@ angular.module('ts5App')
     var _firstTime = true;
     var stateActions = {};
 
+    function isNumberGreaterThanOrEqualTo0(value) {
+      return angular.isDefined(value) && value !== null && parseInt(value) >= 0;
+    }
+
     function showMessage(message, messageType) {
       ngToast.create({
         className: messageType,
@@ -84,8 +88,8 @@ angular.module('ts5App')
       if (!$scope.deliveryNote.items.length) {
         return false;
       }
-      var itemsSet = $scope.deliveryNote.items.filter(function(retailItem) {
-        return retailItem.deliveredQuantity;
+      var itemsSet = $scope.deliveryNote.items.filter(function(item) {
+        return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
       });
       if (!itemsSet.length) {
         return false;
@@ -126,7 +130,7 @@ angular.module('ts5App')
 
     function removeNullDeliveredItems() {
       $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item) {
-        return item.deliveredQuantity;
+        return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
       });
     }
 
@@ -267,10 +271,10 @@ angular.module('ts5App')
       return $scope.deliveryNote.items.map(function(item) {
         return {
           masterItemId: parseInt(item.masterItemId),
-          expectedQuantity: item.expectedQuantity ? parseInt(item.expectedQuantity) : null,
-          deliveredQuantity: item.deliveredQuantity ? parseInt(item.deliveredQuantity) : null,
-          ullageQuantity: item.ullageQuantity ? parseInt(item.ullageQuantity) : null,
-          ullageReason: item.ullageReason ? parseInt(item.ullageReason) : null
+          expectedQuantity: isNumberGreaterThanOrEqualTo0(item.expectedQuantity) ? parseInt(item.expectedQuantity) : null,
+          deliveredQuantity: isNumberGreaterThanOrEqualTo0(item.deliveredQuantity) ? parseInt(item.deliveredQuantity) : null,
+          ullageQuantity: isNumberGreaterThanOrEqualTo0(item.ullageQuantity) ? parseInt(item.ullageQuantity) : null,
+          ullageReason: isNumberGreaterThanOrEqualTo0(item.ullageReason) ? parseInt(item.ullageReason) : null
         };
       });
     }
