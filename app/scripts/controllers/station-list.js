@@ -655,6 +655,10 @@ angular.module('ts5App')
       return $this.filterByCountry(record);
     };
 
+    $scope.isDateActive = function (date) {
+      return dateUtility.isTodayOrEarlier(date);
+    };
+
     $scope.$watch('dateRange', function(current) {
       $this.updateSelectedStartDates(current);
       $this.updateSelectedEndDates(current);
