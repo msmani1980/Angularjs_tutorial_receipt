@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The Stations List Controller', function () {
+describe('The Station Create Controller', function () {
 
   beforeEach(module(
     'ts5App',
@@ -9,7 +9,7 @@ describe('The Stations List Controller', function () {
 
   var scope;
   var controller;
-  var StationListCtrl;
+  var StationCreateCtrl;
   var templateCache;
   var compile;
 
@@ -21,7 +21,7 @@ describe('The Stations List Controller', function () {
   }));
 
   function initController() {
-    StationListCtrl = controller('StationListCtrl', {
+    StationCreateCtrl = controller('StationCreateCtrl', {
       $scope: scope
     });
   }

@@ -1,0 +1,112 @@
+<div class="container module-container">
+
+  <div class="edit-controls">
+
+    <div class="row">
+
+      <div class="col-xs-6">
+
+        <h2 class="view-name">Add Station</h2>
+
+      </div>
+
+      <div class="col-xs-6 text-right">
+
+        <fieldset ng-hide="viewOnly">
+
+          <a class="btn btn-default" ng-href="/#/menu-relationship-list">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="hidden-xs btn-label">Back</span>
+          </a>
+
+          <button ng-show="stationCreateForm.$dirty" class="btn btn-success" ng-click="submitForm()">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+            <span class="hidden-xs btn-label">{{ buttonText }}</span>
+          </button>
+
+        </fieldset>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+  <form name="stationCreateForm" class="form">
+
+			<div class="row">
+
+				<div class="col-xs-12 col-sm-6">
+
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-6">
+              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+                <div class="form-group" ng-class="setInputValidClass('Station Code')">
+                  <label class="control-label">Station Code *</label>
+                  <select required name="Station Code" ng-model="formData.stationId" class="form-control">
+                    <option ng-selected="formData.stationId === station.id" ng-repeat="(key,station) in globalStationList" value="{{ station.id }}">
+                      {{ station.code }}
+                    </option>
+                  </select>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="col-xs-12 col-sm-6">
+              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+                <div class="form-group" ng-class="setInputValidClass('Station Code')">
+                  <label class="control-label">Station Name *</label>
+                  <select required name="Station Name" ng-disabled="true" ng-model="formData.stationId" class="form-control">
+                    <option ng-selected="formData.stationId === station.id" ng-repeat="(key,station) in globalStationList" value="{{ station.id }}">
+                      {{ station.name }}
+                    </option>
+                  </select>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="col-xs-12 col-sm-6">
+              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+                <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
+                min-date="'+1d'" required="true"></date-picker-field>
+              </fieldset>
+            </div>
+
+            <div class="col-xs-12 col-sm-6">
+              <fieldset ng-disabled="viewOnly || isRelationshipInactive()">
+                <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
+                min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
+              </fieldset>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!--<div class="col-xs-12 col-sm-6">
+
+          <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+            <div class="form-group" ng-class="setInputValidClass('CateringStations')">
+              <label class="control-label" for="CateringStations">Catering Stations *</label>
+              <select name="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
+                <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
+              </select>
+            </div>
+          </fieldset>
+
+        </div>
+
+      </div>-->
+
+  </form>
+
+</div>
+
+<form-success-modal list-path="menu-relationship-list" create-path="menu-relationship-create"></form-success-modal>
+<form-update-modal list-path="menu-relationship-list"></form-update-modal>
+<leave-view-modal></leave-view-modal>
+<dynamic-left-nav title="Menu-Catering Station Relationship"></dynamic-left-nav>
