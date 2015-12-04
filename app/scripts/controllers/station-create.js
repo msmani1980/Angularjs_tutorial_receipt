@@ -8,9 +8,32 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationCreateCtrl', function ($scope,$location,$q,ngToast,dateUtility) {
+  .controller('StationCreateCtrl', function ($scope,$location,$q,ngToast,dateUtility,$routeParams) {
 
     var $this = this;
+
+    var stationJSON = {
+      'id': 114,
+      'cityId': 18,
+      'cityName': 'Copenhagen',
+      'companyId': 403,
+      'countryId': 66,
+      'countryName': 'Denmark',
+      'description': 'Copenhagen',
+      'isCaterer': true,
+      'endDate': '2050-01-01',
+      'startDate': '2015-05-02',
+      'regionId': 8,
+      'regionName': 'All',
+      'stationCode': 'CPH',
+      'stationId': 23,
+      'stationName': 'Copenhagen',
+      'timezone': 'Europe/Madrid',
+      'timezoneId': '86',
+      'utcDstOffset': '+02:00',
+      'utcOffset': '+01:00',
+      'companyStationRelationships': []
+    };
 
     var globalStationListJSON = {
       'response': [
@@ -392,6 +415,35 @@ angular.module('ts5App')
       this.setGlobalStationList(globalStationListJSON);
     };
 
+    this.setStation = function(dataFromAPI) {
+      var station = angular.copy(dataFromAPI);
+      $scope.formData = {
+        station: {
+          id: station.id,
+          code: station.stationCode,
+          name: station.stationName
+        },
+        city: {
+          id: station.cityId,
+          cityName: station.cityName
+        },
+        country: {
+          id: station.countryId,
+          countryName: station.countryName
+        },
+        startDate: dateUtility.formatDateForApp(station.startDate),
+        endDate: dateUtility.formatDateForApp(station.endDate),
+        isCaterer: station.isCaterer,
+        companyStationRelationships: station.companyStationRelationships
+      };
+      $scope.dataReady = true;
+    };
+
+    this.getStation = function() {
+      // add factory API call here
+      this.setStation(stationJSON);
+    };
+
     this.showSuccessMessage = function(message) {
       ngToast.create({
         className: 'success',
@@ -408,6 +460,7 @@ angular.module('ts5App')
     };
 
     this.submitForm = function() {
+      console.log($scope.formData);
       this.showSuccessMessage('Station has been created!');
     };
 
@@ -419,11 +472,16 @@ angular.module('ts5App')
     };
 
     this.addRelationship = function() {
-      $scope.formData.catererRelationshipList.push({
+      $scope.formData.companyStationRelationships.push({
         catererId: '',
         startDate: '',
         endDate: ''
       });
+    };
+
+    this.setFormAsEdit = function () {
+      $scope.editingRelationship = true;
+      $scope.buttonText = 'Save';
     };
 
     this.setUISelectValidationClass = function () {
@@ -446,7 +504,11 @@ angular.module('ts5App')
     };
 
     this.initSuccessHandler = function() {
-      // TODO: hide loader
+      if ($routeParams.id && !$scope.viewOnly) {
+        $this.setFormAsEdit();
+        return $this.getStation();
+      }
+      $scope.dataReady = true;
     };
 
     this.init = function() {
@@ -463,10 +525,7 @@ angular.module('ts5App')
       stationId: null,
       endDate: dateUtility.nowFormatted(),
       startDate: dateUtility.nowFormatted(),
-      catererRelationshipList: [
-        { catererId: 123 },
-        { catererId: 124 }
-      ]
+      companyStationRelationships: []
     };
     $scope.viewOnly = false;
     $scope.displayError = false;
