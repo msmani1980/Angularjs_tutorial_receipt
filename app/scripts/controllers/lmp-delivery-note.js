@@ -551,6 +551,10 @@ angular.module('ts5App')
       return $scope.readOnly || !item.ullageQuantity;
     };
 
+    $scope.ullageReasonRequired = function(item) {
+      return !$scope.readOnly && item.ullageQuantity;
+    };
+
     $scope.isLMPStationIsDisabled = function() {
       if ($scope.readOnly ||
         Array.isArray($scope.catererStationList) && $scope.catererStationList.length === 1) {
