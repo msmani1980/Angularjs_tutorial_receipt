@@ -140,6 +140,9 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         if ($scope.doesStoreInstanceContainAction(store, 'Checkbox')) {
           store.selected = $scope.allCheckboxesSelected;
         }
+        lodash.forEach(store.replenishments, function (replenish) {
+          replenish.selected = $scope.allCheckboxesSelected;
+        });
       });
       $scope.storeSelectionToggled();
     };
