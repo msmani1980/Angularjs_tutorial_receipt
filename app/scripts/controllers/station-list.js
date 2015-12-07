@@ -478,6 +478,14 @@ angular.module('ts5App')
       this.setGlobalStationList(globalStationListJSON);
     };
 
+    this.displayLoadingModal = function (loadingText) {
+      angular.element('#loading').modal('show').find('p').text(loadingText);
+    };
+
+    this.hideLoadingModal = function () {
+      angular.element('#loading').modal('hide');
+    };
+
     this.setupFormDataObject = function() {
       $scope.formData = {
         stations: []
@@ -561,7 +569,6 @@ angular.module('ts5App')
       if( $this.validateForm() ) {
         $this.saveStations();
       }
-
     };
 
     this.getStationInFormData = function(stationId) {
@@ -641,11 +648,11 @@ angular.module('ts5App')
     };
 
     this.initSuccessHandler = function() {
-      // TODO: hide loader
+      $this.hideLoadingModal();
     };
 
     this.init = function() {
-      // TODO: Add waiting
+      this.displayLoadingModal('Retrieving Station information');
       var promises = this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };
@@ -664,7 +671,6 @@ angular.module('ts5App')
     };
 
     $scope.searchRecords = function() {
-      // TODO: Add waiting
       $this.getStationList();
       $this.setupFormDataObject();
       $scope.hideSearch();

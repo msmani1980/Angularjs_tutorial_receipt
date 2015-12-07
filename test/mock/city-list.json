@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "count": 270,
+    "limit": 270,
+    "start": 0
+  },
+  "cities": [
+    {
+      "cityId": 11,
+      "cityName": "Albany",
+      "countryId": 240,
+      "countryName": "United States",
+      "regionId": 2,
+      "regionName": "New York",
+      "timeZoneId": 440,
+      "timeZone": "America/New_York",
+      "utcDstOffset": "-04:00",
+      "utcOffset": "-05:00"
+    },
+    {
+      "cityId": 14,
+      "cityName": "Alicante",
+      "countryId": 75,
+      "countryName": "Spain",
+      "regionId": 9,
+      "regionName": "All",
+      "timeZoneId": 86,
+      "timeZone": "Europe/Madrid",
+      "utcDstOffset": "+02:00",
+      "utcOffset": "+01:00"
+    },
+    {
+      "cityId": 15,
+      "cityName": "Barcelona",
+      "countryId": 75,
+      "countryName": "Spain",
+      "regionId": 9,
+      "regionName": "All",
+      "timeZoneId": 86,
+      "timeZone": "Europe/Madrid",
+      "utcDstOffset": "+02:00",
+      "utcOffset": "+01:00"
+    },
+    {
+      "cityId": 21,
+      "cityName": "Basel",
+      "countryId": 50,
+      "countryName": "Switzerland",
+      "regionId": 7,
+      "regionName": "All",
+      "timeZoneId": 86,
+      "timeZone": "Europe/Madrid",
+      "utcDstOffset": "+02:00",
+      "utcOffset": "+01:00"
+    },
+    {
+      "cityId": 24,
+      "cityName": "Bern",
+      "countryId": 50,
+      "countryName": "Switzerland",
+      "regionId": 7,
+      "regionName": "All",
+      "timeZoneId": 86,
+      "timeZone": "Europe/Madrid",
+      "utcDstOffset": "+02:00",
+      "utcOffset": "+01:00"
+    },
+    {
+      "cityId": 5,
+      "cityName": "Chicago",
+      "countryId": 240,
+      "countryName": "United States",
+      "regionId": 4,
+      "regionName": "Illinois",
+      "timeZoneId": 459,
+      "timeZone": "America/Chicago",
+      "utcDstOffset": "-05:00",
+      "utcOffset": "-06:00"
+    },
+    {
+      "cityId": 18,
+      "cityName": "Copenhagen",
+      "countryId": 66,
+      "countryName": "Denmark",
+      "regionId": 8,
+      "regionName": "All",
+      "timeZoneId": 86,
+      "timeZone": "Europe/Madrid",
+      "utcDstOffset": "+02:00",
+      "utcOffset": "+01:00"
+    },
+    {
+      "cityId": 13,
+      "cityName": "Detroit",
+      "countryId": 240,
+      "countryName": "United States",
+      "regionId": 5,
+      "regionName": "Michigan",
+      "timeZoneId": 440,
+      "timeZone": "America/New_York",
+      "utcDstOffset": "-04:00",
+      "utcOffset": "-05:00"
+    },
+    {
+      "cityId": 26,
+      "cityName": "Gatwick",
+      "countryId": 84,
+      "countryName": "United Kingdom",
+      "regionId": 10,
+      "regionName": "UK-REGION",
+      "timeZoneId": 86,
+      "timeZone": "Europe/Madrid",
+      "utcDstOffset": "+02:00",
+      "utcOffset": "+01:00"
+    },
+    {
+      "cityId": 22,
+      "cityName": "Geneva",
+      "countryId": 50,
+      "countryName": "Switzerland",
+      "regionId": 7,
+      "regionName": "All",
+      "timeZoneId": 86,
+      "timeZone": "Europe/Madrid",
+      "utcDstOffset": "+02:00",
+      "utcOffset": "+01:00"
+    }
+  ]
+}
