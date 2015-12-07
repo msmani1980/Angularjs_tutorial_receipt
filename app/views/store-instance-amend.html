@@ -212,11 +212,11 @@
             </div>
 
             <div class="col-xs-4 text-right">
-              <button class="btn btn-info" ng-click="initEditTable(false)"><span
-                class="fa fa-minus-circle active"></span> Collapse Cash Bag Views
+              <button class="btn btn-warning" ng-click="toggleMergeMode()"><span
+                class="fa fa-tasks active"></span> Reorder Flight Sectors
               </button>
-              <button class="btn btn-default" ng-click="toggleMergeMode()"><span
-                class="fa fa-link active"></span> Enable Sector Merging
+              <button class="btn btn-default" ng-click="initEditTable(false)"><span
+                class="fa fa-minus-circle active"></span> Collapse Cash Bag Views
               </button>
             </div>
           </div>
@@ -260,7 +260,7 @@
                   <h4>Sales and Revenue Detail</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-info" ng-click="initEditTable(false)"><span
+                  <button class="btn btn-default" ng-click="initEditTable(false)"><span
                     class="fa fa-minus-circle active"></span> Collapse All Table Details
                   </button>
                 </div>
@@ -272,19 +272,19 @@
                       <td colspan="2"><span class="fa fa-minus-square"></span> <strong>ePOS Sales [GBP]</strong></td>
                     </tr>
                     <tr>
-                      <td>Regular Item Sales</td>
+                      <td><a href="">Regular Item Sales</a></td>
                       <td>+ 20.00</td>
                     </tr>
                     <tr>
-                      <td>Virtual Sales</td>
+                      <td><a href="">Virtual Sales</a></td>
                       <td>+ 10.00</td>
                     </tr>
                     <tr>
-                      <td>Voucher Sales</td>
+                      <td><a href="">Voucher Sales</a></td>
                       <td>+ 15.00</td>
                     </tr>
                     <tr>
-                      <td>Promotion Discounts</td>
+                      <td><a href="">Promotion Discounts</a></td>
                       <td>- 5.00</td>
                     </tr>
                     <tr class="active">
@@ -308,7 +308,7 @@
                       <td>5.00</td>
                     </tr>
                     <tr>
-                      <td>Discount</td>
+                      <td><a href="">Discount</a></td>
                       <td>11.50</td>
                     </tr>
                     <tr class="active">
@@ -330,7 +330,7 @@
                   <button class="btn btn-success" ng-click="initEditTable(false)"><span
                     class="fa fa-plus active"></span> Add Flight Sector
                   </button>
-                  <button class="btn btn-info" ng-click="initEditTable(false)"><span
+                  <button class="btn btn-default" ng-click="initEditTable(false)"><span
                     class="fa fa-plus-circle active"></span> Expand All Crew Data
                   </button>
                 </div>
@@ -445,10 +445,7 @@
                     Delete
                   </button>
                   <button class="btn btn-warning" ng-click="showModal()"><span
-                    class="fa fa-share active"></span> Reallocate
-                  </button>
-                  <button class="btn btn-warning" ng-click="initEditTable(false)"><span
-                    class="fa fa-link active"></span> Merge
+                    class="fa fa-share active"></span> Move Cash Bag
                   </button>
                   <button class="btn btn-default" ng-click="initEditTable(false)"><span
                     class="fa fa-times active"></span> Unverify
@@ -477,7 +474,7 @@
                   <h4>Sales and Revenue Detail</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-info" ng-click="initEditTable(false)"><span
+                  <button class="btn btn-default" ng-click="initEditTable(false)"><span
                     class="fa fa-plus-circle active"></span> Expand All Table Details
                   </button>
                 </div>
@@ -517,7 +514,7 @@
                   <h4>Flight Sectors</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-info" ng-click="initEditTable(false)"><span
+                  <button class="btn btn-default" ng-click="initEditTable(false)"><span
                     class="fa fa-plus-circle active"></span> Expand All Crew Data
                   </button>
                 </div>
