@@ -223,20 +223,20 @@ angular.module('ts5App')
 
       $scope.discrepancy = {
         net: {
-          value: netValue,
-          percentage: netPercentage || 0
+          value: formatAsCurrency(netValue),
+          percentage: formatAsCurrency(netPercentage) || 0
         },
         revenue: {
-          value: revenueValue,
-          percentage: revenuePercentage || 0
+          value: formatAsCurrency(revenueValue),
+          percentage: formatAsCurrency(revenuePercentage) || 0
         },
         exchange: {
-          value: exchangeValue,
-          percentage: exchangePercentage || 0
+          value: formatAsCurrency(exchangeValue),
+          percentage: formatAsCurrency(exchangePercentage) || 0
         },
         total: {
-          value: totalValue,
-          percentage: totalPercentage || 0
+          value: formatAsCurrency(totalValue),
+          percentage: formatAsCurrency(totalPercentage) || 0
         }
       };
     }
