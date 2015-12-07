@@ -66,7 +66,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $scope.formData.menus = storeDetailsJSON.parentStoreInstance.menus;
         return;
       }
-      delete $scope.formData.scheduleNumber;
+      if (!$scope.isStepOneFromStepTwo) {
+        delete $scope.formData.scheduleNumber;
+      }
     };
 
     this.formatCurrentStoreForStoreList = function(store) {
@@ -367,7 +369,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setScheduleNumber = function(apiData) {
       var scheduleNumber = {};
-      if (apiData && apiData.scheduleNumber && !$this.isActionState('replenish')) {
+      if (apiData && apiData.scheduleNumber) {
         scheduleNumber = {
           scheduleNumber: apiData.scheduleNumber
         };
