@@ -23,7 +23,7 @@ angular.module('ts5App')
           'countryName': 'Denmark',
           'description': 'Copenhagen',
           'isCaterer': true,
-          'endDate': '2050-01-01',
+          'endDate': '2015-12-31',
           'startDate': '2015-05-02',
           'regionId': 8,
           'regionName': 'All',
@@ -45,7 +45,7 @@ angular.module('ts5App')
           'countryName': 'Denmark',
           'description': 'Herning',
           'isCaterer': false,
-          'endDate': '2050-01-01',
+          'endDate': '2015-05-30',
           'startDate': '2015-05-02',
           'regionId': 8,
           'regionName': 'All',
@@ -67,8 +67,8 @@ angular.module('ts5App')
           'countryName': 'Denmark',
           'description': 'Vojens',
           'isCaterer': false,
-          'endDate': '2050-01-01',
-          'startDate': '2015-05-02',
+          'endDate': '2016-03-01',
+          'startDate': '2016-05-01',
           'regionId': 8,
           'regionName': 'All',
           'stationCode': 'SKS',
@@ -544,16 +544,32 @@ angular.module('ts5App')
       this.showSuccessMessage(payload.length + ' stations have been updated!');
     };
 
+    this.getStationInFormData = function(stationId) {
+      return $scope.formData.stations.filter(function(station){
+        return stationId === station.id;
+      })[0];
+    };
+
+    this.updateStationStartDate = function(current,stationId) {
+      var station = this.getStationInFormData(stationId);
+      if(station && !this.dateActive(station.startDate)){
+        station.startDate = current.startDate;
+      }
+    };
+
+    this.updateStationEndDate = function(current,stationId) {
+      var station = this.getStationInFormData(stationId);
+      if( station && !dateUtility.isYesterdayOrEarlier(station.endDate) &&
+        !dateUtility.isYesterdayOrEarlier(current.endDate) ){
+        station.endDate = current.endDate;
+      }
+    };
+
     this.updateSelectedStartDates = function(current) {
       if(angular.isDefined(current) && current.startDate) {
         angular.forEach($scope.selectedStations, function(selected,stationId){
           if(selected){
-            var station = $scope.formData.stations.filter(function(station){
-              return stationId === station.id;
-            })[0];
-            if(station){
-              station.startDate = current.startDate;
-            }
+            $this.updateStationStartDate(current,stationId);
           }
         });
       }
@@ -563,12 +579,7 @@ angular.module('ts5App')
       if(angular.isDefined(current) && current.endDate) {
         angular.forEach($scope.selectedStations, function(selected,stationId){
           if(selected){
-            var station = $scope.formData.stations.filter(function(station){
-              return stationId === station.id;
-            })[0];
-            if(station){
-              station.endDate = current.endDate;
-            }
+            $this.updateStationEndDate(current,stationId);
           }
         });
       }
