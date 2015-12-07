@@ -537,11 +537,31 @@ angular.module('ts5App')
       return payload;
     };
 
-    this.submitForm = function() {
-      // TODO: Validation
+    this.validateForm = function() {
+      $scope.displayError = $scope.stationListForm.$invalid;
+      return $scope.stationListForm.$valid;
+    };
+
+    this.errorHandler = function(dataFromAPI) {
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
+    };
+
+    this.saveStationsSuccess = function() {
+      this.showSuccessMessage('Selected stations have been updated!');
+    };
+
+    this.saveStations = function() {
       var payload = this.generatePayload();
-      console.log(payload);
-      this.showSuccessMessage(payload.length + ' stations have been updated!');
+      // make service call here
+      this.saveStationsSuccess(payload);
+    };
+
+    this.submitForm = function() {
+      if( $this.validateForm() ) {
+        $this.saveStations();
+      }
+
     };
 
     this.getStationInFormData = function(stationId) {

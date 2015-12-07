@@ -159,6 +159,8 @@
 
 	</div>
 
+	<error-dialog form-object="stationListForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
 
 	<form name="stationListForm" ng-show="stationList.length">
 
@@ -207,14 +209,14 @@
 					<td>UTC {{station.utcDstOffset}}</td>
 
 	        <td width="200px">
-						<date-picker-field form="stationListForm" name="startDate" required="true"
+						<date-picker-field form="stationListForm" name="Start Date {{$index+1}}" required="true"
 							ng-model="formData.stations[$index].startDate" min-date="'+1d'"
 							disable="isDateActive(station.startDate)">
 						</date-picker-field>
 					</td>
 
 	        <td width="200px">
-						<date-picker-field form="stationListForm" name="endDate" required="true"
+						<date-picker-field form="stationListForm"  name="End Date {{$index+1}}" required="true"
 								ng-model="formData.stations[$index].endDate"
 								disable="isDateActive(station.endDate)">
 						</date-picker-field>
