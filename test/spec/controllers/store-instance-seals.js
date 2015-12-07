@@ -254,6 +254,18 @@ describe('the Store Instance Seals controller', function() {
 
     });
 
+    describe('a failed sealColor API call', function() {
+      beforeEach(function() {
+        getStoreDetailsDeferred.resolve(storeDetailsJSON);
+        getSealColorsDeferred.resolve();
+        $scope.$digest();
+      });
+      it('should add a custom error to the error-dialog', function() {
+        StoreInstanceSealsCtrl.getSealColors();
+        expect($scope.displayError).toBeTruthy();
+      });
+    });
+
     describe('the get sealColor API call', function() {
 
       beforeEach(function() {
