@@ -24,6 +24,15 @@ angular.module('ts5App')
     $scope.saveButtonName = '';
     $scope.state = '';
 
+    function showLoadingModal(text) {
+      $scope.displayError = false;
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
+    }
+
     function showMessage(error, isError, message) {
       if (arguments.length < 2) {
         isError = true;
@@ -135,6 +144,7 @@ angular.module('ts5App')
     };
 
     function getStoreResponseHandler(dataFromAPI) {
+      hideLoadingModal();
       var storeData = angular.copy(dataFromAPI);
       $scope.cashBag.storeNumber = storeData.storeNumber;
     }
@@ -298,6 +308,7 @@ angular.module('ts5App')
 
     // Constructor
     function init() {
+      showLoadingModal('Loading Cash Bag');
       // set global controller properties
       _companyId = cashBagFactory.getCompanyId();
       $scope.state = $routeParams.state;
