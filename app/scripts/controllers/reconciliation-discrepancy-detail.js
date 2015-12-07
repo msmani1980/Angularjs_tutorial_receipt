@@ -30,27 +30,28 @@ angular.module('ts5App')
     }
 
     function getVarianceQuantity(stockItem) {
-      var eposSales = stockItem.eposTotal;
-      var lmpDispatchedCount = stockItem.dispatchedQuantity;
+      var eposSales = stockItem.eposTotal || 0;
+      var lmpDispatchedCount = stockItem.dispatchedQuantity || 0;
       var lmpReplenishCount = 0;
-      var lmpIncomingCount = stockItem.inboundQuantity;
-      var offloadCount = stockItem.offloadQuantity;
-      return eposSales - ((lmpDispatchedCount + lmpReplenishCount) - lmpIncomingCount / offloadCount);
+      var lmpIncomingCount = stockItem.inboundQuantity || 0;
+      var offloadCount = stockItem.offloadQuantity || 0;
+      return eposSales - ((lmpDispatchedCount + lmpReplenishCount) - (lmpIncomingCount + offloadCount));
     }
 
     function setStockItem(stockItem) {
       var varianceQuantity = getVarianceQuantity(stockItem);
-      var retailValue = stockItem.price;
+      var retailValue = stockItem.price || 0;
       var varianceValue = varianceQuantity * stockItem.price;
       var isDiscrepancy = (varianceQuantity !== 0);
+      var eposSales = stockItem.eposQuantity || 0;
 
       return {
         itemName: stockItem.itemName,
         dispatchedCount: stockItem.dispatchedQuantity,
         replenishCount: 0,
-        inboundCount: stockItem.inboundQuantity,
-        offloadCount: stockItem.offloadQuantity,
-        ePOSSales: formatAsCurrency(stockItem.eposQuantity),
+        inboundCount: stockItem.inboundQuantity || 0,
+        offloadCount: stockItem.offloadQuantity || 0,
+        ePOSSales: formatAsCurrency(eposSales),
         varianceQuantity: formatAsCurrency(varianceQuantity),
         retailValue: formatAsCurrency(retailValue),
         varianceValue: formatAsCurrency(varianceValue),
@@ -58,8 +59,10 @@ angular.module('ts5App')
       };
     }
 
-    function mergeItems(itemListFromAPI) {
+    function mergeItems(itemListFromAPI, rawLMPStockData) {
       var rawItemList = angular.copy(itemListFromAPI);
+      var uniqueItemList = lodash.uniq(angular.copy(rawItemList), 'itemMasterId');
+
       var inboundItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
             name: 'Warehouse Close'
@@ -78,28 +81,42 @@ angular.module('ts5App')
           }).id;
       });
 
-      angular.forEach(inboundItemList, function (item) {
-        item.inboundQuantity = item.quantity || 0;
-        delete item.quantity;
+      angular.forEach(uniqueItemList, function (item) {
+        item.inboundQuantity = 0;
+        item.dispatchedQuantity = 0;
+        item.offloadQuantity = 0;
+
+        var inboundItem = $filter('filter')(inboundItemList, {itemMasterId: item.itemMasterId}, true);
+        if (inboundItem.length) {
+          item.inboundQuantity = inboundItem[0].quantity;
+        }
+
+        var dispatchedItem = $filter('filter')(dispatchedItemList, {itemMasterId: item.itemMasterId}, true);
+        if (dispatchedItem.length) {
+          item.dispatchedQuantity = dispatchedItem[0].quantity;
+        }
+
+        var offloadItem = $filter('filter')(offloadItemList, {itemMasterId: item.itemMasterId}, true);
+        if (offloadItem.length) {
+          item.offloadQuantity = offloadItem[0].quantity;
+        }
+
+        var lmpStockItem = $filter('filter')(rawLMPStockData, {itemMasterId: item.itemMasterId}, true);
+        if (lmpStockItem.length) {
+          item.eposQuantity = lmpStockItem[0].eposQuantity;
+          item.eposTotal = lmpStockItem[0].eposTotal;
+          item.lmpQuantity = lmpStockItem[0].lmpQuantity;
+          item.lmpTotal = lmpStockItem[0].lmpTotal;
+          item.price = lmpStockItem[0].price;
+        }
       });
 
-      angular.forEach(dispatchedItemList, function (item) {
-        item.dispatchedQuantity = item.quantity || 0;
-        delete item.quantity;
-      });
-
-      angular.forEach(offloadItemList, function (item) {
-        item.offloadQuantity = item.quantity || 0;
-        delete item.quantity;
-      });
-
-      return angular.merge(inboundItemList, dispatchedItemList, offloadItemList);
+      return uniqueItemList;
     }
 
     function setStockItemList(storeInstanceItemList, rawLMPStockData) {
-      var filteredItems = mergeItems(storeInstanceItemList.response);
-      var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
-      $scope.stockItemList = lodash.map(mergedItemList, setStockItem);
+      var filteredItems = mergeItems(storeInstanceItemList.response, rawLMPStockData);
+      $scope.stockItemList = lodash.map(filteredItems, setStockItem);
       initLMPStockRevisions();
     }
 
@@ -181,8 +198,8 @@ angular.module('ts5App')
 
     function getTotalsForPromotions(promotionTotals) {
       var total = lodash.reduce(promotionTotals, function (total, promotionItem) {
-        return total + promotionItem.convertedAmount;
-      });
+          return total + promotionItem.convertedAmount;
+        }) || 0;
 
       return {
         totalLMP: formatAsCurrency(total),
