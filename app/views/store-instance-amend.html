@@ -198,16 +198,16 @@
                 </span>
                   <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
                     <ui-select-match placeholder="Filter by Cash Bag Number...">{{ $item.cashBag }}</ui-select-match>
-                    <ui-select-choices repeat="cashBag in cashBags | filter: $select.search">
-                      {{ cashBag.cashBag }}
+                    <ui-select-choices repeat="cashBag in cashBagList | filter: $select.search">
+                      {{ cashBag.cashBagNumber }}
                     </ui-select-choices>
                   </ui-select>
                 </div>
               </div>
               <div class="col-xs-6">
-                Show Deleted Cash Bags &nbsp; <input bs-switch ng-model="showLMPDiscrepancies" type="checkbox"
-                                                     switch-size="medium" switch-on-color="info" switch-on-text="Yes"
-                                                     switch-off-text="No">
+                Show Deleted Cash Bags &nbsp;
+                <input bs-switch ng-model="showDeletedCashBags" type="checkbox" switch-size="medium"
+                       switch-on-color="info" switch-on-text="Yes" switch-off-text="No">
               </div>
             </div>
 
@@ -230,30 +230,33 @@
             </h4>
           </div>
         </div>
-        <form name="createStoreInstance" ng-submit="submitForm()">
+        <div class="accordion-wrapper" ng-repeat="cashBag in cashBagList">
           <accordion class="store-instance-review-accordion">
-            <accordion-group ng-init="status.seals.open=true" is-open="status.seals.open">
+            <accordion-group ng-init="cashbag.accordionOpen=true" is-open="cashbag.accordionOpen">
               <accordion-heading class="accordion-heading">
                 <div class="row">
                   <div class="col-xs-6">
-                      <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}"
-                         class="fa"></i>
-                      Cash Bag 345 <span class="fa fa-asterisk"></span>
-
+                    <i ng-class="{'fa-chevron-down': cashbag.accordionOpen, 'fa-chevron-right': !cashbag.accordionOpen}"
+                       class="fa"></i>
+                    Cash Bag {{ cashBag.cashBagNumber }} <span class="fa fa-asterisk"></span>
                   </div>
                   <div class="col-xs-6 text-right">
-                      Bank Ref 123
+                    Bank Ref {{ cashBag.bankRefNumber }}
                   </div>
                 </div>
-
-
               </accordion-heading>
+
               <br>
 
-              <div class="alert alert-success" role="alert"><span class="fa fa-check-circle"></span> Verified by areyes
-                on 11/27/2015 at 12:34
+              <div class="row" ng-show="cashBag.isVerified || cashBag.isDeleted">
+                <div class="col-xs-12">
+                  <div class="alert alert-success" role="alert">
+                    <span class="fa fa-check-circle" ng-show="cashBag.isVerified"></span> Verified by areyes on 11/27/2015 at 12:34
+                    <span class="fa fa-check-circle" ng-show="cashBag.isDeleted"></span> Verified by areyes on 11/27/2015 at 12:34
+                  </div>
+                  <br>
+                </div>
               </div>
-              <br>
 
               <div class="row">
                 <div class="col-xs-6 text-left">
@@ -267,25 +270,29 @@
               </div>
               <div class="row">
                 <div class="col-xs-6">
-                  <table class="table table-bordered">
+                  <table class="table table-bordered" ng-init="cashBag.salesTableOpen=false">
                     <tr class="active">
-                      <td colspan="2"><span class="fa fa-minus-square"></span> <strong>ePOS Sales [GBP]</strong></td>
+                      <td colspan="2">
+                        <span class="fa fa-minus-square" ng-show="cashBag.salesTableOpen"></span>
+                        <span class="fa fa-plus-square-o" ng-hide="cashBag.salesTableOpen"></span>
+                        <strong>ePOS Sales [GBP]</strong>
+                      </td>
                     </tr>
-                    <tr>
+                    <tr ng-show="cashBag.salesTableOpen">
                       <td><a href="">Regular Item Sales</a></td>
-                      <td>+ 20.00</td>
+                      <td>+ {{ cashBag.regularItemSales }}</td>
                     </tr>
-                    <tr>
+                    <tr ng-show="cashBag.salesTableOpen">
                       <td><a href="">Virtual Sales</a></td>
-                      <td>+ 10.00</td>
+                      <td>+ {{ cashBag.virtualItemSales }}</td>
                     </tr>
-                    <tr>
+                    <tr ng-show="cashBag.salesTableOpen">
                       <td><a href="">Voucher Sales</a></td>
-                      <td>+ 15.00</td>
+                      <td>+ {{ cashBag.voucherItemSales }}</td>
                     </tr>
-                    <tr>
+                    <tr ng-show="cashBag.salesTableOpen">
                       <td><a href="">Promotion Discounts</a></td>
-                      <td>- 5.00</td>
+                      <td>- {{ cashBag.promotionDiscounts }}</td>
                     </tr>
                     <tr class="active">
                       <td>Net Value of ePOS Sales</td>
@@ -294,22 +301,25 @@
                   </table>
                 </div>
                 <div class="col-xs-6">
-                  <table class="table table-bordered">
+                  <table class="table table-bordered" ng-init="cashBag.revenueTableOpen=false">
                     <tr class="active">
-                      <td colspan="2"><span class="fa fa-minus-square"></span> <strong>Total Revenue in Cash Handler
-                        Exchange Rate</strong></td>
+                      <td colspan="2">
+                        <span class="fa fa-minus-square" ng-show="cashBag.revenueTableOpen"></span>
+                        <span class="fa fa-plus-square-o" ng-hide="cashBag.revenueTableOpen"></span>
+                        <strong>Total Revenue in Cash Handler Exchange Rate</strong>
+                      </td>
                     </tr>
-                    <tr>
+                    <tr ng-show="cashBag.revenueTableOpen">
                       <td>Cash</td>
-                      <td>10.00</td>
+                      <td>{{ cashBag.cashRevenue }}</td>
                     </tr>
-                    <tr>
+                    <tr ng-show="cashBag.revenueTableOpen">
                       <td>Credit</td>
-                      <td>5.00</td>
+                      <td>{{ cashBag.creditRevenue }}</td>
                     </tr>
-                    <tr>
+                    <tr ng-show="cashBag.revenueTableOpen">
                       <td><a href="">Discount</a></td>
-                      <td>11.50</td>
+                      <td>{{ cashBag.discountRevenue }}</td>
                     </tr>
                     <tr class="active">
                       <td>Total Amount</td>
@@ -318,10 +328,8 @@
                   </table>
                 </div>
               </div>
-
               <br>
               <hr>
-
               <div class="row">
                 <div class="col-xs-6 text-left">
                   <h4>Flight Sectors</h4>
@@ -335,8 +343,6 @@
                   </button>
                 </div>
               </div>
-
-
               <div class="row">
                 <div class="col-xs-12">
                   <table class="table">
@@ -352,85 +358,51 @@
                       <th>Tail Number</th>
                       <th>Number of Transactions</th>
                       <th>Transactions Total [GBP]</th>
-
                       <th></th>
                     </tr>
+                    </tbody>
+                    <tbody ng-repeat="flightSector in cashBag.flightSectors" ng-init="flightSector.rowOpen=false">
                     <tr>
-                      <td><span class="fa fa-plus-square-o"></span></td>
+                      <td>
+                        <span class="fa fa-plus-square-o" ng-hide="flightSector.rowOpen"></span>
+                        <span class="fa fa-minus-square" ng-show="flightSector.rowOpen"></span>
+                      </td>
                       <td><span class="fa fa-asterisk"></span></td>
-                      <td>10/23/2015</td>
-                      <td>123</td>
-                      <td>ORD</td>
-                      <td>LAX</td>
-                      <td>123</td>
-                      <td>ABC-123</td>
-                      <td>5</td>
-                      <td> 456.00</td>
+                      <td>{{ flightSector.scheduleDate }}</td>
+                      <td>{{ flightSector.scheduleNumber }}</td>
+                      <td>{{ flightSector.departureStation }}</td>
+                      <td>{{ flightSector.arrivalStation }}</td>
+                      <td>{{ flightSector.passengerCount }}</td>
+                      <td>{{ flightSector.tailNumber }}</td>
+                      <td>{{ flightSector.transactionCount }}</td>
+                      <td>{{ flightSector.transactionTotal }}</td>
                       <td>
                         <button class="btn btn-primary btn-xs"><span class="fa fa-pencil active"></span></button>
                         <button class="btn btn-danger btn-xs"><span class="fa fa-trash active"></span></button>
                       </td>
                     </tr>
-                    <tr class="open-accordion">
-                      <td><span class="fa fa-minus-square"></span></td>
-                      <td></td>
-                      <td>10/23/2015</td>
-                      <td>123</td>
-                      <td>ORD</td>
-                      <td>LAX</td>
-                      <td>123</td>
-                      <td>ABC-123</td>
-                      <td>5</td>
-                      <td> 456.00</td>
-                      <td>
-                        <button class="btn btn-primary btn-xs"><span class="fa fa-pencil active"></span></button>
-                        <button class="btn btn-danger btn-xs"><span class="fa fa-trash active"></span></button>
-                      </td>
-                    </tr>
-                    <tr class="open-accordion">
+                    <tr class="subversion-row" ng-show="flightSector.rowOpen">
                       <td colspan="2"></td>
                       <td colspan="5">
                         <table class="table table-bordered">
-                          <tr class="active">
-                            <td>Crew ID</td>
-                            <td>First Name</td>
-                            <td>Last Name</td>
-                          </tr>
                           <tr>
-                            <td>123</td>
-                            <td>John</td>
-                            <td>Smith</td>
+                            <th>Crew ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                           </tr>
-                          <tr>
-                            <td>234</td>
-                            <td>Mary</td>
-                            <td>Jane</td>
+                          <tr ng-repeat="crew in flightSector.crewData">
+                            <td>{{ crew.crewId }}</td>
+                            <td>{{ crew.firstName }}</td>
+                            <td>{{ crew.lastName }}</td>
                           </tr>
-
                         </table>
                       </td>
                       <td colspan="4"></td>
                     </tr>
-                    <tr>
-                      <td><span class="fa fa-plus-square-o"></span></td>
-                      <td></td>
-                      <td>10/23/2015</td>
-                      <td>123</td>
-                      <td>ORD</td>
-                      <td>LAX</td>
-                      <td>123</td>
-                      <td>ABC-123</td>
-                      <td>5</td>
-                      <td> 456.00</td>
-                      <td>
-                        <button class="btn btn-primary btn-xs"><span class="fa fa-pencil active"></span></button>
-                        <button class="btn btn-danger btn-xs"><span class="fa fa-trash active"></span></button>
-                      </td>
-                    </tr>
+                    </tbody>
                   </table>
                 </div>
               </div>
-
               <br>
               <hr>
               <div class="row">
@@ -454,139 +426,8 @@
               </div>
             </accordion-group>
           </accordion>
-
-          <accordion class="store-instance-review-accordion">
-            <accordion-group ng-init="status.seals.open=true" is-open="status.seals.open">
-              <accordion-heading class="accordion-heading">
-                <i ng-class="{'fa-chevron-down': status.seals.open, 'fa-chevron-right': !status.seals.open}"
-                   class="fa"></i>
-                <strike>Cash Bag 789</strike>
-              </accordion-heading>
-              <br>
-
-              <div class="alert alert-danger" role="alert"><span class="fa fa-trash"></span> Deleted by areyes on
-                11/27/2015
-              </div>
-              <br>
-
-              <div class="row">
-                <div class="col-xs-6 text-left">
-                  <h4>Sales and Revenue Detail</h4>
-                </div>
-                <div class="col-xs-6 text-right">
-                  <button class="btn btn-default" ng-click="initEditTable(false)"><span
-                    class="fa fa-plus-circle active"></span> Expand All Table Details
-                  </button>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-xs-6">
-                  <table class="table table-bordered">
-                    <tr class="active">
-                      <td colspan="3"><span class="fa fa-plus-square-o"></span> <strong>ePOS Sales [GBP]</strong></td>
-                    </tr>
-                    <tr class="active">
-                      <td colspan="2">Net Value of ePOS Sales</td>
-                      <td>40.00</td>
-                    </tr>
-                  </table>
-                </div>
-                <div class="col-xs-6">
-                  <table class="table table-bordered">
-                    <tr class="active">
-                      <td colspan="2"><span class="fa fa-plus-square-o"></span> <strong>Total Revenue in Cash Handler
-                        Exchange Rate</strong></td>
-                    </tr>
-                    <tr class="active">
-                      <td>Total Amount</td>
-                      <td>26.50</td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-
-              <br>
-              <hr>
-
-              <div class="row">
-                <div class="col-xs-6 text-left">
-                  <h4>Flight Sectors</h4>
-                </div>
-                <div class="col-xs-6 text-right">
-                  <button class="btn btn-default" ng-click="initEditTable(false)"><span
-                    class="fa fa-plus-circle active"></span> Expand All Crew Data
-                  </button>
-                </div>
-              </div>
-
-
-              <div class="row">
-                <div class="col-xs-12">
-                  <table class="table table-bordered">
-                    <tr class="active">
-                      <th></th>
-                      <th></th>
-                      <th ng-click="updateOrderBy('currency', false)">
-                        Flight Date
-                      </th>
-                      <th ng-click="updateOrderBy('exchangeAmount', false)">
-                        Flight Number
-                      </th>
-                      <th ng-click="updateOrderBy('crewAmount', false)">
-                        Flight Route
-                      </th>
-                      <th ng-click="updateOrderBy('paperAmount', false)">
-                        PAX Count
-                      </th>
-                      <th ng-click="updateOrderBy('coinAmount', false)">
-                        AC Reg
-                      </th>
-                      <th ng-click="updateOrderBy('varianceValue', false)">
-                        Number of Transactions
-                      </th>
-                      <th ng-click="updateOrderBy('bankExchangeRate', false)">
-                        EPOS Sales
-                        <!-- Paper & Coin Exchange Rate, as per Retail Company-->
-                      </th>
-                    </tr>
-                    <tr>
-                      <td><span class="fa fa-plus-square-o"></span></td>
-                      <td><span class="fa fa-asterisk"></span></td>
-                      <td> 10/23/2015</td>
-                      <td> 123</td>
-                      <td> ABC</td>
-                      <td>123</td>
-                      <td> DEF-123</td>
-                      <td> 123</td>
-                      <td> 456.00</td>
-                    </tr>
-                    <tr>
-                      <td><span class="fa fa-plus-square-o"></span></td>
-                      <td></td>
-                      <td> 10/23/2015</td>
-                      <td> 123</td>
-                      <td> ABC</td>
-                      <td>123</td>
-                      <td> DEF-123</td>
-                      <td> 123</td>
-                      <td> 456.00</td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </accordion-group>
-          </accordion>
-        </form>
+        </div>
       </div>
-
     </div>
   </div>
-</div>
-
-
-</div>
-
-
-</div>
 </div>
