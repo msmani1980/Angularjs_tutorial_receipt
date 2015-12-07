@@ -24,7 +24,16 @@ angular.module('ts5App')
     $scope.saveButtonName = 'Exit';
 
     this.setSealColors = function(dataFromAPI) {
-      $scope.sealColorsList = dataFromAPI.response;
+      if (angular.isDefined(dataFromAPI)) {
+        $scope.sealColorsList = dataFromAPI.response;
+      }
+      if (angular.isUndefined(dataFromAPI)) {
+        $scope.errorCustom = [{
+          field: 'Seal Colors',
+          value: '- Our server did not return the data, please contact your systems administrator.'
+        }];
+        $scope.displayError = true;
+      }
     };
 
     this.canReplenish = function() {
