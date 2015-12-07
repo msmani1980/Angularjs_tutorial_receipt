@@ -197,9 +197,10 @@ angular.module('ts5App')
     }
 
     function getTotalsForPromotions(promotionTotals) {
-      var total = lodash.reduce(promotionTotals, function (total, promotionItem) {
-          return total + promotionItem.convertedAmount;
-        }) || 0;
+      var total = 0;
+      angular.forEach(promotionTotals, function (promotionItem) {
+        total += promotionItem.convertedAmount;
+      });
 
       return {
         totalLMP: formatAsCurrency(total),
@@ -211,7 +212,7 @@ angular.module('ts5App')
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
       var netPercentage = netValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
 
-      var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.stockTotals.totalNet.epos);
+      var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.stockTotals.totalNet.netEPOS);
       var revenuePercentage = revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
 
       var exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
@@ -223,19 +224,19 @@ angular.module('ts5App')
       $scope.discrepancy = {
         net: {
           value: netValue,
-          percentage: netPercentage
+          percentage: netPercentage || 0
         },
         revenue: {
           value: revenueValue,
-          percentage: revenuePercentage
+          percentage: revenuePercentage || 0
         },
         exchange: {
           value: exchangeValue,
-          percentage: exchangePercentage
+          percentage: exchangePercentage || 0
         },
         total: {
           value: totalValue,
-          percentage: totalPercentage
+          percentage: totalPercentage || 0
         }
       };
     }
@@ -286,23 +287,23 @@ angular.module('ts5App')
       var eposDiscount = angular.copy(eposRevenue[2].response);
       var total = 0;
 
-      total += lodash.reduce($this.eposCashBag, function (total, cashBag) {
+      angular.forEach($this.eposCashBag, function (cashBag) {
         if (cashBag.bankAmount) {
-          return total + cashBag.bankAmount;
+          total += cashBag.bankAmount;
         } else if (cashBag.coinAmountManual && cashBag.paperAmountManual) {
-          return total + cashBag.coinAmountManual + cashBag.paperAmountManual;
+          total += cashBag.coinAmountManual + cashBag.paperAmountManual;
         }
       });
 
-      total += lodash.reduce(eposCreditCard, function (total, creditCard) {
+      angular.forEach(eposCreditCard, function (creditCard) {
         if (creditCard.bankAmountFinal) {
-          return total + creditCard.bankAmountFinal;
+          total += creditCard.bankAmountFinal;
         }
       });
 
-      total += lodash.reduce(eposDiscount, function (total, discount) {
+      angular.forEach(eposDiscount, function (discount) {
         if (discount.bankAmountFinal) {
-          return total + discount.bankAmountFinal;
+          total += discount.bankAmountFinal;
         }
       });
 
@@ -315,27 +316,27 @@ angular.module('ts5App')
       var chDiscount = angular.copy(chRevenue[2].response);
       var total = 0;
 
-      total += lodash.reduce($this.chCashBag, function (total, cashBag) {
+      angular.forEach($this.chCashBag, function (cashBag) {
         if (cashBag.bankAmountCh) {
-          return total + cashBag.bankAmountCh;
+          total += cashBag.bankAmountCh;
         } else if (cashBag.coinAmountManualCh && cashBag.paperAmountManualCh) {
-          return total + cashBag.coinAmountManualCh + cashBag.paperAmountManualCh;
+          total += cashBag.coinAmountManualCh + cashBag.paperAmountManualCh;
         }
       });
 
-      total += lodash.reduce(chCreditCard, function (total, creditCard) {
+      angular.forEach(chCreditCard, function (creditCard) {
         if (creditCard.bankAmountFinal) {
-          return total + creditCard.bankAmountFinal;
+          total += creditCard.bankAmountFinal;
         } else if (creditCard.coinAmountManualCc && creditCard.paperAmountManualCc) {
-          return total + creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
+          total += creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
         }
       });
 
-      total += lodash.reduce(chDiscount, function (total, discount) {
+      angular.forEach(chDiscount, function (discount) {
         if (discount.bankAmountFinal) {
-          return total + discount.bankAmountFinal;
+          total += discount.bankAmountFinal;
         } else if (discount.coinAmountManualCc && discount.paperAmountManualCc) {
-          return total + discount.coinAmountManualCc + discount.paperAmountManualCc;
+          total += discount.coinAmountManualCc + discount.paperAmountManualCc;
         }
       });
 
