@@ -70,6 +70,7 @@ angular.module('ts5App')
         }
       });
       $scope.bankRefList = getSortedBankRefList(response.cashBags);
+      hideLoadingModal();
     }
 
     function setFilteredScheduleList(dataFromAPI) {
@@ -130,6 +131,7 @@ angular.module('ts5App')
 
     $scope.searchCashBag = function () {
       var payload = angular.copy($scope.search);
+      showLoadingModal('Searching Cash Bags');
       if (payload.startDate) {
         payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
         payload.endDate = payload.startDate;
