@@ -111,9 +111,8 @@ angular.module('ts5App')
 
     $this.recalculateActionsForInboundStatus = function (item, actions) {
       if (item.statusName === 'Inbounded') {
-        if (item.eposData !== 'No' && item.postTripData !== 'No' && item.cashHandlerData !== 'No') {
-          actions.push('Validate');
-        }
+        actions.push('Validate');
+
         // TODO: Temporary disabled these buttons as per Roshen's request. Enable once Roshen gives a green light
         /*if (item.eposData === 'No') {
           actions.push('Add ePOS Data');
