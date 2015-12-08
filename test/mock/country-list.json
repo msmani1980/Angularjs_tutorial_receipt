@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "count": 249,
+    "limit": 249,
+    "start": 0
+  },
+  "countries": [
+    {
+      "id": 66,
+      "countryName": "Denmark"
+    },
+    {
+      "id": 10,
+      "countryName": "Afghanistan"
+    },
+    {
+      "id": 22,
+      "countryName": "Åland Islands"
+    },
+    {
+      "id": 13,
+      "countryName": "Albania"
+    },
+    {
+      "id": 69,
+      "countryName": "Algeria"
+    },
+    {
+      "id": 18,
+      "countryName": "American Samoa"
+    },
+    {
+      "id": 8,
+      "countryName": "Andorra"
+    }
+  ]
+}

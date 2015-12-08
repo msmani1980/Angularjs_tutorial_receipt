@@ -251,6 +251,15 @@ angular.module('ts5App', [
   }).when('/station-list', {
     templateUrl: 'views/station-list.html',
     controller: 'StationListCtrl'
+  }).when('/station-create', {
+    templateUrl: 'views/station-create.html',
+    controller: 'StationCreateCtrl'
+  }).when('/station-edit/:id', {
+    templateUrl: 'views/station-create.html',
+    controller: 'StationCreateCtrl'
+  }).when('/station-view/:id', {
+    templateUrl: 'views/station-create.html',
+    controller: 'StationCreateCtrl'
   }).otherwise({
     redirectTo: '/'
   });
