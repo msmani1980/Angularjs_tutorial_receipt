@@ -245,20 +245,20 @@ angular.module('ts5App')
       $this.promotionTotals.map(function (promotion) {
         reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
           promotion.itemName = dataFromAPI.promotionCode;
-        });
+        }, handleResponseError);
         promotion.itemTypeName = 'Promotion';
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Virtual'}).map(function (item) {
         reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
           item.itemName = dataFromAPI.itemName;
-        });
+        }, handleResponseError);
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Voucher'}).map(function (item) {
         reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
           item.itemName = dataFromAPI.itemName;
-        });
+        }, handleResponseError);
       });
     }
 
