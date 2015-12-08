@@ -191,6 +191,8 @@ angular.module('ts5App')
       });
 
       return {
+        parsedLMP: totalLMP,
+        parsedEPOS: totalEPOS,
         totalLMP: formatAsCurrency(totalLMP),
         totalEPOS: formatAsCurrency(totalEPOS)
       };
@@ -203,6 +205,8 @@ angular.module('ts5App')
       });
 
       return {
+        parsedLMP: total,
+        parsedEPOS: total,
         totalLMP: formatAsCurrency(total),
         totalEPOS: formatAsCurrency(total)
       };
@@ -267,11 +271,6 @@ angular.module('ts5App')
 
     function setNetTotals(stockData) {
       var stockTotals = angular.copy(stockData);
-      angular.forEach(stockTotals, function (stockItem) {
-        stockItem.parsedLMP = parseFloat(stockItem.totalLMP);
-        stockItem.parsedEPOS = parseFloat(stockItem.totalEPOS);
-      });
-
       var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedLMP + stockTotals.totalVoucher.parsedLMP - stockTotals.totalPromotion.parsedLMP;
       var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
 
