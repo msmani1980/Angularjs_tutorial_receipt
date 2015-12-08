@@ -1,85 +1,98 @@
 <div class="container module-container">
 
+  <div class="edit-controls">
+
+    <div class="row">
+
+      <div class="col-xs-8">
+        <h2 class="view-name">Retail Reason Codes</h2>
+        <p>Here you will see a list of Reason Codes. You may also add, edit and remove Reason Codes.</p>
+      </div>
+
+      <div class="col-xs-4 text-right">
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <error-dialog form-object="companyReasonCodeFrom" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
   <form name="companyReasonCodeFrom" class="form edit-form" ng-submit="submitForm()">
 
-    <div class="edit-controls">
+    <div class="row">
 
-      <div class="row">
+      <div class="col-xs-12">
 
-        <div class="col-xs-8">
-          <h2 class="view-name">Retail Reason Codes</h2>
-          <p>Here you will see a list of Reason Codes. You may also add, edit and remove Reason Codes.</p>
-        </div>
-
-        <div class="col-xs-4 text-right">
-
-          <button class="btn btn-primary" ng-click="addReasonCode()">
-            <span class="fa fa-plus" aria-hidden="true"></span>
-            <span class="hidden-xs"> Add Reason Code</span>
-          </button>
-
-          <button class="btn btn-success" type="submit">
-            <span class="fa fa-check-square-o" aria-hidden="true"></span>
-            <span class="hidden-xs"> {{ buttonText }} </span>
-          </button>
-
+        <div class="form-group">
+          <label>Filter the Reason Code Types below</label>
+          <ui-select multiple ng-model="selectedGlobalReasonCodeTypes.id" theme="bootstrap">
+            <ui-select-match placeholder="Start typing to find a Reason Type">{{ $item.reasonTypeName }}
+            </ui-select-match>
+            <ui-select-choices repeat="globalReasonCodeType in globalReasonCodeTypesList | filter: $select.search | orderBy:'reasonTypeName'">
+              <div ng-bind-html="globalReasonCodeType.reasonTypeName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
         </div>
 
       </div>
 
     </div>
 
-    <error-dialog form-object="companyReasonCodeFrom" error-response="errorResponse" display="displayError">
-    </error-dialog>
+    <!-- Station Edit Controls Panel -->
+    <div class="panel panel-default" ng-repeat="globalReasonCodeType in globalReasonCodeTypesList | filter: filterByGlobalReason track by globalReasonCodeType.id">
 
-    <table class="table table-bordered table-responsive table-hover">
+        <div class="panel-heading">
 
-	    <thead>
+          <strong>{{ globalReasonCodeType.reasonTypeName }}</strong> - {{ globalReasonCodeType.description}}
 
-	      <tr>
-					<th>Reason Code Type</th>
-	        <th>Description</th>
-	        <th>Actions</th>
-	      </tr>
+          <button class="btn btn-primary pull-right" ng-click="addReasonCode()">
+            <span class="fa fa-plus" aria-hidden="true"></span>
+            <span class="hidden-xs"> Add Reason Code</span>
+          </button>
 
-	    </thead>
 
-	    <tbody>
+        </div>
 
-	      <tr ng-repeat="reasonCode in reasonCodeList track by $index">
+        <div class="panel-body">
 
-          <td>
+          <div class="row" ng-repeat="reasonCode in reasonCodeList track by $index">
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
 
               <div class="form-group">
-              <select class="form-control" name="refundCodeType {{$index+1}}" ng-model="reasonCode.id" required>
-                <option ng-selected="{{ companyReasonType.id === reasonCode.id}}" value="{{ companyReasonType.id }}" ng-repeat="companyReasonType in companyReasonTypes track by companyReasonType.id">
-                  {{ companyReasonType.reasonTypeName }}
-                </option>
-              </select>
+                <select class="form-control" name="refundCodeType {{$index+1}}" ng-model="reasonCode.id" required>
+                  <option ng-selected="{{ companyReasonType.id === reasonCode.id}}" value="{{ companyReasonType.id }}" ng-repeat="companyReasonType in companyReasonCodeTypesList track by companyReasonType.id">
+                    {{ companyReasonType.reasonTypeName }}
+                  </option>
+                </select>
               </div>
 
-          </td>
-
-          <td>
-
-            <div class="form-group">
-              <input placeholder="Start typing to add a description" type="text" class="form-control"
-              name="description {{ $index+1}}" ng-model="reasonCode.description" required />
             </div>
 
-          </td>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <input placeholder="Start typing to add a description" type="text" class="form-control"
+                name="description {{ $index+1}}" ng-model="reasonCode.description" required />
+              </div>
+            </div>
 
-          <td>
-            <button type="button" class="btn btn-danger">
-              <i class="fa fa-close"></i>
-            </button>
-          </td>
+          </div>
 
-        </tr>
+        </div>
 
-      </tbody>
+        <div class="panel-footer">
 
-    </table>
+          <button class="btn btn-success" type="button" ng-click="submitForm()">
+            <i class="fa fa-check-square-o"></i> Save Reasons
+          </button>
+
+        </div>
+
+    </div>
 
   </form>
 
