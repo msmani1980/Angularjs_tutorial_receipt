@@ -23,8 +23,8 @@ angular.module('ts5App')
         return text.split(/(?=[A-Z])/).join(' ');
       };
 
-      this.internalServerErrorHandler = function() {
-        $this.internalServerError = true;
+      this.httpResponseErrorHandler = function() {
+        $this.httpResponseError = true;
       };
 
       this.scrollToDialog = function() {
@@ -45,7 +45,7 @@ angular.module('ts5App')
         this.setFormObject();
         $scope.errorPattern = [];
         $scope.errorRequired = [];
-        $scope.$on('internal-server-error', this.internalServerErrorHandler);
+        $scope.$on('http-response-error', this.httpResponseErrorHandler);
         this.setScrollWatch();
         this.watchForm();
       };
@@ -102,7 +102,7 @@ angular.module('ts5App')
       };
 
       $scope.showInternalServerError = function() {
-        return ( $this.internalServerError  && !$scope.showValidationErrors() );
+        return ( $this.httpResponseError  && !$scope.showValidationErrors() );
       };
 
       $scope.showValidationErrors = function() {

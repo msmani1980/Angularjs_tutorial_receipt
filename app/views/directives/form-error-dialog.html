@@ -10,7 +10,8 @@
   <ul>
 
     <li ng-switch on="formErrors.status">
-      <span ng-switch-when="500"><strong>A server side error (500) has occurred</strong> - please contact your system's adminstrator</span>
+      <span ng-switch-when="500"><strong>A server side error (500) has occurred</strong> - please contact your system's administrator</span>
+      <span ng-switch-when="404"><strong>Not Found</strong> - please contact your system's administrator</span>
       <span ng-switch-when="401"><strong>Wrong credentials</strong> - please check username or password</span>
     </li>
 

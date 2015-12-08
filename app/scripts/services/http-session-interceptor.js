@@ -12,7 +12,8 @@ angular.module('ts5App')
 
     var errorCodeMap = {
       401: 'unauthorized',
-      500: 'internal-server-error'
+      404: 'http-response-error',
+      500: 'http-response-error'
     };
 
     function responseError(response) {

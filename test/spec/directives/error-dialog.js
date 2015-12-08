@@ -140,11 +140,18 @@ describe('The Error Dialog directive', function() {
       compileDirective('myTestForm');
     }));
 
-    it('should set the internal server error flag to true', function() {
+    it('should set the http response error flag to true when 500', function() {
       httpSessionInterceptor.responseError({
         status: 500
       });
-      expect(controller.internalServerError).toBeTruthy();
+      expect(controller.httpResponseError).toBeTruthy();
+    });
+
+    it('should set the http response error flag to true when 404', function() {
+      httpSessionInterceptor.responseError({
+        status: 404
+      });
+      expect(controller.httpResponseError).toBeTruthy();
     });
 
     it('should set the internal server error flag to true', function() {
