@@ -10,10 +10,28 @@
 angular.module('ts5App')
   .factory('storeInstanceAmendFactory', function ($q) {
 
-    var getCashBagListMockData = function () {
+    var getStoreInstancesMockData = function (searchQuery) {
+      var getStoreInstancesMockData = [{
+        storeInstance: 123,
+        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/20/2015',
+        storeNumber: (searchQuery) ? searchQuery.storeNumber : 'str123',
+        warehouse: 'ORD'
+      }, {
+        storeInstance: 145,
+        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/20/2015',
+        storeNumber: (searchQuery) ? searchQuery.storeNumber : 'str123',
+        warehouse: 'LAX'
+      }];
+      var storeInstanceMockResponseDeferred = $q.defer();
+      storeInstanceMockResponseDeferred.resolve(getStoreInstancesMockData);
+      return storeInstanceMockResponseDeferred.promise;
+    };
+
+    var getCashBagListMockData = function (searchQuery) {
       var mockCashBag = [{
-        cashBagNumber: '123',
-        bankRefNumber: 'AB45',
+        cashBag: (searchQuery) ? searchQuery.cashBag : '123',
+        bankRefNumber: (searchQuery) ? searchQuery.bankRefNumber : 'AB45',
+        storeNumber: '123',
         isManual: true,
         isDeleted: false,
         isVerified: true,
@@ -24,9 +42,11 @@ angular.module('ts5App')
         cashRevenue: 10.00,
         creditRevenue: 5.00,
         discountRevenue: 11.50,
+        scheduleNumber: '105',
+        scheduleDate: '10/20/2015',
         flightSectors: [{
           scheduleDate: '10/20/2015',
-          scheduleNumber: '123',
+          scheduleNumber: '105',
           departureStationCode: 'ORD',
           arrivalStationCode: 'LAX',
           passengerCount: 123,
@@ -44,7 +64,7 @@ angular.module('ts5App')
             lastName: 'Jane'
           }]
         }, {
-          scheduleDate: '10/24/2015',
+          scheduleDate: '10/20/2015',
           scheduleNumber: '105',
           departureStationCode: 'LAX',
           arrivalStationCode: 'ORD',
@@ -78,7 +98,7 @@ angular.module('ts5App')
         discountRevenue: 5.00,
         flightSectors: [{
           scheduleDate: '11/20/2015',
-          scheduleNumber: '145',
+          scheduleNumber: '111',
           departureStationCode: 'SAN',
           arrivalStationCode: 'GNV',
           passengerCount: 123,
@@ -96,8 +116,8 @@ angular.module('ts5App')
             lastName: 'Jane'
           }]
         }, {
-          scheduleDate: '12/30/2015',
-          scheduleNumber: '105',
+          scheduleDate: '11/20/2015',
+          scheduleNumber: '111',
           departureStationCode: 'CPH',
           arrivalStationCode: 'ORD',
           passengerCount: 123,
@@ -140,8 +160,8 @@ angular.module('ts5App')
           isManual: true,
           crewData: []
         }, {
-          scheduleDate: '12/30/2015',
-          scheduleNumber: '105',
+          scheduleDate: '11/30/2015',
+          scheduleNumber: '145',
           departureStationCode: 'CPH',
           arrivalStationCode: 'ORD',
           passengerCount: 123,
@@ -158,11 +178,17 @@ angular.module('ts5App')
       }];
 
       var cashBagMockResponseDeferred = $q.defer();
-      cashBagMockResponseDeferred.resolve(mockCashBag);
+
+      if (searchQuery) {
+        cashBagMockResponseDeferred.resolve([mockCashBag[0]]);
+      } else {
+        cashBagMockResponseDeferred.resolve(mockCashBag);
+      }
       return cashBagMockResponseDeferred.promise;
     };
 
     return {
-      getCashBagListMockData: getCashBagListMockData
+      getCashBagListMockData: getCashBagListMockData,
+      getStoreInstancesMockData: getStoreInstancesMockData
     };
   });

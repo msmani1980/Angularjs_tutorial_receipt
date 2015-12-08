@@ -2,24 +2,25 @@
 
   <form-error-dialog></form-error-dialog>
 
-  <div class="modal fade" id="reallocateModal">
+  <div class="modal fade" id="moveCashBagModal">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4>Move Cash Bag</h4>
+          <h4><strong>Move Cash Bag</strong> {{ cashBagToMove.cashBagNumber }}</h4>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-xs-12">
               <h4>1. Select an action</h4>
-              <select class="form-control" ng-model="moveCashBagAction" ng-init="moveCashBagAction='none'">
+              <select class="form-control" ng-model="moveCashBagAction" ng-init="moveCashBagAction='none'"
+                      ng-change="clearMoveSearchResults()">
                 <option value="none"></option>
                 <option value="merge">Merge with a Cash Bag</option>
                 <option value="reallocate">Reallocate to a Store Instance</option>
               </select>
             </div>
           </div>
-          <hr>
+          <hr ng-hide="moveCashBagAction==='none'">
           <div class="row" ng-hide="moveCashBagAction==='none'">
             <div class="col-xs-12">
               <h4>2. Search for a
@@ -32,25 +33,26 @@
           <div class="row" ng-show="moveCashBagAction==='merge'">
             <div class="col-xs-5">
               <label>Cash Bag *</label>
-              <select class="form-control">
+              <select class="form-control" ng-model="moveSearch.cashBag">
                 <option>Str456</option>
                 <option>Str890</option>
               </select>
             </div>
             <div class="col-xs-5">
               <label>Bank Ref # *</label>
-              <input class="form-control">
+              <input class="form-control" ng-model="moveSearch.bankRefNumber">
             </div>
             <div class="col-xs-2">
               <br>
-              <button class="btn btn-primary"><span class="fa fa-search"></span></button>
+              <button class="btn btn-primary" ng-click="searchForMoveCashBag()"><span class="fa fa-search"></span>
+              </button>
             </div>
           </div>
 
           <div class="row" ng-show="moveCashBagAction==='reallocate'">
             <div class="col-xs-5">
               <label>Store Number *</label>
-              <select class="form-control">
+              <select class="form-control" ng-model="moveSearch.storeNumber">
                 <option>Str456</option>
                 <option>Str890</option>
               </select>
@@ -60,17 +62,19 @@
               <date-picker-field
                 class="form-group"
                 element-class="col-xs-6"
-                is-search-field="true">
+                is-search-field="true"
+                ng-model="moveSearch.scheduleDate">
               </date-picker-field>
             </div>
             <div class="col-xs-2">
               <br>
-              <button class="btn btn-primary"><span class="fa fa-search"></span></button>
+              <button class="btn btn-primary" ng-click="searchForMoveCashBag()"><span class="fa fa-search"></span>
+              </button>
             </div>
           </div>
 
-          <hr ng-hide="moveCashBagAction==='none'">
-          <div class="row" ng-hide="moveCashBagAction==='none'">
+          <hr ng-show="moveCashBagAction!=='none' && moveCashBagSearchResults">
+          <div class="row" ng-show="moveCashBagAction!=='none' && moveCashBagSearchResults">
             <div class="col-xs-12">
               <h4>
                 <span ng-show="moveCashBagAction==='merge'">3. Select a Cash Bag to Merge With</span>
@@ -78,8 +82,8 @@
             </div>
           </div>
 
-          <table class="table table-bordered" ng-hide="moveCashBagAction==='none'">
-            <tr>
+          <table class="table table-bordered" ng-show="moveCashBagAction==='merge' && moveCashBagSearchResults">
+            <tr ng-show="moveCashBagAction==='merge'">
               <th>Cash Bag</th>
               <th>Bank Ref #</th>
               <th>Schedule #</th>
@@ -87,6 +91,21 @@
               <th>Store Number</th>
               <th></th>
             </tr>
+            <tr ng-repeat="cashBag in moveCashBagSearchResults" ng-class="getClassesForMoveSelectedRow(cashBag, 'background')">
+              <td>{{ cashBag.cashBag }}</td>
+              <td>{{ cashBag.bankRefNumber }}</td>
+              <td>{{ cashBag.scheduleNumber }}</td>
+              <td>{{ cashBag.scheduleDate }}</td>
+              <td>{{ cashBag.storeNumber }}</td>
+              <td>
+                <button ng-class="getClassesForMoveSelectedRow(cashBag, 'button')" ng-click="selectRecordForMoveCashBag(cashBag)">
+                  <span ng-class="getClassesForMoveSelectedRow(cashBag, 'buttonIcon')"></span>
+                </button>
+              </td>
+            </tr>
+          </table>
+
+          <table class="table table-bordered" ng-show="moveCashBagAction==='reallocate' && moveCashBagSearchResults">
             <tr>
               <th>Store Instance Number</th>
               <th>Store Number</th>
@@ -94,36 +113,46 @@
               <th>Warehouse</th>
               <th></th>
             </tr>
-            <tr class="bg-success">
-              <td>123</td>
-              <td>ABC123</td>
-              <td>105</td>
-              <td>12/21/2015</td>
-              <td>Str78</td>
+            <tr ng-repeat="storeInstance in moveCashBagSearchResults" ng-class="getClassesForMoveSelectedRow(storeInstance, 'background')">
+              <td>{{ storeInstance.storeInstance }}</td>
+              <td>{{ storeInstance.storenumber }}</td>
+              <td>{{ storeInstance.scheduleDate }}</td>
+              <td>{{ storeInstance.warehouse }}</td>
               <td>
-                <button class="btn btn-success"><span class="fa fa-check-circle"></span></button>
-              </td>
-            </tr>
-            <tr>
-              <td>789</td>
-              <td>Str890</td>
-              <td>11/09/2016</td>
-              <td>ORD</td>
-              <td>
-                <button class="btn btn-default"><span class="fa fa-circle-thin"></span></button>
+                <button ng-class="getClassesForMoveSelectedRow(storeInstance, 'button')" ng-click="selectRecordForMoveCashBag(storeInstance)">
+                  <span ng-class="getClassesForMoveSelectedRow(storeInstance, 'buttonIcon')"></span>
+                </button>
               </td>
             </tr>
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="moveCashBagAction==='none'"><span
-            class="fa fa-check"></span> Confirm
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="targetRecordForMoveCashBag===null">
+            <span class="fa fa-check"></span> Confirm
           </button>
-          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="moveCashBagAction='none'">Cancel</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="dismissMoveCashBagModal()">
+            Cancel
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+
+  <div class="modal fade" id="sectorModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Move Cash Bag</h4>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div class="row">
     <div class="col-xs-12 main">
@@ -246,8 +275,8 @@
 
         <div class="well">
           <div class="row">
-            <div class="col-xs-8">
-              <div class="input-group col-xs-6">
+            <div class="col-xs-4">
+              <div class="input-group col-xs-12">
                 <span class="input-group-btn">
                   <button type="button" class="btn btn-default btn-sm" disabled="true">
                     <i class="fa fa-filter"></i> Filter
@@ -262,12 +291,15 @@
               </div>
             </div>
 
-            <div class="col-xs-4 text-right">
-              <button class="btn btn-warning" ng-click="toggleMergeMode()"><span
-                class="fa fa-tasks active"></span> Reorder Flight Sectors
+            <div class="col-xs-8 text-right">
+              <button class="btn btn-warning" ng-click="toggleMergeMode()">
+                <span class="fa fa-tasks active"></span> Reorder Flight Sectors
               </button>
-              <button class="btn btn-default" ng-click="initEditTable(false)"><span
-                class="fa fa-minus-circle active"></span> Collapse Cash Bag Views
+              <button class="btn btn-default" ng-click="initEditTable(false)">
+                <span class="fa fa-eye active"></span> Show Deleted Cash Bags
+              </button>
+              <button class="btn btn-default" ng-click="initEditTable(false)">
+                <span class="fa fa-minus-circle active"></span> Collapse Cash Bag Views
               </button>
             </div>
           </div>
@@ -423,7 +455,7 @@
                     <th>Tail Number</th>
                     <th>Number of Transactions</th>
                     <th>Transactions Total [GBP]</th>
-                    <th></th>
+                    <th ng-hide="cashBag.isDeleted"></th>
                   </tr>
                   </tbody>
                   <tbody ng-repeat="flightSector in cashBag.flightSectors" ng-init="flightSector.rowOpen=false">
@@ -442,7 +474,7 @@
                     <td>{{ flightSector.tailNumber }}</td>
                     <td>{{ flightSector.transactionCount }}</td>
                     <td>{{ flightSector.transactionTotal }}</td>
-                    <td>
+                    <td ng-hide="cashBag.isDeleted">
                       <button class="btn btn-primary btn-xs"><span class="fa fa-pencil active"></span></button>
                       <button class="btn btn-danger btn-xs"><span class="fa fa-trash active"></span></button>
                     </td>
@@ -481,7 +513,7 @@
                 </button>
                 <button class="btn btn-danger" ng-click="saveTable(false)"><span class="fa fa-trash active"></span>
                 </button>
-                <button class="btn btn-warning" ng-click="showModal()"><span
+                <button class="btn btn-warning" ng-click="showMoveCashBagModal(cashBag)"><span
                   class="fa fa-share active"></span>
                 </button>
               </div>
