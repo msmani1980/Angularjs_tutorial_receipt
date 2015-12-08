@@ -209,7 +209,7 @@ angular.module('ts5App')
     };
 
     this.setViewLabels = function() {
-      $scope.buttonText = 'Create';
+      $scope.buttonText = 'Save';
     };
 
     this.setCompanyReasonTypes = function(dataFromAPI) {
@@ -230,9 +230,19 @@ angular.module('ts5App')
       return this.setCompanyReasonCodes(companyReasonCodesJSON);
     };
 
+    this.addReasonCode = function() {
+      $scope.reasonCodeList.push({
+        id: null,
+        description: ''
+      });
+    };
 
     this.init = function() {
       $scope.displayError = false;
+      $scope.reasonCodeList = [{
+        id: 19,
+        description: 'This is an ullage description'
+      }];
       this.setViewLabels();
       this.getCompanyReasonCodes();
       this.getCompanyReasonTypes();
@@ -244,6 +254,10 @@ angular.module('ts5App')
 
     $scope.submitForm = function() {
       return $this.submitForm();
+    };
+
+    $scope.addReasonCode = function() {
+      return $this.addReasonCode();
     };
 
   });
