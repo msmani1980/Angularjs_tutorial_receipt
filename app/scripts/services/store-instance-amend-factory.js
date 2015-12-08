@@ -64,8 +64,11 @@ angular.module('ts5App')
           }]
         }]
       }, {
-        isManual: true,
+        cashBagNumber: '789',
+        bankRefNumber: 'CB12',
+        isManual: false,
         isDeleted: false,
+        isVerified: false,
         regularItemSales: 5.00,
         virtualItemSales: 15.00,
         voucherItemSales: 10.00,
@@ -82,7 +85,7 @@ angular.module('ts5App')
           tailNumber: 'ABC-123',
           transactionsCount: 7,
           transactionTotal: 15.00,
-          isManual: false,
+          isManual: true,
           crewData: [{
             crewId: 1,
             firstName: 'John',
@@ -101,7 +104,7 @@ angular.module('ts5App')
           tailNumber: 'GAD-123',
           transactionsCount: 3,
           transactionTotal: 11.00,
-          isManual: true,
+          isManual: false,
           crewData: [{
             crewId: 1,
             firstName: 'John',
@@ -110,6 +113,46 @@ angular.module('ts5App')
             crewId: 2,
             firstName: 'Mary',
             lastName: 'Jane'
+          }]
+        }]
+      }, {
+        cashBagNumber: '567',
+        bankRefNumber: '1278',
+        isManual: true,
+        isDeleted: true,
+        isVerified: false,
+        regularItemSales: 3.00,
+        virtualItemSales: 20.00,
+        voucherItemSales: 12.00,
+        promotionDiscounts: 1.00,
+        cashRevenue: 10.00,
+        creditRevenue: 7.00,
+        discountRevenue: 3.00,
+        flightSectors: [{
+          scheduleDate: '11/20/2015',
+          scheduleNumber: '145',
+          departureStationCode: 'SAN',
+          arrivalStationCode: 'GNV',
+          passengerCount: 123,
+          tailNumber: 'ABC-123',
+          transactionsCount: 7,
+          transactionTotal: 15.00,
+          isManual: true,
+          crewData: []
+        }, {
+          scheduleDate: '12/30/2015',
+          scheduleNumber: '105',
+          departureStationCode: 'CPH',
+          arrivalStationCode: 'ORD',
+          passengerCount: 123,
+          tailNumber: 'GAD-123',
+          transactionsCount: 3,
+          transactionTotal: 11.00,
+          isManual: false,
+          crewData: [{
+            crewId: 1,
+            firstName: 'John',
+            lastName: 'Smith'
           }]
         }]
       }];

@@ -16,6 +16,18 @@ angular.module('ts5App')
       angular.element('#reallocateModal').modal('show');
     };
 
+    $scope.getClassForOpenRow = function (visbilityFlag) {
+      return (visbilityFlag) ? 'fa fa-minus-square' : 'fa fa-plus-square-o';
+    };
+
+    $scope.shouldShowCashBag = function (cashBag) {
+      return ($scope.showDeletedCashBags) ? true : !cashBag.isDeleted;
+    };
+
+    $scope.doesSectorHaveCrewData = function (flightSector) {
+      return flightSector.crewData.length;
+    };
+
     this.getCashBagListSuccess = function (dataFromAPI) {
       $scope.cashBagList = angular.copy(dataFromAPI);
     };
