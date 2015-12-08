@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('The Stations List Controller', function () {
+describe('The Stations List Controller', function () {
 
   beforeEach(module(
     'ts5App',
