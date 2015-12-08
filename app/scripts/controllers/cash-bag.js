@@ -52,6 +52,7 @@ angular.module('ts5App')
 
     // scope methods
     $scope.formSave = function (payloadFromForm) {
+      delete payloadFromForm.storeNumber;
       switch ($routeParams.state) {
         case 'edit':
           if (payloadFromForm.isSubmitted === 'true') {
@@ -71,7 +72,6 @@ angular.module('ts5App')
           );
           break;
         case 'create':
-          delete payloadFromForm.storeNumber;
           payloadFromForm.isDelete = false;
           payloadFromForm.totalCashBags = parseInt(payloadFromForm.totalCashBags, 10);
           cashBagFactory.createCashBag({cashBag: payloadFromForm}).then(function (newCashBag) {

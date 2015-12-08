@@ -30,7 +30,7 @@ angular.module('ts5App')
     }
 
     function getVarianceQuantity(stockItem) {
-      var eposSales = stockItem.eposTotal || 0;
+      var eposSales = stockItem.eposQuantity || 0;
       var lmpDispatchedCount = stockItem.dispatchedQuantity || 0;
       var lmpReplenishCount = 0;
       var lmpIncomingCount = stockItem.inboundQuantity || 0;
@@ -242,7 +242,10 @@ angular.module('ts5App')
     }
 
     function getStockItemData() {
-      $this.promotionTotals.map(function (promotion) {
+
+      $filter('filter')($this.promotionTotals, {exchangeRateTypeId: 1}).map(function (promotion) {
+        promotion.eposQuantity = 1;
+        promotion.eposTotal = promotion.convertedAmount;
         reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
           promotion.itemName = dataFromAPI.promotionCode;
         }, handleResponseError);
@@ -351,7 +354,7 @@ angular.module('ts5App')
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
       $this.stockTotals = angular.copy(responseCollection[2].response);
-      $this.promotionTotals = angular.copy(responseCollection[3].response);
+      $this.promotionTotals = $filter('filter')(angular.copy(responseCollection[3].response), {exchangeRateTypeId: 1});
       $this.chRevenue = angular.copy(responseCollection[4]);
       $this.eposRevenue = angular.copy(responseCollection[5]);
       $this.globalCurrencyList = angular.copy(responseCollection[6].response);
