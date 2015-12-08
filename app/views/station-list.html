@@ -1,28 +1,36 @@
-<div class="fluid-container module-container">
+<div class="container-fluid module-container">
 
 	<div class="list-controls">
 
 		<div class="row item-list-row">
 
-			<div class="col-xs-6">
+			<div class="col-xs-8">
 
-				<h2 class="view-name">Stations List</h2>
+				<h2 class="view-name">Company Stations</h2>
+				<p>Here you will find a list of Stations. You are able to search and update Stations
 
 			</div>
 
-      <div class="col-xs-6 text-right">
+      <div class="col-xs-4 text-right">
 
+				<a href="#/station-create" class="btn btn-primary">
+					<i class="fa fa-plus"></i>
+					<span class="hidden-xs hidden-sm">Add Station</span>
+				</a>
 
-				<button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false" aria-controls="search-collapse">
+				<button class="btn btn-default" data-toggle="collapse" data-target="#filter-controls">
           <span class="fa fa-filter" aria-hidden="true"></span>
-					<span class="hidden-sm hidden-xs">Filter</span>
+					<span class="hidden-xs">Toggle Filter</span>
 				</button>
 
       </div>
 
 		</div>
 
-		<div class="panel panel-default collapse no-transition" id="search-collapse">
+		<!-- Search Panel -->
+		<div class="panel panel-default no-transition in" id="filter-controls">
+
+			<div class="panel-heading">Search for Stations</div>
 
 			<form name="searchForm" class="form">
 
@@ -30,21 +38,64 @@
 
 					<div class="row">
 
-            <div class="col-xs-12 col-sm-6 col-md-4">
+						<div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label>Country</label>
+								<select class="form-control" ng-model="search.countryId">
+									<option value="{{country.id}}" ng-repeat="country in countryList track by country.id ">{{ country.countryName }}</option>
+								</select>
+              </div>
+            </div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+
+              <div class="form-group">
+                <label>City</label>
+								<ui-select multiple ng-model="search.cityId" theme="bootstrap">
+	                <ui-select-match placeholder="Start typing to find a city">{{ $item.cityName }}
+	                </ui-select-match>
+	                <ui-select-choices repeat="city in cityList | filter: $select.search | filter: filterByCountry | orderBy:'cityName'">
+	                  <div ng-bind-html="city.cityName | highlight: $select.search"></div>
+	                </ui-select-choices>
+	              </ui-select>
+              </div>
+
+            </div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label>Station Code</label>
+								<ui-select ng-disabled="search.stationName" multiple ng-model="search.stationId" theme="bootstrap">
+	                <ui-select-match placeholder="Start typing to find a Station">{{ $item.code }}
+	                </ui-select-match>
+	                <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
+	                  <div ng-bind-html="station.code | highlight: $select.search"></div>
+	                </ui-select-choices>
+	              </ui-select>
+              </div>
+            </div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
                 <label>Station Name</label>
-                <input type="text" class="form-control" ng-model="search.stationName" />
+								<ui-select ng-disabled="search.stationId" multiple ng-model="search.stationName" theme="bootstrap">
+	                <ui-select-match placeholder="Start typing to find a Station">{{ $item.name }}
+	                </ui-select-match>
+	                <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'name'">
+	                  <div ng-bind-html="station.name | highlight: $select.search"></div>
+	                </ui-select-choices>
+	              </ui-select>
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-4">
               <date-picker-field name="EffectiveFrom" label="Effective From"
-                ng-model="dateRange.stationStartDate"></date-picker-field>
+                ng-model="search.startDate"></date-picker-field>
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-4">
               <date-picker-field  name="EffectiveTo" label="Effective To"
-                ng-model="dateRange.stationEndDate"></date-picker-field>
+                ng-model="search.endDate"></date-picker-field>
             </div>
 
 					</div>
@@ -55,7 +106,7 @@
 
 						<button class="btn btn-default btn-search-clear"
 							ng-click="clearSearchFilters()"
-							ng-show="search.menuId.length || search.catererStationId.length || dateRange.startDate.length || dateRange.endDate.length">
+							ng-show="search.countryId || search.cityId.length || search.startDate || search.endDate">
 							<span class="btn-label">Clear</span>
 						</button>
 
@@ -70,16 +121,63 @@
 
 			</div>
 
+			<!-- Station Edit Controls Panel -->
+			<div class="panel panel-default"  ng-show="canSave()">
+
+					<div class="panel-body">
+
+						<div class="row">
+
+							<div class="col-xs-12 col-sm-6 col-md-4">
+								<date-picker-field name="EffectiveFrom" label="Effective From" min-date="'+1d'"
+									ng-model="dateRange.startDate"></date-picker-field>
+							</div>
+
+							<div class="col-xs-12 col-sm-6 col-md-4">
+								<date-picker-field  name="EffectiveTo" label="Effective To" min-date="'0d'"
+									ng-model="dateRange.endDate"></date-picker-field>
+							</div>
+
+						</div>
+
+						<p>
+							<i class="fa fa-info-circle"></i>
+							<em>Use the fields above to update all selected Stations. You may also update stations per row.</em>
+						</p>
+
+					</div>
+
+					<div class="panel-footer">
+
+						<button ng-show="canSave()" class="btn btn-success" type="button" ng-click="submitForm()">
+							<i class="fa fa-check-square-o"></i> Save Stations
+						</button>
+
+					</div>
+
+			</div>
+
 	</div>
 
-	<form name="stationListForm">
+	<error-dialog form-object="stationListForm" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+	<form name="stationListForm" ng-show="stationList.length">
 
 	  <table class="table table-bordered table-responsive table-hover">
 
 	    <thead>
 
 	      <tr>
+					<th>
+						<input type="checkbox" ng-model="allStationsSelected" />
+					</th>
+					<th>Station Code</th>
 	        <th>Station Name</th>
+					<th>Catering Station</th>
+					<th>Country</th>
+					<th>City</th>
+					<th>Timezone</th>
 	        <th>Start Date</th>
 	        <th>End Date</th>
 	        <th>Actions</th>
@@ -91,27 +189,47 @@
 
 	      <tr ng-repeat="station in stationList">
 
-	        <td>{{ station.stationCode }}</td>
+					<td>
+						<input type="checkbox" ng-model="selectedStations[station.id]" />
+					</td>
 
-	        <td>
-						<date-picker-field form="stationListForm" name="startDate" required="true"
-							ng-model="formData.stations[station.id].startDate"
-							disable="isActionState('end-instance')">
+					<td>{{ station.stationCode }}</td>
+
+	        <td>{{ station.stationName }}</td>
+
+					<td>
+						<span ng-show="station.isCaterer">Yes</span>
+						<span ng-show="!station.isCaterer">No</span>
+					</td>
+
+					<td>{{ station.countryName }}</td>
+
+					<td>{{ station.cityName }}</td>
+
+					<td>UTC {{station.utcDstOffset}}</td>
+
+	        <td width="200px">
+						<date-picker-field form="stationListForm" name="Start Date {{$index+1}}" required="true"
+							ng-model="formData.stations[$index].startDate" min-date="'+1d'"
+							disable="isDateActive(station.startDate)">
+						</date-picker-field>
+					</td>
+
+	        <td width="200px">
+						<date-picker-field form="stationListForm"  name="End Date {{$index+1}}" required="true"
+								ng-model="formData.stations[$index].endDate"
+								disable="isDateActive(station.endDate)">
 						</date-picker-field>
 					</td>
 
 	        <td>
-						<date-picker-field form="stationListForm" name="startDate" required="true"
-							ng-model="formData.stations[station.id].endDate"
-							disable="isActionState('end-instance')">
-						</date-picker-field>
-					</td>
 
-	        <td>
-
-	          <button class="btn btn-success btn-xs" type="submit">
-	            <i class="fa fa-check-square-o"></i> Save
-	          </button>
+						<a class="btn btn-info btn-xs" ng-href="#/station-view/{{station.id}}" ng-show="isDateActive(station.endDate)">
+	            <i class="fa fa-file"></i>
+	          </a>
+	          <a class="btn btn-primary btn-xs" ng-href="#/station-edit/{{station.id}}" ng-hide="isDateActive(station.endDate)">
+	            <i class="fa fa-pencil"></i>
+	          </a>
 
 	        </td>
 

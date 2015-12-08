@@ -24,7 +24,16 @@ angular.module('ts5App')
     $scope.saveButtonName = 'Exit';
 
     this.setSealColors = function(dataFromAPI) {
-      $scope.sealColorsList = dataFromAPI.response;
+      if (angular.isDefined(dataFromAPI)) {
+        $scope.sealColorsList = dataFromAPI.response;
+      }
+      if (angular.isUndefined(dataFromAPI)) {
+        $scope.errorCustom = [{
+          field: 'Seal Colors',
+          value: '- Our server did not return the data, please contact your systems administrator.'
+        }];
+        $scope.displayError = true;
+      }
     };
 
     this.canReplenish = function() {
@@ -57,9 +66,9 @@ angular.module('ts5App')
     };
 
     this.storeInstanceIsInvalid = function() {
-      if(this.getCurrentStepName() !== 2 || $routeParams.action === 'replenish' && !this.canReplenish()) {
+      if (this.getCurrentStepName() !== 2 || $routeParams.action === 'replenish' && !this.canReplenish()) {
         $scope.errorCustom = [{
-          field:'Store Instance Invalid Status',
+          field: 'Store Instance Invalid Status',
           value: '- This Store Instance is not in the correct status'
         }];
         $scope.displayError = true;
@@ -73,7 +82,7 @@ angular.module('ts5App')
         this.setAsEdit();
         return;
       }
-      if( this.storeInstanceIsInvalid() ){
+      if (this.storeInstanceIsInvalid()) {
         return;
       }
       $scope.readOnly = false;
@@ -102,6 +111,10 @@ angular.module('ts5App')
       $scope.sealTypes = sealTypesJSON;
     };
 
+    this.setStoreInstanceSeals = function(dataFromAPI) {
+      $scope.existingSeals = dataFromAPI.response;
+    };
+
     this.setWizardSteps = function() {
       var controllerName = 'Seals';
       if ($this.isInboundDuringRedispatch()) {
@@ -123,19 +136,15 @@ angular.module('ts5App')
     };
 
     this.getStoreDetails = function() {
-      storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
+      return storeInstanceFactory.getStoreDetails($routeParams.storeId).then($this.setStoreDetails);
     };
 
     this.getPrevStoreDetails = function() {
-      storeInstanceFactory.getStoreDetails($scope.storeDetails.prevStoreInstanceId).then($this.setPrevStoreDetails);
+      return storeInstanceFactory.getStoreDetails($scope.storeDetails.prevStoreInstanceId).then($this.setPrevStoreDetails);
     };
 
     this.getSealTypes = function() {
       return sealTypesService.getSealTypes().then($this.setSealTypes);
-    };
-
-    this.setStoreInstanceSeals = function(dataFromAPI) {
-      $scope.existingSeals = dataFromAPI.response;
     };
 
     this.getStoreInstanceSeals = function() {
@@ -207,9 +216,11 @@ angular.module('ts5App')
     };
 
     this.getSealColor = function(typeId) {
-      return $scope.sealColorsList.filter(function(sealColor) {
-        return sealColor.type === typeId;
-      })[0];
+      if (angular.isDefined($scope.sealColorsList) && angular.isDefined(typeId)) {
+        return $scope.sealColorsList.filter(function(sealColor) {
+          return sealColor.type === typeId;
+        })[0];
+      }
     };
 
     this.displayLoadingModal = function(loadingText) {
@@ -266,25 +277,29 @@ angular.module('ts5App')
 
     this.generateSealTypeObject = function(sealType) {
       var sealColor = $this.getSealColor(sealType.id);
-      return {
-        id: sealType.id,
-        name: sealType.name,
-        color: sealColor.color,
-        seals: {
-          numbers: $this.getExistingSeals(sealType.id)
-        },
-        actions: $this.addSealTypeActions(sealType),
-        required: $this.isSealTypeRequired(sealType),
-        order: $this.sealTypeListOrder(sealType)
-      };
+      if (angular.isDefined(sealColor)) {
+        return {
+          id: sealType.id,
+          name: sealType.name,
+          color: sealColor.color,
+          seals: {
+            numbers: $this.getExistingSeals(sealType.id)
+          },
+          actions: $this.addSealTypeActions(sealType),
+          required: $this.isSealTypeRequired(sealType),
+          order: $this.sealTypeListOrder(sealType)
+        };
+      }
     };
 
     this.removeHandoverSealType = function() {
-      var handover = $scope.sealTypes.filter(function(sealType) {
-        return sealType.name === HANDOVER;
-      })[0];
-      var index = $scope.sealTypes.indexOf(handover);
-      delete $scope.sealTypes[index];
+      if (angular.isDefined($scope.sealTypes)) {
+        var handover = $scope.sealTypes.filter(function(sealType) {
+          return sealType.name === HANDOVER;
+        })[0];
+        var index = $scope.sealTypes.indexOf(handover);
+        delete $scope.sealTypes[index];
+      }
     };
 
     this.generateSealTypesList = function() {

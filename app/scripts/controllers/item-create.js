@@ -12,7 +12,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     currencyFactory,
     $routeParams, GlobalMenuService, $q, dateUtility, $filter) {
 
-    // TODO: Refactor so the company object is returned, right now it's retruning a num so ember will play nice
+    // TODO: Refactor so the company object is returned, right now it's returning a number so that ember will play nice
     var companyId = GlobalMenuService.company.get();
 
     // object resolution in for sub scopes
@@ -400,7 +400,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     // checks to see if the item is inactive, and set viewOnly=true if item is inactive
-    this.checkIfItemIsInactive = function (itemData) {
+    this.checkIfItemIsInactive = function(itemData) {
       var today = new Date();
       var itemEndDate = new Date(itemData.endDate);
       $scope.itemIsInactive = itemEndDate <= today && !$scope.cloningItem;
@@ -463,7 +463,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.determineMinDate = function() {
       var diff = 1;
-      if($scope.editingItem) {
+      if ($scope.editingItem) {
         diff = dateUtility.diff(
           dateUtility.nowFormatted(),
           $scope.formData.startDate
@@ -961,7 +961,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $this.updateFormData(response.retailItem);
         angular.element('#loading').modal('hide');
         angular.element('#update-success').modal('show');
-      }, $this.errorHandler );
+      }, $this.errorHandler);
     };
 
     this.createItem = function(itemData) {
@@ -973,7 +973,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         angular.element('#loading').modal('hide');
         angular.element('#create-success').modal('show');
         return true;
-      }, $this.errorHandler );
+      }, $this.errorHandler);
     };
 
     $scope.submitForm = function(formData) {
@@ -1016,7 +1016,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.formatGlobalTradeNumbers(itemData);
       this.formatTaxes(itemData);
       this.cleanUpPayload(itemData);
-      if($scope.cloningItem) {
+      if ($scope.cloningItem) {
         delete itemData.id;
       }
       return itemData;
@@ -1061,6 +1061,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         scrollTop: elm.offset().top - (navBar + topBar + 100)
       }, 'slow');
       return activeBtn;
+    };
+
+    $scope.setSelected = function(model, id) {
+      model = parseInt(model);
+      id = parseInt(id);
+      return (model === id);
     };
 
   });

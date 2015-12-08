@@ -43,7 +43,7 @@ describe('Service: reconciliationService', function () {
 
   it('should GET the Payment Report', function () {
     var storeInstanceId = 'fakeStoreInstance';
-    httpBackend.expectGET(/api\/paymentReport\?storeInstanceId/).respond(200, [{}]);
+    httpBackend.expectGET(/api\/paymentReport\?storeInstanceId/).respond(200, {});
 
     reconciliationService.getPaymentReport(storeInstanceId).then(function (response) {
       expect(response).toBeDefined();

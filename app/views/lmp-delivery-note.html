@@ -1,5 +1,11 @@
 <div class="module-container">
 
+  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  </error-dialog>
+
+
+  <form class="form edit-form delivery-note-form" name="form">
+
   <div class="edit-controls">
     <div class="row">
 
@@ -37,11 +43,6 @@
 
     </div>
   </div>
-
-  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
-  </error-dialog>
-
-  <form class="form edit-form delivery-note-form" name="form">
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -253,7 +254,7 @@
                         ng-selected="item.ullageReason"
                         ng-options="ullageReason.id + '' as ullageReason.companyReasonCodeName for ullageReason in ullageReasons"
                         ng-disabled="ullageReasonDisabled(item)"
-                        ng-required="item.ullageQuantity">
+                        ng-required="ullageReasonRequired(item)">
                 </select>
 
               </div>

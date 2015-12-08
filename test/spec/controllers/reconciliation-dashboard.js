@@ -181,6 +181,10 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports']);
 
+    item = {statusName: 'Inbounded'};
+    ReconciliationDashboardCtrl.recalculateActionsColumn(item);
+    expect(item.actions).toEqual(['Reports', 'Validate']);
+
     item = {statusName: 'Inbounded', eposData: '1/3', postTripData: '2/3', cashHandlerData: '3/3'};
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
     expect(item.actions).toEqual(['Reports', 'Validate']);

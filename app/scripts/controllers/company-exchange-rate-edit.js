@@ -71,10 +71,10 @@ angular.module('ts5App')
         .join(', ');
     };
 
-    this.formatPayloadForSearch = function () {
+    this.formatPayloadForSearch = function() {
       var searchPayload = angular.copy($scope.search);
       searchPayload = payloadUtility.serializeDates(searchPayload);
-      if(searchPayload.acceptedCurrencies) {
+      if (searchPayload.acceptedCurrencies) {
         delete searchPayload.acceptedCurrencies;
       }
       return searchPayload;
@@ -229,7 +229,6 @@ angular.module('ts5App')
       $this.showLoadingModal('Loading Data');
       $scope.companyExchangeRates = [];
       var searchPayload = $this.formatPayloadForSearch();
-      console.log(searchPayload);
       currencyFactory.getCompanyExchangeRates(searchPayload).then(function(
         companyExchangeRatesFromAPI) {
         $this.normalizeCompanyExchangeRatesList(companyExchangeRatesFromAPI.response);
@@ -268,6 +267,7 @@ angular.module('ts5App')
 
     this.deleteExchangeRateSuccessHandler = function() {
       $this.hideLoadingModal();
+      $scope.searchCompanyExchangeRates();
     };
 
     this.deleteCompanyExchangeRate = function(exchangeRateId) {
@@ -285,14 +285,12 @@ angular.module('ts5App')
     $scope.showDeleteConfirmation = function(index, exchangeRate) {
       $scope.exchangeRateToDelete = exchangeRate;
       $scope.exchangeRateToDelete.rowIndex = index;
-
       angular.element('.delete-warning-modal').modal('show');
     };
 
     $scope.deleteCompanyExchangeRate = function() {
       angular.element('.delete-warning-modal').modal('hide');
-      angular.element('#exchange-rate-' + $scope.exchangeRateToDelete.rowIndex).remove();
-
+      $scope.companyExchangeRates.splice($scope.exchangeRateToDelete.rowIndex, 1);
       $this.deleteCompanyExchangeRate($scope.exchangeRateToDelete.id);
     };
 

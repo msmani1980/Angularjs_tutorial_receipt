@@ -66,7 +66,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $scope.formData.menus = storeDetailsJSON.parentStoreInstance.menus;
         return;
       }
-      delete $scope.formData.scheduleNumber;
+      if (!$scope.isStepOneFromStepTwo) {
+        delete $scope.formData.scheduleNumber;
+      }
     };
 
     this.formatCurrentStoreForStoreList = function(store) {
@@ -92,7 +94,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
             filteredStore = $filter('unique')(currentStoreArray, 'storeNumber');
           }
         });
-        $scope.storesList.push(filteredStore[0]);
+        if (angular.isDefined(filteredStore)) {
+          $scope.storesList.push(filteredStore[0]);
+        }
       }
     };
 
@@ -104,7 +108,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('redispatch')) {
         $this.getPrevStoreDetails();
       }
-      if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
+      if ($this.isEditingDispatch()) {
         $this.addCurrentStoreToStoreList();
       }
     };
@@ -365,7 +369,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.setScheduleNumber = function(apiData) {
       var scheduleNumber = {};
-      if (apiData && apiData.scheduleNumber && !$this.isActionState('replenish')) {
+      if (apiData && apiData.scheduleNumber) {
         scheduleNumber = {
           scheduleNumber: apiData.scheduleNumber
         };
@@ -690,9 +694,15 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var prevInstanceStatus = this.parsePrevInstanceStatus();
       var payload = this.formatPayload('end-instance');
       return {
-        updateInstancePromises: [{ f: storeInstanceFactory.updateStoreInstance, obj: storeInstanceFactory, args: [$routeParams.storeId, payload] }],
-        updateInstanceStatusPromises: [{ f: storeInstanceFactory.updateStoreInstanceStatus, obj: storeInstanceFactory,
-          args : [$routeParams.storeId, prevInstanceStatus]
+        updateInstancePromises: [{
+          f: storeInstanceFactory.updateStoreInstance,
+          obj: storeInstanceFactory,
+          args: [$routeParams.storeId, payload]
+        }],
+        updateInstanceStatusPromises: [{
+          f: storeInstanceFactory.updateStoreInstanceStatus,
+          obj: storeInstanceFactory,
+          args: [$routeParams.storeId, prevInstanceStatus]
         }]
       };
     };
@@ -831,7 +841,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var promises = $this.makeCreatePromises();
       var redispatchPromises = $this.makeRedispatchPromises();
       $q.all($this.startPromise(redispatchPromises.updateInstancePromises)).then(function() {
-          $this.invokeStoreInstanceStatusPromises(promises.concat($this.startPromise(redispatchPromises.updateInstanceStatusPromises)), saveAndExit);
+          $this.invokeStoreInstanceStatusPromises(promises.concat($this.startPromise(redispatchPromises.updateInstanceStatusPromises)),
+            saveAndExit);
         },
         $this.createStoreInstanceErrorHandler
       );

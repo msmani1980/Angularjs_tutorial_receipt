@@ -11,15 +11,15 @@ angular.module('ts5App')
   .controller('CashBagListCtrl', function ($scope, cashBagFactory, $location, $routeParams, $q, ngToast, dateUtility) {
 
     var _companyId = null;
-    var _services  = null;
+    var _services = null;
 
-    $scope.viewName           = 'Manage Cash Bag';
+    $scope.viewName = 'Manage Cash Bag';
     $scope.createCashBagError = 'temp error message';
-    $scope.displayModalError  = false;
-    $scope.displayError       = false;
-    $scope.search             = {};
-    $scope.storeList          = [];
-    $scope.storeInstanceList  = [];
+    $scope.displayModalError = false;
+    $scope.displayError = false;
+    $scope.search = {};
+    $scope.storeList = [];
+    $scope.storeInstanceList = [];
 
     function showSuccessMessage(error) {
       ngToast.create({
@@ -28,6 +28,15 @@ angular.module('ts5App')
         content: '<strong>Cash bag</strong>: ' + error
       });
       $scope.formErrors = {};
+    }
+
+    function showLoadingModal(text) {
+      $scope.displayError = false;
+      angular.element('#loading').modal('show').find('p').text(text);
+    }
+
+    function hideLoadingModal() {
+      angular.element('#loading').modal('hide');
     }
 
     function getSortedBankRefList(cashBagList) {
@@ -41,7 +50,7 @@ angular.module('ts5App')
     }
 
     function formatScheduleDateForApp(containingArray) {
-      if(!angular.isArray(containingArray)) {
+      if (!angular.isArray(containingArray)) {
         return;
       }
 
@@ -61,10 +70,11 @@ angular.module('ts5App')
         }
       });
       $scope.bankRefList = getSortedBankRefList(response.cashBags);
+      hideLoadingModal();
     }
 
     function setFilteredScheduleList(dataFromAPI) {
-      var scheduleArray            = dataFromAPI.distinctSchedules || dataFromAPI.schedules;
+      var scheduleArray = dataFromAPI.distinctSchedules || dataFromAPI.schedules;
       $scope.filteredSchedulesList = angular.copy(scheduleArray);
     }
 
@@ -81,9 +91,9 @@ angular.module('ts5App')
 
 
     (function constructor() {
-      // set global controller properties
+      showLoadingModal('Loading Cash Bag');
       _companyId = cashBagFactory.getCompanyId();
-      _services  = {
+      _services = {
         promises: [],
         call: function (servicesArray) {
           angular.forEach(servicesArray, function (_service) {
@@ -101,11 +111,12 @@ angular.module('ts5App')
         }
       };
       _services.call(['getCashBagList', 'getStationList', 'getSchedulesList']);
+      $q.all(_services.promises).then(hideLoadingModal);
     })();
 
     // helpers
     function showModalErrors(errorMessage) {
-      $scope.displayModalError  = true;
+      $scope.displayModalError = true;
       $scope.createCashBagError = errorMessage;
     }
 
@@ -120,9 +131,10 @@ angular.module('ts5App')
 
     $scope.searchCashBag = function () {
       var payload = angular.copy($scope.search);
+      showLoadingModal('Searching Cash Bags');
       if (payload.startDate) {
         payload.startDate = dateUtility.formatDateForAPI(payload.startDate);
-        payload.endDate   = payload.startDate;
+        payload.endDate = payload.startDate;
       }
       payload.isSubmitted = 'false';
       payload.isDelete = 'false';
@@ -177,7 +189,7 @@ angular.module('ts5App')
     var getStoreInstanceListHandler = function (dataFromAPI) {
       var isResponseValid = validateStoreInstanceResponse(dataFromAPI.response);
       if (isResponseValid) {
-        var storeListFromAPI     = angular.copy(dataFromAPI.response);
+        var storeListFromAPI = angular.copy(dataFromAPI.response);
         $scope.storeInstanceList = formatScheduleDateForApp(storeListFromAPI);
         return;
       }
@@ -197,7 +209,7 @@ angular.module('ts5App')
 
       $scope.storeInstanceList = [];
       $scope.displayModalError = false;
-      var payload              = createPayloadForStoreInstance();
+      var payload = createPayloadForStoreInstance();
       cashBagFactory.getStoreInstanceList(payload).then(getStoreInstanceListHandler);
     };
 
@@ -216,7 +228,7 @@ angular.module('ts5App')
       $scope.clearSelectedSchedule();
       $scope.clearStoreNumber();
       var searchDate = dateUtility.formatDateForAPI($scope.scheduleDate);
-      var payload    = {
+      var payload = {
         startDate: searchDate,
         endDate: searchDate
       };

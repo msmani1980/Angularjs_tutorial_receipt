@@ -30,27 +30,28 @@ angular.module('ts5App')
     }
 
     function getVarianceQuantity(stockItem) {
-      var eposSales = stockItem.eposTotal;
-      var lmpDispatchedCount = stockItem.dispatchedQuantity;
+      var eposSales = stockItem.eposTotal || 0;
+      var lmpDispatchedCount = stockItem.dispatchedQuantity || 0;
       var lmpReplenishCount = 0;
-      var lmpIncomingCount = stockItem.inboundQuantity;
-      var offloadCount = stockItem.offloadQuantity;
-      return eposSales - ((lmpDispatchedCount + lmpReplenishCount) - lmpIncomingCount / offloadCount);
+      var lmpIncomingCount = stockItem.inboundQuantity || 0;
+      var offloadCount = stockItem.offloadQuantity || 0;
+      return eposSales - ((lmpDispatchedCount + lmpReplenishCount) - (lmpIncomingCount + offloadCount));
     }
 
     function setStockItem(stockItem) {
       var varianceQuantity = getVarianceQuantity(stockItem);
-      var retailValue = stockItem.price;
+      var retailValue = stockItem.price || 0;
       var varianceValue = varianceQuantity * stockItem.price;
       var isDiscrepancy = (varianceQuantity !== 0);
+      var eposSales = stockItem.eposQuantity || 0;
+      var inboundOffloadCount = stockItem.inboundQuantity || stockItem.offloadQuantity || 0;
 
       return {
         itemName: stockItem.itemName,
         dispatchedCount: stockItem.dispatchedQuantity,
         replenishCount: 0,
-        inboundCount: stockItem.inboundQuantity,
-        offloadCount: stockItem.offloadQuantity,
-        ePOSSales: formatAsCurrency(stockItem.eposQuantity),
+        inboundOffloadCount: inboundOffloadCount,
+        ePOSSales: formatAsCurrency(eposSales),
         varianceQuantity: formatAsCurrency(varianceQuantity),
         retailValue: formatAsCurrency(retailValue),
         varianceValue: formatAsCurrency(varianceValue),
@@ -58,8 +59,10 @@ angular.module('ts5App')
       };
     }
 
-    function mergeItems(itemListFromAPI) {
+    function mergeItems(itemListFromAPI, rawLMPStockData) {
       var rawItemList = angular.copy(itemListFromAPI);
+      var uniqueItemList = lodash.uniq(angular.copy(rawItemList), 'itemMasterId');
+
       var inboundItemList = rawItemList.filter(function (item) {
         return item.countTypeId === lodash.findWhere($this.countTypes, {
             name: 'Warehouse Close'
@@ -78,28 +81,42 @@ angular.module('ts5App')
           }).id;
       });
 
-      angular.forEach(inboundItemList, function (item) {
-        item.inboundQuantity = item.quantity || 0;
-        delete item.quantity;
+      angular.forEach(uniqueItemList, function (item) {
+        item.inboundQuantity = 0;
+        item.dispatchedQuantity = 0;
+        item.offloadQuantity = 0;
+
+        var inboundItem = $filter('filter')(inboundItemList, {itemMasterId: item.itemMasterId}, true);
+        if (inboundItem.length) {
+          item.inboundQuantity = inboundItem[0].quantity;
+        }
+
+        var dispatchedItem = $filter('filter')(dispatchedItemList, {itemMasterId: item.itemMasterId}, true);
+        if (dispatchedItem.length) {
+          item.dispatchedQuantity = dispatchedItem[0].quantity;
+        }
+
+        var offloadItem = $filter('filter')(offloadItemList, {itemMasterId: item.itemMasterId}, true);
+        if (offloadItem.length) {
+          item.offloadQuantity = offloadItem[0].quantity;
+        }
+
+        var lmpStockItem = $filter('filter')(rawLMPStockData, {itemMasterId: item.itemMasterId}, true);
+        if (lmpStockItem.length) {
+          item.eposQuantity = lmpStockItem[0].eposQuantity;
+          item.eposTotal = lmpStockItem[0].eposTotal;
+          item.lmpQuantity = lmpStockItem[0].lmpQuantity;
+          item.lmpTotal = lmpStockItem[0].lmpTotal;
+          item.price = lmpStockItem[0].price;
+        }
       });
 
-      angular.forEach(dispatchedItemList, function (item) {
-        item.dispatchedQuantity = item.quantity || 0;
-        delete item.quantity;
-      });
-
-      angular.forEach(offloadItemList, function (item) {
-        item.offloadQuantity = item.quantity || 0;
-        delete item.quantity;
-      });
-
-      return angular.merge(inboundItemList, dispatchedItemList, offloadItemList);
+      return uniqueItemList;
     }
 
     function setStockItemList(storeInstanceItemList, rawLMPStockData) {
-      var filteredItems = mergeItems(storeInstanceItemList.response);
-      var mergedItemList = angular.merge(filteredItems, rawLMPStockData);
-      $scope.stockItemList = lodash.map(mergedItemList, setStockItem);
+      var filteredItems = mergeItems(storeInstanceItemList.response, rawLMPStockData);
+      $scope.stockItemList = lodash.map(filteredItems, setStockItem);
       initLMPStockRevisions();
     }
 
@@ -180,8 +197,9 @@ angular.module('ts5App')
     }
 
     function getTotalsForPromotions(promotionTotals) {
-      var total = lodash.reduce(promotionTotals, function (total, promotionItem) {
-        return total + promotionItem.convertedAmount;
+      var total = 0;
+      angular.forEach(promotionTotals, function (promotionItem) {
+        total += promotionItem.convertedAmount;
       });
 
       return {
@@ -194,7 +212,7 @@ angular.module('ts5App')
       var netValue = parseFloat($scope.stockTotals.totalNet.netEPOS) - parseFloat($scope.stockTotals.totalNet.netLMP);
       var netPercentage = netValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
 
-      var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.stockTotals.totalNet.epos);
+      var revenueValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.stockTotals.totalNet.netEPOS);
       var revenuePercentage = revenueValue / parseFloat($scope.stockTotals.totalNet.netEPOS);
 
       var exchangeValue = parseFloat($scope.totalRevenue.cashHandler) - parseFloat($scope.totalRevenue.epos);
@@ -205,20 +223,20 @@ angular.module('ts5App')
 
       $scope.discrepancy = {
         net: {
-          value: netValue,
-          percentage: netPercentage
+          value: formatAsCurrency(netValue),
+          percentage: formatAsCurrency(netPercentage) || 0
         },
         revenue: {
-          value: revenueValue,
-          percentage: revenuePercentage
+          value: formatAsCurrency(revenueValue),
+          percentage: formatAsCurrency(revenuePercentage) || 0
         },
         exchange: {
-          value: exchangeValue,
-          percentage: exchangePercentage
+          value: formatAsCurrency(exchangeValue),
+          percentage: formatAsCurrency(exchangePercentage) || 0
         },
         total: {
-          value: totalValue,
-          percentage: totalPercentage
+          value: formatAsCurrency(totalValue),
+          percentage: formatAsCurrency(totalPercentage) || 0
         }
       };
     }
@@ -227,20 +245,20 @@ angular.module('ts5App')
       $this.promotionTotals.map(function (promotion) {
         reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
           promotion.itemName = dataFromAPI.promotionCode;
-        });
+        }, handleResponseError);
         promotion.itemTypeName = 'Promotion';
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Virtual'}).map(function (item) {
         reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
           item.itemName = dataFromAPI.itemName;
-        });
+        }, handleResponseError);
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Voucher'}).map(function (item) {
         reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
           item.itemName = dataFromAPI.itemName;
-        });
+        }, handleResponseError);
       });
     }
 
@@ -269,23 +287,23 @@ angular.module('ts5App')
       var eposDiscount = angular.copy(eposRevenue[2].response);
       var total = 0;
 
-      total += lodash.reduce($this.eposCashBag, function (total, cashBag) {
+      angular.forEach($this.eposCashBag, function (cashBag) {
         if (cashBag.bankAmount) {
-          return total + cashBag.bankAmount;
+          total += cashBag.bankAmount;
         } else if (cashBag.coinAmountManual && cashBag.paperAmountManual) {
-          return total + cashBag.coinAmountManual + cashBag.paperAmountManual;
+          total += cashBag.coinAmountManual + cashBag.paperAmountManual;
         }
       });
 
-      total += lodash.reduce(eposCreditCard, function (total, creditCard) {
+      angular.forEach(eposCreditCard, function (creditCard) {
         if (creditCard.bankAmountFinal) {
-          return total + creditCard.bankAmountFinal;
+          total += creditCard.bankAmountFinal;
         }
       });
 
-      total += lodash.reduce(eposDiscount, function (total, discount) {
+      angular.forEach(eposDiscount, function (discount) {
         if (discount.bankAmountFinal) {
-          return total + discount.bankAmountFinal;
+          total += discount.bankAmountFinal;
         }
       });
 
@@ -298,27 +316,27 @@ angular.module('ts5App')
       var chDiscount = angular.copy(chRevenue[2].response);
       var total = 0;
 
-      total += lodash.reduce($this.chCashBag, function (total, cashBag) {
+      angular.forEach($this.chCashBag, function (cashBag) {
         if (cashBag.bankAmountCh) {
-          return total + cashBag.bankAmountCh;
+          total += cashBag.bankAmountCh;
         } else if (cashBag.coinAmountManualCh && cashBag.paperAmountManualCh) {
-          return total + cashBag.coinAmountManualCh + cashBag.paperAmountManualCh;
+          total += cashBag.coinAmountManualCh + cashBag.paperAmountManualCh;
         }
       });
 
-      total += lodash.reduce(chCreditCard, function (total, creditCard) {
+      angular.forEach(chCreditCard, function (creditCard) {
         if (creditCard.bankAmountFinal) {
-          return total + creditCard.bankAmountFinal;
+          total += creditCard.bankAmountFinal;
         } else if (creditCard.coinAmountManualCc && creditCard.paperAmountManualCc) {
-          return total + creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
+          total += creditCard.coinAmountManualCc + creditCard.paperAmountManualCc;
         }
       });
 
-      total += lodash.reduce(chDiscount, function (total, discount) {
+      angular.forEach(chDiscount, function (discount) {
         if (discount.bankAmountFinal) {
-          return total + discount.bankAmountFinal;
+          total += discount.bankAmountFinal;
         } else if (discount.coinAmountManualCc && discount.paperAmountManualCc) {
-          return total + discount.coinAmountManualCc + discount.paperAmountManualCc;
+          total += discount.coinAmountManualCc + discount.paperAmountManualCc;
         }
       });
 
@@ -326,7 +344,7 @@ angular.module('ts5App')
     }
 
     function setupPaymentReport(reportList) {
-      $scope.paymentReport = angular.copy(reportList);
+      $scope.paymentReport = angular.copy(reportList.paymentReports);
     }
 
     function setupData(responseCollection) {
