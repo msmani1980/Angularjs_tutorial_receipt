@@ -78,6 +78,12 @@ fdescribe('The Stations List Controller', function () {
     scope.$apply();
   }
 
+  function mockGetStations() {
+    scope.searchRecords();
+    getStationListDeferred.resolve(stationListJSON);
+    scope.$apply();
+  }
+
   describe('when the controller loads', function() {
 
     beforeEach(function() {
@@ -108,12 +114,10 @@ fdescribe('The Stations List Controller', function () {
     beforeEach(function() {
       initController();
       resolveInitDependencies();
-      scope.searchRecords();
+      mockGetStations();
     });
 
     it('should set the stations list', function() {
-      getStationListDeferred.resolve(stationListJSON);
-      scope.$apply();
       var stationListSubset = stationListJSON.response.slice(0,3);
       expect(scope.stationList).toEqual(stationListSubset);
     });
@@ -124,6 +128,10 @@ fdescribe('The Stations List Controller', function () {
 
     beforeEach(function() {
       initController();
+      resolveInitDependencies();
+      mockGetStations();
+      scope.selectedStations = [];
+      scope.selectedStations[114] = true;
       spyOn(StationListCtrl,'submitForm').and.callThrough();
       spyOn(StationListCtrl,'validateForm').and.callThrough();
       spyOn(StationListCtrl,'saveStations').and.callThrough();
@@ -154,14 +162,27 @@ fdescribe('The Stations List Controller', function () {
     describe('when the the form is valid', function() {
 
       beforeEach(function() {
-        //scope.stationListForm.refundCodeType.$setViewValue(1);
-        //scope.stationListForm.refundReason.$setViewValue(1);
         scope.stationListForm.$valid = true;
         scope.submitForm();
       });
 
       it('should call the create method', function() {
         expect(StationListCtrl.saveStations).toHaveBeenCalled();
+      });
+
+      it('should generate a payload', function() {
+        var payload = StationListCtrl.generatePayload();
+        var mockStation = angular.copy(stationListJSON.response[0]);
+        var payloadControl = [mockStation];
+        expect(payload).toEqual(payloadControl);
+      });
+
+      it('should return an empty payload if there are no selected stations', function() {
+        scope.selectedStations = [];
+        scope.selectedStations[114] = false;
+        var payload = StationListCtrl.generatePayload();
+        var payloadControl = [];
+        expect(payload).toEqual(payloadControl);
       });
 
     });
@@ -207,8 +228,252 @@ fdescribe('The Stations List Controller', function () {
       expect(dateUtility.isTodayOrEarlier).toHaveBeenCalled();
     });
 
+  });
+
+  describe('the get station object functionality', function () {
+
+    beforeEach(function() {
+      initController();
+      resolveInitDependencies();
+      mockGetStations();
+    });
+
+    it('should set error response ', function () {
+      var station = StationListCtrl.getStationObject(114);
+      expect(station).toEqual(stationListJSON.response[0]);
+    });
+
+    describe('the selected stations functionality', function () {
+
+      beforeEach(function() {
+        scope.selectedStations = [];
+        scope.selectedStations[114] = true;
+        scope.selectedStations[115] = false;
+        scope.selectedStations[116] = true;
+        scope.$digest();
+      });
+
+      it('should return an array of selected stations', function () {
+        var selectedStations = StationListCtrl.getSelectedStations();
+        var selectedStationsControl = [ true,true ];
+        expect(selectedStations).toEqual(selectedStationsControl);
+      });
+
+      it('should return a station object', function () {
+        var station = StationListCtrl.getStationObject(114);
+        expect(station).toBeTruthy();
+      });
+
+      it('should allow users to save if there is one or more stations selected', function () {
+        expect(StationListCtrl.canSave()).toBeTruthy();
+      });
+
+      it('should not allow users to save if there are 0 stations selected', function () {
+        scope.selectedStations = [];
+        expect(StationListCtrl.canSave()).toBeFalsy();
+      });
+
+      describe('select / deselect all stations functionality', function() {
+
+        beforeEach(function() {
+          spyOn(StationListCtrl,'selectAllStations').and.callThrough();
+          spyOn(StationListCtrl,'deselectAllStations').and.callThrough();
+        });
+
+        it('should not allow users to save if there are 0 stations selected', function () {
+          scope.selectedStations[114] = false;
+          scope.selectedStations[115] = false;
+          scope.selectedStations[116] = false;
+          expect(StationListCtrl.canSave()).toBeFalsy();
+        });
+
+        it('should allow users to select all stations', function () {
+          StationListCtrl.selectAllStations();
+          expect(scope.selectedStations[114]).toBeTruthy();
+          expect(scope.selectedStations[115]).toBeTruthy();
+          expect(scope.selectedStations[116]).toBeTruthy();
+        });
+
+        it('should allow users to deselect all stations', function () {
+          StationListCtrl.deselectAllStations();
+          expect(scope.selectedStations[114]).toBeFalsy();
+          expect(scope.selectedStations[115]).toBeFalsy();
+          expect(scope.selectedStations[116]).toBeFalsy();
+        });
+
+        it('should deselect all stations when toggleStations is called and all stations are selected', function () {
+          StationListCtrl.selectAllStations();
+          StationListCtrl.toggleAllStations();
+          expect(StationListCtrl.deselectAllStations).toHaveBeenCalled();
+        });
+
+        it('should select all stations when toggleStations is called and no stations are selected', function () {
+          StationListCtrl.toggleAllStations(true);
+          expect(StationListCtrl.selectAllStations).toHaveBeenCalled();
+        });
+
+      });
+
+    });
 
   });
 
+  describe('filter by country', function() {
+
+    var city;
+
+    beforeEach(function() {
+      initController();
+      resolveInitDependencies();
+      city = {
+        name:'Boganville',
+        countryId: 66
+      };
+    });
+
+    it('should return true if the search does not exist in the scope', function() {
+      var filtered = StationListCtrl.filterByCountry(city);
+      expect(filtered).toBeTruthy();
+    });
+
+    it('should return true if the search does  exist in the scope but there is no country id', function() {
+      scope.search = {
+        cityId: 123
+      };
+      var filtered = StationListCtrl.filterByCountry(city);
+      expect(filtered).toBeTruthy();
+    });
+
+    it('should return false when the search and country id exist but country id does not match up', function() {
+      scope.search = {
+        countryId: 15
+      };
+      var filtered = StationListCtrl.filterByCountry(city);
+      expect(filtered).toBeFalsy();
+    });
+
+  });
+
+  describe('performing mass date updates', function () {
+
+    var mockStation;
+    var stationToTest;
+    beforeEach(function() {
+      mockStation = {
+        id:114,
+        startDate: '03/01/2016',
+        endDate: '12/31/2016',
+      };
+      initController();
+      resolveInitDependencies();
+      mockGetStations();
+      scope.selectedStations = [];
+      scope.selectedStations[114] = true;
+      scope.formData = {
+        stations: [ mockStation ]
+      };
+      scope.$digest();
+      stationToTest = StationListCtrl.getStationInFormData(114);
+
+    });
+
+    it('should get a station from the formData', function () {
+      expect(stationToTest).toEqual(mockStation);
+    });
+
+    describe('updating the start dates', function() {
+
+      beforeEach(function() {
+        scope.dateRange = {
+          startDate: '05/01/2016',
+        };
+        scope.$digest();
+      });
+
+      it('should update the start date of each station', function() {
+        expect(stationToTest.startDate).toEqual(scope.dateRange.startDate);
+      });
+
+      it('should not update the start date  if there are no selected stations', function() {
+        scope.selectedStations[114] = false;
+        scope.dateRange = {
+          startDate: '05/02/2016',
+        };
+        scope.$digest();
+        expect(stationToTest.startDate).not.toEqual(scope.dateRange.startDate);
+      });
+
+      it('should not update the start date if the stations date is active', function() {
+        stationToTest.startDate = '01/01/2015';
+        scope.dateRange = {
+          startDate: '05/02/2016',
+        };
+        scope.$digest();
+        expect(stationToTest.startDate).not.toEqual(scope.dateRange.startDate);
+      });
+
+    });
+
+    describe('updating the end dates', function() {
+
+      beforeEach(function() {
+        scope.dateRange = {
+          endDate: '05/01/2016',
+        };
+        scope.$digest();
+      });
+
+      it('should update the end date of each station', function() {
+        expect(stationToTest.endDate).toEqual(scope.dateRange.endDate);
+      });
+
+      it('should not update the end date  if there are no selected stations', function() {
+        scope.selectedStations[114] = false;
+        scope.dateRange = {
+          endDate: '05/02/2016',
+        };
+        scope.$digest();
+        expect(stationToTest.endDate).not.toEqual(scope.dateRange.endDate);
+      });
+
+      it('should not update the endDate date if the stations date is active', function() {
+        stationToTest.endDate = '01/01/2015';
+        scope.dateRange = {
+          endDate: '05/02/2016',
+        };
+        scope.$digest();
+        expect(stationToTest.endDate).not.toEqual(scope.dateRange.endDate);
+      });
+
+    });
+
+  });
+
+  describe('scope assignments', function() {
+
+    beforeEach(function() {
+      initController();
+      scope.$digest();
+      spyOn(StationListCtrl,'canSave');
+      spyOn(StationListCtrl,'filterByCountry');
+      spyOn(StationListCtrl,'dateActive');
+    });
+
+    it('should call the canSave method on the controller', function() {
+      scope.canSave();
+      expect(StationListCtrl.canSave).toHaveBeenCalled();
+    });
+
+    it('should call the filterByCountry method on the controller', function() {
+      scope.filterByCountry();
+      expect(StationListCtrl.filterByCountry).toHaveBeenCalled();
+    });
+
+    it('should call the isDateActive method on the controller', function() {
+      scope.isDateActive();
+      expect(StationListCtrl.dateActive).toHaveBeenCalled();
+    });
+
+  });
 
 });

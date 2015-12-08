@@ -684,14 +684,6 @@ angular.module('ts5App')
       return $this.submitForm();
     };
 
-    $scope.selectAllStations = function() {
-      return $this.selectAllStations();
-    };
-
-    $scope.deselectAllStations = function() {
-      return $this.deselectAllStations();
-    };
-
     $scope.filterByCountry = function(record) {
       return $this.filterByCountry(record);
     };
