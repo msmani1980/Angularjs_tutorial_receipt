@@ -44,7 +44,7 @@
             </div>
             <div class="col-xs-2">
               <br>
-              <button class="btn btn-primary" ng-click="searchForMoveCashBag()"><span class="fa fa-search"></span>
+              <button class="btn btn-primary" ng-click="searchForMoveCashBag()"><i class="fa fa-search"></i>
               </button>
             </div>
           </div>
@@ -68,7 +68,7 @@
             </div>
             <div class="col-xs-2">
               <br>
-              <button class="btn btn-primary" ng-click="searchForMoveCashBag()"><span class="fa fa-search"></span>
+              <button class="btn btn-primary" ng-click="searchForMoveCashBag()"><i class="fa fa-search"></i>
               </button>
             </div>
           </div>
@@ -133,7 +133,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-success" data-dismiss="modal"
                   ng-show="targetRecordForMoveCashBag">
-            <span class="fa fa-check"></span> Confirm
+            <i class="fa fa-check"></i> Confirm
           </button>
           <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeMoveCashBagModal()">
             Cancel
@@ -220,10 +220,10 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success" data-dismiss="modal"
-                  ng-show="sectorsToMove.length">
-            <span class="fa fa-check"></span> Save
+                  ng-show="canSaveRearrange()">
+            <i class="fa fa-check"></i> Save
           </button>
-          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="dismissMoveCashBagModal()">
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeRearrangeSectorModal()">
             Exit
           </button>
         </div>
@@ -380,8 +380,8 @@
             </div>
 
             <div class="col-xs-3 text-right">
-              <button class="btn btn-warning" ng-click="showRearrangeSectorModal()"><i
-                class="fa fa-tasks active"></i> Rearrange Flight Sectors
+              <button class="btn btn-warning" ng-click="showRearrangeSectorModal()">
+                <i class="fa fa-tasks active"></i> Rearrange Flight Sectors
               </button>
             </div>
           </div>

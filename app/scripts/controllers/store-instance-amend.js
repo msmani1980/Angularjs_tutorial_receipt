@@ -43,6 +43,10 @@ angular.module('ts5App')
       $scope.targetRecordForMoveCashBag = null;
     };
 
+    $scope.canSaveRearrange = function () {
+      return ($scope.sectorsToMove.lenghth && $scope.targetRecordForMoveCashBag);
+    };
+
     $scope.toggleSelectSectorToRearrange = function (sector) {
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
       if(matchIndex < 0 ) {
