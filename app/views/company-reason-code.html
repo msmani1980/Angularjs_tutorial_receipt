@@ -5,7 +5,7 @@
     <div class="row">
 
       <div class="col-xs-8">
-        <h2 class="view-name">Retail Reason Codes</h2>
+        <h2 class="view-name">Retail Company Reasons</h2>
         <p>Here you will see a list of Reason Codes. You may also add, edit and remove Reason Codes.</p>
       </div>
 
@@ -63,7 +63,7 @@
             <div class="col-xs-12 col-sm-4 col-md-4">
 
               <div class="form-group">
-                <label>Reason Type</label>
+                <label>Reason Code</label>
                 <select class="form-control" name="reasonCode {{$index+1}}" ng-model="reasonCode.id" required>
                   <option ng-selected="{{ companyReasonType.id === reasonCode.id}}" value="{{ companyReasonType.id }}" ng-repeat="companyReasonType in companyReasonCodeTypesList track by companyReasonType.id">
                     {{ companyReasonType.reasonTypeName }}

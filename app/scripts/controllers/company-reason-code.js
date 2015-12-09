@@ -188,7 +188,7 @@ angular.module('ts5App')
     };
 
     this.filterByGlobalReason = function(reason) {
-      if( angular.isUndefined($scope.reasonFilter) || $scope.reasonFilter.selectedGlobalReasons.length === 0 ) {
+      if( angular.isUndefined($scope.reasonFilter) ) {
         return true;
       }
       return $scope.reasonFilter.selectedGlobalReasons.filter(function(reasonType) {
