@@ -264,7 +264,7 @@ angular.module('ts5App')
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Voucher'}).map(function (item) {
         reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
-          item.itemName = dataFromAPI.itemName;
+          item.itemName = dataFromAPI.retailItem.itemName;
         }, handleResponseError);
       });
     }
@@ -279,7 +279,7 @@ angular.module('ts5App')
         netEPOS: formatAsCurrency(netEPOS)
       };
 
-      var stockItems = angular.copy($this.stockTotals).concat($this.promotionTotals);
+      var stockItems = $this.stockTotals.concat($this.promotionTotals);
       $scope.stockTotals = angular.extend(stockTotals, {totalNet: netTotals}, {stockItems: stockItems});
     }
 
