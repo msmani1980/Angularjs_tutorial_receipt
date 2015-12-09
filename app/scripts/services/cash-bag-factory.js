@@ -31,6 +31,10 @@ angular.module('ts5App')
       return storeInstanceService.getStoreInstancesList(payload);
     }
 
+    function getStoreInstance(storeInstanceId) {
+      return storeInstanceService.getStoreInstance(storeInstanceId);
+    }
+
     var getStationList = function (id) {
       return stationsService.getStationList(id);
     };
@@ -95,6 +99,7 @@ angular.module('ts5App')
       getDailyExchangeRates: getDailyExchangeRates,
       getCompanyPreferences: getCompanyPreferences,
       getStoreList: getStoreList,
-      getStoreInstanceList: getStoreInstanceList
+      getStoreInstanceList: getStoreInstanceList,
+      getStoreInstance: getStoreInstance
     };
   });

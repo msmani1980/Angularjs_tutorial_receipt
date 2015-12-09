@@ -132,8 +132,8 @@
                          name="coinAmountManual[{{currency.currencyId}}]"
                          ng-readonly="readOnly"></td>
               <td ng-if="isBankExchangePreferred()">{{ currency.bankAmount }}</td>
-              <td ng-if="!isBankExchangePreferred()">{{ currency.paperAmountEpos }}</td>
-              <td ng-if="!isBankExchangePreferred()">{{ currency.coinAmountEpos }}</td>
+              <td ng-if="!isBankExchangePreferred()">{{ currency.paperExchangeRate }}</td>
+              <td ng-if="!isBankExchangePreferred()">{{ currency.coinExchangeRate }}</td>
             </tr>
             </tbody>
           </table>

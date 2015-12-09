@@ -9,7 +9,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, dateUtility) {
+  .controller('CashBagCtrl', function ($scope, $routeParams, $q, $location, ngToast, cashBagFactory, dateUtility, lodash) {
 
     // controller global properties
     var _companyId = null;
@@ -158,23 +158,35 @@ angular.module('ts5App')
     }
 
     function promisesResponseHandler() {
-      if (angular.isArray($scope.dailyExchangeRates) && $scope.dailyExchangeRates.length > 0) {
-        $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
-        angular.forEach($scope.dailyExchangeRates[0].dailyExchangeRateCurrencies, function (currency) {
-          $scope.cashBag.cashBagCurrencies.push(
-            {
-              currencyId: currency.retailCompanyCurrencyId,
-              bankAmount: currency.bankExchangeRate,
-              paperAmountManual: '0.0000',
-              coinAmountManual: '0.0000',
-              paperAmountEpos: currency.paperExchangeRate,
-              coinAmountEpos: currency.coinExchangeRate
-            }
-          );
-        });
-      } else {
+      if (angular.isUndefined($scope.dailyExchangeRates) || $scope.dailyExchangeRates.length === 0) {
         showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
       }
+      var dailyExchangeRateCurrencies = $scope.dailyExchangeRates[0].dailyExchangeRateCurrencies;
+      $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
+
+      angular.forEach($scope.cashBag.cashBagCurrencies, function (cashBagCurrency) {
+        var dailyCurrency = lodash.findWhere(dailyExchangeRateCurrencies, {retailCompanyCurrencyId: cashBagCurrency.currencyId});
+        if (dailyCurrency) {
+          cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
+          cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
+          dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
+        }
+      });
+
+      angular.forEach(dailyExchangeRateCurrencies, function (currency) {
+        $scope.cashBag.cashBagCurrencies.push(
+          {
+            currencyId: currency.retailCompanyCurrencyId,
+            bankAmount: currency.bankExchangeRate,
+            paperAmountManual: '0.0000',
+            coinAmountManual: '0.0000',
+            paperAmountEpos: 0,
+            coinAmountEpos: 0,
+            paperExchangeRate: currency.paperExchangeRate,
+            coinExchangeRate: currency.coinExchangeRate
+          }
+        );
+      });
     }
 
     function getCashBag() {
@@ -252,7 +264,7 @@ angular.module('ts5App')
     // CRUD - Create
     function create() {
       setCreatePromises();
-      cashBagFactory.getStoreInstanceList({id: $routeParams.storeInstanceId}).then(getStoreInstanceListResponseHandler);
+      cashBagFactory.getStoreInstance($routeParams.storeInstanceId).then(getStoreInstanceListResponseHandler);
 
 
       $scope.readOnly = false;
@@ -282,7 +294,7 @@ angular.module('ts5App')
       $q.all(_promises).then(function () {
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.displayedCashierDate = dateUtility.formatDateForApp($scope.cashBag.createdOn);
-        cashBagFactory.getStoreInstanceList({id: $scope.cashBag.storeInstanceId}).then(getStoreInstanceListResponseHandler);
+        cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(getStoreInstanceListResponseHandler);
       }, showMessage);
     }
 
@@ -291,6 +303,7 @@ angular.module('ts5App')
       getCompany();
       getCashHandlerCompany();
       getCompanyCurrencies();
+      getDailyExchangeRates();
       getCompanyPreferences();
     }
 
@@ -302,7 +315,8 @@ angular.module('ts5App')
         $scope.displayedScheduleDate = dateUtility.formatDateForApp($scope.cashBag.scheduleDate);
         $scope.displayedCashierDate = dateUtility.formatDateForApp($scope.cashBag.createdOn);
         $scope.saveButtonName = 'Save';
-        cashBagFactory.getStoreInstanceList({id: $scope.cashBag.storeInstanceId}).then(getStoreInstanceListResponseHandler);
+        promisesResponseHandler();
+        cashBagFactory.getStoreInstance($scope.cashBag.storeInstanceId).then(getStoreInstanceListResponseHandler);
       }, showMessage);
     }
 
