@@ -16,7 +16,34 @@ angular.module('ts5App')
       angular.element('#rearrangeSectorModal').modal('show');
     };
 
-    $scope.toggleSelectSectorToMove = function (sector) {
+    $scope.showMoveCashBagModal = function (cashBag) {
+      $scope.cashBagToMove = cashBag;
+      angular.element('#moveCashBagModal').modal('show');
+    };
+
+    $scope.closeRearrangeSectorModal = function () {
+      $scope.sectorsToMove = [];
+      $scope.rearrangeOriginCashBag = null;
+      $scope.rearrangeTargetCashBag = null;
+    };
+
+    $scope.closeMoveCashBagModal = function () {
+      $scope.moveCashBagAction = 'none';
+      $scope.moveCashBagSearchResults = null;
+      $scope.cashBagToMove = null;
+    };
+
+    $scope.clearRearrangeSelections = function () {
+      $scope.sectorsToMove = [];
+    };
+
+    $scope.clearMoveSearchResults = function () {
+      $scope.moveSearch = {};
+      $scope.moveCashBagSearchResults = null;
+      $scope.targetRecordForMoveCashBag = null;
+    };
+
+    $scope.toggleSelectSectorToRearrange = function (sector) {
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
       if(matchIndex < 0 ) {
         $scope.sectorsToMove.push(sector);
@@ -25,14 +52,8 @@ angular.module('ts5App')
       }
     };
 
-    $scope.clearRearrangeSelections = function () {
-      $scope.sectorsToMove = [];
-    };
-
-    $scope.closeRearrangeSectorModal = function () {
-      $scope.sectorsToMove = [];
-      $scope.rearrangeOriginCashBag = null;
-      $scope.rearrangeTargetCashBag = null;
+    $scope.selectRecordForMoveCashBag = function (record) {
+      $scope.targetRecordForMoveCashBag = record;
     };
 
     $scope.getClassesForRearrangeSectors = function (sector, tagType) {
@@ -44,21 +65,28 @@ angular.module('ts5App')
       return correctClassObj[tagType];
     };
 
-    $scope.showMoveCashBagModal = function (cashBag) {
-      $scope.cashBagToMove = cashBag;
-      angular.element('#moveCashBagModal').modal('show');
+    $scope.getClassesForMoveSelectedRow = function (record, tagType) {
+      var selectedClasses = {background: 'bg-success', buttonIcon: 'fa fa-check-circle', button: 'btn btn-success'};
+      var deselectedClasses = {background: '', buttonIcon: 'fa fa-circle-thin', button: 'btn btn-default'};
+
+      var correctClassObj = (record === $scope.targetRecordForMoveCashBag) ? selectedClasses : deselectedClasses;
+      return correctClassObj[tagType];
     };
 
-    $scope.dismissMoveCashBagModal = function () {
-      $scope.moveCashBagAction = 'none';
-      $scope.moveCashBagSearchResults = null;
-      $scope.cashBagToMove = null;
+    $scope.getClassForTableAccordion = function (visibilityFlag) {
+      return (visibilityFlag) ? 'fa fa-minus-square' : 'fa fa-plus-square-o';
     };
 
-    $scope.clearMoveSearchResults = function () {
-      $scope.moveSearch = {};
-      $scope.moveCashBagSearchResults = null;
-      $scope.targetRecordForMoveCashBag = null;
+    $scope.getClassForAccordionArrows = function (accordionFlag) {
+      return (accordionFlag) ? 'fa-chevron-down' : 'fa-chevron-right';
+    };
+
+    $scope.doesSectorHaveCrewData = function (flightSector) {
+      return flightSector.crewData.length;
+    };
+
+    $scope.shouldShowCashBag = function (cashBag) {
+      return ($scope.showDeletedCashBags) ? true : !cashBag.isDeleted;
     };
 
     this.searchForMoveCashBagSuccess = function (dataFromAPI) {
@@ -76,32 +104,33 @@ angular.module('ts5App')
       }
     };
 
-    $scope.selectRecordForMoveCashBag = function (record) {
-      $scope.targetRecordForMoveCashBag = record;
+    $scope.toggleVerifiedCashBag = function (cashBag) {
+      cashBag.isVerified = !cashBag.isVerified;
     };
 
-    $scope.getClassesForMoveSelectedRow = function (record, tagType) {
-      var selectedClasses = {background: 'bg-success', buttonIcon: 'fa fa-check-circle', button: 'btn btn-success'};
-      var deselectedClasses = {background: '', buttonIcon: 'fa fa-circle-thin', button: 'btn btn-default'};
-
-      var correctClassObj = (record === $scope.targetRecordForMoveCashBag) ? selectedClasses : deselectedClasses;
-      return correctClassObj[tagType];
+    $scope.isSalesAndRevenueDetailsOpen = function (cashBag) {
+      return (cashBag.salesTableOpen || cashBag.revenueTableOpen);
     };
 
-    $scope.getClassForOpenRow = function (visibilityFlag) {
-      return (visibilityFlag) ? 'fa fa-minus-square' : 'fa fa-plus-square-o';
+    $scope.toggleSalesAndRevenueDetails = function (cashBag, shouldExpand) {
+      cashBag.salesTableOpen = shouldExpand;
+      cashBag.revenueTableOpen = shouldExpand;
     };
 
-    $scope.shouldShowCashBag = function (cashBag) {
-      return ($scope.showDeletedCashBags) ? true : !cashBag.isDeleted;
+    $scope.isCrewDataOpen = function (cashBag) {
+      var crewRecordOpen = false;
+      angular.forEach(cashBag.flightSectors, function (sector) {
+        crewRecordOpen = sector.rowOpen || crewRecordOpen;
+      });
+      return crewRecordOpen;
     };
 
-    $scope.doesSectorHaveCrewData = function (flightSector) {
-      return flightSector.crewData.length;
-    };
-
-    $scope.getClassForAccordionArrows = function (accordionFlag) {
-      return (accordionFlag) ? 'fa-chevron-down' : 'fa-chevron-right';
+    $scope.toggleCrewDetails = function (cashBag, shouldExpand) {
+      angular.forEach(cashBag.flightSectors, function (sector) {
+        if(sector.crewData.length) {
+          sector.rowOpen = shouldExpand;
+        }
+      });
     };
 
     this.getCashBagListSuccess = function (dataFromAPI) {
@@ -114,14 +143,14 @@ angular.module('ts5App')
 
     this.initViewDefaults = function () {
       $scope.moveCashBagAction = 'none';
+      $scope.showDeletedCashBags = false;
+      $scope.sectorsToMove = [];
+      angular.element('#checkbox').bootstrapSwitch();
     };
 
     this.init = function () {
       $this.initViewDefaults();
-      angular.element('#checkbox').bootstrapSwitch();
-      $scope.showDeletedCashBags = false;
       $this.getCashBagList();
-      $scope.sectorsToMove = [];
     };
 
     $this.init();

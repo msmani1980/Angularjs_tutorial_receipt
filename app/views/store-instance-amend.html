@@ -131,11 +131,11 @@
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal"
+          <button type="button" class="btn btn-success" data-dismiss="modal"
                   ng-show="targetRecordForMoveCashBag">
             <span class="fa fa-check"></span> Confirm
           </button>
-          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="dismissMoveCashBagModal()">
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeMoveCashBagModal()">
             Cancel
           </button>
         </div>
@@ -172,7 +172,7 @@
                     </tr>
                     <tr ng-repeat="sector in rearrangeOriginCashBag.flightSectors"
                         ng-class="getClassesForRearrangeSectors(sector, 'background')">
-                      <td ng-click="toggleSelectSectorToMove(sector)">
+                      <td ng-click="toggleSelectSectorToRearrange(sector)">
                         <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
                           <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>
                         </button>
@@ -240,8 +240,11 @@
             <h3 class="view-name">Store Instance Amend</h3>
           </div>
           <div class="col-xs-4 text-right">
+            <button class="btn btn-primary">
+              Go To Reconciliation
+            </button>
             <button class="btn btn-info">
-              <span class="fa fa-file-text" aria-hidden="true"></span> Show Payment Reports
+              <i class="fa fa-file-text" aria-hidden="true"></i> Show Payment Reports
             </button>
           </div>
         </div>
@@ -377,8 +380,8 @@
             </div>
 
             <div class="col-xs-3 text-right">
-              <button class="btn btn-warning" ng-click="showRearrangeSectorModal()"><span
-                class="fa fa-tasks active"></span> Rearrange Flight Sectors
+              <button class="btn btn-warning" ng-click="showRearrangeSectorModal()"><i
+                class="fa fa-tasks active"></i> Rearrange Flight Sectors
               </button>
             </div>
           </div>
@@ -389,11 +392,11 @@
         <div class="row">
           <div class="col-xs-12">
             <h4>
-              <small><i><span class="fa fa-asterisk"></span> Indicates a manually added record</i></small>
+              <small><i><i class="fa fa-asterisk"></i> Indicates a manually added record</i></small>
             </h4>
           </div>
         </div>
-        <div class="accordion-wrapper" ng-repeat="cashBag in cashBagList">
+        <div class="accordion-wrapper" ng-repeat="cashBag in cashBagList" ng-show="shouldShowCashBag(cashBag)">
           <accordion class="store-instance-review-accordion">
             <accordion-group ng-init="cashBag.accordionOpen=true" is-open="cashBag.accordionOpen">
               <accordion-heading class="accordion-heading">
@@ -403,7 +406,7 @@
                        class="fa"></i>
                     <s ng-show="cashBag.isDeleted">Cash Bag {{ cashBag.cashBag }}</s>
                     <span ng-hide="cashBag.isDeleted">Cash Bag {{ cashBag.cashBag }}</span>
-                    <span class="fa fa-asterisk" ng-show="cashBag.isManual"></span>
+                    <i class="fa fa-asterisk" ng-show="cashBag.isManual"></i>
                   </div>
                   <div class="col-xs-6 text-right">
                     Bank Ref {{ cashBag.bankRefNumber }}
@@ -417,18 +420,18 @@
                   <div class="alert alert-success" role="alert" ng-show="cashBag.isVerified">
                     <div class="row">
                       <div class="col-xs-8 text-left">
-                        <span class="fa fa-check-circle" ng-show="cashBag.isVerified"></span>
+                        <i class="fa fa-check-circle" ng-show="cashBag.isVerified"></i>
                         Verified by areyes on 11/27/2015 at 12:34
                       </div>
                       <div class="col-xs-4 text-right">
-                        <button class="btn btn-success btn-xs" ng-click="initEditTable(false)">
-                          <span class="fa fa-times active"></span> Unverify
+                        <button class="btn btn-success btn-xs" ng-click="toggleVerifiedCashBag(cashBag)">
+                          <i class="fa fa-times active"></i> Unverify
                         </button>
                       </div>
                     </div>
                   </div>
                   <div class="alert alert-danger" role="alert" ng-show="cashBag.isDeleted">
-                    <span class="fa fa-trash"></span>
+                    <i class="fa fa-trash"></i>
                     Deleted by areyes on 11/27/2015 at 12:34
                   </div>
                   <br>
@@ -440,8 +443,11 @@
                   <h4>Sales and Revenue Detail</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-default btn-sm"><span
-                    class="fa fa-minus-circle active"></span> Collapse All Table Details
+                  <button class="btn btn-default btn-sm" ng-click="toggleSalesAndRevenueDetails(cashBag, true)" ng-hide="isSalesAndRevenueDetailsOpen(cashBag)">
+                    <i class="fa fa-plus-circle active"></i> Expand All Table Details
+                  </button>
+                  <button class="btn btn-default btn-sm" ng-click="toggleSalesAndRevenueDetails(cashBag, false)" ng-show="isSalesAndRevenueDetailsOpen(cashBag)">
+                    <i class="fa fa-minus-circle active"></i> Collapse All Table Details
                   </button>
                 </div>
               </div>
@@ -450,7 +456,7 @@
                   <table class="table table-bordered" ng-init="cashBag.salesTableOpen=false">
                     <tr class="active">
                       <td colspan="2" ng-click="cashBag.salesTableOpen=!cashBag.salesTableOpen">
-                        <span ng-class="getClassForOpenRow(cashBag.salesTableOpen)"></span>
+                        <i ng-class="getClassForTableAccordion(cashBag.salesTableOpen)"></i>
                         <strong>ePOS Sales [GBP]</strong>
                       </td>
                     </tr>
@@ -480,7 +486,7 @@
                   <table class="table table-bordered" ng-init="cashBag.revenueTableOpen=false">
                     <tr class="active">
                       <td colspan="2" ng-click="cashBag.revenueTableOpen=!cashBag.revenueTableOpen">
-                        <span ng-class="getClassForOpenRow(cashBag.revenueTableOpen)"></span>
+                        <i ng-class="getClassForTableAccordion(cashBag.revenueTableOpen)"></i>
                         <strong>Total Revenue in Cash Handler Exchange Rate</strong>
                       </td>
                     </tr>
@@ -509,11 +515,14 @@
                   <h4>Flight Sectors</h4>
                 </div>
                 <div class="col-xs-6 text-right">
-                  <button class="btn btn-success btn-sm" ng-click="initEditTable(false)" ng-hide="cashBag.isDeleted"><span
-                    class="fa fa-plus active"></span> Add Flight Sector
+                  <button class="btn btn-primary btn-sm" ng-click="initEditTable(false)" ng-hide="cashBag.isDeleted">
+                    <i class="fa fa-plus active"></i> Add Flight Sector
                   </button>
-                  <button class="btn btn-default btn-sm" ng-click="initEditTable(false)"><span
-                    class="fa fa-plus-circle active"></span> Expand All Crew Data
+                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, true)" ng-hide="isCrewDataOpen(cashBag)">
+                    <i class="fa fa-plus-circle active"></i> Expand All Crew Data
+                  </button>
+                  <button class="btn btn-default btn-sm" ng-click="toggleCrewDetails(cashBag, false)" ng-show="isCrewDataOpen(cashBag)">
+                    <i class="fa fa-minus-circle active"></i> Collapse All Crew Data
                   </button>
                 </div>
               </div>
@@ -538,11 +547,11 @@
                     <tbody ng-repeat="flightSector in cashBag.flightSectors" ng-init="flightSector.rowOpen=false">
                     <tr>
                       <td>
-                      <span ng-class="getClassForOpenRow(flightSector.rowOpen)"
+                      <i ng-class="getClassForTableAccordion(flightSector.rowOpen)"
                             ng-click="flightSector.rowOpen=!flightSector.rowOpen"
-                            ng-if="doesSectorHaveCrewData(flightSector)"></span>
+                            ng-if="doesSectorHaveCrewData(flightSector)"></i>
                       </td>
-                      <td><span class="fa fa-asterisk" ng-show="flightSector.isManual"></span></td>
+                      <td><i class="fa fa-asterisk" ng-show="flightSector.isManual"></i></td>
                       <td>{{ flightSector.scheduleDate }}</td>
                       <td>{{ flightSector.scheduleNumber }}</td>
                       <td>{{ flightSector.departureStation }}</td>
@@ -552,8 +561,8 @@
                       <td>{{ flightSector.transactionCount }}</td>
                       <td>{{ flightSector.transactionTotal }}</td>
                       <td ng-hide="cashBag.isDeleted">
-                        <button class="btn btn-primary btn-xs"><span class="fa fa-pencil active"></span></button>
-                        <button class="btn btn-danger btn-xs"><span class="fa fa-trash active"></span></button>
+                        <button class="btn btn-primary btn-xs"><i class="fa fa-pencil active"></i></button>
+                        <button class="btn btn-danger btn-xs"><i class="fa fa-trash active"></i></button>
                       </td>
                     </tr>
                     <tr class="subversion-row" ng-show="flightSector.rowOpen">
@@ -594,7 +603,7 @@
                   <button class="btn btn-warning" title="Merge or Reallocate Cash Bag" ng-click="showMoveCashBagModal(cashBag)">
                     <i class="fa fa-share active"></i>
                   </button>
-                  <button class="btn btn-success" ng-hide="cashBag.isVerified" title="Verify Cash Bag">
+                  <button class="btn btn-success" ng-hide="cashBag.isVerified" title="Verify Cash Bag" ng-click="toggleVerifiedCashBag(cashBag)">
                     <i class="fa fa-check-circle-o active"></i>
                   </button>
                 </div>
