@@ -45,13 +45,14 @@ angular.module('ts5App')
         scheduleNumber: '105',
         scheduleDate: '10/20/2015',
         flightSectors: [{
+          id: 1,
           scheduleDate: '10/20/2015',
           scheduleNumber: '105',
           departureStationCode: 'ORD',
           arrivalStationCode: 'LAX',
           passengerCount: 123,
           tailNumber: 'ABC-123',
-          transactionsCount: 7,
+          transactionCount: 7,
           transactionTotal: 15.00,
           isManual: false,
           crewData: [{
@@ -64,13 +65,14 @@ angular.module('ts5App')
             lastName: 'Jane'
           }]
         }, {
+          id: 2,
           scheduleDate: '10/20/2015',
           scheduleNumber: '105',
           departureStationCode: 'LAX',
           arrivalStationCode: 'ORD',
           passengerCount: 123,
           tailNumber: 'GAD-123',
-          transactionsCount: 3,
+          transactionCount: 3,
           transactionTotal: 11.00,
           isManual: true,
           crewData: [{
@@ -84,7 +86,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
-        cashBagNumber: '789',
+        cashBag: '789',
         bankRefNumber: 'CB12',
         isManual: false,
         isDeleted: false,
@@ -97,13 +99,14 @@ angular.module('ts5App')
         creditRevenue: 10.00,
         discountRevenue: 5.00,
         flightSectors: [{
+          id: 3,
           scheduleDate: '11/20/2015',
           scheduleNumber: '111',
           departureStationCode: 'SAN',
           arrivalStationCode: 'GNV',
           passengerCount: 123,
           tailNumber: 'ABC-123',
-          transactionsCount: 7,
+          transactionCount: 7,
           transactionTotal: 15.00,
           isManual: true,
           crewData: [{
@@ -116,13 +119,14 @@ angular.module('ts5App')
             lastName: 'Jane'
           }]
         }, {
+          id: 4,
           scheduleDate: '11/20/2015',
           scheduleNumber: '111',
           departureStationCode: 'CPH',
           arrivalStationCode: 'ORD',
           passengerCount: 123,
           tailNumber: 'GAD-123',
-          transactionsCount: 3,
+          transactionCount: 3,
           transactionTotal: 11.00,
           isManual: false,
           crewData: [{
@@ -136,7 +140,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
-        cashBagNumber: '567',
+        cashBag: '567',
         bankRefNumber: '1278',
         isManual: true,
         isDeleted: true,
@@ -149,24 +153,26 @@ angular.module('ts5App')
         creditRevenue: 7.00,
         discountRevenue: 3.00,
         flightSectors: [{
+          id: 5,
           scheduleDate: '11/20/2015',
           scheduleNumber: '145',
           departureStationCode: 'SAN',
           arrivalStationCode: 'GNV',
           passengerCount: 123,
           tailNumber: 'ABC-123',
-          transactionsCount: 7,
+          transactionCount: 7,
           transactionTotal: 15.00,
           isManual: true,
           crewData: []
         }, {
+          id :6,
           scheduleDate: '11/30/2015',
           scheduleNumber: '145',
           departureStationCode: 'CPH',
           arrivalStationCode: 'ORD',
           passengerCount: 123,
           tailNumber: 'GAD-123',
-          transactionsCount: 3,
+          transactionCount: 3,
           transactionTotal: 11.00,
           isManual: false,
           crewData: [{

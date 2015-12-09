@@ -30,6 +30,7 @@
             </div>
           </div>
           <br>
+
           <div class="row" ng-show="moveCashBagAction==='merge'">
             <div class="col-xs-5">
               <label>Cash Bag *</label>
@@ -91,14 +92,16 @@
               <th>Store Number</th>
               <th></th>
             </tr>
-            <tr ng-repeat="cashBag in moveCashBagSearchResults" ng-class="getClassesForMoveSelectedRow(cashBag, 'background')">
+            <tr ng-repeat="cashBag in moveCashBagSearchResults"
+                ng-class="getClassesForMoveSelectedRow(cashBag, 'background')">
               <td>{{ cashBag.cashBag }}</td>
               <td>{{ cashBag.bankRefNumber }}</td>
               <td>{{ cashBag.scheduleNumber }}</td>
               <td>{{ cashBag.scheduleDate }}</td>
               <td>{{ cashBag.storeNumber }}</td>
               <td>
-                <button ng-class="getClassesForMoveSelectedRow(cashBag, 'button')" ng-click="selectRecordForMoveCashBag(cashBag)">
+                <button ng-class="getClassesForMoveSelectedRow(cashBag, 'button')"
+                        ng-click="selectRecordForMoveCashBag(cashBag)">
                   <span ng-class="getClassesForMoveSelectedRow(cashBag, 'buttonIcon')"></span>
                 </button>
               </td>
@@ -113,13 +116,15 @@
               <th>Warehouse</th>
               <th></th>
             </tr>
-            <tr ng-repeat="storeInstance in moveCashBagSearchResults" ng-class="getClassesForMoveSelectedRow(storeInstance, 'background')">
+            <tr ng-repeat="storeInstance in moveCashBagSearchResults"
+                ng-class="getClassesForMoveSelectedRow(storeInstance, 'background')">
               <td>{{ storeInstance.storeInstance }}</td>
               <td>{{ storeInstance.storenumber }}</td>
               <td>{{ storeInstance.scheduleDate }}</td>
               <td>{{ storeInstance.warehouse }}</td>
               <td>
-                <button ng-class="getClassesForMoveSelectedRow(storeInstance, 'button')" ng-click="selectRecordForMoveCashBag(storeInstance)">
+                <button ng-class="getClassesForMoveSelectedRow(storeInstance, 'button')"
+                        ng-click="selectRecordForMoveCashBag(storeInstance)">
                   <span ng-class="getClassesForMoveSelectedRow(storeInstance, 'buttonIcon')"></span>
                 </button>
               </td>
@@ -127,7 +132,8 @@
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-hide="targetRecordForMoveCashBag===null">
+          <button type="button" class="btn btn-primary" data-dismiss="modal"
+                  ng-hide="targetRecordForMoveCashBag===null">
             <span class="fa fa-check"></span> Confirm
           </button>
           <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="dismissMoveCashBagModal()">
@@ -139,15 +145,88 @@
   </div>
 
 
-  <div class="modal fade" id="sectorModal">
+  <div class="modal fade" id="rearrangeSectorModal">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4>Move Cash Bag</h4>
+          <h4><strong>Rearrange Sectors</strong></h4>
         </div>
         <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="row">
+                <div class="col-xs-12">
+                  <h4>Origin Cash Bag</h4>
+                  <select class="form-control"
+                          ng-model="rearrangeOriginCashBag"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBagNumber'"
+                          ng-change="clearRearrangeSelections()">
+                    <option selected="selected" value>Select a Cash Bag</option>
+                  </select>
+                  <hr>
+                  <table class="table" ng-show="rearrangeOriginCashBag">
+                    <tr class="active">
+                      <th></th>
+                      <th>Sector Id</th>
+                      <th>Transactions Total</th>
+                      <th>New Total</th>
+                    </tr>
+                    <tr ng-repeat="sector in rearrangeOriginCashBag.flightSectors"
+                        ng-class="getClassesForRearrangeSectors(sector, 'background')">
+                      <td ng-click="toggleSelectSectorToMove(sector)">
+                        <button ng-class="getClassesForRearrangeSectors(sector, 'button')">
+                          <span ng-class="getClassesForRearrangeSectors(sector, 'buttonIcon')"></span>
+                        </button>
+                      </td>
+                      <td>{{ sector.id }}</td>
+                      <td>{{ sector.transactionTotal}}</td>
+                      <td> -</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="row">
+                <div class="col-xs-12">
+                  <h4>Target Cash Bag</h4>
+                  <select class="form-control"
+                          ng-model="rearrangeTargetCashBag"
+                          ng-options="cashBag as cashBag.cashBag for cashBag in cashBagList | orderBy: 'cashBagNumber'"
+                          ng-change="clearRearrangeSelections()">
+                    <option selected="selected" value>Select a Cash Bag</option>
+                  </select>
+                  <hr>
+                  <table class="table" ng-show="rearrangeTargetCashBag">
+                    <tr class="active">
+                      <th>Sector Id</th>
+                      <th>Transactions Total</th>
+                      <th>New Total</th>
+                    </tr>
+                    <tr ng-repeat="sector in rearrangeTargetCashBag.flightSectors">
+                      <td>{{ sector.id }}</td>
+                      <td>{{ sector.transactionTotal}}</td>
+                      <td> -</td>
+                    </tr>
+                    <tr ng-repeat="sector in sectorsToMove" class="bg-info">
+                      <td>{{ sector.id }}</td>
+                      <td>{{ sector.transactionTotal}}</td>
+                      <td> -</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal"
+                  ng-show="sectorsToMove.length">
+            <span class="fa fa-check"></span> Save
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="dismissMoveCashBagModal()">
+            Exit
+          </button>
         </div>
       </div>
     </div>
@@ -292,8 +371,8 @@
             </div>
 
             <div class="col-xs-8 text-right">
-              <button class="btn btn-warning" ng-click="toggleMergeMode()">
-                <span class="fa fa-tasks active"></span> Reorder Flight Sectors
+              <button class="btn btn-warning" ng-click="showRearrangeSectorModal()">
+                <span class="fa fa-tasks active"></span> Rearrange Flight Sectors
               </button>
               <button class="btn btn-default" ng-click="initEditTable(false)">
                 <span class="fa fa-eye active"></span> Show Deleted Cash Bags
@@ -425,7 +504,6 @@
                 </table>
               </div>
             </div>
-            <br>
             <hr>
             <div class="row">
               <div class="col-xs-6 text-left">
@@ -455,7 +533,7 @@
                     <th>Tail Number</th>
                     <th>Number of Transactions</th>
                     <th>Transactions Total [GBP]</th>
-                    <th ng-hide="cashBag.isDeleted"></th>
+                    <th ng-hide="cashBag.isDeleted">Actions</th>
                   </tr>
                   </tbody>
                   <tbody ng-repeat="flightSector in cashBag.flightSectors" ng-init="flightSector.rowOpen=false">

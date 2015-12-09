@@ -12,6 +12,39 @@ angular.module('ts5App')
     var $this = this;
 
 
+    $scope.showRearrangeSectorModal = function () {
+      angular.element('#rearrangeSectorModal').modal('show');
+    };
+
+    $scope.toggleSelectSectorToMove = function (sector) {
+      var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
+      if(matchIndex < 0 ) {
+        $scope.sectorsToMove.push(sector);
+      } else {
+        $scope.sectorsToMove.splice(matchIndex, 1);
+      }
+    };
+
+    $scope.clearRearrangeSelections = function () {
+      $scope.sectorsToMove = [];
+    };
+
+    $scope.closeRearrangeSectorModal = function () {
+      $scope.sectorsToMove = [];
+      $scope.rearrangeOriginCashBag = null;
+      $scope.rearrangeTargetCashBag = null;
+    };
+
+    $scope.getClassesForRearrangeSectors = function (sector, tagType) {
+      var selectedClasses = {background: 'bg-danger', buttonIcon: 'fa fa-check-circle', button: 'btn btn-danger btn-sm'};
+      var deselectedClasses = {background: '', buttonIcon: 'fa fa-circle-thin', button: 'btn btn-default btn-sm'};
+
+      var objectMatch = lodash.findWhere($scope.sectorsToMove, {id: sector.id});
+      var correctClassObj = (angular.isDefined(objectMatch)) ? selectedClasses : deselectedClasses;
+      return correctClassObj[tagType];
+    };
+
+
     $scope.showMoveCashBagModal = function (cashBag) {
       $scope.cashBagToMove = cashBag;
       angular.element('#moveCashBagModal').modal('show');
@@ -80,6 +113,7 @@ angular.module('ts5App')
       angular.element('#checkbox').bootstrapSwitch();
       $scope.showDeletedCashBags = false;
       $this.getCashBagList();
+      $scope.sectorsToMove = [];
     };
 
     $this.init();
