@@ -44,7 +44,6 @@ angular.module('ts5App')
       return correctClassObj[tagType];
     };
 
-
     $scope.showMoveCashBagModal = function (cashBag) {
       $scope.cashBagToMove = cashBag;
       angular.element('#moveCashBagModal').modal('show');
@@ -101,6 +100,10 @@ angular.module('ts5App')
       return flightSector.crewData.length;
     };
 
+    $scope.getClassForAccordionArrows = function (accordionFlag) {
+      return (accordionFlag) ? 'fa-chevron-down' : 'fa-chevron-right';
+    };
+
     this.getCashBagListSuccess = function (dataFromAPI) {
       $scope.cashBagList = angular.copy(dataFromAPI);
     };
@@ -109,7 +112,12 @@ angular.module('ts5App')
       storeInstanceAmendFactory.getCashBagListMockData().then($this.getCashBagListSuccess);
     };
 
+    this.initViewDefaults = function () {
+      $scope.moveCashBagAction = 'none';
+    };
+
     this.init = function () {
+      $this.initViewDefaults();
       angular.element('#checkbox').bootstrapSwitch();
       $scope.showDeletedCashBags = false;
       $this.getCashBagList();
