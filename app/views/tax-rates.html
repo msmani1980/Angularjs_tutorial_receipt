@@ -1,8 +1,8 @@
-<div class="fluid-container module-container">
+<div class="fluid-container module-container" ng-show="viewIsReady">
   <div class="list-controls">
     <div class="row item-list-row">
       <div class="col-xs-4">
-        <h2 class="view-name">Tax Management</h2>
+        <h2 class="view-name">{{viewName}}</h2>
       </div>
 
       <div class="col-xs-8 text-right">
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="panel panel-default collapse no-transition" id="search-collapse">
+    <div class="panel panel-default collapse" id="search-collapse">
       <form class="form">
         <div class="panel-body">
           <div class="row">
