@@ -459,9 +459,24 @@ angular.module('ts5App')
       return parseInt(record.countryId) === parseInt($scope.formData.countryId);
     };
 
-    this.submitForm = function() {
-      console.log($scope.formData);
+    this.validateForm = function() {
+      $scope.displayError = $scope.stationCreateForm.$invalid;
+      return $scope.stationCreateForm.$valid;
+    };
+
+    this.createStationSuccess = function() {
       this.showSuccessMessage('Station has been created!');
+    };
+
+    this.createStation = function() {
+      // mock API call here
+      this.createStationSuccess();
+    };
+
+    this.submitForm = function() {
+      if( this.validateForm() ) {
+        this.createStation();
+      }
     };
 
     this.checkIfViewOnly = function () {
@@ -484,15 +499,17 @@ angular.module('ts5App')
       $scope.buttonText = 'Save';
     };
 
-    this.setUISelectValidationClass = function () {
-      /*if($scope.stationCreateForm[inputName].$touched && $scope.stationCreateForm[inputName].length < 1 ||
-        $scope.displayError && $scope.stationCreateForm[inputName].length < 1) {
+    this.setUISelectValidationClass = function (inputName) {
+      if( angular.isUndefined($scope.stationCreateForm[inputName]) ){
+        return '';
+      }
+      if($scope.stationCreateForm[inputName].length === 0) {
         return 'has-error';
       }
-      if($scope.stationCreateForm[inputName].$touched && $scope.stationCreateForm[inputName].$valid) {
+      if($scope.stationCreateForm[inputName].length > 0) {
         return 'has-success';
-      }*/
-      return 'has-success';
+      }
+      return '';
     };
 
     this.makeInitPromises = function() {

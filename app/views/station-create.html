@@ -32,10 +32,10 @@
 
   </div>
 
-  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  <error-dialog form-object="stationCreateForm" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <form name="stationCreateForm" class="form" ng-if="dataReady">
+  <form name="stationCreateForm" class="form">
 
 			<div class="row">
 
@@ -115,20 +115,31 @@
 
       <div class="panel panel-default">
 
-        <div class="panel-heading">
+        <div class="panel-heading form-inline" >
 
-          <input type="checkbox" ng-model="formData.isCaterer" /> This is a Catering Station
+          <button ng-show="formData.isCaterer" class="btn btn-primary btn-sm text-right" ng-click="addRelationship()">
+            <span class="fa fa-plus" aria-hidden="true"></span>
+            <span class="hidden-xs btn-label">Add Relationship</span>
+          </button>
+
+          <select class="form-control" name="isCaterer" ng-model="formData.isCaterer">
+             <option value="true">Yes</value>
+             <option value="">No</value>
+          </select>
+
+           This is <span ng-show="!formData.isCaterer">not</span> a Catering Station
+
         </div>
 
         <div class="panel-body" ng-show="formData.isCaterer">
 
-          <button ng-show="formData.isCaterer" class="btn btn-primary pull-right" ng-click="addRelationship()">
-            <span class="fa fa-check-square-o" aria-hidden="true"></span>
-            <span class="hidden-xs btn-label">Add Relationship</span>
-          </button>
+          <div ng-show="formData.companyStationRelationships.length === 0">
 
-          <h2 class="view-name">Station / Caterer Relationships</h2>
-          <p>Below are a list of relationships between this Station and Catering Companies.</p>
+            <p class="alert alert-info">
+              There are no relationships currently. Click the "Add Relationship" button to add a relationship to this list.
+            </p>
+
+          </div>
 
           <div class="row" ng-repeat="relationship in formData.companyStationRelationships track by $index">
 
