@@ -86,9 +86,10 @@ angular.module('ts5App')
 
     $scope.searchForMoveCashBag = function () {
       if ($scope.moveCashBagAction === 'merge') {
-        storeInstanceAmendFactory.getCashBagListMockData($scope.moveSearch).then($this.searchForMoveCashBagSuccess);
-      } else if ($scope.moveCashBagAction === 'reallocate') {
-        storeInstanceAmendFactory.getStoreInstancesMockData($scope.moveSearch).then($this.searchForMoveCashBagSuccess);
+        return storeInstanceAmendFactory.getCashBagListMockData($scope.moveSearch).then($this.searchForMoveCashBagSuccess);
+      }
+      if ($scope.moveCashBagAction === 'reallocate') {
+        return storeInstanceAmendFactory.getStoreInstancesMockData($scope.moveSearch).then($this.searchForMoveCashBagSuccess);
       }
     };
 
@@ -164,6 +165,6 @@ angular.module('ts5App')
       $this.getCashBagList();
     };
 
-    $this.init();
+    this.init();
 
   });
