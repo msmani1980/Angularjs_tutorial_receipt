@@ -21,18 +21,6 @@ angular.module('ts5App')
       angular.element('#moveCashBagModal').modal('show');
     };
 
-    $scope.closeRearrangeSectorModal = function () {
-      $scope.sectorsToMove = [];
-      $scope.rearrangeOriginCashBag = null;
-      $scope.rearrangeTargetCashBag = null;
-    };
-
-    $scope.closeMoveCashBagModal = function () {
-      $scope.moveCashBagAction = 'none';
-      $scope.moveCashBagSearchResults = null;
-      $scope.cashBagToMove = null;
-    };
-
     $scope.clearRearrangeSelections = function () {
       $scope.sectorsToMove = [];
     };
@@ -41,6 +29,18 @@ angular.module('ts5App')
       $scope.moveSearch = {};
       $scope.moveCashBagSearchResults = null;
       $scope.targetRecordForMoveCashBag = null;
+    };
+
+    $scope.closeRearrangeSectorModal = function () {
+      $scope.sectorsToMove = [];
+      $scope.rearrangeOriginCashBag = null;
+      $scope.rearrangeTargetCashBag = null;
+    };
+
+    $scope.closeMoveCashBagModal = function () {
+      $scope.clearMoveSearchResults();
+      $scope.moveCashBagAction = 'none';
+      $scope.cashBagToMove = null;
     };
 
     $scope.canSaveRearrange = function () {
@@ -77,22 +77,6 @@ angular.module('ts5App')
       return correctClassObj[tagType];
     };
 
-    $scope.getClassForTableAccordion = function (visibilityFlag) {
-      return (visibilityFlag) ? 'fa fa-minus-square' : 'fa fa-plus-square-o';
-    };
-
-    $scope.getClassForAccordionArrows = function (accordionFlag) {
-      return (accordionFlag) ? 'fa-chevron-down' : 'fa-chevron-right';
-    };
-
-    $scope.doesSectorHaveCrewData = function (flightSector) {
-      return flightSector.crewData.length;
-    };
-
-    $scope.shouldShowCashBag = function (cashBag) {
-      return ($scope.showDeletedCashBags) ? true : !cashBag.isDeleted;
-    };
-
     this.searchForMoveCashBagSuccess = function (dataFromAPI) {
       $scope.moveCashBagSearchResults = angular.copy(dataFromAPI);
       if ($scope.moveCashBagSearchResults.length === 1) {
@@ -106,6 +90,22 @@ angular.module('ts5App')
       } else if ($scope.moveCashBagAction === 'reallocate') {
         storeInstanceAmendFactory.getStoreInstancesMockData($scope.moveSearch).then($this.searchForMoveCashBagSuccess);
       }
+    };
+
+    $scope.getClassForTableAccordion = function (visibilityFlag) {
+      return (visibilityFlag) ? 'fa fa-minus-square' : 'fa fa-plus-square-o';
+    };
+
+    $scope.getClassForAccordionArrows = function (accordionFlag) {
+      return (accordionFlag) ? 'fa-chevron-down' : 'fa-chevron-right';
+    };
+
+    $scope.doesSectorHaveCrewData = function (flightSector) {
+      return flightSector.crewData.length > 0;
+    };
+
+    $scope.shouldShowCashBag = function (cashBag) {
+      return ($scope.showDeletedCashBags) ? true : !cashBag.isDeleted;
     };
 
     $scope.toggleVerifiedCashBag = function (cashBag) {
