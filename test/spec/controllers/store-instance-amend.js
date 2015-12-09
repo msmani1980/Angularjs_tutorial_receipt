@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('Controller: StoreInstanceAmendCtrl', function () {
+describe('Controller: StoreInstanceAmendCtrl', function () {
 
   beforeEach(module('ts5App'));
 
