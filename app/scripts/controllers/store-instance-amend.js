@@ -44,7 +44,7 @@ angular.module('ts5App')
     };
 
     $scope.canSaveRearrange = function () {
-      return ($scope.sectorsToMove.lenghth && $scope.targetRecordForMoveCashBag);
+      return ($scope.sectorsToMove.length > 0 && !!$scope.rearrangeTargetCashBag);
     };
 
     $scope.toggleSelectSectorToRearrange = function (sector) {

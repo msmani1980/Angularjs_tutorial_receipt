@@ -164,6 +164,22 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
       });
     });
 
+    describe('canSaveRearrange', function () {
+      it('should only allow saving if a record is selected and a target is set', function () {
+        scope.sectorsToMove = [{id: 1}];
+        scope.rearrangeTargetCashBag = {cashBag: '123'};
+        expect(scope.canSaveRearrange()).toEqual(true);
+      });
+      it('should now allow saving if a target or selected sector is not set', function () {
+        scope.sectorsToMove = {id: 1};
+        scope.rearrangeTargetCashBag = null;
+        expect(scope.canSaveRearrange()).toEqual(false);
+        scope.sectorsToMove = [];
+        scope.rearrangeTargetCashBag = {cashBag: '123'};
+        expect(scope.canSaveRearrange()).toEqual(false);
+      });
+    });
+
     describe('select flight sector to move', function () {
       beforeEach(function () {
         scope.sectorsToMove = [{id: 1}, {id: 2}];
