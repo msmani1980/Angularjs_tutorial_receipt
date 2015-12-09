@@ -139,6 +139,7 @@ angular.module('ts5App')
     $this.recalculateActionsForDiscrepanciesStatus = function (item, actions) {
       if (item.statusName === 'Discrepancies') {
         actions.push(
+          'Validate',
           'Review',
           'Confirm'
         );
