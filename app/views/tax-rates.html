@@ -1,1 +1,131 @@
-<p>This is the tax-rates view.</p>
+<div class="fluid-container module-container">
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
+        <h2 class="view-name">Tax Management</h2>
+      </div>
+
+      <div class="col-xs-8 text-right">
+        <button class="btn btn-primary">+ <span class="hidden-xs">Create Tax Rate</span></button>
+
+        <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse" aria-expanded="false"
+                aria-controls="search-collapse">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+
+      </div>
+    </div>
+
+    <div class="panel panel-default collapse no-transition" id="search-collapse">
+      <form class="form">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="tax-rates-type">Tax Type</label>
+                <input ng-model="search.taxType" type="text" class="form-control" id="tax-type" placeholder="Select Tax Type...">
+              </div>
+            </div>
+
+						<div class="col-xs-12 col-sm-6 col-md-4">
+							<div class="form-group">
+								<label for="tax-rates-country">Country</label>
+								<input ng-model="search.country" type="text" class="form-control" id="tax-rate-country" placeholder="Select Country...">
+							</div>
+						</div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="tax-rates-station">Station</label>
+                <input ng-model="search.station" type="text" class="form-control" id="tax-rate-station" placeholder="Select Station...">
+              </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+
+              <div class="form-group">
+                <label for="tax-rates-rate-type">Rate Type</label>
+                <input ng-model="search.rateType" type="text" class="form-control" id="tax-rate-type" placeholder="Select Rate Type...">
+              </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+
+              <div class="form-group">
+                <label for="tax-rates-rate">Tax Rate</label>
+                <input ng-model="search.taxRate" type="text" class="form-control" id="tax-rate" placeholder="Rate">
+              </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+
+              <div class="form-group">
+                <label for="tax-rates-currency">Currency</label>
+                  <input ng-model="search.currency" type="text" class="form-control" id="tax-rate" placeholder="Rate">
+              </div>
+
+            </div>
+
+
+          </div>
+
+          <date-picker element-class="col-xs-12 col-sm-6 col-md-4"
+                       start-date-model="dateRange.startDate"
+                       end-date-model="dateRange.endDate"
+                       is-search-field="true"
+                       label-from="Effective From"
+                       label-to="Effective To">
+          </date-picker>
+
+        </div>
+
+        <div class="panel-footer text-right">
+          <button class="btn btn-default"
+                  ng-click="clearSearchFilters()"
+                  ng-show="search.taxType.length || search.country.length || search.station.length || search.rateType.length || search.currency.length || dateRange.startDate.length || dateRange.endDate.length">
+            <span>Clear</span>
+          </button>
+          <button ng-click="searchRecords()" class="btn btn-primary btn-search">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs btn-label">Search</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <alert ng-hide="!taxRate.length" ng-show="!taxRateList.length" type="info">
+    <span class="fa fa-flag"></span> Your search returned no results.
+  </alert>
+
+  <div class="table table-responsive table-hover">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Tax Type</th>
+          <th>Country</th>
+          <th>Station</th>
+          <th>Rate Type</th>
+          <th>Rate</th>
+          <th>Effective From</th>
+          <th>Effective To</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <!--TODO: add in <tr> with ng-repeat-->
+
+    </table>
+
+  </div>
+</div>
+
+<form-success-modal></form-success-modal>
+<dynamic-left-nav></dynamic-left-nav>
+<delete-record-dialog></delete-record-dialog>
