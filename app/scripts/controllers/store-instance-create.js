@@ -108,7 +108,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('redispatch')) {
         $this.getPrevStoreDetails();
       }
-      if ($this.isEditingDispatch() || $this.isEditingRedispatch()) {
+      if ($this.isEditingDispatch()) {
         $this.addCurrentStoreToStoreList();
       }
     };

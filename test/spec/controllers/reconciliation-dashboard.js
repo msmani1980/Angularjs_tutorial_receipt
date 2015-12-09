@@ -208,7 +208,7 @@ describe('Controller: ReconciliationDashboardCtrl', function () {
 
     item = {statusName: 'Discrepancies'};
     ReconciliationDashboardCtrl.recalculateActionsColumn(item);
-    expect(item.actions).toEqual(['Reports', 'Review', 'Confirm']);
+    expect(item.actions).toEqual(['Reports', 'Validate', 'Review', 'Confirm']);
   });
 
   it('fixSearchDropdowns should reset dropdown value if empty value is selected', function () {
