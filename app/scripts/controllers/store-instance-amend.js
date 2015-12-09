@@ -106,12 +106,10 @@ angular.module('ts5App')
 
     $scope.shouldShowCashBag = function (cashBag) {
       var canCashBagBeVisible = ($scope.showDeletedCashBags) ? true : !cashBag.isDeleted;
-      var isCashBagInFilter;
+      var isCashBagInFilter = true;
       if($scope.cashBagFilter.filterList && $scope.cashBagFilter.filterList.length > 0) {
         var cashBagMatch = lodash.findWhere($scope.cashBagFilter.filterList, {id: cashBag.id});
         isCashBagInFilter = angular.isDefined(cashBagMatch);
-      } else {
-        isCashBagInFilter = true;
       }
       return canCashBagBeVisible && isCashBagInFilter;
     };
