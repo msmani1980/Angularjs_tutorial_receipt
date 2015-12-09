@@ -139,6 +139,7 @@ angular.module('ts5App')
     $this.recalculateActionsForDiscrepanciesStatus = function (item, actions) {
       if (item.statusName === 'Discrepancies') {
         actions.push(
+          'Validate',
           'Review',
           'Confirm'
         );
@@ -148,7 +149,7 @@ angular.module('ts5App')
     this.getReconciliationPrecheckDevices = function (item) {
       reconciliationFactory.getReconciliationPrecheckDevices({storeInstanceId: item.id}).then(function (response) {
         var dataFromAPI = angular.copy(response);
-        item.eposData = (dataFromAPI.devicesSynced && dataFromAPI.totalDevies) ? dataFromAPI.devicesSynced + '/' + dataFromAPI.totalDevies : 'No';
+        item.eposData = (dataFromAPI.devicesSynced || dataFromAPI.totalDevices) ? dataFromAPI.devicesSynced + '/' + dataFromAPI.totalDevices : 'No';
         $this.recalculateActionsColumn(item);
       });
     };
@@ -156,7 +157,7 @@ angular.module('ts5App')
     this.getReconciliationPrecheckSchedules = function (item) {
       reconciliationFactory.getReconciliationPrecheckSchedules({storeInstanceId: item.id}).then(function (response) {
         var dataFromAPI = angular.copy(response);
-        item.postTripData = (dataFromAPI.postTripScheduleCount && dataFromAPI.eposScheduleCount) ? dataFromAPI.postTripScheduleCount + '/' + dataFromAPI.eposScheduleCount : 'No';
+        item.postTripData = (dataFromAPI.postTripScheduleCount || dataFromAPI.eposScheduleCount) ? dataFromAPI.postTripScheduleCount + '/' + dataFromAPI.eposScheduleCount : 'No';
         $this.recalculateActionsColumn(item);
       });
     };
@@ -164,7 +165,7 @@ angular.module('ts5App')
     this.getReconciliationPrecheckCashbags = function (item) {
       reconciliationFactory.getReconciliationPrecheckCashbags({storeInstanceId: item.id}).then(function (response) {
         var dataFromAPI = angular.copy(response);
-        item.cashHandlerData = (dataFromAPI.cashHandlerCashbagCount && dataFromAPI.totalCashbagCount) ? dataFromAPI.cashHandlerCashbagCount + '/' + dataFromAPI.totalCashbagCount : 'No';
+        item.cashHandlerData = (dataFromAPI.cashHandlerCashbagCount || dataFromAPI.totalCashbagCount) ? dataFromAPI.cashHandlerCashbagCount + '/' + dataFromAPI.totalCashbagCount : 'No';
         $this.recalculateActionsColumn(item);
       });
     };
