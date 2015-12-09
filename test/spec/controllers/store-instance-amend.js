@@ -83,19 +83,29 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
     });
 
     describe('shouldShowCashBag', function () {
-      it('should always show cashBag if it has not been deleted', function () {
+      it('should always show cashBag if it has not been deleted and there are no filters', function () {
         var mockCashBag = {isDeleted: false};
+        scope.cashBagFilter = {};
         scope.showDeletedCashBags = false;
         expect(scope.shouldShowCashBag(mockCashBag)).toEqual(true);
         scope.showDeletedCashBags = true;
         expect(scope.shouldShowCashBag(mockCashBag)).toEqual(true);
       });
-      it('should show deleted cashBag if showDeletedCashBags is true', function () {
+      it('should show deleted cashBag if showDeletedCashBags is true and there are no filters', function () {
         var mockCashBag = {isDeleted: true};
+        scope.cashBagFilter = {};
         scope.showDeletedCashBags = false;
         expect(scope.shouldShowCashBag(mockCashBag)).toEqual(false);
         scope.showDeletedCashBags = true;
         expect(scope.shouldShowCashBag(mockCashBag)).toEqual(true);
+      });
+      it('should showCashBag if it is selected in the filter', function () {
+        var mockFilteredCashBag = {id: 123, isDeleted: false};
+        var mockNonFilteredCashBag = {id: 345, isDeleted: false};
+        scope.cashBagFilter = {filterList:[{id:123}]};
+        scope.showDeletedCashBags = false;
+        expect(scope.shouldShowCashBag(mockFilteredCashBag)).toEqual(true);
+        expect(scope.shouldShowCashBag(mockNonFilteredCashBag)).toEqual(false);
       });
     });
 
@@ -328,6 +338,15 @@ describe('Controller: StoreInstanceAmendCtrl', function () {
         var buttonIcon = scope.getClassesForMoveSelectedRow(mockNonSelectedRecord, 'buttonIcon');
         expect(background).toEqual('');
         expect(buttonIcon).toEqual('fa fa-circle-thin');
+      });
+    });
+
+    describe('select record', function () {
+      it('should set targetRecordForMoveCashBag to given record', function () {
+        var mockRecord = {id: 1};
+        scope.targetRecordForMoveCashBag = null;
+        scope.selectRecordForMoveCashBag(mockRecord);
+        expect(scope.targetRecordForMoveCashBag).toEqual(mockRecord);
       });
     });
   });

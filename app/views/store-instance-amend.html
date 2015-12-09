@@ -363,10 +363,11 @@
                     <i class="fa fa-filter"></i> Filter
                   </button>
                 </span>
-                  <ui-select multiple ng-model="cashBagFilter.filter" theme="bootstrap">
+                  <ui-select multiple ng-model="cashBagFilter.filterList" theme="bootstrap">
                     <ui-select-match placeholder="Select Cash Bag">{{ $item.cashBag }}</ui-select-match>
                     <ui-select-choices repeat="cashBag in cashBagList | filter: $select.search">
-                      {{ cashBag.cashBag }}
+                      <span ng-hide="cashBag.isDeleted">{{ cashBag.cashBag }}</span>
+                      <span ng-show="cashBag.isDeleted && showDeletedCashBags"><s>{{ cashBag.cashBag }}</s></span>
                     </ui-select-choices>
                   </ui-select>
                 </div>

@@ -105,7 +105,15 @@ angular.module('ts5App')
     };
 
     $scope.shouldShowCashBag = function (cashBag) {
-      return ($scope.showDeletedCashBags) ? true : !cashBag.isDeleted;
+      var canCashBagBeVisible = ($scope.showDeletedCashBags) ? true : !cashBag.isDeleted;
+      var isCashBagInFilter;
+      if($scope.cashBagFilter.filterList && $scope.cashBagFilter.filterList.length > 0) {
+        var cashBagMatch = lodash.findWhere($scope.cashBagFilter.filterList, {id: cashBag.id});
+        isCashBagInFilter = angular.isDefined(cashBagMatch);
+      } else {
+        isCashBagInFilter = true;
+      }
+      return canCashBagBeVisible && isCashBagInFilter;
     };
 
     $scope.toggleVerifiedCashBag = function (cashBag) {
@@ -149,6 +157,7 @@ angular.module('ts5App')
       $scope.moveCashBagAction = 'none';
       $scope.showDeletedCashBags = false;
       $scope.sectorsToMove = [];
+      $scope.cashBagFilter = {};
       angular.element('#checkbox').bootstrapSwitch();
     };
 

@@ -29,6 +29,7 @@ angular.module('ts5App')
 
     var getCashBagListMockData = function (searchQuery) {
       var mockCashBag = [{
+        id: 10,
         cashBag: (searchQuery) ? searchQuery.cashBag : '123',
         bankRefNumber: (searchQuery) ? searchQuery.bankRefNumber : 'AB45',
         storeNumber: '123',
@@ -88,6 +89,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        id: 20,
         cashBag: '789',
         bankRefNumber: 'CB12',
         isManual: false,
@@ -144,6 +146,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        id: 30,
         cashBag: '567',
         bankRefNumber: '1278',
         isManual: true,
