@@ -181,6 +181,21 @@ angular.module('ts5App')
 
     var $this = this;
 
+    this.getGlobalReasonInFormData = function(globalReasonCodeId) {
+      return $scope.formData.globalReasons.filter(function(globalReason) {
+        return parseInt(globalReason.id) === parseInt(globalReasonCodeId);
+      })[0];
+    };
+
+    this.filterByGlobalReason = function(reason) {
+      if( angular.isUndefined($scope.reasonFilter) || $scope.reasonFilter.selectedGlobalReasons.length === 0 ) {
+        return true;
+      }
+      return $scope.reasonFilter.selectedGlobalReasons.filter(function(reasonType) {
+        return parseInt(reasonType.id) === parseInt(reason.id);
+      })[0];
+    };
+
     this.isActionState = function(actionState) {
       return actionState === $routeParams.action;
     };
@@ -227,9 +242,21 @@ angular.module('ts5App')
       $scope.buttonText = 'Save';
     };
 
+    this.setUpFormDataObject = function() {
+      $scope.formData = {
+        globalReasons: []
+      };
+      angular.forEach($scope.globalReasonCodeTypesList, function(globalReason) {
+        $scope.formData.globalReasons.push({
+          id:globalReason.id,
+          companyReasons: []
+        });
+      });
+    };
+
     this.setGlobalReasonCodeTypes = function(dataFromAPI) {
       $scope.globalReasonCodeTypesList = dataFromAPI.reasonTypes;
-      console.log($scope.globalReasonCodeTypesList);
+      this.setUpFormDataObject();
     };
 
     this.getGlobalReasonCodeTypes = function() {
@@ -246,22 +273,21 @@ angular.module('ts5App')
       return this.setCompanyReasonCodeTypes(companyReasonCodeTypesJSON);
     };
 
-    this.addReasonCode = function() {
-      $scope.reasonCodeList.push({
-        id: null,
-        description: ''
-      });
+    this.addReasonCode = function(globalReasonCodeId) {
+      var globalReason = this.getGlobalReasonInFormData(globalReasonCodeId);
+      if(globalReason) {
+        globalReason.companyReasons.push({
+          id: '',
+          description: ''
+        });
+      }
     };
 
     this.init = function() {
       $scope.displayError = false;
-      $scope.reasonCodeList = [{
-        id: 19,
-        description: 'This is an ullage description'
-      }];
-      $scope.selectedGlobalReasonCodeTypes = [
-
-      ];
+      $scope.reasonFilter = {
+        selectedGlobalReasons:[]
+      };
       this.setViewLabels();
       this.getCompanyReasonCodeTypes();
       this.getGlobalReasonCodeTypes();
@@ -275,18 +301,12 @@ angular.module('ts5App')
       return $this.submitForm();
     };
 
-    $scope.addReasonCode = function() {
-      return $this.addReasonCode();
+    $scope.addReasonCode = function(globalReasonCodeId) {
+      return $this.addReasonCode(globalReasonCodeId);
     };
 
-    $scope.filterByGlobalReason = function(reason) {
-      if( Array.isArray($scope.selectedGlobalReasonCodeTypes) ) {
-        var globalReason = $scope.selectedGlobalReasonCodeTypes.filter(function(reasonType) {
-          return parseInt(reasonType.id) === parseInt(reason.id);
-        });
-        return globalReason;
-      }
-      return true;
+    $scope.whenReasonIsNotFiltered = function(reason) {
+      return $this.filterByGlobalReason(reason);
     };
 
   });

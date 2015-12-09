@@ -29,7 +29,7 @@
 
         <div class="form-group">
           <label>Filter the Reason Code Types below</label>
-          <ui-select multiple ng-model="selectedGlobalReasonCodeTypes.id" theme="bootstrap">
+          <ui-select multiple ng-model="reasonFilter.selectedGlobalReasons" theme="bootstrap">
             <ui-select-match placeholder="Start typing to find a Reason Type">{{ $item.reasonTypeName }}
             </ui-select-match>
             <ui-select-choices repeat="globalReasonCodeType in globalReasonCodeTypesList | filter: $select.search | orderBy:'reasonTypeName'">
@@ -43,28 +43,28 @@
     </div>
 
     <!-- Station Edit Controls Panel -->
-    <div class="panel panel-default" ng-repeat="globalReasonCodeType in globalReasonCodeTypesList | filter: filterByGlobalReason track by globalReasonCodeType.id">
+    <div ng-show="whenReasonIsNotFiltered(globalReasonCodeType)" class="panel panel-default" ng-repeat="(key,globalReasonCodeType) in globalReasonCodeTypesList track by globalReasonCodeType.id">
 
         <div class="panel-heading">
 
           <strong>{{ globalReasonCodeType.reasonTypeName }}</strong> - {{ globalReasonCodeType.description}}
 
-          <button class="btn btn-primary pull-right" ng-click="addReasonCode()">
+          <button type="button" class="btn btn-primary pull-right" ng-click="addReasonCode(globalReasonCodeType.id)">
             <span class="fa fa-plus" aria-hidden="true"></span>
             <span class="hidden-xs"> Add Reason Code</span>
           </button>
-
 
         </div>
 
         <div class="panel-body">
 
-          <div class="row" ng-repeat="reasonCode in reasonCodeList track by $index">
+          <div class="row" ng-repeat="reasonCode in formData.globalReasons[key].companyReasons track by $index">
 
-            <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="col-xs-12 col-sm-4 col-md-4">
 
               <div class="form-group">
-                <select class="form-control" name="refundCodeType {{$index+1}}" ng-model="reasonCode.id" required>
+                <label>Reason Type</label>
+                <select class="form-control" name="reasonCode {{$index+1}}" ng-model="reasonCode.id" required>
                   <option ng-selected="{{ companyReasonType.id === reasonCode.id}}" value="{{ companyReasonType.id }}" ng-repeat="companyReasonType in companyReasonCodeTypesList track by companyReasonType.id">
                     {{ companyReasonType.reasonTypeName }}
                   </option>
@@ -73,10 +73,18 @@
 
             </div>
 
-            <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="col-xs-12 col-sm-6 col-md-6">
               <div class="form-group">
-                <input placeholder="Start typing to add a description" type="text" class="form-control"
-                name="description {{ $index+1}}" ng-model="reasonCode.description" required />
+                <label>Description</label>
+                <input placeholder="Type a reason description here" type="text" class="form-control"
+                name="description {{ $index+1}}" ng-model="reasonCode.description" />
+              </div>
+            </div>
+
+            <div class="col-xs-4 col-sm-2">
+              <div class="form-group">
+                <label>Is Active</label>
+                <input type="checkbox" class="form-control" name="isActive {{ $index+1}}" ng-model="reasonCode.isActive"  />
               </div>
             </div>
 
