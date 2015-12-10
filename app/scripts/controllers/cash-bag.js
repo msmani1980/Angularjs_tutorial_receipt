@@ -1,5 +1,6 @@
 'use strict';
 /*global moment*/
+
 /**
  * @ngdoc function
  * @name ts5App.controller:CashBagCtrl
@@ -23,6 +24,10 @@ angular.module('ts5App')
     $scope.displayedCashierDate = '';
     $scope.saveButtonName = '';
     $scope.state = '';
+
+    function formatAsCurrency(valueToFormat) {
+      return sprintf('%.4f', valueToFormat);
+    }
 
     function showLoadingModal(text) {
       $scope.displayError = false;
@@ -51,15 +56,28 @@ angular.module('ts5App')
     }
 
     // scope methods
-    $scope.formSave = function (payloadFromForm) {
-      delete payloadFromForm.storeNumber;
+    function cleanPayload(payload) {
+      delete payload.storeNumber;
+      angular.forEach(payload.cashBagCurrencies, function (currency) {
+        delete currency.paperExchangeRate;
+        delete currency.coinExchangeRate;
+        delete currency.flightAmount;
+      });
+      return payload;
+    }
+
+    $scope.formSave = function (rawFormData) {
+      if ($scope.cashBagCreateForm.$invalid) {
+        return;
+      }
+      var formData = cleanPayload(angular.copy(rawFormData));
       switch ($routeParams.state) {
         case 'edit':
-          if (payloadFromForm.isSubmitted === 'true') {
+          if (formData.isSubmitted === 'true') {
             showMessage(null, true, 'cannot edit cash bags that have been submitted!');
             break;
           }
-          var saveCashBag = angular.copy(payloadFromForm);
+          var saveCashBag = angular.copy(formData);
           saveCashBag.totalCashBags = parseInt(saveCashBag.totalCashBags, 10);
           saveCashBag.scheduleDate = moment(saveCashBag.scheduleDate, 'YYYY-MM-DD').format('YYYYMMDD').toString();
           $scope.cashBag.scheduleDate = saveCashBag.scheduleDate;
@@ -72,9 +90,9 @@ angular.module('ts5App')
           );
           break;
         case 'create':
-          payloadFromForm.isDelete = false;
-          payloadFromForm.totalCashBags = parseInt(payloadFromForm.totalCashBags, 10);
-          cashBagFactory.createCashBag({cashBag: payloadFromForm}).then(function (newCashBag) {
+          formData.isDelete = false;
+          formData.totalCashBags = parseInt(formData.totalCashBags, 10);
+          cashBagFactory.createCashBag({cashBag: formData}).then(function (newCashBag) {
             $location.search('newId', newCashBag.id)
               .search('scheduleDate', null)
               .search('scheduleNumber', null)
@@ -160,6 +178,8 @@ angular.module('ts5App')
     function promisesResponseHandler() {
       if (angular.isUndefined($scope.dailyExchangeRates) || $scope.dailyExchangeRates.length === 0) {
         showMessage(null, true, 'no daily exchange rate created for this date! please create one on exchange rates page');
+        hideLoadingModal();
+        return;
       }
       var dailyExchangeRateCurrencies = $scope.dailyExchangeRates[0].dailyExchangeRateCurrencies;
       $scope.cashBag.dailyExchangeRateId = $scope.dailyExchangeRates[0].id;
@@ -169,6 +189,7 @@ angular.module('ts5App')
         if (dailyCurrency) {
           cashBagCurrency.paperExchangeRate = dailyCurrency.paperExchangeRate;
           cashBagCurrency.coinExchangeRate = dailyCurrency.coinExchangeRate;
+          cashBagCurrency.flightAmount = formatAsCurrency(parseFloat(cashBagCurrency.paperAmountEpos) + parseFloat(cashBagCurrency.coinAmountEpos));
           dailyExchangeRateCurrencies.splice(dailyExchangeRateCurrencies.indexOf(dailyCurrency), 1);
         }
       });
@@ -178,10 +199,11 @@ angular.module('ts5App')
           {
             currencyId: currency.retailCompanyCurrencyId,
             bankAmount: currency.bankExchangeRate,
-            paperAmountManual: '0.0000',
-            coinAmountManual: '0.0000',
+            paperAmountManual: formatAsCurrency(0),
+            coinAmountManual: formatAsCurrency(0),
             paperAmountEpos: 0,
             coinAmountEpos: 0,
+            flightAmount: '-',
             paperExchangeRate: currency.paperExchangeRate,
             coinExchangeRate: currency.coinExchangeRate
           }
@@ -196,13 +218,6 @@ angular.module('ts5App')
           $scope.displayError = false;
           $scope.formErrors = {};
           $scope.showDeleteButton = canDelete(response);
-
-          if ($scope.cashBag.eposCashBagsId === null) {
-            $scope.flightAmount = '0.0000';
-          } else {
-            // TODO: API call to get flight amount based on eposCashBagsId
-            $scope.flightAmount = '-';
-          }
         })
       );
     }

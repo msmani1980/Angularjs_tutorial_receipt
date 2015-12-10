@@ -12,7 +12,7 @@ angular.module('ts5App')
     var $this = this;
 
     function formatAsCurrency(valueToFormat) {
-      return $filter('currency')(valueToFormat, '');
+      return sprintf ('%.2f', valueToFormat);
     }
 
     function initLMPStockRevisions() {
