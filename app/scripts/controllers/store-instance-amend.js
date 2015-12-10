@@ -11,6 +11,9 @@ angular.module('ts5App')
   .controller('StoreInstanceAmendCtrl', function ($q, $scope, $routeParams, $filter, storeInstanceAmendFactory, dateUtility, lodash) {
     var $this = this;
 
+    $scope.showAddScheduleModal = function () {
+      angular.element('#addScheduleModal').modal('show');
+    };
 
     $scope.showRearrangeSectorModal = function () {
       angular.element('#rearrangeSectorModal').modal('show');
@@ -19,6 +22,12 @@ angular.module('ts5App')
     $scope.showMoveCashBagModal = function (cashBag) {
       $scope.cashBagToMove = cashBag;
       angular.element('#moveCashBagModal').modal('show');
+    };
+
+    $scope.clearScheduleSelections = function () {
+      $scope.scheduleSearch = {};
+      $scope.newScheduleSelection = null;
+      $scope.searchScheduleResults = null;
     };
 
     $scope.clearRearrangeSelections = function () {
@@ -60,6 +69,10 @@ angular.module('ts5App')
       $scope.targetRecordForMoveCashBag = record;
     };
 
+    $scope.selectRecordForNewSchedule = function (record) {
+      $scope.newScheduleSelection = record;
+    };
+
     $scope.getClassesForRearrangeSectors = function (sector, tagType) {
       var selectedClasses = {background: 'bg-danger', buttonIcon: 'fa fa-check-circle', button: 'btn btn-danger btn-sm'};
       var deselectedClasses = {background: '', buttonIcon: 'fa fa-circle-thin', button: 'btn btn-default btn-sm'};
@@ -69,12 +82,25 @@ angular.module('ts5App')
       return correctClassObj[tagType];
     };
 
-    $scope.getClassesForMoveSelectedRow = function (record, tagType) {
+    $scope.getClassesForSingleSelectedRow = function (record, tagType, recordType) {
       var selectedClasses = {background: 'bg-success', buttonIcon: 'fa fa-check-circle', button: 'btn btn-success'};
       var deselectedClasses = {background: '', buttonIcon: 'fa fa-circle-thin', button: 'btn btn-default'};
 
-      var correctClassObj = (record === $scope.targetRecordForMoveCashBag) ? selectedClasses : deselectedClasses;
+      var target = (recordType === 'schedule') ? $scope.newScheduleSelection : $scope.targetRecordForMoveCashBag;
+
+      var correctClassObj = (record === target) ? selectedClasses : deselectedClasses;
       return correctClassObj[tagType];
+    };
+
+    this.searchForScheduleSuccess = function (dataFromAPI) {
+      $scope.searchScheduleResults = angular.copy(dataFromAPI);
+      if ($scope.searchScheduleResults.length === 1) {
+        $scope.newScheduleSelection = $scope.searchScheduleResults[0];
+      }
+    };
+
+    $scope.searchForSchedule = function () {
+      return storeInstanceAmendFactory.getScheduleMockData($scope.scheduleSearch).then($this.searchForScheduleSuccess);
     };
 
     this.searchForMoveCashBagSuccess = function (dataFromAPI) {
@@ -119,15 +145,6 @@ angular.module('ts5App')
       cashBag.isVerified = !cashBag.isVerified;
     };
 
-    $scope.isSalesAndRevenueDetailsOpen = function (cashBag) {
-      return (cashBag.salesTableOpen || cashBag.revenueTableOpen);
-    };
-
-    $scope.toggleSalesAndRevenueDetails = function (cashBag, shouldExpand) {
-      cashBag.salesTableOpen = shouldExpand;
-      cashBag.revenueTableOpen = shouldExpand;
-    };
-
     $scope.isCrewDataOpen = function (cashBag) {
       var crewRecordOpen = false;
       angular.forEach(cashBag.flightSectors, function (sector) {
@@ -157,6 +174,7 @@ angular.module('ts5App')
       $scope.showDeletedCashBags = false;
       $scope.sectorsToMove = [];
       $scope.cashBagFilter = {};
+      $scope.scheduleSearch = {};
       angular.element('#checkbox').bootstrapSwitch();
     };
 
