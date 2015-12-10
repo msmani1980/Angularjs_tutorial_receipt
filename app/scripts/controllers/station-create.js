@@ -21,7 +21,7 @@ angular.module('ts5App')
       'countryName': 'Denmark',
       'description': 'Copenhagen',
       'isCaterer': true,
-      'endDate': '2050-01-01',
+      'endDate': '2015-12-31',
       'startDate': '2015-05-02',
       'regionId': 8,
       'regionName': 'All',
@@ -32,7 +32,11 @@ angular.module('ts5App')
       'timezoneId': '86',
       'utcDstOffset': '+02:00',
       'utcOffset': '+01:00',
-      'companyStationRelationships': []
+      'companyStationRelationships': [{
+        'catererId': '44',
+        'endDate': '2015-12-31',
+        'startDate': '2015-05-02',
+      }]
     };
 
     var globalStationListJSON = {

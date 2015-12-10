@@ -123,7 +123,7 @@
           </button>
 
           <select class="form-control" name="isCaterer" ng-model="formData.isCaterer">
-             <option value="true">Yes</value>
+             <option ng-selected="formData.isCaterer" value="true">Yes</value>
              <option value="">No</value>
           </select>
 
@@ -145,7 +145,7 @@
 
             <div class="col-xs-12 col-sm-4">
 
-              <div class="form-group" ng-class="setUISelectValidationClass('Caterer')">
+              <div class="form-group">
                 <label>Caterer Name *</label>
                 <ui-select name="Caterer" ng-model="relationship.catererId" theme="bootstrap" required>
                   <ui-select-match placeholder="Start typing to find a Caterer">{{ $select.selected.code }}
