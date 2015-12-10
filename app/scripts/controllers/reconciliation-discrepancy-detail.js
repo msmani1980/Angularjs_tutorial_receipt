@@ -30,7 +30,7 @@ angular.module('ts5App')
     }
 
     function getVarianceQuantity(stockItem) {
-      var eposSales = stockItem.eposTotal || 0;
+      var eposSales = stockItem.eposQuantity || 0;
       var lmpDispatchedCount = stockItem.dispatchedQuantity || 0;
       var lmpReplenishCount = 0;
       var lmpIncomingCount = stockItem.inboundQuantity || 0;
@@ -44,13 +44,13 @@ angular.module('ts5App')
       var varianceValue = varianceQuantity * stockItem.price;
       var isDiscrepancy = (varianceQuantity !== 0);
       var eposSales = stockItem.eposQuantity || 0;
+      var inboundOffloadCount = stockItem.inboundQuantity || stockItem.offloadQuantity || 0;
 
       return {
         itemName: stockItem.itemName,
         dispatchedCount: stockItem.dispatchedQuantity,
         replenishCount: 0,
-        inboundCount: stockItem.inboundQuantity || 0,
-        offloadCount: stockItem.offloadQuantity || 0,
+        inboundOffloadCount: inboundOffloadCount,
         ePOSSales: formatAsCurrency(eposSales),
         varianceQuantity: formatAsCurrency(varianceQuantity),
         retailValue: formatAsCurrency(retailValue),
@@ -191,6 +191,8 @@ angular.module('ts5App')
       });
 
       return {
+        parsedLMP: totalLMP,
+        parsedEPOS: totalEPOS,
         totalLMP: formatAsCurrency(totalLMP),
         totalEPOS: formatAsCurrency(totalEPOS)
       };
@@ -203,6 +205,8 @@ angular.module('ts5App')
       });
 
       return {
+        parsedLMP: total,
+        parsedEPOS: total,
         totalLMP: formatAsCurrency(total),
         totalEPOS: formatAsCurrency(total)
       };
@@ -242,34 +246,32 @@ angular.module('ts5App')
     }
 
     function getStockItemData() {
-      $this.promotionTotals.map(function (promotion) {
+
+      $filter('filter')($this.promotionTotals, {exchangeRateTypeId: 1}).map(function (promotion) {
+        promotion.eposQuantity = 1;
+        promotion.eposTotal = promotion.convertedAmount;
         reconciliationFactory.getPromotion(promotion.promotionId).then(function (dataFromAPI) {
           promotion.itemName = dataFromAPI.promotionCode;
-        });
+        }, handleResponseError);
         promotion.itemTypeName = 'Promotion';
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Virtual'}).map(function (item) {
         reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
           item.itemName = dataFromAPI.itemName;
-        });
+        }, handleResponseError);
       });
 
       $filter('filter')($this.stockTotals, {itemTypeName: 'Voucher'}).map(function (item) {
         reconciliationFactory.getItem(item.itemMasterId).then(function (dataFromAPI) {
-          item.itemName = dataFromAPI.itemName;
-        });
+          item.itemName = dataFromAPI.retailItem.itemName;
+        }, handleResponseError);
       });
     }
 
     function setNetTotals(stockData) {
       var stockTotals = angular.copy(stockData);
-      angular.forEach(stockTotals, function (stockItem) {
-        stockItem.parsedLMP = parseFloat(stockItem.totalLMP);
-        stockItem.parsedEPOS = parseFloat(stockItem.totalEPOS);
-      });
-
-      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedLMP + stockTotals.totalVoucher.parsedLMP - stockTotals.totalPromotion.parsedLMP;
+      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedLMP;
       var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
 
       var netTotals = {
@@ -277,7 +279,7 @@ angular.module('ts5App')
         netEPOS: formatAsCurrency(netEPOS)
       };
 
-      var stockItems = angular.copy($this.stockTotals).concat($this.promotionTotals);
+      var stockItems = $this.stockTotals.concat($this.promotionTotals);
       $scope.stockTotals = angular.extend(stockTotals, {totalNet: netTotals}, {stockItems: stockItems});
     }
 
@@ -351,7 +353,7 @@ angular.module('ts5App')
       $this.itemTypes = angular.copy(responseCollection[0]);
       $this.countTypes = angular.copy(responseCollection[1]);
       $this.stockTotals = angular.copy(responseCollection[2].response);
-      $this.promotionTotals = angular.copy(responseCollection[3].response);
+      $this.promotionTotals = $filter('filter')(angular.copy(responseCollection[3].response), {exchangeRateTypeId: 1});
       $this.chRevenue = angular.copy(responseCollection[4]);
       $this.eposRevenue = angular.copy(responseCollection[5]);
       $this.globalCurrencyList = angular.copy(responseCollection[6].response);

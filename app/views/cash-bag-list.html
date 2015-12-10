@@ -263,6 +263,9 @@
         </button>
       </td>
     </tr>
+    <tr ng-show="cashBagList.length === 0">
+      <td colspan="9" class="text-center"><span class="fa fa-exclamation-circle text-danger"></span> We're sorry, there are no items that match the given criteria</td>
+    </tr>
     </tbody>
   </table>
 </div>

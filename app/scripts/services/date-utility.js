@@ -114,6 +114,10 @@ angular.module('ts5App')
       return this.now() >= Date.parse(date);
     };
 
+    this.isTomorrowOrLater = function (date) {
+      return this.tomorrow() <= Date.parse(date);
+    };
+
     this.isYesterdayOrEarlier = function (date) {
       return this.yesterday() >= Date.parse(date);
     };

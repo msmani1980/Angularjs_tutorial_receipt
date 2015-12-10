@@ -248,9 +248,21 @@ angular.module('ts5App', [
   }).when('/reconciliation-dashboard', {
     templateUrl: 'views/reconciliation-dashboard.html',
     controller: 'ReconciliationDashboardCtrl'
+  }).when('/store-instance-amend', {
+    templateUrl: 'views/store-instance-amend.html',
+    controller: 'StoreInstanceAmendCtrl'
   }).when('/station-list', {
     templateUrl: 'views/station-list.html',
     controller: 'StationListCtrl'
+  }).when('/station-create', {
+    templateUrl: 'views/station-create.html',
+    controller: 'StationCreateCtrl'
+  }).when('/station-edit/:id', {
+    templateUrl: 'views/station-create.html',
+    controller: 'StationCreateCtrl'
+  }).when('/station-view/:id', {
+    templateUrl: 'views/station-create.html',
+    controller: 'StationCreateCtrl'
   }).otherwise({
     redirectTo: '/'
   });

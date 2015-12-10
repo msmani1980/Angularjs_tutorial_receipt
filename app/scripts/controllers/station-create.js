@@ -2,90 +2,37 @@
 
 /**
  * @ngdoc function
- * @name ts5App.controller:StationListCtrl
+ * @name ts5App.controller:StationCreateCtrl
  * @description
- * # StationListCtrl
+ * # StationCreateCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('StationListCtrl', function ($scope,dateUtility,ngToast,$q) {
+  .controller('StationCreateCtrl', function ($scope,$location,$q,ngToast,dateUtility,$routeParams) {
 
     var $this = this;
 
-    var stationListJSON = {
-      'response': [
-        {
-          'id': 114,
-          'cityId': 18,
-          'cityName': 'Copenhagen',
-          'companyId': 403,
-          'countryId': 66,
-          'countryName': 'Denmark',
-          'description': 'Copenhagen',
-          'isCaterer': true,
-          'endDate': '2015-12-31',
-          'startDate': '2015-05-02',
-          'regionId': 8,
-          'regionName': 'All',
-          'stationCode': 'CPH',
-          'stationId': 23,
-          'stationName': 'Copenhagen',
-          'timezone': 'Europe/Madrid',
-          'timezoneId': '86',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00',
-          'companyStationRelationships': []
-        },
-        {
-          'id': 115,
-          'cityId': 20,
-          'cityName': 'Herning',
-          'companyId': 403,
-          'countryId': 66,
-          'countryName': 'Denmark',
-          'description': 'Herning',
-          'isCaterer': false,
-          'endDate': '2015-05-30',
-          'startDate': '2015-05-02',
-          'regionId': 8,
-          'regionName': 'All',
-          'stationCode': 'EKHG',
-          'stationId': 25,
-          'stationName': 'Herning',
-          'timezone': 'Europe/Madrid',
-          'timezoneId': '86',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00',
-          'companyStationRelationships': []
-        },
-        {
-          'id': 116,
-          'cityId': 19,
-          'cityName': 'Vojens',
-          'companyId': 403,
-          'countryId': 66,
-          'countryName': 'Denmark',
-          'description': 'Vojens',
-          'isCaterer': false,
-          'endDate': '2016-03-01',
-          'startDate': '2016-05-01',
-          'regionId': 8,
-          'regionName': 'All',
-          'stationCode': 'SKS',
-          'stationId': 24,
-          'stationName': 'Vojens',
-          'timezone': 'Europe/Madrid',
-          'timezoneId': '86',
-          'utcDstOffset': '+02:00',
-          'utcOffset': '+01:00',
-          'companyStationRelationships': []
-        }
-      ],
-      'meta': {
-        'count': 5,
-        'limit': 5,
-        'start': 0
-      }
+    var stationJSON = {
+      'id': 114,
+      'cityId': 18,
+      'cityName': 'Copenhagen',
+      'companyId': 403,
+      'countryId': 66,
+      'countryName': 'Denmark',
+      'description': 'Copenhagen',
+      'isCaterer': true,
+      'endDate': '2050-01-01',
+      'startDate': '2015-05-02',
+      'regionId': 8,
+      'regionName': 'All',
+      'stationCode': 'CPH',
+      'stationId': 23,
+      'stationName': 'Copenhagen',
+      'timezone': 'Europe/Madrid',
+      'timezoneId': '86',
+      'utcDstOffset': '+02:00',
+      'utcOffset': '+01:00',
+      'companyStationRelationships': []
     };
 
     var globalStationListJSON = {
@@ -271,7 +218,6 @@ angular.module('ts5App')
         'start': 0
       }
     };
-
 
     var countryListJSON = {
       'meta': {
@@ -460,15 +406,6 @@ angular.module('ts5App')
       this.setCountryList(countryListJSON);
     };
 
-    this.setStationList = function(dataFromAPI) {
-      $scope.stationList = angular.copy(dataFromAPI.response);
-    };
-
-    this.getStationList = function() {
-      // add factory API call here
-      this.setStationList(stationListJSON);
-    };
-
     this.setGlobalStationList = function(dataFromAPI) {
       $scope.globalStationList = angular.copy(dataFromAPI.response);
     };
@@ -478,46 +415,33 @@ angular.module('ts5App')
       this.setGlobalStationList(globalStationListJSON);
     };
 
-    this.displayLoadingModal = function (loadingText) {
-      angular.element('#loading').modal('show').find('p').text(loadingText);
-    };
-
-    this.hideLoadingModal = function () {
-      angular.element('#loading').modal('hide');
-    };
-
-    this.setupFormDataObject = function() {
+    this.setStation = function(dataFromAPI) {
+      var station = angular.copy(dataFromAPI);
       $scope.formData = {
-        stations: []
-      };
-      angular.forEach($scope.stationList, function(station) {
-        $scope.formData.stations.push({
+        station: {
           id: station.id,
-          isCaterer: station.isCaterer,
-          startDate: dateUtility.formatDateForApp(station.startDate),
-          endDate: dateUtility.formatDateForApp(station.endDate)
-        });
-      });
+          code: station.stationCode,
+          name: station.stationName
+        },
+        city: {
+          id: station.cityId,
+          cityName: station.cityName
+        },
+        country: {
+          id: station.countryId,
+          countryName: station.countryName
+        },
+        startDate: dateUtility.formatDateForApp(station.startDate),
+        endDate: dateUtility.formatDateForApp(station.endDate),
+        isCaterer: station.isCaterer,
+        companyStationRelationships: station.companyStationRelationships
+      };
+      $scope.dataReady = true;
     };
 
-    this.dateActive = function(date) {
-      return dateUtility.isTodayOrEarlier(date);
-    };
-
-    this.getSelectedStations = function() {
-      return $scope.selectedStations.filter(function(selected,stationId){
-        if(selected === true)  {
-          return stationId;
-        }
-      });
-    };
-
-    this.canSave = function() {
-      if($scope.selectedStations.length > 0) {
-        var selected = this.getSelectedStations();
-        return selected.length > 0;
-      }
-      return $scope.selectedStations.length > 0;
+    this.getStation = function() {
+      // add factory API call here
+      this.setStation(stationJSON);
     };
 
     this.showSuccessMessage = function(message) {
@@ -528,115 +452,47 @@ angular.module('ts5App')
       });
     };
 
-    this.getStationObject = function(stationId) {
-      var selectedStation = $scope.stationList.filter(function(station){
-        return station.id === stationId;
-      })[0];
-      return selectedStation;
-    };
-
-    this.generatePayload = function() {
-      var payload = [];
-      angular.forEach($scope.selectedStations, function(selected,stationId){
-        if(selected){
-          payload.push( $this.getStationObject(stationId) );
-        }
-      });
-      return payload;
-    };
-
-    this.validateForm = function() {
-      $scope.displayError = $scope.stationListForm.$invalid;
-      return $scope.stationListForm.$valid;
-    };
-
-    this.errorHandler = function(dataFromAPI) {
-      $scope.displayError = true;
-      $scope.errorResponse = dataFromAPI;
-    };
-
-    this.saveStationsSuccess = function() {
-      this.showSuccessMessage('Selected stations have been updated!');
-    };
-
-    this.saveStations = function() {
-      var payload = this.generatePayload();
-      // make service call here
-      this.saveStationsSuccess(payload);
+    this.filterByCountry = function(record) {
+      if(angular.isUndefined($scope.formData) || angular.isUndefined($scope.formData.countryId)) {
+        return true;
+      }
+      return parseInt(record.countryId) === parseInt($scope.formData.countryId);
     };
 
     this.submitForm = function() {
-      if( $this.validateForm() ) {
-        $this.saveStations();
+      console.log($scope.formData);
+      this.showSuccessMessage('Station has been created!');
+    };
+
+    this.checkIfViewOnly = function () {
+      var path = $location.path();
+      if (path.search('/station-view') !== -1) {
+        $scope.viewOnly = true;
       }
     };
 
-    this.getStationInFormData = function(stationId) {
-      return $scope.formData.stations.filter(function(station){
-        return stationId === station.id;
-      })[0];
-    };
-
-    this.updateStationStartDate = function(current,stationId) {
-      var station = this.getStationInFormData(stationId);
-      if(station && !this.dateActive(station.startDate)){
-        station.startDate = current.startDate;
-      }
-    };
-
-    this.updateStationEndDate = function(current,stationId) {
-      var station = this.getStationInFormData(stationId);
-      if( station && !dateUtility.isYesterdayOrEarlier(station.endDate) &&
-        !dateUtility.isYesterdayOrEarlier(current.endDate) ){
-        station.endDate = current.endDate;
-      }
-    };
-
-    this.updateSelectedStartDates = function(current) {
-      if(angular.isDefined(current) && current.startDate) {
-        angular.forEach($scope.selectedStations, function(selected,stationId){
-          if(selected){
-            $this.updateStationStartDate(current,stationId);
-          }
-        });
-      }
-    };
-
-    this.updateSelectedEndDates = function(current) {
-      if(angular.isDefined(current) && current.endDate) {
-        angular.forEach($scope.selectedStations, function(selected,stationId){
-          if(selected){
-            $this.updateStationEndDate(current,stationId);
-          }
-        });
-      }
-    };
-
-    this.selectAllStations = function() {
-      angular.forEach($scope.stationList, function(station) {
-        $scope.selectedStations[station.id] = true;
+    this.addRelationship = function() {
+      $scope.formData.companyStationRelationships.push({
+        catererId: '',
+        startDate: '',
+        endDate: ''
       });
     };
 
-    this.deselectAllStations = function() {
-      angular.forEach($scope.stationList, function(station) {
-        $scope.selectedStations[station.id] = false;
-      });
+    this.setFormAsEdit = function () {
+      $scope.editingRelationship = true;
+      $scope.buttonText = 'Save';
     };
 
-    this.toggleAllStations = function(selectAll) {
-      if(selectAll) {
-        this.selectAllStations();
-        return;
+    this.setUISelectValidationClass = function () {
+      /*if($scope.stationCreateForm[inputName].$touched && $scope.stationCreateForm[inputName].length < 1 ||
+        $scope.displayError && $scope.stationCreateForm[inputName].length < 1) {
+        return 'has-error';
       }
-      this.deselectAllStations();
-    };
-
-    this.filterByCountry = function(record) {
-      if(angular.isUndefined($scope.search) || angular.isUndefined($scope.search.countryId)) {
-        return true;
-      }
-      return parseInt(record.countryId) === parseInt($scope.search.countryId);
+      if($scope.stationCreateForm[inputName].$touched && $scope.stationCreateForm[inputName].$valid) {
+        return 'has-success';
+      }*/
+      return 'has-success';
     };
 
     this.makeInitPromises = function() {
@@ -648,11 +504,16 @@ angular.module('ts5App')
     };
 
     this.initSuccessHandler = function() {
-      $this.hideLoadingModal();
+      if ($routeParams.id && !$scope.viewOnly) {
+        $this.setFormAsEdit();
+        return $this.getStation();
+      }
+      $scope.dataReady = true;
     };
 
     this.init = function() {
-      this.displayLoadingModal('Retrieving Station information');
+      // TODO: Add waiting
+      this.checkIfViewOnly();
       var promises = this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
     };
@@ -660,45 +521,30 @@ angular.module('ts5App')
     this.init();
 
     /* Scope */
-
-    $scope.selectedStations = [];
-
-    $scope.hideSearch = function() {
-      var filterControls = angular.element(
-        angular.element.find('#filter-controls')[0]
-      );
-      filterControls.addClass('collapse').removeClass('in');
+    $scope.formData = {
+      stationId: null,
+      endDate: dateUtility.nowFormatted(),
+      startDate: dateUtility.nowFormatted(),
+      companyStationRelationships: []
     };
-
-    $scope.searchRecords = function() {
-      $this.getStationList();
-      $this.setupFormDataObject();
-      $scope.hideSearch();
-    };
-
-    $scope.canSave = function() {
-      return $this.canSave();
-    };
+    $scope.viewOnly = false;
+    $scope.displayError = false;
+    $scope.buttonText = 'Add';
 
     $scope.submitForm = function() {
       return $this.submitForm();
+    };
+
+    $scope.setUISelectValidationClass = function(inputName) {
+      return $this.setUISelectValidationClass(inputName);
     };
 
     $scope.filterByCountry = function(record) {
       return $this.filterByCountry(record);
     };
 
-    $scope.isDateActive = function (date) {
-      return $this.dateActive(date);
+    $scope.addRelationship = function() {
+      return $this.addRelationship();
     };
-
-    $scope.$watch('dateRange', function(current) {
-      $this.updateSelectedStartDates(current);
-      $this.updateSelectedEndDates(current);
-    },true);
-
-    $scope.$watch('allStationsSelected', function(selectAll) {
-      $this.toggleAllStations(selectAll);
-    });
 
   });
