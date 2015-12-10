@@ -6,13 +6,13 @@
 
       <div class="col-xs-6">
 
-        <h2 class="view-name">Add Station</h2>
+        <h2 class="view-name">{{ viewLabel }} Station</h2>
 
       </div>
 
       <div class="col-xs-6 text-right">
 
-        <fieldset ng-hide="viewOnly">
+        <fieldset ng-hide="isViewOnly()">
 
           <a class="btn btn-default" ng-href="/#/station-list">
             <span class="fa fa-arrow-left" aria-hidden="true"></span>
@@ -32,136 +32,151 @@
 
   </div>
 
-  <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+  <error-dialog form-object="stationCreateForm" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <form name="stationCreateForm" class="form" ng-if="dataReady">
+  <form name="stationCreateForm" class="form">
 
-			<div class="row">
+		<div class="row">
 
-        <div class="col-xs-12 col-sm-6">
+      <div class="col-xs-12 col-sm-6">
 
-          <div class="form-group" ng-class="setUISelectValidationClass('Country')">
-            <label>Country *</label>
-            <ui-select name="Country" ng-model="formData.country" theme="bootstrap" required>
-              <ui-select-match placeholder="Start typing to find a country">{{ $select.selected.countryName }}
-              </ui-select-match>
-              <ui-select-choices repeat="country in countryList | filter: $select.search | orderBy:'countryName'">
-                <div ng-bind-html="country.countryName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </div>
-
-        </div>
-
-        <div class="col-xs-12 col-sm-6">
-
-            <div class="form-group" ng-class="setUISelectValidationClass('City')">
-            <label>City *</label>
-            <ui-select name="City"  ng-model="formData.city" theme="bootstrap" required>
-              <ui-select-match placeholder="Start typing to find a city">{{ $select.selected.cityName }}
-              </ui-select-match>
-              <ui-select-choices repeat="city in cityList | filter: $select.search | filter: filterByCountry | orderBy:'cityName'">
-                <div ng-bind-html="city.cityName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </div>
-
-        </div>
-
-        <div class="col-xs-12 col-sm-6">
-
-          <div class="form-group" ng-class="setUISelectValidationClass('Station Code')">
-            <label>Station Code *</label>
-            <ui-select name="Station Code" ng-model="formData.station" theme="bootstrap" required>
-              <ui-select-match placeholder="Start typing to find a station">{{ $select.selected.code }}
-              </ui-select-match>
-              <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
-                <div ng-bind-html="station.code | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>
-          </div>
-
-        </div>
-
-        <div class="col-xs-12 col-sm-6">
-
-          <div class="form-group" ng-class="setInputValidClass('Station Code')">
-            <label class="control-label">Station Name *</label>
-            <input disabled="true" class="form-control" type="text" value="{{ formData.station.name }}" />
-          </div>
-
-        </div>
-
-        <div class="col-xs-12 col-sm-6">
-
-          <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-            <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
-            min-date="'+1d'" required="true"></date-picker-field>
-          </fieldset>
-
-        </div>
-
-        <div class="col-xs-12 col-sm-6">
-
-          <fieldset ng-disabled="viewOnly || isRelationshipInactive()">
-            <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
-            min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
-          </fieldset>
-
+        <div class="form-group" ng-class="setUISelectValidationClass('Country')">
+          <label>Country *</label>
+          <ui-select name="Country" ng-model="formData.country" theme="bootstrap" required ng-disabled="isViewOnly()">
+            <ui-select-match placeholder="Start typing to find a country">
+              {{ $select.selected.countryName }}
+            </ui-select-match>
+            <ui-select-choices repeat="country in countryList | filter: $select.search | orderBy:'countryName'">
+              <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
         </div>
 
       </div>
 
-      <div class="panel panel-default">
+      <div class="col-xs-12 col-sm-6">
 
-        <div class="panel-heading">
-
-          <input type="checkbox" ng-model="formData.isCaterer" /> This is a Catering Station
+          <div class="form-group" ng-class="setUISelectValidationClass('City')">
+          <label>City *</label>
+          <ui-select name="City"  ng-model="formData.city" theme="bootstrap" required ng-disabled="isViewOnly()">
+            <ui-select-match placeholder="Start typing to find a city">
+              {{ $select.selected.cityName }}
+            </ui-select-match>
+            <ui-select-choices repeat="city in cityList | filter: $select.search | filter: filterByCountry | orderBy:'cityName'">
+              <div ng-bind-html="city.cityName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
         </div>
 
-        <div class="panel-body" ng-show="formData.isCaterer">
+      </div>
 
-          <button ng-show="formData.isCaterer" class="btn btn-primary pull-right" ng-click="addRelationship()">
-            <span class="fa fa-check-square-o" aria-hidden="true"></span>
+      <div class="col-xs-12 col-sm-6">
+
+        <div class="form-group" ng-class="setUISelectValidationClass('Station Code')">
+          <label>Station Code *</label>
+          <ui-select name="Station Code" ng-model="formData.station" theme="bootstrap" required ng-disabled="isViewOnly()">
+            <ui-select-match placeholder="Start typing to find a station">
+              {{ $select.selected.code }}
+            </ui-select-match>
+            <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
+              <div ng-bind-html="station.code | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6">
+
+        <div class="form-group" ng-class="setInputValidClass('Station Code')">
+          <label class="control-label">Station Name *</label>
+          <input disabled="true" class="form-control" type="text" value="{{ formData.station.name }}" />
+        </div>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6">
+
+          <date-picker-field disable="isViewOnly()" form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
+          min-date="'+1d'" required="true"></date-picker-field>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6">
+
+          <date-picker-field disable="isViewOnly()" form="form" label="Effective To" name="EffectiveTo" ng-model="formData.endDate"
+          min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
+
+      </div>
+
+    </div>
+
+    <div class="panel panel-default">
+
+      <div class="panel-heading form-inline">
+
+        <fieldset ng-disabled="isViewOnly()">
+
+          <button ng-show="formData.isCaterer" class="btn btn-primary btn-sm text-right" ng-click="addRelationship()">
+            <span class="fa fa-plus" aria-hidden="true"></span>
             <span class="hidden-xs btn-label">Add Relationship</span>
           </button>
 
-          <h2 class="view-name">Station / Caterer Relationships</h2>
-          <p>Below are a list of relationships between this Station and Catering Companies.</p>
+          <select class="form-control" name="isCaterer" ng-model="formData.isCaterer">
+             <option ng-selected="formData.isCaterer" value="true">Yes</value>
+             <option value="">No</value>
+          </select>
 
-          <div class="row" ng-repeat="relationship in formData.companyStationRelationships track by $index">
+           This is <span ng-show="!formData.isCaterer">not</span> a Catering Station
 
-            <div class="col-xs-12 col-sm-4">
+       </fieldset>
 
-              <div class="form-group" ng-class="setUISelectValidationClass('Caterer')">
-                <label>Caterer Name *</label>
-                <ui-select name="Caterer" ng-model="relationship.catererId" theme="bootstrap" required>
-                  <ui-select-match placeholder="Start typing to find a Caterer">{{ $select.selected.code }}
-                  </ui-select-match>
-                  <ui-select-choices repeat="station in globalStationList | filter: $select.search | orderBy:'code'">
-                    <div ng-bind-html="station.code | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
-              </div>
+      </div>
 
+      <div class="panel-body" ng-show="formData.isCaterer">
+
+        <div ng-show="formData.companyStationRelationships.length === 0">
+
+          <p class="alert alert-info">
+            There are no relationships currently. Click the "Add Relationship" button to add a relationship to this list.
+          </p>
+
+        </div>
+
+        <div class="row" ng-repeat="relationship in formData.companyStationRelationships track by $index">
+
+          <div class="col-xs-12 col-sm-4">
+
+            <div class="form-group">
+              <label>Caterer*</label>
+              <ui-select name="Caterer" ng-model="relationship.stationId" theme="bootstrap" required ng-disabled="isViewOnly()">
+                <ui-select-match placeholder="Start typing to find a Caterer">
+                  {{ $select.selected.code }}
+                </ui-select-match>
+                <ui-select-choices repeat="caterer in catererStationList | filter: $select.search | orderBy:'code'">
+                  <div ng-bind-html="caterer.code | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
             </div>
 
-            <div class="col-xs-12 col-sm-4">
-              <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="relationship.startDate"
-              min-date="'+1d'" required="true"></date-picker-field>
-            </div>
+          </div>
 
-            <div class="col-xs-12 col-sm-4">
-              <date-picker-field form="form" label="Effective To" name="EffectiveTo" ng-model="relationship.endDate"
-              min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
-            </div>
+          <div class="col-xs-12 col-sm-4">
+            <date-picker-field disable="isViewOnly()" form="form" label="Effective From" name="EffectiveFrom" ng-model="relationship.startDate"
+            min-date="'+1d'" required="true"></date-picker-field>
+          </div>
 
+          <div class="col-xs-12 col-sm-4">
+            <date-picker-field disable="isViewOnly()" form="form" label="Effective To" name="EffectiveTo" ng-model="relationship.endDate"
+            min-date="( editingRelationship ? '0d' : '+1d')" required="true"></date-picker-field>
           </div>
 
         </div>
 
       </div>
+
+    </div>
 
   </form>
 
