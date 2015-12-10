@@ -251,10 +251,13 @@
                         ng-model="item.ullageReason"
                         name="Ullage Reason ( {{ item.itemCode }} - {{ item.itemName }} )"
                         id="ullage-reason-{{ item.masterItemId }}"
-                        ng-selected="item.ullageReason"
-                        ng-options="ullageReason.id + '' as ullageReason.companyReasonCodeName for ullageReason in ullageReasons"
                         ng-disabled="ullageReasonDisabled(item)"
                         ng-required="ullageReasonRequired(item)">
+                        <option selected="selected" value disabled>{{ ullageReasonRequired(item) ? 'Select Ullage Reason' : '' }}</option>
+                        <option ng-selected="ullageReason.id==item.ullageReason"
+                                ng-repeat="ullageReason in ullageReasons" value="{{ ullageReason.id }}">
+                          {{ ullageReason.companyReasonCodeName }}
+                        </option>
                 </select>
 
               </div>
