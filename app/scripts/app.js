@@ -221,7 +221,7 @@ angular.module('ts5App', [
   }).when('/retail-company-exchange-rate-setup', {
     templateUrl: 'views/retail-company-exchange-rate-setup.html',
     controller: 'RetailCompanyExchangeRateSetupCtrl'
-  }).when('/discount-list', {
+  }).when('/discounts', {
     templateUrl: 'views/discount-list.html',
     controller: 'DiscountListCtrl',
     controllerAs: 'discountList'
@@ -263,6 +263,10 @@ angular.module('ts5App', [
   }).when('/station-view/:id', {
     templateUrl: 'views/station-create.html',
     controller: 'StationCreateCtrl'
+  }).when('/discounts/create', {
+    templateUrl: 'views/discounts-create.html',
+    controller: 'DiscountsCreateCtrl',
+    controllerAs: 'discountsCreate'
   }).otherwise({
     redirectTo: '/'
   });

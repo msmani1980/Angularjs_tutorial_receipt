@@ -1,0 +1,251 @@
+<div class="container module-container">
+  <div class="top-header">
+    <div class="container">
+      <div class="edit-controls">
+        <div class="row">
+          <div class="col-xs-6">
+            <h2 class="view-name"> {{ viewName }} </h2>
+          </div>
+          <div class="col-xs-6 text-right">
+            <fieldset ng-hide="viewOnly">
+              <button class="btn btn-default" ng-click="leaveView('discounts-list')">
+                <span class="fa fa-remove" aria-hidden="true"></span>
+                <span class="hidden-xs">Cancel</span>
+              </button>
+              <button class="btn btn-primary" ng-click="submitForm(formData)">
+                <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                <span class="hidden-xs">{{ buttonText }}</span>
+              </button>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div class="form-nav btn-group-justified item-top" role="group" aria-label="..." ng-init="activeBtn = 'discount-information'">
+        <a ng-click="formScroll('discount-information')" ng-class="{'active':activeBtn === 'discount-information'}" type="button" class="btn btn-default">
+          Discount Information
+        </a>
+        <a ng-click="formScroll('rates')" ng-class="{'active':activeBtn === 'rates'}" type="button" class="btn btn-default">
+          Rates
+        </a>
+        <a ng-click="formScroll('restrictions')" ng-class="{'active':activeBtn === 'restrictions'}" type="button" class="btn btn-default">
+          Restrictions
+        </a>
+      </div>
+      <p>All required fields are marked with a *.</p>
+    </div>
+  </div>
+  <!--/TopHeader -->
+  <div class="create-form-container" ng-show="uiSelectTemplateReady">
+    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    </error-dialog>
+    <form name="form" class="form edit-form create-item-form">
+      <h3 id="discount-information">Discount Information</h3>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
+            <div class="form-group">
+              <label>Global Discount Type*</label>
+              <select name="globalDiscountType" required ng-model="formData.globalDiscountType" class="form-control">
+                <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
+                        value="{{ category.id }}">{{ category.name }}
+                </option>
+              </select>
+            </div>
+            <input-text label="Global Discount Description" name="globalDiscountDescription" pattern="regexp.word"></input-text>
+            <div class="form-group">
+              <input-text label="Bar Code*" name="barCode" pattern="regexp.word"></input-text>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
+            <input-text label="Discount Name" name="discountName" pattern="regexp.word"></input-text>
+            <input-textarea label="Description" name="description" pattern="regexp.word"></input-textarea>
+            <div class="row">
+              <date-picker
+                class="col-xs-12 col-md-12 col-sm-12"
+                element-class="col-xs-6 col-sm-6"
+                start-date-model="search.startDate"
+                end-date-model="search.endDate"
+                label-from="Effective From *"
+                label-to="Effective To *">
+              </date-picker>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <h3>Benefits</h3>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <div class="form-group">
+            <label>Discount Type*</label>
+            <select name="globalDiscountType" required ng-model="formData.globalDiscountType" class="form-control">
+              <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
+                      value="{{ category.id }}">{{ category.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <input-text label="Percentage Discount Value*" name="discountName" pattern="regexp.word" placeholder="10%"></input-text>
+                <label>Currencies List</label>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      {{ masterCurrenciesList[currency.companyCurrencyId] }} *
+                    </div>
+                    <input ng-model="currency.price" ng-disabled="$parent.isDisabled()" type="text" class="form-control" maxlength="8"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <h3>Limitation Per Shop</h3>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <input-text label="Item Qty Limit Per Shop" name="discountName" pattern="regexp.word"></input-text>
+          <div class="form-group">
+            <input ng-model="formData.isPrintReceipt" type="checkbox"/>
+            <label>Amount Limit Per Shop Value</label>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <label>Amount Limit Per Shop Value</label>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      {{ masterCurrenciesList[currency.companyCurrencyId] }} *
+                    </div>
+                    <input ng-model="currency.price" ng-disabled="$parent.isDisabled()" type="text" class="form-control" maxlength="8"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <h3>Limitation Per Transaction</h3>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <input-text label="Item Qty Limit Per Transaction" name="discountName" pattern="regexp.word"></input-text>
+          <div class="form-group">
+            <input ng-model="formData.isPrintReceipt" type="checkbox"/>
+            <label>Amount Limit Per Transaction</label>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <label>Amount Limit Per Transaction</label>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      {{ masterCurrenciesList[currency.companyCurrencyId] }} *
+                    </div>
+                    <input ng-model="currency.price" ng-disabled="$parent.isDisabled()" type="text" class="form-control" maxlength="8"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <h3>Limitation Per Seat</h3>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <div class="form-group">
+            <input ng-model="formData.isPrintReceipt" type="checkbox"/>
+            <label>Require Seat Entry</label>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="isDisabled()" ng-show="uiSelectTemplateReady">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6">
+                <input-text label="Item Qty Limit Per Seat" name="discountName" pattern="regexp.word" placeholder=""></input-text>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <h3>Limitation Per Seat</h3>
+      <div class="row">
+        <div class="col-xs-12 col-sm-12">
+          <label>Restrictions</label>
+          <div class="form-group">
+            <input ng-model="formData.isPrintReceipt" type="checkbox"/> <label>Yes</label>
+            <input ng-model="formData.isPrintReceipt" type="checkbox"/> <label>No</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-12">
+          <div class="form-group">
+            <label for="denomination-{{$index}}">Item Categories</label>
+            <ui-select id="denomination-{{$index}}" multiple ng-model="currency.selectedDenominations " ng-change="removeInvalidEasyPayDenominations(currency)" ng-disabled="isCurrencyReadOnly(currency)" theme="bootstrap" style="min-height: 30px;">
+              <ui-select-match placeholder="Select denomination...">{{$item.denomination}}</ui-select-match>
+              <ui-select-choices repeat="denomination in currencyDenominations[currency.currencyId] | filter:{denomination: $select.search}">
+                <div ng-bind-html="denomination.denomination | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <div class="form-group">
+            <label>Item Category</label>
+            <select name="globalDiscountType" required ng-model="formData.globalDiscountType" class="form-control">
+              <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
+                      value="{{ category.id }}">{{ category.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-5">
+          <div class="form-group">
+            <label>Retail Item*</label>
+            <select name="globalDiscountType" required ng-model="formData.globalDiscountType" class="form-control">
+              <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
+                      value="{{ category.id }}">{{ category.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-1">
+          <label>&nbsp;</label>
+          <div class="row">
+            <button type="button" class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, currency)" ng-hide="isCurrencyReadOnly(currency)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row" ng-hide="readOnly">
+        <div class="col-xs-8 col-md-9"></div>
+        <div class="col-xs-4 col-md-3 text-right">
+          <div class="input-group">
+            <input type="number" min="1" max="100" class="form-control" ng-model="addDetailedCompanyCurrenciesNumber">
+            <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" ng-click="addDetailedCompanyCurrencies()"><i class="fa fa-plus"></i> Add Items</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- /Container -->
+<form-success-modal list-path="item-list" create-path="item-create"></form-success-modal>
+<form-update-modal list-path="item-list"></form-update-modal>
+<leave-view-modal></leave-view-modal>
+<dynamic-left-nav title="Retail Item Management"></dynamic-left-nav>
