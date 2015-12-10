@@ -9,6 +9,7 @@ fdescribe('Service: taxRatesFactory', function() {
   var taxTypesService;
   var countriesService;
   var stationsService;
+  var currenciesService;
 
   beforeEach(inject(function(_taxRatesFactory_, $injector) {
     taxRatesFactory = _taxRatesFactory_;
@@ -17,11 +18,13 @@ fdescribe('Service: taxRatesFactory', function() {
     taxTypesService = $injector.get('taxTypesService');
     countriesService = $injector.get('countriesService');
     stationsService = $injector.get('stationsService');
+    currenciesService = $injector.get('currenciesService');
 
     spyOn(taxRateTypesService, 'getTaxRateTypes');
     spyOn(taxTypesService, 'getTaxTypesList');
     spyOn(countriesService, 'getCountriesList');
     spyOn(stationsService, 'getStationList');
+    spyOn(currenciesService, 'getCompanyCurrencies');
   }));
 
   describe('getTaxRateTypes API call', function() {
@@ -51,7 +54,15 @@ fdescribe('Service: taxRatesFactory', function() {
     it('should call getStationsList', function() {
       var id = 432;
       taxRatesFactory.getStationsList(id, 0);
-      expect(stationsService.getStationList).toHaveBeenCalled();
+      expect(stationsService.getStationList).toHaveBeenCalledWith(id, 0);
+    });
+  });
+
+  describe('getCompanyCurrencies API call', function() {
+    it('should call getCompanyCurrencies', function() {
+      var id = 432;
+      taxRatesFactory.getCompanyCurrencies(id);
+      expect(currenciesService.getCompanyCurrencies).toHaveBeenCalledWith(id);
     });
   });
 

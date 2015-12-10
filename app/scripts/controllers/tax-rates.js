@@ -14,17 +14,22 @@ angular.module('ts5App')
 
     var companyId = GlobalMenuService.company.get();
 
+    // SET $scope placeholders
+
     $scope.viewName = 'Tax Management';
 
     $scope.taxRatesList = [];
     $scope.taxTypesList = [];
     $scope.countriesList = [];
     $scope.stationsList = [];
+    $scope.currenciesList = [];
 
     $scope.dateRange = {
       startDate: '',
       endDate: ''
     };
+
+    // Show/Hide loading modal
 
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -34,7 +39,7 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     };
 
-    // Set $scope data
+    // SET $scope data
 
     this.setTaxTypesList = function(dataFromAPI) {
       $scope.taxTypesList = angular.copy(dataFromAPI.response);
@@ -47,11 +52,16 @@ angular.module('ts5App')
     this.setCountriesList = function(dataFromAPI) {
       $scope.countriesList = angular.copy(dataFromAPI.countries);
     };
+
     this.setStationsList = function(dataFromAPI) {
       $scope.stationsList = angular.copy(dataFromAPI);
     };
 
-    // Get $scope data
+    this.setCurrenciesList = function(dataFromAPI) {
+      $scope.currenciesList = angular.copy(dataFromAPI.response);
+    };
+
+    // GET $scope data
 
     this.getTaxTypesList = function() {
       var params = {
@@ -72,12 +82,19 @@ angular.module('ts5App')
       return taxRatesFactory.getStationsList(companyId, 0).then($this.setStationsList);
     };
 
+    this.getCurrenciesList = function() {
+      return taxRatesFactory.getCompanyCurrencies(companyId).then($this.setCurrenciesList);
+    };
+
+    // Dependancy Promises
+
     this.createPromises = function() {
       return [
         $this.getTaxTypesList(),
         $this.getTaxRateTypesList(),
         $this.getCountriesList(),
-        $this.getStationsList()
+        $this.getStationsList(),
+        $this.getCurrenciesList()
       ];
     };
 
@@ -85,6 +102,8 @@ angular.module('ts5App')
       var promises = $this.createPromises();
       $q.all(promises).then($this.initSuccess);
     };
+
+    // Initialize Controller
 
     this.initSuccess = function() {
       $this.hideLoadingModal();
@@ -98,4 +117,7 @@ angular.module('ts5App')
 
     this.init();
 
+    // Place $scope functions here
+
+    //TODO: write all $scope logic for template
   });

@@ -8,7 +8,8 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('taxRatesFactory', function(taxRateTypesService, taxTypesService, countriesService, stationsService) {
+  .factory('taxRatesFactory', function(taxRateTypesService, taxTypesService, countriesService, stationsService,
+    currenciesService) {
 
     var getTaxTypesList = function(payload) {
       return taxTypesService.getTaxTypesList(payload);
@@ -26,11 +27,16 @@ angular.module('ts5App')
       return stationsService.getStationList(companyId, offset);
     };
 
+    var getCompanyCurrencies = function(payload) {
+      return currenciesService.getCompanyCurrencies(payload);
+    };
+
     return {
       getTaxTypesList: getTaxTypesList,
       getTaxRateTypes: getTaxRateTypes,
       getCountriesList: getCountriesList,
-      getStationsList: getStationsList
+      getStationsList: getStationsList,
+      getCompanyCurrencies: getCompanyCurrencies
     };
 
   });
