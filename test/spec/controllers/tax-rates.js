@@ -1,13 +1,13 @@
 'use strict';
 
-fdescribe('Controller: TaxRatesCtrl', function() {
+describe('Controller: TaxRatesCtrl', function() {
 
-  // load the controller's module, load in JSON
   beforeEach(module(
     'ts5App',
     'template-module',
     'served/tax-rate-types.json',
-    'served/tax-types.json'
+    'served/tax-types.json',
+    'served/country-list.json'
   ));
 
   var TaxRatesCtrl;
@@ -18,12 +18,17 @@ fdescribe('Controller: TaxRatesCtrl', function() {
   var taxRatesFactory;
   var taxTypesJSON;
   var taxRateTypesJSON;
+  var countriesListJSON;
   var getTaxTypesListDeferred;
   var getTaxRateTypesDeferred;
+  var getCountriesListDeferred;
 
-  beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedTaxTypes_, _servedTaxRateTypes_) {
+  beforeEach(inject(function($q, $controller, $rootScope, $injector, _servedTaxTypes_, _servedTaxRateTypes_,
+    _servedCountryList_) {
+
     taxTypesJSON = _servedTaxTypes_;
     taxRateTypesJSON = _servedTaxRateTypes_;
+    countriesListJSON = _servedCountryList_;
 
     $scope = $rootScope.$new();
     controller = $controller;
@@ -37,11 +42,15 @@ fdescribe('Controller: TaxRatesCtrl', function() {
 
     getTaxRateTypesDeferred = $q.defer();
     spyOn(taxRatesFactory, 'getTaxRateTypes').and.returnValue(getTaxRateTypesDeferred.promise);
+
+    getCountriesListDeferred = $q.defer();
+    spyOn(taxRatesFactory, 'getCountriesList').and.returnValue(getCountriesListDeferred.promise);
   }));
 
   function resolveAllDependencies() {
     getTaxTypesListDeferred.resolve(taxTypesJSON);
     getTaxRateTypesDeferred.resolve(taxRateTypesJSON);
+    getCountriesListDeferred.resolve(countriesListJSON);
     $scope.$digest();
   }
 
@@ -110,42 +119,20 @@ fdescribe('Controller: TaxRatesCtrl', function() {
 
     describe('After dependencies have been resolved, it', function() {
 
-      it('should set the $scope.taxTypesList', function() {
-        var mockList = [Object({
-          id: 16,
-          companyId: 326,
-          taxTypeCode: 'GST',
-          countTaxRate: '0',
-          description: 'Goods and Service Tax'
-        }), Object({
-          id: 17,
-          companyId: 326,
-          taxTypeCode: 'Local',
-          countTaxRate: '0',
-          description: 'Local City Taxes'
-        }), Object({
-          id: 15,
-          companyId: 326,
-          taxTypeCode: 'VAT',
-          countTaxRate: '0',
-          description: 'Value Added Tax'
-        })];
-        expect($scope.taxTypesList).toEqual(mockList);
+      it('should set the $scope.taxTypesList to the mock data', function() {
+        expect($scope.taxTypesList).toEqual(taxTypesJSON.response);
       });
 
-      it('should set the $scope.taxRatesList', function() {
-        var mockList = [Object({
-          id: '1',
-          taxRateType: 'Amount'
-        }), Object({
-          id: '2',
-          taxRateType: 'Percentage'
-        })];
-        expect($scope.taxRatesList).toEqual(mockList);
+      it('should set the $scope.taxRatesList to the mock data', function() {
+        expect($scope.taxRatesList).toEqual(taxRateTypesJSON);
+      });
+
+      it('should set the $scope.countriesList to the mock data', function() {
+        expect($scope.countriesList).toEqual(countriesListJSON);
       });
 
     });
 
   });
 
-});
+}); //Close for describe | Controller: TaxRatesCtrl

@@ -39,6 +39,10 @@ angular.module('ts5App')
       $scope.taxRatesList = angular.copy(dataFromAPI);
     };
 
+    this.setCountriesList = function(dataFromAPI) {
+      $scope.countriesList = angular.copy(dataFromAPI);
+    };
+
     this.getTaxTypesList = function() {
       var params = {
         companyId: companyId
@@ -50,10 +54,15 @@ angular.module('ts5App')
       return taxRatesFactory.getTaxRateTypes(companyId).then($this.setTaxRateTypesList);
     };
 
+    this.getCountriesList = function() {
+      return taxRatesFactory.getCountriesList().then($this.setCountriesList);
+    };
+
     this.createPromises = function() {
       return [
         $this.getTaxTypesList(),
-        $this.getTaxRateTypesList()
+        $this.getTaxRateTypesList(),
+        $this.getCountriesList()
       ];
     };
 
