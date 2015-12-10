@@ -223,7 +223,7 @@ angular.module('ts5App')
     };
 
     this.createCompanyReasonCodeSuccess = function() {
-      this.showSuccessMessage('Company Reason Code was created!');
+      this.showSuccessMessage('The selected Reasons were saved!');
     };
 
     this.createCompanyReasonCode = function() {
@@ -277,8 +277,8 @@ angular.module('ts5App')
       var globalReason = this.getGlobalReasonInFormData(globalReasonCodeId);
       if(globalReason) {
         globalReason.companyReasons.push({
-          id: '',
-          description: ''
+          reasonCode:'',
+          isActive: true
         });
       }
     };
