@@ -124,7 +124,7 @@ describe('The Stations Create/Edit Controller', function () {
     });
 
     it('should set the caterer station list', function() {
-      expect(scope.catererStationList).toEqual(catererStationListJSON.response);
+      expect(scope.catererStationList).toEqual(angular.copy(catererStationListJSON.response));
     });
 
   });
