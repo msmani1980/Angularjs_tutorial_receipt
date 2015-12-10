@@ -154,8 +154,8 @@
               <td>{{ cashBag.scheduleDate }}</td>
               <td>{{ cashBag.storeNumber }}</td>
               <td>{{ cashBag.cashBag }}</td>
-              <td></td>
-              <td></td>
+              <td>{{ cashBag.storeInstanceNumber }}</td>
+              <td>{{ cashBag.submittedDate }} {{cashBag.submittedTime }}</td>
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(cashBag, 'button', 'cashBag')"
                         ng-click="selectRecordForMoveCashBag(cashBag)">
@@ -178,7 +178,7 @@
               <td>{{ storeInstance.storeInstance }}</td>
               <td>{{ storeInstance.storeNumber }}</td>
               <td>{{ storeInstance.scheduleDate }}</td>
-              <td></td>
+              <td>{{ storeInstance.status }}</td>
               <td>
                 <button ng-class="getClassesForSingleSelectedRow(storeInstance, 'button', 'storeInstance')"
                         ng-click="selectRecordForMoveCashBag(storeInstance)">
