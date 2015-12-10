@@ -29,6 +29,8 @@ angular.module('ts5App')
       endDate: ''
     };
 
+    $scope.search = {};
+
     // Show/Hide loading modal
 
     this.showLoadingModal = function(text) {
@@ -54,7 +56,7 @@ angular.module('ts5App')
     };
 
     this.setStationsList = function(dataFromAPI) {
-      $scope.stationsList = angular.copy(dataFromAPI);
+      $scope.stationsList = angular.copy(dataFromAPI.response);
     };
 
     this.setCurrenciesList = function(dataFromAPI) {
@@ -119,5 +121,32 @@ angular.module('ts5App')
 
     // Place $scope functions here
 
-    //TODO: write all $scope logic for template
+    $scope.clearSearchFilters = function() {
+      $scope.search = {};
+      $scope.dateRange = {
+        startDate: '',
+        endDate: ''
+      };
+    };
+
+    $scope.isDateRangeSet = function() {
+      return ($scope.dateRange.startDate.length || $scope.dateRange.endDate.length);
+    };
+
+    $scope.isSearchActive = function() {
+      var isActive = false;
+      for (var key in $scope.search) {
+        var searchField = $scope.search[key];
+        if (angular.isDefined(searchField.length) || angular.isObject(searchField)) {
+          isActive = true;
+          break;
+        }
+      }
+      return isActive;
+    };
+
+    $scope.showClearButton = function() {
+      return ($scope.isDateRangeSet() || $scope.isSearchActive());
+    };
+
   });
