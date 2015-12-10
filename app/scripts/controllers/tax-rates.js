@@ -50,7 +50,6 @@ angular.module('ts5App')
 
     this.makePromises = function() {
       var promises = $this.createPromises();
-      console.log(promises);
       $q.all(promises).then($this.initSuccess);
     };
 
