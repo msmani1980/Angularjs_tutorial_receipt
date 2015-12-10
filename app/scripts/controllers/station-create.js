@@ -456,7 +456,6 @@ angular.module('ts5App')
           startDate: dateUtility.formatDateForApp(relationship.startDate)
         });
       });
-      console.log($scope.formData.companyStationRelationships);
     };
 
     this.setStation = function(dataFromAPI) {
@@ -508,13 +507,27 @@ angular.module('ts5App')
       return $scope.stationCreateForm.$valid;
     };
 
+    this.errorHandler = function(dataFromAPI) {
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
+    };
+
     this.createStationSuccess = function() {
       this.showSuccessMessage('Station has been created!');
     };
 
+    this.generatePayload = function() {
+      return {
+        stationId: $scope.formData.station.id,
+        cityId: $scope.formData.city.id,
+        countryId: $scope.formData.country.id
+      };
+    };
+
     this.createStation = function() {
+      var payload = this.generatePayload();
       // mock API call here
-      this.createStationSuccess();
+      this.createStationSuccess(payload);
     };
 
     this.submitForm = function() {
@@ -614,7 +627,6 @@ angular.module('ts5App')
     };
 
     $scope.isViewOnly = function() {
-      console.log($this.viewOnly);
       return $this.viewOnly;
     };
 
