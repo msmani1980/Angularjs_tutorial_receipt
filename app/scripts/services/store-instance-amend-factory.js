@@ -10,6 +10,23 @@
 angular.module('ts5App')
   .factory('storeInstanceAmendFactory', function ($q) {
 
+    var getScheduleMockData = function (searchQuery) {
+      var getScheduleMockData = [{
+        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/20/2015',
+        scheduleNumber: (searchQuery) ? searchQuery.scheduleNumber : '105',
+        departureStation: 'ORD',
+        arrivalStation: 'LAX'
+      }, {
+        scheduleDate: (searchQuery)? searchQuery.scheduleDate : '10/30/2015',
+        scheduleNumber: (searchQuery) ? searchQuery.scheduleNumber : '111',
+        departureStation: 'CPH',
+        arrivalStation: 'ORD'
+      }];
+      var scheduleMockResponseDeferred = $q.defer();
+      scheduleMockResponseDeferred.resolve(getScheduleMockData);
+      return scheduleMockResponseDeferred.promise;
+    };
+
     var getStoreInstancesMockData = function (searchQuery) {
       var getStoreInstancesMockData = [{
         storeInstance: 123,
@@ -204,6 +221,7 @@ angular.module('ts5App')
 
     return {
       getCashBagListMockData: getCashBagListMockData,
-      getStoreInstancesMockData: getStoreInstancesMockData
+      getStoreInstancesMockData: getStoreInstancesMockData,
+      getScheduleMockData: getScheduleMockData
     };
   });
